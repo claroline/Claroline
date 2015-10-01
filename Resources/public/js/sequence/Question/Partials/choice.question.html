@@ -11,8 +11,8 @@
                 <div class="form-group">
                     <div class="checkbox">                
                         <label>
-                            <input data-ng-if="choiceQuestionCtrl.question.multiple" data-ng-checked="choiceQuestionCtrl.multipleChoice[choice.id]" data-ng-click="choiceQuestionCtrl.updateStudentDatas()" data-ng-model="choiceQuestionCtrl.multipleChoice[choice.id]" value="{{choice.id}}" name="multiple-choice-{{choice.id}}" type="checkbox">
-                            <input data-ng-if="!choiceQuestionCtrl.question.multiple" data-ng-checked="choiceQuestionCtrl.uniqueChoice === choice.id" data-ng-click="choiceQuestionCtrl.updateStudentDatas()" data-ng-model="choiceQuestionCtrl.uniqueChoice" value="{{choice.id}}" name="unique-choice-{{choice.id}}" type="radio">
+                            <input data-ng-if="choiceQuestionCtrl.question.multiple" data-ng-checked="choiceQuestionCtrl.multipleChoice[choice.id]" data-ng-click="choiceQuestionCtrl.updateStudentData()" data-ng-model="choiceQuestionCtrl.multipleChoice[choice.id]" value="{{choice.id}}" name="multiple-choice-{{choice.id}}" type="checkbox">
+                            <input data-ng-if="!choiceQuestionCtrl.question.multiple" data-ng-checked="choiceQuestionCtrl.uniqueChoice === choice.id" data-ng-click="choiceQuestionCtrl.updateStudentData()" data-ng-model="choiceQuestionCtrl.uniqueChoice" value="{{choice.id}}" name="unique-choice-{{choice.id}}" type="radio">
                         </label>
                     </div>
                 </div>
@@ -33,10 +33,10 @@
                     <label>{{ 'question_hints'|trans:{}:'ujm_sequence' }}:</label>
                     <div data-ng-repeat="hint in choiceQuestionCtrl.question.hints" style="margin-bottom: 10px;">                        
                         <div data-ng-if="!choiceQuestionCtrl.hintIsUsed(hint.id)">
-                            <button type="button" role="button" class="btn btn-default fa fa-eye" title="{{ 'question_hint_show_title'|trans:{}:'ujm_sequence' }}" id="hint-{{hint.id}}" ng-bootbox-confirm="{{ 'question_show_hint_confirm'|trans:{'1' : hint.penalty}:'ujm_sequence'}}" ng-bootbox-confirm-action="choiceQuestionCtrl.showHint(hint.id)"> {{ 'question_hint_label'|trans:{}:'ujm_sequence' }} {{$index + 1}}</button>
+                            <button type="button" role="button" class="btn btn-default fa fa-eye" title="{{ 'question_hint_show_title'|trans:{}:'ujm_sequence' }}" data-ng-click="choiceQuestionCtrl.showHint(hint.id)" id="hint-{{hint.id}}"> {{ 'question_hint_label'|trans:{}:'ujm_sequence' }} {{$index + 1}}</button>
                         </div>
                     </div>
-                    <div data-ng-repeat="used in choiceQuestionCtrl.currentPaperStep.hints" id="visible-hints">
+                    <div data-ng-repeat="used in choiceQuestionCtrl.usedHints" id="visible-hints">
                         <h4>{{used.text}}</h4>
                     </div>
                 </div>

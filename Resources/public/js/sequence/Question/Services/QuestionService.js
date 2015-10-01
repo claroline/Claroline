@@ -33,6 +33,19 @@
                         });
                         
                      return deferred.promise;
+                },
+                /**
+                 * Get a hint penalty
+                 * @param {type} collection array of penalty
+                 * @param {type} searched searched id
+                 * @returns number
+                 */
+                getHintPenalty : function (collection, searched){
+                    for(var i = 0; i < collection.length; i++){
+                        if(collection[i].id === searched){
+                            return collection[i].penalty;
+                        }
+                    }
                 }
                       
             };

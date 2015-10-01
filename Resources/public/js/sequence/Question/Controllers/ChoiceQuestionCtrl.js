@@ -2,37 +2,39 @@
     'use strict';
 
     angular.module('Question').controller('ChoiceQuestionCtrl', [
+        '$ngBootbox',
         'CommonService',
         'QuestionService',
-        function (CommonService, QuestionService) {
+        function ($ngBootbox, CommonService, QuestionService) {
             this.question = {};
-            // keep answer
+            // keep choice(s)
             this.multipleChoice = {};
             this.uniqueChoice = 0;
-            this.currentPaperStep = {};
+            this.currentQuestionPaperData = {};
+            this.usedHints = [];// contains full hints object(s) for display
 
             this.init = function (question) {
-                this.currentPaperStep = CommonService.getCurrentPaperStep();
+                // get used hints infos (id + content) + checked answer(s) for the question
+                // those data have to be updated by view and sent to common service as soon as they change
+                this.currentQuestionPaperData = CommonService.getCurrentQuestionPaperData(question.id);
+                console.log('choice question ctrl this.currentQuestionPaperData');
+                console.log(this.currentQuestionPaperData);
                 this.question = question;
                 var meta = CommonService.getSequenceMeta();
                 if (meta.random) {
                     CommonService.shuffleArray(this.question.choices);
                 }
-                // init hints object if needed
-                if (this.currentPaperStep.hints === '') {
-                    this.currentPaperStep.hints = [];
+
+                if (this.currentQuestionPaperData.hints.length > 0) {
+                    // init used hints display
+                    for (var i = 0; i < this.currentQuestionPaperData.hints.length; i++) {
+                        this.getHintData(this.currentQuestionPaperData.hints[i]);
+                    }
                 }
-                // init anwsers object if needed
-                if (this.currentPaperStep.answers === '') {
-                    this.currentPaperStep.answers = [];
-                    this.currentPaperStep.answers[0] = {
-                        answer_id: '',
-                        question_id: this.question.id,
-                        choices: []
-                    };
+                if (this.currentQuestionPaperData.answer.length > 0) {
+                    // init previously given answer
+                    this.checkChoices(this.question.multiple);
                 }
-                
-                this.checkChoices(this.question.multiple);
             };
 
             /**
@@ -41,9 +43,11 @@
              * @returns {Boolean}
              */
             this.hintIsUsed = function (id) {
-                for (var i = 0; i < this.currentPaperStep.hints.length; i++) {
-                    if (this.currentPaperStep.hints[i].id === id) {
-                        return true;
+                if (this.currentQuestionPaperData && this.currentQuestionPaperData.hints) {
+                    for (var i = 0; i < this.currentQuestionPaperData.hints.length; i++) {
+                        if (this.currentQuestionPaperData.hints[i] === id) {
+                            return true;
+                        }
                     }
                 }
                 return false;
@@ -54,14 +58,22 @@
              * @param {type} hintId
              * @returns {undefined}
              */
-            this.showHint = function (hintId) {
-                //var content = this.getHintContent(hintId);
-                var promise = QuestionService.getHint(hintId);
+            this.showHint = function (id) {
+                var penalty = QuestionService.getHintPenalty(this.question.hints, id);
+                $ngBootbox.confirm(Translator.trans('question_show_hint_confirm', {1: penalty}, 'ujm_sequence'))
+                        .then(function () {
+                            this.getHintData(id);
+                            this.currentQuestionPaperData.hints.push(id);
+                            this.updateStudentData();
+                            // hide button
+                            angular.element('#hint-' + id).hide();
+                        }.bind(this));
+            };
+
+            this.getHintData = function (id) {
+                var promise = QuestionService.getHint(id);
                 promise.then(function (result) {
-                    // hide button
-                    angular.element('#hint-' + hintId).hide();
-                    this.currentPaperStep.hints.push(result.data);
-                    this.updateStudentData();
+                    this.usedHints.push(result.data);
 
                 }.bind(this), function (error) {
                     console.log('error');
@@ -73,11 +85,11 @@
              * @param {boolean} isMultiple
              */
             this.checkChoices = function (isMultiple) {
-                var prevAnswer = this.currentPaperStep.answers[0]; // only one question per step for now
-                if (prevAnswer && prevAnswer.choices && prevAnswer.choices.length > 0) {
+                var prevAnswer = this.currentQuestionPaperData.answer; // only one question per step for now
+                if (prevAnswer && prevAnswer.length > 0) {
                     for (var i = 0; i < this.question.choices.length; i++) {
                         // if an anwser exist with the choice id set checkbox answer model to true
-                        if (this.answerExists(prevAnswer, this.question.choices[i].id)) {
+                        if (this.answerExists(prevAnswer, this.question.choices[i].id, isMultiple)) {
                             if (isMultiple) {
                                 this.multipleChoice[this.question.choices[i].id] = true;
                             }
@@ -104,15 +116,22 @@
 
             /**
              * method used by check choices function
+             * for each question we check if the answer has been given
              * search an anwser in array
-             * @param {type} prevAnswer
-             * @param {type} search_id
+             * @param {array} prevAnswer collection of questions id
+             * @param {type} searched question id
+             * @param {bool} is mutliple choice ?
              * @returns {Boolean}
              */
-            this.answerExists = function (prevAnswer, search_id) {
-                for (var i = 0; i < prevAnswer.choices.length; i++) {
-                    if (prevAnswer.choices[i] === search_id) {
-                        return true;
+            this.answerExists = function (prevAnswer, searched, isMultiple) {
+                if (isMultiple) {
+                    return prevAnswer[0][searched];
+                }
+                else {
+                    for (var j = 0; j < prevAnswer.length; j++) {
+                        if (prevAnswer[j] === searched) {
+                            return true;
+                        }
                     }
                 }
                 return false;
@@ -142,8 +161,8 @@
              */
             this.updateStudentData = function () {
                 var answer = this.question.multiple ? this.multipleChoice : this.uniqueChoice;
-                this.currentPaperStep.answers[0].choices = answer;
-                CommonService.setStudentData(this.question, this.currentPaperStep);
+                this.currentQuestionPaperData.answer[0] = answer;
+                CommonService.setStudentData(this.question, this.currentQuestionPaperData);
             };
         }
     ]);
