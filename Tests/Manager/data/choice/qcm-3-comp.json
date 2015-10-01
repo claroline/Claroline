@@ -1,0 +1,41 @@
+{
+  "id": "1",
+  "type": "application/x.choice+json",
+  "title": "Question ?",
+  "choices": [
+    {
+      "id": "1",
+      "type": "text/html",
+      "data": "True"
+    },
+    {
+      "id": "2",
+      "type": "text/html",
+      "data": "False"
+    }
+  ],
+  "random": false,
+  "multiple": false,
+  "solutions": [
+    {
+      "id": "1",
+      "score": 0
+    },
+    {
+      "id": "2",
+      "score": 1.5
+    }
+  ],
+  "hints": [
+    {
+      "id": "1",
+      "text": "Hint 1",
+      "penalty": 0.5
+    },
+    {
+      "id": "2",
+      "text": "Hint 2",
+      "penalty": 1.5
+    }
+  ]
+}

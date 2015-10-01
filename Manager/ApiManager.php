@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Choice;
 use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Entity\Hint;
 use UJM\ExoBundle\Entity\InteractionQCM;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Transfer\Json\ValidationException;
@@ -241,6 +242,10 @@ class ApiManager
             foreach ($data->solutions as $solution) {
                 if ($solution->id === $data->choices[$i]->id) {
                     $choice->setWeight($solution->score);
+
+                    if (isset($solution->feedback)) {
+                        $choice->setFeedback($solution->feedback);
+                    }
                 }
             }
 
@@ -249,6 +254,15 @@ class ApiManager
             $this->om->persist($choice);
         }
 
+        if (isset($data->hints)) {
+            foreach ($data->hints as $hintData) {
+                $hint = new Hint();
+                $hint->setValue($hintData->text);
+                $hint->setPenalty($hintData->penalty);
+                $question->addHint($hint);
+                $this->om->persist($hint);
+            }
+        }
 
         $subTypeCode = $data->multiple ? 1 : 2;
         $subType = $this->om->getRepository('UJMExoBundle:TypeQCM')
@@ -260,6 +274,14 @@ class ApiManager
         $this->om->persist($question);
     }
 
+    /**
+     * @todo Handle scoreRightResponse, scoreFalseResponse (must be kept) ?
+     * @todo Handle positionForce (spec change) ?
+     *
+     * @param Question  $question
+     * @param bool      $withSolution
+     * @return \stdClass
+     */
     private function exportQcm(Question $question, $withSolution = true)
     {
         $qcm = $this->interactionQcmRepo->findOneBy(['question' => $question]);
@@ -272,7 +294,7 @@ class ApiManager
         $data->random = $qcm->getShuffle();
         $data->choices = array_map(function ($choice) {
             $choiceData = new \stdClass();
-            $choiceData->id = $choice->getId();
+            $choiceData->id = (string) $choice->getId();
             $choiceData->type = 'text/html';
             $choiceData->data = $choice->getLabel();
 
@@ -282,11 +304,29 @@ class ApiManager
         if ($withSolution) {
             $data->solutions = array_map(function ($choice) {
                 $solutionData = new \stdClass();
-                $solutionData->id = $choice->getId();
+                $solutionData->id = (string) $choice->getId();
                 $solutionData->score = $choice->getWeight();
+
+                if ($choice->getFeedback()) {
+                    $solutionData->feedback = $choice->getFeedback();
+                }
 
                 return $solutionData;
             }, $choices);
+        }
+
+        if (count($question->getHints()) > 0) {
+            $data->hints = array_map(function ($hint) use ($withSolution) {
+                $hintData = new \stdClass();
+                $hintData->id = (string) $hint->getId();
+                $hintData->penalty = $hint->getPenalty();
+
+                if ($withSolution) {
+                    $hintData->text = $hint->getValue();
+                }
+
+                return $hintData;
+            }, $question->getHints()->toArray());
         }
 
         return $data;

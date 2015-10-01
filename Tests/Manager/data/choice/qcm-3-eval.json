@@ -1,0 +1,29 @@
+{
+  "id": "1",
+  "type": "application/x.choice+json",
+  "title": "Question ?",
+  "choices": [
+    {
+      "id": "1",
+      "type": "text/html",
+      "data": "True"
+    },
+    {
+      "id": "2",
+      "type": "text/html",
+      "data": "False"
+    }
+  ],
+  "random": false,
+  "multiple": false,
+  "hints": [
+    {
+      "id": "1",
+      "penalty": 0.5
+    },
+    {
+      "id": "2",
+      "penalty": 1.5
+    }
+  ]
+}
