@@ -15,29 +15,27 @@
                  data-resource-name="{{ node.getName() }}"
                     >
             </div>
-            {% if not is_path_mode  %}
-                <ul class="breadcrumb">
-                    <li><a href="{{ path('claro_workspace_list') }}"><i class="fa fa-book"></i> {{ 'workspaces'|trans({}, 'platform') }}</a></li>
-                    <li>
-                        {% set workspace = node.getWorkspace() %}
-                        <a href="{{ path('claro_workspace_open_tool', {'toolName': 'home', 'workspaceId': workspace.getId() }) }}">
-                            {{ workspace.getName() ~ ' (' ~ workspace.getCode() ~ ') ' }}
-                        </a>
-                    </li>
-                    {% render(controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
-                    {'node': node, '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}))
-                    %}
-                    {% block resourceBreadcrumb %}
-                        <li class="active">{{ 'comments'|trans({}, 'icap_socialmedia') }}: {{ node.getName() }}</li>
-                    {% endblock %}
-                </ul>
-            {% endif %}
+            <ul class="breadcrumb">
+                <li><a href="{{ path('claro_workspace_list') }}"><i class="fa fa-book"></i> {{ 'workspaces'|trans({}, 'platform') }}</a></li>
+                <li>
+                    {% set workspace = node.getWorkspace() %}
+                    <a href="{{ path('claro_workspace_open_tool', {'toolName': 'home', 'workspaceId': workspace.getId() }) }}">
+                        {{ workspace.getName() ~ ' (' ~ workspace.getCode() ~ ') ' }}
+                    </a>
+                </li>
+                {% render(controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
+                {'node': node, '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}))
+                %}
+                {% block resourceBreadcrumb %}
+                    <li class="active">{{ 'comments'|trans({}, 'icap_socialmedia') }}: {{ node.getName() }}</li>
+                {% endblock %}
+            </ul>
         {% endif %}
     </div>
 {% endblock %}
 {% block leftbar %}
     {% set workspace = node.getWorkspace() %}
-    {% if not is_path_mode and workspace is defined %}
+    {% if workspace is defined %}
         {% if is_granted('OPEN', workspace) %}
             {% render(controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspace': workspace, '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})) %}
         {% endif %}
