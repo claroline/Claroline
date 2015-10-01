@@ -68,7 +68,7 @@
             </div>
         </div>
 
-        {% if not is_path_mode and not has_role('ROLE_USURPATE_WORKSPACE_ROLE') %}
+        {% if not has_role('ROLE_USURPATE_WORKSPACE_ROLE') %}
             {% block topBarRender %}
             {% if workspace is defined %}
                 {% render(controller('ClarolineCoreBundle:Layout:topBar', {'workspaceId': workspace.id})) %}
@@ -99,10 +99,8 @@
         <div id="push"></div>
         {% endblock %}
     </div>
-   {% block footer %}
-        {% if not is_path_mode %}
-            {% render(controller('ClarolineCoreBundle:Layout:footer')) %}
-        {% endif %}
+    {% block footer %}
+        {% render(controller('ClarolineCoreBundle:Layout:footer')) %}
     {% endblock%}
 {% endblock %}
 
