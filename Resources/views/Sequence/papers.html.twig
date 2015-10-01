@@ -1,0 +1,30 @@
+{% extends "UJMExoBundle:Sequence:layout.html.twig" %}
+
+
+
+{% block breadcrumb %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %} 
+    <div class="ujm-papers-container" data-ng-app="PapersApp" data-ng-cloak="">
+        <h3>Paper list</h3>
+    </div>
+{% endblock %}
+
+
+{% block javascripts %}
+    {# Load Claroline JS #}
+    {{ parent() }}
+
+    {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm_papers.js'
+        
+        '@UJMExoBundle/Resources/public/js/sequence/Common/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Common/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/sequence/papers.module.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+{% endblock %}

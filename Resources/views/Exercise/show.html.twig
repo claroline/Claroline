@@ -258,6 +258,9 @@
                     {% endif %}
                 {% endif %}
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <a class="btn btn-primary" href="{{ path('ujm_exercice_papers', { id: exercise.id }) }}">
+                        <i class="fa fa-list"></i> Résultats Angularised
+                    </a>
                     <a class="btn btn-primary" href="{{ path('ujm_paper_list', { exoID: exercise.id }) }}">
                         <i class="fa fa-list"></i> {{ 'result' | trans({}, 'ujm_exo') }}
                     </a>

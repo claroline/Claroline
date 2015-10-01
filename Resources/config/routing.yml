@@ -53,7 +53,12 @@ all_qti:
 sequence:
     resource: "@UJMExoBundle/Controller/Sequence/SequenceController.php"
     type: annotation
-    prefix: /    
+    prefix: /
+    
+sequence_correction:
+    resource: "@UJMExoBundle/Controller/Sequence/CorrectionController.php"
+    type: annotation
+    prefix: /papers
   
 
 ujm_exercise:
