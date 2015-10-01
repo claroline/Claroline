@@ -9,11 +9,18 @@
             <span>{{ 'primary_resource'|trans:{}:'path_wizards' }}</span>
         </h4>
 
-        <btn-resource-picker data-parameters="resourcesPrimaryEditCtrl.resourcePicker" class="btn btn-sm btn-primary">
-            <span class="fa fa-plus"></span>
-            <span data-ng-show="!resourcesPrimaryEditCtrl.resources || resourcesPrimaryEditCtrl.resources.length == 0">{{ 'resource_primary_add'|trans:{}:'path_wizards' }}</span>
-            <span data-ng-show="resourcesPrimaryEditCtrl.resources && resourcesPrimaryEditCtrl.resources.length != 0">{{  'resource_primary_replace'|trans:{}:'path_wizards' }}</span>
-        </btn-resource-picker>
+        <div class="btns">
+            <btn-resource-picker data-parameters="resourcesPrimaryEditCtrl.resourcePicker" class="btn btn-sm btn-primary">
+                <span class="fa fa-plus"></span>
+                <span data-ng-show="!resourcesPrimaryEditCtrl.resources || resourcesPrimaryEditCtrl.resources.length == 0">{{ 'resource_primary_add'|trans:{}:'path_wizards' }}</span>
+                <span data-ng-show="resourcesPrimaryEditCtrl.resources && resourcesPrimaryEditCtrl.resources.length != 0">{{  'resource_primary_replace'|trans:{}:'path_wizards' }}</span>
+            </btn-resource-picker>
+
+            <button type="button" role="button" class="btn btn-sm btn-danger" data-ng-if="resourcesPrimaryEditCtrl.resources.length != 0" data-ng-click="resourcesPrimaryEditCtrl.removeResource(resourcesPrimaryEditCtrl.resources[0])">
+                <span class="fa fa-trash-o"></span>
+                {{ 'resource_primary_delete'|trans:{}:'path_wizards' }}
+            </button>
+        </div>
     </div>
 
     <div class="panel-body" data-ng-show="!resourcesPrimaryEditCtrl.collapsed">
@@ -27,8 +34,8 @@
             </div>
             <div style="display:inline-block; vertical-align: middle;">
                 <p class="h4">{{ resourcesPrimaryEditCtrl.resources[0].name }}</p>
-                <button type="button" role="button" class="btn btn-xs btn-danger" data-ng-click="resourcesPrimaryEditCtrl.removeResource(resourcesPrimaryEditCtrl.resources[0])">
-                    <span class="fa fa-trash-o"></span> {{ 'resource_delete'|trans:{}:'path_wizards' }}
+                <button type="button" role="button" class="btn btn-default" data-ng-click="resourcesPrimaryEditCtrl.showResource(resourcesPrimaryEditCtrl.resources[0])">
+                    <span class="fa fa-fw fa-sign-out"></span> {{ 'resource_show'|trans:{}:'path_wizards' }}
                 </button>
             </div>
         </div>

@@ -70,6 +70,7 @@ step_delete_title: <span class="trash-o"></span> Delete step : <strong>&lt;%reso
 resource_hide_parent: Hide in this step
 resource_no_propagate : Make unavailable in children
 resource_primary_add: Add resource
+resource_primary_delete: Delete
 resource_primary_replace: Replace
 resource_propagate : Make available in children
 resource_secondary_add: Secondary resource
