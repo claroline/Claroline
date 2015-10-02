@@ -3,6 +3,7 @@
 namespace Icap\BadgeBundle\Factory\Portfolio;
 
 use Icap\BadgeBundle\Entity\Portfolio\BadgesWidget;
+use Icap\PortfolioBundle\Entity\Widget\WidgetType;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -38,5 +39,16 @@ class WidgetFactory
             ->setLabel($this->translator->trans($widgetType . '_title', array(), 'icap_portfolio'));
 
         return $badgesWidget;
+    }
+
+    /**
+     * @return WidgetType
+     */
+    public function createBadgeWidgetType()
+    {
+        $widgetType = new WidgetType();
+        return $widgetType
+            ->setName('badges')
+            ->setIcon('trophy');
     }
 }

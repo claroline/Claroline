@@ -14,7 +14,8 @@ class AdditionalInstaller extends BaseInstaller
 
     public function postInstall()
     {
-        $updater = new Updater\MigrationUpdater($this->container->get('database_connection'), $this->container->get('doctrine.orm.entity_manager'));
+        $updater = new Updater\MigrationUpdater($this->container->get('database_connection'),
+            $this->container->get('doctrine.orm.entity_manager'), $this->container->get('icap_badge.factory.portfolio_widget'));
         $updater->setLogger($this->logger);
         $updater->postInstall();
 

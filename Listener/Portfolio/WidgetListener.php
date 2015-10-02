@@ -6,6 +6,7 @@ use Icap\BadgeBundle\Factory\Portfolio\WidgetFactory;
 use Icap\PortfolioBundle\Event\WidgetDataEvent;
 use Icap\PortfolioBundle\Event\WidgetFormEvent;
 use Icap\PortfolioBundle\Event\WidgetFormViewEvent;
+use Icap\PortfolioBundle\Event\WidgetTypeCreateEvent;
 use Icap\PortfolioBundle\Event\WidgetViewEvent;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -83,5 +84,15 @@ class WidgetListener
     public function onWidgetForm(WidgetFormEvent $widgetFormEvent)
     {
         $widgetFormEvent->setForm($this->formFactory->create('icap_badge_portfolio_widget_form_' . $widgetFormEvent->getWidgetType(), $widgetFormEvent->getData()));
+    }
+
+    /**
+     * @param WidgetTypeCreateEvent $widgetTypeCreateEvent
+     *
+     * @DI\Observe("icap_portfolio_widget_type_create")
+     */
+    public function onWidgetTypeCreate(WidgetTypeCreateEvent $widgetTypeCreateEvent)
+    {
+        $widgetTypeCreateEvent->setWidgetType($this->widgetFactory->createBadgeWidgetType());
     }
 }

@@ -7,28 +7,40 @@ use Doctrine\DBAL\Migrations\Configuration\Configuration;
 use Doctrine\DBAL\Migrations\Version;
 use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\Connection;
+use Icap\BadgeBundle\Factory\Portfolio\WidgetFactory;
 
 class MigrationUpdater extends Updater
 {
     /**
      * @var Connection
      */
-    private $connection;
+    protected $connection;
 
     /**
      * @var EntityManager
      */
-    private $entityManager;
+    protected $entityManager;
 
     /**
      * @var \Claroline\CoreBundle\Entity\Plugin
      */
-    private $badgePlugin;
+    protected $badgePlugin;
 
-    public function __construct(Connection $connection, EntityManager $entityManager)
+    /**
+     * @var WidgetFactory
+     */
+    protected $widgetFactory;
+
+    /**
+     * @param Connection    $connection
+     * @param EntityManager $entityManager
+     * @param WidgetFactory $widgetFactory
+     */
+    public function __construct(Connection $connection, EntityManager $entityManager, WidgetFactory $widgetFactory)
     {
         $this->connection = $connection;
         $this->entityManager = $entityManager;
+        $this->widgetFactory = $widgetFactory;
     }
 
     public function preInstall()
@@ -189,12 +201,7 @@ class MigrationUpdater extends Updater
                 ->getOneOrNullResult();
 
             if (null === $badgeWidgetType) {
-                $widgetType = new \Icap\PortfolioBundle\Entity\Widget\WidgetType();
-                $widgetType
-                    ->setName('badges')
-                    ->setIcon('trophy');
-
-                $this->entityManager->persist($widgetType);
+                $this->entityManager->persist($this->widgetFactory->createBadgeWidgetType());
                 $this->log("Badge widget type created for portfolio.");
             }
         }
