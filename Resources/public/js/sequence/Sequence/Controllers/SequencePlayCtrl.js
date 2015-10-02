@@ -13,6 +13,8 @@
             this.nbAttempts = 1;
             this.isLastStep = false;
             this.isFirstStep = true;
+            this.paper = {};
+            this.isFinished = false;
 
             /**
              * Init the sequence
@@ -23,8 +25,8 @@
              */
             this.init = function (sequence, steps, paper, nbAttempts) {
                 // need to set the sequence and paper in CommonService so that other directives can retrieve the info
-                this.sequence = CommonService.setSequence(sequence);                
-                CommonService.setPaper(paper);
+                this.sequence = CommonService.setSequence(sequence);
+                this.paper = CommonService.setPaper(paper);
                 this.steps = steps;
                 this.nbAttempts = nbAttempts;
                 this.setCurrentStep(0);
@@ -53,13 +55,13 @@
                     console.log('set current step error');
                 }
             };
-            
+
             /**
              * set the data for current step
              * @param {type} index
              * @returns {undefined}
              */
-            this.setCurrentPaperData = function (index){                
+            this.setCurrentPaperData = function (index) {
                 CommonService.setCurrentPaperStep(index);
             };
 
@@ -80,7 +82,9 @@
              * When using the drop down to jump to a specific step
              */
             this.goTo = function (step) {
-                this.validateStep('goto', this.steps.indexOf(step));
+                if (this.steps.indexOf(step) !== this.steps.indexOf(this.currentStep)) {
+                    this.validateStep('goto', this.steps.indexOf(step));
+                }
             };
 
             /**
@@ -94,20 +98,26 @@
                 $('.tooltip').each(function () {
                     $(this).hide();
                 });
+                // data set by question directive
+                var studentData = CommonService.getStudentData();
                 // get current step index
                 var currentStepIndex = this.steps.indexOf(this.currentStep);
                 var newIndex = 0;
                 if (action && (action === 'forward' || action === 'backward')) {
                     newIndex = action === 'forward' ? currentStepIndex + 1 : currentStepIndex - 1;
-                    this.saveAnswerAndGotTo(newIndex);
-                } else if (action && action === 'goto' && index) {
+                    this.saveAnswerAndGotTo(newIndex, studentData);
+                } else if (action && action === 'goto' && index !== undefined) {
                     newIndex = index;
-                    this.saveAnswerAndGotTo(newIndex);
+                    this.saveAnswerAndGotTo(newIndex, studentData);
                 } else if (action && action === 'end') {
-                    console.log('you reached the end of the exercise you will be redirected to paper list page');                   
-                    // MAYBE SAVE THE ENTIRE PAPER -> the php controller method should take care of redirection
-                    var url = CommonService.generateUrl('exercise-home');
-                    $window.location.href = url;
+                    console.log('you reached the end of the exercise you will be redirected to paper correction page');
+                    // save the paper and redirect to paper details (correction)
+                    var promise = SequenceService.endSequence(this.sequence.id, studentData.paper);
+                    promise.then(function (result) {
+                        this.isFinished = true;
+                    }.bind(this), function (error) {
+                        console.log('error');
+                    }.bind(this));
                 } else {
                     console.log('validate step error');
                 }
@@ -117,9 +127,7 @@
              * Saves the anwser in DB and change step
              * @param {type} nextStepIndex
              */
-            this.saveAnswerAndGotTo = function (nextStepIndex) {
-                // data set by question directive
-                var studentData = CommonService.getStudentData();
+            this.saveAnswerAndGotTo = function (nextStepIndex, studentData) {
                 // save answer only or whole paper ??
                 var promise = SequenceService.recordAnswer(this.sequence.id, studentData);
                 promise.then(function (result) {
@@ -127,8 +135,8 @@
                         // result.data.id = recorded answer id ??? but do we need this ? any answer id can be retrieved by ujm_response.paper_id + ujm_response.question_id
                         // change current step
                         this.setCurrentStep(nextStepIndex);
-                        // update paper question
-                        CommonService.getCurrentQuestionPaperData(this.currentStep.items[0].id);
+                        // update paper question = this.currentStep.items[0]
+                        CommonService.getCurrentQuestionPaperData(this.currentStep.items[0]);
                     }
 
                 }.bind(this), function (error) {

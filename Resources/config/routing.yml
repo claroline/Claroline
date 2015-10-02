@@ -59,7 +59,7 @@ sequence:
 sequence_correction:
     resource: "@UJMExoBundle/Controller/Sequence/CorrectionController.php"
     type: annotation
-    prefix: /papers
+    prefix: /
   
 
 ujm_exercise:

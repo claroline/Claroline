@@ -14,16 +14,10 @@
             this.usedHints = [];// contains full hints object(s) for display
 
             this.init = function (question) {
-                // get used hints infos (id + content) + checked answer(s) for the question
-                // those data have to be updated by view and sent to common service as soon as they change
-                this.currentQuestionPaperData = CommonService.getCurrentQuestionPaperData(question.id);
-                console.log('choice question ctrl this.currentQuestionPaperData');
-                console.log(this.currentQuestionPaperData);
+                // get used hints infos (id + content) + checked answer(s) for the current step / question
+                // those data are updated by view and sent to common service as soon as they change
+                this.currentQuestionPaperData = CommonService.getCurrentQuestionPaperData(question);
                 this.question = question;
-                var meta = CommonService.getSequenceMeta();
-                if (meta.random) {
-                    CommonService.shuffleArray(this.question.choices);
-                }
 
                 if (this.currentQuestionPaperData.hints.length > 0) {
                     // init used hints display
@@ -31,6 +25,7 @@
                         this.getHintData(this.currentQuestionPaperData.hints[i]);
                     }
                 }
+                //this.checkChoices(this.question.multiple);
                 if (this.currentQuestionPaperData.answer.length > 0) {
                     // init previously given answer
                     this.checkChoices(this.question.multiple);
@@ -124,6 +119,8 @@
              * @returns {Boolean}
              */
             this.answerExists = function (prevAnswer, searched, isMultiple) {
+                console.log('prev answer');
+                console.log(prevAnswer);
                 if (isMultiple) {
                     return prevAnswer[0][searched];
                 }
@@ -160,8 +157,7 @@
              * For that purpose we use a shared service
              */
             this.updateStudentData = function () {
-                var answer = this.question.multiple ? this.multipleChoice : this.uniqueChoice;
-                this.currentQuestionPaperData.answer[0] = answer;
+                this.currentQuestionPaperData.answer[0] = this.question.multiple ? this.multipleChoice : this.uniqueChoice;
                 CommonService.setStudentData(this.question, this.currentQuestionPaperData);
             };
         }

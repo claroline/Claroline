@@ -1,0 +1,28 @@
+<div class="row">
+    <div class="col-md-12">
+        <!-- links row (accueil, liste copies, retry) -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="btn-group" role="group">
+                    <a class="btn btn-default" data-ng-href="{{paperCtrl.generateUrl('exercise-home')}}">Accueil de l'exercice</a>
+                    <a class="btn btn-default" href="#">Liste des copies</a>
+                    <a class="btn btn-default" data-ng-href="{{paperCtrl.generateUrl('exercise-play')}}">Recommencer</a>
+                </div>
+            </div>
+        </div>
+        <hr/>
+        <!-- Note row -->
+        <div class="row">
+            <div class="col-md-12">
+                <span>Note : </span> <span> <strong>{{paperCtrl.note}} / 20 </strong></span>
+            </div>
+        </div>
+        <hr/>
+        <!-- question list row -->
+        <div class="row" >
+           {{paperCtrl.paper}}
+        </div>
+    </div>
+</div>
+        
+

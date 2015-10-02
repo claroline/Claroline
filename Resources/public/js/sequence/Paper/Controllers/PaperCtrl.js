@@ -1,24 +1,24 @@
 (function () {
     'use strict';
 
-    angular.module('Correction').controller('CorrectionCtrl', [
+    angular.module('Paper').controller('PaperCtrl', [
         'CommonService',
         function (CommonService) {
             this.currentQuestion = {};
             this.currentAnswer = {};
-            this.answers = {};
+            this.paper = {};
             this.sequence = {};
             this.isCollapsed = false;
             this.note = 0;
 
-            this.init = function (sequence, answers) {
-                this.answers = answers;
+            this.init = function (sequence, paper) {
+                this.paper = paper;
                 this.sequence = sequence;
-                console.log('answers');
-                console.log(this.answers);
+                console.log('paper');
+                console.log(this.paper);
                 console.log('sequence');
                 console.log(this.sequence);
-                this.note = this.setNote();
+                //this.note = this.setNote();
             };
 
             /**

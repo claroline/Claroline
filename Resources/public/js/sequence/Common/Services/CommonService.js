@@ -68,16 +68,17 @@
                  * @param {type} id question id
                  * @returns {object}
                  */
-                getCurrentQuestionPaperData : function (id){                    
+                getCurrentQuestionPaperData : function (question){  
+                    // search for an existing answer to the question in paper
                     for(var i = 0; i < this.paper.questions.length; i++){
-                        if(this.paper.questions[i].id === id){
+                        if(this.paper.questions[i].id === question.id){
                             this.currentQuestionPaperData = this.paper.questions[i];
                             return this.currentQuestionPaperData;
                         }
                     }
                     // if no info found, initiate object
                     this.currentQuestionPaperData = {
-                        id:id,
+                        id:question.id,
                         answer: [],
                         hints:[]
                     };

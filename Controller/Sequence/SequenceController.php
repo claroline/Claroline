@@ -66,7 +66,7 @@ class SequenceController extends Controller
         $data = json_encode($exo);
         
         $previousPaper = array(
-            "id" => "2",
+            "id" => "23",
             "questions" => array(
                 array(
                     "id" => "7",
@@ -77,7 +77,7 @@ class SequenceController extends Controller
         );
         
         $newPaper = array(
-            "id" => "2",
+            "id" => "28",
             "questions" => array()
         );
         
@@ -148,9 +148,9 @@ class SequenceController extends Controller
     {
         $sequenceManager = $this->get('ujm.exo.sequence_manager');
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
-        // get answer data
+        // get answer data (question id should be in it so maybe no need to give the question object to the method)
         $data = $request->get('data');
-        $response = $sequenceManager->saveProgression($user, $exercise, $question, $data);
+        $response = $sequenceManager->saveProgression($exercise, $question, $data);
         return new JsonResponse($response);
     }
 
@@ -158,15 +158,13 @@ class SequenceController extends Controller
      * @Route("/end/{id}", requirements={"id" = "\d+"}, name="ujm_sequence_end", options={"expose"=true})
      * @Method("PUT")
      */
-    public function endSequence(Exercise $exercise)
+    public function endSequence(Exercise $exercise, Request $request)
     {
         $sequenceManager = $this->get('ujm.exo.sequence_manager');
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
-        $response = $sequenceManager->endSequence($user, $exercise);
-
-        // if response[message] === success
-
-        return $this->redirect($this->generateUrl('ujm_exercise_open', array('id' => $exercise->getId())));
+        // get paper data (Array)
+        $paper = $request->get('paper');
+        $response = $sequenceManager->endSequence($exercise, $paper);
+        return new JsonResponse($response);
     }
 
     private function getExercise($metaNb, $type)
@@ -180,7 +178,7 @@ class SequenceController extends Controller
         $webImg3 = 'http://www.fubiz.net/wp-content/uploads/2012/07/You-are-not-Banksy17.jpg';
         $pdfSyllabus = 'http://www.cie.org.uk/images/128363-2015-syllabus.pdf';
 
-        $id = 1;
+        $id = "9";
 
         if ($metaNb === 1) {
             $meta = array(
