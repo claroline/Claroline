@@ -79,11 +79,10 @@ class ForumRepository extends EntityRepository
     {
         $dql = "
             SELECT c.id as id,
-            count(m) as count_messages,
+            count(s) as count_subjects,
             c.name as name
             FROM Claroline\ForumBundle\Entity\Category c
             LEFT JOIN c.subjects s
-            LEFT JOIN s.messages m
             JOIN c.forum forum
             WHERE forum.id = :forumId
             GROUP BY c

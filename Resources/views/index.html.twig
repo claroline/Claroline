@@ -35,6 +35,10 @@
                             {% endif %}
                         {% endif %}
                     {% endif %}
+                    {% render controller(
+                        'IcapNotificationBundle:FollowerResource:renderForm',
+                        {'resourceId': _resource.resourceNode.id, 'resourceClass': _resource.resourceNode.class}
+                    ) %}
                 </div>
                 <div class="col-md-4">
                      <div class="input-group">
@@ -67,7 +71,7 @@
                             {{ 'activate_global_notifications'|trans({}, 'forum') }}
                         </a>
                     {% endif %}
-            
+
                     {% if hasSubscribed %}
                         <a class="btn btn-primary" href="{{ path('claro_forum_unsubscribe', {'forum': _resource.getId()}) }}">
                             {{ 'unsubscribe_mail_list'|trans({}, 'forum') }}
@@ -86,7 +90,7 @@
                 <thead>
                     <tr>
                         <th>{{ 'category'|trans({}, 'forum') }}</th>
-                        <th>{{ 'messages'|trans({}, 'forum') }} </th>
+                        <th>{{ 'subjects'|trans({}, 'forum') }} </th>
                         <th>{{ 'last_message'|trans({}, 'forum') }}</th>
                         {% if isModerator %}
                             <th></th>
@@ -109,7 +113,7 @@
                            {% endif %}
                             <br>
                         <td>
-                            {{ category['count_messages'] }}
+                            {{ category['count_subjects'] }}
                         </td>
                         <td>
                             {{ category['last_message_author'] }}

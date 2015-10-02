@@ -137,7 +137,7 @@
         </table>
         <div>
             {{ renderPager(subject.getId(), pager, max) }}
-            
+
             {% if canPost %}
                 <btn id='fast-reply-btn' class='btn btn-primary pull-right'>{{ 'fast_reply'|trans({}, 'forum')}}</btn>
             {% endif %}
@@ -148,7 +148,8 @@
             <div>
             {% if not subject.isClosed() %}
                 <textarea class="forum-answer claroline-tiny-mce hide"></textarea>
-                {{ form_widget(form._token) }}
+                {# something may be wrong here because _token doesn't always exists #}
+                {% if form._token is defined %} {{ form_widget(form._token) }} {% endif %}
             {% endif %}
             </div>
         {% endif %}
@@ -182,7 +183,7 @@
             });
         })();
     </script>
-    
+
     {% if canPost %}
         <script>
             (function () {
@@ -216,7 +217,7 @@
             })();
         </script>
     {% endif %}
-        
+
     {% if isModerator %}
         <script>
             function createValidationBox() {
@@ -249,7 +250,7 @@
             });
         </script>
     {% endif %}
-        
+
     {% if canPost %}
         <script>
             (function () {
