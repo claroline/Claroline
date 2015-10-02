@@ -52,53 +52,36 @@ class SequenceController extends Controller
         //          - step order
         //      - new paper if no unfinished paper
         
-        
+        /*
         $apiManager = $this->get('ujm.exo.api_manager');
         $exo = $apiManager->exportExercise($exercise);
         $steps = json_encode($exo['steps']); // get step order if previous paper
         $data = json_encode($exo);
-          
-        /*
+          */ 
+        
         // FAKE Data for development!!
         $exo = $this->getExercise(2, "choice");
         // to do : if question.randomize = true edit questions (steps) order
         $steps = json_encode($exo['steps']);
         $data = json_encode($exo);
-         */
-
+        
         $previousPaper = array(
-            'id' => '2',
-            'steps' => array(
+            "id" => "2",
+            "questions" => array(
                 array(
-                    'id' => '1',
-                    'answers' => array(
-                        array(
-                            'answer_id' => '7',
-                            'question_id' => '1',
-                            'choices' => ['1']
-                        )
-                    ),
-                    'hints' => [
-                        array(
-                            'id' => "12", 
-                            'penalty' => 1.5,
-                            'text' => "I'm hint number 12"
-                        )
-                    ]
-                ),
-                array(
-                    'id' => '7',
-                    'answers' => '',
-                    'hints' => ''
+                    "id" => "7",
+                    "answer" => ["1"],                    
+                    "hints" => ["12"]
                 )
             )
-        ); // previous or new
-        // should contain step order, questions per step, hints used per question, anwser given per question
-        $paper = json_encode($previousPaper);
-
-
-
-       
+        );
+        
+        $newPaper = array(
+            "id" => "2",
+            "questions" => array()
+        );
+        
+        $paper = json_encode($previousPaper);       
 
         return $this->render('UJMExoBundle:Sequence:play.html.twig', array(
                     '_resource' => $exercise,
@@ -128,7 +111,7 @@ class SequenceController extends Controller
             array(
                 "id" => "12",
                 "penalty" => 1.5,
-                "text" => "I'm hint number 27"
+                "text" => "I'm hint number 12"
             ),
             array(
                 "id" => "54",
@@ -500,7 +483,7 @@ class SequenceController extends Controller
                 ),
                 "items" => array(
                     array(
-                        "id" => "7",
+                        "id" => "8",
                         "type" => "application/x.choice+json",
                         "title" => "Another simple question for dummies...",
                         "label" => "What is my prefered color ?",

@@ -7,19 +7,18 @@
         '$http',
         '$filter',
         '$q',
-        function StepService($http, $filter, $q) {
+        function CommonService($http, $filter, $q) {
 
             this.sequence = {};
             this.paper = {};
             this.currentQuestion = {};
             this.currentAnswer = {};
-            this.currentPaperStep = {};
-            this.usedHints = [];
+            this.currentQuestionPaperData = {};
 
             return {
                 /**
                  * Set the current sequence
-                 * Used for share data between directives
+                 * Used for sharing data between directives
                  * @param {type} sequence
                  * @returns {undefined}
                  */
@@ -44,15 +43,16 @@
                     return object.meta.licence || object.meta.created || object.meta.modified || (object.meta.description && object.meta.description !== '');
                 },
                 // set / update the student data
-                setStudentData: function (question, paperStep) {
+                setStudentData: function (question, currentQuestionPaperData) {
                     this.currentQuestion = question;
-                    // this will automatically update the paper
-                    this.currentPaperStep = paperStep;
+                    // this will automatically update the paper object
+                    this.currentQuestionPaperData = currentQuestionPaperData;
+                    console.log('common service paper');
+                    console.log(this.paper);
                 },
                 getStudentData: function () {
                     return{                        
                         question: this.currentQuestion,
-                        paperStep: this.currentPaperStep,
                         paper: this.paper
                     };
                 },
@@ -63,12 +63,34 @@
                 getPaper: function () {
                     return this.paper;
                 },
-                setCurrentPaperStep: function (index) {
-                    this.currentPaperStep = this.paper.steps[index];
-                    return this.currentPaperStep;
+                /**
+                 * return paper anwser(s) and used hints for the current question
+                 * @param {type} id question id
+                 * @returns {object}
+                 */
+                getCurrentQuestionPaperData : function (id){                    
+                    for(var i = 0; i < this.paper.questions.length; i++){
+                        if(this.paper.questions[i].id === id){
+                            this.currentQuestionPaperData = this.paper.questions[i];
+                            return this.currentQuestionPaperData;
+                        }
+                    }
+                    // if no info found, initiate object
+                    this.currentQuestionPaperData = {
+                        id:id,
+                        answer: [],
+                        hints:[]
+                    };
+                    this.paper.questions.push(this.currentQuestionPaperData);
+                    return this.currentQuestionPaperData;
                 },
-                getCurrentPaperStep: function () {
-                    return this.currentPaperStep;
+                /**
+                 * Checks if a question is already in currentQuestionPaperData
+                 * if not add it
+                 * @param {object} question
+                 */
+                addCurrentQuestionToPaper : function(question){
+                    
                 },
                 // UTILS METHODS
                 /**

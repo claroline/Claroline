@@ -28,6 +28,7 @@
                 this.steps = steps;
                 this.nbAttempts = nbAttempts;
                 this.setCurrentStep(0);
+                // this.setCurrentPaperData(0);
             };
 
             /**
@@ -48,10 +49,18 @@
                 // check new index is in computable range
                 if (index < this.steps.length && index >= 0) {
                     this.currentStep = this.steps[index];
-                    CommonService.setCurrentPaperStep(index);
                 } else {
                     console.log('set current step error');
                 }
+            };
+            
+            /**
+             * set the data for current step
+             * @param {type} index
+             * @returns {undefined}
+             */
+            this.setCurrentPaperData = function (index){                
+                CommonService.setCurrentPaperStep(index);
             };
 
             this.getCurrentStep = function () {
@@ -119,7 +128,8 @@
                         // change current step
                         this.setCurrentStep(nextStepIndex);
                         // update paper step
-                        CommonService.setCurrentPaperStep(nextStepIndex);
+                        // il faut éventuellement ajouter une question au paper existant si la question n'a pas déjà eu de réponse
+                        CommonService.getCurrentQuestionPaperData(this.currentStep.items[0].id);
                     }
 
                 }.bind(this), function (error) {
