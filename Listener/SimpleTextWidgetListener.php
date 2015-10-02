@@ -130,7 +130,7 @@ class SimpleTextWidgetListener
         foreach ($resourceInfos['copies'] as $resource) {
 
             $type = $resource['original']->getResourceType()->getName();
-            
+
             $content = str_replace(
                 '/file/resource/media/' . $resource['original']->getId(),
                 '/file/resource/media/' . $resource['copy']->getId(),
