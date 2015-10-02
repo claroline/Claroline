@@ -18,13 +18,13 @@
         <h3 class="panel-title">{{ 'forum_category_edit'|trans({}, 'forum') }}</h3>
     </div>
     {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
-    <form novalidate="novalidate" action="{{ _path('claro_forum_edit_category', {'category': category.getId()}) }}" method="post" {{ form_enctype(form) }} id="subject_form">
+    <form novalidate="novalidate" action="{{ path('claro_forum_edit_category', {'category': category.getId()}) }}" method="post" {{ form_enctype(form) }} id="subject_form">
         <div class="panel-body">
             {{ form_widget(form) }}
         </div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-            <a class="btn btn-default" href="{{ _path('claro_forum_categories', { 'forum':  _resource.getId()}) }}">{{ 'cancel' | trans({}, 'platform') }}</a>
+            <a class="btn btn-default" href="{{ path('claro_forum_categories', { 'forum':  _resource.getId()}) }}">{{ 'cancel' | trans({}, 'platform') }}</a>
         </div>
     </form>
 {% endblock %}

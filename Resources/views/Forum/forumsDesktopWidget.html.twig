@@ -41,7 +41,7 @@
                                 <a 
                                     class="link-subject" 
                                     title="{{ message.getSubject().getTitle() }}" 
-                                    href="{{ _path('claro_forum_messages', {'subject': message.getSubject().getId() }) }}">
+                                    href="{{ path('claro_forum_messages', {'subject': message.getSubject().getId() }) }}">
                                     {{ message.getSubject().getTitle() | truncate(80) }}
                                 </a>
                             </li>

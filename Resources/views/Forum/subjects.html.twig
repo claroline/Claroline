@@ -54,7 +54,7 @@
                     <i class="fa fa-chevron-left"></i> {{ 'forum_back_to_categories'|trans({}, 'forum') }}
                 </a>
                 {% if canCreateSubject %}
-                    <a class="btn btn-primary" href="{{ _path('claro_forum_form_subject_creation', {'category': category.getId()}) }}">
+                    <a class="btn btn-primary" href="{{ path('claro_forum_form_subject_creation', {'category': category.getId()}) }}">
                         <i class="fa fa-plus"></i> {{ 'new_subject'|trans({}, 'forum') }}
                     </a>
                 {% endif %}
@@ -113,7 +113,7 @@
                         </td>
                         <td>
                             <a class="link-subject"
-                                href="{{ _path('claro_forum_messages', {'subject': subject['id'] }) }}"
+                                href="{{ path('claro_forum_messages', {'subject': subject['id'] }) }}"
                             >
                                 <b>{{ subject['title'] }}</b>
                             </a>
@@ -173,7 +173,7 @@
                                 {% endif %}
                             </td>
                             <td>
-                                <a id="delete-subject" href="{{ _path('claro_forum_delete_subject', {'subject': subject['id']}) }}">
+                                <a id="delete-subject" href="{{ path('claro_forum_delete_subject', {'subject': subject['id']}) }}">
                                     <i class="fa fa-trash-o"></i> {{ 'delete' | trans({}, 'platform') }}
                                 </a>
                             </td>
