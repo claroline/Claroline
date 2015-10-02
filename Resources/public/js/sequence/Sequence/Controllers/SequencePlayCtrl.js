@@ -104,8 +104,8 @@
                     newIndex = index;
                     this.saveAnswerAndGotTo(newIndex);
                 } else if (action && action === 'end') {
-                    console.log('you reached the end of the exercise you will be redirected to paper list page');
-                    // TODO go to paper list / correction instead of exercise home page
+                    console.log('you reached the end of the exercise you will be redirected to paper list page');                   
+                    // MAYBE SAVE THE ENTIRE PAPER -> the php controller method should take care of redirection
                     var url = CommonService.generateUrl('exercise-home');
                     $window.location.href = url;
                 } else {
@@ -114,7 +114,7 @@
             };
 
             /**
-             * Saves the anwser in DB (or in session ????)
+             * Saves the anwser in DB and change step
              * @param {type} nextStepIndex
              */
             this.saveAnswerAndGotTo = function (nextStepIndex) {
@@ -127,8 +127,7 @@
                         // result.data.id = recorded answer id ??? but do we need this ? any answer id can be retrieved by ujm_response.paper_id + ujm_response.question_id
                         // change current step
                         this.setCurrentStep(nextStepIndex);
-                        // update paper step
-                        // il faut éventuellement ajouter une question au paper existant si la question n'a pas déjà eu de réponse
+                        // update paper question
                         CommonService.getCurrentQuestionPaperData(this.currentStep.items[0].id);
                     }
 
