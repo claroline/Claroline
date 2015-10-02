@@ -85,14 +85,6 @@
                     this.paper.questions.push(this.currentQuestionPaperData);
                     return this.currentQuestionPaperData;
                 },
-                /**
-                 * Checks if a question is already in currentQuestionPaperData
-                 * if not add it
-                 * @param {object} question
-                 */
-                addCurrentQuestionToPaper : function(question){
-                    
-                },
                 // UTILS METHODS
                 /**
                  * @param {object} object a javascript object with type property

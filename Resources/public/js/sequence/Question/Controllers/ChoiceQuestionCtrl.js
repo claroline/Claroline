@@ -9,7 +9,7 @@
             this.question = {};
             // keep choice(s)
             this.multipleChoice = {};
-            this.uniqueChoice = 0;
+            this.uniqueChoice = [];
             this.currentQuestionPaperData = {};
             this.usedHints = [];// contains full hints object(s) for display
 
@@ -17,6 +17,8 @@
                 // get used hints infos (id + content) + checked answer(s) for the current step / question
                 // those data are updated by view and sent to common service as soon as they change
                 this.currentQuestionPaperData = CommonService.getCurrentQuestionPaperData(question);
+                console.log('this.currentQuestionPaperData');
+                console.log(this.currentQuestionPaperData);
                 this.question = question;
 
                 if (this.currentQuestionPaperData.hints.length > 0) {
@@ -98,13 +100,13 @@
                         }
                     }
                 }
-                else {
-                    if (isMultiple) {
-                        for (var j = 0; j < this.question.choices.length; j++) {
-                            this.multipleChoice[this.question.choices[j].id] = false;
-                        }
-                    }
-                }
+                /*else {
+                 if (isMultiple) {
+                 for (var j = 0; j < this.question.choices.length; j++) {
+                 this.multipleChoice[j] = this.question.choices[j].id;
+                 }
+                 }
+                 }*/
                 // send the data to commen service so that other directives can get them
                 this.updateStudentData();
             };
@@ -121,16 +123,13 @@
             this.answerExists = function (prevAnswer, searched, isMultiple) {
                 console.log('prev answer');
                 console.log(prevAnswer);
-                if (isMultiple) {
-                    return prevAnswer[0][searched];
-                }
-                else {
-                    for (var j = 0; j < prevAnswer.length; j++) {
-                        if (prevAnswer[j] === searched) {
-                            return true;
-                        }
+
+                for (var j = 0; j < prevAnswer.length; j++) {
+                    if (prevAnswer[j] === searched) {
+                        return true;
                     }
                 }
+
                 return false;
             };
 
@@ -156,8 +155,23 @@
              * We need to share those informations with parent controllers
              * For that purpose we use a shared service
              */
-            this.updateStudentData = function () {
-                this.currentQuestionPaperData.answer[0] = this.question.multiple ? this.multipleChoice : this.uniqueChoice;
+            this.updateStudentData = function (choiceId) {
+                if (this.question.multiple) {
+                    if (this.multipleChoice[choiceId]) {
+                        this.currentQuestionPaperData.answer.push(choiceId);
+                    }
+                    else {
+                        //usnset from this.currentQuestionPaperData.answer
+                        for(var i = 0; i < this.currentQuestionPaperData.answer.length; i++){
+                            if(this.currentQuestionPaperData.answer[i] === choiceId){
+                                this.currentQuestionPaperData.answer.splice(i, 1);
+                            }
+                        }
+                    }
+                }
+                else {
+                    this.currentQuestionPaperData.answer = this.uniqueChoice;
+                }                
                 CommonService.setStudentData(this.question, this.currentQuestionPaperData);
             };
         }

@@ -30,7 +30,6 @@
                 this.steps = steps;
                 this.nbAttempts = nbAttempts;
                 this.setCurrentStep(0);
-                // this.setCurrentPaperData(0);
             };
 
             /**

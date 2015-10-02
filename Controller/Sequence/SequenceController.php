@@ -76,6 +76,22 @@ class SequenceController extends Controller
             )
         );
         
+        $previousPaper2 = array(
+            "id" => "23",
+            "questions" => array(
+                array(
+                    "id" => "7",
+                    "answer" => ["1"],                    
+                    "hints" => ["12"]
+                ),
+                array(
+                    "id" => "8",
+                    "answer" => ["3", "4"],                    
+                    "hints" => []
+                )
+            )
+        );
+        
         $newPaper = array(
             "id" => "28",
             "questions" => array()
@@ -163,6 +179,7 @@ class SequenceController extends Controller
         $sequenceManager = $this->get('ujm.exo.sequence_manager');
         // get paper data (Array)
         $paper = $request->get('paper');
+        print_r($paper);die;
         $response = $sequenceManager->endSequence($exercise, $paper);
         return new JsonResponse($response);
     }
