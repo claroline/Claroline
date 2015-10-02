@@ -31,7 +31,8 @@ admin_paper:
     prefix:   /admin/paper
 
 admin_question:
-    resource: "routing/admin/question.yml"
+    resource: "@UJMExoBundle/Controller/QuestionController.php"
+    type: annotation
     prefix:   /admin/question
 
 all_exercise:
