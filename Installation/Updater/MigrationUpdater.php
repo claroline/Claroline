@@ -5,44 +5,36 @@ namespace Icap\PortfolioBundle\Installation\Updater;
 use Claroline\InstallationBundle\Updater\Updater;
 use Doctrine\DBAL\Migrations\Configuration\Configuration;
 use Doctrine\DBAL\Migrations\Version;
+use Doctrine\ORM\EntityManager;
 use Icap\PortfolioBundle\Entity\Widget\WidgetType;
+use Icap\PortfolioBundle\Event\WidgetTypeCreateEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class MigrationUpdater extends Updater
 {
-    public function postInstall(EntityManager $entityManager)
+    public function postInstall(EntityManager $entityManager, EventDispatcherInterface $eventDispatcher)
     {
-        /** @var \Claroline\CoreBundle\Repository\PluginRepository $pluginRepository */
-        $pluginRepository = $this->entityManager->getRepository('ClarolineCoreBundle:Plugin');
+        $widgetTypeCreateEvent = new WidgetTypeCreateEvent();
 
-        $badgePlugin = $pluginRepository->createQueryBuilder('plugin')
-            ->where('plugin.vendorName = :badgeVendorName')
-            ->andWhere('plugin.bundleName = :badgeShortName')
-            ->setParameters(['badgeVendorName' => 'Icap', 'badgeShortName' => 'BadgeBundle'])
+        $eventDispatcher->dispatch("icap_portfolio_widget_type_create", $widgetTypeCreateEvent);
+
+        /** @var \Icap\PortfolioBundle\Repository\Widget\WidgetTypeRepository $widgetTypeRepository */
+        $widgetTypeRepository = $entityManager->getRepository('IcapPortfolioBundle:Widget\WidgetType');
+
+        $widgetType = $widgetTypeCreateEvent->getWidgetType();
+
+        $existedWidgetType = $widgetTypeRepository->createQueryBuilder('widgetType')
+            ->where('widgetType.name = :badgetWidgetTypeName')
+            ->setParameter('badgetWidgetTypeName', $widgetType->getName())
             ->getQuery()
             ->getOneOrNullResult();
 
-        if (null !== $badgePlugin) {
-            /** @var \Icap\PortfolioBundle\Repository\Widget\WidgetTypeRepository $widgetTypeRepository */
-            $widgetTypeRepository = $this->entityManager->getRepository('IcapPortfolioBundle:Widget\WidgetType');
-
-            $badgeWidgetType = $widgetTypeRepository->createQueryBuilder('widgetType')
-                ->where('widgetType.name = :badgetWidgetTypeName')
-                ->setParameter('badgetWidgetTypeName', 'badges')
-                ->getQuery()
-                ->getOneOrNullResult();
-
-            if (null === $badgeWidgetType) {
-                $widgetType = new WidgetType();
-                $widgetType
-                    ->setName('badges')
-                    ->setIcon('trophy');
-
-                $this->entityManager->persist($widgetType);
-                $this->log("Badge widget type created.");
-            }
+        if (null === $existedWidgetType) {
+            $entityManager->persist($widgetType);
+            $this->log($widgetType->getName() . " widget type created.");
         }
 
-        $this->entityManager->flush();
+        $entityManager->flush();
     }
 }
