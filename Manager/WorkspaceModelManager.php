@@ -631,7 +631,7 @@ class WorkspaceModelManager
                         false,
                         false
                     );
-                    $resourcesInfos['copies'][] = array('original' => $resourceNode, 'copy' => $copy);
+                    $resourcesInfos['copies'][] = array('original' => $resourceNode, 'copy' => $copy->getResourceNode());
                 } catch (NotPopulatedEventException $e) {
                     $resourcesErrors[] = array(
                         'resourceName' => $resourceNode->getName(),
