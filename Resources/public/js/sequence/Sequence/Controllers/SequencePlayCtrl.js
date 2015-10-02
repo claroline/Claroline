@@ -28,6 +28,7 @@
                 this.steps = steps;
                 this.nbAttempts = nbAttempts;
                 this.setCurrentStep(0);
+                // this.setCurrentPaperData(0);
             };
 
             /**
@@ -48,10 +49,18 @@
                 // check new index is in computable range
                 if (index < this.steps.length && index >= 0) {
                     this.currentStep = this.steps[index];
-                    CommonService.setCurrentPaperStep(index);
                 } else {
                     console.log('set current step error');
                 }
+            };
+            
+            /**
+             * set the data for current step
+             * @param {type} index
+             * @returns {undefined}
+             */
+            this.setCurrentPaperData = function (index){                
+                CommonService.setCurrentPaperStep(index);
             };
 
             this.getCurrentStep = function () {
@@ -95,8 +104,8 @@
                     newIndex = index;
                     this.saveAnswerAndGotTo(newIndex);
                 } else if (action && action === 'end') {
-                    console.log('you reached the end of the exercise you will be redirected to paper list page');
-                    // TODO go to paper list / correction instead of exercise home page
+                    console.log('you reached the end of the exercise you will be redirected to paper list page');                   
+                    // MAYBE SAVE THE ENTIRE PAPER -> the php controller method should take care of redirection
                     var url = CommonService.generateUrl('exercise-home');
                     $window.location.href = url;
                 } else {
@@ -105,7 +114,7 @@
             };
 
             /**
-             * Saves the anwser in DB (or in session ????)
+             * Saves the anwser in DB and change step
              * @param {type} nextStepIndex
              */
             this.saveAnswerAndGotTo = function (nextStepIndex) {
@@ -118,8 +127,8 @@
                         // result.data.id = recorded answer id ??? but do we need this ? any answer id can be retrieved by ujm_response.paper_id + ujm_response.question_id
                         // change current step
                         this.setCurrentStep(nextStepIndex);
-                        // update paper step
-                        CommonService.setCurrentPaperStep(nextStepIndex);
+                        // update paper question
+                        CommonService.getCurrentQuestionPaperData(this.currentStep.items[0].id);
                     }
 
                 }.bind(this), function (error) {
