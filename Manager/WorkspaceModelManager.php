@@ -434,7 +434,7 @@ class WorkspaceModelManager
         User $user
     )
     {
-        $this->log('Duplicating root directory...');
+        //$this->log('Duplicating root directory...');
         $rootDirectory = new Directory();
         $rootDirectory->setName($workspace->getName());
         $directoryType = $this->resourceManager->getResourceTypeByName('directory');

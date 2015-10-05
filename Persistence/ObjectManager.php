@@ -31,6 +31,7 @@ class ObjectManager extends ObjectManagerDecorator
     private $hasEventManager = false;
     private $hasUnitOfWork = false;
     private $allowForceFlush;
+    private $showFlushLevel;
 
     /**
      * Constructor.
@@ -49,6 +50,7 @@ class ObjectManager extends ObjectManagerDecorator
             = $om instanceof EntityManagerInterface;
 
         $this->allowForceFlush = true;
+        $this->showFlushLevel = false;
     }
 
     /**
@@ -102,7 +104,7 @@ class ObjectManager extends ObjectManagerDecorator
     public function startFlushSuite()
     {
         ++$this->flushSuiteLevel;
-        if ($this->activateLog) $this->log('Flush level: ' . $this->flushSuiteLevel . '.');
+        if ($this->activateLog && $this->showFlushLevel) $this->log('Flush level: ' . $this->flushSuiteLevel . '.');
     }
 
     /**
@@ -119,7 +121,7 @@ class ObjectManager extends ObjectManagerDecorator
 
         --$this->flushSuiteLevel;
         $this->flush();
-        if ($this->activateLog) $this->log('Flush level: ' . $this->flushSuiteLevel. '.');
+        if ($this->activateLog && $this->showFlushLevel) $this->log('Flush level: ' . $this->flushSuiteLevel. '.');
     }
 
     /**
@@ -299,5 +301,15 @@ class ObjectManager extends ObjectManagerDecorator
         $this->activateLog = false;
 
         return $this;
+    }
+
+    public function showFlushLevel()
+    {
+        $this->showFlushLevel = true;
+    }
+
+    public function hideFlushLevel()
+    {
+        $this->showFlushLevel = false;
     }
 }
