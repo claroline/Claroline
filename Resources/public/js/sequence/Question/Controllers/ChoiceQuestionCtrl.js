@@ -170,7 +170,7 @@
                     }
                 }
                 else {
-                    this.currentQuestionPaperData.answer = this.uniqueChoice;
+                    this.currentQuestionPaperData.answer[0] = this.uniqueChoice;
                 }                
                 CommonService.setStudentData(this.question, this.currentQuestionPaperData);
             };

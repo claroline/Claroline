@@ -81,7 +81,7 @@ class SequenceController extends Controller
             "questions" => array(
                 array(
                     "id" => "7",
-                    "answer" => ["1"],                    
+                    "answer" => [],                    
                     "hints" => ["12"]
                 ),
                 array(
