@@ -1,0 +1,4 @@
+claro_chat_bundle_chat:
+    resource: "@ClarolineChatBundle/Controller/ChatController.php"
+    type:     annotation
+    prefix:   /

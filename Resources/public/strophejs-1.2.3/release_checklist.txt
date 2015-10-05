@@ -1,0 +1,13 @@
+# -*- mode: org -*-
+
+* Release Checklist
+*** Make sure all tests pass (run 'make check')
+*** Decide on version number
+*** Update CHANGELOG.txt
+*** Check for correct version number in package.json and bower,json
+*** Run "make release"
+*** Tag code with version (git tag -s vVERSION )
+*** Push repo and tags (git push && git push --tags)
+*** Add documentation to strophe.im repo
+*** Update website
+*** Tell the world
