@@ -65,7 +65,7 @@ Here is an example to fetch all workspaces tagged as "My Tags", ordered by name 
     **************************************************************************
         $datas = array(
             'tag' => 'My Tags',
-            'strict' => $true,
+            'strict' => true,
             'class' => 'Claroline\CoreBundle\Entity\Workspace\Workspace',
             'object_response' => true,
             'ordered_by' => 'name',
