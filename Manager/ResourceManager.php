@@ -1001,7 +1001,7 @@ class ResourceManager
             $event = $this->dispatcher->dispatch(
                 "download_{$nodes[0]->getResourceType()->getName()}",
                 'DownloadResource',
-                array($this->getResourceFromNode($nodes[0]))
+                array($this->getResourceFromNode($this->getRealTarget($nodes[0])))
             );
 
             $data['name'] = $nodes[0]->getName();
@@ -1022,6 +1022,7 @@ class ResourceManager
         foreach ($nodes as $node) {
             //we only download is we can...
             if ($this->container->get('security.context')->isGranted('EXPORT', $node)) {
+                $node = $this->getRealTarget($node);
                 $resource = $this->getResourceFromNode($node);
 
                 if ($resource) {
