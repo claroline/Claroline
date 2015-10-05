@@ -22,24 +22,12 @@ class ShareRepository extends EntityRepository
      * Return array[Share]
      */
     public function getControlSharedQuestion($user, $question)
-    {
-        $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s JOIN s.question q
-            WHERE q.id LIKE ?1
-            AND s.user = ?2';
-
-        $query = $this->_em->createQuery($dql)
-                      ->setParameters(array(1 => "%{$question}%", 2 => $user));
-//        var_dump($query->getResult());
-//        die();
-        return $query->getResult();
-        
-//        $qb = $this->createQueryBuilder('s');
-//        $qb->join('s.question', 'q')
-//            ->where($qb->expr()->in('q', $question))
-//            ->andWhere($qb->expr()->in('s.user', $user));
-//        var_dump($qb->getQuery()->getResult());
-//        die();
-//        return $qb->getQuery()->getResult();
+    {     
+        $qb = $this->createQueryBuilder('s');
+        $qb->join('s.question', 'q')
+            ->where($qb->expr()->in('q', $question))
+            ->andWhere($qb->expr()->in('s.user', $user));
+        return $qb->getQuery()->getResult();
     }
 
     /**
