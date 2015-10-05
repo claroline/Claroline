@@ -3,7 +3,7 @@
 {% block title %}{{ _resource.resourceNode.name }} - {{ "configure_blog"|trans({}, 'icap_blog') }}{% endblock %}
 
 {% block blog_content %}
-    <form action="{{ _path('icap_blog_configure', {'blogId':_resource.id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal well configure_blog_form">
+    <form action="{{ path('icap_blog_configure', {'blogId':_resource.id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal well configure_blog_form">
         <legend>{{ "configure_blog"|trans({}, 'icap_blog') }}</legend>
         {{ form_errors(form) }}
         <div class="checkbox">

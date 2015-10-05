@@ -86,7 +86,7 @@ class BlogListener extends ContainerAware
 
     public function onCopy(CopyResourceEvent $event)
     {
-        $entityManager = $this->container->get('doctrine.orm.entity_manager');
+        $entityManager = $this->container->get('claroline.persistence.object_manager');
         /** @var \Icap\BlogBundle\Entity\Blog $blog */
         $blog = $event->getResource();
 
