@@ -24,31 +24,37 @@ use Psr\Log\LoggerInterface;
 use Claroline\CoreBundle\Listener\DoctrineDebug;
 
 /**
- * Creates an user, optionaly with a specific role (default to simple user).
+ * Debug a manager
  */
-class DebugModelCommand extends ContainerAwareCommand
+class DebugManagerCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('claroline:model:debug')
-            ->setDescription('Create a workspace from a model');
+        $this->setName('claroline:debug:service')
+            ->setDescription('Create a workspace from a model')
+            ->setAliases(array('claroline:service:debug'));
         $this->setDefinition(
             array(
-                new InputArgument('owner', InputArgument::REQUIRED, 'The workspace owner'),
-                new InputArgument('model', InputArgument::REQUIRED, 'The workspace model'),
-                new InputArgument('code', InputArgument::REQUIRED, 'The workspace code'),
-                new InputArgument('name', InputArgument::REQUIRED, 'The workspace name')
+                new InputArgument('owner', InputArgument::REQUIRED, 'The user doing the action'),
+                new InputArgument('service_name', InputArgument::REQUIRED, 'The service name'),
+                new InputArgument('method_name', InputArgument::REQUIRED, 'The method name'),
+                new InputArgument('parameters', InputArgument::IS_ARRAY, 'The method parameters')
             )
+        );
+        $this->addOption(
+            'debug_doctrine_all',
+            'a',
+            InputOption::VALUE_NONE,
+            'When set to true, shows the doctrine logs'
         );
     }
 
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         $params = array(
-            'owner' => 'The workspace owner: ',
-            'model' => 'The workspace model: ',
-            'code' => 'The workspace code: ',
-            'name' => 'The workspace name: '
+            'owner' => 'The user doing the action: ',
+            'service_name' => 'The service name: ',
+            'method_name' => 'The method name: '
         );
 
         foreach ($params as $argument => $argumentName) {
@@ -79,15 +85,31 @@ class DebugModelCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+
         $consoleLogger = ConsoleLogger::get($output);
-        $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
-        $workspaceManager->setLogger($consoleLogger);
+        $manager = $this->getContainer()->get($input->getArgument('service_name'));
+        if (method_exists($manager, 'setLogger')) $manager->setLogger($consoleLogger);
+        $method = $input->getArgument('method_name');
         $om = $this->getContainer()->get('claroline.persistence.object_manager');
-        $om->setLogger($consoleLogger)->activateLog();
-        $this->getContainer()->get('claroline.doctrine.debug')->setLogger($consoleLogger)->activateLog()->setDebugLevel(DoctrineDebug::DEBUG_ALL)->setVendor('Claroline');
-        $root = $om->getRepository('Claroline\CoreBundle\Entity\User')->findOneByUsername($input->getArgument('owner'));
+
+        if ($input->getOption('debug_doctrine_all')) {
+            $om->setLogger($consoleLogger)->activateLog();
+            $this->getContainer()->get('claroline.doctrine.debug')->setLogger($consoleLogger)->activateLog()->setDebugLevel(DoctrineDebug::DEBUG_ALL)->setVendor('Claroline');
+        }
+
         $this->getContainer()->get('claroline.authenticator')->authenticate($input->getArgument('owner'), null, false);
-        $model = $om->getRepository('Claroline\CoreBundle\Entity\Model\WorkspaceModel')->findOneByName($input->getArgument('model'));
-        $workspaceManager->createWorkspaceFromModel($model, $root, $input->getArgument('name'), $input->getArgument('code'));
+        $variables = $input->getArgument('parameters');
+        $args = array();
+        $class = get_class($manager);
+
+        for ($i = 0; $i < count($variables); $i++) {
+            $param = new \ReflectionParameter(array($class, $method), $i);
+            $pclass = $param->getClass();
+            $args[] = $pclass ?
+                $om->getRepository($pclass->name)->find($variables[$i]): $variables[$i];
+        }
+
+        call_user_func_array(array($manager, $method), $args);
+        //do stuff with the reflection api
     }
 }
