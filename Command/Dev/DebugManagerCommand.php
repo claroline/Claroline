@@ -17,7 +17,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
-use Psr\Log\LoggerInterface;
 use Claroline\CoreBundle\Listener\DoctrineDebug;
 
 /**

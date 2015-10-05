@@ -41,7 +41,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
  */
 class UserManager
 {
-    const MAX_USER_BATCH_SIZE = 5;
+    const MAX_USER_BATCH_SIZE = 20;
 
     private $platformConfigHandler;
     private $strictEventDispatcher;
@@ -371,7 +371,6 @@ class UserManager
 
             if ($i % self::MAX_USER_BATCH_SIZE === 0) {
                 if ($logger) $logger(" [UOW size: " . $this->objectManager->getUnitOfWork()->size() . "]");
-                $i = 0;
                 $this->objectManager->forceFlush();
 
                 if ($logger) $logger(" flushing users...");
