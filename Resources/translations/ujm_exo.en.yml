@@ -271,7 +271,7 @@ questions: Questions
 question_creation: Question creation
 question_description: Description of the question (optional)
 question_model: Set as model
-question_title: Question title
+question_title: Question title (optional)
 question_shared_with: This question is shared with users below
 
 # R
