@@ -23,12 +23,23 @@ class ShareRepository extends EntityRepository
      */
     public function getControlSharedQuestion($user, $question)
     {
-        $qb = $this->createQueryBuilder('s');
-        $qb->join('s.user', 'u')
-            ->where($qb->expr()->in('s.question', $question))
-            ->andWhere($qb->expr()->in('u.id', $user));
+        $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s JOIN s.question q
+            WHERE q.id LIKE ?1
+            AND s.user = ?2';
 
-        return $qb->getQuery()->getResult();
+        $query = $this->_em->createQuery($dql)
+                      ->setParameters(array(1 => "%{$question}%", 2 => $user));
+//        var_dump($query->getResult());
+//        die();
+        return $query->getResult();
+        
+//        $qb = $this->createQueryBuilder('s');
+//        $qb->join('s.question', 'q')
+//            ->where($qb->expr()->in('q', $question))
+//            ->andWhere($qb->expr()->in('s.user', $user));
+//        var_dump($qb->getQuery()->getResult());
+//        die();
+//        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -145,7 +156,7 @@ class ShareRepository extends EntityRepository
         $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s
                 JOIN s.question q
                 WHERE s.user = ?2
-                AND q.description LIKE ?1';
+                AND q.invite LIKE ?1';
 
         $query = $this->_em->createQuery($dql)
                       ->setParameters(array(1 => "%{$whatToFind}%", 2 => $userId));

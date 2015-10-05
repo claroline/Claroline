@@ -4,12 +4,19 @@ namespace UJM\ExoBundle\Services\classes;
 
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
+use Doctrine\Bundle\DoctrineBundle\Registry;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Services for the pagination.
  */
 class PaginationService
 {
+     public function __construct(Registry $doctrine,ContainerInterface $container) {
+        $this->doctrine = $doctrine;
+        $this->container = $container;
+        $this->request = $container->get('request');
+    }
     /**
      * To paginate two tables on one page.
      *
@@ -176,5 +183,45 @@ class PaginationService
         $doublePagination[3] = $pagerTwo;
 
         return $doublePagination;
+    }
+       public function paginationSearchQuestion($listQuestions) {
+        $exoID = $this->request->query->get('exoID'); // If we import or see the questions
+        $page = $this->request->query->get('page'); // Which page
+        $displayAll = $this->request->query->get('displayAll', 0); // If we want to have all the questions in one page
+        $max = 10; // Max questions displayed per page
+        $em = $this->doctrine->getManager();
+        if ($exoID == -1) {
+            if ($displayAll == 1) {
+                $max = count($listQuestions);
+            }
+            return $pagination = $this->pagination($listQuestions, $max, $page);
+        } else {
+            //
+            $exoQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(array('exercise' => $exoID));
+            $finalList = $this->finishList($listQuestions,$exoQuestions);
+            if ($displayAll == 1) {
+                $max = count($finalList);
+            }
+
+            return $pagination = $this->pagination($finalList, $max, $page);
+        }
+    }
+
+    public function finishList($listQuestions,$exoQuestions) {
+        $already = false;
+        $length = count($listQuestions);
+        for ($i = 0; $i < $length; ++$i) {
+            foreach ($exoQuestions as $exoQuestion) {
+                if ($exoQuestion->getQuestion()->getId() == $listQuestions[$i]->getId()) {
+                    $already = true;
+                    break;
+                }
+            }
+            if ($already == false) {
+                $finalList[] = $listQuestions[$i];
+            }
+            $already = false;
+        }
+        return $finalList;
     }
 }
