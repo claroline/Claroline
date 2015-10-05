@@ -8,9 +8,13 @@ use Doctrine\ORM\EntityManager;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\PortfolioWidget;
 use Icap\PortfolioBundle\Entity\Widget\AbstractWidget;
+use Icap\PortfolioBundle\Event\WidgetFormEvent;
+use Icap\PortfolioBundle\Event\WidgetFormViewEvent;
+use Icap\PortfolioBundle\Event\WidgetViewEvent;
 use Icap\PortfolioBundle\Factory\WidgetFactory;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactory;
 
 /**
@@ -36,22 +40,28 @@ class WidgetsManager
     /** @var WidgetFactory  */
     protected $widgetFactory;
 
+    /** @var EventDispatcherInterface  */
+    protected $eventDispatcher;
+
     /**
      * @DI\InjectParams({
-     *     "entityManager"     = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "templatingEngine"  = @DI\Inject("templating"),
-     *     "formFactory"       = @DI\Inject("form.factory"),
+     *     "entityManager" = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "templatingEngine" = @DI\Inject("templating"),
+     *     "formFactory" = @DI\Inject("form.factory"),
      *     "widgetTypeManager" = @DI\Inject("icap_portfolio.manager.widget_type"),
-     *     "widgetFactory"     = @DI\Inject("icap_portfolio.factory.widget")
+     *     "widgetFactory" = @DI\Inject("icap_portfolio.factory.widget"),
+     *     "eventDispatcher" = @DI\Inject("event_dispatcher")
      * })
      */
-    public function __construct(EntityManager $entityManager, EngineInterface $templatingEngine, FormFactory $formFactory, WidgetTypeManager $widgetTypeManager, WidgetFactory $widgetFactory)
+    public function __construct(EntityManager $entityManager, EngineInterface $templatingEngine, FormFactory $formFactory,
+        WidgetTypeManager $widgetTypeManager, WidgetFactory $widgetFactory, EventDispatcherInterface $eventDispatcher)
     {
-        $this->entityManager     = $entityManager;
-        $this->templatingEngine  = $templatingEngine;
-        $this->formFactory       = $formFactory;
+        $this->entityManager = $entityManager;
+        $this->templatingEngine = $templatingEngine;
+        $this->formFactory = $formFactory;
         $this->widgetTypeManager = $widgetTypeManager;
-        $this->widgetFactory     = $widgetFactory;
+        $this->widgetFactory = $widgetFactory;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -64,35 +74,46 @@ class WidgetsManager
 
     /**
      * @param AbstractWidget $widget
-     * @param string         $type
+     * @param string         $widgetType
      *
      * @return string
      */
-    public function getView(AbstractWidget $widget, $type)
+    public function getView(AbstractWidget $widget, $widgetType)
     {
-        return $this->templatingEngine->render('IcapPortfolioBundle:templates:' . $type . '.html.twig', array('widget' => $widget));
+        $widgetViewEvent = new WidgetViewEvent($widgetType, $widget);
+
+        $this->eventDispatcher->dispatch('icap_portfolio_widget_view_' . $widgetType, $widgetViewEvent);
+
+        return $widgetViewEvent->getView();
     }
 
     /**
-     * @param string $type
-     * @param string $action
+     * @param string $widgetType
      *
      * @return string
      */
-    public function getFormView($type, $action)
+    public function getFormView($widgetType)
     {
-        return $this->templatingEngine->render('IcapPortfolioBundle:templates/' . $action . ':' . $type . '.html.twig');
+        $widgetFormViewEvent = new WidgetFormViewEvent($widgetType);
+
+        $this->eventDispatcher->dispatch('icap_portfolio_widget_form_view_' . $widgetType, $widgetFormViewEvent);
+
+        return $widgetFormViewEvent->getFormView();
     }
 
     /**
-     * @param string $type
-     * @param object $data
+     * @param string         $widgetType
+     * @param AbstractWidget $data
      *
      * @return \Symfony\Component\Form\Form|\Symfony\Component\Form\FormInterface
      */
-    public function getForm($type, $data)
+    public function getForm($widgetType, AbstractWidget $data)
     {
-        return $this->formFactory->create('icap_portfolio_widget_form_' . $type, $data);
+        $widgetFormEvent = new WidgetFormEvent($widgetType, $data);
+
+        $this->eventDispatcher->dispatch('icap_portfolio_widget_form_' . $widgetType, $widgetFormEvent);
+
+        return $widgetFormEvent->getForm();
     }
 
     /**
@@ -107,13 +128,13 @@ class WidgetsManager
 
     /**
      * @param AbstractWidget $widget
-     * @param string         $type
+     * @param string         $widgetType
      * @param array          $parameters
      * @param string         $env
      *
      * @return array
      */
-    public function handle(AbstractWidget $widget, $type, array $parameters, $env = 'prod')
+    public function handle(AbstractWidget $widget, $widgetType, array $parameters, $env = 'prod')
     {
         $originalChildren = new ArrayCollection();
 
@@ -123,7 +144,7 @@ class WidgetsManager
 
         $data = array();
 
-        $form = $this->getForm($type, $widget);
+        $form = $this->getForm($widgetType, $widget);
         $form->submit($parameters);
 
         if ($form->isValid()) {
@@ -191,14 +212,14 @@ class WidgetsManager
     }
 
     /**
-     * @param string $type
+     * @param string $widgetType
      * @param User   $user
      *
      * @return AbstractWidget
      */
-    public function getNewDataWidget($type, User $user)
+    public function getNewDataWidget($widgetType, User $user)
     {
-        $widget = $this->widgetFactory->createDataWidget($type);
+        $widget = $this->widgetFactory->createDataWidget($widgetType);
         $widget
             ->setId(uniqid())
             ->setUser($user);
@@ -208,13 +229,13 @@ class WidgetsManager
 
     /**
      * @param Portfolio $portfolio
-     * @param string    $type
+     * @param string    $widgetType
      *
      * @return PortfolioWidget
      */
-    public function getNewPortfolioWidget(Portfolio $portfolio, $type)
+    public function getNewPortfolioWidget(Portfolio $portfolio, $widgetType)
     {
-        return $this->widgetFactory->createPortfolioWidget($portfolio, $type);
+        return $this->widgetFactory->createPortfolioWidget($portfolio, $widgetType);
     }
 
     /**
@@ -294,17 +315,17 @@ class WidgetsManager
 
     /**
      * @param User $user
-     * @param string|null $type
+     * @param string|null $widgetType
      *
      * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]
      */
-    public function getWidgets(User $user, $type = null)
+    public function getWidgets(User $user, $widgetType = null)
     {
         /** @var \Icap\PortfolioBundle\Repository\Widget\AbstractWidgetRepository $abstractWidgetRepository */
         $abstractWidgetRepository = $this->entityManager->getRepository("IcapPortfolioBundle:Widget\AbstractWidget");
 
-        if ($type !== null) {
-            $widgets = $abstractWidgetRepository->findByWidgetTypeAndUser($type, $user);
+        if ($widgetType !== null) {
+            $widgets = $abstractWidgetRepository->findByWidgetTypeAndUser($widgetType, $user);
         }
         else {
             $widgets = $abstractWidgetRepository->findByUser($user);
@@ -316,23 +337,23 @@ class WidgetsManager
     /**
      * @param Portfolio $portfolio
      * @param User      $user
-     * @param string    $type
+     * @param string    $widgetType
      *
      * @return \Icap\PortfolioBundle\Entity\PortfolioWidget[]
      */
-    public function getPortfolioWidgetsForWidgetPicker(Portfolio $portfolio, User $user, $type)
+    public function getPortfolioWidgetsForWidgetPicker(Portfolio $portfolio, User $user, $widgetType)
     {
         $portfolioWidgets = [];
 
-        $widgets = $this->getWidgets($user, $type);
+        $widgets = $this->getWidgets($user, $widgetType);
 
         foreach ($widgets as $widget) {
             $portfolioWidget = new PortfolioWidget();
             $portfolioWidget
                 ->setPortfolio($portfolio)
                 ->setWidget($widget)
-                ->setWidgetType($type)
-                ->setSize($this->getWidgetSizeByType($type))
+                ->setWidgetType($widgetType)
+                ->setSize($this->getWidgetSizeByType($widgetType))
             ;
             $portfolioWidgets[] = $portfolioWidget;
         }
@@ -340,9 +361,9 @@ class WidgetsManager
         return $portfolioWidgets;
     }
 
-    public function getWidgetSizeByType($type)
+    public function getWidgetSizeByType($widgetType)
     {
-        $classNamespace = '\Icap\PortfolioBundle\Entity\Widget\\' . ucfirst($type) . 'Widget';
+        $classNamespace = '\Icap\PortfolioBundle\Entity\Widget\\' . ucfirst($widgetType) . 'Widget';
         $position = [
             'sizeX' => $classNamespace::SIZE_X,
             'sizeY' => $classNamespace::SIZE_Y
