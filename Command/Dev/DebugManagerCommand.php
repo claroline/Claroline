@@ -16,10 +16,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
-use Psr\Log\LogLevel;
-use Claroline\BundleRecorder\Log\LoggableTrait;
 use Psr\Log\LoggerInterface;
 use Claroline\CoreBundle\Listener\DoctrineDebug;
 
@@ -110,6 +107,5 @@ class DebugManagerCommand extends ContainerAwareCommand
         }
 
         call_user_func_array(array($manager, $method), $args);
-        //do stuff with the reflection api
     }
 }
