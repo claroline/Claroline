@@ -1227,13 +1227,12 @@ class QuestionController extends Controller {
                 $allowToAccess = true;
             }
         }
-        if (count($question) > 0 || $allowToAccess === TRUE ){//|| count($sharedQuestions) > 0 ) {
-//           if(count($sharedQuestions) > 0){
-//               
-//           }
-//           {
+        if (count($question) > 0 || $allowToAccess === TRUE || count($sharedQuestions) > 0 ) {  
+           if(count($sharedQuestions) > 0){
+               $question= $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Question')->find($questionId);
+           }      
             $type = $question->getType();
-//           }
+           
             $handlerType = '\UJM\ExoBundle\Form\\' . $type . 'Handler';
 
             $interactionX = $this->getDoctrine()
