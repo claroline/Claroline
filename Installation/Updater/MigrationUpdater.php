@@ -5,39 +5,54 @@ namespace Icap\BadgeBundle\Installation\Updater;
 use Claroline\InstallationBundle\Updater\Updater;
 use Doctrine\DBAL\Migrations\Configuration\Configuration;
 use Doctrine\DBAL\Migrations\Version;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\ORM\EntityManager;
+use Doctrine\DBAL\Connection;
+use Icap\BadgeBundle\Factory\Portfolio\WidgetFactory;
 
 class MigrationUpdater extends Updater
 {
-    private $container;
-    private $conn;
+    /**
+     * @var Connection
+     */
+    protected $connection;
 
     /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var EntityManager
      */
-    private $em;
+    protected $entityManager;
 
     /**
      * @var \Claroline\CoreBundle\Entity\Plugin
      */
-    private $badgePlugin;
+    protected $badgePlugin;
 
-    public function __construct(ContainerInterface $container)
+    /**
+     * @var WidgetFactory
+     */
+    protected $widgetFactory;
+
+    /**
+     * @param Connection    $connection
+     * @param EntityManager $entityManager
+     * @param WidgetFactory $widgetFactory
+     */
+    public function __construct(Connection $connection, EntityManager $entityManager, WidgetFactory $widgetFactory)
     {
-        $this->container = $container;
-        $this->conn = $container->get('database_connection');
-        $this->em = $container->get('doctrine.orm.entity_manager');
+        $this->connection = $connection;
+        $this->entityManager = $entityManager;
+        $this->widgetFactory = $widgetFactory;
     }
 
     public function preInstall()
     {
         $this->skipInstallIfMigratingFromCore();
+        $this->deleteExistingTablesRelatedToPortfolio();
     }
 
     public function postInstall()
     {
         /** @var \Claroline\CoreBundle\Repository\PluginRepository $pluginRepository */
-        $pluginRepository = $this->em->getRepository('ClarolineCoreBundle:Plugin');
+        $pluginRepository = $this->entityManager->getRepository('ClarolineCoreBundle:Plugin');
 
         $this->badgePlugin = $pluginRepository->createQueryBuilder('plugin')
             ->where('plugin.vendorName = :badgeVendorName')
@@ -46,23 +61,34 @@ class MigrationUpdater extends Updater
             ->getQuery()
             ->getSingleResult();
 
-        $this->em->flush();
+        $this->entityManager->flush();
 
         $this->reusePreviousAdminToolsIfAny();
         $this->reusePreviousToolsIfAny();
         $this->reusePreviousWidgetsIfAny();
+        $this->insertWidgetTypeDataForPortfolio();
     }
 
     private function skipInstallIfMigratingFromCore()
     {
-        if ($this->conn->getSchemaManager()->tablesExist(['claro_badge'])) {
+        if ($this->connection->getSchemaManager()->tablesExist(['claro_badge'])) {
             $this->log('Found existing database schema: skipping install migration...');
-            $config = new Configuration($this->conn);
+            $config = new Configuration($this->connection);
             $config->setMigrationsTableName('doctrine_icapbadgebundle_versions');
             $config->setMigrationsNamespace('claro_badge'); // required but useless
             $config->setMigrationsDirectory('claro_badge'); // idem
             $version = new Version($config, '20150506091116', 'stdClass');
             $version->markMigrated();
+        }
+    }
+
+    private function deleteExistingTablesRelatedToPortfolio()
+    {
+        // Manage the case when we install the BadgeBundle while portfolio badges tables are already in the database as
+        // portfolio badges was in the PortfolioBundle before
+        if ($this->connection->getSchemaManager()->tablesExist(['icap__portfolio_widget_badges'])) {
+            $this->connection->getSchemaManager()->dropTable('icap__portfolio_widget_badges_badge');
+            $this->connection->getSchemaManager()->dropTable('icap__portfolio_widget_badges');
         }
     }
 
@@ -99,32 +125,32 @@ class MigrationUpdater extends Updater
             $this->log("Re-using previous {$name} {$type}...");
             $current = $this->find($type, $name);
             $current->setName($name . '_tmp');
-            $this->em->persist($current);
-            $this->em->flush();
+            $this->entityManager->persist($current);
+            $this->entityManager->flush();
             $previous->setPlugin($current->getPlugin());
-            $this->em->persist($previous);
-            $this->em->flush();
+            $this->entityManager->persist($previous);
+            $this->entityManager->flush();
             $this->delete($type, $name . '_tmp');
         }
     }
 
     private function find($type, $name)
     {
-        return $this->em
+        return $this->entityManager
             ->getRepository($this->getClassFromType($type))
             ->findOneBy(['name' => $name, 'plugin' => $this->badgePlugin]);
     }
 
     private function findWithNoPlugin($type, $name)
     {
-        return $this->em
+        return $this->entityManager
             ->getRepository($this->getClassFromType($type))
             ->findOneBy(['name' => $name, 'plugin' => null]);
     }
 
     private function delete($type, $name)
     {
-        $this->em->createQueryBuilder()
+        $this->entityManager->createQueryBuilder()
             ->delete()
             ->from($this->getClassFromType($type), 't')
             ->where('t.name = :name')
@@ -150,5 +176,36 @@ class MigrationUpdater extends Updater
         }
 
         return $class;
+    }
+
+    private function insertWidgetTypeDataForPortfolio()
+    {
+        /** @var \Claroline\CoreBundle\Repository\PluginRepository $pluginRepository */
+        $pluginRepository = $this->entityManager->getRepository('ClarolineCoreBundle:Plugin');
+
+        $portfolioPlugin = $pluginRepository->createQueryBuilder('plugin')
+            ->where('plugin.vendorName = :portfolioVendorName')
+            ->andWhere('plugin.bundleName = :portfolioShortName')
+            ->setParameters(['portfolioVendorName' => 'Icap', 'portfolioShortName' => 'PortfolioBundle'])
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if (null !== $portfolioPlugin) {
+            /** @var \Icap\PortfolioBundle\Repository\Widget\WidgetTypeRepository $widgetTypeRepository */
+            $widgetTypeRepository = $this->entityManager->getRepository('IcapPortfolioBundle:Widget\WidgetType');
+
+            $badgeWidgetType = $widgetTypeRepository->createQueryBuilder('widgetType')
+                ->where('widgetType.name = :badgetWidgetTypeName')
+                ->setParameter('badgetWidgetTypeName', 'badges')
+                ->getQuery()
+                ->getOneOrNullResult();
+
+            if (null === $badgeWidgetType) {
+                $this->entityManager->persist($this->widgetFactory->createBadgeWidgetType());
+                $this->log("Badge widget type created for portfolio.");
+            }
+        }
+
+        $this->entityManager->flush();
     }
 }
