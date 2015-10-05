@@ -110,7 +110,19 @@
     $('#all-my-contacts-content-body').on('click', '.contact-additional-action', function (event) {
         var child = $(this).children('.contact-action');
         var url = child.data('url');
-        window.location = url;
+        var displayMode = child.data('display-mode');
+        
+        if (displayMode === 'new_small_window') {
+            
+            window.open(
+                url,
+                '',
+                'toolbar=0,menubar=0,titlebar=0,location=0,status=0,left=150,top=200,width=200,height=300',
+                false
+            ).focus();
+        } else {
+            window.location = url;
+        }
     });
 
     $('#all-my-contacts-content-body').on('change', '#max-select', function() {

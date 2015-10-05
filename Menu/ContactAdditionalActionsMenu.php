@@ -43,12 +43,14 @@ class ContactAdditionalActionsMenu extends ListRenderer
     protected function renderLinkElement(ItemInterface $item, array $options)
     {
         $uri = $item->getExtra('href') ? $item->getExtra('href'): $item->getUri();
+        $displayMode = $item->getExtra('display') ? $item->getExtra('display'): 'normal';
 
         return sprintf(
-            '<i class="%s contact-action" data-url="%s" data-toggle="tooltip" data-placement="left" title="%s"></i>',
+            '<i class="%s contact-action" data-url="%s" data-toggle="tooltip" data-placement="left" title="%s" data-display-mode="%s"></i>',
             $item->getExtra('icon'),
             $this->escape($uri),
-            $this->renderLabel($item, $options)
+            $this->renderLabel($item, $options),
+            $displayMode
         );
     }
 
