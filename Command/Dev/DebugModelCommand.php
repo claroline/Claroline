@@ -16,10 +16,12 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Console\Logger\ConsoleLogger;
+use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
 use Psr\Log\LogLevel;
+use Claroline\BundleRecorder\Log\LoggableTrait;
+use Psr\Log\LoggerInterface;
+use Claroline\CoreBundle\Listener\DoctrineDebug;
 
 /**
  * Creates an user, optionaly with a specific role (default to simple user).
@@ -77,16 +79,14 @@ class DebugModelCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $verbosityLevelMap = array(
-            LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::DEBUG  => OutputInterface::VERBOSITY_NORMAL
-        );
-
-        $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
+        $consoleLogger = ConsoleLogger::get($output);
         $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
+        $workspaceManager->setLogger($consoleLogger);
         $om = $this->getContainer()->get('claroline.persistence.object_manager');
+        $om->setLogger($consoleLogger)->activateLog();
+        $this->getContainer()->get('claroline.doctrine.debug')->setLogger($consoleLogger)->activateLog()->setDebugLevel(DoctrineDebug::DEBUG_ALL)->setVendor('Claroline');
         $root = $om->getRepository('Claroline\CoreBundle\Entity\User')->findOneByUsername($input->getArgument('owner'));
+        $this->getContainer()->get('claroline.authenticator')->authenticate($input->getArgument('owner'), null, false);
         $model = $om->getRepository('Claroline\CoreBundle\Entity\Model\WorkspaceModel')->findOneByName($input->getArgument('model'));
         $workspaceManager->createWorkspaceFromModel($model, $root, $input->getArgument('name'), $input->getArgument('code'));
     }

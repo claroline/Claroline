@@ -44,7 +44,7 @@ class Authenticator
         $this->encodeFactory = $encodeFactory;
     }
 
-    public function authenticate($username, $password)
+    public function authenticate($username, $password, $validatePassword = true)
     {
         try {
             $user = $this->userRepo->loadUserByUsername($username);
@@ -53,17 +53,25 @@ class Authenticator
         }
 
         $providerKey = 'main';
-        $encoder = $this->encodeFactory->getEncoder($user);
-        $encodedPass = $encoder->encodePassword($password, $user->getSalt());
 
-        if ($user->getPassword() === $encodedPass) {
-            $token = new UsernamePasswordToken($user, $password, $providerKey, $user->getRoles());
-            $this->tokenStorage->setToken($token);
+        if ($validatePassword) {
+            $encoder = $this->encodeFactory->getEncoder($user);
+            $encodedPass = $encoder->encodePassword($password, $user->getSalt());
 
-            return true;
+            if ($user->getPassword() === $encodedPass) {
+                $token = new UsernamePasswordToken($user, $password, $providerKey, $user->getRoles());
+                $this->tokenStorage->setToken($token);
+
+                return true;
+            }
+
+            return false;
         }
 
-        return false;
+        $token = new UsernamePasswordToken($user, $password, $providerKey, $user->getRoles());
+        $this->tokenStorage->setToken($token);
+
+        return true;
     }
 
 }

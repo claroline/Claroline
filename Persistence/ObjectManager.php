@@ -16,12 +16,16 @@ use Doctrine\Common\Persistence\ObjectManagerDecorator;
 use Doctrine\Common\Persistence\ObjectManager as ObjectManagerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\BundleRecorder\Log\LoggableTrait;
+use Psr\Log\LoggerInterface;
 
 /**
  * @DI\Service("claroline.persistence.object_manager")
  */
 class ObjectManager extends ObjectManagerDecorator
 {
+    use LoggableTrait;
+
     private $flushSuiteLevel = 0;
     private $supportsTransactions = false;
     private $hasEventManager = false;
@@ -38,6 +42,7 @@ class ObjectManager extends ObjectManagerDecorator
     public function __construct(ObjectManagerInterface $om)
     {
         $this->wrapped = $om;
+        $this->activateLog = false;
         $this->supportsTransactions
             = $this->hasEventManager
             = $this->hasUnitOfWork
@@ -84,6 +89,7 @@ class ObjectManager extends ObjectManagerDecorator
     public function flush()
     {
         if ($this->flushSuiteLevel === 0) {
+            if ($this->activateLog) $this->log('Flush was started.');
             parent::flush();
         }
     }
@@ -96,6 +102,7 @@ class ObjectManager extends ObjectManagerDecorator
     public function startFlushSuite()
     {
         ++$this->flushSuiteLevel;
+        if ($this->activateLog) $this->log('Flush level: ' . $this->flushSuiteLevel . '.');
     }
 
     /**
@@ -112,6 +119,7 @@ class ObjectManager extends ObjectManagerDecorator
 
         --$this->flushSuiteLevel;
         $this->flush();
+        if ($this->activateLog) $this->log('Flush level: ' . $this->flushSuiteLevel. '.');
     }
 
     /**
@@ -119,7 +127,10 @@ class ObjectManager extends ObjectManagerDecorator
      */
     public function forceFlush()
     {
-        if ($this->allowForceFlush) parent::flush();
+        if ($this->allowForceFlush) {
+            if ($this->activateLog) $this->log('Flush was forced for level ' . $this->flushSuiteLevel. '.');
+            parent::flush();
+        }
     }
 
     /**
@@ -267,5 +278,26 @@ class ObjectManager extends ObjectManagerDecorator
     public function allowForceFlush($bool)
     {
         $this->allowForceFlush = $bool;
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+
+        return $this;
+    }
+
+    public function activateLog()
+    {
+        $this->activateLog = true;
+
+        return $this;
+    }
+
+    public function disableLog()
+    {
+        $this->activateLog = false;
+
+        return $this;
     }
 }

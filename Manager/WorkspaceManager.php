@@ -206,6 +206,7 @@ class WorkspaceManager
     )
     {
         $this->om->startFlushSuite();
+        $this->log('Workspace from model beginning.');
         $workspaceModelManager = $this->container->get('claroline.manager.workspace_model_manager');
 
         $workspace = new Workspace();
@@ -225,6 +226,7 @@ class WorkspaceManager
 
         $this->createWorkspace($workspace);
         $workspaceModelManager->addDataFromModel($model, $workspace, $user, $errors);
+        $this->log('Workspace from model end.');
         $this->om->endFlushSuite();
 
         return $workspace;
@@ -1075,6 +1077,7 @@ class WorkspaceManager
 
     public function setLogger(LoggerInterface $logger)
     {
+        $this->container->get('claroline.manager.workspace_model_manager')->setLogger($logger);
         $this->logger = $logger;
     }
 }
