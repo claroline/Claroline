@@ -54,6 +54,10 @@ class Validator
                     ];
                 }
 
+                if (count($errors) === 0) {
+                    $errors = $handler->validateAfterSchema($question);
+                }
+
                 return $errors;
             }
 
