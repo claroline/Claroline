@@ -42,7 +42,9 @@
             ),
             function (done) {
                 if (done.getResponseHeader('Content-Type')  === 'application/json') {
-                    var resource = $.parseJSON(done.responseText)[0];
+                    //for upload without personal workspace; it goes directory in the upload/files folder.
+                    var data = $.parseJSON(done.responseText)
+                    var resource = data[0];
                     var nodes = {};
                     var mimeType = 'mime_type'; //camel case fix in order to have 0 jshint errors
                     nodes[resource.id] = new Array(resource.name, resource.type, resource[mimeType]);

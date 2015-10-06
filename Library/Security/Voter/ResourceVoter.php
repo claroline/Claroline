@@ -186,7 +186,7 @@ class ResourceVoter implements VoterInterface
         }
 
         //the workspace manager he can do w/e he wants
-        if ($haveSameWorkspace && $this->isWorkspaceManager($ws, $token)) {
+        if ($haveSameWorkspace && $ws && $this->isWorkspaceManager($ws, $token)) {
             return array();
         }
 

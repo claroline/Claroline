@@ -461,10 +461,11 @@ class FileListener implements ContainerAwareInterface
                 $hashName
             );
         } else {
-            $hashName = $this->container->get('claroline.utilities.misc')->generateGuid() .
+            $hashName =
+                $this->tokenStorage->getToken()->getUsername() . DIRECTORY_SEPARATOR . $this->container->get('claroline.utilities.misc')->generateGuid() .
                 "." . $extension;
             $tmpFile->move(
-                $this->container->getParameter('claroline.param.files_directory'),
+                $this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR . $this->tokenStorage->getToken()->getUsername(),
                 $hashName
             );
         }

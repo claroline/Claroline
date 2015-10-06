@@ -13,7 +13,7 @@
                     id='file_form_file'
                     style='position:absolute;top:-1000px;'
                 >
-                {{ form_row(form.destination) }}
+                {% if form.destination is defined %} {{ form_row(form.destination) }} {% endif %}
             </form>
             <button type="button" class="btn btn-primary btn-lg filePicker">
                 <i class='fa fa-file'></i>

@@ -82,7 +82,7 @@ class IconManager
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceIcon
      */
-    public function getIcon(AbstractResource $resource, Workspace $workspace)
+    public function getIcon(AbstractResource $resource, Workspace $workspace = null)
     {
         $node = $resource->getResourceNode();
         $mimeElements = explode('/', $node->getMimeType());

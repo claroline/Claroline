@@ -157,7 +157,7 @@ class ResourceManager
         AbstractResource $resource,
         ResourceType $resourceType,
         User $creator,
-        Workspace $workspace,
+        Workspace $workspace = null,
         ResourceNode $parent = null,
         ResourceIcon $icon = null,
         array $rights = array(),
@@ -179,7 +179,7 @@ class ResourceManager
         $node->setName($resource->getName());
         $name = $this->getUniqueName($node, $parent);
         $node->setCreator($creator);
-        $node->setWorkspace($workspace);
+        if ($workspace) $node->setWorkspace($workspace);
         $node->setParent($parent);
         $node->setName($name);
         $node->setClass(get_class($resource));
@@ -846,10 +846,14 @@ class ResourceManager
         //the following line is required because we wanted to disable the right edition in personal worksspaces...
         //this is not required for everything to work properly.
 
-        if ($node->getWorkspace()->isPersonal() && !$this->rightsManager->canEditPwsPerm($token)) {
+        if (!$node->getWorkspace()) {
             $resourceArray['enableRightsEdition'] = false;
         } else {
-            $resourceArray['enableRightsEdition'] = true;
+            if ($node->getWorkspace()->isPersonal() && !$this->rightsManager->canEditPwsPerm($token)) {
+                $resourceArray['enableRightsEdition'] = false;
+            } else {
+                $resourceArray['enableRightsEdition'] = true;
+            }
         }
 
         if ($node->getResourceType()->getName() === 'file') {
@@ -1725,7 +1729,8 @@ class ResourceManager
             );
         }
 
-        if ($node = $this->container->get('request')->getSession()->get('current_resource_node')) {
+        $node = $this->container->get('request')->getSession()->get('current_resource_node');
+        if ($node && $node->getWorkspace()) {
             $defaults = array_merge(
                 $defaults,
                 $this->directoryRepo->findDefaultUploadDirectories($node->getWorkspace())

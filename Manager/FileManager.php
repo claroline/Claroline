@@ -16,9 +16,9 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
-use Claroline\CoreBundle\Manager\ResourceManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Entity\User;
 
 /**
  * @DI\Service("claroline.manager.file_manager")
@@ -35,6 +35,7 @@ class FileManager
      * @DI\InjectParams({
      *      "om"         = @DI\Inject("claroline.persistence.object_manager"),
      *      "fileDir"    = @DI\Inject("%claroline.param.files_directory%"),
+     *      "uploadDir"  = @DI\Inject("%claroline.param.uploads_directory%"),
      *      "ut"         = @DI\Inject("claroline.utilities.misc"),
      *      "rm"         = @DI\Inject("claroline.manager.resource_manager"),
      *      "dispatcher" = @DI\Inject("claroline.event.event_dispatcher")
@@ -45,7 +46,8 @@ class FileManager
         $fileDir,
         ClaroUtilities $ut,
         ResourceManager $rm,
-        StrictDispatcher $dispatcher
+        StrictDispatcher $dispatcher,
+        $uploadDir
     )
     {
         $this->om = $om;
@@ -53,6 +55,7 @@ class FileManager
         $this->ut = $ut;
         $this->resManager = $rm;
         $this->dispatcher = $dispatcher;
+        $this->uploadDir = $uploadDir;
     }
 
     public function changeFile(File $file, UploadedFile $upload)
