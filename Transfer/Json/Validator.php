@@ -31,9 +31,10 @@ class Validator
      * question schemas. Returns an array of validation errors.
      *
      * @param \stdClass $question
+     * @param bool      $requireSolution
      * @return array
      */
-    public function validateQuestion(\stdClass $question)
+    public function validateQuestion(\stdClass $question, $requireSolution = true)
     {
         if (isset($question->type)) {
             $handler = $this->handlerCollector->getHandlerForMimeType($question->type);
@@ -42,8 +43,18 @@ class Validator
                 $schema = $this->getSchema($handler->getJsonSchemaUri(), true);
                 $validator = new SchemaValidator();
                 $validator->check($question, $schema);
+                $errors = $validator->getErrors();
 
-                return $validator->getErrors();
+                if ($requireSolution
+                    && !isset($question->solution)
+                    && !isset($question->solutions)) {
+                    $errors[] = [
+                        'property' => '',
+                        'message' => 'a solution(s) property is required'
+                    ];
+                }
+
+                return $errors;
             }
 
             return [[

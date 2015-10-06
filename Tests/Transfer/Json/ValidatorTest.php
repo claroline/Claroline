@@ -42,7 +42,22 @@ class ValidatorTest extends TransactionalTestCase
     {
         $data = file_get_contents("{$this->formatDir}/question/choice/examples/invalid/no-solution-id.json");
         $question = json_decode($data);
-        $this->assertGreaterThan(0, count($this->validator->validateQuestion($question)));
+        $expected = [
+            'property' => 'solutions[0]',
+            'message' => 'the property id is required'
+        ];
+        $this->assertContains($expected, $this->validator->validateQuestion($question));
+    }
+
+    public function testValidDataWithoutSolution()
+    {
+        $data = file_get_contents("{$this->formatDir}/question/choice/examples/valid/true-or-false.json");
+        $question = json_decode($data);
+        $expected = [
+            'property' => '',
+            'message' => 'a solution(s) property is required'
+        ];
+        $this->assertContains($expected, $this->validator->validateQuestion($question));
     }
 
     /**
@@ -70,10 +85,10 @@ class ValidatorTest extends TransactionalTestCase
     public function validQuestionProvider()
     {
         return [
-            ['choice/examples/valid/extended.json'],
-            ['cloze/examples/valid/simple-input.json'],
-            ['match/examples/valid/basic.json'],
-            ['sort/examples/valid/basic.json'],
+            ['choice/examples/valid/solutions.json'],
+//            ['cloze/examples/valid/simple-input.json'],
+//            ['match/examples/valid/basic.json'],
+//            ['sort/examples/valid/basic.json'],
         ];
     }
 }
