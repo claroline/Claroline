@@ -253,7 +253,8 @@
                 {{ form_rest(form) }}
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
-                    <a href="{{ path('icap_badge_workspace_tool_badges', {'workspaceId': workspace.id}) }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-danger" role="button">
+                    <a href="{{ path('icap_badge_workspace_tool_badges', {'workspaceId': workspace.id}) }}"
+                       title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-danger" role="button">
                         {{ 'cancel'|trans({}, 'platform') }}
                     </a>
                 </div>
@@ -265,11 +266,6 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('bundles/frontend/jquery/plugin/select2/select2.css') }}" screen="media" />
-    {% stylesheets debug=false filter="lessphp, cssmin" output="css/icapbadge/badge_picker.css"
-        "@IcapBadgeBundle/Resources/views/less/badge_picker.less"
-    %}
-        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
-    {% endstylesheets %}
 {% endblock %}
 
 

@@ -3,8 +3,6 @@ $(function(){
 
     $(".nav-tabs a.has-error:first").tab("show");
 
-    ZenstruckFormHelper.initSelect2Helper();
-
     var uploadImagePlaceholder = $(".upload_image_placeholder");
     uploadImagePlaceholder.click(function(event) {
         badgeFormFile.click();

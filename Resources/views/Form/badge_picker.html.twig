@@ -31,6 +31,12 @@
 
 {% block badgepicker_widget %}
     {% spaceless %}
+        {% stylesheets debug=false filter="lessphp, cssmin" output="css/icapbadge/badge_picker_field.css"
+            "@IcapBadgeBundle/Resources/views/less/badge_picker.less"
+        %}
+            <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+        {% endstylesheets %}
+
         <div class="badge_picker">
             {% if multiple %}
                 <div id="{{ id }}" data-prototype="<div class=&quot;form-collection-element&quot;><input type=&quot;hidden&quot; id=&quot;{{ id }}___name___id&quot; name=&quot;{{ full_name }}[__name__][id]&quot;/></div>">

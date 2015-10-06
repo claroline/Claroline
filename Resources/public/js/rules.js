@@ -10,7 +10,7 @@ $(function(){
         noRuleBlock.hide();
     }
 
-    var tabPrototype        = ruleTabs.attr('data-tab-prototype');
+    var tabPrototype = ruleTabs.attr('data-tab-prototype');
     var tabContentPrototype = $(".badges_rules").attr('data-prototype');
 
     var badgeRules = $("#badge_form_badgeRules");
@@ -34,7 +34,7 @@ $(function(){
     }, "li");
 
     var ruleDeleteNoConfirmSelector = "li .delete_rule_no_confirm";
-    var ruleDeleteConfirmSelector   = "li .delete_rule_confirm";
+    var ruleDeleteConfirmSelector = "li .delete_rule_confirm";
     $(ruleDeleteSelector, ruleTabs).hide();
     $(ruleTabs).on({
         click: function () {
@@ -52,7 +52,6 @@ $(function(){
     $(".action_panel select[id$='_action_']", ".rules").each(function(index){
         toggleDisplayBadgeField($(this));
     });
-    ZenstruckFormHelper.initSelect2Helper();
 
     function toggleDisplayBadgeField(badgeFieldForm)
     {
@@ -93,9 +92,6 @@ $(function(){
         var newTabContent = tabContentPrototype.replace(/__name__/g, tabIndex);
 
         $(".rules").append(newTabContent);
-        $('.zenstruck-ajax-entity', newTabContent).each(function() {
-            ZenstruckFormHelper._select2($('#' + $(this).attr('id')));
-        });
     }
 
     function format(state) {
