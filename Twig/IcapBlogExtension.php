@@ -60,7 +60,7 @@ class IcapBlogExtension extends \Twig_Extension
     {
         return array(
             'highlight' => new \Twig_Filter_Method($this, 'highlight'),
-            'tagnames'    => new \Twig_Filter_Method($this, 'getTagNames'),
+            'tagnames' => new \Twig_Filter_Method($this, 'getTagNames'),
         );
     }
 
@@ -91,7 +91,7 @@ class IcapBlogExtension extends \Twig_Extension
 
     public function getBlogBanner(Blog $blog)
     {
-        return realpath($this->uploadDir . '/' . $blog->getOptions()->getBannerBackgroundImage());
+        return $blog->getOptions()->getBannerBackgroundImage() ? realpath($this->uploadDir . '/' . $blog->getOptions()->getBannerBackgroundImage()) : null;
     }
 
     public function getBlogUploadDir()
@@ -101,7 +101,7 @@ class IcapBlogExtension extends \Twig_Extension
 
     public function getBlogBannerWebPath(Blog $blog)
     {
-        return $this->webDirectory . '/' . $blog->getOptions()->getBannerBackgroundImage();
+        return $blog->getOptions()->getBannerBackgroundImage() ? $this->webDirectory . '/' . $blog->getOptions()->getBannerBackgroundImage() : null;
     }
 
     public function highlight($sentence, $search)
