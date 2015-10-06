@@ -6,6 +6,7 @@ use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Services for the pagination.
@@ -223,5 +224,22 @@ class PaginationService
             $already = false;
         }
         return $finalList;
+    }
+    
+        /**
+     * Returns a NotFoundHttpException.
+     *
+     * This will result in a 404 response code. Usage example:
+     *
+     *     throw $this->createNotFoundException('Page not found!');
+     *
+     * @param string          $message  A message
+     * @param \Exception|null $previous The previous exception
+     *
+     * @return NotFoundHttpException
+     */
+    public function createNotFoundException($message = 'Not Found', \Exception $previous = null)
+    {
+        return new NotFoundHttpException($message, $previous);
     }
 }

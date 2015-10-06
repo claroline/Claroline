@@ -908,7 +908,7 @@ class QuestionController extends Controller {
             //  * and what text to search
             // User's database
             if ($where == 'my') {
-                $listQuestions = $searchSer->choiceTypeQuestion();
+                $listQuestions = $searchSer->choiceTypeQuestion('Question');
                 // For all the matching questions search if ...              
                 $questionWithResponse = $searchSer->searchEntityResponse($listQuestions, 'Response'); //question With Response
                 $alreadyShared = $searchSer->searchEntityResponse($listQuestions, 'Share'); //already Shared
@@ -958,7 +958,8 @@ class QuestionController extends Controller {
                 }
                 // Shared with user's database
             } elseif ($where == 'shared') {
-                $listQuestions = $searchSer->choiceTypeShare();
+                $listeSharedQuestion = $searchSer->choiceTypeQuestion('Share');
+                $listQuestions=$searchSer->listQuestion($listeSharedQuestion);
                 $pagination = $paginationSer->paginationSearchQuestion($listQuestions);
                 // Put the result in a twig
                 if ($exoID == -1) {
@@ -1003,8 +1004,8 @@ class QuestionController extends Controller {
                     );
                 }
             } elseif ($where == 'all') {
-                $listQuestionsShare = $searchSer->choiceTypeShare();
-                $listQuestionsMy = $searchSer->choiceTypeQuestion();
+                $listQuestionsShare = $searchSer->choiceTypeShare('Share');
+                $listQuestionsMy = $searchSer->choiceTypeQuestion('Question');
                 $listQuestions=array_merge($listQuestionsShare,$listQuestionsMy);
                 // For all the matching interactions search if ...
                 $questionWithResponse = $searchSer->searchEntityResponse($listQuestions, 'Response'); //question With Response
@@ -1152,7 +1153,7 @@ class QuestionController extends Controller {
 
         $listQuestions = $questionRepository->findByUserAndContent($user, $userSearch, $exercise);
         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
-                ->findByAllShared($user->getId(), $userSearch);
+                ->findByUserAndContent($user, $userSearch);
 
         $end = count($sharedQuestion);
 

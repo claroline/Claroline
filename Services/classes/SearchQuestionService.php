@@ -31,13 +31,14 @@ class SearchQuestionService {
         $this->whatToFind = $this->request->query->get('whatToFind'); 
     }
     /**
-     * return questions list by his type
-     * @return array 
+     * 
+     * @param string $repository Name of repository called (Question or Share)
+     * @return array
      */
-    public function choiceTypeQuestion() {
+    public function choiceTypeQuestion($repository) {
         
         $em = $this->doctrine->getManager();
-        $questionRepository = $em->getRepository('UJMExoBundle:Question');
+        $questionRepository = $em->getRepository('UJMExoBundle:'.$repository);
         switch ($this->type) {
             case 'Category':
                 $listQuestions = $questionRepository->findByUserAndCategoryName($this->user, $this->whatToFind);
@@ -57,40 +58,13 @@ class SearchQuestionService {
         }
         return $listQuestions;
     }
-    /**
-     * return questions shared list by his type
-     * @return array
-     */
-    public function choiceTypeShare() {
-        $em = $this->doctrine->getManager();
-        $userID=$this->user->getId();
-        $sharedQuestion = $em->getRepository('UJMExoBundle:Share');
-        switch ($this->type) {
-                    case 'Category':
-                        $listeSharedQuestion=$sharedQuestion->findByCategoryShared($userID, $this->whatToFind);                   
-                        break;
-                    case 'Type':
-                        $listeSharedQuestion=$sharedQuestion->findByTypeShared($userID, $this->whatToFind);
-                        break;
-                    case 'Title':
-                        $listeSharedQuestion=$sharedQuestion->findByTitleShared($userID, $this->whatToFind);
-                        break;
-                    case 'Contain':
-                        $listeSharedQuestion=$sharedQuestion->findByContainShared($userID, $this->whatToFind);
-                        break;
-                    case 'All':
-                        $listeSharedQuestion=$sharedQuestion->findByAllShared($userID, $this->whatToFind);
-                        break;
-                }
-        return $listQuestions= $listQuestions=$this->listQuestion($listeSharedQuestion);
-    }
 
     /**
      * Return questions shared list
      * @param array $sharedQuestion //Result of questions shared list
      * @return array
      */
-    private function listQuestion($sharedQuestion) {
+    public function listQuestion($sharedQuestion) {
         $listQuestions = array();
         $end = count($sharedQuestion);
         for ($i = 0; $i < $end; $i++) {
