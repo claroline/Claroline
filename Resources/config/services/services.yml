@@ -6,6 +6,8 @@ parameters:
     icap.blog.tag_repository.class:  Icap\BlogBundle\Repository\TagRepository
     icap.blog.post.class:            Icap\BlogBundle\Entity\Post
     icap.blog.post_repository.class: Icap\BlogBundle\Repository\PostRepository
+    icap.blog.banner_upload_directory: "uploads/blogs"
+    icap.blog.banner_directory:        "%claroline.param.web_directory%/%icap.blog.banner_upload_directory%"
 
 services:
     icap.blog.tag_repository:
@@ -32,6 +34,6 @@ services:
 
     icap.blog.twig.extension:
         class: "%icap.blog.twig.extension.class%"
-        arguments: [@icap.blog.manager.tag, @icap.blog.post_repository]
+        arguments: [@icap.blog.manager.tag, @icap.blog.post_repository, %icap.blog.banner_directory%, %icap.blog.banner_upload_directory%]
         tags:
             - { name: twig.extension }
