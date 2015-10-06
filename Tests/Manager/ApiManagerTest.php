@@ -58,8 +58,8 @@ class ApiManagerTest extends TransactionalTestCase
     {
         $this->loadQuestionTypeFixture();
 
-        $originalCompData = $this->loadData("choice/{$dataFilename}-comp");
-        $originalEvalData = $this->loadData("choice/{$dataFilename}-eval");
+        $originalCompData = $this->loadData("question/valid/complete/{$dataFilename}");
+        $originalEvalData = $this->loadData("question/valid/evaluation/{$dataFilename}");
 
         $this->manager->importQuestion($originalCompData);
 
@@ -113,7 +113,7 @@ class ApiManagerTest extends TransactionalTestCase
     }
 
     private function loadData($fileRelativeName) {
-        $file = __DIR__ . "/data/{$fileRelativeName}.json";
+        $file = realpath(__DIR__ . "/../Data/json/{$fileRelativeName}.json");
 
         return json_decode(file_get_contents($file));
     }

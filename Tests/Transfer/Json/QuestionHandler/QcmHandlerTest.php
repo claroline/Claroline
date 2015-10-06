@@ -20,12 +20,12 @@ class QcmHandlerTest extends TransactionalTestCase
     {
         parent::setUp();
         $this->handler = $this->client->getContainer()->get('ujm.exo.qcm_handler');
-        $this->dataDir = realpath(__DIR__ . '/data');
+        $this->dataDir = realpath(__DIR__ . '/../../../Data/json/question');
     }
 
     public function testPostValidateInconsistentSolutionId()
     {
-        $data = json_decode(file_get_contents("{$this->dataDir}/qcm-inconsistent-solution-id.json"));
+        $data = json_decode(file_get_contents("{$this->dataDir}/invalid/qcm-inconsistent-solution-id.json"));
         $errors = $this->handler->validateAfterSchema($data);
         $expected = [
             'path' => 'solutions[1]',
@@ -40,7 +40,7 @@ class QcmHandlerTest extends TransactionalTestCase
      */
     public function testPostValidateNonPositiveScore($dataFileName)
     {
-        $data = json_decode(file_get_contents("{$this->dataDir}/{$dataFileName}.json"));
+        $data = json_decode(file_get_contents("{$this->dataDir}/invalid/{$dataFileName}.json"));
         $errors = $this->handler->validateAfterSchema($data);
         $expected = [
             'path' => 'solutions',
