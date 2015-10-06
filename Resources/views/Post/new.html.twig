@@ -21,7 +21,7 @@
 {% block title %}{{ _resource.resourceNode.name }} - {{ "add_new_post"|trans({}, 'icap_blog') }}{% endblock %}
 
 {% block blog_content %}
-    <form action="{{ _path('icap_blog_post_new', {'blogId': _resource.id}) }}" method="post" {{ form_enctype(form) }} class="well" id="icap_blog_post_form" novalidate>
+    <form action="{{ path('icap_blog_post_new', {'blogId': _resource.id}) }}" method="post" {{ form_enctype(form) }} class="well" id="icap_blog_post_form" novalidate>
         <legend>{{ "add_new_post"|trans({}, 'icap_blog') }}</legend>
         {% if false == is_granted('EDIT', _resource) and false == _resource.isAutoPublishPost %}
         <p class="alert alert-warning">

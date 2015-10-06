@@ -29,9 +29,6 @@ class BlogBannerType extends AbstractType
                 'theme_options' => array('label_width' => ''),
                 'required'      => false
             ))
-            ->add('banner_background_image', 'hidden', array(
-                'required' => false
-            ))
             ->add('banner_background_image_position', 'text', array(
                 'theme_options' => array('label_width' => ''),
                 'required'      => false

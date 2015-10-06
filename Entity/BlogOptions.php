@@ -144,7 +144,6 @@ class BlogOptions
      */
     protected $tagCloud = null;
 
-
     /**
      * @var string
      *
@@ -363,9 +362,6 @@ class BlogOptions
      */
     public function setBannerBackgroundImage($bannerBackgroundImage)
     {
-        if (null !== $this->bannerBackgroundImage) {
-            $this->oldFileName = $this->bannerBackgroundImage;
-        }
         $this->bannerBackgroundImage = $bannerBackgroundImage;
 
         return $this;
@@ -418,7 +414,6 @@ class BlogOptions
     {
         return $this->bannerBackgroundImageRepeat;
     }
-    
 
     /**
      * @param boolean $bannerActivate
@@ -447,12 +442,6 @@ class BlogOptions
      */
     public function setFile(UploadedFile $file)
     {
-        $newFileName = $file->getClientOriginalName();
-
-        if ($this->bannerBackgroundImage !== $newFileName) {
-            $this->oldFileName           = $this->bannerBackgroundImage;
-            $this->bannerBackgroundImage = null;
-        }
         $this->file = $file;
 
         return $this;
@@ -524,107 +513,6 @@ class BlogOptions
     public function getDisplayPostViewCounter()
     {
         return $this->displayPostViewCounter;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getBannerBackgroundImageAbsolutePath()
-    {
-        return (null === $this->bannerBackgroundImage) ? null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->bannerBackgroundImage;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getBannerBackgroundImageWebPath()
-    {
-        return (null === $this->bannerBackgroundImage) ? null : $this->getUploadDir() . DIRECTORY_SEPARATOR . $this->bannerBackgroundImage;
-    }
-
-    /**
-     * @throws \Exception
-     * @return string
-     */
-    protected function getUploadRootDir()
-    {
-        $ds = DIRECTORY_SEPARATOR;
-
-        $uploadRootDir = sprintf('%s%s..%s..%s..%s..%s..%s..%sweb%s%s', __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir());
-
-        if (!is_dir($uploadRootDir)) {
-            if (false === mkdir($uploadRootDir)) {
-                throw new \Exception(sprintf("Unable to create the upload directory '%s' for blog banner.", $uploadRootDir));
-            }
-        }
-
-        $realpathUploadRootDir = realpath($uploadRootDir);
-
-        if (false === $realpathUploadRootDir) {
-            throw new \Exception(sprintf("Invalid upload root dir '%s'for uploading blog banner background images.", $uploadRootDir));
-        }
-
-        return $realpathUploadRootDir;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUploadDir()
-    {
-        return sprintf("uploads%sblogs", DIRECTORY_SEPARATOR);
-    }
-
-    /**
-     * @ORM\PreUpdate()
-     */
-    public function preUpdate(PreUpdateEventArgs $event)
-    {
-        if (null !== $this->file) {
-            $this->bannerBackgroundImage = $this->file->getClientOriginalName();
-        }
-    }
-
-    /**
-     * @ORM\PostUpdate()
-     */
-    public function postUpdate()
-    {
-        if (null === $this->file && null === $this->oldFileName) {
-            return;
-        }
-
-        if (null !== $this->bannerBackgroundImage) {
-            $this->file->move($this->getUploadRootDir(), $this->bannerBackgroundImage);
-        }
-
-        if (null !== $this->oldFileName) {
-            unlink($this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->oldFileName);
-            $this->oldFileName = null;
-        }
-
-        $this->file = null;
-    }
-
-    /**
-     * @ORM\PostRemove()
-     */
-    public function postRemove()
-    {
-        $filePath = $this->getBannerBackgroundImageAbsolutePath();
-        if (null !== $filePath) {
-            unlink($filePath);
-        }
-    }
-
-    /**
-     * Get bannerActivate
-     *
-     * @return boolean
-     */
-    public function getBannerActivate()
-    {
-        return $this->bannerActivate;
     }
 
     /**

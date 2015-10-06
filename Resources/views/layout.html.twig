@@ -25,7 +25,7 @@
                             </label>
                         </div>
                         <div class="row">
-                            <div class="col-md-4" id="icap_blog_banner_form_banner_background_image_container" data-image-path="{{ asset(blogOptions.uploadDir) }}">
+                            <div class="col-md-4" id="icap_blog_banner_form_banner_background_image_container" data-image-path="{{ asset(get_blog_upload_dir()) }}">
                                 {{ form_label(bannerForm.file) }}
                                 {{ form_widget(bannerForm.file) }}
                             </div>
@@ -42,9 +42,9 @@
                             </div>
                         </div>
                         <div class="row">
-                            <button type="button" class="btn btn-danger btn-xs{% if null == blogOptions.bannerBackgroundImageWebPath %} hidden{% endif %} remove_banner_background_image" id="remove_banner_background_image">Réinitialiser l'image d'arrière plan</button>
+                            <button type="button" class="btn btn-danger btn-xs{% if null == get_blog_banner(_resource) %} hidden{% endif %} remove_banner_background_image" id="remove_banner_background_image">Réinitialiser l'image d'arrière plan</button>
                         </div>
-                        <div class="row{% if null == blogOptions.bannerBackgroundImageWebPath %} hidden{% endif %}" id="banner_background_image_parameters">
+                        <div class="row{% if null == get_blog_banner(_resource) %} hidden{% endif %}" id="banner_background_image_parameters">
                             <div class="col-md-2">
                                 {{ form_label(bannerForm.banner_background_image_position) }}
                                 <table class="position_table">
@@ -95,7 +95,7 @@
         {% endif %}
         {% if blogOptions.isBannerActivate or (false == blogOptions.isBannerActivate and is_granted('ADMINISTRATE', _resource)) %}
         <a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" title="{{ _resource.resourceNode.name }}">
-            <div id="blog_banner" class="col-md-12 well blog_banner{% if false == blogOptions.isBannerActivate %} hidden{% endif %}" style="height: {{ blogOptions.bannerHeight }}px; background-color: {{ blogOptions.bannerBackgroundColor }}; background-image: {% if null == blogOptions.bannerBackgroundImageWebPath %}none{% else %}url('{{ asset(blogOptions.bannerBackgroundImageWebPath) }}'){% endif %}; background-position: {{ blogOptions.bannerBackgroundImagePosition }}; background-repeat: {{ blogOptions.bannerBackgroundImageRepeat }};">
+            <div id="blog_banner" class="col-md-12 well blog_banner{% if false == blogOptions.isBannerActivate %} hidden{% endif %}" style="height: {{ blogOptions.bannerHeight }}px; background-color: {{ blogOptions.bannerBackgroundColor }}; background-image: {% if null == get_blog_banner(_resource) %}none{% else %}url('{{ asset(get_blog_banner_web_path(_resource)) }}'){% endif %}; background-position: {{ blogOptions.bannerBackgroundImagePosition }}; background-repeat: {{ blogOptions.bannerBackgroundImageRepeat }};">
             </div>
         </a>
         {% endif %}
@@ -104,7 +104,7 @@
             {% if is_granted('IS_AUTHENTICATED_FULLY') or is_granted('ADMINISTRATE', _resource) or is_granted('POST', _resource) or is_granted('ROLE_ADMIN') %}
             <div class="col-md-12">
                 {% if is_granted('ADMINISTRATE', _resource) or is_granted('POST', _resource) %}
-                    <a href="{{ _path('icap_blog_post_new', {'blogId': _resource.id}) }}" title="{{ 'new_post'|trans({}, 'icap_blog') }}" class="btn btn-default">
+                    <a href="{{ path('icap_blog_post_new', {'blogId': _resource.id}) }}" title="{{ 'new_post'|trans({}, 'icap_blog') }}" class="btn btn-default">
                         <span class="fa fa-plus"></span> {{ 'new_post'|trans({}, 'icap_blog') }}
                     </a>
                 {% endif %}
