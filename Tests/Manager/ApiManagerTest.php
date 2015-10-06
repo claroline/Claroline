@@ -15,11 +15,6 @@ class ApiManagerTest extends TransactionalTestCase
     private $om;
 
     /**
-     * @var Validator
-     */
-    private $validator;
-
-    /**
      * @var ApiManager
      */
     private $manager;
@@ -33,8 +28,7 @@ class ApiManagerTest extends TransactionalTestCase
     {
         parent::setUp();
         $this->om = $this->client->getContainer()->get('claroline.persistence.object_manager');
-        $this->validator = new Validator();
-        $this->manager = new ApiManager($this->om, $this->validator);
+        $this->manager = $this->client->getContainer()->get('ujm.exo.api_manager');
         $this->formatDir = realpath(__DIR__ . '/../../../../../../json-quiz/json-quiz/format');
     }
 
@@ -100,7 +94,8 @@ class ApiManagerTest extends TransactionalTestCase
           ['qcm-1'],
           ['qcm-2'],
           ['qcm-3'],
-          ['qcm-4']
+          ['qcm-4'],
+          ['qcm-5']
         ];
     }
 
