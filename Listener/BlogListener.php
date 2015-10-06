@@ -81,12 +81,15 @@ class BlogListener extends ContainerAware
      */
     public function onDelete(DeleteResourceEvent $event)
     {
+        $blog = $event->getResource();
+        $options = $blog->getOptions();
+        @unlink($this->container->getParameter('icap.blog.banner_directory') . DIRECTORY_SEPARATOR . $options->getBannerBackgroundImage());
         $event->stopPropagation();
     }
 
     public function onCopy(CopyResourceEvent $event)
     {
-        $entityManager = $this->container->get('doctrine.orm.entity_manager');
+        $entityManager = $this->container->get('claroline.persistence.object_manager');
         /** @var \Icap\BlogBundle\Entity\Blog $blog */
         $blog = $event->getResource();
 

@@ -43,13 +43,13 @@ icap_blog_comment_unpublish_error: "Erreur lors de la dépublication du commenta
 icap_blog_comment_edit_success: 'Commentaire modifié avec succès'
 icap_blog_comment_edit_error: 'Erreur lors de la modification du commentaire'
 icap_blog_comment_access_denied: "Vous n'êtes pas autorisé à modifier ce commentaire"
-icap_blog_post_need_validation_before_publishing: "Votre article ne sera publié qu'après validation d'un administrateur."
-icap_blog_post_edit_need_validation_before_publishing: "La modification de votre article ne sera publié qu'après validation d'un administrateur."
-icap_blog_post_comment_need_validation_before_publishing: "Votre commentaire ne sera publié qu'après validation d'un administrateur."
+icap_blog_post_need_validation_before_publishing: "Votre article ne sera publié qu'après validation par un administrateur."
+icap_blog_post_edit_need_validation_before_publishing: "La modification de votre article ne sera publié qu'après validation par un administrateur."
+icap_blog_post_comment_need_validation_before_publishing: "Votre commentaire ne sera publié qu'après validation par un administrateur."
 icap_blog_post_comment_need_authentication: "<a href='%connection_url%' title='Connexion'>Connectez-vous</a> pour pouvoir commenter cet article."
 icap_blog_post_need_publishing: "Votre article devra être publié après sa validation."
 no_tags: "Aucun tag"
-no_authors: "Aucun rédacteurs"
+no_authors: "Aucun rédacteur"
 no_archives: "Aucune archive"
 comments: "commentaire|commentaires"
 see_comments: "Voir les commentaires"
@@ -63,7 +63,7 @@ comment_deletion_confirm_message: "Etes-vous sûr de vouloir supprimer ce commen
 configure_blog: "Options du blog"
 icap_blog_post_configure_success: "Blog configuré avec succès"
 icap_blog_post_configure_error: "Erreur lors de la configuration du blog"
-icap_blog_post_configure_banner_success: "Bannière du blog configuré avec succès."
+icap_blog_post_configure_banner_success: "Bannière du blog configurée avec succès."
 icap_blog_post_configure_banner_error: "Erreur lors de la configuration de la bannière du blog."
 valid_banner_modification: "Valider les modifications"
 delete_filter: "Supprimer le filtre"
@@ -74,7 +74,7 @@ post_filtered_by_date: "Liste des articles filtrés sur la date <strong>%date%</
 edit_blog_infos: "Modifer les informations du blog"
 icap_blog_edit_infos_success: "Informations du blog modifiées avec succès"
 icap_blog_edit_infos_error: "Erreur lors de la modification des informations du blog"
-icap_blog_post_search_too_much_result: "Vos critères de recherche sont considérés comme non pertinent, veuillez rentrer d'autres mots clés."
+icap_blog_post_search_too_much_result: "Vos critères de recherche sont considérés comme non pertinents. Veuillez rentrer d'autres mots clés."
 icap_blog_options_form_tag_cloud: 'Nuage de tags'
 add_comment: "Ajouter un commentaire"
 be_the_first_to_comment: "Soyez le premier à commenter cet article"
@@ -94,7 +94,7 @@ read_more: "Voir plus"
 modified_at: "Modifié le"
 classic: "Classique"
 3D: "Sphère 3D <span>(* Non compatible avec IE<9)</span>"
-advanced: "Classique avec nombre d'article"
+advanced: "Classique avec nombre d'articles"
 view: '%viewCounter% vue | %viewCounter% vues'
 icap_blog_options_form_display_post_view_counter: 'Afficher le nombre de vue par article'
 blog_widgt_list_form_blog: 'Blog à ajouter'
