@@ -228,6 +228,10 @@ class BlogController extends Controller
 
         $form->submit($request);
         if ($form->isValid()) {
+            $this->container->get('icap_blog.manager.blog')->updateBanner(
+                $form->get('file')->getData(),
+                $blogOptions
+            );
             $entityManager = $this->getDoctrine()->getManager();
             $translator = $this->get('translator');
             $flashBag = $this->get('session')->getFlashBag();

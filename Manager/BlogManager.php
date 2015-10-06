@@ -12,6 +12,7 @@ use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Entity\Tag;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @DI\Service("icap_blog.manager.blog")
@@ -25,12 +26,14 @@ class BlogManager
 
     /**
      * @DI\InjectParams({
-     *      "objectManager" = @DI\Inject("claroline.persistence.object_manager")
+     *      "objectManager" = @DI\Inject("claroline.persistence.object_manager"),
+     *      "uploadDir" = @DI\Inject("%icap.blog.banner_directory%")
      * })
      */
-    public function __construct(ObjectManager $objectManager)
+    public function __construct(ObjectManager $objectManager, $uploadDir)
     {
         $this->objectManager = $objectManager;
+        $this->uploadDir = $uploadDir;
     }
 
     /**
@@ -228,5 +231,29 @@ class BlogManager
         }
 
         return $tag;
+    }
+
+    /**
+     * @param UploadedFile $file
+     * @param BlogOptions $options
+     */
+    public function updateBanner(UploadedFile $file = null, BlogOptions $options)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+
+        if (file_exists($this->uploadDir . $ds . $options->getBannerBackgroundImage()) || $file === null) {
+            @unlink($this->uploadDir . $ds . $options->getBannerBackgroundImage());
+        }
+
+        if ($file) {
+            $uniqid = uniqid();
+            $options->setBannerBackgroundImage($uniqid);
+            $file->move($this->uploadDir, $uniqid);
+        } else {
+            $options->setBannerBackgroundImage(null);
+        }
+
+        $this->objectManager->persist($options);
+        $this->objectManager->flush();
     }
 }
