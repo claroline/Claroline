@@ -57,9 +57,9 @@ sequence:
     prefix: /
     
 sequence_correction:
-    resource: "@UJMExoBundle/Controller/Sequence/CorrectionController.php"
+    resource: "@UJMExoBundle/Controller/Sequence/PaperController.php"
     type: annotation
-    prefix: /
+    prefix: /papers
   
 
 ujm_exercise:

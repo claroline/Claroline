@@ -134,15 +134,16 @@
                     }
                     return array;
                 },
-                generateUrl: function (witch) {
+                generateUrl: function (witch, _id) {
                     switch (witch) {
                         case 'exercise-home':
-                            return Routing.generate('ujm_exercise_open', {id: this.sequence.id});
+                            return Routing.generate('ujm_exercise_open', {id: _id});
                             break;
-                        case 'exercise-paper-list':
+                        case 'paper-list':
+                            return Routing.generate('ujm_exercice_papers', {id: _id});
                             break;
                         case 'exercise-play':
-                            return Routing.generate('ujm_exercise_play', {id: this.sequence.id})
+                            return Routing.generate('ujm_exercise_play', {id: _id});
                             break;
                     }
                 }

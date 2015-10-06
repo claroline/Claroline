@@ -6,6 +6,14 @@ btn_next_step_label: Go to next step
 # d
 dropdown_step_navigate_choice_label: Step n°%1% / %2%
 
+# l
+link_exercice_home: Exercise home
+link_exercise_retry: Retry
+link_exercise_docimology: Docimology
+link_csv_export: CSV export
+label_exercise_score: Score
+label_exercise_correction: Correction
+
 # m
 meta_authors: Author(s)
 meta_others: Others
@@ -17,6 +25,19 @@ meta_updated: Modified
 meta_licence: Licence
 meta_description: Description
 meta_max_attempts: Maximum attempts
+
+# p
+paper_list: Paper list
+paper_search: Search a paper
+paper_list_table_user: User
+paper_list_table_paper_number: Paper number
+paper_list_table_start_date: Start date
+paper_list_table_end_date: End date
+paper_list_table_interrupted: Interrupted
+paper_list_table_interrupted_yes: Yes
+paper_list_table_interrupted_no: No
+paper_list_table_action: Correction
+paper_list_table_score: Score
 
 # q
 question_hints: Hints

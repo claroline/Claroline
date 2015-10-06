@@ -19,7 +19,7 @@ class SequenceController extends Controller
 {
 
     /**
-     * Play the selected Exercise
+     * Render the Exercise player main view
      * @Route("/play/{id}", requirements={"id" = "\d+"}, name="ujm_exercise_play", options={"expose"=true})
      * @Method("GET")
      */
@@ -30,27 +30,6 @@ class SequenceController extends Controller
 
         // get number of attempts already done by user
         $nbAttempts = $this->container->get('ujm.exo_exercise')->getNbPaper($user->getId(), $exercise->getId());
-        $maxAttempts = $exercise->getMaxAttempts();
-
-        // check if exercise has a limited number of attempts and if curent user has reached this maximum
-        /* if($maxAttempts > 0 && $nbAttempts >= $maxAttempts){
-          $msg = $this->get('translator')->trans('sequence_max_attempts_reached', array(), 'ujm_sequence');
-          $this->get('session')->getFlashBag()->set('error', $msg);
-          // redirect to exercise home page
-          return $this->redirect($this->generateUrl('ujm_exercise_open', array('id' => $exercise->getId())));
-          } */
-
-        // if a paper exist for the user and exercise get it with steps order
-        // 
-        //
-        // DATA from API this API method should :
-        // - check exercise availablility
-        // - return a json object with : 
-        //      - exercise data (steps, questions per step, meta per step, choices per question, hints per question...)
-        //      - first unfinished paper if exists with :
-        //          - anwsers previously given by the student
-        //          - step order
-        //      - new paper if no unfinished paper
         
         /*
         $apiManager = $this->get('ujm.exo.api_manager');
@@ -155,12 +134,12 @@ class SequenceController extends Controller
     /**
      * Each time a student navigate through question / step we have to record the current answer
      * the answer object might have an id in this case we update the previous record else we create a new one
-     * @Route("/record/{exo_id}/question/{question_id}", name="ujm_sequence_record_step", options={"expose"=true})
+     * @Route("/put/{exo_id}/question/{question_id}", name="ujm_sequence_save_step", options={"expose"=true})
      * @Method("PUT")
      * @ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"id" = "exo_id"})
      * @ParamConverter("question", class="UJMExoBundle:Question", options={"id" = "question_id"})
      */
-    public function saveProgression(Exercise $exercise, Question $question, Request $request)
+    public function saveStep(Exercise $exercise, Question $question, Request $request)
     {
         $sequenceManager = $this->get('ujm.exo.sequence_manager');
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
@@ -179,7 +158,7 @@ class SequenceController extends Controller
         $sequenceManager = $this->get('ujm.exo.sequence_manager');
         // get paper data (Array)
         $paper = $request->get('paper');
-        print_r($paper);die;
+        //print_r($paper);die;
         $response = $sequenceManager->endSequence($exercise, $paper);
         return new JsonResponse($response);
     }

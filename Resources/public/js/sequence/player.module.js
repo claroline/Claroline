@@ -2,7 +2,7 @@
     'use strict';
 
     // exercise player module
-    angular.module('SequencePlayerApp', [
+    var SequencePlayerApp = angular.module('SequencePlayerApp', [
         'ngSanitize',
         'ui.bootstrap',
         'ui.tinymce',
@@ -11,10 +11,10 @@
         'ngBootbox',
         'Common',
         'Sequence'
-    ])
-    .filter(
-    'unsafe', 
-    function($sce) { 
-        return $sce.trustAsHtml; 
-    });
+    ]);
+    SequencePlayerApp.filter(
+            'unsafe',
+            function ($sce) {
+                return $sce.trustAsHtml;
+            });
 })();

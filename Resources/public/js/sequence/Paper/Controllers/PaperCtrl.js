@@ -7,18 +7,13 @@
             this.currentQuestion = {};
             this.currentAnswer = {};
             this.paper = {};
-            this.sequence = {};
             this.isCollapsed = false;
             this.note = 0;
+            this.context = "";
 
-            this.init = function (sequence, paper) {
+            this.init = function (paper, context) {
                 this.paper = paper;
-                this.sequence = sequence;
-                console.log('paper');
-                console.log(this.paper);
-                console.log('sequence');
-                console.log(this.sequence);
-                //this.note = this.setNote();
+                this.context = context;
             };
 
             /**
@@ -116,8 +111,8 @@
                 }
             };
 
-            this.generateUrl = function (witch) {
-                return CommonService.generateUrl(witch);
+            this.generateUrl = function (witch, _id) {
+                return CommonService.generateUrl(witch, _id);
             };
         }
     ]);
