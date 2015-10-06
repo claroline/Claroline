@@ -2,19 +2,23 @@
 
 namespace UJM\ExoBundle\Transfer\Json;
 
-class ValidatorTest extends \PHPUnit_Framework_TestCase
+use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
+
+class ValidatorTest extends TransactionalTestCase
 {
+    private $validator;
     private $formatDir;
 
     protected function setUp()
     {
+        parent::setUp();
+        $this->validator = $this->client->getContainer()->get('ujm.exo.json_validator');
         $this->formatDir = realpath(__DIR__ . '/../../../../../../../json-quiz/json-quiz/format');
     }
 
     public function testValidateQuestionWithNoType()
     {
-        $validator = new Validator();
-        $errors = $validator->validateQuestion(new \stdClass());
+        $errors = $this->validator->validateQuestion(new \stdClass());
         $expected = [[
             'property' => '',
             'message' => 'Question cannot be validated due to missing property "type"'
@@ -24,10 +28,9 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateQuestionWithUnknownType()
     {
-        $validator = new Validator();
         $question = new \stdClass();
         $question->type = 'application/x.foo+json';
-        $errors = $validator->validateQuestion($question);
+        $errors = $this->validator->validateQuestion($question);
         $expected = [[
             'property' => 'type',
             'message' => "Unknown question type 'application/x.foo+json'"
@@ -37,10 +40,9 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidQuestionData()
     {
-        $validator = new Validator();
         $data = file_get_contents("{$this->formatDir}/question/choice/examples/invalid/no-solution-id.json");
         $question = json_decode($data);
-        $this->assertGreaterThan(0, count($validator->validateQuestion($question)));
+        $this->assertGreaterThan(0, count($this->validator->validateQuestion($question)));
     }
 
     /**
@@ -49,23 +51,20 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidQuestionData($dataFilename)
     {
-        $validator = new Validator();
         $data = file_get_contents("{$this->formatDir}/question/$dataFilename");
         $question = json_decode($data);
-        $this->assertEquals(0, count($validator->validateQuestion($question)));
+        $this->assertEquals(0, count($this->validator->validateQuestion($question)));
     }
 
     public function testValidateExercise()
     {
-        $validator = new Validator();
-
         $data = file_get_contents("{$this->formatDir}/quiz/examples/valid/one-question-step.json");
         $quiz = json_decode($data);
-        $this->assertEquals(0, count($validator->validateExercise($quiz)));
+        $this->assertEquals(0, count($this->validator->validateExercise($quiz)));
 
         $data = file_get_contents("{$this->formatDir}/quiz/examples/invalid/no-steps.json");
         $quiz = json_decode($data);
-        $this->assertGreaterThan(0, count($validator->validateExercise($quiz)));
+        $this->assertGreaterThan(0, count($this->validator->validateExercise($quiz)));
     }
 
     public function validQuestionProvider()

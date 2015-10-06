@@ -4,11 +4,11 @@ namespace UJM\ExoBundle\Manager;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use UJM\ExoBundle\Entity\Choice;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Hint;
 use UJM\ExoBundle\Entity\InteractionQCM;
 use UJM\ExoBundle\Entity\Question;
+use UJM\ExoBundle\Transfer\Json\QuestionHandlerCollector;
 use UJM\ExoBundle\Transfer\Json\ValidationException;
 use UJM\ExoBundle\Transfer\Json\Validator;
 
@@ -21,49 +21,65 @@ class ApiManager
     private $validator;
     private $questionRepo;
     private $interactionQcmRepo;
+    private $handlerCollector;
 
     /**
      * @DI\InjectParams({
      *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "validator"  = @DI\Inject("ujm.exo.json_validator")
+     *     "validator"  = @DI\Inject("ujm.exo.json_validator"),
+     *     "collector"  = @DI\Inject("ujm.exo.question_handler_collector")
      * })
      *
-     * @param ObjectManager $om
-     * @param Validator     $validator
+     * @param ObjectManager             $om
+     * @param Validator                 $validator
+     * @param QuestionHandlerCollector  $collector
      */
-    public function __construct(ObjectManager $om, Validator $validator)
+    public function __construct(ObjectManager $om, Validator $validator, QuestionHandlerCollector $collector)
     {
         $this->om = $om;
         $this->validator = $validator;
         $this->questionRepo = $om->getRepository('UJMExoBundle:Question');
         $this->interactionQcmRepo = $om->getRepository('UJMExoBundle:InteractionQCM');
+        $this->handlerCollector = $collector;
     }
 
     /**
      * Imports a question in a JSON-decoded format.
      *
-     * @param \stdClass $question
+     * @param \stdClass $data
      * @throws ValidationException  if the question is not valid
      * @throws \Exception           if the question type import is not implemented
      */
-    public function importQuestion(\stdClass $question)
+    public function importQuestion(\stdClass $data)
     {
-        $errors = $this->validator->validateQuestion($question);
-
-        if (count($errors) > 0) {
+        if (count($errors = $this->validator->validateQuestion($data)) > 0) {
             throw new ValidationException('Question is not valid', $errors);
         }
 
-        switch ($question->type) {
-            case 'application/x.choice+json':
-                $this->persistQcm($question);
-                break;
-            default:
-                throw new \Exception(
-                    "Import not implemented for {$question->type}"
-                );
+        if (null === $handler = $this->handlerCollector->getHandlerForMimeType($data->type)) {
+            throw new \Exception("Import not supported for {$data->type}");
         }
 
+        $question = new Question();
+        $question->setTitle($data->title);
+        $question->setInvite($data->title);
+
+        if (isset($data->hints)) {
+            foreach ($data->hints as $hintData) {
+                $hint = new Hint();
+                $hint->setValue($hintData->text);
+                $hint->setPenalty($hintData->penalty);
+                $question->addHint($hint);
+                $this->om->persist($hint);
+            }
+        }
+
+        if (isset($data->feedback)) {
+            $question->setFeedback($data->feedback);
+        }
+
+        $handler->persistInteractionDetails($question, $data);
+        $this->om->persist($question);
         $this->om->flush();
     }
 
@@ -77,14 +93,37 @@ class ApiManager
      */
     public function exportQuestion(Question $question, $withSolution = true)
     {
-        switch ($question->getType()) {
-            case InteractionQCM::TYPE:
-                return $this->exportQcm($question, $withSolution);
-            default:
-                throw new \Exception(
-                    "Export not implemented for {$question->getType()}"
-                );
+        $handler = $this->handlerCollector->getHandlerForInteractionType($question->getType());
+
+        if (!$handler) {
+            throw new \Exception("Export not supported for {$question->getType()}");
         }
+
+        $data = new \stdClass();
+        $data->type = $handler->getQuestionMimeType();
+        $data->title = $question->getTitle();
+
+        if (count($question->getHints()) > 0) {
+            $data->hints = array_map(function ($hint) use ($withSolution) {
+                $hintData = new \stdClass();
+                $hintData->id = (string) $hint->getId();
+                $hintData->penalty = $hint->getPenalty();
+
+                if ($withSolution) {
+                    $hintData->text = $hint->getValue();
+                }
+
+                return $hintData;
+            }, $question->getHints()->toArray());
+        }
+
+        if ($withSolution && $question->getFeedback()) {
+            $data->feedback = $question->getFeedback();
+        }
+
+        $handler->convertInteractionDetails($question, $data, $withSolution);
+
+        return $data;
     }
 
     /**
@@ -218,117 +257,5 @@ class ApiManager
                 ];
             }, $qcm->getChoices()->toArray()),
         ];
-    }
-
-    private function persistQcm(\stdClass $data)
-    {
-        $question = new Question();
-        $question->setTitle($data->title);
-        $question->setInvite($data->title);
-        $interaction = new InteractionQCM();
-
-        for ($i = 0, $max = count($data->choices); $i < $max; ++$i) {
-            // temporary limitation
-            if ($data->choices[$i]->type !== 'text/html') {
-                throw new \Exception(
-                    "Import not implemented for MIME type {$data->choices[$i]->type}"
-                );
-            }
-
-            $choice = new Choice();
-            $choice->setLabel($data->choices[$i]->data);
-            $choice->setOrdre($i);
-
-            foreach ($data->solutions as $solution) {
-                if ($solution->id === $data->choices[$i]->id) {
-                    $choice->setWeight($solution->score);
-
-                    if (isset($solution->feedback)) {
-                        $choice->setFeedback($solution->feedback);
-                    }
-                }
-            }
-
-            $choice->setInteractionQCM($interaction);
-            $interaction->addChoice($choice);
-            $this->om->persist($choice);
-        }
-
-        if (isset($data->hints)) {
-            foreach ($data->hints as $hintData) {
-                $hint = new Hint();
-                $hint->setValue($hintData->text);
-                $hint->setPenalty($hintData->penalty);
-                $question->addHint($hint);
-                $this->om->persist($hint);
-            }
-        }
-
-        $subTypeCode = $data->multiple ? 1 : 2;
-        $subType = $this->om->getRepository('UJMExoBundle:TypeQCM')
-            ->findOneByCode($subTypeCode);
-        $interaction->setTypeQCM($subType);
-        $interaction->setShuffle($data->random);
-        $interaction->setQuestion($question);
-        $this->om->persist($interaction);
-        $this->om->persist($question);
-    }
-
-    /**
-     * @todo Handle scoreRightResponse, scoreFalseResponse (must be kept) ?
-     * @todo Handle positionForce (spec change) ?
-     *
-     * @param Question  $question
-     * @param bool      $withSolution
-     * @return \stdClass
-     */
-    private function exportQcm(Question $question, $withSolution = true)
-    {
-        $qcm = $this->interactionQcmRepo->findOneBy(['question' => $question]);
-        $choices = $qcm->getChoices()->toArray();
-
-        $data = new \stdClass();
-        $data->type = 'application/x.choice+json';
-        $data->title = $question->getTitle();
-        $data->multiple = $qcm->getTypeQCM()->getCode() == 1;
-        $data->random = $qcm->getShuffle();
-        $data->choices = array_map(function ($choice) {
-            $choiceData = new \stdClass();
-            $choiceData->id = (string) $choice->getId();
-            $choiceData->type = 'text/html';
-            $choiceData->data = $choice->getLabel();
-
-            return $choiceData;
-        }, $choices);
-
-        if ($withSolution) {
-            $data->solutions = array_map(function ($choice) {
-                $solutionData = new \stdClass();
-                $solutionData->id = (string) $choice->getId();
-                $solutionData->score = $choice->getWeight();
-
-                if ($choice->getFeedback()) {
-                    $solutionData->feedback = $choice->getFeedback();
-                }
-
-                return $solutionData;
-            }, $choices);
-        }
-
-        if (count($question->getHints()) > 0) {
-            $data->hints = array_map(function ($hint) use ($withSolution) {
-                $hintData = new \stdClass();
-                $hintData->id = (string) $hint->getId();
-                $hintData->penalty = $hint->getPenalty();
-
-                if ($withSolution) {
-                    $hintData->text = $hint->getValue();
-                }
-
-                return $hintData;
-            }, $question->getHints()->toArray());
-        }
-
-        return $data;
     }
 }

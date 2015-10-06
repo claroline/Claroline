@@ -12,6 +12,20 @@ use JsonSchema\Validator as SchemaValidator;
  */
 class Validator
 {
+    private $handlerCollector;
+
+    /**
+     * @DI\InjectParams({
+     *     "collector" = @DI\Inject("ujm.exo.question_handler_collector")
+     * })
+     *
+     * @param QuestionHandlerCollector $collector
+     */
+    public function __construct(QuestionHandlerCollector $collector)
+    {
+        $this->handlerCollector = $collector;
+    }
+
     /**
      * Validates a JSON-decoded question against the available
      * question schemas. Returns an array of validation errors.
@@ -22,11 +36,10 @@ class Validator
     public function validateQuestion(\stdClass $question)
     {
         if (isset($question->type)) {
-            $types = implode('|', ['choice', 'cloze', 'match', 'sort']);
-            $typePattern = "#application/x\\.({$types})\\+json#";
+            $handler = $this->handlerCollector->getHandlerForMimeType($question->type);
 
-            if (preg_match($typePattern, $question->type, $matches)) {
-                $schema = $this->getSchema("question/{$matches[1]}");
+            if ($handler) {
+                $schema = $this->getSchema($handler->getJsonSchemaUri(), true);
                 $validator = new SchemaValidator();
                 $validator->check($question, $schema);
 
@@ -60,14 +73,16 @@ class Validator
         return $validator->getErrors();
     }
 
-    private function getSchema($schemaPathId)
+    private function getSchema($schemaPathId, $isUri = false)
     {
         $retriever = new UriRetriever();
         $retriever->setUriRetriever(new LocalSchemaRetriever());
 
-        $schemaUri = LocalSchemaRetriever::uriFromPathId($schemaPathId);
-        $schema = $retriever->retrieve($schemaUri);
+        $schemaUri = !$isUri ?
+            LocalSchemaRetriever::uriFromPathId($schemaPathId) :
+            $schemaPathId;
 
+        $schema = $retriever->retrieve($schemaUri);
         $refResolver = new RefResolver($retriever);
         $refResolver->resolve($schema);
 
