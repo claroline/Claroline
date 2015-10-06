@@ -417,7 +417,7 @@ class SequenceController extends Controller
                         "type" => "application/x.choice+json",
                         "title" => "Simple question for dummies...",
                         "label" => "Witch image shows a kid ?",
-                        "random" => false,
+                        "random" => true,
                         "multiple" => false,
                         "feedback" => "Global feedback",
                         "hints" => array(
@@ -454,12 +454,6 @@ class SequenceController extends Controller
                                 "meta" => array(
                                     "description" => "Image 3"
                                 )
-                            )
-                        ),
-                        "solutions" => array(
-                            array(
-                                "id" => "2",
-                                "score" => 2
                             )
                         )
                     )
@@ -512,16 +506,6 @@ class SequenceController extends Controller
                                 "id" => "5",
                                 "type" => "text/html",
                                 "data" => "<p>Black</p>"
-                            )
-                        ),
-                        "solutions" => array(
-                            array(
-                                "id" => "3",
-                                "score" => 2
-                            ),
-                            array(
-                                "id" => "5",
-                                "score" => 2
                             )
                         )
                     )

@@ -1,7 +1,7 @@
 
 <div class="panel panel-default">
     <div class="panel-heading clearfix">
-        <h3 data-ng-if="!sequencePlayCtrl.isFinished" class="panel-title pull-left"> {{sequencePlayCtrl.sequence.meta.title}} - {{ 'sequence_step'|trans:{}:'ujm_sequence' }} {{sequencePlayCtrl.getCurrentStepIndex()}} / {{sequencePlayCtrl.steps.length}}</h3>
+        <h3 data-ng-if="!sequencePlayCtrl.isFinished" class="panel-title pull-left"> {{sequencePlayCtrl.sequence.meta.title}} - {{ 'sequence_step'|trans:{}:'ujm_sequence' }} {{sequencePlayCtrl.getCurrentStepIndex()}} / {{sequencePlayCtrl.sequence.steps.length}}</h3>
         <h3 data-ng-if="sequencePlayCtrl.isFinished" class="panel-title pull-left"> {{sequencePlayCtrl.sequence.meta.title}} - Essais N° {{sequencePlayCtrl.nbAttempts}} - Correction</h3>
         <span data-ng-if="!sequencePlayCtrl.isFinished" class="pull-right">
             <!-- IF MAX ATTEMPTS -->
@@ -37,11 +37,11 @@
                 <!-- JUMP TO -->
                 <div class="btn-group">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ 'dropdown_step_navigate_choice_label'|trans:{"1" : sequencePlayCtrl.getCurrentStepIndex(), "2" : sequencePlayCtrl.steps.length}:'ujm_sequence'}} <span class="caret"></span>
+                        {{ 'dropdown_step_navigate_choice_label'|trans:{"1" : sequencePlayCtrl.getCurrentStepIndex(), "2" : sequencePlayCtrl.sequence.steps.length}:'ujm_sequence'}} <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li data-ng-repeat="step in sequencePlayCtrl.steps">
-                            <a href="#" data-ng-click="sequencePlayCtrl.goTo(step)">{{ 'dropdown_step_navigate_choice_label'|trans:{"1" : $index + 1, "2" : sequencePlayCtrl.steps.length}:'ujm_sequence'}}</a>
+                        <li data-ng-repeat="step in sequencePlayCtrl.sequence.steps">
+                            <a href="#" data-ng-click="sequencePlayCtrl.goTo(step)">{{ 'dropdown_step_navigate_choice_label'|trans:{"1" : $index + 1, "2" : sequencePlayCtrl.sequence.steps.length}:'ujm_sequence'}}</a>
                         </li>
                     </ul>
                 </div>

@@ -47,8 +47,6 @@
                     this.currentQuestion = question;
                     // this will automatically update the paper object
                     this.currentQuestionPaperData = currentQuestionPaperData;
-                    console.log('common service paper');
-                    console.log(this.paper);
                 },
                 getStudentData: function () {
                     return{                        

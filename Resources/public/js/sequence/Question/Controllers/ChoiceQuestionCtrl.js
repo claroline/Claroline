@@ -17,10 +17,7 @@
                 // get used hints infos (id + content) + checked answer(s) for the current step / question
                 // those data are updated by view and sent to common service as soon as they change
                 this.currentQuestionPaperData = CommonService.getCurrentQuestionPaperData(question);
-                console.log('this.currentQuestionPaperData');
-                console.log(this.currentQuestionPaperData);
                 this.question = question;
-
                 if (this.currentQuestionPaperData.hints.length > 0) {
                     // init used hints display
                     for (var i = 0; i < this.currentQuestionPaperData.hints.length; i++) {
@@ -100,13 +97,6 @@
                         }
                     }
                 }
-                /*else {
-                 if (isMultiple) {
-                 for (var j = 0; j < this.question.choices.length; j++) {
-                 this.multipleChoice[j] = this.question.choices[j].id;
-                 }
-                 }
-                 }*/
                 // send the data to commen service so that other directives can get them
                 this.updateStudentData();
             };
@@ -121,9 +111,6 @@
              * @returns {Boolean}
              */
             this.answerExists = function (prevAnswer, searched, isMultiple) {
-                console.log('prev answer');
-                console.log(prevAnswer);
-
                 for (var j = 0; j < prevAnswer.length; j++) {
                     if (prevAnswer[j] === searched) {
                         return true;
@@ -162,8 +149,8 @@
                     }
                     else {
                         //usnset from this.currentQuestionPaperData.answer
-                        for(var i = 0; i < this.currentQuestionPaperData.answer.length; i++){
-                            if(this.currentQuestionPaperData.answer[i] === choiceId){
+                        for (var i = 0; i < this.currentQuestionPaperData.answer.length; i++) {
+                            if (this.currentQuestionPaperData.answer[i] === choiceId) {
                                 this.currentQuestionPaperData.answer.splice(i, 1);
                             }
                         }
@@ -171,7 +158,7 @@
                 }
                 else {
                     this.currentQuestionPaperData.answer[0] = this.uniqueChoice;
-                }                
+                }
                 CommonService.setStudentData(this.question, this.currentQuestionPaperData);
             };
         }

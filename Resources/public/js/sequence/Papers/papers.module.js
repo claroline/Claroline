@@ -26,8 +26,7 @@
         paperPromise: [
             '$route',
             'PapersService',
-            function getPaper($route, PapersService) {
-                             
+            function getPaper($route, PapersService) {                             
 
                 var promise = null;
                 if ($route.current.params && $route.current.params.pid) {
