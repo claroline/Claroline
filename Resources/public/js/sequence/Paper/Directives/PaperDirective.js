@@ -17,11 +17,12 @@
                 link: function (scope, element, attr, paperCtrl) {
                     console.log('paperDetails directive link method called');
                     paperCtrl.init(scope.paper, scope.context);
-                    /*scope.$watch('paper', function (newValue) {
+                    /*var context = scope.context;
+                    scope.$watch('paper', function (newValue) {
                         if (typeof newValue === 'string') {
-                            paperCtrl.init(newValue);
+                            paperCtrl.init(newValue, context);
                         } else {
-                            paperCtrl.init(newValue);
+                            paperCtrl.init(newValue, context);
                         }
                     });*/
                 }
