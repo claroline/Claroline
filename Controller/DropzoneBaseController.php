@@ -34,7 +34,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class DropzoneBaseController extends Controller
 {
     const CRITERION_PER_PAGE = 10;
-    const DROP_PER_PAGE = 10;
+    const DROP_PER_PAGE = 50;
     const CORRECTION_PER_PAGE = 10;
 
     protected function dispatch($event)
