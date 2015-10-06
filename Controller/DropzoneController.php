@@ -46,7 +46,6 @@ class DropzoneController extends DropzoneBaseController
         $em                     = $this->getDoctrine()->getManager();
         $dropzoneVoter          = $this->get('innova.manager.dropzone_voter');
         $dropzoneManager        = $this->get('innova.manager.dropzone_manager');
-        $agendaManager          = $this->get('claroline.manager.agenda_manager');
         $translator             = $this->get('translator');
         $platformConfigHandler  = $this->get('claroline.config.platform_config_handler');
 
@@ -63,7 +62,6 @@ class DropzoneController extends DropzoneBaseController
             // see if manual planification option has changed.
             $oldManualPlanning = $dropzone->getManualPlanning();
             $oldManualPlanningOption = $dropzone->getManualState();
-            $oldEndDropDate = $dropzone->getEndAllowDrop();
 
             $form->handleRequest($this->getRequest());
             $dropzone = $form->getData();
@@ -78,8 +76,8 @@ class DropzoneController extends DropzoneBaseController
 
             $manualStateChanged = false;
             $newManualState = null;
-            if ($dropzone->getManualPlanning() == true) {
-                if ($oldManualPlanning == false || $oldManualPlanningOption != $dropzone->getManualState()) {
+            if ($dropzone->getManualPlanning() === true) {
+                if ($oldManualPlanning === false || $oldManualPlanningOption != $dropzone->getManualState()) {
                     $manualStateChanged = true;
                     $newManualState = $dropzone->getManualState();
                 }
@@ -329,9 +327,9 @@ class DropzoneController extends DropzoneBaseController
     {
         if (
             !$dropzone->getAllowWorkspaceResource()
-            and !$dropzone->getAllowUpload()
-            and !$dropzone->getAllowUrl()
-            and !$dropzone->getAllowRichText()
+            && !$dropzone->getAllowUpload()
+            && !$dropzone->getAllowUrl()
+            && !$dropzone->getAllowRichText()
             ) {
             $form->get('allowWorkspaceResource')->addError(new FormError('Choose at least one type of document'));
             $form->get('allowUpload')->addError(new FormError('Choose at least one type of document'));

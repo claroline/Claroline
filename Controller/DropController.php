@@ -214,7 +214,7 @@ class DropController extends DropzoneBaseController
      * @internal param $user
      * @internal param $userId
      */
-    public function unlockUser(Dropzone $dropzone, $userId)
+    private function unlockUser(Dropzone $dropzone, $userId)
     {
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
@@ -251,7 +251,7 @@ class DropController extends DropzoneBaseController
      * @internal param $user
      * @internal param $userId
      */
-    public function unlockUsers(Dropzone $dropzone)
+    private function unlockUsers(Dropzone $dropzone)
     {
         return $this->unlockOrLockUsers($dropzone, true);
     }
@@ -270,7 +270,7 @@ class DropController extends DropzoneBaseController
      * @internal param $user
      * @internal param $userId
      */
-    public function unlockUsersCancel(Dropzone $dropzone)
+    private function unlockUsersCancel(Dropzone $dropzone)
     {
         return $this->unlockOrLockUsers($dropzone, false);
     }
@@ -722,8 +722,12 @@ class DropController extends DropzoneBaseController
             ->getRepository('InnovaCollecticielBundle:Correction')
             ->countFinished($dropzone, $user);
 
-        if ($dropzone->getDiplayCorrectionsToLearners() && $drop->countFinishedCorrections() >= $dropzone->getExpectedTotalCorrection() &&
-            $dropzone->getExpectedTotalCorrection() <= $nbCorrections || ($dropzone->isFinished() && $dropzone->getDiplayCorrectionsToLearners() or $drop->getUnlockedUser())
+        if ($dropzone->getDiplayCorrectionsToLearners()
+        && $drop->countFinishedCorrections() >= $dropzone->getExpectedTotalCorrection()
+        && $dropzone->getExpectedTotalCorrection() <= $nbCorrections
+        || ($dropzone->isFinished()
+        && $dropzone->getDiplayCorrectionsToLearners()
+        || $drop->getUnlockedUser())
         ) {
             $showCorrections = true;
         }
@@ -988,11 +992,6 @@ class DropController extends DropzoneBaseController
         
         // Récupération du Workspace
         $workspace = $dropzone->getResourceNode()->getWorkspace();
-
-        // Récupération des roles du Workspace
-        $roles =
-         $this->getDoctrine()->getManager()
-         ->getRepository('ClarolineCoreBundle:Role')->findByWorkspace($workspace);
 
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop');
 

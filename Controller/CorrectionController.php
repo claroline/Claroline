@@ -45,7 +45,7 @@ class CorrectionController extends DropzoneBaseController
     {
         $em = $this->getDoctrine()->getManager();
         // Check that the dropzone is in the process of peer review
-        if ($dropzone->isPeerReview() == false) {
+        if ($dropzone->isPeerReview() === false) {
             $this->getRequest()->getSession()->getFlashBag()->add(
                 'error',
                 $this->get('translator')->trans('The peer review is not enabled', array(), 'innova_collecticiel')
@@ -67,7 +67,7 @@ class CorrectionController extends DropzoneBaseController
             'dropzone' => $dropzone,
             'finished' => true
         ));
-        if ($userDrop == null) {
+        if ($userDrop === null) {
             $this->getRequest()->getSession()->getFlashBag()->add(
                 'error',
                 $this->get('translator')->trans('You must have made ​​your copy before correcting', array(), 'innova_collecticiel')
@@ -109,10 +109,10 @@ class CorrectionController extends DropzoneBaseController
         $em = $this->getDoctrine()->getManager();
         // Check that the user as a not finished correction (exclude admin correction). Otherwise generate a new one.
         $correction = $em->getRepository('InnovaCollecticielBundle:Correction')->getNotFinished($dropzone, $user);
-        if ($correction == null) {
+        if ($correction === null) {
             $drop = $em->getRepository('InnovaCollecticielBundle:Drop')->drawDropForCorrection($dropzone, $user);
 
-            if ($drop != null) {
+            if ($drop !== null) {
                 $correction = new Correction();
                 $correction->setDrop($drop);
                 $correction->setUser($user);
@@ -157,7 +157,7 @@ class CorrectionController extends DropzoneBaseController
 
         $grade = null;
         $i = 0;
-        while ($i < count($grades) and $grade == null) {
+        while ($i < count($grades) && $grade === null) {
             $current = $grades[$i];
             if (
                 $current->getCriterion()->getId() == $criterionId
@@ -168,7 +168,7 @@ class CorrectionController extends DropzoneBaseController
             $i++;
         }
 
-        if ($grade == null) {
+        if ($grade === null) {
             $criterionReference = $em->getReference('InnovaCollecticielBundle:Criterion', $criterionId);
             $grade = new Grade();
             $grade->setCriterion($criterionReference);
@@ -200,7 +200,7 @@ class CorrectionController extends DropzoneBaseController
         $em->flush();
 
         $event = null;
-        if ($edit == true) {
+        if ($edit === true) {
             $event = new LogCorrectionUpdateEvent($dropzone, $correction->getDrop(), $correction);
         } else {
             $event = new LogCorrectionEndEvent($dropzone, $correction->getDrop(), $correction);
@@ -711,8 +711,6 @@ class CorrectionController extends DropzoneBaseController
             ->getRepository('InnovaCollecticielBundle:Correction')
             ->getCorrectionAndDropAndUserAndDocuments($dropzone, $correctionId);
 
-        $countCorrection = count($correction);
-
         // Parcours des documents sélectionnés
         foreach ($correction->getDrop()->getDocuments() as $document) {
             if ($document->getId() == $documentOri->getId())
@@ -770,12 +768,10 @@ class CorrectionController extends DropzoneBaseController
                         $this->dispatch($event);
                     }
                 }
-                $em->flush();
                 // Fin ajout.
             }    
         }
-
-
+        $em->flush();
 
         $userId = $this->get('security.token_storage')->getToken()->getUser()->getId();
         if ($state == 'preview') {
@@ -807,7 +803,7 @@ class CorrectionController extends DropzoneBaseController
 
         $edit = $state == 'edit';
 
-        if ($correction == null) {
+        if ($correction === null) {
             throw new NotFoundHttpException();
         }
 
@@ -1383,7 +1379,6 @@ class CorrectionController extends DropzoneBaseController
         $form = $this->createForm(new CorrectionDenyType(), $correction);
 
         $dropUser = $correction->getDrop()->getUser();
-        $drop = $correction->getDrop();
         $dropId = $correction->getDrop()->getId();
         $dropzoneId = $dropzone->getId();
         // dropZone not in peerReview or corrections are not displayed to users or correction deny is not allowed
@@ -1774,7 +1769,7 @@ class CorrectionController extends DropzoneBaseController
             $em->persist($correction);
 
             $currentDrop = $correction->getDrop();
-            if ($currentDrop != null && $oldTotalGrade != $totalGrade) {
+            if ($currentDrop !== null && $oldTotalGrade != $totalGrade) {
                 $event = new LogCorrectionUpdateEvent($dropzone, $currentDrop, $correction);
                 $this->dispatch($event);
             }
@@ -1887,7 +1882,7 @@ class CorrectionController extends DropzoneBaseController
 
         $edit = $state == 'edit';
 
-        if ($correction == null) {
+        if ($correction === null) {
             throw new NotFoundHttpException();
         }
 
