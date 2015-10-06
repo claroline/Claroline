@@ -7,7 +7,8 @@ class AdditionalInstaller extends BaseInstaller
 {
     public function preInstall()
     {
-        $updater = new Updater\MigrationUpdater($this->container);
+        $updater = new Updater\MigrationUpdater($this->container->get('database_connection'),
+            $this->container->get('doctrine.orm.entity_manager'), $this->container->get('icap_badge.factory.portfolio_widget'));
         $updater->setLogger($this->logger);
         $updater->preInstall();
     }
