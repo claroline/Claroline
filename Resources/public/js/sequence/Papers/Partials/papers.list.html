@@ -1,0 +1,82 @@
+<div class="panel panel-default">
+    <div class="panel-heading clearfix">
+        <h5 class="panel-title pull-left">{{ 'paper_list'|trans:{}:'ujm_sequence' }}</h5>
+    </div>
+    <div class="panel-body">
+        <!-- links row (back, Docimologie, csv export) -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="btn-group" role="group">
+                    <a class="btn btn-default" data-ng-href="{{paperListCtrl.generateUrl('exercise-home', paperListCtrl.exoId)}}">{{ 'link_exercice_home'|trans:{}:'ujm_sequence' }}</a>
+                    <a class="btn btn-default" data-ng-href="#">{{ 'link_exercise_docimology'|trans:{}:'ujm_sequence' }}</a>
+                    <a class="btn btn-default" data-ng-href="#">{{ 'link_csv_export'|trans:{}:'ujm_sequence' }}</a>
+                </div>
+            </div>
+        </div>
+        <hr/>
+
+
+        <!-- Search row -->
+        <div class="form-inline">
+            <div class="form-group">               
+                <div class="input-group">
+                    <input type="text" class="form-control" data-ng-model="searchText" placeholder="{{ 'paper_search'|trans:{}:'ujm_sequence' }}">
+                    <div class="input-group-addon"><span class="fa fa-search"></span></div>
+                </div>
+            </div>
+            <!--
+            <div class="form-group">  
+                <div class="btn-group">
+                    <button role="button" type="button" class="btn btn-default fa fa-refresh"> Init</button>
+                    <button role="button" type="button" class="btn btn-default fa fa-list"> Complete list</button>
+                </div>
+            </div>
+            -->
+        </div>
+        <hr/>
+        <!-- paper list row -->
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>{{ 'paper_list_table_user'|trans:{}:'ujm_sequence' }}</th>
+                            <th>{{ 'paper_list_table_paper_number'|trans:{}:'ujm_sequence' }}</th>
+                            <th>{{ 'paper_list_table_start_date'|trans:{}:'ujm_sequence' }}</th>
+                            <th>{{ 'paper_list_table_end_date'|trans:{}:'ujm_sequence' }}</th>
+                            <th>{{ 'paper_list_table_interrupted'|trans:{}:'ujm_sequence' }}</th>
+                            <th>{{ 'paper_list_table_action'|trans:{}:'ujm_sequence' }}</th>
+                            <th>{{ 'paper_list_table_score'|trans:{}:'ujm_sequence' }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-ng-repeat="p in paperListCtrl.papers | filter:searchText">
+                            <td>
+                                <div>{{p.user}}</div>
+                            </td>
+                            <td>{{$index + 1}}</td>
+                            <td>
+                                <div>{{p.start}}</div>
+                            </td>
+                            <td>
+                                <div data-ng-if="p.end">{{p.end}}</div>
+                                <div data-ng-if="!p.end">-</div>
+                            </td>
+                            <td>
+                                <div data-ng-if="p.interrupted">{{ 'paper_list_table_interrupted_yes'|trans:{}:'ujm_sequence' }}</div>
+                                <div data-ng-if="!p.interrupted">{{ 'paper_list_table_interrupted_no'|trans:{}:'ujm_sequence' }}</div>
+                            </td>
+                            <td>
+                                <a href="#/{{p.id}}">Correction</a>
+                            </td>
+                            <td>
+                                <div data-ng-if="p.score">{{p.score}}/20</div>
+                                <div data-ng-if="!p.score">-</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

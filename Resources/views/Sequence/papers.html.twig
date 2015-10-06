@@ -7,8 +7,8 @@
 {% endblock %}
 
 {% block content %} 
-    <div class="ujm-papers-container" data-ng-app="PapersApp" data-ng-cloak="">
-        <h3>Paper list</h3>
+    <div class="ujm-papers-container" data-ng-app="PapersApp" data-ng-cloak="">        
+        <ng-view></ng-view>
     </div>
 {% endblock %}
 
@@ -22,9 +22,24 @@
         '@UJMExoBundle/Resources/public/js/sequence/Common/*'
         '@UJMExoBundle/Resources/public/js/sequence/Common/Services/*'
 
-        '@UJMExoBundle/Resources/public/js/sequence/papers.module.js'
+
+        '@UJMExoBundle/Resources/public/js/sequence/Paper/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Paper/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Paper/Directives/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Paper/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/sequence/Papers/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Papers/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Papers/Services/*'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
+    
+    
+    {# Set some vars needed by Angular parts #}
+    <script type="text/javascript">
+        {# exercice id since symfony calls the route angular does not know exercise id so this is a way to go... #}
+        var exoId = "{{ _resource.id }}";        
+    </script>
 
 {% endblock %}

@@ -24,9 +24,9 @@
                     $http
                         .put(
                             // fake for testing (param converter needs real object!)
-                            Routing.generate('ujm_sequence_record_step', {exo_id : 9, question_id : 12}), {data: answer}
+                            Routing.generate('ujm_sequence_save_step', {exo_id : 9, question_id : 12}), {data: answer}
                             // real one when API will be ready
-                            //Routing.generate('ujm_sequence_record_step', {exo_id : exoId, question_id : answer.question.id}), {data: answer}
+                            //Routing.generate('ujm_sequence_save_step', {exo_id : exoId, question_id : answer.question.id}), {data: answer}
                         )
                         .success(function (response){
                             deferred.resolve(response);

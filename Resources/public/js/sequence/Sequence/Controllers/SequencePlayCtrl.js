@@ -113,6 +113,8 @@
                     // save the paper and redirect to paper details (correction)
                     var promise = SequenceService.endSequence(this.sequence.id, studentData.paper);
                     promise.then(function (result) {
+                        //var url = CommonService.generateUrl('paper-list', this.sequence.id) + '#/' + studentData.paper.id;
+                        //$window.location = url;
                         this.isFinished = true;
                     }.bind(this), function (error) {
                         console.log('error');
