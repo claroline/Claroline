@@ -10,7 +10,7 @@ use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
 
 /**
- * @DI\Service
+ * @DI\Service("ujm.exo.qcm_handler")
  * @DI\Tag("ujm.exo.question_handler")
  */
 class QcmHandler implements QuestionHandlerInterface
@@ -46,9 +46,43 @@ class QcmHandler implements QuestionHandlerInterface
 
     public function validateAfterSchema(\stdClass $questionData)
     {
-        // check solutions is present
-        // check score
-        // check id score / id solution consistency
+        $errors = [];
+
+        if (!isset($questionData->solutions)) {
+            return $errors;
+        }
+
+        // check solution ids are consistent with choice ids
+        $choiceIds = array_map(function ($choice) {
+            return $choice->id;
+        }, $questionData->choices);
+
+        foreach ($questionData->solutions as $index => $solution) {
+            if (!in_array($solution->id, $choiceIds)) {
+                $errors[] = [
+                    'path' => "solutions[{$index}]",
+                    'message' => "id {$solution->id} doesn't match any choice id"
+                ];
+            }
+        }
+
+        // check there is a positive score solution
+        $maxScore = -1;
+
+        foreach ($questionData->solutions as $solution) {
+            if ($solution->score > $maxScore) {
+                $maxScore = $solution->score;
+            }
+        }
+
+        if ($maxScore <= 0) {
+            $errors[] = [
+                'path' => 'solutions',
+                'message' => 'there is no solution with a positive score'
+            ];
+        }
+
+        return $errors;
     }
 
     public function persistInteractionDetails(Question $question, \stdClass $importData)
