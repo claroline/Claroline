@@ -15,6 +15,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -28,17 +29,24 @@ class WidgetVoter implements VoterInterface
 {
     private $em;
     private $translator;
+    private $wm;
 
     /**
      * @DI\InjectParams({
      *     "em"           = @DI\Inject("doctrine.orm.entity_manager"),
      *     "translator"   = @DI\Inject("translator"),
+     *     "wm"           = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
-    public function __construct(EntityManager $em, TranslatorInterface $translator)
+    public function __construct(
+        EntityManager $em,
+        TranslatorInterface $translator,
+        WorkspaceManager $wm
+    )
     {
         $this->em = $em;
         $this->translator = $translator;
+        $this->wm = $wm;
     }
 
     public function vote(TokenInterface $token, $object, array $attributes)
@@ -78,7 +86,7 @@ class WidgetVoter implements VoterInterface
                 if (in_array('ROLE_WS_MANAGER_' . $workspace->getGuid(), $roleStrings)) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
-                //else
+                //if we have access to the parameters, always granted aswell
                 $tools = $this->em
                     ->getRepository('ClarolineCoreBundle:Tool\Tool')
                     ->findDisplayedByRolesAndWorkspace($roleStrings, $workspace);
@@ -89,7 +97,12 @@ class WidgetVoter implements VoterInterface
                     }
                 }
 
-                return VoterInterface::ACCESS_DENIED;
+                //else we need to check the masks (c/c from WorkspaceVoter)
+                $accesses = $this->wm->getAccesses($token, array($workspace), 'home', 'edit');
+
+                return isset($accesses[$workspace->getId()]) && $accesses[$workspace->getId()] === true ?
+                    VoterInterface::ACCESS_GRANTED :
+                    VoterInterface::ACCESS_DENIED;
             }
 
             if ($user = $object->getUser()) {
