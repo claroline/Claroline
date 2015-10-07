@@ -137,6 +137,13 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $mail;
 
     /**
+     * @ORM\Column()
+     * @Groups({"api"})
+     * @SerializedName("guid")
+     */
+    protected $guid;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="administrative_code", nullable=true)
@@ -1047,5 +1054,15 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function __toString()
     {
         return $this->firstName . ' ' . $this->lastName;
+    }
+
+    public function setGuid($guid)
+    {
+        $this->guid = $guid;
+    }
+
+    public function getGuid()
+    {
+        return $this->guid;
     }
 }

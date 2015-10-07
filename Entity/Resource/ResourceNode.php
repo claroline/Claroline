@@ -201,6 +201,11 @@ class ResourceNode
      */
     protected $active = true;
 
+    /**
+     * @ORM\Column()
+     */
+    protected $guid;
+
     public function __construct()
     {
         $this->rights = new ArrayCollection();
@@ -594,5 +599,15 @@ class ResourceNode
     public function __toString()
     {
         return $this->getPathForDisplay();
+    }
+
+    public function setGuid($guid)
+    {
+        $this->guid = $guid;
+    }
+
+    public function getGuid()
+    {
+        return $this->guid;
     }
 }

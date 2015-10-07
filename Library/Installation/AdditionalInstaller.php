@@ -222,6 +222,10 @@ class AdditionalInstaller extends BaseInstaller
                 $updater = new Updater\Updater060300($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
+            case version_compare($currentVersion, '6.4.0', '<'):
+                $updater = new Updater\Updater060400($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
         }
         $termsOfServiceManager = $this->container->get('claroline.common.terms_of_service_manager');
         $termsOfServiceManager->sendDatas();
