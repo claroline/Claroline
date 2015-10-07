@@ -1705,7 +1705,7 @@ class HomeController extends Controller
 
     private function checkWorkspaceEditionAccess(Workspace $workspace)
     {
-        if (!$this->authorization->isGranted('parameters', $workspace)) {
+        if (!$this->authorization->isGranted(array('home', 'edit'), $workspace)) {
 
             throw new AccessDeniedException();
         }
