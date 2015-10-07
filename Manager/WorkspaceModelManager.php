@@ -36,12 +36,16 @@ use Claroline\CoreBundle\Manager\WidgetManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\BundleRecorder\Log\LoggableTrait;
+use Psr\Log\LoggerInterface;
 
 /**
  * @DI\Service("claroline.manager.workspace_model_manager")
  */
 class WorkspaceModelManager
 {
+    use LoggableTrait;
+
     private $dispatcher;
     private $homeTabManager;
     private $om;
@@ -351,6 +355,7 @@ class WorkspaceModelManager
         User $user
     )
     {
+        $this->log('Duplicating roles...');
         $guid = $workspace->getGuid();
         $roles = $source->getRoles();
         $unusedRolePartName = '_' . $source->getGuid();
@@ -380,6 +385,7 @@ class WorkspaceModelManager
      */
     private function duplicateOrderedTools(Workspace $source, Workspace $workspace)
     {
+        $this->log('Duplicating tools...');
         $orderedTools = $source->getOrderedTools();
         $workspaceRoles = $this->getArrayRolesByWorkspace($workspace);
 
@@ -428,6 +434,7 @@ class WorkspaceModelManager
         User $user
     )
     {
+        //$this->log('Duplicating root directory...');
         $rootDirectory = new Directory();
         $rootDirectory->setName($workspace->getName());
         $directoryType = $this->resourceManager->getResourceTypeByName('directory');
@@ -489,6 +496,7 @@ class WorkspaceModelManager
         $resourceInfos
     )
     {
+        $this->log('Duplicating home tabs...');
         $this->om->startFlushSuite();
 
         $homeTabConfigs = $this->homeTabManager
@@ -612,18 +620,20 @@ class WorkspaceModelManager
         &$resourcesInfos
     )
     {
+        $this->log('Duplicating ' . count($resourcesModels) . ' resources...');
         $this->om->startFlushSuite();
 
         $copies = array();
         $resourcesErrors = array();
         $workspaceRoles = $this->getArrayRolesByWorkspace($workspace);
 
-        foreach ($resourcesModels as $resourceModel) {
+        foreach ($resourcesModels as $key => $resourceModel) {
             $resourceNode = $resourceModel->getResourceNode();
 
             if ($resourceModel->isCopy()) {
 
                 try {
+                    $this->log('Duplicating ' . $resourceNode->getName() . ' from type ' . $resourceNode->getResourceType()->getName());
                     $copy = $this->resourceManager->copy(
                         $resourceNode,
                         $rootDirectory->getResourceNode(),
@@ -631,7 +641,9 @@ class WorkspaceModelManager
                         false,
                         false
                     );
-                    $resourcesInfos['copies'][] = array('original' => $resourceNode, 'copy' => $copy);
+                    $copy->getResourceNode()->setIndex($resourceNode->getIndex());
+                    $this->om->persist($copy->getResourceNode());
+                    $resourcesInfos['copies'][] = array('original' => $resourceNode, 'copy' => $copy->getResourceNode());
                 } catch (NotPopulatedEventException $e) {
                     $resourcesErrors[] = array(
                         'resourceName' => $resourceNode->getName(),
@@ -668,6 +680,10 @@ class WorkspaceModelManager
                 );
                 $copies[] = $shortcut;
             }
+
+            $position = $key + 1;
+
+            $this->log('Resource [' . $resourceModel->getResourceNode()->getName() . '] ' . $position . '/' . count($resourcesModels) . ' copied');
         }
 
         /*** Sets previous and next for each copied resource ***/
@@ -729,6 +745,7 @@ class WorkspaceModelManager
         array $workspaceRoles
     )
     {
+        //$this->log('Duplicating rights...');
         $rights = $resourceNode->getRights();
         $workspace = $resourceNode->getWorkspace();
 
@@ -769,6 +786,7 @@ class WorkspaceModelManager
         array $workspaceRoles
     )
     {
+        $this->log('Duplicating directory content...');
         $children = $directory->getChildren();
         $copies = array();
         $resourcesErrors = array();
@@ -838,5 +856,10 @@ class WorkspaceModelManager
         $this->om->forceFlush();
         
         $errors['widgetConfigErrors'] = $this->duplicateHomeTabs($modelWorkspace, $workspace, $homeTabs->toArray(), $resourcesInfos);
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 }

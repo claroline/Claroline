@@ -27,6 +27,7 @@ class ConsoleLogger
 
         $formatLevelMap = array(
             LogLevel::DEBUG    => SfLogger::ERROR,
+            LogLevel::NOTICE   => SfLogger::INFO
         );
 
         $consoleLogger = new SfLogger($output, $verbosityLevelMap, $formatLevelMap);

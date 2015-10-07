@@ -1519,7 +1519,12 @@ class WorkspaceController extends Controller
             $this->workspaceManager->create($config, $this->tokenStorage->getToken()->getUser());
             $this->workspaceManager->importRichText();
         } else {
-            throw new \Exception('Invalid form');
+            return new Response(
+                $this->templating->render(
+                    "ClarolineCoreBundle:Workspace:importForm.html.twig",
+                    array('form' => $form->createView())
+                )
+            );
         }
 
         $route = $this->router->generate('claro_workspace_by_user');

@@ -19,7 +19,7 @@
     </div>
     <div class="panel-footer">
         {% if isEditGranted %}
-            <a class="btn btn-primary" href="{{ _path('claro_text_edit_form', {'text': _resource.getId()}) }}" role="button">{{ 'edit' | trans({}, 'platform') }}</a>
+            <a class="btn btn-primary" href="{{ path('claro_text_edit_form', {'text': _resource.getId()}) }}" role="button">{{ 'edit' | trans({}, 'platform') }}</a>
         {% endif %}
     </div>
 {% endblock %}

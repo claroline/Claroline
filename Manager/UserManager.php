@@ -41,7 +41,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
  */
 class UserManager
 {
-    const MAX_USER_BATCH_SIZE = 5;
+    const MAX_USER_BATCH_SIZE = 20;
 
     private $platformConfigHandler;
     private $strictEventDispatcher;
@@ -124,14 +124,15 @@ class UserManager
      *
      * @return \Claroline\CoreBundle\Entity\User
      */
-    public function createUser(User $user, $sendMail = true, $additionnalRoles = array(), $model = null)
+    public function createUser(User $user, $sendMail = true, $additionnalRoles = array(), $model = null, $publicUrl)
     {
         $this->objectManager->startFlushSuite();
 
         if ($this->personalWorkspaceAllowed($additionnalRoles)) {
             $this->setPersonalWorkspace($user, $model);
         }
-        $user->setPublicUrl($this->generatePublicUrl($user));
+
+        $publicUrl ? $user->setPublicUrl($publicUrl): $user->setPublicUrl($this->generatePublicUrl($user));
         $this->toolManager->addRequiredToolsToUser($user, 0);
         $this->toolManager->addRequiredToolsToUser($user, 1);
         $this->roleManager->setRoleToRoleSubject($user, PlatformRoles::USER);
@@ -366,7 +367,7 @@ class UserManager
             $newUser->setPhone($phone);
             $newUser->setLocale($lg);
             $newUser->setAuthentication($authentication);
-            $this->createUser($newUser, $sendMail, $additionalRoles, $model);
+            $this->createUser($newUser, $sendMail, $additionalRoles, $model, $username . uniqid());
             $this->objectManager->persist($newUser);
             $returnValues[] = $firstName . ' ' . $lastName;
 
@@ -377,7 +378,6 @@ class UserManager
 
             if ($i % self::MAX_USER_BATCH_SIZE === 0) {
                 if ($logger) $logger(" [UOW size: " . $this->objectManager->getUnitOfWork()->size() . "]");
-                $i = 0;
                 $this->objectManager->forceFlush();
 
                 if ($logger) $logger(" flushing users...");

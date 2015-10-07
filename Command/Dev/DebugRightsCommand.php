@@ -16,10 +16,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Console\Logger\ConsoleLogger;
-use Psr\Log\LogLevel;
+use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
 
 /**
  * Creates an user, optionaly with a specific role (default to simple user).
@@ -72,12 +70,7 @@ class DebugRightsCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $verbosityLevelMap = array(
-            LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::DEBUG  => OutputInterface::VERBOSITY_NORMAL
-        );
-        $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
+        $consoleLogger = ConsoleLogger::get($output);
         $code = $input->getArgument('code');
 
         $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');

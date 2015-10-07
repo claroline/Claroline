@@ -202,13 +202,15 @@ class WorkspaceManager
         User $user,
         $name,
         $code,
-        $description,
-        $displayable,
-        $selfRegistration,
-        $selfUnregistration,
+        $description = null,
+        $displayable = false,
+        $selfRegistration = false,
+        $selfUnregistration = false,
         &$errors = array()
     )
     {
+        $this->om->startFlushSuite();
+        $this->log('Workspace from model beginning.');
         $workspaceModelManager = $this->container->get('claroline.manager.workspace_model_manager');
 
         $workspace = new Workspace();
@@ -228,6 +230,8 @@ class WorkspaceManager
 
         $this->createWorkspace($workspace);
         $workspaceModelManager->addDataFromModel($model, $workspace, $user, $errors);
+        $this->log('Workspace from model end.');
+        $this->om->endFlushSuite();
 
         return $workspace;
     }
@@ -918,10 +922,7 @@ class WorkspaceManager
             $j++;
 
             if ($i % self::MAX_WORKSPACE_BATCH_SIZE === 0) {
-                if ($logger) $logger(" [UOW size: " . $this->om->getUnitOfWork()->size() . "]");
-                $i = 0;
                 $this->om->forceFlush();
-                if ($logger) $logger(" Workspace $j ($name) being created");
                 $this->om->clear();
             }
 
@@ -1119,6 +1120,7 @@ class WorkspaceManager
 
     public function setLogger(LoggerInterface $logger)
     {
+        $this->container->get('claroline.manager.workspace_model_manager')->setLogger($logger);
         $this->logger = $logger;
     }
 }
