@@ -323,4 +323,14 @@ class CourseSession
     {
         return $this->sessionGroups->toArray();
     }
+
+    public function getCourseTitle()
+    {
+        return $this->getCourse()->getTitle();
+    }
+
+    public function __toString()
+    {
+        return $this->getName();
+    }
 }

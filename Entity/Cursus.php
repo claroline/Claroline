@@ -360,4 +360,9 @@ class Cursus
     {
         return is_null($this->parent) ? null : $this->parent->getId();
     }
+
+    public function __toString()
+    {
+        return $this->getTitleAndCode();
+    }
 }
