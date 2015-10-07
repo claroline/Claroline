@@ -202,7 +202,7 @@ class ResourceNode
     protected $active = true;
 
     /**
-     * @ORM\Column(unique=true)
+     * @ORM\Column()
      */
     protected $guid;
 

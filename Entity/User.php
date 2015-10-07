@@ -137,7 +137,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $mail;
 
     /**
-     * @ORM\Column(unique=true)
+     * @ORM\Column()
      * @Groups({"api"})
      * @SerializedName("guid")
      */

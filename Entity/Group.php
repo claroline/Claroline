@@ -57,7 +57,7 @@ class Group extends AbstractRoleSubject implements OrderableInterface
     protected $users;
 
     /**
-     * @ORM\Column(unique=true)
+     * @ORM\Column()
      * @Groups({"api"})
      */
     protected $guid;

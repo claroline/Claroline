@@ -14,27 +14,20 @@ class Version20151007154027 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->addSql('SET foreign_key_checks = 0');
         $this->addSql("
             ALTER TABLE claro_user 
             ADD guid VARCHAR(255) NOT NULL
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_EB8D28522B6FCFB2 ON claro_user (guid)
         ");
         $this->addSql("
             ALTER TABLE claro_group 
             ADD guid VARCHAR(255) NOT NULL
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_E7C393D72B6FCFB2 ON claro_group (guid)
-        ");
-        $this->addSql("
             ALTER TABLE claro_resource_node 
             ADD guid VARCHAR(255) NOT NULL
         ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_A76799FF2B6FCFB2 ON claro_resource_node (guid)
-        ");
+        $this->addSql('SET foreign_key_checks = 1');
     }
 
     public function down(Schema $schema)
