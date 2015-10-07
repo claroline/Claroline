@@ -30,7 +30,7 @@ class LogResourceCreateEvent extends LogGenericEvent
                     'path' => $node->getPathForCreationLog()
                 ),
                 'workspace' => array(
-                    'name' => $node->getWorkspace()->getName()
+                    'name' => $node->getWorkspace() ? $node->getWorkspace()->getName(): ' - '
                 ),
                 'owner' => array(
                     'lastName' => $node->getCreator()->getLastName(),

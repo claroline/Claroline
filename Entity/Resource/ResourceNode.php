@@ -130,7 +130,7 @@ class ResourceNode
      *      targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
      *      inversedBy="resources"
      * )
-     * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      */
     protected $workspace;
 
