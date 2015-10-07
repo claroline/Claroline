@@ -5,6 +5,7 @@ namespace Icap\PortfolioBundle\Controller\Internal;
 use Claroline\CoreBundle\Entity\User;
 use Icap\PortfolioBundle\Controller\Controller as BaseController;
 use Icap\PortfolioBundle\Entity\Widget;
+use Icap\PortfolioBundle\Event\WidgetFindEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -134,12 +135,11 @@ class WidgetController extends BaseController
     {
         $this->checkPortfolioToolAccess($loggedUser);
 
-        /** @var \Icap\PortfolioBundle\Repository\Widget\AbstractWidgetRepository $abstractWidgetRepository */
-        $abstractWidgetRepository = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\AbstractWidget');
+        $widgetFindEvent = new WidgetFindEvent($widgetId, $type, $loggedUser);
 
-        $widget = $abstractWidgetRepository->findOneByWidgetType($type, $widgetId, $loggedUser);
+        $this->get('event_dispatcher')->dispatch("icap_portfolio_widget_find_" . $type, $widgetFindEvent);
 
-        $data = $this->getWidgetsManager()->handle($widget, $type, $request->request->all(), $this->get('kernel')->getEnvironment());
+        $data = $this->getWidgetsManager()->handle($widgetFindEvent->getWidget(), $type, $request->request->all(), $this->get('kernel')->getEnvironment());
 
         $response = new JsonResponse();
         $response->setData($data);
