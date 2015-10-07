@@ -124,14 +124,15 @@ class UserManager
      *
      * @return \Claroline\CoreBundle\Entity\User
      */
-    public function createUser(User $user, $sendMail = true, $additionnalRoles = array(), $model = null)
+    public function createUser(User $user, $sendMail = true, $additionnalRoles = array(), $model = null, $publicUrl)
     {
         $this->objectManager->startFlushSuite();
 
         if ($this->personalWorkspaceAllowed($additionnalRoles)) {
             $this->setPersonalWorkspace($user, $model);
         }
-        $user->setPublicUrl($this->generatePublicUrl($user));
+
+        $publicUrl ? $user->setPublicUrl($publicUrl): $user->setPublicUrl($this->generatePublicUrl($user));
         $this->toolManager->addRequiredToolsToUser($user, 0);
         $this->toolManager->addRequiredToolsToUser($user, 1);
         $this->roleManager->setRoleToRoleSubject($user, PlatformRoles::USER);
@@ -360,7 +361,7 @@ class UserManager
             $newUser->setPhone($phone);
             $newUser->setLocale($lg);
             $newUser->setAuthentication($authentication);
-            $this->createUser($newUser, $sendMail, $additionalRoles, $model);
+            $this->createUser($newUser, $sendMail, $additionalRoles, $model, $username . uniqid());
             $this->objectManager->persist($newUser);
             $returnValues[] = $firstName . ' ' . $lastName;
 
