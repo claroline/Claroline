@@ -2,20 +2,16 @@
     'use strict';
 
     angular.module('PapersApp').controller('PaperListCtrl', [
-        '$scope',
         '$routeParams',
         '$window',
         'PapersService',
         'CommonService',
-        function ($scope, $routeParams, $window, PapersService, CommonService) {
+        function ($routeParams, $window, PapersService, CommonService) {
 
-            this.papers = [];
-            this.exoId = exoId;
-            // exoId is given by paper.html.twig
-            // for now no better solutions
-            // when 'exercise_home_view' will be in angular, this data will be given by route
-            if(exoId){
-                 var promise = PapersService.getAll(exoId);
+            this.papers = [];          
+            this.exoId = $routeParams.eid;
+            if(this.exoId){
+                 var promise = PapersService.getAll(this.exoId);
                     promise.then(function (result) {
                         this.papers = result.data;
                     }.bind(this), function (error) {

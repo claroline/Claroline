@@ -11,7 +11,7 @@
         function ($scope, $routeParams, $window, PapersService, CommonService, paperPromise) {
             
             $scope.paper = paperPromise.data;
-
+            $scope.exoId = $routeParams.eid;
         }
     ]);
 })();

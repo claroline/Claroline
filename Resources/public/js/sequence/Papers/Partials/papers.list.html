@@ -67,7 +67,7 @@
                                 <div data-ng-if="!p.interrupted">{{ 'paper_list_table_interrupted_no'|trans:{}:'ujm_sequence' }}</div>
                             </td>
                             <td>
-                                <a href="#/{{p.id}}">Correction</a>
+                                <a href="#/{{paperListCtrl.exoId}}/{{p.id}}">Correction</a>
                             </td>
                             <td>
                                 <div data-ng-if="p.score">{{p.score}}/20</div>

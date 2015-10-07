@@ -1,5 +1,9 @@
 {% extends "UJMExoBundle:Sequence:layout.html.twig" %}
 
+{% block meta %}
+    {{ parent() }}
+    {# if we want to use html5 urls set the base url here <base href="{ { path('editor_edit', {id: _resource.id}) } }"> #}
+{% endblock %}
 
 
 {% block breadcrumb %}
@@ -37,9 +41,7 @@
     
     
     {# Set some vars needed by Angular parts #}
-    <script type="text/javascript">
-        {# exercice id since symfony calls the route angular does not know exercise id so this is a way to go... #}
-        var exoId = "{{ _resource.id }}";        
+    <script type="text/javascript">    
     </script>
 
 {% endblock %}

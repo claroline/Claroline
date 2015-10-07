@@ -19,7 +19,7 @@
     ]);
 
 
-    var resolvePaper = {
+    var resolvePaperDetailsData = {
         /**
          * Get the Root step of the Path
          */
@@ -45,15 +45,16 @@
         '$locationProvider',
         function PapersConfig($routeProvider, $locationProvider) {
             $routeProvider
-                    .when('/', {
+                    .when('/:eid', {
                         templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Papers/Partials/papers.list.html',
                         controller: 'PaperListCtrl',
                         controllerAs: 'paperListCtrl'
                     })
-                    .when('/:pid', {
+                    .when('/:eid/:pid', {
                         templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Papers/Partials/paper.show.html',
                         controller: 'PaperDetailsCtrl',
-                        resolve: resolvePaper
+                        controllerAs: 'paperDetailsCtrl',
+                        resolve: resolvePaperDetailsData
                     })
                     .otherwise({
                         redirectTo: '/'

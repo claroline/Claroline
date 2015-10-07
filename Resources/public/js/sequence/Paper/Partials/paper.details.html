@@ -4,9 +4,9 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="btn-group" role="group">
-                    <a class="btn btn-default" data-ng-href="{{paperCtrl.generateUrl('exercise-home', paperCtrl.paper.exerciseId)}}">{{ 'link_exercice_home'|trans:{}:'ujm_sequence' }}</a>
+                    <a class="btn btn-default" data-ng-href="{{paperCtrl.generateUrl('exercise-home', paperCtrl.exoId)}}">{{ 'link_exercice_home'|trans:{}:'ujm_sequence' }}</a>
                     <a class="btn btn-default" data-ng-if="paperCtrl.context === 'from-list'" data-ng-href="#/">{{ 'paper_list'|trans:{}:'ujm_sequence' }}</a>
-                    <a class="btn btn-default" data-ng-href="{{paperCtrl.generateUrl('exercise-play', paperCtrl.paper.exerciseId)}}">{{ 'link_exercise_retry'|trans:{}:'ujm_sequence' }}</a>
+                    <a class="btn btn-default" data-ng-href="{{paperCtrl.generateUrl('exercise-play', paperCtrl.exoId)}}">{{ 'link_exercise_retry'|trans:{}:'ujm_sequence' }}</a>
                 </div>
             </div>
         </div>

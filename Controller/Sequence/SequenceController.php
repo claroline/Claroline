@@ -46,7 +46,6 @@ class SequenceController extends Controller
         
         $previousPaper = array(
             "id" => "23",
-            'exerciseId' => $exercise->getId(),
             "questions" => array(
                 array(
                     "id" => "7",
@@ -58,7 +57,6 @@ class SequenceController extends Controller
         
         $previousPaper2 = array(
             "id" => "23",
-            'exerciseId' => $exercise->getId(),
             "questions" => array(
                 array(
                     "id" => "7",
@@ -75,7 +73,6 @@ class SequenceController extends Controller
         
         $newPaper = array(
             "id" => "28",
-            'exerciseId' => $exercise->getId(),
             "questions" => array()
         );
         

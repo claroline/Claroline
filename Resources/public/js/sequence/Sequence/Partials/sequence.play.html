@@ -16,7 +16,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <step-show data-ng-if="!sequencePlayCtrl.isFinished" class="step-container" data-current-step="sequencePlayCtrl.currentStep"></step-show>
-                        <paper-details data-ng-if="sequencePlayCtrl.isFinished" data-paper="sequencePlayCtrl.paper" data-context="in-exercise"></paper-details>
+                        <paper-details data-ng-if="sequencePlayCtrl.isFinished" data-paper="sequencePlayCtrl.paper" data-exo-id="{{sequencePlayCtrl.sequence.id}}" data-context="in-exercise"></paper-details>
                     </div>
                 </div>
             </div>
