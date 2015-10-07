@@ -170,7 +170,7 @@ class ResourceManager
         $node = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $node->setResourceType($resourceType);
         $node->setPublished($isPublished);
-
+        $node->setGuid($this->container->get('claroline.utilities.misc')->generateGuid());
         $mimeType = ($resource->getMimeType() === null) ?
             'custom/' . $resourceType->getName():
             $resource->getMimeType();

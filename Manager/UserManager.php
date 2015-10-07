@@ -132,6 +132,8 @@ class UserManager
             $this->setPersonalWorkspace($user, $model);
         }
 
+        $user->setGuid($this->container->get('claroline.utilities.misc')->generateGuid());
+        $this->objectManager->persist($user);
         $publicUrl ? $user->setPublicUrl($publicUrl): $user->setPublicUrl($this->generatePublicUrl($user));
         $this->toolManager->addRequiredToolsToUser($user, 0);
         $this->toolManager->addRequiredToolsToUser($user, 1);

@@ -57,6 +57,12 @@ class Group extends AbstractRoleSubject implements OrderableInterface
     protected $users;
 
     /**
+     * @ORM\Column(unique=true)
+     * @Groups({"api"})
+     */
+    protected $guid;
+
+    /**
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
      *     cascade={"persist"},
@@ -215,5 +221,15 @@ class Group extends AbstractRoleSubject implements OrderableInterface
     public function __toString()
     {
         return $this->name;
+    }
+
+    public function setGuid($guid)
+    {
+        $this->guid = $guid;
+    }
+
+    public function getGuid()
+    {
+        return $this->guid;
     }
 }
