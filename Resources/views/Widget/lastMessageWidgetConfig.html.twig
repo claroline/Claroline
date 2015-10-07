@@ -1,0 +1,14 @@
+<form name="claroline_forum_last_message_widget_config" class="form-inline" action="{{ path("claroline_forum_last_message_widget_configure", {'id': widgetInstance.id}) }}" method="post" {{ form_enctype(form) }} novalidate="novalidate">
+    <div class="panel-body">
+        <label class="control-label col-md-3">{{  'title_form_last_messages'|trans({}, 'forum') }}</label>
+            {{ form_errors(form) }}
+            {{ form_widget(form.display_my_last_messages) }}
+            {{ form_errors(form.display_my_last_messages) }}
+            {{ form_label(form.display_my_last_messages, 'title_option_form_last_messages'|trans({}, 'forum')) }}
+            {{ form_rest(form) }}
+    </div>
+    <div class="panel-footer">
+        <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
+        <button type="button" class="btn btn-default claro-widget-form-cancel">{{ 'cancel'|trans({}, 'platform') }}</button>
+    </div>
+</form>
