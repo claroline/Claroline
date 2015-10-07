@@ -83,15 +83,19 @@ class ResourceVoter implements VoterInterface
             $errors = array();
 
             if (strtolower($attributes[0]) == 'create') {
-                //there should be one one resource every time
-                //(you only create resource one at a time in a single directory
-                $targetWorkspace = $object->getResources()[0]->getWorkspace();
+                if ($targetWorkspace = $object->getResources()[0]) {
+                    //there should be one one resource every time
+                    //(you only create resource one at a time in a single directory
+                    $targetWorkspace = $object->getResources()[0]->getWorkspace();
 
-                foreach ($object->getResources() as $resource) {
-                    $errors = array_merge(
-                        $errors,
-                        $this->checkCreation($object->getAttribute('type'), $resource, $token, $targetWorkspace)
-                    );
+                    foreach ($object->getResources() as $resource) {
+                        $errors = array_merge(
+                            $errors,
+                            $this->checkCreation($object->getAttribute('type'), $resource, $token, $targetWorkspace)
+                        );
+                    }
+                } else {
+                    return VoterInterface::ACCESS_GRANTED;
                 }
             } elseif (strtolower($attributes[0]) == 'move') {
                 $errors = array_merge(
