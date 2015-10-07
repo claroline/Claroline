@@ -2,10 +2,14 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4>{{ "upload" | trans({}, "platform")}}</h4>
+            <h4>{% if form.destination is defined %}{{ "upload" | trans({}, "platform")}}{% else %} {{ 'pick_a_resource' | trans({}, 'platform') }}  {% endif %}</h4>
         </div>
         <div class="modal-body text-center">
-            <p>{{ 'upload_file' | trans({}, 'platform') }}:</p>
+            {% if form.destination is defined %}
+                <p>{{ 'upload_file' | trans({}, 'platform') }}:</p>
+            {% else %}
+                <p>{{ 'pick_a_resource' | trans({}, 'platform') }}:</p>
+            {% endif %}
             <form role="form" enctype="multipart/form-data">
                 <input
                     type="file"
@@ -13,18 +17,20 @@
                     id='file_form_file'
                     style='position:absolute;top:-1000px;'
                 >
-                {{ form_row(form.destination) }}
+                {% if form.destination is defined %} {{ form_row(form.destination) }} {% endif %}
             </form>
-            <button type="button" class="btn btn-primary btn-lg filePicker">
-                <i class='fa fa-file'></i>
-            </button>
-            <div class="progress margin-top-md hide">
-                <div role="progressbar" class="progress-bar" data-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                    <span class="sr-only">0%</span>
+            {% if form.destination is defined %}
+                <button type="button" class="btn btn-primary btn-lg filePicker">
+                    <i class='fa fa-file'></i>
+                </button>
+                <div class="progress margin-top-md hide">
+                    <div role="progressbar" class="progress-bar" data-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                        <span class="sr-only">0%</span>
+                    </div>
                 </div>
-            </div>
-            <hr>
-            <p>{{ 'choose_from_resource_manager' | trans({}, 'platform') }}:</p>
+                <hr>
+                <p>{{ 'choose_from_resource_manager' | trans({}, 'platform') }}:</p>
+            {% endif %}
             <button type="button" data-dismiss="modal" class="btn btn-primary btn-lg resourcePicker">
                 <i class="fa fa-folder-open"></i>
             </button>

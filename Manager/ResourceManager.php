@@ -1726,10 +1726,11 @@ class ResourceManager
         }
 
         if ($node = $this->container->get('request')->getSession()->get('current_resource_node')) {
-            $defaults = array_merge(
-                $defaults,
-                $this->directoryRepo->findDefaultUploadDirectories($node->getWorkspace())
-            );
+            $root = $this->directoryRepo->findDefaultUploadDirectories($node->getWorkspace());
+            
+            if ($this->container->get('security.authorization_checker')->isGranted('CREATE', $root)) {
+                $defaults = array_merge($defaults, $root);
+            }
         }
 
         return $defaults;

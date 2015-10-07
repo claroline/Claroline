@@ -51,16 +51,17 @@ class TinyMceUploadModalType extends AbstractType
                 )
            )
         );
-
-        $builder->add(
-            'destination',
-            'choice',
-            array(
-                'label' => 'destination',
-                'mapped' => false,
-                'choices' => $this->destinations
-            )
-        );
+        if (count($this->destinations) > 1) {
+            $builder->add(
+                'destination',
+                'choice',
+                array(
+                    'label' => 'destination',
+                    'mapped' => false,
+                    'choices' => $this->destinations
+                )
+            );
+        }
         if ($this->uncompress) {
             $builder->add(
                 'uncompress',
