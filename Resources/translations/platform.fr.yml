@@ -1186,3 +1186,4 @@ time_ago: Il y a %count% %unit%
 mail_options: Options du courriel
 mailer_from: Champ "from" du courriel
 desktop_root_directory_upload_error: Vous ne pouvez pas rajouter de ressources à la racine du bureau.
+pick_a_resource: Choisissez une ressource
