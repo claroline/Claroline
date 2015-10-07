@@ -216,7 +216,7 @@
                        href="{{ path('ujm_exercise_question_delete', {
                             'id': exerciseID, 'qid': question.id, 'pageNow': pagerQuestion.getCurrentPage,
                             'maxPage': pagerQuestion.maxPerPage, 'nbItem': pagerQuestion.getNbResults,
-                            'lastPage': pagerQuestion.getNbPages }) }}">
+                            'lastPage': pagerQuestion.getNbPages }) }}" id="delete-question">
                         <i class="fa fa-trash-o"></i>
                     </a>
                 {% endif %}
