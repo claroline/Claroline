@@ -231,4 +231,9 @@ class Course
     {
         $this->icon = $icon;
     }
+
+    public function __toString()
+    {
+        return $this->getTitle() . ' [' . $this->getCode() . ']';
+    }
 }
