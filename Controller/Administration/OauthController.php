@@ -15,7 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Manager\OauthManager;
 use Claroline\CoreBundle\Entity\Oauth\Client;
 use Claroline\CoreBundle\Entity\Oauth\FriendRequest;
@@ -25,6 +24,7 @@ use Claroline\CoreBundle\Form\Administration\RequestFriendType;
 use Claroline\CoreBundle\Manager\Exception\FriendRequestException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -33,19 +33,23 @@ class OauthController extends Controller
 {
     private $oauthManager;
     private $request;
+    private $translator;
 
     /**
      * @DI\InjectParams({
      *     "oauthManager" = @DI\Inject("claroline.manager.oauth_manager"),
-     *     "request"      = @DI\Inject("request")
+     *     "request"      = @DI\Inject("request"),
+     *     "translator"   = @DI\Inject("translator")
      * })
      */
     public function __construct(
         OauthManager $oauthManager,
-        $request
+        $request,
+        TranslatorInterface $translator
     ) {
         $this->oauthManager = $oauthManager;
         $this->request = $request;
+        $this->translator = $translator;
     }
 
     /**
@@ -185,7 +189,12 @@ class OauthController extends Controller
             try {
                 $data = $this->oauthManager->createFriendRequest($request, $host);
             } catch (FriendRequestException $e) {
-                $form->addError(new FormError('invalid_host'));
+                $url = $e->getUrl();
+                $form->addError(new FormError($this->translator->trans(
+                    'invalid_host',
+                    array('%url%' => $url),
+                    'platform')
+                ));
 
                 return array("form" => $form->createView());
             }

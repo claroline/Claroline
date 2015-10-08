@@ -132,9 +132,9 @@
                                             <tr id="friend-request-row-{{ request.getId() }}">
                                                 <th>
                                                     {% if request.isActivated() %}
-                                                        activated
+                                                        {{ 'activated'|trans({}, 'platform') }}
                                                     {% else %}
-                                                        not activated
+                                                        {{ 'not_activated'|trans({}, 'platform') }}
                                                     {% endif %}
                                                 </th>
                                                 <th> {{ request.getHost() }} </th>

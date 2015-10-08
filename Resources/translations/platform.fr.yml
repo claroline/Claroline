@@ -439,7 +439,7 @@ home_tab_widgets: 'Widgets de l''onglet'
 home_tab_widgets_configuration: 'Configuration des widgets de l''onglet'
 home_tabs: 'Onglets de la page d''accueil'
 home_tabs_configuration: 'Configuration des onglets de la page d''accueil'
-host: Host
+host: Hôte
 icon: Icône
 id: Id
 id_col: 'Colonne des identifiants'
@@ -1187,3 +1187,7 @@ mail_options: Options du courriel
 mailer_from: Champ "from" du courriel
 desktop_root_directory_upload_error: Vous ne pouvez pas rajouter de ressources à la racine du bureau.
 pick_a_resource: Choisissez une ressource
+invalid_host: Hôte invalide (accès à %url% refusé).
+request_friend: Requête d'ami
+activated: Activé
+not_activated: Désactivé
