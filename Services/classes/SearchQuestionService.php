@@ -16,19 +16,11 @@ class SearchQuestionService {
     private $doctrine;
     private $container;
     
-    private $type;// In which column
-    private $whatToFind;// Which text to find
-    private $user;
-    
     public function __construct(Registry $doctrine,ContainerInterface $container,TokenStorageInterface $tokenStorage) {
         $this->doctrine = $doctrine;
         $this->container = $container;
         $this->request = $container->get('request');
-        $this->tokenStorage = $tokenStorage;
-        
-        $this->user = $this->container->get('security.token_storage')->getToken()->getUser();
-        $this->type = $this->request->query->get('type'); 
-        $this->whatToFind = $this->request->query->get('whatToFind'); 
+        $this->tokenStorage = $tokenStorage;        
     }
     /**
      * 
@@ -36,24 +28,27 @@ class SearchQuestionService {
      * @return array
      */
     public function choiceTypeQuestion($repository) {
-        
+        $type = $this->request->query->get('type');
+        $whatToFind = $this->request->query->get('whatToFind');
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $em = $this->doctrine->getManager();
         $questionRepository = $em->getRepository('UJMExoBundle:'.$repository);
-        switch ($this->type) {
+        
+        switch ($type) {
             case 'Category':
-                $listQuestions = $questionRepository->findByUserAndCategoryName($this->user, $this->whatToFind);
+                $listQuestions = $questionRepository->findByUserAndCategoryName($user, $whatToFind);
                 break;
             case 'Type':
-                $listQuestions = $questionRepository->findByUserAndType($this->user, $this->whatToFind);
+                $listQuestions = $questionRepository->findByUserAndType($user, $whatToFind);
                 break;
             case 'Title':
-                $listQuestions = $questionRepository->findByUserAndTitle($this->user, $this->whatToFind);
+                $listQuestions = $questionRepository->findByUserAndTitle($user, $whatToFind);
                 break;
             case 'Contain':
-                $listQuestions = $questionRepository->findByUserAndInvite($this->user, $this->whatToFind);
+                $listQuestions = $questionRepository->findByUserAndInvite($user, $whatToFind);
                 break;
             case 'All':
-                $listQuestions = $questionRepository->findByUserAndContent($this->user, $this->whatToFind);
+                $listQuestions = $questionRepository->findByUserAndContent($user, $whatToFind);
                 break;
         }
         return $listQuestions;
