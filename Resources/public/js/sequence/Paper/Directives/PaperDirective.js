@@ -16,7 +16,6 @@
                     exoId: '@'
                 },
                 link: function (scope, element, attr, paperCtrl) {
-                    console.log('paperDetails directive link method called');
                     paperCtrl.init(scope.paper, scope.context, scope.exoId);
                 }
             };

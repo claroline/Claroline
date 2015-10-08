@@ -38,6 +38,9 @@ paper_list_table_interrupted_yes: Oui
 paper_list_table_interrupted_no: Non
 paper_list_table_action: Correction
 paper_list_table_score: Score
+paper_list_table_first_page_label: Première
+paper_list_table_last_page_label: Dernière
+paper_list_table_toggle_pagination: Paginer / Dépaginer les resultats
 
 # q
 question_hints: Indices
@@ -86,3 +89,4 @@ sequence_nb_attempts: Essais N° %1%
 sequence_next_step_confirm: Etes vous sur de vouloir terminer l'étape courante ? <br/> Vous ne pourrez pas revenir en arrière.
 sequence_end_sequence_confirm: Etes vous sur de vouloir terminer la séquence ? <br/> Vous ne pourrez plus modifier vos réponses.
 step_question_shuffle: Ordre des questions aléatoire pour cette étape
+start_again: Recommencer

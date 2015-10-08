@@ -13,7 +13,7 @@
                     currentStep: '='
                 },
                 link: function (scope, element, attr, stepShowCtrl) {
-                    console.log('step show directive link method called'); 
+                    
                     scope.$watch('currentStep', function (newValue) {
                         if (typeof newValue === 'string') {
                             stepShowCtrl.currentStep = JSON.parse(newValue);

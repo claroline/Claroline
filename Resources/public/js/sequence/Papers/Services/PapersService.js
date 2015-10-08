@@ -22,8 +22,6 @@
                         })
                         .error(function (data, status) {
                             console.log('PapersService, getAll method error');
-                            console.log(status);
-                            console.log(data);
                             deferred.reject([]);
                         });
 
@@ -40,8 +38,6 @@
                         })
                         .error(function (data, status) {
                             console.log('PapersService, getOne method error');
-                            console.log(status);
-                            console.log(data);
                             deferred.reject([]);
                         });
 

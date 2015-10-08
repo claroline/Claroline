@@ -64,7 +64,6 @@
                     }
                 }
                 score -= penalty;
-                console.log('crac ' + score.toString());
                 return score;
 
             };
@@ -90,12 +89,7 @@
                 this.currentAnswer = answer;
             };
 
-            this.goTo = function (index) {
-
-            };
-
             this.toggleDetails = function (id) {
-                console.log('toggle ' + id);
                 $('#' + id).toggle();
             };
 

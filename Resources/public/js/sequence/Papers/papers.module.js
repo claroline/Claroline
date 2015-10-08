@@ -14,6 +14,7 @@
         'ui.translation',
         'ui.resourcePicker',
         'ngBootbox',
+        'angular-table',
         'Common',
         'Paper'
     ]);
@@ -21,7 +22,7 @@
 
     var resolvePaperDetailsData = {
         /**
-         * Get the Root step of the Path
+         * Get the paper details
          */
         paperPromise: [
             '$route',
@@ -31,6 +32,26 @@
                 var promise = null;
                 if ($route.current.params && $route.current.params.pid) {
                     promise = PapersService.getOne($route.current.params.pid);
+                    
+                }
+                return promise;
+
+            }
+        ]
+    };
+    
+    var resolvePaperListData = {
+         /**
+         * Get the exercise papers
+         */
+        paperListPromise: [
+            '$route',
+            'PapersService',
+            function getPapers($route, PapersService) {                             
+
+                var promise = null;
+                if ($route.current.params && $route.current.params.eid) {
+                    promise = PapersService.getAll($route.current.params.eid);
                     
                 }
                 return promise;
@@ -48,7 +69,8 @@
                     .when('/:eid', {
                         templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Papers/Partials/papers.list.html',
                         controller: 'PaperListCtrl',
-                        controllerAs: 'paperListCtrl'
+                        controllerAs: 'paperListCtrl',
+                        resolve: resolvePaperListData
                     })
                     .when('/:eid/:pid', {
                         templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Papers/Partials/paper.show.html',
@@ -57,7 +79,7 @@
                         resolve: resolvePaperDetailsData
                     })
                     .otherwise({
-                        redirectTo: '/'
+                        redirectTo: '/:eid'
                     });
             //$locationProvider.html5Mode({enabled:true, requireBase:false});
         }
