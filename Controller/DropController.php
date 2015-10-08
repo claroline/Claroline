@@ -978,11 +978,18 @@ class DropController extends DropzoneBaseController
      *      requirements={"resourceId" = "\d+"},
      *      defaults={"page" = 1}
      * )
+     * @Route(
+     *      "/{resourceId}/shared/spaces/{page}",
+     *      name="innova_collecticiel_shared_spaces_paginated",
+     *      requirements={"resourceId" = "\d+", "page" = "\d+"},
+     *      defaults={"page" = 1}
+     * )
      * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @Template()
      */
     public function sharedSpacesAction($dropzone, $page)
     {
+
 // Onglet "Espaces partagés"
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
@@ -1001,17 +1008,18 @@ class DropController extends DropzoneBaseController
 
         // Récupération du workspace courant
         $workspaceId = $dropzone->getResourceNode()->getWorkspace()->getId();
-
         $workspaceArray[] = $workspaceId;
-        $page=1;
 
         $userManager = $this->get('claroline.manager.user_manager');
         $withPager = false;
         $usersByWorkspaces = $userManager->getUsersByWorkspaces($workspaceArray, $page, 20, $withPager);
+//      var_dump($usersByWorkspaces[0]);
+
+        $userWithRights = $userManager->getUsersWithRights($dropzone->getResourceNode());
         // Fin ajout du code pour afficher les élèves inscrits mais qui n'ont pas déposé. InnovaERV.
 
         // dropsQuery : finished à TRUE et unlocked_drop à FALSE
-        $dropsQuery = $dropRepo->getDropsAwaitingCorrectionQuery($dropzone, 2);
+        $dropsQuery = $dropRepo->getSharedSpacesQuery($dropzone, $workspace);
 
         $countUnterminatedDrops = $dropRepo->countUnterminatedDropsByDropzone($dropzone->getId());
 
@@ -1040,13 +1048,15 @@ class DropController extends DropzoneBaseController
         $adapter = new DoctrineORMAdapter($dropsQuery);
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage(DropzoneBaseController::DROP_PER_PAGE);
+
+        //echo DropzoneBaseController::DROP_PER_PAGE . "--";
         try {
             $pager->setCurrentPage($page);
         } catch (NotValidCurrentPageException $e) {
             if ($page > 0) {
                 return $this->redirect(
                     $this->generateUrl(
-                        'innova_collecticiel_drops_awaiting_paginated',
+                        'innova_collecticiel_shared_spaces_paginated',
                         array(
                             'resourceId' => $dropzone->getId(),
                             'page' => $pager->getNbPages(),
