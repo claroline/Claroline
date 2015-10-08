@@ -2,8 +2,10 @@
 
 namespace Icap\BadgeBundle\Listener\Portfolio;
 
+use Doctrine\ORM\EntityManager;
 use Icap\BadgeBundle\Factory\Portfolio\WidgetFactory;
 use Icap\PortfolioBundle\Event\WidgetDataEvent;
+use Icap\PortfolioBundle\Event\WidgetFindEvent;
 use Icap\PortfolioBundle\Event\WidgetFormEvent;
 use Icap\PortfolioBundle\Event\WidgetFormViewEvent;
 use Icap\PortfolioBundle\Event\WidgetTypeCreateEvent;
@@ -33,17 +35,25 @@ class WidgetListener
     protected $formFactory;
 
     /**
+     * @var EntityManager
+     */
+    protected $entityManager;
+
+    /**
      * @DI\InjectParams({
      *     "templatingEngine" = @DI\Inject("templating"),
      *     "widgetFactory" = @DI\Inject("icap_badge.factory.portfolio_widget"),
      *     "formFactory" = @DI\Inject("form.factory"),
+     *     "entityManager" = @DI\Inject("doctrine.orm.entity_manager"),
      * })
      */
-    public function __construct(EngineInterface $templatingEngine, WidgetFactory $widgetFactory, FormFactory $formFactory)
+    public function __construct(EngineInterface $templatingEngine, WidgetFactory $widgetFactory, FormFactory $formFactory,
+        EntityManager $entityManager)
     {
         $this->templatingEngine = $templatingEngine;
         $this->widgetFactory = $widgetFactory;
         $this->formFactory = $formFactory;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -94,5 +104,18 @@ class WidgetListener
     public function onWidgetTypeCreate(WidgetTypeCreateEvent $widgetTypeCreateEvent)
     {
         $widgetTypeCreateEvent->setWidgetType($this->widgetFactory->createBadgeWidgetType());
+    }
+
+    /**
+     * @param WidgetFindEvent $widgetFindEvent
+     *
+     * @DI\Observe("icap_portfolio_widget_find_badges")
+     */
+    public function onWidgetFind(WidgetFindEvent $widgetFindEvent)
+    {
+        $widgetFindEvent->setWidget($this->entityManager
+            ->getRepository('IcapBadgeBundle:Portfolio\BadgesWidget')
+            ->findOneByWidgetType($widgetFindEvent->getWidgetType(), $widgetFindEvent->getWidgetId(), $widgetFindEvent->getUser())
+        );
     }
 }

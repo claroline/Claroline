@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="icap__portfolio_widget_badges")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Icap\BadgeBundle\Repository\PortfolioWidgetRepository")
  */
 class BadgesWidget extends AbstractWidget
 {
