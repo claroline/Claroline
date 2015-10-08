@@ -21,7 +21,6 @@ class ExerciseController extends Controller
      * Displays a form to edit an existing Exercise entity.
      *
      * @EXT\Route("/{id}/edit", name="ujm_exercise_edit")
-     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -60,8 +59,6 @@ class ExerciseController extends Controller
      *
      * @EXT\Route("/{id}/update", name="ujm_exercise_update")
      * @EXT\Method("POST")
-     *
-     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -108,7 +105,6 @@ class ExerciseController extends Controller
      *     requirements={"id"="\d+"},
      *     options={"expose"=true}
      * )
-     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -153,7 +149,6 @@ class ExerciseController extends Controller
      *
      * @EXT\Route("/{id}/publish", name="ujm_exercise_publish")
      * @EXT\Method("POST")
-     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -170,7 +165,6 @@ class ExerciseController extends Controller
      *
      * @EXT\Route("/{id}/unpublish", name="ujm_exercise_unpublish")
      * @EXT\Method("POST")
-     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -187,7 +181,6 @@ class ExerciseController extends Controller
      *
      * @EXT\Route("/{id}/papers/delete", name="ujm_exercise_delete_papers")
      * @EXT\Method("POST")
-     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -602,7 +595,6 @@ class ExerciseController extends Controller
      * To create a paper in order to take an assessment.
      *
      * @EXT\Route("/{id}/paper", name="ujm_exercise_paper")
-     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -910,9 +902,6 @@ class ExerciseController extends Controller
 
     /**
      * To check the right to open exo or not.
-     *
-     *
-     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      *
      * @return exception
      */

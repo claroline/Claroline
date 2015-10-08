@@ -1,5 +1,0 @@
-ujm_Document_name_alreadyExist:
-    pattern:  /Document/nameAlreadyExist
-    defaults: { _controller: "UJMExoBundle:WSRest:nameAlreadyExist" }
-    requirements:
-      _method: POST

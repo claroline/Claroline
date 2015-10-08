@@ -258,7 +258,8 @@ class Matching extends Interaction
         //array of responses of user indexed by labelId
         foreach ($tabResponse as $rep) {
             $tabTmp = preg_split('(,)', $rep);
-            for ($i = 1; $i < count($tabTmp); ++$i) {
+            $end=count($tabTmp);
+            for ($i = 1; $i < $end; ++$i) {
                 if (isset($tabResponseIndex[$tabTmp[$i]])) {
                     $tabResponseIndex[$tabTmp[$i]] .= '-' . $tabTmp[0];
                 } else {
