@@ -124,7 +124,7 @@ class UserManager
      *
      * @return \Claroline\CoreBundle\Entity\User
      */
-    public function createUser(User $user, $sendMail = true, $additionnalRoles = array(), $model = null, $publicUrl)
+    public function createUser(User $user, $sendMail = true, $additionnalRoles = array(), $model = null, $publicUrl = null)
     {
         $this->objectManager->startFlushSuite();
 
