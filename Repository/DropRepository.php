@@ -328,19 +328,12 @@ class DropRepository extends EntityRepository
         return $qb->getQuery();
     }
 
-
-
-
-
-
     //
     // Appel dans dropsAwaitingAction du controller DropController. InnovaERV.
     //
     public function getSharedSpacesQuery(Dropzone $dropzone, Workspace $workspace)
     {
 
-        $workspaceId = $workspace->getId();
-        $dropzoneId = $dropzone->getId();
         // getDropIdsFullyCorrectedQuery : fonction définie dans ce repository
         $lines = $this->getDropIdsFullyCorrectedQuery($dropzone)->getResult();
 
@@ -349,109 +342,24 @@ class DropRepository extends EntityRepository
             $dropIds[] = $line['did'];
         }
 
+        $qb = $this
+            ->createQueryBuilder('drop')
+            ->select('drop, document, correction, user')
+            ->andWhere('drop.dropzone = :dropzone')
+            ->join('drop.user', 'user')
+            ->leftJoin('drop.documents', 'document')
+            ->leftJoin('drop.corrections', 'correction')
+            ->orderBy('drop.reported desc, user.lastName, user.firstName')
+            ->setParameter('dropzone', $dropzone);
 
-
-
-//        $qb = $this->getEntityManager()->createQuery(
-//            "SELECT max(drop.number) \n" .
-//            "FROM Innova\\CollecticielBundle\\Entity\\Drop AS drop \n" .
-//            "WHERE drop.dropzone = :dropzone")
-//            ->setParameter('dropzone', $dropzone);
-
-
-//SELECT claro_user. *
-//FROM claro_user
-//LEFT JOIN innova_collecticielbundle_drop ON claro_user.id = innova_collecticielbundle_drop.user_id
-//WHERE claro_user.id =51 
-//);
-
-            $qb = $this
-                ->createQueryBuilder('drop')
-                ->select('drop, document, user')
-
-                ->join('drop.user', 'user')
-
-                ->leftJoin('user.roles', 'role')
-                ->leftJoin('drop.documents', 'document')
-                ->leftJoin('role.workspace', 'workspace')
-
-                ->andWhere('user.isEnabled = 1')
-
-                ->andWhere('drop.dropzone = :dropzone')
-                ->andWhere('role.workspace = :workspace')
-                ->setParameter('dropzone', $dropzone)
-                ->setParameter('workspace', $workspace)
-
-                ->orderBy('drop.reported desc, user.lastName, user.firstName')
-                ;
-
-/*
-            $qb = $this
-                ->createQueryBuilder('drop')
-                ->select('drop, document, correction, user')
-                ->andWhere('drop.dropzone = :dropzone')
-                ->join('drop.user', 'user')
-                ->leftJoin('drop.documents', 'document')
-                ->leftJoin('drop.corrections', 'correction')
-                ->orderBy('drop.reported desc, user.lastName, user.firstName')
-                ->setParameter('dropzone', $dropzone);
-*/
-
-//var_dump($qb);die();
         if (count($dropIds) > 0) {
             $qb = $qb
                 ->andWhere('drop.id NOT IN (:dropIds)')
                 ->setParameter('dropIds', $dropIds);
         }
 
-
-/*
-        $dql = '
-        SELECT u FROM Claroline\CoreBundle\Entity\User u
-        WHERE u NOT IN (
-            SELECT d.user FROM InnovaCollecticielBundle:Drop d
-            ) 
-        ';
-
-        $query = $this->_em->createQuery($dql);
-
-
-        return $query;
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-//var_dump($qb->getQuery()->getArrayResult());
-
-
         return $qb->getQuery();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public function getDropIdsByUser($dropzoneId, $userId)
     {
