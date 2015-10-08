@@ -378,6 +378,18 @@ class WorkspaceManager
     }
 
     /**
+     * @param string $search
+     * @param string[] $roles
+     *
+     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace[]
+     */
+    public function getOpenableWorkspacesByRolesAndSearch($search, array $roles)
+    {
+
+        return $this->workspaceRepo->findBySearchAndRoles($search, $roles);
+    }
+
+    /**
      * Returns the accesses rights of a given token for a set of workspaces.
      * If a tool name is passed in, the check will be limited to that tool,
      * otherwise workspaces with at least one accessible tool will be
@@ -481,6 +493,21 @@ class WorkspaceManager
     public function getOpenableWorkspacesByRolesPager(array $roles, $page, $max)
     {
         $workspaces = $this->getOpenableWorkspacesByRoles($roles);
+
+        return $this->pagerFactory->createPagerFromArray($workspaces, $page, $max);
+    }
+
+    /**
+     * @param string $search
+     * @param string[] $roles
+     * @param integer $page
+     * @param integer $max
+     *
+     * @return \PagerFanta\PagerFanta
+     */
+    public function getOpenableWorkspacesBySearchAndRolesPager($search, array $roles, $page, $max)
+    {
+        $workspaces = $this->getOpenableWorkspacesByRolesAndSearch($search, $roles);
 
         return $this->pagerFactory->createPagerFromArray($workspaces, $page, $max);
     }
