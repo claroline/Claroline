@@ -280,12 +280,15 @@ class StepManager
 
         if (!empty($data['inheritedResources'])) {
             foreach($data['inheritedResources'] as $inherited) {
-                $inheritedResource = new InheritedResource();
-                $inheritedResource->setLvl($inherited['lvl']);
-                $inheritedResource->setStep($step);
-                $inheritedResource->setResource($createdResources[$inherited['resource']]->getResourceNode());
+                if (!empty($createdResources[$inherited['resource']])) {
+                    // Check if the resource has been created (in case of the Resource has no Importer, it may not exist)
+                    $inheritedResource = new InheritedResource();
+                    $inheritedResource->setLvl($inherited['lvl']);
+                    $inheritedResource->setStep($step);
+                    $inheritedResource->setResource($createdResources[$inherited['resource']]->getResourceNode());
 
-                $this->om->persist($inheritedResource);
+                    $this->om->persist($inheritedResource);
+                }
             }
         }
 
