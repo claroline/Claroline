@@ -852,7 +852,7 @@ class ExerciseController extends Controller
     /**
      * To display the docimology's histogramms.
      *
-     * @EXT\Route("/docimology/{id}/{nbPapers}", name="ujm_exercise_docimology")
+     * @EXT\Route("/docimology/{id}/{nbPapers}", name="ujm_exercise_docimology", options={"expose"=true})
      * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      * 
      * @param int $nbPapers   number of papers to this exercise

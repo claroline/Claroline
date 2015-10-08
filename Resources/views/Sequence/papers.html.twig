@@ -21,11 +21,10 @@
     {# Load Claroline JS #}
     {{ parent() }}
 
-    {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm_papers.js'
+    {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm-papers.js'
         
         '@UJMExoBundle/Resources/public/js/sequence/Common/*'
         '@UJMExoBundle/Resources/public/js/sequence/Common/Services/*'
-
 
         '@UJMExoBundle/Resources/public/js/sequence/Paper/*'
         '@UJMExoBundle/Resources/public/js/sequence/Paper/Controllers/*'

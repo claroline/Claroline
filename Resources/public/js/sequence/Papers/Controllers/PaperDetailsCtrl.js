@@ -10,8 +10,8 @@
         'paperPromise',
         function ($scope, $routeParams, $window, PapersService, CommonService, paperPromise) {
             
-            $scope.paper = paperPromise.data;
-            $scope.exoId = $routeParams.eid;
+            this.paper = paperPromise.data;
+            this.exoId = $routeParams.eid;
         }
     ]);
 })();

@@ -126,13 +126,12 @@
                     newIndex = index;
                     this.saveAnswerAndGotTo(newIndex, studentData);
                 } else if (action && action === 'end') {
-                    console.log('you reached the end of the exercise you will be redirected to paper correction page');
-                    // save the paper and redirect to paper details (correction)
+                    // save the entire paper and redirect to paper details (correction)
                     var promise = SequenceService.endSequence(this.sequence.id, studentData.paper);
                     promise.then(function (result) {
-                        //var url = CommonService.generateUrl('paper-list', this.sequence.id) + '#/' + studentData.paper.id;
-                        //$window.location = url;
-                        this.isFinished = true;
+                        var url = CommonService.generateUrl('paper-list', this.sequence.id) + '#/' + this.sequence.id + '/' + studentData.paper.id;
+                        $window.location = url;
+                        //this.isFinished = true;
                     }.bind(this), function (error) {
                         console.log('error');
                     }.bind(this));

@@ -14,7 +14,6 @@
                     question: '='
                 },
                 link: function (scope, element, attr, choiceQuestionCtrl) {
-                    console.log('choiceQuestion directive link method called');
                     choiceQuestionCtrl.init(scope.question);
                 }
             };

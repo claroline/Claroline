@@ -38,6 +38,9 @@ paper_list_table_interrupted_yes: Yes
 paper_list_table_interrupted_no: No
 paper_list_table_action: Correction
 paper_list_table_score: Score
+paper_list_table_first_page_label: First
+paper_list_table_last_page_label: Last
+paper_list_table_toggle_pagination: Paginated / Unpaginated results
 
 # q
 question_hints: Hints
@@ -86,3 +89,4 @@ sequence_nb_attempts: Attempt N° %1%
 sequence_next_step_confirm: Are you sure you want to end the current step ? <br/> Yon won't be able to go back.
 sequence_end_sequence_confirm: Are you sure you want to go to finish the sequence ? <br/> Yon won't be able to edit your answers.
 step_question_shuffle: Shuffle question order for this step
+start_again: Retry
