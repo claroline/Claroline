@@ -22,25 +22,40 @@ use Symfony\Component\Form\FormFactory;
  */
 class WidgetsManager
 {
-    /** @var EntityManager  */
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
-    /** @var EngineInterface  */
+    /**
+     * @var EngineInterface
+     */
     protected $templatingEngine;
 
-    /** @var FormFactory  */
+    /**
+     *
+     * @var FormFactory
+     */
     protected $formFactory;
 
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $widgetsConfig = null;
 
-    /** @var WidgetTypeManager  */
+    /**
+     * @var WidgetTypeManager
+     */
     protected $widgetTypeManager;
 
-    /** @var WidgetFactory  */
+    /**
+     * @var WidgetFactory
+     */
     protected $widgetFactory;
 
-    /** @var EventDispatcherInterface  */
+    /**
+     * @var EventDispatcherInterface
+     */
     protected $eventDispatcher;
 
     /**
@@ -370,6 +385,22 @@ class WidgetsManager
         ];
 
         return $position;
+    }
+
+    /**
+     * @param string  $widgetType
+     * @param integer $widgetId
+     * @param User    $user
+     *
+     * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]
+     */
+    public function getWidget($widgetType, $widgetId, User $user)
+    {
+        /** @var \Icap\PortfolioBundle\Repository\Widget\AbstractWidgetRepository $abstractWidgetRepository */
+        $abstractWidgetRepository = $this->entityManager->getRepository('IcapPortfolioBundle:Widget\AbstractWidget');
+        $widget = $abstractWidgetRepository->findOneByWidgetType($widgetType, $widgetId, $user);
+
+        return $widget;
     }
 }
  

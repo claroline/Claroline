@@ -3,6 +3,7 @@
 namespace Icap\PortfolioBundle\Listener;
 
 use Icap\PortfolioBundle\Event\WidgetDataEvent;
+use Icap\PortfolioBundle\Event\WidgetFindEvent;
 use Icap\PortfolioBundle\Event\WidgetFormEvent;
 use Icap\PortfolioBundle\Event\WidgetFormViewEvent;
 use Icap\PortfolioBundle\Event\WidgetViewEvent;
@@ -33,17 +34,25 @@ class WidgetListener
     protected $formFactory;
 
     /**
+     * @var WidgetsManager
+     */
+    protected $widgetManager;
+
+    /**
      * @DI\InjectParams({
      *     "templatingEngine" = @DI\Inject("templating"),
      *     "widgetFactory" = @DI\Inject("icap_portfolio.factory.widget"),
      *     "formFactory" = @DI\Inject("form.factory"),
+     *     "widgetManager" = @DI\Inject("icap_portfolio.manager.widgets"),
      * })
      */
-    public function __construct(EngineInterface $templatingEngine, WidgetFactory $widgetFactory, FormFactory $formFactory)
+    public function __construct(EngineInterface $templatingEngine, WidgetFactory $widgetFactory, FormFactory $formFactory,
+        WidgetsManager $widgetManager)
     {
         $this->templatingEngine = $templatingEngine;
         $this->widgetFactory = $widgetFactory;
         $this->formFactory = $formFactory;
+        $this->widgetManager = $widgetManager;
     }
 
     /**
@@ -100,5 +109,19 @@ class WidgetListener
     public function onWidgetForm(WidgetFormEvent $widgetFormEvent)
     {
         $widgetFormEvent->setForm($this->formFactory->create('icap_portfolio_widget_form_' . $widgetFormEvent->getWidgetType(), $widgetFormEvent->getData()));
+    }
+
+    /**
+     * @param WidgetFindEvent $widgetFindEvent
+     *
+     * @DI\Observe("icap_portfolio_widget_find_userInformation")
+     * @DI\Observe("icap_portfolio_widget_find_text")
+     * @DI\Observe("icap_portfolio_widget_find_skills")
+     * @DI\Observe("icap_portfolio_widget_find_formations")
+     * @DI\Observe("icap_portfolio_widget_find_experience")
+     */
+    public function onWidgetFind(WidgetFindEvent $widgetFindEvent)
+    {
+        $widgetFindEvent->setWidget($this->widgetManager->getWidget($widgetFindEvent->getWidgetType(), $widgetFindEvent->getWidgetId(), $widgetFindEvent->getUser()));
     }
 }
