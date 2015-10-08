@@ -14,6 +14,7 @@ class Version20150612100621 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->addSql('SET foreign_key_checks = 0');
         $this->addSql("
             ALTER TABLE innova_step 
             DROP FOREIGN KEY FK_86F4856788BD9C1F
@@ -28,6 +29,7 @@ class Version20150612100621 extends AbstractMigration
             ALTER TABLE innova_step_inherited_resources CHANGE resource_id resource_id INT NOT NULL, 
             CHANGE step_id step_id INT NOT NULL
         ");
+        $this->addSql('SET foreign_key_checks = 1');
     }
 
     public function down(Schema $schema)
