@@ -203,6 +203,10 @@ class MailManager
                 ->setFrom($fromEmail)
                 ->setBody($body, 'text/html');
 
+            if ($from !== null) {
+                $message->setReplyTo($from->getMail());
+            }
+
             if (count($to) > 1) {
                 $message->setBcc($to);
             } else {
