@@ -17,7 +17,7 @@ use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class Updater050108 extends Updater
+class Updater050114 extends Updater
 {
     private $container;
 
