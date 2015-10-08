@@ -14,18 +14,6 @@ link_csv_export: CSV export
 label_exercise_score: Score
 label_exercise_correction: Correction
 
-# m
-meta_authors: Author(s)
-meta_others: Others
-meta_author_name: Name
-meta_author_status: Status
-meta_author_mail: Email
-meta_created: Created
-meta_updated: Modified
-meta_licence: Licence
-meta_description: Description
-meta_max_attempts: Maximum attempts
-
 # p
 paper_list: Paper list
 paper_search: Search a paper
@@ -44,49 +32,11 @@ paper_list_table_toggle_pagination: Paginated / Unpaginated results
 
 # q
 question_hints: Hints
-question_hint_label: Hint
 question_hint_show_title: Show hint
 question_show_hint_confirm: Are you sure you want to see this hint ? <br/> This will give you a penalty of %1% points.
-question_objects: Objects
-question_global_feedback: Global feedback
-question_resources: Resources
-question_choices: Choices
-question_choice_score: Score
-question_allow_multiple_choice: Allow multiple choice
-question_randomize_choices: Shuffle choices order
-question_panel_hide: Hide / Show question details
-question_remove: Remove question
-question_cloze_text: Cloze text
-question_solutions: Solutions
-question_solution_answers: Answer(s)
-question_solution_score: Score
 
 # s
 sequence_step: Step
-sequence_panel_title: Sequence
-sequence_panel_hide: Hide / Show sequence informations
-sequence_type_name : Sequence name
-sequence_type_description : Sequence description
-sequence_start_date: Start date
-sequence_end_date: End date
-sequence_name : Name
-sequence_description : Description
-sequence_step_description: Description
-sequence_step_previous: Previous step
-sequence_step_next: Next step
-sequence_step_view: View step
-sequence_steps_save: Save steps
-sequence_step_add: Add step
-sequence_step_content_add: Add content step
-sequence_step_question_add: Add question step
-sequence_step_remove: Remove step
-sequence_save: Save sequence
-sequence_step_panel_title: Steps
-sequence_select_available_question: Select a question
-sequence_step_add_question: Add question
 sequence_attempts_infos: You have %1% attempt(s)
 sequence_nb_attempts: Attempt N° %1%
-sequence_next_step_confirm: Are you sure you want to end the current step ? <br/> Yon won't be able to go back.
 sequence_end_sequence_confirm: Are you sure you want to go to finish the sequence ? <br/> Yon won't be able to edit your answers.
-step_question_shuffle: Shuffle question order for this step
-start_again: Retry

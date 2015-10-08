@@ -30,7 +30,6 @@
             <!-- Question hints row -->
             <div class="form-inline">
                 <div class="form-group">
-                    <label>{{ 'question_hints'|trans:{}:'ujm_sequence' }}:</label>
                     <div data-ng-repeat="hint in choiceQuestionCtrl.question.hints" style="margin-bottom: 10px;">                        
                         <div data-ng-if="!choiceQuestionCtrl.hintIsUsed(hint.id)">
                             <button type="button" role="button" class="btn btn-default fa fa-eye" title="{{ 'question_hint_show_title'|trans:{}:'ujm_sequence' }}" data-ng-click="choiceQuestionCtrl.showHint(hint.id)" id="hint-{{hint.id}}"> {{ 'question_hint_label'|trans:{}:'ujm_sequence' }} {{$index + 1}}</button>

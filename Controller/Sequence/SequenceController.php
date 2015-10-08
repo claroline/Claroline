@@ -31,17 +31,15 @@ class SequenceController extends Controller
         // get number of attempts already done by user
         $nbAttempts = $this->container->get('ujm.exo_exercise')->getNbPaper($user->getId(), $exercise->getId());
         
-        /*
+   
         $apiManager = $this->get('ujm.exo.api_manager');
         $exo = $apiManager->exportExercise($exercise);
-        $steps = json_encode($exo['steps']); // get step order if previous paper
         $data = json_encode($exo);
-          */ 
+        echo '<pre>';
+        print_r($exo);die;
         
         // FAKE Data for development!!
         $exo = $this->getExercise(2, "choice");
-        // to do : if question.randomize = true edit questions (steps) order
-        $steps = json_encode($exo['steps']);
         $data = json_encode($exo);
         
         $previousPaper = array(
@@ -80,7 +78,6 @@ class SequenceController extends Controller
 
         return $this->render('UJMExoBundle:Sequence:play.html.twig', array(
                     '_resource' => $exercise,
-                    'steps' => $steps,
                     'sequence' => $data,
                     'attempts' => $nbAttempts,
                     'paper' => $paper
