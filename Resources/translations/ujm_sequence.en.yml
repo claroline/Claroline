@@ -32,6 +32,7 @@ paper_list_table_toggle_pagination: Paginated / Unpaginated results
 
 # q
 question_hints: Hints
+question_hint_label: Hint
 question_hint_show_title: Show hint
 question_show_hint_confirm: Are you sure you want to see this hint ? <br/> This will give you a penalty of %1% points.
 

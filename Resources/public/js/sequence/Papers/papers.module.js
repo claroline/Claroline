@@ -8,6 +8,7 @@
     // exercise papers module
     var papersApp = angular.module('PapersApp', [
         'ngSanitize',
+        'angular-loading-bar',
         'ngRoute',
         'ui.bootstrap',
         'ui.tinymce',
@@ -64,7 +65,8 @@
     papersApp.config([
         '$routeProvider',
         '$locationProvider',
-        function PapersConfig($routeProvider, $locationProvider) {
+        'cfpLoadingBarProvider',
+        function PapersModuleConfig($routeProvider, $locationProvider, cfpLoadingBarProvider) {
             $routeProvider
                     .when('/:eid', {
                         templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Papers/Partials/papers.list.html',
@@ -82,8 +84,14 @@
                         redirectTo: '/:eid'
                     });
             //$locationProvider.html5Mode({enabled:true, requireBase:false});
+            // please wait spinner config
+            cfpLoadingBarProvider.latencyThreshold = 0;
+            cfpLoadingBarProvider.includeBar = false;
+            cfpLoadingBarProvider.spinnerTemplate = '<div class="loading">Loading&#8230;</div>';
         }
     ]);
+    
+
     papersApp.filter(
             'unsafe',
             function ($sce) {

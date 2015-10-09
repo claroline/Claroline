@@ -32,11 +32,11 @@ class SequenceController extends Controller
         $nbAttempts = $this->container->get('ujm.exo_exercise')->getNbPaper($user->getId(), $exercise->getId());
         
    
-        $apiManager = $this->get('ujm.exo.api_manager');
+        /*$apiManager = $this->get('ujm.exo.api_manager');
         $exo = $apiManager->exportExercise($exercise);
         $data = json_encode($exo);
         echo '<pre>';
-        print_r($exo);die;
+        print_r($exo);die;*/
         
         // FAKE Data for development!!
         $exo = $this->getExercise(2, "choice");

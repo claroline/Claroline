@@ -7,6 +7,7 @@
     {# Exercise Player styles #}
     {% stylesheets debug=false filter='lessphp, cssmin' output='bundles/ujmexo/css/ujm-sequence.css'
         '@UJMExoBundle/Resources/public/less/ujm-sequence.less'
+        '@UJMExoBundle/Resources/public/less/loading-bar.css'
     %}
     <link rel="stylesheet" media="screen" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -50,6 +51,7 @@
         '@UJMExoBundle/Resources/public/js/libs/angular-libs/*'
         '@UJMExoBundle/Resources/public/js/libs/angular-libs/bootbox/*'
         '@UJMExoBundle/Resources/public/js/libs/angular-libs/angular-table/*'
+        '@UJMExoBundle/Resources/public/js/libs/angular-libs/loading-bar/*'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
