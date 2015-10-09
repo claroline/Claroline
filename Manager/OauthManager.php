@@ -68,6 +68,13 @@ class OauthManager extends ClientManager
         return $this->om->getRepository('ClarolineCoreBundle:Oauth\FriendRequest')->findOneBy(array('name' => $name));
     }
 
+    public function findActivatedExternalAuthentications()
+    {
+        return $this->om->getRepository('ClarolineCoreBundle:Oauth\FriendRequest')->findBy(
+            array('isActivated' => true, 'allowAuthentication' => true)
+        );
+    }
+
     public function connect($host, $id, $secret, FriendRequest $friendRequest)
     {
         $url = $host . '/oauth/v2/token?client_id=' .
