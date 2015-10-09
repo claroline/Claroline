@@ -2,6 +2,7 @@
 
 namespace Icap\PortfolioBundle\Installation\Updater;
 
+use AppKernel;
 use Claroline\InstallationBundle\Updater\Updater;
 use Doctrine\DBAL\Migrations\Configuration\Configuration;
 use Doctrine\DBAL\Migrations\Version;
@@ -12,7 +13,7 @@ use Psr\Log\LoggerInterface;
 
 class Updater060200 extends Updater
 {
-    public function postUpdate(Connection $connection, \AppKernel $kernel)
+    public function postUpdate(Connection $connection, AppKernel $kernel)
     {
         // Delete portfolio badges tables if the BadgeBundle is not installed
         /** @var \Symfony\Component\HttpKernel\Bundle\Bundle[] $bundles */
