@@ -1465,6 +1465,7 @@ class ResourceManager
         $newNode->setLicense($node->getLicense());
         $newNode->setAuthor($node->getAuthor());
         $newNode->setIndex($index);
+        $newNode->setGuid($this->container->get('claroline.utilities.misc')->generateGuid());
 
         if ($withRights) {
             //if everything happens inside the same workspace and no specific rights have been given,
