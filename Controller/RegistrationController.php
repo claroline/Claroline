@@ -127,12 +127,11 @@ class RegistrationController extends Controller
         $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
-
-            $this->roleManager->setRoleToRoleSubject($user, $this->configHandler->getParameter('default_role'));
             $user = $this->get('claroline.manager.user_manager')->createUserWithRole(
                 $user,
                 PlatformRoles::USER
             );
+            $this->roleManager->setRoleToRoleSubject($user, $this->configHandler->getParameter('default_role'));
             //then we adds the differents value for facets.
             foreach ($facets as $facet) {
                 foreach ($facet->getPanelFacets() as $panel) {
