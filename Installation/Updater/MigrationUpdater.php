@@ -49,6 +49,11 @@ class MigrationUpdater extends Updater
         $this->deleteExistingTablesRelatedToPortfolio();
     }
 
+    public function preUninstall()
+    {
+        $this->deleteExistingTablesRelatedToPortfolio();
+    }
+
     public function postInstall()
     {
         /** @var \Claroline\CoreBundle\Repository\PluginRepository $pluginRepository */
@@ -84,11 +89,11 @@ class MigrationUpdater extends Updater
 
     private function deleteExistingTablesRelatedToPortfolio()
     {
-        // Manage the case when we install the BadgeBundle while portfolio badges tables are already in the database as
-        // portfolio badges was in the PortfolioBundle before
         if ($this->connection->getSchemaManager()->tablesExist(['icap__portfolio_widget_badges'])) {
+            $this->log('Deleting portfolios badges tables...');
             $this->connection->getSchemaManager()->dropTable('icap__portfolio_widget_badges_badge');
             $this->connection->getSchemaManager()->dropTable('icap__portfolio_widget_badges');
+            $this->log('Portfolios badges tables deleted.');
         }
     }
 
@@ -207,5 +212,12 @@ class MigrationUpdater extends Updater
         }
 
         $this->entityManager->flush();
+    }
+
+    public function postUninstall()
+    {
+        if ($this->connection->getSchemaManager()->tablesExist(['doctrine_icapbadgebundle_versions'])) {
+            $this->connection->getSchemaManager()->dropTable('doctrine_icapbadgebundle_versions');
+        }
     }
 }

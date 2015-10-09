@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\BadgeBundle\Migrations\pdo_mysql;
+namespace Icap\BadgeBundle\Installation\Migrations;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
