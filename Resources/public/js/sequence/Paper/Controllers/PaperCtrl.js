@@ -15,7 +15,6 @@
             this.init = function (paper, context, exoId) {
                 this.paper = paper;
                 this.context = context;
-                // we get exoId from directive when used in-exercise context else we get it from papers.html.twig js variable...
                 this.exoId = exoId;
             };
 

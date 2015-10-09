@@ -3,9 +3,10 @@
 
     angular.module('Question').controller('ChoiceQuestionCtrl', [
         '$ngBootbox',
+        '$window',
         'CommonService',
         'QuestionService',
-        function ($ngBootbox, CommonService, QuestionService) {
+        function ($ngBootbox, $window, CommonService, QuestionService) {
             this.question = {};
             // keep choice(s)
             this.multipleChoice = {};
@@ -69,9 +70,7 @@
                 promise.then(function (result) {
                     this.usedHints.push(result.data);
 
-                }.bind(this), function (error) {
-                    console.log('error');
-                });
+                }.bind(this));
             };
 
             /**
@@ -116,7 +115,6 @@
                         return true;
                     }
                 }
-
                 return false;
             };
 

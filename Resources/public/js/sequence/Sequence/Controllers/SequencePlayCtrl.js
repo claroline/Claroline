@@ -23,8 +23,8 @@
              * @param {number} number of attempts already done
              */
             this.init = function (sequence, paper, nbAttempts) {
-                
-                 // shuffle each question choices order if needed
+
+                // shuffle each question choices order if needed
                 // TODO handle number of questions to keep
                 for (var i = 0; i < sequence.steps.length; i++) {
                     // shuffle step question order
@@ -37,8 +37,8 @@
                             sequence.steps[i].items[j].choices = CommonService.shuffleArray(sequence.steps[i].items[j].choices);
                         }
                     }
-                }   
-                
+                }
+
                 // need to set the sequence and paper in CommonService so that other directives can retrieve the data
                 this.sequence = CommonService.setSequence(sequence);
                 this.paper = CommonService.setPaper(paper);
@@ -68,7 +68,9 @@
                 if (index < this.sequence.steps.length && index >= 0) {
                     this.currentStep = this.sequence.steps[index];
                 } else {
-                    console.log('set current step error');
+                    // console.log('set current step error');
+                    var url = Routing.generate('ujm_sequence_error');
+                    $window.location = url;
                 }
             };
 
@@ -132,11 +134,10 @@
                         var url = CommonService.generateUrl('paper-list', this.sequence.id) + '#/' + this.sequence.id + '/' + studentData.paper.id;
                         $window.location = url;
                         //this.isFinished = true;
-                    }.bind(this), function (error) {
-                        console.log('error');
                     }.bind(this));
                 } else {
-                    console.log('validate step error');
+                    var url = Routing.generate('ujm_sequence_error');
+                    $window.location = url;
                 }
             };
 
@@ -148,16 +149,11 @@
                 // save answer only or whole paper ??
                 var promise = SequenceService.recordAnswer(this.sequence.id, studentData);
                 promise.then(function (result) {
-                    if (result.status === 'success') {
-                        // result.data.id = recorded answer id ??? but do we need this ? any answer id can be retrieved by ujm_response.paper_id + ujm_response.question_id
-                        // change current step
-                        this.setCurrentStep(nextStepIndex);
-                        // update paper question = this.currentStep.items[0]
-                        CommonService.getCurrentQuestionPaperData(this.currentStep.items[0]);
-                    }
-
-                }.bind(this), function (error) {
-                    console.log('error');
+                    // result.data.id = recorded answer id ??? but do we need this ? any answer id can be retrieved by ujm_response.paper_id + ujm_response.question_id
+                    // change current step
+                    this.setCurrentStep(nextStepIndex);
+                    // update paper question = this.currentStep.items[0]
+                    CommonService.getCurrentQuestionPaperData(this.currentStep.items[0]);
                 }.bind(this));
             };
         }

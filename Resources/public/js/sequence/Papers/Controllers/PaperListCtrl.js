@@ -15,6 +15,7 @@
             this.exoId = $routeParams.eid;
             this.showPagination = true;
             this.itemPerPageDefaultValue = 5;
+          
             this.config = {
                 itemsPerPage: this.itemPerPageDefaultValue,
                 fillLastPage: false,
@@ -33,7 +34,7 @@
                 switch (witch) {
                     case 'papers-docimolgy':
                         var nbPapers = this.papers.length;
-                        return Routing.generate('ujm_exercise_docimology', {id: _id, nbPapers: nbPapers });
+                        return Routing.generate('ujm_exercise_docimology', {id: _id, nbPapers: nbPapers});
                         break;
                     case 'papers-csv-export':
                         return Routing.generate('ujm_paper_export_results', {exerciseId: _id});
@@ -46,13 +47,12 @@
             this.updateFilteredList = function () {
                 this.filtered = $filter("filter")(this.papers, this.query);
             };
-            
-            this.togglePaginationButton = function(){
+
+            this.togglePaginationButton = function () {
                 this.showPagination = !this.showPagination;
-                if(!this.showPagination){
+                if (!this.showPagination) {
                     this.config.itemsPerPage = this.papers.length;
                 }
-                //this.config.itemsPerPage = this.showPagination ? this.itemPerPageDefaultValue : this.papers.length;
             };
 
 

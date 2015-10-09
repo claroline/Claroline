@@ -12,6 +12,8 @@ use UJM\ExoBundle\Entity\Question;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 /**
  * Description of SequenceController.
  */
@@ -83,6 +85,14 @@ class SequenceController extends Controller
                     'paper' => $paper
                         )
         );
+    }
+    
+     /**
+     * @Route("error", name="ujm_sequence_error", options={"expose"=true})
+     * @Method("GET")
+     */
+    public function sequenceError(){
+        throw new NotFoundHttpException();        
     }
 
     /**
@@ -410,7 +420,7 @@ class SequenceController extends Controller
                         "id" => "7",
                         "type" => "application/x.choice+json",
                         "title" => "Simple question for dummies...",
-                        "label" => "Witch image shows a kid ?",
+                        "label" => "Which image shows a kid ?",
                         "random" => true,
                         "multiple" => false,
                         "feedback" => "Global feedback",
