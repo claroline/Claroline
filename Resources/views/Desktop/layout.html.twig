@@ -10,18 +10,16 @@
                  data-resource-name="{{ _resource.getName() }}"
                     >
             </div>
-            {% if not is_path_mode  %}
-                <ul class="breadcrumb">
-                    <li><a href="{{ path('claro_desktop_open') }}"><i class="fa fa-home"></i> {{ 'desktop'|trans({}, 'platform') }}</a></li>
-                    <li><a href="{{ path('claro_desktop_open_tool', {'toolName': 'resource_manager'}) }}">{{ 'resources'|trans({}, 'platform') }}</a></li>
-                    {% render(controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
-                    {'node': _resource.getResourceNode(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}))
-                    %}
-                    {% block resourceBreadcrumb %}
-                        <li class="active">{{ _resource.getResourceNode().getName() }}</li>
-                    {% endblock %}
-                </ul>
-            {% endif %}
+            <ul class="breadcrumb">
+                <li><a href="{{ path('claro_desktop_open') }}"><i class="fa fa-home"></i> {{ 'desktop'|trans({}, 'platform') }}</a></li>
+                <li><a href="{{ path('claro_desktop_open_tool', {'toolName': 'resource_manager'}) }}">{{ 'resources'|trans({}, 'platform') }}</a></li>
+                {% render(controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
+                {'node': _resource.getResourceNode(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}))
+                %}
+                {% block resourceBreadcrumb %}
+                    <li class="active">{{ _resource.getResourceNode().getName() }}</li>
+                {% endblock %}
+            </ul>
         {% endif %}
     </div>
 {% endblock %}

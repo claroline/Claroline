@@ -202,13 +202,15 @@ class WorkspaceManager
         User $user,
         $name,
         $code,
-        $description,
-        $displayable,
-        $selfRegistration,
-        $selfUnregistration,
+        $description = null,
+        $displayable = false,
+        $selfRegistration = false,
+        $selfUnregistration = false,
         &$errors = array()
     )
     {
+        $this->om->startFlushSuite();
+        $this->log('Workspace from model beginning.');
         $workspaceModelManager = $this->container->get('claroline.manager.workspace_model_manager');
 
         $workspace = new Workspace();
@@ -228,6 +230,8 @@ class WorkspaceManager
 
         $this->createWorkspace($workspace);
         $workspaceModelManager->addDataFromModel($model, $workspace, $user, $errors);
+        $this->log('Workspace from model end.');
+        $this->om->endFlushSuite();
 
         return $workspace;
     }
@@ -374,6 +378,18 @@ class WorkspaceManager
     }
 
     /**
+     * @param string $search
+     * @param string[] $roles
+     *
+     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace[]
+     */
+    public function getOpenableWorkspacesByRolesAndSearch($search, array $roles)
+    {
+
+        return $this->workspaceRepo->findBySearchAndRoles($search, $roles);
+    }
+
+    /**
      * Returns the accesses rights of a given token for a set of workspaces.
      * If a tool name is passed in, the check will be limited to that tool,
      * otherwise workspaces with at least one accessible tool will be
@@ -477,6 +493,21 @@ class WorkspaceManager
     public function getOpenableWorkspacesByRolesPager(array $roles, $page, $max)
     {
         $workspaces = $this->getOpenableWorkspacesByRoles($roles);
+
+        return $this->pagerFactory->createPagerFromArray($workspaces, $page, $max);
+    }
+
+    /**
+     * @param string $search
+     * @param string[] $roles
+     * @param integer $page
+     * @param integer $max
+     *
+     * @return \PagerFanta\PagerFanta
+     */
+    public function getOpenableWorkspacesBySearchAndRolesPager($search, array $roles, $page, $max)
+    {
+        $workspaces = $this->getOpenableWorkspacesByRolesAndSearch($search, $roles);
 
         return $this->pagerFactory->createPagerFromArray($workspaces, $page, $max);
     }
@@ -918,10 +949,7 @@ class WorkspaceManager
             $j++;
 
             if ($i % self::MAX_WORKSPACE_BATCH_SIZE === 0) {
-                if ($logger) $logger(" [UOW size: " . $this->om->getUnitOfWork()->size() . "]");
-                $i = 0;
                 $this->om->forceFlush();
-                if ($logger) $logger(" Workspace $j ($name) being created");
                 $this->om->clear();
             }
 
@@ -1119,6 +1147,7 @@ class WorkspaceManager
 
     public function setLogger(LoggerInterface $logger)
     {
+        $this->container->get('claroline.manager.workspace_model_manager')->setLogger($logger);
         $this->logger = $logger;
     }
 }

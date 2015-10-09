@@ -24,11 +24,14 @@
                                 {{ 'edit_password'|trans({}, 'platform') }}
                             </a>
                         </li>
-                        <li role="presentation" >
-                            <a role="menuitem" href="{{ path('claro_public_profile_view', {'publicUrl': user.publicUrl}) }}">
-                                {{ 'see_public_profile'|trans({}, 'platform') }}
-                            </a>
-                        </li>
+                        {# this should avoid some errors when the public url wasn't properly generated #}
+                        {%  if user.publicUrl != '' %}
+                            <li role="presentation" >
+                                <a role="menuitem" href="{{ path('claro_public_profile_view', {'publicUrl': user.publicUrl}) }}">
+                                    {{ 'see_public_profile'|trans({}, 'platform') }}
+                                </a>
+                            </li>
+                        {% endif %}
                         {% if false == user.hasTunedPublicUrl %}
                             <li role="presentation" >
                                 <a role="menuitem" href="{{ path('claro_user_public_url_edit') }}">

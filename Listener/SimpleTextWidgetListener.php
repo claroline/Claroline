@@ -128,13 +128,14 @@ class SimpleTextWidgetListener
         $baseUrl = $this->router->getContext()->getBaseUrl();
 
         foreach ($resourceInfos['copies'] as $resource) {
+
+            $type = $resource['original']->getResourceType()->getName();
+
             $content = str_replace(
                 '/file/resource/media/' . $resource['original']->getId(),
                 '/file/resource/media/' . $resource['copy']->getId(),
                 $content
             );
-
-            $type = $resource['original']->getResourceType()->getName();
 
             $content = str_replace(
                 "/resource/open/{$type}/" . $resource['original']->getId(),

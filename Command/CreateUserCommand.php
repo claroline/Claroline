@@ -33,7 +33,8 @@ class CreateUserCommand extends ContainerAwareCommand
                 new InputArgument('user_first_name', InputArgument::REQUIRED, 'The user first name'),
                 new InputArgument('user_last_name', InputArgument::REQUIRED, 'The user last name'),
                 new InputArgument('user_username', InputArgument::REQUIRED, 'The user username'),
-                new InputArgument('user_password', InputArgument::REQUIRED, 'The user password')
+                new InputArgument('user_password', InputArgument::REQUIRED, 'The user password'),
+                new InputArgument('user_email', InputArgument::REQUIRED, 'The user email')
             )
         );
         $this->addOption(
@@ -56,7 +57,8 @@ class CreateUserCommand extends ContainerAwareCommand
             'user_first_name' => 'first name',
             'user_last_name' => 'last name',
             'user_username' => 'username',
-            'user_password' => 'password'
+            'user_password' => 'password',
+            'user_email' => 'email'
         );
 
         foreach ($params as $argument => $argumentName) {
@@ -92,7 +94,7 @@ class CreateUserCommand extends ContainerAwareCommand
         $user->setLastName($input->getArgument('user_last_name'));
         $user->setUsername($input->getArgument('user_username'));
         $user->setPlainPassword($input->getArgument('user_password'));
-        $user->setMail($input->getArgument('user_username') . '@claro.net');
+        $user->setMail($input->getArgument('user_email'));
 
         if ($input->getOption('admin')) {
             $roleName = PlatformRoles::ADMIN;

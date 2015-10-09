@@ -134,8 +134,10 @@ class FileController extends Controller
     public function uploadWithTinyMceAction($parent, User $user)
     {
         $parent = $this->get('claroline.manager.resource_manager')->getById($parent);
+        $workspace = $parent ? $parent->getWorkspace: null;
         $collection = new ResourceCollection(array($parent));
         $collection->setAttributes(array('type' => 'file'));
+        $this->checkAccess('CREATE', $collection);
 
         if (!$this->get('security.authorization_checker')->isGranted('CREATE', $collection)) {
             //use different header so we know something went wrong
@@ -162,19 +164,29 @@ class FileController extends Controller
             $file,
             $file->getClientOriginalName(),
             $mimeType,
-            $parent->getWorkspace()
+            $workspace
         );
 
         $resourceManager = $this->get('claroline.manager.resource_manager');
+        if ($workspace) {
+            $rights = array();
+        } else {
+            $rights = array(
+                'ROLE_ANONYMOUS' => array(
+                    'open' => true, 'export' => true, 'create' => array(),
+                    'role' => $this->container->get('claroline.manager.role_manager')->getRoleByName('ROLE_ANONYMOUS')
+                )
+            );
+        }
 
         $file = $resourceManager->create(
             $file,
             $resourceManager->getResourceTypeByName('file'),
             $user,
-            $parent->getWorkspace(),
+            $workspace,
             $parent,
             null,
-            array(),
+            $rights,
             true
         );
 
@@ -193,7 +205,6 @@ class FileController extends Controller
     public function uploadModalAction()
     {
         $destinations = $this->get('claroline.manager.resource_manager')->getDefaultUploadDestinations();
-        $pws = $this->getCurrentUser()->getPersonalWorkspace();
 
         return array(
             'form' => $this->get('form.factory')->create(new TinyMceUploadModalType($destinations))->createView()

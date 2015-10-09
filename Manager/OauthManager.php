@@ -101,7 +101,7 @@ class OauthManager extends ClientManager
             $this->om->remove($friend);
             $this->om->flush();
 
-            throw new Exception\FriendRequestException('An error occured during the friend request');
+            throw new Exception\FriendRequestException('An error occured during the friend request', $url);
         }
 
         return $url;

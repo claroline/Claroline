@@ -15,10 +15,9 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Validator\Constraints\CsvUser;
+use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
+use Claroline\CoreBundle\Listener\DoctrineDebug;
 
 /**
  * Creates an user, optionaly with a specific role (default to simple user).
@@ -68,7 +67,13 @@ class CreateUserFromCsvCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         //validate the csv file...
-
+        $consoleLogger = ConsoleLogger::get($output);
+        $om = $this->getContainer()->get('claroline.persistence.object_manager');
+        $om->setLogger($consoleLogger)->activateLog();
+        $this->getContainer()->get('claroline.doctrine.debug')->setLogger($consoleLogger)
+            ->activateLog()
+            ->setDebugLevel(DoctrineDebug::DEBUG_ALL)
+            ->setVendor('Claroline');
         $validator = $this->getContainer()->get('validator');
         $file = $input->getArgument('csv_user_path');
         $lines = str_getcsv(file_get_contents($file), PHP_EOL);

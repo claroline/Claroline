@@ -264,6 +264,8 @@ class UsersController extends Controller
      */
     public function deleteAction(array $users)
     {
+        $this->container->get('claroline.persistence.object_manager')->startFlushSuite();
+
         foreach ($users as $user) {
             if (!$this->authorization->isGranted('ROLE_ADMIN') && $user->hasRole('ROLE_ADMIN')) {
                 throw new AccessDeniedException();
@@ -272,6 +274,8 @@ class UsersController extends Controller
             $this->userManager->deleteUser($user);
             $this->eventDispatcher->dispatch('log', 'Log\LogUserDelete', array($user));
         }
+
+        $this->container->get('claroline.persistence.object_manager')->endFlushSuite();
 
         return new Response('user(s) removed', 204);
     }

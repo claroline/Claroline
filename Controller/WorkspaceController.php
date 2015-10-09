@@ -699,7 +699,7 @@ class WorkspaceController extends Controller
     )
     {
         $this->assertIsGranted('home', $workspace);
-        $canEdit = $this->authorization->isGranted('parameters', $workspace);
+        $canEdit = $this->authorization->isGranted(array('home', 'edit'), $workspace);
         $widgets = array();
         $homeTab = $this->homeTabManager->getHomeTabByIdAndWorkspace($homeTabId, $workspace);
         $isHomeTab = (intval($valid) === 1);
@@ -1302,7 +1302,7 @@ class WorkspaceController extends Controller
     public function displayWorkspaceHomeTabAction(Workspace $workspace, $tabId)
     {
         $this->assertIsGranted('home', $workspace);
-        $canEdit = $this->authorization->isGranted('parameters', $workspace);
+        $canEdit = $this->authorization->isGranted(array('home', 'edit'), $workspace);
         $roleNames = $this->utils->getRoles($this->tokenStorage->getToken());
         $workspaceHomeTabConfigs = $canEdit ?
             $this->homeTabManager->getWorkspaceHomeTabConfigsByWorkspace($workspace):
@@ -1519,7 +1519,12 @@ class WorkspaceController extends Controller
             $this->workspaceManager->create($config, $this->tokenStorage->getToken()->getUser());
             $this->workspaceManager->importRichText();
         } else {
-            throw new \Exception('Invalid form');
+            return new Response(
+                $this->templating->render(
+                    "ClarolineCoreBundle:Workspace:importForm.html.twig",
+                    array('form' => $form->createView())
+                )
+            );
         }
 
         $route = $this->router->generate('claro_workspace_by_user');

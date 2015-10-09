@@ -157,7 +157,7 @@ class ResourceManager
         AbstractResource $resource,
         ResourceType $resourceType,
         User $creator,
-        Workspace $workspace,
+        Workspace $workspace = null,
         ResourceNode $parent = null,
         ResourceIcon $icon = null,
         array $rights = array(),
@@ -170,7 +170,7 @@ class ResourceManager
         $node = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $node->setResourceType($resourceType);
         $node->setPublished($isPublished);
-
+        $node->setGuid($this->container->get('claroline.utilities.misc')->generateGuid());
         $mimeType = ($resource->getMimeType() === null) ?
             'custom/' . $resourceType->getName():
             $resource->getMimeType();
@@ -179,7 +179,7 @@ class ResourceManager
         $node->setName($resource->getName());
         $name = $this->getUniqueName($node, $parent);
         $node->setCreator($creator);
-        $node->setWorkspace($workspace);
+        if ($workspace) $node->setWorkspace($workspace);
         $node->setParent($parent);
         $node->setName($name);
         $node->setClass(get_class($resource));
@@ -846,10 +846,14 @@ class ResourceManager
         //the following line is required because we wanted to disable the right edition in personal worksspaces...
         //this is not required for everything to work properly.
 
-        if ($node->getWorkspace()->isPersonal() && !$this->rightsManager->canEditPwsPerm($token)) {
+        if (!$node->getWorkspace()) {
             $resourceArray['enableRightsEdition'] = false;
         } else {
-            $resourceArray['enableRightsEdition'] = true;
+            if ($node->getWorkspace()->isPersonal() && !$this->rightsManager->canEditPwsPerm($token)) {
+                $resourceArray['enableRightsEdition'] = false;
+            } else {
+                $resourceArray['enableRightsEdition'] = true;
+            }
         }
 
         if ($node->getResourceType()->getName() === 'file') {
@@ -1006,7 +1010,7 @@ class ResourceManager
             $event = $this->dispatcher->dispatch(
                 "download_{$nodes[0]->getResourceType()->getName()}",
                 'DownloadResource',
-                array($this->getResourceFromNode($nodes[0]))
+                array($this->getResourceFromNode($this->getRealTarget($nodes[0])))
             );
             $extension = $event->getExtension();
             $data['name'] = empty($extension) ?
@@ -1029,6 +1033,7 @@ class ResourceManager
         foreach ($nodes as $node) {
             //we only download is we can...
             if ($this->container->get('security.context')->isGranted('EXPORT', $node)) {
+                $node = $this->getRealTarget($node);
                 $resource = $this->getResourceFromNode($node);
 
                 if ($resource) {
@@ -1731,11 +1736,14 @@ class ResourceManager
             );
         }
 
-        if ($node = $this->container->get('request')->getSession()->get('current_resource_node')) {
-            $defaults = array_merge(
-                $defaults,
-                $this->directoryRepo->findDefaultUploadDirectories($node->getWorkspace())
-            );
+        $node = $this->container->get('request')->getSession()->get('current_resource_node');
+
+        if ($node && $node->getWorkspace()) {
+            $root = $this->directoryRepo->findDefaultUploadDirectories($node->getWorkspace());
+            
+            if ($this->container->get('security.authorization_checker')->isGranted('CREATE', $root)) {
+                $defaults = array_merge($defaults, $root);
+            }
         }
 
         return $defaults;

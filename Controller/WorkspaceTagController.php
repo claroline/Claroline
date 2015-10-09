@@ -927,9 +927,9 @@ class WorkspaceTagController extends Controller
         $roleNames = $this->utils->getRoles($token);
         $workspaces = ($search === '') ?
             $this->workspaceManager
-                ->getWorkspacesByRoleNamesPager($roleNames, $page) :
+                ->getOpenableWorkspacesByRolesPager($roleNames, $page, 20) :
             $this->workspaceManager
-                ->getWorkspacesByRoleNamesBySearchPager($roleNames, $search, $page);
+                ->getOpenableWorkspacesBySearchAndRolesPager($search, $roleNames, $page, 20);
         $workspacesTags = array();
 
         foreach ($workspaces as $workspace) {

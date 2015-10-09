@@ -29,6 +29,7 @@
     buttons.resourcePickerCallBack = function (nodes, currentDirectoryId, isWidget)
     {
         if (!isWidget) {
+            //if it's not a resource node...
             var nodeId = _.keys(nodes)[0];
             var mimeType = nodes[_.keys(nodes)][2] !== '' ? nodes[_.keys(nodes)][2] : 'unknown/mimetype';
             var openInNewTab = tinymce.activeEditor.getParam('picker').openResourcesInNewTab ? '1' : '0';

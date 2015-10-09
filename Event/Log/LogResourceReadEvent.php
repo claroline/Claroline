@@ -30,7 +30,7 @@ class LogResourceReadEvent extends LogGenericEvent implements LogNotRepeatableIn
                     'path' => $node->getPathForDisplay()
                 ),
                 'workspace' => array(
-                    'name' => $node->getWorkspace()->getName()
+                    'name' => $node->getWorkspace() ? $node->getWorkspace()->getName(): ' - '
                 ),
                 'owner' => array(
                     'lastName' => $node->getCreator()->getLastName(),

@@ -18,19 +18,16 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
 
-class RightsIntegrityCheckerCommand extends ContainerAwareCommand
+class CleanIpWhiteListCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('claroline:rights:check')
-            ->setDescription('Checks the rights integrity of the platform.');
+        $this->setName('claroline:white_list:clean')
+            ->setDescription('Cleans the ip white list file');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $consoleLogger = ConsoleLogger::get($output);
-        $rightsManager = $this->getContainer()->get('claroline.manager.rights_manager');
-        $rightsManager->setLogger($consoleLogger);
-        $rightsManager->checkIntegrity();
+        $this->getContainer()->get('claroline.manager.ip_white_list_manager')->cleanWhiteList();
     }
 }
