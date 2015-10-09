@@ -57,6 +57,13 @@ class FriendRequest
     protected $allowAuthentication = false;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="create_user_if_missing", type="boolean", nullable=false)
+     */
+    protected $createUserIfMissing = false;
+
+    /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Oauth\ClarolineAccess", mappedBy="friendRequest")
      **/
     protected $clarolineAccess;
@@ -114,5 +121,15 @@ class FriendRequest
     public function getAllowAuthentication()
     {
         return $this->allowAuthentication;
+    }
+
+    public function setCreateUserIfMissing($bool)
+    {
+        $this->createUserIfMissing = $bool;
+    }
+
+    public function getCreateUserIfMissing()
+    {
+        return $this->createUserIfMissing;
     }
 }

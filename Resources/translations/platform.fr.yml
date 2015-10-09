@@ -1191,3 +1191,5 @@ invalid_host: Hôte invalide (accès à %url% refusé).
 request_friend: Requête d'ami
 activated: Activé
 not_activated: Désactivé
+add_pending: Ajouter une plateforme amie
+add_friend_confirm_message: Êtes-vous sûr de vouloir ajouter cet plateforme amie ?
