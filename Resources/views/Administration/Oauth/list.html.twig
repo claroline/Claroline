@@ -159,6 +159,9 @@
                                                             >
                                                                 <i class="fa fa-key" data-secret="{{ request.getClarolineAccess().getSecret() }}"></i>
                                                             </button>
+                                                            <button class="btn btn-default configure-authentication-btn" data-request-id="{{ request.getId() }}">
+                                                                <i class="fa fa-users" data-request-id="{{ request.getId() }}"></i>
+                                                            </button>
                                                         {% endif %}
                                                     </div>
                                                 </th>

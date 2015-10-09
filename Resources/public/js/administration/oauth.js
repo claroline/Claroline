@@ -47,6 +47,10 @@
             var url = Routing.generate('oauth_request_friend_form');
             modal.displayForm(url, addFriendRequest, function(){}, 'form_request_friend');
         })
+        .on('click', '.configure-authentication-btn', function(event) {
+            var url = Routing.generate('oauth_request_authentication_form', {'friend': $(event.target).attr('data-request-id')});
+            modal.displayForm(url, addFriendRequest, function(){}, 'oauth_request_authentication_form');
+        })
         .on('click', '.show-client-btn', function(event) {
             modal.simpleContainer('', $(event.target).attr('data-client-id') + '_' + $(event.target).attr('data-client-random'));
         })

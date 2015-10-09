@@ -213,4 +213,10 @@ class OauthManager extends ClientManager
 
         return false;
     }
+
+    public function updateFriend(FriendRequest $request)
+    {
+        $this->om->persist($request);
+        $this->om->flush();
+    }
 }

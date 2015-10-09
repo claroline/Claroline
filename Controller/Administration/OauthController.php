@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Entity\Oauth\FriendRequest;
 use Claroline\CoreBundle\Entity\Oauth\PendingFriend;
 use Claroline\CoreBundle\Form\Administration\OauthClientType;
 use Claroline\CoreBundle\Form\Administration\RequestFriendType;
+use Claroline\CoreBundle\Form\Administration\FriendAuthenticationType;
 use Claroline\CoreBundle\Manager\Exception\FriendRequestException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\FormError;
@@ -325,5 +326,53 @@ class OauthController extends Controller
         $this->oauthManager->hideClient($client);
 
         return new JsonResponse('done');
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/request/authentication/form/{friend}",
+     *     name="oauth_request_authentication_form",
+     *     options = {"expose"=true}
+     * )
+     *
+     * @EXT\Template()
+     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     *
+     * @return Response
+     */
+    public function friendAuthenticationFormAction(FriendRequest $friend)
+    {
+        $form = $this->get('form.factory')->create(new FriendAuthenticationType(), $friend);
+
+        return array('form' => $form->createView(), 'friend' => $friend);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/request/authentication/submit/{friend}",
+     *     name="oauth_request_authentication_submit",
+     *     options = {"expose"=true}
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Administration:Oauth\friendAuthenticationForm.html.twig")
+     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     *
+     * @return Response
+     */
+    public function friendAuthenticationSubmitAction(FriendRequest $friend)
+    {
+        $form = $this->get('form.factory')->create(new FriendAuthenticationType(), $friend);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $request = $form->getData();
+            $this->oauthManager->updateFriend($request);
+
+            return new JsonResponse('done');
+        }
+
+        //throw new \Exception($form->getErrorsAsString());
+
+        return array('form' => $form->createView(), 'friend' => $friend);
     }
 }

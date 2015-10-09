@@ -50,6 +50,13 @@ class FriendRequest
     protected $isActivated = false;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="allow_authentication", type="boolean", nullable=false)
+     */
+    protected $allowAuthentication = false;
+
+    /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Oauth\ClarolineAccess", mappedBy="friendRequest")
      **/
     protected $clarolineAccess;
@@ -97,5 +104,15 @@ class FriendRequest
     public function setClarolineAccess(ClarolineAccess $access)
     {
         $this->clarolineAccess = $access;
+    }
+
+    public function setAllowAuthentication($bool)
+    {
+        $this->allowAuthentication = $bool;
+    }
+
+    public function getAllowAuthentication()
+    {
+        return $this->allowAuthentication;
     }
 }
