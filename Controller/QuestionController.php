@@ -630,8 +630,7 @@ class QuestionController extends Controller {
     /**
      * To display the modal which allow to change the label of a document.
      *
-     * @EXT\Route("/update/name", name="ujm_question_name_update")
-     * @EXT\Method("POST")
+     * @EXT\Route("/change/document/name", name="ujm_document_change_name")
      * 
      * @param int $id id of exercise
      *
@@ -648,7 +647,8 @@ class QuestionController extends Controller {
     /**
      * To change the label of a document.
      *
-     * @EXT\Route("/change/document/name", name="ujm_document_change_name")
+     * @EXT\Route("/update/name", name="ujm_question_name_update")
+     * @EXT\Method("POST")
      * 
      * @param int $id id of exercise
      *
@@ -658,11 +658,10 @@ class QuestionController extends Controller {
         $request = $this->container->get('request');
         $newlabel = $request->get('newlabel');
         $oldlabel = $request->get('oldName');
-
         $em = $this->getDoctrine()->getManager();
 
         $alterDoc = $em->getRepository('UJMExoBundle:Document')->findOneBy(array('label' => $oldlabel));
-
+       
         $alterDoc->setLabel($newlabel);
 
         $em->persist($alterDoc);
