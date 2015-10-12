@@ -5,5 +5,5 @@
 {% if nbItems == 1 %}
     {{ 'remove_message_confirm_message'|trans({}, 'platform') }}
 {% else %}
-    {{ 'remove_message_s_confirm_message'|trans({'%count%': nbItems}, 'platform') }}
+    {{ 'remove_message_s_confirm_message'|trans({'count': nbItems}, 'platform') }}
 {% endif %}
