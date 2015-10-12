@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\ForumBundle\Entity\Widget\LastMessageWidgetConfig;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -67,9 +68,16 @@ class ForumWidgetManager
      */
     public function getConfig(WidgetInstance $widgetInstance)
     {
-        return $this->objectManager
+        $lastMessageWidgetConfig = $this->objectManager
             ->getRepository('ClarolineForumBundle:Widget\LastMessageWidgetConfig')
             ->findOneOrNullByWidgetInstance($widgetInstance);
+
+        if ($lastMessageWidgetConfig === null) {
+            $lastMessageWidgetConfig = new LastMessageWidgetConfig();
+            $lastMessageWidgetConfig->setWidgetInstance($widgetInstance);
+        }
+
+        return $lastMessageWidgetConfig;
     }
 
     /**

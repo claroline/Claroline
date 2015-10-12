@@ -28,11 +28,6 @@ class WidgetController extends Controller
 
         $lastMessageWidgetConfig = $this->get("claroline.manager.forum_widget")->getConfig($widgetInstance);
 
-        if ($lastMessageWidgetConfig === null) {
-            $lastMessageWidgetConfig = new LastMessageWidgetConfig();
-            $lastMessageWidgetConfig->setWidgetInstance($widgetInstance);
-        }
-
         /** @var Form $form */
         $form = $this->get('form.factory')->create(new LastMessageWidgetConfigType(), $lastMessageWidgetConfig);
         $form->submit($request);
