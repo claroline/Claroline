@@ -94,6 +94,6 @@ class ForumWidgetManager
         }
 
         return $this->entityManager->getRepository('ClarolineForumBundle:Message')
-            ->findNLastByForum($workspaces, $roles, 3, $user);
+            ->findNLastByForum($workspaces, $roles, 10, $user);
     }
 }
