@@ -153,6 +153,35 @@ class WorkspaceRepository extends EntityRepository
     }
 
     /**
+     * Returns the workspaces whose at least one tool is accessible to one of the given roles.
+     *
+     * @param string $search
+     * @param string[] $roles
+     *
+     * @return array[Workspace]
+     */
+    public function findBySearchAndRoles($search, array $roles)
+    {
+        $dql = "
+            SELECT DISTINCT w FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+            JOIN w.roles r
+            WHERE r.name in (:roles)
+            AND (
+                UPPER(w.name) LIKE :search
+                OR UPPER(w.code) LIKE :search
+            )
+            ORDER BY w.name
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roles', $roles);
+        $upperSearch = strtoupper($search);
+        $query->setParameter('search', "%{$upperSearch}%");
+
+        return $query->getResult();
+    }
+
+    /**
      * Finds which workspaces can be opened by one of the given roles,
      * in a given set of workspaces. If a tool name is passed in, the
      * check will be limited to that tool, otherwise workspaces with
