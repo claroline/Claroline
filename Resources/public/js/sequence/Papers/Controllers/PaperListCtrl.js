@@ -9,15 +9,15 @@
         'paperListPromise',
         function ($routeParams, $window, $filter, CommonService, paperListPromise) {
 
-            this.papers = paperListPromise.data;
+            this.papers = paperListPromise.data.papers;
+            this.sequence = paperListPromise.data.sequence;
             this.filtered = this.papers;
             this.query = '';
             this.exoId = $routeParams.eid;
             this.showPagination = true;
-            this.itemPerPageDefaultValue = 5;
-          
+
             this.config = {
-                itemsPerPage: this.itemPerPageDefaultValue,
+                itemsPerPage: 10,
                 fillLastPage: false,
                 paginatorLabels: {
                     stepBack: '‹',
@@ -53,6 +53,44 @@
                 if (!this.showPagination) {
                     this.config.itemsPerPage = this.papers.length;
                 }
+            };
+
+            /**
+             * Checks if we can display the correction link
+             * @returns {bool}
+             */
+            this.checkCorrectionAvailability = function (paper) {
+                var correctionMode = CommonService.getCorrectionMode(this.sequence.meta.correctionMode);             
+                var nbFinishedAttempts = this.countFinishedAttempts();
+                switch (correctionMode) {
+                    case "test-end":
+                        return paper.end && paper.end !== undefined && paper.end !== '' ;
+                        break;
+                    case "last-try":
+                        // number of paper with date end === sequence.maxAttempts ?
+                        return nbFinishedAttempts === this.sequence.meta.maxAttempts;
+                        break;
+                    case "after-date":
+                        var current = new Date();
+                        // compare with ??? sequence.endDate ?
+                        return true;
+                        break;
+                    case "never":
+                        return false;
+                        break;
+                    default:
+                        return false;
+                }
+            };
+            
+            this.countFinishedAttempts = function (){
+                var nb = 0;
+                for(var i = 0; i < this.papers.length; i++){
+                    if(this.papers[i].end && this.papers[i].end !== undefined && this.papers[i].end !== ''){
+                        nb++;
+                    }
+                }
+                return nb;
             };
 
 

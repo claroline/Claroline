@@ -131,8 +131,16 @@
                     // save the entire paper and redirect to paper details (correction)
                     var promise = SequenceService.endSequence(this.sequence.id, studentData.paper);
                     promise.then(function (result) {
-                        var url = CommonService.generateUrl('paper-list', this.sequence.id) + '#/' + this.sequence.id + '/' + studentData.paper.id;
-                        $window.location = url;
+                        if (this.checkCorrectionAvailability()) {
+                            // go to paper correction view
+                            var url = CommonService.generateUrl('paper-list', this.sequence.id) + '#/' + this.sequence.id + '/' + studentData.paper.id;
+                            $window.location = url;
+                        }
+                        else {
+                            // got to exercise home page
+                            var url = CommonService.generateUrl('exercise-home', this.sequence.id);
+                            $window.location = url;
+                        }
                         //this.isFinished = true;
                     }.bind(this));
                 } else {
@@ -156,6 +164,35 @@
                     CommonService.getCurrentQuestionPaperData(this.currentStep.items[0]);
                 }.bind(this));
             };
+
+
+            /**
+             * Check if correction is available for a sequence
+             * @returns {Boolean}
+             */
+            this.checkCorrectionAvailability = function () {
+                var correctionMode = CommonService.getCorrectionMode(this.sequence.correctionMode);
+                switch (correctionMode) {
+                    case "test-end":
+                        return true;                       
+                        break;
+                    case "last-try":
+                        // check if current try is the last one ? -> currentAttemptNumber === sequence.maxAttempts - 1 ?
+                        return this.nbAttempts === sequence.maxAttempts - 1;
+                        break;
+                    case "after-date":
+                        var current = new Date();
+                        // compare with ??? sequence.endDate ?
+                        return true;
+                        break;
+                    case "never":
+                        return false;
+                        break;
+                    default:
+                        return false;
+                }
+
+            }
         }
     ]);
 })();

@@ -193,7 +193,13 @@ class SequenceController extends Controller
                 ),
                 "created" => "2015-09-11 10:43:56",
                 "title" => "TEST",
-                "description" => null
+                "description" => null,
+                
+                
+                "keepSameQuestion" => false,
+                "random" => false,
+                "pick" => 0,
+                "correctionMode" => 2,
             );
         } else if ($metaNb === 2) {
             $meta = array(
@@ -214,7 +220,9 @@ class SequenceController extends Controller
                 "description" => "<h1>Lorem ipsum dolor sit amet</h1><p>Integer non tortor porta, facilisis odio vitae, condimentum ex. Ut dictum orci at enim consequat, vel iaculis augue posuere. Sed ullamcorper est et odio rhoncus mattis. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Suspendisse aliquam hendrerit nibh, ac mattis ante scelerisque at. Nam varius lorem nec ex malesuada pharetra. Quisque vulputate lacus ligula, in feugiat mauris sodales quis. Morbi ultricies dolor eu suscipit sollicitudin. Morbi vel congue sapien. Integer in lectus erat. Ut volutpat id nibh id semper. Vivamus ex turpis, iaculis id cursus et, ultricies vitae est. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam tincidunt quam consectetur mauris consectetur, in dictum diam hendrerit. Pellentesque maximus lectus mi. </p>",
                 "pick" => 0,
                 "random" => false,
-                "maxAttempts" => 4
+                "maxAttempts" => 4,                
+                "correctionMode" => 1,
+                "keepSameQuestion" => true
             );
         }
 
@@ -414,7 +422,7 @@ class SequenceController extends Controller
             );
         } else if ($type === "choice") {
             $step1 = array(
-                "id" => "1",
+                "id" => "1", 
                 "items" => array(
                     array(
                         "id" => "7",
@@ -423,7 +431,8 @@ class SequenceController extends Controller
                         "label" => "Which image shows a kid ?",
                         "random" => true,
                         "multiple" => false,
-                        "feedback" => "Global feedback",
+                        "feedback" => "Global feedback",                   
+                        
                         "hints" => array(
                             array(
                                 "id" => "12",

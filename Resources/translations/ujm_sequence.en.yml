@@ -25,6 +25,7 @@ paper_list_table_interrupted: Interrupted
 paper_list_table_interrupted_yes: Yes
 paper_list_table_interrupted_no: No
 paper_list_table_action: Correction
+paper_list_table_action_not_available: Not available yet
 paper_list_table_score: Score
 paper_list_table_first_page_label: First
 paper_list_table_last_page_label: Last

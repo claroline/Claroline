@@ -58,7 +58,9 @@
                                 <span data-ng-if="!item.interrupted">{{ 'paper_list_table_interrupted_no'|trans:{}:'ujm_sequence' }}</span>
                             </td>
                             <td at-attribute="id" at-title="{{ 'paper_list_table_action'|trans:{}:'ujm_sequence' }}">
-                                <a href="#/{{paperListCtrl.exoId}}/{{item.id}}">{{ 'paper_list_table_action'|trans:{}:'ujm_sequence' }}</a>
+                                
+                                <a data-ng-if="paperListCtrl.checkCorrectionAvailability(item)" href="#/{{paperListCtrl.exoId}}/{{item.id}}">{{ 'paper_list_table_action'|trans:{}:'ujm_sequence' }}</a>
+                                <span data-ng-if="!paperListCtrl.checkCorrectionAvailability(item)">{{ 'paper_list_table_action_not_available'|trans:{}:'ujm_sequence' }}</span>
                             </td>
                             <td at-attribute="score" at-sortable at-title="{{ 'paper_list_table_score'|trans:{}:'ujm_sequence' }}">
                                 {{item.score ? item.score + '/20' : '-'}}

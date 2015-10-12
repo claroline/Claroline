@@ -49,7 +49,7 @@
                     this.currentQuestionPaperData = currentQuestionPaperData;
                 },
                 getStudentData: function () {
-                    return{                        
+                    return{
                         question: this.currentQuestion,
                         paper: this.paper
                     };
@@ -66,24 +66,48 @@
                  * @param {type} id question id
                  * @returns {object}
                  */
-                getCurrentQuestionPaperData : function (question){  
+                getCurrentQuestionPaperData: function (question) {
                     // search for an existing answer to the question in paper
-                    for(var i = 0; i < this.paper.questions.length; i++){
-                        if(this.paper.questions[i].id === question.id){
+                    for (var i = 0; i < this.paper.questions.length; i++) {
+                        if (this.paper.questions[i].id === question.id) {
                             this.currentQuestionPaperData = this.paper.questions[i];
                             return this.currentQuestionPaperData;
                         }
                     }
                     // if no info found, initiate object
                     this.currentQuestionPaperData = {
-                        id:question.id,
+                        id: question.id,
                         answer: [],
-                        hints:[]
+                        hints: []
                     };
                     this.paper.questions.push(this.currentQuestionPaperData);
                     return this.currentQuestionPaperData;
                 },
                 // UTILS METHODS
+                /**
+                 * get a sequence correction mode in a human readable word
+                 * @param {integer} mode
+                 * @returns {string} the humanized correction mode
+                 */
+                getCorrectionMode: function (mode) {
+                    switch (mode) {
+                        case 1:
+                            return "test-end";
+                            break;
+                        case 2:
+                            return "last-try";
+                            break;
+                        case 3:
+                            return "after-date";
+                            break;
+                        case 4:
+                            return "never";
+                            break;
+                        default:
+                            return "never";
+                    }
+
+                },
                 /**
                  * @param {object} object a javascript object with type property
                  * @returns null or string
