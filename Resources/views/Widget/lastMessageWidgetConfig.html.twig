@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="{{ asset('bundles/clarolineforum/css/forum.css') }}" type="text/css" media="all" />
 <form name="claroline_forum_last_message_widget_config" class="form-inline" action="{{ path("claroline_forum_last_message_widget_configure", {'id': widgetInstance.id}) }}" method="post" {{ form_enctype(form) }} novalidate="novalidate">
     <div class="panel-body">
         <label class="control-label col-md-3">{{  'title_form_last_messages'|trans({}, 'forum') }}</label>
