@@ -20,7 +20,7 @@ class WidgetController extends Controller
      * @Route("/widget/listmessages/{id}/config", name="claroline_forum_last_message_widget_configure", requirements={"id" = "\d+"})
      * @Method("POST")
      */
-    public function updateWidgetBlogList(Request $request, WidgetInstance $widgetInstance)
+    public function updateLastMessagesForumWidgetConfig(Request $request, WidgetInstance $widgetInstance)
     {
         if (!$this->get('security.authorization_checker')->isGranted('edit', $widgetInstance)) {
             throw new AccessDeniedException();
@@ -29,7 +29,6 @@ class WidgetController extends Controller
         $lastMessageWidgetConfig = $this->get("claroline.manager.forum_widget")->getConfig($widgetInstance);
 
         if ($lastMessageWidgetConfig === null) {
-            echo 'ça passe ';
             $lastMessageWidgetConfig = new LastMessageWidgetConfig();
             $lastMessageWidgetConfig->setWidgetInstance($widgetInstance);
         }
@@ -38,9 +37,6 @@ class WidgetController extends Controller
         $form = $this->get('form.factory')->create(new LastMessageWidgetConfigType(), $lastMessageWidgetConfig);
         $form->submit($request);
 
-        var_dump(get_class($form->getData()));
-        var_dump($form->getData()->getDisplayMyLastMessages());
-        var_dump($form->isValid());
         if ($form->isValid()) {
             $entityManager = $this->get('doctrine.orm.entity_manager');
 
@@ -48,18 +44,6 @@ class WidgetController extends Controller
             $entityManager->flush();
 
             return new Response('', Response::HTTP_NO_CONTENT);
-        }
-        else {
-
-//            var_dump($form->getData());
-            var_dump($form->isSubmitted());
-//            foreach($form->getErrors() as $error) {
-//
-//                echo '<pre>';
-//                var_dump($error);
-//                echo '</pre>';
-//            }
-
         }
 
         return $this->render(
