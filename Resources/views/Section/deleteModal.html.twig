@@ -21,7 +21,7 @@
             $('form[id="deleteSection-form-{{ section.id }}"] > input[type="submit"]').hide();
             $('form[id="deleteSection-form-{{ section.id }}"] > a.cancel-btn').hide();
 
-            $('#deleteSectionModal-submit-{{ section.id }}').on('click', function () {
+            $('#deleteSectionModal-submit-{{ section.id }}').on('click', function (event) {
                 event.preventDefault();
                 //I do the "click" on submit button for keep html5 warning
                 $('form[id="deleteSection-form-{{ section.id }}"] > input[type="submit"]').trigger('click');
