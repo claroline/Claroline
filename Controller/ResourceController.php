@@ -619,8 +619,12 @@ class ResourceController
                 //and the current date don't match, then it's de facto unpublished.
                 if ($item['accessible_from'] || $item['accessible_until']) {
                     $now = new \DateTime();
-                    if ($item['accessible_from']->getTimeStamp() > $now->getTimeStamp()) $item['published'] = false;
-                    if ($item['accessible_until']->getTimeStamp() < $now->getTimeStamp()) $item['published'] = false;
+                    if ($item['accessible_from']) {
+                        if ($item['accessible_from']->getTimeStamp() > $now->getTimeStamp()) $item['published'] = false;
+                    }
+                    if ($item['accessible_until']) {
+                        if ($item['accessible_until']->getTimeStamp() < $now->getTimeStamp()) $item['published'] = false;
+                    }
                 }
 
                 $nodesWithCreatorPerms[] = $item;
