@@ -75,15 +75,15 @@
         <ul>
             <li>{{ 'name'|trans({}, 'platform') }}</li>
             <li>{{ 'code'|trans({}, 'platform') }}</li>
-            <li>{{ 'is_visible'|trans({}, 'platform') }}</li>
-            <li>{{ 'self_registration'|trans({}, 'platform') }}</li>
-            <li>{{ 'registration_validation'|trans({}, 'platform') }}</li>
-            <li>{{ 'self_unregistration'|trans({}, 'platform') }}</li>
+            <li>{{ 'is_visible'|trans({}, 'platform') }} ({{ '0_or_1'|trans({}, 'platform') }})</li>
+            <li>{{ 'self_registration'|trans({}, 'platform') }} ({{ '0_or_1'|trans({}, 'platform') }})</li>
+            <li>{{ 'registration_validation'|trans({}, 'platform') }} ({{ '0_or_1'|trans({}, 'platform') }})</li>
+            <li>{{ 'self_unregistration'|trans({}, 'platform') }} ({{ '0_or_1'|trans({}, 'platform') }})</li>
         </ul>
         <p>{{ 'csv_users_import_infos_optional'|trans({}, 'platform') }} :</p>
         <ul>
-            <li>{{ 'creator'|trans({}, 'platform') }}</li>
-            <li>{{ 'model'|trans({}, 'platform') }}</li>
+            <li>{{ 'creator'|trans({}, 'platform') }} ({{ 'username'|trans({}, 'platform') }})</li>
+            <li>{{ 'model'|trans({}, 'platform') }} ({{ 'name'|trans({}, 'platform') }})</li>
         </ul>
     </div>
         <form role="form" class="form-horizontal" id="ws_import_form" action="{{ path('claro_admin_workspace_import', {}) }}" method="post" {{ form_enctype(form) }}>

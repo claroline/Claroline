@@ -1158,3 +1158,4 @@ mail_options: Email options
 mailer_from: Email "from" field
 desktop_root_directory_upload_error: You can't add resources at the desktop root directory.
 pick_a_resource: Pick a resource
+0_or_1: 0 or 1
