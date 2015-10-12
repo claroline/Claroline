@@ -121,7 +121,7 @@ class HoleExport extends QtiExport
     protected function promptTag()
     {
         $prompt = $this->document->CreateElement('prompt');
-        $prompttxt = $this->document->CreateTextNode($this->interactionhole->getQuestion()->getDescription());
+        $prompttxt = $this->document->CreateTextNode($this->interactionhole->getQuestion()->getInvite());
         $prompt->appendChild($prompttxt);
         $this->itemBody->appendChild($prompt);
     }
