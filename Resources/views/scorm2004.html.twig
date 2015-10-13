@@ -26,7 +26,7 @@
                     successStatus == 'failed' or
                     successStatus == 'passed'
                 %}
-                    {% if successStatus is not null %}
+                    {% if successStatus is not null and (successStatus == 'failed' or successStatus == 'passed') %}
                         {% set status = successStatus %}
                     {% else %}
                         {% set status = completionStatus %}
