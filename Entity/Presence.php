@@ -52,17 +52,17 @@ use FormaLibre\PresenceBundle\Entity\Period;
      * @ORM\Column(name="date", type="date")
      */
     protected $date;
-     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Group"
-     * )
-     * @ORM\JoinColumn(name="group_id", onDelete="CASCADE")
-     */
-    protected $group;
       /**
      * @ORM\Column(name="Comment",nullable=true)
      */
     protected $comment;
+     /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CursusBundle\Entity\CourseSession"
+     * )
+     * @ORM\JoinColumn(name="course_session", onDelete="CASCADE", nullable=true)
+     */
+    protected $courseSession;
     
     public function getId()
     {
@@ -123,16 +123,7 @@ use FormaLibre\PresenceBundle\Entity\Period;
     {
         $this->date = $date;
     }
-    
-    public function getGroup()
-    {
-        return $this->group;
-    }
-    
-    public function setGroup(Group $group)
-    {
-        $this->group = $group;
-    }  
+   
      public function getComment()
     {
         return $this->comment;
@@ -142,5 +133,15 @@ use FormaLibre\PresenceBundle\Entity\Period;
     {
         $this->comment = $comment;
     }
+     public function getCourseSession()
+    {
+        return $this->courseSession;
+    }
+    
+    public function setCourseSession($courseSession)
+    {
+        $this->courseSession = $courseSession;
+    }
+    
     
  }

@@ -20,9 +20,11 @@ use FormaLibre\PresenceBundle\Entity\Presence;
 use FormaLibre\PresenceBundle\Entity\Status;
 use FormaLibre\PresenceBundle\Entity\Releves;
 use FormaLibre\PresenceBundle\Entity\SchoolYear;
+use Claroline\CursusBundle\Entity\CourseSession;
 
 use Claroline\CoreBundle\Entity\User;
 use FormaLibre\PresenceBundle\Manager\PresenceManager;
+use Claroline\CursusBundle\Manager\CursusManager;
 use FormaLibre\PresenceBundle\Entity\PresenceRights;
 
 use FormaLibre\PresenceBundle\Form\Type\ReleveType;
@@ -40,6 +42,7 @@ class PresenceController extends Controller
     private $schoolYearRepo;
     private $router;
     private $presenceManager;
+    private $cursusManager;
     
     
     /**
@@ -47,14 +50,16 @@ class PresenceController extends Controller
      *      "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *      "em"                 = @DI\Inject("doctrine.orm.entity_manager"),
      *      "router"             = @DI\Inject("router"),
-     *      "presenceManager"    = @DI\Inject("formalibre.manager.presence_manager")
+     *      "presenceManager"    = @DI\Inject("formalibre.manager.presence_manager"),
+     *      "cursusManager"      = @DI\Inject("claroline.manager.cursus_manager")
      * })
      */
     public function __construct(
         ObjectManager $om,
         EntityManager $em,
         RouterInterface $router,
-        PresenceManager $presenceManager
+        PresenceManager $presenceManager,
+        CursusManager $cursusManager    
       )
     {   $this->router             =$router;          
         $this->om                 = $om;
@@ -67,6 +72,7 @@ class PresenceController extends Controller
         $this->presenceRepo       = $om->getRepository('FormaLibrePresenceBundle:Presence');
         $this->schoolYearRepo     = $om->getRepository('FormaLibrePresenceBundle:SchoolYear');
         $this->presenceManager    = $presenceManager;
+        $this->cursusManager      = $cursusManager;
     }
     
        /**
@@ -123,13 +129,16 @@ class PresenceController extends Controller
      */
     public function ChoixClasseAction(User $user, Period $period, Request $request, $date)
 
-    {
+    {   
+        $sessionsByUser = $this->cursusManager->getSessionsByUserAndType($user, 1);
+        //throw new \Exception(count($test));
         $form = $this ->createFormBuilder()
         
-            ->add ('selection','entity',array (
+            ->add ('selection', 'entity', array (
                 'label'=>'Classe:',
-                'class' => 'ClarolineCoreBundle:Group',
-                'property' => 'name',
+                'class' => 'Claroline\CursusBundle\Entity\CourseSession',
+                'choices' => $sessionsByUser,
+                'property' => 'getShortNameWithCourse',
                 'empty_value' =>'Choisissez un groupe',))
             ->add ('valider','submit',array (
                 'label'=>'Relever les présences'))
@@ -139,11 +148,11 @@ class PresenceController extends Controller
             if ($request->getMethod() == 'POST')
             {
                 $form->handleRequest($request);
-                $classe = $form->get("selection")->getData();
+                $session = $form->get("selection")->getData();
                 
                 return $this->redirect($this->generateUrl('formalibre_presence_releve', array("period" => $period->getId(), 
                                                                                               "date" => $date, 
-                                                                                              "classe" => $classe->getId())));
+                                                                                              "session" => $session->getId())));
         }
             
             return array('form'=>$form->createView(),
@@ -155,7 +164,7 @@ class PresenceController extends Controller
     
       /**
      * @EXT\Route(
-     *     "/presence/releve/period/{period}/date/{date}/classe/{classe}",
+     *     "/presence/releve/period/{period}/date/{date}/session/{session}",
      *     name="formalibre_presence_releve",
      *     options={"expose"=true}
      * )
@@ -164,18 +173,20 @@ class PresenceController extends Controller
      * @param User $user
      * @EXT\Template()
      */
-    public function PresenceReleveAction(Request $request, User $user, Period $period, $date, Group $classe)
+    public function PresenceReleveAction(Request $request, User $user, Period $period, $date, CourseSession $session)
     {
         
         $canCkeckPresences=  $this->presenceManager->checkRights($user,  PresenceRights::CHECK_PRESENCES);
                 
         $dateFormat=new \DateTime($date);
  
-        $Presences = $this->presenceRepo->OrderByStudent($classe,$date,$period);
-        $dayPresences = $this->presenceRepo->OrderByNumPeriod($classe,$date);
+        $Presences = $this->presenceRepo->OrderByStudent($session,$date,$period);
+        $dayPresences = $this->presenceRepo->OrderByNumPeriod($session,$date);
         
         $Groups = $this->groupRepo->findAll() ;
-        $Users = $this->userRepo->findByGroup($classe) ;
+        
+        
+        $Users = $this->cursusManager->getUsersBySessionAndType($session, 0);
        
         $Null = $this->statuRepo->findOneByStatusName('');
         $liststatus= $this->statuRepo->findByStatusByDefault(false);
@@ -190,7 +201,7 @@ class PresenceController extends Controller
                     $actualPresence->setStatus($Null);
                     $actualPresence->setUserTeacher($user);
                     $actualPresence->setUserStudent($student);
-                    $actualPresence->setGroup($classe);
+                    $actualPresence->setCourseSession($session);
                     $actualPresence->setPeriod($period);
                     $actualPresence->setDate($dateFormat);
                     $this->em->persist($actualPresence);
@@ -230,7 +241,7 @@ class PresenceController extends Controller
             return $this->redirect($this->generateUrl('formalibre_presence_releve', 
                     array("period" => $period->getId(), 
                           "date" => $date, 
-                          "classe" => $classe->getId())));
+                          "session" => $session->getId())));
         }
         
         return array('presForm'=>$presForm->createView(),
@@ -240,7 +251,7 @@ class PresenceController extends Controller
                      'presences'=>$Presences, 
                      'period'=>$period, 
                      'date'=>$date, 
-                     'classe'=>$classe, 
+                     'session'=>$session, 
                      'groups'=>$Groups, 
                      'users'=>$Users,
                      'daypresences'=>$dayPresences,
@@ -326,7 +337,7 @@ class PresenceController extends Controller
      * @param User $user
      * @EXT\Template()
      */
-    public function PresenceModifAction($id)
+    public function PresenceModifAction($id, $user)
             
     {   
         $canEditArchives= $this->presenceManager->checkRights($user, PresenceRights::EDIT_ARCHIVES);
@@ -378,9 +389,6 @@ class PresenceController extends Controller
         
        return array('ModifPresenceForm' => $ModifPresenceForm->createView(),
                     'presence' => $Presence,
-                    'canViewPersonalArchives'=>$canViewPersonalArchives, 
-                    'canCheckPresences'=>$canCkeckPresences,
-                    'canViewArchives'=>$canViewArchives,
                     'canEditArchives'=>$canEditArchives);
     }
                  /**

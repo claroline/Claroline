@@ -47,7 +47,7 @@
                             <th style="text-align: center;">{{"date"|trans({},"presences")}}</th>
                             <th style="text-align: center;">{{"tranche"|trans({},"presences")}}</th>
                                 {#<th>Cours</th>#}
-                                <th style="text-align: center;">{{"group"|trans({},"presences")}}</th>
+                                <th style="text-align: center;">{{"session"|trans({},"presences")}}</th>
                                 <th style="text-align: center;">{{"student_name"|trans({},"presences")}}</th>
                                 <th style="text-align: center;">{{"student_firstname"|trans({},"presences")}}</th>
                                 <th style="text-align: center;">{{"statut"|trans({},"presences")}}</th>
@@ -64,7 +64,7 @@
                                     <td>{{presence.getDate()|date("y/m/d")}}</td>
                                     <td>{{presence.getPeriod.getNumPeriod()}}</td>
                 {#                    <td>{{presence.getPeriod.getName()}}</td>#}
-                                    <td>{{presence.getGroup.getName()}}</td>
+                                    <td>{{presence.getCourseSession.getShortNameWithCourse}}</td>
                                     <td>{{presence.getUserStudent.getLastName()}}</td>
                                     <td>{{presence.getUserStudent.getFirstName()}}</td>
                                     {% if presence.getStatus() is null %}
@@ -72,7 +72,7 @@
                                     {% else %}
                                     <td>{{presence.getStatus.getStatusName()}}</td>
                                     {% endif %}
-                                    <td>{{presence.getUserTeacher.getFirstName()}}{{presence.getUserTeacher.getLastName()}}</td>
+                                    <td>{{presence.getUserTeacher.getFirstName()}} {{presence.getUserTeacher.getLastName()}}</td>
                                     <td>{{presence.getComment()}}</td>
                                     {% if canEditArchives%}
                                         <td>
