@@ -206,7 +206,7 @@ class PresenceController extends Controller
                     $actualPresence->setDate($dateFormat);
                     $this->em->persist($actualPresence);
                     $this->em->flush();
-                    $Presences[]=$actualPresence;
+                    $Presences = $this->presenceRepo->OrderByStudent($session,$date,$period);
                     }
             }
             

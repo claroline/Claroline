@@ -78,7 +78,7 @@
                                                 
                                                     <h1><i class="fa fa-user img-thumbnail"></i></h1>
                                             {% else %}   
-                                                        <img id="photo" style="height:150px; border: 2px solid black;" 
+                                                        <img id="photo" style="height:150px;" 
                                                          class="img-circle" 
                                                          src="{{asset('uploads/pictures/') ~ student.getUserStudent().getPicture()}}" 
                                                          width="100" 
@@ -110,9 +110,9 @@
                                         {{periode.getPeriod().getNumPeriod}}° N.C.
                                     {% else %}
                                         {% if periode.getPeriod().getNumPeriod < period.getNumPeriod()%}
-                                            <div style="color: {{periode.getStatus.getStatusColor()}};">
+                                          
                                                 {{periode.getPeriod().getNumPeriod}}° {{periode.getStatus.getStatusName()}}
-                                            </div>    
+                                               
                                         {% endif %}
                                     {% endif %}
                                 {% endif %}
@@ -163,13 +163,13 @@
             
            $('.OneForm').each(function (){
 
-            var image=$("img",this);
+            var image=$("td",this);
 
       $(this).find('input').each(function (){
          if($(this).prop('checked')){
              var valeurCheck=$(this).val();
 
-             image.css( 'border-color', colors[valeurCheck]['color']);  
+             image.css( 'background-color', colors[valeurCheck]['color']);  
 
          }
 
@@ -179,9 +179,9 @@
 
         $('input').on('click',function(){
             var OneForm=$(this).closest('.OneForm');
-            var image =OneForm.find("img");
+            var image =OneForm.find("td");
             var valeurCheck=$(this).val();
-            image.css( 'border-color', colors[valeurCheck]['color']);
+            image.css( 'background-color', colors[valeurCheck]['color']);
             var oTable = $('#studentList').dataTable();
              oTable.fnFilter('');
          
@@ -203,19 +203,15 @@
               {
               $(this).prop('checked',true);
               var OneForm=$(this).closest('.OneForm');
-              var image =OneForm.find("img");
-            image.css( 'border-color', colors[status]['color']);
-            console.log("testcouleur")
+              var image =OneForm.find("td");
+            image.css( 'background-color', colors[status]['color']);
+
               }
               else
               {
                $(this).prop('checked',false);   
               }
-              
-             
-              
-              
-              
+
           });
 
         };
@@ -249,8 +245,7 @@
     <script>
         $(document).ready(function() {
             $('#studentList').DataTable( {
-                
-               
+ 
                  dom: 'Bftlp',
                 buttons: true,
                "pageLength": 25,
