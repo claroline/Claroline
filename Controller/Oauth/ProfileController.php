@@ -28,6 +28,7 @@ class ProfileController extends Controller
      */
     public function listAction(User $user)
     {
+        //???????
         $clients = $this->getDoctrine()
             ->getRepository('ClarolineCoreBundle:Oauth\Client')
             ->findByUserWithAccessToken($user);

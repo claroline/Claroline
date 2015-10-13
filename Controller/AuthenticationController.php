@@ -339,6 +339,15 @@ class AuthenticationController
             new XmlResponse($content, $status);
     }
 
+    /**
+     * @Route("/request/token/{request}")
+     * @Method("POST")
+     */
+    public function requestTokenAction(FriendRequest $request)
+    {
+
+    }
+
     //not routed...
     public function renderExternalAuthenticatonButtonAction()
     {
