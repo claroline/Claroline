@@ -1,5 +1,6 @@
 # b
 btn_end_sequence_label: Terminer la séquence
+btn_interrupt_sequence_label: Interrompre
 btn_prev_step_label: Aller à l'étape précédente
 btn_next_step_label: Aller à l'étape suivante
 
@@ -35,10 +36,11 @@ paper_list_table_toggle_pagination: Paginer / Dépaginer les resultats
 question_hints: Indices
 question_hint_label: Indice
 question_hint_show_title: Voir l'indice
-question_show_hint_confirm: Etes vous sur de vouloir utiliser l'indice ? <br/> Cela entrainera une pénalité de %1% points.
+question_show_hint_confirm: Êtes vous sur de vouloir utiliser l'indice ? <br/> Cela entrainera une pénalité de %1% points.
 
 # s
 sequence_step: Etape
 sequence_attempts_infos: Vous avez le droit à %1% essai(s)
 sequence_nb_attempts: Essais N° %1%
-sequence_end_sequence_confirm: Etes vous sur de vouloir terminer la séquence ? <br/> Vous ne pourrez plus modifier vos réponses.
+sequence_interrupt_sequence_confirm: Êtes vous sur de vouloir interrompre la séquence ?
+sequence_end_sequence_confirm: Êtes vous sur de vouloir terminer la séquence ? <br/> Vous ne pourrez plus modifier vos réponses.

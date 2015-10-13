@@ -165,8 +165,9 @@ class SequenceController extends Controller
         $sequenceManager = $this->get('ujm.exo.sequence_manager');
         // get paper data (Array)
         $paper = $request->get('paper');
+        $interrupted = $request->get('interrupted');
         //print_r($paper);die;
-        $response = $sequenceManager->endSequence($exercise, $paper);
+        $response = $sequenceManager->endSequence($exercise, $paper, $interrupted);
         return new JsonResponse($response);
     }
 
@@ -222,7 +223,8 @@ class SequenceController extends Controller
                 "random" => false,
                 "maxAttempts" => 4,                
                 "correctionMode" => 1,
-                "keepSameQuestion" => true
+                "keepSameQuestion" => true,
+                "displayBtnInterrupt" => true
             );
         }
 

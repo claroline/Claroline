@@ -45,6 +45,11 @@
                         </li>
                     </ul>
                 </div>
+                
+                <!-- INTERRUPT SEQUENCE -->
+                <button data-ng-if="!sequencePlayCtrl.isLastStep && sequencePlayCtrl.sequence.meta.displayBtnInterrupt" role="button" type="button" ng-bootbox-confirm="{{ 'sequence_interrupt_sequence_confirm'|trans:{}:'ujm_sequence'}}" ng-bootbox-confirm-action="sequencePlayCtrl.validateStep('interrupt')" class="btn btn-default">
+                    {{ 'btn_interrupt_sequence_label'|trans:{}:'ujm_sequence' }}
+                </button>
                 <!-- END SEQUENCE -->
                 <button data-ng-if="sequencePlayCtrl.isLastStep" role="button" type="button" ng-bootbox-confirm="{{ 'sequence_end_sequence_confirm'|trans:{}:'ujm_sequence'}}" ng-bootbox-confirm-action="sequencePlayCtrl.validateStep('end')" class="btn btn-default">
                     {{ 'btn_end_sequence_label'|trans:{}:'ujm_sequence' }}

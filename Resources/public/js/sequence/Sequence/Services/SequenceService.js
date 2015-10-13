@@ -40,15 +40,16 @@
                 },
                 /**
                  * End the sequence by setting the paper data
-                 * @param {type} exoId
-                 * @param {type} studentPaper
+                 * @param {integer} exoId
+                 * @param {object} studentPaper
+                 * @param {bool} interrupted
                  * @returns promise
                  */
-                endSequence: function (exoId, studentPaper) {
+                endSequence: function (exoId, studentPaper, interrupted) {
                     var deferred = $q.defer();
                     $http
                             .put(
-                                    Routing.generate('ujm_sequence_end', {id: exoId}), {paper: studentPaper}
+                                    Routing.generate('ujm_sequence_end', {id: exoId}), {paper: studentPaper, interrupted : interrupted}
                             )
                             .success(function (response) {
                                 deferred.resolve(response);

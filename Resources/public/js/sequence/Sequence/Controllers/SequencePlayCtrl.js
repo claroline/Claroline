@@ -127,11 +127,12 @@
                 } else if (action && action === 'goto' && index !== undefined) {
                     newIndex = index;
                     this.saveAnswerAndGotTo(newIndex, studentData);
-                } else if (action && action === 'end') {
+                } else if (action && action === 'end' || action === 'interrupt' ) {
                     // save the entire paper and redirect to paper details (correction)
-                    var promise = SequenceService.endSequence(this.sequence.id, studentData.paper);
+                    var interrupted = action === 'interrupt';
+                    var promise = SequenceService.endSequence(this.sequence.id, studentData.paper, interrupted);
                     promise.then(function (result) {
-                        if (this.checkCorrectionAvailability()) {
+                        if (this.checkCorrectionAvailability() && action !== 'interrupt') {
                             // go to paper correction view
                             var url = CommonService.generateUrl('paper-list', this.sequence.id) + '#/' + this.sequence.id + '/' + studentData.paper.id;
                             $window.location = url;

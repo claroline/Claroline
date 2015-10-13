@@ -39,11 +39,11 @@ class SequenceManager
     /**
      * End the sequence
      * @param Exercise $exercise
-     * @param User $user
      * @param Array $paper
+     * @param bool $interrupted
      * @return type
      */
-    public function endSequence(Exercise $exercise, $paper)
+    public function endSequence(Exercise $exercise, $paper, $interrupted)
     {
         $response = array();
         $response['status'] = 'success';

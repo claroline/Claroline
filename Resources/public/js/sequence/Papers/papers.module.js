@@ -85,7 +85,7 @@
                     });
             //$locationProvider.html5Mode({enabled:true, requireBase:false});
             // please wait spinner config
-            cfpLoadingBarProvider.latencyThreshold = 0;
+            cfpLoadingBarProvider.latencyThreshold = 200;
             cfpLoadingBarProvider.includeBar = false;
             cfpLoadingBarProvider.spinnerTemplate = '<div class="loading">Loading&#8230;</div>';
         }
