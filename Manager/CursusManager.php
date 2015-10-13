@@ -2530,4 +2530,41 @@ class CursusManager
             $executeQuery
         );
     }
+
+
+    /******************
+     * Others methods *
+     ******************/
+
+    public function getSessionsByUserAndType(User $user, $userType = 0)
+    {
+        $sessions = array();
+        $sessionUsers = $this->getSessionUsersByUser($user);
+
+        foreach ($sessionUsers as $sessionUser) {
+            $type = $sessionUser->getUserType();
+
+            if ($type === $userType) {
+                $sessions[] = $sessionUser->getSession();
+            }
+        }
+
+        return $sessions;
+    }
+
+    public function getUsersBySessionAndType(CourseSession $session, $userType = 0)
+    {
+        $users = array();
+        $sessionUsers = $this->getSessionUsersBySession($session);
+
+        foreach ($sessionUsers as $sessionUser) {
+            $type = $sessionUser->getUserType();
+
+            if ($type === $userType) {
+                $users[] = $sessionUser->getUser();
+            }
+        }
+
+        return $users;
+    }
 }
