@@ -328,7 +328,10 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
             foreach ($children as $child) {
                 if ($child && $child->getResourceType()->getName() !== 'directory') {
-                    $_data['items'][] = $this->getResourceElement($child, $workspace, $_files, $_data);
+                    $item = $this->getResourceElement($child, $workspace, $_files, $_data);
+                    if (!empty($item)) {
+                        $_data['items'][] = $item;
+                    }
                 }
             }
         }
@@ -802,34 +805,40 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
     {
         $parentId = $resourceNode->getParent() ? $resourceNode->getParent()->getId(): null;
         $resourceNode = $this->resourceManager->getRealTarget($resourceNode, false);
+
         $data = array();
-        $importer = $this->getImporterByName($resourceNode->getResourceType()->getName());
+        $resElement = array();
 
-        if ($importer) {
-            $importer->setExtendedData($_data);
-            $data = $importer->export(
-                $workspace,
-                $_files,
-                $this->resourceManager->getResourceFromNode($resourceNode),
-                $_data
-            );
-        }
+        $resource = $this->resourceManager->getResourceFromNode($resourceNode);
+        if (!empty($resource)) {
+            // We are not processing an orphan Node so we can run the export of the Resource
+            $importer = $this->getImporterByName($resourceNode->getResourceType()->getName());
+            if ($importer) {
+                $importer->setExtendedData($_data);
+                $data = $importer->export(
+                    $workspace,
+                    $_files,
+                    $resource,
+                    $_data
+                );
+            }
 
-        if ($setParentNull) $parentId = null;
+            if ($setParentNull) $parentId = null;
 
-        $resElement = array('item' => array(
-            'name'      => $resourceNode->getName(),
-            'creator'   => null,
-            'parent'    => $parentId,
-            'published' => $resourceNode->isPublished(),
-            'type'      => $resourceNode->getResourceType()->getName(),
-            'roles'     => $this->getPermsArray($resourceNode),
-            'uid'       => $resourceNode->getId(),
-            'data'      => $data,
-        ));
+            $resElement = array('item' => array(
+                'name'      => $resourceNode->getName(),
+                'creator'   => null,
+                'parent'    => $parentId,
+                'published' => $resourceNode->isPublished(),
+                'type'      => $resourceNode->getResourceType()->getName(),
+                'roles'     => $this->getPermsArray($resourceNode),
+                'uid'       => $resourceNode->getId(),
+                'data'      => $data,
+            ));
 
-        if ($icon = $this->getIcon($resourceNode, $_files)) {
-            $resElement['item']['icon'] = $icon;
+            if ($icon = $this->getIcon($resourceNode, $_files)) {
+                $resElement['item']['icon'] = $icon;
+            }
         }
 
         return $resElement;
