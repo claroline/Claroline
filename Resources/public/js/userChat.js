@@ -12,16 +12,154 @@
     
     var xmppHost;
     var xmppPort;
+    var authenticatedUsername;
+    var username;
     var connection;
+    
+    function OnMessageStanza(stanza)
+    {
+        var from = $(stanza).attr('from');
+        var type = $(stanza).attr('type');
+        var jid = Strophe.getBareJidFromJid(from);
+        var sender = jid.replace('@' + xmppHost, '');
+        var body = $(stanza).find('body').text();
+        
+        var message = '<li><b class="received-message">' + sender + ' : </b>' + body + '</li>';
+        $('#chat-content').append(message);
+        var scrollHeight = $('#chat-content')[0].scrollHeight;
+        $('#chat-content').scrollTop(scrollHeight);
+        
+        return true;
+    }
+    
+    function OnPresenceStanza(stanza)
+    {
+        var from = $(stanza).attr('from');
+        var jid = Strophe.getBareJidFromJid(from);
+        var type = $(stanza).attr('type');
+        var show = $(stanza).find('show').text();
+        
+        return true;
+    }
     
     function connection()
     {
         xmppHost = $('#chat-datas-box').data('xmpp-host');
         xmppPort = $('#chat-datas-box').data('xmpp-port');
+        authenticatedUsername = $('#chat-datas-box').data('authenticated-username');
+        username = $('#chat-datas-box').data('username');
         
-        console.log(xmppHost + ' - ' + xmppPort);
-        connection = new Strophe.Connection(xmppHost + ':' + xmppPort);
+        connection = new Strophe.Connection('/http-bind');
+        
+        connection.connect(
+            authenticatedUsername + '@' + xmppHost,
+            authenticatedUsername, 
+            connectionCallBack
+        );
     }
+    
+    function registration()
+    {
+        xmppHost = $('#chat-datas-box').data('xmpp-host');
+        xmppPort = $('#chat-datas-box').data('xmpp-port');
+        authenticatedUsername = $('#chat-datas-box').data('authenticated-username');
+        username = $('#chat-datas-box').data('username');
+        
+        connection = new Strophe.Connection('/http-bind');
+        
+        connection.register.connect(
+            xmppHost,
+            registrationCallBack
+        );
+    }
+
+    $('#send-msg-btn').on('click', function () {
+        var msgContent = $('#msg-input').val();
+        
+        var message = $msg({
+            to: username + '@' + xmppHost,
+            from: authenticatedUsername + '@' + xmppHost,
+            type: 'chat'
+        }).c("body").t(msgContent);
+        
+        connection.send(message);
+        $('#msg-input').val('');
+        
+        var display = '<li><b class="sent-message">' + authenticatedUsername + ' : </b>' + msgContent + '</li>';
+        $('#chat-content').append(display);
+        var scrollHeight = $('#chat-content')[0].scrollHeight;
+        $('#chat-content').scrollTop(scrollHeight);
+    });
+
+    $('#msg-input').on('keypress', function (e) {
+        
+        if (e.keyCode === 13) {
+            var msgContent = $(this).val();
+        
+            var message = $msg({
+                to: username + '@' + xmppHost,
+                from: authenticatedUsername + '@' + xmppHost,
+                type: 'chat'
+            }).c("body").t(msgContent);
+            
+            connection.send(message);
+            $('#msg-input').val('');
+        
+            var display = '<li><b class="sent-message">' + authenticatedUsername + ' : </b>' + msgContent + '</li>';
+            $('#chat-content').append(display);
+            var scrollHeight = $('#chat-content')[0].scrollHeight;
+            $('#chat-content').scrollTop(scrollHeight);
+        }
+    });
+    
+    var connectionCallBack = function (status) {
+                
+        if (status === Strophe.Status.CONNECTED) { 
+            console.log('Connected');
+
+            connection.addHandler(OnPresenceStanza, null, "presence");
+            connection.addHandler(OnMessageStanza, null, "message");
+            connection.send($pres());
+        } else if (status === Strophe.Status.CONNFAIL) {
+            console.log('Connection failed !');
+        } else if (status === Strophe.Status.DISCONNECTED) {
+            console.log('Disconnected');
+        } else if (status === Strophe.Status.CONNECTING) {
+            console.log('Connecting...');
+        } else if (nStatus === Strophe.Status.DISCONNECTING) {
+            console.log('Disconnecting...');   
+        }
+    };
+    
+    var registrationCallBack = function (status) {
+                
+        if (status === Strophe.Status.REGISTER) {
+            console.log('Register...');
+            // fill out the fields
+            connection.register.fields.username = authenticatedUsername;
+            connection.register.fields.password = authenticatedUsername;
+            // calling submit will continue the registration process
+            connection.register.submit();
+        } else if (status === Strophe.Status.REGISTERED) {
+            console.log("Registered !");
+            // calling login will authenticate the registered JID.
+            connection.authenticate();
+        } else if (status === Strophe.Status.CONFLICT) {
+            console.log("Contact already existed!");
+        } else if (status === Strophe.Status.NOTACCEPTABLE) {
+            console.log("Registration form not properly filled out.")
+        } else if (status === Strophe.Status.REGIFAIL) {
+            console.log("The Server does not support In-Band Registration")
+        } else if (status === Strophe.Status.CONNECTED) { 
+            console.log('Connected');
+
+            connection.addHandler(OnPresenceStanza, null, "presence");
+            connection.addHandler(OnMessageStanza, null, "message");
+            connection.send($pres());
+        } else {
+            console.log('Connection failed !');
+        }
+    };
     
     connection();
 })();
