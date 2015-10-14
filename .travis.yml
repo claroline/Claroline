@@ -1,0 +1,30 @@
+language: php
+
+php:
+  - "5.5"
+
+env:
+  - DB=mysql COMPOSER=composer_travis.json
+
+mysql:
+  adapter: mysql2
+  database: claroline_test
+  username: travis
+  encoding: utf8
+
+before_script:
+  - cd ../..
+  - ROOT_DIR=`pwd`
+  - curl -O https://raw.githubusercontent.com/claroline/DevBundle/master/Resources/travis/pre-composer.php
+  - php pre-composer.php
+  - BUNDLE_DIR=`cat bundle_dir.txt`
+  - cd $BUNDLE_DIR
+  - cp composer.lock composer_travis.lock
+  - composer self-update
+  - composer install --prefer-source
+  - cd $ROOT_DIR
+  - cp -R vendor/claroline/dev-bundle/Claroline/DevBundle/Resources/travis/app/* app
+  - php app/register-bundle.php `cat package_dir.txt`
+  - php app/init-schema.php
+
+script: vendor/bin/phpunit -c "${BUNDLE_DIR}/phpunit_travis.xml"
