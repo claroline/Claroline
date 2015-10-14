@@ -160,7 +160,6 @@ class ResourceRightsController
         $collection = new ResourceCollection(array($node));
         $this->checkAccess('ADMINISTRATE', $collection);
         $datas = $this->getPermissionsFromRequest($node->getResourceType());
-        //throw new \Exception(var_dump($datas));
         $isRecursive = $this->request->getCurrentRequest()->request->get('isRecursive');
 
         foreach ($datas as $data) {

@@ -5,6 +5,10 @@ claro_security_login_check:
 claro_security_logout:
     pattern: /logout
 
+claro_oauth_authorize:
+    resource: "@ClarolineCoreBundle/Controller/OauthController.php"
+    type: annotation
+
 claro_index:
     resource: "@ClarolineCoreBundle/Controller/HomeController.php"
     type: annotation

@@ -253,10 +253,8 @@ class EventManager
                 }
             }
         }
-        //var_dump($sortedEvents);
-        //die();
+
         return $sortedEvents;
-        //return array('all' => 'Tous','group' => 'Group');
     }
 
     /**

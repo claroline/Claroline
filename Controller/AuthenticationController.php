@@ -129,14 +129,6 @@ class AuthenticationController
         }
 
         $session = $this->request->getSession();
-        // Add the following lines
-        /*
-        if ($session->has('_security.target_path')) {
-            if (false !== strpos($session->get('_security.target_path'), $this->generateUrl('fos_oauth_server_authorize'))) {
-                $session->set('_fos_oauth_server.ensure_logout', true);
-            }
-        }*/
-
 
         return array(
             'last_username' => $lastUsername,
@@ -337,15 +329,6 @@ class AuthenticationController
         return $format === 'json' ?
             new JsonResponse($content, $status) :
             new XmlResponse($content, $status);
-    }
-
-    /**
-     * @Route("/request/token/{request}")
-     * @Method("POST")
-     */
-    public function requestTokenAction(FriendRequest $request)
-    {
-
     }
 
     //not routed...
