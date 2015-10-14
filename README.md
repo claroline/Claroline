@@ -1,3 +1,8 @@
+Competency bundle
+=================
+
+[![Build Status](https://travis-ci.org/hevinci/CompetencyBundle.svg?branch=master)](https://travis-ci.org/hevinci/CompetencyBundle)
+
 Installation
 ------------
 
