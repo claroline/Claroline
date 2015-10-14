@@ -11,41 +11,44 @@
 
 namespace Claroline\ForumBundle\Manager;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Manager\MessageManager;
+use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Manager\MailManager;
+use Claroline\CoreBundle\Manager\MaskManager;
+use Claroline\CoreBundle\Manager\RightsManager;
+use Claroline\CoreBundle\Pager\PagerFactory;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\ForumBundle\Entity\Category;
 use Claroline\ForumBundle\Entity\Forum;
-use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Notification;
-use Claroline\ForumBundle\Entity\Category;
-use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Claroline\ForumBundle\Entity\Subject;
+use Claroline\ForumBundle\Event\Log\CloseSubjectEvent;
+use Claroline\ForumBundle\Event\Log\CreateCategoryEvent;
 use Claroline\ForumBundle\Event\Log\CreateMessageEvent;
 use Claroline\ForumBundle\Event\Log\CreateSubjectEvent;
-use Claroline\ForumBundle\Event\Log\CreateCategoryEvent;
+use Claroline\ForumBundle\Event\Log\DeleteCategoryEvent;
 use Claroline\ForumBundle\Event\Log\DeleteMessageEvent;
 use Claroline\ForumBundle\Event\Log\DeleteSubjectEvent;
-use Claroline\ForumBundle\Event\Log\DeleteCategoryEvent;
-use Claroline\ForumBundle\Event\Log\SubscribeForumEvent;
-use Claroline\ForumBundle\Event\Log\UnsubscribeForumEvent;
-use Claroline\ForumBundle\Event\Log\StickSubjectEvent;
-use Claroline\ForumBundle\Event\Log\UnstickSubjectEvent;
+use Claroline\ForumBundle\Event\Log\EditCategoryEvent;
+use Claroline\ForumBundle\Event\Log\EditMessageEvent;
+use Claroline\ForumBundle\Event\Log\EditSubjectEvent;
 use Claroline\ForumBundle\Event\Log\MoveMessageEvent;
 use Claroline\ForumBundle\Event\Log\MoveSubjectEvent;
-use Claroline\ForumBundle\Event\Log\EditMessageEvent;
-use Claroline\ForumBundle\Event\Log\EditCategoryEvent;
-use Claroline\ForumBundle\Event\Log\EditSubjectEvent;
-use Claroline\ForumBundle\Event\Log\CloseSubjectEvent;
 use Claroline\ForumBundle\Event\Log\OpenSubjectEvent;
-use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Pager\PagerFactory;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Claroline\ForumBundle\Event\Log\StickSubjectEvent;
+use Claroline\ForumBundle\Event\Log\SubscribeForumEvent;
+use Claroline\ForumBundle\Event\Log\UnstickSubjectEvent;
+use Claroline\ForumBundle\Event\Log\UnsubscribeForumEvent;
+use Claroline\MessageBundle\Manager\MessageManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("claroline.manager.forum_manager")
@@ -59,6 +62,7 @@ class Manager
     private $subjectRepo;
     private $messageRepo;
     private $forumRepo;
+    private $roleRepo;
     private $userRepo;
     private $messageManager;
     private $translator;
@@ -66,6 +70,8 @@ class Manager
     private $mailManager;
     private $container;
     private $sc;
+    private $maskManager;
+    private $rightsManager;
 
     /**
      * Constructor.
@@ -79,7 +85,9 @@ class Manager
      *     "router"         = @DI\Inject("router"),
      *     "mailManager"    = @DI\Inject("claroline.manager.mail_manager"),
      *     "container"      = @DI\Inject("service_container"),
-     *     "sc"           = @DI\Inject("security.context")
+     *     "sc"             = @DI\Inject("security.context"),
+     *     "maskManager"    = @DI\Inject("claroline.manager.mask_manager"),
+     *     "rightsManager"  = @DI\Inject("claroline.manager.rights_manager")
      * })
      */
     public function __construct(
@@ -91,7 +99,9 @@ class Manager
         RouterInterface $router,
         MailManager $mailManager,
         ContainerInterface $container,
-        SecurityContextInterface $sc
+        SecurityContextInterface $sc,
+        MaskManager $maskManager,
+        RightsManager $rightsManager
     )
     {
         $this->om = $om;
@@ -100,6 +110,7 @@ class Manager
         $this->subjectRepo = $om->getRepository('ClarolineForumBundle:Subject');
         $this->messageRepo = $om->getRepository('ClarolineForumBundle:Message');
         $this->forumRepo = $om->getRepository('ClarolineForumBundle:Forum');
+        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->dispatcher = $dispatcher;
         $this->messageManager = $messageManager;
@@ -108,6 +119,8 @@ class Manager
         $this->mailManager = $mailManager;
         $this->container = $container;
         $this->sc = $sc;
+        $this->maskManager = $maskManager;
+        $this->rightsManager = $rightsManager;
     }
 
     /**
@@ -117,12 +130,13 @@ class Manager
      * @param \Claroline\ForumBundle\Entity\Forum $forum
      * @param \Claroline\CoreBundle\Entity\User $user
      */
-    public function subscribe(Forum $forum, User $user)
+    public function subscribe(Forum $forum, User $user, $selfActivation = true)
     {
         $this->om->startFlushSuite();
         $notification = new Notification();
         $notification->setUser($user);
         $notification->setForum($forum);
+        $notification->setSelfActivation($selfActivation);
         $this->om->persist($notification);
         $this->dispatch(new SubscribeForumEvent($forum));
         $this->om->endFlushSuite();
@@ -270,31 +284,16 @@ class Manager
     public function sendMessageNotification(Message $message, User $user)
     {
         $forum = $message->getSubject()->getCategory()->getForum();
+        $notifications = $this->notificationRepo->findBy(array('forum' => $forum));
+        $users = array();
 
-        if ($forum->getActivateNotifications()) {
-            $relevantRoles = [];
-            $rights = $forum->getResourceNode()->getRights();
-
-            foreach ($rights as $right) {
-                //can open
-                if ($right->getMask() & 1) {
-                    $relevantRoles[] = $right->getRole();
-                }
-            }
-
-            $users = $this->userRepo->findByRoles($relevantRoles);
-        } else {
-            $notifications = $this->notificationRepo->findBy(array('forum' => $forum));
-            $users = array();
-
-            foreach ($notifications as $notification) {
-                $users[] = $notification->getUser();
-            }
+        foreach ($notifications as $notification) {
+            $users[] = $notification->getUser();
         }
 
         $title = $this->translator->trans(
             'forum_new_message',
-            array('%forum%' => $forum->getResourceNode()->getName(), '%subject%' => $message->getSubject()->getTitle()),
+            array('%forum%' => $forum->getResourceNode()->getName(), '%subject%' => $message->getSubject()->getTitle(), '%author%' => $message->getCreator()->getUsername()),
             'forum'
         );
 
@@ -305,7 +304,6 @@ class Manager
         $body = "<a href='{$url}'>{$title}</a><hr>{$message->getContent()}";
 
         $this->mailManager->send($title, $body, $users);
-
     }
 
     /**
@@ -558,36 +556,61 @@ class Manager
         return $newForum;
     }
 
-    public function replyMessage(Message $message, Message $oldMessage)
+    public function getMessageQuoteHTML(Message $message)
     {
-        // todo: this should be in a template...
-        $mask = '<div class="well"><div class="original-poster">%s :</div>%s</div>%s';
-        $oldAuthor = $oldMessage->getCreator()->getFirstName()
+        $answer = $this->translator->trans('answer_message', array(), 'forum');
+        $author = $message->getCreator()->getFirstName()
             . ' '
-            . $oldMessage->getCreator()->getLastName();
-        $message->setContent(
-            sprintf(
-                $mask,
-                $oldAuthor,
-                $oldMessage->getContent(),
-                $message->getContent()
-            )
+            . $message->getCreator()->getLastName();
+        $date = $message->getCreationDate()->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));
+        $by = $this->translator->trans('posted_by', array('%author%' => $author, '%date%' => $date), 'forum');
+        $mask = '<div class="original-poster"><b>' . $by . '</b></div><div class="well">%s</div></div><b>' . $answer . ':</b></div>';
+
+        return sprintf(
+            $mask,
+            $message->getContent()
         );
-        $this->createMessage($message, $oldMessage->getSubject());
+    }
+    
+    public function getReplyHTML(Message $message)
+    {
+        $author = $message->getCreator()->getFirstName()
+            . ' '
+            . $message->getCreator()->getLastName();
+        $date = $message->getCreationDate()->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));
+        $by = $this->translator->trans('posted_by', array('%author%' => $author, '%date%' => $date), 'forum');
+        
+        return $by;
     }
 
     public function activateGlobalNotifications(Forum $forum)
     {
+        $this->om->startFlushSuite();
         $forum->setActivateNotifications(true);
         $this->om->persist($forum);
-        $this->om->flush();
+        $node = $forum->getResourceNode();
+        $roles = $this->roleRepo->findRolesWithRightsByResourceNode($node);
+        $usersWithRoles = $this->userRepo->findUsersByRolesIncludingGroups($roles);
+        $users = $this->forumRepo
+            ->findUnnotifiedUsersFromListByForum($forum, $usersWithRoles);
+
+        foreach ($users as $user) {
+            $this->subscribe($forum, $user, false);
+        }
+        $this->om->endFlushSuite();
     }
 
     public function disableGlobalNotifications(Forum $forum)
     {
+        $this->om->startFlushSuite();
         $forum->setActivateNotifications(false);
         $this->om->persist($forum);
-        $this->om->flush();
+        $notifications = $this->forumRepo->findNonSelfNotificationsByForum($forum);
+
+        foreach ($notifications as $notification) {
+            $this->removeNotification($forum, $notification);
+        }
+        $this->om->endFlushSuite();
     }
 
     public function getLastMessagesBySubjectsIds(array $subjectsIds)
@@ -600,5 +623,53 @@ class Manager
         }
 
         return $lastMessages;
+    }
+
+    /**
+     * Unsubscribe a user from a forum.
+     *
+     * @param \Claroline\ForumBundle\Entity\Forum $forum
+     * @param \Claroline\ForumBundle\Entity\Notification $notification
+     */
+    private function removeNotification(Forum $forum, Notification $notification)
+    {
+        $this->om->startFlushSuite();
+        $this->om->remove($notification);
+        $this->dispatch(new UnsubscribeForumEvent($forum));
+        $this->om->endFlushSuite();
+    }
+
+    public function createDefaultPostRights(ResourceNode $node)
+    {
+        $workspace = $node->getWorkspace();
+        $resourceType = $node->getResourceType();
+        $role = $this->roleRepo->findOneBaseWorkspaceRole('COLLABORATOR', $workspace);
+
+        if (!is_null($role)) {
+            $postDecoder = $this->maskManager->getDecoder($resourceType, 'post');
+
+            if (!is_null($postDecoder)) {
+                $rights = $this->rightsManager->getOneByRoleAndResource($role, $node);
+                $value = $postDecoder->getValue();
+                $mask = $rights->getMask();
+                $permissions = $mask | $value;
+                $this->rightsManager->editPerms($permissions, $role, $node);
+            }
+        }
+    }
+
+    public function getSubjectsReadingLogs(
+        User $user,
+        ResourceNode $node,
+        $orderedBy = 'id',
+        $order = 'DESC'
+    )
+    {
+        return $this->forumRepo->findSubjectsReadingLogs(
+            $user,
+            $node,
+            $orderedBy,
+            $order
+        );
     }
 }

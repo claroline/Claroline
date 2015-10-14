@@ -17,7 +17,7 @@ forum_form_name: Nom
 forum_options_form_subjects: Sujets par page
 forum_options_form_messages: Messages par page
 forum_subject_title_form_title: Titre
-forum_new_message: Un nouveau message a été ajouté dans le sujet "%subject%" du forum "%forum%".
+forum_new_message: Un nouveau message a été ajouté dans le sujet "%subject%" du forum "%forum% par %author%".
 forum_new_subject: Un nouveau sujet a été ajouté dans le forum "%forum%".
 last_message: Dernier message
 messages: Messages
@@ -39,6 +39,7 @@ started_by: Initié par
 stick: Épingler
 stuck: Épinglé
 subject: Sujet
+subjects: Sujets
 subjets_per_page: Sujets par page
 subscribe_mail_list: Recevoir les notifications
 unstick: Désépingler
@@ -49,3 +50,8 @@ notifications_explanation: L'activation des notifications globales entraîne l'e
 activate_global_notifications: Activer les notifications globales
 disable_global_notifications: Annuler les notifications globales
 responses: Réponses
+answer_message: Réponse
+posted_by: Posté par %author% le %date%
+fast_reply: Réponse rapide
+reply_to: Répondre à %author%:
+quote: Citer

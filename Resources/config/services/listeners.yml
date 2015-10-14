@@ -13,3 +13,4 @@ services:
             - { name: kernel.event_listener, event: resource_claroline_forum_to_template, method: onExportTemplate }
             - { name: kernel.event_listener, event: resource_claroline_forum_from_template, method: onImportTemplate }
             - { name: kernel.event_listener, event: delete_user, method: onDeleteUser }
+            - { name: kernel.event_listener, event: resource_created_claroline_forum, method: onResourceCreated }

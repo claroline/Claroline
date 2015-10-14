@@ -9,7 +9,7 @@ forum_back_to_subjects: Back to subjects
 forum_category_edit: 'Edit category'
 forum_form_name: Name
 forum_message_form_content: Content
-forum_new_message: A new post was added to topic "%subject%" in forum "%forum%".
+forum_new_message: A new post was added to topic "%subject%" in forum "%forum% by %author%".
 forum_new_subject: A new topic was initiated in forum "%forum%".
 forum_options_form_messages: Posts per page
 forum_options_form_subjects: Topics per page
@@ -39,6 +39,7 @@ started_by: Initiated by
 stick: Stick
 stuck: Stuck
 subject: Topic
+subjects: Topics
 subjets_per_page: Subjects per page
 subscribe_mail_list: Subscribe to notifications
 unstick: Unstick
@@ -49,3 +50,8 @@ notifications_explanation: Global notifications will send a mail to each user wh
 activate_global_notifications: Activate global notifications
 disable_global_notifications: Disable global notifications
 responses: Replies
+answer_message: Reply
+posted_by: Posted by %author% the %date%
+fast_reply: Fast reply
+reply_to: Reply to %author%:
+quote: Quote

@@ -44,7 +44,9 @@
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ _resource.getResourceNode().getName() }}</h3>
+        <h3 class="panel-title">
+            [{{ 'subject'|trans({}, 'forum') }}] {{ subject.getTitle() }}
+        </h3>
     </div>
     <div class="panel-body">
         <div class="row">
@@ -77,9 +79,13 @@
                 {% set creator = message.getCreator() %}
                 <tr class="row-message">
                     <td width="125px">
-                        <div>
+                        <div class="text-center">
                             {% if creator.getPicture() != "" %}
-                                 <img src="{{ asset('uploads/pictures/') ~ creator.getPicture() }}" class="col-md-12">
+                                 <img src="{{ asset('uploads/pictures/') ~ creator.getPicture() }}"
+                                      class="img-circle"
+                                      width="70px"
+                                      height="70px"
+                                 >
                             {% else %}
                                 <h1><i class="fa fa-user col-md-12"></i><h1>
                             {% endif %}
@@ -88,10 +94,10 @@
                             {% if creator.isEnabled() %}
                                 <a href="{{ path('claro_public_profile_view', {'publicUrl': creator.getPublicUrl()}) }}">
                             {% endif %}
-                                    
+
                             {{ message.getAuthor() }}
-                              
-                            {% if creator.isEnabled() %}      
+
+                            {% if creator.isEnabled() %}
                                 </a>
                             {% endif %}
                         </div>
@@ -104,7 +110,12 @@
                         <p class="text-muted">{{ message.getCreationDate()| timeAgo }}</p>
                         <hr>
                         <div class="pull-right clearfix">
-                            {% if canAnswer and not subject.isClosed() %}
+                            {% if canPost and not subject.isClosed() %}
+                                <a class="btn btn-default" href="{{ path('claro_forum_quote_message_form', {'message': message.getId()}) }}">
+                                    <i class="fa fa-pencil"></i> {{ 'quote'|trans({}, 'forum') }}
+                                </a>
+                            {% endif %}
+                            {% if canPost and not subject.isClosed() %}
                                 <a class="btn btn-default" href="{{ path('claro_forum_reply_message_form', {'message': message.getId()}) }}">
                                     <i class="fa fa-pencil"></i> {{ 'reply'|trans({}, 'forum') }}
                                 </a>
@@ -130,16 +141,23 @@
         </table>
         <div>
             {{ renderPager(subject.getId(), pager, max) }}
+
+            {% if canPost %}
+                <btn id='fast-reply-btn' class='btn btn-primary pull-right'>{{ 'fast_reply'|trans({}, 'forum')}}</btn>
+            {% endif %}
         </div>
-        {% if canAnswer %}
+        {% if canPost %}
+        <div class="fast-reply" style="display: none;">
             <h4><i class="fa fa-reply"></i> {{ 'new_message' | trans({}, 'forum') }}</h4>
             <div>
             {% if not subject.isClosed() %}
                 <textarea class="forum-answer claroline-tiny-mce hide"></textarea>
-                {{ form_widget(form._token) }}
+                {# something may be wrong here because _token doesn't always exists #}
+                {% if form._token is defined %} {{ form_widget(form._token) }} {% endif %}
             {% endif %}
             </div>
         {% endif %}
+        </div>
     </div>
     <div class="panel-footer clearfix">
         <div class="pull-right">
@@ -147,7 +165,7 @@
 	            <a class="btn btn-default" href='{{ path('claro_forum_subjects', { 'category': category.getId() }) }}'>
 	               {{ 'back'|trans({}, 'platform') }}
 	            </a>
-	            {% if canAnswer %}
+	            {% if canPost %}
 	                <a class="btn btn-primary">
 	                    <i class="fa fa-reply"></i> {{ 'send' | trans({}, 'platform') }}
 	                </a>
@@ -159,7 +177,18 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% if canAnswer %}
+    <script>
+        (function () {
+            $('#max-select').on('change', function () {
+                window.location.href = Routing.generate(
+                    'claro_forum_messages',
+                    {'subject': {{ subject.getId()}}, 'max': $(this).val()}
+                );
+            });
+        })();
+    </script>
+
+    {% if canPost %}
         <script>
             (function () {
                 'use strict';
@@ -192,6 +221,7 @@
             })();
         </script>
     {% endif %}
+
     {% if isModerator %}
         <script>
             function createValidationBox() {
@@ -222,13 +252,16 @@
                     }
                 });
             });
-            $('#max-select').on('change', function () {
-                window.location.href = Routing.generate(
-                    'claro_forum_messages',
-                    {'subject': {{ subject.getId()}}, 'max': $(this).val()}
-                );
-            });
+        </script>
+    {% endif %}
+
+    {% if canPost %}
+        <script>
+            (function () {
+                $('body').on('click', '#fast-reply-btn', function() {
+                    $('.fast-reply').show();
+                });
+            })();
         </script>
     {% endif %}
 {% endblock %}
-

@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\DeleteUserEvent;
+use Claroline\CoreBundle\Event\ResourceCreatedEvent;
 use Claroline\CoreBundle\Event\ImportResourceTemplateEvent;
 use Claroline\CoreBundle\Event\ExportResourceTemplateEvent;
 use Claroline\ForumBundle\Entity\Forum;
@@ -98,50 +99,6 @@ class ForumListener extends ContainerAware
         $event->stopPropagation();
     }
 
-    public function onExportTemplate(ExportResourceTemplateEvent $event)
-    {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $resource = $event->getResource();
-        $config['type'] = 'claroline_forum';
-        $datas = $em->getRepository('ClarolineForumBundle:Forum')->findSubjects($resource);
-
-        foreach ($datas as $data) {
-            $subjects['title'] = $data['title'];
-            $message = $em->getRepository('ClarolineForumBundle:Message')
-                ->findInitialBySubject($data['id']);
-            $subjects['initial_message'] = $message->getContent();
-            $subjectsData[] = $subjects;
-        }
-
-        $config['subjects'] = $subjectsData;
-        $event->setConfig($config);
-        $event->stopPropagation();
-    }
-
-    public function onImportTemplate(ImportResourceTemplateEvent $event)
-    {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $config = $event->getConfig();
-        $forum = new Forum();
-        $user = $event->getUser();
-
-        foreach ($config['subjects'] as $subject) {
-            $subjectEntity = new Subject();
-            $subjectEntity->setTitle($subject['title']);
-            $subjectEntity->setForum($forum);
-            $subjectEntity->setCreator($user);
-            $message = new Message();
-            $message->setCreator($user);
-            $message->setContent($subject['initial_message']);
-            $message->setSubject($subjectEntity);
-            $em->persist($subjectEntity);
-            $em->persist($message);
-        }
-
-        $event->setResource($forum);
-        $event->stopPropagation();
-    }
-
     public function onDeleteUser(DeleteUserEvent $event)
     {
         //remove notification for user if it exists
@@ -157,5 +114,9 @@ class ForumListener extends ContainerAware
         }            
     }
 
-
+    public function onResourceCreated(ResourceCreatedEvent $event)
+    {
+        $node = $event->getResourceNode();
+        $this->container->get('claroline.manager.forum_manager')->createDefaultPostRights($node);
+    }
 }

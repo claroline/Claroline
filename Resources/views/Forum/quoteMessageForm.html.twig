@@ -16,11 +16,10 @@
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'reply_to'|trans({'%author%': message.getAuthor()}, 'forum') }}</h3>
+        <h3 class="panel-title">{{ 'reply_message'|trans({}, 'forum') }}</h3>
     </div>
-    <div class="well"> {{ message.getContent()|raw }} </div>
     {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
-    <form novalidate="novalidate" action="{{ path('claro_forum_reply_message_form', {'message': message.getId()}) }}" method="post" {{ form_enctype(form) }} id="message_form">
+    <form novalidate="novalidate" action="{{ path('claro_forum_quote_message_form', {'message': message.getId()}) }}" method="post" {{ form_enctype(form) }} id="message_form">
         <div class="panel-body">
             {{ form_widget(form) }}
         </div>
@@ -29,4 +28,12 @@
             <a class="btn btn-default" href="{{ path('claro_forum_messages', {'subject': subject.getId()}) }}">{{ 'cancel' | trans({}, 'platform' )}}</a>
         </div>
     </form>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        window.tinymce.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
+        window.tinymce.activeEditor.selection.collapse(false);
+    </script>
 {% endblock %}

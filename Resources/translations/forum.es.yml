@@ -9,7 +9,7 @@ forum_back_to_subjects: Volver a las temas
 forum_category_edit: 'Editar una categoría'
 forum_form_name: Nombre
 forum_message_form_content: Cotenido
-forum_new_message: 'Un nuevo mensaje fue agregada en tema "%subject%", en el foro "%forum%".'
+forum_new_message: 'Un nuevo mensaje fue agregada en tema "%subject%", en el foro "%forum% por %author%".'
 forum_options_form_messages: 'Mensajes por página'
 forum_options_form_subjects: 'Temas por página'
 forum_settings: 'Configuración del foro'
@@ -38,6 +38,7 @@ started_by: 'Iniciado por'
 stick: Anclar
 stuck: Anclado
 subject: Tema
+subjects: Temas
 subjets_per_page: 'Temas por pagina'
 subscribe_mail_list: 'Suscríbase a las notificaciones'
 unstick: Desanclar
@@ -48,3 +49,8 @@ notifications_explanation: Cuando se agrega un mensaje, la activación de las no
 activate_global_notifications: Activar las notificaciones globales
 disable_global_notifications: Anular las notificaciones globales
 responses: Respuestas
+answer_message: Respuesta
+posted_by: Iniciado por %author% el %date%
+fast_reply: Veloz respuesta
+reply_to: reply_to
+quote: quote

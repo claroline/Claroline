@@ -11,6 +11,8 @@
 
 namespace Claroline\ForumBundle\Repository;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Entity\Category;
@@ -77,11 +79,10 @@ class ForumRepository extends EntityRepository
     {
         $dql = "
             SELECT c.id as id,
-            count(m) as count_messages,
+            count(s) as count_subjects,
             c.name as name
             FROM Claroline\ForumBundle\Entity\Category c
             LEFT JOIN c.subjects s
-            LEFT JOIN s.messages m
             JOIN c.forum forum
             WHERE forum.id = :forumId
             GROUP BY c
@@ -220,5 +221,77 @@ class ForumRepository extends EntityRepository
         $query->setParameter('subjectsIds', $subjectsIds);
 
         return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findUnnotifiedUsersFromListByForum(
+        Forum $forum,
+        array $users,
+        $executeQuery = true
+    )
+    {
+        if (count($users) === 0) {
+
+            return array();
+        } else {
+            $dql = '
+                SELECT DISTINCT u
+                FROM Claroline\CoreBundle\Entity\User u
+                WHERE u IN (:users)
+                AND NOT EXISTS (
+                    SELECT n
+                    FROM Claroline\ForumBundle\Entity\Notification n
+                    WHERE n.forum = :forum
+                    AND n.user = u
+                )
+            ';
+
+            $query = $this->_em->createQuery($dql);
+            $query->setParameter('users', $users);
+            $query->setParameter('forum', $forum);
+
+            return $executeQuery ? $query->getResult() : $query;
+        }
+    }
+
+    public function findNonSelfNotificationsByForum(
+        Forum $forum,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT n
+            FROM Claroline\ForumBundle\Entity\Notification n
+            WHERE n.forum = :forum
+            AND n.selfActivation = false
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('forum', $forum);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findSubjectsReadingLogs(
+        User $user,
+        ResourceNode $node,
+        $orderedBy = 'id',
+        $order = 'DESC'
+    )
+    {
+        $dql = "
+            SELECT l
+            FROM Claroline\CoreBundle\Entity\Log\Log l
+            WHERE l.action = 'resource-claroline_forum-read_subject'
+            AND l.doer = :user
+            AND l.resourceNode = :node
+            ORDER BY l.{$orderedBy} {$order}
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+        $query->setParameter('node', $node);
+
+        return $query->getResult();
+
     }
 }

@@ -19,7 +19,7 @@
         <h3 class="panel-title">{{ _resource.getResourceNode().getName() }} ({{ 'new_subject'|trans({}, 'forum') }})</h3>
     </div>
     {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
-    <form novalidate="novalidate" action="{{ _path('claro_forum_create_subject', {'category': category.getId()}) }}" method="post" {{ form_enctype(form) }} id="subject_form">
+    <form novalidate="novalidate" action="{{ path('claro_forum_create_subject', {'category': category.getId()}) }}" method="post" {{ form_enctype(form) }} id="subject_form">
         <div class="panel-body">
            {{ form_errors(form.title) }}
            {{ form_row(form.title) }}
@@ -29,7 +29,7 @@
         </div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-            <a class="btn btn-default" href="{{ _path('claro_forum_subjects', { 'category': category.getId() }) }}">{{ 'cancel' | trans({}, 'platform') }}</a>
+            <a class="btn btn-default" href="{{ path('claro_forum_subjects', { 'category': category.getId() }) }}">{{ 'cancel' | trans({}, 'platform') }}</a>
         </div>
     </form>
 {% endblock %}

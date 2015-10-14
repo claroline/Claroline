@@ -64,9 +64,13 @@
                     {% set creator = message.getCreator() %}
                     <tr class="row-message">
                         <td width="125px">
-                            <div>
+                            <div class="text-center">
                                 {% if creator.getPicture() != "" %}
-                                     <img src="{{ asset('uploads/pictures/') ~ message.getCreator().getPicture() }}" class="col-md-12">
+                                     <img src="{{ asset('uploads/pictures/') ~ message.getCreator().getPicture() }}"
+                                          class="img-circle"
+                                          width="70px"
+                                          height="70px"
+                                     >
                                 {% else %}
                                     <h1><i class="fa fa-user col-md-12"></i><h1>
                                 {% endif %}
@@ -89,7 +93,17 @@
                         </td>
                         <td>
                             <div>
-                                <p class="message-content"> {{ message.getContent() }} </p>
+                                <a href="{{ path('claro_forum_messages', {'subject': message.getSubject().getId()}) }}"
+                                   class="pull-right"
+                                   data-toggle="tooltip" 
+                                   data-placement="left" 
+                                   title="[{{ message.getSubject().getCategory().getName() }}] {{ message.getSubject().getTitle() }}"
+                                >
+                                    <i class="fa fa-eye"></i>
+                                </a>
+                                <p class="message-content">
+                                    {{ message.getContent()|raw }}
+                                </p>
                                 <p class="text-muted">{{ message.getCreationDate()| timeAgo }} </p>
                             </div>
                         </td>

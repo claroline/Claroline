@@ -18,15 +18,17 @@ use Claroline\ForumBundle\Form\MessageType;
 use Claroline\ForumBundle\Form\SubjectType;
 use Claroline\ForumBundle\Form\CategoryType;
 use Claroline\ForumBundle\Form\EditTitleType;
+use Claroline\ForumBundle\Event\Log\ReadSubjectEvent;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\ForumBundle\Manager\Manager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -39,23 +41,27 @@ use JMS\DiExtraBundle\Annotation as DI;
 class ForumController extends Controller
 {
     private $manager;
-    private $security;
+    private $tokenStorage;
+    private $authorization;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "manager"  = @DI\Inject("claroline.manager.forum_manager"),
-     *     "security" = @DI\Inject("security.context")
+     *     "manager"       = @DI\Inject("claroline.manager.forum_manager"),
+     *     "authorization" = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage"  = @DI\Inject("security.token_storage")
      * })
      */
     public function __construct(
         Manager $manager,
-        SecurityContextInterface $security
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorization
     )
     {
         $this->manager = $manager;
-        $this->security = $security;
+        $this->tokenStorage = $tokenStorage;
+        $this->authorization = $authorization;
     }
     /**
      * @Route(
@@ -73,11 +79,11 @@ class ForumController extends Controller
         $em = $this->getDoctrine()->getManager();
         $this->checkAccess($forum);
         $categories = $em->getRepository('ClarolineForumBundle:Forum')->findCategories($forum);
-        $user = $this->security->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         $hasSubscribed = $user === 'anon.' ?
             false :
             $this->manager->hasSubscribed($user, $forum);
-        $isModerator = $this->security->isGranted(
+        $isModerator = $this->authorization->isGranted(
             'moderate',
             new ResourceCollection(array($forum->getResourceNode()))
         ) && $user !== 'anon.';
@@ -87,7 +93,8 @@ class ForumController extends Controller
             '_resource' => $forum,
             'isModerator' => $isModerator,
             'categories' => $categories,
-            'hasSubscribed' => $hasSubscribed
+            'hasSubscribed' => $hasSubscribed,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
         );
     }
 
@@ -123,10 +130,30 @@ class ForumController extends Controller
         }
         $collection = new ResourceCollection(array($forum->getResourceNode()));
         $isAnon = $this->isAnon();
-        $canCreateSubject = $this->security->isGranted('post', $collection) &&
+        $canCreateSubject = $this->authorization->isGranted('post', $collection);
+        $isModerator = $this->authorization->isGranted('moderate', $collection) &&
             !$isAnon;
-        $isModerator = $this->security->isGranted('moderate', $collection) &&
-            !$isAnon;
+
+        $logs = array();
+
+        if (!$isAnon) {
+            $securityToken = $this->tokenStorage->getToken();
+
+            if (!is_null($securityToken)) {
+                $user = $securityToken->getUser();
+                $logs = $this->manager->getSubjectsReadingLogs($user, $forum->getResourceNode());
+            }
+        }
+        $lastAccessDates = array();
+
+        foreach ($logs as $log) {
+            $details = $log->getDetails();
+            $subjectId = $details['subject']['id'];
+
+            if (!isset($lastAccessDates[$subjectId])) {
+                $lastAccessDates[$subjectId] = $log->getDateLog();
+            }
+        }
 
         return array(
             'pager' => $pager,
@@ -135,7 +162,10 @@ class ForumController extends Controller
             'isModerator' => $isModerator,
             'category' => $category,
             'max' => $max,
-            'lastMessages' => $lastMessages
+            'lastMessages' => $lastMessages,
+            'workspace' => $forum->getResourceNode()->getWorkspace(),
+            'lastAccessDates' => $lastAccessDates,
+            'isAnon' => $isAnon
         );
     }
 
@@ -144,6 +174,7 @@ class ForumController extends Controller
      *     "/form/subject/{category}",
      *     name="claro_forum_form_subject_creation"
      * )
+     * @ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @Template()
      *
      * @param Category $category
@@ -153,8 +184,8 @@ class ForumController extends Controller
         $forum = $category->getForum();
         $collection = new ResourceCollection(array($forum->getResourceNode()));
 
-        if (!$this->security->isGranted('post', $collection)) {
-            throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
+        if (!$this->authorization->isGranted('post', $collection)) {
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
 
         $formSubject = $this->get('form.factory')->create(new SubjectType());
@@ -162,7 +193,8 @@ class ForumController extends Controller
         return array(
             '_resource' => $forum,
             'form' => $formSubject->createView(),
-            'category' => $category
+            'category' => $category,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
         );
     }
 
@@ -171,6 +203,7 @@ class ForumController extends Controller
      *     "/form/category/{forum}",
      *     name="claro_forum_form_category_creation"
      * )
+     * @ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @Template()
      *
      * @param Forum $forum
@@ -179,15 +212,16 @@ class ForumController extends Controller
     {
         $collection = new ResourceCollection(array($forum->getResourceNode()));
 
-        if (!$this->security->isGranted('post', $collection)) {
-            throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
+        if (!$this->authorization->isGranted('post', $collection)) {
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
 
         $formCategory = $this->get('form.factory')->create(new CategoryType());
 
         return array(
             '_resource' => $forum,
-            'form' => $formCategory->createView()
+            'form' => $formCategory->createView(),
+            'workspace' => $forum->getResourceNode()->getWorkspace()
         );
     }
 
@@ -196,6 +230,7 @@ class ForumController extends Controller
      *     "/category/create/{forum}",
      *     name="claro_forum_create_category"
      * )
+     * @ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @Template()
      * @param Forum $forum
      */
@@ -203,8 +238,8 @@ class ForumController extends Controller
     {
         $collection = new ResourceCollection(array($forum->getResourceNode()));
 
-        if (!$this->security->isGranted('post', $collection)) {
-            throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
+        if (!$this->authorization->isGranted('post', $collection)) {
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
 
         $form = $this->get('form.factory')->create(new CategoryType(), new Category());
@@ -227,6 +262,7 @@ class ForumController extends Controller
      *     "/subject/create/{category}",
      *     name="claro_forum_create_subject"
      * )
+     * @ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @Template("ClarolineForumBundle:Forum:subjectForm.html.twig")
      * @param Category $category
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
@@ -238,15 +274,15 @@ class ForumController extends Controller
         $forum = $category->getForum();
         $collection = new ResourceCollection(array($forum->getResourceNode()));
 
-        if (!$this->security->isGranted('post', $collection)) {
-            throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
+        if (!$this->authorization->isGranted('post', $collection)) {
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
 
         $form = $this->get('form.factory')->create(new SubjectType(), new Subject);
         $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
-            $user = $this->security->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()->getUser();
             $subject = $form->getData();
             $subject->setCreator($user);
             $subject->setAuthor($user->getFirstName() . ' ' . $user->getLastName());
@@ -275,7 +311,8 @@ class ForumController extends Controller
 
         return array(
             'form' => $form->createView(),
-            '_resource' => $forum
+            '_resource' => $forum,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
         );
     }
 
@@ -297,14 +334,25 @@ class ForumController extends Controller
         $forum = $subject->getCategory()->getForum();
         $this->checkAccess($forum);
         $isAnon = $this->isAnon();
-        $isModerator = $this->security->isGranted(
+        $isModerator = $this->authorization->isGranted(
             'moderate',
             new ResourceCollection(array($forum->getResourceNode()))
         ) && !$isAnon;
         $pager = $this->manager->getMessagesPager($subject, $page, $max);
         $collection = new ResourceCollection(array($forum->getResourceNode()));
-        $canAnswer = $this->security->isGranted('post', $collection) && !$isAnon;
+        $canPost = $this->authorization->isGranted('post', $collection);
         $form = $this->get('form.factory')->create(new MessageType());
+
+        if (!$isAnon) {
+            $securityToken = $this->tokenStorage->getToken();
+
+            if (!is_null($securityToken)) {
+                $user = $securityToken->getUser();
+                $event = new ReadSubjectEvent($subject);
+                $event->setDoer($user);
+                $this->dispatch($event);
+            }
+        }
 
         return array(
             'subject' => $subject,
@@ -312,9 +360,10 @@ class ForumController extends Controller
             '_resource' => $forum,
             'isModerator' => $isModerator,
             'form' => $form->createView(),
-            'canAnswer' => $canAnswer,
             'category' => $subject->getCategory(),
-            'max' => $max
+            'max' => $max,
+            'canPost' => $canPost,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
         );
     }
 
@@ -323,6 +372,7 @@ class ForumController extends Controller
      *     "/create/message/{subject}",
      *     name="claro_forum_create_message"
      * )
+     * @ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      *
      * @param Subject $subject
      */
@@ -354,10 +404,10 @@ class ForumController extends Controller
     {
         $subject = $message->getSubject();
         $forum = $subject->getCategory()->getForum();
-        $isModerator = $this->security->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
+        $isModerator = $this->authorization->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
 
-        if (!$isModerator && $this->security->getToken()->getUser() !== $message->getCreator()) {
-            throw new AccessDeniedHttpException();
+        if (!$isModerator && $this->tokenStorage->getToken()->getUser() !== $message->getCreator()) {
+            throw new AccessDeniedException();
         }
 
         $form = $this->get('form.factory')->create(new MessageType(), $message);
@@ -366,7 +416,8 @@ class ForumController extends Controller
             'subject' => $subject,
             'form' => $form->createView(),
             'message' => $message,
-            '_resource' => $forum
+            '_resource' => $forum,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
         );
     }
 
@@ -383,10 +434,10 @@ class ForumController extends Controller
     {
         $subject = $message->getSubject();
         $forum = $subject->getCategory()->getForum();
-        $isModerator = $this->security->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
+        $isModerator = $this->authorization->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
 
-        if (!$isModerator && $this->security->getToken()->getUser() !== $message->getCreator()) {
-            throw new AccessDeniedHttpException();
+        if (!$isModerator && $this->tokenStorage->getToken()->getUser() !== $message->getCreator()) {
+            throw new AccessDeniedException();
         }
 
         $oldContent = $message->getContent();
@@ -406,7 +457,8 @@ class ForumController extends Controller
             'subject' => $subject,
             'form' => $form->createView(),
             'message' => $message,
-            '_resource' => $forum
+            '_resource' => $forum,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
         );
     }
 
@@ -421,10 +473,10 @@ class ForumController extends Controller
     public function editCategoryFormAction(Category $category)
     {
         $forum = $category->getForum();
-        $isModerator = $this->security->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
+        $isModerator = $this->authorization->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
 
-        if (!$isModerator && $this->security->getToken()->getUser()) {
-            throw new AccessDeniedHttpException();
+        if (!$isModerator && $this->tokenStorage->getToken()->getUser()) {
+            throw new AccessDeniedException();
         }
 
         $form = $this->container->get('form.factory')->create(new CategoryType, $category);
@@ -433,7 +485,8 @@ class ForumController extends Controller
         return array(
             'category' => $category,
             'form' => $form->createView(),
-            '_resource' => $category->getForum()
+            '_resource' => $forum,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
         );
     }
 
@@ -447,10 +500,10 @@ class ForumController extends Controller
     public function editCategoryAction(Category $category)
     {
         $forum = $category->getForum();
-        $isModerator = $this->security->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
+        $isModerator = $this->authorization->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
 
-        if (!$isModerator && $this->security->getToken()->getUser()) {
-            throw new AccessDeniedHttpException();
+        if (!$isModerator && $this->tokenStorage->getToken()->getUser()) {
+            throw new AccessDeniedException();
         }
 
         $oldName = $category->getName();
@@ -462,7 +515,7 @@ class ForumController extends Controller
             $this->manager->editCategory($category, $oldName, $newName);
 
             return new RedirectResponse(
-                $this->generateUrl('claro_forum_categories', array('forum' => $category->getForum()->getId()))
+                $this->generateUrl('claro_forum_categories', array('forum' => $forum->getId()))
             );
         }
     }
@@ -479,7 +532,7 @@ class ForumController extends Controller
     {
         $forum = $category->getForum();
 
-        if ($this->security->isGranted('moderate', new ResourceCollection(array($category->getForum()->getResourceNode())))) {
+        if ($this->authorization->isGranted('moderate', new ResourceCollection(array($category->getForum()->getResourceNode())))) {
 
             $this->manager->deleteCategory($category);
 
@@ -488,7 +541,7 @@ class ForumController extends Controller
             );
         }
 
-        throw new AccessDeniedHttpException();
+        throw new AccessDeniedException();
     }
 
     /**
@@ -507,7 +560,13 @@ class ForumController extends Controller
     {
         $pager = $this->manager->searchPager($forum, $search, $page);
 
-        return array('pager' => $pager, '_resource' => $forum, 'search' => $search, 'page' => $page);
+        return array(
+            'pager' => $pager,
+            '_resource' => $forum,
+            'search' => $search,
+            'page' => $page,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
+        );
     }
 
      /**
@@ -525,10 +584,11 @@ class ForumController extends Controller
      */
     public function editSubjectFormAction(Subject $subject)
     {
-        $isModerator = $this->security->isGranted('moderate', new ResourceCollection(array($subject->getCategory()->getForum()->getResourceNode())));
+        $forum = $subject->getCategory()->getForum();
+        $isModerator = $this->authorization->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
 
-        if (!$isModerator && $this->security->getToken()->getUser() !== $subject->getCreator()) {
-            throw new AccessDeniedHttpException();
+        if (!$isModerator && $this->tokenStorage->getToken()->getUser() !== $subject->getCreator()) {
+            throw new AccessDeniedException();
         }
 
         $form = $this->container->get('form.factory')->create(new EditTitleType(), $subject);
@@ -536,8 +596,9 @@ class ForumController extends Controller
         return array(
             'form' => $form->createView(),
             'subject' => $subject,
-            'forumId' => $subject->getCategory()->getForum()->getId(),
-            '_resource' => $subject->getCategory()->getForum()
+            'forumId' => $forum->getId(),
+            '_resource' => $forum,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
         );
     }
 
@@ -556,12 +617,13 @@ class ForumController extends Controller
      */
     public function editSubjectAction(Subject $subject)
     {
-        $isModerator = $this->security->isGranted(
-            'moderate', new ResourceCollection(array($subject->getCategory()->getForum()->getResourceNode()))
+        $forum = $subject->getCategory()->getForum();
+        $isModerator = $this->authorization->isGranted(
+            'moderate', new ResourceCollection(array($forum->getResourceNode()))
         );
 
-        if (!$isModerator && $this->security->getToken()->getUser() !== $subject->getCreator()) {
-            throw new AccessDeniedHttpException();
+        if (!$isModerator && $this->tokenStorage->getToken()->getUser() !== $subject->getCreator()) {
+            throw new AccessDeniedException();
         }
 
         $oldTitle = $subject->getTitle();
@@ -580,8 +642,9 @@ class ForumController extends Controller
         return array(
             'form' => $form->createView(),
             'subjectId' => $subject->getId(),
-            'forumId' => $subject->getCategory()->getForum()->getId(),
-            '_resource' => $subject->getCategory()->getForum()
+            'forumId' => $forum->getId(),
+            '_resource' => $forum,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
         );
     }
 
@@ -595,7 +658,7 @@ class ForumController extends Controller
      */
     public function deleteMessageAction(Message $message)
     {
-        if ($this->security->isGranted('moderate', new ResourceCollection(array($message->getSubject()->getCategory()->getForum()->getResourceNode())))) {
+        if ($this->authorization->isGranted('moderate', new ResourceCollection(array($message->getSubject()->getCategory()->getForum()->getResourceNode())))) {
             $this->manager->deleteMessage($message);
 
             return new RedirectResponse(
@@ -603,7 +666,7 @@ class ForumController extends Controller
             );
         }
 
-        throw new AccessDeniedHttpException();
+        throw new AccessDeniedException();
     }
 
     /**
@@ -654,7 +717,7 @@ class ForumController extends Controller
      */
     public function deleteSubjectAction(Subject $subject)
     {
-        if ($this->security->isGranted('moderate', new ResourceCollection(array($subject->getCategory()->getForum()->getResourceNode())))) {
+        if ($this->authorization->isGranted('moderate', new ResourceCollection(array($subject->getCategory()->getForum()->getResourceNode())))) {
 
             $this->manager->deleteSubject($subject);
 
@@ -663,7 +726,7 @@ class ForumController extends Controller
             );
         }
 
-        throw new AccessDeniedHttpException();
+        throw new AccessDeniedException();
     }
 
     /**
@@ -674,8 +737,8 @@ class ForumController extends Controller
     {
         $collection = new ResourceCollection(array($forum->getResourceNode()));
 
-        if (!$this->security->isGranted('OPEN', $collection)) {
-            throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
+        if (!$this->authorization->isGranted('OPEN', $collection)) {
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
     }
 
@@ -708,9 +771,9 @@ class ForumController extends Controller
      */
     public function forumsWorkspaceWidgetAction(Workspace $workspace)
     {
-        $user = $this->security->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         $utils = $this->get('claroline.security.utilities');
-        $token = $this->security->getToken($user);
+        $token = $this->tokenStorage->getToken($user);
         $roles = $utils->getRoles($token);
 
         $workspaces = array();
@@ -737,9 +800,9 @@ class ForumController extends Controller
      */
     public function forumsDesktopWidgetAction()
     {
-        $user = $this->security->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         $utils = $this->get('claroline.security.utilities');
-        $token = $this->security->getToken();
+        $token = $this->tokenStorage->getToken();
         $roles = $utils->getRoles($token);
 
         // Get user workspaces
@@ -775,7 +838,8 @@ class ForumController extends Controller
             '_resource' => $forum,
             'categories' => $categories,
             'category' => $category,
-            'subject' => $subject
+            'subject' => $subject,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
         );
     }
 
@@ -804,7 +868,8 @@ class ForumController extends Controller
             'category' => $category,
             'subject' => $subject,
             'pager' => $pager,
-            'message' => $message
+            'message' => $message,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
         );
     }
 
@@ -941,20 +1006,22 @@ class ForumController extends Controller
      *     "/reply/message/{message}",
      *     name="claro_forum_reply_message_form"
      * )
+     * @ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      *
      * @Template("ClarolineForumBundle:Forum:replyMessageForm.html.twig")
      * @param Message $message
      */
-    public function replyMessageAction(Message $message)
-    {
+     public function replyMessageAction(Message $message)
+     {
         $subject = $message->getSubject();
         $forum = $subject->getCategory()->getForum();
-        $form = $this->container->get('form.factory')->create(new MessageType, new Message());
+        $reply = new Message();
+        $form = $this->container->get('form.factory')->create(new MessageType, $reply);
         $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
             $newMsg = $form->getData();
-            $this->manager->replyMessage($newMsg, $message);
+            $this->manager->createMessage($newMsg, $subject);
 
             return new RedirectResponse(
                 $this->generateUrl('claro_forum_messages', array('subject' => $subject->getId()))
@@ -965,7 +1032,47 @@ class ForumController extends Controller
             'subject' => $subject,
             'form' => $form->createView(),
             'message' => $message,
-            '_resource' => $forum
+            '_resource' => $forum,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
+        );
+
+     }
+
+
+    /**
+     * @Route(
+     *     "/quote/message/{message}",
+     *     name="claro_forum_quote_message_form"
+     * )
+     * @ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     *
+     * @Template("ClarolineForumBundle:Forum:quoteMessageForm.html.twig")
+     * @param Message $message
+     */
+    public function quoteMessageAction(Message $message)
+    {
+        $subject = $message->getSubject();
+        $forum = $subject->getCategory()->getForum();
+        $reply = new Message();
+        $reply->setContent($this->manager->getMessageQuoteHTML($message));
+        $form = $this->container->get('form.factory')->create(new MessageType, $reply);
+        $form->handleRequest($this->get('request'));
+
+        if ($form->isValid()) {
+            $newMsg = $form->getData();
+            $this->manager->createMessage($newMsg, $subject);
+
+            return new RedirectResponse(
+                $this->generateUrl('claro_forum_messages', array('subject' => $subject->getId()))
+            );
+        }
+
+        return array(
+            'subject' => $subject,
+            'form' => $form->createView(),
+            'message' => $message,
+            '_resource' => $forum,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
         );
     }
 
@@ -981,8 +1088,8 @@ class ForumController extends Controller
     {
         $collection = new ResourceCollection(array($forum->getResourceNode()));
 
-        if (!$this->security->isGranted('MODERATE', $collection)) {
-            throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
+        if (!$this->authorization->isGranted('MODERATE', $collection)) {
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
 
         $this->manager->activateGlobalNotifications($forum);
@@ -1004,8 +1111,8 @@ class ForumController extends Controller
     {
         $collection = new ResourceCollection(array($forum->getResourceNode()));
 
-        if (!$this->security->isGranted('MODERATE', $collection)) {
-            throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
+        if (!$this->authorization->isGranted('MODERATE', $collection)) {
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
 
         $this->manager->disableGlobalNotifications($forum);
@@ -1017,6 +1124,6 @@ class ForumController extends Controller
 
     private function isAnon()
     {
-        return $this->security->getToken()->getUser() === 'anon.';
+        return $this->tokenStorage->getToken()->getUser() === 'anon.';
     }
 }
