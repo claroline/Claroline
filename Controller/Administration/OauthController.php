@@ -97,11 +97,29 @@ class OauthController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/form/{client}",
+     *     name="claro_admin_oauth_form_edit",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Template()
+     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     *
+     * @return Response
+     */
+    public function modalEditFormAction(Client $client)
+    {
+        $form = $this->get('form.factory')->create(new OauthClientType(), $client);
+
+        return array('form' => $form->createView(), 'client' => $client);
+    }
+
+    /**
+     * @EXT\Route(
      *     "/form/create",
      *     name="claro_admin_oauth_client_create",
      *     options = {"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Administration:oauth\clientModalForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration:oauth\modalCreateForm.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return Response
@@ -128,6 +146,40 @@ class OauthController extends Controller
         }
 
         return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/form/edit/{client}",
+     *     name="claro_admin_oauth_client_edit",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Administration:oauth\modalEditForm.html.twig")
+     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     *
+     * @return Response
+     */
+    public function editClientAction(Client $client)
+    {
+        $form = $this->get('form.factory')->create(new OauthClientType(), $client);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $grantTypes = $form->get('allowed_grant_types')->getData();
+            if ($uri = $form->get('uri')->getData()) $client->setRedirectUris(array($uri));
+            $client->setAllowedGrantTypes($grantTypes);
+            $client->setName($form->get('name')->getData());
+            $this->oauthManager->updateClient($client);
+
+            return new JsonResponse(array(
+                'id' => $client->getId(),
+                'name' => $form->get('name')->getData(),
+                'uri' => $form->get('uri')->getData(),
+                'grant_type' => $grantTypes
+            ));
+        }
+
+        return array('form' => $form->createView(), 'client' => $client);
     }
 
     /**
