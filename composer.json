@@ -14,10 +14,16 @@
     ],
     "require": {
         "php": ">=5.4.1",
-        "claroline/core-bundle": "~3.0"
+        "claroline/core-bundle": "~5.0",
+        "claroline/message-bundle": "~5.0"
+    },
+    "require-dev": {
+        "claroline/dev-bundle": "dev-master"
     },
     "autoload": {
         "psr-0": { "Claroline\\ForumBundle": "" }
     },
-    "target-dir": "Claroline/ForumBundle"
+    "target-dir": "Claroline/ForumBundle",
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
