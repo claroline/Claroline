@@ -55,3 +55,5 @@ posted_by: Posté par %author% le %date%
 fast_reply: Réponse rapide
 reply_to: Répondre à %author%:
 quote: Citer
+title_option_form_last_messages: Afficher seulement les conversations auxquelles j'ai participé
+title_form_last_messages: Apparence des messages

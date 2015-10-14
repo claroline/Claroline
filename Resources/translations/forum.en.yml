@@ -55,3 +55,5 @@ posted_by: Posted by %author% the %date%
 fast_reply: Fast reply
 reply_to: Reply to %author%:
 quote: Quote
+title_option_form_last_messages: Just display the last messages which I have contributed
+title_form_last_messages: Display messages
