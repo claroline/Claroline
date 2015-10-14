@@ -18,8 +18,13 @@
         "claroline/message-bundle": "~6.0",
         "icap/notification-bundle": "~6.0"
     },
+    "require-dev": {
+        "claroline/dev-bundle": "dev-master"
+    },
     "autoload": {
         "psr-0": { "Claroline\\ForumBundle": "" }
     },
-    "target-dir": "Claroline/ForumBundle"
+    "target-dir": "Claroline/ForumBundle",
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
