@@ -89,6 +89,9 @@ class ResourceNodeRepository extends MaterializedPathRepository
      */
     public function findChildren(ResourceNode $parent, array $roles, $user, $withLastOpenDate = false)
     {
+        //if we usurpate a role, then it's like we're anonymous.
+        if (in_array('ROLE_USURPATE_WORKSPACE_ROLE', $roles)) $user = 'anon.';
+
         if (count($roles) === 0) {
             throw new \RuntimeException('Roles cannot be empty');
         }
