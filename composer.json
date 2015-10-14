@@ -3,16 +3,18 @@
   "description": "Url Plugin for Claroline Connect",
   "homepage": "http://www.claroline.net",
   "type": "claroline-plugin",
-  "autoload": {
-    "psr-0": { "HeVinci\\UrlBundle": "" }
-  },
   "require": {
     "php": ">=5.4.1",
     "claroline/core-bundle": "~6.2",
     "guzzle/http": "~3.1"
   },
+  "require-dev": {
+    "claroline/dev-bundle": "dev-master"
+  },
   "autoload": {
     "psr-0": { "HeVinci\\UrlBundle": "" }
   },
-  "target-dir": "HeVinci/UrlBundle"
+  "target-dir": "HeVinci/UrlBundle",
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }
