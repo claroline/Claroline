@@ -1,11 +1,7 @@
 {
     "name": "claroline/forum-bundle",
     "description": "Claroline forum plugin",
-    "keywords": [
-        "Claroline",
-        "Plugin",
-        "Forum"
-    ],
+    "keywords": ["Claroline", "Plugin", "Forum"],
     "homepage": "http://www.claroline.net",
     "type": "claroline-plugin",
     "license": "GPL-3.0+",
