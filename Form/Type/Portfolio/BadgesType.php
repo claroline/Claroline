@@ -3,7 +3,6 @@
 namespace Icap\BadgeBundle\Form\Type\Portfolio;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Icap\PortfolioBundle\Form\Type\Widgets\AbstractWidgetType;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -12,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * @DI\FormType
  */
-class BadgesType extends AbstractWidgetType
+class BadgesType extends AbstractType
 {
     /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler  */
     private $platformConfigHandler;
@@ -34,6 +33,7 @@ class BadgesType extends AbstractWidgetType
         $language = $this->platformConfigHandler->getParameter('locale_language');
 
         $builder
+            ->add('label', 'text')
             ->add('children', 'collection',
                 array(
                     'type' => 'icap_badge_portfolio_widget_form_badges_badge',
