@@ -329,6 +329,29 @@ class CourseSession
         return $this->getCourse()->getTitle();
     }
 
+    public function getFullNameWithCourse()
+    {
+        return $this->getCourseTitle() .
+            ' [' .
+            $this->getCourse()->getCode() .
+            ']' .
+            ' - ' .
+            $this->getName();
+    }
+
+    public function getShortNameWithCourse($courseLength = 25)
+    {
+        $courseTitle = $this->getCourseTitle();
+        $length = strlen($courseTitle);
+        $shortTitle = ($length > $courseLength) ?
+            substr($courseTitle, 0, $courseLength) . '...' :
+            $courseTitle;
+
+
+
+        return $shortTitle . ' - ' . $this->getName();
+    }
+
     public function __toString()
     {
         return $this->getName();
