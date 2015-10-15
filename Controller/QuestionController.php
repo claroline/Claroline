@@ -630,8 +630,7 @@ class QuestionController extends Controller {
     /**
      * To display the modal which allow to change the label of a document.
      *
-     * @EXT\Route("/update/name", name="ujm_question_name_update")
-     * @EXT\Method("POST")
+     * @EXT\Route("/change/document/name", name="ujm_document_change_name")
      * 
      * @param int $id id of exercise
      *
@@ -648,21 +647,21 @@ class QuestionController extends Controller {
     /**
      * To change the label of a document.
      *
-     * @EXT\Route("/change/document/name", name="ujm_document_change_name")
+     * @EXT\Route("/update/name", name="ujm_question_name_update")
+     * @EXT\Method("POST")
      * 
      * @param int $id id of exercise
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function updateNameAction() {
-        $request = $this->container->get('request');       
+        $request = $this->container->get('request');
         $newlabel = $request->get('newlabel');
         $oldlabel = $request->get('oldName');
-
         $em = $this->getDoctrine()->getManager();
 
         $alterDoc = $em->getRepository('UJMExoBundle:Document')->findOneBy(array('label' => $oldlabel));
-
+       
         $alterDoc->setLabel($newlabel);
 
         $em->persist($alterDoc);
@@ -894,12 +893,14 @@ class QuestionController extends Controller {
      */
     public function searchQuestionTypeAction(Request $request) {
         $paginationSer = $this->container->get('ujm.exo_pagination');
-        $searchSer=$this->container->get('ujm.exo_search_question');
+        $searchSer = $this->container->get('ujm.exo_search_question');
         $type = $request->query->get('type'); // In which column
         $whatToFind = $request->query->get('whatToFind'); // Which text to find
         $where = $request->query->get('where'); // In which database
         $exoID = $request->query->get('exoID'); // If we import or see the questions
         $displayAll = $request->query->get('displayAll', 0); // If we want to have all the questions in one page
+        $questionWithResponse='';
+        $alreadyShared='';
         // If what and where to search is defined
         if ($type && $whatToFind && $where) {
             // Get the matching questions depending on :
@@ -908,140 +909,42 @@ class QuestionController extends Controller {
             //  * and what text to search
             // User's database
             if ($where == 'my') {
-                $listQuestions = $searchSer->choiceTypeQuestion();
+                $listQuestions = $searchSer->choiceTypeQuestion('Question');
                 // For all the matching questions search if ...              
                 $questionWithResponse = $searchSer->searchEntityResponse($listQuestions, 'Response'); //question With Response
                 $alreadyShared = $searchSer->searchEntityResponse($listQuestions, 'Share'); //already Shared
-                $pagination = $paginationSer->paginationSearchQuestion($listQuestions);
-              
-            if ($exoID  == -1) {
-                    $divResultSearch = $this->render(
-                        'UJMExoBundle:Question:SearchQuestionType.html.twig', array(
-                        'listQuestions' => $pagination[0],
-                        'canDisplay' => $where,
-                        'pagerSearch' => $pagination[1],
-                        'type' => $type,
-                        'whatToFind' => $whatToFind,
-                        'questionWithResponse' => $questionWithResponse,
-                        'alreadyShared' => $alreadyShared,
-                        'exoID' => $exoID ,
-                        'displayAll' => $displayAll,
-                            )
-                    );
-                } else {
-                    $divResultSearch = $this->render(
-                            'UJMExoBundle:Question:searchQuestionImport.html.twig', array(
-                        'listQuestions' => $pagination[0],
-                        'pagerSearch' => $pagination[1],
-                        'exoID' => $exoID,
-                        'canDisplay' => $where,
-                        'whatToFind' => $whatToFind,
-                        'type' => $type,
-                        'displayAll' => $displayAll,
-                            )
-                    );
-                }
-               // If request is ajax (first display of the first search result (page = 1))
-                if ($request->isXmlHttpRequest()) {
-                    return $divResultSearch; // Send the twig with the result
-                } else {
-                    // Cut the header of the request to only have the twig with the result
-                    $divResultSearch = substr($divResultSearch, strrpos($divResultSearch, '<link'));
-
-                    // Send the form to search and the result
-                    return $this->render(
-                                    'UJMExoBundle:Question:searchQuestion.html.twig', array(
-                                'divResultSearch' => $divResultSearch,
-                                'exoID' => $exoID,
-                                    )
-                    );
-                }
                 // Shared with user's database
             } elseif ($where == 'shared') {
-                $listQuestions = $searchSer->choiceTypeShare();
+                $listeSharedQuestion = $searchSer->choiceTypeQuestion('Share');
+                $listQuestions = $searchSer->listQuestion($listeSharedQuestion);
                 $pagination = $paginationSer->paginationSearchQuestion($listQuestions);
-                // Put the result in a twig
-                if ($exoID == -1) {
-                    $divResultSearch = $this->render(
-                            'UJMExoBundle:Question:SearchQuestionType.html.twig', array(
-                        'listQuestions' => $pagination[0],
-                        'canDisplay' => $where,
-                        'pagerSearch' => $pagination[1],
-                        'type' => $type,
-                        'whatToFind' => $whatToFind,
-                        'exoID' => $exoID,
-                        'displayAll' => $displayAll,
-                            )
-                    );
-                } else {
-                    $divResultSearch = $this->render(
-                            'UJMExoBundle:Question:searchQuestionImport.html.twig', array(
-                        'listQuestions' => $pagination[0],
-                        'pagerSearch' => $pagination[1],
-                        'exoID' => $exoID,
-                        'canDisplay' => $where,
-                        'whatToFind' => $whatToFind,
-                        'type' => $type,
-                        'displayAll' => $displayAll,
-                            )
-                    );
-                }
-
-                // If request is ajax (first display of the first search result (page = 1))
-                if ($request->isXmlHttpRequest()) {
-                    return $divResultSearch; // Send the twig with the result
-                } else {
-                    // Cut the header of the request to only have the twig with the result
-                    $divResultSearch = substr($divResultSearch, strrpos($divResultSearch, '<link'));
-
-                    // Send the form to search and the result
-                    return $this->render(
-                                    'UJMExoBundle:Question:searchQuestion.html.twig', array(
-                                'divResultSearch' => $divResultSearch,
-                                'exoID' => $exoID,
-                                    )
-                    );
-                }
+                
             } elseif ($where == 'all') {
-                $listQuestionsShare = $searchSer->choiceTypeShare();
-                $listQuestionsMy = $searchSer->choiceTypeQuestion();
-                $listQuestions=array_merge($listQuestionsShare,$listQuestionsMy);
+                $listeSharedQuestion = $searchSer->choiceTypeQuestion('Share');
+                $listQuestionsShare= $searchSer->listQuestion($listeSharedQuestion);
+                $listQuestionsMy = $searchSer->choiceTypeQuestion('Question');
+                $listQuestions = array_merge($listQuestionsShare, $listQuestionsMy);
                 // For all the matching interactions search if ...
                 $questionWithResponse = $searchSer->searchEntityResponse($listQuestions, 'Response'); //question With Response
-                $alreadyShared = $searchSer->searchEntityResponse($listQuestions, 'Share'); //already Shared
+                $alreadyShared = $searchSer->searchEntityResponse($listQuestions, 'Share'); //already Shared               
+            }
+             $pagination = $paginationSer->paginationSearchQuestion($listQuestions);
 
-                $pagination = $paginationSer->paginationSearchQuestion($listQuestions);
-                // Put the result in a twig
+                $vars['listQuestions'] = $pagination[0];
+                $vars['pagerSearch'] = $pagination[1];
+                $vars['exoID'] = $exoID;
+                $vars['canDisplay'] = $where;
+                $vars['type'] = $type;
+                $vars['whatToFind'] = $whatToFind;
+                $vars['displayAll'] = $displayAll;
                 if ($exoID == -1) {
-                    $divResultSearch = $this->render(
-                            'UJMExoBundle:Question:SearchQuestionType.html.twig', array(
-                        'listQuestions' => $pagination[0],
-                        'canDisplay' => $where,
-                        'pagerSearch' => $pagination[1],
-                        'type' => $type,
-                        'whatToFind' => $whatToFind,
-                        'questionWithResponse' => $questionWithResponse,
-                        'alreadyShared' => $alreadyShared,
-                        'exoID' => $exoID,
-                        'displayAll' => $displayAll,
-                            )
-                    );
+                    $vars['questionWithResponse'] = $questionWithResponse;
+                    $vars['alreadyShared'] = $alreadyShared;
+                    $divResultSearch = $this->render('UJMExoBundle:Question:SearchQuestionType.html.twig', $vars);
                 } else {
-                    $divResultSearch = $this->render(
-                            'UJMExoBundle:Question:searchQuestionImport.html.twig', array(
-                        'listQuestions' => $pagination[0],
-                        'pagerSearch' => $pagination[1],
-                        'exoID' => $exoID,
-                        'canDisplay' => $where,
-                        'whatToFind' => $whatToFind,
-                        'type' => $type,
-                        'displayAll' => $displayAll,
-                            )
-                    );
+                    $divResultSearch = $this->render('UJMExoBundle:Question:searchQuestionImport.html.twig', $vars);
                 }
-
-                // If request is ajax (first display of the first search result (page = 1))
-                if ($request->isXmlHttpRequest()) {
+            if ($request->isXmlHttpRequest()) {
                     return $divResultSearch; // Send the twig with the result
                 } else {
                     // Cut the header of the request to only have the twig with the result
@@ -1055,7 +958,6 @@ class QuestionController extends Controller {
                                     )
                     );
                 }
-            }
         } else {
             return $this->render(
                             'UJMExoBundle:Question:SearchQuestionType.html.twig', array(
@@ -1152,7 +1054,7 @@ class QuestionController extends Controller {
 
         $listQuestions = $questionRepository->findByUserAndContent($user, $userSearch, $exercise);
         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
-                ->findByAllShared($user->getId(), $userSearch);
+                ->findByUserAndContent($user, $userSearch);
 
         $end = count($sharedQuestion);
 
@@ -1211,7 +1113,7 @@ class QuestionController extends Controller {
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function duplicateAction($questionId,$exoID) {
+    public function duplicateAction($questionId, $exoID) {
         $exercise = null;
         $service = $this->container->get('ujm.exo_question');
 
@@ -1227,12 +1129,12 @@ class QuestionController extends Controller {
                 $allowToAccess = true;
             }
         }
-        if (count($question) > 0 || $allowToAccess === TRUE || count($sharedQuestions) > 0 ) {  
-           if(count($sharedQuestions) > 0){
-               $question= $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Question')->find($questionId);
-           }      
+        if (count($question) > 0 || $allowToAccess === TRUE || count($sharedQuestions) > 0) {
+            if (count($sharedQuestions) > 0) {
+                $question = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Question')->find($questionId);
+            }
             $type = $question->getType();
-           
+
             $handlerType = '\UJM\ExoBundle\Form\\' . $type . 'Handler';
 
             $interactionX = $this->getDoctrine()
@@ -1248,8 +1150,8 @@ class QuestionController extends Controller {
 
             $categoryToFind = $interactionX->getQuestion()->getCategory();
             $titleToFind = $interactionX->getQuestion()->getTitle();
-           
-            if ($exoID == -1) {                           
+
+            if ($exoID == -1) {
                 return $this->redirect(
                                 $this->generateUrl('ujm_question_index', array(
                                     'categoryToFind' => base64_encode($categoryToFind), 'titleToFind' => base64_encode($titleToFind),)

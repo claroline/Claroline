@@ -100,7 +100,7 @@ class MatchingExport extends QtiExport
 
         $prompttxt = $this->document
                 ->CreateTextNode(
-                        $this->interactionmatching->getQuestion()->getDescription()
+                        $this->interactionmatching->getQuestion()->getInvite()
                         );
         $prompt->appendChild($prompttxt);
         $this->qtiProposal();

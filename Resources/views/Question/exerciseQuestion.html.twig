@@ -86,6 +86,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'messages' }) }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/exerciceQuestion.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/resize.js') }}"></script>
@@ -95,4 +96,5 @@
             ready();
         });
     </script>
+    {% include "UJMExoBundle:Partial:modal/confirmDelQuestion.html.twig" %}
 {% endblock %}

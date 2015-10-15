@@ -1,9 +1,9 @@
 {#% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %#}
 
 {#% if isDesktop() %#}
-    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
-    {% block breadcrumb %}
-        {{
+{% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% block breadcrumb %}
+    {{
             macros.breadcrumbs([
                 {
                     'icon': 'fa fa-briefcase',
@@ -15,8 +15,8 @@
                     'href': ''
                 }
             ])
-        }}
-    {% endblock %}
+    }}
+{% endblock %}
 {#% else %#}
 {#% endif %#}
 
@@ -61,8 +61,8 @@
         {% endif %}
 
         <select id="exoList" onchange="getQuestionsExo(this.options[this.selectedIndex].value,
-            '{{ path('ujm_question_bank_filter') }}',
-            '{{ path('ujm_question_index') }}');">
+                        '{{ path('ujm_question_bank_filter') }}',
+                        '{{ path('ujm_question_index') }}');">
             {% include "UJMExoBundle:Partial:listToFilterQuestions.html.twig" %}
         </select>
 
@@ -70,16 +70,16 @@
         <form action="{{ path('ujm_question_briefSearch') }}" method="post" id='formBriefSearch'>
             <div class="input-group" style="width: 350px; margin-top: 20px;">
                 <input type="text" class="form-control" id="briefSearch" placeholder="{{ 'brief_search'|trans({}, 'ujm_exo') }}" name="userSearch"
-                    onkeydown="if (event.keyCode == 13) {
-                        //briefSearch('{#{ path('ujm_question_briefSearch') }#}', -1, 'index');
-                        briefSearchSubmit();
+                       onkeydown="if (event.keyCode == 13) {
+                                   //briefSearch('{#{ path('ujm_question_briefSearch') }#}', -1, 'index');
+                                   briefSearchSubmit();
                         return false; }">
                 <input type='hidden' name='exoID' value='-1' />
                 <input type='hidden' name='where' value='index' />
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="button" id="SubmitBriefSearch"
-                        onClick="briefSearchSubmit();">
-                    <i class="fa fa-search"></i></button>
+                            onClick="briefSearchSubmit();">
+                        <i class="fa fa-search"></i></button>                   
                     <a class="btn btn-default" data-toggle="tooltip" title="Recherche par type"
                        accesskey=""href="#" onclick="showInfos();event.preventDefault();">
                         <i class="fa fa-question"></i>
@@ -95,9 +95,9 @@
                     {{ 'info_search_type' | trans({}, 'ujm_exo') }} :
                     {% for type in interactionType %}
                         {% for value in type %}
-                            <option value="{{ type[loop.index0] }}">{{ type[loop.index0] | trans({}, 'ujm_exo') }}</option>
-                        {% endfor %}
+                        <option value="{{ type[loop.index0] }}">{{ type[loop.index0] | trans({}, 'ujm_exo') }}</option>
                     {% endfor %}
+                {% endfor %}
                 </p>
             </div>
         </div>
@@ -126,21 +126,21 @@
                 {% endif %}
                 <hr/>
                 <h3 class="panel-title">{{ 'shared_questions' | trans({}, 'ujm_exo') }} : </h3><br/>
-                    {% if sharedWithMe is not empty %}
-                        {% set questionsList = 'share' %}
-                        {% set interactions = sharedWithMe %}
-                        {% include "UJMExoBundle:Partial:question/questionsList.html.twig" %}
+                {% if sharedWithMe is not empty %}
+                    {% set questionsList = 'share' %}
+                    {% set interactions = sharedWithMe %}
+                    {% include "UJMExoBundle:Partial:question/questionsList.html.twig" %}
 
-                        {% if pagerShared.haveToPaginate %}
-                            <div class="text-center panel-footer">
-                                {{ pagerfanta(pagerShared, 'twitter_bootstrap_translated',
+                    {% if pagerShared.haveToPaginate %}
+                        <div class="text-center panel-footer">
+                            {{ pagerfanta(pagerShared, 'twitter_bootstrap_translated',
                                     {'routeName': 'ujm_question_index', 'routeParams':
                                     {'pagerMy': pagerMy.getCurrentPage, 'pagerShared': pagerShared.getCurrentPage,  'click': 'shared'} }) }}
-                            </div>
-                        {% endif %}
-                    {% else %}
-                        <div class="alert alert-info">{{ 'no_question_found'|trans({}, 'ujm_exo') }} ...</div>
+                        </div>
                     {% endif %}
+                {% else %}
+                    <div class="alert alert-info">{{ 'no_question_found'|trans({}, 'ujm_exo') }} ...</div>
+                {% endif %}
             {% else %}
                 {% if interactions is not empty %}
                     {% set questionsList = 'exoList' %}

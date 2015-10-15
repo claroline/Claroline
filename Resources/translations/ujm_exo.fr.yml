@@ -111,7 +111,7 @@ feedback: Feedback général
 feedback_answer_check: Commentaire si la réponse est selectionnée(facultatif)
 find_by: Trouver par
 find_in: Trouver dans
-find_question: Rechercher des questions
+find_question_advance: Recherche avancée
 find_what: Ce que vous cherchez
 final_mark: Note finale
 finish: Terminer
@@ -154,6 +154,7 @@ image: Image
 import: Importer
 import_qti : Importer des questions au format QTI
 import_questions: Importer des questions
+info_search: Recherche par type
 info_search_type: Si vous voulez faire une recherche par type, vous devez utiliser les mots clés suivants
 instruction_add_hole : Pour créer un trou, sélectionnez le texte à trouer dans l'éditeur "Texte à trous", puis cliquez sur le bouton "Créer un trou".
 instruction_matching: Pour définir vos correspondances, choisissez dans la colonne "Correspondance" le numéro d'une ou plusieurs propositions à associer.

@@ -255,7 +255,7 @@ class ExerciseController extends Controller
 
                 if ($user->getId() == $question->getUser()->getId()) {
                     $allowEdit[$question->getId()] = 1;
-                } elseif (count($share) > 0) {
+                } else if(count($share) > 0) {
                     $allowEdit[$question->getId()] = $share[0]->getAllowToModify();
                 } else {
                     $allowEdit[$question->getId()] = 0;
@@ -334,7 +334,6 @@ class ExerciseController extends Controller
      *              defaults={"pageGoNow"= 1, "maxPage"= 10, "nbItem"= 1, "displayAll"= 0, "idExo"= -1, "QuestionsExo"= "false"})
      *
      * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
-     *
      * @param int  $pageGoNow    page going for the pagination
      * @param int  $maxpage      number max questions per page
      * @param int  $nbItem       number of question
@@ -361,9 +360,7 @@ class ExerciseController extends Controller
 
         $workspace = $exercise->getResourceNode()->getWorkspace();
 
-        $user = $this->container->get('security.token_storage')
-                                ->getToken()->getUser();
-        $uid = $user->getId();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
         $services = $this->container->get('ujm.exo_exercise');
         $questionSer = $this->container->get('ujm.exo_question');
@@ -377,8 +374,7 @@ class ExerciseController extends Controller
         $pagerMy = $request->query->get('pagerMy', 1); // Get the page of the array my question (default 1)
         $pagerShared = $request->query->get('pagerShared', 1); // Get the pager of the array my shared question (default 1)
         $pageToGo = $request->query->get('pageGoNow'); // Page to go for the list of the questions of the exercise
-        $max = 10; // Max of questions per page
-
+        
         // If change page of my questions array
         if ($click == 'my') {
             // The choosen new page is for my questions array
@@ -391,22 +387,10 @@ class ExerciseController extends Controller
 
         if ($exoAdmin === true) {
             if ($QuestionsExo == 'true') {
-                $actionQ = array();
-
-                if ($idExo == -2) {
-                    $listQExo = $this->getDoctrine()
-                        ->getManager()
-                        ->getRepository('UJMExoBundle:Question')
-                        ->findByUserNotInExercise($user, $exercise, true);
-                } else {
-                    $listQExo = $this->getDoctrine()
-                        ->getManager()
-                        ->getRepository('UJMExoBundle:Question')
-                        ->findByExercise($exercise);
-                }
-
-                $allActions = $questionSer->getActionsAllQuestions($listQExo, $uid);
-
+                
+                $listQExo= $questionSer->getListQuestionExo($idExo,$user,$exercise);
+                $allActions = $this->getActionsAllQuestions($listQExo, $user->getId());
+                
                 $actionQ = $allActions[0];
                 $questionWithResponse = $allActions[1];
                 $alreadyShared = $allActions[2];
@@ -419,24 +403,10 @@ class ExerciseController extends Controller
                     ->findByUserNotInExercise($user, $exercise);
 
                 $shared = $em->getRepository('UJMExoBundle:Share')
-                        ->getUserInteractionSharedImport($exercise->getId(), $uid, $em);
-
-                if ($displayAll == 1) {
-                    if (count($userQuestions) > count($shared)) {
-                        $max = count($userQuestions);
-                    } else {
-                        $max = count($shared);
-                    }
-                }
-
-                $sharedWithMe = array();
-
-                $end = count($shared);
-
-                for ($i = 0; $i < $end; ++$i) {
-                    $sharedWithMe[] = $shared[$i]->getQuestion();
-                }
-
+                        ->getUserInteractionSharedImport($exercise->getId(), $user->getId(), $em);
+                
+                $max=$paginationSer->getMaxByDisplayAll($shared,$displayAll,$userQuestions);
+                $sharedWithMe=$questionSer->getQuestionShare($shared);
                 $doublePagination = $paginationSer->doublePagination($userQuestions, $sharedWithMe, $max, $pagerMy, $pagerShared);
 
                 $interactionsPager = $doublePagination[0];
@@ -445,20 +415,7 @@ class ExerciseController extends Controller
                 $sharedWithMePager = $doublePagination[2];
                 $pagerfantaShared = $doublePagination[3];
 
-                if ($pageToGo) {
-                    $pageGoNow = $pageToGo;
-                } else {
-                    // If new item > max per page, display next page
-                    $rest = $nbItem % $maxPage;
-
-                    if ($nbItem == 0) {
-                        $pageGoNow = 0;
-                    }
-
-                    if ($rest == 0) {
-                        $pageGoNow += 1;
-                    }
-                }
+                $pageGoNow=$paginationSer->getPageGoNow($nbItem,$maxPage,$pageToGo,$pageGoNow);
             }
 
             $listExo = $this->getDoctrine()
@@ -550,7 +507,6 @@ class ExerciseController extends Controller
      *              defaults={"pageNow"= 1, "maxPage"= 10, "nbItem"= 1, "lastPage"= 1})
      *
      * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
-     *
      * @param int $qid      id of question to delete
      * @param int $pageNow  actual page for the pagination
      * @param int $maxpage  number max questions per page
@@ -846,10 +802,10 @@ class ExerciseController extends Controller
     /**
      * To display the docimology's histogramms.
      *
-     * @EXT\Route("/docimology/{id}/{nbPapers}", name="ujm_exercise_docimology", options={"expose"=true})
+     * @EXT\Route("/docimology/{id}/{nbPapers}", name="ujm_exercise_docimology")
      * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      * 
-     * @param int $nbPapers number of papers to this exercise
+     * @param int $nbPapers   number of papers to this exercise
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -858,34 +814,34 @@ class ExerciseController extends Controller
         $docimoServ = $this->container->get('ujm.exo_docimology');
         $em = $this->getDoctrine()->getManager();
         $this->checkAccess($exercise);
-
+        
         $eqs = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(
             array('exercise' => $exercise->getId()),
             array('ordre' => 'ASC')
         );
-
+        
         $papers = $em->getRepository('UJMExoBundle:Paper')->getExerciseAllPapers($exercise->getId());
-
+        
         if ($this->container->get('ujm.exo_exercise')->isExerciseAdmin($exercise)) {
             $workspace = $exercise->getResourceNode()->getWorkspace();
-
+            
             $parameters['nbPapers'] = $nbPapers;
             $parameters['workspace'] = $workspace;
             $parameters['exoID'] = $exercise->getId();
             $parameters['_resource'] = $exercise;
-
+            
             if ($nbPapers >= 12) {
                 $histoMark = $docimoServ->histoMark($exercise->getId());
                 $histoSuccess = $docimoServ->histoSuccess($exercise->getId(), $eqs, $papers);
-
+                
                 if ($exercise->getNbQuestion() == 0) {
                     $histoDiscrimination = $docimoServ->histoDiscrimination($exercise->getId(), $eqs, $papers);
                 } else {
                     $histoDiscrimination['coeffQ'] = 'none';
                 }
-
+                
                 $histoMeasureDifficulty = $docimoServ->histoMeasureOfDifficulty($exercise->getId(), $eqs);
-
+                
                 $parameters['scoreList'] = $histoMark['scoreList'];
                 $parameters['frequencyMarks'] = $histoMark['frequencyMarks'];
                 $parameters['maxY'] = $histoMark['maxY'];
@@ -895,7 +851,7 @@ class ExerciseController extends Controller
                 $parameters['coeffQ'] = $histoDiscrimination['coeffQ'];
                 $parameters['MeasureDifficulty'] = $histoMeasureDifficulty;
             }
-
+            
             return $this->render('UJMExoBundle:Exercise:docimology.html.twig', $parameters);
         } else {
             return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $exercise->getId()]));
