@@ -35,13 +35,9 @@
         <a class="btn btn-primary" title="{{ 'qti_format_warning' | trans({}, 'ujm_exo') }}" onClick="importQTI('{{ path('ujm_qti_import_form') }}', '{{ exoID }}');">
             <i class="fa fa-download"></i> {{ 'import_qti' | trans({}, 'ujm_exo') }}
         </a>
-        <a class="btn btn-primary" href="{{ path('ujm_question_search_question', { 'exoID': exoID }) }}">
+        {# <a class="btn btn-primary" href="{{ path('ujm_question_search_question', { 'exoID': exoID }) }}">
              <i class="fa fa-question"></i> {{ 'search_question' | trans({}, 'ujm_exo') }}
-        </a>
-        <a class="btn btn-primary" href="#" onclick="importQuestion('{{ path('ujm_exercise_validate_import') }}',
-            {{ exoID }}, {{ pageToGo }}, '{{ 'no_thing_import' | trans({}, 'ujm_exo') }}');event.preventDefault();">
-                <i class="fa fa-arrow-circle-o-down"></i> {{ 'import' | trans({}, 'ujm_exo') }}
-        </a>
+         </a>#}      
         {% if QuestionsExo == 'false' %}
             {% if (pagerMy.getNbResults > pagerMy.maxPerPage or pagerShared.getNbResults > pagerShared.maxPerPage) and displayAll == 0 %}
                 <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'id': exoID, 'displayAll': 1 }) }} ">
@@ -53,6 +49,10 @@
                 </a>
             {% endif %}
         {% endif %}
+        <a class="btn btn-success" href="#" onclick="importQuestion('{{ path('ujm_exercise_validate_import') }}',
+           {{ exoID }}, {{ pageToGo }}, '{{ 'no_thing_import' | trans({}, 'ujm_exo') }}'); event.preventDefault();">
+            <i class="fa fa-arrow-circle-o-down"></i> {{ 'import' | trans({}, 'ujm_exo') }}
+        </a>
 
         <select id="exoList" onchange="getQuestionsExoImport(this.options[this.selectedIndex].value,
                         '{{ path('ujm_exercise_import_question', { 'id': exoID, 'idExo': idExo, 'QuestionsExo': 'true' }) }}',
@@ -65,17 +65,23 @@
                 <input type="text" class="form-control" id="briefSearch" placeholder="{{ 'brief_search'|trans({}, 'ujm_exo') }}" name="userSearch"
                        onkeydown="if (event.keyCode == 13) {
                                    briefSearchSubmit();
-                        return false; }">
+                                   return false;
+                               }">
                 <input type='hidden' name='exoID' value={{ exoID }} />
                 <input type='hidden' name='where' value='import' />
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="button" id="SubmitBriefSearch"
+                            data-toggle="tooltip" title="{{ 'brief_search' | trans({}, 'ujm_exo') }}"
                             onClick="briefSearchSubmit();">
                         <i class="fa fa-search"></i></button>
-                    <a class="btn btn-default" data-toggle="tooltip" title="Recherche par type"
-                       accesskey=""href="#" onclick="showInfos();event.preventDefault();">
+                    <a class="btn btn-default" data-toggle="tooltip" title="{{ 'info_search' | trans({}, 'ujm_exo') }}"
+                       accesskey=""href="#" onclick="showInfos();
+                               event.preventDefault();">
                         <i class="fa fa-question"></i>
                     </a>
+                    <a class="btn btn-default" href="{{ path('ujm_question_search_question', { 'exoID': exoID }) }}"
+                       data-toggle="tooltip" title="{{ 'find_question_advance' | trans({}, 'ujm_exo') }}">
+                    <i class="fa fa-cog"></i></a>
                 </span>
             </div>
         </form>
