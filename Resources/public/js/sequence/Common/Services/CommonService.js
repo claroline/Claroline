@@ -168,6 +168,50 @@
                             return Routing.generate('ujm_exercise_play', {id: _id});
                             break;
                     }
+                },
+                getPaperScore: function (paper) {
+                    var nbQuestions = paper.questions.length;
+
+                    var score = 0.0; //final score
+                    var totalPoints = 0.0;
+                    var studentPoints = 0.0; // good answers
+
+                    for (var i = 0; i < nbQuestions; i++) {
+                        // paper question item contains student answer, used hints and solution 
+                        var paperQuestion = paper.questions[i];
+
+                        // update exercise total points
+                        for (var j = 0; j < paperQuestion.choices.length; j++) {
+                            // update total points for the sequence
+                            totalPoints += paperQuestion.choices[j].score;
+                        }
+
+                        // for each given answer
+                        for (var k = 0; k < paperQuestion.answer.length; k++) {
+                            var id = paperQuestion.answer[k];
+                            //  check if it is in solution
+                            for (var l = 0; l < paperQuestion.solution.length; l++) {
+                                if (paperQuestion.solution[l] === id) {
+                                    // get the corresponding choice score... Only for choice question type...
+                                    for (var m = 0; m < paperQuestion.choices.length; m++) {
+                                        if (paperQuestion.choices[m].id === id) {
+                                            // update student points
+                                            studentPoints += paperQuestion.choices[m].score;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        // for each used hints
+                        for (var n = 0; n < paperQuestion.hints.length; n++) {
+                            // remove penalty value from student points
+                            studentPoints -= paperQuestion.hints[n].penalty;
+                        }
+                    }
+
+                    //return (round($toBeAdjusted / 0.5) * 0.5);
+                    score = studentPoints * 20 / totalPoints;
+                    return score > 0 ? (Math.round(score / 0.5) * 0.5) : 0;
                 }
             };
         }

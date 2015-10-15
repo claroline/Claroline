@@ -16,68 +16,7 @@
                 this.paper = paper;
                 this.context = context;
                 this.exoId = exoId;
-            };
-
-            /**
-             * Set the student note /20
-             * 1 - Get the total points on the entire exercise
-             * 2 - For each student answer get the points and subtract penalties
-             * 3 - Calculate the final note ( studentPoints * 20 / totalPoints )
-             * @returns number
-             */
-            this.setNote = function () {
-                var nbAnswers = this.answers.length;
-                var score = 0;
-                var totalPoints = 0;
-                var studentPoints = 0;
-                for (var i = 0; i < nbAnswers; i++) {
-                    // anwser is an array [questionId] => true/false if question is multiple or a string if not
-                    var answer = this.answers[i].answer;
-                    var penalty = this.answers[i].penalty;
-                    var question = this.answers[i].question;
-                    //var solutions = question.solutions;
-                    totalPoints += this.getSolutionsPoints(question.solutions);
-                    studentPoints += this.getStudentQuestionScore(question, answer, penalty);
-                }
-                score = studentPoints * 20 / totalPoints;
-                return score > 0 ? score : 0;
-            };
-
-            this.getStudentQuestionScore = function (question, answer, penalty) {
-                var score = 0;
-                // usefull on choice questions but for the others ???
-                var isMultiple = question.multiple;
-                if (isMultiple) {
-                    for (var i = 0; i < question.solutions.length; i++) {
-                        var questionId = parseInt(question.solutions[i].id);
-                        if(answer[questionId] === true){
-                            score += question.solutions[i].score;
-                        }
-                        
-                    }
-                }
-                else{
-                    var questionId = parseInt(question.solutions[0].id);
-                    if(questionId === parseInt(answer)){
-                        score += question.solutions[0].score;
-                    }
-                }
-                score -= penalty;
-                return score;
-
-            };
-
-            /**
-             * get the points available in a question solutions
-             * @param solutions
-             * @returns number
-             */
-            this.getSolutionsPoints = function (solutions) {
-                var points = 0;
-                for (var i = 0; i < solutions.length; i++) {
-                    points += solutions[i].score;
-                }
-                return points;
+                this.note = CommonService.getPaperScore(this.paper);
             };
 
             this.setCurrentQuestion = function (question) {
@@ -89,22 +28,49 @@
             };
 
             this.toggleDetails = function (id) {
-                $('#' + id).toggle();
+                $('#question-body-' + id).toggle();
+                
+                if(angular.element('#question-toggle-' + id).hasClass('fa-chevron-down')){
+                    //id="question-toggle-{{question.id}}"
+                    angular.element('#question-toggle-' + id).removeClass('fa-chevron-down').addClass('fa-chevron-right');
+                }
+                else if(angular.element('#question-toggle-' + id).hasClass('fa-chevron-right')){
+                    angular.element('#question-toggle-' + id).removeClass('fa-chevron-right').addClass('fa-chevron-down');
+                }
             };
 
             this.getChoiceSimpleType = function (choice) {
                 return CommonService.getObjectSimpleType(choice);
             };
-
-            this.getStudentAnswer = function (choice, item) {
-                if (item.multiple) {
-                    var isSelected = item.answer[choice.id];
-                    return isSelected;
+            
+            /**
+             * Check if the choice is an expected one
+             * @param {type} question
+             * @param {type} choice
+             * @returns {Boolean}
+             */
+            this.isChoiceValid = function (question, choice){
+                for(var i = 0 ; i < question.solution.length; i++){
+                    if(question.solution[i] === choice.id){
+                        return true;
+                    }
                 }
-                else {
-                    var id = parseInt(item.answer);
-                    return id === choice.id;
+                return false;
+            };
+            
+            /**
+             * Check if the student choosed this proposal
+             * @param {type} question 
+             * @param {type} choice
+             * @returns {Boolean}
+             */
+            this.isStudentChoice = function (question, choice){
+                for(var i = 0 ; i < question.answer.length; i++){
+                    if(question.answer[i] === choice.id){
+                        return true;
+                    }
                 }
+                return false;
             };
 
             this.generateUrl = function (witch, _id) {

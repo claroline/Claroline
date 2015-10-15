@@ -16,6 +16,8 @@
             this.exoId = $routeParams.eid;
             this.showPagination = true;
 
+
+
             this.config = {
                 itemsPerPage: 10,
                 fillLastPage: false,
@@ -60,11 +62,11 @@
              * @returns {bool}
              */
             this.checkCorrectionAvailability = function (paper) {
-                var correctionMode = CommonService.getCorrectionMode(this.sequence.meta.correctionMode);             
+                var correctionMode = CommonService.getCorrectionMode(this.sequence.meta.correctionMode);
                 var nbFinishedAttempts = this.countFinishedAttempts();
                 switch (correctionMode) {
                     case "test-end":
-                        return paper.end && paper.end !== undefined && paper.end !== '' ;
+                        return paper.end && paper.end !== undefined && paper.end !== '';
                         break;
                     case "last-try":
                         // number of paper with date end === sequence.maxAttempts ?
@@ -82,16 +84,27 @@
                         return false;
                 }
             };
-            
-            this.countFinishedAttempts = function (){
+
+            this.countFinishedAttempts = function () {
                 var nb = 0;
-                for(var i = 0; i < this.papers.length; i++){
-                    if(this.papers[i].end && this.papers[i].end !== undefined && this.papers[i].end !== ''){
+                for (var i = 0; i < this.papers.length; i++) {
+                    if (this.papers[i].end && this.papers[i].end !== undefined && this.papers[i].end !== '') {
                         nb++;
                     }
                 }
                 return nb;
             };
+
+            this.setTableData = function () {
+                for (var i = 0; i < this.filtered.length; i++) {
+                    // set scores
+                    if (this.filtered[i].end) { // TODO check score availability
+                        this.filtered[i].score = CommonService.getPaperScore(this.filtered[i]);
+                    }
+                }
+            };
+
+            this.setTableData();
 
 
         }

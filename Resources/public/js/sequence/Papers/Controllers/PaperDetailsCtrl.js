@@ -10,6 +10,8 @@
             this.paper = paperPromise.data.paper;
             this.sequence = paperPromise.data.sequence;
             this.exoId = $routeParams.eid;
+            
+            
         }
     ]);
 })();

@@ -47,8 +47,6 @@
 
                     return deferred.promise;
                 }
-
-
             };
         }
     ]);

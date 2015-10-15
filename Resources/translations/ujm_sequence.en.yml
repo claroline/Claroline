@@ -5,7 +5,7 @@ btn_prev_step_label: Go to previous step
 btn_next_step_label: Go to next step
 
 # d
-dropdown_step_navigate_choice_label: Step n°%1% / %2%
+dropdown_step_navigate_choice_label: Step N°%1% / %2%
 
 # l
 link_exercice_home: Exercise home
@@ -31,6 +31,11 @@ paper_list_table_score: Score
 paper_list_table_first_page_label: First
 paper_list_table_last_page_label: Last
 paper_list_table_toggle_pagination: Paginated / Unpaginated results
+
+paper_details_table_choice: Choix
+paper_details_table_expected_answer: Expected answer
+paper_details_table_your_answer: Your answer
+paper_details_table_comment: Comment
 
 # q
 question_hints: Hints

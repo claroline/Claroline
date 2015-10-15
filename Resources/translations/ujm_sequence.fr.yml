@@ -32,6 +32,11 @@ paper_list_table_first_page_label: Première
 paper_list_table_last_page_label: Dernière
 paper_list_table_toggle_pagination: Paginer / Dépaginer les resultats
 
+paper_details_table_choice: Choix
+paper_details_table_expected_answer: Réponse attendue
+paper_details_table_your_answer: Votre réponse
+paper_details_table_comment: Commentaire
+
 # q
 question_hints: Indices
 question_hint_label: Indice
