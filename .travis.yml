@@ -4,11 +4,11 @@ php:
   - "5.5"
 
 env:
-  - DB=mysql COMPOSER=composer_travis.json
+  - DB=mysql
 
 mysql:
   adapter: mysql2
-  database: claroline_test
+  database: claroline_test_travis
   username: travis
   encoding: utf8
 
@@ -19,12 +19,14 @@ before_script:
   - php pre-composer.php
   - BUNDLE_DIR=`cat bundle_dir.txt`
   - cd $BUNDLE_DIR
-  - cp composer.lock composer_travis.lock
-  - composer self-update
-  - composer install --prefer-source
+  - echo "memory_limit=2048M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  - COMPOSER=composer_travis.json composer update --prefer-source
   - cd $ROOT_DIR
   - cp -R vendor/claroline/dev-bundle/Claroline/DevBundle/Resources/travis/app/* app
-  - php app/register-bundle.php `cat package_dir.txt`
+  - php app/register-bundle.php $BUNDLE_DIR
+  - rm -rf app/cache/*
   - php app/init-schema.php
 
 script: vendor/bin/phpunit -c "${BUNDLE_DIR}/phpunit_travis.xml"
+
+sudo: false
