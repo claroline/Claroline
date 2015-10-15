@@ -7,7 +7,7 @@ $('#descriptionOptionalHide').css({"display" : "none"});
 $('#feebackOptionalHide').css({"display" : "none"});
 
 
-//$("*[id$='_interaction_question_model']").attr("disabled", true);
+//$("*[id$='_question_model']").attr("disabled", true);
 
 // Display the textarea
 function DisplayOptional(type) {
@@ -55,9 +55,8 @@ function statusButton(idI,idDiv) {
 
 // Delete the name of the category
 function dropCategory() {
-    var idCategory = $("*[id$='_interaction_question_category']").val(); // Id of the category to delete
+    var idCategory = $("*[id$='_question_category']").val(); // Id of the category to delete
     var path = $('#pathDrop').val(); // Path to the controller
-
     $.ajax({
         type: "POST",
         url: path,
@@ -67,7 +66,7 @@ function dropCategory() {
         cache: false,
         success: function (data) {
             // Remove the label from the list
-            $("*[id$='_interaction_question_category'] option[value=\""+idCategory+"\"]").remove();
+            $("*[id$='_question_category'] option[value=\""+idCategory+"\"]").remove();
             displayDeleteCategory();
         }
     });
@@ -87,9 +86,9 @@ var categoryArray = allCategory.split(';');
  * @var {string} valueCat Category select
  * @var {string} locker  Locked category for this user
  */
-$("*[id$='_interaction_question_category']").change(function () {
-    var idCat = $("*[id$='_interaction_question_category']").val();
-    var valueCat = $("*[id$='_interaction_question_category'] option:selected").text();
+$("*[id$='_question_category']").change(function () {
+    var idCat = $("*[id$='_question_category']").val();
+    var valueCat = $("*[id$='_question_category'] option:selected").text();
     var locker=$('#locker').val();
     displayDeleteCategory(idCat,valueCat,locker);
     displayEditCategory(idCat,valueCat,locker);
@@ -177,11 +176,11 @@ function addDelete(tr, deleteTrans) {
 }
 
 $(document).ready(function() {
-    $('#ujm_exobundle_interactionqcmtype_interaction_invite_ifr').height(50);
+    $('#ujm_exobundle_interactionqcmtype_question_invite_ifr').height(50);
     displayOptionalFields();
 
     //on ne passe par ici pour l'instant
-    $('#ujm_exobundle_interactionqcmtype_interaction_invite_ifr').on('load', function() {
+    $('#ujm_exobundle_interactionqcmtype_question_invite_ifr').on('load', function() {
         placeholderTinyMCE();
     });
 
@@ -192,7 +191,7 @@ function placeholderTinyMCE(){
 //
 //    });
 
-    $('#ujm_exobundle_interactionqcmtype_interaction_invite_ifr').contents().find("br").css( "background-color", "#BADA55" );
+    $('#ujm_exobundle_interactionqcmtype_question_invite_ifr').contents().find("br").css( "background-color", "#BADA55" );
 }
 
 /**
@@ -232,12 +231,12 @@ function advancedEdition(idTextarea, btnEdition, e) {
  */
 function displayOptionalFields(){
   //Value select the category
-  var idCatSelect=$("*[id$='_interaction_question_category']").val();
+  var idCatSelect=$("*[id$='_question_category']").val();
   //Value of the description
-  var valDescription =$("*[id$='_interaction_question_description']").text();
+  var valDescription =$("*[id$='_question_description']").text();
 
   //Value of feelback
-  var valFeedback = $("*[id$='_interaction_feedBack']").text();
+  var valFeedback = $("*[id$='_question_feedBack']").text();
 
   //Test category
   if(idCatSelect !== "" )
@@ -251,8 +250,8 @@ function displayOptionalFields(){
       //Enables advanced edition
       if(valDescription.match("<.+>.+|\s<\/.+>$"))
       {
-          $("*[id$='_interaction_question_description']").addClass("claroline-tiny-mce hide");
-          $("*[id$='_interaction_question_description']").data("data-theme","advanced");
+          $("*[id$='_question_description']").addClass("claroline-tiny-mce hide");
+          $("*[id$=_question_description']").data("data-theme","advanced");
           $("#buttonEdition").remove();
       }
   }
