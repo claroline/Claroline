@@ -101,6 +101,7 @@ abstract class RepositoryTestCase extends TransactionalTestCase
         $user->setLastName($username);
         $user->setUsername($username);
         $user->setPassword($username);
+        $user->setGuid($username);
         $user->setMail($username . '@mail.com');
         $this->om->persist($user);
 
@@ -111,6 +112,7 @@ abstract class RepositoryTestCase extends TransactionalTestCase
     {
         $group = new Group();
         $group->setName($name);
+        $group->setGuid($name);
         $this->om->persist($group);
 
         return $group;
@@ -144,6 +146,7 @@ abstract class RepositoryTestCase extends TransactionalTestCase
         $node->setCreator($this->defaults['user']);
         $node->setResourceType($this->defaults['activity_type']);
         $node->setWorkspace($this->defaults['workspace']);
+        $node->setGuid($name);
         $node->setClass('foo');
 
         $activity = new Activity();

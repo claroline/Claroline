@@ -260,12 +260,7 @@ class AbilityRepositoryTest extends RepositoryTestCase
 
     private function createActivity($name)
     {
-        $user = new User();
-        $user->setFirstName('John');
-        $user->setLastName('Doe');
-        $user->setUsername('jdoe');
-        $user->setMail('jd@mail.com');
-        $user->setPassword('123');
+        $user = $this->persistUser('jdoe');
 
         $workspace = new Workspace();
         $workspace->setName('w1');
@@ -282,6 +277,7 @@ class AbilityRepositoryTest extends RepositoryTestCase
         $node->setCreator($user);
         $node->setResourceType($type);
         $node->setWorkspace($workspace);
+        $node->setGuid($name);
 
         $activity = new Activity();
         $activity->setResourceNode($node);
