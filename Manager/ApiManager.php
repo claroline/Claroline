@@ -44,9 +44,29 @@ class ApiManager
         $this->curlManager = $curlManager;
     }
 
-    public function url(FriendRequest $request, $url, $payload = null, $type = 'GET')
+    /**
+     * Legacy method. Please use query() instead.
+     * @deprecated
+     */
+    public function url($token, $url, $payload = null, $type = 'GET')
     {
         $this->validateUrl($url);
+
+        switch (get_class($token)) {
+            case 'Claroline\CoreBundle\Entity\Oauth\FriendRequest': return $this->adminQuery($token, $url, $payload, $type);
+            //maybe later, we'll use this method to fetch resources & stuff from an other platform...
+            //case 'Claroline\CoreBundle\Entity\Oauth\UserToken': return $this->userQuery($token, $url, $payload, $type);
+        }
+    }
+
+    /* @see above
+    private function userQuery(UserOauth $token, $url, $payload, $type)
+    {
+        return '';
+    }*/
+
+    private function adminQuery(FriendRequest $request, $url, $payload = null, $type = 'GET')
+    {
         $access = $request->getClarolineAccess();
         if ($access === null) throw new \Exception('The oauth tokens were lost. Please ask for a new authentication.');
         $firstTry = $request->getHost() . '/' . $url . '?access_token=' . $access->getAccessToken();

@@ -31,11 +31,14 @@ class ApiController extends Controller
             /** @var \Claroline\CoreBundle\Entity\User $user */
             $user = $securityToken->getUser();
 
-            if($user) {
+            if ($user) {
                 return new JsonResponse(array(
                         'id'       => $user->getId(),
                         'username' => $user->getUsername(),
-                        'user_id'  => $user->getUsername() . $user->getId()
+                        'user_id'  => $user->getUsername() . $user->getId(),
+                        'first_name' => $user->getFirstName(),
+                        'last_name' => $user->getLastName(),
+                        'email' => $user->getMail()
                     ));
             }
         }

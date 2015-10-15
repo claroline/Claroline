@@ -19,6 +19,9 @@ use Symfony\Component\HttpFoundation\Request;
 use FOS\OAuthServerBundle\Controller\AuthorizeController as BaseAuthorizeController;
 use FOS\OAuthServerBundle\Form\Handler\AuthorizeFormHandler;
 use Symfony\Component\Security\Core\SecurityContext;
+use Claroline\CoreBundle\Entity\User;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Claroline\CoreBundle\Entity\Oauth\FriendRequest;
 
 /**
  * Controller handling basic authorization
@@ -137,15 +140,72 @@ class OauthController extends BaseAuthorizeController
 
         try {
             //always work
+
             return $this->container
                 ->get('fos_oauth_server.server')
                 ->finishClientAuthorization(true, $user, $request, $formHandler->getScope());
 
-            //return $this->container
-            //    ->get('fos_oauth_server.server')
-            //    ->finishClientAuthorization($formHandler->isAccepted(), $user, $request, $formHandler->getScope());
+            return $this->container
+                ->get('fos_oauth_server.server')
+                ->finishClientAuthorization($formHandler->isAccepted(), $user, $request, $formHandler->getScope());
         } catch (OAuth2ServerException $e) {
             return $e->getHttpResponse();
         }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/oauth/v2/log/{name}",
+     *     name="claro_oauth_log"
+     * )
+     */
+    public function logAction($name)
+    {
+        $authCode = $this->container->get('request')->query->get('code');
+        $curlManager = $this->container->get('claroline.manager.curl_manager');
+        $friendRequest = $this->container->get('claroline.manager.oauth_manager')->findFriendRequestByName($name);
+        $access = $friendRequest->getClarolineAccess();
+        $redirect = $this->container->get('request')->getSchemeAndHttpHost() .
+            $this->container->get('router')->getContext()->getBaseUrl() . '/oauth/v2/log/' . $name;
+
+        //request the token
+        $url = $friendRequest->getHost() . '/oauth/v2/token?client_id=' . urlencode($access->getRandomId()) . '&client_secret='
+            . urlencode($access->getSecret()) . '&grant_type=authorization_code&redirect_uri=' . urlencode($redirect)
+            . '&code=' . urlencode($authCode);
+
+        $data = json_decode($curlManager->exec($url), true);
+        var_dump($data);
+        $accessToken = $data['access_token'];
+        //maybe store the user token one way or an other ?
+
+        $url = $friendRequest->getHost() . '/api/connected_user?access_token=' . $accessToken;
+        $data = json_decode($curlManager->exec($url), true);
+        $email = $data['email'];
+        $userRepo = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:User');
+        $users = $userRepo->findByMail($email);
+
+        if (count($users) === 0) {
+            $username = $data['username'];
+            $users = $userRepo->findByUsername($username);
+
+            if (count($users) > 0) {
+                $username .= uniqd();
+            }
+
+            $user = new User();
+            $user->setUsername($username);
+            $user->setMail($email);
+            $user->setFirstName($data['first_name']);
+            $user->setLastName($data['last_name']);
+            $pw = uniqid();
+            $user->setPlainPassword($pw);
+            $user = $this->container->get('claroline.manager.user_manager')->createUser($user, false);
+        } else {
+            $user = $users[0];
+        }
+
+        $this->container->get('claroline.authenticator')->authenticate($user->getUsername(), null, false);
+
+        return new RedirectResponse($this->container->get('router')->generate('claro_desktop_open'));
     }
 }

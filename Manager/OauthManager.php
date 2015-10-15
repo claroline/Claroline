@@ -226,4 +226,5 @@ class OauthManager extends ClientManager
         $this->om->persist($request);
         $this->om->flush();
     }
+
 }
