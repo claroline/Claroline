@@ -61,7 +61,7 @@
                         <tbody>
                             {% for presence in presences%}
                                 <tr>
-                                    <td>{{presence.getDate()|date("y/m/d")}}</td>
+                                    <td>{{presence.getDate()|date("d/m/y")}}</td>
                                     <td>{{presence.getPeriod.getNumPeriod()}}</td>
                 {#                    <td>{{presence.getPeriod.getName()}}</td>#}
                                     <td>{{presence.getCourseSession.getShortNameWithCourse}}</td>

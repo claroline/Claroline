@@ -161,7 +161,7 @@
                                title: '{{ item.getName()}}',
                                start: '{{item.getDay()|date('Y-m-d')}}T{{item.getBeginHour()|date('H:i:s')}}',
                                end: '{{item.getDay()|date('Y-m-d')}}T{{item.getEndHour()|date('H:i:s')}}',
-                               url:'{{path("formalibre_choix_classe", {"period":item.getId(),"date":item.getDay()|date('d-m-Y')})}}',
+                               url:'{{path("formalibre_choix_classe", {"period":item.getId(),"date":item.getDay()|date('Y-m-d')})}}',
                                        
 
         

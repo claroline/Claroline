@@ -178,10 +178,11 @@ class PresenceController extends Controller
         
         $canCkeckPresences=  $this->presenceManager->checkRights($user,  PresenceRights::CHECK_PRESENCES);
                 
-        $dateFormat=new \DateTime($date);
- 
-        $Presences = $this->presenceRepo->OrderByStudent($session,$date,$period);
-        $dayPresences = $this->presenceRepo->OrderByNumPeriod($session,$date);
+        $dateFormat = \DateTime::createFromFormat("d-m-y", $date);
+        $dateFormat->setTime(0, 0);
+        
+        $Presences = $this->presenceRepo->OrderByStudent($session, $dateFormat, $period);
+        $dayPresences = $this->presenceRepo->OrderByNumPeriod($session, $dateFormat);
         
         $Groups = $this->groupRepo->findAll() ;
         
@@ -190,7 +191,7 @@ class PresenceController extends Controller
        
         $Null = $this->statuRepo->findOneByStatusName('');
         $liststatus= $this->statuRepo->findByStatusByDefault(false);
-       
+      
             if (!$Presences)
             {
                 $Presences=array();
@@ -206,7 +207,7 @@ class PresenceController extends Controller
                     $actualPresence->setDate($dateFormat);
                     $this->em->persist($actualPresence);
                     $this->em->flush();
-                    $Presences = $this->presenceRepo->OrderByStudent($session,$date,$period);
+                    $Presences = $this->presenceRepo->OrderByStudent($session,$dateFormat,$period);
                     }
             }
             
@@ -483,4 +484,3 @@ class PresenceController extends Controller
     
     
 }
-
