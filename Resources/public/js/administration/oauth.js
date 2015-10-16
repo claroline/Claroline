@@ -47,6 +47,10 @@
             var url = Routing.generate('oauth_request_friend_form');
             modal.displayForm(url, addFriendRequest, function(){}, 'form_request_friend');
         })
+        .on('click', '.configure-authentication-btn', function(event) {
+            var url = Routing.generate('oauth_request_authentication_form', {'friend': $(event.target).attr('data-request-id')});
+            modal.displayForm(url, addFriendRequest, function(){}, 'oauth_request_authentication_form');
+        })
         .on('click', '.show-client-btn', function(event) {
             modal.simpleContainer('', $(event.target).attr('data-client-id') + '_' + $(event.target).attr('data-client-random'));
         })
@@ -58,6 +62,11 @@
         })
         .on('click', '.show-refresh-btn', function(event) {
             modal.simpleContainer('', $(event.target).attr('data-url'));
+        })
+        .on('click', '.edit-client-btn', function(event) {
+            var clientid = $(event.target).attr('data-client-id');
+            var url = Routing.generate('claro_admin_oauth_form_edit', {'client': clientid});
+            modal.displayForm(url, addClient, function(){}, 'form_client_update');
         })
         .on('click', '.delete-client-btn', function(event) {
             var clientid = $(event.target).attr('data-client-id');

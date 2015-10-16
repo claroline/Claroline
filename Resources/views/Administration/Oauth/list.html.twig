@@ -82,6 +82,11 @@
                                                         >
                                                             <i class="fa fa-key" data-secret="{{ client.getSecret() }}"></i>
                                                         </button>
+                                                        <button class="btn btn-warning edit-client-btn"
+                                                                data-client-id="{{ client.getId() }}"
+                                                                >
+                                                            <i class="fa fa-pencil" data-client-id="{{ client.getId() }}"></i>
+                                                        </button>
                                                         <button class="btn btn-warning hide-client-btn"
                                                                 data-client-id="{{ client.getId() }}"
                                                         >
@@ -158,6 +163,9 @@
                                                                     data-secret="{{ request.getClarolineAccess().getSecret() }}"
                                                             >
                                                                 <i class="fa fa-key" data-secret="{{ request.getClarolineAccess().getSecret() }}"></i>
+                                                            </button>
+                                                            <button class="btn btn-default configure-authentication-btn" data-request-id="{{ request.getId() }}">
+                                                                <i class="fa fa-users" data-request-id="{{ request.getId() }}"></i>
                                                             </button>
                                                         {% endif %}
                                                     </div>
