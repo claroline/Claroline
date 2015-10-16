@@ -84,9 +84,9 @@
         $(document).ready(function() {
             addFormHoleEdit("{{ 'response' | trans({}, 'ujm_exo') }}", "{{ 'size' | trans({}, 'ujm_exo') }}",
             "{{ 'orthography' | trans({}, 'ujm_exo') }}", "{{ 'delete' | trans({}, 'ujm_exo') }}",
-            "{{ 'hole_selector' | trans({}, 'ujm_exo') }}", "{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}",
-            "{{ 'key_word' | trans({}, 'ujm_exo') }}", "{{ 'points' | trans({}, 'ujm_exo') }}",
-             {{ nbResponses }}, "{{ 'instruction_add_hole' | trans({}, 'ujm_exo') }}");
+            "{{ 'hole_selector' | trans({}, 'ujm_exo') }}","{{ 'key_word' | trans({}, 'ujm_exo') }}",
+            "{{ 'points' | trans({}, 'ujm_exo') }}",{{ nbResponses }},
+            "{{ 'comment' | trans({}, 'ujm_exo') }}","{{ 'advanced_edition' | trans({}, 'ujm_exo') }}");
 
             newHintEdit("{{ 'hint' | trans({}, 'ujm_exo') }}", "{{ 'penalty' | trans({}, 'ujm_exo') }}", "{{ 'hint' | trans({}, 'ujm_exo') }}", "{{ 'delete' | trans({}, 'ujm_exo') }}");
             disableNotYetReady();
