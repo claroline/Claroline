@@ -40,8 +40,6 @@ function addFormHoleEdit(response, size, orthography, del, selector, wlangKeyWor
     langComment = comment;
     langEdition     = edition;
     var index;
-    var i = 0;
-    alert('langComment '+langComment);
     if (nbResponses == 0) {
         tableHoles.append('<table id="newTable" class="table table-striped table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">' + size + '</th><th class="classic" style="display:none;">' + orthography + '</th><th class="classic">' + selector + '</th><th class="classic">' + response + '</th><th class="classic">' + del + '</th></tr></thead><tbody class="bodyHole"></tbody></table>');
     } else {
