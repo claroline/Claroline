@@ -110,7 +110,7 @@ class CursusManager
         $this->container = $container;
         $this->contentManager = $contentManager;
         $this->eventDispatcher = $eventDispatcher;
-        $this->iconsDirectory = $this->container->getParameter('claroline.param.thumbnails_directory') . '/';rm V
+        $this->iconsDirectory = $this->container->getParameter('claroline.param.thumbnails_directory') . '/';
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
         $this->roleManager = $roleManager;

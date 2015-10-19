@@ -202,7 +202,7 @@
                         <tr>
                             <td>
                                 {% if icon is not empty %}
-                                    {% set iconPath = asset('files/cursusbundle/icons/' ~ icon) %}
+                                    {% set iconPath = asset('uploads/thumbnails/' ~ icon) %}
                                     <img src="{{ iconPath }}" alt="" width="20px">
                                 {% endif %}
                                 <a href="{{ path('claro_cursus_course_management', {'course': courseId}) }}">

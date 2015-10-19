@@ -83,7 +83,7 @@
             {% if icon is empty %}
                 {% set iconPath = asset('bundles/clarolinecursus/images/no_icon.png') %}
             {% else %}
-                {% set iconPath = asset('files/cursusbundle/icons/' ~ course.getIcon()) %}
+                {% set iconPath = asset('uploads/thumbnails/' ~ course.getIcon()) %}
             {% endif %}
             <div class="panel panel-default">
                 <div class="panel-heading">
