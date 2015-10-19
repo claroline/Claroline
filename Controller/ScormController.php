@@ -183,6 +183,7 @@ class ScormController extends Controller
      * @EXT\Route(
      *     "/scorm/tracking/commit/{datasString}/mode/{mode}/sco/{scoId}",
      *     name = "claro_scorm_12_tracking_commit",
+     *     requirements={"datasString"=".+"},
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter(
