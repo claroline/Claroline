@@ -120,9 +120,12 @@
             </div>
             <div id="content-box" class="col-md-12">
                 <div class="full-size">
-                    <div id="twig-scorm-data"
-                         data-sco-id="{{scoTracking.getSco().getId()}}">
-                    </div>
+                    
+                    {% if not isAnon %}
+                        <div id="twig-scorm-data"
+                             data-sco-id="{{scoTracking.getSco().getId()}}">
+                        </div>
+                    {% endif %}
                     <iframe id="scorm-frame"
                             class="full-size"
                             src="{{ asset(scormUrl) }}"

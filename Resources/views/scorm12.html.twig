@@ -1,4 +1,4 @@
-{% macro renderMenu(scos, trackings) %}
+{% macro renderMenu(scos, trackings, isAnon) %}
     <ul>
     {% for sco in scos %}
         
@@ -7,64 +7,73 @@
             <li><b>{{ sco.getTitle() }}</b></li>
             
             {% if scoChildren is not null %}
-                {{ _self.renderMenu(scoChildren, trackings) }}
+                {{ _self.renderMenu(scoChildren, trackings, isAnon) }}
             {% endif %}
                 
         {% else %}
-            {% set tracking = trackings[sco.getId()] %}
             {% set scoId = sco.getId() %}
             {% set scoTitle = sco.getTitle() %}
-            <li>
-                <a href="{{ path('claro_render_scorm_12_sco', {'scoId': scoId}) }}" class="sco-menu-link">
-                    {{ scoTitle }}
-                </a>
-                
-                {% set bestLessonStatus = tracking.getBestLessonStatus() %}
-                {% if bestLessonStatus == 'passed' or
-                    bestLessonStatus == 'completed' or
-                    bestLessonStatus == 'browsed' or
-                    bestLessonStatus == 'failed' or
-                    bestLessonStatus == 'incomplete'
-                %}
-                    {% set bestScoreRaw = tracking.getBestScoreRaw() %}
-                    {% set scoreMax = tracking.getScoreMax() %}
-                    {% if (scoreMax is not null) and (bestScoreRaw is not null) and (scoreMax > 0) %}
-                        {% set bestScore = bestScoreRaw ~ ' / ' ~ scoreMax %}
+            
+            {% if isAnon %}
+                <li>
+                    <a href="{{ path('claro_render_scorm_12_sco', {'scoId': scoId}) }}" class="sco-menu-link">
+                        {{ scoTitle }}
+                    </a>
+                </li>
+            {% else %}
+                {% set tracking = trackings[sco.getId()] %}
+                <li>
+                    <a href="{{ path('claro_render_scorm_12_sco', {'scoId': scoId}) }}" class="sco-menu-link">
+                        {{ scoTitle }}
+                    </a>
+
+                    {% set bestLessonStatus = tracking.getBestLessonStatus() %}
+                    {% if bestLessonStatus == 'passed' or
+                        bestLessonStatus == 'completed' or
+                        bestLessonStatus == 'browsed' or
+                        bestLessonStatus == 'failed' or
+                        bestLessonStatus == 'incomplete'
+                    %}
+                        {% set bestScoreRaw = tracking.getBestScoreRaw() %}
+                        {% set scoreMax = tracking.getScoreMax() %}
+                        {% if (scoreMax is not null) and (bestScoreRaw is not null) and (scoreMax > 0) %}
+                            {% set bestScore = bestScoreRaw ~ ' / ' ~ scoreMax %}
+                        {% endif %}
+                        &nbsp;
+                        {% if bestLessonStatus == 'failed' or bestLessonStatus == 'incomplete' %}
+                            <i class="fa fa-exclamation-triangle pointer-hand check-status-btn"
+                                style="color: #E60000"
+                                data-container="#scorm-menu"
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                data-title="{{ bestLessonStatus|trans({}, 'scorm') }}"
+                                data-sco-title="{{ scoTitle }}"
+                                data-best-lesson-status="{{ bestLessonStatus|trans({}, 'scorm') }}"
+                                data-total-time="{{ tracking.getFormattedTotalTime() }}"
+
+                                {% if bestScore is defined %}
+                                    data-best-score="{{ bestScore }}"
+                                {% endif %}
+                            ></i>
+                        {% else %}
+                            <i class="fa fa-check-circle pointer-hand check-status-btn"
+                                style="color: #009900"
+                                data-container="#scorm-menu"
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                data-title="{{ bestLessonStatus|trans({}, 'scorm') }}"
+                                data-sco-title="{{ scoTitle }}"
+                                data-best-lesson-status="{{ bestLessonStatus|trans({}, 'scorm') }}"
+                                data-total-time="{{ tracking.getFormattedTotalTime() }}"
+
+                                {% if bestScore is defined %}
+                                    data-best-score="{{ bestScore }}"
+                                {% endif %}
+                            ></i>
+                        {% endif %}
                     {% endif %}
-                    &nbsp;
-                    {% if bestLessonStatus == 'failed' or bestLessonStatus == 'incomplete' %}
-                        <i class="fa fa-exclamation-triangle pointer-hand check-status-btn"
-                            style="color: #E60000"
-                            data-container="#scorm-menu"
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            data-title="{{ bestLessonStatus|trans({}, 'scorm') }}"
-                            data-sco-title="{{ scoTitle }}"
-                            data-best-lesson-status="{{ bestLessonStatus|trans({}, 'scorm') }}"
-                            data-total-time="{{ tracking.getFormattedTotalTime() }}"
-                            
-                            {% if bestScore is defined %}
-                                data-best-score="{{ bestScore }}"
-                            {% endif %}
-                        ></i>
-                    {% else %}
-                        <i class="fa fa-check-circle pointer-hand check-status-btn"
-                            style="color: #009900"
-                            data-container="#scorm-menu"
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            data-title="{{ bestLessonStatus|trans({}, 'scorm') }}"
-                            data-sco-title="{{ scoTitle }}"
-                            data-best-lesson-status="{{ bestLessonStatus|trans({}, 'scorm') }}"
-                            data-total-time="{{ tracking.getFormattedTotalTime() }}"
-                            
-                            {% if bestScore is defined %}
-                                data-best-score="{{ bestScore }}"
-                            {% endif %}
-                        ></i>
-                    {% endif %}
-                {% endif %}
-            </li>
+                </li>
+            {% endif %}
         {% endif %}
     {% endfor %}
     </ul>
@@ -86,7 +95,7 @@
     </div>
     <div class="panel-body">
         <div id="scorm-menu">
-            {{ renderMenu(scos, trackings) }}
+            {{ renderMenu(scos, trackings, isAnon) }}
         </div>
     </div>
     <div id="scorm-tracking-modal-box" class="modal fade" role="dialog" aria-hidden="true">

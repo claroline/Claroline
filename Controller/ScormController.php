@@ -94,17 +94,20 @@ class ScormController extends Controller
     {
         $this->checkAccess('OPEN', $scorm);
         $user = $this->tokenStorage->getToken()->getUser();
+        $isAnon = ($user === 'anon.');
         $rootScos = array();
         $trackings = array();
         $scos = $scorm->getScos();
         $nbActiveScos = 0;
         $lastActiveSco = null;
 
-        $scosTracking = $this->scormManager
-            ->getAllScorm12ScoTrackingsByUserAndResource($user, $scorm);
+        if (!$isAnon) {
+            $scosTracking = $this->scormManager
+                ->getAllScorm12ScoTrackingsByUserAndResource($user, $scorm);
 
-        foreach ($scosTracking as $tracking) {
-            $trackings[$tracking->getSco()->getId()] = $tracking;
+            foreach ($scosTracking as $tracking) {
+                $trackings[$tracking->getSco()->getId()] = $tracking;
+            }
         }
 
         foreach ($scos as $sco) {
@@ -113,7 +116,7 @@ class ScormController extends Controller
                 $rootScos[] = $sco;
             }
 
-            if (!isset($trackings[$sco->getId()])) {
+            if (!$isAnon && !isset($trackings[$sco->getId()])) {
                 $trackings[$sco->getId()] = $this->scormManager
                     ->createScorm12ScoTracking($user, $sco);
             }
@@ -139,7 +142,8 @@ class ScormController extends Controller
                 '_resource' => $scorm,
                 'scos' => $rootScos,
                 'workspace' => $scorm->getResourceNode()->getWorkspace(),
-                'trackings' => $trackings
+                'trackings' => $trackings,
+                'isAnon' => $isAnon
             );
         }
     }
@@ -165,6 +169,7 @@ class ScormController extends Controller
         $user = $this->tokenStorage->getToken()->getUser();
         $scorm = $scorm12Sco->getScormResource();
         $this->checkAccess('OPEN', $scorm);
+        $isAnon = ($user === 'anon.');
 
         $scos = $scorm->getScos();
         $entryUrl = $scorm12Sco->getEntryUrl();
@@ -185,12 +190,17 @@ class ScormController extends Controller
                 $rootScos[] = $sco;
             }
         }
-        $scoTracking = $this->scormManager
-            ->getScorm12ScoTrackingByUserAndSco($user, $scorm12Sco);
 
-        if (is_null($scoTracking)) {
+        if ($isAnon) {
+            $scoTracking = null;
+        } else {
             $scoTracking = $this->scormManager
-                ->createScorm12ScoTracking($user, $sco);
+                ->getScorm12ScoTrackingByUserAndSco($user, $scorm12Sco);
+
+            if (is_null($scoTracking)) {
+                $scoTracking = $this->scormManager
+                    ->createScorm12ScoTracking($user, $sco);
+            }
         }
 
         return array(
@@ -200,7 +210,8 @@ class ScormController extends Controller
             'scos' => $rootScos,
             'scoTracking' => $scoTracking,
             'scormUrl' => $scormPath,
-            'workspace' => $scorm->getResourceNode()->getWorkspace()
+            'workspace' => $scorm->getResourceNode()->getWorkspace(),
+            'isAnon' => $isAnon
         );
     }
 
@@ -208,6 +219,7 @@ class ScormController extends Controller
      * @EXT\Route(
      *     "/scorm/tracking/commit/{datasString}/mode/{mode}/sco/{scoId}",
      *     name = "claro_scorm_12_tracking_commit",
+     *     requirements={"datasString"=".+"},
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter(
@@ -396,17 +408,20 @@ class ScormController extends Controller
     {
         $this->checkScorm2004ResourceAccess('OPEN', $scorm);
         $user = $this->tokenStorage->getToken()->getUser();
+        $isAnon = ($user === 'anon.');
         $rootScos = array();
         $trackings = array();
         $scos = $scorm->getScos();
         $nbActiveScos = 0;
         $lastActiveSco = null;
 
-        $scosTracking = $this->scormManager
-            ->getAllScorm2004ScoTrackingsByUserAndResource($user, $scorm);
+        if (!$isAnon) {
+            $scosTracking = $this->scormManager
+                ->getAllScorm2004ScoTrackingsByUserAndResource($user, $scorm);
 
-        foreach ($scosTracking as $tracking) {
-            $trackings[$tracking->getSco()->getId()] = $tracking;
+            foreach ($scosTracking as $tracking) {
+                $trackings[$tracking->getSco()->getId()] = $tracking;
+            }
         }
 
         foreach ($scos as $sco) {
@@ -415,7 +430,7 @@ class ScormController extends Controller
                 $rootScos[] = $sco;
             }
 
-            if (!isset($trackings[$sco->getId()])) {
+            if (!$isAnon && !isset($trackings[$sco->getId()])) {
                 $trackings[$sco->getId()] = $this->scormManager
                     ->createScorm2004ScoTracking($user, $sco);
             }
@@ -441,7 +456,8 @@ class ScormController extends Controller
                 '_resource' => $scorm,
                 'scos' => $rootScos,
                 'workspace' => $scorm->getResourceNode()->getWorkspace(),
-                'trackings' => $trackings
+                'trackings' => $trackings,
+                'isAnon' => $isAnon
             );
         }
     }
@@ -467,6 +483,7 @@ class ScormController extends Controller
         $user = $this->tokenStorage->getToken()->getUser();
         $scorm = $scorm2004Sco->getScormResource();
         $this->checkScorm2004ResourceAccess('OPEN', $scorm);
+        $isAnon = ($user === 'anon.');
 
         $scos = $scorm->getScos();
         $entryUrl = $scorm2004Sco->getEntryUrl();
@@ -488,44 +505,49 @@ class ScormController extends Controller
             }
         }
 
-        $scoTracking = $this->scormManager
-            ->getScorm2004ScoTrackingByUserAndSco($user, $scorm2004Sco);
-
-        if (is_null($scoTracking)) {
+        if ($isAnon) {
+            $scoTracking = null;
+            $details = array();
+        } else {
             $scoTracking = $this->scormManager
-                ->createScorm2004ScoTracking($user, $scorm2004Sco);
+                ->getScorm2004ScoTrackingByUserAndSco($user, $scorm2004Sco);
+
+            if (is_null($scoTracking)) {
+                $scoTracking = $this->scormManager
+                    ->createScorm2004ScoTracking($user, $scorm2004Sco);
+            }
+            $details = !is_null($scoTracking->getDetails()) ?
+                $scoTracking->getDetails() :
+                array();
+
+            $timeLimitAction = $scorm2004Sco->getTimeLimitAction();
+            $totalTime = $scoTracking->getTotalTime();
+            $completionThreshold = $scorm2004Sco->getCompletionThreshold();
+            $maxTimeAllowed = $scorm2004Sco->getMaxTimeAllowed();
+            $scaledPassingScore = $scorm2004Sco->getScaledPassingScore();
+
+            $details['cmi.time_limit_action'] = !is_null($timeLimitAction) ?
+                $timeLimitAction :
+                'continue,no message';
+            $details['cmi.total_time'] = !is_null($totalTime) ?
+                $totalTime :
+                'PT0S';
+            $details['cmi.launch_data'] = $scorm2004Sco->getLaunchData();
+            $details['cmi.learner_id'] = $user->getId();
+            $details['cmi.learner_name'] = $user->getFirstName() .
+                ', ' .
+                $user->getLastName();
+
+            $details['cmi.completion_threshold'] = !is_null($completionThreshold) ?
+                $completionThreshold :
+                '';
+            $details['cmi.max_time_allowed'] = !is_null($maxTimeAllowed) ?
+                $maxTimeAllowed :
+                '';
+            $details['cmi.scaled_passing_score'] = !is_null($scaledPassingScore) ?
+                $scaledPassingScore :
+                '';
         }
-        $details = !is_null($scoTracking->getDetails()) ?
-            $scoTracking->getDetails() :
-            array();
-
-        $timeLimitAction = $scorm2004Sco->getTimeLimitAction();
-        $totalTime = $scoTracking->getTotalTime();
-        $completionThreshold = $scorm2004Sco->getCompletionThreshold();
-        $maxTimeAllowed = $scorm2004Sco->getMaxTimeAllowed();
-        $scaledPassingScore = $scorm2004Sco->getScaledPassingScore();
-
-        $details['cmi.time_limit_action'] = !is_null($timeLimitAction) ?
-            $timeLimitAction :
-            'continue,no message';
-        $details['cmi.total_time'] = !is_null($totalTime) ?
-            $totalTime :
-            'PT0S';
-        $details['cmi.launch_data'] = $scorm2004Sco->getLaunchData();
-        $details['cmi.learner_id'] = $user->getId();
-        $details['cmi.learner_name'] = $user->getFirstName() .
-            ', ' .
-            $user->getLastName();
-
-        $details['cmi.completion_threshold'] = !is_null($completionThreshold) ?
-            $completionThreshold :
-            '';
-        $details['cmi.max_time_allowed'] = !is_null($maxTimeAllowed) ?
-            $maxTimeAllowed :
-            '';
-        $details['cmi.scaled_passing_score'] = !is_null($scaledPassingScore) ?
-            $scaledPassingScore :
-            '';
 
         return array(
             'resource' => $scorm,
@@ -535,7 +557,8 @@ class ScormController extends Controller
             'scoTracking' => $scoTracking,
             'scoTrackingDetails' => json_encode($details),
             'scormUrl' => $scormPath,
-            'workspace' => $scorm->getResourceNode()->getWorkspace()
+            'workspace' => $scorm->getResourceNode()->getWorkspace(),
+            'isAnon' => $isAnon
         );
     }
 
@@ -783,6 +806,7 @@ class ScormController extends Controller
         $collection = new ResourceCollection(array($resource->getResourceNode()));
 
         if (!$this->authorization->isGranted($permission, $collection)) {
+
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
     }
