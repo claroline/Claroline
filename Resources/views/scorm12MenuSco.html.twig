@@ -118,7 +118,26 @@
             <div id="content-box" class="col-md-12">
                 <div class="full-size">
                     
-                    {% if not isAnon %}
+                    {% if isAnon %}
+                        <div id="twig-scorm-data"
+                             student-id="-1"
+                             sco-id="{{scoTracking.getSco().getId()}}"
+                             student-name="anon., anon."
+                             score-raw="{% if scoTracking.getScoreRaw() > -1 %}{{scoTracking.getScoreRaw()}}{% endif %}"
+                             score-min="{% if scoTracking.getScoreMin() > -1 %}{{scoTracking.getScoreMin()}}{% endif %}"
+                             score-max="{% if scoTracking.getScoreMax() > -1 %}{{scoTracking.getScoreMax()}}{% endif %}"
+                             total-time="{{scoTracking.getTotalTime()}}"
+                             credit="{{scoTracking.getCredit()}}"
+                             lesson-status="{{scoTracking.getLessonStatus()}}"
+                             lesson-location="{{scoTracking.getLessonLocation()}}"
+                             exit="{{scoTracking.getExitMode()}}"
+                             entry="{{scoTracking.getEntry()}}"
+                             lesson-mode="{{scoTracking.getLessonMode()}}"
+                             suspend-data="{{scoTracking.getSuspendData()}}"
+                             launch-data="{{ scoTracking.getSco().getLaunchData()}}"
+                        >
+                        </div>
+                    {% else %}
                         <div id="twig-scorm-data"
                              student-id="{{scoTracking.getUser().getId()}}"
                              sco-id="{{scoTracking.getSco().getId()}}"
