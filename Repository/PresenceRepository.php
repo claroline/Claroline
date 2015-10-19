@@ -8,7 +8,7 @@
 
 namespace FormaLibre\PresenceBundle\Repository;
 
-
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
 class PresenceRepository extends EntityRepository
@@ -67,5 +67,47 @@ class PresenceRepository extends EntityRepository
 
         return $query->getResult();   
     }
-    
+
+    public function findPresencesByUserAndSession(User $user, array $sessions)
+    {
+        $dql = '
+            SELECT p
+            FROM FormaLibre\PresenceBundle\Entity\Presence p
+            JOIN p.userStudent pu
+            JOIN p.courseSession pcs
+            WHERE pu = :user
+            AND pcs IN (:sessions)
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+        $query->setParameter('sessions', $sessions);
+
+        return $query->getResult();
+    }
+
+    public function findPresencesByUserAndSessionAndStatusName(
+        User $user,
+        array $sessions,
+        $statusName
+    )
+    {
+        $dql = '
+            SELECT p
+            FROM FormaLibre\PresenceBundle\Entity\Presence p
+            JOIN p.userStudent pu
+            JOIN p.courseSession pcs
+            JOIN p.status ps
+            WHERE pu = :user
+            AND pcs IN (:sessions)
+            AND ps.statusName = :statusName
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+        $query->setParameter('sessions', $sessions);
+        $query->setParameter('statusName', $statusName);
+
+        return $query->getResult();
+    }
 }

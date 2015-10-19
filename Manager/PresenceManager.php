@@ -20,6 +20,7 @@ class PresenceManager
     private $rightsRepo;
     private $roleManager;
     private $authorization;
+    private $presenceRepo;
      
     /**
      * @DI\InjectParams({
@@ -35,6 +36,7 @@ class PresenceManager
         $this->rightsRepo=$om->getRepository("FormaLibrePresenceBundle:PresenceRights");
         $this->roleManager =$roleManager;
         $this->authorization =$authorization;
+        $this->presenceRepo = $om->getRepository("FormaLibrePresenceBundle:Presence");
         
     }
     
@@ -81,5 +83,28 @@ class PresenceManager
         
     }
     
-    
+    public function getPresencesByUserAndSessions(User $user, array $sessions)
+    {
+        return (count($sessions) > 0) ?
+            $this->presenceRepo->findPresencesByUserAndSession(
+                $user,
+                $sessions
+            ) :
+            array();
+    }
+
+    public function getPresencesByUserAndSessionAndStatusName(
+        User $user,
+        array $sessions,
+        $statusName
+    )
+    {
+        return (count($sessions) > 0) ?
+            $this->presenceRepo->findPresencesByUserAndSessionAndStatusName(
+                $user,
+                $sessions,
+                $statusName
+            ) :
+            array();
+    }
 }
