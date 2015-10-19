@@ -17,6 +17,6 @@ class ClarolineChatBundle extends PluginBundle
 {
     public function hasMigrations()
     {
-        return false;
+        return true;
     }
 }

@@ -16,7 +16,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class PluginConfigurationType extends AbstractType
+class ChatConfigurationType extends AbstractType
 {
     private $configHandler;
 
@@ -55,7 +55,7 @@ class PluginConfigurationType extends AbstractType
 
     public function getName()
     {
-        return 'chat_plugin_configuration_form';
+        return 'chat_configuration_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

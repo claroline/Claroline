@@ -1,7 +1,7 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
 {% block title %}
-    {{ parent() ~ ' - ' ~ 'chat_plugin_configuration'|trans({}, 'chat') | striptags | raw }}
+    {{ parent() ~ ' - ' ~ 'chat_configuration'|trans({}, 'chat') | striptags | raw }}
 {% endblock %}
 
 {% block breadcrumb %}
@@ -12,11 +12,11 @@
                 'href': path('claro_admin_index')
             },
             {
-                'name': 'packages'|trans({}, 'platform'),
-                'href': path('claro_admin_plugins')
+                'name': 'claroline_chat_management_admin_tool'|trans({}, 'tools'),
+                'href': path('claro_chat_admin_management')
             },
             {
-                'name': 'chat_plugin_configuration'|trans({}, 'chat'),
+                'name': 'chat_configuration'|trans({}, 'chat'),
                 'href': ''
             }
         ])
@@ -26,12 +26,12 @@
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">
-            {{ 'chat_plugin_configuration'|trans({}, 'chat') }}
+            {{ 'chat_configuration'|trans({}, 'chat') }}
         </h3>
     </div>
     <form role="form"
           class="form-horizontal"
-          action="{{ path('claro_chat_plugin_configure') }}"
+          action="{{ path('claro_chat_admin_configure') }}"
           method="post"
           {{ form_enctype(form) }}
           enctype='multipart/form-data'
@@ -43,7 +43,7 @@
             <button type="submit" class="btn btn-primary">
                 {{ 'ok'|trans({}, 'platform') }}
             </button>
-            <a href="{{ path('claro_admin_plugins') }}" class="btn btn-default">
+            <a href="{{ path('claro_chat_admin_management') }}" class="btn btn-default">
                 {{ 'cancel'|trans({}, 'platform') }}
             </a>
         </div>

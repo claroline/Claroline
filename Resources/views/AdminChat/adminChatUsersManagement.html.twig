@@ -1,0 +1,34 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ 'users_management'|trans({}, 'platform') | striptags | raw }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'claroline_chat_management_admin_tool'|trans({}, 'tools'),
+                'href': path('claro_chat_admin_management')
+            },
+            {
+                'name': 'users_management'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'users_management'|trans({}, 'platform') }}
+        </h3>
+    </div>
+    <div class="panel-body">
+    </div>
+{% endblock %}

@@ -1,4 +1,4 @@
 chat: Chat
-chat_plugin_configuration: Configuration du plugin de Chat
+chat_configuration: Configuration du Chat
 host: Hôte
 port: Port

@@ -1,3 +1,7 @@
 plugin:
-  has_options: true
+  has_options: false
+  
+  admin_tools:
+    - name: claroline_chat_management_admin_tool
+      class: comments-o
   

@@ -11,7 +11,7 @@
 
 namespace Claroline\ChatBundle\Listener;
 
-use Claroline\CoreBundle\Event\PluginOptionsEvent;
+use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use Claroline\CoreBundle\Menu\ContactAdditionalActionEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -51,14 +51,14 @@ class ChatListener
     }
 
     /**
-     * @DI\Observe("plugin_options_chatbundle")
+     * @DI\Observe("administration_tool_claroline_chat_management_admin_tool")
      *
-     * @param PluginOptionsEvent $event
+     * @param DisplayToolEvent $event
      */
-    public function onPluginOptionsOpen(PluginOptionsEvent $event)
+    public function onChatManagementAdministrationToolOpen(OpenAdministrationToolEvent $event)
     {
         $params = array();
-        $params['_controller'] = 'ClarolineChatBundle:Chat:pluginConfigureForm';
+        $params['_controller'] = 'ClarolineChatBundle:AdminChat:adminChatManagement';
         $subRequest = $this->request->duplicate(array(), null, $params);
         $response = $this->httpKernel
             ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);

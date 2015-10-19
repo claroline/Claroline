@@ -12,8 +12,13 @@
 namespace Claroline\ChatBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * @ORM\Entity(repositoryClass="Claroline\ChatBundle\Repository\ChatUserRepository")
+ * @ORM\Table(name="claro_chatbundle_chat_user")
+ */
 class ChatUser
 {
     /**
@@ -37,7 +42,7 @@ class ChatUser
 
     /**
      * @ORM\Column(name="chat_password")
-     * @Assert\NotBlank(groups={"registration"})
+     * @Assert\NotBlank()
      */
     protected $chatPassword;
 
