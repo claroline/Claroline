@@ -5,3 +5,31 @@
 
 <p><h3 class="panel-title">{{ 'expected_answer' | trans({}, 'ujm_exo') }}</h3></p>
 <div id="eAnswer">{{ inter.html|raw }}</div>
+<br/>
+     {% for hole in inter.holes %}
+      <p><h3 class="panel-title">{{ 'answer_zone' | trans({}, 'ujm_exo') }} {{loop.index}}</h3></p>
+         <table border="1" class="table table-striped table-bordered table-condensed">
+    <tr>
+        <th class="classic">{{ 'keys_words' | trans({}, 'ujm_exo') }}</th>
+        <th class="classic">{{ 'points' | trans({}, 'ujm_exo') }}</th>
+        <th class="classic">{{ 'comment' | trans({}, 'ujm_exo') }}</th>
+    </tr>
+         {% for wr in hole.wordResponses %}
+          <tr>
+                <td >
+                    {{ wr.response | raw }}
+                </td>
+                <td >
+                    {{ wr.score | raw }}
+                </td>
+                <td>
+                {% if wr.feedback is not empty %}
+                    {{ wr.feedback|raw }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+          </tr>
+           {% endfor %}
+       </table>
+     {% endfor %}

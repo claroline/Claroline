@@ -88,7 +88,7 @@ function addHints(container, deleteHint) {
     var index = $('#newTable2').find('tr:not(:first)').length;
 
     while (uniqChoiceID == false) {
-        if ($("*[id$='_interaction_hints_" + index + "_value']").length) {
+        if ($("*[id$='_question_hints_" + index + "_value']").length) {
             index++;
         } else {
             uniqChoiceID = true;
