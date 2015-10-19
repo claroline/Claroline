@@ -996,8 +996,7 @@ class CourseController extends Controller
             $courses = json_decode($contents, true);
             $this->cursusManager->importCourses($courses);
 
-            $iconsDir = $this->container->getParameter('claroline.param.web_directory') .
-                '/files/cursusbundle/icons/';
+            $iconsDir = $this->container->getParameter('claroline.param.thumbnails_directory') . '/';
 
             for ($i = 0; $i < $zip->numFiles; $i++) {
                 $name = $zip->getNameIndex($i);
