@@ -333,7 +333,7 @@ class WorkspaceParametersController extends Controller
 
             return $this->redirect(
                 $this->generateUrl(
-                    'claro_workspace_open_tool', array('workspaceId' => $workspace->getId(), 'toolName' => 'home')
+                    'claro_workspace_open', array('workspaceId' => $workspace->getId())
                 )
             );
         }
