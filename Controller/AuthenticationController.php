@@ -304,6 +304,44 @@ class AuthenticationController
     }
 
     /**
+     * @Route(
+     *     "/validate/email/{hash}",
+     *     name="claro_security_validate_email",
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     *
+     * @Template("ClarolineCoreBundle:Authentication:resetPassword.html.twig")
+     */
+    public function validateEmailAction($hash)
+    {
+        $this->userManager->validateEmailHash($hash);
+
+        $this->request->getSession()
+            ->getFlashBag()
+            ->add('success', $this->translator->trans('email_validated', array(), 'platform'));
+
+        return new RedirectResponse($this->router->generate('claro_desktop_open'));
+    }
+
+    /**
+     * @Route(
+     *     "/send/email/validation/{hash}",
+     *     name="claro_security_validate_email_send",
+     *     options={"expose"=true}
+     * )
+     */
+    public function sendEmailValidationAction($hash)
+    {
+        $this->mailManager->sendValidateEmail($hash);
+        $this->request->getSession()
+            ->getFlashBag()
+            ->add('success', $this->translator->trans('email_sent', array(), 'platform'));
+
+        return new RedirectResponse($this->router->generate('claro_desktop_open'));
+    }
+
+    /**
      * @Route("/authenticate.{format}")
      * @Method("POST")
      */

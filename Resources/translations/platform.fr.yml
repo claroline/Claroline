@@ -1195,3 +1195,15 @@ add_pending: Ajouter une plateforme amie
 add_friend_confirm_message: Êtes-vous sûr de vouloir ajouter cet plateforme amie ?
 edit_client: Modifier le client
 0_or_1: 0 ou 1
+registration_mail_validation: Validation de l'inscription des utilisateurs
+send_mail_info: Envoyer un courriel de confirmation (plateforme accessible sans confirmation de la réception du courriel)
+force_mail_validation: Forcer la validation du courriel (utilisateur bloqué tant que la réception du courriel n'a pas été confirmée)
+replace_validation_email_message: qui affichera le lien de validation du courriel
+email_not_activated_part_1: Votre courriel n'a pas été validé (%email%). Cliquez
+email_not_activated_part_2: ici
+email_not_activated_part_3: pour l'activer
+email_confirmation_message: La plateforme ne pourra pas vous envoyer tous les courriels tant que votre adresse n'a pas été confirmée.
+email_sent: Courriel envoyé
+email_validation: Validation du courriel
+email_validation_url_display: Veuillez vous rendre à l'url suivante pour confirmer votre courriel: %url%
+email_validated: Courriel validé

@@ -1194,3 +1194,15 @@ add_pending: Add a friend platform
 add_friend_confirm_message: Do you really want to add this friend platform ?
 edit_client: Edit a client
 0_or_1: 0 or 1
+registration_mail_validation: User registration validation
+send_mail_info: send confirmation email
+force_mail_validation: force the email confirmation
+replace_validation_email_message: will display the email validation link
+email_not_activated_part_1: Your email address has not been validated yet (%email%). Click
+email_not_activated_part_2: here
+email_not_activated_part_3: to activate
+email_confirmation_message: The platform cannot send your every email as long as your adress is not confirmed.
+email_sent: Email sent
+email_validation: Email validation
+email_validation_url_display: Please use the following link to confirm your email: %url%
+email_validated: Email validated

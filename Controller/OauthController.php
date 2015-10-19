@@ -174,7 +174,6 @@ class OauthController extends BaseAuthorizeController
             . '&code=' . urlencode($authCode);
 
         $data = json_decode($curlManager->exec($url), true);
-        var_dump($data);
         $accessToken = $data['access_token'];
         //maybe store the user token one way or an other ?
 
