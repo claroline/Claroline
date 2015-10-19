@@ -13,6 +13,7 @@
 namespace Claroline\ScormBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ScormBundle\Entity\Scorm12Resource;
 use Claroline\ScormBundle\Entity\Scorm12Sco;
@@ -58,18 +59,19 @@ class ScormManager
         $this->scorm2004ScoTrackingRepo =
             $om->getRepository('ClarolineScormBundle:Scorm2004ScoTracking');
         $this->scormResourcesPath = $this->container
-            ->getParameter('kernel.root_dir') . '/../web/uploads/scormresources/';
+            ->getParameter('claroline.param.uploads_directory') . '/scormresources/';
         $this->filePath = $this->container
             ->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR;
     }
 
-    public function createScorm12($tmpFile, $name)
+    public function createScorm12($tmpFile, $name, Workspace $workspace)
     {
+        $prefix = 'WORKSPACE_' . $workspace->getId();
         $scormResource = new Scorm12Resource();
         $scormResource->setName($name);
         $hashName = $this->container->get('claroline.utilities.misc')
                 ->generateGuid() . '.zip';
-        $scormResource->setHashName($hashName);
+        $scormResource->setHashName($prefix . DIRECTORY_SEPARATOR . $hashName);
         $scos = $this->generateScosFromScormArchive($tmpFile);
 
         if (count($scos) > 0) {
@@ -78,9 +80,9 @@ class ScormManager
         } else {
             throw new InvalidScormArchiveException('no_sco_in_scorm_archive_message');
         }
-        $this->unzipScormArchive($tmpFile, $hashName);
+        $this->unzipScormArchive($tmpFile, $hashName, $prefix);
         // Move Scorm archive in the files directory
-        $tmpFile->move($this->filePath, $hashName);
+        $tmpFile->move($this->filePath . DIRECTORY_SEPARATOR . $prefix, $hashName);
 
         return $scormResource;
     }
@@ -496,11 +498,11 @@ class ScormManager
      * @param UploadedFile $file
      * @param $hashName name of the destination directory
      */
-    private function unzipScormArchive(\SplFileInfo $file, $hashName)
+    private function unzipScormArchive(\SplFileInfo $file, $hashName, $prefix)
     {
         $zip = new \ZipArchive();
         $zip->open($file);
-        $destinationDir = $this->scormResourcesPath . $hashName;
+        $destinationDir = $this->scormResourcesPath . $prefix . DIRECTORY_SEPARATOR . $hashName;
 
         if (!file_exists($destinationDir)) {
             mkdir($destinationDir, 0777, true);

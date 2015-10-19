@@ -87,7 +87,7 @@ class Scorm2004Listener
         $this->router = $router;
         $this->scormResourceRepo = $om->getRepository('ClarolineScormBundle:Scorm2004Resource');
         $this->scormResourcesPath = $this->container
-            ->getParameter('kernel.root_dir') . '/../web/uploads/scormresources/';
+            ->getParameter('claroline.param.uploads_directory') . '/scormresources/';
         $this->scorm2004ScoTrackingRepo = $om->getRepository('ClarolineScormBundle:Scorm2004ScoTracking');
         $this->templating = $templating;
         $this->translator = $translator;
@@ -131,6 +131,8 @@ class Scorm2004Listener
         try {
             if ($form->isValid()) {
                 $tmpFile = $form->get('file')->getData();
+                $workspace = $event->getParent()->getWorkspace();
+                $prefix = 'WORKSPACE_' . $workspace->getId();
 
                 if ($this->isScormArchive($tmpFile)) {
                     $scormResource = new Scorm2004Resource();
@@ -139,7 +141,7 @@ class Scorm2004Listener
                     $extension = pathinfo($fileName, PATHINFO_EXTENSION);
                     $hashName = $this->container->get('claroline.utilities.misc')
                         ->generateGuid() . "." . $extension;
-                    $scormResource->setHashName($hashName);
+                    $scormResource->setHashName($prefix . DIRECTORY_SEPARATOR . $hashName);
                     $scos = $this->generateScosFromScormArchive($tmpFile);
 
                     if (count($scos) > 0) {
@@ -148,9 +150,9 @@ class Scorm2004Listener
                     } else {
                         throw new InvalidScormArchiveException('no_sco_in_scorm_archive_message');
                     }
-                    $this->unzipScormArchive($tmpFile, $hashName);
+                    $this->unzipScormArchive($tmpFile, $hashName, $prefix);
                     // Move Scorm archive in the files directory
-                    $tmpFile->move($this->filePath, $hashName);
+                    $tmpFile->move($this->filePath . DIRECTORY_SEPARATOR . $prefix, $hashName);
 
                     $event->setResources(array($scormResource));
                     $event->stopPropagation();
@@ -263,6 +265,7 @@ class Scorm2004Listener
     public function onDownload(DownloadResourceEvent $event)
     {
         $event->setItem($this->filePath . $event->getResource()->getHashName());
+        $event->setExtension('zip');
         $event->stopPropagation();
     }
 
@@ -295,11 +298,11 @@ class Scorm2004Listener
      * @param UploadedFile $file
      * @param $hashName name of the destination directory
      */
-    private function unzipScormArchive(UploadedFile $file, $hashName)
+    private function unzipScormArchive(UploadedFile $file, $hashName, $prefix)
     {
         $zip = new \ZipArchive();
         $zip->open($file);
-        $destinationDir = $this->scormResourcesPath . $hashName;
+        $destinationDir = $this->scormResourcesPath . $prefix . DIRECTORY_SEPARATOR . $hashName;
 
         if (!file_exists($destinationDir)) {
             mkdir($destinationDir, 0777, true);
