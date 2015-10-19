@@ -127,7 +127,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
         $qtiServ = $this->container->get('ujm.exo_qti');
 
         $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
-        $questions = $questionRepo->findByExercise($object->getId());
+        $questions = $questionRepo->findByExercise($object);
         $this->createQuestionsDirectory($qtiRepos, $questions);
         $qdirs = $qtiServ->sortPathOfQuestions($qtiRepos);
 
