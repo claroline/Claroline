@@ -107,7 +107,10 @@ class ScormController extends Controller
                 $rootScos[] = $sco;
             }
 
-            if (!$isAnon && !isset($trackings[$sco->getId()])) {
+            if ($isAnon) {
+                $trackings[$sco->getId()] = $this->scormManager
+                    ->createEmptyScorm12ScoTracking($sco);
+            } elseif (!isset($trackings[$sco->getId()])) {
                 $trackings[$sco->getId()] = $this->scormManager
                     ->createScorm12ScoTracking($user, $sco);
             }
@@ -167,14 +170,14 @@ class ScormController extends Controller
         }
 
         if ($isAnon) {
-            $scoTracking = null;
+            $scoTracking = $this->scormManager->createEmptyScorm12ScoTracking($scorm12Sco);
         } else {
             $scoTracking = $this->scormManager
                 ->getScorm12ScoTrackingByUserAndSco($user, $scorm12Sco);
 
             if (is_null($scoTracking)) {
                 $scoTracking = $this->scormManager
-                    ->createScorm12ScoTracking($user, $sco);
+                    ->createScorm12ScoTracking($user, $scorm12Sco);
             }
         }
 
@@ -215,6 +218,15 @@ class ScormController extends Controller
         Scorm12Sco $scorm12Sco
     )
     {
+        $user = $this->tokenStorage->getToken()->getUser();
+        $scorm = $scorm12Sco->getScormResource();
+        $this->checkAccess('OPEN', $scorm);
+
+        if ($user === 'anon.') {
+
+            return new Response('', '204');
+        }
+
         $datasArray = explode("<-;->", $datasString);
         $studentId = intval($datasArray[0]);
         $lessonMode = $datasArray[1];
@@ -230,7 +242,6 @@ class ScormController extends Controller
         $entry = $datasArray[11];
         $exitMode = $datasArray[12];
 
-        $user = $this->tokenStorage->getToken()->getUser();
 
         if ($user->getId() !== $studentId) {
             throw new AccessDeniedException();
@@ -402,7 +413,11 @@ class ScormController extends Controller
                 $rootScos[] = $sco;
             }
 
-            if (!$isAnon && !isset($trackings[$sco->getId()])) {
+            if ($isAnon) {
+                $trackings[$sco->getId()] = $this->scormManager
+                    ->createEmptyScorm2004ScoTracking($sco);
+
+            } elseif (!isset($trackings[$sco->getId()])) {
                 $trackings[$sco->getId()] = $this->scormManager
                     ->createScorm2004ScoTracking($user, $sco);
             }
@@ -462,8 +477,11 @@ class ScormController extends Controller
         }
 
         if ($isAnon) {
-            $scoTracking = null;
+            $scoTracking = $this->scormManager
+                ->createEmptyScorm2004ScoTracking($scorm2004Sco);
             $details = array();
+            $details['cmi.learner_id'] = -1;
+            $details['cmi.learner_name'] = 'anon., anon.';
         } else {
             $scoTracking = $this->scormManager
                 ->getScorm2004ScoTrackingByUserAndSco($user, $scorm2004Sco);
@@ -472,38 +490,37 @@ class ScormController extends Controller
                 $scoTracking = $this->scormManager
                     ->createScorm2004ScoTracking($user, $scorm2004Sco);
             }
+
             $details = !is_null($scoTracking->getDetails()) ?
                 $scoTracking->getDetails() :
                 array();
-
-            $timeLimitAction = $scorm2004Sco->getTimeLimitAction();
-            $totalTime = $scoTracking->getTotalTime();
-            $completionThreshold = $scorm2004Sco->getCompletionThreshold();
-            $maxTimeAllowed = $scorm2004Sco->getMaxTimeAllowed();
-            $scaledPassingScore = $scorm2004Sco->getScaledPassingScore();
-
-            $details['cmi.time_limit_action'] = !is_null($timeLimitAction) ?
-                $timeLimitAction :
-                'continue,no message';
-            $details['cmi.total_time'] = !is_null($totalTime) ?
-                $totalTime :
-                'PT0S';
-            $details['cmi.launch_data'] = $scorm2004Sco->getLaunchData();
             $details['cmi.learner_id'] = $user->getId();
             $details['cmi.learner_name'] = $user->getFirstName() .
                 ', ' .
                 $user->getLastName();
-
-            $details['cmi.completion_threshold'] = !is_null($completionThreshold) ?
-                $completionThreshold :
-                '';
-            $details['cmi.max_time_allowed'] = !is_null($maxTimeAllowed) ?
-                $maxTimeAllowed :
-                '';
-            $details['cmi.scaled_passing_score'] = !is_null($scaledPassingScore) ?
-                $scaledPassingScore :
-                '';
         }
+        $timeLimitAction = $scorm2004Sco->getTimeLimitAction();
+        $totalTime = $scoTracking->getTotalTime();
+        $completionThreshold = $scorm2004Sco->getCompletionThreshold();
+        $maxTimeAllowed = $scorm2004Sco->getMaxTimeAllowed();
+        $scaledPassingScore = $scorm2004Sco->getScaledPassingScore();
+
+        $details['cmi.time_limit_action'] = !is_null($timeLimitAction) ?
+            $timeLimitAction :
+            'continue,no message';
+        $details['cmi.total_time'] = !is_null($totalTime) ?
+            $totalTime :
+            'PT0S';
+        $details['cmi.launch_data'] = $scorm2004Sco->getLaunchData();
+        $details['cmi.completion_threshold'] = !is_null($completionThreshold) ?
+            $completionThreshold :
+            '';
+        $details['cmi.max_time_allowed'] = !is_null($maxTimeAllowed) ?
+            $maxTimeAllowed :
+            '';
+        $details['cmi.scaled_passing_score'] = !is_null($scaledPassingScore) ?
+            $scaledPassingScore :
+            '';
 
         return array(
             'resource' => $scorm,
@@ -542,6 +559,13 @@ class ScormController extends Controller
     )
     {
         $user = $this->tokenStorage->getToken()->getUser();
+        $scorm = $scorm2004Sco->getScormResource();
+        $this->checkScorm2004ResourceAccess('OPEN', $scorm);
+
+        if ($user === 'anon.') {
+
+            return new Response('', '204');
+        }
         $datas = $this->request->getCurrentRequest()->request->all();
         $learnerId = isset($datas['cmi.learner_id']) ?
             (int)$datas['cmi.learner_id'] :

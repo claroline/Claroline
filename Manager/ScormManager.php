@@ -112,6 +112,30 @@ class ScormManager
         return $scoTracking;
     }
 
+    public function createEmptyScorm12ScoTracking(Scorm12Sco $sco)
+    {
+        $scoTracking = new Scorm12ScoTracking();
+        $scoTracking->setSco($sco);
+        $scoTracking->setLessonStatus('not attempted');
+        $scoTracking->setSuspendData('');
+        $scoTracking->setEntry('ab-initio');
+        $scoTracking->setLessonLocation('');
+        $scoTracking->setCredit('no-credit');
+        $scoTracking->setTotalTime(0);
+        $scoTracking->setSessionTime(0);
+        $scoTracking->setLessonMode('normal');
+        $scoTracking->setExitMode('');
+        $scoTracking->setBestLessonStatus('not attempted');
+
+        if (is_null($sco->getPrerequisites())) {
+            $scoTracking->setIsLocked(false);
+        } else {
+            $scoTracking->setIsLocked(true);
+        }
+
+        return $scoTracking;
+    }
+
     public function updateScorm12ScoTracking(Scorm12ScoTracking $scoTracking)
     {
         $this->om->persist($scoTracking);
@@ -128,6 +152,17 @@ class ScormManager
         $scoTracking->setSuccessStatus('unknown');
         $this->om->persist($scoTracking);
         $this->om->flush();
+
+        return $scoTracking;
+    }
+
+    public function createEmptyScorm2004ScoTracking(Scorm2004Sco $sco)
+    {
+        $scoTracking = new Scorm2004ScoTracking();
+        $scoTracking->setSco($sco);
+        $scoTracking->setTotalTime('PT0S');
+        $scoTracking->setCompletionStatus('unknown');
+        $scoTracking->setSuccessStatus('unknown');
 
         return $scoTracking;
     }
