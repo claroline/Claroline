@@ -60,6 +60,9 @@ class DropzoneCommonType extends AbstractType
             ))
             ->add('startAllowDrop', 'datetimepicker', $defaultDateTimeOptions)
             ->add('endAllowDrop', 'datetimepicker', $defaultDateTimeOptions)
+
+            // Publication. Ajout de cette zone, demande JJQ. InnovaERV
+            ->add('publication', 'checkbox', array('mapped' => false, 'required' => false))
             ;
     }
 

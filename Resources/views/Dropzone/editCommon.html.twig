@@ -83,7 +83,17 @@
                     ) }}
                 </div>
             </div>
+        </div>
 
+        {# Publication. Ajout de cette zone, demande JJQ. InnovaERV #}
+        <div>
+            <h4>{{ 'Publication Title'|trans({}, 'innova_collecticiel') }}</h4>
+
+            <div class="row form-group">
+                <div class="col-md6">
+                    {{ form_row(form.publication) }}
+                </div>
+            </div>
         </div>
 
         {# Submit #}
