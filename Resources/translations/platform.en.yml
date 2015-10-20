@@ -1208,3 +1208,5 @@ email_validation_url_display: Please use the following link to confirm your emai
 email_validated: Email validated
 oauth_application_request: The application "%name%" wants to connect to %platform%
 oauth_required_data: The following datas will be sent:
+client_list: Client list
+allow_authentication: Allow authentication

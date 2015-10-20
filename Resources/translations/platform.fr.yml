@@ -1209,3 +1209,5 @@ email_validation_url_display: Veuillez vous rendre à l'url suivante pour confir
 email_validated: Courriel validé
 oauth_application_request: L'application "%name%" désire se connecter à %platform%
 oauth_required_data: Les informations suivantes seront envoyées:
+client_list: Liste des clients
+allow_authentication: Autoriser l'authentification
