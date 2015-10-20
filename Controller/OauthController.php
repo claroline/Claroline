@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use FOS\OAuthServerBundle\Event\OAuthEvent;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -22,6 +23,8 @@ use Symfony\Component\Security\Core\SecurityContext;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use OAuth2\OAuth2RedirectException;
+use OAuth2\OAuth2ServerException;
 
 /**
  * Controller handling basic authorization
@@ -42,7 +45,7 @@ class OauthController extends BaseAuthorizeController
         $lastUsername = $request->getSession()->get(SecurityContext::LAST_USERNAME);
         $user         = $this->container->get('claroline.manager.user_manager')->getUserByUsername($lastUsername);
         $clientId     = $this->container->get('request')->get('client_id');
-        $this->container->get('session')->set('client_id', $clientId);
+        if ($clientId) $this->container->get('session')->set('client_id', $clientId);
 
         if ($user && !$user->isAccountNonExpired()) {
             return array(
@@ -174,7 +177,7 @@ class OauthController extends BaseAuthorizeController
             return $this->container
                 ->get('fos_oauth_server.server')
                 ->finishClientAuthorization($formHandler->isAccepted(), $user, $request, $formHandler->getScope());
-        } catch (OAuth2ServerException $e) {
+        } catch (\Exception $e) {
             return $e->getHttpResponse();
         }
     }
@@ -200,6 +203,11 @@ class OauthController extends BaseAuthorizeController
             . '&code=' . urlencode($authCode);
 
         $data = json_decode($curlManager->exec($url), true);
+
+        if (isset($data['error'])) {
+            return new RedirectResponse($this->container->get('router')->generate('claro_security_login'));
+        }
+
         $accessToken = $data['access_token'];
         //maybe store the user token one way or an other ?
 

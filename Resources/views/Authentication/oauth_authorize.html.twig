@@ -21,6 +21,7 @@
         <div align="center">
             <form action="{{ action }}" method="POST" class="fos_oauth_server_authorize" {{ form_enctype(form) }}>
                 <input class="btn btn-primary" type="submit" name="accepted" value="{{ 'authorize.accept'|trans({}, 'FOSOAuthServerBundle') }}" />
+                <input class="btn" type="submit" name="rejected" value="{{ 'authorize.reject'|trans({}, 'FOSOAuthServerBundle') }}" />
 
                 {{ form_row(form.client_id) }}
                 {{ form_row(form.response_type) }}
