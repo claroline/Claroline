@@ -48,7 +48,7 @@
         {# InnovaERV : Ajout d'id "is-valide" afin d'exécuter le traitement pour l'affichage de "Demande adressée" #}
     <td class="{{ classArray }} centered" id="is-validate-{{ document.id }}">
         {% include 'InnovaCollecticielBundle:Document:documentIsValidate.html.twig' %}
-   < git/td>
+    </td>
     {# {% endif %} #}
 
     <td class="{{ classArray }} centered">
@@ -60,18 +60,19 @@
         </a>
     </td>
 
+    {# #146 : changement de gestion des annulations et des suppressions, demande de JJQ #}
     {% if adminInnova %}
         {% if mode == 'complete' %}
         <td id="delete_button_td">
         {# Si le document a été validé alors je ne peux pas le supprimer #}
-        {% if not document.validate or (adminInnova and document.drop.user.id != document.sender.id) %}
+        {% if not document.validate or (document.drop.user.id != document.sender.id) %}
             <a href="{{ path('innova_collecticiel_delete_document', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}"
                class="btn btn-danger btn-sm launch-modal del_btn_td"
                id="delete_{{ document.id }}" >
                 <span class="fa fa-trash-o"></span>
                 {{ 'Delete'|trans({}, 'innova_collecticiel') }}
             </a>
-        {% elseif document.validate and not adminInnova and document.comments|length == 0 and document.sender.id == document.drop.user.id %}
+        {% elseif document.validate and document.comments|length == 0 and document.sender.id == document.drop.user.id %}
             <a href="" class="btn btn-default cancel_button" id="cancel_{{ document.id }}" data-document_id="{{ document.id }}" >{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</a>
         {% endif %}
         </td>
