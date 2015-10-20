@@ -21,7 +21,7 @@ use FOS\OAuthServerBundle\Form\Handler\AuthorizeFormHandler;
 use Symfony\Component\Security\Core\SecurityContext;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Claroline\CoreBundle\Entity\Oauth\FriendRequest;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Controller handling basic authorization
@@ -29,13 +29,20 @@ use Claroline\CoreBundle\Entity\Oauth\FriendRequest;
 class OauthController extends BaseAuthorizeController
 {
     /**
-     * @EXT\Route("/oauth/v2/auth_login", name="claro_api_oauth_login")
+     * @var \FOS\OAuthServerBundle\Model\ClientInterface
+     */
+    private $client;
+
+    /**
+     * @EXT\Route("/oauth/v2/auth_login", name="claro_oauth_login")
      * @EXT\Template("ClarolineCoreBundle:Authentication:oauthLogin.html.twig")
      */
     public function oauthLoginAction(Request $request)
     {
         $lastUsername = $request->getSession()->get(SecurityContext::LAST_USERNAME);
         $user         = $this->container->get('claroline.manager.user_manager')->getUserByUsername($lastUsername);
+        $clientId     = $this->container->get('request')->get('client_id');
+        $this->container->get('session')->set('client_id', $clientId);
 
         if ($user && !$user->isAccountNonExpired()) {
             return array(
@@ -59,21 +66,54 @@ class OauthController extends BaseAuthorizeController
     }
 
     /**
-     * @EXT\Route("/oauth/v2/auth_login_check", name="claro_api_oauth_login_check")
+     * @EXT\Route("/oauth/v2/auth_login_check", name="claro_oauth_login_check")
      * @EXT\Template
      */
     public function loginCheckAction(Request $request)
     {
+        throw new \Exception('login check');
         // The security layer will intercept this request
+    }
+
+    protected function getRedirectionUrl(UserInterface $user)
+    {
+        $url = $this->container->get('router')->generate('fos_oauth_server_profile_show');
+
+        return $url;
     }
 
     /**
      * @EXT\Route(
-     *     "/oauth/v2/auth",
-     *     name="claro_oauth_authorize"
+     *     "/oauth/v2/auth/form",
+     *     name="claro_oauth_authorize_form"
      * )
      */
-    public function authorizeAction(Request $request)
+    public function authorizeFormAction(Request $request)
+    {
+        $user = $this->container->get('security.context')->getToken()->getUser();
+
+        if (!$user instanceof UserInterface) {
+            throw new AccessDeniedException('This user does not have access to this section.');
+        }
+
+        $form = $this->container->get('fos_oauth_server.authorize.form');
+
+        return $this->container->get('templating')->renderResponse(
+            'ClarolineCoreBundle:Authentication:oauth_authorize.html.twig',
+            array(
+                'form'      => $form->createView(),
+                'client'    => $this->getClient(),
+            )
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/oauth/v2/auth/submit",
+     *     name="claro_oauth_authorize_submit"
+     * )
+     */
+    public function authorizeSubmitAction(Request $request)
     {
         $user = $this->container->get('security.context')->getToken()->getUser();
 
@@ -86,7 +126,6 @@ class OauthController extends BaseAuthorizeController
             $this->container->get('session')->set('_fos_oauth_server.ensure_logout', true);
         }
 
-        $form = $this->container->get('fos_oauth_server.authorize.form');
         $formHandler = $this->container->get('fos_oauth_server.authorize.form.handler');
 
         $event = $this->container->get('event_dispatcher')->dispatch(
@@ -105,14 +144,6 @@ class OauthController extends BaseAuthorizeController
         if (true === $formHandler->process()) {
             return $this->processSuccess($user, $formHandler, $request);
         }
-
-        return $this->container->get('templating')->renderResponse(
-            'ClarolineCoreBundle:Authentication:oauth_authorize.html.twig',
-            array(
-                'form'      => $form->createView(),
-                'client'    => $this->getClient(),
-            )
-        );
     }
 
     /**
@@ -134,17 +165,12 @@ class OauthController extends BaseAuthorizeController
         );
 
         $formName = $this->container->get('fos_oauth_server.authorize.form')->getName();
+
         if (!$request->query->all() && $request->request->has($formName)) {
             $request->query->add($request->request->get($formName));
         }
 
         try {
-            //always work
-
-            return $this->container
-                ->get('fos_oauth_server.server')
-                ->finishClientAuthorization(true, $user, $request, $formHandler->getScope());
-
             return $this->container
                 ->get('fos_oauth_server.server')
                 ->finishClientAuthorization($formHandler->isAccepted(), $user, $request, $formHandler->getScope());
@@ -178,7 +204,8 @@ class OauthController extends BaseAuthorizeController
         //maybe store the user token one way or an other ?
 
         $url = $friendRequest->getHost() . '/api/connected_user?access_token=' . $accessToken;
-        $data = json_decode($curlManager->exec($url), true);
+        $data = $curlManager->exec($url);
+        $data = json_decode($data, true);
         $email = $data['email'];
         $userRepo = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:User');
         $users = $userRepo->findByMail($email);
@@ -206,5 +233,30 @@ class OauthController extends BaseAuthorizeController
         $this->container->get('claroline.authenticator')->authenticate($user->getUsername(), null, false);
 
         return new RedirectResponse($this->container->get('router')->generate('claro_desktop_open'));
+    }
+
+    /**
+     * @return ClientInterface
+     */
+    protected function getClient()
+    {
+        if (null === $this->client) {
+            $clientId = $this->container->get('request')->get('client_id');
+            if ($clientId === null) $clientId = $this->container->get('session')->get('client_id');
+
+            $client = $this->container
+                ->get('fos_oauth_server.client_manager')
+                ->findClientByPublicId($clientId);
+
+            if (null === $client) {
+                throw new NotFoundHttpException('Client not found.');
+            }
+
+            $this->client = $client;
+
+            return $this->client;
+        }
+
+        return $this->client;
     }
 }

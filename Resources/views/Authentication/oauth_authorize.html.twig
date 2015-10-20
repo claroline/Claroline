@@ -1,7 +1,6 @@
 <h2>The application "{{ client.name }}" would like to connect to your account</h2>
 
-{% set action = path('claro_oauth_authorize') %}
-{# {% set action = path('claro_oauth_authorize') ~ client.id ~ '_' ~ client.randomId %} #}
+{% set action = path('claro_oauth_authorize_submit') ~ '?client_id=' ~ client.id ~ '_' ~ client.randomId ~ '&redirect_uri=' ~ client.getUri() ~ '&response_type=code'%}
 
 <form action="{{ action }}" method="POST" class="fos_oauth_server_authorize" {{ form_enctype(form) }}>
     <input class="btn" type="submit" name="rejected" value="{{ 'authorize.reject'|trans({}, 'FOSOAuthServerBundle') }}" />

@@ -10,4 +10,5 @@ fos_oauth_server:
             access_token_lifetime: 3600
             refresh_token_lifetime: 1209600
             auth_code_lifetime: 30
+            #enforce_redirect: true
             #supported_scopes: scope_admin scope_user
