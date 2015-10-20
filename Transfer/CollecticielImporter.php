@@ -10,7 +10,7 @@ use Symfony\Component\Config\Definition\Processor;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class CollecticielImporter extends Importer implements ConfigurationInterface
+class CollecticielImporter extends Importer implements ConfigurationInterface, RichTextInterface
 {
     /**
      * We need to inject the whole service container
@@ -51,7 +51,15 @@ class CollecticielImporter extends Importer implements ConfigurationInterface
 
         $rootNode
             ->children()
-
+                ->scalarNode('instruction')->end()
+                ->booleanNode('allow_workspace_resource')->end()
+                ->booleanNode('allow_upload')->end()
+                ->booleanNode('allow_url')->end()
+                ->booleanNode('allow_rich_text')->end()
+                ->booleanNode('manual_planning')->end()
+                ->scalarNode('manual_state')->end()
+                ->scalarNode('start_allow_drop')->end()
+                ->scalarNode('end_allow_drop')->end()
             ->end()
         ;
 
@@ -69,11 +77,28 @@ class CollecticielImporter extends Importer implements ConfigurationInterface
 
     public function import(array $data, $name, $created)
     {
-        return $this->container->get('innova.manager.collecticiel_manager')->import($data, $created);
+        return $this->container->get('innova.manager.collecticiel_manager')->import($data, $created, $this->getRootPath());
     }
 
     public function export(Workspace $workspace, array &$files, $object)
     {
         return $this->container->get('innova.manager.collecticiel_manager')->export($workspace, $files, $object);
+    }
+
+    public function format($data)
+    {
+        if (isset($data)) {
+            if ($path = $data['instruction']) {
+                $content = file_get_contents($this->getRootPath() . DIRECTORY_SEPARATOR . $path);
+                $entities = $this->container->get('doctrine.orm.entity_manager')->getRepository('InnovaCollecticielBundle:Dropzone')->findByInstruction($content);
+
+                foreach ($entities as $entity) {
+                    $text = $entity->getInstruction();
+                    $text = $this->container->get('claroline.importer.rich_text_formatter')->format($text);
+                    $entity->setInstruction($text);
+                    $this->container->get('doctrine.orm.entity_manager')->persist($entity);
+                }
+            }
+        }
     }
 }

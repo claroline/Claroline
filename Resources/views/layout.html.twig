@@ -19,7 +19,6 @@ Point 5 du document, vu avec Axel
                  data-resource-name="{{ _resource.getName() }}"
             >
             </div>
-            {% if not is_path_mode  %}
                 <ul class="breadcrumb">
                     {% if not has_role('ROLE_ANONYMOUS') %}
                         <li><a href="{{ path('claro_workspace_list') }}"><i class="fa fa-book"></i> {{ 'workspaces'|trans({}, 'platform') }}</a></li>
@@ -46,7 +45,6 @@ Point 5 du document, vu avec Axel
                     {% endif %}
                    
                 </ul>
-            {% endif %}
         {% endif %}
     </div>
 {% endblock %}
