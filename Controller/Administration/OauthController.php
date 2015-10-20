@@ -79,6 +79,26 @@ class OauthController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/clients",
+     *     name="claro_admin_oauth_clients",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Template()
+     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     *
+     * @return Response
+     */
+    public function clientsAction()
+    {
+        $clients = $this->oauthManager->findVisibleClients();
+
+        return array(
+            'clients' => $clients
+        );
+    }
+
+    /**
+     * @EXT\Route(
      *     "/form",
      *     name="claro_admin_oauth_form",
      *     options = {"expose"=true}
@@ -97,7 +117,7 @@ class OauthController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/form/{client}",
+     *     "/form/edit/{client}",
      *     name="claro_admin_oauth_form_edit",
      *     options = {"expose"=true}
      * )
@@ -150,7 +170,7 @@ class OauthController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/form/edit/{client}",
+     *     "/form/edit/{client}/submit",
      *     name="claro_admin_oauth_client_edit",
      *     options = {"expose"=true}
      * )

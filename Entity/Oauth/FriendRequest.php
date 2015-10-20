@@ -68,6 +68,11 @@ class FriendRequest
      **/
     protected $clarolineAccess;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Client", mappedBy="friendRequest", cascade={"remove"})
+     */
+    protected $clients;
+
     public function getId()
     {
         return $this->id;
@@ -131,5 +136,10 @@ class FriendRequest
     public function getCreateUserIfMissing()
     {
         return $this->createUserIfMissing;
+    }
+
+    public function getClients()
+    {
+        return $this->clients;
     }
 }

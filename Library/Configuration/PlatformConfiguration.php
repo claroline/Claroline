@@ -13,6 +13,10 @@ namespace Claroline\CoreBundle\Library\Configuration;
 
 class PlatformConfiguration
 {
+    const REGISTRATION_MAIL_VALIDATION_NONE = 0;
+    const REGISTRATION_MAIL_VALIDATION_PARTIAL = 1;
+    const REGISTRATION_MAIL_VALIDATION_FULL = 2;
+
     private $name;
     private $nameActive;
     private $supportEmail;

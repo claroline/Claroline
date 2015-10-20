@@ -1,5 +1,9 @@
 {% for platform in platforms %}
-    <a class="btn btn-primary btn-block" data-max-rows="1" data-size="xlarge" href="#">
+    <button class="btn btn-primary btn-block claro-oauth"
+       data-max-rows="1"
+       data-size="xlarge"
+       type="submit"
+       href="{{ platform.getHost() }}/oauth/v2/auth_login?client_id={{ platform.getClarolineAccess().getRandomId() }}&redirect_uri={{ get_host() ~ '/oauth/v2/log/' ~ platform.getName() }}&response_type=code">
         {{  platform.getName() }}
-    </a>
+    </button>
 {% endfor %}

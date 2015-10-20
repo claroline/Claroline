@@ -19,6 +19,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfiguration;
 
 class GeneralType extends AbstractType
 {
@@ -244,6 +245,18 @@ class GeneralType extends AbstractType
                     'required' => false,
                     'disabled' => isset($this->lockedParams['send_mail_at_workspace_registration']),
                     'label' => 'send_mail_at_workspace_registration'
+                )
+            )
+            ->add(
+                'registrationMailValidation',
+                'choice',
+                array(
+                    'disabled' => isset($this->lockedParams['registration_mail_validation']),
+                    'label' => 'registration_mail_validation',
+                    'choices' => array(
+                        PlatformConfiguration::REGISTRATION_MAIL_VALIDATION_PARTIAL => 'send_mail_info',
+                        PlatformConfiguration::REGISTRATION_MAIL_VALIDATION_FULL => 'force_mail_validation'
+                    )
                 )
             )
             ->add(

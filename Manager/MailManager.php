@@ -89,8 +89,9 @@ class MailManager
             'ClarolineCoreBundle:Mail:forgotPassword.html.twig', array('user' => $user, 'link' => $link)
         );
 
-        return $this->send($subject, $body, array($user));
+        return $this->send($subject, $body, array($user), null, array(), true);
     }
+
     public function sendInitPassword(User $user)
     {
         $this->container->get('claroline.manager.user_manager')->initializePassword($user);
@@ -102,10 +103,10 @@ class MailManager
             'ClarolineCoreBundle:Mail:initialize_password.html.twig', array('user' => $user, 'link' => $link)
         );
 
-        return $this->send($subject, $body, array($user));
+        return $this->send($subject, $body, array($user), null, array(), true);
     }
 
-    public function sendEnableAccountMessage($user)
+    public function sendEnableAccountMessage(User $user)
     {
         $hash = $user->getResetPasswordHash();
         $link = $this->router->generate('claro_security_activate_user', array('hash' => $hash), true);
@@ -115,7 +116,19 @@ class MailManager
             'ClarolineCoreBundle:Mail:activateUser.html.twig', array('user' => $user, 'link' => $link)
         );
 
-        return $this->send($subject, $body, array($user));
+        return $this->send($subject, $body, array($user), null, array(), true);
+    }
+
+    public function sendValidateEmail($hash)
+    {
+        $users = $this->container->get('claroline.manager.user_manager')->getByEmailValidationHash($hash);
+        $url =
+            $this->container->get('request')->getSchemeAndHttpHost()
+            . $this->router->generate('claro_security_validate_email', array('hash' => $hash));
+        $body = $this->translator->trans('email_validation_url_display', array('%url%' => $url), 'platform');
+        $subject = $this->translator->trans('email_validation', array(), 'platform');
+
+        $this->send($subject, $body, $users, null, array(), true);
     }
 
     /**
@@ -130,14 +143,19 @@ class MailManager
         $displayedLocale = isset($content[$locale]) ? $locale : $this->ch->getParameter('locale_language');
         $body = $content[$displayedLocale]['content'];
         $subject = $content[$displayedLocale]['title'];
+        $url =
+            $this->container->get('request')->getSchemeAndHttpHost()
+            . $this->router->generate('claro_security_validate_email', array('hash' => $user->getEmailValidationHash()));
+        $validationLink = $this->translator->trans('email_validation_url_display', array('%url%' => $url), 'platform');
 
         $body = str_replace('%first_name%', $user->getFirstName(), $body);
         $body = str_replace('%last_name%', $user->getLastName(), $body);
         $body = str_replace('%username%', $user->getUsername(), $body);
         $body = str_replace('%password%', $user->getPlainPassword(), $body);
+        $body = str_replace('%validation_mail%', $validationLink, $body);
         $subject = str_replace('%platform_name%', $this->ch->getParameter('name'), $subject);
 
-        return $this->send($subject, $body, array($user));
+        return $this->send($subject, $body, array($user), null, array(), true);
     }
 
     public function getMailInscription()
@@ -155,10 +173,12 @@ class MailManager
      * @param string $body
      * @param User[] $users
      * @param User   $from
+     * @param array  $extra
+     * @param bool   $force
      *
      * @return boolean
      */
-    public function send($subject, $body, array $users, $from = null, array $extra = array())
+    public function send($subject, $body, array $users, $from = null, array $extra = array(), $force = false)
     {
         if ($this->isMailerAvailable()) {
             $to = [];
@@ -186,7 +206,7 @@ class MailManager
             foreach ($users as $user) {
                 $mail = $user->getMail();
 
-                if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
+                if ($user->isMailValidated() || $force) {
                     $to[] = $mail;
                 }
             }
