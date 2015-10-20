@@ -156,6 +156,7 @@ class OauthManager extends ClientManager
         $client = $this->createClient();
         $client->setAllowedGrantTypes($grantTypes);
         $client->setName($friend->getName());
+        $client->setRedirectUris(array($friend->getHost() . '/oauth/v2/log/' . $friend->getName()));
         $this->updateClient($client);
         $url = $friend->getHost() . '/admin/oauth/id/' . $client->getId() . '_' . $client->getRandomId() .
             '/secret/' . $client->getSecret() . '/name/' . $friend->getName();
