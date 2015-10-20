@@ -29,11 +29,8 @@ class FriendAuthenticationType extends AbstractType
         );
         $builder->add(
             'createUserIfMissing',
-            'checkbox',
-            array(
-                'label' => 'createUserIfMissing',
-                'required' => false
-            )
+            'hidden',
+            array('data' => true)
         );
     }
 

@@ -112,7 +112,6 @@ class ActivityImporter extends Importer implements ConfigurationInterface, RichT
         $ds = DIRECTORY_SEPARATOR;
 
         foreach ($array['data'] as $item) {
-            //throw new \Exception(var_dump(array_keys($created)));
             $description = file_get_contents($this->getRootPath() . $ds . $item['activity']['description']);
             $activity = new Activity();
             $activity->setTitle($item['activity']['title']);

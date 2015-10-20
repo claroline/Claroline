@@ -58,6 +58,12 @@ class Client extends BaseClient
      */
     protected $isHidden = false;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="FriendRequest", inversedBy="clients")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    protected $friendRequest;
+
     //for the form
     private $uri;
 
@@ -169,5 +175,15 @@ class Client extends BaseClient
     public function getUri()
     {
         return (isset($this->redirectUris[0])) ? $this->redirectUris[0]: null;
+    }
+
+    public function setFriendRequest(FriendRequest $request)
+    {
+        $this->friendRequest = $request;
+    }
+
+    public function getFriendRequest()
+    {
+        return $this->friendRequest;
     }
 }
