@@ -464,16 +464,16 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
 
         // Récupération du dropID puis du dropZone
         $dropId = $document->getDrop()->getId();
-var_dump("dropId = " . $dropId);
+//var_dump("dropId = " . $dropId);
 
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop')
         ->findBy(array('id' => $dropId));
 //var_dump($dropRepo);
-var_dump($dropRepo[0]->getDropZone());
-die();
+//var_dump($dropRepo[0]->getDropZone());
+//die();
 
-        $dropzoneRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:DropZone')
-        ->findBy(array('id' => $dropRepo->getDropzone()->getId()));
+//        $dropzoneRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:DropZone')
+//        ->findBy(array('id' => $dropRepo->getDropzone()->getId()));
 
 
         // Mise à jour de la base de données
@@ -481,9 +481,9 @@ die();
         $em->flush();
 
         $usersIds = $document->getSender();
-        $event = new LogDropzoneManualRequestSentEvent($document, "titi", $usersIds, $dropzone);
-        $this->get('event_dispatcher')->dispatch('log', $event);
-var_dump("LOG OK !!!!!!!!!!");
+//        $event = new LogDropzoneManualRequestSentEvent($document, "titi", $usersIds, $dropzone);
+//        $this->get('event_dispatcher')->dispatch('log', $event);
+//var_dump("LOG OK !!!!!!!!!!");
 
         // Ajout afin d'afficher la partie du code avec "Demande transmise"
         $template = $this->get("templating")->
