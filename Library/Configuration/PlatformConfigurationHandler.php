@@ -27,7 +27,7 @@ class PlatformConfigurationHandler
     private $configFile;
     private $parameters;
     public static $defaultParameters = array(
-        'name' => null,
+        'name' => 'claroline',
         'nameActive' => true,
         'support_email' => null,
         'footer' => null,

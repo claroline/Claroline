@@ -216,10 +216,6 @@ claro_user:
     type: annotation
     prefix: user
 
-claro_oauth:
-    resource: "@ClarolineCoreBundle/Controller/Oauth"
-    type: annotation
-
 claro_admin_parameters:
     prefix: admin/parameters
     resource: "@ClarolineCoreBundle/Controller/Administration/ParametersController.php"
@@ -281,32 +277,32 @@ claro_admin_i18n:
     type: annotation
 
 claro_api:
-    resource: "@ClarolineCoreBundle/Controller/API/ApiController.php"
+    resource: "@ClarolineCoreBundle/Controller/API/User/ApiController.php"
     prefix: api
     type: annotation
 
 claro_user_api:
-    resource: "@ClarolineCoreBundle/Controller/API/UserController.php"
+    resource: "@ClarolineCoreBundle/Controller/API/Admin/UserController.php"
     type: rest
     prefix: api
 
 claro_workspace_api:
-    resource: "@ClarolineCoreBundle/Controller/API/WorkspaceController.php"
+    resource: "@ClarolineCoreBundle/Controller/API/Admin/WorkspaceController.php"
     type: rest
     prefix: api
 
 claro_group_api:
-    resource: "@ClarolineCoreBundle/Controller/API/GroupController.php"
+    resource: "@ClarolineCoreBundle/Controller/API/Admin/GroupController.php"
     type: rest
     prefix: api
 
 claro_parameters_api:
-    resource: "@ClarolineCoreBundle/Controller/API/ParametersController.php"
+    resource: "@ClarolineCoreBundle/Controller/API/Admin/ParametersController.php"
     type: rest
     prefix: api
 
 claro_packages_api:
-    resource: "@ClarolineCoreBundle/Controller/API/PackageController.php"
+    resource: "@ClarolineCoreBundle/Controller/API/Admin/PackageController.php"
     type: rest
     prefix: api
 

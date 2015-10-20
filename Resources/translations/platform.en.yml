@@ -1206,3 +1206,5 @@ email_sent: Email sent
 email_validation: Email validation
 email_validation_url_display: Please use the following link to confirm your email: %url%
 email_validated: Email validated
+oauth_application_request: The application "%name%" wants to connect to %platform%
+oauth_required_data: The following datas will be sent:

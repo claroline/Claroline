@@ -1207,3 +1207,5 @@ email_sent: Courriel envoyé
 email_validation: Validation du courriel
 email_validation_url_display: Veuillez vous rendre à l'url suivante pour confirmer votre courriel: %url%
 email_validated: Courriel validé
+oauth_application_request: L'application "%name%" désire se connecter à %platform%
+oauth_required_data: Les informations suivantes seront envoyées:

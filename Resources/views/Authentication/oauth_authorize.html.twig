@@ -1,15 +1,35 @@
-<h2>The application "{{ client.name }}" would like to connect to your account</h2>
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
-{% set action = path('claro_oauth_authorize_submit') ~ '?client_id=' ~ client.id ~ '_' ~ client.randomId ~ '&redirect_uri=' ~ client.getUri() ~ '&response_type=code'%}
+{% block title %}{{ 'oauth_connection' | trans({}, 'platform') ~ ' - ' ~ parent() | striptags | raw }}{% endblock %}
 
-<form action="{{ action }}" method="POST" class="fos_oauth_server_authorize" {{ form_enctype(form) }}>
-    <input class="btn" type="submit" name="rejected" value="{{ 'authorize.reject'|trans({}, 'FOSOAuthServerBundle') }}" />
-    <input class="btn btn-primary" type="submit" name="accepted" value="{{ 'authorize.accept'|trans({}, 'FOSOAuthServerBundle') }}" />
+{% block content %}
+<div class="row login_form_container">
+    <div class="col-md-offset-4 col-md-4">
+        <h2 align="center">{{ 'oauth_application_request'|trans({'%name%': client.name, '%platform%': config.getParameter('name')}, 'platform') }}</h2>
+        <div class="well">
+            {{ 'oauth_required_data'|trans({}, 'platform') }}
+            <ul>
+                <li> {{ 'username'|trans({}, 'platform') }} </li>
+                <li> {{ 'first_name'|trans({}, 'platform') }} </li>
+                <li> {{ 'last_name'|trans({}, 'platform') }} </li>
+                <li> {{ 'email'|trans({}, 'platform') }} </li>
+            </ul>
+        </div>
 
-    {{ form_row(form.client_id) }}
-    {{ form_row(form.response_type) }}
-    {{ form_row(form.redirect_uri) }}
-    {{ form_row(form.state) }}
-    {{ form_row(form.scope) }}
-    {{ form_rest(form) }}
-</form>
+        {% set action = path('claro_oauth_authorize_submit') ~ '?client_id=' ~ client.id ~ '_' ~ client.randomId ~ '&redirect_uri=' ~ client.getUri() ~ '&response_type=code'%}
+
+        <div align="center">
+            <form action="{{ action }}" method="POST" class="fos_oauth_server_authorize" {{ form_enctype(form) }}>
+                <input class="btn btn-primary" type="submit" name="accepted" value="{{ 'authorize.accept'|trans({}, 'FOSOAuthServerBundle') }}" />
+
+                {{ form_row(form.client_id) }}
+                {{ form_row(form.response_type) }}
+                {{ form_row(form.redirect_uri) }}
+                {{ form_row(form.state) }}
+                {{ form_row(form.scope) }}
+                {{ form_rest(form) }}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
