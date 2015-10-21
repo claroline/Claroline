@@ -32,6 +32,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Entity\User;
 
 /**
  * Authentication/login controller.
@@ -334,11 +335,28 @@ class AuthenticationController
     public function sendEmailValidationAction($hash)
     {
         $this->mailManager->sendValidateEmail($hash);
+        $users = $this->userManager->getByEmailValidationHash($hash);
+        $user = $users[0];
         $this->request->getSession()
             ->getFlashBag()
-            ->add('success', $this->translator->trans('email_sent', array(), 'platform'));
+            ->add('success', $this->translator->trans('email_sent', array('%email%' => $user->getMail()), 'platform'));
 
         return new RedirectResponse($this->router->generate('claro_desktop_open'));
+    }
+
+    /**
+     * @Route(
+     *     "/hide/email/validation",
+     *     name="claro_security_validate_email_hide",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     */
+    public function hideEmailConformationAction(User $user)
+    {
+        $this->userManager->hideEmailValidation($user);
+
+        return new JsonResponse('success');
     }
 
     /**

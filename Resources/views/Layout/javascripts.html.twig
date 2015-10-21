@@ -137,3 +137,14 @@
 <script type="text/javascript">
     $('.maintenance-popover').popover();
 </script>
+<script type="text/javascript">
+    $('#hide-email-confirmation').on('click', function(event) {
+        $.ajax({
+            url: Routing.generate('claro_security_validate_email_hide'),
+            type: 'GET',
+            success: function (datas) {
+                $('.alert-email-confirm').hide();
+            }
+        });
+    });
+</script>

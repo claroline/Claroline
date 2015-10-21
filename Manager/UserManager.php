@@ -1498,4 +1498,11 @@ class UserManager
         $this->objectManager->persist($user);
         $this->objectManager->flush();
     }
+
+    public function hideEmailValidation(User $user)
+    {
+        $user->setHideMailWarning(true);
+        $this->objectManager->persist($user);
+        $this->objectManager->flush();
+    }
 }

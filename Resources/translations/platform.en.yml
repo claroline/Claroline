@@ -1205,7 +1205,7 @@ email_not_activated_part_1: Your email address has not been validated yet (%emai
 email_not_activated_part_2: here
 email_not_activated_part_3: to activate
 email_confirmation_message: The platform cannot send your every email as long as your adress is not confirmed.
-email_sent: Email sent
+email_sent: Email sent at the adress %email%. If you didn't receive anything, please check your spam folder.
 email_validation: Email validation
 email_validation_url_display: Please use the following link to confirm your email: %url%
 email_validated: Email validated

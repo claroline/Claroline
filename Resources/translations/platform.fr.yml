@@ -1205,7 +1205,7 @@ email_not_activated_part_1: Votre courriel n'a pas été validé (%email%). Cliq
 email_not_activated_part_2: ici
 email_not_activated_part_3: pour l'activer
 email_confirmation_message: La plateforme ne peux pas vous envoyer tous les courriels tant que votre adresse n'a pas été confirmée.
-email_sent: Courriel envoyé
+email_sent: Courriel de validation envoyé à l'adresse %email%. Veuillez consulter vos spam si vous n'avez rien reçu.
 email_validation: Validation du courriel
 email_validation_url_display: Veuillez vous rendre à l'url suivante pour confirmer votre courriel: %url%
 email_validated: Courriel validé

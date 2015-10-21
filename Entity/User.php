@@ -292,6 +292,15 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $isMailValidated = false;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="hide_mail_warning", type="boolean")
+     * @Groups({"api"})
+     * @SerializedName("isMailValidated")
+     */
+    protected $hideMailWarning = false;
+
+    /**
      * @ORM\Column(name="last_uri", length=255, nullable=true)
      * @Groups({"api"})
      * @SerializedName("lastUri")
@@ -1098,5 +1107,15 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function getEmailValidationHash()
     {
         return $this->emailValidationHash;
+    }
+
+    public function setHideMailWarning($hideMailWarning)
+    {
+        $this->hideMailWarning = $hideMailWarning;
+    }
+
+    public function getHideMailWarning()
+    {
+        return $this->hideMailWarning;
     }
 }
