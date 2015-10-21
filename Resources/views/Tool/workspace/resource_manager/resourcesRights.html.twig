@@ -33,6 +33,9 @@
             </i>
         </h3>
     </div>
+    <div class="well">
+        {{ 'root_rights_change_explanation'|trans({}, 'platform') }}
+    </div>
     {% include 'ClarolineCoreBundle:Tool\\workspace\\resource_manager:resourcesRightsForm.html.twig' %}
 {% endblock %}
 {% block javascripts %}
