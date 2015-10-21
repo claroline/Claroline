@@ -22,5 +22,8 @@
     "autoload": {
         "psr-0": { "UJM\\ExoBundle": "" }
     },
-    "target-dir": "UJM/ExoBundle"
+    "target-dir": "UJM/ExoBundle",
+    "extra": {
+        "dbVersion": "20151021184403"
+    }
 }
