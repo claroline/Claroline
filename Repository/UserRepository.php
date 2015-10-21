@@ -290,8 +290,14 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $dql = '
             SELECT DISTINCT u FROM Claroline\CoreBundle\Entity\User u
             JOIN u.roles wr
+            LEFT JOIN u.groups g
+            LEFT JOIN g.roles gr
+            LEFT JOIN gr.workspace gw
             LEFT JOIN wr.workspace w
-            WHERE w IN (:workspaces)
+            WHERE (
+              w IN (:workspaces) OR
+              gw IN (:workspaces)
+            )
             AND u.isEnabled = true
             ORDER BY u.id
         ';
@@ -317,8 +323,14 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $dql = '
             SELECT DISTINCT u FROM Claroline\CoreBundle\Entity\User u
             JOIN u.roles wr
+            LEFT JOIN u.groups g
+            LEFT JOIN g.roles gr
+            LEFT JOIN gr.workspace gw
             LEFT JOIN wr.workspace w
-            WHERE w IN (:workspaces)
+            WHERE (
+              w IN (:workspaces) OR
+              gw IN (:workspaces)
+            )
             AND (
                 UPPER(u.firstName) LIKE :search
                 OR UPPER(u.lastName) LIKE :search
