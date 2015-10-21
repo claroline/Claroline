@@ -31,6 +31,7 @@ class NotificationUserParametersListener
     {
         $event->addTypes(
             array(
+                "resource-create",
                 "role-change_right",
                 "registration-decline",
                 "role-subscribe",

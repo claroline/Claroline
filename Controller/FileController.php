@@ -193,7 +193,6 @@ class FileController extends Controller
     public function uploadModalAction()
     {
         $destinations = $this->get('claroline.manager.resource_manager')->getDefaultUploadDestinations();
-        $pws = $this->getCurrentUser()->getPersonalWorkspace();
 
         return array(
             'form' => $this->get('form.factory')->create(new TinyMceUploadModalType($destinations))->createView()
