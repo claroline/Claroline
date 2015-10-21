@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Controller\API;
+namespace Claroline\CoreBundle\Controller\API\User;
 
 use FOS\RestBundle\Util\Codes;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -31,11 +31,14 @@ class ApiController extends Controller
             /** @var \Claroline\CoreBundle\Entity\User $user */
             $user = $securityToken->getUser();
 
-            if($user) {
+            if ($user) {
                 return new JsonResponse(array(
                         'id'       => $user->getId(),
                         'username' => $user->getUsername(),
-                        'user_id'  => $user->getUsername() . $user->getId()
+                        'user_id'  => $user->getUsername() . $user->getId(),
+                        'first_name' => $user->getFirstName(),
+                        'last_name' => $user->getLastName(),
+                        'email' => $user->getMail()
                     ));
             }
         }

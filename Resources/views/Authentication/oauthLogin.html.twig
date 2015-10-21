@@ -21,9 +21,9 @@ same message when authentication has failed (no precise validation errors).
             <div class="panel-heading">
                 <h3 class="panel-title">{{ 'login' | trans({}, "platform")}}</h3>
             </div>
-            <form role="form" id="login" class="vertical" action="{{ path('claro_api_oauth_login_check') }}" method="post">
+            <form role="form" id="login" class="vertical" action="{{ path('claro_oauth_login_check') }}" method="post">
                 {% if(error) %}
-                <div class='form_error'></div>
+                    <div class='form_error'></div>
                 {% endif %}
                 <div class="panel-body">
                     <div class="form-group">
@@ -33,9 +33,6 @@ same message when authentication has failed (no precise validation errors).
                     <div class="form-group">
                         <label for="password">
                             {{ 'password'|trans({}, 'platform') }}
-                            <small>
-                                <a href ="{{ path('claro_security_forgot_password')}}" tabindex="4">({{ 'forgot_password'|trans({}, 'platform') }})</a>
-                            </small>
                         </label>
                         <input type="password" class="form-control" id="password" name="_password" placeholder="{{ 'password'|trans({}, 'platform') }}" tabindex="2">
                     </div>

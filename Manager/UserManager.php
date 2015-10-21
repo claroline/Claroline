@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfiguration;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
@@ -133,6 +134,7 @@ class UserManager
         }
 
         $user->setGuid($this->container->get('claroline.utilities.misc')->generateGuid());
+        $user->setEmailValidationHash($this->container->get('claroline.utilities.misc')->generateGuid());
         $this->objectManager->persist($user);
         $publicUrl ? $user->setPublicUrl($publicUrl): $user->setPublicUrl($this->generatePublicUrl($user));
         $this->toolManager->addRequiredToolsToUser($user, 0);
@@ -152,14 +154,15 @@ class UserManager
 
         if ($this->mailManager->isMailerAvailable() && $sendMail) {
             //send a validation by hash
-            if ($this->platformConfigHandler->getParameter('registration_mail_validation')) {
+            $mailValidation = $this->platformConfigHandler->getParameter('registration_mail_validation');
+            if ($mailValidation === PlatformConfiguration::REGISTRATION_MAIL_VALIDATION_FULL) {
                 $password = sha1(rand(1000, 10000) . $user->getUsername() . $user->getSalt());
                 $user->setResetPasswordHash($password);
                 $user->setIsEnabled(false);
                 $this->objectManager->persist($user);
                 $this->objectManager->flush();
                 $this->mailManager->sendEnableAccountMessage($user);
-            } else {
+            } elseif ($mailValidation === PlatformConfiguration::REGISTRATION_MAIL_VALIDATION_PARTIAL) {
             //don't change anything
                 $this->mailManager->sendCreationMessage($user);
             }
@@ -932,6 +935,25 @@ class UserManager
     }
 
     /**
+     * @param string $validationHash
+     *
+     * @return User
+     */
+    public function getByEmailValidationHash($validationHash)
+    {
+        return $this->userRepo->findByEmailValidationHash($validationHash);
+    }
+
+    public function validateEmailHash($validationHash)
+    {
+        $users = $this->getByEmailValidationHash($validationHash);
+        $user = $users[0];
+        $user->setIsMailValidated(true);
+        $this->objectManager->persist($user);
+        $this->objectManager->flush();
+    }
+
+    /**
      * @param integer $userId
      *
      * @return User|null
@@ -1298,6 +1320,7 @@ class UserManager
     public function activateUser(User $user)
     {
         $user->setIsEnabled(true);
+        $user->setIsMailValidated(true);
         $user->setResetPasswordHash(null);
         $user->setInitDate(new \DateTime());
         $this->objectManager->persist($user);

@@ -27,7 +27,7 @@ class PlatformConfigurationHandler
     private $configFile;
     private $parameters;
     public static $defaultParameters = array(
-        'name' => null,
+        'name' => 'claroline',
         'nameActive' => true,
         'support_email' => null,
         'footer' => null,
@@ -77,7 +77,7 @@ class PlatformConfigurationHandler
         'repository_api' => 'http://packages.claroline.net/api.php',
         'use_repository_test' => false,
         'auto_logging_after_registration' => false,
-        'registration_mail_validation' => false,
+        'registration_mail_validation' => PlatformConfiguration::REGISTRATION_MAIL_VALIDATION_PARTIAL,
         'resource_soft_delete' => false,
         'show_help_button' => false,
         'help_url' => 'http://claroline.net/workspaces/125/open/tool/home',

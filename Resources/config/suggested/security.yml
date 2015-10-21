@@ -25,7 +25,7 @@ security:
             form_login:
                 check_path: /oauth/v2/auth_login_check
                 login_path: /oauth/v2/auth_login
-                use_referer: true
+                default_target_path: /oauth/v2/auth/form
             anonymous: true
 
         api:
