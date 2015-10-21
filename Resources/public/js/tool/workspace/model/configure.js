@@ -118,7 +118,8 @@ function addGroups()
 {
     var queryString = {};
     queryString.groupIds = typeMap['group'];
-    var route = Routing.generate('ws_share_groups_add', {'model': modelId})
+    var route = Routing.generate('ws_share_groups_add', {'model': modelId});
+    route += '?' + $.param(queryString);
 
     $.ajax({
         url: route,
@@ -136,7 +137,7 @@ function addUsers()
 {
     var queryString = {};
     queryString.userIds = typeMap['user'];
-    var route = Routing.generate('ws_share_users_add', {'model': modelId})
+    var route = Routing.generate('ws_share_users_add', {'model': modelId});
     route += '?' + $.param(queryString);
 
     $.ajax({
