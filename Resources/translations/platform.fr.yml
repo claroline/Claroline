@@ -1160,3 +1160,5 @@ mailer_from: Champ "from" du courriel
 desktop_root_directory_upload_error: Vous ne pouvez pas rajouter de ressources à la racine du bureau.
 pick_a_resource: Choisissez une ressource
 0_or_1: 0 ou 1
+import_resources_explanation: L'import de ressources demande un fichier .zip généré par claroline contenant le fichier manifest.yml. Si vous désirez importer un autre fichier zip, veuillez créer une ressource de type 'Fichier' et sélectionnez 'décompresser'.
+root_rights_change_explanation: Cette page vous permet de modifier les permissions sur la ressource racine d'un espace d'activité. Si vous désirez affecter toutes les ressources, sélectionnez 'Appliquer au contenu du répertoire et sous répertoires'.
