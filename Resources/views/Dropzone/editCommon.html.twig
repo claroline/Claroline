@@ -86,12 +86,23 @@
         </div>
 
         {# Publication. Ajout de cette zone, demande JJQ. InnovaERV #}
+        {# PArtie sans form_row car c'est une extraData. InnovaERV #}
         <div>
             <h4>{{ 'Publication Title'|trans({}, 'innova_collecticiel') }}</h4>
-
             <div class="row form-group">
-                <div class="col-md6">
-                    {{ form_row(form.publication) }}
+                <div class="col-md-6">
+                    <div>
+                        <div class="col-md-10">
+                            <div class="checkbox">
+                                <label>
+                                    <input id="innova_collecticiel_common_form_published2" type="checkbox"
+                                    {% if dropzone.resourceNode.isPublished == 1 %}checked="checked"{% endif %}
+                                    name="innova_collecticiel_common_form[published2]">
+                                    <label for="innova_collecticiel_common_form_published2">Publié</label>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
