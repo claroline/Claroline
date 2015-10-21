@@ -2,17 +2,18 @@
 
 namespace Innova\PathBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Innova\PathBundle\Entity\Path\Path;
 
 /**
  * Category
  *
- *
  * @ORM\Table(name="innova_path_category")
  * @ORM\Entity()
  */
-class Category
+class Category implements \JsonSerializable
 {
     /**
      * Unique identifier of the Category
@@ -37,6 +38,22 @@ class Category
      * @var \Claroline\CoreBundle\Entity\Workspace\Workspace
      */
     protected $workspace;
+
+    /**
+     * List of Paths in this Category
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Innova\PathBundle\Entity\Path\Path", mappedBy="categories")
+     */
+    protected $paths;
+
+    /**
+     * Class constructor
+     */
+    public function __construct()
+    {
+        $this->paths = new ArrayCollection();
+    }
 
     /**
      * Get id.
@@ -87,5 +104,56 @@ class Category
         $this->workspace = $workspace;
 
         return $this;
+    }
+
+    /**
+     * Get paths
+     * @return ArrayCollection
+     */
+    public function getPaths()
+    {
+        return $this->paths;
+    }
+
+    /**
+     * Add a new Path
+     * @param Path $path
+     * @return $this
+     */
+    public function addPath(Path $path)
+    {
+        if (!$this->paths->contains($path)) {
+            $this->paths->add($path);
+
+            // Update other side of the relation
+            $path->addCategory($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a Path
+     * @param Path $path
+     * @return $this
+     */
+    public function removePath(Path $path)
+    {
+        if ($this->paths->contains($path)) {
+            $this->paths->removeElement($path);
+
+            // Update other side of the relation
+            $path->removeCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return array (
+            'id'   => $this->id,
+            'name' => $this->name,
+        );
     }
 }
