@@ -344,9 +344,11 @@ class QuestionController extends Controller {
 
         if (count($share) > 0) {
             $shareAllowEdit = $share[0]->getAllowToModify();
+            $question=$this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Question')->find($id);
         }
 
         if ($question || $shareAllowEdit) {
+
             if ($user->getId() != $question->getUser()->getId()) {
                 $catID = $question->getCategory()->getId();
             }
