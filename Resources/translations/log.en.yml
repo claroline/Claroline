@@ -1,4 +1,4 @@
-log_resource_ujm_exercise-exercise_evaluated_filter: "Get an evaluation on an exercise"
-log_resource_ujm_exercise-exercise_evaluated_title: "Get an evaluation on an exercise"
-log_resource_ujm_exercise-exercise_evaluated_shortname: "Evaluation of an exercise"
-log_resource_ujm_exercise-exercise_evaluated_sentence: "has been evaluated on the exercise %resource%"
+log_resource-ujm_exercise-exercise_evaluated_filter: "Get an evaluation on an exercise"
+log_resource-ujm_exercise-exercise_evaluated_title: "Get an evaluation on an exercise"
+log_resource-ujm_exercise-exercise_evaluated_shortname: "Evaluation of an exercise"
+log_resource-ujm_exercise-exercise_evaluated_sentence: "has been evaluated on the exercise %resource%"
