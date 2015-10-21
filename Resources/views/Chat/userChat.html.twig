@@ -24,8 +24,9 @@
 <div id="chat-datas-box"
      data-xmpp-host="{{ xmppHost }}"
      data-xmpp-port="{{ xmppPort }}"
-     data-authenticated-username="{{ authenticatedUser.getUsername() }}"
-     data-username="{{ user.getUsername() }}"
+     data-username="{{ chatUser.getChatUsername() }}"
+     data-password="{{ chatUser.getChatPassword() }}"
+     data-contact-username="{{ user.getUsername() }}"
 >
 </div>
          

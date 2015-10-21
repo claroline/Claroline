@@ -13,6 +13,7 @@
     var xmppHost;
     var xmppPort;
     var authenticatedUsername;
+    var password;
     var username;
     var connection;
     
@@ -46,30 +47,16 @@
     {
         xmppHost = $('#chat-datas-box').data('xmpp-host');
         xmppPort = $('#chat-datas-box').data('xmpp-port');
-        authenticatedUsername = $('#chat-datas-box').data('authenticated-username');
-        username = $('#chat-datas-box').data('username');
+        authenticatedUsername = $('#chat-datas-box').data('username');
+        password = $('#chat-datas-box').data('password');
+        username = $('#chat-datas-box').data('contact-username');
         
         connection = new Strophe.Connection('/http-bind');
         
         connection.connect(
             authenticatedUsername + '@' + xmppHost,
-            authenticatedUsername, 
+            password, 
             connectionCallBack
-        );
-    }
-    
-    function registration()
-    {
-        xmppHost = $('#chat-datas-box').data('xmpp-host');
-        xmppPort = $('#chat-datas-box').data('xmpp-port');
-        authenticatedUsername = $('#chat-datas-box').data('authenticated-username');
-        username = $('#chat-datas-box').data('username');
-        
-        connection = new Strophe.Connection('/http-bind');
-        
-        connection.register.connect(
-            xmppHost,
-            registrationCallBack
         );
     }
 
@@ -128,36 +115,6 @@
             console.log('Connecting...');
         } else if (nStatus === Strophe.Status.DISCONNECTING) {
             console.log('Disconnecting...');   
-        }
-    };
-    
-    var registrationCallBack = function (status) {
-                
-        if (status === Strophe.Status.REGISTER) {
-            console.log('Register...');
-            // fill out the fields
-            connection.register.fields.username = authenticatedUsername;
-            connection.register.fields.password = authenticatedUsername;
-            // calling submit will continue the registration process
-            connection.register.submit();
-        } else if (status === Strophe.Status.REGISTERED) {
-            console.log("Registered !");
-            // calling login will authenticate the registered JID.
-            connection.authenticate();
-        } else if (status === Strophe.Status.CONFLICT) {
-            console.log("Contact already existed!");
-        } else if (status === Strophe.Status.NOTACCEPTABLE) {
-            console.log("Registration form not properly filled out.")
-        } else if (status === Strophe.Status.REGIFAIL) {
-            console.log("The Server does not support In-Band Registration")
-        } else if (status === Strophe.Status.CONNECTED) { 
-            console.log('Connected');
-
-            connection.addHandler(OnPresenceStanza, null, "presence");
-            connection.addHandler(OnMessageStanza, null, "message");
-            connection.send($pres());
-        } else {
-            console.log('Connection failed !');
         }
     };
     

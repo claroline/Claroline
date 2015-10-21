@@ -28,4 +28,24 @@ class ChatUserRepository extends EntityRepository
 
         return $query->getOneOrNullResult();
     }
+
+    public function findChatUsers($search = '', $orderedBy = 'username', $order = 'ASC')
+    {
+        $dql = "
+            SELECT cu
+            FROM Claroline\ChatBundle\Entity\ChatUser cu
+            JOIN cu.user u
+            WHERE UPPER(u.firstName) LIKE :search
+            OR UPPER(u.lastName) LIKE :search
+            OR CONCAT(UPPER(u.firstName), CONCAT(' ', UPPER(u.lastName))) LIKE :search
+            OR CONCAT(UPPER(u.lastName), CONCAT(' ', UPPER(u.firstName))) LIKE :search
+            OR UPPER(u.username) LIKE :search
+            ORDER BY u.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $upperSearch = strtoupper($search);
+        $query->setParameter('search', "%{$upperSearch}%");
+
+        return $query->getResult();
+    }
 }

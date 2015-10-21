@@ -18,13 +18,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-require_once __DIR__ . "/../Library/xmpphp-master/XMPPHP/XMPP.php";
-require_once __DIR__ . "/../Library/xmpphp-master/XMPPHP/Log.php";
-require_once __DIR__ . "/../Library/xmpphp-master/XMPPHP/Exception.php";
-use \XMPPHP_XMPP;
-use \XMPPHP_Log;
-use \XMPPHP_Exception;
-
 class ChatController extends Controller
 {
     private $chatManager;
@@ -58,32 +51,10 @@ class ChatController extends Controller
     {
         $xmppHost = $this->platformConfigHandler->getParameter('chat_xmpp_host');
         $xmppPort = $this->platformConfigHandler->getParameter('chat_xmpp_port');
+        $chatUser = $this->chatManager->getChatUserByUser($authenticatedUser);
 
-//        if (!empty($xmppHost) && !empty($xmppPort)) {
-//            $connection = new XMPPHP_XMPP(
-//                $xmppHost,
-//                $xmppPort,
-//                $authenticatedUser->getUsername(),
-//                $authenticatedUser->getUsername(),
-//                'xmpphp',
-//                null,
-//                false,
-//                XMPPHP_Log::LEVEL_INFO
-//            );
-//
-//            try {
-//                $connection->connect();
-//                $connection->processUntil('session_start');
-//                $connection->presence();
-//                $receiver = $user->getUsername() . '@' . $xmppHost;
-//                $connection->message($receiver, 'Yahoo!');
-//                $connection->disconnect();
-//            } catch(XMPPHP_Exception $e) {
-//                die($e->getMessage());
-//            }
-//        }
         return array(
-            'authenticatedUser' => $authenticatedUser,
+            'chatUser' => $chatUser,
             'user' => $user,
             'xmppHost' => $xmppHost,
             'xmppPort' => $xmppPort

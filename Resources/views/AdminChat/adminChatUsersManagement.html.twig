@@ -1,3 +1,50 @@
+{% if show != 0 %}
+    {% macro renderPager(pager, search, orderedBy, order, max) %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_chat_users_admin_management',
+                    'routeParams': {
+                        'show': 1,
+                        'search': search,
+                        'orderedBy': orderedBy,
+                        'order': order,
+                        'max': max
+                    }
+                }
+            )
+        }}
+    {% endmacro %}
+
+    {% macro sortUrl(search, orderedBy, order, max) %}
+        {% if order == 'ASC' %}
+            {% set newOrder = 'DESC' %}
+        {% else %}
+            {% set newOrder = 'ASC' %}
+        {% endif %}
+
+        {{ 
+            path(
+                'claro_chat_users_admin_management',
+                {
+                    'show': 1,
+                    'search': search,
+                    'orderedBy': orderedBy,
+                    'order': newOrder ,
+                    'max': max
+                }
+            )
+        }}
+    {% endmacro %}
+
+    {% from _self import renderPager %}
+    {% from _self import sortUrl %}
+{% endif %}
+{% from "ClarolineCoreBundle::macros.html.twig" import maxResultsSelectBox %}
+
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
 {% block title %}
@@ -30,5 +77,129 @@
         </h3>
     </div>
     <div class="panel-body">
+        
+        {% if show == 0 %}
+            <div class="alert alert-info">
+                {{ 'search_chat_users_infos'|trans({}, 'chat') }}
+            </div>
+        {% else %}
+            
+            {% if search != '' %}
+                <div class="alert alert-info">
+                    {{ 'results_for_search_on'|trans({}, 'platform') }} :
+                    "{{ search }}"
+                </div>
+            {% endif %}
+        {% endif %}
+        <div class="row">
+            <div class="input-group col-md-6 pull-right margin-top-sm">
+                <input class="form-control search-chat-users"
+                       type="text"
+                       id="search-chat-users-input"
+                       placeholder="{{ 'search'|trans({}, 'platform') }}"
+                       value="{{ search }}"
+                >
+                <span class="input-group-btn">
+                    <button class="filter btn btn-default"
+                            type="button"
+                            id="search-chat-users-btn"
+                    >
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
+            </div>
+        </div>
+        <div class="btn btn-primary create-chat-users-btn margin-top-md">
+            <i class="fa fa-user-plus"></i>
+            {{ 'create_chat_accounts'|trans({}, 'chat') }}
+        </div>
+
+        {% if show != 0 %}
+
+            {% if chatUsers|length > 0 %}
+                <div class="row">
+                    <div class="col-md-4 pull-right margin-top-md">
+                        {{ maxResultsSelectBox(max, '', 'users_per_page') }}
+                    </div>
+                </div>
+
+                {% if chatUsers.getNbPages() > 1 %}
+                    {{ renderPager(chatUsers, search, orderedBy, order, max) }}
+                {% endif %}
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>
+                                <a href="{{ sortUrl(search, 'username', order, max) }}">
+                                    {{ 'username'|trans({}, 'platform') }}
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{{ sortUrl(search, 'firstName', order, max) }}">
+                                    {{ 'first_name'|trans({}, 'platform') }}
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{{ sortUrl(search, 'lastName', order, max) }}">
+                                    {{ 'last_name'|trans({}, 'platform') }}
+                                </a>
+                            </th>
+                            <th>
+                                {{ 'chat_username'|trans({}, 'chat') }}
+                            </th>
+                            <th></th>
+                        </tr>
+
+                        {% for chatUser in chatUsers %}
+                            {% set user = chatUser.getUser() %}
+                            <tr>
+                                <td>{{ user.getUsername() }}</td>
+                                <td>{{ user.getFirstName() }}</td>
+                                <td>{{ user.getLastName() }}</td>
+                                <td>{{ chatUser.getChatUsername() }}</td>
+                                <td></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+
+                {% if chatUsers.getNbPages() > 1 %}
+                    {{ renderPager(chatUsers, search, orderedBy, order, max) }}
+                {% endif %}
+            {% else %}
+                <div class="alert alert-warning margin-top-md">
+                    {{ 'no_user'|trans({}, 'platform') }}
+                </div>
+            {% endif %}
+        {% endif %}
     </div>
+    <div id="management-datas-box"
+         data-search="{{ search }}"
+         data-ordered-by="{{ orderedBy }}"
+         data-order="{{ order }}"
+         data-max="{{ max }}"
+         data-xmpp-host="{{ xmppHost }}"
+    >
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/strophejs-1.2.3/strophe.min.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/strophe-register/strophe.register.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ url('bazinga_jstranslation_js', { 'domain': 'chat' }) }}"
+    >
+    </script>
+    <script src='{{ asset('bundles/clarolinechat/js/adminChatUsersManagement.js') }}'
+            type="text/javascript"
+    >
+    </script>
 {% endblock %}
