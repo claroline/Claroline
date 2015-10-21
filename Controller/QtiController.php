@@ -221,13 +221,20 @@ class QtiController extends Controller
      * @param int $id : id of question
      */
     public function ExportAction($id)
-    {
-        $question = $this->container->get('ujm.exo_question')->controlUserQuestion($id);
-
+    {     
+        $service = $this->container->get('ujm.exo_question');
+        $question = $service->controlUserQuestion($id);
+        $sharedQuestions = $service->controlUserSharedQuestion($id);
+        
         $qtiRepos = $this->container->get('ujm.exo_qti_repository');
         $qtiRepos->createDirQTI();
-
-        if ($question) {
+        
+        if (count($question) > 0 || count($sharedQuestions) > 0) {
+            if (count($sharedQuestions) > 0) {
+                $question = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Question')->find($id);
+            }
+            
+       
             $export = $qtiRepos->export($question);
         }
 
