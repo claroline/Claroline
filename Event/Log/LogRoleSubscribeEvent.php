@@ -21,10 +21,12 @@ class LogRoleSubscribeEvent extends LogGenericEvent implements NotifiableInterfa
     const ACTION_GROUP = 'role-subscribe_group';
     const ACTION_WORKSPACE_USER = 'workspace-role-subscribe_user';
     const ACTION_WORKSPACE_GROUP = 'workspace-role-subscribe_group';
+
     protected $receiver = null;
     protected $receiverGroup = null;
     protected $role = null;
     protected $details;
+    protected $workspaceOwners;
 
     /**
      * Constructor.
@@ -32,6 +34,8 @@ class LogRoleSubscribeEvent extends LogGenericEvent implements NotifiableInterfa
     public function __construct(Role $role, AbstractRoleSubject $subject)
     {
         $this->role = $role;
+        $this->workspaceOwners = array();
+
         $details = array('role' => array('name' => $role->getTranslationKey()));
 
         if ($role->getWorkspace()) {
@@ -39,12 +43,16 @@ class LogRoleSubscribeEvent extends LogGenericEvent implements NotifiableInterfa
                 'name' => $role->getWorkspace()->getName(),
                 'id' => $role->getWorkspace()->getId()
             );
+
+            $managerRole = $role->getWorkspace()->getManagerRole();
+            $this->workspaceOwners = $managerRole->getUsers();
         }
 
         if ($subject instanceof User) {
             $details['receiverUser'] = array(
                 'firstName' => $subject->getFirstName(),
-                'lastName' => $subject->getLastName()
+                'lastName' => $subject->getLastName(),
+                'username' => $subject->getUsername()
             );
             $this->receiver = $subject;
         } else {
@@ -93,10 +101,18 @@ class LogRoleSubscribeEvent extends LogGenericEvent implements NotifiableInterfa
     public function getIncludeUserIds()
     {
         if ($this->receiver !== null) {
-            return array($this->receiver->getId());
+            $ids = array($this->receiver->getId());
         } else {
-            return $this->receiverGroup->getUserIds();
+            $ids = $this->receiverGroup->getUserIds();
         }
+
+        if ($this->workspaceOwners) {
+            foreach ($this->workspaceOwners as $owner) {
+                $ids[] = $owner->getId();
+            }
+        }
+
+        return array_unique($ids);
     }
 
     /**

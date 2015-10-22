@@ -1213,3 +1213,4 @@ oauth_application_request: The application "%name%" wants to connect to %platfor
 oauth_required_data: The following datas will be sent:
 client_list: Client list
 allow_authentication: Allow authentication
+user_subscription_notification_for_admin: subscribed to the workspace %workspace%

@@ -785,11 +785,6 @@ class WorkspaceManager
         if (count($userRoles) === 0) {
             $this->roleManager->associateRole($user, $role);
             $this->dispatcher->dispatch(
-                'log',
-                'Log\LogRoleSubscribe',
-                array($role, $user)
-            );
-            $this->dispatcher->dispatch(
                 'claroline_workspace_register_user',
                 'WorkspaceAddUser',
                 array($role, $user)

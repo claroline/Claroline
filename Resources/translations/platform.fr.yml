@@ -1213,3 +1213,4 @@ oauth_application_request: L'application "%name%" désire se connecter à %platf
 oauth_required_data: Les informations suivantes seront envoyées:
 client_list: Liste des clients
 allow_authentication: Autoriser l'authentification
+user_subscription_notification_for_admin: s'est inscrit dans l'espace d'activité %workspace%

@@ -502,4 +502,13 @@ class Workspace
     {
         return $this->name . ' [' . $this->code . ']';
     }
+
+    public function getManagerRole()
+    {
+        foreach ($this->roles as $role) {
+            if (strpos('_' . $role->getName(), 'ROLE_WS_MANAGER') === 1) return $role;
+        }
+
+        return null;
+    }
 }
