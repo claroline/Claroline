@@ -42,6 +42,7 @@ use Claroline\CoreBundle\Manager\TransfertManager;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class ResourceController
 {
