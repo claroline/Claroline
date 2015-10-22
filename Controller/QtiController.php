@@ -232,13 +232,15 @@ class QtiController extends Controller
         if (count($question) > 0 || count($sharedQuestions) > 0) {
             if (count($sharedQuestions) > 0) {
                 $question = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Question')->find($id);
-            }
-            
-       
+            }            
             $export = $qtiRepos->export($question);
+            return $export;
+        }
+        else {
+            return $this->redirect($this->generateUrl('ujm_question_index'));
         }
 
-        return $export;
+        
     }
 
     /**

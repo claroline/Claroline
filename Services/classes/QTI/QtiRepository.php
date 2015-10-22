@@ -78,20 +78,22 @@ class QtiRepository
      */
     public function removeDirectory()
     {
-        if (is_dir($this->userRootDir)) {
-            exec('rm -rf '.$this->userRootDir.'*');
-            $fs = new FileSystem();
-            $iterator = new \DirectoryIterator($this->userRootDir);
-
-            foreach ($iterator as $el) {
-                if ($el->isDir()) {
-                    $fs->rmDir($el->getRealPath(), true);
-                }
-                if ($el->isFile()) {
-                    $fs->rm($el->getRealPath());
-                }
-            }
-        }
+//        if (is_dir($this->userRootDir)) {
+//            exec('rm -rf '.$this->userRootDir.'*');
+//            $fs = new FileSystem();
+//            $iterator = new \DirectoryIterator($this->userRootDir);
+//
+//            foreach ($iterator as $el) {
+//                if ($el->isDir()) {
+//                    $fs->rmDir($el->getRealPath(), true);
+//                }
+//                if ($el->isFile()) {
+//                    $fs->rm($el->getRealPath());
+//                }
+//            }
+//        }
+        $fs = new FileSystem();
+        $fs->rmdir($this->userRootDir, true);
     }
 
     /**
