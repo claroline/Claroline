@@ -1,5 +1,6 @@
 badge-award: Badges
 registration-decline: 'Registration refusal'
+resource-create: Resource creation
 role-change_right: 'Resource access'
 role-subscribe: 'New registration'
 role-subscribe_group: 'assigned you the ''%role%'''
@@ -8,3 +9,4 @@ workspace-registration-decline: 'has declined your registration request in works
 workspace-role-change_right: 'gave you access to %resource% in %workspace%'
 workspace-role-subscribe_group: 'assigned you the ''%role%'' role in %workspace%'
 workspace-role-subscribe_user: 'assigned you the ''%role%'' role in %workspace%'
+resource_creation_notification_message: 'created the resource %resource% in the workspace %workspace%'

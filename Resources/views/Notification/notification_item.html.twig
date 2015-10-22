@@ -17,5 +17,7 @@
         {% include 'ClarolineCoreBundle:Notification:notification_subscribe_group.html.twig' %}
     {% elseif constant('Claroline\\CoreBundle\\Event\\Log\\LogRoleSubscribeEvent::ACTION_USER') == notification.actionKey %}
         {% include 'ClarolineCoreBundle:Notification:notification_subscribe_user.html.twig' %}
+    {% elseif constant('Claroline\\CoreBundle\\Event\\Log\\LogResourceCreateEvent::ACTION') == notification.actionKey %}
+        {% include 'ClarolineCoreBundle:Notification:notification_resource_creation.html.twig' %}
     {% endif %}
 {% endblock %}

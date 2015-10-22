@@ -30,7 +30,9 @@ class LogResourceCreateEvent extends LogGenericEvent implements NotifiableInterf
             array(
                 'resource' => array(
                     'name' => $node->getName(),
-                    'path' => $node->getPathForCreationLog()
+                    'path' => $node->getPathForCreationLog(),
+                    'guid' => $node->getGuid(),
+                    'resourceType' => $node->getResourceType()->getName()
                 ),
                 'workspace' => array(
                     'name' => $node->getWorkspace()->getName()
