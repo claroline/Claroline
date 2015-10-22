@@ -158,12 +158,12 @@ function alreadyPlacedAnswersZoneEdit(shape, color, pathImg, point, feedback) {
 
     if (shape == 'square') {
         contenu += '<select class="form-control" id="shape' + grade + '" size="1" onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">\n\
-                        <option value="circle">' + translations['tradCircle', {}, 'ujm_exo'] + '</option>\n\
+                        <option value="circle">' + translations['tradCircle'] + '</option>\n\
                         <option value="square" selected>' + translations['tradSquare', {}, 'ujm_exo'] + '</option>\n\
                     </select></td>'
     } else {
         contenu += '<select class="form-control" id="shape' + grade + '" size="1" onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">\n\
-                        <option value="circle" selected>' + translations['tradCircle', {}, 'ujm_exo'] + '</option>\n\
+                        <option value="circle" selected>' + translations['tradCircle'] + '</option>\n\
                         <option value="square">' + translations['tradSquare', {}, 'ujm_exo'] + '</option>\n\
                     </select></td>';
     }

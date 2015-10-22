@@ -230,6 +230,7 @@ class HoleImport extends QtiImport
     {
         foreach ($mapping->getElementsByTagName('mapEntry') as $mapEntry) {
             $keyWord = new WordResponse();
+            $this->addFeedbackInLine($mapEntry,$keyWord);
             $keyWord->setResponse($mapEntry->getAttribute('mapKey'));
             $keyWord->setScore($mapEntry->getAttribute('mappedValue'));
             $keyWord->setHole($hole);
@@ -256,7 +257,7 @@ class HoleImport extends QtiImport
         foreach ($ib->getElementsByTagName('inlineChoiceInteraction') as $ici) {
             if ($ici->getAttribute('responseIdentifier') == $qtiId) {
                 foreach ($ici->getElementsByTagName('inlineChoice') as $ic) {
-                    $keyWord = new WordResponse();
+                    $keyWord = new WordResponse();   
                     $score = 0;
                     $matchScore = false;
                     $keyWord->setResponse($ic->nodeValue);
@@ -264,6 +265,7 @@ class HoleImport extends QtiImport
                         if ($mapEntry->getAttribute('mapKey') == $ic->getAttribute('identifier')) {
                             $score = $mapEntry->getAttribute('mappedValue');
                             $matchScore = true;
+                            $this->addFeedbackInLine($mapEntry,$keyWord);
                         }
                         if ($mapEntry->getAttribute('caseSensitive') == true) {
                             $keyWord->setCaseSensitive(true);
@@ -286,6 +288,13 @@ class HoleImport extends QtiImport
                 }
             }
         }
+    }
+    protected function addFeedbackInLine($mapEntry,$keyWord){
+         $feedback = $mapEntry->getElementsByTagName("feedbackInline"); 
+                        if ($feedback->item(0)) {
+                             $keyWord->setFeedback($feedback->item(0)->nodeValue);     
+                                $mapEntry->removeChild($feedback->item(0));
+                        }
     }
 
     /**
