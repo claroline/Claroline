@@ -259,7 +259,11 @@ class InteractionOpenController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('UJMExoBundle:InteractionOpen')->find($id);
-
+        //Deleting of relations, if there the question is shared
+        $sharesQuestion = $em->getRepository('UJMExoBundle:Share')->findBy(array('question' => $entity->getQuestion()->getId()));       
+        foreach ($sharesQuestion as $share){
+            $em->remove($share);
+        }
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find InteractionOpen entity.');
         }
