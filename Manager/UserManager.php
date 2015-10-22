@@ -673,7 +673,7 @@ class UserManager
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getUsersByWorkspaces(array $workspaces, $page, $max = 20, $withPager = true)
+    public function getUsersByWorkspaces(array $workspaces, $page = 1, $max = 20, $withPager = true)
     {
         if ($withPager) {
             $query = $this->userRepo->findUsersByWorkspaces($workspaces, false);

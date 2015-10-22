@@ -231,7 +231,11 @@ class ResourceManager
             }
         }
 
-        $this->dispatcher->dispatch('log', 'Log\LogResourceCreate', array($node));
+        $usersToNotify = $workspace ?
+            $this->container->get('claroline.manager.user_manager')->getUsersByWorkspaces(array($workspace), null, null, false):
+            array();
+
+        $this->dispatcher->dispatch('log', 'Log\LogResourceCreate', array($node, $usersToNotify));
         $this->om->endFlushSuite();
 
         return $resource;

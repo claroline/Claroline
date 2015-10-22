@@ -38,3 +38,4 @@ services:
             - { name: kernel.event_listener, event: create_notification_item_workspace-role-subscribe_group, method: onCreateNotificationItem }
             - { name: kernel.event_listener, event: create_notification_item_role-subscribe_user, method: onCreateNotificationItem }
             - { name: kernel.event_listener, event: create_notification_item_role-subscribe_group, method: onCreateNotificationItem }
+            - { name: kernel.event_listener, event: create_notification_resource-create, method: onCreateNotificationItem }
