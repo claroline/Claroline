@@ -24,6 +24,7 @@ use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -162,12 +163,13 @@ class ResourceRightsController
         $datas = $this->getPermissionsFromRequest($node->getResourceType());
         //throw new \Exception(var_dump($datas));
         $isRecursive = $this->request->getCurrentRequest()->request->get('isRecursive');
+        $perms = array();
 
         foreach ($datas as $data) {
-            $this->rightsManager->editPerms($data['permissions'], $data['role'], $node, $isRecursive);
+            $perms[] = $this->rightsManager->editPerms($data['permissions'], $data['role'], $node, $isRecursive);
         }
 
-        return new Response('', 200, array('Content-Type' => 'application/json'));
+        return new JsonResponse($datas, 200);
     }
 
 
@@ -354,6 +356,7 @@ class ResourceRightsController
 
                 $data[] = array(
                     'role' => $this->roleManager->getRole($roleId),
+                    'role_name' => $this->roleManager->getRole($roleId)->getName(),
                     'permissions' => $changedPerms
                 );
             }
@@ -362,11 +365,12 @@ class ResourceRightsController
         foreach ($roles as $roleId => $perms) {
 
             foreach ($permsMap as $perm) {
-                $changedPerms[$perm] = (array_key_exists($perm, $perms)) ? true: false;
+                $changedPerms[$perm] = (array_key_exists(trim($perm), $perms)) ? true: false;
             }
 
             $data[] = array(
                 'role' => $this->roleManager->getRole($roleId),
+                'role_name' => $this->roleManager->getRole($roleId)->getName(),
                 'permissions' => $changedPerms
             );
         }
