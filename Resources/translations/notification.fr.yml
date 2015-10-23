@@ -11,3 +11,5 @@ workspace-role-subscribe_group: 'vous a attribué le rôle ''%role%'' dans l''es
 workspace-role-subscribe_user: 'vous a attribué le rôle ''%role%'' dans l''espace d''activités %workspace%'
 resource_creation_notification_message: 'a créé la resource %resource% dans l''espace d''activité %workspace%'
 role-subscribe-queue: 'a fait une demande d''inscription dans l''espace d''activité %workspace%'
+text_update_notification_message: a modifié le texte '%resource%' de l'espace d'activité %workspace%
+resource-text: Textes

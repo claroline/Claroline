@@ -21,5 +21,9 @@
         {% if isEditGranted %}
             <a class="btn btn-primary" href="{{ path('claro_text_edit_form', {'text': _resource.getId()}) }}" role="button">{{ 'edit' | trans({}, 'platform') }}</a>
         {% endif %}
+        {% render controller(
+        'IcapNotificationBundle:FollowerResource:renderForm',
+        {'resourceId': _resource.resourceNode.id, 'resourceClass': _resource.resourceNode.class}
+        ) %}
     </div>
 {% endblock %}

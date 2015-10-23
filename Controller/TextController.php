@@ -86,6 +86,19 @@ class TextController extends Controller
         $em->persist($revision);
         $old->setVersion($version);
         $em->flush();
+        $workspace = $old->getResourceNode()->getWorkspace();
+        $usersToNotify = $workspace ?
+            $this->container->get('claroline.manager.user_manager')
+                ->getUsersByWorkspaces(array($workspace), null, null, false):
+            array();
+
+        $this->get('claroline.event.event_dispatcher')
+            ->dispatch(
+                'log',
+                'Log\LogEditResourceText',
+                array('node' => $old->getResourceNode(), 'usersToNotify' => $usersToNotify)
+            );
+
 
         $route = $this->get('router')->generate(
             'claro_resource_open',

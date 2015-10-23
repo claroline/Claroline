@@ -40,3 +40,4 @@ services:
             - { name: kernel.event_listener, event: create_notification_item_role-subscribe_group, method: onCreateNotificationItem }
             - { name: kernel.event_listener, event: create_notification_item_resource-create, method: onCreateNotificationItem }
             - { name: kernel.event_listener, event: create_notification_item_role-subscribe-queue, method: onCreateNotificationItem }
+            - { name: kernel.event_listener, event: create_notification_item_resource-text-update, method: onCreateNotificationItem }

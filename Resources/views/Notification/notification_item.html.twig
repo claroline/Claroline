@@ -21,5 +21,7 @@
         {% include 'ClarolineCoreBundle:Notification:notification_resource_creation.html.twig' %}
     {% elseif constant('Claroline\\CoreBundle\\Event\\Log\\LogWorkspaceRegistrationQueueEvent::ACTION') == notification.actionKey %}
         {% include 'ClarolineCoreBundle:Notification:notification_workspace_role_queue.html.twig' %}
+    {% elseif constant('Claroline\\CoreBundle\\Event\\Log\\LogEditResourceTextEvent::ACTION') == notification.actionKey %}
+        {% include 'ClarolineCoreBundle:Notification:notification_text_update.html.twig' %}
     {% endif %}
 {% endblock %}

@@ -34,7 +34,8 @@ class NotificationUserParametersListener
                 "resource-create",
                 "role-change_right",
                 "role-subscribe",
-                "badge-award"
+                "badge-award",
+                "resource-text"
             )
         );
     }
