@@ -33,7 +33,6 @@ class NotificationUserParametersListener
             array(
                 "resource-create",
                 "role-change_right",
-                "registration-decline",
                 "role-subscribe",
                 "badge-award"
             )

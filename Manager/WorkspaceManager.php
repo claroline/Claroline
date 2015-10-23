@@ -767,6 +767,11 @@ class WorkspaceManager
         $role = $this->roleManager->getCollaboratorRole($workspace);
         $wksrq->setRole($role);
         $wksrq->setWorkspace($workspace);
+        $this->dispatcher->dispatch(
+            'log',
+            'Log\LogWorkspaceRegistrationQueue',
+            array($wksrq)
+        );
         $this->om->persist($wksrq);
         $this->om->flush();
     }

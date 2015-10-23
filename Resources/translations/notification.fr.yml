@@ -10,3 +10,4 @@ workspace-role-change_right: 'vous donne accès à la ressource %resource% dans 
 workspace-role-subscribe_group: 'vous a attribué le rôle ''%role%'' dans l''espace d''activités %workspace%'
 workspace-role-subscribe_user: 'vous a attribué le rôle ''%role%'' dans l''espace d''activités %workspace%'
 resource_creation_notification_message: 'a créé la resource %resource% dans l''espace d''activité %workspace%'
+role-subscribe-queue: 'a fait une demande d''inscription dans l''espace d''activité %workspace%'
