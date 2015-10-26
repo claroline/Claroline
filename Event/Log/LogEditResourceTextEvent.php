@@ -13,29 +13,38 @@ namespace Claroline\CoreBundle\Event\Log;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
-class LogResourceCreateEvent extends LogGenericEvent implements NotifiableInterface
+class LogEditResourceTextEvent extends LogGenericEvent implements NotifiableInterface
 {
-    const ACTION = 'resource-create';
+    const ACTION = 'resource-text-update';
+    private $usersToNotify;
 
     /**
      * Constructor.
+     * ChangeSet expected variable is array which contain all modified properties, in the following form:
+     * (
+     *      'propertyName1' => ['property old value 1', 'property new value 1'],
+     *      'propertyName2' => ['property old value 2', 'property new value 2'],
+     *      etc.
+     * )
+     *
+     * Please respect lower caml case naming convention for property names
      */
     public function __construct(ResourceNode $node, array $usersToNotify = array())
     {
+        $action = self::ACTION;
         $this->usersToNotify = $usersToNotify;
-        $this->node = $node;
 
         parent::__construct(
-            self::ACTION,
+            $action,
             array(
                 'resource' => array(
                     'name' => $node->getName(),
-                    'path' => $node->getPathForCreationLog(),
-                    'guid' => $node->getGuid(),
-                    'resourceType' => $node->getResourceType()->getName()
+                    'path' => $node->getPathForDisplay()
                 ),
                 'workspace' => array(
-                    'name' => $node->getWorkspace() ? $node->getWorkspace()->getName(): ' - '
+                    'name' => $node->getWorkspace()->getName(),
+                    'id'   => $node->getWorkspace()->getId(),
+                    'guid' => $node->getWorkspace()->getGuid()
                 ),
                 'owner' => array(
                     'lastName' => $node->getCreator()->getLastName(),
@@ -51,17 +60,18 @@ class LogResourceCreateEvent extends LogGenericEvent implements NotifiableInterf
         );
     }
 
-    public function setUsersToNotify(array $usersToNotify)
-    {
-        $this->usersToNotify = $usersToNotify;
-    }
-
     /**
      * @return array
      */
     public static function getRestriction()
     {
         return null;
+    }
+
+
+    public function setUsersToNotify(array $usersToNotify)
+    {
+        $this->usersToNotify = $usersToNotify;
     }
 
     /**
@@ -97,7 +107,7 @@ class LogResourceCreateEvent extends LogGenericEvent implements NotifiableInterf
      */
     public function getExcludeUserIds()
     {
-        return array($this->node->getCreator()->getId());
+        //return $this->getDoer()->getId();
     }
 
     /**

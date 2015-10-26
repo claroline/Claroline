@@ -767,6 +767,11 @@ class WorkspaceManager
         $role = $this->roleManager->getCollaboratorRole($workspace);
         $wksrq->setRole($role);
         $wksrq->setWorkspace($workspace);
+        $this->dispatcher->dispatch(
+            'log',
+            'Log\LogWorkspaceRegistrationQueue',
+            array($wksrq)
+        );
         $this->om->persist($wksrq);
         $this->om->flush();
     }
@@ -784,11 +789,6 @@ class WorkspaceManager
 
         if (count($userRoles) === 0) {
             $this->roleManager->associateRole($user, $role);
-            $this->dispatcher->dispatch(
-                'log',
-                'Log\LogRoleSubscribe',
-                array($role, $user)
-            );
             $this->dispatcher->dispatch(
                 'claroline_workspace_register_user',
                 'WorkspaceAddUser',

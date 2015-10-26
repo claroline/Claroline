@@ -1195,6 +1195,8 @@ add_pending: Ajouter une plateforme amie
 add_friend_confirm_message: Êtes-vous sûr de vouloir ajouter cet plateforme amie ?
 edit_client: Modifier le client
 0_or_1: 0 ou 1
+import_resources_explanation: L'import de ressources demande un fichier .zip généré par claroline contenant le fichier manifest.yml. Si vous désirez importer un autre fichier zip, veuillez créer une ressource de type 'Fichier' et sélectionnez 'décompresser'.
+root_rights_change_explanation: Cette page vous permet de modifier les permissions sur la ressource racine d'un espace d'activité. Si vous désirez affecter toutes les ressources, sélectionnez 'Appliquer au contenu du répertoire et sous répertoires'.
 registration_mail_validation: Validation de l'inscription des utilisateurs
 send_mail_info: Envoyer un courriel de confirmation (plateforme accessible sans confirmation de la réception du courriel)
 force_mail_validation: Forcer la validation du courriel (utilisateur bloqué tant que la réception du courriel n'a pas été confirmée)
@@ -1202,8 +1204,8 @@ replace_validation_email_message: qui affichera le lien de validation du courrie
 email_not_activated_part_1: Votre courriel n'a pas été validé (%email%). Cliquez
 email_not_activated_part_2: ici
 email_not_activated_part_3: pour l'activer
-email_confirmation_message: La plateforme ne pourra pas vous envoyer tous les courriels tant que votre adresse n'a pas été confirmée.
-email_sent: Courriel envoyé
+email_confirmation_message: La plateforme ne peux pas vous envoyer tous les courriels tant que votre adresse n'a pas été confirmée.
+email_sent: Courriel de validation envoyé à l'adresse %email%. Veuillez consulter vos spam si vous n'avez rien reçu.
 email_validation: Validation du courriel
 email_validation_url_display: Veuillez vous rendre à l'url suivante pour confirmer votre courriel: %url%
 email_validated: Courriel validé
@@ -1211,3 +1213,4 @@ oauth_application_request: L'application "%name%" désire se connecter à %platf
 oauth_required_data: Les informations suivantes seront envoyées:
 client_list: Liste des clients
 allow_authentication: Autoriser l'authentification
+user_subscription_notification_for_admin: s'est inscrit dans l'espace d'activité %workspace%

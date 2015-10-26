@@ -45,17 +45,17 @@
                 <h4 class="label label-danger">
                     {{ 'maintenance_mode_enabled'|trans({}, 'platform') }}
                     <i
-                            class="fa fa-question-circle pointer-hand maintenance-popover"
-                            data-container=".alert-update-mode"
-                            data-toggle="popover"
-                            data-placement="bottom"
-                            data-content="{{ 'maintenance_mode_message'|trans({}, 'platform') }}"
-                            >
+                        class="fa fa-question-circle pointer-hand maintenance-popover"
+                        data-container=".alert-update-mode"
+                        data-toggle="popover"
+                        data-placement="bottom"
+                        data-content="{{ 'maintenance_mode_message'|trans({}, 'platform') }}"
+                    >
                     </i>
                 </h4>
             </div>
         {% endif %}
-        {% if app.user != null and app.user.isMailValidated == false %}
+        {% if app.user != null and app.user.isMailValidated == false and app.user.hideMailWarning == false and is_mailer_available() %}
             <div class="alert-email-confirm">
                 <h4 class="label label-warning">
                     {{ 'email_not_activated_part_1'|trans({'%email%': app.user.mail}, 'platform') }}
@@ -68,6 +68,10 @@
                             data-placement="bottom"
                             data-content="{{ 'email_confirmation_message'|trans({}, 'platform') }}"
                     >
+                    </i>
+                    &nbsp&nbsp&nbsp&nbsp&nbsp
+                    <i class="fa fa-close pointer-hand" id="hide-email-confirmation">
+
                     </i>
                 </h4>
             </div>

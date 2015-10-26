@@ -26,6 +26,18 @@ use Claroline\CoreBundle\Repository\Exception\UnknownFilterException;
  */
 class ResourceNodeRepository extends MaterializedPathRepository
 {
+    public function find($id)
+    {
+        $dql = '
+            SELECT n FROM Claroline\CoreBundle\Entity\Resource\ResourceNode n
+            WHERE n.id = :id OR n.guid LIKE :id
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('id', $id);
+
+        return $query->getOneOrNullResult();
+    }
+
     /**
      * Returns the root directory of a workspace.
      *

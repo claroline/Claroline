@@ -232,6 +232,12 @@
             var isDir = $('#rights-list').attr('data-is-dir');
             var nodeId = $('#rights-list').attr('data-node-id');
             rights = rights.split(',');
+            var trimmed = [];
+
+            for (var i = 0; i < rights.length; i++) {
+                trimmed.push(rights[i].trim());
+            }
+
             var picker = new UserPicker();
             var settings = {
                 'multiple': true,
@@ -242,11 +248,12 @@
                 settings,
                 function (users) {
                     $.each(users, function(index, val) {
+                        console.debug(val);
                         //add the row to the tab
                         var twigParams = {
                             'user': val,
                             'isDir': true,
-                            'rights': rights,
+                            'rights': trimmed,
                             'nodeId': nodeId
                         };
 

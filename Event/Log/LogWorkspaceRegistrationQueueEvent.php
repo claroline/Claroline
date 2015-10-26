@@ -13,13 +13,14 @@ namespace Claroline\CoreBundle\Event\Log;
 
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 
-class LogWorkspaceRegistrationDeclineEvent extends LogGenericEvent implements NotifiableInterface
+class LogWorkspaceRegistrationQueueEvent extends LogGenericEvent implements NotifiableInterface
 {
-    const ACTION = 'role-subscribe-decline';
+    const ACTION = 'role-subscribe-queue';
     protected $details;
     protected $role;
     protected $user;
     protected $workspace;
+    protected $managers;
 
     /**
      * Constructor.
@@ -40,6 +41,8 @@ class LogWorkspaceRegistrationDeclineEvent extends LogGenericEvent implements No
             'lastName' => $this->user->getLastName()
         );
         $this->details = $details;
+
+        $this->managers = $this->workspace->getManagerRole()->getUsers();
 
         parent::__construct(
             self::ACTION,
@@ -77,7 +80,13 @@ class LogWorkspaceRegistrationDeclineEvent extends LogGenericEvent implements No
 
     public function getIncludeUserIds()
     {
-        return array($this->user->getId());
+        $ids = array();
+
+        foreach ($this->managers as $manager) {
+            $ids[] = $manager->getId();
+        }
+
+        return $ids;
     }
 
     public function getNotificationDetails()

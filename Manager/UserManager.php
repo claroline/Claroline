@@ -673,7 +673,7 @@ class UserManager
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getUsersByWorkspaces(array $workspaces, $page, $max = 20, $withPager = true)
+    public function getUsersByWorkspaces(array $workspaces, $page = 1, $max = 20, $withPager = true)
     {
         if ($withPager) {
             $query = $this->userRepo->findUsersByWorkspaces($workspaces, false);
@@ -1495,6 +1495,13 @@ class UserManager
         $user->setHashTime(time());
         $password = sha1(rand(1000, 10000) . $user->getUsername() . $user->getSalt());
         $user->setResetPasswordHash($password);
+        $this->objectManager->persist($user);
+        $this->objectManager->flush();
+    }
+
+    public function hideEmailValidation(User $user)
+    {
+        $user->setHideMailWarning(true);
         $this->objectManager->persist($user);
         $this->objectManager->flush();
     }
