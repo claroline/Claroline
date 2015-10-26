@@ -241,7 +241,8 @@
             var picker = new UserPicker();
             var settings = {
                 'multiple': true,
-                'picker_name': 'user_res_picker'
+                'picker_name': 'user_res_picker',
+                'return_datas': true
             };
             picker.configure(
                 settings,
