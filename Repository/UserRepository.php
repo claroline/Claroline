@@ -1378,14 +1378,14 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                     u IN (
                         SELECT ur
                         FROM Claroline\CoreBundle\Entity\User ur
-                        JOIN ur.roles urr
+                        LEFT JOIN ur.roles urr
                         WITH urr IN (:roleRestrictions)
                     )
                     OR u IN (
                         SELECT ur2
                         FROM Claroline\CoreBundle\Entity\User ur2
-                        JOIN ur2.groups ur2g
-                        JOIN ur2g.roles ur2gr
+                        LEFT JOIN ur2.groups ur2g
+                        LEFT JOIN ur2g.roles ur2gr
                         WITH ur2gr IN (:roleRestrictions)
                     )
                 ';
@@ -1401,7 +1401,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                     u IN (
                         SELECT ug
                         FROM Claroline\CoreBundle\Entity\User ug
-                        JOIN ug.groups ugg
+                        LEFT JOIN ug.groups ugg
                         WITH ugg IN (:groupRestrictions)
                     )
                 ';
@@ -1417,14 +1417,14 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                     u IN (
                         SELECT uw
                         FROM Claroline\CoreBundle\Entity\User uw
-                        JOIN uw.roles uwr
+                        LEFT JOIN uw.roles uwr
                         WITH uwr.workspace IN (:workspaceRestrictions)
                     )
                     OR u IN (
                         SELECT uw2
                         FROM Claroline\CoreBundle\Entity\User uw2
-                        JOIN uw2.groups uw2g
-                        JOIN uw2g.roles uw2gr
+                        LEFT JOIN uw2.groups uw2g
+                        LEFT JOIN uw2g.roles uw2gr
                         WITH uw2gr.workspace IN (:workspaceRestrictions)
                     )
                 ';
@@ -1451,7 +1451,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 AND u IN (
                     SELECT ufg
                     FROM Claroline\CoreBundle\Entity\User ufg
-                    JOIN ufg.groups ufgg
+                    LEFT JOIN ufg.groups ufgg
                     WITH ufgg IN (:forcedGroups)
                 )
             ';
@@ -1463,14 +1463,14 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                     u IN (
                         SELECT ufr
                         FROM Claroline\CoreBundle\Entity\User ufr
-                        JOIN ufr.roles ufrr
+                        LEFT JOIN ufr.roles ufrr
                         WITH ufrr IN (:forcedRoles)
                     )
                     OR u IN (
                         SELECT ufr2
                         FROM Claroline\CoreBundle\Entity\User ufr2
-                        JOIN ufr2.groups ufr2g
-                        JOIN ufr2g.roles ufr2gr
+                        LEFT JOIN ufr2.groups ufr2g
+                        LEFT JOIN ufr2g.roles ufr2gr
                         WITH ufr2gr IN (:forcedRoles)
                     )
                 )
@@ -1483,14 +1483,14 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                     u IN (
                         SELECT ufw
                         FROM Claroline\CoreBundle\Entity\User ufw
-                        JOIN ufw.roles ufwr
+                        LEFT JOIN ufw.roles ufwr
                         WITH ufwr.workspace IN (:forcedWorkspaces)
                     )
                     OR u IN (
                         SELECT ufw2
                         FROM Claroline\CoreBundle\Entity\User ufw2
-                        JOIN ufw2.groups ufw2g
-                        JOIN ufw2g.roles ufw2gr
+                        LEFT JOIN ufw2.groups ufw2g
+                        LEFT JOIN ufw2g.roles ufw2gr
                         WITH ufw2gr.workspace IN (:forcedWorkspaces)
                     )
                 )

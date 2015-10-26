@@ -242,8 +242,7 @@
             var settings = {
                 'multiple': true,
                 'picker_name': 'user_res_picker',
-                'return_datas': true,
-                'show_all_users': true
+                'return_datas': true
             };
             picker.configure(
                 settings,
