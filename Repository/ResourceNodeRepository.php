@@ -30,7 +30,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
     {
         $dql = '
             SELECT n FROM Claroline\CoreBundle\Entity\Resource\ResourceNode n
-            WHERE n.id = :id OR n.guid = :id
+            WHERE n.id = :id OR n.guid LIKE :id
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('id', $id);
