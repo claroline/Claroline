@@ -964,10 +964,12 @@ class ResourceManager
                      * not work for directory containing children.
                      */
                     $this->om->remove($resource);
-                    $this->om->remove($node);
                 }
             }
+
+            $this->om->remove($node);
         }
+
         $this->om->endFlushSuite();
 
         if (!$softDelete) {
