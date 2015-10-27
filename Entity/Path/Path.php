@@ -4,7 +4,6 @@ namespace Innova\PathBundle\Entity\Path;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
-use Innova\PathBundle\Entity\Category;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -76,21 +75,11 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     protected $description;
 
     /**
-     * List of Categories of the Path
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="Innova\PathBundle\Entity\Category", inversedBy="paths")
-     * @ORM\JoinTable(name="innova_path_category_path")
-     */
-    protected $categories;
-
-    /**
      * Class constructor
      */
     public function __construct()
     {
         $this->steps = new ArrayCollection();
-        $this->categories = new ArrayCollection();
         $this->modified = false;
     }
     
@@ -336,45 +325,6 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
         return $creator;
     }
 
-    public function getCategories()
-    {
-        return $this->categories;
-    }
-
-    /**
-     * Add a new Category
-     * @param Category $category
-     * @return $this
-     */
-    public function addCategory(Category $category)
-    {
-        if (!$this->categories->contains($category)) {
-            $this->categories->add($category);
-
-            // Update other side of the relation
-            $category->addPath($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a Category
-     * @param Category $category
-     * @return $this
-     */
-    public function removeCategory(Category $category)
-    {
-        if ($this->categories->contains($category)) {
-            $this->categories->removeElement($category);
-
-            // Update other side of the relation
-            $category->removePath($this);
-        }
-
-        return $this;
-    }
-
     public function jsonSerialize()
     {
         $steps = array ();
@@ -387,7 +337,6 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
         return array (
             'name'             => $this->getResourceNode()->getName(),
             'description'      => $this->description,
-            'categories'       => $this->categories,
             'breadcrumbs'      => $this->breadcrumbs,
             'summaryDisplayed' => $this->summaryDisplayed,
             'steps'            => $steps,
