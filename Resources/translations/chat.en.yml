@@ -3,6 +3,7 @@ chat_configuration: Chat configuration
 chat_accounts_creation: Chat accounts creation
 create_chat_accounts: Create Chat accounts
 host: Host
+muc_host: MUC server
 port: Port
 search_chat_users_infos: A search has to be performed in order to display users with a chat account.
 select_users_for_chat_account_generation: Select users for Chat account generation

@@ -1,0 +1,55 @@
+{% extends "ClarolineChatBundle:Chat:layout.html.twig" %}
+
+{% set _resource = chatRoom %}
+
+{% block chat_content %}
+    {% block section_content %}
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                {{ chatRoom.getResourceNode().getName() }}
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div ng-cloak="" ng-app="chatRoomApp">
+                <div id="chat-room-content-panel" class="col-md-9">
+                    <div ng-controller="mainMenuCtrl"
+                         data-id="{{ chatRoom.getId() }}"
+                         data-chat-room="{{ chatRoom | json_encode }}"
+                         data-can-chat="{{ canChat }}"
+                         data-can-edit="{{ canEdit }}"
+                    >
+                        Message : {% verbatim %}{{ name }}{% endverbatim %}
+                        <div id="chat-content"></div>
+                    </div>
+                    <br>
+                    <br>
+                    <div class="row">
+                        <div class="input-group">
+                            <input type="text"
+                                   id="msg-input"
+                                   class="form-control"
+                            >
+                            <span class="input-group-btn">
+                                <button id="send-msg-btn" class="btn btn-default">
+                                    <i class="fa fa-comment"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div id="chat-room-users-panel" class="col-md-3">
+                </div>
+            </div>
+        </div>
+        <div id="chat-datas-box"
+             data-chat-room-id="{{ chatRoom.getId() }}"
+             data-resource-guid="{{ chatRoom.getResourceNode().getGuid() }}"
+             data-username="{{ chatUser.getChatUsername() }}"
+             data-password="{{ chatUser.getChatPassword() }}"
+             data-xmpp-host="{{ xmppHost }}"
+             data-xmpp-muc-host="{{ xmppMucHost }}"
+             data-xmpp-port="{{ xmppPort }}"
+        >
+        </div>
+    {% endblock %}
+{% endblock %}

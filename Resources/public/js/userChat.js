@@ -21,8 +21,7 @@
     {
         var from = $(stanza).attr('from');
         var type = $(stanza).attr('type');
-        var jid = Strophe.getBareJidFromJid(from);
-        var sender = jid.replace('@' + xmppHost, '');
+        var sender = Strophe.getNodeFromJid(from);
         var body = $(stanza).find('body').text();
         
         var message = '<li><b class="received-message">' + sender + ' : </b>' + body + '</li>';

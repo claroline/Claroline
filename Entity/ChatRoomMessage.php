@@ -1,0 +1,101 @@
+<?php
+
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Claroline\ChatBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="claro_chatbundle_room_message")
+ */
+class ChatRoomMessage
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\ChatBundle\Entity\ChatRoom"
+     * )
+     * @ORM\JoinColumn(name="chat_room_id", onDelete="CASCADE", nullable=false)
+     */
+    protected $chatRoom;
+
+    /**
+     * @ORM\Column(name="username", nullable=false)
+     */
+    protected $username;
+
+    /**
+     * @ORM\Column(name="content", nullable=true)
+     */
+    protected $content;
+
+    /**
+     * @ORM\Column(name="creation_date", type="datetime", nullable=false)
+     */
+    protected $creationDate;
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    public function getChatRoom()
+    {
+        return $this->chatRoom;
+    }
+
+    public function setChatRoom(ChatRoom $chatRoom)
+    {
+        $this->chatRoom = $chatRoom;
+    }
+
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    }
+
+    public function getCreationDate()
+    {
+        return $this->creationDate;
+    }
+
+    public function setCreationDate($creationDate)
+    {
+        $this->creationDate = $creationDate;
+    }
+
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    public function setContent($content)
+    {
+        $this->content = $content;
+    }
+}

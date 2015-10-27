@@ -114,10 +114,12 @@ class AdminChatController extends Controller
     {
         $formData = $this->request->get('chat_configuration_form');
         $host = $formData['host'];
+        $mucHost = $formData['mucHost'];
         $port = $formData['port'];
         $this->platformConfigHandler->setParameters(
             array(
                 'chat_xmpp_host' => $host,
+                'chat_xmpp_muc_host' => $mucHost,
                 'chat_xmpp_port' => $port
             )
         );

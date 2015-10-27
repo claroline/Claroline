@@ -1,0 +1,11 @@
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
+#chat-room-content-panel {
+    background-color: #B3D3DB;
+}
+
+#chat-room-users-panel {
+    background-color: #D8B1B1;
+}

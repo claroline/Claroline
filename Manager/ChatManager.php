@@ -11,6 +11,8 @@
 
 namespace Claroline\ChatBundle\Manager;
 
+use Claroline\ChatBundle\Entity\ChatRoom;
+use Claroline\ChatBundle\Entity\ChatRoomMessage;
 use Claroline\ChatBundle\Entity\ChatUser;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Pager\PagerFactory;
@@ -63,6 +65,17 @@ class ChatManager
     public function deleteChatUser(ChatUser $chatUser)
     {
         $this->om->remove($chatUser);
+    }
+
+    public function saveChatRoomMessage(ChatRoom $chatRoom, $username, $message)
+    {
+        $roomMessage = new ChatRoomMessage();
+        $roomMessage->setCreationDate(new \DateTime());
+        $roomMessage->setChatRoom($chatRoom);
+        $roomMessage->setUsername($username);
+        $roomMessage->setContent($message);
+        $this->om->persist($roomMessage);
+        $this->om->flush();
     }
 
 

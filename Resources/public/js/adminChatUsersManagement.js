@@ -128,8 +128,7 @@
     var registrationCallBack = function (status) {
                 
         if (status === Strophe.Status.REGISTER) {
-            console.log('Register...');
-            console.log(userDatas);
+            console.log('Registering...');
             
             if (userDatas !== null) {
                 username = userDatas['username'];
@@ -142,10 +141,9 @@
                     userDatas['lastName'];
                 // calling submit will continue the registration process
                 connection.register.submit();
-                console.log('Submitted');
             }
         } else if (status === Strophe.Status.REGISTERED) {
-            console.log("Registered !");
+            console.log("[XMPP] Registered !");
             console.log(userId + ' - ' + username + ' - ' + password);
             
             $.ajax({
@@ -155,7 +153,7 @@
                 ),
                 type: 'POST',
                 success: function () {
-                    console.log("Double registered !");
+                    console.log("[Claroline] Registered !");
                 }
             });
             // calling login will authenticate the registered JID.

@@ -28,6 +28,7 @@ class ChatConfigurationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $xmppHost = $this->configHandler->getParameter('chat_xmpp_host');
+        $xmppMucHost = $this->configHandler->getParameter('chat_xmpp_muc_host');
         $configPort = $this->configHandler->getParameter('chat_xmpp_port');
         $xmppPort = empty($configPort) ? 5222 : $configPort;
 
@@ -39,6 +40,16 @@ class ChatConfigurationType extends AbstractType
                 'data' => $xmppHost,
                 'mapped' => false,
                 'label' => 'host'
+            )
+        );
+        $builder->add(
+            'mucHost',
+            'text',
+            array(
+                'required' => false,
+                'data' => $xmppMucHost,
+                'mapped' => false,
+                'label' => 'muc_host'
             )
         );
         $builder->add(
