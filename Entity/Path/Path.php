@@ -73,7 +73,7 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     protected $description;
-    
+
     /**
      * Class constructor
      */
