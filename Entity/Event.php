@@ -146,8 +146,12 @@ class Event
             } else {
                 $this->start = $dateTime->getTimestamp();
             }
-        } else {
+        } elseif (is_int($start)) {
             $this->start = $start;
+        } elseif ($start instanceof \DateTime) {
+            $this->start = $start->getTimestamp();
+        } else {
+            throw new \Exception('Date format is not supported');
         }
 
         return $this;
@@ -179,8 +183,12 @@ class Event
             } else {
                 $this->end = $dateTime->getTimestamp();
             }
-        } else {
+        } elseif (is_int($end)) {
             $this->end = $end;
+        } elseif ($end instanceof \DateTime) {
+            $this->end = $end->getTimestamp();
+        } else {
+            throw new \Exception('Date format is not supported');
         }
 
         return $this;
