@@ -231,7 +231,7 @@ class ResourceManager
             }
         }
 
-        $usersToNotify = $workspace ?
+        $usersToNotify = $workspace && $workspace->getId() ?
             $this->container->get('claroline.manager.user_manager')->getUsersByWorkspaces(array($workspace), null, null, false):
             array();
 
