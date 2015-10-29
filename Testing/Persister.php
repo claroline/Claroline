@@ -146,6 +146,7 @@ class Persister
         $user->setUsername($username);
         $user->setPassword($username);
         $user->setMail($username . '@mail.com');
+        $user->setGuid($username);
         $this->om->persist($user);
 
         $workspace = new Workspace();
