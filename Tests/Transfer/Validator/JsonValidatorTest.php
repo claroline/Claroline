@@ -53,54 +53,53 @@ class JsonValidatorTest extends UnitTestCase
     public function invalidDataProvider()
     {
         return [
-            ['no-name.json', 'the property name is required', ''],
-            ['name-is-not-a-string.json', 'array value found, but a string is required', 'name'],
-            ['name-is-empty.json', 'must be at least 1 characters long', 'name'],
-            ['name-is-too-long.json', 'must be at most 500 characters long', 'name'],
-            ['no-description.json', 'the property description is required', ''],
-            ['description-is-not-a-string.json', 'integer value found, but a string is required', 'description'],
-            ['description-is-empty.json', 'must be at least 1 characters long', 'description'],
-            ['no-scale.json', 'the property scale is required', ''],
-            ['scale-is-not-an-object.json', 'string value found, but an object is required', 'scale'],
-            ['no-scale-name.json', 'the property name is required', 'scale'],
-            ['scale-name-is-not-a-string.json', 'integer value found, but a string is required', 'scale.name'],
-            ['scale-name-is-empty.json', 'must be at least 1 characters long', 'scale.name'],
-            ['scale-name-is-too-long.json', 'must be at most 255 characters long', 'scale.name'],
-            ['no-scale-levels.json', 'the property levels is required', 'scale'],
-            ['scale-levels-is-not-an-array.json', 'integer value found, but an array is required', 'scale.levels'],
-            ['scale-levels-is-empty.json', 'There must be a minimum of 1 in the array', 'scale.levels'],
-            ['scale-level-is-not-a-string.json', 'integer value found, but a string is required', 'scale.levels[1]'],
-            ['scale-level-is-empty.json', 'must be at least 1 characters long', 'scale.levels[0]'],
-            ['scale-level-is-too-long.json', 'must be at most 255 characters long', 'scale.levels[0]'],
-            ['duplicate-scale-level.json', 'There are no duplicates allowed in the array', 'scale.levels'],
-            ['competency-item-is-not-an-object.json', 'string value found, but an object is required', 'competencies[0]'],
-            ['competency-item-has-no-name.json', 'the property name is required', 'competencies[0]'],
-            ['duplicate-competency-item.json', 'There are no duplicates allowed in the array', 'competencies[0].competencies'],
-            ['ability-is-not-an-object.json', 'integer value found, but an object is required', 'abilities[0]'],
-            ['no-ability-name.json', 'the property name is required', 'abilities[0]'],
-            ['ability-name-is-not-a-string.json', 'integer value found, but a string is required', 'abilities[0].name'],
-            ['ability-name-is-empty.json', 'must be at least 1 characters long', 'abilities[0].name'],
-            ['ability-name-is-too-long.json', 'must be at most 500 characters long', 'abilities[0].name'],
-            ['no-ability-level.json', 'the property level is required', 'abilities[0]'],
-            ['ability-level-is-not-a-string.json', 'integer value found, but a string is required', 'abilities[0].level'],
-            ['ability-level-is-empty.json', 'must be at least 1 characters long', 'abilities[0].level'],
-            ['ability-level-is-too-long.json', 'must be at most 255 characters long', 'abilities[0].level'],
-            ['duplicate-ability.json', 'There are no duplicates allowed in the array', 'abilities']
+            ['no-name.json', 'property "name" is missing', ''],
+            ['name-is-not-a-string.json', 'instance must be of type string', '/name'],
+            ['name-is-empty.json', 'should be greater than or equal to 1 characters', '/name'],
+            ['name-is-too-long.json', 'should be lesser than or equal to 500 characters', '/name'],
+            ['no-description.json', 'property "description" is missing', ''],
+            ['description-is-not-a-string.json', 'instance must be of type string', '/description'],
+            ['description-is-empty.json', 'should be greater than or equal to 1 characters', '/description'],
+            ['no-scale.json', 'property "scale" is missing', ''],
+            ['scale-is-not-an-object.json', 'instance must be of type object', '/scale'],
+            ['no-scale-name.json', 'property "name" is missing', '/scale'],
+            ['scale-name-is-not-a-string.json', 'instance must be of type string', '/scale/name'],
+            ['scale-name-is-empty.json', 'should be greater than or equal to 1 characters', '/scale/name'],
+            ['scale-name-is-too-long.json', 'should be lesser than or equal to 255 characters', '/scale/name'],
+            ['no-scale-levels.json', 'property "levels" is missing', '/scale'],
+            ['scale-levels-is-not-an-array.json', 'instance must be of type array', '/scale/levels'],
+            ['scale-levels-is-empty.json', 'number of items should be greater than or equal to 1', '/scale/levels'],
+            ['scale-level-is-not-a-string.json', 'instance must be of type string', '/scale/levels/1'],
+            ['scale-level-is-empty.json', 'should be greater than or equal to 1 characters', '/scale/levels/0'],
+            ['scale-level-is-too-long.json', 'should be lesser than or equal to 255 characters', '/scale/levels/0'],
+            ['duplicate-scale-level.json', 'elements must be unique', '/scale/levels'],
+            ['competency-item-is-not-an-object.json', 'instance must be of type object', '/competencies/0'],
+            ['competency-item-has-no-name.json', 'property "name" is missing', '/competencies/0'],
+            ['duplicate-competency-item.json', 'elements must be unique', '/competencies/0/competencies'],
+            ['ability-is-not-an-object.json', 'instance must be of type object', '/abilities/0'],
+            ['no-ability-name.json', 'property "name" is missing', '/abilities/0'],
+            ['ability-name-is-not-a-string.json', 'instance must be of type string', '/abilities/0/name'],
+            ['ability-name-is-empty.json', 'should be greater than or equal to 1 characters', '/abilities/0/name'],
+            ['ability-name-is-too-long.json', 'should be lesser than or equal to 500 characters', '/abilities/0/name'],
+            ['no-ability-level.json', 'property "level" is missing', '/abilities/0'],
+            ['ability-level-is-not-a-string.json', 'instance must be of type string', '/abilities/0/level'],
+            ['ability-level-is-empty.json', 'should be greater than or equal to 1 characters', '/abilities/0/level'],
+            ['ability-level-is-too-long.json', 'should be lesser than or equal to 255 characters', '/abilities/0/level'],
+            ['duplicate-ability.json', 'elements must be unique', '/abilities']
         ];
     }
 
-    private function assertHasValidationError(array $errors, $expectedProperty, $expectedMessage)
+    private function assertHasValidationError(array $errors, $expectedPath, $expectedMessage)
     {
         $this->assertGreaterThan(0, count($errors), 'At least one error was expected');
 
         foreach ($errors as $error) {
-            if ($error['property'] === $expectedProperty && $error['message'] === $expectedMessage) {
-                $this->assertTrue(true, 'Expected error was found');
+            if ($error['path'] === $expectedPath && $error['message'] === $expectedMessage) {
                 return;
             }
         }
 
         $errorString = print_r($errors, true);
-        $this->assertTrue(false, "Expected error was not found in the following:\n{$errorString})");
+        $this->fail("Expected error was not found in the following:\n{$errorString})");
     }
 }

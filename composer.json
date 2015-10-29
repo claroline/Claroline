@@ -4,7 +4,7 @@
     "require": {
         "php": ">=5.4.1",
         "claroline/core-bundle": "~6.2",
-        "justinrainbow/json-schema": "~1.4"
+        "stefk/jval": "dev-master"
     },
     "require-dev": {
         "claroline/dev-bundle": "dev-master"
