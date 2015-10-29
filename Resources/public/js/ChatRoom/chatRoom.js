@@ -18,6 +18,7 @@ var ChatRoom = {
     xmppMucHost: null,
     NS_MUC: "http://jabber.org/protocol/muc",
     participants: {},
+    messages: [],
     on_room_message: function (message) {
         var from = $(message).attr('from');
         var type = $(message).attr('type');
@@ -109,15 +110,15 @@ var ChatRoom = {
         });
     },
     display_message: function (sender, message) {
-        var txt = '<li><b class="received-message">' + sender + ' : </b>' + message + '</li>';
+        ChatRoom.messages.push({sender: sender, message: message});
+        var txt = '<span><b class="received-message">' + sender + '</b> : ' + message + '<br></span>';
         $('#chat-content').append(txt);
-        var scrollHeight = $('#chat-content')[0].scrollHeight;
-        $('#chat-content').scrollTop(scrollHeight);
+//        var scrollHeight = $('#chat-content')[0].scrollHeight;
+//        $('#chat-content').scrollTop(scrollHeight);
     },
     display_user: function (username) {
         ChatRoom.participants[username] = username;
-        console.log(ChatRoom.participants);
-        var txt = '<li class="participant-' + username + '">' + username + '</li>';
+        var txt = '<span class="participant-' + username + '"><i class="fa fa-user"></i> ' + username + '<br></span>';
         $('#chat-room-users-panel').append(txt);
     },
     remove_user: function (username) {
