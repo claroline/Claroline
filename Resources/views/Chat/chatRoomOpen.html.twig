@@ -41,15 +41,23 @@
                 </div>
             </div>
         </div>
-        <div id="chat-datas-box"
-             data-chat-room-id="{{ chatRoom.getId() }}"
-             data-resource-guid="{{ chatRoom.getResourceNode().getGuid() }}"
-             data-username="{{ chatUser.getChatUsername() }}"
-             data-password="{{ chatUser.getChatPassword() }}"
-             data-xmpp-host="{{ xmppHost }}"
-             data-xmpp-muc-host="{{ xmppMucHost }}"
-             data-xmpp-port="{{ xmppPort }}"
-        >
-        </div>
     {% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        (function () {
+            'use strict';
+            
+            ChatRoom.connect(
+                '{{ xmppHost }}',
+                '{{ xmppMucHost }}',
+                '{{ chatRoom.getId() }}',
+                '{{ chatRoom.getResourceNode().getGuid() }}',
+                '{{ chatUser.getChatUsername() }}',
+                '{{ chatUser.getChatPassword() }}'
+            );
+        })();
+    </script>
 {% endblock %}

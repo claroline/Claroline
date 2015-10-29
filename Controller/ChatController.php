@@ -90,6 +90,7 @@ class ChatController extends Controller
         $canEdit = $this->hasChatRoomRight($chatRoom, 'EDIT');
 
         return array(
+            'workspace' => $chatRoom->getResourceNode()->getWorkspace(),
             'canChat' => $canChat,
             'canEdit' => $canEdit,
             'chatUser' => $chatUser,
