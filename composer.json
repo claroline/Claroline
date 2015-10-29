@@ -13,7 +13,7 @@
         "innova/angular-ui-sortable-bundle" : "~5.0",
         "innova/angular-ui-pageslide-bundle" : "~5.0",
         "json-quiz/json-quiz": "dev-master",
-        "justinrainbow/json-schema": "~1.4"
+        "stefk/jval": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.6",

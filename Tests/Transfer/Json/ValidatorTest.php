@@ -6,7 +6,14 @@ use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 
 class ValidatorTest extends TransactionalTestCase
 {
+    /**
+     * @var Validator
+     */
     private $validator;
+
+    /**
+     * @var string
+     */
     private $formatDir;
 
     protected function setUp()
@@ -20,7 +27,7 @@ class ValidatorTest extends TransactionalTestCase
     {
         $errors = $this->validator->validateQuestion(new \stdClass());
         $expected = [[
-            'property' => '',
+            'path' => '',
             'message' => 'Question cannot be validated due to missing property "type"'
         ]];
         $this->assertEquals($expected, $errors);
@@ -32,7 +39,7 @@ class ValidatorTest extends TransactionalTestCase
         $question->type = 'application/x.foo+json';
         $errors = $this->validator->validateQuestion($question);
         $expected = [[
-            'property' => 'type',
+            'path' => 'type',
             'message' => "Unknown question type 'application/x.foo+json'"
         ]];
         $this->assertEquals($expected, $errors);
@@ -43,8 +50,8 @@ class ValidatorTest extends TransactionalTestCase
         $data = file_get_contents("{$this->formatDir}/question/choice/examples/invalid/no-solution-id.json");
         $question = json_decode($data);
         $expected = [
-            'property' => 'solutions[0]',
-            'message' => 'the property id is required'
+            'path' => '/solutions/0',
+            'message' => 'property "id" is missing'
         ];
         $this->assertContains($expected, $this->validator->validateQuestion($question));
     }
@@ -54,7 +61,7 @@ class ValidatorTest extends TransactionalTestCase
         $data = file_get_contents("{$this->formatDir}/question/choice/examples/valid/true-or-false.json");
         $question = json_decode($data);
         $expected = [
-            'property' => '',
+            'path' => '',
             'message' => 'a solution(s) property is required'
         ];
         $this->assertContains($expected, $this->validator->validateQuestion($question));
