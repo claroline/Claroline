@@ -3,9 +3,8 @@
 namespace UJM\ExoBundle\Transfer\Json;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use JsonSchema\RefResolver;
-use JsonSchema\Uri\UriRetriever;
-use JsonSchema\Validator as SchemaValidator;
+use JVal\Utils;
+use JVal\Validator as SchemaValidator;
 
 /**
  * @DI\Service("ujm.exo.json_validator")
@@ -40,16 +39,15 @@ class Validator
             $handler = $this->handlerCollector->getHandlerForMimeType($question->type);
 
             if ($handler) {
-                $schema = $this->getSchema($handler->getJsonSchemaUri(), true);
-                $validator = new SchemaValidator();
-                $validator->check($question, $schema);
-                $errors = $validator->getErrors();
+                $schema = $this->getSchema($handler->getJsonSchemaUri());
+                $validator = $this->getValidator();
+                $errors = $validator->validate($question, $schema);
 
                 if ($requireSolution
                     && !isset($question->solution)
                     && !isset($question->solutions)) {
                     $errors[] = [
-                        'property' => '',
+                        'path' => '',
                         'message' => 'a solution(s) property is required'
                     ];
                 }
@@ -62,13 +60,13 @@ class Validator
             }
 
             return [[
-                'property' => 'type',
+                'path' => 'type',
                 'message' => "Unknown question type '{$question->type}'"
             ]];
         }
 
         return [[
-            'property' => '',
+            'path' => '',
             'message' => 'Question cannot be validated due to missing property "type"'
         ]];
     }
@@ -81,26 +79,32 @@ class Validator
      */
     public function validateExercise(\stdClass $quiz)
     {
-        $schema = $this->getSchema('quiz');
-        $validator = new SchemaValidator();
-        $validator->check($quiz, $schema);
+        $schema = $this->getSchema('http://json-quiz.github.io/json-quiz/schemas/quiz/schema.json');
+        $validator = $this->getValidator();
 
-        return $validator->getErrors();
+        return $validator->validate($quiz, $schema);
     }
 
-    private function getSchema($schemaPathId, $isUri = false)
+    private function getValidator()
     {
-        $retriever = new UriRetriever();
-        $retriever->setUriRetriever(new LocalSchemaRetriever());
+        $hook = function ($uri) {
+            return $this->uriToFile($uri);
+        };
 
-        $schemaUri = !$isUri ?
-            LocalSchemaRetriever::uriFromPathId($schemaPathId) :
-            $schemaPathId;
+        return SchemaValidator::buildDefault($hook);
+    }
 
-        $schema = $retriever->retrieve($schemaUri);
-        $refResolver = new RefResolver($retriever);
-        $refResolver->resolve($schema);
+    private function getSchema($uri)
+    {
+        return Utils::loadJsonFromFile($this->uriToFile($uri));
+    }
 
-        return $schema;
+    private function uriToFile($uri)
+    {
+        $vendorDir = __DIR__ . '/../../../../../..';
+        $schemaDir = realpath("{$vendorDir}/json-quiz/json-quiz/format");
+        $baseUri = 'http://json-quiz.github.io/json-quiz/schemas';
+
+        return str_replace($baseUri, $schemaDir, $uri);
     }
 }
