@@ -2,11 +2,11 @@
 
 namespace UJM\ExoBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Claroline\CoreBundle\Entity\User;
-use UJM\ExoBundle\Repository\TypeQCMRepository;
 
 class InteractionQCMType extends AbstractType
 {
@@ -69,7 +69,7 @@ class InteractionQCMType extends AbstractType
                     'data_class' => 'UJM\\ExoBundle\\Entity\\TypeQCM',
                     'multiple' => false,
                     'expanded' => true,
-                    'query_builder' => function (TypeQCMRepository $er) {
+                    'query_builder' => function (EntityRepository $er) {
                         return $er->createQueryBuilder('TypeQCM')
                         ->orderBy('TypeQCM.value', 'DESC');
                     },
