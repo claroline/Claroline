@@ -1,0 +1,7 @@
+<iq type='result'
+    from='shakespeare.lit'
+    to='romeo@montague.net/orchard'
+    id='items1'>
+  <query xmlns='http://jabber.org/protocol/disco#items'/>
+</iq>
+      

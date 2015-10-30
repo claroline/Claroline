@@ -1,0 +1,11 @@
+{
+ "src_dir"  : "/lib/",
+ "spec_dir" : "/spec/",
+ "server":{
+   "port":8124
+ },
+ "externals":[
+    "http://localhost/jslibs/strophe.js",
+    "http://localhost/jslibs/jquery.js"
+ ]
+}

@@ -1,0 +1,13 @@
+ban: Ban
+chat: Chat
+chat_accounts_creation: Chat accounts creation
+chat_configuration: Chat configuration
+chat_room_configuration: Chat room configuration
+chat_username: Chat username
+create_chat_accounts: Create Chat accounts
+host: Host
+muc_host: MUC server
+mute: Mute
+port: Port
+search_chat_users_infos: A search has to be performed in order to display users with a chat account.
+select_users_for_chat_account_generation: Select users for Chat account generation

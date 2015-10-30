@@ -1,0 +1,78 @@
+{% extends "ClarolineChatBundle:Chat:layout.html.twig" %}
+
+{% set _resource = chatRoom %}
+
+{% block chat_content %}
+    {% block section_content %}
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                {{ chatRoom.getResourceNode().getName() }}
+                
+                {% if canEdit %}
+                    <i class="fa fa-cogs pointer-hand pull-right"
+                       id="chat-room-configuration-btn"
+                       data-toggle="tooltip"
+                       data-placement="left"
+                       title="{{ 'configuration'|trans({}, 'platform') }}"
+                    >
+                    </i>
+                {% endif %}
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div ng-cloak="" ng-app="chatRoomApp">
+                <div class="row chat-room-row">
+                    <div id="chat-room-content-panel" class="col-md-9">
+                        <div ng-controller="mainMenuCtrl"
+                             data-id="{{ chatRoom.getId() }}"
+                             data-chat-room="{{ chatRoom | json_encode }}"
+                             data-can-chat="{{ canChat }}"
+                             data-can-edit="{{ canEdit }}"
+                        >
+    {#                        Message : {% verbatim %}{{ name }}{% endverbatim %}#}
+                        <div id="chat-content" class="well well-sm"></div>
+                        </div>
+                    </div>
+                    <div id="chat-room-users-panel" class="col-md-3 well well-sm hidden-xs hidden-sm">
+                        <h4 class="text-center">
+                            {{ 'users'|trans({}, 'platform') }}
+                        </4>
+                    </div>
+                </div>
+                <div class="row chat-room-row">
+                    <div class="input-group">
+                        <input type="text"
+                               id="msg-input"
+                               class="form-control"
+                        >
+                        <span class="input-group-btn">
+                            <button id="send-msg-btn" class="btn btn-default">
+                                <i class="fa fa-comment"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        (function () {
+            'use strict';
+            
+            ChatRoom.connect(
+                '{{ xmppHost }}',
+                '{{ xmppMucHost }}',
+                '{{ chatRoom.getId() }}',
+                '{{ chatRoom.getRoomName() }}',
+                '{{ chatUser.getChatUsername() }}',
+                '{{ chatUser.getChatPassword() }}',
+                '{{ chatUser.getUser().getFirstName() }}',
+                '{{ chatUser.getUser().getLastName() }}'
+            );
+        })();
+    </script>
+{% endblock %}
