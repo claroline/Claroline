@@ -1,9 +1,13 @@
+ban: Bannir
 chat: Chat
-chat_configuration: Configuration du Chat
 chat_accounts_creation: Création de comptes pour le Chat
+chat_configuration: Configuration du Chat
+chat_room_configuration: Configuration de la Chat room
+chat_username: Identifiant pour le Chat
 create_chat_accounts: Créer des comptes pour le Chat
 host: Hôte
 muc_host: Serveur MUC
+mute: Muet
 port: Port
 search_chat_users_infos: Une recherche doit être effectuée pour afficher les utilisateurs ayant un compte pour le Chat.
 select_users_for_chat_account_generation: Sélectionnez les utilisateurs pour lesquels vous désirez créer un compte pour le Chat

@@ -13,6 +13,7 @@ namespace Claroline\ChatBundle\Listener;
 
 use Claroline\ChatBundle\Entity\ChatRoom;
 use Claroline\ChatBundle\Form\ChatRoomType;
+use Claroline\ChatBundle\Manager\ChatManager;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
@@ -31,6 +32,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  */
 class ChatRoomListener
 {
+    private $chatManager;
     private $formFactory;
     private $httpKernel;
     private $om;
@@ -39,6 +41,7 @@ class ChatRoomListener
 
     /**
      * @DI\InjectParams({
+     *     "chatManager"        = @DI\Inject("claroline.manager.chat_manager"),
      *     "formFactory"        = @DI\Inject("form.factory"),
      *     "httpKernel"         = @DI\Inject("http_kernel"),
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
@@ -47,6 +50,7 @@ class ChatRoomListener
      * })
      */
     public function __construct(
+        ChatManager $chatManager,
         FormFactory $formFactory,
         HttpKernelInterface $httpKernel,
         ObjectManager $om,
@@ -54,6 +58,7 @@ class ChatRoomListener
         TwigEngine $templating
     )
     {
+        $this->chatManager = $chatManager;
         $this->formFactory = $formFactory;
         $this->httpKernel = $httpKernel;
         $this->om = $om;
@@ -134,8 +139,8 @@ class ChatRoomListener
      */
     public function onCopy(CopyResourceEvent $event)
     {
-        $copy = new ChatRoom();
-        $this->om->persist($copy);
+        $chatRoom = $event->getResource();
+        $copy = $this->chatManager->copyChatRoom($chatRoom);
 
         $event->setCopy($copy);
         $event->stopPropagation();

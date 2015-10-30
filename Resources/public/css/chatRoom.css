@@ -2,10 +2,32 @@
   display: none !important;
 }
 
-#chat-room-content-panel {
-    background-color: #B3D3DB;
-}
+/*#chat-room-content-panel {
+    height: 60vh;
+    overflow-y: scroll;
+}*/
 
 #chat-room-users-panel {
-    background-color: #D8B1B1;
+    height: 60vh;
+    overflow-y: scroll;
+    /*background-color: #D8B1B1;*/
+}
+
+/*body {
+    overflow: hidden !important;
+}*/
+
+#chat-content {
+    height: 60vh;
+    overflow-y: scroll;
+    background-color: #FFFFFF;
+}
+
+.chat-room-row {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.chat-room-ban-btn {
+    color: #D9534F;
 }

@@ -67,6 +67,18 @@ class ChatManager
         $this->om->remove($chatUser);
     }
 
+    public function iniChatRoom(ChatRoom $chatRoom)
+    {
+        $roomName = $chatRoom->getRoomName();
+
+        if (empty($roomName)) {
+            $guid = $chatRoom->getResourceNode()->getGuid();
+            $chatRoom->setRoomName($guid);
+            $this->om->persist($chatRoom);
+            $this->om->flush();
+        }
+    }
+
     public function saveChatRoomMessage(ChatRoom $chatRoom, $username, $message)
     {
         $roomMessage = new ChatRoomMessage();
@@ -76,6 +88,28 @@ class ChatManager
         $roomMessage->setContent($message);
         $this->om->persist($roomMessage);
         $this->om->flush();
+    }
+
+    public function copyChatRoom(ChatRoom $chatRoom)
+    {
+        $newRoom = new ChatRoom();
+        $newRoom->setName($chatRoom->getName());
+        $newRoom->setRoomName($chatRoom->getRoomName());
+        $newRoom->setRoomStatus($chatRoom->getRoomStatus());
+        $this->om->persist($newRoom);
+
+        $messages = $chatRoom->getMessages();
+
+        foreach ($messages as $message) {
+            $newMessage = new ChatRoomMessage();
+            $newMessage->setChatRoom($newRoom);
+            $newMessage->setContent($message->getContent());
+            $newMessage->setUsername($message->getUsername());
+            $newMessage->setCreationDate($message->getCreationDate());
+            $this->om->persist($newMessage);
+        }
+
+        return $newRoom;
     }
 
 

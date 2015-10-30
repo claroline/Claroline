@@ -82,6 +82,7 @@ class ChatController extends Controller
     public function chatRoomOpenAction(User $authenticatedUser, ChatRoom $chatRoom)
     {
         $this->checkChatRoomRight($chatRoom, 'OPEN');
+        $this->chatManager->iniChatRoom($chatRoom);
         $xmppHost = $this->platformConfigHandler->getParameter('chat_xmpp_host');
         $xmppMucHost = $this->platformConfigHandler->getParameter('chat_xmpp_muc_host');
         $xmppPort = $this->platformConfigHandler->getParameter('chat_xmpp_port');
@@ -115,6 +116,38 @@ class ChatController extends Controller
     {
         $this->checkChatRoomRight($chatRoom, 'OPEN');
         $this->chatManager->saveChatRoomMessage($chatRoom, $username, $message);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/chat/room/{chatRoom}/configure/form",
+     *     name="claro_chat_room_configure_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineChatBundle:Chat:chatRoomConfigureModalForm.html.twig")
+     */
+    public function chatRoomConfigureFormAction(ChatRoom $chatRoom)
+    {
+        $this->checkChatRoomRight($chatRoom, 'EDIT');
+
+        return array('chatRoom' => $chatRoom);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/chat/room/{chatRoom}/configure",
+     *     name="claro_chat_room_configure",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineChatBundle:Chat:chatRoomConfigureModalForm.html.twig")
+     */
+    public function chatRoomConfigureAction(ChatRoom $chatRoom)
+    {
+        $this->checkChatRoomRight($chatRoom, 'EDIT');
 
         return new JsonResponse('success', 200);
     }

@@ -101,7 +101,7 @@
         
         var userPicker = new UserPicker();
         var config = {
-            multiple: true,
+            multiple: false,
             picker_name: 'chat_users_selections',
             picker_title: Translator.trans(
                 'select_users_for_chat_account_generation',
