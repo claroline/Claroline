@@ -5,12 +5,14 @@ parameters:
     innova_path.controller.path_player.class:      Innova\PathBundle\Controller\Wizard\PlayerController
     innova_path.controller.path_editor.class:      Innova\PathBundle\Controller\Wizard\EditorController
     innova_path.controller.user_progression.class: Innova\PathBundle\Controller\UserProgressionController
+    innova_path.controller.step_conditions.class:  Innova\PathBundle\Controller\StepConditionsController
 
     # Managers
     innova_path.manager.path.class:                Innova\PathBundle\Manager\PathManager
     innova_path.manager.publishing.class:          Innova\PathBundle\Manager\PublishingManager
     innova_path.manager.path_template.class:       Innova\PathBundle\Manager\PathTemplateManager
     innova_path.manager.step.class:                Innova\PathBundle\Manager\StepManager
+    innova_path.manager.stepconditions.class:      Innova\PathBundle\Manager\StepConditionsManager
     innova_path.manager.user_progression.class:    Innova\PathBundle\Manager\UserProgressionManager
     
     # Form types

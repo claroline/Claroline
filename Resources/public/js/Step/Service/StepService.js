@@ -39,6 +39,7 @@
                 this.who               = null;
                 this.where             = null;
                 this.duration          = null;
+                this.evaluationType    = null;
             };
 
             /**
@@ -127,10 +128,11 @@
                         }
 
                         // Parameters
-                        step.withTutor = activity['withTutor'];
-                        step.who       = activity['who'];
-                        step.where     = activity['where'];
-                        step.duration  = activity['duration'];
+                        step.withTutor      = activity['withTutor'];
+                        step.who            = activity['who'];
+                        step.where          = activity['where'];
+                        step.duration       = activity['duration'];
+                        step.evaluationType = activity['evaluationType'];
                     }
                 },
 

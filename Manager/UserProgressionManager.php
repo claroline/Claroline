@@ -43,9 +43,10 @@ class UserProgressionManager
      * @param Step $step
      * @param User $user
      * @param string $status
-     * @return \Innova\PathBundle\Entity\UserProgression
+     * @param bool $authorized
+     * @return UserProgression
      */
-    public function create(Step $step, User $user = null, $status = null)
+    public function create(Step $step, User $user = null, $status = null, $authorized=false)
     {
         if (empty($user)) {
             // Load current logged User
@@ -62,6 +63,7 @@ class UserProgressionManager
         }
 
         $progression->setStatus($status);
+        $progression->setAuthorized($authorized);
 
         $this->om->persist($progression);
         $this->om->flush();
@@ -69,7 +71,7 @@ class UserProgressionManager
         return $progression;
     }
 
-    public function update(Step $step, User $user = null, $status)
+    public function update(Step $step, User $user = null, $status, $authorized=false)
     {
         if (empty($user)) {
             // Load current logged User
@@ -84,10 +86,11 @@ class UserProgressionManager
 
         if (empty($progression)) {
             // No progression for User => initialize a new one
-            $progression = $this->create($step, $user, $status);
+            $progression = $this->create($step, $user, $status, $authorized);
         } else {
             // Update existing progression
             $progression->setStatus($status);
+            $progression->setAuthorized($authorized);
 
             $this->om->persist($progression);
             $this->om->flush();

@@ -76,6 +76,21 @@
                 <!-- Primary resource -->
                 <resources-primary-edit data-resources="stepEditCtrl.step.primaryResource"></resources-primary-edit>
 
+<!-- Conditions -->
+                <div class="panel panel-default" data-ng-if="stepEditCtrl.nextstep">
+                    <div class="panel-heading">
+                        <h4 class="panel-title" data-ng-click="stepEditCtrl.collapsedPanels.conditions = !stepEditCtrl.collapsedPanels.conditions">
+                            <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': stepEditCtrl.collapsedPanels.conditions, 'fa-caret-down': !stepEditCtrl.collapsedPanels.conditions }"></span>
+                            {{ 'condition_access'|trans:{}:'path_wizards' }} {{stepEditCtrl.nextstep.name}}
+                        </h4>
+                    </div>
+
+                    <div class="panel-body" data-ng-show="!stepEditCtrl.collapsedPanels.conditions" >
+                        <step-conditions-edit data-title="pathEditCtrl.path.name"></step-conditions-edit>
+                    </div>
+                </div>
+<!-- /Conditions -->
+
                 <!-- Properties -->
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -128,6 +143,17 @@
                             <label class="control-label col-md-4" for="duration">{{ 'step_duration'|trans:{}:'path_wizards' }}</label>
                             <div class="col-md-8">
                                 <duration-field class="row" data-model="stepEditCtrl.step.duration"></duration-field>
+                            </div>
+                        </div>
+
+                        <!-- Evaluation Type -->
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="evaluation-type">{{ 'step_evaluation_type'|trans:{}:'path_wizards' }}</label>
+                            <div class="col-md-8">
+                                <select class="form-control" id="evaluation-type" name="evaluation-type" data-ng-model="stepEditCtrl.step.evaluationType">
+                                    <option value="manual">{{ 'manual'|trans:{}:'platform' }}</option>
+                                    <option value="automatic">{{ 'automatic'|trans:{}:'platform' }}</option>
+                                </select>
                             </div>
                         </div>
                     </div>

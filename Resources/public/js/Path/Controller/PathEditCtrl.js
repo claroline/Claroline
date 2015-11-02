@@ -84,6 +84,8 @@ PathEditCtrl.prototype.redo = function () {
  */
 PathEditCtrl.prototype.save = function () {
     if (this.unsaved) {
+        //Check for condition validity
+       // console.log(this.pathService.ConditionValidityCheck());
         // Save only with there is something to change
         this.pathService.save().then(function () {
             // Mark path as modified

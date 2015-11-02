@@ -1,0 +1,56 @@
+<div>
+    <div class="padding-md alert-danger text-center" data-ng-if="stepConditionsEditCtrl.step.evaluationType !== 'automatic'">{{ 'condition_step_activity_notmanageable'|trans:{}:'path_wizards' }}</div>
+    <div class="padding-md alert-danger text-center" data-ng-if="stepConditionsEditCtrl.step.primaryResource.length === 0">{{ 'condition_step_no_activity'|trans:{}:'path_wizards' }}</div>
+    <!-- display these buttons only when a condition is created -->
+    <div class="btn-group" role="group" data-ng-if="stepConditionsEditCtrl.conditionstructure.length !== 0">
+<!--
+        <button type="button" data-ng-click="stepConditionsEditCtrl.addCriteriagroup(stepConditionsEditCtrl.conditionstructure[0])" class="btn btn-sm btn-primary">
+            <span class="fa fa-plus"></span>
+            <span>{{ 'condition_criteria_group_add'|trans:{}:'path_wizards' }}</span>
+        </button>
+        <button type="button" data-ng-click="stepConditionsEditCtrl.addCriterion(stepConditionsEditCtrl.conditionstructure)" class="btn btn-sm btn-primary">
+            <span class="fa fa-plus"></span>
+            <span>{{ 'condition_criterion_add'|trans:{}:'path_wizards' }}</span>
+        </button>
+-->
+        <button type="button" data-ng-click="stepConditionsEditCtrl.deleteCondition(stepConditionsEditCtrl.current.stepId)" class="btn btn-sm btn-danger text-right" >
+            <span class="fa fa-trash"></span>
+            <span>{{ 'condition_condition_delete'|trans:{}:'path_wizards' }}</span>
+        </button>
+
+    </div>
+
+    <div data-ps-class="step-conditions-container" data-ps-push-class="step-conditions-opened">
+        <div class="step-conditions">
+
+            <!-- Block to display where there is no condition structure -->
+            <div data-ng-if="stepConditionsEditCtrl.conditionstructure.length === 0" class="text-center">
+                <em>{{ 'condition_no_conditionstructure'|trans:{}:'path_wizards' }}</em>
+                <div class="text-center col-md-12">
+                    <button type="button" role="button" class="btn btn-sm btn-primary" data-ng-click="stepConditionsEditCtrl.createCondition(stepConditionsEditCtrl.current.stepId)">
+                        <span class="fa fa-fw fa-pencil"></span>
+                        {{ 'condition_init_conditionstructure'|trans:{}:'path_wizards' }}
+                    </button>
+                    <!--<button type="button" role="button" class="btn btn-block btn-default" data-ng-click="stepConditionsEditCtrl.createFromTemplate()">
+                        <span class="fa fa-fw fa-download"></span>
+                        {{ 'condition_init_conditionstructure_template'|trans:{}:'path_wizards' }}
+                    </button>-->
+                </div>
+            </div>
+
+            <!-- Block to display when a condition structure is set -->
+            <div class="condition-container" data-ng-if="stepConditionsEditCtrl.conditionstructure.length !== 0">
+
+                <!-- criteriagroup block, recursive generation -->
+                <ul class="criteriagroup">
+                    <li class="criteriagroup-li" data-ng-repeat="group in stepConditionsEditCtrl.conditionstructure[0].criteriagroups"
+                        data-ng-include="stepConditionsEditCtrl.webDir + 'bundles/innovapath/js/StepConditions/Partial/criteriagroup.html'">
+                    </li>
+                </ul>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>

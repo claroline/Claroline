@@ -2,6 +2,13 @@
     <!-- Summary of the Path-->
     <path-summary-show data-title="pathShowCtrl.path.name" data-ng-if="pathShowCtrl.path.steps.length !== 0"></path-summary-show>
 
+	<div class="row">
+        <p class="navbar-text navbar-right">
+            <!-- User messages -->
+            <alert-box></alert-box>
+        </p>
+    </div>
+
     <div class="path-header">
         <h1 class="h2" style="margin-top: 0;">
             <!-- Toggle summary button -->
@@ -21,7 +28,7 @@
         </h1>
 
         <!-- Breadcrumbs -->
-        <path-navigation data-ng-if="pathShowCtrl.path.breadcrumbs && pathShowCtrl.path.steps.length !== 0"></path-navigation>
+        <path-navigation-show data-ng-if="pathShowCtrl.path.breadcrumbs && pathShowCtrl.path.steps.length !== 0"></path-navigation-show>
     </div>
 
     <!-- Current step -->

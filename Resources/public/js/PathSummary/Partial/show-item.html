@@ -13,7 +13,7 @@
         {{ step.name | truncate }}
     </div>
 
-    <div class="step-progression dropdown" data-ng-switch="pathSummaryShowCtrl.userProgression[step.id].status">
+    <div class="step-progression dropdown" data-ng-switch="pathSummaryShowCtrl.userProgression[step.id].status" data-ng-if="pathSummaryShowCtrl.userProgression[step.id].status">
         <a href="" id="step-progression-{{ step.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             <!-- Step has never be seen -->
             <span data-ng-switch-default="" class="fa fa-fw fa-eye-slash text-muted" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="{{ 'user_progression_step_unseen'|trans:{}:'path_wizards' }}"></span>

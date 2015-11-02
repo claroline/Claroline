@@ -41,3 +41,13 @@ services:
         arguments:
             userProgressionManager: @innova_path.manager.user_progression
         scope: request
+
+    # Step Conditions controller
+    innova_path.controller.step_conditions:
+        class: %innova_path.controller.step_conditions.class%
+        arguments:
+            objectManager:  @claroline.persistence.object_manager
+            groupManager:   @claroline.manager.group_manager
+            securityToken:  @security.token_storage
+            teamManager:    @claroline.manager.team_manager
+        scope: request

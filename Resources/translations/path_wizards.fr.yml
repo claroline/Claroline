@@ -3,6 +3,44 @@ cancel: Annuler
 close_summary: Fermer le sommaire
 copy: copie
 
+condition_access: Condition d'accès pour
+condition_and: ET
+condition_condition_delete: Supprimer la condition
+condition_criterion_add : Ajouter un critère
+condition_criteria_group_add : Ajouter un groupe de critère
+condition_criteria_group_delete : Supprimer le groupe de critère
+condition_criterion_choice: Votre choix
+condition_criterion_delete: Supprimer le critère
+condition_criterion_test_repetition: L'activité doit être tenté <b>%activityRep%</b> fois, actuellement vous l'avez tenté <b>%userRep%</b> fois
+condition_criterion_test_status: Le statut de l'activité doit être <b>%activityStatus%</b>, actuellement il est <b>%userStatus%</b>
+condition_criterion_test_usergroup : Vous devez appartenir au groupe <b>%activityGroup%</b>, actuellement vous appartenez au(x) groupe(s) <b>%userGroup%</b>
+condition_criterion_test_usergroup_nogroup : Vous devez appartenir au groupe <b>%activityGroup%</b>, actuellement vous n'appartenez à <b>aucun groupe</b>
+condition_criterion_test_userteam : Vous devez appartenir à l'équipe <b>%activityTeam%</b>, actuellement vous appartenez à l'équipe <b>%userTeam%</b>
+condition_criterion_test_userteam_noteam : Vous devez appartenir à l'équipe <b>%activityTeam%</b>, actuellement vous n'appartenez à <b>aucune équipe</b>
+condition_criterion_type_activityrepetition: Répétition de l'activité
+condition_criterion_type_activitystatus: Status de l'activité
+condition_criterion_type_usergroup: Groupe d'utilisateur
+condition_criterion_type_userteam: Equipe d'utilisateur
+condition_criterion_type: Type de critère
+condition_criterion_activityrepetition: Nombre de fois où l'activité a été effectuée
+condition_criterion_activitystatus: Statut de l'activité
+condition_criterion_usergroup: Utilisateur appartient au groupe
+condition_criterion_userteam: Utilisateur appartient à l'équipe
+condition_delete_title: Suppression de la condition
+condition_delete_confirm: Attention, vous êtes sur le point de supprimer la condition. Sans condition, tous les utilisateurs pourront passer à l'étape suivante
+condition_delete: Supprimer
+condition_init_conditionstructure: Initialiser une condition pour l'accès à l'étape
+condition_no_conditionstructure: Aucune condition n'est définie pour l'étape
+condition_or: OU
+condition_step_no_activity: Attention, vous n'avez pas associé d'activité à cette étape
+condition_step_activity_notmanageable : Attention, l'activité que vous avez choisi est en évaluation manuelle : vous ne pouvez utiliser les critères relatifs à une évaluation pour cette étape
+criteriagroup_delete_title: Suppression du groupe de critère
+criteriagroup_delete_confirm: Souhaitez-vous vraiment supprimer ce groupe de critères ? Cela supprimera tous les critères de ce groupe et les groupes de critères enfants
+criteriagroup_delete: Supprimer
+criterion_delete_title: Suppression du critère
+criterion_delete_confirm: Souhaitez-vous vraiment supprimer ce critère ?
+criterion_delete: Supprimer
+
 # d
 delete_activity: Supprimer le lien avec l'activité
 delete_step: Supprimer l'étape
@@ -86,6 +124,9 @@ see_activity: Voir l'activité
 see_step_siblings: Voir les étapes soeurs
 select_activity: Sélectionner une activité existante
 show_path_info: Afficher les informations relatives au Parcours
+step_access_denied: Vous n'avez pas effectué les étapes précédentes
+step_access_denied_condition: Vous n'avez pas rempli les conditions pour accéder à l'étape %stepName% parce que : %conditionList%
+step_access_denied_no_activity_set: Vous ne pouvez accéder à l'étape %stepName% car aucune activité ne lui a été attribuée. Contactez le gestionnaire
 step_add_child: Ajouter une étape
 step_copy: Copier
 step_delete: Supprimer l'étape
@@ -95,6 +136,7 @@ step_description: Description
 step_drag: Déplacer l'élément
 step_duration: Durée prévue
 step_edit: Modifier l'étape
+step_evaluation_type: Type d'évaluation
 step_has_duration: l'étape a une durée
 step_no_resource: Il n'y a aucune ressource rattachée à cette étape.
 step_not_accessible: Cette étape n'est pas accessible pour le moment.

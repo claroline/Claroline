@@ -23,7 +23,8 @@
         'PathModule',
         'StepModule',
         'TemplateModule',
-        'UserProgressionModule'
+        'UserProgressionModule',
+        'StepConditionsModule'
     ];
 
     // Resolve functions (it's the same between Editor and Player as we navigate in the same way in the 2 apps)
@@ -104,6 +105,27 @@
                 }
 
                 return inherited;
+            }
+        ],
+        /**
+         * get return values of promises made in PathService to be available elsewhere
+         */
+        /**
+         * list of all user group in Claro
+         */
+        allgroups: [
+            'PathService',
+            function getAllgroups(PathService) {
+                return PathService.usergrouppromise;
+            }
+        ],
+        /**
+         * list of all evaluation statuses in Claro
+         */
+        conditionEvaluationStatuses: [
+            'PathService',
+            function getEvaluationStatuses(PathService) {
+                return PathService.evaluationstatusespromise;
             }
         ]
     };

@@ -4,9 +4,13 @@ namespace Innova\PathBundle\Manager;
 
 use Claroline\CoreBundle\Manager\RightsManager;
 use Doctrine\Common\Persistence\ObjectManager;
+use Innova\PathBundle\Entity\Criterion;
+use Innova\PathBundle\Entity\Criteriagroup;
 use Innova\PathBundle\Entity\InheritedResource;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
+use Innova\PathBundle\Entity\StepCondition;
+use Innova\PathBundle\Manager\StepConditionsManager;
 
 /**
  * Manage Publishing of the paths
@@ -55,18 +59,42 @@ class PublishingManager
     protected $uniqId2step;
 
     /**
+     * array uniqid => stepcondition
+     */
+    protected $uniqId2sc;
+
+    /**
+     * array uniqid => criteriagroup
+     */
+    protected $uniqId2cg;
+
+    /**
+     * array uniqid => criteria
+     */
+    protected $uniqId2crit;
+
+    /**
+     *StepConditions Manager
+     * @var \Claroline\CoreBundle\Manager\ResourceManager
+     */
+    protected $stepConditionsManager;
+
+    /**
      * Class constructor
-     * @param \Doctrine\Common\Persistence\ObjectManager                                          $objectManager
-     * @param \Innova\PathBundle\Manager\StepManager                                              $stepManager
-     * @param \Claroline\CoreBundle\Manager\RightsManager                                         $rightsManager
+     * @param \Doctrine\Common\Persistence\ObjectManager $objectManager
+     * @param \Innova\PathBundle\Manager\StepManager $stepManager
+     * @param StepConditionsManager $stepConditionsManager
+     * @param \Claroline\CoreBundle\Manager\RightsManager $rightsManager
      */
     public function __construct(
         ObjectManager                 $objectManager,
         StepManager                   $stepManager,
+        StepConditionsManager         $stepConditionsManager,
         RightsManager                 $rightsManager)
     {
         $this->om            = $objectManager;
         $this->stepManager   = $stepManager;
+        $this->stepConditionsManager = $stepConditionsManager;
         $this->rightsManager = $rightsManager;
     }
 
@@ -86,9 +114,11 @@ class PublishingManager
 
         // Decode structure
         $this->pathStructure = json_decode($pathStructure);
-
-        $this->path = $path;
-        $this->uniqId2step = array();
+        $this->path         = $path;
+        $this->uniqId2step  = array();
+        $this->uniqId2sc    = array();
+        $this->uniqId2cg    = array();
+        $this->uniqId2crit  = array();
 
         return $this;
     }
@@ -103,6 +133,9 @@ class PublishingManager
         $this->path          = null;
         $this->pathStructure = null;
         $this->uniqId2step   = array();
+        $this->uniqId2sc     = array();
+        $this->uniqId2cg     = array();
+        $this->uniqId2crit   = array();
 
         return $this;
     }
@@ -126,6 +159,7 @@ class PublishingManager
 
         // Publish steps for this path
         $toProcess = !empty($this->pathStructure->steps) ? $this->pathStructure->steps : array();
+/*//echo "JSON steps : <br>\n";var_dump($this->pathStructure->steps);*/
         $publishedSteps = $this->publishSteps(0, null, $toProcess);
 
         // Clean steps to remove
@@ -136,7 +170,10 @@ class PublishingManager
 
         // replace ids
         $json = $this->replaceStepIds();
-
+        $json = $this->replaceStepConditionId($json);
+        $json = $this->replaceCriteriagroupId($json);
+        $json = $this->replaceCriteriaId($json);
+//echo "json final :".$json;
         // Re encode updated structure and update Path
         $this->path->setStructure($json);
 
@@ -182,19 +219,29 @@ class PublishingManager
 
         // Retrieve existing steps for this path
         $existingSteps = $this->path->getSteps();
+
+//        //echo "DB steps : <br>";var_dump($existingSteps);
+
         foreach ($steps as $stepStructure) {
+//echo "before : stepStructure->resourceId=";//echo $stepStructure->resourceId."<br>\n";
             if (empty($stepStructure->resourceId) || !$existingSteps->containsKey($stepStructure->resourceId)) {
+//echo "create step <br>";//echo 'level'.$level."<br>\n";
                 // Current step has never been published or step entity has been deleted => create it
                 $step = $this->stepManager->create($this->path, $level, $parent, $currentOrder, $stepStructure);
                 $uniqId = "_STEP".uniqid();
                 $this->uniqId2step[$uniqId] = $step;
                 // Update json structure with new resource ID
                 $stepStructure->resourceId = $uniqId;
+//echo "after create step : stepStructure->resourceId =";//echo $stepStructure->resourceId."<br>\n";
             } else {
+//echo "update step <br>";//echo 'level'.$level.' stepStructure->resourceId:'.$stepStructure->resourceId.' parent'.$parent."<br>\n";
                 // Step already exists => update it
                 $step = $existingSteps->get($stepStructure->resourceId);
                 $step = $this->stepManager->edit($this->path, $level, $parent, $currentOrder, $stepStructure, $step);
             }
+
+            //condition management
+            $publishedStepConditions = $this->publishStepConditions($step, $stepStructure);
 
             // Manage resources inheritance
             $excludedResources = !empty($stepStructure->excludedResources) ? $stepStructure->excludedResources : array();
@@ -386,5 +433,303 @@ class PublishingManager
         }
 
         return $nodes;
+    }
+
+    /**
+     * Get a condition by ID
+     * @param  integer   $conditionId
+     * @return null|StepCondition
+     */
+    public function getStepCondition($conditionId)
+    {
+        return $this->om->getRepository("InnovaPathBundle:StepCondition")->findOneById($conditionId);
+    }
+
+    /**
+     * Get a criteriagroup by ID
+     * @param  integer   $criteriagroupId
+     * @return null|Criteriagroup
+     */
+    public function getCriteriagroup($criteriagroupId)
+    {
+        return $this->om->getRepository("InnovaPathBundle:Criteriagroup")->findOneById($criteriagroupId);
+    }
+
+    /**
+     * Get a criteria by ID
+     * @param  integer   $criterionId
+     * @return null|Criterion
+     */
+    public function getCriteria($criterionId)
+    {
+        return $this->om->getRepository("InnovaPathBundle:Criterion")->findOneById($criterionId);
+    }
+
+    /**
+     * Add or update stepconditions
+     *
+     * @param Step $stepDB
+     * @param \stdClass $stepJS
+     * @return array
+     */
+    protected function publishStepConditions(Step $stepDB, \stdClass $stepJS = null)
+    {
+        //retrieve condition from DB
+        $existingCondition = $stepDB->getCondition();
+        $processedCondition = array();
+
+        if (isset($stepJS->condition))
+        {
+            //retrieve the condition
+            $conditionJS = $stepJS->condition;
+
+            // Current condition has never been published or condition entity has been deleted => create it
+            if (empty($conditionJS->scid)
+                || ($existingCondition->getId() != $conditionJS->scid))
+            {
+//echo "create condition <br>\n";
+                $publishedCondition = $this->stepConditionsManager->createStepCondition($stepDB);
+                $uniqId = "_COND".uniqid();
+                $this->uniqId2sc[$uniqId] = $publishedCondition;
+                // Update json structure with new resource ID
+                $conditionJS->scid = $uniqId;
+            }
+            else
+            {
+//echo "update condition <br>\n";
+                $publishedCondition = $this->getStepCondition($conditionJS->scid);
+                $publishedCondition = $this->stepConditionsManager->editStepCondition($stepDB, $publishedCondition);
+            }
+            $processedCondition[] = $publishedCondition;
+//echo "manage criteriagroups <br>\n";
+
+            //manage criteriagroups
+            $existingCriteriagroups = $publishedCondition->getCriteriagroups()->toArray();
+            $publishedCriteriagroup = $this->publishCriteriagroups($publishedCondition, 0, null, $conditionJS->criteriagroups);
+//echo "Clean criteriagroup to remove <br>\n";
+            // Clean criteriagroup to remove
+            $this->cleanCriteriagroup($publishedCriteriagroup, $existingCriteriagroups, $publishedCondition);
+
+//echo "Clean Condition to remove <br>\n";
+            // Clean Condition to remove
+            if (is_object($existingCondition))
+                $this->cleanCondition($publishedCondition, $existingCondition, $stepDB);
+        }
+        return $processedCondition;
+    }
+
+    /**
+     * Update criteriagroups for a condition
+     *
+     * @param StepCondition $conditionDB
+     * @param int $level
+     * @param array $criteriagroupsJS
+     * @return array
+     */
+    protected function publishCriteriagroups(StepCondition $conditionDB, $level = 0, Criteriagroup $parentCG = null, array $criteriagroupsJS = array())
+    {
+        $processedCriteriagroups = array();
+        $currentOrder = 0;
+
+        // Retrieve existing criteriagroups for this condition
+        $existingCriteriagroups = $conditionDB->getCriteriagroups();
+
+        foreach ($criteriagroupsJS as $criteriagroupJS)
+        {
+//echo "criteriagroupid ".$criteriagroupJS->id."<br>\n";
+
+            // Current criteriagroup has never been published or criteriagroup entity has been deleted => create it
+            if (empty($criteriagroupJS->cgid) || !$existingCriteriagroups->containsKey($criteriagroupJS->cgid))
+            {
+//echo "create group <br>\n";
+                $criteriagroupDB = $this->stepConditionsManager->createCriteriagroup($level, $currentOrder, $parentCG, $conditionDB);
+                $uniqId = "_CG".uniqid();
+                $this->uniqId2cg[$uniqId] = $criteriagroupDB;
+                // Update json structure with new resource ID
+                $criteriagroupJS->cgid = $uniqId;
+            }
+            else
+            {
+//echo "edit group <br>\n";
+                //retrieve CG
+                $criteriagroupDB = $existingCriteriagroups->get($criteriagroupJS->cgid);
+                //edit CG in DB
+                $criteriagroupDB = $this->stepConditionsManager->editCriteriagroup($level, $currentOrder, $parentCG, $conditionDB, $criteriagroupDB);
+            }
+//echo "Manage criteria <br>\n";
+            // Manage criteria
+            $existingCriteria = $criteriagroupDB->getCriteria();
+            $publishedCriteria = $this->publishCriteria($criteriagroupJS, $criteriagroupDB);
+//echo "Clean criteria to remove <br>\n";
+            // Clean criteria to remove
+            $this->cleanCriteria($publishedCriteria, $existingCriteria->toArray(), $criteriagroupDB);
+
+            // Store criteriagroup to know it doesn't have to be deleted when we will clean the condition
+            $processedCriteriagroups[] = $criteriagroupDB;
+
+            //Check children criteriagroup
+            if (!empty($criteriagroupJS->criteriagroup))
+            {
+                $childrenLevel = $level + 1;
+                $childrenCriteriagroups = $this->publishCriteriagroups($conditionDB, $childrenLevel, $criteriagroupDB, $criteriagroupJS->criteriagroup);
+
+                // Store children criteriagroup
+                $processedCriteriagroups = array_merge($processedCriteriagroups, $childrenCriteriagroups);
+            }
+
+            $currentOrder++;
+        }
+
+        return $processedCriteriagroups;
+    }
+
+    /**
+     * Update criteria from a criteriagroup
+     *
+     * @param array $criteriagroupJS
+     * @param Criteriagroup $criteriagroupDB
+     * @return array
+     */
+    protected function publishCriteria($criteriagroupJS = array(), Criteriagroup $criteriagroupDB)
+    {
+        $processedCriteria = array();
+
+        // Retrieve existing criteriagroups for this condition
+        $existingCriteria = $criteriagroupDB->getCriteria();
+
+        foreach ($criteriagroupJS->criterion as $criterionJS) {
+            //criterion attributes
+            $data = (isset($criterionJS->data)) ? $criterionJS->data : null;
+            $ctype = (isset($criterionJS->type)) ? $criterionJS->type : null;
+//echo "criterionid ".$criterionJS->id."<br>\n";
+            // Current criterion has never been published or criterion entity has been deleted => create it
+            if (empty($criterionJS->critid) || !$existingCriteria->containsKey($criterionJS->critid))
+            {
+//echo "criterion add <br>\n";
+                $criterionDB = $this->stepConditionsManager->createCriterion($data, $ctype, $criteriagroupDB);
+                $uniqId = "_CRIT".uniqid();
+                $this->uniqId2crit[$uniqId] = $criterionDB;
+                // Update json structure with new resource ID
+                $criterionJS->critid = $uniqId;
+            } else {
+//echo "criterion edit <br>\n";
+                //retrieve criterion
+                $criterionDB = $existingCriteria->get($criterionJS->critid);
+                //edit criterion in DB
+                $criterionDB = $this->stepConditionsManager->editCriterion($data, $ctype, $criteriagroupDB, $criterionDB);
+            }
+            // Store criteria to know it doesn't have to be deleted when we will clean the condition
+            $processedCriteria[] = $criterionDB;
+        }
+
+        return $processedCriteria;
+    }
+
+    /**
+     * Clean conditions data which no long exist in the current path
+     *
+     * @param array $neededCondition
+     * @param array $existingCondition
+     * @param Step $step
+     * @return PublishingManager
+     */
+    protected function cleanCondition($neededCondition = null, $existingCondition = null, Step $step)
+    {
+//echo "inside cleanCondition<br>\n";
+//echo "typeof(existingData)";var_dump(is_object($existingCondition));//echo "<br>\ntypeof(neededData)";var_dump(is_object($neededCondition));
+        if ($existingCondition->getId() != $neededCondition->getId()) {
+            $step->removeCondition($neededCondition);
+            $this->om->remove($neededCondition);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clean criteriagroups data which no long exist in the current condition
+     *
+     * @param array $neededCriteriagroup
+     * @param array $existingCriteriagroup
+     * @param StepCondition $stepCondition
+     * @return PublishingManager
+     */
+    protected function cleanCriteriagroup(array $neededCriteriagroup = array(), array $existingCriteriagroup = array(), StepCondition $stepCondition)
+    {
+//echo "inside cleanCriteriagroup<br>\n";
+        $toRemove = array_filter($existingCriteriagroup, function (Criteriagroup $current) use ($neededCriteriagroup) {
+//echo "inside cleanCriteriagroup closure<br>\n";
+            $removeCriteriagroup = true;
+            foreach ($neededCriteriagroup as $data) {
+                if ($current->getId() == $data->getId()) {
+                    $removeCriteriagroup = false;
+                    break;
+                }
+            }
+
+            return $removeCriteriagroup;
+        });
+
+        foreach ($toRemove as $criteriagroupToRemove) {
+            $stepCondition->removeCriteriagroup($criteriagroupToRemove);
+            $this->om->remove($criteriagroupToRemove);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clean criteria data which no long exist in the current criteriagroup
+     *
+     * @param array $neededCriteria
+     * @param array $existingCriteria
+     * @param Criteriagroup $criteriagroup
+     * @return PublishingManager
+     */
+    protected function cleanCriteria(array $neededCriteria = array(), array $existingCriteria = array(), Criteriagroup $criteriagroup)
+    {
+//echo "inside cleanCriteria<br>\n";
+        $toRemove = array_filter($existingCriteria, function (Criterion $current) use ($neededCriteria) {
+//echo "inside cleanCriteria closure<br>\n";
+            $removeCriterion = true;
+            foreach ($neededCriteria as $data) {
+                if ($current->getId() == $data->getId()) {
+                    $removeCriterion = false;
+                    break;
+                }
+            }
+
+            return $removeCriterion;
+        });
+
+        foreach ($toRemove as $criterionToRemove) {
+            $criteriagroup->removeCriterion($criterionToRemove);
+            $this->om->remove($criterionToRemove);
+        }
+
+        return $this;
+    }
+
+    protected function replaceStepConditionId($json)
+    {
+        foreach ($this->uniqId2sc as $uniqId => $stepcondition) {
+            $json = str_replace($uniqId, $stepcondition->getId(), $json);
+        }
+        return $json;
+    }
+
+    protected function replaceCriteriagroupId($json)
+    {
+        foreach ($this->uniqId2cg as $uniqId => $criteriagroup) {
+            $json = str_replace($uniqId, $criteriagroup->getId(), $json);
+        }
+        return $json;
+    }
+
+    protected function replaceCriteriaId($json)
+    {
+        foreach ($this->uniqId2crit as $uniqId => $criterion) {
+            $json = str_replace($uniqId, $criterion->getId(), $json);
+        }
+        return $json;
     }
 }

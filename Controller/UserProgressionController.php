@@ -42,16 +42,16 @@ class UserProgressionController
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      *
      * @Route(
-     *     "/step/{id}/{status}",
+     *     "/create/{id}/{authorized}/{status}",
      *     name         = "innova_path_progression_create",
      *     requirements = {"id" = "\d+"},
      *     options      = { "expose" = true }
      * )
      * @Method("POST")
      */
-    public function createAction(Step $step, $status = null)
+    public function createAction(Step $step, $status = null, $authorized=0)
     {
-        $progression = $this->userProgressionManager->create($step, null, $status);
+        $progression = $this->userProgressionManager->create($step, null, $status, $authorized);
 
         return new JsonResponse($progression);
     }
@@ -63,16 +63,16 @@ class UserProgressionController
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      *
      * @Route(
-     *     "/step/{id}/{status}",
+     *     "/step/{id}/{status}/{authorized}",
      *     name         = "innova_path_progression_update",
      *     requirements = {"id" = "\d+"},
      *     options      = { "expose" = true }
      * )
      * @Method("PUT")
      */
-    public function updateAction(Step $step, $status)
+    public function updateAction(Step $step, $status, $authorized)
     {
-        $progression = $this->userProgressionManager->update($step, null, $status);
+        $progression = $this->userProgressionManager->update($step, null, $status, $authorized);
 
         return new JsonResponse($progression);
     }

@@ -1,9 +1,8 @@
 <div class="path-form">
     <!-- Summary of the Path-->
     <path-summary-edit data-title="pathEditCtrl.path.name"></path-summary-edit>
-
     <!-- Form of the Path -->
-    <form action="#" role="form" class="form-horizontal" method="post">
+    <form action="#" role="form" class="form-horizontal" method="post" name="pathform">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="panel panel-default">
@@ -129,7 +128,7 @@
         </div>
 
         <!-- Breadcrumbs -->
-        <path-navigation data-ng-if="pathEditCtrl.path.breadcrumbs"></path-navigation>
+        <path-navigation-edit data-ng-if="pathEditCtrl.path.breadcrumbs"></path-navigation-edit>
 
         <!-- Display current step -->
         <div data-ng-view=""></div>

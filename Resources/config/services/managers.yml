@@ -16,6 +16,7 @@ services:
         arguments:
             objectManager: @doctrine.orm.entity_manager
             stepManager:   @innova_path.manager.step
+            stepConditionsManager: @innova_path.manager.stepconditions
             rightsManager: @claroline.manager.rights_manager
 
     # Path template manager
@@ -39,3 +40,9 @@ services:
         arguments:
             objectManager: @doctrine.orm.entity_manager
             securityToken: @security.token_storage
+
+    # StepCondition manager
+    innova_path.manager.stepconditions:
+        class: %innova_path.manager.stepconditions.class%
+        arguments:
+            om:              @doctrine.orm.entity_manager
