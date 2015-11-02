@@ -31,3 +31,9 @@ ujm_interactiongraphic_update:
     pattern:  /{id}/update
     defaults: { _controller: "UJMExoBundle:InteractionGraphic:update" }
     requirements: { _method: post }
+
+ujm_Document_name_alreadyExist:
+    pattern:  /Document/nameAlreadyExist
+    defaults: { _controller: "UJMExoBundle:WSRest:nameAlreadyExist" }
+    requirements:
+      _method: POST

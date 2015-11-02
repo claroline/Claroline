@@ -1,0 +1,89 @@
+<div class="row">
+    <div class="col-md-12">
+        <!-- links row (accueil, liste copies, retry) -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="btn-group" role="group">
+                    <a class="btn btn-default" data-ng-href="{{paperCtrl.generateUrl('exercise-home', paperCtrl.exoId)}}">{{ 'link_exercice_home'|trans:{}:'ujm_sequence' }}</a>
+                    <a class="btn btn-default" data-ng-href="#/{{paperCtrl.exoId}}">{{ 'paper_list'|trans:{}:'ujm_sequence' }}</a>
+                </div>                
+                <a class="btn btn-primary pull-right" data-ng-href="{{paperCtrl.generateUrl('exercise-play', paperCtrl.exoId)}}">
+                    <i class="fa fa-check-square-o">{{ 'link_exercise_retry'|trans:{}:'ujm_sequence' }}</i>
+                </a>
+            </div>
+        </div>
+        <hr/>
+        <!-- Note row -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="pull-right alert" data-ng-class="{'alert-danger' : paperCtrl.note < 5 , 'alert-warning' : (paperCtrl.note < 10 && paperCtrl.note >= 5), 'alert-info' : (paperCtrl.note >= 10 && paperCtrl.note < 15), 'alert-success' : paperCtrl.note >= 15 }"><strong>{{ 'label_exercise_score'|trans:{}:'ujm_sequence' }} : {{paperCtrl.note}} / 20 </strong></div>
+            </div>
+        </div>
+        <hr/>
+        <!-- question list row -->
+        <div class="row" >
+            <div class="col-md-12">
+                <!-- One question -->
+                <div data-ng-repeat="question in paperCtrl.paper.questions" id="question-{{question.id}}" class="panel panel-default">
+                    <div class="panel-heading clearfix">
+                        <h4 class="panel-title pull-left">
+                            {{question.title}} - {{question.label}}
+                        </h4>
+                        <a class="btn btn-default pull-right fa fa-chevron-down" id="question-toggle-{{question.id}}" data-ng-click="paperCtrl.toggleDetails(question.id)"></a>
+                    </div>
+                    <div id="question-body-{{question.id}}">
+                        <div class="panel-body">
+                            <!-- global feedback -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h5>{{question.feedback}}</h5>
+                                </div>
+                            </div>
+                            <hr/>
+                            <!-- used hints -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h5 data-ng-repeat="hint in question.hints">{{hint.text}} - {{hint.penalty}}</h5>
+                                </div>
+                            </div>
+                            <hr/>
+                            <!-- for choice question only... directive ? -->
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>{{ 'paper_details_table_choice'|trans:{}:'ujm_sequence' }}</th>
+                                        <th class="center-text">{{ 'paper_details_table_expected_answer'|trans:{}:'ujm_sequence' }}</th>
+                                        <th class="center-text">{{ 'paper_details_table_your_answer'|trans:{}:'ujm_sequence' }}</th>
+                                        <th>{{ 'paper_details_table_comment'|trans:{}:'ujm_sequence' }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-ng-repeat="choice in question.choices">
+                                        <td>
+                                            <img class="image" data-ng-if="paperCtrl.getChoiceSimpleType(choice) == 'encoded-image'" data-ng-src="data:{{choice.type}};{{choice.encoding}}, {{choice.data}}"/>
+                                            <img class="image" data-ng-if="paperCtrl.getChoiceSimpleType(choice) == 'web-image'" data-ng-src="{{choice.url}}"/>
+                                            <div data-ng-if="paperCtrl.getChoiceSimpleType(choice) == 'simple-text'">{{choice.data}}</div>
+                                            <div data-ng-if="paperCtrl.getChoiceSimpleType(choice) == 'html-text'" data-ng-bind-html="choice.data | unsafe"></div>
+                                        </td>
+                                        <td class="center-text">
+                                            <div class="fa" data-ng-class="paperCtrl.isChoiceValid(question, choice) ? 'fa-check':'fa-remove'"></div>
+                                        </td>
+                                        <td class="center-text">
+                                            <div class="fa" data-ng-class="paperCtrl.isStudentChoice(question, choice) ? 'fa-check':'fa-remove'"></div>
+                                        </td>
+                                        <td>
+                                            <span>{{choice.feedback ? choice.feedback : '-'}}</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

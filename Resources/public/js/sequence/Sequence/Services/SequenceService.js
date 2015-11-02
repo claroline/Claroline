@@ -8,49 +8,58 @@
         '$http',
         '$filter',
         '$q',
-        function PlayerService($http, $filter, $q) {       
-           
+        '$window',
+        function SequenceService($http, $filter, $q, $window) {
 
             return {
-               
                 /**
-                 * Update the sequence
-                 * @param sequence
-                 * @returns 
+                 * Each time a student navigate through question / step we have to record the current answer
+                 * the answer object might have an id in this case we update the previous record else we create a new one
+                 * @param {number} exercise id (= step id)
+                 * @param {object} answer
+                 * @returns promise
                  */
-                update : function (sequence){
-                    var deferred = $q.defer();                    
-                    // sequence constructor
-                    function Sequence(sequence){
-                        var ujm_sequence = {
-                            name: sequence.name,
-                            description: sequence.description,
-                            startDate: new Date(sequence.startDate),
-                            endDate: new Date(sequence.endDate)
-                        };
-                        
-                        return ujm_sequence;
-                    }
-                    
-                    var updated = new Sequence(sequence);
-                   
+                recordAnswer: function (exoId, answer) {
+                    var deferred = $q.defer();
                     $http
-                        .put(
-                            Routing.generate('ujm_sequence_update', { id : sequence.id }),
-                            {
-                                sequence_type: updated
-                            }
-                        )
-                        .success(function (response){
-                            deferred.resolve(response);
-                        })
-                        .error(function(data, status){
-                            console.log('sequence service, update method error');
-                            console.log(status);
-                            console.log(data);
-                            deferred.reject([]);
-                        });
-                        return deferred.promise;
+                            .put(
+                                    // fake for testing (param converter needs real object!)
+                                    Routing.generate('ujm_sequence_save_step', {exo_id: 9, question_id: 12}), {data: answer}
+                            // real one when API will be ready
+                            //Routing.generate('ujm_sequence_save_step', {exo_id : exoId, question_id : answer.question.id}), {data: answer}
+                            )
+                            .success(function (response) {
+                                deferred.resolve(response);
+                            })
+                            .error(function (data, status) {
+                                deferred.reject([]);
+                                var url = Routing.generate('ujm_sequence_error');
+                                $window.location = url;
+                            });
+                    return deferred.promise;
+                },
+                /**
+                 * End the sequence by setting the paper data
+                 * @param {integer} exoId
+                 * @param {object} studentPaper
+                 * @param {bool} interrupted
+                 * @returns promise
+                 */
+                endSequence: function (exoId, studentPaper, interrupted) {
+                    var deferred = $q.defer();
+                    $http
+                            .put(
+                                    Routing.generate('ujm_sequence_end', {id: exoId}), {paper: studentPaper, interrupted : interrupted}
+                            )
+                            .success(function (response) {
+                                deferred.resolve(response);
+                            })
+                            .error(function (data, status) {
+                                deferred.reject([]);
+                                var url = Routing.generate('ujm_sequence_error');
+                                $window.location = url;
+                            });
+                    return deferred.promise;
                 }
             };
         }

@@ -2,24 +2,124 @@
     'use strict';
 
     angular.module('Question').controller('ChoiceQuestionCtrl', [
+        '$ngBootbox',
+        '$window',
         'CommonService',
-        function (CommonService) {
+        'QuestionService',
+        function ($ngBootbox, $window, CommonService, QuestionService) {
             this.question = {};
-            // keep answer
-            this.answer = {};
-            this.penalty = 0;
+            // keep choice(s)
+            this.multipleChoice = {};
+            this.uniqueChoice = [];
+            this.currentQuestionPaperData = {};
+            this.usedHints = [];// contains full hints object(s) for display
 
-
-            this.setQuestion = function (question) {
+            this.init = function (question) {
+                // get used hints infos (id + content) + checked answer(s) for the current step / question
+                // those data are updated by view and sent to common service as soon as they change
+                this.currentQuestionPaperData = CommonService.getCurrentQuestionPaperData(question);
                 this.question = question;
-            };
-
-            this.getQuestion = function () {
-                return this.question;
+                if (this.currentQuestionPaperData.hints.length > 0) {
+                    // init used hints display
+                    for (var i = 0; i < this.currentQuestionPaperData.hints.length; i++) {
+                        this.getHintData(this.currentQuestionPaperData.hints[i]);
+                    }
+                }
+                //this.checkChoices(this.question.multiple);
+                if (this.currentQuestionPaperData.answer.length > 0) {
+                    // init previously given answer
+                    this.checkChoices(this.question.multiple);
+                }
             };
 
             /**
-             * Check if the question has meta like created / licence, description...
+             * check if a Hint has already been used (in paper)
+             * @param {type} id
+             * @returns {Boolean}
+             */
+            this.hintIsUsed = function (id) {
+                if (this.currentQuestionPaperData && this.currentQuestionPaperData.hints) {
+                    for (var i = 0; i < this.currentQuestionPaperData.hints.length; i++) {
+                        if (this.currentQuestionPaperData.hints[i] === id) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            };
+
+            /**
+             * Get hint data and update student data in common service
+             * @param {type} hintId
+             * @returns {undefined}
+             */
+            this.showHint = function (id) {
+                var penalty = QuestionService.getHintPenalty(this.question.hints, id);
+                $ngBootbox.confirm(Translator.trans('question_show_hint_confirm', {1: penalty}, 'ujm_sequence'))
+                        .then(function () {
+                            this.getHintData(id);
+                            this.currentQuestionPaperData.hints.push(id);
+                            this.updateStudentData();
+                            // hide button
+                            angular.element('#hint-' + id).hide();
+                        }.bind(this));
+            };
+
+            this.getHintData = function (id) {
+                var promise = QuestionService.getHint(id);
+                promise.then(function (result) {
+                    this.usedHints.push(result.data);
+
+                }.bind(this));
+            };
+
+            /**
+             * check already given answers
+             * @param {boolean} isMultiple
+             */
+            this.checkChoices = function (isMultiple) {
+                var prevAnswer = this.currentQuestionPaperData.answer; // only one question per step for now
+                if (prevAnswer && prevAnswer.length > 0) {
+                    for (var i = 0; i < this.question.choices.length; i++) {
+                        // if an anwser exist with the choice id set checkbox answer model to true
+                        if (this.answerExists(prevAnswer, this.question.choices[i].id, isMultiple)) {
+                            if (isMultiple) {
+                                this.multipleChoice[this.question.choices[i].id] = true;
+                            }
+                            else {
+                                this.uniqueChoice = this.question.choices[i].id;
+                            }
+                        } else {
+                            if (isMultiple) {
+                                this.multipleChoice[this.question.choices[i].id] = false;
+                            }
+                        }
+                    }
+                }
+                // send the data to commen service so that other directives can get them
+                this.updateStudentData();
+            };
+
+            /**
+             * method used by check choices function
+             * for each question we check if the answer has been given
+             * search an anwser in array
+             * @param {array} prevAnswer collection of questions id
+             * @param {type} searched question id
+             * @param {bool} is mutliple choice ?
+             * @returns {Boolean}
+             */
+            this.answerExists = function (prevAnswer, searched, isMultiple) {
+                for (var j = 0; j < prevAnswer.length; j++) {
+                    if (prevAnswer[j] === searched) {
+                        return true;
+                    }
+                }
+                return false;
+            };
+
+            /**
+             * Checks if the question has meta
              * @returns {boolean}
              */
             this.questionHasOtherMeta = function () {
@@ -36,64 +136,28 @@
             };
 
             /**
-             * Used for multiple choice question
-             * The way we get checked boxes in the model is a bit odd so we need to initiate values to false...
-             */
-            this.initAnswers = function () {
-                for (var i = 0; i < this.question.choices.length; i++) {
-                    this.answer[this.question.choices[i].id] = false;
-                }
-                // init the answer objects
-                this.updateQuestionChoices();
-            };
-
-            /**
-             * in case of random order in choices need to create a random ordering
-             * @returns {undefined}
-             */
-            this.initChoicesOrder = function () {
-                var meta = CommonService.getSequenceMeta();
-                if (meta.random) {
-                    this.shuffleChoices(this.question.choices);
-                }
-            };
-
-            /**
-             * private method
-             * shuffle array elements
-             * @param {type} array
-             * @returns {@var;temporaryValue}
-             */
-            this.shuffleChoices = function (array) {
-                var currentIndex = array.length, temporaryValue, randomIndex;
-                // While there remain elements to shuffle...
-                while (0 !== currentIndex) {
-                    // Pick a remaining element...
-                    randomIndex = Math.floor(Math.random() * currentIndex);
-                    currentIndex -= 1;
-
-                    // And swap it with the current element.
-                    temporaryValue = array[currentIndex];
-                    array[currentIndex] = array[randomIndex];
-                    array[randomIndex] = temporaryValue;
-                }
-                return array;
-            };
-
-            this.showHint = function (hint) {
-                angular.element('#' + hint.id).next().show();
-                angular.element('#' + hint.id).hide();
-                // update penalty
-                this.penalty += hint.penalty;
-            };
-
-            /**
              * Called on each checkbox / radiobutton click
              * We need to share those informations with parent controllers
              * For that purpose we use a shared service
              */
-            this.updateQuestionChoices = function () {
-                CommonService.setCurrentQuestionAndAnswer(this.answer, this.question, this.penalty);
+            this.updateStudentData = function (choiceId) {
+                if (this.question.multiple) {
+                    if (this.multipleChoice[choiceId]) {
+                        this.currentQuestionPaperData.answer.push(choiceId);
+                    }
+                    else {
+                        //usnset from this.currentQuestionPaperData.answer
+                        for (var i = 0; i < this.currentQuestionPaperData.answer.length; i++) {
+                            if (this.currentQuestionPaperData.answer[i] === choiceId) {
+                                this.currentQuestionPaperData.answer.splice(i, 1);
+                            }
+                        }
+                    }
+                }
+                else {
+                    this.currentQuestionPaperData.answer[0] = this.uniqueChoice;
+                }
+                CommonService.setStudentData(this.question, this.currentQuestionPaperData);
             };
         }
     ]);

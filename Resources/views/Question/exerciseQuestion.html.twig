@@ -26,7 +26,7 @@
         <a class="btn btn-primary" href="{{ path('ujm_exercise_open', { 'id':  exerciseID }) }}">
             <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
         </a>
-        <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'exoID':  exerciseID, 'pageGoNow': pagerQuestion.getNbPages,
+        <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'id':  exerciseID, 'pageGoNow': pagerQuestion.getNbPages,
             'maxPage': pagerQuestion.maxPerPage, 'nbItem': pagerQuestion.getNbResults }) }}">
             <i class="fa fa-download"></i> {{ 'import_questions' | trans({}, 'ujm_exo') }}
         </a>
@@ -86,6 +86,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'messages' }) }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/exerciceQuestion.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/resize.js') }}"></script>
@@ -95,4 +96,5 @@
             ready();
         });
     </script>
+    {% include "UJMExoBundle:Partial:modal/confirmDelQuestion.html.twig" %}
 {% endblock %}

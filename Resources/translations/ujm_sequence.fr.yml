@@ -1,66 +1,51 @@
 # b
 btn_end_sequence_label: Terminer la séquence
+btn_interrupt_sequence_label: Interrompre
 btn_prev_step_label: Aller à l'étape précédente
 btn_next_step_label: Aller à l'étape suivante
 
 # d
 dropdown_step_navigate_choice_label: Etape n°%1% / %2%
 
-# m
-meta_authors: Author(s)
-meta_others: Others
-meta_author_name: Nom
-meta_author_status: Status
-meta_author_mail: Email
-meta_created: Créé
-meta_updated: Modifié
-meta_licence: Licence
-meta_description: Description
-meta_max_attempts: Nombre d'essais maximum
+# l
+link_exercice_home: Accueil de l'exercise
+link_exercise_retry: Recommencer
+link_exercise_docimology: Docimologie
+link_csv_export: Export CSV
+label_exercise_score: Note
+label_exercise_correction: Correction
 
+# p
+paper_list: Liste des copies
+paper_search: Rechercher une copie
+paper_list_table_user: Utilisateur
+paper_list_table_paper_number: Numéro de copie
+paper_list_table_start_date: Date de début
+paper_list_table_end_date: Date de fin
+paper_list_table_interrupted: Interrompue
+paper_list_table_interrupted_yes: Oui
+paper_list_table_interrupted_no: Non
+paper_list_table_action: Correction
+paper_list_table_action_not_available: Indisponible actuellement
+paper_list_table_score: Score
+paper_list_table_first_page_label: Première
+paper_list_table_last_page_label: Dernière
+paper_list_table_toggle_pagination: Paginer / Dépaginer les resultats
+
+paper_details_table_choice: Choix
+paper_details_table_expected_answer: Réponse attendue
+paper_details_table_your_answer: Votre réponse
+paper_details_table_comment: Commentaire
 
 # q
 question_hints: Indices
-question_objects: Objets
-question_global_feedback: Retour global
-question_resources: Ressources
-question_choices: Choix
-question_choice_score: Score
-question_allow_multiple_choice: Permettre un choix multiple
-question_randomize_choices: Ordre aléatoire des choix
-question_panel_hide: Cacher / Montrer les détails de la question
-question_remove: Enlever la question
-question_cloze_text: Texte à trous
-question_solutions: Solutions
-question_solution_answers: Réponse(s)
-question_solution_score: Score
-question_show_hint_confirm: Etes vous sur de vouloir utiliser l'indice ? <br/> Cela entrainera une pénalité de %1% points.
+question_hint_label: Indice
+question_hint_show_title: Voir l'indice
+question_show_hint_confirm: Êtes vous sur de vouloir utiliser l'indice ? <br/> Cela entrainera une pénalité de %1% points.
 
 # s
 sequence_step: Etape
-sequence_panel_title: Séquence
-sequence_panel_hide: Cacher / Montrer les informations de la séquence
-sequence_type_name : Nom de la séquence
-sequence_type_description : Description de la séquence
-sequence_start_date: Date de début
-sequence_end_date: Date de fin
-sequence_name : Nom
-sequence_description : Description
-sequence_step_description: Description
-sequence_step_previous: Etape précédente
-sequence_step_next: Etape suivante
-sequence_step_view: Voir l'étape
-sequence_steps_save: Sauvegarder les étapes
-sequence_step_add: Ajouter une étape
-sequence_step_content_add: Add content step
-sequence_step_question_add: Add question step
-sequence_step_remove: Supprimer une étape
-sequence_save: Sauvegarder la séquence
-sequence_step_panel_title: Etapes
-sequence_select_available_question: Sélectionner une question
-sequence_step_add_question: Ajouter une question
 sequence_attempts_infos: Vous avez le droit à %1% essai(s)
 sequence_nb_attempts: Essais N° %1%
-sequence_next_step_confirm: Etes vous sur de vouloir terminer l'étape courante ? <br/> Vous ne pourrez pas revenir en arrière.
-sequence_end_sequence_confirm: Etes vous sur de vouloir terminer la séquence ? <br/> Vous ne pourrez plus modifier vos réponses.
-step_question_shuffle: Ordre des questions aléatoire pour cette étape
+sequence_interrupt_sequence_confirm: Êtes vous sur de vouloir interrompre la séquence ?
+sequence_end_sequence_confirm: Êtes vous sur de vouloir terminer la séquence ? <br/> Vous ne pourrez plus modifier vos réponses.

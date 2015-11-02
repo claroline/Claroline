@@ -23,6 +23,22 @@
         <h3 class="panel-title">{{ 'exercise'|trans({}, 'ujm_exo') }} : {{ exercise.title }}</h3>
     </div>
     <div class="panel-body">
+        <div class="row">
+            <div class="col-md-12">
+                {% for flashMessage in app.session.flashbag.get('success') %}
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('error') %}
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ flashMessage }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
         <div class="list-group">
             {% if isDesktop() %}
                 <a class="btn btn-primary" href="{{ path('claro_desktop_open_tool', { 'toolName': 'resource_manager', 'workspaceId': workspace.getId() }) ~ "#resources/" ~ resource.getParent().getId() }}">
@@ -214,16 +230,22 @@
                     <button type="button" id="more" class="btn btn-primary" onclick="moreInformation();">
                         <i class="fa fa-plus"></i> {{ 'more_info' | trans({}, 'ujm_exo') }}
                     </button>
-                    <button type="button" id="less" class="btn btn-primary" onclick="less_information();">
+                     <button type="button" id="less" class="btn btn-primary" onclick="lessInformation();">
                         <i class="fa fa-minus"></i> {{ 'less_information' | trans({}, 'ujm_exo') }}
                     </button>
                 {% endif %}
             </div>
             <div class="text-center panel-footer">
-                {% if allowedToCompose and nbQuestion > 0 %}
-                    <a class="btn btn-primary" href="{{ path('ujm_exercise_play', { 'id': exercise.id }) }}">
-                        <i class="fa fa-check-square-o"></i> Jouer
-                    </a>
+                {% if allowedToCompose and nbQuestion > 0 %}                   
+                    {% if nbUserPaper == 0 %}
+                        <a class="btn btn-primary" href="{{ path('ujm_exercise_play', { 'id': exercise.id }) }}">
+                            <i class="fa fa-check-square-o"></i> {{ 'compose' | trans({}, 'ujm_exo') }} [Angular]
+                        </a>
+                    {% else %}
+                        <a class="btn btn-primary" href="{{ path('ujm_exercice_papers', { 'id': exercise.id }) }}#/{{exercise.id}}">
+                            <i class="fa fa-check-square-o"></i> {{ 'compose' | trans({}, 'ujm_exo') }} [Angular]
+                        </a>
+                    {% endif %}
                 {% endif %}
                 {% if allowedToCompose and nbQuestion > 0 %}
                     {% if nbUserPaper == 0 %}
@@ -258,6 +280,9 @@
                     {% endif %}
                 {% endif %}
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <a class="btn btn-primary" href="{{ path('ujm_exercice_papers', { id: exercise.id }) }}#/{{exercise.id}}">
+                        <i class="fa fa-list"></i> {{ 'result' | trans({}, 'ujm_exo') }} [Angular]
+                    </a>
                     <a class="btn btn-primary" href="{{ path('ujm_paper_list', { exoID: exercise.id }) }}">
                         <i class="fa fa-list"></i> {{ 'result' | trans({}, 'ujm_exo') }}
                     </a>

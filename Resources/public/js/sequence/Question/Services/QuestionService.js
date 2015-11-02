@@ -8,54 +8,45 @@
         '$http',
         '$filter',
         '$q',
-        function QuestionService($http, $filter, $q) {       
-           
+        '$window',
+        function QuestionService($http, $filter, $q, $window) {
 
             return {
-               
                 /**
-                 * Get all available questions
+                 * Get an hint
                  * @returns promise
                  */
-                getAll : function (){
-                    var deferred = $q.defer(); 
+                getHint: function (_id) {
+                    var deferred = $q.defer();
                     $http
-                        .get(
-                            Routing.generate('ujm_step_get_available_questions')
-                        )
-                        .success(function (response){
-                            deferred.resolve(response);
-                        })
-                        .error(function(data, status){
-                            console.log('QuestionService, getAll method error');
-                            console.log(status);
-                            console.log(data);
-                            deferred.reject([]);
-                        });
-                        
-                     return deferred.promise;
+                            .get(
+                                    Routing.generate('ujm_get_hint_content', {id: _id})
+                                    )
+                            .success(function (response) {
+                                deferred.resolve(response);
+                            })
+                            .error(function (data, status) {
+                                deferred.reject([]);
+                                var url = Routing.generate('ujm_sequence_error');
+                                $window.location = url;
+                            });
+
+                    return deferred.promise;
                 },
                 /**
-                 * get questions for a step
-                 * @param sequence
-                 * @returns 
+                 * Get a hint penalty
+                 * @param {type} collection array of penalty
+                 * @param {type} searched searched id
+                 * @returns number
                  */
-                getStepQuestions : function (step){
-                    var deferred = $q.defer();                    
-                    $http
-                        .get(
-                            Routing.generate('ujm_step_get_questions', { id : step.id })
-                        )
-                        .success(function (response){
-                            deferred.resolve(response);
-                        })
-                        .error(function(data, status){
-                            console.log('QuestionService, getStepQuestions method error');
-                            console.log(status);
-                            console.log(data);
-                        });
-                        return deferred.promise;
+                getHintPenalty: function (collection, searched) {
+                    for (var i = 0; i < collection.length; i++) {
+                        if (collection[i].id === searched) {
+                            return collection[i].penalty;
+                        }
+                    }
                 }
+
             };
         }
     ]);

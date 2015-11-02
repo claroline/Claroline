@@ -2,62 +2,71 @@
 
 namespace UJM\ExoBundle\Manager\Sequence;
 
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Translation\TranslatorInterface;
-use UJM\ExoBundle\Entity\Sequence\Sequence;
-use UJM\ExoBundle\Entity\Sequence\Step;
+use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Entity\Question;
 
 /**
- * Description of SequenceManager.
+ * @DI\Service("ujm.exo.sequence_manager")
  */
 class SequenceManager
 {
-    protected $em;
-    protected $translator;
 
-    public function __construct(EntityManager $em, TranslatorInterface $translator)
+    private $om;
+    private $em;
+    private $translator;
+
+    /**
+     * @DI\InjectParams({
+     *     "om" = @DI\Inject("claroline.persistence.object_manager"),
+     *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "translator" = @DI\Inject("translator")
+     * })
+     * @param ObjectManager $om
+     * @param EntityManager $em
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(ObjectManager $om, EntityManager $em, TranslatorInterface $translator)
     {
+        $this->om = $om;
         $this->em = $em;
         $this->translator = $translator;
     }
 
-    public function getRepository()
+    /**
+     * End the sequence
+     * @param Exercise $exercise
+     * @param Array $paper
+     * @param bool $interrupted
+     * @return type
+     */
+    public function endSequence(Exercise $exercise, $paper, $interrupted)
     {
-        return $this->em->getRepository('UJMExoBundle:Sequence\Sequence');
+        $response = array();
+        $response['status'] = 'success';
+        $response['messages'] = array();
+        $response['data'] = array();
+
+        return $response;
+    }
+    
+    /**
+     * 
+     * @param Exercise $exercise
+     * @param Question $question
+     * @param type $answer
+     * @return int
+     */
+    public function saveProgression(Exercise $exercise, Question $question, $answer){
+        $response = array();
+        $response['status'] = 'success';
+        $response['messages'] = array();
+        // return the brand new answer id
+        $response['data'] = array('id' => 1);
+        return $response;
     }
 
-    public function createFirstAndLastStep(Sequence $s)
-    {
-
-        // add first page
-        $first = new Step();
-        $first->setIsFirst(true);
-        $first->setIsContentStep(true);
-        $first->setPosition(1);
-        $first->setDescription('<h1>This is the first Step</h1>');
-        $first->setSequence($s);
-        $s->addStep($first);
-
-        // add last page
-        $last = new Step();
-        $last->setIsLast(true);
-        $last->setIsContentStep(true);
-        $last->setPosition(2);
-        $last->setDescription('<h1>This is the last Step</h1>');
-        $last->setSequence($s);
-        $s->addStep($last);
-
-        $this->em->persist($s);
-        $this->em->flush();
-
-        return $s;
-    }
-
-    public function update(Sequence $s)
-    {
-        $this->em->persist($s);
-        $this->em->flush();
-
-        return $s;
-    }
 }

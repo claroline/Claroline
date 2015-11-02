@@ -5,7 +5,8 @@
 (function () {
     'use strict';
 
-    angular.module('Correction', [
+    angular.module('Paper', [
+        
        
     ]);
 })();

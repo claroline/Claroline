@@ -76,11 +76,12 @@ function sendData(select, path, prefx) {
 }
 
 // Display the selected picture
-function LoadPic(path, prefx, iddoc) {
+function LoadPic(path, prefx, iddoc,no_img) {
 
     // Selected document label in the list
     var select = $("*[id$='"+iddoc+"'] option:selected").text();
 
+if(select !== ""){
     // Get the matching url for a given label in order to load the new image
     sendData(select, path, prefx);
 
@@ -100,6 +101,10 @@ function LoadPic(path, prefx, iddoc) {
 
     //displays the button to add an answer
     $('#addButtonAnswer').css({"display" : "inline"});
+    }
+    else{
+        alert(no_img);
+    }
 }
 
 /**

@@ -6,7 +6,7 @@
 
     angular.module('Sequence', [
         'Step',
-        'Correction'
+        'Paper'
     ]);
 })();
 

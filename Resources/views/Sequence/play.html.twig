@@ -8,7 +8,7 @@
 
 {% block content %} 
     <div class="ujm-sequence-container" data-ng-app="SequencePlayerApp" data-ng-cloak="">
-        <sequence-play class="player-container" data-attempts="{{ attempts }}" data-steps="{{ steps }}" data-sequence="{{ sequence }}"></sequence-play>       
+        <sequence-play class="player-container" data-paper="{{ paper }}" data-attempts="{{ attempts }}" data-sequence="{{ sequence }}"></sequence-play>       
     </div>
 {% endblock %}
 
@@ -17,10 +17,7 @@
     {# Load Claroline JS #}
     {{ parent() }}
 
-
-
-    {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm_sequence_show.js'
-
+    {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm-sequence-show.js'
         
         '@UJMExoBundle/Resources/public/js/sequence/Common/*'
         '@UJMExoBundle/Resources/public/js/sequence/Common/Services/*'
@@ -30,10 +27,10 @@
         '@UJMExoBundle/Resources/public/js/sequence/Sequence/Directives/*'
         '@UJMExoBundle/Resources/public/js/sequence/Sequence/Services/*'
 
-        '@UJMExoBundle/Resources/public/js/sequence/Correction/*'
-        '@UJMExoBundle/Resources/public/js/sequence/Correction/Controllers/*'
-        '@UJMExoBundle/Resources/public/js/sequence/Correction/Directives/*'
-        '@UJMExoBundle/Resources/public/js/sequence/Correction/Services/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Paper/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Paper/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Paper/Directives/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Paper/Services/*'
 
         '@UJMExoBundle/Resources/public/js/sequence/Question/*'
         '@UJMExoBundle/Resources/public/js/sequence/Question/Controllers/*'
@@ -49,6 +46,14 @@
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
+
+    <script type="text/javascript">
+
+        window.onbeforeunload = function () {
+            //return 'Are you sure you want to leave?';
+        };
+
+    </script>
 
 
 {% endblock %}

@@ -257,8 +257,8 @@ class InteractionHoleHandler extends QuestionHandler
         }
         ksort($tabHoles);
         $tabHoles = array_values($tabHoles);
-
-        for ($i = 0; $i < count($tabInputValue); ++$i) {
+        $end=count($tabInputValue);
+        for ($i = 0; $i < $end; ++$i) {
             $inputValue = explode('"', $tabInputValue[$i]);
             $regExpr = 'value="'.$inputValue[0].'"';
             $html = str_replace($regExpr, 'value=""', $html);

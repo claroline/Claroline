@@ -153,7 +153,7 @@ class QuestionRepositoryTest extends TransactionalTestCase
         $this->assertEquals([$q2, $q3], $questions);
     }
 
-    public function testFindByUserAndDescription()
+    public function testFindByUserAndInvite()
     {
         $u1 = $this->persistUser('u1');
         $u2 = $this->persistUser('u2');
@@ -167,11 +167,13 @@ class QuestionRepositoryTest extends TransactionalTestCase
         $q3->setUser($u1);
         $q4->setUser($u2);
 
-        $q3->setDescription('Foo');
+        $q1->setInvite('...Bar');
+        $q2->setInvite('...BAZ');
+        $q3->setInvite('Foo');
 
         $this->om->flush();
 
-        $questions = $this->repo->findByUserAndDescription($u1, 'esc');
+        $questions = $this->repo->findByUserAndInvite($u1, 'ba');
         $this->assertEquals([$q1, $q2], $questions);
     }
 
@@ -199,7 +201,7 @@ class QuestionRepositoryTest extends TransactionalTestCase
         $q1->setCategory($c1);
         $q2->setCategory($c2);
         $q3->setType('---match---');
-        $q4->setDescription('----match----');
+        $q4->setInvite('----match----');
 
         $this->om->flush();
 
@@ -217,7 +219,7 @@ class QuestionRepositoryTest extends TransactionalTestCase
     {
         $question = new Question();
         $question->setTitle($title);
-        $question->setDescription('Description...');
+        $question->setInvite('Invite...');
 
         $interactionQcm = new InteractionQCM();
         $interactionQcm->setQuestion($question);
@@ -232,7 +234,7 @@ class QuestionRepositoryTest extends TransactionalTestCase
     {
         $question = new Question();
         $question->setTitle($title);
-        $question->setDescription('Description...');
+        $question->setInvite('Invite...');
 
         $interactionQcm = new InteractionOpen();
         $interactionQcm->setQuestion($question);

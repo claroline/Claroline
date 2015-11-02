@@ -1,20 +1,22 @@
+
 <div class="panel panel-default">
     <div class="panel-heading clearfix">
-        <h3 class="panel-title pull-left"> {{sequencePlayCtrl.sequence.meta.title}} - {{ 'sequence_step'|trans:{}:'ujm_sequence' }} {{sequencePlayCtrl.getCurrentStepIndex()}} / {{sequencePlayCtrl.steps.length}}</h3>
-        <span class="pull-right">
+        <h3 data-ng-if="!sequencePlayCtrl.isFinished" class="panel-title pull-left"> {{sequencePlayCtrl.sequence.meta.title}} - {{ 'sequence_step'|trans:{}:'ujm_sequence' }} {{sequencePlayCtrl.getCurrentStepIndex()}} / {{sequencePlayCtrl.sequence.steps.length}}</h3>
+        <h3 data-ng-if="sequencePlayCtrl.isFinished" class="panel-title pull-left"> {{sequencePlayCtrl.sequence.meta.title}} - Essais N° {{sequencePlayCtrl.nbAttempts}} - Correction</h3>
+        <span data-ng-if="!sequencePlayCtrl.isFinished" class="pull-right">
             <!-- IF MAX ATTEMPTS -->
             <span data-ng-if="sequencePlayCtrl.sequence.meta.maxAttempts > 0">{{ 'sequence_attempts_infos'|trans:{"1" : sequencePlayCtrl.sequence.meta.maxAttempts}:'ujm_sequence'}}</span>
             <span>{{ 'sequence_nb_attempts'|trans:{"1" : sequencePlayCtrl.nbAttempts}:'ujm_sequence' }}</span>
             <span data-ng-if="sequencePlayCtrl.sequence.meta.maxAttempts > 0">/ {{sequencePlayCtrl.sequence.meta.maxAttempts}}</span>
         </span>
-     
     </div>
     <div class="panel-body">           
         <div class="row">
             <div class="col-md-12">
                 <div class="row">
                     <div class="col-md-12">
-                        <step-show class="step-container" data-current-step="sequencePlayCtrl.currentStep"></step-show>
+                        <step-show data-ng-if="!sequencePlayCtrl.isFinished" class="step-container" data-current-step="sequencePlayCtrl.currentStep"></step-show>
+                        <paper-details data-ng-if="sequencePlayCtrl.isFinished" data-paper="sequencePlayCtrl.paper" data-exo-id="{{sequencePlayCtrl.sequence.id}}" data-context="in-exercise"></paper-details>
                     </div>
                 </div>
             </div>
@@ -22,7 +24,7 @@
     </div>
     <!-- NAVIGATE THROUGH STEPS / END SEQUENCE -->
     <div class="panel-footer">
-        <div class="row center-text">
+        <div data-ng-if="!sequencePlayCtrl.isFinished" class="row center-text">
             <!-- PREV / NEXT / JUMP TO / END -->
             <div class="col-md-12">
                 <!-- NEXT / PREV -->
@@ -35,23 +37,24 @@
                 <!-- JUMP TO -->
                 <div class="btn-group">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ 'dropdown_step_navigate_choice_label'|trans:{"1" : sequencePlayCtrl.getCurrentStepIndex(), "2" : sequencePlayCtrl.steps.length}:'ujm_sequence'}} <span class="caret"></span>
+                        {{ 'dropdown_step_navigate_choice_label'|trans:{"1" : sequencePlayCtrl.getCurrentStepIndex(), "2" : sequencePlayCtrl.sequence.steps.length}:'ujm_sequence'}} <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li data-ng-repeat="step in sequencePlayCtrl.steps">
-                            <a href="#" data-ng-click="sequencePlayCtrl.goTo(step)">{{ 'dropdown_step_navigate_choice_label'|trans:{"1" : $index + 1, "2" : sequencePlayCtrl.steps.length}:'ujm_sequence'}}</a>
+                        <li data-ng-repeat="step in sequencePlayCtrl.sequence.steps">
+                            <a href="#" data-ng-click="sequencePlayCtrl.goTo(step)">{{ 'dropdown_step_navigate_choice_label'|trans:{"1" : $index + 1, "2" : sequencePlayCtrl.sequence.steps.length}:'ujm_sequence'}}</a>
                         </li>
                     </ul>
                 </div>
+                
+                <!-- INTERRUPT SEQUENCE -->
+                <button data-ng-if="!sequencePlayCtrl.isLastStep && sequencePlayCtrl.sequence.meta.displayBtnInterrupt" role="button" type="button" ng-bootbox-confirm="{{ 'sequence_interrupt_sequence_confirm'|trans:{}:'ujm_sequence'}}" ng-bootbox-confirm-action="sequencePlayCtrl.validateStep('interrupt')" class="btn btn-default">
+                    {{ 'btn_interrupt_sequence_label'|trans:{}:'ujm_sequence' }}
+                </button>
                 <!-- END SEQUENCE -->
-                <button data-ng-if="sequencePlayCtrl.isLastStep" role="button" type="button" ng-bootbox-confirm="{{ 'sequence_end_sequence_confirm'|trans:{}:'ujm_sequence'}}" ng-bootbox-confirm-action="sequencePlayCtrl.validateStep()" class="btn btn-default">
+                <button data-ng-if="sequencePlayCtrl.isLastStep" role="button" type="button" ng-bootbox-confirm="{{ 'sequence_end_sequence_confirm'|trans:{}:'ujm_sequence'}}" ng-bootbox-confirm-action="sequencePlayCtrl.validateStep('end')" class="btn btn-default">
                     {{ 'btn_end_sequence_label'|trans:{}:'ujm_sequence' }}
                 </button>
             </div>
         </div>
-
-        <!--
-        <correction-show data-ng-if="sequencePlayCtrl.isFinished" data-sequence="sequencePlayCtrl.sequence" data-answers="sequencePlayCtrl.studentResults"></correction-show>
-        -->
     </div>
 </div>

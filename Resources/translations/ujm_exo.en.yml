@@ -111,7 +111,7 @@ feedback: Feedback general
 feedback_answer_check: Feedback if this answer is checked (optional)
 find_by: Find by
 find_in: Find in
-find_question: Find questions
+find_question_advance: question advanced
 find_what: What you're looking for
 final_mark: Final mark
 finish: Finish
@@ -154,6 +154,7 @@ image: Image
 import: Import
 import_qti : Import questions in QTI format
 import_questions: Import questions
+info_search: Search of type
 info_search_type: If you want to do a search by type, you must used the following key words
 instruction_add_hole : To add a blank, you must select the text in the editor "Text with hole", then click on the button "Create hole".
 instruction_matching: To set your correspondence, choose in the column "Correspondence" the number of one or more proposals to associate.
@@ -271,7 +272,7 @@ questions: Questions
 question_creation: Question creation
 question_description: Description of the question (optional)
 question_model: Set as model
-question_title: Question title
+question_title: Question title (optional)
 question_shared_with: This question is shared with users below
 
 # R

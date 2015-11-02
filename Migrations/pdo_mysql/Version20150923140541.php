@@ -8,18 +8,18 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/09/10 05:02:17
+ * Generation date: 2015/09/23 02:05:42
  */
-class Version20150910170216 extends AbstractMigration
+class Version20150923140541 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             ALTER TABLE ujm_question 
             ADD type VARCHAR(255) NOT NULL, 
+            ADD invite LONGTEXT NOT NULL, 
             ADD feedback LONGTEXT DEFAULT NULL, 
             CHANGE title title VARCHAR(255) NOT NULL, 
-            CHANGE description description LONGTEXT NOT NULL, 
             CHANGE locked locked TINYINT(1) NOT NULL, 
             CHANGE model model TINYINT(1) NOT NULL
         ");
@@ -275,9 +275,9 @@ class Version20150910170216 extends AbstractMigration
         $this->addSql("
             ALTER TABLE ujm_question 
             DROP type, 
+            DROP invite, 
             DROP feedback, 
             CHANGE title title VARCHAR(255) DEFAULT NULL COLLATE utf8_unicode_ci, 
-            CHANGE description description LONGTEXT DEFAULT NULL COLLATE utf8_unicode_ci, 
             CHANGE locked locked TINYINT(1) DEFAULT NULL, 
             CHANGE model model TINYINT(1) DEFAULT NULL
         ");

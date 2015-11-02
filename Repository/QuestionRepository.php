@@ -173,21 +173,21 @@ class QuestionRepository extends EntityRepository
     }
 
     /**
-     * Returns the questions created by a user whose description
+     * Returns the questions created by a user whose invite
      * matches a given search string.
      *
      * @param User      $user
-     * @param string    $description
+     * @param string    $invite
      * @return array
      */
-    public function findByUserAndDescription(User $user, $description)
+    public function findByUserAndInvite(User $user, $invite)
     {
         return $this->createQueryBuilder('q')
             ->where('q.user = :user')
-            ->andWhere('q.description LIKE :search')
+            ->andWhere('q.invite LIKE :search')
             ->setParameters([
                 'user' => $user,
-                'search' => "%{$description}%"
+                'search' => "%{$invite}%"
             ])
             ->getQuery()
             ->getResult();
@@ -195,7 +195,7 @@ class QuestionRepository extends EntityRepository
 
     /**
      * Returns the questions created by a user whose category name,
-     * type, title or description matches a given search string.
+     * type, title or invite matches a given search string.
      * Allows to select only questions which are not associated with
      * a particular exercise.
      *
@@ -216,7 +216,7 @@ class QuestionRepository extends EntityRepository
             ->andWhere('c.value LIKE :search')
             ->orWhere('q.type LIKE :search')
             ->orWhere('q.title LIKE :search')
-            ->orWhere('q.description LIKE :search');
+            ->orWhere('q.invite LIKE :search');
 
         $parameters = [
             'user' => $user,

@@ -17,7 +17,7 @@
     <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
     <li><a href="{{ path('ujm_exercise_questions', {'id': exoID}) }}">{{ 'my_questions' | trans({}, 'ujm_exo') }}</a></li>
     <li class="active">{{ 'list_question' | trans({}, 'ujm_exo') }}</li>
-{% endblock %}
+    {% endblock %}
 
 {% set exerciseID = exoID %}
 
@@ -36,7 +36,7 @@
             <i class="fa fa-download"></i> {{ 'import_qti' | trans({}, 'ujm_exo') }}
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_question_search_question', { 'exoID': exoID }) }}">
-            <i class="fa fa-question"></i> {{ 'search_question' | trans({}, 'ujm_exo') }}
+             <i class="fa fa-question"></i> {{ 'search_question' | trans({}, 'ujm_exo') }}
         </a>
         <a class="btn btn-primary" href="#" onclick="importQuestion('{{ path('ujm_exercise_validate_import') }}',
             {{ exoID }}, {{ pageToGo }}, '{{ 'no_thing_import' | trans({}, 'ujm_exo') }}');event.preventDefault();">
@@ -44,34 +44,34 @@
         </a>
         {% if QuestionsExo == 'false' %}
             {% if (pagerMy.getNbResults > pagerMy.maxPerPage or pagerShared.getNbResults > pagerShared.maxPerPage) and displayAll == 0 %}
-                <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'exoID': exoID, 'displayAll': 1 }) }} ">
+                <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'id': exoID, 'displayAll': 1 }) }} ">
                     <i class="fa fa-plus-circle"></i> {{ 'display_all_on_this_page' | trans({}, 'ujm_exo') }}
                 </a>
             {% elseif displayAll == 1 %}
-                <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'exoID': exoID }) }}">
+                <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'id': exoID }) }}">
                     <i class="fa fa-minus-circle"></i> {{ 'display_pagination' | trans({}, 'ujm_exo') }}
                 </a>
             {% endif %}
         {% endif %}
 
         <select id="exoList" onchange="getQuestionsExoImport(this.options[this.selectedIndex].value,
-                     '{{ path('ujm_exercise_import_question', { 'exoID': exoID, 'idExo': idExo, 'QuestionsExo': 'true' }) }}',
-                     '{{ path('ujm_exercise_import_question', { 'exoID': exoID }) }}');">
+                        '{{ path('ujm_exercise_import_question', { 'id': exoID, 'idExo': idExo, 'QuestionsExo': 'true' }) }}',
+                        '{{ path('ujm_exercise_import_question', { 'id': exoID }) }}');">
             {% include "UJMExoBundle:Partial:listToFilterQuestions.html.twig" %}
         </select>
 
         <form action="{{ path('ujm_question_briefSearch') }}" method="post" id='formBriefSearch'>
             <div class="input-group" style="width: 350px; margin-top: 20px;">
                 <input type="text" class="form-control" id="briefSearch" placeholder="{{ 'brief_search'|trans({}, 'ujm_exo') }}" name="userSearch"
-                    onkeydown="if (event.keyCode == 13) {
-                        briefSearchSubmit();
+                       onkeydown="if (event.keyCode == 13) {
+                                   briefSearchSubmit();
                         return false; }">
                 <input type='hidden' name='exoID' value={{ exoID }} />
                 <input type='hidden' name='where' value='import' />
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="button" id="SubmitBriefSearch"
-                        onClick="briefSearchSubmit();">
-                    <i class="fa fa-search"></i></button>
+                            onClick="briefSearchSubmit();">
+                        <i class="fa fa-search"></i></button>
                     <a class="btn btn-default" data-toggle="tooltip" title="Recherche par type"
                        accesskey=""href="#" onclick="showInfos();event.preventDefault();">
                         <i class="fa fa-question"></i>
@@ -85,13 +85,13 @@
             <div class="alert alert-info">
                 <p>
                     {{ 'info_search_type' | trans({}, 'ujm_exo') }} :
-                    <ul>
-                        <li style="list-style-type: circle">'qcm' {{ 'for_type_of' | trans({}, 'ujm_exo') }} {{ 'qcm' | trans({}, 'ujm_exo') }},</li>
-                        <li style="list-style-type: circle">'graphic' {{ 'for_type_of' | trans({}, 'ujm_exo') }} {{ 'graphic' | trans({}, 'ujm_exo') }},</li>
-                        <li style="list-style-type: circle">'hole' {{ 'for_type_of' | trans({}, 'ujm_exo') }} {{ 'hole' | trans({}, 'ujm_exo') }},</li>
-                        <li style="list-style-type: circle">'open' {{ 'for_type_of' | trans({}, 'ujm_exo') }} {{ 'open' | trans({}, 'ujm_exo') }}.</li>
-                        <li style="list-style-type: circle">'matching' {{ 'for_type_of' | trans({}, 'ujm_exo') }} {{ 'matching' | trans({}, 'ujm_exo') }}.</li>
-                    </ul>
+                <ul>
+                    <li style="list-style-type: circle">'qcm' {{ 'for_type_of' | trans({}, 'ujm_exo') }} {{ 'qcm' | trans({}, 'ujm_exo') }},</li>
+                    <li style="list-style-type: circle">'graphic' {{ 'for_type_of' | trans({}, 'ujm_exo') }} {{ 'graphic' | trans({}, 'ujm_exo') }},</li>
+                    <li style="list-style-type: circle">'hole' {{ 'for_type_of' | trans({}, 'ujm_exo') }} {{ 'hole' | trans({}, 'ujm_exo') }},</li>
+                    <li style="list-style-type: circle">'open' {{ 'for_type_of' | trans({}, 'ujm_exo') }} {{ 'open' | trans({}, 'ujm_exo') }}.</li>
+                    <li style="list-style-type: circle">'matching' {{ 'for_type_of' | trans({}, 'ujm_exo') }} {{ 'matching' | trans({}, 'ujm_exo') }}.</li>
+                </ul>
                 </p>
             </div>
         </div>
@@ -112,7 +112,7 @@
                             <div class="text-center panel-footer">
                                 {{ pagerfanta(pagerMy, 'twitter_bootstrap_translated',
                                     {'routeName': 'ujm_exercise_import_question', 'routeParams':
-                                    { 'exoID': exoID, 'pagerShared': pagerShared.getCurrentPage,
+                                    { 'id': exoID, 'pagerShared': pagerShared.getCurrentPage,
                                         'pagerMy': pagerMy.getCurrentPage, 'click': 'my', 'pageGoNow': pageToGo } }) }}
                             </div>
                         {% endif %}
@@ -132,7 +132,7 @@
                             <div class="text-center panel-footer">
                                 {{ pagerfanta(pagerShared, 'twitter_bootstrap_translated',
                                     {'routeName': 'ujm_exercise_import_question', 'routeParams':
-                                    { 'exoID': exoID, 'pagerMy': pagerMy.getCurrentPage,
+                                    { 'id': exoID, 'pagerMy': pagerMy.getCurrentPage,
                                         'pagerShared': pagerShared.getCurrentPage,  'click': 'shared',
                                         'pageGoNow': pageToGo} }) }}
                             </div>
@@ -170,6 +170,6 @@
         $(document).ready(function () {
             ready();
         });
-        $("#exoList option[value=\""+{{ idExo }}+"\"]").attr('selected', 'selected');
+                $("#exoList option[value=\""+{{ idExo }}+"\"]").attr('selected', 'selected');
     </script>
 {% endblock %}
