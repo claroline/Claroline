@@ -14,6 +14,8 @@
             </h3>
         </div>
         <div class="modal-body">
+            <h4>{{ 'chat_room_id'|trans({}, 'chat') }}</h4>
+            <span>{{ chatRoom.getRoomName() ~ '@' ~ xmppMucHost }}</span>
             {#<form id="chat-room-configure-form"
                   action="{{ path('claro_chat_room_configure', {'chatRoom': chatRoom.getId()}) }}"
                   method="POST"
@@ -24,10 +26,10 @@
         </div>
         <div class="modal-footer">
             <span class="btn btn-default" data-dismiss="modal">
-                {{ 'cancel'|trans({},'platform') }}
+                {{ 'cancel'|trans({}, 'platform') }}
             </span>
             <button type="submit" id='configure-btn' class="btn btn-primary" data-dismiss="modal">
-                {{ 'ok'|trans({},'platform') }}
+                {{ 'ok'|trans({}, 'platform') }}
             </button>
         </div>
     </div>

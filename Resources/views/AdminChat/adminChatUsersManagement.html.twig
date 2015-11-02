@@ -157,8 +157,24 @@
                                 <td>{{ user.getUsername() }}</td>
                                 <td>{{ user.getFirstName() }}</td>
                                 <td>{{ user.getLastName() }}</td>
-                                <td>{{ chatUser.getChatUsername() }}</td>
-                                <td></td>
+                                <td>
+                                    {% if chatUser.getOptions() is not empty and
+                                          chatUser.getOptions()['color'] is defined and 
+                                          chatUser.getOptions()['color'] is not empty
+                                    %}
+                                        {% set color = chatUser.getOptions()['color'] %}
+                                        <i class="fa fa-circle" style="color: {{ color }}"></i>
+                                    {% endif %}
+                                        
+                                    {{ chatUser.getChatUsername() }}
+                                </td>
+                                <td>
+                                    <button class="btn btn-default btn-sm chat-user-edit-btn"
+                                            data-chat-user-id="{{ chatUser.getId() }}"
+                                    >
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                </td>
                             </tr>
                         {% endfor %}
                     </table>
@@ -180,6 +196,7 @@
          data-order="{{ order }}"
          data-max="{{ max }}"
          data-xmpp-host="{{ xmppHost }}"
+         data-bosh-port="{{ boshPort }}"
     >
     </div>
 {% endblock %}

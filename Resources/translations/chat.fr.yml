@@ -1,8 +1,10 @@
 ban: Bannir
+bosh_server_port: Port pour le serveur BOSH
 chat: Chat
 chat_accounts_creation: Création de comptes pour le Chat
 chat_configuration: Configuration du Chat
 chat_room_configuration: Configuration de la Chat room
+chat_room_id: Identifiant de la Chat room
 chat_username: Identifiant pour le Chat
 create_chat_accounts: Créer des comptes pour le Chat
 host: Hôte

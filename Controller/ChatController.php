@@ -12,6 +12,7 @@
 namespace Claroline\ChatBundle\Controller;
 
 use Claroline\ChatBundle\Entity\ChatRoom;
+use Claroline\ChatBundle\Form\ChatRoomConfigurationType;
 use Claroline\ChatBundle\Manager\ChatManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -19,7 +20,9 @@ use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -27,24 +30,32 @@ class ChatController extends Controller
 {
     private $authorization;
     private $chatManager;
+    private $formFactory;
     private $platformConfigHandler;
+    private $request;
 
     /**
      * @DI\InjectParams({
      *     "authorization"         = @DI\Inject("security.authorization_checker"),
      *     "chatManager"           = @DI\Inject("claroline.manager.chat_manager"),
-     *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler")
+     *     "formFactory"           = @DI\Inject("form.factory"),
+     *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "requestStack"          = @DI\Inject("request_stack")
      * })
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         ChatManager $chatManager,
-        PlatformConfigurationHandler $platformConfigHandler
+        FormFactory $formFactory,
+        PlatformConfigurationHandler $platformConfigHandler,
+        RequestStack $requestStack
     )
     {
         $this->authorization = $authorization;
         $this->chatManager = $chatManager;
+        $this->formFactory = $formFactory;
         $this->platformConfigHandler = $platformConfigHandler;
+        $this->request = $requestStack->getCurrentRequest();
     }
 
     /**
@@ -59,14 +70,14 @@ class ChatController extends Controller
     public function userChatAction(User $authenticatedUser, User $user)
     {
         $xmppHost = $this->platformConfigHandler->getParameter('chat_xmpp_host');
-        $xmppPort = $this->platformConfigHandler->getParameter('chat_xmpp_port');
+        $boshPort = $this->platformConfigHandler->getParameter('chat_bosh_port');
         $chatUser = $this->chatManager->getChatUserByUser($authenticatedUser);
 
         return array(
             'chatUser' => $chatUser,
             'user' => $user,
             'xmppHost' => $xmppHost,
-            'xmppPort' => $xmppPort
+            'boshPort' => $boshPort
         );
     }
 
@@ -85,7 +96,7 @@ class ChatController extends Controller
         $this->chatManager->iniChatRoom($chatRoom);
         $xmppHost = $this->platformConfigHandler->getParameter('chat_xmpp_host');
         $xmppMucHost = $this->platformConfigHandler->getParameter('chat_xmpp_muc_host');
-        $xmppPort = $this->platformConfigHandler->getParameter('chat_xmpp_port');
+        $boshPort = $this->platformConfigHandler->getParameter('chat_bosh_port');
         $chatUser = $this->chatManager->getChatUserByUser($authenticatedUser);
         $canChat = !is_null($chatUser);
         $canEdit = $this->hasChatRoomRight($chatRoom, 'EDIT');
@@ -98,7 +109,7 @@ class ChatController extends Controller
             'chatRoom' => $chatRoom,
             'xmppHost' => $xmppHost,
             'xmppMucHost' => $xmppMucHost,
-            'xmppPort' => $xmppPort
+            'boshPort' => $boshPort
         );
     }
 
@@ -132,8 +143,16 @@ class ChatController extends Controller
     public function chatRoomConfigureFormAction(ChatRoom $chatRoom)
     {
         $this->checkChatRoomRight($chatRoom, 'EDIT');
+        $form = $this->formFactory->create(
+            new ChatRoomConfigurationType($chatRoom, $this->platformConfigHandler)
+        );
+        $xmppMucHost = $this->platformConfigHandler->getParameter('chat_xmpp_muc_host');
 
-        return array('chatRoom' => $chatRoom);
+        return array(
+            'form' => $form->createView(),
+            'chatRoom' => $chatRoom,
+            'xmppMucHost' => $xmppMucHost
+        );
     }
 
     /**

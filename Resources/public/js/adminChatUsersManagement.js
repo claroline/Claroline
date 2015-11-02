@@ -12,6 +12,8 @@
     
     var connection;
     var xmppHost;
+    var boshPort;
+    var boshService;
     var userDatas = null;
     var username = '';
     var password = '';
@@ -20,7 +22,9 @@
     function xmppConnect()
     {
         xmppHost = $('#management-datas-box').data('xmpp-host');
-        connection = new Strophe.Connection('/http-bind');
+        boshPort = $('#management-datas-box').data('bosh-port');
+        boshService = 'http://' + xmppHost + ':' + boshPort + '/http-bind';
+        connection = new Strophe.Connection(boshService);
     }
     
     function xmppRegistration()
@@ -170,4 +174,23 @@
             console.log('Connection failed !');
         }
     };
+    
+    $('.chat-user-edit-btn').on('click', function () {
+        var chatUserId = $(this).data('chat-user-id');
+        
+        window.Claroline.Modal.displayForm(
+            Routing.generate(
+                'claro_chat_user_edit_form',
+                {'chatUser': chatUserId}
+            ),
+            function () {
+                window.location.reload();
+            },
+            function () {}
+        );
+    });
+    
+    $('body').on('focus', '#chat_user_edition_form_color', function () {
+        $(this).colorpicker();
+    });
 })();

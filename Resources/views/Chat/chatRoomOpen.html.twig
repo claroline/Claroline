@@ -63,15 +63,26 @@
         (function () {
             'use strict';
             
+            var color = null;
+            
+            {% if chatUser.getOptions() is not empty and
+                  chatUser.getOptions()['color'] is defined and 
+                  chatUser.getOptions()['color'] is not empty
+            %}
+                color = '{{ chatUser.getOptions()['color'] }}';
+            {% endif %}
+            
             ChatRoom.connect(
                 '{{ xmppHost }}',
                 '{{ xmppMucHost }}',
+                '{{ boshPort }}',
                 '{{ chatRoom.getId() }}',
                 '{{ chatRoom.getRoomName() }}',
                 '{{ chatUser.getChatUsername() }}',
                 '{{ chatUser.getChatPassword() }}',
                 '{{ chatUser.getUser().getFirstName() }}',
-                '{{ chatUser.getUser().getLastName() }}'
+                '{{ chatUser.getUser().getLastName() }}',
+                color
             );
         })();
     </script>

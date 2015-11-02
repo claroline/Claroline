@@ -16,8 +16,11 @@ var ChatRoom = {
     password: null,
     firstName: null,
     lastName: null,
+    color: null,
     xmppHost: null,
     xmppMucHost: null,
+    boshPort: null,
+    boshService: null,
     NS_MUC: "http://jabber.org/protocol/muc",
     participants: {},
     messages: [],
@@ -36,12 +39,13 @@ var ChatRoom = {
             var datas = $(message).find('datas');
             var firstName = datas.attr('firstName');
             var lastName = datas.attr('lastName');
-            
+            var color = datas.attr('color');
+            color = (color === undefined) ? null : color;
             
             var sender = (firstName !== undefined && lastName !== undefined) ?
                 firstName + ' ' + lastName :
                 Strophe.getResourceFromJid(from);
-            ChatRoom.display_message(sender, body);
+            ChatRoom.display_message(sender, body, color);
         }
 
         return true;
@@ -56,6 +60,9 @@ var ChatRoom = {
             var datas = $(presence).find('datas');
             var firstName = datas.attr('firstName');
             var lastName = datas.attr('lastName');
+            var color = datas.attr('color');
+            color = (color === undefined) ? null : color;
+            
             var name = (firstName !== undefined && lastName !== undefined) ?
                 firstName + ' ' + lastName :
                 username;
@@ -63,7 +70,7 @@ var ChatRoom = {
             if (type === 'unavailable') {
                 ChatRoom.remove_user(username);
             } else {
-                ChatRoom.display_user(username, name);
+                ChatRoom.display_user(username, name, color);
             }
         }
 
@@ -82,7 +89,7 @@ var ChatRoom = {
                     to: ChatRoom.room + "/" + ChatRoom.username
                 }).c('x', {xmlns: ChatRoom.NS_MUC})
                 .up()
-                .c('datas', {firstName: ChatRoom.firstName, lastName: ChatRoom.lastName})
+                .c('datas', {firstName: ChatRoom.firstName, lastName: ChatRoom.lastName, color: ChatRoom.color})
             );
         } else if (status === Strophe.Status.CONNFAIL) {
             console.log('Connection failed !');
@@ -94,9 +101,22 @@ var ChatRoom = {
             console.log('Disconnecting...');   
         }
     },
-    connect: function (server, mucServer, roomId, roomName, username, password, firstName, lastName) {
+    connect: function (
+        server,
+        mucServer, 
+        boshPort, 
+        roomId, 
+        roomName, 
+        username, 
+        password, 
+        firstName, 
+        lastName, 
+        color
+    ) {
         ChatRoom.xmppHost = server;
         ChatRoom.xmppMucHost = mucServer;
+        ChatRoom.boshPort = boshPort;
+        ChatRoom.boshService = 'http://' + server + ':' + boshPort + '/http-bind';
         ChatRoom.roomId = roomId;
         ChatRoom.roomName = roomName;
         ChatRoom.room = roomName + '@' + mucServer;
@@ -104,8 +124,9 @@ var ChatRoom = {
         ChatRoom.password = password;
         ChatRoom.firstName = firstName;
         ChatRoom.lastName = lastName;
+        ChatRoom.color = color;
 
-        ChatRoom.connection = new Strophe.Connection('/http-bind');
+        ChatRoom.connection = new Strophe.Connection(ChatRoom.boshService);
         ChatRoom.connection.connect(
             ChatRoom.username + '@' + ChatRoom.xmppHost,
             ChatRoom.password, 
@@ -119,7 +140,7 @@ var ChatRoom = {
                 type: "groupchat"
             }).c('body').t(message)
             .up()
-            .c('datas', {firstName: ChatRoom.firstName, lastName: ChatRoom.lastName})
+            .c('datas', {firstName: ChatRoom.firstName, lastName: ChatRoom.lastName, color: ChatRoom.color})
         );
 
         $.ajax({
@@ -134,18 +155,28 @@ var ChatRoom = {
             type: 'POST'
         });
     },
-    display_message: function (sender, message) {
+    display_message: function (sender, message, color) {
         ChatRoom.messages.push({sender: sender, message: message});
-        var txt = '<span><b class="received-message">' + sender + '</b> : ' + message + '<br></span>';
+        var txt = '<span><b class="received-message"';
+        
+        if (color !== null) {
+            txt += ' style="color: ' + color + '"';
+        }
+        txt += '>' + sender + '</b> : ' + message + '<br></span>';
         $('#chat-content').append(txt);
         var scrollHeight = $('#chat-content')[0].scrollHeight;
         $('#chat-content').scrollTop(scrollHeight);
     },
-    display_user: function (username, name) {
-        ChatRoom.participants[username] = {username: username, name: name};
+    display_user: function (username, name, color) {
+        ChatRoom.participants[username] = {username: username, name: name, color: color};
         var txt = '<span class="participant-' +
             username +
-            '"><i class="fa fa-user"></i> ' + 
+            '"><i class="fa fa-user"';
+        
+        if (color !== null) {
+            txt += ' style="color: ' + color + '"';
+        }
+        txt += '></i> ' + 
             name + 
             '&nbsp;' +
             '<i class="fa fa-microphone-slash pointer-hand chat-room-mute-btn" data-toggle="tooltip" data-placement="top" title="' +
