@@ -134,7 +134,7 @@ class FileController extends Controller
     public function uploadWithTinyMceAction($parent, User $user)
     {
         $parent = $this->get('claroline.manager.resource_manager')->getById($parent);
-        $workspace = $parent ? $parent->getWorkspace: null;
+        $workspace = $parent ? $parent->getWorkspace(): null;
         $collection = new ResourceCollection(array($parent));
         $collection->setAttributes(array('type' => 'file'));
         $this->checkAccess('CREATE', $collection);
