@@ -102,7 +102,7 @@ class WebsitePage{
     protected $resourceNodeType;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Icap\WebsiteBundle\Entity\Website", cascade={"remove"})
+     * @ORM\ManyToOne(targetEntity="Icap\WebsiteBundle\Entity\Website")
      * @ORM\JoinColumn(name="website_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * @JMS\Exclude
      */
