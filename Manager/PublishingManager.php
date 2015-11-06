@@ -638,7 +638,7 @@ class PublishingManager
 //echo "inside cleanCondition<br>\n";
 //echo "typeof(existingData)";var_dump(is_object($existingCondition));//echo "<br>\ntypeof(neededData)";var_dump(is_object($neededCondition));
         if ($existingCondition->getId() != $neededCondition->getId()) {
-            $step->removeCondition($neededCondition);
+            $step->setCondition(null);
             $this->om->remove($neededCondition);
         }
 

@@ -188,7 +188,12 @@ class Criteriagroup implements \JsonSerializable
      */
     public function setStepCondition(Stepcondition $stepcondition = null)
     {
-        $this->stepcondition = $stepcondition;
+        if ($stepcondition !== $this->stepcondition) {
+            $this->stepcondition = $stepcondition;
+            if (null !== $stepcondition) {
+                $stepcondition->addCriteriagroup($this);
+            }
+        }
 
         return $this;
     }

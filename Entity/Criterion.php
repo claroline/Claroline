@@ -109,7 +109,13 @@ class Criterion implements \JsonSerializable
      */
     public function setCriteriagroup(Criteriagroup $criteriagroup = null)
     {
-        $this->criteriagroup = $criteriagroup;
+        if ($criteriagroup !== $this->criteriagroup) {
+            $this->criteriagroup = $criteriagroup;
+
+            if (null !== $criteriagroup) {
+                $criteriagroup->addCriterion($this);
+            }
+        }
 
         return $this;
     }

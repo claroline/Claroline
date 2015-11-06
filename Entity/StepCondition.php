@@ -130,7 +130,12 @@ class StepCondition implements \JsonSerializable
      */
     public function setStep(\Innova\PathBundle\Entity\Step $step = null)
     {
-        $this->step = $step;
+        if ($step !== $this->step) {
+            $this->step = $step;
+            if (null !== $step) {
+                $step->setCondition($this);
+            }
+        }
 
         return $this;
     }
