@@ -7,6 +7,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Choice;
 use UJM\ExoBundle\Entity\InteractionQCM;
 use UJM\ExoBundle\Entity\Question;
+use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
 
 /**
@@ -157,5 +158,34 @@ class QcmHandler implements QuestionHandlerInterface
         }
 
         return $exportData;
+    }
+
+    public function convertAnswerDetails(Response $response)
+    {
+        $parts = explode(';', $response->getResponse());
+
+        return array_filter($parts, function ($part) {
+            return $part !== '';
+        });
+    }
+
+    public function validateAnswerFormat(Question $question, $data)
+    {
+        if (!is_array($data)) {
+            return ['Answer data must be an array, ' . gettype($data) . ' given'];
+        }
+
+        foreach ($data as $id) {
+            if (!is_string($id)) {
+                return ['Answer array must contain only string identifiers'];
+            }
+        }
+
+        return [];
+    }
+
+    public function storeAnswerAndMark(Question $question, Response $response, $data)
+    {
+
     }
 }

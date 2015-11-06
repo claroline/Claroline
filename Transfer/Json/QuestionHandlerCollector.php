@@ -53,18 +53,27 @@ class QuestionHandlerCollector
      * Returns the handler for a specific MIME type, if any.
      *
      * @param string $type
-     * @return null|QuestionHandlerInterface
+     * @throws UnregisteredHandlerException
+     * @return QuestionHandlerInterface
      */
     public function getHandlerForMimeType($type)
     {
-        return isset($this->handlers[$type]) ? $this->handlers[$type] : null;
+        if (isset($this->handlers[$type])) {
+            return $this->handlers[$type];
+        }
+
+        throw new UnregisteredHandlerException(
+            $type,
+            UnregisteredHandlerException::TARGET_MIME_TYPE
+        );
     }
 
     /**
      * Returns the handler for a specific interaction type, if any.
      *
      * @param string $type
-     * @return null|QuestionHandlerInterface
+     * @throws UnregisteredHandlerException
+     * @return QuestionHandlerInterface
      */
     public function getHandlerForInteractionType($type)
     {
@@ -74,7 +83,10 @@ class QuestionHandlerCollector
             }
         }
 
-        return null;
+        throw new UnregisteredHandlerException(
+            $type,
+            UnregisteredHandlerException::TARGET_INTERACTION
+        );
     }
 
     /**
@@ -92,7 +104,13 @@ class QuestionHandlerCollector
      */
     public function hasHandlerForInteractionType($type)
     {
-        return $this->getHandlerForInteractionType($type) !== null;
+        foreach ($this->handlers as $handler) {
+            if ($handler->getInteractionType() === $type) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

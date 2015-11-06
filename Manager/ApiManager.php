@@ -2,12 +2,14 @@
 
 namespace UJM\ExoBundle\Manager;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Hint;
-use UJM\ExoBundle\Entity\InteractionQCM;
+use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Entity\Question;
+use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerCollector;
 use UJM\ExoBundle\Transfer\Json\ValidationException;
 use UJM\ExoBundle\Transfer\Json\Validator;
@@ -56,9 +58,7 @@ class ApiManager
             throw new ValidationException('Question is not valid', $errors);
         }
 
-        if (null === $handler = $this->handlerCollector->getHandlerForMimeType($data->type)) {
-            throw new \Exception("Import not supported for {$data->type}");
-        }
+        $handler = $this->handlerCollector->getHandlerForMimeType($data->type);
 
         $question = new Question();
         $question->setTitle($data->title);
@@ -95,10 +95,6 @@ class ApiManager
     {
         $handler = $this->handlerCollector->getHandlerForInteractionType($question->getType());
 
-        if (!$handler) {
-            throw new \Exception("Export not supported for {$question->getType()}");
-        }
-
         $data = new \stdClass();
         $data->type = $handler->getQuestionMimeType();
         $data->title = $question->getTitle();
@@ -127,6 +123,8 @@ class ApiManager
     }
 
     /**
+     * @todo actual import...
+     *
      * Imports an exercise in JSON format.
      *
      * @param string $data
@@ -144,26 +142,85 @@ class ApiManager
     }
 
     /**
-     * @todo add user parameter...
+     * Exports an exercise in JSON format.
      *
-     * @param Exercise $exercise
-     *
+     * @param Exercise  $exercise
+     * @param bool      $withSolutions
      * @return array
      */
-    public function exportExercise(Exercise $exercise)
+    public function exportExercise(Exercise $exercise, $withSolutions = true)
     {
         return [
             'id' => $exercise->getId(),
             'meta' => $this->getMetadata($exercise),
-            'steps' => $this->getSteps($exercise),
+            'steps' => $this->getSteps($exercise, $withSolutions),
         ];
     }
 
     /**
-     * @todo add duration
+     * Returns the JSON representation of an exercise with its last associated paper
+     * for a given user. If no paper exists, a new one is created.
+     *
+     * @param Exercise  $exercise
+     * @param User      $user
+     * @param bool      $withSolutions
+     * @return array
+     */
+    public function openExercise(Exercise $exercise, User $user, $withSolutions = false)
+    {
+        return [
+            'exercise' => $this->exportExercise($exercise, $withSolutions),
+            'paper' => $this->getPaper($exercise, $user)
+        ];
+    }
+
+    /**
+     * Ensures the format of the answer is correct and returns a list of
+     * validation errors, if any.
+     *
+     * @param Question  $question
+     * @param mixed     $data
+     * @return array
+     * @throws \UJM\ExoBundle\Transfer\Json\UnregisteredHandlerException
+     */
+    public function validateAnswerFormat(Question $question, $data)
+    {
+        $handler = $this->handlerCollector->getHandlerForInteractionType($question->getType());
+
+        return $handler->validateAnswerFormat($question, $data);
+    }
+
+    /**
+     * Records an answer for a given question and paper.
+     *
+     * @param Paper     $paper
+     * @param Question  $question
+     * @param mixed     $data
+     * @param string    $ip
+     */
+    public function recordAnswer(Paper $paper, Question $question, $data, $ip)
+    {
+        if ($paper->getEnd()) {
+            throw new \RuntimeException('Cannot add answer to ended paper');
+        }
+
+        $handler = $this->handlerCollector->getHandlerForInteractionType($question->getType());
+
+        $response = new Response();
+        $response->setNbTries(1);
+        $response->setPaper($paper);
+        $response->setQuestion($question);
+        $response->setIp($ip);
+        $handler->storeAnswerAndMark($question, $response, $data);
+
+        $this->om->persist($response);
+        $this->om->flush();
+    }
+
+    /**
+     * @todo duration
      *
      * @param Exercise $exercise
-     *
      * @return array
      */
     private function getMetadata(Exercise $exercise)
@@ -184,78 +241,76 @@ class ApiManager
     }
 
     /**
-     * @todo step id...
-     * @todo add optional question description (schema)
+     * @todo step id
      *
-     * @param Exercise $exercise
-     *
+     * @param Exercise  $exercise
+     * @param bool      $withSolutions
      * @return array
      */
-    private function getSteps(Exercise $exercise)
+    private function getSteps(Exercise $exercise, $withSolutions = true)
     {
-        $questions = $this->questionRepo->findByExercise($exercise);
-
-        return array_map(function ($question) {
-            switch ($questionType = $question->getType()) {
-                case InteractionQCM::TYPE:
-                    $data = $this->getQCM($question);
-                    $type = 'application/x.choice+json';
-                    break;
-                default:
-                    throw new \Exception("Export not implemented for {$questionType} type");
-            }
-
-            $step = [
-                'id' => 'todo',
-                'items' => [array_merge($data, [
-                    'id' => $question->getId(),
-                    'type' => $type,
-                    'title' => $question->getTitle(),
-                    'hints' => '',
-                ])]
+        return array_map(function ($question) use ($withSolutions) {
+            return [
+                'id' => '(unknown)',
+                'items' => [$this->exportQuestion($question, $withSolutions)]
             ];
-
-            if ($question->getFeedback()) {
-                $step['items'][0]['feedback'] = $question->getFeedback();
-            }
-
-            if (count($hints = $question->getHints()->toArray()) > 0) {
-                $step['items'][0]['hints'] = array_map(function ($hint) {
-                    return [
-                        'id' => $hint->getId(),
-                        'text' => $hint->getValue(),
-                        'penalty' => $hint->getPenalty(),
-                    ];
-                }, $hints);
-            }
-
-            return $step;
-        }, $questions);
+        }, $this->questionRepo->findByExercise($exercise));
     }
 
-    /**
-     * @todo get real "multiple" value
-     * @todo add solutions property
-     * @todo check order of choices
-     * @todo weight ?
-     *
-     * @param Question $question
-     * @return array
-     */
-    private function getQCM(Question $question)
+    private function getPaper(Exercise $exercise, User $user)
     {
-        $qcm = $this->interactionQcmRepo->findOneBy(['question' => $question]);
+        $papers = $this->om->getRepository('UJMExoBundle:Paper')
+            ->findUnfinishedPapers($user, $exercise);
+
+        if (count($papers) === 0) {
+            $paper = new Paper();
+            $paper->setExercise($exercise);
+            $paper->setUser($user);
+            $paper->setNumPaper(time()); // not used...
+            $paper->setOrdreQuestion('not used...');
+
+            $this->om->persist($paper);
+            $this->om->flush();
+
+            $questions = [];
+        } else {
+            $paper = $papers[0];
+            $questions = $this->getPaperQuestions($paper);
+        }
 
         return [
-            'multiple' => false,
-            'random' => $qcm->getShuffle(),
-            'choices' => array_map(function ($choice) {
-                return [
-                    'id' => $choice->getId(),
-                    'type' => 'text/html',
-                    'data' => $choice->getLabel(),
-                ];
-            }, $qcm->getChoices()->toArray()),
+            'id' => $paper->getId(),
+            'questions' => $questions
         ];
+    }
+
+    private function getPaperQuestions(Paper $paper)
+    {
+        $responseRepo = $this->om->getRepository('UJMExoBundle:Response');
+        $linkRepo = $this->om->getRepository('UJMExoBundle:LinkHintPaper');
+        $questions = $this->questionRepo->findByExercise($paper->getExercise());
+        $paperQuestions = [];
+
+        foreach ($questions as $question) {
+            $handler = $this->handlerCollector->getHandlerForInteractionType($question->getType());
+            // TODO: these two queries must be moved out of the loop
+            $response = $responseRepo->findOneBy(['paper' => $paper, 'question' => $question]);
+            $links = $linkRepo->findViewedByPaperAndQuestion($paper, $question);
+
+            $answer = $response ? $handler->convertAnswerDetails($response) : null;
+            $hints = array_map(function ($link) {
+                return (string) $link->getHint()->getId();
+            }, $links);
+
+            if ($answer || count($hints) > 0) {
+                $paperQuestions[] = [
+                    'id' => (string) $question->getId(),
+                    'answer' => $answer,
+                    'hints' => $hints
+                ];
+            }
+        }
+
+        return $paperQuestions;
     }
 }

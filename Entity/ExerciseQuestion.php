@@ -31,13 +31,13 @@ class ExerciseQuestion
      */
     private $ordre;
 
-    public function __construct(\UJM\ExoBundle\Entity\Exercise $exercise, \UJM\ExoBundle\Entity\Question $question)
+    public function __construct(Exercise $exercise, Question $question)
     {
         $this->exercise = $exercise;
         $this->question = $question;
     }
 
-    public function setExercise(\UJM\ExoBundle\Entity\Exercise $exercise)
+    public function setExercise(Exercise $exercise)
     {
         $this->exercise = $exercise;
     }
@@ -47,7 +47,7 @@ class ExerciseQuestion
         return $this->exercise;
     }
 
-    public function setQuestion(\UJM\ExoBundle\Entity\Question $question)
+    public function setQuestion(Question $question)
     {
         $this->question = $question;
     }

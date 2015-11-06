@@ -2,7 +2,9 @@
 
 namespace UJM\ExoBundle\Repository;
 
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
+use UJM\ExoBundle\Entity\Exercise;
 
 /**
  * PaperRepository.
@@ -12,6 +14,27 @@ use Doctrine\ORM\EntityRepository;
  */
 class PaperRepository extends EntityRepository
 {
+    /**
+     * Returns the unfinished papers of a user for a given exercise, if any.
+     *
+     * @param User      $user
+     * @param Exercise  $exercise
+     * @return array
+     */
+    public function findUnfinishedPapers(User $user, Exercise $exercise)
+    {
+        return $this->createQueryBuilder('p')
+            ->join('p.user', 'u')
+            ->join('p.exercise', 'e')
+            ->where('u = :user')
+            ->andWhere('e = :exercise')
+            ->andWhere('p.end IS NULL')
+            ->orderBy('p.start', 'DESC')
+            ->setParameters(['user' => $user, 'exercise' => $exercise])
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * Get a student's Paper which is not finished.
      *
