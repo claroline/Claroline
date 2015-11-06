@@ -505,19 +505,13 @@ class Step implements \JsonSerializable
      */
     public function setCondition(\Innova\PathBundle\Entity\StepCondition $condition = null)
     {
-        $this->condition = $condition;
+        if ($condition !== $this->condition) {
+            $this->condition = $condition;
 
-        return $this;
-    }
-
-    /**
-     * Remove condition
-     * @param \Innova\PathBundle\Entity\StepCondition $condition
-     * @return \Innova\PathBundle\Entity\Step
-     */
-    public function removeCondition(StepCondition $condition)
-    {
-        $condition->setStep(null);
+            if (null !== $condition) {
+                $condition->setStep($this);
+            }
+        }
 
         return $this;
     }
