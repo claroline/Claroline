@@ -29,6 +29,8 @@ Project setup
     - fileinfo (for mime type detection)
     - curl
     - mcrypt
+    - gd
+    - intl
 
 - MySQL >=5.0 (MariaDB should work aswell)
 - A web server like Apache or Nginx
