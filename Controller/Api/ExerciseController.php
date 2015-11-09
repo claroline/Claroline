@@ -8,12 +8,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Entity\Hint;
 use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Manager\ApiManager;
 
 /**
- * @EXT\Route(requirements={"id"="\d+"}, options={"expose"=true})
+ * @EXT\Route(
+ *     requirements={"id"="\d+"},
+ *     options={"expose"=true},
+ *     defaults={"_format": "json"}
+ * )
  * @EXT\Method("GET")
  */
 class ExerciseController
@@ -68,19 +73,16 @@ class ExerciseController
      *
      * @EXT\Route("/papers/{paperId}/questions/{questionId}")
      * @EXT\Method("PUT")
-     * @EXT\ParamConverter("currentUser", options={"authenticatedUser"=true})
      * @EXT\ParamConverter("paper", class="UJMExoBundle:Paper", options={"mapping": {"paperId": "id"}})
      * @EXT\ParamConverter("question", class="UJMExoBundle:Question", options={"mapping": {"questionId": "id"}})
      *
      * @param Request   $request
-     * @param User      $currentUser
      * @param Paper     $paper
      * @param Question  $question
      * @return JsonResponse
      */
     public function submitAnswerAction(
         Request $request,
-        User $currentUser,
         Paper $paper,
         Question $question
     )
@@ -100,5 +102,25 @@ class ExerciseController
         $this->manager->recordAnswer($paper, $question, $data, $ip);
 
         return new JsonResponse();
+    }
+
+    /**
+     * @todo right management
+     *
+     * @EXT\Route("/papers/{paperId}/hints/{hintId}")
+     * @EXT\ParamConverter("paper", class="UJMExoBundle:Paper", options={"mapping": {"paperId": "id"}})
+     * @EXT\ParamConverter("hint", class="UJMExoBundle:Hint", options={"mapping": {"hintId": "id"}})
+     *
+     * @param Paper $paper
+     * @param Hint  $hint
+     * @return JsonResponse
+     */
+    public function hintAction(Paper $paper, Hint $hint)
+    {
+        if (!$this->manager->hasHint($paper, $hint)) {
+            return new JsonResponse('Hint and paper are not related', 422);
+        }
+
+        return new JsonResponse($this->manager->viewHint($paper, $hint));
     }
 }
