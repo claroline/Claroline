@@ -30,21 +30,33 @@ class QcmHandler implements QuestionHandlerInterface
         $this->om = $om;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getQuestionMimeType()
     {
         return 'application/x.choice+json';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getInteractionType()
     {
         return InteractionQCM::TYPE;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getJsonSchemaUri()
     {
         return 'http://json-quiz.github.io/json-quiz/schemas/question/choice/schema.json';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function validateAfterSchema(\stdClass $questionData)
     {
         $errors = [];
@@ -86,6 +98,9 @@ class QcmHandler implements QuestionHandlerInterface
         return $errors;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function persistInteractionDetails(Question $question, \stdClass $importData)
     {
         $interaction = new InteractionQCM();
@@ -126,6 +141,9 @@ class QcmHandler implements QuestionHandlerInterface
         $this->om->persist($interaction);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true)
     {
         $repo = $this->om->getRepository('UJMExoBundle:InteractionQCM');
@@ -160,6 +178,9 @@ class QcmHandler implements QuestionHandlerInterface
         return $exportData;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function convertAnswerDetails(Response $response)
     {
         $parts = explode(';', $response->getResponse());
@@ -169,10 +190,17 @@ class QcmHandler implements QuestionHandlerInterface
         });
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function validateAnswerFormat(Question $question, $data)
     {
         if (!is_array($data)) {
             return ['Answer data must be an array, ' . gettype($data) . ' given'];
+        }
+
+        if (0 === $count = count($data)) {
+            return ['Answer data cannot be empty'];
         }
 
         foreach ($data as $id) {
@@ -181,11 +209,43 @@ class QcmHandler implements QuestionHandlerInterface
             }
         }
 
+        $interaction = $this->om->getRepository('UJMExoBundle:InteractionQCM')
+            ->findOneByQuestion($question);
+
+        if ($interaction->getTypeQCM()->getCode() === 2 && $count > 1) {
+            return ['This question does not allow multiple answers'];
+        }
+
         return [];
     }
 
+    /**
+     * @todo handle global score option
+     *
+     * {@inheritdoc}
+     */
     public function storeAnswerAndMark(Question $question, Response $response, $data)
     {
+        $interaction = $this->om->getRepository('UJMExoBundle:InteractionQCM')
+            ->findOneByQuestion($question);
 
+        if (!$interaction->getWeightResponse()) {
+            throw new \Exception('Global score not implemented yet');
+        }
+
+        $mark = 0;
+
+        foreach ($interaction->getChoices() as $choice) {
+            if (in_array((string) $choice->getId(), $data)) {
+                $mark += $choice->getWeight();
+            }
+        }
+
+        if ($mark < 0) {
+            $mark = 0;
+        }
+
+        $response->setResponse(implode(';', $data) . ';');
+        $response->setMark($mark);
     }
 }
