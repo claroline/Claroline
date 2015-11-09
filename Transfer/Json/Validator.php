@@ -36,9 +36,8 @@ class Validator
     public function validateQuestion(\stdClass $question, $requireSolution = true)
     {
         if (isset($question->type)) {
-            $handler = $this->handlerCollector->getHandlerForMimeType($question->type);
-
-            if ($handler) {
+            if ($this->handlerCollector->hasHandlerForMimeType($question->type)) {
+                $handler = $this->handlerCollector->getHandlerForMimeType($question->type);
                 $schema = $this->getSchema($handler->getJsonSchemaUri());
                 $validator = $this->getValidator();
                 $errors = $validator->validate($question, $schema);
