@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Hint;
+use UJM\ExoBundle\Entity\LinkHintPaper;
 use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
@@ -191,8 +192,6 @@ class ApiManager
     }
 
     /**
-     * @todo handle penalties
-     *
      * Records or updates an answer for a given question and paper.
      *
      * @param Paper     $paper
@@ -217,9 +216,49 @@ class ApiManager
         }
 
         $handler->storeAnswerAndMark($question, $response, $data);
+        $this->applyPenalties($paper, $question, $response);
 
         $this->om->persist($response);
         $this->om->flush();
+    }
+
+    /**
+     * Returns whether a hint is related to a paper.
+     *
+     * @param Paper $paper
+     * @param Hint  $hint
+     * @return bool
+     */
+    public function hasHint(Paper $paper, Hint $hint)
+    {
+        $link = $this->om->getRepository('UJMExoBundle:ExerciseQuestion')->findOneBy([
+            'question' => $hint->getQuestion(),
+            'exercise' => $paper->getExercise()
+        ]);
+
+        return $link !== null;
+    }
+
+    /**
+     * Returns the contents of a hint and records a log asserting that the hint
+     * has been consulted for a given paper.
+     *
+     * @param Paper $paper
+     * @param Hint  $hint
+     * @return string
+     */
+    public function viewHint(Paper $paper, Hint $hint)
+    {
+        $log = $this->om->getRepository('UJMExoBundle:LinkHintPaper')
+            ->findOneBy(['paper' => $paper, 'hint' => $hint]);
+
+        if (!$log) {
+            $log = new LinkHintPaper($hint, $paper);
+            $this->om->persist($log);
+            $this->om->flush();
+        }
+
+        return $hint->getValue();
     }
 
     /**
@@ -324,5 +363,26 @@ class ApiManager
         }
 
         return $paperQuestions;
+    }
+
+    private function applyPenalties(Paper $paper, Question $question, Response $response)
+    {
+        if (count($hints = $question->getHints()) === 0) {
+            return;
+        }
+
+        $logs = $this->om->getRepository('UJMExoBundle:LinkHintPaper')
+            ->findViewedByPaperAndQuestion($paper, $question);
+        $penalty = 0;
+
+        foreach ($logs as $log) {
+            $penalty += $log->getHint()->getPenalty();
+        }
+
+        $response->setMark($response->getMark() - $penalty);
+
+        if ($response->getMark() < 0) {
+            $response->setMark(0);
+        }
     }
 }

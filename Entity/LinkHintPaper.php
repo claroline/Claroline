@@ -25,11 +25,9 @@ class LinkHintPaper
     private $paper;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(name="view", type="boolean")
+     * @ORM\Column(type="boolean")
      */
-    private $view;
+    private $view = true;
 
     public function __construct(Hint $hint, Paper $paper)
     {
@@ -58,8 +56,6 @@ class LinkHintPaper
     }
 
     /**
-     * Set view.
-     *
      * @param bool $view
      */
     public function setView($view)
@@ -68,7 +64,7 @@ class LinkHintPaper
     }
 
     /**
-     * Get view.
+     * @return bool
      */
     public function getView()
     {
