@@ -26,7 +26,6 @@ before_script:
   - cd $ROOT_DIR
   - cp -R vendor/claroline/dev-bundle/Claroline/DevBundle/Resources/travis/app/* app
   - php app/register-bundle.php `cat package_dir.txt`
-  - rm -rf app/cache/*
   - php app/init-schema.php
 
 script: vendor/bin/phpunit -c "${BUNDLE_DIR}/phpunit_travis.xml"
