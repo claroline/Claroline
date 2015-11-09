@@ -6,6 +6,8 @@ php:
 env:
   - DB=mysql
 
+services: mysql
+
 mysql:
   adapter: mysql2
   database: claroline_test_travis
