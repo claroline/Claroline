@@ -91,7 +91,7 @@ class ExerciseController
             return new JsonResponse('Paper cannot be edited anymore', 403);
         }
 
-        $data = $request->request->get('data', null);
+        $data = $request->request->all();
         $ip = $request->getClientIp();
         $errors = $this->manager->validateAnswerFormat($question, $data);
 

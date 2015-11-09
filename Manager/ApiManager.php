@@ -367,12 +367,13 @@ class ApiManager
 
     private function applyPenalties(Paper $paper, Question $question, Response $response)
     {
-        if (count($hints = $question->getHints()) === 0) {
+        $logs = $this->om->getRepository('UJMExoBundle:LinkHintPaper')
+            ->findViewedByPaperAndQuestion($paper, $question);
+
+        if (count($logs) === 0) {
             return;
         }
 
-        $logs = $this->om->getRepository('UJMExoBundle:LinkHintPaper')
-            ->findViewedByPaperAndQuestion($paper, $question);
         $penalty = 0;
 
         foreach ($logs as $log) {
