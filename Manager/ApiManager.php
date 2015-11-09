@@ -191,7 +191,9 @@ class ApiManager
     }
 
     /**
-     * Records an answer for a given question and paper.
+     * @todo handle penalties
+     *
+     * Records or updates an answer for a given question and paper.
      *
      * @param Paper     $paper
      * @param Question  $question
@@ -200,17 +202,20 @@ class ApiManager
      */
     public function recordAnswer(Paper $paper, Question $question, $data, $ip)
     {
-        if ($paper->getEnd()) {
-            throw new \RuntimeException('Cannot add answer to ended paper');
-        }
-
         $handler = $this->handlerCollector->getHandlerForInteractionType($question->getType());
 
-        $response = new Response();
-        $response->setNbTries(1);
-        $response->setPaper($paper);
-        $response->setQuestion($question);
-        $response->setIp($ip);
+        $response = $this->om->getRepository('UJMExoBundle:Response')
+            ->findOneBy(['paper' => $paper, 'question' => $question]);
+
+        if (!$response) {
+            $response = new Response();
+            $response->setPaper($paper);
+            $response->setQuestion($question);
+            $response->setIp($ip);
+        } else {
+            $response->setNbTries($response->getNbTries() + 1);
+        }
+
         $handler->storeAnswerAndMark($question, $response, $data);
 
         $this->om->persist($response);
@@ -259,14 +264,21 @@ class ApiManager
 
     private function getPaper(Exercise $exercise, User $user)
     {
-        $papers = $this->om->getRepository('UJMExoBundle:Paper')
-            ->findUnfinishedPapers($user, $exercise);
+        $repo = $this->om->getRepository('UJMExoBundle:Paper');
+        $papers = $repo->findUnfinishedPapers($user, $exercise);
 
         if (count($papers) === 0) {
+            $lastPaper = $repo->findOneBy(
+                ['user' => $user, 'exercise' => $exercise],
+                ['start' => 'DESC']
+            );
+
+            $paperNum = $lastPaper ? $lastPaper->getNumPaper() + 1 : 1;
+
             $paper = new Paper();
             $paper->setExercise($exercise);
             $paper->setUser($user);
-            $paper->setNumPaper(time()); // not used...
+            $paper->setNumPaper($paperNum);
             $paper->setOrdreQuestion('not used...');
 
             $this->om->persist($paper);

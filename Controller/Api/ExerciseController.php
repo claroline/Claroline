@@ -65,10 +65,9 @@ class ExerciseController
 
     /**
      * @todo right management
-     * @todo handle data validation errors
      *
      * @EXT\Route("/papers/{paperId}/questions/{questionId}")
-     * @EXT\Method("POST")
+     * @EXT\Method("PUT")
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser"=true})
      * @EXT\ParamConverter("paper", class="UJMExoBundle:Paper", options={"mapping": {"paperId": "id"}})
      * @EXT\ParamConverter("question", class="UJMExoBundle:Question", options={"mapping": {"questionId": "id"}})
@@ -86,11 +85,15 @@ class ExerciseController
         Question $question
     )
     {
+        if ($paper->getEnd()) {
+            return new JsonResponse('Paper cannot be edited anymore', 403);
+        }
+
         $data = $request->request->get('data', null);
         $ip = $request->getClientIp();
         $errors = $this->manager->validateAnswerFormat($question, $data);
 
-        if (!count($errors) !== 0) {
+        if (count($errors) !== 0) {
             return new JsonResponse($errors, 422);
         }
 
