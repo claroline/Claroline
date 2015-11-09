@@ -60,13 +60,48 @@
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
- {#   {% javascripts debug=false filter='jsmin' output='vendor/clarolinechat/chatRoom.js'
-        '@ClarolineChatBundle/Resources/public/js/chatRoom.app.js'
+    {#{% javascripts debug=false filter='jsmin' output='vendor/clarolinechat/chatRoom.js'
+        '@ClarolineChatBundle/Resources/public/js/Xmpp/*'
+        '@ClarolineChatBundle/Resources/public/js/Xmpp/Service/*'
+        '@ClarolineChatBundle/Resources/public/js/ChatRoom/chatRoom.app.js'
+        '@ClarolineChatBundle/Resources/public/js/ChatRoom/Service/*'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}#}
     <script type="text/javascript"
-            src="{{ asset('bundles/clarolinechat/js/ChatRoom/chatRoom.js') }}"
+            src="{{ asset('bundles/clarolinechat/js/Xmpp/module.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/Xmpp/Service/XmppService.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/ChatRoom/module.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/ChatRoom/Service/XmppMucService.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/ChatRoom/Controller/ChatRoomMessagesCtrl.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/ChatRoom/Controller/ChatRoomUsersCtrl.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/ChatRoom/Controller/ChatRoomInputCtrl.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/ChatRoom/Controller/ChatRoomXmppCtrl.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/ChatRoom/Directive/ChatRoomDirective.js') }}"
     >
     </script>
 

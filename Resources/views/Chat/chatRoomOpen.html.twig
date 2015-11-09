@@ -20,38 +20,8 @@
             </h3>
         </div>
         <div class="panel-body">
-            <div ng-cloak="" ng-app="chatRoomApp">
-                <div class="row chat-room-row">
-                    <div id="chat-room-content-panel" class="col-md-9">
-                        <div ng-controller="mainMenuCtrl"
-                             data-id="{{ chatRoom.getId() }}"
-                             data-chat-room="{{ chatRoom | json_encode }}"
-                             data-can-chat="{{ canChat }}"
-                             data-can-edit="{{ canEdit }}"
-                        >
-    {#                        Message : {% verbatim %}{{ name }}{% endverbatim %}#}
-                        <div id="chat-content" class="well well-sm"></div>
-                        </div>
-                    </div>
-                    <div id="chat-room-users-panel" class="col-md-3 well well-sm hidden-xs hidden-sm">
-                        <h4 class="text-center">
-                            {{ 'users'|trans({}, 'platform') }}
-                        </4>
-                    </div>
-                </div>
-                <div class="row chat-room-row">
-                    <div class="input-group">
-                        <input type="text"
-                               id="msg-input"
-                               class="form-control"
-                        >
-                        <span class="input-group-btn">
-                            <button id="send-msg-btn" class="btn btn-default">
-                                <i class="fa fa-comment"></i>
-                            </button>
-                        </span>
-                    </div>
-                </div>
+            <div id="chat-room-app" ng-cloak="" ng-app="ChatRoomModule">
+                <chat-room></chat-room>
             </div>
         </div>
     {% endblock %}
@@ -71,8 +41,25 @@
             %}
                 color = '{{ chatUser.getOptions()['color'] }}';
             {% endif %}
+{#            console.log(angular.element(document.getElementById('chat-room-main')).scope());#}
+    
+            $('#chat-room-app').on('click', '#connection-btn', function () {
+                angular.element(document.getElementById('chat-room-main')).scope().connect(
+                    '{{ xmppHost }}',
+                    '{{ xmppMucHost }}',
+                    '{{ boshPort }}',
+                    '{{ chatRoom.getId() }}',
+                    '{{ chatRoom.getRoomName() }}',
+                    '{{ chatUser.getChatUsername() }}',
+                    '{{ chatUser.getChatPassword() }}',
+                    '{{ chatUser.getUser().getFirstName() }}',
+                    '{{ chatUser.getUser().getLastName() }}',
+                    color
+                );
+            });
+{#            angular.element(document.getElementById('chat-content')).scope().addMessage(body);#}
             
-            ChatRoom.connect(
+           {# ChatRoom.connect(
                 '{{ xmppHost }}',
                 '{{ xmppMucHost }}',
                 '{{ boshPort }}',
@@ -83,7 +70,7 @@
                 '{{ chatUser.getUser().getFirstName() }}',
                 '{{ chatUser.getUser().getLastName() }}',
                 color
-            );
+            );#}
         })();
     </script>
 {% endblock %}
