@@ -96,13 +96,14 @@ class MatchingExport extends QtiExport
     protected function promptTag()
     {
         $prompt = $this->document->CreateElement('prompt');
+        $invite = $this->interactionmatching->getQuestion()->getInvite(); 
+        // Managing the resource export
+        $body=$this->qtiExportObject($invite);
+        foreach ($body->childNodes as $child) {
+            $inviteNew = $this->document->importNode($child, true);
+            $prompt->appendChild($inviteNew);
+        }
         $this->matchInteraction->appendChild($prompt);
-
-        $prompttxt = $this->document
-                ->CreateTextNode(
-                        $this->interactionmatching->getQuestion()->getInvite()
-                        );
-        $prompt->appendChild($prompttxt);
         $this->qtiProposal();
         $this->qtiLabel();
         $this->notation();
