@@ -93,9 +93,7 @@ class ExerciseController
      */
     public function submitAnswerAction(User $user, Request $request, Paper $paper, Question $question)
     {
-        if ($paper->getEnd() || $user !== $paper->getUser()) {
-            throw new AccessDeniedHttpException();
-        }
+        $this->assertHasPaperAccess($user, $paper);
 
         $data = $request->request->all();
         $errors = $this->manager->validateAnswerFormat($question, $data);
@@ -125,15 +123,34 @@ class ExerciseController
      */
     public function hintAction(User $user, Paper $paper, Hint $hint)
     {
-        if ($paper->getEnd() || $user !== $paper->getUser()) {
-            throw new AccessDeniedHttpException();
-        }
+        $this->assertHasPaperAccess($user, $paper);
 
         if (!$this->manager->hasHint($paper, $hint)) {
             return new JsonResponse('Hint and paper are not related', 422);
         }
 
         return new JsonResponse($this->manager->viewHint($paper, $hint));
+    }
+
+    /**
+     * Marks a paper as finished.
+     *
+     * @EXT\Route("/papers/{id}/end")
+     * @EXT\ParamConverter("user", converter="current_user")
+     *
+     * @param User  $user
+     * @param Paper $paper
+     * @return JsonResponse
+     */
+    public function finishPaperAction(User $user, Paper $paper)
+    {
+        if ($user !== $paper->getUser()) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $this->manager->finishPaper($paper);
+
+        return new JsonResponse('', 204);
     }
 
     /**
@@ -154,6 +171,13 @@ class ExerciseController
     private function assertHasPermission($permission, Exercise $exercise)
     {
         if (!$this->authorization->isGranted($permission, new ResourceCollection([$exercise]))) {
+            throw new AccessDeniedHttpException();
+        }
+    }
+
+    private function assertHasPaperAccess(User $user, Paper $paper)
+    {
+        if ($paper->getEnd() || $user !== $paper->getUser()) {
             throw new AccessDeniedHttpException();
         }
     }

@@ -271,6 +271,19 @@ class ApiManager
     }
 
     /**
+     * Terminates a user paper.
+     *
+     * @param Paper $paper
+     */
+    public function finishPaper(Paper $paper)
+    {
+        if (!$paper->getEnd()) {
+            $paper->setEnd(new \DateTime());
+            $this->om->flush();
+        }
+    }
+
+    /**
      * Returns the papers of a user for a given exercise, in a JSON format.
      *
      * @param Exercise  $exercise
