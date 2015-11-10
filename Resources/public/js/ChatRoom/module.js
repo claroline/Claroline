@@ -10,7 +10,7 @@
 (function () {
     'use strict';
 
-    angular.module('ChatRoomModule', ['XmppModule']);
+    angular.module('ChatRoomModule', ['XmppModule', 'ui.translation']);
 
     $('#chat-room-app').on('keypress', '#msg-input', function (e) {
 
@@ -23,17 +23,6 @@
             }
             $('#msg-input').val('');
         }
-    });
-
-    $('#chat-room-configuration-btn').on('click', function () {
-    //    window.Claroline.Modal.displayForm(
-    //        Routing.generate(
-    //            'claro_chat_room_configure_form',
-    //            {'chatRoom': ChatRoom.roomId}
-    //        ),
-    //        function () {},
-    //        function () {}
-    //    );
     });
 
     $(window).unload(function(){

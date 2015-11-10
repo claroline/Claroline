@@ -1,0 +1,24 @@
+<div id="chat-content" class="well well-sm" ng-controller="ChatRoomMessagesCtrl">
+    <div ng-repeat="message in messages">
+        <div ng-switch="message['type']">
+            <div ng-switch-when="message">
+                <b class="received-message" style="color: {{ message['color'] }}">
+                    {{ message['sender'] }} 
+                </b> :
+                {{ message['message'] }}
+            </div>
+            <div ng-switch-when="presence">
+                <b ng-switch="message['status']">
+                    <span ng-switch-when="connection">
+                        {{ message['name'] }}
+                        {{ 'has_joined_the_chat_room'|trans:{}:'chat' }}
+                    </span>
+                    <span ng-switch-when="disconnection">
+                        {{ message['name'] }}
+                        {{ 'has_left_the_chat_room'|trans:{}:'chat' }}
+                    </span>
+                </b>
+            </div>
+        </div>
+    </div>
+</div>

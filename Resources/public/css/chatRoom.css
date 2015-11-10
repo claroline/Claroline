@@ -7,7 +7,7 @@
     overflow-y: scroll;
 }*/
 
-#chat-room-users-panel {
+#chat-room-users-list {
     height: 60vh;
     overflow-y: scroll;
     /*background-color: #D8B1B1;*/

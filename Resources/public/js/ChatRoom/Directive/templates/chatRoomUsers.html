@@ -1,0 +1,23 @@
+<div id="chat-room-users-list" class="well well-sm" ng-controller="ChatRoomUsersCtrl">
+    <h4 class="text-center">
+        {{ 'users'|trans:{}:'platform' }}
+        <span class="badge">{{ users.length }}</span>
+    </h4>
+    <span ng-repeat="user in users" class="participant">
+        <i class="fa fa-user" style="color: {{ user['color'] }}"></i>
+        {{ user['name'] }}
+        <i class="fa fa-microphone-slash pointer-hand chat-room-mute-btn"
+           data-toggle="tooltip"
+           data-placement="top"
+           title="Mute"
+        >
+        </i>
+        <i class="fa fa-ban pointer-hand chat-room-ban-btn"
+           data-toggle="tooltip"
+           data-placement="top"
+           title="Ban"
+        >
+        </i>
+        <br>
+    </span> 
+</div>

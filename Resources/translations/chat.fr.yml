@@ -7,6 +7,8 @@ chat_room_configuration: Configuration de la Chat room
 chat_room_id: Identifiant de la Chat room
 chat_username: Identifiant pour le Chat
 create_chat_accounts: Créer des comptes pour le Chat
+has_joined_the_chat_room: a rejoint la Chat room
+has_left_the_chat_room: a quitté la Chat room
 host: Hôte
 muc_host: Serveur MUC
 mute: Muet

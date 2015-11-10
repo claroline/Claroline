@@ -4,53 +4,13 @@
     </button>
     <div class="row chat-room-row">
         <div id="chat-room-content-panel" class="col-md-9">
-            <div id="chat-content" class="well well-sm" ng-controller="ChatRoomMessagesCtrl">
-                <span ng-repeat="message in messages">
-                    <b class="received-message" style="color: {{ message['color'] }}">
-                        {{ message['sender'] }} 
-                    </b> :
-                    {{ message['message'] }}
-                    <br>
-                </span>
-            </div>
+            <chat-room-messages></chat-room-messages>
         </div>
-        <div id="chat-room-users-panel" class="col-md-3 well well-sm hidden-xs hidden-sm" ng-controller="ChatRoomUsersCtrl">
-            <h4 class="text-center">
-                
-            </h4>
-            <span ng-repeat="user in users" class="participant">
-                <i class="fa fa-user" style="color: {{ user['color'] }}"></i>
-                {{ user['name'] }}
-                <i class="fa fa-microphone-slash pointer-hand chat-room-mute-btn"
-                   data-toggle="tooltip"
-                   data-placement="top"
-                   title="Mute"
-                >
-                </i>
-                <i class="fa fa-ban pointer-hand chat-room-ban-btn"
-                   data-toggle="tooltip"
-                   data-placement="top"
-                   title="Ban"
-                >
-                </i>
-                <br>
-            </span> 
+        <div id="chat-room-users-panel" class="col-md-3 hidden-xs hidden-sm">
+            <chat-room-users></chat-room-users>
         </div>
     </div>
     <div class="row chat-room-row">
-        <div id="input-box" ng-controller="ChatRoomInputCtrl">
-            <div class="input-group">
-                <input type="text"
-                       id="msg-input"
-                       class="form-control"
-                       ng-model="input"
-                >
-                <span class="input-group-btn">
-                    <button id="send-msg-btn" class="btn btn-default" ng-click="sendMessage()">
-                        <i class="fa fa-comment"></i>
-                    </button>
-                </span>
-            </div>
-        </div>
+        <chat-room-input></chat-room-input>
     </div>
 </div>

@@ -41,7 +41,6 @@
             %}
                 color = '{{ chatUser.getOptions()['color'] }}';
             {% endif %}
-{#            console.log(angular.element(document.getElementById('chat-room-main')).scope());#}
     
             $('#chat-room-app').on('click', '#connection-btn', function () {
                 angular.element(document.getElementById('chat-room-main')).scope().connect(
@@ -57,20 +56,17 @@
                     color
                 );
             });
-{#            angular.element(document.getElementById('chat-content')).scope().addMessage(body);#}
             
-           {# ChatRoom.connect(
-                '{{ xmppHost }}',
-                '{{ xmppMucHost }}',
-                '{{ boshPort }}',
-                '{{ chatRoom.getId() }}',
-                '{{ chatRoom.getRoomName() }}',
-                '{{ chatUser.getChatUsername() }}',
-                '{{ chatUser.getChatPassword() }}',
-                '{{ chatUser.getUser().getFirstName() }}',
-                '{{ chatUser.getUser().getLastName() }}',
-                color
-            );#}
+            $('#chat-room-configuration-btn').on('click', function () {
+                window.Claroline.Modal.displayForm(
+                    Routing.generate(
+                        'claro_chat_room_configure_form',
+                        {'chatRoom': {{ chatRoom.getId() }}}
+                    ),
+                    function () {},
+                    function () {}
+                );
+            });
         })();
     </script>
 {% endblock %}

@@ -24,18 +24,6 @@
             src="{{ asset('bundles/clarolinechat/js/strophejs-1.2.3/strophe.min.js') }}"
     >
     </script>
-    {#<script type="text/javascript"
-            src="{{ asset('bundles/clarolinechat/js/strophejs-plugins/roster/strophe.roster.js') }}"
-    >
-    </script>#}
-    {#<script type="text/javascript"
-            src="{{ asset('bundles/clarolinechat/js/strophejs-plugins/disco/strophe.disco.js') }}"
-    >
-    </script>#}
-    {#<script type="text/javascript"
-            src="{{ asset('bundles/clarolinechat/js/strophejs-plugins/muc/strophe.muc.js') }}"
-    >
-    </script>#}
 
     {# Angular JS #}
     {% javascripts debug=false filter='jsmin' output='vendor/angular/angular-js.js'
@@ -102,6 +90,18 @@
     </script>
     <script type="text/javascript"
             src="{{ asset('bundles/clarolinechat/js/ChatRoom/Directive/ChatRoomDirective.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/ChatRoom/Directive/ChatRoomUsersDirective.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/ChatRoom/Directive/ChatRoomMessagesDirective.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/ChatRoom/Directive/ChatRoomInputDirective.js') }}"
     >
     </script>
 

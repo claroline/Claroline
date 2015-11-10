@@ -10,12 +10,12 @@
 (function () {
     'use strict';
 
-    angular.module('ChatRoomModule').directive('chatRoom', [
+    angular.module('ChatRoomModule').directive('chatRoomInput', [
         function () {
             return {
                 restrict: 'E',
                 replace: true,
-                templateUrl: AngularApp.webDir + 'bundles/clarolinechat/js/ChatRoom/Directive/templates/chatRoom.html'
+                templateUrl: AngularApp.webDir + 'bundles/clarolinechat/js/ChatRoom/Directive/templates/chatRoomInput.html'
             };
         }
     ]);

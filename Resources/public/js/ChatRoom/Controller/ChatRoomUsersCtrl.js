@@ -10,8 +10,8 @@
 (function () {
     'use strict';
 
-    angular.module('ChatRoomModule').controller('ChatRoomUsersCtrl', ['$scope',
-        function ($scope) {
+    angular.module('ChatRoomModule').controller('ChatRoomUsersCtrl', ['$scope', '$rootScope',
+        function ($scope, $rootScope) {
             $scope.users = [];
 
             $scope.addUser = function (username, name, color) {
@@ -28,6 +28,7 @@
                 if (!isPresent) {
                     $scope.users.push({username: username, name: name, color: color});
                     $scope.$apply();
+                    $rootScope.$broadcast('newPresenceEvent', {name: name, status: 'connection'});
                 }
             };
 
@@ -37,8 +38,10 @@
                     var currentUsername =  $scope.users[i]['username'];
 
                     if (username === currentUsername) {
+                        var currentName = $scope.users[i]['name'];
                         $scope.users.splice(i, 1);
                         $scope.$apply();
+                        $rootScope.$broadcast('newPresenceEvent', {name: currentName, status: 'disconnection'});
                         break;
                     }
                 }
