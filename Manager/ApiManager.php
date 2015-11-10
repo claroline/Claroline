@@ -271,6 +271,26 @@ class ApiManager
     }
 
     /**
+     * Returns the papers of a user for a given exercise, in a JSON format.
+     *
+     * @param Exercise  $exercise
+     * @param User      $user
+     * @return array
+     */
+    public function exportUserPapers(Exercise $exercise, User $user)
+    {
+        $papers = $this->om->getRepository('UJMExoBundle:Paper')
+            ->findBy(['exercise' => $exercise, 'user' => $user]);
+
+        return array_map(function ($paper) {
+            return [
+                'id' => $paper->getId(),
+                'questions' => $this->exportPaperQuestions($paper)
+            ];
+        }, $papers);
+    }
+
+    /**
      * @todo duration
      *
      * @param Exercise $exercise
