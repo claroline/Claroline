@@ -108,8 +108,8 @@ class ExerciseController
     }
 
     /**
-     * Returns the value of a question hint, and records it has been consulted
-     * within the context of a given paper.
+     * Returns the value of a question hint, and records the fact that it has
+     * been consulted within the context of a given paper.
      *
      * @EXT\Route("/papers/{paperId}/hints/{hintId}")
      * @EXT\ParamConverter("user", converter="current_user")
