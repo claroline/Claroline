@@ -106,6 +106,7 @@ class ApiManager
         $handler = $this->handlerCollector->getHandlerForInteractionType($question->getType());
 
         $data = new \stdClass();
+        $data->id = $question->getId();
         $data->type = $handler->getQuestionMimeType();
         $data->title = $question->getTitle();
 
@@ -285,6 +286,8 @@ class ApiManager
 
     /**
      * Returns the papers of a user for a given exercise, in a JSON format.
+     * Also includes the complete definition and solution of each question
+     * associated with the exercise.
      *
      * @param Exercise  $exercise
      * @param User      $user
@@ -295,12 +298,25 @@ class ApiManager
         $papers = $this->om->getRepository('UJMExoBundle:Paper')
             ->findBy(['exercise' => $exercise, 'user' => $user]);
 
-        return array_map(function ($paper) {
+        $papers = array_map(function ($paper) {
             return [
                 'id' => $paper->getId(),
+                'number' => $paper->getNumPaper(),
+                'start' => $paper->getStart()->format('Y-m-d H:i:s'),
+                'end' => $paper->getEnd()->format('Y-m-d H:i:s'),
+                'interrupted' => $paper->getInterupt(),
                 'questions' => $this->exportPaperQuestions($paper)
             ];
         }, $papers);
+
+        $questions = array_map(function ($question) {
+            return $this->exportQuestion($question, true);
+        }, $this->questionRepo->findByExercise($exercise));
+
+        return [
+            'questions' => $questions,
+            'papers' => $papers
+        ];
     }
 
     /**
