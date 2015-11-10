@@ -25,25 +25,34 @@ class ApiManager
     private $questionRepo;
     private $interactionQcmRepo;
     private $handlerCollector;
+    private $exerciseManager;
 
     /**
      * @DI\InjectParams({
      *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
      *     "validator"  = @DI\Inject("ujm.exo.json_validator"),
-     *     "collector"  = @DI\Inject("ujm.exo.question_handler_collector")
+     *     "collector"  = @DI\Inject("ujm.exo.question_handler_collector"),
+     *     "manager"    = @DI\Inject("ujm.exo.exercise_manager")
      * })
      *
      * @param ObjectManager             $om
      * @param Validator                 $validator
      * @param QuestionHandlerCollector  $collector
+     * @param ExerciseManager           $manager
      */
-    public function __construct(ObjectManager $om, Validator $validator, QuestionHandlerCollector $collector)
+    public function __construct(
+        ObjectManager $om,
+        Validator $validator,
+        QuestionHandlerCollector $collector,
+        ExerciseManager $manager
+    )
     {
         $this->om = $om;
         $this->validator = $validator;
         $this->questionRepo = $om->getRepository('UJMExoBundle:Question');
         $this->interactionQcmRepo = $om->getRepository('UJMExoBundle:InteractionQCM');
         $this->handlerCollector = $collector;
+        $this->exerciseManager = $manager;
     }
 
     /**
@@ -153,8 +162,8 @@ class ApiManager
     {
         return [
             'id' => $exercise->getId(),
-            'meta' => $this->getMetadata($exercise),
-            'steps' => $this->getSteps($exercise, $withSolutions),
+            'meta' => $this->exportMetadata($exercise),
+            'steps' => $this->exportSteps($exercise, $withSolutions),
         ];
     }
 
@@ -171,7 +180,7 @@ class ApiManager
     {
         return [
             'exercise' => $this->exportExercise($exercise, $withSolutions),
-            'paper' => $this->getPaper($exercise, $user)
+            'paper' => $this->exportPaper($exercise, $user)
         ];
     }
 
@@ -267,7 +276,7 @@ class ApiManager
      * @param Exercise $exercise
      * @return array
      */
-    private function getMetadata(Exercise $exercise)
+    private function exportMetadata(Exercise $exercise)
     {
         $node = $exercise->getResourceNode();
         $creator = $node->getCreator();
@@ -291,7 +300,7 @@ class ApiManager
      * @param bool      $withSolutions
      * @return array
      */
-    private function getSteps(Exercise $exercise, $withSolutions = true)
+    private function exportSteps(Exercise $exercise, $withSolutions = true)
     {
         return array_map(function ($question) use ($withSolutions) {
             return [
@@ -301,32 +310,17 @@ class ApiManager
         }, $this->questionRepo->findByExercise($exercise));
     }
 
-    private function getPaper(Exercise $exercise, User $user)
+    private function exportPaper(Exercise $exercise, User $user)
     {
         $repo = $this->om->getRepository('UJMExoBundle:Paper');
         $papers = $repo->findUnfinishedPapers($user, $exercise);
 
         if (count($papers) === 0) {
-            $lastPaper = $repo->findOneBy(
-                ['user' => $user, 'exercise' => $exercise],
-                ['start' => 'DESC']
-            );
-
-            $paperNum = $lastPaper ? $lastPaper->getNumPaper() + 1 : 1;
-
-            $paper = new Paper();
-            $paper->setExercise($exercise);
-            $paper->setUser($user);
-            $paper->setNumPaper($paperNum);
-            $paper->setOrdreQuestion('not used...');
-
-            $this->om->persist($paper);
-            $this->om->flush();
-
+            $paper = $this->createPaper($user, $exercise);
             $questions = [];
         } else {
             $paper = $papers[0];
-            $questions = $this->getPaperQuestions($paper);
+            $questions = $this->exportPaperQuestions($paper);
         }
 
         return [
@@ -335,7 +329,34 @@ class ApiManager
         ];
     }
 
-    private function getPaperQuestions(Paper $paper)
+    private function createPaper(User $user, Exercise $exercise)
+    {
+        $lastPaper = $this->om->getRepository('UJMExoBundle:Paper')->findOneBy(
+            ['user' => $user, 'exercise' => $exercise],
+            ['start' => 'DESC']
+        );
+
+        $paperNum = $lastPaper ? $lastPaper->getNumPaper() + 1 : 1;
+        $questions = $this->exerciseManager->pickQuestions($exercise);
+        $order = '';
+
+        foreach ($questions as $question) {
+            $order .= $question->getId().';';
+        }
+
+        $paper = new Paper();
+        $paper->setExercise($exercise);
+        $paper->setUser($user);
+        $paper->setNumPaper($paperNum);
+        $paper->setOrdreQuestion($order);
+
+        $this->om->persist($paper);
+        $this->om->flush();
+
+        return $paper;
+    }
+
+    private function exportPaperQuestions(Paper $paper)
     {
         $responseRepo = $this->om->getRepository('UJMExoBundle:Response');
         $linkRepo = $this->om->getRepository('UJMExoBundle:LinkHintPaper');
