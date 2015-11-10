@@ -59,6 +59,8 @@ class ExerciseController
     /**
      * @todo max attempt check
      *
+     * Opens an exercise, creating a new paper or re-using an unfinished one.
+     *
      * @EXT\Route("/exercises/{id}/attempts")
      * @EXT\Method("POST")
      * @EXT\ParamConverter("user", converter="current_user")
@@ -75,6 +77,8 @@ class ExerciseController
     }
 
     /**
+     * Records an answer to an exercise question.
+     *
      * @EXT\Route("/papers/{paperId}/questions/{questionId}")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("user", converter="current_user")
@@ -106,7 +110,8 @@ class ExerciseController
     }
 
     /**
-     * @todo right management
+     * Returns the value of a question hint, and records it has been consulted
+     * within the context of a given paper.
      *
      * @EXT\Route("/papers/{paperId}/hints/{hintId}")
      * @EXT\ParamConverter("user", converter="current_user")
@@ -120,7 +125,7 @@ class ExerciseController
      */
     public function hintAction(User $user, Paper $paper, Hint $hint)
     {
-        if ($user !== $paper->getUser()) {
+        if ($paper->getEnd() || $user !== $paper->getUser()) {
             throw new AccessDeniedHttpException();
         }
 
@@ -132,6 +137,8 @@ class ExerciseController
     }
 
     /**
+     * Returns all the papers associated with an exercise for a given user.
+     *
      * @EXT\Route("/exercises/{id}/papers")
      * @EXT\ParamConverter("user", converter="current_user")
      *
