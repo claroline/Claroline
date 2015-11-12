@@ -79,13 +79,19 @@ class ChatManager
         }
     }
 
-    public function saveChatRoomMessage(ChatRoom $chatRoom, $username, $message)
+    public function saveChatRoomMessage(
+        ChatRoom $chatRoom,
+        $username,
+        $message,
+        $type = ChatRoomMessage::MESSAGE
+    )
     {
         $roomMessage = new ChatRoomMessage();
         $roomMessage->setCreationDate(new \DateTime());
         $roomMessage->setChatRoom($chatRoom);
         $roomMessage->setUsername($username);
         $roomMessage->setContent($message);
+        $roomMessage->setType($type);
         $this->om->persist($roomMessage);
         $this->om->flush();
     }

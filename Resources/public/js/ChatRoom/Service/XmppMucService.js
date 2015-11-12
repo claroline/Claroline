@@ -93,6 +93,18 @@
                         }
                     )
                 );
+        
+                $.ajax({
+                    url: Routing.generate(
+                        'claro_chat_room_presence_register',
+                        {
+                            chatRoom: roomId, 
+                            username: XmppService.getUsername(), 
+                            status: 'connection'
+                        }
+                    ),
+                    type: 'POST'
+                });
             });
 
             return {
@@ -133,6 +145,18 @@
                     );
                     connection.flush();
                     connection.disconnect();
+        
+                    $.ajax({
+                        url: Routing.generate(
+                            'claro_chat_room_presence_register',
+                            {
+                                chatRoom: roomId, 
+                                username: XmppService.getUsername(), 
+                                status: 'disconnection'
+                            }
+                        ),
+                        type: 'POST'
+                    });
                 },
                 sendMessageToRoom: function (message) {
                      XmppService.getConnection().send(

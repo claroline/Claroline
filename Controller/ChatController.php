@@ -12,6 +12,7 @@
 namespace Claroline\ChatBundle\Controller;
 
 use Claroline\ChatBundle\Entity\ChatRoom;
+use Claroline\ChatBundle\Entity\ChatRoomMessage;
 use Claroline\ChatBundle\Form\ChatRoomConfigurationType;
 use Claroline\ChatBundle\Manager\ChatManager;
 use Claroline\CoreBundle\Entity\User;
@@ -136,7 +137,23 @@ class ChatController extends Controller
     public function chatRoomMessageRegisterAction(ChatRoom $chatRoom, $username, $message = '')
     {
         $this->checkChatRoomRight($chatRoom, 'OPEN');
-        $this->chatManager->saveChatRoomMessage($chatRoom, $username, $message);
+        $this->chatManager->saveChatRoomMessage($chatRoom, $username, $message, ChatRoomMessage::MESSAGE);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/chat/room/{chatRoom}/user/{username}/presence/status/{status}",
+     *     name="claro_chat_room_presence_register",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function chatRoomPresenceRegisterAction(ChatRoom $chatRoom, $username, $status)
+    {
+        $this->checkChatRoomRight($chatRoom, 'OPEN');
+        $this->chatManager->saveChatRoomMessage($chatRoom, $username, $status, ChatRoomMessage::PRESENCE);
 
         return new JsonResponse('success', 200);
     }
