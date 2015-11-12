@@ -81,7 +81,6 @@ class ResourceVoter implements VoterInterface
 
         if ($object instanceof ResourceCollection) {
             $errors = array();
-
             if (strtolower($attributes[0]) == 'create') {
                 if ($targetWorkspace = $object->getResources()[0]) {
                     //there should be one one resource every time
