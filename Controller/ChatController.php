@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class ChatController extends Controller
 {
@@ -34,6 +35,7 @@ class ChatController extends Controller
     private $formFactory;
     private $platformConfigHandler;
     private $request;
+    private $translator;
 
     /**
      * @DI\InjectParams({
@@ -41,7 +43,8 @@ class ChatController extends Controller
      *     "chatManager"           = @DI\Inject("claroline.manager.chat_manager"),
      *     "formFactory"           = @DI\Inject("form.factory"),
      *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "requestStack"          = @DI\Inject("request_stack")
+     *     "requestStack"          = @DI\Inject("request_stack"),
+     *     "translator"            = @DI\Inject("translator")
      * })
      */
     public function __construct(
@@ -49,7 +52,8 @@ class ChatController extends Controller
         ChatManager $chatManager,
         FormFactory $formFactory,
         PlatformConfigurationHandler $platformConfigHandler,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        TranslatorInterface $translator
     )
     {
         $this->authorization = $authorization;
@@ -57,6 +61,7 @@ class ChatController extends Controller
         $this->formFactory = $formFactory;
         $this->platformConfigHandler = $platformConfigHandler;
         $this->request = $requestStack->getCurrentRequest();
+        $this->translator = $translator;
     }
 
     /**
@@ -171,7 +176,8 @@ class ChatController extends Controller
     {
         $this->checkChatRoomRight($chatRoom, 'EDIT');
         $form = $this->formFactory->create(
-            new ChatRoomConfigurationType($chatRoom, $this->platformConfigHandler)
+            new ChatRoomConfigurationType($this->platformConfigHandler, $this->translator),
+            $chatRoom
         );
         $xmppMucHost = $this->platformConfigHandler->getParameter('chat_xmpp_muc_host');
 
@@ -194,8 +200,25 @@ class ChatController extends Controller
     public function chatRoomConfigureAction(ChatRoom $chatRoom)
     {
         $this->checkChatRoomRight($chatRoom, 'EDIT');
+        $form = $this->formFactory->create(
+            new ChatRoomConfigurationType($this->platformConfigHandler, $this->translator),
+            $chatRoom
+        );
+        $form->handleRequest($this->request);
 
-        return new JsonResponse('success', 200);
+        if ($form->isValid()) {
+            $this->chatManager->persistChatRoom($chatRoom);
+
+            return new JsonResponse('success', 200);
+        } else {
+            $xmppMucHost = $this->platformConfigHandler->getParameter('chat_xmpp_muc_host');
+
+            return array(
+                'form' => $form->createView(),
+                'chatRoom' => $chatRoom,
+                'xmppMucHost' => $xmppMucHost
+            );
+        }
     }
 
     private function checkChatRoomRight(ChatRoom $chatRoom, $right)

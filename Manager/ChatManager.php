@@ -79,6 +79,12 @@ class ChatManager
         }
     }
 
+    public function persistChatRoom(ChatRoom $chatRoom)
+    {
+        $this->om->persist($chatRoom);
+        $this->om->flush();
+    }
+
     public function saveChatRoomMessage(
         ChatRoom $chatRoom,
         $username,

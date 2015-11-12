@@ -1,10 +1,17 @@
 ban: Ban
 bosh_server_port: BOSH server port
 chat: Chat
+chat_account_not_activated_msg: Your chat account is not activated
 chat_accounts_creation: Chat accounts creation
 chat_configuration: Chat configuration
+chat_room_closed: Closed
+chat_room_closed_msg: Chat room is closed
 chat_room_configuration: Chat room configuration
 chat_room_id: Chat room id
+chat_room_open: Open
+chat_room_uninitialized: Not initialized
+chat_room_uninitialized_msg: Chat room is not available yet
+chat_room_unknown_status_msg: Chat room has an unknown status
 chat_username: Chat username
 create_chat_accounts: Create Chat accounts
 has_joined_the_chat_room: has joined the Chat room
@@ -15,3 +22,4 @@ mute: Mute
 port: Port
 search_chat_users_infos: A search has to be performed in order to display users with a chat account.
 select_users_for_chat_account_generation: Select users for Chat account generation
+status: Status
