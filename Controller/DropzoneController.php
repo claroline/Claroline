@@ -102,6 +102,19 @@ class DropzoneController extends DropzoneBaseController
             $changeSet = $unitOfWork->getEntityChangeSet($dropzone);
 
             $em = $this->getDoctrine()->getManager();
+
+            // InnovaERV : ici, on a changé l'état du collecticiel.
+            // InnovaERV : j'ajoute une notification.
+            if ($oldManualPlanningOption != $dropzone->getManualState())
+            {
+                // send notification.
+                $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
+                var_dump($usersIds);
+                $event = new LogDropzoneManualStateChangedEvent($dropzone, $dropzone->getManualState(), $usersIds);
+                $this->get('event_dispatcher')->dispatch('log', $event);
+                var_dump("état changé");
+            }
+
             $em->persist($dropzone);
             $em->flush();
 

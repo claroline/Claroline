@@ -36,7 +36,7 @@
          {% include  'InnovaCollecticielBundle:Log:log_details_correction_report.html.twig' %}
     {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogDropGradeAvailableEvent::ACTION') == log.action %}
          {% include  'InnovaCollecticielBundle:Log:log_details_drop_grade_available.html.twig' %}
-    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogDropzoneManualStateChangedEvent::ACTION') == log.action %}
+    {% elseif constant('Innova\\CollecticielBundle\\Event\\Log\\LogDropzoneManualStateChangedEvent::ACTION') == log.action %}
         {% include  'InnovaCollecticielBundle:Log:log_details_dropzone_manualState.html.twig' %}
     {% endif %}
 {% endblock %}

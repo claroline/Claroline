@@ -251,6 +251,9 @@ class DocumentController extends DropzoneBaseController
      */
     public function documentAction($dropzone, $documentType, $drop)
     {
+
+
+        echo "suis ici ajout document";die();
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
         $formType = null;

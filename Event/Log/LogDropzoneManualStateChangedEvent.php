@@ -23,6 +23,7 @@ class LogDropzoneManualStateChangedEvent extends AbstractLogResourceEvent implem
     */
     public function __construct(Dropzone $dropzone,$newstate,$userIds)
     {
+
         $this->dropzone = $dropzone;
         $this->newState = $newstate;
         $this->userIds = $userIds;

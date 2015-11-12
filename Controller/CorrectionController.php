@@ -702,7 +702,7 @@ class CorrectionController extends DropzoneBaseController
         $documentOri = $document;
 
         $em = $this->getDoctrine()->getManager();
-        $dropzoneManager        = $this->get('innova.manager.dropzone_manager');
+        $dropzoneManager       = $this->get('innova.manager.dropzone_manager');
         $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
 
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
@@ -2039,6 +2039,8 @@ class CorrectionController extends DropzoneBaseController
     public function AddCommentsInnovaAction(Document $document, User $user, Dropzone $dropzone, Correction $correction)
     {
 
+
+echo "je suis ici dans AddComments";die();
         $em = $this->getDoctrine()->getManager();
 
         // Valorisation du commentaire
