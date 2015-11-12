@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Jingle/MUC-powered WebRTC VideoChat Sample</title>
+    <script src='//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script><!-- jquery -->
+    <script src='strophe.min.js'></script><!-- strophe, minified -->
+    <script src='strophe.disco.min.js'></script><!-- strophe.disco, optional -->
+    <script src='strophe.jingle.js' charset='utf-8'></script><!-- strophe jingle connection plugin -->
+    <script src='strophe.jingle.session.js' charset='utf-8'></script><!-- strophe jingle connection plugin -->
+    <script src='strophe.jingle.sdp.js' charset='utf-8'></script><!-- sdp library -->
+    <script src='strophe.jingle.adapter.js' charset='utf-8'></script><!-- getusermedia cross browser compat layer -->
+    <script src='muc.js' charset='utf-8'></script><!-- sample application logic -->
+    <script src='hark.bundle.js' charset='utf-8'></script><!-- https://github.com/latentflip/hark --> 
+    <script type='text/javascript' charset='utf-8'>
+$(document).ready(function() {
+//    $('#connect').bind('click', function () {
+    $('#credentials').submit(function () {
+        var button = $('#connect').get(0);
+        if (button.value == 'connect' || button.value == 'get camera and connect') {
+            button.value = 'disconnect';
+
+            setStatus('please allow access to microphone and camera');
+            getUserMediaWithConstraints(['audio', 'video']);
+
+            $('#credentials>input[id!="connect"]').attr('disabled', 'disabled');
+        } else {
+            button.value = 'connect';
+            connection.disconnect();
+            $('#credentials>input[id!="connect"]').attr('disabled', null);
+        }
+        return false;
+    });
+    $('#docall').submit(function () {
+        var peer = $('#peerjid').get(0).value;
+        $('#docall>input').attr('disabled', 'disabled');
+        setStatus('calling ' + peer);
+        // TODO: one should check that this is a full jid
+        connection.send($pres({to:peer})); // sharing directed presence is a good idea
+        connection.jingle.initiate(peer, connection.jid);
+        return false;
+    });
+});
+
+function doConnect() {
+    var u = $('#jid').get(0).value;
+    if (u.length == 0) {
+        connection.connect(DOMAIN, null, onConnect);
+    } else {
+        if (u.indexOf('@') == -1) {
+            u += '@' + DOMAIN;
+        }
+        connection.connect(u,
+            $('#pass').get(0).value,
+            onConnect
+        );
+    }
+}
+
+    </script>
+    <style type='text/css'>
+body {background-color:#9ce9fe}
+#largevideocontainer {width:90%;top:10px;bottom:30px;left:10px;position:absolute;}
+#minivideocontainer {width:160px;height:120px;position:absolute;right:10px;top:10px;}
+#minivideo {width:160px;height:120px;position:absolute;}
+#ownvolume {width:0px;height:5px;position:absolute;bottom:0px;background-color:#6ddffe;}
+#status {position:absolute;bottom:0px;height:30px;left:10px;right:10px;color:white;background-color:#6ddffe;font-weight:bold;line-height:28px;font-size:14px;text-align:center;}
+#explain {width:160px;position:absolute;bottom:30px;right:10px;color:white;background-color:#6ddffe;font-weight:bold;font-size:14px;text-align:center}
+#explain a:link {color:white;}
+#explain a:visited {color:white;}
+#explain a img{width:160px;background-color:#cef4fd}
+#login {width:160px;position:absolute;right:10px;top:160px;color:white;background-color:#6ddffe;font-weight:bold;line-height:28px;font-size:14px;}
+    </style>
+  </head>
+  <body>
+    <div id='explain'>
+        <div>Check out the full featured application at <a href='https://go.estos.de'>go.estos.de</a></div>
+        <a href='https://go.estos.de'><img src='https://go.estos.de/fileadmin/img/go.png'/></a>
+    </div>
+	<div id='largevideocontainer'>
+    </div>
+    <div id='minivideocontainer'>
+      <video id='minivideo' autoplay='autoplay'></video>
+      <div id='ownvolume'></div>
+    </div>
+    <div id='login'>
+      <form id='credentials'>
+        <label for='jid'>JID:</label>
+        <input type='text' id='jid' placeholder='leave blank for'>
+        <label for='pass'>Password:</label>
+        <input type='password' id='pass' placeholder='anonymous login'>
+        <input type='submit' id='connect' value='get camera and connect'>
+      </form>
+    </div>
+    <a href="https://github.com/ESTOS/strophe.jingle/"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_orange_ff7600.png" alt="Fork me on GitHub"></a>
+    <div id='status'></div>
+  </body>
+</html>

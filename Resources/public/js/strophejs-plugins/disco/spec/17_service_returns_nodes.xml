@@ -1,0 +1,16 @@
+<iq type='result'
+    from='catalog.shakespeare.lit'
+    to='romeo@montague.net/orchard'
+    id='items2'>
+  <query xmlns='http://jabber.org/protocol/disco#items'>
+    <item jid='catalog.shakespeare.lit'
+          node='books'
+          name='Books by and about Shakespeare'/>
+    <item jid='catalog.shakespeare.lit'
+          node='clothing'
+          name='Wear your literary taste with pride'/>
+    <item jid='catalog.shakespeare.lit'
+          node='music'
+          name='Music from the time of Shakespeare'/>
+  </query>
+</iq>

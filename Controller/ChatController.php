@@ -100,6 +100,15 @@ class ChatController extends Controller
         $chatUser = $this->chatManager->getChatUserByUser($authenticatedUser);
         $canChat = !is_null($chatUser);
         $canEdit = $this->hasChatRoomRight($chatRoom, 'EDIT');
+        $color = null;
+        
+        if (!is_null($chatUser)) {
+            $options = $chatUser->getOptions();
+
+            if (is_array($options) && isset($options['color'])) {
+                $color = $options['color'];
+            }
+        }
 
         return array(
             'workspace' => $chatRoom->getResourceNode()->getWorkspace(),
@@ -109,7 +118,8 @@ class ChatController extends Controller
             'chatRoom' => $chatRoom,
             'xmppHost' => $xmppHost,
             'xmppMucHost' => $xmppMucHost,
-            'boshPort' => $boshPort
+            'boshPort' => $boshPort,
+            'color' => $color
         );
     }
 

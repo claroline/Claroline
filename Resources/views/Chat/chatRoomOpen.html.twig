@@ -21,7 +21,18 @@
         </div>
         <div class="panel-body">
             <div id="chat-room-app" ng-cloak="" ng-app="ChatRoomModule">
-                <chat-room></chat-room>
+                <chat-room chat-room-xmpp-host="{{ xmppHost }}"
+                           chat-room-xmpp-muc-host="{{ xmppMucHost }}"
+                           chat-room-bosh-port="{{ boshPort }}"
+                           chat-room-id="{{ chatRoom.getId() }}"
+                           chat-room-name="{{ chatRoom.getRoomName() }}"
+                           chat-room-user-username="{{ chatUser.getChatUsername() }}"
+                           chat-room-user-password="{{ chatUser.getChatPassword() }}"
+                           chat-room-user-first-name="{{ chatUser.getUser().getFirstName() }}"
+                           chat-room-user-last-name="{{ chatUser.getUser().getLastName() }}"
+                           chat-room-user-color="{{ color }}"
+                >
+                </chat-room>
             </div>
         </div>
     {% endblock %}
@@ -32,30 +43,6 @@
     <script type="text/javascript">
         (function () {
             'use strict';
-            
-            var color = null;
-            
-            {% if chatUser.getOptions() is not empty and
-                  chatUser.getOptions()['color'] is defined and 
-                  chatUser.getOptions()['color'] is not empty
-            %}
-                color = '{{ chatUser.getOptions()['color'] }}';
-            {% endif %}
-    
-            $('#chat-room-app').on('click', '#connection-btn', function () {
-                angular.element(document.getElementById('chat-room-main')).scope().connect(
-                    '{{ xmppHost }}',
-                    '{{ xmppMucHost }}',
-                    '{{ boshPort }}',
-                    '{{ chatRoom.getId() }}',
-                    '{{ chatRoom.getRoomName() }}',
-                    '{{ chatUser.getChatUsername() }}',
-                    '{{ chatUser.getChatPassword() }}',
-                    '{{ chatUser.getUser().getFirstName() }}',
-                    '{{ chatUser.getUser().getLastName() }}',
-                    color
-                );
-            });
             
             $('#chat-room-configuration-btn').on('click', function () {
                 window.Claroline.Modal.displayForm(

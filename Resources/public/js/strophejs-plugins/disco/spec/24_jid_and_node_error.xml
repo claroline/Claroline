@@ -1,0 +1,11 @@
+<iq type='error'
+    from='mim.shakespeare.lit'
+    to='romeo@montague.net/orchard'
+    id='info3'>
+  <query xmlns='http://jabber.org/protocol/disco#info' 
+         node='http://jabber.org/protocol/commands'/>
+  <error type='cancel'>
+    <not-allowed xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
+  </error>
+</iq>
+    
