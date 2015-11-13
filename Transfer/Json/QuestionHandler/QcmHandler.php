@@ -150,7 +150,7 @@ class QcmHandler implements QuestionHandlerInterface
         $qcm = $repo->findOneBy(['question' => $question]);
         $choices = $qcm->getChoices()->toArray();
 
-        $exportData->multiple = $qcm->getTypeQCM()->getCode() == 1;
+        $exportData->multiple = $qcm->getTypeQCM()->getCode() === 1;
         $exportData->random = $qcm->getShuffle();
         $exportData->choices = array_map(function ($choice) {
             $choiceData = new \stdClass();
@@ -203,14 +203,21 @@ class QcmHandler implements QuestionHandlerInterface
             return ['Answer data cannot be empty'];
         }
 
+        $interaction = $this->om->getRepository('UJMExoBundle:InteractionQCM')
+            ->findOneByQuestion($question);
+        $choiceIds = array_map(function ($choice) {
+            return (string) $choice->getId();
+        }, $interaction->getChoices()->toArray());
+
         foreach ($data as $id) {
             if (!is_string($id)) {
                 return ['Answer array must contain only string identifiers'];
             }
-        }
 
-        $interaction = $this->om->getRepository('UJMExoBundle:InteractionQCM')
-            ->findOneByQuestion($question);
+            if (!in_array($id, $choiceIds)) {
+                return ['Answer array identifiers must reference question choices'];
+            }
+        }
 
         if ($interaction->getTypeQCM()->getCode() === 2 && $count > 1) {
             return ['This question does not allow multiple answers'];

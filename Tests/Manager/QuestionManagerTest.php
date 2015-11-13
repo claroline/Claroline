@@ -5,30 +5,21 @@ namespace UJM\ExoBundle\Manager;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use UJM\ExoBundle\DataFixtures\LoadOptionsData;
-use UJM\ExoBundle\Transfer\Json\Validator;
 
 class ApiManagerTest extends TransactionalTestCase
 {
-    /**
-     * @var ObjectManager
-     */
+    /** @var ObjectManager */
     private $om;
-
-    /**
-     * @var ApiManager
-     */
+    /** @var QuestionManager */
     private $manager;
-
-    /**
-     * @var string
-     */
+    /** @var string */
     private $formatDir;
 
     protected function setUp()
     {
         parent::setUp();
         $this->om = $this->client->getContainer()->get('claroline.persistence.object_manager');
-        $this->manager = $this->client->getContainer()->get('ujm.exo.api_manager');
+        $this->manager = $this->client->getContainer()->get('ujm.exo.question_manager');
         $this->formatDir = realpath(__DIR__ . '/../../../../../../json-quiz/json-quiz/format');
     }
 
@@ -39,15 +30,6 @@ class ApiManagerTest extends TransactionalTestCase
     {
         $data = file_get_contents("{$this->formatDir}/question/choice/examples/invalid/no-solution-score.json");
         $this->manager->importQuestion(json_decode($data));
-    }
-
-    /**
-     * @expectedException \UJM\ExoBundle\Transfer\Json\ValidationException
-     */
-    public function testImportExerciseThrowsOnValidationError()
-    {
-        $data = file_get_contents("{$this->formatDir}/quiz/examples/invalid/no-steps.json");
-        $this->manager->importExercise($data);
     }
 
     /**
@@ -77,17 +59,6 @@ class ApiManagerTest extends TransactionalTestCase
         $this->assertQcmIdConsistency($exportedEvalData);
     }
 
-    /**
-     * @dataProvider validQuizProvider
-     * @param string $dataFilename
-     */
-    public function testSchemaRoundTrip($dataFilename)
-    {
-        $this->markTestIncomplete();
-        $data = file_get_contents("{$this->formatDir}/quiz/examples/valid/{$dataFilename}");
-        $this->manager->importExercise($data);
-    }
-
     public function validQcmQuestionProvider()
     {
         return [
@@ -96,13 +67,6 @@ class ApiManagerTest extends TransactionalTestCase
           ['qcm-3'],
           ['qcm-4'],
           ['qcm-5']
-        ];
-    }
-
-    public function validQuizProvider()
-    {
-        return [
-            ['quiz-metadata.json']
         ];
     }
 

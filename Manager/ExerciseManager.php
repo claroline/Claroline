@@ -5,6 +5,8 @@ namespace UJM\ExoBundle\Manager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Transfer\Json\ValidationException;
+use UJM\ExoBundle\Transfer\Json\Validator;
 
 /**
  * @DI\Service("ujm.exo.exercise_manager")
@@ -12,24 +14,31 @@ use UJM\ExoBundle\Entity\Exercise;
 class ExerciseManager
 {
     private $om;
+    private $validator;
+    private $questionManager;
 
     /**
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
+     *     "validator"  = @DI\Inject("ujm.exo.json_validator"),
+     *     "manager"    = @DI\Inject("ujm.exo.question_manager")
      * })
      *
-     * @param ObjectManager $om
+     * @param ObjectManager     $om
+     * @param Validator         $validator
+     * @param QuestionManager   $manager
      */
-    public function __construct(ObjectManager $om)
+    public function __construct(ObjectManager $om, Validator $validator, QuestionManager $manager)
     {
         $this->om = $om;
+        $this->validator = $validator;
+        $this->questionManager = $manager;
     }
 
     /**
      * Publishes an exercise.
      *
      * @param Exercise $exercise
-     *
      * @throws \LogicException if the exercise is already published
      */
     public function publish(Exercise $exercise)
@@ -51,7 +60,6 @@ class ExerciseManager
      * Unpublishes an exercise.
      *
      * @param Exercise $exercise
-     *
      * @throws \LogicException if the exercise is already unpublished
      */
     public function unpublish(Exercise $exercise)
@@ -65,12 +73,11 @@ class ExerciseManager
     }
 
     /**
-     * Deletes all the papers associated with an exercise.
-     *
      * @todo optimize request number using repository method(s)
      *
-     * @param Exercise $exercise
+     * Deletes all the papers associated with an exercise.
      *
+     * @param Exercise $exercise
      * @throws \Exception if the exercise has been published at least once
      */
     public function deletePapers(Exercise $exercise)
@@ -136,5 +143,82 @@ class ExerciseManager
         }
 
         return $questions;
+    }
+
+    /**
+     * @todo actual import...
+     *
+     * Imports an exercise in a JSON format.
+     *
+     * @param string $data
+     * @throws ValidationException if the exercise is not valid
+     */
+    public function importExercise($data)
+    {
+        $quiz = json_decode($data);
+
+        $errors = $this->validator->validateExercise($quiz);
+
+        if (count($errors) > 0) {
+            throw new ValidationException('Exercise is not valid', $errors);
+        }
+    }
+
+    /**
+     * Exports an exercise in a JSON-encodable format.
+     *
+     * @param Exercise  $exercise
+     * @param bool      $withSolutions
+     * @return array
+     */
+    public function exportExercise(Exercise $exercise, $withSolutions = true)
+    {
+        return [
+            'id' => $exercise->getId(),
+            'meta' => $this->exportMetadata($exercise),
+            'steps' => $this->exportSteps($exercise, $withSolutions),
+        ];
+    }
+
+    /**
+     * @todo duration
+     *
+     * @param Exercise $exercise
+     * @return array
+     */
+    private function exportMetadata(Exercise $exercise)
+    {
+        $node = $exercise->getResourceNode();
+        $creator = $node->getCreator();
+        $authorName = sprintf('%s %s', $creator->getFirstName(), $creator->getLastName());
+
+        return [
+            'authors' => [$authorName],
+            'created' => $node->getCreationDate()->format('Y-m-d H:i:s'),
+            'title' => $exercise->getTitle(),
+            'description' => $exercise->getDescription(),
+            'pick' => $exercise->getNbQuestion(),
+            'random' => $exercise->getShuffle(),
+            'maxAttempts' => $exercise->getMaxAttempts(),
+        ];
+    }
+
+    /**
+     * @todo step id
+     *
+     * @param Exercise  $exercise
+     * @param bool      $withSolutions
+     * @return array
+     */
+    private function exportSteps(Exercise $exercise, $withSolutions = true)
+    {
+        $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
+
+        return array_map(function ($question) use ($withSolutions) {
+            return [
+                'id' => '(unknown)',
+                'items' => [$this->questionManager->exportQuestion($question, $withSolutions)]
+            ];
+        }, $questionRepo->findByExercise($exercise));
     }
 }

@@ -28,8 +28,9 @@ class QuestionRepositoryTest extends TransactionalTestCase
     {
         parent::setUp();
         $this->om = $this->client->getContainer()->get('claroline.persistence.object_manager');
+        $manager = $this->client->getContainer()->get('ujm.exo.paper_manager');
+        $this->persist = new Persister($this->om, $manager);
         $this->repo = $this->om->getRepository('UJMExoBundle:Question');
-        $this->persist = new Persister($this->om);
     }
 
     public function testFindByUser()
