@@ -1,0 +1,38 @@
+{
+  "id": "1",
+  "type": "application/x.choice+json",
+  "title": "Question ?",
+  "choices": [
+    {
+      "id": "1",
+      "type": "text/html",
+      "data": "Item A"
+    },
+    {
+      "id": "2",
+      "type": "text/html",
+      "data": "Item B"
+    },
+    {
+      "id": "3",
+      "type": "text/html",
+      "data": "Item C"
+    }
+  ],
+  "random": true,
+  "multiple": true,
+  "solutions": [
+    {
+      "id": "1",
+      "score": 0
+    },
+    {
+      "id": "2",
+      "score": 1.5
+    },
+    {
+      "id": "3",
+      "score": -0.5
+    }
+  ]
+}

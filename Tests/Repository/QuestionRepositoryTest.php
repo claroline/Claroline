@@ -2,35 +2,45 @@
 
 namespace UJM\ExoBundle\Repository;
 
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
-use UJM\ExoBundle\Entity\Category;
-use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\ExerciseQuestion;
-use UJM\ExoBundle\Entity\InteractionOpen;
-use UJM\ExoBundle\Entity\InteractionQCM;
-use UJM\ExoBundle\Entity\Question;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\SurveyBundle\Repository\QuestionRepository;
+use UJM\ExoBundle\Testing\Persister;
 
 class QuestionRepositoryTest extends TransactionalTestCase
 {
+    /**
+     * @var ObjectManager
+     */
     private $om;
+
+    /**
+     * @var Persister
+     */
+    private $persist;
+
+    /**
+     * @var QuestionRepository
+     */
     private $repo;
 
     protected function setUp()
     {
         parent::setUp();
         $this->om = $this->client->getContainer()->get('claroline.persistence.object_manager');
+        $manager = $this->client->getContainer()->get('ujm.exo.paper_manager');
+        $this->persist = new Persister($this->om, $manager);
         $this->repo = $this->om->getRepository('UJMExoBundle:Question');
     }
 
     public function testFindByUser()
     {
-        $q1 = $this->persistQcmQuestion('qcm1');
-        $q2 = $this->persistQcmQuestion('qcm2');
-        $q3 = $this->persistQcmQuestion('qcm3');
-        $u1 = $this->persistUser('u1');
-        $u2 = $this->persistUser('u2');
-        $c1 = $this->persistCategory('c1');
+        $q1 = $this->persist->qcmQuestion('qcm1');
+        $q2 = $this->persist->qcmQuestion('qcm2');
+        $q3 = $this->persist->qcmQuestion('qcm3');
+        $u1 = $this->persist->user('u1');
+        $u2 = $this->persist->user('u2');
+        $c1 = $this->persist->category('c1');
 
         $q1->setUser($u1);
         $q2->setUser($u1);
@@ -47,10 +57,10 @@ class QuestionRepositoryTest extends TransactionalTestCase
 
     public function testFindByExercise()
     {
-        $q1 = $this->persistQcmQuestion('qcm1');
-        $q2 = $this->persistQcmQuestion('qcm2');
-        $q3 = $this->persistQcmQuestion('qcm3'); // extra
-        $e1 = $this->persistExercise('ex1', [$q1, $q2]);
+        $q1 = $this->persist->qcmQuestion('qcm1');
+        $q2 = $this->persist->qcmQuestion('qcm2');
+        $q3 = $this->persist->qcmQuestion('qcm3'); // extra
+        $e1 = $this->persist->exercise('ex1', [$q1, $q2]);
         $this->om->flush();
 
         $questions = $this->repo->findByExercise($e1);
@@ -59,14 +69,14 @@ class QuestionRepositoryTest extends TransactionalTestCase
 
     public function testFindByUserNotInExercise()
     {
-        $u1 = $this->persistUser('u1');
-        $u2 = $this->persistUser('u2');
-        $q1 = $this->persistQcmQuestion('q1');
-        $q2 = $this->persistQcmQuestion('q2');
-        $q3 = $this->persistQcmQuestion('q3');
-        $q4 = $this->persistQcmQuestion('q4');
-        $q5 = $this->persistQcmQuestion('q5');
-        $e1 = $this->persistExercise('e1', [$q1, $q2]);
+        $u1 = $this->persist->user('u1');
+        $u2 = $this->persist->user('u2');
+        $q1 = $this->persist->qcmQuestion('q1');
+        $q2 = $this->persist->qcmQuestion('q2');
+        $q3 = $this->persist->qcmQuestion('q3');
+        $q4 = $this->persist->qcmQuestion('q4');
+        $q5 = $this->persist->qcmQuestion('q5');
+        $e1 = $this->persist->exercise('e1', [$q1, $q2]);
 
         $q1->setUser($u1);
         $q2->setUser($u2);
@@ -86,16 +96,16 @@ class QuestionRepositoryTest extends TransactionalTestCase
 
     public function testFindByUserAndCategoryName()
     {
-        $u1 = $this->persistUser('u1');
-        $u2 = $this->persistUser('u2');
-        $q1 = $this->persistQcmQuestion('q1');
-        $q2 = $this->persistQcmQuestion('q2');
-        $q3 = $this->persistQcmQuestion('q3');
-        $q4 = $this->persistQcmQuestion('q4');
-        $q5 = $this->persistQcmQuestion('q5'); // extra
-        $c1 = $this->persistCategory('bar');
-        $c2 = $this->persistCategory('foo');
-        $c3 = $this->persistCategory('baz');
+        $u1 = $this->persist->user('u1');
+        $u2 = $this->persist->user('u2');
+        $q1 = $this->persist->qcmQuestion('q1');
+        $q2 = $this->persist->qcmQuestion('q2');
+        $q3 = $this->persist->qcmQuestion('q3');
+        $q4 = $this->persist->qcmQuestion('q4');
+        $q5 = $this->persist->qcmQuestion('q5'); // extra
+        $c1 = $this->persist->category('bar');
+        $c2 = $this->persist->category('foo');
+        $c3 = $this->persist->category('baz');
 
         $q1->setUser($u1);
         $q2->setUser($u2);
@@ -117,11 +127,11 @@ class QuestionRepositoryTest extends TransactionalTestCase
 
     public function testFindByUserAndType()
     {
-        $u1 = $this->persistUser('u1');
-        $u2 = $this->persistUser('u2');
-        $q1 = $this->persistQcmQuestion('q1');
-        $q2 = $this->persistOpenQuestion('q2');
-        $q3 = $this->persistQcmQuestion('q3');
+        $u1 = $this->persist->user('u1');
+        $u2 = $this->persist->user('u2');
+        $q1 = $this->persist->qcmQuestion('q1');
+        $q2 = $this->persist->openQuestion('q2');
+        $q3 = $this->persist->qcmQuestion('q3');
 
         $q1->setUser($u1);
         $q2->setUser($u1);
@@ -135,12 +145,12 @@ class QuestionRepositoryTest extends TransactionalTestCase
 
     public function testFindByUserAndTitle()
     {
-        $u1 = $this->persistUser('u1');
-        $u2 = $this->persistUser('u2');
-        $q1 = $this->persistQcmQuestion('q1');
-        $q2 = $this->persistQcmQuestion('q2a');
-        $q3 = $this->persistQcmQuestion('q3az');
-        $q4 = $this->persistQcmQuestion('q4');
+        $u1 = $this->persist->user('u1');
+        $u2 = $this->persist->user('u2');
+        $q1 = $this->persist->qcmQuestion('q1');
+        $q2 = $this->persist->qcmQuestion('q2a');
+        $q3 = $this->persist->qcmQuestion('q3az');
+        $q4 = $this->persist->qcmQuestion('q4');
 
         $q1->setUser($u1);
         $q2->setUser($u1);
@@ -155,12 +165,12 @@ class QuestionRepositoryTest extends TransactionalTestCase
 
     public function testFindByUserAndInvite()
     {
-        $u1 = $this->persistUser('u1');
-        $u2 = $this->persistUser('u2');
-        $q1 = $this->persistQcmQuestion('q1');
-        $q2 = $this->persistQcmQuestion('q2');
-        $q3 = $this->persistQcmQuestion('q3');
-        $q4 = $this->persistQcmQuestion('q4');
+        $u1 = $this->persist->user('u1');
+        $u2 = $this->persist->user('u2');
+        $q1 = $this->persist->qcmQuestion('q1');
+        $q2 = $this->persist->qcmQuestion('q2');
+        $q3 = $this->persist->qcmQuestion('q3');
+        $q4 = $this->persist->qcmQuestion('q4');
 
         $q1->setUser($u1);
         $q2->setUser($u1);
@@ -179,17 +189,17 @@ class QuestionRepositoryTest extends TransactionalTestCase
 
     public function testFindByUserAndContent()
     {
-        $u1 = $this->persistUser('u1');
-        $u2 = $this->persistUser('u2');
-        $q1 = $this->persistQcmQuestion('q1');
-        $q2 = $this->persistQcmQuestion('--match--');
-        $q3 = $this->persistQcmQuestion('q3');
-        $q4 = $this->persistQcmQuestion('q4');
-        $q5 = $this->persistQcmQuestion('q5');
-        $q6 = $this->persistQcmQuestion('q6');
-        $c1 = $this->persistCategory('-match-');
-        $c2 = $this->persistCategory('c2');
-        $e1 = $this->persistExercise('e1', [$q1, $q2, $q3]);
+        $u1 = $this->persist->user('u1');
+        $u2 = $this->persist->user('u2');
+        $q1 = $this->persist->qcmQuestion('q1');
+        $q2 = $this->persist->qcmQuestion('--match--');
+        $q3 = $this->persist->qcmQuestion('q3');
+        $q4 = $this->persist->qcmQuestion('q4');
+        $q5 = $this->persist->qcmQuestion('q5');
+        $q6 = $this->persist->qcmQuestion('q6');
+        $c1 = $this->persist->category('-match-');
+        $c2 = $this->persist->category('c2');
+        $e1 = $this->persist->exercise('e1', [$q1, $q2, $q3]);
 
         $q1->setUser($u1);
         $q2->setUser($u1);
@@ -213,73 +223,5 @@ class QuestionRepositoryTest extends TransactionalTestCase
         $this->assertContains($q4, $questions);
         $questions = $this->repo->findByUserAndContent($u1, 'match', $e1);
         $this->assertEquals([$q4], $questions);
-    }
-
-    private function persistQcmQuestion($title, array $choices = [])
-    {
-        $question = new Question();
-        $question->setTitle($title);
-        $question->setInvite('Invite...');
-
-        $interactionQcm = new InteractionQCM();
-        $interactionQcm->setQuestion($question);
-
-        $this->om->persist($interactionQcm);
-        $this->om->persist($question);
-
-        return $question;
-    }
-
-    private function persistOpenQuestion($title)
-    {
-        $question = new Question();
-        $question->setTitle($title);
-        $question->setInvite('Invite...');
-
-        $interactionQcm = new InteractionOpen();
-        $interactionQcm->setQuestion($question);
-
-        $this->om->persist($interactionQcm);
-        $this->om->persist($question);
-
-        return $question;
-    }
-
-    private function persistExercise($title, array $questions = [])
-    {
-        $exercise = new Exercise();
-        $exercise->setTitle($title);
-
-        for ($i = 0, $max = count($questions); $i < $max; ++$i) {
-            $link = new ExerciseQuestion($exercise, $questions[$i]);
-            $link->setOrdre($i);
-            $this->om->persist($link);
-        }
-
-        $this->om->persist($exercise);
-
-        return $exercise;
-    }
-
-    private function persistUser($username)
-    {
-        $user = new User();
-        $user->setFirstName($username);
-        $user->setLastName($username);
-        $user->setUsername($username);
-        $user->setPassword($username);
-        $user->setMail($username . '@mail.com');
-        $this->om->persist($user);
-
-        return $user;
-    }
-
-    private function persistCategory($name)
-    {
-        $category = new Category();
-        $category->setValue($name);
-        $this->om->persist($category);
-
-        return $category;
     }
 }

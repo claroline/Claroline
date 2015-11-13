@@ -350,7 +350,7 @@ class PaperService
     /**
      * To interupt an assessment.
      *
-     * 
+     *
      * @param SessionInterface session
      *
      * @return \UJM\ExoBundle\Entity\Paper

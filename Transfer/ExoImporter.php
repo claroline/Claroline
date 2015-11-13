@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace UJM\ExoBundle\Transfert;
+namespace UJM\ExoBundle\Transfer;
 
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -127,7 +127,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
         $qtiServ = $this->container->get('ujm.exo_qti');
 
         $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
-        $questions = $questionRepo->findByExercise($object->getId());
+        $questions = $questionRepo->findByExercise($object);
         $this->createQuestionsDirectory($qtiRepos, $questions);
         $qdirs = $qtiServ->sortPathOfQuestions($qtiRepos);
 
