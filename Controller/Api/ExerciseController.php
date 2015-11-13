@@ -14,7 +14,9 @@ use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Hint;
 use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Entity\Question;
-use UJM\ExoBundle\Manager\ApiManager;
+use UJM\ExoBundle\Manager\ExerciseManager;
+use UJM\ExoBundle\Manager\PaperManager;
+use UJM\ExoBundle\Manager\QuestionManager;
 
 /**
  * @EXT\Route(requirements={"id"="\d+"}, options={"expose"=true}, defaults={"_format": "json"})
@@ -23,21 +25,34 @@ use UJM\ExoBundle\Manager\ApiManager;
 class ExerciseController
 {
     private $authorization;
-    private $manager;
+    private $exerciseManager;
+    private $questionManager;
+    private $paperManager;
 
     /**
      * @DI\InjectParams({
-     *     "authorization"  = @DI\Inject("security.authorization_checker"),
-     *     "manager"        = @DI\Inject("ujm.exo.api_manager")
+     *     "authorization"      = @DI\Inject("security.authorization_checker"),
+     *     "exerciseManager"    = @DI\Inject("ujm.exo.exercise_manager"),
+     *     "questionManager"    = @DI\Inject("ujm.exo.question_manager"),
+     *     "paperManager"       = @DI\Inject("ujm.exo.paper_manager")
      * })
      *
      * @param AuthorizationCheckerInterface $authorization
-     * @param ApiManager                    $manager
+     * @param ExerciseManager               $exerciseManager
+     * @param QuestionManager               $questionManager
+     * @param PaperManager                  $paperManager
      */
-    public function __construct(AuthorizationCheckerInterface $authorization, ApiManager $manager)
+    public function __construct(
+        AuthorizationCheckerInterface $authorization,
+        ExerciseManager $exerciseManager,
+        QuestionManager $questionManager,
+        PaperManager $paperManager
+    )
     {
         $this->authorization = $authorization;
-        $this->manager = $manager;
+        $this->exerciseManager = $exerciseManager;
+        $this->questionManager = $questionManager;
+        $this->paperManager = $paperManager;
     }
 
     /**
@@ -53,7 +68,7 @@ class ExerciseController
     {
         $this->assertHasPermission('ADMINISTRATE', $exercise);
 
-        return new JsonResponse($this->manager->exportExercise($exercise));
+        return new JsonResponse($this->exerciseManager->exportExercise($exercise));
     }
 
     /**
@@ -73,7 +88,7 @@ class ExerciseController
     {
         $this->assertHasPermission('OPEN', $exercise);
 
-        return new JsonResponse($this->manager->openExercise($exercise, $user, false));
+        return new JsonResponse($this->paperManager->openPaper($exercise, $user, false));
     }
 
     /**
@@ -96,13 +111,13 @@ class ExerciseController
         $this->assertHasPaperAccess($user, $paper);
 
         $data = $request->request->all();
-        $errors = $this->manager->validateAnswerFormat($question, $data);
+        $errors = $this->questionManager->validateAnswerFormat($question, $data);
 
         if (count($errors) !== 0) {
             return new JsonResponse($errors, 422);
         }
 
-        $this->manager->recordAnswer($paper, $question, $data, $request->getClientIp());
+        $this->paperManager->recordAnswer($paper, $question, $data, $request->getClientIp());
 
         return new JsonResponse('', 204);
     }
@@ -125,17 +140,18 @@ class ExerciseController
     {
         $this->assertHasPaperAccess($user, $paper);
 
-        if (!$this->manager->hasHint($paper, $hint)) {
+        if (!$this->paperManager->hasHint($paper, $hint)) {
             return new JsonResponse('Hint and paper are not related', 422);
         }
 
-        return new JsonResponse($this->manager->viewHint($paper, $hint));
+        return new JsonResponse($this->paperManager->viewHint($paper, $hint));
     }
 
     /**
      * Marks a paper as finished.
      *
      * @EXT\Route("/papers/{id}/end")
+     * @EXT\Method("PUT")
      * @EXT\ParamConverter("user", converter="current_user")
      *
      * @param User  $user
@@ -148,29 +164,31 @@ class ExerciseController
             throw new AccessDeniedHttpException();
         }
 
-        $this->manager->finishPaper($paper);
+        $this->paperManager->finishPaper($paper);
 
         return new JsonResponse('', 204);
     }
 
     /**
-     * Returns all the papers associated with an exercise for a given user.
+     * Returns all the papers associated with an exercise for the current user.
      *
      * @EXT\Route("/exercises/{id}/papers")
      * @EXT\ParamConverter("user", converter="current_user")
      *
-     * @param User      $currentUser
+     * @param User      $user
      * @param Exercise  $exercise
      * @return JsonResponse
      */
-    public function papersAction(User $currentUser, Exercise $exercise)
+    public function papersAction(User $user, Exercise $exercise)
     {
-        return new JsonResponse($this->manager->exportUserPapers($exercise, $currentUser));
+        return new JsonResponse($this->paperManager->exportUserPapers($exercise, $user));
     }
 
     private function assertHasPermission($permission, Exercise $exercise)
     {
-        if (!$this->authorization->isGranted($permission, new ResourceCollection([$exercise]))) {
+        $collection = new ResourceCollection([$exercise->getResourceNode()]);
+
+        if (!$this->authorization->isGranted($permission, $collection)) {
             throw new AccessDeniedHttpException();
         }
     }
