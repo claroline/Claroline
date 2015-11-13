@@ -15,12 +15,14 @@ class ExerciseQuestion
     /**
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Exercise")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $exercise;
 
     /**
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Question")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $question;
 

@@ -50,7 +50,7 @@ class OpenExport extends QtiExport
         $node = $arg_list[0];
 
         $prompt = $this->document->CreateElement('prompt');
-        $prompttxt = $this->document->CreateTextNode($this->interactionopen->getQuestion()->getDescription());
+        $prompttxt = $this->document->CreateTextNode($this->interactionopen->getQuestion()->getInvite());
         $prompt->appendChild($prompttxt);
         $node->appendChild($prompt);
     }

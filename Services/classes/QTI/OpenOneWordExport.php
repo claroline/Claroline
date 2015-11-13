@@ -59,7 +59,17 @@ class OpenOneWordExport extends OpenExport
             $mapEntry->setAttribute('mappedValue', $resp->getScore());
             $mapEntry->setAttribute('caseSensitive', $resp->getCaseSensitive());
             $mapping->appendChild($mapEntry);
-
+            
+            if(($resp->getFeedback()!=Null) && ($resp->getFeedback()!="")){
+            $feedbackInline = $this->document->CreateElement('feedbackInline');
+            $feedbackInline->setAttribute("outcomeIdentifier", "FEEDBACK");
+            $feedbackInline->setAttribute("identifier","Choice".$resp->getId());
+            $feedbackInline->setAttribute("showHide","show");
+            $feedbackInlinetxt = $this->document->CreateTextNode($resp->getFeedback());
+            $feedbackInline->appendChild($feedbackInlinetxt);
+            $mapEntry->appendChild($feedbackInline);
+        }
+            
             ++$i;
         }
         $Tagvalue = $this->document->CreateElement('value');

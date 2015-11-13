@@ -52,9 +52,10 @@ abstract class QtiImport
         $this->question->setDateCreate(new \Datetime());
         $this->question->setUser($this->user);
         $this->question->setCategory($this->qtiCat);
-        $this->question->setDescription($this->getPrompt());
+     //   $this->question->setDescription($this->getPrompt());
+        $this->getDescription();
+        $this->question->setInvite($this->getPrompt());
         $this->question->setType($type);
-
         if ($feedback = $this->getFeedback()) {
             $this->question->setFeedBack($feedback);
         }

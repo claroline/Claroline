@@ -53,6 +53,11 @@ class OpenShortImport extends OpenImport
         $mapping = $rp->getElementsByTagName('mapping')->item(0);
         foreach ($mapping->getElementsByTagName('mapEntry') as $me) {
             $keyWord = new WordResponse();
+            $feedback = $me->getElementsByTagName("feedbackInline");
+            if ($feedback->item(0)) {
+                $keyWord->setFeedback($feedback->item(0)->nodeValue);
+                $me->removeChild($feedback->item(0));
+            }
             $keyWord->setResponse($me->getAttribute('mapKey'));
             $keyWord->setScore($me->getAttribute('mappedValue'));
             $keyWord->setInteractionOpen($this->interactionOpen);

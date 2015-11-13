@@ -98,7 +98,15 @@ class HoleExport extends QtiExport
             $mapEntry->setAttribute('mappedValue', $resp->getScore());
             $mapEntry->setAttribute('caseSensitive', $resp->getCaseSensitive());
             $mapping->appendChild($mapEntry);
-
+            if(($resp->getFeedback()!=Null) && ($resp->getFeedback()!="")){
+                $feedbackInline = $this->document->CreateElement('feedbackInline');
+                $feedbackInline->setAttribute("outcomeIdentifier", "FEEDBACK");
+                $feedbackInline->setAttribute("identifier","choice_".$resp->getId());
+                $feedbackInline->setAttribute("showHide","show");
+                $feedbackInlinetxt = $this->document->CreateTextNode($resp->getFeedback());
+                $feedbackInline->appendChild($feedbackInlinetxt);
+                $mapEntry->appendChild($feedbackInline);
+            }
             ++$i;
         }
         $Tagvalue = $this->document->CreateElement('value');
@@ -121,7 +129,7 @@ class HoleExport extends QtiExport
     protected function promptTag()
     {
         $prompt = $this->document->CreateElement('prompt');
-        $prompttxt = $this->document->CreateTextNode($this->interactionhole->getQuestion()->getDescription());
+        $prompttxt = $this->document->CreateTextNode($this->interactionhole->getQuestion()->getInvite());
         $prompt->appendChild($prompttxt);
         $this->itemBody->appendChild($prompt);
     }

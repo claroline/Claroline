@@ -100,7 +100,7 @@ class MatchingExport extends QtiExport
 
         $prompttxt = $this->document
                 ->CreateTextNode(
-                        $this->interactionmatching->getQuestion()->getDescription()
+                        $this->interactionmatching->getQuestion()->getInvite()
                         );
         $prompt->appendChild($prompttxt);
         $this->qtiProposal();
@@ -186,8 +186,7 @@ class MatchingExport extends QtiExport
      * @param type $numberLabel
      * @param type $elementLabel
      */
-    protected function simpleMatchSetTagLabel($label, $numberLabel, $elementLabel)
-    {
+    protected function simpleMatchSetTagLabel($label, $numberLabel, $elementLabel){
         if ($this->cardinality == 'multiple') {
             $w = 0;
             foreach ($this->interactionmatching->getProposals() as $pr) {
@@ -215,6 +214,16 @@ class MatchingExport extends QtiExport
 
         $simpleLabel->appendChild($simpleLabeltxt);
         $elementLabel->appendChild($simpleLabel);
+        
+        if(($label->getFeedback()!=Null) && ($label->getFeedback()!="")){
+            $feedbackInline = $this->document->CreateElement('feedbackInline');
+            $feedbackInline->setAttribute("outcomeIdentifier", "FEEDBACK");
+            $feedbackInline->setAttribute("identifier","Choice".$numberLabel);
+            $feedbackInline->setAttribute("showHide","show");
+            $feedbackInlinetxt = $this->document->CreateTextNode($label->getFeedback());
+            $feedbackInline->appendChild($feedbackInlinetxt);
+            $simpleLabel->appendChild($feedbackInline);
+        }
     }
 
     /**

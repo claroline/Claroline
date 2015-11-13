@@ -21,7 +21,6 @@ class ExerciseController extends Controller
      * Displays a form to edit an existing Exercise entity.
      *
      * @EXT\Route("/{id}/edit", name="ujm_exercise_edit")
-     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -60,8 +59,6 @@ class ExerciseController extends Controller
      *
      * @EXT\Route("/{id}/update", name="ujm_exercise_update")
      * @EXT\Method("POST")
-     *
-     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -108,7 +105,6 @@ class ExerciseController extends Controller
      *     requirements={"id"="\d+"},
      *     options={"expose"=true}
      * )
-     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -153,7 +149,6 @@ class ExerciseController extends Controller
      *
      * @EXT\Route("/{id}/publish", name="ujm_exercise_publish")
      * @EXT\Method("POST")
-     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -170,7 +165,6 @@ class ExerciseController extends Controller
      *
      * @EXT\Route("/{id}/unpublish", name="ujm_exercise_unpublish")
      * @EXT\Method("POST")
-     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -187,7 +181,6 @@ class ExerciseController extends Controller
      *
      * @EXT\Route("/{id}/papers/delete", name="ujm_exercise_delete_papers")
      * @EXT\Method("POST")
-     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -367,9 +360,7 @@ class ExerciseController extends Controller
 
         $workspace = $exercise->getResourceNode()->getWorkspace();
 
-        $user = $this->container->get('security.token_storage')
-                                ->getToken()->getUser();
-        $uid = $user->getId();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
         $services = $this->container->get('ujm.exo_exercise');
         $questionSer = $this->container->get('ujm.exo_question');
@@ -383,8 +374,7 @@ class ExerciseController extends Controller
         $pagerMy = $request->query->get('pagerMy', 1); // Get the page of the array my question (default 1)
         $pagerShared = $request->query->get('pagerShared', 1); // Get the pager of the array my shared question (default 1)
         $pageToGo = $request->query->get('pageGoNow'); // Page to go for the list of the questions of the exercise
-        $max = 10; // Max of questions per page
-
+        
         // If change page of my questions array
         if ($click == 'my') {
             // The choosen new page is for my questions array
@@ -397,22 +387,10 @@ class ExerciseController extends Controller
 
         if ($exoAdmin === true) {
             if ($QuestionsExo == 'true') {
-                $actionQ = array();
-
-                if ($idExo == -2) {
-                    $listQExo = $this->getDoctrine()
-                        ->getManager()
-                        ->getRepository('UJMExoBundle:Question')
-                        ->findByUserNotInExercise($user, $exercise, true);
-                } else {
-                    $listQExo = $this->getDoctrine()
-                        ->getManager()
-                        ->getRepository('UJMExoBundle:Question')
-                        ->findByExercise($exercise);
-                }
-
-                $allActions = $questionSer->getActionsAllQuestions($listQExo, $uid);
-
+                
+                $listQExo= $questionSer->getListQuestionExo($idExo,$user,$exercise);
+                $allActions = $this->getActionsAllQuestions($listQExo, $user->getId());
+                
                 $actionQ = $allActions[0];
                 $questionWithResponse = $allActions[1];
                 $alreadyShared = $allActions[2];
@@ -425,24 +403,10 @@ class ExerciseController extends Controller
                     ->findByUserNotInExercise($user, $exercise);
 
                 $shared = $em->getRepository('UJMExoBundle:Share')
-                        ->getUserInteractionSharedImport($exercise->getId(), $uid, $em);
-
-                if ($displayAll == 1) {
-                    if (count($userQuestions) > count($shared)) {
-                        $max = count($userQuestions);
-                    } else {
-                        $max = count($shared);
-                    }
-                }
-
-                $sharedWithMe = array();
-
-                $end = count($shared);
-
-                for ($i = 0; $i < $end; $i++) {
-                    $sharedWithMe[] = $shared[$i]->getQuestion();
-                }
-
+                        ->getUserInteractionSharedImport($exercise->getId(), $user->getId(), $em);
+                
+                $max=$paginationSer->getMaxByDisplayAll($shared,$displayAll,$userQuestions);
+                $sharedWithMe=$questionSer->getQuestionShare($shared);
                 $doublePagination = $paginationSer->doublePagination($userQuestions, $sharedWithMe, $max, $pagerMy, $pagerShared);
 
                 $interactionsPager = $doublePagination[0];
@@ -451,22 +415,8 @@ class ExerciseController extends Controller
                 $sharedWithMePager = $doublePagination[2];
                 $pagerfantaShared = $doublePagination[3];
 
-                if ($pageToGo) {
-                    $pageGoNow = $pageToGo;
-                } else {
-                    // If new item > max per page, display next page
-                    $rest = $nbItem % $maxPage;
-
-                    if ($nbItem == 0) {
-                        $pageGoNow = 0;
-                    }
-
-                    if ($rest == 0) {
-                        $pageGoNow += 1;
-                    }
-                }
+                $pageGoNow=$paginationSer->getPageGoNow($nbItem,$maxPage,$pageToGo,$pageGoNow);
             }
-
             $listExo = $this->getDoctrine()
                         ->getManager()
                         ->getRepository('UJMExoBundle:Exercise')
@@ -602,7 +552,6 @@ class ExerciseController extends Controller
      * To create a paper in order to take an assessment.
      *
      * @EXT\Route("/{id}/paper", name="ujm_exercise_paper")
-     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -910,9 +859,6 @@ class ExerciseController extends Controller
 
     /**
      * To check the right to open exo or not.
-     *
-     *
-     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      *
      * @return exception
      */
