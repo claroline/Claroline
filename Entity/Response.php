@@ -30,7 +30,7 @@ class Response
     /**
      * @ORM\Column(name="nb_tries", type="integer")
      */
-    private $nbTries;
+    private $nbTries = 1;
 
     /**
      * @ORM\Column(type="text", nullable=true)

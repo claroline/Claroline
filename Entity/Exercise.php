@@ -6,65 +6,47 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\Exercise.
- *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\ExerciseRepository")
  * @ORM\Table(name="ujm_exercise")
  */
 class Exercise extends AbstractResource
 {
     /**
-     * @var string
-     *
      * @ORM\Column(name="title", type="string", length=255)
      */
     private $title;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
 
     /**
-     * @var bool
-     *
      * @ORM\Column(name="shuffle", type="boolean", nullable=true)
      */
     private $shuffle = false;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="nb_question", type="integer")
      */
     private $nbQuestion = 0;
 
     /**
-     * @var bool
-     *
      * @ORM\Column(name="keepSameQuestion", type="boolean", nullable=true)
      */
     private $keepSameQuestion;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="duration", type="integer")
      */
     private $duration = 0;
 
     /**
-     * @var boolean $doprint
-     *
      * @ORM\Column(name="doprint", type="boolean", nullable=true)
      */
     private $doprint = false;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="max_attempts", type="integer")
      */
     private $maxAttempts = 0;
@@ -72,15 +54,11 @@ class Exercise extends AbstractResource
     /**
      * @todo mode should be at least a class constant
      *
-     * @var string
-     *
      * @ORM\Column(name="correction_mode", type="string", length=255)
      */
     private $correctionMode = '1';
 
     /**
-     * @var \Datetime
-     *
      * @ORM\Column(name="date_correction", type="datetime", nullable=true)
      */
     private $dateCorrection;
@@ -88,22 +66,16 @@ class Exercise extends AbstractResource
     /**
      * @todo mode should be at least a class constant
      *
-     * @var string
-     *
      * @ORM\Column(name="mark_mode", type="string", length=255)
      */
     private $markMode = '1';
 
     /**
-     * @var bool
-     *
      * @ORM\Column(name="disp_button_interrupt", type="boolean", nullable=true)
      */
     private $dispButtonInterrupt = false;
 
     /**
-     * @var bool
-     *
      * @ORM\Column(name="lock_attempt", type="boolean", nullable=true)
      */
     private $lockAttempt = false;
@@ -112,8 +84,6 @@ class Exercise extends AbstractResource
      * Flag indicating whether the exercise has been published at least
      * one time. An exercise that has never been published has all its
      * existing papers deleted at the first publication.
-     *
-     * @var bool
      *
      * @ORM\Column(name="published", type="boolean")
      */

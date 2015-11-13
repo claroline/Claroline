@@ -1,0 +1,24 @@
+{
+  "id": "1",
+  "type": "application/x.choice+json",
+  "title": "Question ?",
+  "choices": [
+    {
+      "id": "1",
+      "type": "text/html",
+      "data": "Item A"
+    },
+    {
+      "id": "2",
+      "type": "text/html",
+      "data": "Item B"
+    },
+    {
+      "id": "3",
+      "type": "text/html",
+      "data": "Item C"
+    }
+  ],
+  "random": true,
+  "multiple": true
+}

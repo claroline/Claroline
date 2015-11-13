@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace UJM\ExoBundle\Transfert;
+namespace UJM\ExoBundle\Transfer;
 
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
