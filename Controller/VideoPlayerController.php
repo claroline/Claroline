@@ -15,6 +15,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\SecurityExtraBundle\Annotation as SEC;
+use Claroline\VideoPlayerBundle\Form\PlayersType;
 
 //todo use sf2.2 BinaryFileResponse
 class VideoPlayerController extends Controller
@@ -28,6 +31,7 @@ class VideoPlayerController extends Controller
     public function streamAction(ResourceNode $node, $name)
     {
         $video = $this->get('claroline.manager.resource_manager')->getResourceFromNode($node);
+
         $response = new StreamedResponse();
         $path = $this->container->getParameter('claroline.param.files_directory')
             . DIRECTORY_SEPARATOR
@@ -41,5 +45,45 @@ class VideoPlayerController extends Controller
         $response->headers->set('Content-Type', $node->getMimeType());
 
         return $response->send();
+    }
+
+    /**
+     * @SEC\PreAuthorize("canOpenAdminTool('platform_packages')")
+     * @Route(
+     *     "/admin/player/form",
+     *     name="claro_video_player_admin_form"
+     * )
+     * @EXT\Template("ClarolineVideoPlayerBundle:Administration:adminOpen.html.twig")
+     */
+    public function adminOpenAction()
+    {
+        $player = $this->get('claroline.config.platform_config_handler')
+            ->getParameter('video_player');
+        if ($player === null) $player = 'mediaelement';
+
+        $form = $this->get('form.factory')->create(new PlayersType($player));
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @SEC\PreAuthorize("canOpenAdminTool('platform_packages')")
+     * @Route(
+     *     "/admin/player/submit",
+     *     name="claro_video_player_admin_submit"
+     * )
+     */
+    public function adminSubmitAction()
+    {
+        $form = $this->get('form.factory')->create(new PlayersType());
+        $form->handleRequest($this->get('request'));
+
+        if ($form->isValid()) {
+            $this->get('claroline.config.platform_config_handler')->setParameter('video_player', $form->get('player')->getData());
+
+            return $this->redirect($this->generateUrl('claro_admin_plugins'));
+        }
+
+        return array('form_group' => $form->createView());
     }
 }

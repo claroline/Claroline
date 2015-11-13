@@ -8,8 +8,6 @@
 
 {% set tag = 'video' %}
 {% set source = path ('claro_stream_video', {'node': video.getResourceNode().getId(), 'name': video.getResourceNode().getName()}) %}
-{% set mediaFlash = asset('bundles/frontend/mediaelement/build/flashmediaelement.swf') %}
-
 {% if "audio" in video.getResourceNode().getMimeType() %}
     {% set tag = 'audio' %}
 {% endif %}
@@ -20,14 +18,9 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ video.getResourceNode().getName() }}</h3>
     </div>
+    
     <div class="panel-body">
-        <{{ tag }} controls="controls" width="540" height="273" preload="none" style="background:#000;max-width:100%">
-            <source type="{{ video.getResourceNode().getMimeType() }}" src="{{ source }}">
-            <object class="flashplayer" type="application/x-shockwave-flash" data="{{ mediaFlash }}">
-                <param name="movie" value="{{ mediaFlash }}" />
-                <param name="flashvars" value="controls=true&file={{ source }}" />
-            </object>
-        </{{ tag }}>
+        {% include "ClarolineVideoPlayerBundle::" ~ player ~ 'player.html.twig' with {'tag': tag, 'video': video, 'source': source} %}
     </div>
     <div class="panel-footer">
         <a class="btn btn-primary" href="{{ path('claro_resource_download') }}?ids[]={{ video.getResourceNode().getId() }}">
@@ -38,13 +31,10 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('bundles/frontend/mediaelement/build/mediaelementplayer.min.css') }}" />
+    {% include "ClarolineVideoPlayerBundle::" ~ player ~ 'player.css.twig' %} 
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('bundles/frontend/mediaelement/build/mediaelement-and-player.min.js') }}"></script>
-    <script>
-        $('audio,video').mediaelementplayer();
-    </script>
+    {% include "ClarolineVideoPlayerBundle::" ~ player ~ 'player.js.twig' %} 
 {% endblock %}
