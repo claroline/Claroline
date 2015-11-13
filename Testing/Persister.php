@@ -135,7 +135,6 @@ class Persister
     {
         $exercise = new Exercise();
         $exercise->setTitle($title);
-        $this->om->persist($exercise);
 
         for ($i = 0, $max = count($questions); $i < $max; ++$i) {
             $link = new ExerciseQuestion($exercise, $questions[$i]);
@@ -161,6 +160,7 @@ class Persister
             $this->om->persist($node);
         }
 
+        $this->om->persist($exercise);
 
         return $exercise;
     }
