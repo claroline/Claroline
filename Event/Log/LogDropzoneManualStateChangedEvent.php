@@ -7,10 +7,10 @@ use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Innova\CollecticielBundle\Entity\Dropzone;
 
-
 class LogDropzoneManualStateChangedEvent extends AbstractLogResourceEvent implements NotifiableInterface {
 
     const ACTION = 'resource-innova_collecticiel-dropzone_manual_state_changed';
+
     protected $dropzone;
     protected $newState;
     protected $details;
@@ -21,15 +21,22 @@ class LogDropzoneManualStateChangedEvent extends AbstractLogResourceEvent implem
      * @param Section $section
      * @param Contribution $contribution
     */
-    public function __construct(Dropzone $dropzone,$newstate,$userIds)
+    public function __construct(Dropzone $dropzone, $newstate, $userIds)
     {
 
+ 
         $this->dropzone = $dropzone;
         $this->newState = $newstate;
         $this->userIds = $userIds;
         $this->details = array(
                 'newState'=> $newstate
         );
+
+$this->userId = $dropzone->getDrops()[0]->getUser()->getId();
+
+echo "DropZoneId = " . $dropzone->getId();
+
+echo "Id = " . $this->userId;die();
 
         parent::__construct($dropzone->getResourceNode(), $this->details);
     }
@@ -41,6 +48,7 @@ class LogDropzoneManualStateChangedEvent extends AbstractLogResourceEvent implem
     {
         return array(self::DISPLAYED_WORKSPACE);
     }
+
     public function getDropzone()
     {
         return $this->$dropzone;
@@ -103,12 +111,19 @@ class LogDropzoneManualStateChangedEvent extends AbstractLogResourceEvent implem
      */
     public function getNotificationDetails()
     {
+
+//var_dump($this->details);
         $notificationDetails = array_merge($this->details, array());
+
         $notificationDetails['resource'] = array(
             'id' => $this->dropzone->getId(),
             'name' => $this->resource->getName(),
             'type' => $this->resource->getResourceType()->getName()
         );
+
+//var_dump("ici");
+//var_dump($notificationDetails);
+//die();
 
         return $notificationDetails;
     }

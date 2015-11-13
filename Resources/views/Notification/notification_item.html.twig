@@ -7,21 +7,20 @@
     {% else %}
         <strong>{{ systemName }}</strong>
     {% endif %}
-    {% if constant('Icap\\DropzoneBundle\\Event\\Log\\LogDropReportEvent::ACTION') == notification.actionKey %}
+    {% if constant('Innova\\CollecticielBundle\\Event\\Log\\LogDropReportEvent::ACTION') == notification.actionKey %}
         {#    DROP REPORT  #}
         {% include 'InnovaCollecticielBundle:Notification:notification_drop_report.html.twig' %}
-    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogCorrectionReportEvent::ACTION') == notification.actionKey %}
+    {% elseif constant('Innova\\CollecticielBundle\\Event\\Log\\LogCorrectionReportEvent::ACTION') == notification.actionKey %}
         {#    CORRECTION  REPORT  #}
         {% include 'InnovaCollecticielBundle:Notification:notification_correction_report.html.twig' %}
-    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogDropGradeAvailableEvent::ACTION') == notification.actionKey %}
+    {% elseif constant('Innova\\CollecticielBundle\\Event\\Log\\LogDropGradeAvailableEvent::ACTION') == notification.actionKey %}
         {#    DROP GRADE AVAILABLE  #}
         {% include 'InnovaCollecticielBundle:Notification:notification_drop_grade_available.html.twig' %}
-    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogDropzoneManualStateChangedEvent::ACTION') == notification.actionKey %}
+    {% elseif constant('Innova\\CollecticielBundle\\Event\\Log\\LogDropzoneManualStateChangedEvent::ACTION') == notification.actionKey %}
         {#    MANUAL STATE CHANGED  #}
         {% include 'InnovaCollecticielBundle:Notification:notification_dropzone_manual_state_changed.html.twig' %}
-    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogDropEndEvent::ACTION') == notification.actionKey %}
+    {% elseif constant('Innova\\CollecticielBundle\\Event\\Log\\LogDropEndEvent::ACTION') == notification.actionKey %}
         {#    DROP END  #}
         {% include 'InnovaCollecticielBundle:Notification:notification_drop_end.html.twig' %}
-
     {% endif %}
 {% endblock %}

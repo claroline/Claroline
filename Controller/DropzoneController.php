@@ -109,7 +109,6 @@ class DropzoneController extends DropzoneBaseController
             {
                 // send notification.
                 $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
-                var_dump($usersIds);
                 $event = new LogDropzoneManualStateChangedEvent($dropzone, $dropzone->getManualState(), $usersIds);
                 $this->get('event_dispatcher')->dispatch('log', $event);
                 var_dump("état changé");

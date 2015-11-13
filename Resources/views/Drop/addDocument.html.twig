@@ -16,9 +16,9 @@
         <span class="text-danger">{{ 'No document type allowed'|trans({}, 'innova_collecticiel') }}</span>
     {% else %}
         {% if (adminInnova == false and collecticielOpenOrNot == false) %}
-                <div class="alert alert-warning">
-                  {{ 'NotAllowToAddAnyDocument'|trans({}, 'innova_collecticiel') }}
-                </div>
+            <div class="alert alert-warning">
+                {{ 'NotAllowToAddAnyDocument'|trans({}, 'innova_collecticiel') }}
+            </div>
         {% else %}
             {% set activeClass = " active " %}
             <ul class="nav nav-tabs">
