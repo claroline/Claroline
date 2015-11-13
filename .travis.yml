@@ -25,6 +25,7 @@ before_script:
   - cp -R vendor/claroline/dev-bundle/Claroline/DevBundle/Resources/travis/app/* app
   - php app/register-bundle.php `cat package_dir.txt`
   - rm -rf app/cache/*
+  - mysql -e 'create database claroline_test_travis;'
   - php app/init-schema.php
 
 script: vendor/bin/phpunit -c "${BUNDLE_DIR}/phpunit_travis.xml"
