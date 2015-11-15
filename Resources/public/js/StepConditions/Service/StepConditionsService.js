@@ -242,15 +242,19 @@
                     if(angular.isDefined(evaluationResultToCheck)||criterion.type=="usergroup"){
                         switch(criterion.type){
                             case"activityrepetition":
-                                test=(parseInt(evaluationResultToCheck.attempts) >= parseInt(criterion.data));
+                                var attempts = evaluationResultToCheck.attempts;
+                                if (attempts === null){attempts = 0;}
+                                test=(parseInt(attempts)>=parseInt(criterion.data));
                                 if (test) {isok=Translator.trans('yes', {}, 'path_wizards');}
-                                data = Translator.trans('condition_criterion_test_repetition', {activityRep:criterion.data, userRep:evaluationResultToCheck.attempts}, 'path_wizards')+" : "+isok;
+                                data = Translator.trans('condition_criterion_test_repetition', {activityRep:criterion.data, userRep:attempts}, 'path_wizards')+" : "+isok;
                                 break;
                             case"activitystatus":
                                 //TODO : improve test for the different case (failed, attempted, completed...)
-                                test=(criterion.data===evaluationResultToCheck.status);
+                                var evalstatus = evaluationResultToCheck.status;
+                                if (evalstatus === null){evalstatus = "non tenté";}
+                                test=(criterion.data===evalstatus);
                                 if (test) {isok=Translator.trans('yes', {}, 'path_wizards');}
-                                data = Translator.trans('condition_criterion_test_status', {activityStatus:criterion.data, userStatus:evaluationResultToCheck.status}, 'path_wizards')+" : "+isok;
+                                data = Translator.trans('condition_criterion_test_status', {activityStatus:criterion.data, userStatus:evalstatus}, 'path_wizards')+" : "+isok;
                                 break;
                             case"usergroup":
                                 var test_tmp;

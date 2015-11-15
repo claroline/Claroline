@@ -23,7 +23,9 @@ var PathEditCtrl = function PathEditCtrl($window, $route, $routeParams, PathServ
 
             if (!empty && updated) {
                 // Initialization is already done, so mark path as unsaved for each modification
-                this.unsaved = true;
+                if (this.published!==true) {
+                    this.unsaved = true;
+                }
             }
         }.bind(this)
     , true);
@@ -105,6 +107,8 @@ PathEditCtrl.prototype.publish = function () {
             this.modified  = false;
             this.published = true;
             this.unsaved   = false;
+            this.pathService.goTo(this.path.steps[0]);
+            this.published=1;/*hack : 1 == true but 1 !== true*/
         }.bind(this));
     }
 };

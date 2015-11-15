@@ -1,23 +1,24 @@
 (function () {
     'use strict';
 
-    angular.module('StepConditionsModule').directive('fieldValidation', [
-        function () {
-            return {
-                require: 'ngModel',
-                link: function(scope, element, attrs, modelCtrl) {
-                    modelCtrl.$parsers.push(function (inputValue) {
-                        if (inputValue == undefined) return 1;
-                        var transformedInput = inputValue.replace(/[^0-9]/g, '');
-                        if (transformedInput!=inputValue) {
-                            modelCtrl.$setViewValue(transformedInput);
-                            modelCtrl.$render();
-                        }
-
-                        return transformedInput;
-                    });
-                }
-            };
-        }
-    ]);
+    angular.module('StepConditionsModule')
+        .directive('fieldValidation', [
+            function () {
+                return {
+                    require: 'ngModel',
+                    link: function(scope, element, attrs, ngModel) {
+                        ngModel.$parsers.push(function(value) {
+                            /**
+                             * Check and set the input as an integer (>=0)
+                             */
+                            value = parseInt(value, 10);
+                            if (!((typeof value === 'number') && (value % 1 === 0))){value = 1}
+                            ngModel.$setViewValue(value);
+                            ngModel.$render();
+                            return value;
+                        });
+                    }
+                };
+            }
+        ]);
 })();
