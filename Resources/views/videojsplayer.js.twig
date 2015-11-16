@@ -1,0 +1,11 @@
+<script src="http://vjs.zencdn.net/5.0.2/video.js"></script>
+<script>
+	$(document).ready(function() {
+		player = videojs('video-js-to-play', {
+			techOrder: ['flash', 'html5'],
+			autoplay: true,
+		}, function() {
+			//do some stuff here for now.
+		});
+	});
+</script>
