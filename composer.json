@@ -1,0 +1,15 @@
+{
+    "name": "icap/formula-plugin-bundle",
+    "keywords": ["Claroline", "Plugin"],
+    "homepage": "http://www.claroline.net",
+    "type": "claroline-plugin",
+    "license": "GPL-3.0+",
+    "require": {
+        "php": ">=5.4.1",
+        "claroline/core-bundle": "~6.0"
+    },
+    "autoload": {
+        "psr-0": { "Icap\\FormulaPluginBundle": "" }
+    },
+    "target-dir": "Icap/FormulaPluginBundle"
+}
