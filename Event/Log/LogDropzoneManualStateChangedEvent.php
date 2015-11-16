@@ -24,19 +24,31 @@ class LogDropzoneManualStateChangedEvent extends AbstractLogResourceEvent implem
     public function __construct(Dropzone $dropzone, $newstate, $userIds)
     {
 
- 
+//var_dump($dropzone->getResourceNode()->getName());
+//die(); 
+
         $this->dropzone = $dropzone;
-        $this->newState = $newstate;
+        $this->newState = $dropzone->getResourceNode()->getName();
         $this->userIds = $userIds;
         $this->details = array(
-                'newState'=> $newstate
+            'newState'=> $this->newState
         );
 
-$this->userId = $dropzone->getDrops()[0]->getUser()->getId();
+        $this->userId = $dropzone->getDrops()[0]->getUser()->getId();
+
+        // Récupération du nom et du prénom
+        $this->firstName = $dropzone->getDrops()[0]->getUser()->getFirstName();
+        $this->lastName = $dropzone->getDrops()[0]->getUser()->getLastName();
 
 echo "DropZoneId = " . $dropzone->getId();
-
-echo "Id = " . $this->userId;die();
+echo "<br />";
+echo "Id = " . $this->userId;
+echo "<br />";
+echo "First = " . $this->firstName;
+echo "<br />";
+echo "Last = " . $this->lastName;
+echo "<br />";
+//die();
 
         parent::__construct($dropzone->getResourceNode(), $this->details);
     }
@@ -117,7 +129,7 @@ echo "Id = " . $this->userId;die();
 
         $notificationDetails['resource'] = array(
             'id' => $this->dropzone->getId(),
-            'name' => $this->resource->getName(),
+            'name' => $this->firstName . " " . $this->lastName, // $this->resource->getName(),
             'type' => $this->resource->getResourceType()->getName()
         );
 

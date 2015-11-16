@@ -1,6 +1,6 @@
 resource-innova_collecticiel-drop_report: ' a signalé une une copie  dans l''évaluation %dropzone%'
 resource-innova_collecticiel-correction_report: ' a signalé une correction dans l''évaluation %dropzone%'
 resource-innova_collecticiel-drop_grade_available: ' Votre copie a été corrigée et votre note est disponible dans l''évaluation %dropzone%'
-resource-innova_collecticiel-dropzone_manual_state_changed: 'Collecticiel modifié en %name% a changé en %type%'
+resource-innova_collecticiel-dropzone_manual_state_changed: '%name% a ouvert le collecticiel %type%'
 resource-innova_collecticiel-drop_end: 'a déposé une copie dans l''évaluation %dropzone%'
 resource-innova_collecticiel-dropzone_manual_request_sent: 'Une demande de commentaire a été transmise par %newState%'
