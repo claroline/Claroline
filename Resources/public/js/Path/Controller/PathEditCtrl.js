@@ -108,7 +108,7 @@ PathEditCtrl.prototype.publish = function () {
             this.published = true;
             this.unsaved   = false;
             this.pathService.goTo(this.path.steps[0]);
-            this.published=1;/*hack : 1 == true but 1 !== true*/
+            this.unsaved=false;/*hack to fix the unsaved status*/
         }.bind(this));
     }
 };
