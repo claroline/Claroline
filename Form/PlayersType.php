@@ -28,7 +28,6 @@ class PlayersType extends AbstractType
             'choice',
             array(
                 'choices' => array(
-                    'mediaelement' => 'mediaelement',
                     'videojs' => 'videojs'
                 ),
                 'multiple' => false,

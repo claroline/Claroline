@@ -49,7 +49,7 @@ class VideoPlayerListener extends ContainerAware
     public function onOpenVideo(PlayFileEvent $event)
     {
         $player = $this->ch->getParameter('video_player');
-        if ($player == null) $player = 'mediaelement';
+        if ($player == null) $player = 'videojs';
 
         $path = $this->fileDir . DIRECTORY_SEPARATOR . $event->getResource()->getHashName();
         $content = $this->templating->render(

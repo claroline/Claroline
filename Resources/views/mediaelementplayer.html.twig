@@ -1,8 +1,0 @@
-{% set mediaFlash = asset('bundles/frontend/mediaelement/build/flashmediaelement.swf') %}
-<{{ tag }} controls="controls" width="540" height="273" preload="none" style="background:#000;max-width:100%">
-    <source type="{{ video.getResourceNode().getMimeType() }}" src="{{ source }}">
-    <object class="flashplayer" type="application/x-shockwave-flash" data="{{ mediaFlash }}">
-        <param name="movie" value="{{ mediaFlash }}" />
-        <param name="flashvars" value="controls=true&file={{ source }}" />
-    </object>
-</{{ tag }}>
