@@ -1,9 +1,14 @@
-<script src="http://vjs.zencdn.net/5.0.2/video.js"></script>
+<script src="{{ asset('bundles/clarolinevideojs/js/dist/video.min.js') | raw }}"></script>
+<script>
+	videojs.options.flash.swf = "{{ asset('bundles/clarolinevideojs/js/dist/video-js.swf') | raw }}"
+</script>
 <script>
 	$(document).ready(function() {
 		player = videojs('video-js-to-play', {
 			techOrder: ['flash', 'html5'],
-			autoplay: true,
+			autoplay: false,
+			controls: true,
+			preload: "metadata"
 		}, function() {
 			//do some stuff here for now.
 		});
