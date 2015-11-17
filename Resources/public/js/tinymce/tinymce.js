@@ -242,6 +242,7 @@
     // Get theme to load inside tinymce in order to have no display differences
     var themeCSS = _.find(_.pluck(document.styleSheets, 'href'), function(link){return link.indexOf("themes/") !== -1});
     tinymce.claroline.configuration = {
+        paste_data_images: true,
         'relative_urls': false,
         'theme': 'modern',
         'language': home.locale.trim(),
