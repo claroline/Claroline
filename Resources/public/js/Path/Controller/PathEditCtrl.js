@@ -107,8 +107,12 @@ PathEditCtrl.prototype.publish = function () {
             this.modified  = false;
             this.published = true;
             this.unsaved   = false;
-            this.pathService.goTo(this.path.steps[0]);
-            this.unsaved=false;/*hack to fix the unsaved status*/
+            if (this.path.steps[0] !== 'undefined') {
+                this.pathService.goTo(this.path.steps[0]);
+            }
+            /* wip save/publish */
+            this.unsaved=false;
+            this.published=1;
         }.bind(this));
     }
 };
