@@ -11,44 +11,37 @@
 
 namespace Claroline\ChatBundle\Form;
 
-use Claroline\ChatBundle\Entity\ChatRoom;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
-class ChatRoomType extends AbstractType
+class ChatUserEditionType extends AbstractType
 {
+    private $color;
+
+    public function __construct($color)
+    {
+        $this->color = $color;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $typesList = array(
-            ChatRoom::TEXT => 'text_only',
-            ChatRoom::AUDIO => 'audio_only',
-            ChatRoom::VIDEO => 'audio_video'
-        );
-
         $builder->add(
-            'name',
+            'color',
             'text',
             array(
-                'constraints' => new NotBlank(),
-                'label' => 'name',
+                'required' => false,
+                'mapped' => false,
+                'data' => $this->color,
+                'label' => 'color',
                 'translation_domain' => 'platform'
-            )
-        );
-        $builder->add(
-            'roomType',
-            'choice',
-            array(
-                'label' => 'type',
-                'choices' => $typesList
             )
         );
     }
 
     public function getName()
     {
-        return 'chat_room_form';
+        return 'chat_user_edition_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

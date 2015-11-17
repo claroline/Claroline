@@ -19,6 +19,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ChatRoomMessage
 {
+    const MESSAGE = 0;
+    const PRESENCE = 1;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -48,6 +51,11 @@ class ChatRoomMessage
      * @ORM\Column(name="creation_date", type="datetime", nullable=false)
      */
     protected $creationDate;
+
+    /**
+     * @ORM\Column(name="message_type", type="integer", nullable=false)
+     */
+    protected $type = self::MESSAGE;
 
     public function getId()
     {
@@ -97,5 +105,15 @@ class ChatRoomMessage
     public function setContent($content)
     {
         $this->content = $content;
+    }
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
     }
 }

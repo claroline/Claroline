@@ -11,7 +11,8 @@
     'use strict';
     
     var xmppHost;
-    var xmppPort;
+    var boshPort;
+    var boshService;
     var authenticatedUsername;
     var password;
     var username;
@@ -45,12 +46,13 @@
     function connection()
     {
         xmppHost = $('#chat-datas-box').data('xmpp-host');
-        xmppPort = $('#chat-datas-box').data('xmpp-port');
+        boshPort = $('#chat-datas-box').data('bosh-port');
+        boshService = 'http://' + xmppHost + ':' + boshPort + '/http-bind';
         authenticatedUsername = $('#chat-datas-box').data('username');
         password = $('#chat-datas-box').data('password');
         username = $('#chat-datas-box').data('contact-username');
         
-        connection = new Strophe.Connection('/http-bind');
+        connection = new Strophe.Connection(boshService);
         
         connection.connect(
             authenticatedUsername + '@' + xmppHost,

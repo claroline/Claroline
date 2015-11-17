@@ -15,9 +15,8 @@ use Claroline\ChatBundle\Entity\ChatRoom;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
-class ChatRoomType extends AbstractType
+class ChatRoomConfigurationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -26,14 +25,18 @@ class ChatRoomType extends AbstractType
             ChatRoom::AUDIO => 'audio_only',
             ChatRoom::VIDEO => 'audio_video'
         );
+        $statusList = array(
+            ChatRoom::UNINITIALIZED => 'uninitialized',
+            ChatRoom::OPEN => 'open',
+            ChatRoom::CLOSED => 'closed'
+        );
 
         $builder->add(
-            'name',
+            'roomName',
             'text',
             array(
-                'constraints' => new NotBlank(),
-                'label' => 'name',
-                'translation_domain' => 'platform'
+                'label' => 'chat_room_id',
+                'disabled' => true
             )
         );
         $builder->add(
@@ -44,11 +47,19 @@ class ChatRoomType extends AbstractType
                 'choices' => $typesList
             )
         );
+        $builder->add(
+            'roomStatus',
+            'choice',
+            array(
+                'label' => 'status',
+                'choices' => $statusList
+            )
+        );
     }
 
     public function getName()
     {
-        return 'chat_room_form';
+        return 'chat_room_configuration_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

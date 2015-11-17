@@ -11,7 +11,9 @@
 
 namespace Claroline\ChatBundle\Controller;
 
+use Claroline\ChatBundle\Entity\ChatUser;
 use Claroline\ChatBundle\Form\ChatConfigurationType;
+use Claroline\ChatBundle\Form\ChatUserEditionType;
 use Claroline\ChatBundle\Manager\ChatManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -120,7 +122,7 @@ class AdminChatController extends Controller
             array(
                 'chat_xmpp_host' => $host,
                 'chat_xmpp_muc_host' => $mucHost,
-                'chat_xmpp_port' => $port
+                'chat_bosh_port' => $port
             )
         );
 
@@ -161,6 +163,7 @@ class AdminChatController extends Controller
             );
         }
         $xmppHost = $this->platformConfigHandler->getParameter('chat_xmpp_host');
+        $boshPort = $this->platformConfigHandler->getParameter('chat_bosh_port');
 
         return array(
             'chatUsers' => $chatUsers,
@@ -170,7 +173,8 @@ class AdminChatController extends Controller
             'max' => $max,
             'orderedBy' => $orderedBy,
             'order' => $order,
-            'xmppHost' => $xmppHost
+            'xmppHost' => $xmppHost,
+            'boshPort' => $boshPort
         );
     }
 
@@ -218,5 +222,63 @@ class AdminChatController extends Controller
         $this->chatManager->createChatUser($user, $username, $password);
 
         return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/chat/user/{chatUser}/edit/form",
+     *     name="claro_chat_user_edit_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineChatBundle:AdminChat:chatUserEditModalForm.html.twig")
+     */
+    public function chatUserEditFormAction(ChatUser $chatUser)
+    {
+        $options = $chatUser->getOptions();
+        $color = isset($options['color']) ? $options['color'] : null;
+
+        $form = $this->formFactory->create(
+            new ChatUserEditionType($color)
+        );
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/chat/user/{chatUser}/edit",
+     *     name="claro_chat_user_edit",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineChatBundle:AdminChat:chatUserEditModalForm.html.twig")
+     */
+    public function chatUserEditAction(ChatUser $chatUser)
+    {
+        $options = $chatUser->getOptions();
+        $color = isset($options['color']) ? $options['color'] : null;
+
+        $form = $this->formFactory->create(
+            new ChatUserEditionType($color)
+        );
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $newColor = $form->get('color')->getData();
+
+            if (is_null($options)) {
+                $options = array('color' => $newColor);
+            } else {
+                $options['color'] = $newColor;
+            }
+            $chatUser->setOptions($options);
+            $this->chatManager->persistChatUser($chatUser);
+
+            return new JsonResponse('success', 200);
+        } else {
+
+            return array('form' => $form->createView());
+        }
     }
 }

@@ -1,0 +1,14 @@
+<div id="input-box" ng-controller="ChatRoomInputCtrl">
+    <div class="input-group">
+        <input type="text"
+               id="msg-input"
+               class="form-control"
+               ng-model="input"
+        >
+        <span class="input-group-btn">
+            <button id="send-msg-btn" class="btn btn-default" ng-click="sendMessage()">
+                <i class="fa fa-comment"></i>
+            </button>
+        </span>
+    </div>
+</div>

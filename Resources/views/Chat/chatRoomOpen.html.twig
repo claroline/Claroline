@@ -8,7 +8,7 @@
             <h3 class="panel-title">
                 {{ chatRoom.getResourceNode().getName() }}
                 
-                {% if canEdit %}
+                {% if canChat and canEdit %}
                     <i class="fa fa-cogs pointer-hand pull-right"
                        id="chat-room-configuration-btn"
                        data-toggle="tooltip"
@@ -20,39 +20,71 @@
             </h3>
         </div>
         <div class="panel-body">
-            <div ng-cloak="" ng-app="chatRoomApp">
-                <div class="row chat-room-row">
-                    <div id="chat-room-content-panel" class="col-md-9">
-                        <div ng-controller="mainMenuCtrl"
-                             data-id="{{ chatRoom.getId() }}"
-                             data-chat-room="{{ chatRoom | json_encode }}"
-                             data-can-chat="{{ canChat }}"
-                             data-can-edit="{{ canEdit }}"
-                        >
-    {#                        Message : {% verbatim %}{{ name }}{% endverbatim %}#}
-                        <div id="chat-content" class="well well-sm"></div>
-                        </div>
+            {% if canChat %}
+                {% set chatRoomStatus = chatRoom.getRoomStatus() %}
+                {% set chatRoomType = chatRoom.getRoomType() %}
+                
+                {% if chatRoomStatus == constant('Claroline\\ChatBundle\\Entity\\ChatRoom::UNINITIALIZED') %}
+                    <div class="alert alert-warning">
+                        {{ 'chat_room_uninitialized_msg'|trans({}, 'chat') }}
                     </div>
-                    <div id="chat-room-users-panel" class="col-md-3 well well-sm hidden-xs hidden-sm">
-                        <h4 class="text-center">
-                            {{ 'users'|trans({}, 'platform') }}
-                        </4>
+                {% elseif chatRoomStatus == constant('Claroline\\ChatBundle\\Entity\\ChatRoom::CLOSED') %}
+                    <div class="alert alert-success">
+                        {{ 'chat_room_closed_msg'|trans({}, 'chat') }}
                     </div>
+                {% elseif chatRoomStatus == constant('Claroline\\ChatBundle\\Entity\\ChatRoom::OPEN') %}
+                    <div id="chat-room-app" ng-cloak="" ng-app="ChatRoomModule">
+                        {% if chatRoomType == constant('Claroline\\ChatBundle\\Entity\\ChatRoom::TEXT') %}
+                            <chat-room chat-room-xmpp-host="{{ xmppHost }}"
+                                       chat-room-xmpp-muc-host="{{ xmppMucHost }}"
+                                       chat-room-bosh-port="{{ boshPort }}"
+                                       chat-room-id="{{ chatRoom.getId() }}"
+                                       chat-room-name="{{ chatRoom.getRoomName() }}"
+                                       chat-room-user-username="{{ chatUser.getChatUsername() }}"
+                                       chat-room-user-password="{{ chatUser.getChatPassword() }}"
+                                       chat-room-user-first-name="{{ chatUser.getUser().getFirstName() }}"
+                                       chat-room-user-last-name="{{ chatUser.getUser().getLastName() }}"
+                                       chat-room-user-color="{{ color }}"
+                            >
+                            </chat-room>
+                        {% elseif chatRoomType == constant('Claroline\\ChatBundle\\Entity\\ChatRoom::AUDIO') %}
+                            <chat-room-audio chat-room-xmpp-host="{{ xmppHost }}"
+                                       chat-room-xmpp-muc-host="{{ xmppMucHost }}"
+                                       chat-room-bosh-port="{{ boshPort }}"
+                                       chat-room-id="{{ chatRoom.getId() }}"
+                                       chat-room-name="{{ chatRoom.getRoomName() }}"
+                                       chat-room-user-username="{{ chatUser.getChatUsername() }}"
+                                       chat-room-user-password="{{ chatUser.getChatPassword() }}"
+                                       chat-room-user-first-name="{{ chatUser.getUser().getFirstName() }}"
+                                       chat-room-user-last-name="{{ chatUser.getUser().getLastName() }}"
+                                       chat-room-user-color="{{ color }}"
+                            >
+                            </chat-room-audio>
+                        {% elseif chatRoomType == constant('Claroline\\ChatBundle\\Entity\\ChatRoom::VIDEO') %}
+                            <chat-room-video chat-room-xmpp-host="{{ xmppHost }}"
+                                       chat-room-xmpp-muc-host="{{ xmppMucHost }}"
+                                       chat-room-bosh-port="{{ boshPort }}"
+                                       chat-room-id="{{ chatRoom.getId() }}"
+                                       chat-room-name="{{ chatRoom.getRoomName() }}"
+                                       chat-room-user-username="{{ chatUser.getChatUsername() }}"
+                                       chat-room-user-password="{{ chatUser.getChatPassword() }}"
+                                       chat-room-user-first-name="{{ chatUser.getUser().getFirstName() }}"
+                                       chat-room-user-last-name="{{ chatUser.getUser().getLastName() }}"
+                                       chat-room-user-color="{{ color }}"
+                            >
+                            </chat-room-video>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-danger">
+                        {{ 'chat_room_unknown_status_msg'|trans({}, 'chat') }}
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="alert alert-danger">
+                    {{ 'chat_account_not_activated_msg'|trans({}, 'chat') }}
                 </div>
-                <div class="row chat-room-row">
-                    <div class="input-group">
-                        <input type="text"
-                               id="msg-input"
-                               class="form-control"
-                        >
-                        <span class="input-group-btn">
-                            <button id="send-msg-btn" class="btn btn-default">
-                                <i class="fa fa-comment"></i>
-                            </button>
-                        </span>
-                    </div>
-                </div>
-            </div>
+            {% endif %}
         </div>
     {% endblock %}
 {% endblock %}
@@ -63,16 +95,18 @@
         (function () {
             'use strict';
             
-            ChatRoom.connect(
-                '{{ xmppHost }}',
-                '{{ xmppMucHost }}',
-                '{{ chatRoom.getId() }}',
-                '{{ chatRoom.getRoomName() }}',
-                '{{ chatUser.getChatUsername() }}',
-                '{{ chatUser.getChatPassword() }}',
-                '{{ chatUser.getUser().getFirstName() }}',
-                '{{ chatUser.getUser().getLastName() }}'
-            );
+            $('#chat-room-configuration-btn').on('click', function () {
+                window.Claroline.Modal.displayForm(
+                    Routing.generate(
+                        'claro_chat_room_configure_form',
+                        {'chatRoom': {{ chatRoom.getId() }}}
+                    ),
+                    function () {
+                        window.location.reload();
+                    },
+                    function () {}
+                );
+            });
         })();
     </script>
 {% endblock %}
