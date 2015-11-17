@@ -24,12 +24,20 @@ class LogDropzoneManualStateChangedEvent extends AbstractLogResourceEvent implem
     public function __construct(Dropzone $dropzone, $newstate, $userIds)
     {
 
-//var_dump($dropzone->getResourceNode()->getName());
-//die(); 
+
+//echo "Etat : " . $newstate;die();
 
         $this->dropzone = $dropzone;
         $this->newState = $dropzone->getResourceNode()->getName();
         $this->userIds = $userIds;
+
+        if ($newstate == "allowDrop") {
+            $this->newState = "Open";
+        }
+        if ($newstate == "finished") {
+            $this->newState = "Closed";
+        }
+
         $this->details = array(
             'newState'=> $this->newState
         );
