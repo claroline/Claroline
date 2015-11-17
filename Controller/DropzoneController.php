@@ -111,19 +111,18 @@ class DropzoneController extends DropzoneBaseController
                 $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
                 $event = new LogDropzoneManualStateChangedEvent($dropzone, $dropzone->getManualState(), $usersIds);
                 $this->get('event_dispatcher')->dispatch('log', $event);
-                var_dump("état changé");
             }
 
             $em->persist($dropzone);
             $em->flush();
 
             // check if manual state has changed
-            if ($manualStateChanged) {
-                // send notification.
-                $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
-                $event = new LogDropzoneManualStateChangedEvent($dropzone, $newManualState, $usersIds);
-                $this->get('event_dispatcher')->dispatch('log', $event);
-            }
+//            if ($manualStateChanged) {
+//                // send notification.
+//                $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
+//                $event = new LogDropzoneManualStateChangedEvent($dropzone, $newManualState, $usersIds);
+//                $this->get('event_dispatcher')->dispatch('log', $event);
+//            }
 
             $event = new LogDropzoneConfigureEvent($dropzone, $changeSet);
             $this->dispatch($event);

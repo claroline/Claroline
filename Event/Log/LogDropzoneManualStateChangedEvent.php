@@ -24,13 +24,11 @@ class LogDropzoneManualStateChangedEvent extends AbstractLogResourceEvent implem
     public function __construct(Dropzone $dropzone, $newstate, $userIds)
     {
 
-
-//echo "Etat : " . $newstate;die();
-
         $this->dropzone = $dropzone;
         $this->newState = $dropzone->getResourceNode()->getName();
         $this->userIds = $userIds;
 
+        // Traitement de la traduction pour CE cas. InnovaERV.
         if ($newstate == "allowDrop") {
             $this->newState = "Open";
         }
@@ -47,16 +45,6 @@ class LogDropzoneManualStateChangedEvent extends AbstractLogResourceEvent implem
         // Récupération du nom et du prénom
         $this->firstName = $dropzone->getDrops()[0]->getUser()->getFirstName();
         $this->lastName = $dropzone->getDrops()[0]->getUser()->getLastName();
-
-echo "DropZoneId = " . $dropzone->getId();
-echo "<br />";
-echo "Id = " . $this->userId;
-echo "<br />";
-echo "First = " . $this->firstName;
-echo "<br />";
-echo "Last = " . $this->lastName;
-echo "<br />";
-//die();
 
         parent::__construct($dropzone->getResourceNode(), $this->details);
     }
@@ -132,7 +120,6 @@ echo "<br />";
     public function getNotificationDetails()
     {
 
-//var_dump($this->details);
         $notificationDetails = array_merge($this->details, array());
 
         $notificationDetails['resource'] = array(
@@ -140,10 +127,6 @@ echo "<br />";
             'name' => $this->firstName . " " . $this->lastName, // $this->resource->getName(),
             'type' => $this->resource->getResourceType()->getName()
         );
-
-//var_dump("ici");
-//var_dump($notificationDetails);
-//die();
 
         return $notificationDetails;
     }
