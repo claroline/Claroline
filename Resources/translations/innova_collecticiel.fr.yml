@@ -397,3 +397,5 @@ NotAllowToAddAnyDocument: 'Ce collecticiel n''est pas (ou plus) ouvert. Il n''es
 Title: 'Titre du document :'
 Publication Title: 'Publication'
 Published: 'Publié'
+Closed: 'Fermé'
+Open: 'Ouvert'

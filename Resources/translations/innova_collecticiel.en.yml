@@ -397,3 +397,5 @@ NotAllowToAddAnyDocument: 'This collecticiel is not open. You can''t drop any fi
 Title: 'Title :'
 Publication Title: 'Publication'
 Published: 'Published'
+Closed: 'Closed'
+Open: 'Open'
