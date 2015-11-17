@@ -28,16 +28,8 @@ class LogDropzoneAddCommentEvent extends AbstractLogResourceEvent implements Not
         $this->newState = $dropzone->getResourceNode()->getName();
         $this->userIds = $userIds;
 
-        // Traitement de la traduction pour CE cas. InnovaERV.
-        if ($newstate == "allowDrop") {
-            $this->newState = "Open";
-        }
-        if ($newstate == "finished") {
-            $this->newState = "Closed";
-        }
-
         $this->details = array(
-            'newState'=> $this->newState
+//            'newState'=> $this->newState
         );
 
         $this->userId = $dropzone->getDrops()[0]->getUser()->getId();
@@ -125,7 +117,7 @@ class LogDropzoneAddCommentEvent extends AbstractLogResourceEvent implements Not
         $notificationDetails['resource'] = array(
             'id' => $this->dropzone->getId(),
             'name' => $this->firstName . " " . $this->lastName, // $this->resource->getName(),
-            'type' => $this->resource->getResourceType()->getName()
+            'type' => $this->dropzone->getResourceNode()->getName()
         );
 
         return $notificationDetails;
