@@ -10,7 +10,9 @@
 (function () {
     'use strict';
 
-    angular.module('ChatRoomModule').controller('ChatRoomUsersCtrl', ['$scope', '$rootScope',
+    angular.module('ChatRoomModule').controller('ChatRoomUsersCtrl', [
+        '$scope', 
+        '$rootScope',
         function ($scope, $rootScope) {
             $scope.users = [];
 

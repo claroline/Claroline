@@ -10,7 +10,9 @@
 (function () {
     'use strict';
 
-    angular.module('ChatRoomModule').factory('XmppMucService', ['$rootScope', 'XmppService',
+    angular.module('ChatRoomModule').factory('XmppMucService', [
+        '$rootScope', 
+        'XmppService',
         function ($rootScope, XmppService) {
             var room = null;
             var roomId = null;
@@ -49,7 +51,7 @@
             var onRoomPresence = function (presence) {
                 var from = $(presence).attr('from');
                 var roomName = Strophe.getBareJidFromJid(from);
-
+                
                 if (roomName.toLowerCase() === room.toLowerCase()) {
                     var username = Strophe.getResourceFromJid(from);
                     var type = $(presence).attr('type');
@@ -93,6 +95,7 @@
                         }
                     )
                 );
+                $rootScope.$broadcast('xmppMucConnectedEvent');
         
                 $.ajax({
                     url: Routing.generate(
@@ -186,6 +189,22 @@
                         ),
                         type: 'POST'
                     });
+                },
+                getRoom: function () {
+
+                    return room;
+                },
+                getRoomName: function () {
+
+                    return roomName;
+                },
+                getRoomId: function () {
+
+                    return roomId;
+                },
+                getXmppMucHost: function () {
+                    
+                    return xmppMucHost;
                 }
             };
         }

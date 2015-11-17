@@ -1,25 +1,29 @@
+audio_only: Audio seulement
+audio_video: Audio & video
 ban: Bannir
 bosh_server_port: Port pour le serveur BOSH
 chat: Chat
 chat_account_not_activated_msg: Votre compte pour le Chat n'est pas activé
 chat_accounts_creation: Création de comptes pour le Chat
 chat_configuration: Configuration du Chat
-chat_room_closed: Fermé
 chat_room_closed_msg: La Chat room est fermée
 chat_room_configuration: Configuration de la Chat room
 chat_room_id: Identifiant de la Chat room
-chat_room_open: Ouvert
-chat_room_uninitialized: Non initialisé
 chat_room_uninitialized_msg: La Chat room n'est pas encore accessible
 chat_room_unknown_status_msg: Le statut de la Chat room est inconnu
 chat_username: Identifiant pour le Chat
+closed: Fermé
 create_chat_accounts: Créer des comptes pour le Chat
 has_joined_the_chat_room: a rejoint la Chat room
 has_left_the_chat_room: a quitté la Chat room
 host: Hôte
 muc_host: Serveur MUC
 mute: Muet
+open: Ouvert
 port: Port
 search_chat_users_infos: Une recherche doit être effectuée pour afficher les utilisateurs ayant un compte pour le Chat.
 select_users_for_chat_account_generation: Sélectionnez les utilisateurs pour lesquels vous désirez créer un compte pour le Chat
 status: Statut
+text_only: Texte seulement
+type: Type
+uninitialized: Non initialisé

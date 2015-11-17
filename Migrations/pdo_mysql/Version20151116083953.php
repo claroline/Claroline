@@ -8,12 +8,16 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/11/12 11:06:00
+ * Generation date: 2015/11/16 08:39:56
  */
-class Version20151112110538 extends AbstractMigration
+class Version20151116083953 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->addSql("
+            ALTER TABLE claro_chatbundle_room_resource 
+            ADD room_type INT NOT NULL
+        ");
         $this->addSql("
             ALTER TABLE claro_chatbundle_room_message 
             ADD message_type INT NOT NULL
@@ -25,6 +29,10 @@ class Version20151112110538 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_chatbundle_room_message 
             DROP message_type
+        ");
+        $this->addSql("
+            ALTER TABLE claro_chatbundle_room_resource 
+            DROP room_type
         ");
     }
 }

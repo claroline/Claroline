@@ -12,32 +12,23 @@
 namespace Claroline\ChatBundle\Form;
 
 use Claroline\ChatBundle\Entity\ChatRoom;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class ChatRoomConfigurationType extends AbstractType
 {
-    private $configHandler;
-    private $translator;
-
-    public function __construct(
-        PlatformConfigurationHandler $configHandler,
-        TranslatorInterface $translator
-    )
-    {
-        $this->configHandler = $configHandler;
-        $this->translator = $translator;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $typesList = array(
+            ChatRoom::TEXT => 'text_only',
+            ChatRoom::AUDIO => 'audio_only',
+            ChatRoom::VIDEO => 'audio_video'
+        );
         $statusList = array(
-            ChatRoom::UNINITIALIZED => $this->translator->trans('chat_room_uninitialized', array(), 'chat'),
-            ChatRoom::OPEN => $this->translator->trans('chat_room_open', array(), 'chat'),
-            ChatRoom::CLOSED => $this->translator->trans('chat_room_closed', array(), 'chat'),
+            ChatRoom::UNINITIALIZED => 'uninitialized',
+            ChatRoom::OPEN => 'open',
+            ChatRoom::CLOSED => 'closed'
         );
 
         $builder->add(
@@ -46,6 +37,14 @@ class ChatRoomConfigurationType extends AbstractType
             array(
                 'label' => 'chat_room_id',
                 'disabled' => true
+            )
+        );
+        $builder->add(
+            'roomType',
+            'choice',
+            array(
+                'label' => 'type',
+                'choices' => $typesList
             )
         );
         $builder->add(

@@ -10,7 +10,8 @@
 (function () {
     'use strict';
 
-    angular.module('XmppModule').factory('XmppService', ['$rootScope',
+    angular.module('XmppModule').factory('XmppService', [
+        '$rootScope',
         function ($rootScope) {
             var connection = null;
             var username = null;

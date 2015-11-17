@@ -25,6 +25,10 @@ class ChatRoom extends AbstractResource
     const OPEN = 1;
     const CLOSED = 2;
 
+    CONST TEXT = 0;
+    CONST AUDIO = 1;
+    CONST VIDEO = 2;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -41,6 +45,11 @@ class ChatRoom extends AbstractResource
      * @ORM\Column(type="integer", name="room_status")
      */
     protected $roomStatus = self::UNINITIALIZED;
+
+    /**
+     * @ORM\Column(type="integer", name="room_type")
+     */
+    protected $roomType = self::TEXT;
 
     /**
      * @ORM\OneToMany(
@@ -83,6 +92,16 @@ class ChatRoom extends AbstractResource
     public function setRoomStatus($roomStatus)
     {
         $this->roomStatus = $roomStatus;
+    }
+
+    public function getRoomType()
+    {
+        return $this->roomType;
+    }
+
+    public function setRoomType($roomType)
+    {
+        $this->roomType = $roomType;
     }
 
     public function getMessages()

@@ -10,7 +10,9 @@
 (function () {
     'use strict';
 
-    angular.module('ChatRoomModule').controller('ChatRoomInputCtrl', ['$scope', 'XmppMucService',
+    angular.module('ChatRoomModule').controller('ChatRoomInputCtrl', [
+        '$scope', 
+        'XmppMucService',
         function ($scope, XmppMucService) {
             $scope.input = '';
 

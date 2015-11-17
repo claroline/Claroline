@@ -10,7 +10,8 @@
 (function () {
     'use strict';
 
-    angular.module('ChatRoomModule').directive('chatRoom', ['XmppMucService',
+    angular.module('ChatRoomModule').directive('chatRoom', [
+        'XmppMucService',
         function (XmppMucService) {
             return {
                 restrict: 'E',
