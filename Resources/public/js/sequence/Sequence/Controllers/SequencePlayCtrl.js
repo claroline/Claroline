@@ -9,23 +9,30 @@
 
             this.sequence = {};
             this.currentStep = {};
+            this.user;
             //this.steps = {};
             this.nbAttempts = 1;
             this.isLastStep = false;
             this.isFirstStep = true;
             this.paper = {};
             this.isFinished = false;
+            this.isLastStep = false;
+
+            this.setSequence = function (sequence) {
+                this.sequence = sequence;
+                CommonService.setSequence(sequence);
+            };
 
             /**
              * Init the sequence
              * @param {object} sequence
              * @param {object} sequence paper
              * @param {number} number of attempts already done
+             * @param {number} user id
              */
-            this.init = function (sequence, paper, nbAttempts) {
+            this.init = function (sequence, paper, nbAttempts, user) {
 
                 // shuffle each question choices order if needed
-                // TODO handle number of questions to keep
                 for (var i = 0; i < sequence.steps.length; i++) {
                     // shuffle step question order
                     if (sequence.meta.random && sequence.steps[i].items.length > 1) {
@@ -42,6 +49,7 @@
                 // need to set the sequence and paper in CommonService so that other directives can retrieve the data
                 this.sequence = CommonService.setSequence(sequence);
                 this.paper = CommonService.setPaper(paper);
+                this.user = CommonService.setUser(user);
                 //this.steps = sequence.steps;
                 this.nbAttempts = nbAttempts;
                 // set current step
@@ -127,10 +135,11 @@
                 } else if (action && action === 'goto' && index !== undefined) {
                     newIndex = index;
                     this.saveAnswerAndGotTo(newIndex, studentData);
-                } else if (action && action === 'end' || action === 'interrupt' ) {
+                } else if (action && action === 'end' || action === 'interrupt') {
                     // save the entire paper and redirect to paper details (correction)
                     var interrupted = action === 'interrupt';
-                    var promise = SequenceService.endSequence(this.sequence.id, studentData.paper, interrupted);
+                    // var promise = SequenceService.endSequence(this.sequence.id, studentData.paper, interrupted);
+                    var promise = SequenceService.endSequence(studentData.paper);
                     promise.then(function (result) {
                         if (this.checkCorrectionAvailability() && action !== 'interrupt') {
                             // go to paper correction view
@@ -142,7 +151,6 @@
                             var url = CommonService.generateUrl('exercise-home', this.sequence.id);
                             $window.location = url;
                         }
-                        //this.isFinished = true;
                     }.bind(this));
                 } else {
                     var url = Routing.generate('ujm_sequence_error');
@@ -155,15 +163,21 @@
              * @param {type} nextStepIndex
              */
             this.saveAnswerAndGotTo = function (nextStepIndex, studentData) {
-                // save answer only or whole paper ??
-                var promise = SequenceService.recordAnswer(this.sequence.id, studentData);
-                promise.then(function (result) {
-                    // result.data.id = recorded answer id ??? but do we need this ? any answer id can be retrieved by ujm_response.paper_id + ujm_response.question_id
+
+                if (studentData.answers.length > 0) {
+                    var promise = SequenceService.submitAnswer(this.paper.id, studentData);
+                    promise.then(function (result) {
+                        // change current step
+                        this.setCurrentStep(nextStepIndex);
+                        // update paper question = this.currentStep.items[0]
+                        CommonService.getCurrentQuestionPaperData(this.currentStep.items[0]);
+                    }.bind(this));
+                } else {
                     // change current step
                     this.setCurrentStep(nextStepIndex);
                     // update paper question = this.currentStep.items[0]
                     CommonService.getCurrentQuestionPaperData(this.currentStep.items[0]);
-                }.bind(this));
+                }
             };
 
 
@@ -175,7 +189,7 @@
                 var correctionMode = CommonService.getCorrectionMode(this.sequence.correctionMode);
                 switch (correctionMode) {
                     case "test-end":
-                        return true;                       
+                        return true;
                         break;
                     case "last-try":
                         // check if current try is the last one ? -> currentAttemptNumber === sequence.maxAttempts - 1 ?
@@ -193,7 +207,7 @@
                         return false;
                 }
 
-            }
+            };
         }
     ]);
 })();

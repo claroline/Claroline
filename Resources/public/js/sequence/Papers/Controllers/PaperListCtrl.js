@@ -2,22 +2,24 @@
     'use strict';
 
     angular.module('PapersApp').controller('PaperListCtrl', [
-        '$routeParams',
-        '$window',
         '$filter',
         'CommonService',
-        'paperListPromise',
-        function ($routeParams, $window, $filter, CommonService, paperListPromise) {
+        'paperList',
+        'paperExercise',
+        function ($filter, CommonService, paperList, paperExercise) {
 
-            this.papers = paperListPromise.data.papers;
-            this.sequence = paperListPromise.data.sequence;
+            console.log(paperExercise);
+            console.log(paperList);
+            this.papers = paperList.papers;
+            this.questions = paperList.questions;
+            this.exercise = paperExercise;
+            // table data
             this.filtered = this.papers;
             this.query = '';
-            this.exoId = $routeParams.eid;
             this.showPagination = true;
 
 
-
+            // table config
             this.config = {
                 itemsPerPage: 10,
                 fillLastPage: false,
@@ -59,10 +61,11 @@
 
             /**
              * Checks if we can display the correction link
+             * For now the API does not return the needed data so...
              * @returns {bool}
              */
             this.checkCorrectionAvailability = function (paper) {
-                var correctionMode = CommonService.getCorrectionMode(this.sequence.meta.correctionMode);
+                var correctionMode = 'test-end';//CommonService.getCorrectionMode(this.exercise.meta.correctionMode);
                 var nbFinishedAttempts = this.countFinishedAttempts();
                 switch (correctionMode) {
                     case "test-end":
@@ -70,7 +73,7 @@
                         break;
                     case "last-try":
                         // number of paper with date end === sequence.maxAttempts ?
-                        return nbFinishedAttempts === this.sequence.meta.maxAttempts;
+                        return nbFinishedAttempts === this.exercise.meta.maxAttempts;
                         break;
                     case "after-date":
                         var current = new Date();
@@ -97,9 +100,11 @@
 
             this.setTableData = function () {
                 for (var i = 0; i < this.filtered.length; i++) {
-                    // set scores
+                    // set scores in paper object
+                    // could do the same with user ??
                     if (this.filtered[i].end) { // TODO check score availability
-                        this.filtered[i].score = CommonService.getPaperScore(this.filtered[i]);
+                        this.filtered[i].score = CommonService.getPaperScore2(this.filtered[i], this.questions);
+                        //CommonService.getPaperScore(this.filtered[i])
                     }
                 }
             };
