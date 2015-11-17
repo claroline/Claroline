@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Claroline Connect package
  *
@@ -9,7 +8,6 @@
  *
  * Date: 11/16/15
  */
-
 namespace Icap\FormulaPluginBundle\Listener;
 
 use Claroline\CoreBundle\Event\InjectJavascriptEvent;
