@@ -38,6 +38,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Innova\CollecticielBundle\Event\Log\LogDropzoneAddCommentEvent;
+
+
+
 
 class CorrectionController extends DropzoneBaseController
 {
@@ -2039,41 +2043,44 @@ class CorrectionController extends DropzoneBaseController
     public function AddCommentsInnovaAction(Document $document, User $user, Dropzone $dropzone, Correction $correction)
     {
 
-
-echo "je suis ici dans AddComments";die();
         $em = $this->getDoctrine()->getManager();
-
         // Valorisation du commentaire
         $comment = new Comment();
         $comment->setDocument($document);
         $comment->setUser($user);
-
         $form = $this->get('form.factory')->createBuilder(new CommentType(), $comment)->getForm();
-
         // Récupération de la saisie du commentaire
         $request = $this->get('request');
-
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
-
             if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-
             // Insertion en base du commentaire
             $em->persist($comment);
             $em->flush();
+
+
+            $dropzoneManager = $this->get('innova.manager.dropzone_manager');
+
+
+            // Envoi notification. InnovaERV
+            $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
+            $event = new LogDropzoneAddCommentEvent($dropzone, $dropzone->getManualState(), $usersIds);
+            $this->get('event_dispatcher')->dispatch('log', $event);
+
+
+
+
+
+
             }
         }
-
         // Ajouter la création du log de la création du commentaire. InnovaERV.
         $unitOfWork = $em->getUnitOfWork();
         $unitOfWork->computeChangeSets();
         $dropzoneChangeSet = $unitOfWork->getEntityChangeSet($dropzone);
-
         $event = new LogCommentCreateEvent($dropzone, $dropzoneChangeSet, $comment);
-
         $this->dispatch($event);
-
         // Redirection vers la page des commentaires. InnovaERV.
         return $this->redirect(
             $this->generateUrl(
@@ -2087,5 +2094,7 @@ echo "je suis ici dans AddComments";die();
             )
         );
     }
+
+
 
 }
