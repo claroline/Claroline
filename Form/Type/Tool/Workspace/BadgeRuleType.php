@@ -80,10 +80,7 @@ class BadgeRuleType extends AbstractType
             ->add('occurrence', 'integer', array('attr' => array('class' => 'input-sm')))
             ->add('result', 'text')
             ->add('resource', 'resourcePicker', array(
-                    'required' => false,
-                    'attr' => array(
-                        'data-restrict-for-owner' => 1
-                    )
+                    'required' => false
                 )
             )
             ->add(
