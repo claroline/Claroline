@@ -20,8 +20,8 @@
                     var deferred = $q.defer();
                     $http
                             .get(
-                                    Routing.generate('ujm_get_hint_content', {id: _id})
-                                    )
+                                Routing.generate('ujm_get_hint_content', {id: _id})
+                            )
                             .success(function (response) {
                                 deferred.resolve(response);
                             })

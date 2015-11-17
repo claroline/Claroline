@@ -41,7 +41,7 @@ class SequenceController extends Controller
         print_r($exo);die;*/
 
         // FAKE Data for development!!
-        $exo = $this->getExercise(2, 'choice');
+        $exo = $this->getExercise(2, 'match');
         $data = json_encode($exo);
 
         $previousPaper = array(
