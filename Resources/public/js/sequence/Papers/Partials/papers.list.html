@@ -1,17 +1,17 @@
 <div class="panel panel-default">
     <div class="panel-heading clearfix">
-        <h5 class="panel-title pull-left">{{ 'paper_list'|trans:{}:'ujm_sequence' }} - {{paperListCtrl.sequence.meta.title}}</h5>
+        <h5 class="panel-title pull-left">{{ 'paper_list'|trans:{}:'ujm_sequence' }} - {{paperListCtrl.exercise.meta.title}}</h5>
     </div>
     <div class="panel-body">
         <!-- links row (back, Docimologie, csv export) -->
         <div class="row">
             <div class="col-md-12">
                 <div class="btn-group" role="group">
-                    <a class="btn btn-default" data-ng-href="{{paperListCtrl.generateUrl('exercise-home', paperListCtrl.exoId)}}">{{ 'link_exercice_home'|trans:{}:'ujm_sequence' }}</a>
-                    <a class="btn btn-default" data-ng-href="{{paperListCtrl.generateUrl('papers-docimolgy', paperListCtrl.exoId)}}">{{ 'link_exercise_docimology'|trans:{}:'ujm_sequence' }}</a>
-                    <a class="btn btn-default" data-ng-href="{{paperListCtrl.generateUrl('papers-csv-export', paperListCtrl.exoId)}}">{{ 'link_csv_export'|trans:{}:'ujm_sequence' }}</a>
+                    <a class="btn btn-default" data-ng-href="{{paperListCtrl.generateUrl('exercise-home', paperListCtrl.exercise.id)}}">{{ 'link_exercice_home'|trans:{}:'ujm_sequence' }}</a>
+                    <a class="btn btn-default" data-ng-href="{{paperListCtrl.generateUrl('papers-docimolgy', paperListCtrl.exercise.id)}}">{{ 'link_exercise_docimology'|trans:{}:'ujm_sequence' }}</a>
+                    <a class="btn btn-default" data-ng-href="{{paperListCtrl.generateUrl('papers-csv-export', paperListCtrl.exercise.id)}}">{{ 'link_csv_export'|trans:{}:'ujm_sequence' }}</a>
                 </div>
-                <a class="btn btn-primary pull-right" href="{{paperListCtrl.generateUrl('exercise-play', paperListCtrl.exoId)}}">
+                <a class="btn btn-primary pull-right" href="{{paperListCtrl.generateUrl('exercise-play', paperListCtrl.exercise.id)}}">
                     <i class="fa fa-check-square-o">{{ 'link_exercise_retry'|trans:{}:'ujm_sequence' }}</i>
                 </a>
             </div>
@@ -59,7 +59,7 @@
                             </td>
                             <td at-attribute="id" at-title="{{ 'paper_list_table_action'|trans:{}:'ujm_sequence' }}">
                                 
-                                <a data-ng-if="paperListCtrl.checkCorrectionAvailability(item)" href="#/{{paperListCtrl.exoId}}/{{item.id}}">{{ 'paper_list_table_action'|trans:{}:'ujm_sequence' }}</a>
+                                <a data-ng-if="paperListCtrl.checkCorrectionAvailability(item)" href="#/{{paperListCtrl.exercise.id}}/{{item.id}}">{{ 'paper_list_table_action'|trans:{}:'ujm_sequence' }}</a>
                                 <span data-ng-if="!paperListCtrl.checkCorrectionAvailability(item)">{{ 'paper_list_table_action_not_available'|trans:{}:'ujm_sequence' }}</span>
                             </td>
                             <td at-attribute="score" at-sortable at-title="{{ 'paper_list_table_score'|trans:{}:'ujm_sequence' }}">

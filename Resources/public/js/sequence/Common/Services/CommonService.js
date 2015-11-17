@@ -11,6 +11,7 @@
 
             this.sequence = {};
             this.paper = {};
+            this.user;
             this.currentQuestion = {};
             this.currentAnswer = {};
             this.currentQuestionPaperData = {};
@@ -46,12 +47,15 @@
                 setStudentData: function (question, currentQuestionPaperData) {
                     this.currentQuestion = question;
                     // this will automatically update the paper object
-                    this.currentQuestionPaperData = currentQuestionPaperData;
+                    if (currentQuestionPaperData) {
+                        this.currentQuestionPaperData = currentQuestionPaperData;
+                    }
                 },
                 getStudentData: function () {
                     return{
                         question: this.currentQuestion,
-                        paper: this.paper
+                        paper: this.paper,
+                        answers: this.currentQuestionPaperData.answer
                     };
                 },
                 setPaper: function (paper) {
@@ -61,6 +65,13 @@
                 getPaper: function () {
                     return this.paper;
                 },
+                setUser: function (id) {
+                    this.user = id;
+                    return this.user;
+                },
+                getUser: function () {
+                    return this.user;
+                },
                 /**
                  * return paper anwser(s) and used hints for the current question
                  * @param {type} id question id
@@ -69,7 +80,7 @@
                 getCurrentQuestionPaperData: function (question) {
                     // search for an existing answer to the question in paper
                     for (var i = 0; i < this.paper.questions.length; i++) {
-                        if (this.paper.questions[i].id === question.id) {
+                        if (this.paper.questions[i].id === question.id.toString()) {
                             this.currentQuestionPaperData = this.paper.questions[i];
                             return this.currentQuestionPaperData;
                         }
@@ -212,6 +223,80 @@
                     //return (round($toBeAdjusted / 0.5) * 0.5);
                     score = studentPoints * 20 / totalPoints;
                     return score > 0 ? (Math.round(score / 0.5) * 0.5) : 0;
+                },
+                getPaperScore2: function (paper, questions) {
+
+
+                    var score = 0.0; // final score
+                    var totalPoints = this.getExerciseTotalScore(questions);
+                    var studentPoints = 0.0; // good answers
+
+                    for (var i = 0; i < paper.questions.length; i++) {
+                        // paper question item contains student answer, used hints
+                        var currentPaperQuestion = paper.questions[i];
+
+                        // for each given answer
+                        for (var j = 0; j < currentPaperQuestion.answer.length; j++) {
+                            var id = currentPaperQuestion.answer[j];
+                            studentPoints += this.getAnswerScore(id, questions);
+                        }
+                        // for each used hints
+                        for (var k = 0; k < currentPaperQuestion.hints.length; k++) {
+                            // find hint penalty in questions collection
+                            var penalty = this.getHintPenalty(currentPaperQuestion.hints[k], questions);
+                            // remove penalty value from student points
+                            studentPoints -= penalty;
+                        }
+                    }
+                    score = studentPoints * 20 / totalPoints;
+                    return score > 0 ? (Math.round(score / 0.5) * 0.5) : 0;
+                },
+                getExerciseTotalScore: function (questions) {
+                    var nbQuestions = questions.length;
+                    var score = 0.0;
+                    for (var i = 0; i < nbQuestions; i++) {
+                        var currentQuestion = questions[i];
+
+                        // update exercise total points
+                        for (var j = 0; j < currentQuestion.solutions.length; j++) {
+                            // update total points for the sequence
+                            score += currentQuestion.solutions[j].score;
+                        }
+                    }
+                    console.log('exercise total score ' + score);
+                    return score;
+                },
+                getHintPenalty: function (searched, questions) {
+                    var nbQuestions = questions.length;
+                    var penalty = 0.0;
+                    for (var i = 0; i < nbQuestions; i++) {
+                        var currentQuestion = questions[i];
+                        if (currentQuestion.hints) {
+                            // update exercise total points
+                            for (var j = 0; j < currentQuestion.hints.length; j++) {
+                                if (currentQuestion.hints[j].id === searched) {
+                                    penalty = currentQuestion.hints[j].penalty;
+                                }
+                            }
+                        }
+                    }
+                    console.log('penalty ' + penalty);
+                    return penalty;
+                },
+                getAnswerScore: function (searched, questions) {
+                    var nbQuestions = questions.length;
+                    var score = 0.0;
+                    for (var i = 0; i < nbQuestions; i++) {
+                        var currentQuestion = questions[i];
+                        // update exercise total points
+                        for (var j = 0; j < currentQuestion.solutions.length; j++) {
+                            if (currentQuestion.solutions[j].id === searched) {
+                                score = currentQuestion.solutions[j].score;
+                            }
+                        }
+                    }
+                    console.log('question score ' + score);
+                    return score;
                 }
             };
         }

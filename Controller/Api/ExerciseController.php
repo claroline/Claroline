@@ -59,7 +59,7 @@ class ExerciseController
      * Exports the full representation of an exercise (including solutions)
      * in a JSON format.
      *
-     * @EXT\Route("/exercises/{id}")
+     * @EXT\Route("/exercises/{id}", name="exercise_get")
      *
      * @param Exercise $exercise
      * @return JsonResponse
@@ -94,7 +94,7 @@ class ExerciseController
     /**
      * Records an answer to an exercise question.
      *
-     * @EXT\Route("/papers/{paperId}/questions/{questionId}")
+     * @EXT\Route("/papers/{paperId}/questions/{questionId}", name="exercise_submit_answer")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("user", converter="current_user")
      * @EXT\ParamConverter("paper", class="UJMExoBundle:Paper", options={"mapping": {"paperId": "id"}})
@@ -110,7 +110,8 @@ class ExerciseController
     {
         $this->assertHasPaperAccess($user, $paper);
 
-        $data = $request->request->all();
+        $data = $request->request->get('data');
+        
         $errors = $this->questionManager->validateAnswerFormat($question, $data);
 
         if (count($errors) !== 0) {
@@ -126,7 +127,7 @@ class ExerciseController
      * Returns the value of a question hint, and records the fact that it has
      * been consulted within the context of a given paper.
      *
-     * @EXT\Route("/papers/{paperId}/hints/{hintId}")
+     * @EXT\Route("/papers/{paperId}/hints/{hintId}", name="exercice_hint")
      * @EXT\ParamConverter("user", converter="current_user")
      * @EXT\ParamConverter("paper", class="UJMExoBundle:Paper", options={"mapping": {"paperId": "id"}})
      * @EXT\ParamConverter("hint", class="UJMExoBundle:Hint", options={"mapping": {"hintId": "id"}})
@@ -150,7 +151,7 @@ class ExerciseController
     /**
      * Marks a paper as finished.
      *
-     * @EXT\Route("/papers/{id}/end")
+     * @EXT\Route("/papers/{id}/end", name="exercise_finish_paper")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("user", converter="current_user")
      *
@@ -172,7 +173,7 @@ class ExerciseController
     /**
      * Returns all the papers associated with an exercise for the current user.
      *
-     * @EXT\Route("/exercises/{id}/papers")
+     * @EXT\Route("/exercises/{id}/papers", name="exercise_papers")
      * @EXT\ParamConverter("user", converter="current_user")
      *
      * @param User      $user

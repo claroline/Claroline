@@ -17,6 +17,7 @@
         'ngBootbox',
         'angular-table',
         'Common',
+        'Sequence',
         'Paper'
     ]);
 
@@ -45,7 +46,7 @@
          /**
          * Get the exercise papers
          */
-        paperListPromise: [
+        paperList: [
             '$route',
             'PapersService',
             function getPapers($route, PapersService) {                             
@@ -53,6 +54,21 @@
                 var promise = null;
                 if ($route.current.params && $route.current.params.eid) {
                     promise = PapersService.getAll($route.current.params.eid);
+                    
+                }
+                return promise;
+
+            }
+        ],
+        
+        paperExercise:[
+            '$route',
+            'SequenceService',
+            function getSequence($route, SequenceService) {                             
+
+                var promise = null;
+                if ($route.current.params && $route.current.params.eid) {
+                    promise = SequenceService.get($route.current.params.eid);
                     
                 }
                 return promise;
@@ -83,7 +99,6 @@
                     .otherwise({
                         redirectTo: '/:eid'
                     });
-            //$locationProvider.html5Mode({enabled:true, requireBase:false});
             // please wait spinner config
             cfpLoadingBarProvider.latencyThreshold = 200;
             cfpLoadingBarProvider.includeBar = false;

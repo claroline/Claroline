@@ -16,7 +16,9 @@
                     var deferred = $q.defer();
                     $http
                             .get(
-                                    Routing.generate('ujm_get_exercise_papers', {id: exoId})
+                            //exercise_papers        
+                            Routing.generate('exercise_papers', {id: exoId})
+                            //Routing.generate('ujm_get_exercise_papers', {id: exoId})
                                     )
                             .success(function (response) {
                                 deferred.resolve(response);

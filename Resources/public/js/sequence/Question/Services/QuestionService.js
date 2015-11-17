@@ -9,18 +9,22 @@
         '$filter',
         '$q',
         '$window',
-        function QuestionService($http, $filter, $q, $window) {
+        'CommonService',
+        function QuestionService($http, $filter, $q, $window, CommonService) {
 
             return {
                 /**
                  * Get an hint
                  * @returns promise
                  */
-                getHint: function (_id) {
+                getHint: function (hid) {
                     var deferred = $q.defer();
+                    var paper = CommonService.getPaper();
                     $http
                             .get(
-                                    Routing.generate('ujm_get_hint_content', {id: _id})
+                                    //Routing.generate('ujm_get_hint_content', {id: _id})
+                                    Routing.generate('exercice_hint', {paperId: paper.id, hintId: hid})
+                                    //exercice_hint
                                     )
                             .success(function (response) {
                                 deferred.resolve(response);

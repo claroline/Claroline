@@ -198,6 +198,7 @@ class QcmHandler implements QuestionHandlerInterface
         if (!is_array($data)) {
             return ['Answer data must be an array, ' . gettype($data) . ' given'];
         }
+        $count = 0;
 
         if (0 === $count = count($data)) {
             return ['Answer data cannot be empty'];
@@ -210,6 +211,7 @@ class QcmHandler implements QuestionHandlerInterface
         }, $interaction->getChoices()->toArray());
 
         foreach ($data as $id) {
+            //var_dump($id);
             if (!is_string($id)) {
                 return ['Answer array must contain only string identifiers'];
             }
@@ -218,7 +220,7 @@ class QcmHandler implements QuestionHandlerInterface
                 return ['Answer array identifiers must reference question choices'];
             }
         }
-
+//die;
         if ($interaction->getTypeQCM()->getCode() === 2 && $count > 1) {
             return ['This question does not allow multiple answers'];
         }

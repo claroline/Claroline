@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-12">
         <h4>{{question.title}}</h4>
-        <h5>{{question.label}}</h5>
+        <h5>{{question.label}}</h5>        
         <hr/>
         <!-- Question choices row -->
         <div data-ng-if="choiceQuestionCtrl.question.choices" class="question-row">
@@ -36,7 +36,7 @@
                         </div>
                     </div>
                     <div data-ng-repeat="used in choiceQuestionCtrl.usedHints" id="visible-hints">
-                        <h4>{{used.text}}</h4>
+                        <h4>{{used}}</h4>
                     </div>
                 </div>
             </div>

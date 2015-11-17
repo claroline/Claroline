@@ -12,13 +12,17 @@
             this.multipleChoice = {};
             this.uniqueChoice = [];
             this.currentQuestionPaperData = {};
-            this.usedHints = [];// contains full hints object(s) for display
+            this.usedHints = [];// contains hints texts
 
             this.init = function (question) {
-                // get used hints infos (id + content) + checked answer(s) for the current step / question
                 // those data are updated by view and sent to common service as soon as they change
                 this.currentQuestionPaperData = CommonService.getCurrentQuestionPaperData(question);
+                console.log('this.currentQuestionPaperData');
+                console.log(this.currentQuestionPaperData);
                 this.question = question;
+                // init student data question object
+                CommonService.setStudentData(question);
+
                 if (this.currentQuestionPaperData.hints.length > 0) {
                     // init used hints display
                     for (var i = 0; i < this.currentQuestionPaperData.hints.length; i++) {
@@ -68,7 +72,8 @@
             this.getHintData = function (id) {
                 var promise = QuestionService.getHint(id);
                 promise.then(function (result) {
-                    this.usedHints.push(result.data);
+                    //console.log(result);
+                    this.usedHints.push(result);
 
                 }.bind(this));
             };
@@ -96,7 +101,7 @@
                         }
                     }
                 }
-                // send the data to commen service so that other directives can get them
+                // send the data to common service so that other directives can get them
                 this.updateStudentData();
             };
 
@@ -155,7 +160,9 @@
                     }
                 }
                 else {
-                    this.currentQuestionPaperData.answer[0] = this.uniqueChoice;
+                    if (this.uniqueChoice.length > 0) { 
+                        this.currentQuestionPaperData.answer[0] = this.uniqueChoice;
+                    }
                 }
                 CommonService.setStudentData(this.question, this.currentQuestionPaperData);
             };
