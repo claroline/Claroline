@@ -18,7 +18,7 @@
                 <li class="badge_picker_item{% if isSelected %} selected{% endif %}">
                     <input type="checkbox" name="badge_{{ badge.id }}" value="{{ badge.id }}"
                         {% if isSelected %} checked="checked"{% endif %} class="hidden"
-                           data-icon="{{ asset(badge.webPath) }}"
+                           data-icon="{{ badge.webPath }}"
                            data-text="{{ badge.name }}"/>
                     <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="badge_image" />
                     <span>{{ badge.name }}</span>
@@ -37,7 +37,7 @@
 
 <script type="text/javascript">
     $(function(){
-        var modalElement      = $(".badge_picker_modal");
+        var modalElement = $(".badge_picker_modal");
         var multipleSelection = $(".badge_picker_list").data('multiple');
 
         $(".badge_picker_item").click(function (event) {

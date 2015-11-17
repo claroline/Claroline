@@ -73,6 +73,13 @@ class UserBadge
     protected $comment;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(name="is_shared", type="boolean")
+     */
+    protected $isShared = false;
+
+    /**
      * @param int $id
      *
      * @return UserBadge
@@ -218,5 +225,25 @@ class UserBadge
     public function getComment()
     {
         return $this->comment;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isIsShared()
+    {
+        return $this->isShared;
+    }
+
+    /**
+     * @param boolean $isShared
+     *
+     * @return UserBadge
+     */
+    public function setIsShared($isShared)
+    {
+        $this->isShared = $isShared;
+
+        return $this;
     }
 }

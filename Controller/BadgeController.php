@@ -111,4 +111,34 @@ class BadgeController extends Controller
             'value'    => $value
         );
     }
+
+    /**
+     * @Route("/badge/{username}/{badgeSlug}", name="icap_badge_badge_share_view")
+     * @Template
+     */
+    public function shareViewAction(Request $request, $username, $badgeSlug)
+    {
+        $userBadge = $this->getDoctrine()->getRepository('IcapBadgeBundle:UserBadge')->findOneByUsernameAndBadgeSlug($username, $badgeSlug);
+
+        if ($userBadge === null) {
+            throw $this->createNotFoundException("Cannot found badge.");
+        }
+
+        if (!$userBadge->isIsShared()) {
+            throw $this->createNotFoundException("Badge not shared.");
+        }
+
+        if (!$this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            $showBanner = false;
+        }
+        else {
+            $showBanner = ($this->getUser() === $userBadge->getUser());
+        }
+
+        return array(
+            'userBadge' => $userBadge,
+            'user' => $userBadge->getUser(),
+            'showBanner' => $showBanner
+        );
+    }
 }

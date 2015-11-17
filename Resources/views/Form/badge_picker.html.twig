@@ -31,6 +31,12 @@
 
 {% block badgepicker_widget %}
     {% spaceless %}
+        {% stylesheets debug=false filter="lessphp, cssmin" output="css/icapbadge/badge_picker_field.css"
+            "@IcapBadgeBundle/Resources/views/less/badge_picker.less"
+        %}
+            <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+        {% endstylesheets %}
+
         <div class="badge_picker">
             {% if multiple %}
                 <div id="{{ id }}" data-prototype="<div class=&quot;form-collection-element&quot;><input type=&quot;hidden&quot; id=&quot;{{ id }}___name___id&quot; name=&quot;{{ full_name }}[__name__][id]&quot;/></div>">
@@ -71,6 +77,7 @@
         <script type="text/javascript" src="{{ asset('bundles/icapbadge/js/badge_picker.js') }}"></script>
         <script type="text/javascript">
             $(function(){
+                var assetPath = "{{ asset('') }}";
                 $("#badgepicker_{{ id }}").click(function() {
                 {% if multiple %}
                     var value = [];
@@ -100,7 +107,7 @@
                                 .html(selectedBadge.text)
                                 .removeClass('hide');
                             $(".badge_image", badgeSelectionField)
-                                .attr('src', selectedBadge.icon)
+                                .attr('src', assetPath + selectedBadge.icon)
                                 .attr('alt', selectedBadge.text)
                                 .removeClass('hide');
                             $(".no_badge_selected").addClass('hide');
