@@ -23,6 +23,7 @@ use Cocur\Slugify\Slugify;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Innova\CollecticielBundle\Event\Log\LogDropzoneValidateDocumentEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropzoneManualStateChangedEvent;
 
 class DocumentController extends DropzoneBaseController
 {
@@ -236,6 +237,8 @@ class DocumentController extends DropzoneBaseController
         $em->persist($document);
         $em->flush();
 
+//echo "Document ajouté : " . $document->getId();die();
+
         $event = new LogDocumentCreateEvent($dropzone, $drop, $document);
         $this->dispatch($event);
     }
@@ -256,6 +259,7 @@ class DocumentController extends DropzoneBaseController
 
 //        echo "suis ici ajout document";die();
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $dropzoneManager = $this->get('innova.manager.dropzone_manager');
 
         $formType = null;
         if ($documentType == 'url') {
@@ -282,6 +286,13 @@ class DocumentController extends DropzoneBaseController
 
             if ($form->isValid()) {
                 $this->createDocument($dropzone, $drop, $form, $documentType);
+
+                // Envoi notification. InnovaERV
+                $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
+                var_dump("logdrop");
+                var_dump($usersIds);
+                $event = new LogDropzoneManualStateChangedEvent($dropzone, $dropzone->getManualState(), $usersIds);
+                $this->get('event_dispatcher')->dispatch('log', $event);
 
 /*
 InnoERV : demande de JJQ dans son document d'août 2015
