@@ -22,6 +22,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Cocur\Slugify\Slugify;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Innova\CollecticielBundle\Event\Log\LogDropzoneValidateDocumentEvent;
 
 class DocumentController extends DropzoneBaseController
 {
@@ -253,7 +254,7 @@ class DocumentController extends DropzoneBaseController
     {
 
 
-        echo "suis ici ajout document";die();
+//        echo "suis ici ajout document";die();
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
         $formType = null;
@@ -469,21 +470,49 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
         $dropId = $document->getDrop()->getId();
 //var_dump("dropId = " . $dropId);
 
-        $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop')
-        ->findBy(array('id' => $dropId));
-//var_dump($dropRepo);
-//var_dump($dropRepo[0]->getDropZone());
+        $dropRepo = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Drop');
+        $drops = $dropRepo->findBy(array('id' => $dropId));
+
+//        $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop')
+//        ->findBy(array('id' => $dropId));
+
+//echo "<pre>";
+//var_dump($drops[0]->getDropzone()->getId());
+//echo "</pre>";
+
+        $dropzoneRepo = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:DropZone');
+        $dropzones = $dropzoneRepo->findBy(array('id' => $drops[0]->getDropzone()->getId()));
+
+//echo "<pre>";
+//var_dump($dropzones[0]->getResourceNode()->getId());
+//var_dump($dropzones[0]->getResourceNode()->getName());
+//echo "</pre>";
+
 //die();
+//var_dump($drops->getDropzone()->getId());
 
 //        $dropzoneRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:DropZone')
 //        ->findBy(array('id' => $dropRepo->getDropzone()->getId()));
-
 
         // Mise à jour de la base de données
         $em->persist($doc);
         $em->flush();
 
-        $usersIds = $document->getSender();
+//        $usersIds = array();
+//        $usersIds[] = $document->getSender();
+
+        $dropzoneManager = $this->get('innova.manager.dropzone_manager');
+
+//var_dump($dropzones[0]);
+
+        // Envoi notification. InnovaERV
+        $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzones[0]);
+
+//var_dump($usersIds);
+//die();
+        $event = new LogDropzoneValidateDocumentEvent($document, $dropzones[0], $usersIds);
+        $this->get('event_dispatcher')->dispatch('log', $event);
+
 //        $event = new LogDropzoneManualRequestSentEvent($document, "titi", $usersIds, $dropzone);
 //        $this->get('event_dispatcher')->dispatch('log', $event);
 //var_dump("LOG OK !!!!!!!!!!");

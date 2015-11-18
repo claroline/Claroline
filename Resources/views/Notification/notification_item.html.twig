@@ -28,6 +28,10 @@
         {#    ADD COMMENT  #}
         {% include 'InnovaCollecticielBundle:Notification:notification_dropzone_add_comment.html.twig' %}
 
+    {% elseif constant('Innova\\CollecticielBundle\\Event\\Log\\LogDropzoneValidateDocumentEvent::ACTION') == notification.actionKey %}
+        {#    VALIDATE DOCUMENT  #}
+        {% include 'InnovaCollecticielBundle:Notification:notification_dropzone_validate_document.html.twig' %}
+
     {% elseif constant('Innova\\CollecticielBundle\\Event\\Log\\LogDropEndEvent::ACTION') == notification.actionKey %}
         {#    DROP END  #}
         {% include 'InnovaCollecticielBundle:Notification:notification_drop_end.html.twig' %}

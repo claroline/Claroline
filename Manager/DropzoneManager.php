@@ -44,7 +44,11 @@ class DropzoneManager
      */
     public function getDropzoneUsersIds(Dropzone $dropzone)
     {
-        $this->container->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
+
+        echo "dans getDropzoneUsersIdsssssssssss<br />";
+//        $this->container->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
+
+        echo "<br />suite";
 
         //getting the ressource node
         $ressourceNode = $dropzone->getResourceNode();

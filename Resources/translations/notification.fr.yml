@@ -5,3 +5,4 @@ resource-innova_collecticiel-dropzone_manual_state_changed: '%name% a %newState%
 resource-innova_collecticiel-drop_end: 'a déposé une copie dans l''évaluation %dropzone%'
 resource-innova_collecticiel-dropzone_manual_request_sent: 'Une demande de commentaire a été transmise par %newState%'
 resource-innova_collecticiel-dropzone_add_comment: '%name% a déposé un nouveau commentaire dans `%type%`'
+resource-innova_collecticiel-dropzone_validate_document: '%name% vous a adressé une demande de commentaire/évaluation dans `%type%`'
