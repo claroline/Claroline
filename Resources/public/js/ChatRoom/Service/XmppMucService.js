@@ -18,6 +18,7 @@
             var roomId = null;
             var roomName = null;
             var xmppMucHost = null;
+            var users = [];
 
             var onRoomMessage = function (message) {
                 var from = $(message).attr('from');
@@ -205,6 +206,16 @@
                 getXmppMucHost: function () {
                     
                     return xmppMucHost;
+                },
+                getUsers: function () {
+                    
+                    return users;
+                },
+                addUser: function (userDatas) {
+                    users.push(userDatas);
+                },
+                removeUser: function (index) {
+                    users.splice(index, 1);
                 }
             };
         }

@@ -99,7 +99,7 @@ class ChatController extends Controller
     public function chatRoomOpenAction(User $authenticatedUser, ChatRoom $chatRoom)
     {
         $this->checkChatRoomRight($chatRoom, 'OPEN');
-        $this->chatManager->iniChatRoom($chatRoom);
+        $this->chatManager->initChatRoom($chatRoom);
         $xmppHost = $this->platformConfigHandler->getParameter('chat_xmpp_host');
         $xmppMucHost = $this->platformConfigHandler->getParameter('chat_xmpp_muc_host');
         $boshPort = $this->platformConfigHandler->getParameter('chat_bosh_port');
