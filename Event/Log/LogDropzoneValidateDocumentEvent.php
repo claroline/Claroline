@@ -64,9 +64,9 @@ echo "</pre>";
         return array(self::DISPLAYED_WORKSPACE);
     }
 
-    public function getDocument()
+    public function getDropzone()
     {
-        return $this->$document;
+        return $this->$dropzone;
     }
 
     /**
@@ -135,7 +135,7 @@ echo "</pre>";
             'type' => $this->type
         );
 
-var_dump($notificationDetails);        
+//var_dump($notificationDetails);        
 //die();
 
         return $notificationDetails;
