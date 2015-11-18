@@ -3,8 +3,7 @@
     'use strict';
 
     angular.module('Question').directive('matchQuestion', [
-        '$timeout',
-        function ($timeout) {
+        function () {
             return {
                 restrict: 'E',
                 replace: true,
@@ -23,48 +22,6 @@
                     $("#resetAll").click(function() {
                         jsPlumb.detachEveryConnection();
                     });
-                    
-                    // $(element)
-/*
-                    $timeout(function () {
-                        $(".origin").each(function () {
-                            console.log('jojo ');
-                        });
-                    }, 1000);
-                    
-                    $(".droppable").each(function () {
-                        console.log("trucbidule");
-                    });
-                    
-                    $(".all").each(function () {
-                        console.log("écris bordel");
-                    });
-                    console.log("modif");
-*/
-                    /*var myelements = element[0].getElementsByClassName('origin');
-                     
-                     console.log(myelements.length);
-                     
-                     for (var i=0; i<myelements.length; i++) {
-                     console.log(myelements[i]);
-                     }
-                     jsPlumb.makeSource(element[0].getElementsByClassName('origin'), {
-                     anchor: "Right",
-                     cssClass: "endPoints",
-                     isSource: true
-                     });*/
-                    /*
-                     jsPlumb.draggable(element, {
-                     start: function () {
-                     console.log('drag start');
-                     },
-                     drag: function (event, ui) {
-                     console.log('drag');
-                     },
-                     stop: function (event, ui) {
-                     console.log('drag stop');
-                     }
-                     });*/
                 }
             };
         }

@@ -20,12 +20,11 @@
                     matchQuestionProposalCtrl.init(attr.proposal);
                     
                     if (element.attr("id").substr(0,9) === "draggable") {
-                        console.log(element.attr("id").substr(0,9));
-                        jsPlumb.makeSource(element, {
+                    /*    jsPlumb.makeSource(element, {
                             anchor: "Right",
                             cssClass: "endPoints",
                             isSource: true
-                        });
+                        });*/
                         
                         jsPlumb.addEndpoint(element, {
                             anchor: 'RightMiddle',
@@ -34,13 +33,12 @@
                             maxConnections: -1
                         });
                     }
-                    else {
-                        console.log(element.attr("id").substr(0,9));
+                    else {/*
                         jsPlumb.makeTarget(element, {
                             anchor: "Left",
                             cssClass: "endPoints",
                             isTarget: true
-                        });
+                        });*/
                         
                         jsPlumb.addEndpoint(element, {
                             anchor: 'LeftMiddle',
@@ -49,45 +47,6 @@
                             maxConnections: -1
                         });
                     }
-                    
-                    
-                    /*
-                    // $(element)
-
-                    $timeout(function () {
-                        $(".origin").each(function () {
-                            console.log('jojo ');
-                        });
-                    }, 1000);
-                    
-                    $(".droppable").each(function () {
-                        console.log("trucbidule");
-                    });
-
-                    /*var myelements = element[0].getElementsByClassName('origin');
-                     
-                     console.log(myelements.length);
-                     
-                     for (var i=0; i<myelements.length; i++) {
-                     console.log(myelements[i]);
-                     }
-                     jsPlumb.makeSource(element[0].getElementsByClassName('origin'), {
-                     anchor: "Right",
-                     cssClass: "endPoints",
-                     isSource: true
-                     });*/
-                    /*
-                     jsPlumb.draggable(element, {
-                     start: function () {
-                     console.log('drag start');
-                     },
-                     drag: function (event, ui) {
-                     console.log('drag');
-                     },
-                     stop: function (event, ui) {
-                     console.log('drag stop');
-                     }
-                     });*/
                 }
             };
         }

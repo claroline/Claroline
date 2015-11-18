@@ -9,3 +9,20 @@
 ._jsPlumb_endpoint {
     cursor: default;
 }
+
+.origin {
+    background-color: #f9f9f9;
+    margin: 10px;
+    max-width: 400px;
+    min-width: 200px;
+    padding: 10px;
+}
+
+.droppable {
+    background-color: #f9f9f9;
+    margin: 10px;
+    max-width: 400px;
+    min-height: 50px;
+    min-width: 200px;
+    padding: 10px;
+}
