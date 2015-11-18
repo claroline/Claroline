@@ -70,6 +70,10 @@
 
                     return connection;
                 },
+                getXmppHost: function () {
+                  
+                    return xmppHost;
+                },
                 getUsername: function () {
 
                     return username;

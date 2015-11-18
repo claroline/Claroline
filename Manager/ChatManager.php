@@ -67,13 +67,13 @@ class ChatManager
         $this->om->remove($chatUser);
     }
 
-    public function iniChatRoom(ChatRoom $chatRoom)
+    public function initChatRoom(ChatRoom $chatRoom)
     {
         $roomName = $chatRoom->getRoomName();
 
         if (empty($roomName)) {
             $guid = $chatRoom->getResourceNode()->getGuid();
-            $chatRoom->setRoomName($guid);
+            $chatRoom->setRoomName(strtolower($guid));
             $this->om->persist($chatRoom);
             $this->om->flush();
         }

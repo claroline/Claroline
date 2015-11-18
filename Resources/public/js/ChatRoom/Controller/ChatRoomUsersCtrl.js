@@ -13,7 +13,8 @@
     angular.module('ChatRoomModule').controller('ChatRoomUsersCtrl', [
         '$scope', 
         '$rootScope',
-        function ($scope, $rootScope) {
+        'XmppMucService',
+        function ($scope, $rootScope, XmppMucService) {
             $scope.users = [];
 
             $scope.addUser = function (username, name, color) {
@@ -28,9 +29,10 @@
                 }
 
                 if (!isPresent) {
+                    XmppMucService.addUser({username: username, name: name, color: color});
                     $scope.users.push({username: username, name: name, color: color});
                     $scope.$apply();
-                    $rootScope.$broadcast('newPresenceEvent', {name: name, status: 'connection'});
+                    $rootScope.$broadcast('newPresenceEvent', {username: username, name: name, status: 'connection'});
                 }
             };
 
@@ -41,9 +43,11 @@
 
                     if (username === currentUsername) {
                         var currentName = $scope.users[i]['name'];
+                        var currentUsername = $scope.users[i]['username'];
+                        XmppMucService.removeUser(i);
                         $scope.users.splice(i, 1);
                         $scope.$apply();
-                        $rootScope.$broadcast('newPresenceEvent', {name: currentName, status: 'disconnection'});
+                        $rootScope.$broadcast('newPresenceEvent', {username: currentUsername, name: currentName, status: 'disconnection'});
                         break;
                     }
                 }
