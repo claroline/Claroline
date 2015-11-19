@@ -52,10 +52,10 @@ var videoTracks = null;
                     console.log('using video device "' + $scope.localStream.getVideoTracks()[i].label + '"');
                 }
                 // mute video on firefox and recent canary
-                $('#minivideo')[0].muted = true;
-                $('#minivideo')[0].volume = 0;
+                $('#my-video')[0].muted = true;
+                $('#my-video')[0].volume = 0;
 
-                RTC.attachMediaStream($('#minivideo'), $scope.localStream);
+                RTC.attachMediaStream($('#my-video'), $scope.localStream);
 
 //                doConnect();
 
@@ -164,8 +164,8 @@ var videoTracks = null;
                 console.log('------------------------------------------------');
                 setStatus('call active ' + sid);
 //                videoelem[0].style.display = 'inline-block';
-                $(videoelem).appendTo('#largevideocontainer');
-                arrangeVideos('#largevideocontainer >');
+                $(videoelem).appendTo('#participants-video-container');
+//                arrangeVideos('#participants-video-container >');
                 connection.jingle.sessions[sid].getStats(1000);
             }
 
@@ -174,8 +174,8 @@ var videoTracks = null;
                 if (Object.keys(connection.jingle.sessions).length === 0) {
                     setStatus('all calls terminated');
                 }
-                $('#largevideocontainer #largevideo_' + sid).remove();
-                arrangeVideos('#largevideocontainer >');
+                $('#participants-video-container #participant-video-' + sid).remove();
+//                arrangeVideos('#participants-video-container >');
             }
             
             function waitForRemoteVideo(selector, sid) {
@@ -192,13 +192,13 @@ var videoTracks = null;
 
             function onRemoteStreamAdded(event, data, sid) {
                 setStatus('Remote stream for session ' + sid + ' added.');
-                if ($('#largevideo_' + sid).length !== 0) {
+                if ($('#participant-video-' + sid).length !== 0) {
                     console.log('ignoring duplicate onRemoteStreamAdded...'); // FF 20
                     return;
                 }
                 // after remote stream has been added, wait for ice to become connected
                 // old code for compat with FF22 beta
-                var el = $("<video autoplay='autoplay' style='display:none'/>").attr('id', 'largevideo_' + sid);
+                var el = $("<video autoplay='autoplay'/>").attr('id', 'participant-video-' + sid);
                 RTC.attachMediaStream(el, data.stream);
                 waitForRemoteVideo(el, sid);
                 /* does not yet work for remote streams -- https://code.google.com/p/webrtc/issues/detail?id=861
@@ -218,6 +218,11 @@ var videoTracks = null;
             function onIceConnectionStateChanged(event, sid, sess) {
                 console.log('ice state for', sid, sess.peerconnection.iceConnectionState);
                 console.log('sig state for', sid, sess.peerconnection.signalingState);
+                
+                if (sess.peerconnection.iceConnectionState === 'disconnected') {
+                    connection.jingle.sessions[sid].terminate('disconnected');
+                    $('#participants-video-container #participant-video-' + sid).remove();
+                }
                 // works like charm, unfortunately only in chrome and FF nightly, not FF22 beta
                 /*
                 if (sess.peerconnection.signalingState == 'stable' && sess.peerconnection.iceConnectionState == 'connected') {
@@ -232,6 +237,12 @@ var videoTracks = null;
                 setStatus('webrtc did not encounter stun candidates, NAT traversal will not work');
                 console.warn('webrtc did not encounter stun candidates, NAT traversal will not work');
             }
+            
+            function connectToPeers() {
+                var connectedUsers = XmppMucService.getUsers();
+                console.log('Connected users');
+                console.log(connectedUsers);
+            }
 
             $rootScope.$on('xmppMucConnectedEvent', function (event) {
 //                var connection = XmppService.getConnection();
@@ -240,6 +251,9 @@ var videoTracks = null;
                 connection = XmppService.getConnection();
                 roomjid = XmppMucService.getRoom();
                 myUsername = XmppService.getUsername();
+                
+                connectToPeers();
+                
                 RTC = setupRTC();
                 getUserMediaWithConstraints(['audio', 'video']);
                 $(document).bind('mediaready.jingle', onMediaReady);
@@ -270,19 +284,28 @@ var videoTracks = null;
                 RTCPeerconnection = RTC.peerconnection;
             });
 
-            $scope.$on('newPresenceEvent', function (event, presenceDatas) {
-                var status = presenceDatas['status'];
+//            $scope.$on('newPresenceEvent', function (event, presenceDatas) {
+//                var status = presenceDatas['status'];
+//                
+//                if (status === 'connection' && presenceDatas['username'] !== myUsername) {
+//                    connection.jingle.initiate(
+//                        roomjid + '/' + presenceDatas['username'],
+//                        roomjid + '/' + myUsername
+//                    );
+//                }
+//            });
+            
+            $scope.$on('myPresenceConfirmationEvent', function () {
+                var allUsers = XmppMucService.getUsers();
                 
-                if (status === 'connection' && presenceDatas['username'] !== myUsername) {
-                    connection.jingle.initiate(
-                        roomjid + '/' + presenceDatas['username'],
-                        roomjid + '/' + myUsername
-                    );
-//                    console.log(XmppService.getXmppHost());
-//                    console.log(XmppMucService.getRoom());
-//                    console.log(XmppMucService.getUsers());
-//                    console.log('salut ' + presenceDatas['username']);
-//                    connection.jingle.initiate(list_members[i], myroomjid);
+                for (var i = 0; i < allUsers.length; i++) {
+                    
+                    if (myUsername && allUsers[i]['username'] !== myUsername) {
+                        var x = connection.jingle.initiate(
+                            roomjid + '/' + allUsers[i]['username'],
+                            roomjid + '/' + myUsername
+                        );
+                    }
                 }
             });
         }
