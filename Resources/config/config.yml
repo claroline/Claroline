@@ -18,3 +18,4 @@ plugin:
             - action: resource-innova_collecticiel-dropzone_manual_state_changed
             - action: resource-innova_collecticiel-dropzone_add_comment
             - action: resource-innova_collecticiel-dropzone_validate_document
+            - action: resource-innova_collecticiel-dropzone_add_document

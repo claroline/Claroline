@@ -2065,9 +2065,10 @@ class CorrectionController extends DropzoneBaseController
                 $dropzoneManager = $this->get('innova.manager.dropzone_manager');
 
                 // Envoi notification. InnovaERV
-                $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
-//                $usersIds = array();
-//                $usersIds[] = 1;
+//                $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
+                $usersIds = array();
+                $usersIds[] = $dropzone->getResourceNode()->getCreator()->getId();
+                $usersIds[] = $document->getSender()->getId();
                 $event = new LogDropzoneAddCommentEvent($dropzone, $dropzone->getManualState(), $usersIds);
                 $this->get('event_dispatcher')->dispatch('log', $event);
             }

@@ -23,7 +23,7 @@ use Cocur\Slugify\Slugify;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Innova\CollecticielBundle\Event\Log\LogDropzoneValidateDocumentEvent;
-use Innova\CollecticielBundle\Event\Log\LogDropzoneManualStateChangedEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropzoneAddDocumentEvent;
 
 class DocumentController extends DropzoneBaseController
 {
@@ -241,6 +241,8 @@ class DocumentController extends DropzoneBaseController
 
         $event = new LogDocumentCreateEvent($dropzone, $drop, $document);
         $this->dispatch($event);
+
+        return $document;
     }
 
     /**
@@ -285,13 +287,18 @@ class DocumentController extends DropzoneBaseController
             $form->handleRequest($this->getRequest());
 
             if ($form->isValid()) {
-                $this->createDocument($dropzone, $drop, $form, $documentType);
+                $newDocument = $this->createDocument($dropzone, $drop, $form, $documentType);
 
+var_dump($newDocument->getId());die();
                 // Envoi notification. InnovaERV
-                $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
-                var_dump("logdrop");
+//                $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
+//                var_dump("logdrop");
+                $usersIds = array();
+                $usersIds[] = $dropzone->getResourceNode()->getCreator()->getId();
+//                $usersIds[] = $document->getSender()->getId();
                 var_dump($usersIds);
-                $event = new LogDropzoneManualStateChangedEvent($dropzone, $dropzone->getManualState(), $usersIds);
+
+                $event = new LogDropzoneAddDocumentEvent($dropzone, $dropzone->getManualState(), $usersIds);
                 $this->get('event_dispatcher')->dispatch('log', $event);
 
 /*
