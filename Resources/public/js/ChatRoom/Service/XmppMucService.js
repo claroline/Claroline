@@ -66,6 +66,10 @@
                         firstName + ' ' + lastName :
                         username;
 
+                    if (username === XmppService.getUsername()) {
+                        $rootScope.$broadcast('myPresenceConfirmationEvent');
+                    }
+                    
                     if (type === 'unavailable') {
                         $rootScope.$broadcast('userDisconnectionEvent', username);
                     } else {
