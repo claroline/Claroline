@@ -48,9 +48,9 @@ abstract class QtiExport
 
     /**
      * Generate object tags for the attached files.
-     * 
+     *
      * @access protected
-     * 
+     *
      */
     protected function objetcTags()
     {
@@ -109,7 +109,7 @@ abstract class QtiExport
 
     /**
      * add the tag outcomeDeclaration to the node.
-     * 
+     *
      * @access protected
      */
     protected function qtiOutComeDeclaration()
@@ -130,17 +130,16 @@ abstract class QtiExport
     protected function qtiFeedBack($feedBack)
     {
         $this->modalFeedback = $this->document->CreateElement('modalFeedback');
-        $this->modalFeedback->setAttribute('outcomeIdentifier', 'FEEDBACK');
-        $this->modalFeedback->setAttribute('identifier', 'COMMENT');
-        $this->modalFeedback->setAttribute('showHide', 'show');
-        if(strpos($feedBack, '<img') !== false) {
-            $feedBack = $this->qtiImage($feedBack);
-            $feedBackNew = $this->document->importNode($feedBack, true);
+        $this->modalFeedback->setAttribute("outcomeIdentifier","FEEDBACK");
+        $this->modalFeedback->setAttribute("identifier","COMMENT");
+        $this->modalFeedback->setAttribute("showHide","show");
+
+        $body = $this->qtiExportObject($feedBack);
+        foreach ($body->childNodes as $child) {
+            $feedBackNew = $this->document->importNode($child, true);
             $this->modalFeedback->appendChild($feedBackNew);
-        } else {
-            $modalFeedbacktxt = $this->document->importNode($feedBack, true);
-            $this->modalFeedback->appendChild($modalFeedbacktxt);
         }
+
         $this->node->appendChild($this->modalFeedback);
     }
 
@@ -162,7 +161,7 @@ abstract class QtiExport
             $this->itemBody->appendChild($describeTag);
         }
     }
-    
+
     /**
      * Managing the resource export, format QTI
      * @param String $str
@@ -176,7 +175,7 @@ abstract class QtiExport
         $body = $dom->getElementsByTagName('body')->item(0);
         return $body;
     }
-    
+
     /**
      * Export atached file
      * @access private
@@ -231,15 +230,34 @@ abstract class QtiExport
 
         return $response;
     }
-    
+
+    /**
+     * add the dom in a DomElement
+     *
+     * @access protected
+     *
+     * @param DOMElement $domEl
+     * @param String $label
+     *
+     */
+    protected function getDomEl($domEl, $label)
+    {
+       //Managing the resource export
+        $body = $this->qtiExportObject($label);
+        foreach ($body->childNodes as $child) {
+            $labelNew = $this->document->importNode($child, true);
+            $domEl->appendChild($labelNew);
+        }
+    }
+
     /**
      * Convert img tag to object tag
-     * @access private
+     * @access protected
      *
      * @param \DOMDocument $DOMdoc
      *
      */
-    private function imgToObject($DOMdoc)
+    protected function imgToObject($DOMdoc)
     {
         $tagsImg = $DOMdoc->getElementsByTagName('img');
         foreach ($tagsImg as $img) {
@@ -263,12 +281,12 @@ abstract class QtiExport
     }
     /**
      * Convert a tag to object tag
-     * @access private
+     * @access protected
      *
      * @param \DOMDocument $DOMdoc
      *
      */
-    private function aToObject($DOMdoc)
+    protected function aToObject($DOMdoc)
     {
         $aTags = $DOMdoc->getElementsByTagName('a');
         foreach ($aTags as $aTag) {
