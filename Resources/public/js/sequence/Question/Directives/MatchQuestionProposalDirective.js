@@ -19,13 +19,10 @@
                     matchQuestionProposalCtrl.setProposal(attr.proposal);
                     matchQuestionProposalCtrl.init(attr.proposal);
                     
+                    console.log(element);
+                    console.log(element.attr);
+                    
                     if (element.attr("id").substr(0,9) === "draggable") {
-                    /*    jsPlumb.makeSource(element, {
-                            anchor: "Right",
-                            cssClass: "endPoints",
-                            isSource: true
-                        });*/
-                        
                         jsPlumb.addEndpoint(element, {
                             anchor: 'RightMiddle',
                             cssClass: "endPoints",
@@ -33,13 +30,7 @@
                             maxConnections: -1
                         });
                     }
-                    else {/*
-                        jsPlumb.makeTarget(element, {
-                            anchor: "Left",
-                            cssClass: "endPoints",
-                            isTarget: true
-                        });*/
-                        
+                    else {
                         jsPlumb.addEndpoint(element, {
                             anchor: 'LeftMiddle',
                             cssClass: "endPoints",
@@ -47,6 +38,8 @@
                             maxConnections: -1
                         });
                     }
+                    
+                    jsPlumb.detachEveryConnection();
                 }
             };
         }
