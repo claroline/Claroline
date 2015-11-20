@@ -28,5 +28,6 @@
     $(window).unload(function(){
         console.log('disconnecting...');
         angular.element(document.getElementById('chat-room-main')).scope().disconnect();
+        console.log('unloaded');
     });
 })();
