@@ -18,7 +18,10 @@
     {{ parent() }}
 
     {# Translations #}
-    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'chat' }) }}"></script>
+    <script type="text/javascript"
+            src="{{ url('bazinga_jstranslation_js', { 'domain': 'chat' }) }}"
+    >
+    </script>
     
     <script type="text/javascript"
             src="{{ asset('bundles/clarolinechat/js/strophejs-1.2.3/strophe.min.js') }}"

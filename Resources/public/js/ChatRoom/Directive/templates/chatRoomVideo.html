@@ -1,5 +1,7 @@
 <div id="chat-room-video" ng-controller="ChatRoomVideoCtrl">
     <div id='participants-video-container'>
+        <div ng-repeat="stream in streams" id="participant-stream-{{ stream }}">
+        </div>
     </div>
     <div id='my-video-container'>
         <video id='my-video' autoplay='autoplay'></video>

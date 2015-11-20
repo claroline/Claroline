@@ -50,6 +50,7 @@
             };
 
             var onRoomPresence = function (presence) {
+                console.log(presence);
                 var from = $(presence).attr('from');
                 var roomName = Strophe.getBareJidFromJid(from);
                 
@@ -148,6 +149,7 @@
                     connection.send(
                         $pres({
                             to: room + "/" + XmppService.getUsername(),
+                            from: XmppService.getUsername() + "@" + XmppService.getXmppHost() + '/' + roomName,
                             type: "unavailable"
                         })
                     );
