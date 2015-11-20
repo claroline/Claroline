@@ -106,6 +106,8 @@ unregister_group_from_cursus_confirm_message: 'Are you sure you want to unregist
 unregister_group_from_session: 'Unregister group from session'
 unregister_group_from_session_message: 'Are you sure you want to unregister this group from this session ?'
 unregister_learner_from_session: 'Unregister learner from session'
+unregister_selected_groups: 'Unregister selected groups'
+unregister_selected_groups_message: 'Are you sure you want to unregister the selected groups ?'
 unregister_tutor_from_session: 'Unregister tutor from session'
 unregister_user_from_cursus_confirm_message: 'Are you sure you want to unregister this user from this cursus ?'
 unregister_user_from_session: 'Unregister user from session'

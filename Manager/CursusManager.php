@@ -588,6 +588,19 @@ class CursusManager
         $this->om->endFlushSuite();
     }
 
+    public function unregisterGroupsFromCursus(array $cursusGroups)
+    {
+        $this->om->startFlushSuite();
+
+        foreach ($cursusGroups as $cursusGroup) {
+            $this->unregisterGroupFromCursus(
+                $cursusGroup->getCursus(),
+                $cursusGroup->getGroup()
+            );
+        }
+        $this->om->endFlushSuite();
+    }
+
     public function updateCursusParentAndOrder(
         Cursus $cursus,
         Cursus $parent = null,
