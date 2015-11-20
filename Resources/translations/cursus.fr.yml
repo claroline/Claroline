@@ -108,6 +108,8 @@ unregister_group_from_session_message: 'Êtes-vous sûr de vouloir désinscrire 
 unregister_learner_from_session: 'Désinscrire l''apprenant de la session'
 unregister_selected_groups: 'Désinscrire les groupes sélectionnés'
 unregister_selected_groups_message: 'Êtes-vous sûr de vouloir désinscrire les groupes sélectionnés ?'
+unregister_selected_users: 'Désinscrire les utilisateurs sélectionnés'
+unregister_selected_users_message: 'Êtes-vous sûr de vouloir désinscrire les utilisateurs sélectionnés ?'
 unregister_tutor_from_session: 'Désinscrire le tuteur de la session'
 unregister_user_from_cursus_confirm_message: 'Êtes-vous sûr de vouloir désinscrire cet utilisateur de ce cursus ?'
 unregister_user_from_session: 'Désinscrire l''utilisateur de la session'

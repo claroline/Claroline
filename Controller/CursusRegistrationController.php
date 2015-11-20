@@ -696,6 +696,27 @@ class CursusRegistrationController extends Controller
 
     /**
      * @EXT\Route(
+     *     "cursus/{cursus}/users/delete",
+     *     name="claro_cursus_users_delete",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *     "users",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"multipleIds" = true, "name" = "userIds"}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function cursusUsersDeleteAction(Cursus $cursus, array $users)
+    {
+        $this->checkToolAccess();
+        $this->cursusManager->unregisterUsersFromCursus($cursus, $users);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
      *     "cursus/group/{cursusGroup}/delete",
      *     name="claro_cursus_group_delete",
      *     options={"expose"=true}

@@ -23,6 +23,17 @@
         }
     }
     
+    function activateUsersUnregistrationBtn()
+    {
+        var nbChecked = $('.chk-user-item:checked').length;
+        
+        if (nbChecked > 0) {
+            $('#unregister-selected-users-btn').removeClass('disabled');
+        } else {
+            $('#unregister-selected-users-btn').addClass('disabled');
+        }
+    }
+    
     $('#register-groups-btn').on('click', function () {
         var title = Translator.trans('register_groups_to_cursus', {}, 'cursus');
 
@@ -330,13 +341,40 @@
         params.cursusGroupIds = ids;
         var route = Routing.generate('claro_cursus_groups_delete');
         route += '?' + $.param(params);
-         console.log(route);           
         window.Claroline.Modal.confirmRequest(
             route,
             refreshPage,
             null,
             Translator.trans('unregister_selected_groups_message', {}, 'cursus'),
             Translator.trans('unregister_selected_groups', {}, 'cursus')
+        );
+    });
+    
+    $('#check-all-users').on('click', function () {
+        var checked = $(this).prop('checked');
+        $('.chk-user-item').prop('checked', checked);
+        activateUsersUnregistrationBtn();
+    });
+    
+    $('.chk-user-item').on('change', function () {
+        activateUsersUnregistrationBtn();
+    });
+    
+    $('#unregister-selected-users-btn').on('click', function () {
+        var ids = [];
+        $('.chk-user-item:checked').each(function () {
+            ids.push(parseInt($(this).val()));
+        });
+        var params = {};
+        params.userIds = ids;
+        var route = Routing.generate('claro_cursus_users_delete', {cursus: cursusId});
+        route += '?' + $.param(params);
+        window.Claroline.Modal.confirmRequest(
+            route,
+            refreshPage,
+            null,
+            Translator.trans('unregister_selected_users_message', {}, 'cursus'),
+            Translator.trans('unregister_selected_users', {}, 'cursus')
         );
     });
 
