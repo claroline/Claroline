@@ -2454,6 +2454,37 @@ class CursusManager
         );
     }
 
+    public function getUnregisteredGroupsBySession(
+        CourseSession $session,
+        $groupType,
+        $search = '',
+        $orderedBy = 'name',
+        $order = 'ASC',
+        $withPager = true,
+        $page = 1,
+        $max = 50
+    )
+    {
+        $groups = empty($search) ?
+            $this->sessionGroupRepo->findUnregisteredGroupsBySession(
+                $session,
+                $groupType,
+                $orderedBy,
+                $order
+            ) :
+            $this->sessionGroupRepo->findSearchedUnregisteredGroupsBySession(
+                $session,
+                $groupType,
+                $search,
+                $orderedBy,
+                $order
+            );
+
+        return $withPager ?
+            $this->pagerFactory->createPagerFromArray($groups, $page, $max) :
+            $groups;
+    }
+
 
     /**************************************************************
      * Access to CourseSessionRegistrationQueueRepository methods *
