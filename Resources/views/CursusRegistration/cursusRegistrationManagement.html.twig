@@ -165,14 +165,24 @@
                         <div id="groups-list" class="table-responsive">
                             <table id="groups-list-table" class="table">
                                 <tr>
+                                    <th><input type="checkbox" name="all-groups" id="check-all-groups"/></th>
                                     <th>{{ 'name'|trans({}, 'platform') }}</th>
                                     <th>{{ 'registration_date'|trans({}, 'cursus') }}</th>
-                                    <th></th>
+                                    <th class="text-center">
+                                        <button id="unregister-selected-groups-btn"
+                                                class="btn btn-default disabled"
+                                        >
+                                            {{ 'unregister_selected_groups'|trans({}, 'cursus') }}
+                                        </button>
+                                    </th>
                                 </tr>
 
                                 {% for cursusGroup in cursusGroups %}
                                     {% set group = cursusGroup.getGroup() %}
                                     <tr id="row-group-{{ cursusGroup.getId() }}">
+                                        <td>
+                                            <input type="checkbox" value="{{ cursusGroup.getId() }}" class="chk-group-item"/>
+                                        </td>
                                         <td>{{ group.getName() }}</td>
                                         <td>{{ cursusGroup.getRegistrationDate()|intl_date_format }}</td>
                                         <td class="text-center">
@@ -227,16 +237,26 @@
                         <div id="users-list" class="table-responsive">
                             <table id="users-list-table" class="table">
                                 <tr>
+                                    <th><input type="checkbox" name="all-users" id="check-all-users"/></th>
                                     <th>{{ 'firstName'|trans({}, 'platform') }}</th>
                                     <th>{{ 'lastName'|trans({}, 'platform') }}</th>
                                     <th>{{ 'username'|trans({}, 'platform') }}</th>
                                     <th>{{ 'registration_date'|trans({}, 'cursus') }}</th>
-                                    <th></th>
+                                    <th class="text-center">
+                                        <button id="unregister-selected-users-btn"
+                                                class="btn btn-default disabled"
+                                        >
+                                            {{ 'unregister_selected_users'|trans({}, 'cursus') }}
+                                        </button>
+                                    </th>
                                 </tr>
 
                                 {% for cursusUser in cursusUsers %}
                                     {% set user = cursusUser.getUser() %}
                                     <tr id="row-user-{{ cursusUser.getId() }}">
+                                        <td>
+                                            <input type="checkbox" value="{{ user.getId() }}" class="chk-user-item"/>
+                                        </td>
                                         <td>{{ user.getFirstName() }}</td>
                                         <td>{{ user.getLastName() }}</td>
                                         <td>{{ user.getUsername() }}</td>

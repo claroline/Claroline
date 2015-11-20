@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Controller;
 
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -690,6 +691,86 @@ class CourseController extends Controller
     public function courseSessionUserUnregisterAction(CourseSessionUser $sessionUser)
     {
         $this->cursusManager->unregisterUsersFromSession(array($sessionUser));
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/course/session/{session}/registration/unregistered/groups/{groupType}/list/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}",
+     *     name="claro_cursus_course_session_registration_unregistered_groups_list",
+     *     defaults={"groupType"=0, "page"=1, "search"="", "max"=50, "orderedBy"="name","order"="ASC"},
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     *
+     * Displays the list of users who are not registered to the session.
+     *
+     * @param CourseSession $session
+     * @param integer $groupType
+     * @param string  $search
+     * @param integer $page
+     * @param integer $max
+     * @param string  $orderedBy
+     * @param string  $order
+     */
+    public function courseSessionRegistrationUnregisteredGroupsListAction(
+        CourseSession $session,
+        $groupType = 0,
+        $search = '',
+        $page = 1,
+        $max = 50,
+        $orderedBy = 'name',
+        $order = 'ASC'
+    )
+    {
+        $groups = $this->cursusManager->getUnregisteredGroupsBySession(
+            $session,
+            $groupType,
+            $search,
+            $orderedBy,
+            $order,
+            true,
+            $page,
+            $max
+        );
+
+        return array(
+            'session' => $session,
+            'groupType' => $groupType,
+            'groups' => $groups,
+            'search' => $search,
+            'max' => $max,
+            'orderedBy' => $orderedBy,
+            'order' => $order
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/course/session/{session}/register/group/{group}/type/{groupType}",
+     *     name="claro_cursus_course_session_register_group",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     *
+     * @param CourseSession $session
+     * @param Group $group
+     * @param int $groupType
+     */
+    public function courseSessionGroupRegisterAction(
+        CourseSession $session,
+        Group $group,
+        $groupType
+    )
+    {
+        $this->cursusManager->registerGroupToSessions(
+            array($session),
+            $group,
+            $groupType
+        );
 
         return new JsonResponse('success', 200);
     }

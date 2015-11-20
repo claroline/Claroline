@@ -63,6 +63,27 @@
         });
     });
     
+    $('#users-box').on('click', '#register-groups-btn', function () {
+        var sessionId = $(this).data('session-id');
+        var title = Translator.trans('register_groups_to_session', {}, 'cursus');
+
+        $.ajax({
+            url: Routing.generate(
+                'claro_cursus_course_session_registration_unregistered_groups_list',
+                {
+                    'session': sessionId,
+                    'groupType': 0
+                }
+            ),
+            type: 'GET',
+            success: function (datas) {
+                $('#view-registration-header').html(title);
+                $('#view-registration-body').html(datas);
+                $('#view-registration-box').modal('show');
+            }
+        });
+    });
+    
     $('#users-box').on('click', '#register-tutors-btn', function () {
         var sessionId = $(this).data('session-id');
         var title = Translator.trans('register_tutors_to_session', {}, 'cursus');
@@ -207,6 +228,27 @@
                         $('#session-tutors-table').append(sessionUserElement);
                     }
                 }
+            }
+        });
+    });
+    
+    $('#view-registration-box').on('click', '.register-group-btn', function () {
+        var groupId = $(this).data('group-id');
+        var sessionId = $(this).data('session-id');
+        var groupType = $(this).data('group-type');
+    
+        $.ajax({
+            url: Routing.generate(
+                'claro_cursus_course_session_register_group',
+                {
+                    'session': sessionId,
+                    'group': groupId,
+                    'groupType': groupType
+                }
+            ),
+            type: 'POST',
+            success: function () {
+                $('#registration-row-group-' + groupId).remove();
             }
         });
     });

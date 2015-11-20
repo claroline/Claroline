@@ -588,6 +588,19 @@ class CursusManager
         $this->om->endFlushSuite();
     }
 
+    public function unregisterGroupsFromCursus(array $cursusGroups)
+    {
+        $this->om->startFlushSuite();
+
+        foreach ($cursusGroups as $cursusGroup) {
+            $this->unregisterGroupFromCursus(
+                $cursusGroup->getCursus(),
+                $cursusGroup->getGroup()
+            );
+        }
+        $this->om->endFlushSuite();
+    }
+
     public function updateCursusParentAndOrder(
         Cursus $cursus,
         Cursus $parent = null,
@@ -2452,6 +2465,37 @@ class CursusManager
             $group,
             $executeQuery
         );
+    }
+
+    public function getUnregisteredGroupsBySession(
+        CourseSession $session,
+        $groupType,
+        $search = '',
+        $orderedBy = 'name',
+        $order = 'ASC',
+        $withPager = true,
+        $page = 1,
+        $max = 50
+    )
+    {
+        $groups = empty($search) ?
+            $this->sessionGroupRepo->findUnregisteredGroupsBySession(
+                $session,
+                $groupType,
+                $orderedBy,
+                $order
+            ) :
+            $this->sessionGroupRepo->findSearchedUnregisteredGroupsBySession(
+                $session,
+                $groupType,
+                $search,
+                $orderedBy,
+                $order
+            );
+
+        return $withPager ?
+            $this->pagerFactory->createPagerFromArray($groups, $page, $max) :
+            $groups;
     }
 
 
