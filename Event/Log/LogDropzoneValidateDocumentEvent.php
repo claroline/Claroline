@@ -35,9 +35,9 @@ class LogDropzoneValidateDocumentEvent extends AbstractLogResourceEvent implemen
         $this->document = $document;
         $this->type = $dropzone->getResourceNode()->getName();
         $this->userIds = $userIds;
-echo "<pre>";
-var_dump($this->userIds);
-echo "</pre>";
+//echo "<pre>";
+//var_dump($this->userIds);
+//echo "</pre>";
 //die();
 
         $this->details = array(
@@ -134,9 +134,6 @@ echo "</pre>";
             'name' => $this->firstName . " " . $this->lastName, // $this->resource->getName(),
             'type' => $this->type
         );
-
-//var_dump($notificationDetails);        
-//die();
 
         return $notificationDetails;
     }

@@ -289,30 +289,23 @@ class DocumentController extends DropzoneBaseController
             if ($form->isValid()) {
                 $newDocument = $this->createDocument($dropzone, $drop, $form, $documentType);
 
-var_dump($dropzone->getResourceNode()->getCreator()->getId());
-var_dump($drop->getUser()->getId());
-var_dump($newDocument->getSender()->getId());
-var_dump($newDocument->getId());
-die();
                 // Envoi notification. InnovaERV
-//                $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
-//                var_dump("logdrop");
                 $usersIds = array();
 
                 // Ici, on récupère le créateur du collecticiel = l'admin
                 $userCreator = $dropzone->getResourceNode()->getCreator()->getId();
-
                 // Ici, on récupère celui qui vient de déposer le nouveau document
-                $userAddDocument = $this->get('security.context')->getToken()->getUser()->getId(); 
-
-                if ($userCreator != $userAddDocument) {
-    //                $usersIds[] = $document->getSender()->getId();
-                    $usersIds[] = $userCreator;
+                //$userAddDocument = $this->get('security.context')->getToken()->getUser()->getId(); 
+                $userDropDocument = $drop->getUser()->getId();
+                $userSenderDocument = $newDocument->getSender()->getId();
+            
+                if ($userCreator == $userSenderDocument) {
+                    // Ici avertir l'étudiant qui a travaillé sur ce collecticiel
+                    $usersIds[] = $userDropDocument;
                 }
                 else {
-    // Ici avertir l'étudiant qui a déjà travaillé sur le collecticiel
-    //                $usersIds[] = $document->getSender()->getId();
-                    $usersIds[] = $userAddDocument;
+                    // Ici avertir celui a qui créé le collecticiel
+                    $usersIds[] = $userCreator;
                 }
                 var_dump($usersIds);
                 $event = new LogDropzoneAddDocumentEvent($dropzone, $dropzone->getManualState(), $usersIds);
