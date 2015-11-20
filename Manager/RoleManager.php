@@ -104,6 +104,8 @@ class RoleManager
         $role->setWorkspace($workspace);
 
         $this->om->persist($role);
+        $workspace->addRole($role);
+        $this->om->persist($workspace);
         $this->om->flush();
 
         return $role;
