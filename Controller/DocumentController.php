@@ -289,15 +289,32 @@ class DocumentController extends DropzoneBaseController
             if ($form->isValid()) {
                 $newDocument = $this->createDocument($dropzone, $drop, $form, $documentType);
 
-var_dump($newDocument->getId());die();
+var_dump($dropzone->getResourceNode()->getCreator()->getId());
+var_dump($drop->getUser()->getId());
+var_dump($newDocument->getSender()->getId());
+var_dump($newDocument->getId());
+die();
                 // Envoi notification. InnovaERV
 //                $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
 //                var_dump("logdrop");
                 $usersIds = array();
-                $usersIds[] = $dropzone->getResourceNode()->getCreator()->getId();
-//                $usersIds[] = $document->getSender()->getId();
-                var_dump($usersIds);
 
+                // Ici, on récupère le créateur du collecticiel = l'admin
+                $userCreator = $dropzone->getResourceNode()->getCreator()->getId();
+
+                // Ici, on récupère celui qui vient de déposer le nouveau document
+                $userAddDocument = $this->get('security.context')->getToken()->getUser()->getId(); 
+
+                if ($userCreator != $userAddDocument) {
+    //                $usersIds[] = $document->getSender()->getId();
+                    $usersIds[] = $userCreator;
+                }
+                else {
+    // Ici avertir l'étudiant qui a déjà travaillé sur le collecticiel
+    //                $usersIds[] = $document->getSender()->getId();
+                    $usersIds[] = $userAddDocument;
+                }
+                var_dump($usersIds);
                 $event = new LogDropzoneAddDocumentEvent($dropzone, $dropzone->getManualState(), $usersIds);
                 $this->get('event_dispatcher')->dispatch('log', $event);
 
