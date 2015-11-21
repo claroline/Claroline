@@ -129,7 +129,6 @@ class SimpleTextWidgetListener
 
         foreach ($resourceInfos['copies'] as $resource) {
             $type = $resource['original']->getResourceType()->getName();
-            var_dump('Replacing link ' . $resource['original']->getId() . ' by ' . $resource['copy']->getId() . ' for ' . $type);
  
             $content = str_replace(
                 '/file/resource/media/' . $resource['original']->getId(),
