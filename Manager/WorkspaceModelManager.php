@@ -668,7 +668,8 @@ class WorkspaceModelManager
                         $resourceNode,
                         $copy->getResourceNode(),
                         $user,
-                        $workspaceRoles
+                        $workspaceRoles,
+                        $resourcesInfos
                     );
                     $resourcesErrors = array_merge_recursive($resourcesErrors, $errors);
                 }
@@ -784,7 +785,8 @@ class WorkspaceModelManager
         ResourceNode $directory,
         ResourceNode $directoryCopy,
         User $user,
-        array $workspaceRoles
+        array $workspaceRoles,
+        &$resourcesInfos
     )
     {
         $this->log('Duplicating directory content...');
@@ -802,6 +804,7 @@ class WorkspaceModelManager
                     false
                 );
                 $copies[] = $copy;
+                $resourcesInfos['copies'][] = array('original' => $child, 'copy' => $copy->getResourceNode());
             } catch (NotPopulatedEventException $e) {
                 $resourcesErrors[] = array(
                     'resourceName' => $child->getName(),
@@ -825,7 +828,8 @@ class WorkspaceModelManager
                     $child,
                     $copy->getResourceNode(),
                     $user,
-                    $workspaceRoles
+                    $workspaceRoles,
+                    $resourcesInfos
                 );
                 $resourcesErrors = array_merge_recursive($resourcesErrors, $errors);
             }

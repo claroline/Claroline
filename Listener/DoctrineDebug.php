@@ -49,13 +49,16 @@ class DoctrineDebug extends ContainerAware
                 $stack = debug_backtrace();
 
                 foreach ($stack as $call) {
+                    if (isset($call['file'])) {
+                        
                     $file = $call['file'];
-                    if ($this->debugLevel === self::DEBUG_CLAROLINE) {
-                        if (strpos($file, 'Claroline')) $this->logTrace($call);
-                    } elseif ($this->debugLevel === self::DEBUG_ALL) {
-                        $this->logTrace($call);
-                    } elseif($this->debugLevel === self::DEBUG_VENDOR) {
-                        if (strpos($file, $this->debugVendor)) $this->logTrace($call);
+                        if ($this->debugLevel === self::DEBUG_CLAROLINE) {
+                            if (strpos($file, 'Claroline')) $this->logTrace($call);
+                        } elseif ($this->debugLevel === self::DEBUG_ALL) {
+                            $this->logTrace($call);
+                        } elseif($this->debugLevel === self::DEBUG_VENDOR) {
+                            if (strpos($file, $this->debugVendor)) $this->logTrace($call);
+                        }
                     }
                 }
 
