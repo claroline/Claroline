@@ -1,0 +1,83 @@
+{% macro renderPager(pager, search, max) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_cursus_sessions_datas_list',
+                'routeParams': {
+                    'search': search,
+                    'max': max
+                }
+            }
+        )
+    }}
+{% endmacro %}
+
+{% macro displaySessionDatas(datas) %}
+    {% set course = datas['course'] %}
+    {% set sessions = datas['sessions'] %}
+
+    <div>
+        <span class="collapsed pointer-hand"
+           role="button"
+           data-toggle="collapse"
+           href="#sessions-{{ course.getId() }}"
+        >
+            {{ course.getTitle() }}
+            <small>
+                [{{ course.getCode() }}]
+            </small>
+            &nbsp;
+            <i class="fa fa-caret-down"></i>
+        </span>
+        <ul id="sessions-{{ course.getId() }}" class="collapse in list-unstyled">
+            
+            {% for session in sessions %}
+                <li>
+                    &nbsp;
+                    &nbsp;
+                    &nbsp;
+                    &nbsp;
+                    <input id="session-chk-{{ session.getId() }}"
+                           class="session-chk"
+                           type="checkbox"
+                           value="{{ session.getId() }}"
+                           data-course-title="{{ course.getTitle() }}"
+                           data-course-code="{{ course.getCode() }}"
+                           data-session-name="{{ session.getName() }}"
+                    >
+                    <label for="session-chk-{{ session.getId() }}" class="pointer-hand">
+                        {{ session.getName() }}
+                    </label>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endmacro %}
+
+{% from _self import renderPager %}
+{% from _self import displaySessionDatas %}
+
+<div id="sessions-list">
+      
+    {% if sessionsDatas|length > 0 %}
+
+        {% if sessionsDatas.getNbPages() > 1 %}
+            {{ renderPager(sessionsDatas, search, max) }}
+        {% endif %}
+        
+        {% for sessionsDatas in sessionsDatas %}
+            {{ displaySessionDatas(sessionsDatas) }}
+        {% endfor %}
+
+        {% if sessionsDatas.getNbPages() > 1 %}
+            {{ renderPager(sessionsDatas, search, max) }}
+        {% endif %}
+    {% else %}
+        <div class="alert alert-warning">
+            {{ 'no_session'|trans({}, 'cursus') }}
+        </div>
+    {% endif %}
+</div>
