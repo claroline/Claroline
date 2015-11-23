@@ -1,0 +1,161 @@
+{% macro displayCourseSessions(datas, type) %}
+    {% set course = datas['course'] %}
+    {% set userSessions = datas['sessions'] %}
+
+    <div>
+        <span class="collapsed pointer-hand"
+           role="button"
+           data-toggle="collapse"
+           href="#sessions-{{ type }}-{{ course.getId() }}"
+        >
+            {{ course.getTitle() }}
+            <small>
+                [{{ course.getCode() }}]
+            </small>
+            &nbsp;
+            <i class="fa fa-caret-down"></i>
+        </span>
+        <ul id="sessions-{{ type }}-{{ course.getId() }}" class="collapse in">
+            
+            {% for userSession in userSessions %}
+                {% set session = userSession.getSession() %}
+                <li id="session-row-{{ userSession.getId() }}">
+                    <span class="label label-primary">
+                        {{ session.getName() }}
+                    </span>
+                    <span class="label label-danger pointer-hand delete-session-user-btn"
+                          data-session-user-id="{{ userSession.getId() }}"
+                          data-type="{{ type }}"
+                    >
+                        <i class="fa fa-trash"></i>
+                    </span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endmacro %}
+
+{% from _self import displayCourseSessions %}
+
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}
+    {{
+        parent() ~
+        ' - ' ~
+        user.getFirstName() ~
+        ' ' ~
+        user.getLastName() ~
+        ' - ' ~
+        'user_sessions_management' | trans({}, 'cursus') | striptags | raw
+    }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'users_management'|trans({}, 'platform'),
+                'href': path('claro_admin_user_list')
+            },
+            {
+                'name': user.getFirstName() ~ ' ' ~ user.getLastName(),
+                'href': path('claro_admin_user_list')
+            },
+            {
+                'name': 'user_sessions_management'|trans({}, 'cursus'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'user_sessions_management'|trans({}, 'cursus') }}
+        </h3>
+    </div>
+    <div class="panel-body">
+        <h3>{{ user.getFirstName() }} {{ user.getLastName() }}</h3>
+        <hr>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" href="#learner-sessions-panel">
+                        {{ 'learner'|trans({}, 'cursus') }}
+                    </a>
+                    <a class="pull-right" href="{{ path('claro_cursus_user_sessions_registration_management', {'user': user.getId(), 'type': 0}) }}">
+                        <i class="fa fa-sign-in"></i>
+                        {{ 'registration'|trans({}, 'platform') }}
+                    </a>
+                </h4>
+            </div>
+            <div id="learner-sessions-panel" class="collapse in">
+                <div class="panel-body">
+                    
+                    {% if learnerSessions|length > 0 %}
+                        
+                        {% for learnerSession in learnerSessions %}
+                            {{ displayCourseSessions(learnerSession, 0) }}
+                        {% endfor %}
+                    {% else %}
+                        <div class="alert alert-warning">
+                            {{ 'no_sessions'|trans({}, 'cursus') }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" href="#tutor-sessions-panel">
+                        {{ 'tutor'|trans({}, 'cursus') }}
+                    </a>
+                    <a class="pull-right" href="{{ path('claro_cursus_user_sessions_registration_management', {'user': user.getId(), 'type': 1}) }}">
+                        <i class="fa fa-sign-in"></i>
+                        {{ 'registration'|trans({}, 'platform') }}
+                    </a>
+                </h4>
+            </div>
+            <div id="tutor-sessions-panel" class="collapse in">
+                <div class="panel-body">
+                    
+                    {% if tutorSessions|length > 0 %}
+                        
+                        {% for tutorSession in tutorSessions %}
+                            {{ displayCourseSessions(tutorSession, 1) }}
+                        {% endfor %}
+                    {% else %}
+                        <div class="alert alert-warning">
+                            {{ 'no_session'|trans({}, 'cursus') }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="user-sessions-datas-box"
+         data-user-id="{{ user.getId() }}"
+    >
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript"
+            src="{{ url('bazinga_jstranslation_js', { 'domain': 'cursus' }) }}"
+    >
+    </script>
+    <script src='{{ asset('bundles/clarolinecursus/js/userSessionsManagement.js') }}'
+            type="text/javascript"
+    >
+    </script>
+{% endblock %}

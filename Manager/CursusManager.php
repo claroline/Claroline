@@ -1693,6 +1693,30 @@ class CursusManager
         }
     }
 
+    public function getSessionsDatas($search = '', $withPager = true, $page = 1, $max = 50)
+    {
+        $sessionsDatas = array();
+        $sessions = empty($search) ?
+            $this->courseSessionRepo->findAllUnclosedSessions() :
+            $this->courseSessionRepo->findSearchedlUnclosedSessions($search);
+
+        foreach ($sessions as $session) {
+            $course = $session->getCourse();
+            $courseCode = $course->getCode();
+
+            if (!isset($sessionsDatas[$courseCode])) {
+                $sessionsDatas[$courseCode] = array();
+                $sessionsDatas[$courseCode]['course'] = $course;
+                $sessionsDatas[$courseCode]['sessions'] = array();
+            }
+            $sessionsDatas[$courseCode]['sessions'][] = $session;
+        }
+
+        return $withPager ?
+            $this->pagerFactory->createPagerFromArray($sessionsDatas, $page, $max) :
+            $sessionsDatas;
+    }
+
 
     /***************************************************
      * Access to CursusDisplayedWordRepository methods *

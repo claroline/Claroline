@@ -91,7 +91,7 @@ class CourseSession
     /**
      * @ORM\Column(name="session_status", type="integer")
      */
-    protected $sessionStatus = 0;
+    protected $sessionStatus = self::SESSION_NOT_STARTED;
 
     /**
      * @ORM\Column(name="default_session", type="boolean")
