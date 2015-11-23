@@ -239,10 +239,13 @@ class WorkspaceManager
      */
     public function deleteWorkspace(Workspace $workspace)
     {
+        $this->om->startFlushSuite();
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
+        $this->log('Removing root directory ' . $root->getName() . '[id:' . $root->getId() . ']');
 
         if ($root) {
             $children = $root->getChildren();
+            $this->log('Looping through ' . count($children) . ' children...');
 
             if ($children) {
                 foreach ($children as $node) {
@@ -252,7 +255,7 @@ class WorkspaceManager
         }
 
         $this->om->remove($workspace);
-        $this->om->flush();
+        $this->om->endFlushSuite();
     }
 
     /**
@@ -1105,7 +1108,15 @@ class WorkspaceManager
 
     public function setLogger(LoggerInterface $logger)
     {
-        $this->container->get('claroline.manager.workspace_model_manager')->setLogger($logger);
+        $rm = $this->container->get('claroline.manager.resource_manager');
+        $wmm = $this->container->get('claroline.manager.workspace_model_manager');
+        if (!$wmm->getLogger()) $wmm->setLogger($logger);
+        if (!$rm->getLogger()) $rm->setLogger($logger);
         $this->logger = $logger;
+    }
+
+    public function getLogger()
+    {
+        return $this->logger;
     }
 }

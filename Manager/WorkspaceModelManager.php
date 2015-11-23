@@ -875,4 +875,9 @@ class WorkspaceModelManager
     {
         $this->logger = $logger;
     }
+
+    public function getLogger()
+    {
+        return $this->logger;
+    }
 }
