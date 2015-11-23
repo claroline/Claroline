@@ -9,88 +9,104 @@
         'PathService',
         'UserProgressionService',
         'StepConditionsService',
-        function AuthorizationCheckerService(AlertService, PathService, UserProgressionService, StepConditionsService) {
+        '$q',
+        function AuthorizationCheckerService(AlertService, PathService, UserProgressionService, StepConditionsService, $q) {
 
             return {
-                isAuthorized: function isAuthorized(step) {
-                    var authorized = false;
-
-                    var currentStepId = step.id;
-                    var rootStep = PathService.getRoot();
+                /**
+                 * Check if the UserProgression grant access to the Step
+                 * @param step
+                 * @returns {boolean}
+                 */
+                isProgressionAuthorized: function isProgressionAuthorized(step) {
+                    var progressionAuthorized = false;
 
                     var userProgression = UserProgressionService.get();
-
-                    //make sure root is accessible anyways
-                    if (typeof userProgression[rootStep.id] == 'undefined'
-                        || !angular.isDefined(userProgression[rootStep.id].authorized)
-                        || !userProgression[rootStep.id].authorized) {
-                        UserProgressionService.update(rootStep, userProgression[rootStep.id].status, 1);    //pass 1 (and not "true") to controller : problem in url
+                    if (angular.isDefined(userProgression[step.id]) && angular.isDefined(userProgression[step.id].authorized) && userProgression[step.id].authorized) {
+                        progressionAuthorized = true;
                     }
-                    //previous step exists ? NO : we're on root step => access
-                    if (!angular.isObject(PathService.getPrevious(step))) {
-                        authorized = true;
-                        //previous step exists ? YES
+
+                    return progressionAuthorized;
+                },
+
+                /**
+                 * Check if the User can access to the Step
+                 * @param step
+                 * @returns {object}
+                 */
+                isAuthorized: function isAuthorized(step) {
+                    // Authorization object (contains a granted boolean and a message if not authorized)
+                    var authorization = $q.defer();
+
+                    if (PathService.getRoot() == step) {
+                        // Always grant access to the Root step
+                        authorization.resolve({granted: true});
+                        // previous step exists ? YES
                     } else {
-                        var previousstep = PathService.getPrevious(step);
-                        //is there a flag authorized on current step ? YES => access
-                        if (typeof userProgression[currentStepId] !== 'undefined'
-                            && angular.isDefined(userProgression[currentStepId].authorized)
-                            && userProgression[currentStepId].authorized) {
-                            authorized = true;
-                            //is there a flag authorized on current step ? NO (or because the progression is not set)
+                        // Check authorization for the current step
+                        var previous = PathService.getPrevious(step);
+
+                        // Check progression of the User to know if the step is already granted
+                        if (this.isProgressionAuthorized(step)) {
+                            // Step has already been marked as accessible => grant access
+                            authorization.resolve({granted: true});
                         } else {
-                            //activity has been set for the step : NO => path error
-                            if (!angular.isDefined(previousstep.activityId)) {
-                                AlertService.addAlert('error', Translator.trans('step_access_denied_no_activity_set', {stepName: step.name}, 'path_wizards'));
-                                //activity has been set for the step : YES
+                            // Step is not already granted => so check conditions
+                            if (!angular.isDefined(previous.activityId)) {
+                                // activity has been set for the step : NO => path error
+                                authorization.resolve({
+                                    granted: false,
+                                    message: Translator.trans('step_access_denied_no_activity_set', {stepName: step.name}, 'path_wizards')
+                                });
                             } else {
-                                //is there a flag authorized on previous step ? YES
-                                if (typeof userProgression[previousstep.id] !== 'undefined'
-                                    && angular.isDefined(userProgression[previousstep.id].authorized)
-                                    && userProgression[previousstep.id].authorized) {
-                                    //retrieve user progression
-                                    var progression = userProgression[step.id];
-                                    var status = (typeof progression == 'undefined') ? "seen" : progression.status;
-                                    //is there a condition on previous step ? YES
-                                    if (angular.isDefined(previousstep.condition) && angular.isObject(previousstep.condition)) {
-                                        //get the promise
-                                        var activityEvaluationPromise = StepConditionsService.getActivityEvaluation(previousstep.activityId);
-                                        activityEvaluationPromise.then(
-                                            function (result) {
+                                //activity has been set for the step : YES
+                                if (this.isProgressionAuthorized(previous)) {
+                                    // Previous step is authorized, so check the condition to know if User can access current step
+                                    // retrieve user progression
+                                    var progression = UserProgressionService.getForStep(step);
+                                    var status = (typeof progression == 'undefined' || null == progression) ? "seen" : progression.status;
+
+                                    if (angular.isDefined(previous.condition) && angular.isObject(previous.condition)) {
+                                        // There is a condition on the previous step => check if it is OK
+
+                                        // Process evaluation of the Activity
+                                        StepConditionsService.getActivityEvaluation(previous.activityId).then(function onSuccess(result) {
+                                            if (StepConditionsService.testCondition(previous, result)) {
                                                 // validate condition on previous step ? YES
-                                                if (StepConditionsService.testCondition(previousstep, result)) {
-                                                    //add flag to current step
-                                                    var promise = UserProgressionService.update(step, status, 1);
-                                                    promise.then(function(result){
-                                                        //grant access
-                                                        PathService.goTo(step);
-                                                    }.bind(this));          //important, to keep the scope
-                                                    // validate condition on previous step ? NO
-                                                } else {
-                                                    var conditionlist = StepConditionsService.getConditionList();
-                                                    //display error
-                                                    AlertService.addAlert('error', Translator.trans('step_access_denied_condition', {stepName: step.name, conditionList: conditionlist}, 'path_wizards'));
-                                                }
-                                            });
-                                        //is there a condition on previous step ? NO
-                                    } else {
-                                        //add flag to current step
-                                        var promise = UserProgressionService.update(step, status, 1);
-                                        promise.then(function(result){
-                                            //grant access
-                                            authorized = true;
+                                                // Update UserProgression
+                                                UserProgressionService.update(step, status, 1);
+
+                                                authorization.resolve({ granted: true });
+                                            } else {
+                                                // validate condition on previous step ? NO
+                                                var conditionsList = StepConditionsService.getConditionList();
+
+                                                //display error
+                                                authorization.resolve({
+                                                    granted: false,
+                                                    message: Translator.trans('step_access_denied_condition', {stepName: step.name, conditionList: conditionsList}, 'path_wizards')
+                                                });
+                                            }
                                         });
+                                    } else {
+                                        // Previous step doesn't lock the current step so access it and update the User progression
+                                        UserProgressionService.update(step, status, 1);
+
+                                        // Don't stand by for request response => authorize access anyway
+                                        authorization.resolve({ granted: true });
                                     }
-                                    //is there a flag authorized on previous step ? NO => no access => message
                                 } else {
-                                    //display error
-                                    AlertService.addAlert('error', Translator.trans('step_access_denied', {}, 'path_wizards'));
+                                    // The previous step is not accessible, so the current step neither
+                                    authorization.resolve({
+                                        granted: false,
+                                        message: Translator.trans('step_access_denied', {}, 'path_wizards')
+                                    });
                                 }
                             }
                         }
                     }
 
-                    return authorized;
+                    return authorization.promise;
                 }
             };
         }

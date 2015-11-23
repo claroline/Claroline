@@ -15,7 +15,7 @@
 
             <ul class="dropdown-menu" role="menu" aria-labelledby="step-children-dropdown">
                 <!-- step-item lvl lvl-{{ child.lvl }} lvl-child lvl-hover -->
-                <li class="" data-ng-repeat="child in pathNavigationEditCtrl.step.children" role="presentation">
+                <li data-ng-repeat="child in pathNavigationEditCtrl.step.children" role="presentation">
                     <a role="menuitem" tabindex="-1" href="#/{{ child.id }}">E {{ child.name | truncate }}</a>
                 </li>
             </ul>

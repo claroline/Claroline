@@ -154,13 +154,13 @@
                 $routeProvider
                     .when('/', {
                         templateUrl: AngularApp.webDir + 'bundles/innovapath/js/Step/Partial/edit.html',
-                        controller: StepEditCtrl,
+                        controller: 'StepEditCtrl',
                         controllerAs: 'stepEditCtrl',
                         resolve: resolveRootFunctions
                     })
                     .when('/:stepId?', {
                         templateUrl: AngularApp.webDir + 'bundles/innovapath/js/Step/Partial/edit.html',
-                        controller: StepEditCtrl,
+                        controller: 'StepEditCtrl',
                         controllerAs: 'stepEditCtrl',
                         resolve: resolveFunctions
                     })
@@ -185,15 +185,39 @@
                 $routeProvider
                     .when('/', {
                         templateUrl: AngularApp.webDir + 'bundles/innovapath/js/Step/Partial/show.html',
-                        controller: StepShowCtrl,
+                        controller: 'StepShowCtrl',
                         controllerAs: 'stepShowCtrl',
-                        resolve: resolveRootFunctions
+                        resolve: angular.merge({
+                            // Always allow access to the Root step
+                            authorization: [
+                                function authorizationRootResolve() {
+                                    return { granted: true };
+                                }
+                            ]
+                        }, resolveRootFunctions)
                     })
                     .when('/:stepId?', {
                         templateUrl: AngularApp.webDir + 'bundles/innovapath/js/Step/Partial/show.html',
-                        controller: StepShowCtrl,
+                        controller: 'StepShowCtrl',
                         controllerAs: 'stepShowCtrl',
-                        resolve: resolveFunctions
+                        resolve: angular.merge({
+                            // Add authorization checker
+                            authorization: [
+                                '$route',
+                                'PathService',
+                                'AuthorizationCheckerService',
+                                function authorizationResolve($route, PathService, AuthorizationCheckerService) {
+                                    var authorization = false;
+
+                                    var step = PathService.getStep($route.current.params.stepId);
+                                    if (angular.isDefined(step) && angular.isObject(step)) {
+                                        authorization = AuthorizationCheckerService.isAuthorized(step);
+                                    }
+
+                                    return authorization;
+                                }
+                            ]
+                        }, resolveFunctions)
                     })
                     .otherwise({
                         redirectTo: '/:stepId?'

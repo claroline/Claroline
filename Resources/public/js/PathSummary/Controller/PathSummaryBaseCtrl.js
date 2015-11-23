@@ -3,11 +3,10 @@
  * @returns {PathSummaryBaseCtrl}
  * @constructor
  */
-var PathSummaryBaseCtrl = function PathSummaryBaseCtrl($routeParams, PathService, StepConditionsService) {
+var PathSummaryBaseCtrl = function PathSummaryBaseCtrl($routeParams, PathService) {
     this.webDir = AngularApp.webDir;
 
     this.pathService = PathService;
-    this.stepConditionsService = StepConditionsService;
     this.current = $routeParams;
 
     this.state = this.pathService.getSummaryState();

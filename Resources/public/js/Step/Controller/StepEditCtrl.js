@@ -78,6 +78,9 @@ var StepEditCtrl = function StepEditCtrl(step, inheritedResources, PathService, 
 StepEditCtrl.prototype = Object.create(StepBaseCtrl.prototype);
 StepEditCtrl.prototype.constructor = StepEditCtrl;
 
+// Dependency Injection
+StepEditCtrl.$inject = [ 'step', 'inheritedResources', 'PathService', '$scope', 'StepService' ];
+
 /**
  * Defines which panels of the form are collapsed or not
  * @type {object}
@@ -110,3 +113,8 @@ StepEditCtrl.prototype.showActivity = function () {
 StepEditCtrl.prototype.deleteActivity = function () {
     this.step.activityId = null;
 };
+
+// Register controller into Angular
+angular
+    .module('StepModule')
+    .controller('StepEditCtrl', StepEditCtrl);

@@ -6,17 +6,9 @@
             return {
                 restrict: 'E',
                 replace: true,
-                controller: [
-                    'AuthorizationCheckerService',
-                    'PathService',
-                    function PathNavigationItemCtrl(AuthorizationCheckerService, PathService) {
-                        this.goTo = function goTo() {
-
-                        }
-                    }
-                ],
+                controller: function PathNavigationItemCtrl() {},
                 controllerAs: 'pathNavigationItemCtrl',
-                templateUrl: AngularApp.webDir + 'bundles/innovapath/js/PathNavigation/Partial/item.html',
+                templateUrl: AngularApp.webDir + 'bundles/innovapath/js/PathNavigation/Partial/navigation-item.html',
                 scope: {
                     parent:  '=?',
                     element: '=',

@@ -3,7 +3,7 @@
  * @returns {PathSummaryEditCtrl}
  * @constructor
  */
-var PathSummaryEditCtrl = function PathSummaryEditCtrl($routeParams, PathService, StepConditionsService, ClipboardService, ConfirmService, IdentifierService) {
+var PathSummaryEditCtrl = function PathSummaryEditCtrl($routeParams, PathService, ClipboardService, ConfirmService, IdentifierService) {
     PathSummaryBaseCtrl.apply(this, arguments);
 
     // Inject service
@@ -152,11 +152,4 @@ PathSummaryEditCtrl.prototype.removeStep = function (step) {
             }
         }.bind(this)
     );
-};
-PathSummaryEditCtrl.prototype.goTo = function goTo(step) {
-    //to avoid empty step
-    if (typeof this.current.stepId == 'undefined') {
-        this.current.stepId = this.structure[0].id
-    }
-    this.pathService.goTo(step);
 };

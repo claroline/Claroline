@@ -1,9 +1,9 @@
 /**
  * Class constructor
- * @returns {PathNavigationBaseCtrl}
+ * @returns {PathNavigationCtrl}
  * @constructor
  */
-var PathNavigationBaseCtrl = function PathNavigationBaseCtrl($routeParams, $scope, PathService) {
+var PathNavigationCtrl = function PathNavigationCtrl($routeParams, $scope, PathService) {
     this.pathService = PathService;
 
     this.current = $routeParams;
@@ -25,24 +25,24 @@ var PathNavigationBaseCtrl = function PathNavigationBaseCtrl($routeParams, $scop
  * Current matched route
  * @type {object}
  */
-PathNavigationBaseCtrl.prototype.current = {};
+PathNavigationCtrl.prototype.current = {};
 
 /**
  * Current displayed step
  * @type {object}
  */
-PathNavigationBaseCtrl.prototype.step = {};
+PathNavigationCtrl.prototype.step = {};
 
 /**
  * Parents of the current step
  * @type {object}
  */
-PathNavigationBaseCtrl.prototype.parents = {};
+PathNavigationCtrl.prototype.parents = {};
 
 /**
  * Reload the Step from route params
  */
-PathNavigationBaseCtrl.prototype.reloadStep = function reloadStep() {
+PathNavigationCtrl.prototype.reloadStep = function reloadStep() {
     this.step = null;
 
     // Get step
