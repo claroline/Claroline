@@ -32,9 +32,8 @@
                             })
                             .error(function (data, status) {
                                 deferred.reject([]);
-                                console.log('error');
-                                console.log(data);
-                                //var url = Routing.generate('ujm_sequence_error');
+                        console.log(data);
+                                var url = Routing.generate('ujm_sequence_error');
                                 //$window.location = url;
                             });
                     return deferred.promise;
@@ -59,11 +58,17 @@
                             })
                             .error(function (data, status) {
                                 deferred.reject([]);
+                        console.log(data);
                                 var url = Routing.generate('ujm_sequence_error');
-                                $window.location = url;
+                                //$window.location = url;
                             });
                     return deferred.promise;
                 },
+                /**
+                 * Get an exercise
+                 * @param {type} id
+                 * @returns {$q@call;defer.promise}
+                 */
                 get: function (id) {
                     var deferred = $q.defer();
                     $http
@@ -76,8 +81,9 @@
                             })
                             .error(function (data, status) {
                                 deferred.reject([]);
+                        console.log(data);
                                 var url = Routing.generate('ujm_sequence_error');
-                                $window.location = url;
+                                //$window.location = url;
                             });
 
                     return deferred.promise;

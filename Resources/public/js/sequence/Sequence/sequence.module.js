@@ -5,8 +5,7 @@
     'use strict';
 
     angular.module('Sequence', [
-        'Step',
-        'Paper'
+        'Step'
     ]);
 })();
 

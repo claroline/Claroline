@@ -6,18 +6,21 @@
         'CommonService',
         'paperList',
         'paperExercise',
-        function ($filter, CommonService, paperList, paperExercise) {
+        'PapersService',
+        'user',
+        function ($filter, CommonService, paperList, paperExercise, PapersService, user) {
 
-            console.log(paperExercise);
-            console.log(paperList);
             this.papers = paperList.papers;
             this.questions = paperList.questions;
             this.exercise = paperExercise;
+            this.user = user;
+            
+            console.log(user);
+            
             // table data
             this.filtered = this.papers;
             this.query = '';
             this.showPagination = true;
-
 
             // table config
             this.config = {
@@ -98,20 +101,33 @@
                 return nb;
             };
 
+            /**
+             * All data that need to be transformed and used in filter / sort
+             * @returns {undefined}
+             */
             this.setTableData = function () {
                 for (var i = 0; i < this.filtered.length; i++) {
-                    // set scores in paper object
-                    // could do the same with user ??
+                    // set scores in paper object and in the same time format end date
                     if (this.filtered[i].end) { // TODO check score availability
-                        this.filtered[i].score = CommonService.getPaperScore2(this.filtered[i], this.questions);
-                        //CommonService.getPaperScore(this.filtered[i])
+                        this.filtered[i].endDate = $filter('mySqlDateToLocalDate')(this.filtered[i].end);// $filter('toLocalDate')(this.filtered[i].end);// d.toLocaleString();
+                        this.filtered[i].score = PapersService.getPaperScore(this.filtered[i], this.questions);
+                    }
+                    else{
+                        this.filtered[i].endDate = '-';
+                    }
+                    // format start date
+                    this.filtered[i].startDate = $filter('mySqlDateToLocalDate')(this.filtered[i].start);
+                    
+                    // set interrupt property in a human readable way
+                    if(this.filtered[i].interrupted){
+                        this.filtered[i].interruptLabel = Translator.trans('paper_list_table_interrupted_yes', {}, 'ujm_sequence');
+                    } else {
+                        this.filtered[i].interruptLabel = Translator.trans('paper_list_table_interrupted_no', {}, 'ujm_sequence');
                     }
                 }
             };
 
             this.setTableData();
-
-
         }
     ]);
 })();

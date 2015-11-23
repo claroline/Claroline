@@ -200,6 +200,9 @@ class ExerciseManager
             'pick' => $exercise->getNbQuestion(),
             'random' => $exercise->getShuffle(),
             'maxAttempts' => $exercise->getMaxAttempts(),
+            'dispButtonInterrupt' => $exercise->getDispButtonInterrupt(),
+            'markMode' => $exercise->getMarkMode(),
+            'correctionMode' => $exercise->getCorrectionMode(),
         ];
     }
 

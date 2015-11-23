@@ -36,6 +36,9 @@ paper_details_table_choice: Choix
 paper_details_table_expected_answer: Réponse attendue
 paper_details_table_your_answer: Votre réponse
 paper_details_table_comment: Commentaire
+paper_details_paper_score: Score global
+paper_details_question_score: Score de la question
+paper_details_correction_label: Correction
 
 # q
 question_hints: Indices

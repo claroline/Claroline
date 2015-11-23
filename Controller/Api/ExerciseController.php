@@ -66,7 +66,8 @@ class ExerciseController
      */
     public function exportAction(Exercise $exercise)
     {
-        $this->assertHasPermission('ADMINISTRATE', $exercise);
+        // $this->assertHasPermission('ADMINISTRATE', $exercise);
+        $this->assertHasPermission('OPEN', $exercise);
 
         return new JsonResponse($this->exerciseManager->exportExercise($exercise));
     }
@@ -183,6 +184,26 @@ class ExerciseController
     public function papersAction(User $user, Exercise $exercise)
     {
         return new JsonResponse($this->paperManager->exportUserPapers($exercise, $user));
+    }
+    
+    /**
+     * Returns one paper.
+     * Also includes the complete definition and solution of each question
+     * associated with the exercise.
+     *
+     * @EXT\Route("/exercises/{exerciseId}/papers/{paperId}", name="exercise_paper")
+     * @EXT\ParamConverter("user", converter="current_user")
+     * @EXT\ParamConverter("paper", class="UJMExoBundle:Paper", options={"mapping": {"paperId": "id"}})
+     * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"exerciseId": "id"}})
+     *
+     * @param User      $user
+     * @param Exercise  $exercise
+     * @param Paper     $paper
+     * @return JsonResponse
+     */
+    public function paperAction(User $user, Exercise $exercise, Paper $paper)
+    {
+        return new JsonResponse($this->paperManager->exportUserPaper($paper, $exercise));
     }
 
     private function assertHasPermission($permission, Exercise $exercise)

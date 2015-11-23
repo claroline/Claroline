@@ -17,20 +17,18 @@
             this.init = function (question) {
                 // those data are updated by view and sent to common service as soon as they change
                 this.currentQuestionPaperData = CommonService.getCurrentQuestionPaperData(question);
-                console.log('this.currentQuestionPaperData');
-                console.log(this.currentQuestionPaperData);
                 this.question = question;
                 // init student data question object
                 CommonService.setStudentData(question);
 
-                if (this.currentQuestionPaperData.hints.length > 0) {
+                if (this.currentQuestionPaperData.hints && this.currentQuestionPaperData.hints.length > 0) {
                     // init used hints display
                     for (var i = 0; i < this.currentQuestionPaperData.hints.length; i++) {
                         this.getHintData(this.currentQuestionPaperData.hints[i]);
                     }
                 }
                 //this.checkChoices(this.question.multiple);
-                if (this.currentQuestionPaperData.answer.length > 0) {
+                if (this.currentQuestionPaperData.answer && this.currentQuestionPaperData.answer.length > 0) {
                     // init previously given answer
                     this.checkChoices(this.question.multiple);
                 }

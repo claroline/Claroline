@@ -11,7 +11,7 @@
 
             this.sequence = {};
             this.paper = {};
-            this.user;
+            this.user = {};
             this.currentQuestion = {};
             this.currentAnswer = {};
             this.currentQuestionPaperData = {};
@@ -65,8 +65,8 @@
                 getPaper: function () {
                     return this.paper;
                 },
-                setUser: function (id) {
-                    this.user = id;
+                setUser: function (user) {
+                    this.user = user;
                     return this.user;
                 },
                 getUser: function () {
@@ -102,16 +102,16 @@
                  */
                 getCorrectionMode: function (mode) {
                     switch (mode) {
-                        case 1:
+                        case "1":
                             return "test-end";
                             break;
-                        case 2:
+                        case "2":
                             return "last-try";
                             break;
-                        case 3:
+                        case "3":
                             return "after-date";
                             break;
-                        case 4:
+                        case "4":
                             return "never";
                             break;
                         default:
@@ -179,124 +179,6 @@
                             return Routing.generate('ujm_exercise_play', {id: _id});
                             break;
                     }
-                },
-                getPaperScore: function (paper) {
-                    var nbQuestions = paper.questions.length;
-
-                    var score = 0.0; //final score
-                    var totalPoints = 0.0;
-                    var studentPoints = 0.0; // good answers
-
-                    for (var i = 0; i < nbQuestions; i++) {
-                        // paper question item contains student answer, used hints and solution 
-                        var paperQuestion = paper.questions[i];
-
-                        // update exercise total points
-                        for (var j = 0; j < paperQuestion.choices.length; j++) {
-                            // update total points for the sequence
-                            totalPoints += paperQuestion.choices[j].score;
-                        }
-
-                        // for each given answer
-                        for (var k = 0; k < paperQuestion.answer.length; k++) {
-                            var id = paperQuestion.answer[k];
-                            //  check if it is in solution
-                            for (var l = 0; l < paperQuestion.solution.length; l++) {
-                                if (paperQuestion.solution[l] === id) {
-                                    // get the corresponding choice score... Only for choice question type...
-                                    for (var m = 0; m < paperQuestion.choices.length; m++) {
-                                        if (paperQuestion.choices[m].id === id) {
-                                            // update student points
-                                            studentPoints += paperQuestion.choices[m].score;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        // for each used hints
-                        for (var n = 0; n < paperQuestion.hints.length; n++) {
-                            // remove penalty value from student points
-                            studentPoints -= paperQuestion.hints[n].penalty;
-                        }
-                    }
-
-                    //return (round($toBeAdjusted / 0.5) * 0.5);
-                    score = studentPoints * 20 / totalPoints;
-                    return score > 0 ? (Math.round(score / 0.5) * 0.5) : 0;
-                },
-                getPaperScore2: function (paper, questions) {
-
-
-                    var score = 0.0; // final score
-                    var totalPoints = this.getExerciseTotalScore(questions);
-                    var studentPoints = 0.0; // good answers
-
-                    for (var i = 0; i < paper.questions.length; i++) {
-                        // paper question item contains student answer, used hints
-                        var currentPaperQuestion = paper.questions[i];
-
-                        // for each given answer
-                        for (var j = 0; j < currentPaperQuestion.answer.length; j++) {
-                            var id = currentPaperQuestion.answer[j];
-                            studentPoints += this.getAnswerScore(id, questions);
-                        }
-                        // for each used hints
-                        for (var k = 0; k < currentPaperQuestion.hints.length; k++) {
-                            // find hint penalty in questions collection
-                            var penalty = this.getHintPenalty(currentPaperQuestion.hints[k], questions);
-                            // remove penalty value from student points
-                            studentPoints -= penalty;
-                        }
-                    }
-                    score = studentPoints * 20 / totalPoints;
-                    return score > 0 ? (Math.round(score / 0.5) * 0.5) : 0;
-                },
-                getExerciseTotalScore: function (questions) {
-                    var nbQuestions = questions.length;
-                    var score = 0.0;
-                    for (var i = 0; i < nbQuestions; i++) {
-                        var currentQuestion = questions[i];
-
-                        // update exercise total points
-                        for (var j = 0; j < currentQuestion.solutions.length; j++) {
-                            // update total points for the sequence
-                            score += currentQuestion.solutions[j].score;
-                        }
-                    }
-                    console.log('exercise total score ' + score);
-                    return score;
-                },
-                getHintPenalty: function (searched, questions) {
-                    var nbQuestions = questions.length;
-                    var penalty = 0.0;
-                    for (var i = 0; i < nbQuestions; i++) {
-                        var currentQuestion = questions[i];
-                        if (currentQuestion.hints) {
-                            // update exercise total points
-                            for (var j = 0; j < currentQuestion.hints.length; j++) {
-                                if (currentQuestion.hints[j].id === searched) {
-                                    penalty = currentQuestion.hints[j].penalty;
-                                }
-                            }
-                        }
-                    }
-                    console.log('penalty ' + penalty);
-                    return penalty;
-                },
-                getAnswerScore: function (searched, questions) {
-                    var nbQuestions = questions.length;
-                    var score = 0.0;
-                    for (var i = 0; i < nbQuestions; i++) {
-                        var currentQuestion = questions[i];
-                        // update exercise total points
-                        for (var j = 0; j < currentQuestion.solutions.length; j++) {
-                            if (currentQuestion.solutions[j].id === searched) {
-                                score = currentQuestion.solutions[j].score;
-                            }
-                        }
-                    }
-                    console.log('question score ' + score);
-                    return score;
                 }
             };
         }
