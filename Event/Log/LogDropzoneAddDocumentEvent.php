@@ -24,7 +24,6 @@ class LogDropzoneAddDocumentEvent extends AbstractLogResourceEvent implements No
     public function __construct(Dropzone $dropzone, $newstate, $userIds)
     {
 
-var_dump("dans AddDocumentEvent");
         $this->dropzone = $dropzone;
         $this->newState = $dropzone->getResourceNode()->getName();
         $this->userIds = $userIds;

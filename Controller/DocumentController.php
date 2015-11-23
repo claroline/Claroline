@@ -237,8 +237,6 @@ class DocumentController extends DropzoneBaseController
         $em->persist($document);
         $em->flush();
 
-//echo "Document ajouté : " . $document->getId();die();
-
         $event = new LogDocumentCreateEvent($dropzone, $drop, $document);
         $this->dispatch($event);
 
@@ -258,8 +256,6 @@ class DocumentController extends DropzoneBaseController
     public function documentAction($dropzone, $documentType, $drop)
     {
 
-
-//        echo "suis ici ajout document";die();
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $dropzoneManager = $this->get('innova.manager.dropzone_manager');
 
@@ -307,9 +303,9 @@ class DocumentController extends DropzoneBaseController
                     // Ici avertir celui a qui créé le collecticiel
                     $usersIds[] = $userCreator;
                 }
-                var_dump($usersIds);
                 $event = new LogDropzoneAddDocumentEvent($dropzone, $dropzone->getManualState(), $usersIds);
                 $this->get('event_dispatcher')->dispatch('log', $event);
+
 
 /*
 InnoERV : demande de JJQ dans son document d'août 2015
