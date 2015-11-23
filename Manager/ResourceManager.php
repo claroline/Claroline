@@ -44,12 +44,16 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Claroline\BundleRecorder\Log\LoggableTrait;
+use Psr\Log\LoggerInterface;
 
 /**
  * @DI\Service("claroline.manager.resource_manager")
  */
 class ResourceManager
 {
+    use LoggableTrait;
+
     /** @var RightsManager */
     private $rightsManager;
     /** @var ResourceTypeRepository */
@@ -883,19 +887,23 @@ class ResourceManager
      */
     public function delete(ResourceNode $resourceNode)
     {
+        $this->log('Removing ' . $resourceNode->getName() . '[' . $resourceNode->getResourceType()->getName() . ':id:' . $resourceNode->getId() . ']');
+
         if ($resourceNode->getParent() === null) {
 
             throw new \LogicException('Root directory cannot be removed');
         }
         $workspace = $resourceNode->getWorkspace();
         $nodes = $this->getDescendants($resourceNode);
+        $count = count($nodes);
         $nodes[] = $resourceNode;
         $softDelete = $this->platformConfigHandler->getParameter('resource_soft_delete');
 
         $this->om->startFlushSuite();
+        $this->log('Looping through ' . $count . ' children...');
 
         foreach ($nodes as $node) {
-
+            $this->log('Removing ' . $node->getName() . '[' . $node->getResourceType()->getName() . ':id:' . $node->getId() . ']');
             $resource = $this->getResourceFromNode($node);
             /**
              * resChild can be null if a shortcut was removed
@@ -1796,5 +1804,15 @@ class ResourceManager
         }
 
         return $node;
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    public function getLogger()
+    {
+        return $this->logger;
     }
 }
