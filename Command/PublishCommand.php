@@ -52,7 +52,7 @@ class PublishCommand extends AbstractPublishCommand
 
             if ($workspaceId = $input->getOption('workspace')) {
                 // Need to publish Paths for a specific Workspace
-                $workspace = $this->objectManager->getRepository('ClarolineCoreBundle:Workspace')->find($workspaceId);
+                $workspace = $this->objectManager->getRepository('ClarolineCoreBundle:Workspace\Workspace')->find($workspaceId);
                 if (!empty($workspace)) {
                     // Workspace found => retrieve Paths
                     $paths = $this->objectManager->getRepository('InnovaPathBundle:Path\Path')->findWorkspacePaths($workspace, !$force);
