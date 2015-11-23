@@ -282,49 +282,19 @@ class UsersController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/page/{page}/max/{max}/order/{order}/direction/{direction}",
+     *     "/list}",
      *     name="claro_admin_user_list",
-     *     defaults={"page"=1, "search"="", "max"=50, "order"="id","direction"="ASC"},
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Route(
-     *     "/users/page/{page}/search/{search}/max/{max}/order/{order}/direction/{direction}",
-     *     name="claro_admin_user_list_search",
-     *     defaults={"page"=1, "max"=50, "order"="id","direction"="ASC"},
      *     options = {"expose"=true}
      * )
      * @EXT\Template
-     * @EXT\ParamConverter(
-     *     "order",
-     *     class="Claroline\CoreBundle\Entity\User",
-     *     options={"orderable"=true}
-     * )
      *
      * Displays the platform user list.
      *
-     * @param integer $page
-     * @param string  $search
-     * @param integer $max
-     * @param string  $order
-     * @param string  $direction
-     *
      * @return array
      */
-    public function listAction($page, $search, $max, $order, $direction)
+    public function listAction()
     {
-        $canUserBeCreated = $this->roleManager->validateRoleInsert(new User(),$this->roleManager->getRoleByName('ROLE_USER'));
-        $pager = $search === '' ?
-            $this->userManager->getAllUsers($page, $max, $order, $direction) :
-            $this->userManager->getUsersByName($search, $page, $max, $order, $direction);
-
-        return array(
-            'canUserBeCreated' => $canUserBeCreated,
-            'pager' => $pager,
-            'search' => $search,
-            'max' => $max,
-            'order' => $order,
-            'direction' => $direction,
-        );
+        return array();
     }
 
     /**

@@ -1,85 +1,3 @@
-{% macro renderPager(search, pager, max, order, direction) %}
-    {% if search == '' %}
-    {{
-        pagerfanta(
-            pager,
-            'twitter_bootstrap_translated',
-            {
-                'proximity' : 1,
-                'routeName': 'claro_admin_user_list',
-                'routeParams': {'max': max, 'order': order, 'direction': direction }
-            }
-        )
-    }}
-    {% else %}
-        {{
-            pagerfanta(
-                pager,
-                'twitter_bootstrap_translated',
-                {
-                    'proximity' : 1,
-                    'routeName': 'claro_admin_user_list_search',
-                    'routeParams': {'search': search, 'max': max, 'order': order, 'direction':direction }
-                }
-            )
-        }}
-    {% endif %}
-{% endmacro %}
-
-{% macro displayControls(canUserBeCreated) %}
-    {% if app.user %}
-        <button class="btn btn-default action-button table-control" data-action="remove" disabled>
-            <i class="fa fa-trash-o"></i>
-            {{ 'delete'|trans({}, 'platform') }}
-        </button>
-        {% if is_mailer_available() %}
-            <button class="btn btn-default action-button table-control" data-action="password" disabled>
-                <i class="fa fa-refresh"></i>
-                {{ 'reset_password'|trans({}, 'platform') }}
-            </button>
-        {% endif %}
-        {% if canUserBeCreated == true %}
-            <a href="{{path('claro_admin_user_creation_form')}}" class="btn btn-default">
-                <i class="fa fa-plus"></i>
-                {{ 'create_user'|trans({}, 'platform') }}
-            </a>
-        {% endif %}
-        {% if canUserBeCreated == true %}
-            <a href="{{path('claro_admin_import_users_form')}}" class="btn btn-default">
-                <i class="fa fa-plus"></i>
-                {{ 'import_csv'|trans({}, 'platform') }}
-            </a>
-        {% endif %}
-        <a class="btn btn-default action-button table-control"
-            href="{{ path('claro_admin_export_users', {'format': 'xls'}) }}">
-            {{ 'excel_export'|trans({}, 'platform') }}
-        </a>
-        <a class="btn btn-default action-button table-control"
-            href="{{ path('claro_admin_export_users', {'format': 'csv'}) }}">
-            {{ 'csv_export'|trans({}, 'platform') }}
-        </a>
-
-    {% endif %}
-{% endmacro %}
-
-{% macro sortUrl(max, search, order, direction) %}
-    {% if direction == 'ASC' %}
-        {% set newDirection = 'DESC' %}
-    {% else %}
-        {% set newDirection = 'ASC' %}
-    {% endif %}
-
-    {% if search == '' %}
-        {{ path('claro_admin_user_list', {'max': max, 'order': order , 'direction': newDirection}) }}
-    {% else %}
-        {{ path('claro_admin_user_list_search', {'search': search, 'max': max, 'order': order, 'direction':newDirection }) }}
-    {% endif %}
-{% endmacro %}
-
-{% from _self import renderPager %}
-{% from _self import displayControls %}
-{% from _self import sortUrl %}
-{% from "ClarolineCoreBundle::macros.html.twig" import maxResultsSelectBox %}
 
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
@@ -95,200 +13,94 @@
             },
             {
                 'name': 'users_management'|trans({}, 'platform'),
-                'href': path('claro_admin_users_management')
-            },
-            {
-                'name': 'users'|trans({}, 'platform'),
                 'href': ''
             }
         ])
     }}
 {% endblock %}
 {% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'users_list'|trans({}, 'platform') }}</h3>
-    </div>
-    <div class="panel-body">
-        <div>
-            {{ macros.flashBox() }}
-        </div>
-        <div class="search-bar row">
-            <div class="col-md-8">
-                {{ displayControls(canUserBeCreated) }}
-            </div>
-            <div class="col-md-4">
-                 <div class="input-group">
-                    <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value={{ search }}>
-                    <span class="input-group-btn">
-                        <button class="filter btn btn-default" type="button" id="search-button">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </span>
+    <div id="users-panel" class="panel panel-default" ng-app="userManager">
+        <div class="panel-body" ng-controller="contentCtrl">
+            <div class="col-md-2 panel-group">
+                <div class="panel-body">
+                    <locales align="center" class="locale-list">
+                    </locales>
                 </div>
-
+                <div class="panel-body">
+                    <repositories class="list-group">
+                    </repositories>
+                </div>
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-8">
-                {% if pager.getNbPages() > 1 %}
-                    {{ renderPager(search, pager, max, order, direction) }}
-                {% endif %}
+            <div class="col-md-10 panel-group">
+                <div class="container panel-body">
+                    <div align="center">
+                        <searchbar>
+                        </searchbar>   
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <translations>
+                    </translations>
+                </div>
+                <div class="panel-body">
+                    <preferedlang class="locale-list">
+                    </preferedlang>
+                </div>
             </div>
-            <div class="col-md-4" style="margin-top: 15px;">
-                {{ maxResultsSelectBox(max, "$('#search-button').trigger('click');", 'users_per_page') }}
-            </div>
-        </div>
-        <div class="table-responsive">
-            <table id="user-table"  class="table table-striped table-bordered table-condensed">
-                <thead>
-                    <tr>
-                        <th><input type="checkbox" name="all" id="check-all-items" /></th>
-                        <th><a href="{{ sortUrl(max, search, 'username', direction) }}">{{ 'username'|trans({}, 'platform') }}</a></th>
-                        <th><a href="{{ sortUrl(max, search, 'lastName',direction ) }}">{{ 'last_name'|trans({}, 'platform') }}</a></th>
-                        <th><a href="{{ sortUrl(max, search, 'firstName' , direction) }}">{{ 'first_name'|trans({}, 'platform') }}</a></th>
-                        <th><a href="{{ sortUrl(max, search, 'mail', direction) }}">{{ 'mail'|trans({}, 'platform') }}</a></th>
-                        <th>{{ 'role'|trans({}, 'platform') }}</th>
-                        <th>{{ 'personal_workspace'|trans({}, 'platform')}} </th>
-                        <th>{{ 'actions' | trans({}, 'platform') }}</th>
-                    </tr>
-                </thead>
-                <tbody id="user-table-body">
-                    {% for user in pager.currentPageResults %}
-                        <tr id="{{ user.getId() }}" class="row-user">
-                            <td>
-                                <input type="checkbox" value="{{ user.id }}" class="chk-item" align="center"
-                                    {% if (not is_granted('ROLE_ADMIN') and user.hasRole('ROLE_ADMIN'))
-                                        or user.getId() == app.user.getId( )%}
-                                        disabled
-                                    {% endif %}
-                                />
-                            </td>
-                            <td>
-                                {% if user.getPublicUrl() != '' %}
-                                    <a href="{{ path('claro_public_profile_view', {'publicUrl':user.getPublicUrl()}) }}">{{ user.getUsername() }}</a>
-                                {% else %}
-                                    {{ user.getUsername() }}
-                                {% endif %}
-                            </td>
-                            <td>{{ user.getLastName() }}</td>
-                            <td>{{ user.getFirstName() }}</td>
-                            <td>{{ user.getMail() }}</td>
-                            <td>
-                                <div>
-                                    {% for role in user.getEntityRoles() %}
-                                        {% if role.type == 1 %}
-                                            {{ role.getTranslationKey()|trans({}, 'platform')  }}{% if not loop.last %}, {% endif %}
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                            </td>
-                            <td>
-                                {% if user.getPersonalWorkspace() %}
-                                    <a class='btn btn-default delete-pws' href='#' data-user-id='{{ user.getId() }}'>{{ 'delete'|trans({}, 'platform') }}</a>
-                                {% else %}
-                                    <a class='btn btn-default create-pws' href='#' data-user-id='{{ user.getId() }}'>{{ 'create'|trans({}, 'platform') }}</a>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% set isUserAdmin = false %}
-                                {% for role in user.getEntityRoles() %}
-                                    {% if role.getName() == 'ROLE_ADMIN' %} {% set isUserAdmin = true %} {% endif %}
-                                {% endfor %}
-                                {% if is_granted('ROLE_ADMIN') %}
-                                    {% if user.getId() != app.user.id %}
-                                        <a class='btn btn-default' href="{{ path('claro_desktop_open', {'_switch': user.getUsername()}) }}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{ 'show_as'|trans({}, 'platform') }}" role="button">
-                                            <i class='fa fa-eye'></i>
-                                        </a>
-                                    {% endif %}
-                                {% endif %}
-                                {% if not is_granted('ROLE_ADMIN') and isUserAdmin == true %}
-                                {% else%}
-                                    <a class='btn btn-default' href="{{ path('claro_user_profile_edit', {'user': user.getId()}) }}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{ 'edit'|trans({}, 'platform') }}" role="button">
-                                        <i class='fa fa-pencil'></i>
-                                    </a>
-                                {% endif %}
-                                <a class='btn btn-default' href="{{ path('claro_admin_user_workspaces', {'user': user.getId()}) }}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{ 'workspaces'|trans({}, 'platform') }}" role="button">
-                                    <i class='fa fa-book'></i>
-                                </a>
-                                {% set menu = knp_menu_get('ClarolineCoreBundle:Builder:userActionsMenu', [], {'user': user} ) %}
-                                {{ knp_menu_render(menu, {}, 'user_additional_actions') }}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-            {% if pager.getNbPages() > 1 %}
-                 {{ renderPager(search, pager, max, order, direction) }}
-            {% endif %}
-        <div>
-            {{ displayControls(canUserBeCreated) }}
         </div>
     </div>
+
 {% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link 
+        rel="stylesheet" 
+        href="{{ asset('bundles/clarolineangulardatatable/js/release/dataTable.css') }}"
+    />
+    <link 
+        rel="stylesheet" 
+        href="{{ asset('bundles/clarolineangulardatatable/js/release/material.css') }}"
+    />
+    <link href="http://fontastic.s3.amazonaws.com/Jnf54BZCm7mSjGCxNRbfp3/icons.css" rel="stylesheet">
+{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
-    <script src='{{ asset('bundles/clarolinecore/js/table.js') }}' type="text/javascript"></script>
-    <script>
-        parameters = {};
-        parameters.route = {};
-        parameters.route.action = {};
-        parameters.route.normal = {"route": "claro_admin_user_list", "parameters": {'order': '{{ order }}' }};
-        parameters.route.search = {"route": "claro_admin_user_list_search", "parameters": {'order': '{{ order }}' }};
-        parameters.route.action.remove = {"route": "claro_admin_multidelete_user", "parameters": {}, "type": "DELETE", "confirmTemplate": removeUserConfirm, "delete": true};
-        parameters.route.action.password = {"route": "claro_security_initialize_password", "parameters": {}, "type": "POST", "confirmTemplate": resetPasswordConfirm};
-        Claroline.Table.initialize(parameters);
 
+    {# Angular JS #}
+    {% javascripts debug=false filter='jsmin' output='vendor/claroline/js/angular.js'
+        '@InnovaAngularJSBundle/Resources/public/js/angular.min.js'
+        '@InnovaAngularJSBundle/Resources/public/js/angular-sanitize.min.js'
+        '@InnovaAngularJSBundle/Resources/public/js/angular-route.min.js'
+        '@InnovaAngularJSBundle/Resources/public/js/angular-resource.min.js'
+        '@InnovaAngularJSBundle/Resources/public/js/angular-touch.min.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 
+    {# Angular UI #}
+    {% javascripts debug=false filter='jsmin' output='vendor/angular/angular-ui.js'
+        '@InnovaAngularUIBootstrapBundle/Resources/public/js/*'
+        '@InnovaAngularUITreeBundle/Resources/public/js/*'
+        '@InnovaAngularUIPageslideBundle/Resources/public/js/*'
+        '@InnovaAngularUITinyMCEBundle/Resources/public/js/*'
+        '@InnovaAngularUITranslationBundle/Resources/public/js/*'
+        '@InnovaAngularUIResourcePickerBundle/Resources/public/js/*'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 
-        $('body').on('click', '.delete-pws', function(event) {
-            event.preventDefault();
-            var el = $(event.target);
-            var route = Routing.generate('claro_admin_pws_delete', {user: el.attr('data-user-id')});
-
-            $.ajax({
-                url: route,
-                success: function(data, textStatus, jqXHR) {
-                    el.addClass('create-pws');
-                    el.removeClass('delete-pws');
-                    el.html(Translator.trans('create', {}, 'platform'));
-                }
-            })
-        });
-
-        $('body').on('click', '.create-pws', function(event) {
-            event.preventDefault();
-            var route = Routing.generate('claro_admin_pws_create', {user: $(event.target).attr('data-user-id')});
-            var el = $(event.target);
-
-            $.ajax({
-                url: route,
-                success: function(data, textStatus, jqXHR) {
-                    el.addClass('delete-pws');
-                    el.removeClass('create-pws');
-                    el.html(Translator.trans('delete', {}, 'platform'));
-                }
-            })
-        });
-
+    <script type="text/javascript" src="{{ asset('bundles/clarolineangulardatatable/js/release/dataTable.helpers.min.js') }}">
     </script>
-    <script>
-        $('#user-table-body').on('click', '.user-additional-action', function (event) {
-            var child = $(this).children('.user-action');
-            var url = child.data('url');
-            var displayMode = child.data('display-mode');
-            
-            if (displayMode === 'modal_form') {
-                window.Claroline.Modal.displayForm(
-                    url,
-                    function () {},
-                    function() {}
-                );
-                
-            } else {
-                window.location = url;
-            }
-        });
+
+    {# Set some vars needed by Angular parts #}
+    <script type="text/javascript">
+        {# Make Twig variables accessibles by AngularJS #}
+
+        var AngularApp = {};
+        AngularApp.webDir = "{{ asset('') }}";
     </script>
+<!--
+    <script type="text/javascript" src={{ asset('bundles/clarolinetranslator/js/app.js') }}></script>
+->
 {% endblock %}

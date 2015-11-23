@@ -38,7 +38,7 @@ class AdministrationToolListener
     public function onOpenUserManagement(OpenAdministrationToolEvent $event)
     {
         $params = array();
-        $params['_controller'] = 'ClarolineCoreBundle:Administration\Users:index';
+        $params['_controller'] = 'ClarolineCoreBundle:Administration\Users:list';
         $this->redirect($params, $event);
     }
 
