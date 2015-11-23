@@ -1,7 +1,18 @@
 <div class="row">
     <div class="col-md-12">
         <h4>{{question.title}}</h4>
-        <h5>{{question.label}}</h5>        
+        <hr/>
+        <div class="row">
+            <div class="col-md-12">
+                <div data-ng-bind-html="question.invite | unsafe"></div>   
+            </div>
+        </div>
+        <hr/>
+        <div class="row">
+            <div class="col-md-12">
+             {{question.description}}   
+            </div>
+        </div>
         <hr/>
         <!-- Question choices row -->
         <div data-ng-if="choiceQuestionCtrl.question.choices" class="question-row">

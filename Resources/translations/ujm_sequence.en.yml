@@ -12,7 +12,7 @@ link_exercice_home: Exercise home
 link_exercise_retry: Retry
 link_exercise_docimology: Docimology
 link_csv_export: CSV export
-label_exercise_score: Score
+label_exercise_score: Global score
 label_exercise_correction: Correction
 
 # p
@@ -36,6 +36,9 @@ paper_details_table_choice: Choix
 paper_details_table_expected_answer: Expected answer
 paper_details_table_your_answer: Your answer
 paper_details_table_comment: Comment
+paper_details_paper_score: Global score
+paper_details_question_score: Question score
+paper_details_correction_label: Correction
 
 # q
 question_hints: Hints

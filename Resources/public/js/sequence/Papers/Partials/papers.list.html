@@ -47,18 +47,12 @@
                     <thead></thead>
                     <tbody>
                         <tr>
-                            <td at-implicit at-attribute="user" at-title="{{ 'paper_list_table_user'|trans:{}:'ujm_sequence' }}"></td>
+                            <td at-implicit at-attribute="user" at-sortable at-title="{{ 'paper_list_table_user'|trans:{}:'ujm_sequence' }}"></td>
                             <td at-implicit at-attribute="number" at-sortable at-title="{{ 'paper_list_table_paper_number'|trans:{}:'ujm_sequence' }}"></td>
-                            <td at-implicit at-attribute="start" at-sortable at-initial-sorting="asc" at-title="{{ 'paper_list_table_start_date'|trans:{}:'ujm_sequence' }}"></td>
-                            <td at-attribute="end" at-sortable at-title="{{ 'paper_list_table_end_date'|trans:{}:'ujm_sequence' }}">
-                                {{item.end ? item.end : '-'}}
-                            </td>
-                            <td at-attribute="interrupted" at-title="{{ 'paper_list_table_interrupted'|trans:{}:'ujm_sequence' }}">
-                                <span data-ng-if="item.interrupted">{{ 'paper_list_table_interrupted_yes'|trans:{}:'ujm_sequence' }}</span>
-                                <span data-ng-if="!item.interrupted">{{ 'paper_list_table_interrupted_no'|trans:{}:'ujm_sequence' }}</span>
-                            </td>
-                            <td at-attribute="id" at-title="{{ 'paper_list_table_action'|trans:{}:'ujm_sequence' }}">
-                                
+                            <td at-implicit at-attribute="startDate" at-sortable at-initial-sorting="asc" at-title="{{ 'paper_list_table_start_date'|trans:{}:'ujm_sequence' }}"></td>
+                            <td at-implicit at-attribute="endDate" at-sortable at-title="{{ 'paper_list_table_end_date'|trans:{}:'ujm_sequence' }}"></td>
+                            <td at-implicit at-attribute="interruptLabel" at-sortable at-title="{{ 'paper_list_table_interrupted'|trans:{}:'ujm_sequence' }}"></td>
+                            <td at-attribute="id" at-title="{{ 'paper_list_table_action'|trans:{}:'ujm_sequence' }}">                                
                                 <a data-ng-if="paperListCtrl.checkCorrectionAvailability(item)" href="#/{{paperListCtrl.exercise.id}}/{{item.id}}">{{ 'paper_list_table_action'|trans:{}:'ujm_sequence' }}</a>
                                 <span data-ng-if="!paperListCtrl.checkCorrectionAvailability(item)">{{ 'paper_list_table_action_not_available'|trans:{}:'ujm_sequence' }}</span>
                             </td>

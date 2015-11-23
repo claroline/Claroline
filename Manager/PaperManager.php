@@ -124,6 +124,7 @@ class PaperManager
 
         return [
             'id' => $paper->getId(),
+            'paperNumber' => $paper->getNumPaper(),
             'questions' => $questions
         ];
     }
@@ -207,9 +208,10 @@ class PaperManager
     public function finishPaper(Paper $paper)
     {
         if (!$paper->getEnd()) {
-            $paper->setEnd(new \DateTime());
-            $this->om->flush();
+            $paper->setEnd(new \DateTime());            
         }
+        $paper->setInterupt(false);
+        $this->om->flush();
     }
 
     /**
@@ -228,8 +230,81 @@ class PaperManager
             ->findBy(['exercise' => $exercise, 'user' => $user]);
 
         $papers = array_map(function ($paper) {
+            $_user = $paper->getUser();
             return [
                 'id' => $paper->getId(),
+                'number' => $paper->getNumPaper(),
+                'user' => $_user->getFirstName().' '.$_user->getLastName(),
+                'start' => $paper->getStart()->format('Y-m-d H:i:s'),
+                'end' => $paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : null,
+                'interrupted' => $paper->getInterupt(),
+                'questions' => $this->exportPaperQuestions($paper)
+            ];
+        }, $papers);
+
+        $questions = array_map(function ($question) {
+            return $this->questionManager->exportQuestion($question, true);
+        }, $questionRepo->findByExercise($exercise));
+
+        return [
+            'questions' => $questions,
+            'papers' => $papers
+        ];
+    }
+    
+    /**
+     * Returns one specific paper details.
+     * Also includes the complete definition and solution of each question
+     * associated with the exercise.
+     *
+     * @param Paper     $paper
+     * @param Exercise  $exercise
+     * @return array
+     */
+    public function exportUserPaper(Paper $paper, Exercise $exercise)
+    {
+        $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
+
+        $user = $paper->getUser();
+        $_paper = [
+            'id' => $paper->getId(),
+            'number' => $paper->getNumPaper(),
+            'user' => $user->getFirstName().' '.$user->getLastName(),
+            'start' => $paper->getStart()->format('Y-m-d H:i:s'),
+            'end' => $paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : null,
+            'interrupted' => $paper->getInterupt(),
+            'questions' => $this->exportPaperQuestions($paper)
+        ];
+
+        $questions = array_map(function ($question) {
+            return $this->questionManager->exportQuestion($question, true);
+        }, $questionRepo->findByExercise($exercise));
+
+        return [
+            'questions' => $questions,
+            'paper' => $_paper
+        ];
+    }
+    
+    /**
+     * Returns the papers for a given exercise, in a JSON format.
+     * Also includes the complete definition and solution of each question
+     * associated with the exercise.
+     *
+     * @param Exercise  $exercise
+     * @return array
+     */
+    public function exportExercisePapers(Exercise $exercise)
+    {
+        $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
+        $papers = $this->om->getRepository('UJMExoBundle:Paper')
+            ->findBy(['exercise' => $exercise]);
+
+        $papers = array_map(function ($paper) {
+            $_user = $paper->getUser();
+            return [
+                'id' => $paper->getId(),
+                'user' => $_user->getFirstName().' '.$_user->getLastName(),
                 'number' => $paper->getNumPaper(),
                 'start' => $paper->getStart()->format('Y-m-d H:i:s'),
                 'end' => $paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : null,

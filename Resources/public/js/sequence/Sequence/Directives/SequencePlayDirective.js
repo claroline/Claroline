@@ -12,11 +12,10 @@
                 scope: {
                     sequence: '=',
                     paper: '=',
-                    attempts: '@',
                     user:'@'
                 },
                 link: function (scope, element, attr, sequencePlayCtrl) {
-                    sequencePlayCtrl.init(scope.sequence, scope.paper, scope.attempts, scope.user);                    
+                    sequencePlayCtrl.init(scope.sequence, scope.paper, scope.user);                    
                 }
             };
         }

@@ -9,29 +9,19 @@
 
             this.sequence = {};
             this.currentStep = {};
-            this.user;
-            //this.steps = {};
-            this.nbAttempts = 1;
+            this.user = {};
+
             this.isLastStep = false;
             this.isFirstStep = true;
             this.paper = {};
-            this.isFinished = false;
-            this.isLastStep = false;
-
-            this.setSequence = function (sequence) {
-                this.sequence = sequence;
-                CommonService.setSequence(sequence);
-            };
 
             /**
              * Init the sequence
              * @param {object} sequence
              * @param {object} sequence paper
-             * @param {number} number of attempts already done
              * @param {number} user id
              */
-            this.init = function (sequence, paper, nbAttempts, user) {
-
+            this.init = function (sequence, paper, user) {
                 // shuffle each question choices order if needed
                 for (var i = 0; i < sequence.steps.length; i++) {
                     // shuffle step question order
@@ -50,8 +40,6 @@
                 this.sequence = CommonService.setSequence(sequence);
                 this.paper = CommonService.setPaper(paper);
                 this.user = CommonService.setUser(user);
-                //this.steps = sequence.steps;
-                this.nbAttempts = nbAttempts;
                 // set current step
                 this.setCurrentStep(0);
 
@@ -107,7 +95,7 @@
             /**
              * When using the drop down to jump to a specific step
              */
-            this.goTo = function (step) {
+            this.goToStep = function (step) {
                 if (this.sequence.steps.indexOf(step) !== this.sequence.steps.indexOf(this.currentStep)) {
                     this.validateStep('goto', this.sequence.steps.indexOf(step));
                 }
@@ -115,85 +103,115 @@
 
             /**
              * save the current step in paper js object
+             * in some case end the sequence
              * go to another step or end sequence
              * @param {String} action
-             * @param {Number} index (nullable) the step index
+             * @param {Number} index (nullable) the step index when using direct access
              */
             this.validateStep = function (action, index) {
                 // manualy disable tooltips...
                 $('.tooltip').each(function () {
                     $(this).hide();
                 });
-                // data set by question directive
-                var studentData = CommonService.getStudentData();
                 // get current step index
                 var currentStepIndex = this.sequence.steps.indexOf(this.currentStep);
-                var newIndex = 0;
-                if (action && (action === 'forward' || action === 'backward')) {
-                    newIndex = action === 'forward' ? currentStepIndex + 1 : currentStepIndex - 1;
-                    this.saveAnswerAndGotTo(newIndex, studentData);
-                } else if (action && action === 'goto' && index !== undefined) {
-                    newIndex = index;
-                    this.saveAnswerAndGotTo(newIndex, studentData);
-                } else if (action && action === 'end' || action === 'interrupt') {
-                    // save the entire paper and redirect to paper details (correction)
-                    var interrupted = action === 'interrupt';
-                    // var promise = SequenceService.endSequence(this.sequence.id, studentData.paper, interrupted);
-                    var promise = SequenceService.endSequence(studentData.paper);
-                    promise.then(function (result) {
-                        if (this.checkCorrectionAvailability() && action !== 'interrupt') {
-                            // go to paper correction view
-                            var url = CommonService.generateUrl('paper-list', this.sequence.id) + '#/' + this.sequence.id + '/' + studentData.paper.id;
-                            $window.location = url;
-                        }
-                        else {
+                // get next step index
+                var newIndex = this.getNextStepIndex(currentStepIndex, action, index);
+                // data set by question directive
+                var studentData = CommonService.getStudentData();
+                // If anwsers exist we need to save them
+                if (studentData.answers && studentData.answers.length > 0) {
+                    // save anwsers
+                    var submitPromise = SequenceService.submitAnswer(this.paper.id, studentData);
+                    submitPromise.then(function (result) {
+                        // navigation inside player
+                        if (action && (action === 'forward' || action === 'backward' || action === 'goto')) {
+                            this.goTo(newIndex);
+                        } else if (action && action === 'end') {
+                            var endPromise = SequenceService.endSequence(studentData.paper)
+                            endPromise.then(function (result) {
+                                if (this.checkCorrectionAvailability()) {
+                                    // go to paper correction view
+                                    var url = CommonService.generateUrl('paper-list', this.sequence.id) + '#/' + this.sequence.id + '/' + studentData.paper.id;
+                                    $window.location = url;
+                                }
+                                else {
+                                    var url = CommonService.generateUrl('exercise-home', this.sequence.id);
+                                    $window.location = url;
+                                }
+                            }.bind(this));
+                        } else if (action && action === 'interrupt') {
                             // got to exercise home page
                             var url = CommonService.generateUrl('exercise-home', this.sequence.id);
                             $window.location = url;
+                        } else {
+                            var url = Routing.generate('ujm_sequence_error');
+                            $window.location = url;
                         }
                     }.bind(this));
                 } else {
-                    var url = Routing.generate('ujm_sequence_error');
-                    $window.location = url;
+
+                    if (action && (action === 'forward' || action === 'backward' || action === 'goto')) {
+                        this.goTo(newIndex);
+                    } else if (action && action === 'end') {                        
+                        var endPromise = SequenceService.endSequence(studentData.paper)
+                        endPromise.then(function (result) {
+                            if (this.checkCorrectionAvailability()) {
+                                // go to paper correction view
+                                var url = CommonService.generateUrl('paper-list', this.sequence.id) + '#/' + this.sequence.id + '/' + studentData.paper.id;
+                                $window.location = url;
+                            }
+                            else {
+                                var url = CommonService.generateUrl('exercise-home', this.sequence.id);
+                                $window.location = url;
+                            }
+                        }.bind(this));
+                    } else if (action && action === 'interrupt') {                 
+                        // got to exercise home page
+                        var url = CommonService.generateUrl('exercise-home', this.sequence.id);
+                        $window.location = url;
+                    } else {
+                        var url = Routing.generate('ujm_sequence_error');
+                        $window.location = url;
+                    }
                 }
+            };
+
+            this.getNextStepIndex = function (current, action, index) {
+                var newIndex = 0;
+                if (action && (action === 'forward' || action === 'backward')) {
+                    newIndex = action === 'forward' ? current + 1 : current - 1;
+                } else if (action && action === 'goto' && index !== undefined) {
+                    newIndex = index;
+                }
+                return newIndex;
             };
 
             /**
-             * Saves the anwser in DB and change step
+             * set the current step
              * @param {type} nextStepIndex
+             * @returns {undefined}
              */
-            this.saveAnswerAndGotTo = function (nextStepIndex, studentData) {
+            this.goTo = function (nextStepIndex) {
+                this.setCurrentStep(nextStepIndex);
+                CommonService.getCurrentQuestionPaperData(this.currentStep.items[0]);
 
-                if (studentData.answers.length > 0) {
-                    var promise = SequenceService.submitAnswer(this.paper.id, studentData);
-                    promise.then(function (result) {
-                        // change current step
-                        this.setCurrentStep(nextStepIndex);
-                        // update paper question = this.currentStep.items[0]
-                        CommonService.getCurrentQuestionPaperData(this.currentStep.items[0]);
-                    }.bind(this));
-                } else {
-                    // change current step
-                    this.setCurrentStep(nextStepIndex);
-                    // update paper question = this.currentStep.items[0]
-                    CommonService.getCurrentQuestionPaperData(this.currentStep.items[0]);
-                }
             };
-
 
             /**
              * Check if correction is available for a sequence
              * @returns {Boolean}
              */
             this.checkCorrectionAvailability = function () {
-                var correctionMode = CommonService.getCorrectionMode(this.sequence.correctionMode);
+                var correctionMode = CommonService.getCorrectionMode(this.sequence.meta.correctionMode);
+
                 switch (correctionMode) {
                     case "test-end":
                         return true;
                         break;
                     case "last-try":
                         // check if current try is the last one ? -> currentAttemptNumber === sequence.maxAttempts - 1 ?
-                        return this.nbAttempts === sequence.maxAttempts - 1;
+                        return this.paper.paperNumber === sequence.maxAttempts - 1;
                         break;
                     case "after-date":
                         var current = new Date();

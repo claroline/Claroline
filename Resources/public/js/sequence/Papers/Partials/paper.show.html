@@ -1,11 +1,11 @@
 <div class="panel panel-default">
     <div class="panel-heading clearfix">
-        <h3 class="panel-title pull-left">{{ 'label_exercise_correction'|trans:{}:'ujm_sequence'}} - {{ 'sequence_nb_attempts'|trans:{"1":paperDetailsCtrl.paper.tryNumber}:'ujm_sequence'}}</h3>        
+        <h3 class="panel-title pull-left">{{paperDetailsCtrl.sequence.meta.title}} : {{ 'paper_details_correction_label'|trans:{}:'ujm_sequence'}} - {{ 'sequence_nb_attempts'|trans:{"1":paperDetailsCtrl.paper.number}:'ujm_sequence'}}</h3>        
     </div>
     <div class="panel-body">           
         <div class="row">
             <div class="col-md-12">
-                <paper-details data-paper="paperDetailsCtrl.paper" data-exo-id="{{paperDetailsCtrl.exoId}}" data-context="from-list"></paper-details>
+                <correction-details data-paper="paperDetailsCtrl.paper" data-user="paperDetailsCtrl.user" data-questions="paperDetailsCtrl.questions" data-sequence="paperDetailsCtrl.sequence"></correction-details>
             </div>
         </div>
     </div>
@@ -13,4 +13,3 @@
        
     </div>
 </div>
-

@@ -1,11 +1,10 @@
 /**
- * Common module
- *  Share data service
+ * Correction module
  */
 (function () {
     'use strict';
 
-    angular.module('Paper', [
+    angular.module('Correction', [
         
        
     ]);

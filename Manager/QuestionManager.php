@@ -95,6 +95,8 @@ class QuestionManager
         $data->id = $question->getId();
         $data->type = $handler->getQuestionMimeType();
         $data->title = $question->getTitle();
+        $data->description = $question->getDescription();
+        $data->invite = $question->getInvite();
 
         if (count($question->getHints()) > 0) {
             $data->hints = array_map(function ($hint) use ($withSolution) {

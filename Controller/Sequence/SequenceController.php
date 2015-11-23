@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use UJM\ExoBundle\Entity\Exercise;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 
 /**
  * Description of SequenceController.
@@ -16,39 +17,39 @@ class SequenceController extends Controller
 {
     /**
      * Render the Exercise player main view.
-     * This view instaciate the angular app
+     * This view instaciate the angular PlayerApp
      * @Route("/play/{id}", requirements={"id" = "\d+"}, name="ujm_exercise_play", options={"expose"=true})
      * @Method("GET")
      */
     public function playAction(Exercise $exercise)
     {
-        // TODO check authorisation
-        /*$collection = new ResourceCollection([$exercise->getResourceNode()]);
+        // check authorisation
+        $collection = new ResourceCollection([$exercise->getResourceNode()]);
         // $this->authorization : commenton le récupère ?
-        if (!$this->authorization->isGranted('OPEN', $collection)) {
+        if (!$this->container->get('security.authorization_checker')->isGranted('OPEN', $collection)) {
             throw new AccessDeniedHttpException();
-        }*/
-        // 
-        // 
+        }
         // get user
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
-        // get number of attempts already done by user
-        $nbAttempts = $this->container->get('ujm.exo_exercise')->getNbPaper($user->getId(), $exercise->getId());
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();   
 
         $paperManager = $this->get('ujm.exo.paper_manager');
         $apiData = $paperManager->openPaper($exercise, $user, false);
         $exo = json_encode($apiData['exercise']);
         $paper = json_encode($apiData['paper']);
         
-        //echo '<pre>';
-        //print_r($apiData);die;
+        $u = array(
+            'id' => $user->getId(),
+            'name' => $user->getFirstName() . '' . $user->getLastName(),
+            'admin' => $this->isExerciseAdmin($exercise)
+        );
+
+
         
         return $this->render('UJMExoBundle:Sequence:play.html.twig', array(
                     '_resource' => $exercise,
                     'sequence' => $exo,
-                    'attempts' => $nbAttempts,
                     'paper' => $paper,
-                    'user' => $user->getId()
+                    'user' => json_encode($u)
             )
         );
     }
@@ -60,5 +61,15 @@ class SequenceController extends Controller
     public function sequenceError()
     {
         throw new NotFoundHttpException();
+    }
+    
+    private function isExerciseAdmin(Exercise $exercise)
+    {
+        $collection = new ResourceCollection(array($exercise->getResourceNode())); 
+        if ( $this->container->get('security.authorization_checker')->isGranted('ADMINISTRATE', $collection)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

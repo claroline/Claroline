@@ -1,12 +1,14 @@
 /**
  * This is a container app used to handle routes for paper views
- * 
+ * Paper list
+ * Paper details
+ *  ->  This one uses paper directive to display paper details. 
+ *      This directive has been created to handle the case when a correction has to be shown immediatly after a question answer
  */
 (function () {
     'use strict';
 
-    // exercise papers module
-    var papersApp = angular.module('PapersApp', [
+    var dependencies = [
         'ngSanitize',
         'angular-loading-bar',
         'ngRoute',
@@ -17,10 +19,11 @@
         'ngBootbox',
         'angular-table',
         'Common',
-        'Sequence',
-        'Paper'
-    ]);
+        'Correction'
+    ];
 
+    // exercise papers module
+    var papersApp = angular.module('PapersApp', dependencies);
 
     var resolvePaperDetailsData = {
         /**
@@ -29,47 +32,85 @@
         paperPromise: [
             '$route',
             'PapersService',
-            function getPaper($route, PapersService) {                             
+            function getPaper($route, PapersService) {
 
                 var promise = null;
-                if ($route.current.params && $route.current.params.pid) {
-                    promise = PapersService.getOne($route.current.params.pid);
-                    
+                if ($route.current.params && $route.current.params.eid && $route.current.params.pid) {
+                    promise = PapersService.getOne($route.current.params.eid, $route.current.params.pid);
+
+                }
+                return promise;
+            }
+        ],
+        paperExercise: [
+            '$route',
+            'PapersService',
+            function getSequence($route, PapersService) {
+
+                var promise = null;
+                if ($route.current.params && $route.current.params.eid) {
+                    promise = PapersService.getSequence($route.current.params.eid);
+
+                }
+                return promise;
+
+            }
+        ],
+        user: [
+            '$route',
+            'PapersService',
+            function getConnectedUserInfos($route, PapersService) {
+
+                var promise = null;
+                if ($route.current.params && $route.current.params.eid) {
+                    promise = PapersService.getConnectedUser($route.current.params.eid);
                 }
                 return promise;
 
             }
         ]
     };
-    
+
     var resolvePaperListData = {
-         /**
+        /**
          * Get the exercise papers
          */
         paperList: [
             '$route',
             'PapersService',
-            function getPapers($route, PapersService) {                             
+            function getPapers($route, PapersService) {
 
                 var promise = null;
                 if ($route.current.params && $route.current.params.eid) {
                     promise = PapersService.getAll($route.current.params.eid);
-                    
+
                 }
                 return promise;
 
             }
         ],
-        
-        paperExercise:[
+        paperExercise: [
             '$route',
-            'SequenceService',
-            function getSequence($route, SequenceService) {                             
+            'PapersService',
+            function getSequence($route, PapersService) {
 
                 var promise = null;
                 if ($route.current.params && $route.current.params.eid) {
-                    promise = SequenceService.get($route.current.params.eid);
-                    
+                    promise = PapersService.getSequence($route.current.params.eid);
+
+                }
+                return promise;
+
+            }
+        ],
+        user: [
+            '$route',
+            'PapersService',
+            function getConnectedUserInfos($route, PapersService) {
+
+                var promise = null;
+                if ($route.current.params && $route.current.params.eid) {
+                    promise = PapersService.getConnectedUser($route.current.params.eid);
                 }
                 return promise;
 
@@ -105,11 +146,20 @@
             cfpLoadingBarProvider.spinnerTemplate = '<div class="loading">Loading&#8230;</div>';
         }
     ]);
-    
+
 
     papersApp.filter(
             'unsafe',
             function ($sce) {
                 return $sce.trustAsHtml;
+            });
+    papersApp.filter(
+            'mySqlDateToLocalDate',
+            function () {
+                return function (date) {
+                    var searched = new RegExp('-', 'g');
+                    var localDate = new Date(Date.parse(date.replace(searched, '/')));
+                    return localDate.toLocaleString();
+                };
             });
 })();
