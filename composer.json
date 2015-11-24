@@ -27,8 +27,8 @@
         "Collecticiel"
     ],
     "require": {
-        "claroline/core-bundle" : "~5.0",
-        "claroline/agenda-bundle": "~5.0"
+        "claroline/core-bundle" : "~6.0",
+        "claroline/agenda-bundle": "~6.0"
     },
     "autoload": {
         "psr-0": { "Innova\\CollecticielBundle": "" }
