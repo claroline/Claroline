@@ -38,6 +38,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Innova\CollecticielBundle\Event\Log\LogDropzoneAddCommentEvent;
+
+
+
 
 class CorrectionController extends DropzoneBaseController
 {
@@ -67,7 +71,7 @@ class CorrectionController extends DropzoneBaseController
             'dropzone' => $dropzone,
             'finished' => true
         ));
-        if ($userDrop === null) {
+        if ($userDrop == null) {
             $this->getRequest()->getSession()->getFlashBag()->add(
                 'error',
                 $this->get('translator')->trans('You must have made ​​your copy before correcting', array(), 'innova_collecticiel')
@@ -109,10 +113,10 @@ class CorrectionController extends DropzoneBaseController
         $em = $this->getDoctrine()->getManager();
         // Check that the user as a not finished correction (exclude admin correction). Otherwise generate a new one.
         $correction = $em->getRepository('InnovaCollecticielBundle:Correction')->getNotFinished($dropzone, $user);
-        if ($correction === null) {
+        if ($correction == null) {
             $drop = $em->getRepository('InnovaCollecticielBundle:Drop')->drawDropForCorrection($dropzone, $user);
 
-            if ($drop !== null) {
+            if ($drop != null) {
                 $correction = new Correction();
                 $correction->setDrop($drop);
                 $correction->setUser($user);
@@ -157,7 +161,7 @@ class CorrectionController extends DropzoneBaseController
 
         $grade = null;
         $i = 0;
-        while ($i < count($grades) && $grade === null) {
+        while ($i < count($grades) and $grade == null) {
             $current = $grades[$i];
             if (
                 $current->getCriterion()->getId() == $criterionId
@@ -168,7 +172,7 @@ class CorrectionController extends DropzoneBaseController
             $i++;
         }
 
-        if ($grade === null) {
+        if ($grade == null) {
             $criterionReference = $em->getReference('InnovaCollecticielBundle:Criterion', $criterionId);
             $grade = new Grade();
             $grade->setCriterion($criterionReference);
@@ -200,7 +204,7 @@ class CorrectionController extends DropzoneBaseController
         $em->flush();
 
         $event = null;
-        if ($edit === true) {
+        if ($edit == true) {
             $event = new LogCorrectionUpdateEvent($dropzone, $correction->getDrop(), $correction);
         } else {
             $event = new LogCorrectionEndEvent($dropzone, $correction->getDrop(), $correction);
@@ -702,7 +706,7 @@ class CorrectionController extends DropzoneBaseController
         $documentOri = $document;
 
         $em = $this->getDoctrine()->getManager();
-        $dropzoneManager        = $this->get('innova.manager.dropzone_manager');
+        $dropzoneManager       = $this->get('innova.manager.dropzone_manager');
         $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
 
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
@@ -710,6 +714,8 @@ class CorrectionController extends DropzoneBaseController
             ->getDoctrine()
             ->getRepository('InnovaCollecticielBundle:Correction')
             ->getCorrectionAndDropAndUserAndDocuments($dropzone, $correctionId);
+
+        $countCorrection = count($correction);
 
         // Parcours des documents sélectionnés
         foreach ($correction->getDrop()->getDocuments() as $document) {
@@ -768,10 +774,12 @@ class CorrectionController extends DropzoneBaseController
                         $this->dispatch($event);
                     }
                 }
+                $em->flush();
                 // Fin ajout.
             }    
         }
-        $em->flush();
+
+
 
         $userId = $this->get('security.token_storage')->getToken()->getUser()->getId();
         if ($state == 'preview') {
@@ -950,7 +958,6 @@ class CorrectionController extends DropzoneBaseController
                     'edit' => false,
                     'state' => $state,
                     'adminInnova' => $canEdit,
-                    'collecticielOpenOrNot' => $collecticielOpenOrNot
                 )
             );
         }
@@ -1109,7 +1116,6 @@ class CorrectionController extends DropzoneBaseController
         */
 
         $em = $this->getDoctrine()->getManager();
-
         $correction = new Correction();
         $correction->setUser($user);
         $correction->setDropzone($dropzone);
@@ -1131,7 +1137,7 @@ class CorrectionController extends DropzoneBaseController
                     'state' => 'edit',
                     'correctionId' => $correction->getId(),
                     'documentId' => $document->getId()
-               )
+                )
             )
         );
     }
@@ -1379,6 +1385,7 @@ class CorrectionController extends DropzoneBaseController
         $form = $this->createForm(new CorrectionDenyType(), $correction);
 
         $dropUser = $correction->getDrop()->getUser();
+        $drop = $correction->getDrop();
         $dropId = $correction->getDrop()->getId();
         $dropzoneId = $dropzone->getId();
         // dropZone not in peerReview or corrections are not displayed to users or correction deny is not allowed
@@ -2050,11 +2057,21 @@ class CorrectionController extends DropzoneBaseController
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+                $em = $this->getDoctrine()->getManager();
 
-            // Insertion en base du commentaire
-            $em->persist($comment);
-            $em->flush();
+                // Insertion en base du commentaire
+                $em->persist($comment);
+                $em->flush();
+
+                $dropzoneManager = $this->get('innova.manager.dropzone_manager');
+
+                // Envoi notification. InnovaERV
+//                $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
+                $usersIds = array();
+                $usersIds[] = $dropzone->getResourceNode()->getCreator()->getId();
+                $usersIds[] = $document->getSender()->getId();
+                $event = new LogDropzoneAddCommentEvent($dropzone, $dropzone->getManualState(), $usersIds);
+                $this->get('event_dispatcher')->dispatch('log', $event);
             }
         }
 

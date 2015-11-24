@@ -120,3 +120,22 @@ log_resource-innova_collecticiel-dropzone_manual_state_changed_sentence: "a chan
 log_resource-innova_collecticiel-dropzone_manual_state_changed_title: "Changement d'état  de l'évaluation"
 log_resource-innova_collecticiel-dropzone_manual_state_changed_filter: "Changement d'état de l'évaluation"
 
+log_resource-innova_collecticiel-dropzone_manual_request_sent_shortname: "Changement d'état d'un document "
+log_resource-innova_collecticiel-dropzone_manual_request_sent_sentence: "a changé l'état du document %resource%"
+log_resource-innova_collecticiel-dropzone_manual_request_sent_title: "Changement d'état du document"
+log_resource-innova_collecticiel-dropzone_manual_request_sent_filter: "Changement d'état du document"
+
+log_resource-innova_collecticiel-dropzone_add_comment_shortname: "Changement d'état de l'évaluation "
+log_resource-innova_collecticiel-dropzone_add_comment_sentence: "a changé la phase de l'évaluation %resource%"
+log_resource-innova_collecticiel-dropzone_add_comment_title: "Changement d'état  de l'évaluation"
+log_resource-innova_collecticiel-dropzone_add_comment_filter: "Changement d'état de l'évaluation"
+
+log_resource-innova_collecticiel-dropzone_validate_document_shortname: "Changement d'état de l'évaluation "
+log_resource-innova_collecticiel-dropzone_validate_document_sentence: "a changé la phase de l'évaluation %resource%"
+log_resource-innova_collecticiel-dropzone_validate_document_title: "Changement d'état  de l'évaluation"
+log_resource-innova_collecticiel-dropzone_validate_document_filter: "Changement d'état de l'évaluation"
+
+log_resource-innova_collecticiel-dropzone_add_document_shortname: "Changement d'état de l'évaluation "
+log_resource-innova_collecticiel-dropzone_add_document_sentence: "a changé la phase de l'évaluation %resource%"
+log_resource-innova_collecticiel-dropzone_add_document_title: "Changement d'état  de l'évaluation"
+log_resource-innova_collecticiel-dropzone_add_document_filter: "Changement d'état de l'évaluation"

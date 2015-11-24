@@ -64,6 +64,18 @@ class DropzoneController extends DropzoneBaseController
             $oldManualPlanningOption = $dropzone->getManualState();
 
             $form->handleRequest($this->getRequest());
+
+            // Récupération de la EXTRA donnée "publish". InnovaERV.
+            $extraDataPublished = "";
+            foreach ($form->getExtraData() as $ps) {
+                $extraDataPublished = $ps;
+            }
+
+//          $published = $form->get('published')->getData();
+            // Mise à jour de la publication dans la table "claro_resource_node"
+            $resourceId = $dropzone->getResourceNode()->getId();
+            $resourceNodes = $dropzoneManager->updatePublished($resourceId, $extraDataPublished);
+
             $dropzone = $form->getData();
             $form = $this->handleFormErrors($form, $dropzone);
 
@@ -88,16 +100,27 @@ class DropzoneController extends DropzoneBaseController
             $changeSet = $unitOfWork->getEntityChangeSet($dropzone);
 
             $em = $this->getDoctrine()->getManager();
+
+            // InnovaERV : ici, on a changé l'état du collecticiel.
+            // InnovaERV : j'ajoute une notification.
+            if ($oldManualPlanningOption != $dropzone->getManualState())
+            {
+                // send notification.
+                $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
+                $event = new LogDropzoneManualStateChangedEvent($dropzone, $dropzone->getManualState(), $usersIds);
+                $this->get('event_dispatcher')->dispatch('log', $event);
+            }
+
             $em->persist($dropzone);
             $em->flush();
 
             // check if manual state has changed
-            if ($manualStateChanged) {
-                // send notification.
-                $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
-                $event = new LogDropzoneManualStateChangedEvent($dropzone, $newManualState, $usersIds);
-                $this->get('event_dispatcher')->dispatch('log', $event);
-            }
+//            if ($manualStateChanged) {
+//                // send notification.
+//                $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
+//                $event = new LogDropzoneManualStateChangedEvent($dropzone, $newManualState, $usersIds);
+//                $this->get('event_dispatcher')->dispatch('log', $event);
+//            }
 
             $event = new LogDropzoneConfigureEvent($dropzone, $changeSet);
             $this->dispatch($event);

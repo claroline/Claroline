@@ -59,7 +59,6 @@ class LogDropEvaluateListener
                     $this->sendFinishedLog($drop);
                 }
             }
-//            die();
         }
     }
 
