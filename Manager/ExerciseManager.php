@@ -179,6 +179,21 @@ class ExerciseManager
             'steps' => $this->exportSteps($exercise, $withSolutions),
         ];
     }
+    
+    /**
+     * Exports an exercise in a JSON-encodable format.
+     *
+     * @param Exercise  $exercise
+     * @param bool      $withSolutions
+     * @return array
+     */
+    public function exportExerciseMinimal(Exercise $exercise)
+    {
+        return [
+            'id' => $exercise->getId(),
+            'meta' => $this->exportMetadata($exercise)
+        ];
+    }
 
     /**
      * @todo duration

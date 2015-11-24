@@ -287,6 +287,18 @@ class PaperManager
     }
     
     /**
+     * Returns the number of finished papers already done by the user for a given exercise
+     * @param Exercise  $exercise
+     * @param User      $user
+     * @return array
+     */
+    public function countUserFinishedPapers(Exercise $exercise, User $user){
+        $nbPapers = $this->om->getRepository('UJMExoBundle:Paper')
+            ->countUserFinishedPapers($exercise, $user);
+        return $nbPapers;
+    }
+    
+    /**
      * Returns the papers for a given exercise, in a JSON format.
      * Also includes the complete definition and solution of each question
      * associated with the exercise.

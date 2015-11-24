@@ -66,10 +66,25 @@ class ExerciseController
      */
     public function exportAction(Exercise $exercise)
     {
-        // $this->assertHasPermission('ADMINISTRATE', $exercise);
-        $this->assertHasPermission('OPEN', $exercise);
+        $this->assertHasPermission('ADMINISTRATE', $exercise);
 
         return new JsonResponse($this->exerciseManager->exportExercise($exercise));
+    }
+    
+     /**
+     * Exports the minimal representation of an exercise (id + meta)
+     * in a JSON format.
+     *
+     * @EXT\Route("/exercises/{id}/minimal", name="exercise_get_minimal")
+     *
+     * @param Exercise $exercise
+     * @return JsonResponse
+     */
+    public function minimalExportAction(Exercise $exercise){
+        
+        $this->assertHasPermission('OPEN', $exercise);
+
+        return new JsonResponse($this->exerciseManager->exportExerciseMinimal($exercise));
     }
 
     /**
@@ -184,6 +199,37 @@ class ExerciseController
     public function papersAction(User $user, Exercise $exercise)
     {
         return new JsonResponse($this->paperManager->exportUserPapers($exercise, $user));
+    }
+    
+    
+    /**
+     * Returns all the papers associated with an exercise.
+     *
+     * @EXT\Route("/exercises/{id}/papers/admin", name="exercise_papers_admin")
+     * @EXT\ParamConverter("user", converter="current_user")
+     *
+     * @param User      $user
+     * @param Exercise  $exercise
+     * @return JsonResponse
+     */
+    public function papersAdminAction(User $user, Exercise $exercise)
+    {
+        $this->assertHasPermission('ADMINISTRATE', $exercise);
+        return new JsonResponse($this->paperManager->exportExercisePapers($exercise));
+    }
+    
+    /**
+     * Returns the number of finished paper for a given user and exercise
+     *
+     * @EXT\Route("/exercises/{id}/papers/count", name="exercise_papers_count")
+     * @EXT\ParamConverter("user", converter="current_user")
+     *
+     * @param User      $user
+     * @param Exercise  $exercise
+     * @return JsonResponse
+     */
+    public function countFinishedPaperAction(User $user, Exercise $exercise){
+        return new JsonResponse($this->paperManager->countUserFinishedPapers($exercise, $user));
     }
     
     /**
