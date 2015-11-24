@@ -73,11 +73,11 @@
                     return this.user;
                 },
                 /**
-                 * return paper anwser(s) and used hints for the current question
-                 * @param {type} id question id
+                 * Set the current paper data and return paper anwser(s) and used hints for the current question
+                 * @param {object} question
                  * @returns {object}
                  */
-                getCurrentQuestionPaperData: function (question) {
+                setCurrentQuestionPaperData: function (question) {
                     // search for an existing answer to the question in paper
                     for (var i = 0; i < this.paper.questions.length; i++) {
                         if (this.paper.questions[i].id === question.id.toString()) {

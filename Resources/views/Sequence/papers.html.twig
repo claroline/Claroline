@@ -21,19 +21,19 @@
     {# Load Claroline JS #}
     {{ parent() }}
 
-    {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm-papers.js'
+    {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm-exo-papers.js'
         
         '@UJMExoBundle/Resources/public/js/sequence/Common/*'
         '@UJMExoBundle/Resources/public/js/sequence/Common/Services/*'
 
-        '@UJMExoBundle/Resources/public/js/sequence/Correction/*'
-        '@UJMExoBundle/Resources/public/js/sequence/Correction/Controllers/*'
-        '@UJMExoBundle/Resources/public/js/sequence/Correction/Directives/*'
-        '@UJMExoBundle/Resources/public/js/sequence/Correction/Services/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Papers/Correction/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Papers/Correction/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Papers/Correction/Directives/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Papers/Correction/Services/*'
 
-        '@UJMExoBundle/Resources/public/js/sequence/Papers/*'
-        '@UJMExoBundle/Resources/public/js/sequence/Papers/Controllers/*'
-        '@UJMExoBundle/Resources/public/js/sequence/Papers/Services/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Papers/Main/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Papers/Main/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Papers/Main/Services/*'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

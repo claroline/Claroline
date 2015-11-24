@@ -17,27 +17,27 @@
     {# Load Claroline JS #}
     {{ parent() }}
 
-    {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm-sequence-show.js'
+    {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm-exo-player.js'
         
         '@UJMExoBundle/Resources/public/js/sequence/Common/*'
         '@UJMExoBundle/Resources/public/js/sequence/Common/Services/*'
 
-        '@UJMExoBundle/Resources/public/js/sequence/Sequence/*'
-        '@UJMExoBundle/Resources/public/js/sequence/Sequence/Controllers/*'
-        '@UJMExoBundle/Resources/public/js/sequence/Sequence/Directives/*'
-        '@UJMExoBundle/Resources/public/js/sequence/Sequence/Services/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Player/Sequence/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Player/Sequence/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Player/Sequence/Directives/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Player/Sequence/Services/*'
 
-        '@UJMExoBundle/Resources/public/js/sequence/Question/*'
-        '@UJMExoBundle/Resources/public/js/sequence/Question/Controllers/*'
-        '@UJMExoBundle/Resources/public/js/sequence/Question/Directives/*'
-        '@UJMExoBundle/Resources/public/js/sequence/Question/Services/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Player/Question/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Player/Question/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Player/Question/Directives/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Player/Question/Services/*'
 
-        '@UJMExoBundle/Resources/public/js/sequence/Step/*'
-        '@UJMExoBundle/Resources/public/js/sequence/Step/Controllers/*'
-        '@UJMExoBundle/Resources/public/js/sequence/Step/Directives/*'
-        '@UJMExoBundle/Resources/public/js/sequence/Step/Services/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Player/Step/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Player/Step/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Player/Step/Directives/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Player/Step/Services/*'
 
-        '@UJMExoBundle/Resources/public/js/sequence/player.module.js'
+        '@UJMExoBundle/Resources/public/js/sequence/Player/player.module.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
