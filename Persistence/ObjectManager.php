@@ -18,6 +18,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 
 /**
  * @DI\Service("claroline.persistence.object_manager")
@@ -104,7 +105,7 @@ class ObjectManager extends ObjectManagerDecorator
     public function startFlushSuite()
     {
         ++$this->flushSuiteLevel;
-        if ($this->activateLog && $this->showFlushLevel) $this->log('Flush level: ' . $this->flushSuiteLevel . '.');
+        if ($this->activateLog && $this->showFlushLevel) $this->logFlushLevel();
     }
 
     /**
@@ -121,7 +122,7 @@ class ObjectManager extends ObjectManagerDecorator
 
         --$this->flushSuiteLevel;
         $this->flush();
-        if ($this->activateLog && $this->showFlushLevel) $this->log('Flush level: ' . $this->flushSuiteLevel. '.');
+        if ($this->activateLog && $this->showFlushLevel) $this->logFlushLevel();
     }
 
     /**
@@ -311,5 +312,18 @@ class ObjectManager extends ObjectManagerDecorator
     public function hideFlushLevel()
     {
         $this->showFlushLevel = false;
+    }
+
+    private function logFlushLevel()
+    {
+        $stack = debug_backtrace();
+
+        foreach ($stack as $call) {
+            if ($call['function'] === 'endFlushSuite' || $call['function'] === 'startFlushSuite') {
+                $this->log('Function "' . $call['function'] . '" was called from file ' . $call['file'] . ' on line ' . $call['line'] . '.', LogLevel::DEBUG);
+            }
+        }
+
+        $this->log('Flush level: ' . $this->flushSuiteLevel. '.');
     }
 }
