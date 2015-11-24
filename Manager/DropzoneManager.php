@@ -8,6 +8,8 @@ use Innova\CollecticielBundle\Entity\Dropzone;
 use Innova\CollecticielBundle\Entity\Drop;
 use DateTime;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Repository\ResourceNodeRepository;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 /**
  * @DI\Service("innova.manager.dropzone_manager")
@@ -17,7 +19,8 @@ class DropzoneManager
     private $container;
     private $maskManager;
     private $em;
-
+    /** @var ResourceNodeRepository */
+    private $resourceNodeRepo;
     /**
      * @DI\InjectParams({
      *     "container" = @DI\Inject("service_container"),
@@ -30,6 +33,7 @@ class DropzoneManager
         $this->container = $container;
         $this->maskManager = $maskManager;
         $this->em = $em;
+        $this->resourceNodeRepo = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
     }
 
     /**
@@ -40,7 +44,11 @@ class DropzoneManager
      */
     public function getDropzoneUsersIds(Dropzone $dropzone)
     {
-        $this->container->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
+
+        echo "dans getDropzoneUsersIdsssssssssss<br />";
+//        $this->container->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
+
+        echo "<br />suite";
 
         //getting the ressource node
         $ressourceNode = $dropzone->getResourceNode();
@@ -425,4 +433,24 @@ class DropzoneManager
 
         return $event;
     }
+
+    public function updatePublished($resourceId, $extraDataPublished)
+    {
+
+        $published = 0;
+        if ($extraDataPublished == "on") {
+          $published = 1;
+        }
+
+        $resourceNodes = $this->resourceNodeRepo->findBy(array('id' => $resourceId));
+
+        foreach ($resourceNodes as $resourceNode) {
+            $resourceNode->setPublished($published);
+            $this->em->persist($resourceNode);
+        }
+        $this->em->flush();
+
+        return $resourceNodes;
+    }
+
 }

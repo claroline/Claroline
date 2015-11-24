@@ -29,6 +29,7 @@ use Innova\CollecticielBundle\Event\Log\LogDropEvaluateEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropStartEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropzoneConfigureEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropzoneManualStateChangedEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropzoneManualRequestSentEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class DropzoneBaseController extends Controller
@@ -46,6 +47,7 @@ class DropzoneBaseController extends Controller
 /** Partie log créé pour Innova */
             $event instanceof LogCommentReadCreateEvent or
             $event instanceof LogCommentCreateEvent or
+            $event instanceof LogDropzoneManualRequestSentEvent or
 /** Fin partie log créé pour Innova */
             $event instanceof LogCriterionCreateEvent or
             $event instanceof LogCriterionUpdateEvent or

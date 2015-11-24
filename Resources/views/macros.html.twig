@@ -27,9 +27,10 @@
                                 <th>{{ 'Name of document'|trans({}, 'innova_collecticiel') }}</th>
                                 <th class="typeColumn">{{ 'Type of document'|trans({}, 'innova_collecticiel') }}</th>
                                 <th class="dateColumn">{{ 'Date hour'|trans({}, 'innova_collecticiel') }}</th>
-                                {% if not adminInnova %}
+                                {# #146 : on affiche cette colonne même en tant qu'enseignant, demande de JJQ #}
+                                {#  {% if not adminInnova %} #}
                                 <th class="centered" style="width:140px;">{{ 'Commented document'|trans({}, 'innova_collecticiel') }}</th>
-                                {% endif %}
+                                {#  {% endif %} #}
                                 <th class="centered" style="width:120px;">{{ 'Comment'|trans({}, 'innova_collecticiel') }}</th>
                                 {% if adminInnova %}
                                     <th class="no-sort" style="width: 120px;"></th>

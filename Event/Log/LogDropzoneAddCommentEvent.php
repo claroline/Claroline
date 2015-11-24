@@ -7,9 +7,9 @@ use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Innova\CollecticielBundle\Entity\Dropzone;
 
-class LogDropzoneManualStateChangedEvent extends AbstractLogResourceEvent implements NotifiableInterface {
+class LogDropzoneAddCommentEvent extends AbstractLogResourceEvent implements NotifiableInterface {
 
-    const ACTION = 'resource-innova_collecticiel-dropzone_manual_state_changed';
+    const ACTION = 'resource-innova_collecticiel-dropzone_add_comment';
 
     protected $dropzone;
     protected $newState;
@@ -25,20 +25,11 @@ class LogDropzoneManualStateChangedEvent extends AbstractLogResourceEvent implem
     {
 
         $this->dropzone = $dropzone;
-        $this->type = $dropzone->getResourceNode()->getName();
-
+        $this->newState = $dropzone->getResourceNode()->getName();
         $this->userIds = $userIds;
 
-        // Traitement de la traduction pour CE cas. InnovaERV.
-        if ($newstate == "allowDrop") {
-            $this->newState = "Open";
-        }
-        if ($newstate == "finished") {
-            $this->newState = "Closed";
-        }
-
         $this->details = array(
-            'newState'=> $this->newState
+//            'newState'=> $this->newState
         );
 
         $this->userId = $dropzone->getDrops()[0]->getUser()->getId();
@@ -126,7 +117,7 @@ class LogDropzoneManualStateChangedEvent extends AbstractLogResourceEvent implem
         $notificationDetails['resource'] = array(
             'id' => $this->dropzone->getId(),
             'name' => $this->firstName . " " . $this->lastName, // $this->resource->getName(),
-            'type' => $this->type
+            'type' => $this->dropzone->getResourceNode()->getName()
         );
 
         return $notificationDetails;

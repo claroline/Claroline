@@ -6,12 +6,12 @@ use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Innova\CollecticielBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Entity\Document;
 
-class LogDropzoneManualStateChangedEvent extends AbstractLogResourceEvent implements NotifiableInterface {
+class LogDropzoneManualRequestSentEvent extends AbstractLogResourceEvent implements NotifiableInterface {
 
-    const ACTION = 'resource-innova_collecticiel-dropzone_manual_state_changed';
-
-    protected $dropzone;
+    const ACTION = 'resource-innova_collecticiel-dropzone_manual_request_sent';
+    protected $document;
     protected $newState;
     protected $details;
     private $userIds = array();
@@ -21,33 +21,20 @@ class LogDropzoneManualStateChangedEvent extends AbstractLogResourceEvent implem
      * @param Section $section
      * @param Contribution $contribution
     */
-    public function __construct(Dropzone $dropzone, $newstate, $userIds)
+    public function __construct(Document $document, $newstate, $userIds)
     {
-
-        $this->dropzone = $dropzone;
-        $this->type = $dropzone->getResourceNode()->getName();
-
+        $this->document = $document;
+        $this->newState = $newstate;
         $this->userIds = $userIds;
-
-        // Traitement de la traduction pour CE cas. InnovaERV.
-        if ($newstate == "allowDrop") {
-            $this->newState = "Open";
-        }
-        if ($newstate == "finished") {
-            $this->newState = "Closed";
-        }
-
         $this->details = array(
-            'newState'=> $this->newState
+                'newState'=> $newstate
         );
 
-        $this->userId = $dropzone->getDrops()[0]->getUser()->getId();
 
-        // Récupération du nom et du prénom
-        $this->firstName = $dropzone->getDrops()[0]->getUser()->getFirstName();
-        $this->lastName = $dropzone->getDrops()[0]->getUser()->getLastName();
 
-        parent::__construct($dropzone->getResourceNode(), $this->details);
+
+
+/**        parent::__construct($dropzone->getResourceNode(), $this->details); */
     }
 
     /**
@@ -57,10 +44,9 @@ class LogDropzoneManualStateChangedEvent extends AbstractLogResourceEvent implem
     {
         return array(self::DISPLAYED_WORKSPACE);
     }
-
-    public function getDropzone()
+    public function getDocument()
     {
-        return $this->$dropzone;
+        return $this->$document;
     }
 
     /**
@@ -110,7 +96,7 @@ class LogDropzoneManualStateChangedEvent extends AbstractLogResourceEvent implem
      */
     public function getIconKey()
     {
-        return "dropzone";
+        return "document";
     }
 
     /**
@@ -120,13 +106,11 @@ class LogDropzoneManualStateChangedEvent extends AbstractLogResourceEvent implem
      */
     public function getNotificationDetails()
     {
-
         $notificationDetails = array_merge($this->details, array());
-
         $notificationDetails['resource'] = array(
-            'id' => $this->dropzone->getId(),
-            'name' => $this->firstName . " " . $this->lastName, // $this->resource->getName(),
-            'type' => $this->type
+            'id' => $this->document->getId(),
+            'name' => $this->resource->getName(),
+            'type' => $this->resource->getResourceType()->getName()
         );
 
         return $notificationDetails;

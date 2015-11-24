@@ -46,7 +46,6 @@ class DropzoneController extends DropzoneBaseController
         $em                     = $this->getDoctrine()->getManager();
         $dropzoneVoter          = $this->get('innova.manager.dropzone_voter');
         $dropzoneManager        = $this->get('innova.manager.dropzone_manager');
-        $agendaManager          = $this->get('claroline.manager.agenda_manager');
         $translator             = $this->get('translator');
         $platformConfigHandler  = $this->get('claroline.config.platform_config_handler');
 
@@ -63,9 +62,20 @@ class DropzoneController extends DropzoneBaseController
             // see if manual planification option has changed.
             $oldManualPlanning = $dropzone->getManualPlanning();
             $oldManualPlanningOption = $dropzone->getManualState();
-            $oldEndDropDate = $dropzone->getEndAllowDrop();
 
             $form->handleRequest($this->getRequest());
+
+            // Récupération de la EXTRA donnée "publish". InnovaERV.
+            $extraDataPublished = "";
+            foreach ($form->getExtraData() as $ps) {
+                $extraDataPublished = $ps;
+            }
+
+//          $published = $form->get('published')->getData();
+            // Mise à jour de la publication dans la table "claro_resource_node"
+            $resourceId = $dropzone->getResourceNode()->getId();
+            $resourceNodes = $dropzoneManager->updatePublished($resourceId, $extraDataPublished);
+
             $dropzone = $form->getData();
             $form = $this->handleFormErrors($form, $dropzone);
 
@@ -78,8 +88,8 @@ class DropzoneController extends DropzoneBaseController
 
             $manualStateChanged = false;
             $newManualState = null;
-            if ($dropzone->getManualPlanning() == true) {
-                if ($oldManualPlanning == false || $oldManualPlanningOption != $dropzone->getManualState()) {
+            if ($dropzone->getManualPlanning() === true) {
+                if ($oldManualPlanning === false || $oldManualPlanningOption != $dropzone->getManualState()) {
                     $manualStateChanged = true;
                     $newManualState = $dropzone->getManualState();
                 }
@@ -90,16 +100,27 @@ class DropzoneController extends DropzoneBaseController
             $changeSet = $unitOfWork->getEntityChangeSet($dropzone);
 
             $em = $this->getDoctrine()->getManager();
+
+            // InnovaERV : ici, on a changé l'état du collecticiel.
+            // InnovaERV : j'ajoute une notification.
+            if ($oldManualPlanningOption != $dropzone->getManualState())
+            {
+                // send notification.
+                $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
+                $event = new LogDropzoneManualStateChangedEvent($dropzone, $dropzone->getManualState(), $usersIds);
+                $this->get('event_dispatcher')->dispatch('log', $event);
+            }
+
             $em->persist($dropzone);
             $em->flush();
 
             // check if manual state has changed
-            if ($manualStateChanged) {
-                // send notification.
-                $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
-                $event = new LogDropzoneManualStateChangedEvent($dropzone, $newManualState, $usersIds);
-                $this->get('event_dispatcher')->dispatch('log', $event);
-            }
+//            if ($manualStateChanged) {
+//                // send notification.
+//                $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
+//                $event = new LogDropzoneManualStateChangedEvent($dropzone, $newManualState, $usersIds);
+//                $this->get('event_dispatcher')->dispatch('log', $event);
+//            }
 
             $event = new LogDropzoneConfigureEvent($dropzone, $changeSet);
             $this->dispatch($event);
@@ -329,9 +350,9 @@ class DropzoneController extends DropzoneBaseController
     {
         if (
             !$dropzone->getAllowWorkspaceResource()
-            and !$dropzone->getAllowUpload()
-            and !$dropzone->getAllowUrl()
-            and !$dropzone->getAllowRichText()
+            && !$dropzone->getAllowUpload()
+            && !$dropzone->getAllowUrl()
+            && !$dropzone->getAllowRichText()
             ) {
             $form->get('allowWorkspaceResource')->addError(new FormError('Choose at least one type of document'));
             $form->get('allowUpload')->addError(new FormError('Choose at least one type of document'));

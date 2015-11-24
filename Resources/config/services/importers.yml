@@ -1,0 +1,8 @@
+services:
+    # Collecticiel importer
+    innova_collecticiel.importer.collecticiel:
+        class: Innova\CollecticielBundle\Transfer\CollecticielImporter
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: claroline.importer }

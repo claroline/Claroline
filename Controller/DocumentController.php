@@ -10,6 +10,7 @@ use Innova\CollecticielBundle\Entity\Drop;
 use Innova\CollecticielBundle\Entity\Dropzone;
 use Innova\CollecticielBundle\Event\Log\LogDocumentCreateEvent;
 use Innova\CollecticielBundle\Event\Log\LogDocumentDeleteEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropzoneManualRequestSentEvent;
 use Innova\CollecticielBundle\Event\Log\LogDocumentOpenEvent;
 use Innova\CollecticielBundle\Form\DocumentDeleteType;
 use Innova\CollecticielBundle\Form\DocumentType;
@@ -21,6 +22,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Cocur\Slugify\Slugify;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Innova\CollecticielBundle\Event\Log\LogDropzoneValidateDocumentEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropzoneAddDocumentEvent;
 
 class DocumentController extends DropzoneBaseController
 {
@@ -69,7 +72,7 @@ class DocumentController extends DropzoneBaseController
         $em = $this->getDoctrine()->getManager();
         $hiddenDropDirectory = $drop->getHiddenDirectory();
 
-        if ($hiddenDropDirectory == null) {
+        if ($hiddenDropDirectory === null) {
             $hiddenDropDirectory = new Directory();
             // slugify user name
             $slugify = new Slugify();
@@ -236,6 +239,8 @@ class DocumentController extends DropzoneBaseController
 
         $event = new LogDocumentCreateEvent($dropzone, $drop, $document);
         $this->dispatch($event);
+
+        return $document;
     }
 
     /**
@@ -250,9 +255,10 @@ class DocumentController extends DropzoneBaseController
      */
     public function documentAction($dropzone, $documentType, $drop)
     {
-        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
-        $formType = null;
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $dropzoneManager = $this->get('innova.manager.dropzone_manager');
+
         if ($documentType == 'url') {
             if (!$dropzone->getAllowUrl()) {
                 throw new AccessDeniedException();
@@ -276,7 +282,29 @@ class DocumentController extends DropzoneBaseController
             $form->handleRequest($this->getRequest());
 
             if ($form->isValid()) {
-                $this->createDocument($dropzone, $drop, $form, $documentType);
+                $newDocument = $this->createDocument($dropzone, $drop, $form, $documentType);
+
+                // Envoi notification. InnovaERV
+                $usersIds = array();
+
+                // Ici, on récupère le créateur du collecticiel = l'admin
+                $userCreator = $dropzone->getResourceNode()->getCreator()->getId();
+                // Ici, on récupère celui qui vient de déposer le nouveau document
+                //$userAddDocument = $this->get('security.context')->getToken()->getUser()->getId(); 
+                $userDropDocument = $drop->getUser()->getId();
+                $userSenderDocument = $newDocument->getSender()->getId();
+            
+                if ($userCreator == $userSenderDocument) {
+                    // Ici avertir l'étudiant qui a travaillé sur ce collecticiel
+                    $usersIds[] = $userDropDocument;
+                }
+                else {
+                    // Ici avertir celui a qui créé le collecticiel
+                    $usersIds[] = $userCreator;
+                }
+                $event = new LogDropzoneAddDocumentEvent($dropzone, $dropzone->getManualState(), $usersIds);
+                $this->get('event_dispatcher')->dispatch('log', $event);
+
 
 /*
 InnoERV : demande de JJQ dans son document d'août 2015
@@ -413,8 +441,8 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
             return $this->redirect($document->getUrl());
         } elseif (
             $document->getType() == 'text'
-            or $document->getType() == 'resource'
-            or $document->getType() == 'file'
+            || $document->getType() == 'resource'
+            || $document->getType() == 'file'
         ) {
             /** Issue #27 "il se produit un plantage au niveau de "temporary_access_resource_manager" InnovaERV */
             $this->get('innova.temporary_access_resource_manager')->addTemporaryAccess($document->getResourceNode(), $user);
@@ -444,7 +472,7 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
      * @Route(
      *      "/document/{documentId}",
      *      name="innova_collecticiel_validate_document",
-     *      requirements={"documentId" = "\d+"},
+     *      requirements={"documentId" = "\d+", "dropzoneId" = "\d+"},
      *      options={"expose"=true}
      * )
      * @ParamConverter("document", class="InnovaCollecticielBundle:Document", options={"id" = "documentId"})
@@ -461,9 +489,56 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
         // Mise à jour du booléen de Validation de false à true
         $doc->setvalidate(true);
 
+        // Récupération du dropID puis du dropZone
+        $dropId = $document->getDrop()->getId();
+//var_dump("dropId = " . $dropId);
+
+        $dropRepo = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Drop');
+        $drops = $dropRepo->findBy(array('id' => $dropId));
+
+//        $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop')
+//        ->findBy(array('id' => $dropId));
+
+//echo "<pre>";
+//var_dump($drops[0]->getDropzone()->getId());
+//echo "</pre>";
+
+        $dropzoneRepo = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:DropZone');
+        $dropzones = $dropzoneRepo->findBy(array('id' => $drops[0]->getDropzone()->getId()));
+
+//echo "<pre>";
+//var_dump($dropzones[0]->getResourceNode()->getId());
+//var_dump($dropzones[0]->getResourceNode()->getName());
+//echo "</pre>";
+
+//die();
+//var_dump($drops->getDropzone()->getId());
+
+//        $dropzoneRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:DropZone')
+//        ->findBy(array('id' => $dropRepo->getDropzone()->getId()));
+
         // Mise à jour de la base de données
         $em->persist($doc);
         $em->flush();
+
+//        $usersIds = array();
+//        $usersIds[] = $document->getSender();
+
+        $dropzoneManager = $this->get('innova.manager.dropzone_manager');
+
+//var_dump($dropzones[0]);
+
+        // Envoi notification. InnovaERV
+        $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzones[0]);
+
+//var_dump($usersIds);
+//die();
+        $event = new LogDropzoneValidateDocumentEvent($document, $dropzones[0], $usersIds);
+        $this->get('event_dispatcher')->dispatch('log', $event);
+
+//        $event = new LogDropzoneManualRequestSentEvent($document, "titi", $usersIds, $dropzone);
+//        $this->get('event_dispatcher')->dispatch('log', $event);
+//var_dump("LOG OK !!!!!!!!!!");
 
         // Ajout afin d'afficher la partie du code avec "Demande transmise"
         $template = $this->get("templating")->

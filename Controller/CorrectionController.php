@@ -38,6 +38,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Innova\CollecticielBundle\Event\Log\LogDropzoneAddCommentEvent;
+
+
+
 
 class CorrectionController extends DropzoneBaseController
 {
@@ -45,7 +49,7 @@ class CorrectionController extends DropzoneBaseController
     {
         $em = $this->getDoctrine()->getManager();
         // Check that the dropzone is in the process of peer review
-        if ($dropzone->isPeerReview() == false) {
+        if ($dropzone->isPeerReview() === false) {
             $this->getRequest()->getSession()->getFlashBag()->add(
                 'error',
                 $this->get('translator')->trans('The peer review is not enabled', array(), 'innova_collecticiel')
@@ -702,7 +706,7 @@ class CorrectionController extends DropzoneBaseController
         $documentOri = $document;
 
         $em = $this->getDoctrine()->getManager();
-        $dropzoneManager        = $this->get('innova.manager.dropzone_manager');
+        $dropzoneManager       = $this->get('innova.manager.dropzone_manager');
         $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
 
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
@@ -807,7 +811,7 @@ class CorrectionController extends DropzoneBaseController
 
         $edit = $state == 'edit';
 
-        if ($correction == null) {
+        if ($correction === null) {
             throw new NotFoundHttpException();
         }
 
@@ -954,7 +958,6 @@ class CorrectionController extends DropzoneBaseController
                     'edit' => false,
                     'state' => $state,
                     'adminInnova' => $canEdit,
-                    'collecticielOpenOrNot' => $collecticielOpenOrNot
                 )
             );
         }
@@ -1113,7 +1116,6 @@ class CorrectionController extends DropzoneBaseController
         */
 
         $em = $this->getDoctrine()->getManager();
-
         $correction = new Correction();
         $correction->setUser($user);
         $correction->setDropzone($dropzone);
@@ -1135,7 +1137,7 @@ class CorrectionController extends DropzoneBaseController
                     'state' => 'edit',
                     'correctionId' => $correction->getId(),
                     'documentId' => $document->getId()
-               )
+                )
             )
         );
     }
@@ -1774,7 +1776,7 @@ class CorrectionController extends DropzoneBaseController
             $em->persist($correction);
 
             $currentDrop = $correction->getDrop();
-            if ($currentDrop != null && $oldTotalGrade != $totalGrade) {
+            if ($currentDrop !== null && $oldTotalGrade != $totalGrade) {
                 $event = new LogCorrectionUpdateEvent($dropzone, $currentDrop, $correction);
                 $this->dispatch($event);
             }
@@ -1887,7 +1889,7 @@ class CorrectionController extends DropzoneBaseController
 
         $edit = $state == 'edit';
 
-        if ($correction == null) {
+        if ($correction === null) {
             throw new NotFoundHttpException();
         }
 
@@ -2055,11 +2057,21 @@ class CorrectionController extends DropzoneBaseController
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+                $em = $this->getDoctrine()->getManager();
 
-            // Insertion en base du commentaire
-            $em->persist($comment);
-            $em->flush();
+                // Insertion en base du commentaire
+                $em->persist($comment);
+                $em->flush();
+
+                $dropzoneManager = $this->get('innova.manager.dropzone_manager');
+
+                // Envoi notification. InnovaERV
+//                $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
+                $usersIds = array();
+                $usersIds[] = $dropzone->getResourceNode()->getCreator()->getId();
+                $usersIds[] = $document->getSender()->getId();
+                $event = new LogDropzoneAddCommentEvent($dropzone, $dropzone->getManualState(), $usersIds);
+                $this->get('event_dispatcher')->dispatch('log', $event);
             }
         }
 

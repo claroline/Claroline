@@ -68,7 +68,6 @@ class DocumentRepository extends EntityRepository {
             ;
 
         $numberDocuments = count($qb->getQuery()->getResult());
-//        echo "Utilisateur numéro " . $user->getId() . " a " . $numberDocuments . " document(s)";die();
 
         return $numberDocuments;
 

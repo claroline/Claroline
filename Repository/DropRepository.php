@@ -8,9 +8,11 @@
 namespace Innova\CollecticielBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Claroline\CoreBundle\Entity\User;
 use Innova\CollecticielBundle\Entity\Drop;
 use Innova\CollecticielBundle\Entity\Dropzone;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 class DropRepository extends EntityRepository
 {
@@ -55,13 +57,6 @@ class DropRepository extends EntityRepository
         foreach ($dropIds as $key => $value) {
             $arrayResult[] = $key;
         }
-//        echo('<pre>');
-//        var_dump($dropzone->getExpectedTotalCorrection());
-//        var_dump($result);
-//        var_dump($dropIds);
-//        var_dump($arrayResult);
-//        echo('</pre>');
-//        die();
 
         return $arrayResult;
     }
@@ -290,7 +285,7 @@ class DropRepository extends EntityRepository
     //
     // Appel dans dropsAwaitingAction du controller DropController. InnovaERV.
     //
-    public function getDropsAwaitingCorrectionQuery($dropzone, $case)
+    public function getDropsAwaitingCorrectionQuery(Dropzone $dropzone, $case)
     {
 
         // getDropIdsFullyCorrectedQuery : fonction définie dans ce repository
@@ -315,23 +310,40 @@ class DropRepository extends EntityRepository
                 ->leftJoin('drop.corrections', 'correction')
                 ->orderBy('drop.reported desc, user.lastName, user.firstName')
                 ->setParameter('dropzone', $dropzone);
-        }    
-            // #65 InnovaERV : commentaire car critères ne sont pas utiles. 
-            // ->andWhere('drop.finished = true')
-            // ->andWhere('drop.unlockedDrop = false')
-        // On vient via l'onglet "Espaces partagés"
-        else
-        {
-            $qb = $this
-                ->createQueryBuilder('drop')
-                ->select('drop, document, correction, user')
-                ->andWhere('drop.dropzone = :dropzone')
-                ->join('drop.user', 'user')
-                ->leftJoin('drop.documents', 'document')
-                ->leftJoin('drop.corrections', 'correction')
-                ->orderBy('drop.reported desc, user.lastName, user.firstName')
-                ->setParameter('dropzone', $dropzone);
+        }  
+
+        if (count($dropIds) > 0) {
+            $qb = $qb
+                ->andWhere('drop.id NOT IN (:dropIds)')
+                ->setParameter('dropIds', $dropIds);
         }
+
+        return $qb->getQuery();
+    }
+
+    //
+    // Appel dans dropsAwaitingAction du controller DropController. InnovaERV.
+    //
+    public function getSharedSpacesQuery(Dropzone $dropzone, Workspace $workspace)
+    {
+
+        // getDropIdsFullyCorrectedQuery : fonction définie dans ce repository
+        $lines = $this->getDropIdsFullyCorrectedQuery($dropzone)->getResult();
+
+        $dropIds = array();
+        foreach ($lines as $line) {
+            $dropIds[] = $line['did'];
+        }
+
+        $qb = $this
+            ->createQueryBuilder('drop')
+            ->select('drop, document, correction, user')
+            ->andWhere('drop.dropzone = :dropzone')
+            ->join('drop.user', 'user')
+            ->leftJoin('drop.documents', 'document')
+            ->leftJoin('drop.corrections', 'correction')
+            ->orderBy('drop.reported desc, user.lastName, user.firstName')
+            ->setParameter('dropzone', $dropzone);
 
         if (count($dropIds) > 0) {
             $qb = $qb
