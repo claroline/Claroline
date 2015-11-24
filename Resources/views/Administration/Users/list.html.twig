@@ -19,34 +19,14 @@
     }}
 {% endblock %}
 {% block section_content %}
-    <div id="users-panel" class="panel panel-default" ng-app="userManager">
-        <div class="panel-body" ng-controller="contentCtrl">
-            <div class="col-md-2 panel-group">
-                <div class="panel-body">
-                    <locales align="center" class="locale-list">
-                    </locales>
-                </div>
-                <div class="panel-body">
-                    <repositories class="list-group">
-                    </repositories>
-                </div>
+    <div id="users-panel" class="panel panel-default" ng-app="usersManager">
+        <div class="panel-body" ng-controller="usersCtrl">
+            <div align="center" class="action-bar">
+                <searchbar>
+                </searchbar>   
             </div>
-            <div class="col-md-10 panel-group">
-                <div class="container panel-body">
-                    <div align="center">
-                        <searchbar>
-                        </searchbar>   
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <translations>
-                    </translations>
-                </div>
-                <div class="panel-body">
-                    <preferedlang class="locale-list">
-                    </preferedlang>
-                </div>
-            </div>
+            <userlist>
+            </userlist>
         </div>
     </div>
 
@@ -67,29 +47,8 @@
 {% block javascripts %}
     {{ parent() }}
 
-    {# Angular JS #}
-    {% javascripts debug=false filter='jsmin' output='vendor/claroline/js/angular.js'
-        '@InnovaAngularJSBundle/Resources/public/js/angular.min.js'
-        '@InnovaAngularJSBundle/Resources/public/js/angular-sanitize.min.js'
-        '@InnovaAngularJSBundle/Resources/public/js/angular-route.min.js'
-        '@InnovaAngularJSBundle/Resources/public/js/angular-resource.min.js'
-        '@InnovaAngularJSBundle/Resources/public/js/angular-touch.min.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-    {# Angular UI #}
-    {% javascripts debug=false filter='jsmin' output='vendor/angular/angular-ui.js'
-        '@InnovaAngularUIBootstrapBundle/Resources/public/js/*'
-        '@InnovaAngularUITreeBundle/Resources/public/js/*'
-        '@InnovaAngularUIPageslideBundle/Resources/public/js/*'
-        '@InnovaAngularUITinyMCEBundle/Resources/public/js/*'
-        '@InnovaAngularUITranslationBundle/Resources/public/js/*'
-        '@InnovaAngularUIResourcePickerBundle/Resources/public/js/*'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
+    <script type="text/javascript" src="{{ asset('vendor/angular/angular.js')}}"> </script>
+    <script type="text/javascript" src="{{ asset('vendor/angular/angular-ui.js')}}"> </script>
     <script type="text/javascript" src="{{ asset('bundles/clarolineangulardatatable/js/release/dataTable.helpers.min.js') }}">
     </script>
 
@@ -100,7 +59,7 @@
         var AngularApp = {};
         AngularApp.webDir = "{{ asset('') }}";
     </script>
-<!--
-    <script type="text/javascript" src={{ asset('bundles/clarolinetranslator/js/app.js') }}></script>
-->
+
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/users/users.app.js') }}></script>
+
 {% endblock %}
