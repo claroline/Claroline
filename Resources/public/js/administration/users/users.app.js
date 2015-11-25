@@ -1,31 +1,25 @@
 var usersManager = angular.module('usersManager', ['usersSearch']);
 
-angular.module('usersSearch').constant('usersCallback', function(users) {
-	alert(users);
-});
-
 usersManager.controller('usersCtrl', function(
 	$scope,
 	$log,
 	$http,
 	$cacheFactory,
-	$users,
 	usersSearcher,
 	API
 ) {
-
-	$scope.results = usersSearcher.getResults();
-	console.log($scope.results);
+	$scope.results = usersSearcher.getResults(function(managedUsers, param) {
+		return managedUsers + param + Math.random();
+	}, 'test');
 });
 
 usersManager.factory('API', function($http) {
 	var api = {};
 
-
 	return api;
 });
 
-angular.module('usersManager').directive('userlist', [
+usersManager.directive('userlist', [
 	function userlist() {
 		return {
 			restrict: 'E',
