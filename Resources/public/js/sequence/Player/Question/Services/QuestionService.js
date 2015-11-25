@@ -22,9 +22,7 @@
                     var paper = CommonService.getPaper();
                     $http
                             .get(
-                                    //Routing.generate('ujm_get_hint_content', {id: _id})
                                     Routing.generate('exercice_hint', {paperId: paper.id, hintId: hid})
-                                    //exercice_hint
                                     )
                             .success(function (response) {
                                 deferred.resolve(response);

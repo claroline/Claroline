@@ -36,6 +36,8 @@
                             })
                             .error(function (data, status) {
                                 deferred.reject([]);
+                                console.log('PapersService, getAll method error');
+                                console.log(data);
                                 var url = Routing.generate('ujm_sequence_error', {message: data.error.message, code: data.error.code});
                                 $window.location = url;
                             });
@@ -196,8 +198,7 @@
                                 deferred.resolve(response);
                             })
                             .error(function(data, status){
-                                 deferred.reject([]);
-                         console.log(data);
+                                 deferred.reject([]);    
                                 var url = Routing.generate('ujm_sequence_error', {message: data.error.message, code: data.error.code});
                                 $window.location = url;
                             });
@@ -217,7 +218,6 @@
                 getPaperMaxNumber: function (papers) {
                     var max = 0;
                     for (var i = 0; i < papers.length; i++) {
-                        console.log(papers[i]);
                         if (max < papers[i].number && papers[i].end !== '' && papers[i].end !== undefined && !papers[i].interrupted) {
                             max = papers[i].number;
                         }

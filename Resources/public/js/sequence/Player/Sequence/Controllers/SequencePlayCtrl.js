@@ -63,10 +63,8 @@
                 // check new index is in computable range
                 if (index < this.sequence.steps.length && index >= 0) {
                     this.currentStep = this.sequence.steps[index];
-                    // CommonService.getCurrentQuestionPaperData(this.currentStep.items[0]);
                 } else {
-                    // console.log('set current step error');
-                    var url = Routing.generate('ujm_sequence_error');
+                    var url = Routing.generate('ujm_sequence_error', {message:'index out of bounds', code:'500'});
                     $window.location = url;
                 }
             };
@@ -162,8 +160,8 @@
                             $window.location = url;
                         }
                         else {
-                            var url = CommonService.generateUrl('exercise-home', this.sequence.id);
-                            $window.location = url;
+                           var url = CommonService.generateUrl('exercise-home', this.sequence.id);
+                           $window.location = url;
                         }
                     }.bind(this));
                 } else if (action && action === 'interrupt') {
@@ -171,7 +169,7 @@
                     var url = CommonService.generateUrl('exercise-home', this.sequence.id);
                     $window.location = url;
                 } else {
-                    var url = Routing.generate('ujm_sequence_error');
+                    var url = Routing.generate('ujm_sequence_error', {message:'action not allowed', code:'500'});
                     $window.location = url;
                 }
             };
@@ -189,7 +187,7 @@
                         break;
                     case "last-try":
                         // check if current try is the last one ?
-                        return this.paper.numberNumber === sequence.meta.maxAttempts;
+                        return this.paper.paperNumber === this.sequence.meta.maxAttempts;
                         break;
                     case "after-date":
                         var now = new Date();                        

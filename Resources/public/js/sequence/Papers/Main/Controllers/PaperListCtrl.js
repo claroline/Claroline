@@ -84,7 +84,7 @@
                 if (this.user.admin || this.exercise.meta.maxAttempts === 0) {
                     this.displayRetryExerciseLink = true;
                 } else {
-                    this.displayRetryExerciseLink = PapersService.userCanReplayExercise(this.exercise.meta.maxAttempts, this.papers);
+                    this.displayRetryExerciseLink = this.papers.length < this.exercise.meta.maxAttempts;//PapersService.userCanReplayExercise(this.exercise.meta.maxAttempts, this.papers);
                 }
             };
 

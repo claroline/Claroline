@@ -87,7 +87,7 @@
                     }
                     // if no info found, initiate object
                     this.currentQuestionPaperData = {
-                        id: question.id,
+                        id: question.id.toString(),
                         answer: [],
                         hints: []
                     };
