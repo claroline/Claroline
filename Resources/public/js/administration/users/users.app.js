@@ -8,8 +8,9 @@ usersManager.controller('usersCtrl', function(
 	usersSearcher,
 	API
 ) {
-	$scope.results = usersSearcher.getResults(function(managedUsers, param) {
-		return managedUsers + param + Math.random();
+	$scope.results = {}; 
+	$scope.results.users = usersSearcher.getResults(function(searcher, param) {
+		return searcher.managedUsers + param + Math.random();
 	}, 'test');
 });
 

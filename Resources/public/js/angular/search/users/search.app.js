@@ -27,10 +27,11 @@ usersSearch.factory('usersSearcher', function($http) {
 	var searcher = {};
 
 	searcher.getResults = function(usersCallback, params) {
-		return usersCallback(searcher.managedUsers, params);
+		return usersCallback(searcher, params);
 	}
 
 	searcher.search = function(managedUsers) {
+		console.log('search');
 		searcher.managedUsers = managedUsers;
 	}
 
