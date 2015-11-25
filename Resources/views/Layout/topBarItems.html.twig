@@ -26,11 +26,11 @@
 
     {% block rightSide %}
         {% import _self as topbar %}
-    
+
         {% if adminTools|length > 0 %}
             {{ topbar.item({'name':'administration', 'dropdown':block('dropdownAdministration')}) }}
         {% endif %}
-    
+
         {% if isInAWorkspace %}
             {% set workspacesName = currentWorkspace.getName() | length > 16 ? currentWorkspace.getName() | slice(0, 16) ~ '...' : currentWorkspace.getName() %}
         {% else %}
@@ -57,7 +57,7 @@
     {% block dropdownAdministration %}
         <ul class="dropdown-menu" role="menu">
             {% for tool in adminTools %}
-                {{ 
+                {{
                     topbar.item({
                         'name': tool.getName()|trans({}, 'tools'),
                         'href': path('claro_admin_open_tool', {'toolName': tool.getName() }),

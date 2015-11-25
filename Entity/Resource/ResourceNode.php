@@ -130,7 +130,7 @@ class ResourceNode
      *      targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
      *      inversedBy="resources"
      * )
-     * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      */
     protected $workspace;
 
@@ -200,6 +200,11 @@ class ResourceNode
      * @ORM\Column(type="boolean", options={"default": 1})
      */
     protected $active = true;
+
+    /**
+     * @ORM\Column()
+     */
+    protected $guid;
 
     public function __construct()
     {
@@ -594,5 +599,15 @@ class ResourceNode
     public function __toString()
     {
         return $this->getPathForDisplay();
+    }
+
+    public function setGuid($guid)
+    {
+        $this->guid = $guid;
+    }
+
+    public function getGuid()
+    {
+        return $this->guid;
     }
 }

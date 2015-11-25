@@ -114,7 +114,8 @@ class SimpleTextWidgetListener
         if (!is_null($widgetConfig)) {
             $widgetConfigCopy = new SimpleTextConfig();
             $widgetConfigCopy->setWidgetInstance($copy);
-            $widgetConfigCopy->setContent($this->replaceLinks($widgetConfig->getContent(), $event->getResourceInfos()));
+            $content = $this->replaceResourceLinks($widgetConfig->getContent(), $event->getResourceInfos());
+            $widgetConfigCopy->setContent($this->replaceTabsLinks($content, $event->getTabsInfos()));
 
             $this->om->persist($widgetConfigCopy);
             $this->om->flush();
@@ -123,26 +124,42 @@ class SimpleTextWidgetListener
         $event->stopPropagation();
     }
 
-    private function replaceLinks($content, $resourceInfos)
+    private function replaceResourceLinks($content, $resourceInfos)
     {
         $baseUrl = $this->router->getContext()->getBaseUrl();
 
         foreach ($resourceInfos['copies'] as $resource) {
+            $type = $resource['original']->getResourceType()->getName();
+ 
             $content = str_replace(
                 '/file/resource/media/' . $resource['original']->getId(),
                 '/file/resource/media/' . $resource['copy']->getId(),
                 $content
             );
 
-            $type = $resource['original']->getResourceType()->getName();
-
             $content = str_replace(
                 "/resource/open/{$type}/" . $resource['original']->getId(),
                 "/resource/open/{$type}/" . $resource['copy']->getId(),
                 $content
             );
+            
         }
 
+        return $content;
+    }
+    
+    private function replaceTabsLinks($content, $tabsInfos)
+    {
+        foreach ($tabsInfos as $tabInfo) {
+            $oldWsId = $tabInfo['original']->getWorkspace()->getId();
+            $newWsId = $tabInfo['copy']->getWorkspace()->getId();
+            $content = str_replace(
+                '/workspaces/' . $oldWsId . '/open/tool/home/tab/' . $tabInfo['original']->getId(),
+                '/workspaces/' . $newWsId . '/open/tool/home/tab/' . $tabInfo['copy']->getId(),
+                $content
+            );
+        }
+        
         return $content;
     }
 }

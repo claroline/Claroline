@@ -11,9 +11,7 @@
     'use strict';
 
     var tinymce = window.tinymce;
-    var resourceManager = window.Claroline.ResourceManager;
     var translator = window.Translator;
-    var buttons = window.tinymce.claroline.buttons || {};
 
     tinymce.PluginManager.add('resourcePicker', function(editor, url) {
         editor.addButton('resourcePicker', {

@@ -8,4 +8,11 @@ id is not generated at this time #}
     {% set workspace = notification.details.workspace.name %}
 {% endif %}
 
-{{ notification.actionKey|trans({'%role%' : notification.details.role.name|trans({},'platform'), '%workspace%' : workspace}, 'notification') | raw }}
+{% if notification.details.receiverUser.username is defined and notification.details.receiverUser.username != app.user.username %}
+    {{ 'user_subscription_notification_for_admin'|trans({'%workspace%': workspace}, 'platform') | raw }}
+{% else %}
+    {{ notification.actionKey|trans({
+        '%role%' : notification.details.role.name|trans({}, 'platform'),
+        '%workspace%' : workspace
+    }, 'notification') | raw }}
+{% endif %}

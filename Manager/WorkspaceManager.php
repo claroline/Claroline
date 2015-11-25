@@ -202,13 +202,15 @@ class WorkspaceManager
         User $user,
         $name,
         $code,
-        $description,
-        $displayable,
-        $selfRegistration,
-        $selfUnregistration,
+        $description = null,
+        $displayable = false,
+        $selfRegistration = false,
+        $selfUnregistration = false,
         &$errors = array()
     )
     {
+        $this->om->startFlushSuite();
+        $this->log('Workspace from model beginning.');
         $workspaceModelManager = $this->container->get('claroline.manager.workspace_model_manager');
 
         $workspace = new Workspace();
@@ -228,6 +230,8 @@ class WorkspaceManager
 
         $this->createWorkspace($workspace);
         $workspaceModelManager->addDataFromModel($model, $workspace, $user, $errors);
+        $this->log('Workspace from model end.');
+        $this->om->endFlushSuite();
 
         return $workspace;
     }
@@ -239,10 +243,13 @@ class WorkspaceManager
      */
     public function deleteWorkspace(Workspace $workspace)
     {
+        $this->om->startFlushSuite();
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
+        $this->log('Removing root directory ' . $root->getName() . '[id:' . $root->getId() . ']');
 
         if ($root) {
             $children = $root->getChildren();
+            $this->log('Looping through ' . count($children) . ' children...');
 
             if ($children) {
                 foreach ($children as $node) {
@@ -256,7 +263,7 @@ class WorkspaceManager
             array(array($workspace))
         );
         $this->om->remove($workspace);
-        $this->om->flush();
+        $this->om->endFlushSuite();
     }
 
     /**
@@ -374,6 +381,18 @@ class WorkspaceManager
     }
 
     /**
+     * @param string $search
+     * @param string[] $roles
+     *
+     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace[]
+     */
+    public function getOpenableWorkspacesByRolesAndSearch($search, array $roles)
+    {
+
+        return $this->workspaceRepo->findBySearchAndRoles($search, $roles);
+    }
+
+    /**
      * Returns the accesses rights of a given token for a set of workspaces.
      * If a tool name is passed in, the check will be limited to that tool,
      * otherwise workspaces with at least one accessible tool will be
@@ -477,6 +496,21 @@ class WorkspaceManager
     public function getOpenableWorkspacesByRolesPager(array $roles, $page, $max)
     {
         $workspaces = $this->getOpenableWorkspacesByRoles($roles);
+
+        return $this->pagerFactory->createPagerFromArray($workspaces, $page, $max);
+    }
+
+    /**
+     * @param string $search
+     * @param string[] $roles
+     * @param integer $page
+     * @param integer $max
+     *
+     * @return \PagerFanta\PagerFanta
+     */
+    public function getOpenableWorkspacesBySearchAndRolesPager($search, array $roles, $page, $max)
+    {
+        $workspaces = $this->getOpenableWorkspacesByRolesAndSearch($search, $roles);
 
         return $this->pagerFactory->createPagerFromArray($workspaces, $page, $max);
     }
@@ -736,6 +770,11 @@ class WorkspaceManager
         $role = $this->roleManager->getCollaboratorRole($workspace);
         $wksrq->setRole($role);
         $wksrq->setWorkspace($workspace);
+        $this->dispatcher->dispatch(
+            'log',
+            'Log\LogWorkspaceRegistrationQueue',
+            array($wksrq)
+        );
         $this->om->persist($wksrq);
         $this->om->flush();
     }
@@ -753,11 +792,6 @@ class WorkspaceManager
 
         if (count($userRoles) === 0) {
             $this->roleManager->associateRole($user, $role);
-            $this->dispatcher->dispatch(
-                'log',
-                'Log\LogRoleSubscribe',
-                array($role, $user)
-            );
             $this->dispatcher->dispatch(
                 'claroline_workspace_register_user',
                 'WorkspaceAddUser',
@@ -877,8 +911,9 @@ class WorkspaceManager
             $selfRegistration = $workspace[3];
             $registrationValidation = $workspace[4];
             $selfUnregistration = $workspace[5];
+            $errors = array();
 
-            if (isset($workspace[6])) {
+            if (isset($workspace[6]) && trim($workspace[6]) !== '') {
                 $user = $this->om->getRepository('ClarolineCoreBundle:User')
                     ->findOneByUsername($workspace[6]);
             } else {
@@ -918,10 +953,7 @@ class WorkspaceManager
             $j++;
 
             if ($i % self::MAX_WORKSPACE_BATCH_SIZE === 0) {
-                if ($logger) $logger(" [UOW size: " . $this->om->getUnitOfWork()->size() . "]");
-                $i = 0;
                 $this->om->forceFlush();
-                if ($logger) $logger(" Workspace $j ($name) being created");
                 $this->om->clear();
             }
 
@@ -1119,6 +1151,15 @@ class WorkspaceManager
 
     public function setLogger(LoggerInterface $logger)
     {
+        $rm = $this->container->get('claroline.manager.resource_manager');
+        $wmm = $this->container->get('claroline.manager.workspace_model_manager');
+        if (!$wmm->getLogger()) $wmm->setLogger($logger);
+        if (!$rm->getLogger()) $rm->setLogger($logger);
         $this->logger = $logger;
+    }
+
+    public function getLogger()
+    {
+        return $this->logger;
     }
 }

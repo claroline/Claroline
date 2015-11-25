@@ -16,6 +16,7 @@ use Psr\Log\LogLevel;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -26,7 +27,13 @@ class InitTestSchemaCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this->setName('claroline:init_test_schema')
-            ->setDescription('Creates a test database with full app schema (without data)');
+            ->setDescription('Executes all the database migrations in the test environment')
+            ->addOption(
+                'create-db',
+                null,
+                InputOption::VALUE_NONE,
+                'If set, an attempt will be made to create the database'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -37,7 +44,10 @@ class InitTestSchemaCommand extends ContainerAwareCommand
             );
         }
 
-        $this->createDatabase();
+        if ($input->getOption('create-db')) {
+            $this->createDatabase();
+        }
+
         $this->createSchema($output);
     }
 

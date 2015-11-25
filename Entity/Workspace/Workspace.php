@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Workspace;
 
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -285,6 +286,18 @@ class Workspace
         return $this->roles;
     }
 
+    public function addRole(Role $role)
+    {
+        if (!$this->roles->contains($role)) {
+            $this->roles->add($role);
+        }
+    }
+
+    public function removeRole(Role $role)
+    {
+        $this->roles->removeElement($role);
+    }
+
     public function getCreator()
     {
         return $this->creator;
@@ -501,5 +514,14 @@ class Workspace
     public function __toString()
     {
         return $this->name . ' [' . $this->code . ']';
+    }
+
+    public function getManagerRole()
+    {
+        foreach ($this->roles as $role) {
+            if (strpos('_' . $role->getName(), 'ROLE_WS_MANAGER') === 1) return $role;
+        }
+
+        return null;
     }
 }

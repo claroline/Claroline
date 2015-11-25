@@ -1,0 +1,16 @@
+{% if notification.details.resource.guid is defined %}
+    {% set path = path('claro_resource_open', {'node': notification.details.resource.guid, 'resourceType': notification.details.resource.resourceType}) %}
+    {% set resource = '<a href="' ~ path ~ '">' ~ notification.details.resource.name ~ '</a>' %}
+{% else %}
+    {# old notifications do not store the resource id in their details field #}
+    {% set resource = notification.details.resource.name %}
+{% endif %}
+
+{% if notification.details.workspace.id is defined and notification.details.workspace.id != '' and notification.details.workspace.id is not null %}
+    {% set workspace = '<a href="' ~ path('claro_workspace_open', {'workspaceId': notification.details.workspace.id}) ~ '">' ~ notification.details.workspace.name ~ '</a>' %}
+    {# old notifications do not store the workspace id in their details field #}
+{% else %}
+    {% set workspace = notification.details.workspace.name %}
+{% endif %}
+
+{{ 'text_update_notification_message'|trans({'%resource%': resource, '%workspace%': workspace}, 'notification') | raw }}

@@ -137,6 +137,13 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $mail;
 
     /**
+     * @ORM\Column()
+     * @Groups({"api"})
+     * @SerializedName("guid")
+     */
+    protected $guid;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="administrative_code", nullable=true)
@@ -276,6 +283,24 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $isMailNotified = true;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_mail_validated", type="boolean")
+     * @Groups({"api"})
+     * @SerializedName("isMailValidated")
+     */
+    protected $isMailValidated = false;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="hide_mail_warning", type="boolean")
+     * @Groups({"api"})
+     * @SerializedName("isMailValidated")
+     */
+    protected $hideMailWarning = false;
+
+    /**
      * @ORM\Column(name="last_uri", length=255, nullable=true)
      * @Groups({"api"})
      * @SerializedName("lastUri")
@@ -347,6 +372,11 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @ORM\JoinColumn(name="options_id", onDelete="SET NULL", nullable=true)
      */
     protected $options;
+
+    /**
+     * @ORM\Column(name="email_validation_hash", nullable=true)
+     */
+    protected $emailValidationHash;
 
     public function __construct()
     {
@@ -1047,5 +1077,45 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function __toString()
     {
         return $this->firstName . ' ' . $this->lastName;
+    }
+
+    public function setGuid($guid)
+    {
+        $this->guid = $guid;
+    }
+
+    public function getGuid()
+    {
+        return $this->guid;
+    }
+
+    public function setIsMailValidated($isMailValidated)
+    {
+        $this->isMailValidated = $isMailValidated;
+    }
+
+    public function isMailValidated()
+    {
+        return $this->isMailValidated;
+    }
+
+    public function setEmailValidationHash($hash)
+    {
+        $this->emailValidationHash = $hash;
+    }
+
+    public function getEmailValidationHash()
+    {
+        return $this->emailValidationHash;
+    }
+
+    public function setHideMailWarning($hideMailWarning)
+    {
+        $this->hideMailWarning = $hideMailWarning;
+    }
+
+    public function getHideMailWarning()
+    {
+        return $this->hideMailWarning;
     }
 }

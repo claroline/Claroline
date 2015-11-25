@@ -241,7 +241,8 @@
                     event.node.type,
                     event.node.mimeType,
                     event.node.path,
-                    event.node.id
+                    event.node.id,
+                    event.node.mask
                 ];
             }
 
@@ -291,7 +292,27 @@
                     this.setButtonEnabledState(this.$('a.copy'), isSelectionNotEmpty);
                     this.setButtonEnabledState(this.$('a.delete'), isSelectionNotEmpty);
                 }
+
+                var that = this;
+                //check masks and remove the action if a resource can't do that so you don't get an accessdenied before trying to do something
+                //copy/cut paste is not fully supported yet
+                $.each(this.checkedNodes.nodes, function(i, node) {
+                    if (node) {
+                       if (that.isActionAvailable(node, 'delete') === 0) that.setButtonEnabledState(that.$('a.delete'), false);
+                       if (that.isActionAvailable(node, 'copy') === 0) that.setButtonEnabledState(that.$('a.copy'), false);
+                       if (that.isActionAvailable(node, 'copy') === 0) that.setButtonEnabledState(that.$('a.cut'), false);
+                       if (that.isActionAvailable(node, 'download') === 0) that.setButtonEnabledState(that.$('a.download'), false);
+                       if (that.isActionAvailable(node, 'download') === 0) that.setButtonEnabledState(that.$('a.export'), false);
+                    }
+
+                });
             }
+        },
+        isActionAvailable: function(node, action) {
+            var type = this.parameters.resourceTypes[node[1]];
+            var act = type.actions[action];
+
+            return act ? node[5] & act.mask: false;
         },
         render: function (event) {
             if (event.isSearchMode && !this.isSearchMode) {
@@ -352,7 +373,8 @@
                                 name: $(el).attr('data-node-name'),
                                 type: $(el).attr('data-type'),
                                 mimeType: $(el).attr('data-mime-type'),
-                                path: $(el).attr('data-path')
+                                path: $(el).attr('data-path'),
+                                mask: $(el).attr('data-mask')
 
                             },
                             isChecked: true,

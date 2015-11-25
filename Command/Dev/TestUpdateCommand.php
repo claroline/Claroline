@@ -25,6 +25,7 @@ class TestUpdateCommand extends ContainerAwareCommand
     {
         parent::configure();
         $this->setName('claroline:test_update')
+            ->setAliases(array('claroline:debug:update'))
             ->setDescription('Tests the local update of a bundle.');
         $this->setDefinition(
             array(

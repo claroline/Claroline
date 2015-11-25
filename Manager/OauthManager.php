@@ -68,6 +68,13 @@ class OauthManager extends ClientManager
         return $this->om->getRepository('ClarolineCoreBundle:Oauth\FriendRequest')->findOneBy(array('name' => $name));
     }
 
+    public function findActivatedExternalAuthentications()
+    {
+        return $this->om->getRepository('ClarolineCoreBundle:Oauth\FriendRequest')->findBy(
+            array('isActivated' => true, 'allowAuthentication' => true)
+        );
+    }
+
     public function connect($host, $id, $secret, FriendRequest $friendRequest)
     {
         $url = $host . '/oauth/v2/token?client_id=' .
@@ -101,7 +108,7 @@ class OauthManager extends ClientManager
             $this->om->remove($friend);
             $this->om->flush();
 
-            throw new Exception\FriendRequestException('An error occured during the friend request');
+            throw new Exception\FriendRequestException('An error occured during the friend request', $url);
         }
 
         return $url;
@@ -149,6 +156,7 @@ class OauthManager extends ClientManager
         $client = $this->createClient();
         $client->setAllowedGrantTypes($grantTypes);
         $client->setName($friend->getName());
+        $client->setRedirectUris(array($friend->getHost() . '/oauth/v2/log/' . $friend->getName()));
         $this->updateClient($client);
         $url = $friend->getHost() . '/admin/oauth/id/' . $client->getId() . '_' . $client->getRandomId() .
             '/secret/' . $client->getSecret() . '/name/' . $friend->getName();
@@ -213,4 +221,11 @@ class OauthManager extends ClientManager
 
         return false;
     }
+
+    public function updateFriend(FriendRequest $request)
+    {
+        $this->om->persist($request);
+        $this->om->flush();
+    }
+
 }

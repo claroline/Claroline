@@ -134,8 +134,8 @@
                     name: event.currentTarget.getAttribute('data-node-name'),
                     type: event.currentTarget.getAttribute('data-type'),
                     mimeType: event.currentTarget.getAttribute('data-mime-type'),
-                    path: event.currentTarget.getAttribute('data-path')
-
+                    path: event.currentTarget.getAttribute('data-path'),
+                    mask: event.currentTarget.getAttribute('data-mask')
                 },
                 isChecked: event.currentTarget.checked,
                 isPickerMode: this.parameters.isPickerMode

@@ -13,5 +13,14 @@ namespace Claroline\CoreBundle\Manager\Exception;
 
 class FriendRequestException extends \Exception
 {
+    private $url;
 
+    public function __construct($message, $url) {
+        parent::__construct($message);
+        $this->url = $url;
+    }
+
+    public function getUrl() {
+        return $this->url;
+    }
 }

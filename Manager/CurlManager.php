@@ -23,6 +23,7 @@ class CurlManager
 {
     public function exec($url, $payload = null, $type = 'GET')
     {
+        $url = trim($url);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
 

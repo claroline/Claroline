@@ -19,7 +19,7 @@ use Knp\Menu\ItemInterface;
 
 /**
  * @DI\Service("claroline.menu.external_authentication_renderer")
- * @DI\Tag("knp_menu.renderer", attributes = {"name" = "knp_menu.renderer", "alias"="external_authentication"})
+ * @DI\Tag("knp_menu.renderer", attributes = {"name" = "knp_menu.renderer", "alias"="external_authentication_renderer"})
  */
 class ExternalAuthenticationRenderer extends ListRenderer
 {
@@ -48,8 +48,18 @@ class ExternalAuthenticationRenderer extends ListRenderer
         );
     }
 
+    protected function renderItem(ItemInterface $item, array $options)
+    {
+        return $this->renderLink($item, $options);
+    }
+
     protected function renderSpanElement(ItemInterface $item, array $options)
     {
         return $this->renderLinkElement($item, $options);
+    }
+
+    protected function renderList(ItemInterface $item, array $attributes, array $options)
+    {
+        return $this->renderChildren($item, $options);
     }
 }

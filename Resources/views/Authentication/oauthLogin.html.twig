@@ -1,0 +1,46 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block title %}{{ 'login' | trans({}, 'platform') ~ ' - ' ~ parent() | striptags | raw }}{% endblock %}
+
+{#
+This form doesn't include the usual form theme as we want it to always display the
+same message when authentication has failed (no precise validation errors).
+#}
+
+{% block content %}
+    {{ macros.flashBox() }}
+    <div class="col-md-offset-4 col-md-4">
+        {% if error %}
+            <div class="alert alert-danger">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                {{ 'login_failure'|trans({}, 'platform') }}
+            </div>
+        {% endif %}
+
+        <div class='content-element panel panel-default'>
+            <div class="panel-heading">
+                <h3 class="panel-title">{{ 'login' | trans({}, "platform")}}</h3>
+            </div>
+            <form role="form" id="login" class="vertical" action="{{ path('claro_oauth_login_check') }}" method="post">
+                {% if(error) %}
+                    <div class='form_error'></div>
+                {% endif %}
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="username">{{ 'username'|trans({}, 'platform') }}</label>
+                        <input type="text" class="form-control" id="username" name="_username" placeholder="{{ 'username'|trans({}, 'platform') }}" tabindex="1" autofocus>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">
+                            {{ 'password'|trans({}, 'platform') }}
+                        </label>
+                        <input type="password" class="form-control" id="password" name="_password" placeholder="{{ 'password'|trans({}, 'platform') }}" tabindex="2">
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <button type="submit" name="_submit" class="btn btn-primary" tabindex="3">{{ 'login'|trans({}, 'platform') }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

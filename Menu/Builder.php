@@ -307,6 +307,50 @@ class Builder extends ContainerAware
         return $menu;
     }
 
+    public function workspaceUsersMenu(FactoryInterface $factory, array $options)
+    {
+        $user = $options['user'];
+        $menu = $factory->createItem($user->getUsername())
+            ->setChildrenAttribute('class', 'btn-group menu contact-actions-menu');
+
+        $this->container->get('event_dispatcher')->dispatch(
+            'claroline_workspace_users_action',
+            new ContactAdditionalActionEvent($factory, $menu, $user)
+        );
+
+        return $menu;
+    }
+
+    public function exceptionActionsMenu(FactoryInterface $factory, array $options)
+    {
+        $user = $options['user'];
+        $message = $options['message'];
+        $exceptionClass = $options['exception_class'];
+        $file = $options['file'];
+        $line = $options['line'];
+        $url = $options['url'];
+        $referer = $options['referer'];
+        $menu = $factory->createItem('exception-actions')
+            ->setChildrenAttribute('class', 'btn-group menu exception-actions-menu');
+
+        $this->container->get('event_dispatcher')->dispatch(
+            'claroline_exception_action',
+            new ExceptionActionEvent(
+                $factory,
+                $menu,
+                $user,
+                $message,
+                $exceptionClass,
+                $file,
+                $line,
+                $url,
+                $referer
+            )
+        );
+
+        return $menu;
+    }
+
     public function addDivider($menu, $name)
     {
         $menu->addChild($name)

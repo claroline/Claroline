@@ -204,7 +204,8 @@ class ParametersController extends Controller
                             'register_button_at_login' => $form['registerButtonAtLogin']->getData(),
                             'send_mail_at_workspace_registration' => $form['sendMailAtWorkspaceRegistration']->getData(),
                             'domain_name' => $form['domainName']->getData(),
-                            'default_workspace_tag' => $form['defaultWorkspaceTag']->getData()
+                            'default_workspace_tag' => $form['defaultWorkspaceTag']->getData(),
+                            'registration_mail_validation' => $form['registrationMailValidation']->getData()
                         )
                     );
 
@@ -764,9 +765,6 @@ class ParametersController extends Controller
      */
     public function maintenancePageAction()
     {
-        //the current ip must be whitelisted so it can access the the plateform when it's under maintenance
-        $this->ipwlm->addIP($_SERVER['REMOTE_ADDR']);
-
         return array();
     }
 
@@ -778,6 +776,8 @@ class ParametersController extends Controller
      */
     public function startMaintenanceAction()
     {
+        //the current ip must be whitelisted so it can access the the plateform when it's under maintenance
+        $this->ipwlm->addIP($_SERVER['REMOTE_ADDR']);
         MaintenanceHandler::enableMaintenance();
 
         return new RedirectResponse($this->router->generate('claro_admin_parameters_index'));
@@ -791,8 +791,9 @@ class ParametersController extends Controller
      */
     public function endMaintenanceAction()
     {
+        //the current ip must be whitelisted so it can access the the plateform when it's under maintenance
         MaintenanceHandler::disableMaintenance();
-
+        $this->ipwlm->removeIP($_SERVER['REMOTE_ADDR']);
         return new RedirectResponse($this->router->generate('claro_admin_parameters_index'));
     }
 

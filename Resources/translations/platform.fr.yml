@@ -125,7 +125,7 @@ by: par
 by_user: 'Par utilisateur'
 by_workspace: 'Par espace'
 canCopy: 'Droit de copier'
-canCreate: 'Creation de %type%'
+canCreate: 'Création de %type%'
 canDelete: 'Droit de supprimer'
 canEdit: 'Droit de modifier'
 canExport: 'Droit d''exporter'
@@ -231,7 +231,7 @@ database: 'Base de données'
 database_connection_failed: 'La connexion à la base de données a échoué.'
 date: Date
 date_agenda_display_format_for_form: dd-MM-yyyy
-date_form_datepicker_format: dd-mm-yyyy
+date_form_datepicker_format: dd/mm/yyyy
 date_form_datepicker_php: d-m-Y
 date_form_format: dd/MM/yyyy
 date_form_placeholder: jj/mm/aaaa
@@ -439,7 +439,7 @@ home_tab_widgets: 'Widgets de l''onglet'
 home_tab_widgets_configuration: 'Configuration des widgets de l''onglet'
 home_tabs: 'Onglets de la page d''accueil'
 home_tabs_configuration: 'Configuration des onglets de la page d''accueil'
-host: Host
+host: Hôte
 icon: Icône
 id: Id
 id_col: 'Colonne des identifiants'
@@ -1185,3 +1185,32 @@ seconds: secondes
 time_ago: Il y a %count% %unit%
 mail_options: Options du courriel
 mailer_from: Champ "from" du courriel
+desktop_root_directory_upload_error: Vous ne pouvez pas rajouter de ressources à la racine du bureau.
+pick_a_resource: Choisissez une ressource
+invalid_host: Hôte invalide (accès à %url% refusé).
+request_friend: Requête d'ami
+activated: Activé
+not_activated: Désactivé
+add_pending: Ajouter une plateforme amie
+add_friend_confirm_message: Êtes-vous sûr de vouloir ajouter cet plateforme amie ?
+edit_client: Modifier le client
+0_or_1: 0 ou 1
+import_resources_explanation: L'import de ressources demande un fichier .zip généré par claroline contenant le fichier manifest.yml. Si vous désirez importer un autre fichier zip, veuillez créer une ressource de type 'Fichier' et sélectionnez 'décompresser'.
+root_rights_change_explanation: Cette page vous permet de modifier les permissions sur la ressource racine d'un espace d'activité. Si vous désirez affecter toutes les ressources, sélectionnez 'Appliquer au contenu du répertoire et sous répertoires'.
+registration_mail_validation: Validation de l'inscription des utilisateurs
+send_mail_info: Envoyer un courriel de confirmation (plateforme accessible sans confirmation de la réception du courriel)
+force_mail_validation: Forcer la validation du courriel (utilisateur bloqué tant que la réception du courriel n'a pas été confirmée)
+replace_validation_email_message: qui affichera le lien de validation du courriel
+email_not_activated_part_1: Votre courriel n'a pas été validé (%email%). Cliquez
+email_not_activated_part_2: ici
+email_not_activated_part_3: pour l'activer
+email_confirmation_message: La plateforme ne peut pas vous envoyer tous les courriels tant que votre adresse n'a pas été confirmée.
+email_sent: Courriel de validation envoyé à l'adresse %email%. Veuillez consulter vos spam si vous n'avez rien reçu.
+email_validation: Validation du courriel
+email_validation_url_display: Veuillez vous rendre à l'url suivante pour confirmer votre courriel: %url%
+email_validated: Courriel validé
+oauth_application_request: L'application "%name%" désire se connecter à %platform%
+oauth_required_data: Les informations suivantes seront envoyées:
+client_list: Liste des clients
+allow_authentication: Autoriser l'authentification
+user_subscription_notification_for_admin: s'est inscrit dans l'espace d'activité %workspace%

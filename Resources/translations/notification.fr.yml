@@ -1,5 +1,6 @@
 badge-award: Badges
 registration-decline: 'Refus d''inscription'
+resource-create: Création de ressource
 role-change_right: 'Accès ressource'
 role-subscribe: 'Nouvelle inscription'
 role-subscribe_group: 'vous a attribué le rôle ''%role%'''
@@ -8,3 +9,7 @@ workspace-registration-decline: 'a refusé votre demande d''inscription dans l''
 workspace-role-change_right: 'vous donne accès à la ressource %resource% dans l''espace d''activités %workspace%'
 workspace-role-subscribe_group: 'vous a attribué le rôle ''%role%'' dans l''espace d''activités %workspace%'
 workspace-role-subscribe_user: 'vous a attribué le rôle ''%role%'' dans l''espace d''activités %workspace%'
+resource_creation_notification_message: 'a créé la resource %resource% dans l''espace d''activité %workspace%'
+role-subscribe-queue: 'a fait une demande d''inscription dans l''espace d''activité %workspace%'
+text_update_notification_message: a modifié le texte '%resource%' de l'espace d'activité %workspace%
+resource-text: Textes

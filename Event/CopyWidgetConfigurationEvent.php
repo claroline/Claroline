@@ -26,12 +26,14 @@ class CopyWidgetConfigurationEvent extends Event implements DataConveyorEventInt
     public function __construct(
         WidgetInstance $widgetInstance,
         WidgetInstance $widgetInstanceCopy,
-        $resourceInfos
+        $resourceInfos = array(),
+        $tabsInfos = array()
     )
     {
         $this->widgetInstanceCopy = $widgetInstanceCopy;
         $this->widgetInstance = $widgetInstance;
         $this->resourceInfos = $resourceInfos;
+        $this->tabsInfos = $tabsInfos;
     }
 
     public function validateCopy()
@@ -57,5 +59,10 @@ class CopyWidgetConfigurationEvent extends Event implements DataConveyorEventInt
     public function getResourceInfos()
     {
         return $this->resourceInfos;
+    }
+    
+    public function getTabsInfos()
+    {
+        return $this->tabsInfos;
     }
 }

@@ -1,0 +1,9 @@
+{# todo: use guid as indentifier instead ? #}
+{% if notification.details.workspace.id is defined and notification.details.workspace.id != '' and notification.details.workspace.id is not null %}
+    {% set workspace = '<a href="' ~ path('claro_workspace_open', {'workspaceId': notification.details.workspace.id}) ~ '">' ~ notification.details.workspace.name ~ '</a>' %}
+    {# old notifications do not store the workspace id in their details field #}
+{% else %}
+    {% set workspace = notification.details.workspace.name %}
+{% endif %}
+
+{{ notification.actionKey|trans({'%workspace%' : workspace}, 'notification') | raw }}

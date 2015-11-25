@@ -10,8 +10,8 @@ same message when authentication has failed (no precise validation errors).
 {% block content %}
     {{ macros.flashBox() }}
     <div class="row login_form_container" style="background-color: whitesmoke">
-        <div class="col-md-offset-5 col-md-2">
-            <form role="form" action="{{ path('claro_security_login_check') }}" method="post">
+        <div class="col-lg-2 col-lg-offset-5 col-md-offset-4 col-md-4 col-sm-offset-2 col-sm-8">
+            <form role="form" action="{{ path('claro_security_login_check') }}" method="post" id="login-form">
                 <h2>{{ 'login' | trans({}, "platform")}}</h2>
                 {% if error %}
                     <div class="alert alert-danger">
@@ -66,4 +66,14 @@ same message when authentication has failed (no precise validation errors).
         </div>
     </div>
 
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            $('.claro-oauth').click(function(event) {
+                event.preventDefault();
+                var form = $('#login-form');
+                form.attr('action', $(event.target).attr('href'));
+                form.submit();
+            });
+        });
+    </script>
 {% endblock %}

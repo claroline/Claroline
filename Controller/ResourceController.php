@@ -42,6 +42,7 @@ use Claroline\CoreBundle\Manager\TransfertManager;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class ResourceController
 {
@@ -612,6 +613,18 @@ class ResourceController
                 foreach ($files as $file) {
                     if ($file->getResourceNode()->getId() === $el['id']) {
                         $item['size'] = $file->getFormattedSize();
+                    }
+                }
+
+                //compute this is_published flag. If the resource has an accessible_from/accessible_until flag
+                //and the current date don't match, then it's de facto unpublished.
+                if ($item['accessible_from'] || $item['accessible_until']) {
+                    $now = new \DateTime();
+                    if ($item['accessible_from']) {
+                        if ($item['accessible_from']->getTimeStamp() > $now->getTimeStamp()) $item['published'] = false;
+                    }
+                    if ($item['accessible_until']) {
+                        if ($item['accessible_until']->getTimeStamp() < $now->getTimeStamp()) $item['published'] = false;
                     }
                 }
 
