@@ -1,26 +1,26 @@
-var usersManager = angular.module('usersManager', []);
+var usersManager = angular.module('usersManager', ['usersSearch']);
 
-/**
- * Path base controller
- *
- * @returns {PathBaseCtrl}
- * @constructor
- */
+angular.module('usersSearch').constant('usersCallback', function(users) {
+	alert(users);
+});
+
 usersManager.controller('usersCtrl', function(
 	$scope,
 	$log,
 	$http,
 	$cacheFactory,
+	$users,
+	usersSearcher,
 	API
 ) {
 
-	$scope.search = function() {
-		$scope.lan g 
-	}
+	$scope.results = usersSearcher.getResults();
+	console.log($scope.results);
 });
 
 usersManager.factory('API', function($http) {
 	var api = {};
+
 
 	return api;
 });
@@ -30,7 +30,7 @@ angular.module('usersManager').directive('userlist', [
 		return {
 			restrict: 'E',
 			templateUrl: AngularApp.webDir + 'bundles/clarolinecore/js/administration/users/views/userlist.html',
-			replace: false
+			replace: true
 		}
 	}
 ]);

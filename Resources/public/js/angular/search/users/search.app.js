@@ -5,18 +5,43 @@ usersSearch.controller('usersSearchCtrl', function(
 	$log,
 	$http,
 	$cacheFactory,
-	API
+	usersSearcher,
+	usersCallback
 ) {
+	$scope.fields 		= ['name', 'id', 'email', 'administrative_code', 'all', '   create'];
+	$scope.$log   		= $log;
+	$scope.stringSearch = '';
+	$scope.users 		= {};
 
+	$scope.editSearch = function(search) {
+		//console.log(search);
+	}
+
+	$scope.search = function(search) {
+		var saveSearch       = search;
+		$scope.stringSearch  = '';
+		usersCallback(saveSearch);
+	}
 });
+
+usersSearch.config(['$provide', function($provide) {
+	$provide.factory('usersSearcher', function() {
+		var api = {};
+
+		api.getResults = function() {
+			return api.managedUsers;
+		}
+
+		return api;
+	});
+}]);
+
 
 usersSearch.factory('API', function($http) {
-	var api = {};
 
-	return api;
 });
 
-angular.module('usersSearch').directive('usersSearch', [
+angular.module('usersSearch').directive('searchuser', [
 	function userlist() {
 		return {
 			restrict: 'E',

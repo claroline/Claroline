@@ -3,17 +3,24 @@
         class="form-control" 
         type="text" 
         id="search-users-txt"
-        placeholder="" 
-        value=""
+        list="usersearch-datalist"
+        ng-model="stringSearch"
     >
     </input>
     <span class="input-group-btn">
         <button 
             class="filter btn btn-default" 
             type="button" 
-            ng-click="search()"   
+            ng-click="search(stringSearch)"   
             id="search-button">
             <i class="fa fa-search"></i>
         </button>
     </span>
 </div>
+<datalist id="usersearch-datalist">
+    <option 
+        data-ng-repeat="field in fields" 
+        class='datalist-user-class' 
+        value="{{ field }}:({{ stringSearch }})">
+    </option>
+</datalist>
