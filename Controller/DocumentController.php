@@ -491,59 +491,33 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
 
         // Récupération du dropID puis du dropZone
         $dropId = $document->getDrop()->getId();
-//var_dump("dropId = " . $dropId);
 
         $dropRepo = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Drop');
         $drops = $dropRepo->findBy(array('id' => $dropId));
 
-//        $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop')
-//        ->findBy(array('id' => $dropId));
-
-//echo "<pre>";
-//var_dump($drops[0]->getDropzone()->getId());
-//echo "</pre>";
-
         $dropzoneRepo = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:DropZone');
         $dropzones = $dropzoneRepo->findBy(array('id' => $drops[0]->getDropzone()->getId()));
-
-//echo "<pre>";
-//var_dump($dropzones[0]->getResourceNode()->getId());
-//var_dump($dropzones[0]->getResourceNode()->getName());
-//echo "</pre>";
-
-//die();
-//var_dump($drops->getDropzone()->getId());
-
-//        $dropzoneRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:DropZone')
-//        ->findBy(array('id' => $dropRepo->getDropzone()->getId()));
 
         // Mise à jour de la base de données
         $em->persist($doc);
         $em->flush();
 
-//        $usersIds = array();
-//        $usersIds[] = $document->getSender();
-
         $dropzoneManager = $this->get('innova.manager.dropzone_manager');
-
-//var_dump($dropzones[0]);
+        $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzones[0]);
 
         // Envoi notification. InnovaERV
         $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzones[0]);
 
-//var_dump($usersIds);
-//die();
         $event = new LogDropzoneValidateDocumentEvent($document, $dropzones[0], $usersIds);
         $this->get('event_dispatcher')->dispatch('log', $event);
-
-//        $event = new LogDropzoneManualRequestSentEvent($document, "titi", $usersIds, $dropzone);
-//        $this->get('event_dispatcher')->dispatch('log', $event);
-//var_dump("LOG OK !!!!!!!!!!");
 
         // Ajout afin d'afficher la partie du code avec "Demande transmise"
         $template = $this->get("templating")->
         render('InnovaCollecticielBundle:Document:documentIsValidate.html.twig',
-                array('document' => $document)
+                array('document' => $document,
+                      'collecticielOpenOrNot' => $collecticielOpenOrNot,
+                      'dropzone' => $dropzones[0]
+                    )
                );
 
         // Retour du template actualisé à l'Ajax et non plus du Json.
@@ -575,10 +549,24 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
         $em->persist($doc);
         $em->flush();
 
+        // Récupération du dropID puis du dropZone
+        $dropId = $document->getDrop()->getId();
+
+        $dropRepo = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Drop');
+        $drops = $dropRepo->findBy(array('id' => $dropId));
+
+        $dropzoneRepo = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:DropZone');
+        $dropzones = $dropzoneRepo->findBy(array('id' => $drops[0]->getDropzone()->getId()));
+
+        $dropzoneManager = $this->get('innova.manager.dropzone_manager');
+        $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzones[0]);
+
         // Ajout afin d'afficher la partie du code avec "Demande transmise"
         $template = $this->get("templating")->
         render('InnovaCollecticielBundle:Document:documentIsValidate.html.twig',
-                array('document' => $document)
+                array('document' => $document,
+                      'collecticielOpenOrNot' => $collecticielOpenOrNot,
+                      'dropzone' => $dropzones[0])
                );
 
         // Retour du template actualisé à l'Ajax et non plus du Json.

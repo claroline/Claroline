@@ -958,6 +958,7 @@ class CorrectionController extends DropzoneBaseController
                     'edit' => false,
                     'state' => $state,
                     'adminInnova' => $canEdit,
+                    'collecticielOpenOrNot' => $collecticielOpenOrNot
                 )
             );
         }

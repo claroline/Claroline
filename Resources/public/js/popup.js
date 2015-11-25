@@ -85,22 +85,18 @@ $(document).ready(function () {
     });
     
     $('a.cancel_button').on('click', function(event) {
+        event.preventDefault();
         var docId = $(this).attr("data-document_id");
-        
-        $.ajax({
-            url: Routing.generate('innova_collecticiel_unvalidate_document',
+
+        $.ajax(
             {
-                documentId: docId
-            }),
-        method: "POST",
-        data:
-        {
-            documentId: docId
-        },
-        complete: function(data) {
-            $("#is-validate-"+docId).html(data.responseText);
-        }
-        });
+                url: Routing.generate('innova_collecticiel_unvalidate_document', {documentId: docId}),
+                method: "POST",
+                complete: function(data) {
+                    $("#is-validate-" + docId).html(data.responseText);
+                }
+            }
+        );
     });
 
     // InnovaERV : ajout du bouton "Retour" dans la liste des commentaires.

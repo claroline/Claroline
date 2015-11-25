@@ -2,7 +2,10 @@
 {# Cf popup.js #}
 {# Ajout de la classe document_validate pour la validation du document #}
 {# Si le collecticiel n'est pas ouvert, il n'est pas possible de demander une évaluation. InnovaERV #}
+
+{# Si le document est validé ... #}
 {% if not document.validate %}
+	{# Si le collecticiel est ouvert ... #}
     {% if collecticielOpenOrNot %}
 	    <input id="document_id_{{ document.id }}" value="document" type="checkbox" class="document_validate" name="document_id_{{ document.id }}" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#validate-modal" data-document_id="{{ document.id }}" data-dropzone_id="{{ dropzone.id }}" />
 	{% endif %}
