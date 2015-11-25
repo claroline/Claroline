@@ -9,7 +9,7 @@
  *
  * Date: 11/18/15
  */
-namespace Claroline\Corebundle\Twig;
+namespace Claroline\CoreBundle\Twig;
 
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -17,7 +17,7 @@ use JMS\DiExtraBundle\Annotation as DI;
  * Class PcreTwigExtension
  * Preg filters for twig, for handling regular expressions.
  * Filters includes: preg_filter, preg_grep, preg_match, preg_quote, preg_replace, preg_split
- * @package Icap\WikiBundle\Twig
+ * @package Claroline\CoreBundle\Twig
  *
  * @DI\Service
  * @DI\Tag("twig.extension")
