@@ -188,13 +188,14 @@
                         return true;
                         break;
                     case "last-try":
-                        // check if current try is the last one ? -> currentAttemptNumber === sequence.maxAttempts - 1 ?
-                        return this.paper.paperNumber === sequence.maxAttempts - 1;
+                        // check if current try is the last one ?
+                        return this.paper.numberNumber === sequence.meta.maxAttempts;
                         break;
                     case "after-date":
-                        var current = new Date();
-                        // compare with ??? sequence.endDate ?
-                        return true;
+                        var now = new Date();                        
+                        var searched = new RegExp('-', 'g');
+                        var correctionDate = new Date(Date.parse(this.sequence.meta.correctionDate.replace(searched, '/')));
+                        return now >= correctionDate;
                         break;
                     case "never":
                         return false;

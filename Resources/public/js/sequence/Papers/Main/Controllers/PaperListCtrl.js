@@ -94,20 +94,22 @@
              * @returns {bool}
              */
             this.checkCorrectionAvailability = function (paper) {
-                var correctionMode = 'test-end';//CommonService.getCorrectionMode(this.exercise.meta.correctionMode);
+                var correctionMode = CommonService.getCorrectionMode(this.exercise.meta.correctionMode);
+                // !!! countFinishedAttempts dont take the paper user into account...
                 var nbFinishedAttempts = this.countFinishedAttempts();
                 switch (correctionMode) {
                     case "test-end":
                         return paper.end && paper.end !== undefined && paper.end !== '';
                         break;
-                    case "last-try":
-                        // number of paper with date end === sequence.maxAttempts ?
-                        return nbFinishedAttempts === this.exercise.meta.maxAttempts;
+                    case "last-try": 
+                        // only used for normal user ? if admin i will always see correction link ?
+                        return nbFinishedAttempts >= this.exercise.meta.maxAttempts;
                         break;
                     case "after-date":
-                        var current = new Date();
-                        // compare with ??? sequence.endDate ?
-                        return true;
+                        var now = new Date();                        
+                        var searched = new RegExp('-', 'g');
+                        var correctionDate = new Date(Date.parse(this.exercise.meta.correctionDate.replace(searched, '/')));
+                        return now >= correctionDate;
                         break;
                     case "never":
                         return false;
@@ -116,6 +118,7 @@
                         return false;
                 }
             };
+           
 
             this.countFinishedAttempts = function () {
                 var nb = 0;
