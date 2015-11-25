@@ -1505,4 +1505,9 @@ class UserManager
         $this->objectManager->persist($user);
         $this->objectManager->flush();
     }
+
+    public function getPartialList($page, $limit)
+    {
+        return $this->userRepo->findPartialList($page, $limit);
+    }
 }

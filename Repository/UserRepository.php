@@ -1570,7 +1570,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             $query->setParameter('search', "%{$upperSearch}%");
         }
 
-        return $executeQuery ? $query->getResult() : $query;
+        return $executeQuery ? limit : $query;
     }
 
     public function findForApi($data)
@@ -1584,5 +1584,16 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query->setParameter('data', $data);
 
         return $query->getOneOrNullResult();
+    }
+
+    public function findPartialList($page, $limit)
+    {
+        $page--;
+        $dql = 'SELECT u FROM Claroline\CoreBundle\Entity\User u';
+        $query = $this->_em->createQuery($dql);
+        $query->setMaxResults($limit);
+        $query->setFirstResult($page * $limit);
+
+        return $query->getResult();
     }
 }

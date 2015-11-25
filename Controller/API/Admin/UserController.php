@@ -32,7 +32,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
 
+/**
+ * @NamePrefix("api_")
+ */
 class UserController extends FOSRestController
 {
     /**
@@ -87,6 +92,43 @@ class UserController extends FOSRestController
     public function getUsersAction()
     {
         return $this->userManager->getAll();
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Returns the users list",
+     *     views = {"user"}
+     * )
+     * @EXT\Route(options = {"expose"=true})
+     */
+    public function getPartialListUsersAction($page, $limit)
+    {
+        return $this->userManager->getPartialList($page, $limit);
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Returns the users list",
+     *     views = {"user"}
+     * )
+     * @EXT\Route(options = {"expose"=true})
+     */
+    public function searchPartialListUsersAction($search, $field, $page, $limit)
+    {
+        
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Returns the searchable user fields"
+     * )
+     */
+    public function getSearchableFields()
+    {
+        return array('name', 'id', 'email', 'administrative_code');
     }
 
     /**

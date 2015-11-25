@@ -285,26 +285,42 @@ claro_user_api:
     resource: "@ClarolineCoreBundle/Controller/API/Admin/UserController.php"
     type: rest
     prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
 
 claro_workspace_api:
     resource: "@ClarolineCoreBundle/Controller/API/Admin/WorkspaceController.php"
     type: rest
     prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
 
 claro_group_api:
     resource: "@ClarolineCoreBundle/Controller/API/Admin/GroupController.php"
     type: rest
     prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
 
 claro_parameters_api:
     resource: "@ClarolineCoreBundle/Controller/API/Admin/ParametersController.php"
     type: rest
     prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
 
 claro_packages_api:
     resource: "@ClarolineCoreBundle/Controller/API/Admin/PackageController.php"
     type: rest
     prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
 
 claro_contact:
     resource: "@ClarolineCoreBundle/Controller/ContactController.php"

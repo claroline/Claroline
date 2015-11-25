@@ -10,29 +10,18 @@ usersSearch.controller('usersSearchCtrl', function(
 	$scope.fields 		= ['name', 'id', 'email', 'administrative_code', 'all', '   create'];
 	$scope.$log   		= $log;
 	$scope.stringSearch = '';
-	$scope.users 		= {};
-
-	$scope.editSearch = function(search) {
-		//console.log(search);
-	}
-
-	$scope.search = function(search) {
-		var saveSearch       = search;
-		usersSearcher.search(saveSearch);
-		$scope.stringSearch  = '';
-	}
 });
 
 usersSearch.factory('usersSearcher', function($http) {
 	var searcher = {};
 
-	searcher.getResults = function(usersCallback, params) {
-		return usersCallback(searcher, params);
-	}
-
-	searcher.search = function(managedUsers) {
-		console.log('search');
-		searcher.managedUsers = managedUsers;
+	searcher.find = function(search, page, limit) {
+		if (search) {
+			return [];
+		} else {
+			//can't use fos js routing with nelmio api bundle T_T
+			return $http.get(Routing.generate('api_get_partial_list_users', {'page': 1, 'limit': 10}));
+		}
 	}
 
 	return searcher;
