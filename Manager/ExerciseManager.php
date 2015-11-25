@@ -218,6 +218,7 @@ class ExerciseManager
             'dispButtonInterrupt' => $exercise->getDispButtonInterrupt(),
             'markMode' => $exercise->getMarkMode(),
             'correctionMode' => $exercise->getCorrectionMode(),
+            'correctionDate' => $exercise->getDateCorrection()->format('Y-m-d H:i:s')
         ];
     }
 
