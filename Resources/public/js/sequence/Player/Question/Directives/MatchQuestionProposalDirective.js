@@ -10,7 +10,7 @@
                 replace: true,
                 controller: 'MatchQuestionProposalCtrl',
                 controllerAs: 'matchQuestionProposalCtrl',
-                templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Player/Question/Partials/proposal.html',
+                templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Question/Partials/proposal.html',
                 scope: {
                     step: '=',
                     question: '=',
