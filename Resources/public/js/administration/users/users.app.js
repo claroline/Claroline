@@ -69,6 +69,7 @@ usersManager.controller('usersCtrl', function(
 	$scope.searchUsers = function(search) {
 		usersSearcher.find(search, 1, 10).then(function(d) {
 			$scope.users = d.data.users;
+			$scope.dataTableOptions.paging.count = d.data.total;
 		});
 	};
 

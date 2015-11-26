@@ -36,14 +36,14 @@ class Group extends AbstractRoleSubject implements OrderableInterface
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api"})
+     * @Groups({"api", "admin"})
      */
     protected $id;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api"})
+     * @Groups({"api", "admin"})
      */
     protected $name;
 
@@ -69,6 +69,7 @@ class Group extends AbstractRoleSubject implements OrderableInterface
      *     inversedBy="groups"
      * )
      * @ORM\JoinTable(name="claro_group_role")
+     * @Groups({"admin"})
      */
     protected $roles;
 

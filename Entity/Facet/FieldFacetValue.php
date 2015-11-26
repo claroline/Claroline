@@ -14,6 +14,8 @@ namespace Claroline\CoreBundle\Entity\Facet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\Accessor;
 
 /**
  * @ORM\Entity
@@ -25,6 +27,7 @@ class FieldFacetValue
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"admin"})
      */
     protected $id;
 
@@ -62,6 +65,12 @@ class FieldFacetValue
      * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
      */
     protected $fieldFacet;
+
+    /**
+     * @Groups({"admin"})
+     * @Accessor(getter="getValue") 
+     */
+    protected $value;
 
     public function setDateValue(\DateTime $dateValue)
     {

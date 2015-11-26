@@ -95,7 +95,7 @@ class UserController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"admin"})
      * @ApiDoc(
      *     description="Returns the users list",
      *     views = {"user"}
@@ -112,7 +112,7 @@ class UserController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"admin"})
      * @ApiDoc(
      *     description="Returns the users list",
      *     views = {"user"}
@@ -142,7 +142,7 @@ class UserController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"admin"})
      * @ApiDoc(
      *     description="Returns the searchable user fields"
      * )

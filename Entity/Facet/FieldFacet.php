@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Entity\Role;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use JMS\Serializer\Annotation\Groups;
 
 
 /**
@@ -35,12 +36,14 @@ class FieldFacet
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"admin"})
      */
     protected $id;
 
     /**
      * @ORM\Column
      * @Assert\NotBlank()
+     * @Groups({"admin"})
      */
     protected $name;
 
