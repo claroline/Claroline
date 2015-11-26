@@ -124,7 +124,7 @@ class PaperManager
 
         return [
             'id' => $paper->getId(),
-            'paperNumber' => $paper->getNumPaper(),
+            'number' => $paper->getNumPaper(),
             'questions' => $questions
         ];
     }

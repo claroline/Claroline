@@ -23,11 +23,7 @@
              */
             this.init = function (sequence, paper, user) {
                 // shuffle each question choices order if needed
-                for (var i = 0; i < sequence.steps.length; i++) {
-                    // shuffle step question order
-                    if (sequence.meta.random && sequence.steps[i].items.length > 1) {
-                        sequence.steps[i].items = CommonService.shuffleArray(sequence.steps[i].items);
-                    }
+                for (var i = 0; i < sequence.steps.length; i++) {                   
                     // shuffle each step choices order if needed
                     for (var j = 0; j < sequence.steps[i].items.length; j++) {
                         if (sequence.steps[i].items[j].random && sequence.steps[i].items[j].type === 'application/x.choice+json') {
@@ -187,7 +183,7 @@
                         break;
                     case "last-try":
                         // check if current try is the last one ?
-                        return this.paper.paperNumber === this.sequence.meta.maxAttempts;
+                        return this.paper.number === this.sequence.meta.maxAttempts;
                         break;
                     case "after-date":
                         var now = new Date();                        
