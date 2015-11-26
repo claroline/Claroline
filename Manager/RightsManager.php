@@ -157,6 +157,8 @@ class RightsManager
                     $permissionsMask = $this->maskManager->encodeMask($permissions, $resourceType);
                     $permissionsMask = $this->mergeTypePermissions($permissionsMask, $toUpdate->getMask());
                     $permissions = $this->maskManager->decodeMask($permissionsMask, $resourceType);
+                } else {
+                    $permissions = $this->mergeTypePermissions($permissions, $toUpdate->getMask());
                 }
             }
 
