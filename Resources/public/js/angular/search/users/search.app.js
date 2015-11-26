@@ -20,7 +20,7 @@ usersSearch.factory('usersSearcher', function($http) {
 			return [];
 		} else {
 			//can't use fos js routing with nelmio api bundle T_T
-			return $http.get(Routing.generate('api_get_partial_list_users', {'page': 1, 'limit': 10}));
+			return $http.get(Routing.generate('api_get_partial_list_users', {'page': page, 'limit': limit}));
 		}
 	}
 

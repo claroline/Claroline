@@ -104,7 +104,11 @@ class UserController extends FOSRestController
      */
     public function getPartialListUsersAction($page, $limit)
     {
-        return $this->userManager->getPartialList($page, $limit);
+        $users = $this->userManager->getPartialList($page, $limit);
+        $count = $this->userManager->getCountAllEnabledUsers();
+
+        return array('users' => $users, 'total' => $count);
+
     }
 
     /**
@@ -115,9 +119,26 @@ class UserController extends FOSRestController
      * )
      * @EXT\Route(options = {"expose"=true})
      */
-    public function searchPartialListUsersAction($search, $field, $page, $limit)
+    public function searchPartialListUsersAction($page, $limit)
     {
-        
+        $data = [];
+        $searches = $this->request->query->all();
+        //format search
+        foreach ($searches as $key => $search) {
+            switch ($key) {
+                case 'first_name': $data['firstName'] = $search; break;
+                case 'last_name': $data['lastName'] = $search; break;
+                case 'administrative_code': $data['administrativeCode'] = $search; break;
+                case 'email': $data['mail'] = $search; break;
+                default: $data[$key] = $search;
+            }
+
+        }
+
+        $users = $this->userManager->searchPartialList($data, $page, $limit);
+        $count = $this->userManager->countSearchPartialList($data);
+
+        return array('users' => $users, 'total' => $count);
     }
 
     /**

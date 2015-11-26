@@ -37,32 +37,55 @@ usersManager.controller('usersCtrl', function(
 	API
 ) {
 	$scope.users = []; 
+	$scope.search = '';
 	//$scope.users = [];
 	$scope.dataTableOptions = {
 		scrollbarV: false,
  		columnMode: 'force',
-        headerHeight: 0,
+        headerHeight: 50,
         footerHeight: 50,
         selectable: true,
+        multiSelect: true,
+        checkboxSelection: true,
  		columns: [
- 			{name: "username", prop: "username"}
- 		]
+ 			{name: "username", prop: "username", isCheckboxColumn: true, headerCheckbox: true},
+ 			{name: "first_name", prop: "firstName"},
+ 			{name: "last_name", prop:"lastName"},
+ 			{name: "email", prop: "mail"}
+ 		],
+ 		paging: {
+ 			externalPaging: true,
+ 			size: 10
+ 		}
 	};
 	
-	usersSearcher.find('', 1, 10).then(function(d) {
-		$scope.users = d.data;
-		console.log($scope.users);
+	usersSearcher.find($scope.search, 1, 10).then(function(d) {
+		$scope.users = d.data.users;
+		$scope.dataTableOptions.paging.count = d.data.total;
 	});
 
 	//I'm an angular newb so I use $scope inheritance #IDontKnowWhatImDoing
 	//searchUsers is defined in a usersSearcher template.
 	$scope.searchUsers = function(search) {
 		usersSearcher.find(search, 1, 10).then(function(d) {
-			$scope.users = d.data;
-			console.log($scope.users);
-			//then we should do some stuff and bla bla bla...
+			$scope.users = d.data.users;
 		});
 	};
+
+	$scope.paging = function(offset, size) {
+		console.log(offset, size);
+		usersSearcher.find($scope.search, offset + 1, size).then(function(d) {
+			var users = d.data.users;
+
+			//I know it's terrible... but I have no other choice with this table.
+			for (var i = 0; i < offset * size; i++) {
+				users.unshift({});
+			}
+			
+			$scope.users = users;
+			$scope.dataTableOptions.paging.count = d.data.total;
+		});
+	}
 });
 
 usersManager.factory('API', function($http) {

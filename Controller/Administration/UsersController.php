@@ -282,7 +282,7 @@ class UsersController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/list}",
+     *     "/list",
      *     name="claro_admin_user_list",
      *     options = {"expose"=true}
      * )

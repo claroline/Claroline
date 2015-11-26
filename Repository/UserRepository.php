@@ -1589,11 +1589,59 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     public function findPartialList($page, $limit)
     {
         $page--;
-        $dql = 'SELECT u FROM Claroline\CoreBundle\Entity\User u';
+        $dql = 'SELECT u FROM Claroline\CoreBundle\Entity\User u where u.isEnabled = true';
         $query = $this->_em->createQuery($dql);
         $query->setMaxResults($limit);
         $query->setFirstResult($page * $limit);
 
         return $query->getResult();
+    }
+
+    public function searchPartialList(array $searches, $page, $limit)
+    {
+        $page--;
+        $dql = 'SELECT u FROM Claroline\CoreBundle\Entity\User u where u.isEnabled = true';
+
+        foreach ($searches as $key => $search) {
+            foreach ($search as $id => $el) {
+                $dql .= ' AND UPPER (u.' . $key . ') LIKE :' . $key . $id;
+            }
+        }
+
+        $query = $this->_em->createQuery($dql);
+
+
+        foreach ($searches as $key => $search) {
+            foreach ($search as $id => $el) {
+                $query->setParameter($key . $id, '%' . strtoupper($el) . '%');
+            }
+        }
+
+        $query->setMaxResults($limit);
+        $query->setFirstResult($page * $limit);
+
+        return $query->getResult();
+    }
+
+    public function countSearchPartialList(array $searches)
+    {
+        $dql = 'SELECT count(u) FROM Claroline\CoreBundle\Entity\User u where u.isEnabled = true';
+
+        foreach ($searches as $key => $search) {
+            foreach ($search as $id => $el) {
+                $dql .= ' AND UPPER (u.' . $key . ') LIKE :' . $key . $id;
+            }
+        }
+
+        $query = $this->_em->createQuery($dql);
+
+        foreach ($searches as $key => $search) {
+            foreach ($search as $id => $el) {
+                $query->setParameter($key . $id, '%' . strtoupper($el) . '%');
+            }
+            
+        }
+
+        return $query->getSingleScalarResult();
     }
 }
