@@ -69,7 +69,7 @@ class CourseSessionUserRepository extends EntityRepository
             JOIN csu.user u
             WHERE csu.session = :session
             AND u.isEnabled = true
-            ORDER BY u.username ASC
+            ORDER BY u.lastName ASC
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('session', $session);
