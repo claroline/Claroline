@@ -804,6 +804,7 @@ class WorkspaceModelManager
 
         foreach ($children as $child) {
            try {
+                $this->log('Duplicating ' . $resourceNode->getName() . ' from type ' . $resourceNode->getResourceType()->getName());
                 $copy = $this->resourceManager->copy(
                     $child,
                     $directoryCopy,
