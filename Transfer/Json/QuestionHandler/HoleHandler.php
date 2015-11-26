@@ -35,7 +35,7 @@ class HoleHandler implements QuestionHandlerInterface
      */
     public function getQuestionMimeType()
     {
-        return 'application/x.hole+json';
+        return 'application/x.cloze+json';
     }
 
     /**
@@ -66,12 +66,12 @@ class HoleHandler implements QuestionHandlerInterface
         }
 
         // check solution ids are consistent with choice ids
-        $choiceIds = array_map(function ($choice) {
-            return $choice->id;
+        $holeIds = array_map(function ($hole) {
+            return $hole->id;
         }, $questionData->holes);
 
         foreach ($questionData->solutions as $index => $solution) {
-            if (!in_array($solution->id, $choiceIds)) {
+            if (!in_array($solution->id, $holeIds)) {
                 $errors[] = [
                     'path' => "solutions[{$index}]",
                     'message' => "id {$solution->id} doesn't match any choice id"
@@ -134,7 +134,9 @@ class HoleHandler implements QuestionHandlerInterface
         $repo = $this->om->getRepository('UJMExoBundle:InteractionHole');
         $holeQuestion = $repo->findOneBy(['question' => $question]);
         $holes = $holeQuestion->getHoles()->toArray();
+        $text = $holeQuestion->getHtmlWithoutValue();
 
+        $exportData->text = $text;
         $exportData->holes = array_map(function ($hole) {
             $holeData = new \stdClass();
             $holeData->id = (string) $hole->getId();
@@ -142,7 +144,7 @@ class HoleHandler implements QuestionHandlerInterface
 
             return $holeData;
         }, $holes);
-
+        
         return $exportData;
     }
 
