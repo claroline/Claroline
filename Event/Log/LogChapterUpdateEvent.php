@@ -12,7 +12,6 @@ class LogChapterUpdateEvent extends AbstractLogResourceEvent implements Notifiab
 {
     const ACTION = 'resource-icap_lesson-chapter_update';
     protected $lesson;
-    protected $details;
 
     /**
      * @param Lesson $lesson
@@ -21,6 +20,8 @@ class LogChapterUpdateEvent extends AbstractLogResourceEvent implements Notifiab
      */
     public function __construct(Lesson $lesson, Chapter $chapter, $changeSet)
     {
+        $this->lesson = $lesson;
+
         $details = array(
             'chapter' => array(
                 'lesson'    => $lesson->getId(),
