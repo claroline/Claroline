@@ -22,6 +22,6 @@
     <br/>
     <div class="form-actions">
         <input type="submit" class="btn btn-primary" value = '{{ 'Ok'|trans({}, 'icap_lesson') }}' />
-        <a href="{{ path('icap_lesson_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.slug }) }}"><button type="button" class="btn">{{ 'Cancel'|trans({}, 'icap_lesson') }}</button></a>
+        <a href="{{ path('icap_lesson_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.slug }) }}"><button type="button" class="btn btn-default">{{ 'Cancel'|trans({}, 'icap_lesson') }}</button></a>
     </div>
 </form>

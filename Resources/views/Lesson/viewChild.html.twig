@@ -7,14 +7,10 @@
     {% if root.__children|length %}
         {% for child in root.__children %}
             <li class='draggable-item' id = '{{ child.id }}' data-path = '{{ path('icap_lesson_move_chapter', { 'resourceId': lesson.id, 'chapterId': child.id })}}' >
-            {% if child.id == chapter.id %}
-                <div class='menu-item active_chapter' id = 'menu_item_{{ child.id }}'>
-            {% else %}
-                <div class='menu-item' id = 'menu_item_{{ child.id }}'>
-            {% endif %}
-            <i class='fa fa-caret-down collapsor {% if child.__children|length == 0%}empty{% endif %}' id='collapsor_icon_{{ child.id }}' data-collapsor = '{{ child.id }}'></i>
-            {#<i data-handle = '{{ child.id }}' class="fa fa-file-text-alt handle_sortable lesson_tooltip" data-original-title='{{ 'dragndrop_button'|trans({}, 'icap_lesson') }}'></i>#}
-            <a href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': child.slug }) }}">{{ child.title }}</a>
+            <div class='menu-item {% if child.id == chapter.id %}active_chapter{% endif %}' id = 'menu_item_{{ child.id }}'>
+                    <i class='fa fa-caret-down collapsor {% if child.__children|length == 0%}empty{% endif %}' id='collapsor_icon_{{ child.id }}' data-collapsor = '{{ child.id }}'></i>
+                    {#<i data-handle = '{{ child.id }}' class="fa fa-file-text-alt handle_sortable lesson_tooltip" data-original-title='{{ 'dragndrop_button'|trans({}, 'icap_lesson') }}'></i>#}
+                    <a href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': child.slug }) }}">{{ child.title }}</a>
             </div>
             {{ _self.recursiveChapter(child, chapter, lesson, false) }}
             </li>
@@ -32,15 +28,10 @@
 
             <div class="icon_chapter_list_header">
                 {% if is_granted('EDIT', node) %}
-                    <span class="btn-xs btn btn-default">
-                        <li class='lesson_tooltip menu_lesson_button' data-original-title='{{ 'enabled_move'|trans({}, 'icap_lesson') }}'><a  id='enable_move' data-status = 'enable' class='icon_link'><span class="fa fa-arrows" ></span><span class='chapter_menu_labels active'></span></a></li>
-                    </span>
+                <button id='enable_move' role="button" data-status='enable' class='btn-xs btn btn-default lesson_tooltip menu_lesson_button' data-original-title='{{ 'enabled_move'|trans({}, 'icap_lesson') }}'><i class="fa fa-arrows text-primary" ></i></button>
                 {%  endif  %}
-                <span class="btn-xs btn btn-default">
-                    <li class='lesson_tooltip menu_lesson_button replie' data-original-title='{{ 'collapse_all'|trans({}, 'icap_lesson') }}'><a href='#' id='collapse_all' class='icon_link'> <span class=" fa fa-long-arrow-up" ></span><span class="fa fa-minus"></span></a></li>
-                    
-                    <li class='lesson_tooltip menu_lesson_button deplie' data-original-title='{{ 'expand_all'|trans({}, 'icap_lesson') }}'><a href='#' id='expand_all' class='icon_link'><span class="fa fa-long-arrow-down"></span><span class="fa fa-reorder"></span></a></li>
-                </span>
+                <button id='collapse_all' role="button" class='btn-xs btn btn-default lesson_tooltip menu_lesson_button collapse' data-original-title='{{ 'collapse_all'|trans({}, 'icap_lesson') }}'><i class=" fa fa-long-arrow-up text-primary" ></i><i class="fa fa-minus text-primary"></i></button>
+                <button id='expand_all' role="button" class='btn-xs btn btn-default lesson_tooltip menu_lesson_button expand hidden' data-original-title='{{ 'expand_all'|trans({}, 'icap_lesson') }}'><i class="fa fa-long-arrow-down text-primary"></i><i class="fa fa-reorder text-primary"></i></button>
             </div>
 
 

@@ -494,7 +494,7 @@ class LessonController extends Controller
      * @Template()
      * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
      */
-    public function choiceMoveChapterAction($lesson, $chapterId)
+    public function choiceMoveChapterAction($lesson, $chapterId, Request $request)
     {
         $this->checkAccess("EDIT", $lesson);
         $chapter = $this->findChapter($lesson, $chapterId);
@@ -503,7 +503,7 @@ class LessonController extends Controller
         $form->handleRequest($this->container->get('request_stack')->getCurrentRequest());
 
         //for ajaxification
-        if ($this->container->get('request_stack')->getCurrentRequest()->isXMLHttpRequest()) {
+        if ($request->isXMLHttpRequest()) {
             return $this->render(
                 'IcapLessonBundle:Lesson:choiceMoveChapterAjaxified.html.twig',
                 array(
@@ -552,7 +552,7 @@ class LessonController extends Controller
             $firstposition = $form->get('firstposition')->getData();
         }else{
             return array(
-                'lesson' => $lesson,
+                '_resource' => $lesson,
                 'chapter' => $chapter,
                 'form' => $form->createView(),
                 'workspace' => $lesson->getResourceNode()->getWorkspace()
