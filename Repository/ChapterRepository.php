@@ -22,6 +22,24 @@ class ChapterRepository extends NestedTreeRepository{
     function getChapterTree(Chapter $chapter){
         return $this->childrenHierarchy($chapter, false, array(), true);
     }
+
+    /**
+     * @param Chapter $chapter
+     * @return Tree $tree
+     */
+    public function buildChapterTree(Chapter $chapter)
+    {
+        $queryBuilder = $this->createQueryBuilder('chapter')
+            ->select('chapter')
+            ->andWhere('chapter.root = :rootId')
+            ->orderBy('chapter.root, chapter.left', 'ASC')
+            ->setParameter('rootId', $chapter->getId());
+        $options = array('decorate' => false);
+        $tree = $this->buildTree($queryBuilder->getQuery()->getArrayResult(), $options);
+
+        return $tree;
+    }
+
     function getChapterAndChapterChildren(Chapter $chapter){
         return $this->children($chapter, false, null, 'ASC', true);
     }

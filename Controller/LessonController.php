@@ -63,6 +63,47 @@ class LessonController extends Controller
 
     /**
      * @Route(
+     *      "view/pdf/{resourceId}.{_format}",
+     *      name="icap_lesson_pdf",
+     *      requirements={"resourceId" = "\d+", "_format" = "pdf"},
+     *      defaults={"_format" = "pdf"}
+     * )
+     * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
+     */
+    public function viewLessonPdfAction(Lesson $lesson)
+    {
+        $this->checkAccess("OPEN", $lesson);
+        $chapterRepository = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter');
+        $tree = $chapterRepository->buildChapterTree($lesson->getRoot());
+        $content = $this->renderView(
+            "IcapLessonBundle:Lesson:view.pdf.twig",
+            array(
+                "_resource" => $lesson,
+                "tree" => $tree
+            )
+        );
+
+        return new Response(
+            $this->get('knp_snappy.pdf')->getOutputFromHtml(
+                $content,
+                array(
+                    'outline' => true,
+                    'footer-right' => '[page]/[toPage]',
+                    'footer-spacing' => 3,
+                    'footer-font-size' => 8
+                ),
+                true
+            ),
+            200,
+            array(
+                'Content-Type'          => 'application/pdf',
+                'Content-Disposition'   => 'inline; filename="'.$lesson->getResourceNode()->getName()
+            )
+        );
+    }
+
+    /**
+     * @Route(
      *      "view/{resourceId}/{chapterId}",
      *      name="icap_lesson_chapter",
      *      requirements={"resourceId" = "\d+"}

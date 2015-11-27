@@ -22,7 +22,16 @@
 {% endblock %}
 
 {% block content %}
-    {% render controller('IcapNotificationBundle:FollowerResource:renderForm', {'resourceId': _resource.resourceNode.id, 'resourceClass': _resource.resourceNode.class}) %}
+    {% if app.user is not empty or config.getParameter('is_pdf_export_active') == true %}
+        <div class="lesson-header-buttons">
+            {% if app.user is not empty %}
+                {% render controller('IcapNotificationBundle:FollowerResource:renderForm', {'resourceId': _resource.resourceNode.id, 'resourceClass': _resource.resourceNode.class}) %}
+            {% endif %}
+            {% if config.getParameter('is_pdf_export_active') == true %}
+                <a href="{{ path('icap_lesson_pdf', {'resourceId':_resource.id})}}" target="_blank" class="btn btn-default"><i class="fa fa-file-pdf-o text-danger"></i> {{ 'pdf_export'|trans({}, 'platform') }}</a>
+            {% endif %}
+        </div>
+    {% endif %}
     {% block lesson_content %}
     {% endblock %}
 {% endblock %}
