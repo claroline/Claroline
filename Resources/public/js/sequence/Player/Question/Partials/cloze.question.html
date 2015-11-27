@@ -15,9 +15,9 @@
         <hr/>
         </div>
         <div data-ng-if="clozeQuestionCtrl.question.text" class="question-row">
-            <div class="form-inline choice-item-col">
-                <div class="form-group">
-                    <h4 ng-bind-html="question.invite"></h4>
+            <div class="form-inline choice-item-col"> 
+                <div class="form-group"> 
+                    <label>{{ 'question_cloze_text'|trans:{}:'ujm_sequence' }}:</label>                   
                     <div data-ng-bind-html="clozeQuestionCtrl.formatedClozeText | unsafe"></div>
                 </div>
             </div>
