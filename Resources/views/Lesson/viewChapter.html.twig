@@ -48,7 +48,7 @@
                        {{ chapter.text | raw }}
                    </div>
                    <div class='lesson_footer row'>
-                       <div class='col-md-1 align_left'>
+                       <div class='col-md-1 col-xs-6 align_left'>
                            {% if previous != null %}
                            <a class='btn-primary btn lesson_tooltip' rel="tooltip" data-original-title='{{ 'previous'|trans({}, 'icap_lesson') }}' href='{{ path('icap_lesson_chapter', { 'resourceId': _resource.id, 'chapterId': previous }) }}'><i class='fa fa-arrow-left lesson_footer_icon'></i></a>
                            {% else %}
@@ -56,14 +56,14 @@
                            {% endif %}
                        </div>
 
-                       <div class='col-md-10'>
+                       <div class='col-md-10 col-xs-1'>
                           <a class="lesson_tooltip btn btn_up btn-primary hidden" href='#resource-breadcrumb' rel="tooltip" data-original-title='{{ 'back_top'|trans({}, 'icap_lesson') }}'>
                           <i class='fa fa-arrow-up lesson_footer_icon'></i>
                           </a>
                           <!--<a href='#wrap'>{{ 'back_top'|trans({}, 'icap_lesson') }}</a>-->
                        </div>
 
-                       <div class='col-md-1 align_right'>
+                       <div class='col-md-1 col-xs-5 align-right'>
                            {% if next != null %}
                                <a class=' btn-primary btn lesson_tooltip' rel="tooltip" data-original-title='{{ 'next'|trans({}, 'icap_lesson') }}' href='{{ path('icap_lesson_chapter', { 'resourceId': _resource.id, 'chapterId': next }) }}'><i class='fa fa-arrow-right lesson_footer_icon'></i></a>
                            {% else %}

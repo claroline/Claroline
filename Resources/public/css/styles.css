@@ -365,10 +365,10 @@ ul.jquery-sortable-list li.placeholder:before {
 
 a.btn_up.btn-primary{
     display: inline-block;
-    padding: 15px;
+    padding: 10px;
     text-decoration: none;
-    bottom: 80px;
-    left: 55px;
+    bottom: 5px;
+    left: 20%;
     position: fixed;
     z-index:1000;
 }
