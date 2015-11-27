@@ -52,3 +52,4 @@ sequence_attempts_infos: You have %1% attempt(s)
 sequence_nb_attempts: Attempt N° %1%
 sequence_interrupt_sequence_confirm: Are you sure you want to go to interrupt the sequence ?
 sequence_end_sequence_confirm: Are you sure you want to go to finish the sequence ? <br/> Yon won't be able to edit your answers.
+sequence_play_leave_confirm: Are you sure you want to leave the application ?

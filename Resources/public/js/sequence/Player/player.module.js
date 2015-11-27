@@ -11,7 +11,8 @@
         'ui.resourcePicker',
         'ngBootbox',
         'Common',
-        'Sequence'
+        'Sequence',
+        'Correction'
     ]);
     SequencePlayerApp.filter(
             'unsafe',

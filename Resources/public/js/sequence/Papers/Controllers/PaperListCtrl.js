@@ -139,7 +139,7 @@
                     // set scores in paper object and in the same time format end date
                     if (this.filtered[i].end) { // TODO check score availability
                         this.filtered[i].endDate = $filter('mySqlDateToLocalDate')(this.filtered[i].end);// $filter('toLocalDate')(this.filtered[i].end);// d.toLocaleString();
-                        this.filtered[i].score = PapersService.getPaperScore(this.filtered[i], this.questions) + '/20';
+                        this.filtered[i].score = CommonService.getPaperScore(this.filtered[i], this.questions) + '/20';
                     }
                     else {
                         this.filtered[i].endDate = '-';

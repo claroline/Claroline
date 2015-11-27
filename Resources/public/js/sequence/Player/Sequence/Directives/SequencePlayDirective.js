@@ -12,7 +12,7 @@
                 scope: {
                     sequence: '=',
                     paper: '=',
-                    user:'@'
+                    user:'='
                 },
                 link: function (scope, element, attr, sequencePlayCtrl) {
                     sequencePlayCtrl.init(scope.sequence, scope.paper, scope.user);                    

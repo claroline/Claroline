@@ -38,14 +38,13 @@ class SequenceController extends Controller
         $apiData = $paperManager->openPaper($exercise, $user, false);
         $exo = json_encode($apiData['exercise']);
         $paper = json_encode($apiData['paper']);
+       
         
         $u = array(
             'id' => $user->getId(),
-            'name' => $user->getFirstName() . '' . $user->getLastName(),
+            'name' => $user->getFirstName() . ' ' . $user->getLastName(),
             'admin' => $this->isExerciseAdmin($exercise)
         );
-
-
         
         return $this->render('UJMExoBundle:Sequence:play.html.twig', array(
                     '_resource' => $exercise,

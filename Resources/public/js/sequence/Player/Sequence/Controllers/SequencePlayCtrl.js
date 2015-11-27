@@ -11,6 +11,7 @@
             this.currentStep = {};
             this.user = {};
 
+            this.isFinished = false;
             this.isLastStep = false;
             this.isFirstStep = true;
             this.paper = {};
@@ -60,7 +61,7 @@
                 if (index < this.sequence.steps.length && index >= 0) {
                     this.currentStep = this.sequence.steps[index];
                 } else {
-                    var url = Routing.generate('ujm_sequence_error', {message:'index out of bounds', code:'500'});
+                    var url = Routing.generate('ujm_sequence_error', {message:'index out of bounds', code:'400'});
                     $window.location = url;
                 }
             };
@@ -151,9 +152,12 @@
                     var endPromise = SequenceService.endSequence(paper)
                     endPromise.then(function (result) {
                         if (this.checkCorrectionAvailability()) {
+                            // display correction directive
+                            this.isFinished = true;
+                            
                             // go to paper correction view
-                            var url = CommonService.generateUrl('paper-list', this.sequence.id) + '#/' + this.sequence.id + '/' + paper.id;
-                            $window.location = url;
+                            //var url = CommonService.generateUrl('paper-list', this.sequence.id) + '#/' + this.sequence.id + '/' + paper.id;
+                            //$window.location = url;
                         }
                         else {
                            var url = CommonService.generateUrl('exercise-home', this.sequence.id);
@@ -165,7 +169,7 @@
                     var url = CommonService.generateUrl('exercise-home', this.sequence.id);
                     $window.location = url;
                 } else {
-                    var url = Routing.generate('ujm_sequence_error', {message:'action not allowed', code:'500'});
+                    var url = Routing.generate('ujm_sequence_error', {message:'action not allowed', code:'400'});
                     $window.location = url;
                 }
             };

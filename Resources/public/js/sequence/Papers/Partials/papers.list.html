@@ -8,8 +8,8 @@
             <div class="col-md-12">
                 <div class="btn-group" role="group">
                     <a class="btn btn-default" data-ng-href="{{paperListCtrl.generateUrl('exercise-home', paperListCtrl.exercise.id)}}">{{ 'link_exercice_home'|trans:{}:'ujm_sequence' }}</a>
-                    <a class="btn btn-default" data-ng-href="{{paperListCtrl.generateUrl('papers-docimolgy', paperListCtrl.exercise.id)}}">{{ 'link_exercise_docimology'|trans:{}:'ujm_sequence' }}</a>
-                    <a class="btn btn-default" data-ng-href="{{paperListCtrl.generateUrl('papers-csv-export', paperListCtrl.exercise.id)}}">{{ 'link_csv_export'|trans:{}:'ujm_sequence' }}</a>
+                    <a data-ng-if="paperListCtrl.user.admin" class="btn btn-default" data-ng-href="{{paperListCtrl.generateUrl('papers-docimolgy', paperListCtrl.exercise.id)}}">{{ 'link_exercise_docimology'|trans:{}:'ujm_sequence' }}</a>
+                    <a data-ng-if="paperListCtrl.user.admin" class="btn btn-default" data-ng-href="{{paperListCtrl.generateUrl('papers-csv-export', paperListCtrl.exercise.id)}}">{{ 'link_csv_export'|trans:{}:'ujm_sequence' }}</a>
                 </div>
                 <a data-ng-if="paperListCtrl.displayRetryExerciseLink" class="btn btn-default pull-right" href="{{paperListCtrl.generateUrl('exercise-play', paperListCtrl.exercise.id)}}">
                     <i class="fa fa-check-square-o"> {{ 'link_exercise_retry'|trans:{}:'ujm_sequence' }}</i>
