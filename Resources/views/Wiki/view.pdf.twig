@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{{ _resource.resourceNode.name ~ '.pdf' }}</title>
+    {% stylesheets debug=false filter='lessphp' output='bundles/icapwiki/css/pdf.css'
+    "@IcapWikiBundle/Resources/views/less/pdf.less"
+    %}
+    <link rel="stylesheet" type="text/css" href="{{ app.request.getSchemeAndHttpHost() ~ asset_url }}"/>
+    {% endstylesheets %}
+</head>
+<body>
+    <div class="page-header">
+        <h1>{{ _resource.resourceNode.name }}</h1>
+    </div>
+    {% if tree is not empty and tree[0] is not empty and tree[0].activeContribution.text is not empty%}
+        <div>
+            {{ tree[0].activeContribution.text|raw }}
+        </div>
+    {% endif %}
+
+    {% if tree is not empty and tree[0] is not empty and tree[0].__children is not empty %}
+        <div class="pdf-contents">
+            <div class="pdf-contents-inner well">
+                <div class="pdf-contents-title">
+                    {{ 'wiki_contents'|trans({},'icap_wiki') }}
+                </div>
+                {% include "IcapWikiBundle:Wiki:wikiContents.pdf.twig" with {'sections' : tree[0].__children, 'isAdmin' : isAdmin, 'delimeter' : '.', 'rootId' : tree[0].id } %}
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="wiki-sections">
+            {% include "IcapWikiBundle:Wiki:wikiSections.pdf.twig" with {'sections' : tree[0].__children, 'wikiId' : _resource.id, 'isAdmin' : isAdmin, 'wikiMode' : _resource.mode, 'user' : user } %}
+        </div>
+    {% endif %}
+</body>
+</html>

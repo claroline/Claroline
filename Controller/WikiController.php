@@ -33,28 +33,51 @@ class WikiController extends Controller{
 
     /**
      * @Route(
-     *      "/{wikiId}",
-     *      requirements={"wikiId" = "\d+"},
+     *      "/{wikiId}.{_format}",
+     *      defaults={"_format":"html"},
+     *      requirements={"wikiId" = "\d+", "_format":"html|pdf"},
      *      name="icap_wiki_view"
      * )
      * @ParamConverter("wiki", class="IcapWikiBundle:Wiki", options={"id" = "wikiId"})
-     * @Template()
      */
-    public function viewAction(Wiki $wiki)
+    public function viewAction(Wiki $wiki, Request $request)
     {
         $this->checkAccess("OPEN", $wiki);
         $isAdmin = $this->isUserGranted("EDIT", $wiki);
         $user = $this->getLoggedUser();
         $sectionRepository = $this->get('icap.wiki.section_repository');
         $tree = $sectionRepository->buildSectionTree($wiki, $isAdmin);
-
-        return array(
+        $format = $request->get('_format');
+        $response = new Response();
+        $this->render(sprintf('IcapWikiBundle:Wiki:view.%s.twig', $format), array(
             '_resource' => $wiki,
             'tree' => $tree,
             'workspace' => $wiki->getResourceNode()->getWorkspace(),
             'isAdmin' => $isAdmin,
             'user' => $user
-        );
+        ), $response);
+        if ($format == "pdf") {
+            return new Response(
+                $this->get('knp_snappy.pdf')->getOutputFromHtml(
+                    $response->getContent(),
+                    array(
+                        'outline' => true,
+                        'footer-right' => '[page]/[toPage]',
+                        'footer-spacing' => 3,
+                        'footer-font-size' => 8
+                    ),
+                    true
+                ),
+                200,
+                array(
+                    'Content-Type'          => 'application/pdf',
+                    'Content-Disposition'   => 'inline; filename="'.$wiki->getResourceNode()->getName()
+                )
+            );
+
+        }
+
+        return $response;
     }
 
     /**

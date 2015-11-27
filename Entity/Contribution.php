@@ -35,6 +35,8 @@ class Contribution
      */
     protected $text;
 
+    protected $textForPdf;
+
     /**
      * @ORM\Column(type="datetime", name="creation_date")
      * @Gedmo\Timestampable(on="create")
@@ -89,6 +91,15 @@ class Contribution
     public function getText()
     {
         return $this->text;
+    }
+
+    public function getTextForPdf()
+    {
+        $tmpText = $this->text;
+        str_replace("&nbsp;", " ", $tmpText);
+        preg_replace('/alt=["\'][a-zA-Z]*["\']/g', "", $tmpText);
+
+        return $tmpText;
     }
 
     /**

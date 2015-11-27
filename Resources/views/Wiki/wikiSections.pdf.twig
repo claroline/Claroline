@@ -1,0 +1,26 @@
+{% macro wiki_sections_pdf(sections, isAdmin, wikiId, wikiMode, user) %}
+    {% for section in sections %}
+        {% if section.deleted is empty and section.visible %}
+            {% set level = section.level + 1 %}
+            {% set fontsize = 0 %}
+            {% if level > 4 %}
+                {% set level = 4 %}
+            {% endif %}
+            <li id="section-{{section.id}}" class="section-title">
+                <div class="{{level>2?"subsection-header":"page-header"}}">
+                    <h{{level}}>{{section.activeContribution.title}}</h{{level}}>
+                </div>
+                <div id="wst-{{ section.id }}" class="wiki-section-text">{{section.activeContribution.text|preg_replace("/src=\"\\/\\//","src=\"http://")|preg_replace("/src=\"\\//","src=\""~app.request.getSchemeAndHttpHost()~"/")|raw}}</div>
+                {% if section.__children is not empty %}
+               <ul class="no-bullet-list">
+                   {{ _self.wiki_sections_pdf(section.__children, isAdmin, wikiId, wikiMode, user) }}
+               </ul>
+                {% endif %}
+            </li>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+<ul id="wiki-sections-list" class="no-bullet-list">
+    {{ _self.wiki_sections_pdf(sections, isAdmin, wikiId, wikiMode, user) }}
+</ul>

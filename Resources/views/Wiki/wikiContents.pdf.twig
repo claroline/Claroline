@@ -1,0 +1,20 @@
+{% macro wiki_contents_pdf(sections, isAdmin, delimeter, prefix) %}
+    {% for section in sections %}
+        {% if section.visible %}
+            <li id="li-{{ section.id }}">
+                <a href="#section-{{section.id}}">
+                    {{prefix ~ loop.index}}&nbsp;{{ section.activeContribution.title }}
+                </a>
+                <ul id="ul-{{ section.id }}" class="no-bullet-list">
+                    {% if section.__children is not empty %}
+                        {{ _self.wiki_contents_pdf(section.__children, isAdmin, delimeter, prefix ~ loop.index ~ delimeter) }}
+                    {% endif %}
+                </ul>
+            </li>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+<ul id="wiki-contents-list" class="no-bullet-list">
+    {{ _self.wiki_contents_pdf(sections, isAdmin, delimeter, "") }}
+</ul>
