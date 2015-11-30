@@ -511,7 +511,6 @@ class RightsManager
 
     /**
      * Return the resource rights as a readable array. This array can be used for the resource creation.
-
      * @param ResourceNode $node
      *
      * @return array

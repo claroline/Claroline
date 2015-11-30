@@ -1,12 +1,19 @@
 <div class="input-group">
-    <input 
-        class="form-control" 
-        type="text" 
-        id="search-users-txt"
-        list="usersearch-datalist"
-        ng-model="stringSearch"
-    >
-    </input>
+
+    <ui-select ng-model="stringSearch" ng-change="updateOptions" on-select="onSelect($item, $model, $select)" reset-search-input="false" focus-on="putCursorAtEnd()">
+        <ui-select-match>
+            <span ng-bind="$select.selected.name"></span>
+        </ui-select-match>
+        <ui-select-choices 
+            repeat="item in (options)"
+            refresh="refreshOption($select)"
+            refresh-delay="0"
+        >
+            <span ng-bind="item.name"></span>
+        </ui-select-choices>
+    </ui-select>
+
+    <div id="search-el"></div>
     <span class="input-group-btn">
         <button 
             class="filter btn btn-default" 
@@ -21,6 +28,8 @@
     <option 
         data-ng-repeat="field in fields" 
         class='datalist-user-class' 
-        value="{{ field }}:({{ stringSearch }})">
+        value="{{ getOptionValue(field) }}"
+    >
     </option>
 </datalist>
+
