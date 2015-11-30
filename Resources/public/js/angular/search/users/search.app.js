@@ -10,7 +10,7 @@ usersSearch.controller('usersSearchCtrl', function(
 	//should be dynamic because it'll include facets and so on...
 	$scope.fields 		= ['username', 'last_name', 'first_name', 'email', 'administrative_code'];
 	$scope.$log   		= $log;
-	$scope.stringSearch = '';
+	$scope.searches     = [];
 
 	$scope.refreshOption = function($select) {		
 		for (var i = 0; i < $scope.options.length; i++) {
@@ -19,8 +19,9 @@ usersSearch.controller('usersSearchCtrl', function(
 	}
 
 	$scope.onSelect = function($item, $model, $select) {
-		$select.search = $scope.stringSearch = $item.name;
-
+		$select.selected.pop();
+		var cloned = angular.copy($item);
+		$select.selected.push(cloned);
 	}
 
 	$scope.putCursorAtEnd = function() {
@@ -43,7 +44,8 @@ usersSearch.controller('usersSearchCtrl', function(
 	}
 
 	var getOptionValue = function(field, search) {
-		if (!search) search = $scope.stringSearch;
+		
+		if (!search) search = '';
 		var matched = '';
 
 		for (var i = 0; i < $scope.fields.length; i++) {
@@ -60,8 +62,8 @@ usersSearch.controller('usersSearchCtrl', function(
 
 		var newSearch = diff(matched, search);
 		var newOption = matched;
-
-		if (newSearch.trim() !== '') newOption += field + ':(' + newSearch + ')'; 
+		newSearch = newSearch.trim();
+		newOption += field + ':(' + newSearch + ')'; 
 
 		return newOption;
 	}
