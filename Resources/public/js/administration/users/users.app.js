@@ -66,8 +66,8 @@ usersManager.controller('usersCtrl', function(
 
 	//I'm an angular newb so I use $scope inheritance #IDontKnowWhatImDoing
 	//searchUsers is defined in a usersSearcher template.
-	$scope.searchUsers = function(search) {
-		usersSearcher.find(search, 1, 10).then(function(d) {
+	$scope.searchUsers = function(searches) {
+		usersSearcher.find(searches, 1, 10).then(function(d) {
 			$scope.users = d.data.users;
 			$scope.dataTableOptions.paging.count = d.data.total;
 		});

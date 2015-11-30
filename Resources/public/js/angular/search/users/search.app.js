@@ -11,61 +11,28 @@ usersSearch.controller('usersSearchCtrl', function(
 	$scope.fields 		= ['username', 'last_name', 'first_name', 'email', 'administrative_code'];
 	$scope.$log   		= $log;
 	$scope.searches     = [];
+	$scope.selected     = [];
 
 	$scope.refreshOption = function($select) {		
 		for (var i = 0; i < $scope.options.length; i++) {
 			$scope.options[i].name = getOptionValue($scope.options[i].field, $select.search);
+			$scope.options[i].value = $select.search;
 		}
 	}
 
 	$scope.onSelect = function($item, $model, $select) {
+		//angular and its plugins does not make any sense to me.
 		$select.selected.pop();
 		var cloned = angular.copy($item);
 		$select.selected.push(cloned);
-	}
-
-	$scope.putCursorAtEnd = function() {
-		console.log('onfocus');
-	}
-
-	//simplistic diff. For now we only get what's after the string... This could be improved further later.
-	var diff = function(oldString, newString) {
-		var diff = new Array();
-		oldString = oldString.split(" ");
-		newString = newString.split(" ");
-
-		for (x = 0; x < newString.length; x++) {
-		   if (oldString[x] != newString[x]) {
-		      diff.push(newString[x]);
-		   }
-		}
-
-		return diff.join(" ");
+		$scope.options.push(getOptionValue($item.field));
+		$scope.selected = $select.selected;
 	}
 
 	var getOptionValue = function(field, search) {
+		search = !search ? '': search.trim();
 		
-		if (!search) search = '';
-		var matched = '';
-
-		for (var i = 0; i < $scope.fields.length; i++) {
-			regex = $scope.fields[i] + ':\\((.*?)\\)';
-			regxp = new RegExp(regex, 'g');
-			var grep = search.match(regxp);
-			
-			if (grep) {
-				for (var j = 0; j < grep.length; j++) {
-					matched += grep[j] + ' ';
-				}
-			}
-		}
-
-		var newSearch = diff(matched, search);
-		var newOption = matched;
-		newSearch = newSearch.trim();
-		newOption += field + ':(' + newSearch + ')'; 
-
-		return newOption;
+		return field + ':(' + search + ')'; 
 	}
 
 	var generateOptions = function() {
@@ -76,7 +43,8 @@ usersSearch.controller('usersSearchCtrl', function(
 				{
 					id: i,
 					name: getOptionValue($scope.fields[i]),
-					field: $scope.fields[i]
+					field: $scope.fields[i],
+					value: ''
 				}
 			);
 		}
@@ -117,18 +85,14 @@ usersSearch.factory('usersSearcher', function($http) {
 		searcher.fields = fields;
 	}
 
-	searcher.find = function(search, page, limit) {
-		if (search.trim() !== '') {
+	searcher.find = function(searches, page, limit) {
+		if (searches.length > 0) {
 			var qs = '?';
-			data = parseSearchString(search);
-			for (var prop in data) {
-				if (data.hasOwnProperty(prop)) {
-					for (var i = 0; i < data[prop].length; i++) {
-						qs += prop + '[]=' + data[prop][i] + '&';
-					}
-				}
-			}
-			console.log(qs);
+
+			for (var i = 0; i < searches.length; i++) {
+				qs += searches[i].field +'[]=' + searches[i].value + '&';
+			} 
+
 			var route = Routing.generate('api_search_partial_list_users', {'page': page, 'limit': limit});
 			route += qs;
 
