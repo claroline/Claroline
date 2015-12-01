@@ -5,7 +5,7 @@
         {% if error is defined %}
         <description>{{ error|trans({}, 'notification') }}</description>
         {% else %}
-        {% if pager.getNbResults()|length > 0 %}
+        {% if pager.getNbResults() > 0 %}
             {% for notificationViewer in pager %}
                 {% set notification = notificationViewer.notification %}
                 <item>

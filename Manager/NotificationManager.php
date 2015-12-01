@@ -356,16 +356,17 @@ class NotificationManager
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      * @return mixed
      */
-    public function getUserNotificationsList($userId, $page = 1, $maxResult = -1, $isRss = false)
+    public function getUserNotificationsList($userId, $page = 1, $maxResult = -1, $isRss = false, $notificationParameters = null)
     {
-        $notificationUserParameters = $this
-            ->notificationParametersManager
-            ->getParametersByUserId($userId);
-        $visibleTypes = $notificationUserParameters->getDisplayEnabledTypes();
-        if ($isRss) {
-            $visibleTypes = $notificationUserParameters->getRssEnabledTypes();
+        if ($notificationParameters == null) {
+            $notificationParameters = $this
+                ->notificationParametersManager
+                ->getParametersByUserId($userId);
         }
-
+        $visibleTypes = $notificationParameters->getDisplayEnabledTypes();
+        if ($isRss) {
+            $visibleTypes = $notificationParameters->getRssEnabledTypes();
+        }
         $query = $this
             ->getNotificationViewerRepository()
             ->findUserNotificationsQuery($userId, $visibleTypes);
@@ -393,7 +394,6 @@ class NotificationManager
         $notificationUserParameters = $this
             ->notificationParametersManager
             ->getParametersByRssId($rssId);
-
         if($notificationUserParameters === null) {
             throw new NoResultException();
         }
@@ -402,7 +402,8 @@ class NotificationManager
             $notificationUserParameters->getUserId(),
             1,
             $config->getMaxPerPage(),
-            true
+            true,
+            $notificationUserParameters
         );
     }
 

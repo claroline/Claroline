@@ -57,7 +57,6 @@ class NotificationController extends Controller
      *      defaults={"_format":"xml"},
      *      name="icap_notification_rss"
      * )
-     * @Template()
      * @param $rssId
      * @return mixed
      */
@@ -73,7 +72,7 @@ class NotificationController extends Controller
             $result = array("error" => "zero_notifications");
         }
 
-        return $result;
+        return $this->render('IcapNotificationBundle:Notification:rss.xml.twig', $result);
     }
 
     /**
