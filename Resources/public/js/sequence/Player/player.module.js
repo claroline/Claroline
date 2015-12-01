@@ -1,19 +1,21 @@
 (function () {
     'use strict';
 
-    // exercise player module
-    var SequencePlayerApp = angular.module('SequencePlayerApp', [
+    var dependencies = [
         'ngSanitize',
+        'ngRoute',
         'angular-loading-bar',
         'ui.bootstrap',
-        'ui.tinymce',
         'ui.translation',
-        'ui.resourcePicker',
         'ngBootbox',
         'Common',
         'Sequence',
         'Correction'
-    ]);
+    ];
+    // exercise player module
+    var SequencePlayerApp = angular.module('SequencePlayerApp', dependencies);
+    
+    
     SequencePlayerApp.filter(
             'unsafe',
             function ($sce) {
