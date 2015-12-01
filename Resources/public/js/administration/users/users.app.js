@@ -1,44 +1,18 @@
 var usersManager = angular.module('usersManager', ['usersSearch', 'data-table']);
 
-//let's do some initialization first.
-usersManager.config(function ($httpProvider) {
-	$httpProvider.interceptors.push(function ($q) {
-		return {
-			'request': function(config) {
-				$('.please-wait').show();
-
-				return config;
-			},
-			'requestError': function(rejection) {
-				$('.please-wait').hide();
-
-				return $q.reject(rejection);
-			},	
-			'responseError': function(rejection) {
-				$('.please-wait').hide();
-
-				return $q.reject(rejection);
-			},
-			'response': function(response) {
-				$('.please-wait').hide();
-
-				return response;
-			}
-		};
-	});
-});
-
 usersManager.controller('usersCtrl', function(
 	$scope,
 	$log,
 	$http,
 	$cacheFactory,
-	usersSearcher,
-	API
+	usersSearcher
 ) {
 	$scope.users = []; 
 	$scope.search = '';
-	//$scope.users = [];
+	$scope.savedSearch = [];
+	//$scope.offset = 0;
+	//$scope.size   = 10;
+	$scope.users = [];
 	$scope.dataTableOptions = {
 		scrollbarV: false,
  		columnMode: 'force',
@@ -59,23 +33,21 @@ usersManager.controller('usersCtrl', function(
  		}
 	};
 	
-	usersSearcher.find($scope.search, 1, 10).then(function(d) {
+	usersSearcher.find([], 1, 10).then(function(d) {
 		$scope.users = d.data.users;
 		$scope.dataTableOptions.paging.count = d.data.total;
 	});
-
-	//I'm an angular newb so I use $scope inheritance #IDontKnowWhatImDoing
-	//searchUsers is defined in a usersSearcher template.
-	$scope.searchUsers = function(searches) {
-		usersSearcher.find(searches, 1, 10).then(function(d) {
+	
+	$scope.clarolineSearch = function(searches) {
+		$scope.savedSearch = searches;
+		usersSearcher.find(searches, $scope.dataTableOptions.paging.offset + 1, $scope.dataTableOptions.paging.size).then(function(d) {
 			$scope.users = d.data.users;
 			$scope.dataTableOptions.paging.count = d.data.total;
 		});
 	};
 
 	$scope.paging = function(offset, size) {
-		console.log(offset, size);
-		usersSearcher.find($scope.search, offset + 1, size).then(function(d) {
+		usersSearcher.find($scope.savedSearch, offset + 1, size).then(function(d) {
 			var users = d.data.users;
 
 			//I know it's terrible... but I have no other choice with this table.
@@ -89,17 +61,21 @@ usersManager.controller('usersCtrl', function(
 	}
 });
 
-usersManager.factory('API', function($http) {
-	var api = {};
-
-	return api;
-});
-
 usersManager.directive('userlist', [
 	function userlist() {
 		return {
 			restrict: 'E',
 			templateUrl: AngularApp.webDir + 'bundles/clarolinecore/js/administration/users/views/userlist.html',
+			replace: true
+		}
+	}
+]);
+
+usersManager.directive('usersearch', [
+	function usersearch() {
+		return {
+			restrict: 'E',
+			templateUrl: AngularApp.webDir + 'bundles/clarolinecore/js/administration/users/views/usersearch.html',
 			replace: true
 		}
 	}

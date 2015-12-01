@@ -21,12 +21,8 @@
 {% block section_content %}
     <div id="users-panel" class="panel panel-default" ng-app="usersManager">
         <div class="panel-body" ng-controller="usersCtrl">
-            <div align="center" class="action-bar">
-                <div ng-controller="usersSearchCtrl" class="panel-body">
-                    <searchuser>
-                    </searchuser>
-                </div>   
-            </div>
+            <usersearch>
+            </usersearch>
             <userlist>
             </userlist>
         </div>
@@ -66,6 +62,7 @@
         var AngularApp = {};
         AngularApp.webDir = "{{ asset('') }}";
     </script>
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/angular/search/generic/search.app.js') }}></script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/angular/search/users/search.app.js') }}></script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/users/users.app.js') }}></script>
 
