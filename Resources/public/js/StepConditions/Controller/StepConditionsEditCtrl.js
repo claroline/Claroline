@@ -42,6 +42,12 @@ StepConditionsEditCtrl.prototype.constructor = StepConditionsEditCtrl;
 StepConditionsEditCtrl.prototype.showButtons = null;
 
 /**
+ * Step which will be locked
+ * @type {null}
+ */
+StepConditionsEditCtrl.prototype.next = null;
+
+/**
  * Create a new condition for a given step
  * @param step
  */

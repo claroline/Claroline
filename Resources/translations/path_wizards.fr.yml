@@ -5,7 +5,7 @@ copy: copie
 
 condition_access: Condition d'accès pour
 condition_and: ET
-condition_condition_delete: Supprimer la condition
+condition_condition_delete: Supprimer la condition d'accès
 condition_criterion_add : Ajouter un critère
 condition_criteria_group_add : Ajouter un groupe de critère
 condition_criteria_group_delete : Supprimer le groupe de critère
@@ -29,7 +29,7 @@ condition_criterion_userteam: Utilisateur appartient à l'équipe
 condition_delete_title: Suppression de la condition
 condition_delete_confirm: Attention, vous êtes sur le point de supprimer la condition. Sans condition, tous les utilisateurs pourront passer à l'étape suivante
 condition_delete: Supprimer
-condition_init_conditionstructure: Initialiser une condition pour l'accès à l'étape
+condition_init_conditionstructure: Créer une condition d'accès
 condition_no_conditionstructure: Aucune condition n'est définie pour l'étape
 condition_or: OU
 condition_step_no_activity: Attention, vous n'avez pas associé d'activité à cette étape

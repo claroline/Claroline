@@ -5,7 +5,7 @@ copy: copy
 
 condition_access: Access condition for
 condition_and: AND
-condition_condition_delete: Delete condition
+condition_condition_delete: Delete access condition
 condition_criterion_add : Add a criterion
 condition_criteria_group_add : Add a criteria group
 condition_criteria_group_delete : Delete criteria group
@@ -29,7 +29,7 @@ condition_criterion_userteam: User belongs to the team
 condition_delete_title: Delete the condition
 condition_delete_confirm: Warning you're about to delete the condition. Without one, all the user will be able to go to the next step
 condition_delete: Delete
-condition_init_conditionstructure: Initialize a condition to access the step
+condition_init_conditionstructure: Create an access condition
 condition_no_conditionstructure : No condition is set for the step
 condition_or: OR
 condition_step_no_activity: Warning, no activity is linked to this step

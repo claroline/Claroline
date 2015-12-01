@@ -10,7 +10,7 @@
                 controllerAs: 'stepConditionsEditCtrl',
                 templateUrl: AngularApp.webDir + 'bundles/innovapath/js/StepConditions/Partial/edit.html',
                 scope: {
-                    title: '='
+                    next: '='
                 },
                 bindToController: true
             };

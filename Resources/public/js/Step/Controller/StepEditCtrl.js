@@ -87,7 +87,8 @@ StepEditCtrl.$inject = [ 'step', 'inheritedResources', 'PathService', '$scope', 
  */
 StepEditCtrl.prototype.collapsedPanels = {
     description       : false,
-    properties        : true
+    properties        : true,
+    conditions        : true
 };
 
 /**
