@@ -127,8 +127,6 @@ class UserManager
      */
     public function createUser(User $user, $sendMail = true, $additionnalRoles = array(), $model = null, $publicUrl = null)
     {
-        $this->objectManager->startFlushSuite();
-
         if ($this->personalWorkspaceAllowed($additionnalRoles)) {
             $this->setPersonalWorkspace($user, $model);
         }
@@ -150,8 +148,6 @@ class UserManager
             }
         }
 
-        $this->objectManager->endFlushSuite();
-
         if ($this->mailManager->isMailerAvailable() && $sendMail) {
             //send a validation by hash
             $mailValidation = $this->platformConfigHandler->getParameter('registration_mail_validation');
@@ -167,9 +163,11 @@ class UserManager
                 $this->mailManager->sendCreationMessage($user);
             }
         }
-
+        
         $this->container->get('claroline.event.event_dispatcher')
             ->dispatch('user_created_event', 'UserCreated', array('user' => $user));
+            
+        $this->objectManager->flush();
 
         return $user;
     }
