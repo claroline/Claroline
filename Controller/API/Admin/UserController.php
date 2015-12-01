@@ -100,7 +100,6 @@ class UserController extends FOSRestController
      *     description="Returns the users list",
      *     views = {"user"}
      * )
-     * @EXT\Route(options = {"expose"=true})
      */
     public function getPartialListUsersAction($page, $limit)
     {
@@ -117,7 +116,6 @@ class UserController extends FOSRestController
      *     description="Returns the users list",
      *     views = {"user"}
      * )
-     * @EXT\Route(options = {"expose"=true})
      */
     public function searchPartialListUsersAction($page, $limit)
     {
@@ -142,14 +140,20 @@ class UserController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"admin"})
      * @ApiDoc(
-     *     description="Returns the searchable user fields"
+     *     description="Returns the searchable user fields",
+     *     views = {"user"}
      * )
      */
-    public function getSearchableFields()
+    public function getUserSearchableFieldsAction()
     {
-        return array('name', 'id', 'email', 'administrative_code');
+        return array(
+            'first_name', 
+            'last_name', 
+            'email', 
+            'administrative_code', 
+            'username'
+        );
     }
 
     /**

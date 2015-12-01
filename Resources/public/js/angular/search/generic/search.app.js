@@ -1,4 +1,5 @@
 var genericSearch = angular.module('genericSearch', ['ui.select']);
+var translator = window.Translator;
 
 //let's do some initialization first.
 genericSearch.config(function ($httpProvider) {
@@ -32,14 +33,19 @@ genericSearch.controller('genericSearchCtrl', function(
 	$scope,
 	$log,
 	$http,
-	$cacheFactory,
-	clarolineSearch,
-	genericSearcher
+	clarolineSearch
 ) {
-	$scope.fields 		= clarolineSearch.getFields();
-	$scope.$log   		= $log;
-	$scope.searches     = [];
-	$scope.selected     = [];
+	$scope.fields 	= [];
+	$scope.$log   	= $log;
+	$scope.searches = [];
+	$scope.selected = [];
+	$scope.options  = [];
+
+	//init field list
+	$http.get(Routing.generate(clarolineSearch.getFieldRoute())).then(function(d) {
+		$scope.fields = d.data;
+		$scope.options = generateOptions();
+	})
 
 	$scope.refreshOption = function($select) {		
 		for (var i = 0; i < $scope.options.length; i++) {
@@ -58,18 +64,13 @@ genericSearch.controller('genericSearchCtrl', function(
 	}
 
 	$scope.onRemove = function($item, $model, $select) {
-		//angular and its plugins does not make any sense to me.
-		//$select.selected.pop();
-		//var cloned = angular.copy($item);
-		//$select.selected.push(cloned);
-		//$scope.options.push(getOptionValue($item.field));
 		$scope.selected = $select.selected;
 	}
 
 	var getOptionValue = function(field, search) {
 		search = !search ? '': search.trim();
 		
-		return field + ':(' + search + ')'; 
+		return translator.trans(field, {}, 'platform') + ': ' + search + ''; 
 	}
 
 	var generateOptions = function() {
@@ -88,41 +89,6 @@ genericSearch.controller('genericSearchCtrl', function(
 
 		return options;
 	}
-
-	genericSearcher.setFields($scope.fields);
-
-	$scope.options = generateOptions();
-});
-
-
-genericSearch.factory('genericSearcher', function($http, clarolineSearch) {
-	var searcher = {};
-
-	searcher.setFields = function(fields) {
-		searcher.fields = fields;
-	}
-
-	searcher.find = function(searches, page, limit) {
-		var baseRoute = clarolineSearch.getBaseRoute();
-		var searchRoute = clarolineSearch.getSearchRoute();
-
-		if (searches.length > 0) {
-			var qs = '?';
-
-			for (var i = 0; i < searches.length; i++) {
-				qs += searches[i].field +'[]=' + searches[i].value + '&';
-			} 
-
-			var route = Routing.generate(baseRoute, {'page': page, 'limit': limit});
-			route += qs;
-
-			return $http.get(route);
-		} else {
-			return $http.get(Routing.generate(searchRoute, {'page': page, 'limit': limit}));
-		}
-	}
-
-	return searcher;
 });
 
 genericSearch.directive('clarolinesearch', [
@@ -136,7 +102,7 @@ genericSearch.directive('clarolinesearch', [
 ]);
 
 genericSearch.provider("clarolineSearch", function() {
-	var baseRoute = searchRoute = searchFields = '';
+	var baseRoute = searchRoute = fieldRoute = '';
 
 	this.setBaseRoute = function(route) {
 		baseRoute = route;
@@ -146,11 +112,11 @@ genericSearch.provider("clarolineSearch", function() {
 		searchRoute = route;
 	};
 
-	this.setFields = function(fields) {
-		searchFields = fields;
+	this.setFieldRoute = function(route) {
+		fieldRoute = route;
 	};
 
-	this.$get = function() {
+	this.$get = function($http) {
 		return {
 			getBaseRoute: function() {
 				return baseRoute;
@@ -158,8 +124,24 @@ genericSearch.provider("clarolineSearch", function() {
 			getSearchRoute: function() {
 				return searchRoute;
 			},
-			getFields: function() {
-				return searchFields;
+			getFieldRoute: function() {
+				return fieldRoute;
+			},
+			find: function(searches, page, limit) {
+				if (searches.length > 0) {
+					var qs = '?';
+
+					for (var i = 0; i < searches.length; i++) {
+						qs += searches[i].field +'[]=' + searches[i].value + '&';
+					} 
+
+					var route = Routing.generate(baseRoute, {'page': page, 'limit': limit});
+					route += qs;
+
+					return $http.get(route);
+				} else {
+					return $http.get(Routing.generate(searchRoute, {'page': page, 'limit': limit}));
+				}
 			}
 		}
 	}
