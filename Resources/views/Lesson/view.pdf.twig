@@ -24,7 +24,7 @@
         </div>
         <div class="clearfix"></div>
     </div>
-    <div class="wiki-sections">
+    <div class="lesson-chapters">
         {% include "IcapLessonBundle:Lesson:lessonChapters.pdf.twig" with {'chapters' : tree[0].__children, 'lessonId' : _resource.id} %}
     </div>
 {% endif %}
