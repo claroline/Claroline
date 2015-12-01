@@ -8,8 +8,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class AbstractPathType extends AbstractType
 {
-    abstract function getName();
-    
     public function buildForm(FormBuilderInterface $builder, array $options = array ())
     {
         $builder->add('name',             'text',     array ('required' => true));
