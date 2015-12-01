@@ -92,7 +92,7 @@ class ExerciseController
      *
      * Opens an exercise, creating a new paper or re-using an unfinished one.
      *
-     * @EXT\Route("/exercises/{id}/attempts")
+     * @EXT\Route("/exercises/{id}/attempts", name="exercise_new_attempt")
      * @EXT\Method("POST")
      * @EXT\ParamConverter("user", converter="current_user")
      *

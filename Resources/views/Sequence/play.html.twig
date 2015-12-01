@@ -7,8 +7,8 @@
 {% endblock %}
 
 {% block content %} 
-    <div class="ujm-sequence-container" data-ng-app="SequencePlayerApp" data-ng-cloak="">
-        <sequence-play class="player-container" data-paper="{{ paper }}" data-user="{{ user }}" data-sequence="{{ sequence }}"></sequence-play>       
+    <div class="ujm-sequence-container" data-ng-app="ExercisePlayerApp" data-ng-cloak="">
+        <ng-view></ng-view>
     </div>
 {% endblock %}
 
@@ -27,10 +27,12 @@
         '@UJMExoBundle/Resources/public/js/sequence/Correction/Directives/*'
         '@UJMExoBundle/Resources/public/js/sequence/Correction/Services/*'
 
-        '@UJMExoBundle/Resources/public/js/sequence/Player/Sequence/*'
-        '@UJMExoBundle/Resources/public/js/sequence/Player/Sequence/Controllers/*'
-        '@UJMExoBundle/Resources/public/js/sequence/Player/Sequence/Directives/*'
-        '@UJMExoBundle/Resources/public/js/sequence/Player/Sequence/Services/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Player/Shared/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Player/Shared/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/sequence/Player/Exercise/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Player/Exercise/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Player/Exercise/Services/*'
 
         '@UJMExoBundle/Resources/public/js/sequence/Player/Question/*'
         '@UJMExoBundle/Resources/public/js/sequence/Player/Question/Controllers/*'
@@ -42,7 +44,7 @@
         '@UJMExoBundle/Resources/public/js/sequence/Player/Step/Directives/*'
         '@UJMExoBundle/Resources/public/js/sequence/Player/Step/Services/*'
 
-        '@UJMExoBundle/Resources/public/js/sequence/Player/player.module.js'
+        
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

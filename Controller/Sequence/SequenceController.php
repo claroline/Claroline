@@ -11,7 +11,7 @@ use UJM\ExoBundle\Entity\Exercise;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-
+use Symfony\Component\HttpFoundation\JsonResponse;
 /**
  * Description of SequenceController.
  */
@@ -31,26 +31,9 @@ class SequenceController extends Controller
         if (!$this->container->get('security.authorization_checker')->isGranted('OPEN', $collection)) {
             throw new AccessDeniedHttpException();
         }
-        // get user
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();   
-
-        $paperManager = $this->get('ujm.exo.paper_manager');
-        $apiData = $paperManager->openPaper($exercise, $user, false);
-        $exo = json_encode($apiData['exercise']);
-        $paper = json_encode($apiData['paper']);
-       
-        
-        $u = array(
-            'id' => $user->getId(),
-            'name' => $user->getFirstName() . ' ' . $user->getLastName(),
-            'admin' => $this->isExerciseAdmin($exercise)
-        );
         
         return $this->render('UJMExoBundle:Sequence:play.html.twig', array(
-                    '_resource' => $exercise,
-                    'sequence' => $exo,
-                    'paper' => $paper,
-                    'user' => json_encode($u)
+                    '_resource' => $exercise
             )
         );
     }
@@ -85,5 +68,23 @@ class SequenceController extends Controller
         } else {
             return false;
         }
+    }
+    
+    /**
+     *  @Route("/exercise/{id}/user", name="sequence_get_connected_user", options={"expose"=true})
+     */
+    public function getCurrentUser(Exercise $exercise){        
+         // get user
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        
+         
+        $u = array(
+            'id' => $user->getId(),
+            'name' => $user->getFirstName() . ' ' . $user->getLastName(),
+            'admin' => $this->isExerciseAdmin($exercise)
+        );       
+        
+        return new JsonResponse($u);
+        
     }
 }

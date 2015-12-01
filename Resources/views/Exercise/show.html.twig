@@ -238,7 +238,7 @@
             <div class="text-center panel-footer">
                 {% if allowedToCompose and nbQuestion > 0 %}                   
                     {% if nbUserPaper == 0 %}
-                        <a class="btn btn-primary" href="{{ path('ujm_exercise_play', { 'id': exercise.id }) }}">
+                        <a class="btn btn-primary" href="{{ path('ujm_exercise_play', { 'id': exercise.id }) }}#/{{exercise.id}}">
                             <i class="fa fa-check-square-o"></i> {{ 'compose' | trans({}, 'ujm_exo') }} [Angular]
                         </a>
                     {% else %}
