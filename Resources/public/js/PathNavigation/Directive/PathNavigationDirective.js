@@ -7,8 +7,8 @@
                 restrict: 'E',
                 replace: true,
                 controller: PathNavigationCtrl,
-                controllerAs: 'pathNavigationCtrl',
-                templateUrl: AngularApp.webDir + 'bundles/innovapath/js/PathNavigation/Partial/show.html',
+                controllerAs: 'pathNavigationEditCtrl',
+                templateUrl: AngularApp.webDir + 'bundles/innovapath/js/PathNavigation/Partial/navigation.html',
                 scope: {},
                 bindToController: true
             };

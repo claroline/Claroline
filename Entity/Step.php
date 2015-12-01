@@ -8,6 +8,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 
+use Innova\PathBundle\Entity\StepCondition;
+
 /**
  * Step
  *
@@ -85,6 +87,14 @@ class Step implements \JsonSerializable
      * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Path\Path", inversedBy="steps")
      */
     protected $path;
+
+    /**
+     * Condition
+     * @var \Innova\PathBundle\Entity\StepCondition
+     *
+     * @ORM\OneToOne(targetEntity="Innova\PathBundle\Entity\StepCondition", mappedBy="step", cascade={"persist", "remove"})
+     */
+    protected $condition;
 
     /**
      * Inherited resources
@@ -486,6 +496,36 @@ class Step implements \JsonSerializable
         return $resources;
     }
 
+    /**
+     * Set condition
+     *
+     * @param \Innova\PathBundle\Entity\StepCondition $condition
+     *
+     * @return Step
+     */
+    public function setCondition(\Innova\PathBundle\Entity\StepCondition $condition = null)
+    {
+        if ($condition !== $this->condition) {
+            $this->condition = $condition;
+
+            if (null !== $condition) {
+                $condition->setStep($this);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get condition
+     *
+     * @return \Innova\PathBundle\Entity\StepCondition
+     */
+    public function getCondition()
+    {
+        return $this->condition;
+    }
+
     public function jsonSerialize()
     {
         $accessibleFrom  = $this->getAccessibleFrom();
@@ -493,10 +533,10 @@ class Step implements \JsonSerializable
 
         // Initialize data array
         $jsonArray = array (
-            'id'                => $this->getId(),          // A local ID for the step in the path (reuse step ID)
-            'resourceId'        => $this->getId(),          // The real ID of the Step into the DB
+            'id'                => $this->id,               // A local ID for the step in the path (reuse step ID)
+            'resourceId'        => $this->id,               // The real ID of the Step into the DB
             'activityId'        => null,
-            'lvl'               => $this->getLvl(),         // The depth of the step in the path structure
+            'lvl'               => $this->lvl,              // The depth of the step in the path structure
             'name'              => $this->getName(),        // The name of the linked Activity (used as Step name)
             'description'       => $this->getDescription(), // The description of the linked Activity (used as Step description)
             'primaryResource'   => array (),
@@ -509,6 +549,7 @@ class Step implements \JsonSerializable
             'duration'          => null, // Duration in seconds
             'accessibleFrom'    => $accessibleFrom  instanceof \DateTime ? $accessibleFrom->format('Y-m-d H:i:s')  : null,
             'accessibleUntil'   => $accessibleUntil instanceof \DateTime ? $accessibleUntil->format('Y-m-d H:i:s') : null,
+            'evaluationType'    => null, // automatic/manual
         );
 
         // Get activity properties
@@ -561,10 +602,11 @@ class Step implements \JsonSerializable
             }
 
             // Global Parameters
-            $jsonArray['withTutor'] = $parameters->isWithTutor();
-            $jsonArray['who']       = $parameters->getWho();
-            $jsonArray['where']     = $parameters->getWhere();
-            $jsonArray['duration']  = $parameters->getMaxDuration(); // Duration in seconds
+            $jsonArray['withTutor']      = $parameters->isWithTutor();
+            $jsonArray['who']            = $parameters->getWho();
+            $jsonArray['where']          = $parameters->getWhere();
+            $jsonArray['duration']       = $parameters->getMaxDuration(); // Duration in seconds
+            $jsonArray['evaluationType'] = $parameters->getEvaluationType(); // manual/automatic
         }
 
         // Excluded resources
@@ -586,6 +628,12 @@ class Step implements \JsonSerializable
             if (!$exist) {
                 $jsonArray['excludedResources'][] = $resource->getId();
             }
+        }
+
+        // Get condition
+        if (!empty($this->condition)) {
+            // Get condition of the step
+            $jsonArray['condition'] = $this->condition;
         }
 
         // Get step children

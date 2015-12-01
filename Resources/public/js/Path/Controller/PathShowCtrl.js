@@ -14,6 +14,8 @@ var PathShowCtrl = function PathShowCtrl($window, $route, $routeParams, PathServ
         this.userProgressionService.set(this.userProgression);
     }
 
+    this.pathService = PathService;
+
     return this;
 };
 

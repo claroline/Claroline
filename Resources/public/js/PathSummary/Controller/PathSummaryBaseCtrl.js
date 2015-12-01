@@ -16,7 +16,6 @@ var PathSummaryBaseCtrl = function PathSummaryBaseCtrl($routeParams, PathService
         // Set the structure of the path
         this.structure = path.steps;
     }
-
     return this;
 };
 
@@ -61,6 +60,7 @@ PathSummaryBaseCtrl.prototype.close = function close() {
  * Go to a specific Step
  * @param step
  */
+
 PathSummaryBaseCtrl.prototype.goTo = function goTo(step) {
     this.pathService.goTo(step);
 };

@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Manager\ResourceManager;
 use Innova\PathBundle\Entity\InheritedResource;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\Path\Path;
+use Innova\PathBundle\Entity\StepCondition;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -40,10 +41,11 @@ class StepManager
 
     /**
      * Class constructor
-     * @param \Doctrine\Common\Persistence\ObjectManager                 $om
-     * @param \Claroline\CoreBundle\Manager\ResourceManager              $resourceManager
+     * @param \Doctrine\Common\Persistence\ObjectManager $om
+     * @param \Claroline\CoreBundle\Manager\ResourceManager $resourceManager
+     * @param StepConditionsManager $stepConditionsManager
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
-     * @param \Symfony\Component\Translation\TranslatorInterface         $translator
+     * @param \Symfony\Component\Translation\TranslatorInterface $translator
      */
     public function __construct(
         ObjectManager            $om,
@@ -213,6 +215,9 @@ class StepManager
 
         $where = !empty($stepStructure->where) ? $stepStructure->where : null;
         $parameters->setWhere($where);
+
+        $evaluationType = !empty($stepStructure->evaluationType) ? $stepStructure->evaluationType : null;
+        $parameters->setEvaluationType($evaluationType);
 
         // Set resources
         $this->updateSecondaryResources($parameters, $stepStructure);

@@ -3,23 +3,29 @@
  * @returns {StepShowCtrl}
  * @constructor
  */
-var StepShowCtrl = function StepShowCtrl(step, inheritedResources, PathService, $sce, UserProgressionService, $filter) {
+var StepShowCtrl = function StepShowCtrl(step, inheritedResources, PathService, authorization, $sce, UserProgressionService, $filter) {
     StepBaseCtrl.apply(this, arguments);
 
+    // Store some services
     this.userProgressionService = UserProgressionService;
+    this.filterDate             = $filter('date');
 
-    this.filterDate = $filter('date');
+    this.authorization = authorization;
+    if (authorization && authorization.granted) {
+        // User has access to the current step
+        if (angular.isDefined(this.step) && angular.isDefined(this.step.description) && typeof this.step.description == 'string') {
+            // Trust content to allow Cross Sites URL
+            this.step.description = $sce.trustAsHtml(this.step.description);
+        }
 
-    if (angular.isDefined(this.step) && angular.isDefined(this.step.description) && typeof this.step.description == 'string') {
-        // Trust content to allow Cross Sites URL
-        this.step.description = $sce.trustAsHtml(this.step.description);
-    }
-
-    // Update User progression if needed (e.g. if the User has never seen the Step, mark it as seen)
-    this.progression = this.userProgressionService.getForStep(this.step);
-    if (!angular.isObject(this.progression)) {
-        // Create progression for User
-        this.progression = this.userProgressionService.create(step);
+        // Update User progression if needed (e.g. if the User has never seen the Step, mark it as seen)
+        this.progression = this.userProgressionService.getForStep(this.step);
+        if (!angular.isObject(this.progression)) {
+            //root step is authorized anyways
+            var authorized = (this.pathService.getRoot().id == step.id) ? 1 : 0;
+            // Create progression for User
+            this.progression = this.userProgressionService.create(step, null, authorized);
+        }
     }
 
     return this;
@@ -28,6 +34,9 @@ var StepShowCtrl = function StepShowCtrl(step, inheritedResources, PathService, 
 // Extends the base controller
 StepShowCtrl.prototype = Object.create(StepBaseCtrl.prototype);
 StepShowCtrl.prototype.constructor = StepShowCtrl;
+
+// Dependency Injection
+StepShowCtrl.$inject = [ 'step', 'inheritedResources', 'PathService', 'authorization', '$sce', 'UserProgressionService', '$filter' ];
 
 /**
  * Service that manages the User Progression in the Path
@@ -67,3 +76,8 @@ StepShowCtrl.prototype.isAccessible = function () {
 StepShowCtrl.prototype.updateProgression = function (newStatus) {
     this.userProgressionService.update(this.step, newStatus);
 };
+
+// Register controller into Angular
+angular
+    .module('StepModule')
+    .controller('StepShowCtrl', StepShowCtrl);

@@ -33,7 +33,6 @@ var PathSummaryEditCtrl = function PathSummaryEditCtrl($routeParams, PathService
             this.pathService.reorderSteps(this.structure);
         }.bind(this)
     };
-
     return this;
 };
 
@@ -138,7 +137,6 @@ PathSummaryEditCtrl.prototype.removeStep = function (step) {
                 // Need to update preview
                 updatePreview = true;
             }
-
             // Effective remove
             this.pathService.removeStep(this.structure, step);
 
