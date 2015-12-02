@@ -6,17 +6,12 @@
             <button type="button" role="button" class="btn btn-danger fa fa-trash" data-toggle="tooltip" data-container="body" data-ng-click="selfRemove()" title="{{ 'question_remove'|trans:{}:'ujm_sequence' }}"></button>
         </div>
     </div>
-    <div class="panel-body" ng-hide="clozeQuestionCtrl.isCollapsed">    
-        <!-- Question feedback row -->
-        <div data-ng-if="clozeQuestionCtrl.question.feedback" class="question-row">
-            <label><strong>{{ 'question_global_feedback'|trans:{}:'ujm_sequence' }}:</strong></label>
-            <p>{{clozeQuestionCtrl.question.feedback}}</p>
-        </div>
+    <div class="panel-body" ng-hide="clozeQuestionCtrl.isCollapsed">
         <!-- Question cloze text row -->
         <div data-ng-if="clozeQuestionCtrl.question.text" class="question-row">
-            <div class="form-inline choice-item-col"> 
-                <div class="form-group"> 
-                    <label>{{ 'question_cloze_text'|trans:{}:'ujm_sequence' }}:</label>                   
+            <div class="form-inline choice-item-col">
+                <div class="form-group">
+                    <h4 ng-bind-html="question.invite"></h4>
                     <div data-ng-bind-html="clozeQuestionCtrl.formatedClozeText | unsafe"></div>
                 </div>
             </div>
