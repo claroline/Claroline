@@ -20,9 +20,6 @@
                     matchQuestionProposalCtrl.setProposal(attr.proposal);
                     matchQuestionProposalCtrl.init(attr.proposal);
                     
-                    console.log(element);
-                    console.log(element.attr);
-                    
                     $timeout(function init() {
                         if (element.attr("id").substr(0,9) === "draggable") {
                             jsPlumb.addEndpoint(element, {
