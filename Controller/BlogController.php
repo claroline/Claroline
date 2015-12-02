@@ -162,6 +162,45 @@ class BlogController extends BaseController
     }
 
     /**
+     * @Route("/pdf/{blogId}", name="icap_blog_view_pdf", requirements={"blogId" = "\d+"})
+     * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})     *
+     */
+    public function viewPdfAction(Blog $blog)
+    {
+        $this->checkAccess("OPEN", $blog);
+
+        /** @var \Icap\BlogBundle\Repository\PostRepository $postRepository */
+        $postRepository = $this->get('icap.blog.post_repository');
+
+        $posts = $postRepository->findAllPublicByBlog($blog);
+
+        $content = $this->renderView('IcapBlogBundle:Blog:view.pdf.twig',
+            array(
+                '_resource' => $blog,
+                'posts'     => $posts
+            )
+        );
+
+        return new Response(
+            $this->get('knp_snappy.pdf')->getOutputFromHtml(
+                $content,
+                array(
+                    'outline' => true,
+                    'footer-right' => '[page]/[toPage]',
+                    'footer-spacing' => 3,
+                    'footer-font-size' => 8
+                ),
+                true
+            ),
+            200,
+            array(
+                'Content-Type'          => 'application/pdf',
+                'Content-Disposition'   => 'inline; filename="'.$blog->getResourceNode()->getName()
+            )
+        );
+    }
+
+    /**
      * @Route("/configure/{blogId}", name="icap_blog_configure", requirements={"blogId" = "\d+"})
      * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
      * @ParamConverter("user", options={"authenticatedUser" = true})

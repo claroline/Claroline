@@ -105,3 +105,6 @@ icap_blog_options_form_Order_Widget_Right: "Manage the side bar of widget"
 apply: "Apply"
 limit_to: "Limit to the"
 tags_in_the_cloud: "tags most used"
+created_by: "by"
+created_on: "on"
+posts: Posts

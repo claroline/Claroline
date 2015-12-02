@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{{ _resource.resourceNode.name ~ '.pdf' }}</title>
+    {% stylesheets debug=false filter='lessphp' output='bundles/icapblog/css/pdf.css'
+    "@IcapBlogBundle/Resources/views/less/pdf.less"
+    %}
+    <link rel="stylesheet" type="text/css" href="{{ app.request.getSchemeAndHttpHost() ~ asset_url }}"/>
+    {% endstylesheets %}
+</head>
+<body>
+<div class="page-header">
+    <h1>{{ _resource.resourceNode.name }}</h1>
+</div>
+
+<h2>{{ 'posts'|trans({}, 'icap_blog') }}</h2>
+{% if posts is not empty%}
+    <div class="blog-posts">
+        {% for post in posts %}
+        <article>
+            {% include 'IcapBlogBundle:Post:postHeader.pdf.twig'%}
+            <div class="content">{{ post.content|preg_replace("/src=\"\\/\\//","src=\"http://")|preg_replace("/src=\"\\//","src=\""~app.request.getSchemeAndHttpHost()~"/")|raw }}</div>
+        </article>
+        {% endfor %}
+    </div>
+{% endif %}
+</body>
+</html>

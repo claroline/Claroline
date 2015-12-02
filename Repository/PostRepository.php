@@ -83,6 +83,20 @@ class PostRepository extends EntityRepository
         return $executeQuery ? $query->getResult(): $query;
     }
 
+    public function findAllPublicByBlog(Blog $blog)
+    {
+        $qb = $this->createQueryBuilder('post')
+            ->andWhere('post.blog = :blogId')
+            ->setParameter('blogId', $blog->getId())
+            ->orderBy('post.publicationDate', 'ASC')
+            ->andWhere('post.publicationDate IS NOT NULL')
+            ->andWhere('post.status = :publishedStatus')
+            ->setParameter('publishedStatus', Statusable::STATUS_PUBLISHED)
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
+
     /**
      * @param Blog $blog
      * @param int  $startDate

@@ -105,3 +105,6 @@ icap_blog_options_form_Order_Widget_Right: "Gestion de la barre latérale de wid
 apply: "Appliquer"
 limit_to: "Limiter l'affichage aux"
 tags_in_the_cloud: "tags les plus utilisés"
+created_by: "par"
+created_on: "le"
+posts: Articles
