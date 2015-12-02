@@ -71,6 +71,7 @@ class PlatformConfiguration
     private $locales;
     private $domainName;
     private $defaultWorkspaceTag;
+    private $isPdfExportActive;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -680,5 +681,17 @@ class PlatformConfiguration
     public function getDefaultWorkspaceTag()
     {
         return $this->defaultWorkspaceTag;
+    }
+
+    public function getIsPdfExportActive()
+    {
+        return $this->isPdfExportActive;
+    }
+
+    public function setIsPdfExportActive($isPdfExportActive)
+    {
+        $this->isPdfExportActive = $isPdfExportActive;
+
+        return $this;
     }
 }

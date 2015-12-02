@@ -14,6 +14,7 @@ activate_account: activate_account
 activate_account_click: activate_account_click
 activate_maintenance_mode: activate_maintenance_mode
 activate_notifications: activate_notifications
+activate_pdf_export: activate_pdf_export
 activate_personal_workspace_creation: activate_personal_workspace_creation
 active_widgets: active_widgets
 activities: activities
@@ -658,6 +659,7 @@ password_mismatch: password_mismatch
 password_ok: password_ok
 paste: paste
 path: path
+pdf_export: pdf_export
 pending: pending
 pending_users_list: pending_users_list
 permissions: permissions

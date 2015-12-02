@@ -88,6 +88,7 @@ class PlatformConfigurationHandler
         'platform_url' => null,
         'mailer_from' => null,
         'default_workspace_tag' => null,
+        'is_pdf_export_active' => false,
     );
     private $lockedParameters;
 
@@ -200,6 +201,7 @@ class PlatformConfigurationHandler
         $config->setLocales($this->parameters['locales']);
         $config->setDomainName($this->parameters['domain_name']);
         $config->setDefaultWorkspaceTag($this->parameters['default_workspace_tag']);
+        $config->setIsPdfExportActive($this->parameters['is_pdf_export_active']);
 
         return $config;
     }

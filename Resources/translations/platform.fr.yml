@@ -14,6 +14,7 @@ activate_account: 'Activation du compte'
 activate_account_click: 'Cliquez ici pour activer votre compte.'
 activate_maintenance_mode: 'Vous devriez activer le mode de maintenance afin de signaler aux utilisateurs qu''une mise à jour est en cours.'
 activate_notifications: 'Activer les notifications'
+activate_pdf_export: "Activer l'export PDF"
 activate_personal_workspace_creation: 'Activer la création des espaces personnels.'
 active_widgets: 'Widgets actifs'
 activities: Activités
@@ -681,6 +682,7 @@ password_mismatch: 'Les mots de passe ne correspondent pas.'
 password_ok: 'Votre mot de passe a été modifié. Vous pouvez maintenant vous connecter.'
 paste: Coller
 path: Emplacement
+pdf_export: Export PDF
 pending: 'En attente'
 pending_friends: 'Amis en attente'
 pending_users_list: 'Liste des utilisateurs en attente'
