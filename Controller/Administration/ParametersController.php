@@ -205,7 +205,8 @@ class ParametersController extends Controller
                             'send_mail_at_workspace_registration' => $form['sendMailAtWorkspaceRegistration']->getData(),
                             'domain_name' => $form['domainName']->getData(),
                             'default_workspace_tag' => $form['defaultWorkspaceTag']->getData(),
-                            'registration_mail_validation' => $form['registrationMailValidation']->getData()
+                            'registration_mail_validation' => $form['registrationMailValidation']->getData(),
+                            'is_pdf_export_active' => $form['isPdfExportActive']->getData(),
                         )
                     );
 

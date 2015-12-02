@@ -14,6 +14,7 @@ activate_account: 'Activate your account'
 activate_account_click: 'Click here to activate your account'
 activate_maintenance_mode: 'You should activate the maintenance mode before going further.'
 activate_notifications: 'Activate notifications'
+activate_pdf_export: 'Activate PDF export'
 activate_personal_workspace_creation: 'Activate personal workspace creation.'
 active_widgets: 'Active widgets'
 activities: Activities
@@ -680,6 +681,7 @@ password_mismatch: 'Passwords mismatch'
 password_ok: 'Your password has been changed, you can login now'
 paste: Paste
 path: Path
+pdf_export: Export in PDF
 pending: Pending
 pending_friends: 'Pending friends'
 pending_users_list: 'Pending users list'

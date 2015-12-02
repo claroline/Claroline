@@ -494,17 +494,18 @@ class WorkspaceModelManager
         Workspace $source,
         Workspace $workspace,
         array $homeTabs,
-        $resourceInfos
+        $resourceInfos,
+        &$tabsInfos = array()
     )
     {
         $this->log('Duplicating home tabs...');
         $this->om->startFlushSuite();
-
         $homeTabConfigs = $this->homeTabManager
             ->getHomeTabConfigsByWorkspaceAndHomeTabs($source, $homeTabs);
         $order = 1;
         $widgetCongigErrors = array();
         $widgetDisplayConfigs = array();
+        $widgets = array();
 
         foreach ($homeTabConfigs as $homeTabConfig) {
             $homeTab = $homeTabConfig->getHomeTab();
@@ -524,6 +525,7 @@ class WorkspaceModelManager
             $newHomeTab->setWorkspace($workspace);
             $newHomeTab->setName($homeTab->getName());
             $this->om->persist($newHomeTab);
+            $tabsInfos[] = array('original' => $homeTab, 'copy' => $newHomeTab);
 
             $newHomeTabConfig = new HomeTabConfig();
             $newHomeTabConfig->setHomeTab($newHomeTab);
@@ -582,27 +584,33 @@ class WorkspaceModelManager
                     $newWidgetDisplayConfig->setWidth($widget->getDefaultWidth());
                     $newWidgetDisplayConfig->setHeight($widget->getDefaultHeight());
                 }
+                
+                $widgets[] = array('widget' => $widget, 'original' => $widgetInstance, 'copy' => $newWidgetInstance);
                 $this->om->persist($newWidgetDisplayConfig);
-
-                if ($widget->isConfigurable()) {
-
-                    try {
-                        $this->dispatcher->dispatch(
-                            'copy_widget_config_' . $widget->getName(),
-                            'CopyWidgetConfiguration',
-                            array($widgetInstance, $newWidgetInstance, $resourceInfos)
-                        );
-                    } catch (NotPopulatedEventException $e) {
-                        $widgetCongigErrors[] = array(
-                            'widgetName' => $widget->getName(),
-                            'widgetInstanceName' => $widgetInstance->getName(),
-                            'error' => $e->getMessage()
-                        );
-                    }
-                }
             }
         }
         $this->om->endFlushSuite();
+        $this->om->forceFlush();
+        
+        foreach ($widgets as $widget) {
+            if ($widget['widget']->isConfigurable()) {
+                try {
+                    $this->dispatcher->dispatch(
+                        'copy_widget_config_' . $widget['widget']->getName(),
+                        'CopyWidgetConfiguration',
+                        array($widget['original'], $widget['copy'], $resourceInfos, $tabsInfos)
+                    );
+                } catch (NotPopulatedEventException $e) {
+                    $widgetCongigErrors[] = array(
+                        'widgetName' => $widget['widget']->getName(),
+                        'widgetInstanceName' => $widget['original']->getName(),
+                        'error' => $e->getMessage()
+                    );
+                }
+            }
+        }
+        
+        
 
         return $widgetCongigErrors;
     }
@@ -668,7 +676,8 @@ class WorkspaceModelManager
                         $resourceNode,
                         $copy->getResourceNode(),
                         $user,
-                        $workspaceRoles
+                        $workspaceRoles,
+                        $resourcesInfos
                     );
                     $resourcesErrors = array_merge_recursive($resourcesErrors, $errors);
                 }
@@ -784,7 +793,8 @@ class WorkspaceModelManager
         ResourceNode $directory,
         ResourceNode $directoryCopy,
         User $user,
-        array $workspaceRoles
+        array $workspaceRoles,
+        &$resourcesInfos
     )
     {
         $this->log('Duplicating directory content...');
@@ -794,6 +804,7 @@ class WorkspaceModelManager
 
         foreach ($children as $child) {
            try {
+                $this->log('Duplicating ' . $resourceNode->getName() . ' from type ' . $resourceNode->getResourceType()->getName());
                 $copy = $this->resourceManager->copy(
                     $child,
                     $directoryCopy,
@@ -802,6 +813,7 @@ class WorkspaceModelManager
                     false
                 );
                 $copies[] = $copy;
+                $resourcesInfos['copies'][] = array('original' => $child, 'copy' => $copy->getResourceNode());
             } catch (NotPopulatedEventException $e) {
                 $resourcesErrors[] = array(
                     'resourceName' => $child->getName(),
@@ -825,7 +837,8 @@ class WorkspaceModelManager
                     $child,
                     $copy->getResourceNode(),
                     $user,
-                    $workspaceRoles
+                    $workspaceRoles,
+                    $resourcesInfos
                 );
                 $resourcesErrors = array_merge_recursive($resourcesErrors, $errors);
             }
@@ -862,5 +875,10 @@ class WorkspaceModelManager
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
+    }
+
+    public function getLogger()
+    {
+        return $this->logger;
     }
 }

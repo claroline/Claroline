@@ -50,6 +50,7 @@ use Claroline\CoreBundle\Manager\WidgetManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
+use Claroline\CoreBundle\Library\Logger\FileLogger;
 
 /**
  * This controller is able to:
@@ -348,6 +349,9 @@ class WorkspaceController extends Controller
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE, array($user));
         $form->handleRequest($this->request);
         $ds = DIRECTORY_SEPARATOR;
+        $modelLog = $this->container->getParameter('kernel.root_dir') . '/logs/models.log';
+        $logger = FileLogger::get($modelLog);
+        $this->workspaceManager->setLogger($logger);
 
         if ($form->isValid()) {
             $model = $form->get('model')->getData();
