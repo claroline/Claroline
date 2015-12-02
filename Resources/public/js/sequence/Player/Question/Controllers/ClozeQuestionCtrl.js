@@ -2,11 +2,28 @@
     'use strict';
 
     angular.module('Question').controller('ClozeQuestionCtrl', [
-        function () {
+        'CommonService',
+        function (CommonService) {
 
             this.question = {};
             this.formatedClozeText = '';
             this.isCollapsed = false;
+            this.currentQuestionPaperData = {};
+            
+            this.init = function (question) {
+                // those data are updated by view and sent to common service as soon as they change
+                this.currentQuestionPaperData = CommonService.setCurrentQuestionPaperData(question);
+                this.question = question;
+                // init student data question object
+                CommonService.setStudentData(question);
+
+                if (this.currentQuestionPaperData.hints && this.currentQuestionPaperData.hints.length > 0) {
+                    // init used hints display
+                    for (var i = 0; i < this.currentQuestionPaperData.hints.length; i++) {
+                        this.getHintData(this.currentQuestionPaperData.hints[i]);
+                    }
+                }
+            };
 
             this.setQuestion = function (question) {
                 this.question = question;
