@@ -14,6 +14,7 @@ activate_account: activate_account
 activate_account_click: activate_account_click
 activate_maintenance_mode: activate_maintenance_mode
 activate_notifications: 'Activar notificaciones'
+activate_pdf_export: 'Activar exportación a PDF'
 activate_personal_workspace_creation: 'Activar la creación de espacios personales.'
 active_widgets: 'Widgets activos'
 activities: Actividades
@@ -676,6 +677,7 @@ password_mismatch: 'Las contraseñas no coinciden'
 password_ok: 'Su contraseña ha cambiado, ahora pude conectarse'
 paste: Pegar
 path: Ruta
+pdf_export: Exportación a PDF
 pending: pending
 pending_friends: pending_friends
 pending_users_list: pending_users_list

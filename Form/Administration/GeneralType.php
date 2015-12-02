@@ -267,6 +267,15 @@ class GeneralType extends AbstractType
                     'required' => false,
                     'disabled' => isset($this->lockedParams['default_workspace_tag'])
                 )
+            )
+            ->add(
+                'isPdfExportActive',
+                'checkbox',
+                array(
+                    'label' => 'activate_pdf_export',
+                    'required' => false,
+                    'disabled' => isset($this->lockedParams['is_pdf_export_active'])
+                )
             );
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event){
