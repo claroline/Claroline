@@ -514,6 +514,11 @@ class FacetManager
         return $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacet')->find($id);
     }
 
+    public function getFieldFacets()
+    {
+        return $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacet')->findAll();
+    }
+
     public function getVisibleFieldFacets()
     {
         $token = $this->tokenStorage->getToken();

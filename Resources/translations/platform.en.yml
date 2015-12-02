@@ -1214,3 +1214,4 @@ oauth_required_data: The following datas will be sent:
 client_list: Client list
 allow_authentication: Allow authentication
 user_subscription_notification_for_admin: subscribed to the workspace %workspace%
+filter_by: Filter by

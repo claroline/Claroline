@@ -21,6 +21,14 @@ usersManager.controller('usersCtrl', function(
 	$scope.search = '';
 	$scope.savedSearch = [];
 	$scope.users = [];
+
+	$scope.columns = [
+		{name: translate('username'), prop: "username", isCheckboxColumn: true, headerCheckbox: true},
+		{name: translate('first_name'), prop: "firstName"},
+		{name: translate('last_name'), prop:"lastName"},
+		{name: translate('email'), prop: "mail"}
+	];
+
 	$scope.dataTableOptions = {
 		scrollbarV: false,
  		columnMode: 'force',
@@ -29,17 +37,16 @@ usersManager.controller('usersCtrl', function(
         selectable: true,
         multiSelect: true,
         checkboxSelection: true,
- 		columns: [
- 			{name: translate('username'), prop: "username", isCheckboxColumn: true, headerCheckbox: true},
- 			{name: translate('first_name'), prop: "firstName"},
- 			{name: translate('last_name'), prop:"lastName"},
- 			{name: translate('email'), prop: "mail"}
- 		],
+ 		columns: $scope.columns,
  		paging: {
  			externalPaging: true,
  			size: 10
  		}
 	};
+
+	$scope.$watch('columns', function(n){
+            console.log('columns changed', n)
+          }, true)
 	
 	clarolineSearch.find([], 1, 10).then(function(d) {
 		$scope.users = d.data.users;
