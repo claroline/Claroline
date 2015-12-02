@@ -1,13 +1,19 @@
-<div class="panel panel-primary">
-    <div class="panel-heading clearfix">
-        <h5 class="panel-title pull-left">{{question.title}}</h5>
-        <div class="btn-group pull-right">
-            <button type="button" role="button" class="btn btn-default fa" data-toggle="tooltip" data-container="body" data-ng-class="{' fa-arrow-circle-down':clozeQuestionCtrl.isCollapsed, ' fa-arrow-circle-up':!clozeQuestionCtrl.isCollapsed}" data-ng-click="clozeQuestionCtrl.isCollapsed = !clozeQuestionCtrl.isCollapsed" title="{{ 'question_panel_hide'|trans:{}:'ujm_sequence' }}"></button>
-            <button type="button" role="button" class="btn btn-danger fa fa-trash" data-toggle="tooltip" data-container="body" data-ng-click="selfRemove()" title="{{ 'question_remove'|trans:{}:'ujm_sequence' }}"></button>
+<div class="row">
+    <div class="col-md-12">
+        <h4>{{question.title}}</h4>
+        <hr/>
+        <div class="row">
+            <div class="col-md-12">
+                <div data-ng-bind-html="question.invite | unsafe"></div>   
+            </div>
         </div>
-    </div>
-    <div class="panel-body" ng-hide="clozeQuestionCtrl.isCollapsed">
-        <!-- Question cloze text row -->
+        <hr/>
+        <div class="row">
+            <div class="col-md-12">
+             {{question.description}}   
+            </div>
+        </div>
+        <hr/>
         <div data-ng-if="clozeQuestionCtrl.question.text" class="question-row">
             <div class="form-inline choice-item-col">
                 <div class="form-group">
