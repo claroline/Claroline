@@ -7,11 +7,7 @@
             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
         </div>
         {% block daterange_assets %}
-            {% stylesheets debug=false filter="lessphp, cssmin" output="css/clarolinecore/jquery.daterangepicker.css"
-              'bundles/frontend/jquery/plugin/daterangepicker/less/bootstrap-daterangepicker.less'
-            %}
-                <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
-            {% endstylesheets %}
+            <link rel="stylesheet" href="{{ asset( 'bundles/frontend/jquery/plugin/daterangepicker/daterangepicker-bs3.css') }}" screen="media" />
             <script type="text/javascript" src="{{ asset('bundles/frontend/date.js') }}"></script>
             <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/daterangepicker/daterangepicker.js') }}"></script>
         {% endblock %}
