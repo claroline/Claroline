@@ -35,14 +35,14 @@ class CourseSession
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api"})
+     * @Groups({"api", "bulletin"})
      */
     protected $id;
 
     /**
      * @ORM\Column(name="session_name")
      * @Assert\NotBlank()
-     * @Groups({"api"})
+     * @Groups({"api", "bulletin"})
      * @SerializedName("name")
      */
     protected $name;
@@ -53,6 +53,7 @@ class CourseSession
      *     inversedBy="sessions"
      * )
      * @ORM\JoinColumn(name="course_id", nullable=false, onDelete="CASCADE")
+     * @Groups({"bulletin"})
      */
     protected $course;
 
