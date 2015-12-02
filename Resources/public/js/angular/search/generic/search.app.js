@@ -69,9 +69,7 @@ genericSearch.controller('genericSearchCtrl', function(
 
 	var getOptionValue = function(field, search) {
 		if (!field) return;
-
 		search = !search ? '': search.trim();
-		console.log(field, search);
 		
 		return translator.trans('filter_by', {}, 'platform') + ' ' + translator.trans(field, {}, 'platform').toLowerCase() + ': ' + search + ''; 
 	}
