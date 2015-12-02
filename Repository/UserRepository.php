@@ -1644,4 +1644,14 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return $query->getSingleScalarResult();
     }
+
+    private function buildPartialJoinClause()
+    {
+
+    }
+
+    private function buildPartialWhereClause()
+    {
+
+    }
 }
