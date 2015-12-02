@@ -9,6 +9,7 @@
         {% block daterange_assets %}
             <link rel="stylesheet" href="{{ asset( 'bundles/frontend/jquery/plugin/daterangepicker/daterangepicker-bs3.css') }}" screen="media" />
             <script type="text/javascript" src="{{ asset('bundles/frontend/date.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('bundles/frontend/moment.min.js') }}"></script>
             <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/daterangepicker/daterangepicker.js') }}"></script>
         {% endblock %}
         <script type="text/javascript">
@@ -16,85 +17,85 @@
             var possibleRanges = {
                 'today': {
                     'value': [
-                        'today',
-                        'today'
+                        moment(),
+                        moment()
                     ],
                     'label': '{{ 'date_range.today'|trans({}, 'platform') }}'
                 },
                 'yesterday': {
                     'value': [
-                        'yesterday',
-                        'yesterday'
+                        moment().subtract(1, 'days'),
+                        moment().subtract(1, 'days')
                     ],
                     'label': '{{ 'date_range.yesterday'|trans({}, 'platform') }}'
                 },
                 'this_week': {
                     'value': [
-                        Date.today().moveToDayOfWeek({{ 'date_range.first_day'|trans({}, 'platform')|raw }}).add({ days: -7}),
-                        Date.today().moveToDayOfWeek({{ 'date_range.first_day'|trans({}, 'platform')|raw }}).add({ days: -1})
+                        moment().day({{ 'date_range.first_day'|trans({}, 'platform')|raw }}),
+                        moment().day({{ 'date_range.first_day'|trans({}, 'platform')|raw }} + 6)
                     ],
                     'label': '{{ 'date_range.this_week'|trans({}, 'platform') }}'
                 },
                 'last_week': {
                     'value': [
-                        Date.today().moveToDayOfWeek({{ 'date_range.first_day'|trans({}, 'platform')|raw }}).add({ days: -14}),
-                        Date.today().moveToDayOfWeek({{ 'date_range.first_day'|trans({}, 'platform')|raw }}).add({ days: -8})
+                        moment().day({{ 'date_range.first_day'|trans({}, 'platform')|raw }}).subtract(7, 'days'),
+                        moment().day({{ 'date_range.first_day'|trans({}, 'platform')|raw }} + 6).subtract(7, 'days')
                     ],
                     'label': '{{ 'date_range.last_week'|trans({}, 'platform') }}'
                 },
                 'this_month': {
                     'value': [
-                        Date.today().moveToFirstDayOfMonth(),
-                        Date.today().moveToLastDayOfMonth()
+                        moment().startOf('month'),
+                        moment().endOf('month')
                     ],
                     'label': '{{ 'date_range.this_month'|trans({}, 'platform') }}'
                 },
                 'last_month': {
                     'value': [
-                        Date.today().moveToFirstDayOfMonth().add({ months: -1 }),
-                        Date.today().moveToFirstDayOfMonth().add({ days: -1 })
+                        moment().subtract(1, 'month').startOf('month'),
+                        moment().subtract(1, 'month').endOf('month')
                     ],
                     'label': '{{ 'date_range.last_month'|trans({}, 'platform') }}'
                 },
                 'this_year': {
                     'value': [
-                        Date.today().moveToMonth(0).moveToFirstDayOfMonth().add({ years: -1 }),
-                        Date.today().moveToMonth(0).moveToFirstDayOfMonth().add({ days: -1 })
+                        moment().startOf('year'),
+                        moment().endOf('year')
                     ],
                     'label': '{{ 'date_range.this_year'|trans({}, 'platform') }}'
                 },
                 'last_year': {
                     'value': [
-                        Date.today().moveToMonth(0).moveToFirstDayOfMonth().add({ years: -2 }),
-                        Date.today().moveToMonth(0).moveToFirstDayOfMonth().add({ years: -1, days: -1 })
+                        moment().subtract(1, 'year').startOf('year'),
+                        moment().subtract(1, 'year').endOf('year')
                     ],
                     'label': '{{ 'date_range.last_year'|trans({}, 'platform') }}'
                 },
                 'this_school_year': {
                     'value': [
-                        Date.today().moveToMonth(8).moveToFirstDayOfMonth().add({ years: -1 }),
-                        Date.today().moveToMonth(8).moveToFirstDayOfMonth().add({ days: -1 })
+                        moment().month(8).startOf('month'),
+                        moment().month(8).endOf('month').add(1, 'year').subtract(1, 'month')
                     ],
                     'label': '{{ 'date_range.this_school_year'|trans({}, 'platform') }}'
                 },
                 'last_school_year': {
                     'value': [
-                        Date.today().moveToMonth(8).moveToFirstDayOfMonth().add({ years: -2 }),
-                        Date.today().moveToMonth(8).moveToFirstDayOfMonth().add({ years: -1, days: -1 })
+                        moment().month(8).startOf('month').subtract(1, 'year'),
+                        moment().month(8).endOf('month').subtract(1, 'month')
                     ],
                     'label': '{{ 'date_range.last_school_year'|trans({}, 'platform') }}'
                 },
                 'last_seven_days': {
                     'value': [
-                        Date.today().add({ days: -6 }),
-                        'today'
+                        moment().subtract(6, 'days'),
+                        moment()
                     ],
                     'label': '{{ 'date_range.last_seven_days'|trans({}, 'platform') }}'
                 },
                 'last_thirty_days': {
                     'value': [
-                        Date.today().add({ days: -29 }),
-                        'today'
+                        moment().subtract(29, 'days'),
+                        moment()
                     ],
                     'label': '{{ 'date_range.last_thirty_days'|trans({}, 'platform') }}'
                 }

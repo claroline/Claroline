@@ -15,7 +15,7 @@ use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 
 class LogWorkspaceRegistrationDeclineEvent extends LogGenericEvent implements NotifiableInterface
 {
-    const ACTION = 'workspace-registration-decline';
+    const ACTION = 'role-subscribe-decline';
     protected $details;
     protected $role;
     protected $user;

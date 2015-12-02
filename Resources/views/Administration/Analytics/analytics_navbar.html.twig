@@ -1,5 +1,6 @@
 <ul id="analytics-navbar" class="nav nav-tabs margin-bottom-md">
-    <li{% if path('claro_admin_analytics_show') == app.request.requesturi %} class="active"{% endif %}>
+    <li{% if path('claro_admin_analytics_show') == app.request.requesturi
+    or path('claro_admin_open_tool', {'toolName': 'platform_analytics'}) == app.request.requesturi %} class="active"{% endif %}>
         <a href="{{path('claro_admin_analytics_show')}}">{{ 'analytics_home' | trans({}, 'platform') }}</a>
     </li>
 
@@ -7,7 +8,8 @@
         <a href="{{path('claro_admin_analytics_connections')}}">{{ 'user_visit' | trans({}, 'platform') }}</a>
     </li>
 
-    <li{% if path('claro_admin_analytics_resources') == app.request.requesturi %} class="active"{% endif %}>
+    <li{% if path('claro_admin_analytics_resources') == app.request.requesturi
+        or item_details_page is defined %} class="active"{% endif %}>
         <a href="{{path('claro_admin_analytics_resources')}}">{{ 'analytics_resources' | trans({}, 'platform') }}</a>
     </li>
 

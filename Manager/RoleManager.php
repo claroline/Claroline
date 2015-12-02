@@ -30,12 +30,17 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\BundleRecorder\Log\LoggableTrait;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 
 /**
  * @DI\Service("claroline.manager.role_manager")
  */
 class RoleManager
 {
+    use LoggableTrait;
+
     /** @var RoleRepository */
     private $roleRepo;
     /** @var RoleOptionsRepository */
@@ -70,6 +75,7 @@ class RoleManager
     )
     {
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
+        $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\Workspace');
         $this->roleOptionsRepo = $om->getRepository('ClarolineCoreBundle:RoleOptions');
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->groupRepo = $om->getRepository('ClarolineCoreBundle:Group');
@@ -98,6 +104,8 @@ class RoleManager
         $role->setWorkspace($workspace);
 
         $this->om->persist($role);
+        $workspace->addRole($role);
+        $this->om->persist($workspace);
         $this->om->flush();
 
         return $role;
@@ -168,8 +176,9 @@ class RoleManager
             $role->setReadOnly(true);
             $role->setType(Role::USER_ROLE);
             $this->om->persist($role);
+
         }
-        $this->associateRole($user, $role);
+        $this->associateRole($user, $role, false, false);
         $this->om->endFlushSuite();
 
         return $role;
@@ -229,7 +238,7 @@ class RoleManager
      *
      * @throws Exception\AddRoleException
      */
-    public function associateRole(AbstractRoleSubject $ars, Role $role, $sendMail = false)
+    public function associateRole(AbstractRoleSubject $ars, Role $role, $sendMail = false, $dispatch = true)
     {
         if (!$this->validateRoleInsert($ars, $role)) {
             throw new Exception\AddRoleException('Role cannot be added');
@@ -244,11 +253,13 @@ class RoleManager
             $ars->addRole($role);
             $this->om->startFlushSuite();
 
-            $this->dispatcher->dispatch(
-                'log',
-                'Log\LogRoleSubscribe',
-                array($role, $ars)
-            );
+            if ($dispatch) {
+                $this->dispatcher->dispatch(
+                    'log',
+                    'Log\LogRoleSubscribe',
+                    array($role, $ars)
+                );
+            }
             $this->om->persist($ars);
             $this->om->endFlushSuite();
 
@@ -756,6 +767,9 @@ class RoleManager
         $this->om->persist($role);
         $this->om->flush();
 
+        $this->container->get('claroline.manager.profile_property_manager')
+            ->addDefaultProperties();
+
         return $role;
     }
 
@@ -809,6 +823,8 @@ class RoleManager
 
     public function validateNewUserRolesInsert(array $roles)
     {
+        $unavailableRoles = array();
+
         foreach ($roles as $role) {
             $isAvailable = $this->validateRoleInsert(new User(), $role);
 
@@ -816,7 +832,7 @@ class RoleManager
                 $unavailableRoles[] = $role;
             }
         }
-
+        $roleUser = $this->getRoleByName('ROLE_USER');
         $isAvailable = $this->validateRoleInsert(new User(), $roleUser);
 
         if (!$isAvailable) {
@@ -1047,5 +1063,61 @@ class RoleManager
         return count($roles) > 0 ?
             $this->roleOptionsRepo->findRoleOptionsByRoles($roles) :
             array();
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    public function checkIntegrity()
+    {
+        $this->log('Checking workspace roles integrity.');
+        $workspaces = $this->workspaceRepo->findAll();
+        $i = 0;
+        $this->om->startFlushSuite();
+
+        foreach ($workspaces as $workspace) {
+            $this->log('Checking collaborator role for workspace ' . $workspace->getCode() . '...');
+            $collaborator = $this->getCollaboratorRole($workspace);
+
+            if (!$collaborator) {
+                $this->log('Adding collaborator role for workspace ' . $workspace->getCode() . '...', LogLevel::DEBUG);
+                $this->createWorkspaceRole(
+                    'ROLE_WS_COLLABORATOR_' . $workspace->getGuid(),
+                    'collaborator',
+                    $workspace,
+                    true
+                );
+                $i++;
+
+                if ($i % 300 === 0) {
+                    $this->om->forceFlush();
+                }
+            }
+        }
+
+        $this->om->endFlushSuite();
+        $this->log('Checking user role integrity.');
+        $users = $this->container->get('claroline.manager.user_manager')->getAllEnabledUsers();
+        $this->om->startFlushSuite();
+
+        foreach ($users as $user) {
+            $this->log('Checking personal role for ' . $user->getUsername());
+            $roleName = 'ROLE_USER_' . strtoupper($user->getUsername());
+            $role = $this->roleRepo->findOneByName($roleName);
+
+            if (!$role) {
+                $this->log('Adding user role for ' . $user->getUsername(), LogLevel::DEBUG);
+                $this->createUserRole($user);
+                $i++;
+
+                if ($i % 300 === 0) {
+                    $this->om->forceFlush();
+                }
+            }
+        }
+
+        $this->om->endFlushSuite();
     }
 }

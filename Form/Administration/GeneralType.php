@@ -19,6 +19,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfiguration;
 
 class GeneralType extends AbstractType
 {
@@ -80,6 +81,14 @@ class GeneralType extends AbstractType
                 array(
                     'label' => 'support_email',
                     'disabled' => isset($this->lockedParams['support_email'])
+                )
+            )
+            ->add(
+                'domainName',
+                'text',
+                array(
+                    'label' => 'domain_name',
+                    'disabled' => isset($this->lockedParams['domain_name'])
                 )
             )
             ->add(
@@ -236,6 +245,36 @@ class GeneralType extends AbstractType
                     'required' => false,
                     'disabled' => isset($this->lockedParams['send_mail_at_workspace_registration']),
                     'label' => 'send_mail_at_workspace_registration'
+                )
+            )
+            ->add(
+                'registrationMailValidation',
+                'choice',
+                array(
+                    'disabled' => isset($this->lockedParams['registration_mail_validation']),
+                    'label' => 'registration_mail_validation',
+                    'choices' => array(
+                        PlatformConfiguration::REGISTRATION_MAIL_VALIDATION_PARTIAL => 'send_mail_info',
+                        PlatformConfiguration::REGISTRATION_MAIL_VALIDATION_FULL => 'force_mail_validation'
+                    )
+                )
+            )
+            ->add(
+                'defaultWorkspaceTag',
+                'text',
+                array(
+                    'label' => 'default_workspace_tag',
+                    'required' => false,
+                    'disabled' => isset($this->lockedParams['default_workspace_tag'])
+                )
+            )
+            ->add(
+                'isPdfExportActive',
+                'checkbox',
+                array(
+                    'label' => 'activate_pdf_export',
+                    'required' => false,
+                    'disabled' => isset($this->lockedParams['is_pdf_export_active'])
                 )
             );
 

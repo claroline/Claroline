@@ -14,9 +14,12 @@ namespace Claroline\CoreBundle\Library\Transfert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\BundleRecorder\Log\LoggableTrait;
 
 abstract class Importer
 {
+    use LoggableTrait;
+
     private $listImporters;
     private $rootPath;
     private $configuration;
@@ -24,6 +27,8 @@ abstract class Importer
     private $workspace;
     private static $isStrict;
     private $roles = array();
+    private $_data;
+    private $_files;
 
     public function setListImporters(ArrayCollection $importers)
     {
@@ -126,6 +131,28 @@ abstract class Importer
         $this->roles[] = $role;
     }
 
+    public function getPriority()
+    {
+        return 0;
+    }
+
+    public function setLogger($logger)
+    {
+        $this->logger = $logger;
+    }
+
+    public function setExtendedData(&$_data)
+    {
+        $this->_data =& $_data;
+    }
+
+    //this is only supposed to keep backward compatibility... damn references !
+    //I wish I could pass _data to the export function but it would break pretty much every plugin
+    public function &getExtendedData()
+    {
+        return $this->_data;
+    }
+
     abstract function getName();
 
     abstract function validate(array $data);
@@ -134,6 +161,7 @@ abstract class Importer
      * @param Workspace $workspace
      * @param array $files
      * @param mixed $object
+     * @param mixed $data
      */
      abstract function export(Workspace $workspace, array &$files, $object);
 }

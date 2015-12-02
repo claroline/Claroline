@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Symfony\Component\HttpFoundation\File\File;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
@@ -43,12 +44,16 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Claroline\BundleRecorder\Log\LoggableTrait;
+use Psr\Log\LoggerInterface;
 
 /**
  * @DI\Service("claroline.manager.resource_manager")
  */
 class ResourceManager
 {
+    use LoggableTrait;
+
     /** @var RightsManager */
     private $rightsManager;
     /** @var ResourceTypeRepository */
@@ -156,7 +161,7 @@ class ResourceManager
         AbstractResource $resource,
         ResourceType $resourceType,
         User $creator,
-        Workspace $workspace,
+        Workspace $workspace = null,
         ResourceNode $parent = null,
         ResourceIcon $icon = null,
         array $rights = array(),
@@ -169,7 +174,7 @@ class ResourceManager
         $node = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $node->setResourceType($resourceType);
         $node->setPublished($isPublished);
-
+        $node->setGuid($this->container->get('claroline.utilities.misc')->generateGuid());
         $mimeType = ($resource->getMimeType() === null) ?
             'custom/' . $resourceType->getName():
             $resource->getMimeType();
@@ -178,10 +183,11 @@ class ResourceManager
         $node->setName($resource->getName());
         $name = $this->getUniqueName($node, $parent);
         $node->setCreator($creator);
-        $node->setWorkspace($workspace);
+        if ($workspace) $node->setWorkspace($workspace);
         $node->setParent($parent);
         $node->setName($name);
         $node->setClass(get_class($resource));
+
         if ($parent) $this->setLastIndex($parent, $node);
 
         if (!is_null($parent)) {
@@ -227,11 +233,13 @@ class ResourceManager
             } else {
                 $this->container->get('claroline.manager.activity_manager')->initializePermissions($resource);
             }
-
-
         }
 
-        $this->dispatcher->dispatch('log', 'Log\LogResourceCreate', array($node));
+        $usersToNotify = $workspace && $workspace->getId() ?
+            $this->container->get('claroline.manager.user_manager')->getUsersByWorkspaces(array($workspace), null, null, false):
+            array();
+
+        $this->dispatcher->dispatch('log', 'Log\LogResourceCreate', array($node, $usersToNotify));
         $this->om->endFlushSuite();
 
         return $resource;
@@ -846,10 +854,14 @@ class ResourceManager
         //the following line is required because we wanted to disable the right edition in personal worksspaces...
         //this is not required for everything to work properly.
 
-        if ($node->getWorkspace()->isPersonal() && !$this->rightsManager->canEditPwsPerm($token)) {
+        if (!$node->getWorkspace()) {
             $resourceArray['enableRightsEdition'] = false;
         } else {
-            $resourceArray['enableRightsEdition'] = true;
+            if ($node->getWorkspace()->isPersonal() && !$this->rightsManager->canEditPwsPerm($token)) {
+                $resourceArray['enableRightsEdition'] = false;
+            } else {
+                $resourceArray['enableRightsEdition'] = true;
+            }
         }
 
         if ($node->getResourceType()->getName() === 'file') {
@@ -875,19 +887,23 @@ class ResourceManager
      */
     public function delete(ResourceNode $resourceNode)
     {
+        $this->log('Removing ' . $resourceNode->getName() . '[' . $resourceNode->getResourceType()->getName() . ':id:' . $resourceNode->getId() . ']');
+
         if ($resourceNode->getParent() === null) {
 
             throw new \LogicException('Root directory cannot be removed');
         }
         $workspace = $resourceNode->getWorkspace();
         $nodes = $this->getDescendants($resourceNode);
+        $count = count($nodes);
         $nodes[] = $resourceNode;
         $softDelete = $this->platformConfigHandler->getParameter('resource_soft_delete');
 
         $this->om->startFlushSuite();
+        $this->log('Looping through ' . $count . ' children...');
 
         foreach ($nodes as $node) {
-
+            $this->log('Removing ' . $node->getName() . '[' . $node->getResourceType()->getName() . ':id:' . $node->getId() . ']');
             $resource = $this->getResourceFromNode($node);
             /**
              * resChild can be null if a shortcut was removed
@@ -942,6 +958,11 @@ class ResourceManager
                 }
 
                 $this->dispatcher->dispatch(
+                    'claroline_resources_delete',
+                    'GenericDatas',
+                    array(array($node))
+                );
+                $this->dispatcher->dispatch(
                     "log",
                     'Log\LogResourceDelete',
                     array($node)
@@ -964,10 +985,12 @@ class ResourceManager
                      * not work for directory containing children.
                      */
                     $this->om->remove($resource);
-                    $this->om->remove($node);
                 }
             }
+
+            $this->om->remove($node);
         }
+
         $this->om->endFlushSuite();
 
         if (!$softDelete) {
@@ -1001,10 +1024,12 @@ class ResourceManager
             $event = $this->dispatcher->dispatch(
                 "download_{$nodes[0]->getResourceType()->getName()}",
                 'DownloadResource',
-                array($this->getResourceFromNode($nodes[0]))
+                array($this->getResourceFromNode($this->getRealTarget($nodes[0])))
             );
-
-            $data['name'] = $nodes[0]->getName();
+            $extension = $event->getExtension();
+            $data['name'] = empty($extension) ?
+                $nodes[0]->getName() :
+                $nodes[0]->getName() . '.' . $extension;
             $data['file'] = $event->getItem();
             $data['mimeType'] = $nodes[0]->getResourceType()->getName() === 'file' ?
                 $nodes[0]->getMimeType():
@@ -1020,41 +1045,46 @@ class ResourceManager
         }
 
         foreach ($nodes as $node) {
+            //we only download is we can...
+            if ($this->container->get('security.context')->isGranted('EXPORT', $node)) {
+                $node = $this->getRealTarget($node);
+                $resource = $this->getResourceFromNode($node);
 
-            $resource = $this->getResourceFromNode($node);
+                if ($resource) {
+                    if (get_class($resource) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
+                        $node = $resource->getTarget();
+                    }
 
-            if (get_class($resource) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
-                $node = $resource->getTarget();
-            }
+                    $filename = $this->getRelativePath($currentDir, $node) . $node->getName();
+                    $resource = $this->getResourceFromNode($node);
 
-            $filename = $this->getRelativePath($currentDir, $node) . $node->getName();
-            $resource = $this->getResourceFromNode($node);
+                    //if it's a file, we may have to add the extension back in case someone removed it from the name
+                    if ($node->getResourceType()->getName() === 'file') {
+                        $extension = '.' . pathinfo($resource->getHashName(), PATHINFO_EXTENSION);
+                        if (!preg_match("#$extension#", $filename)) $filename .= $extension;
+                    }
 
-            //if it's a file, we may have to add the extension back in case someone removed it from the name
-            if ($node->getResourceType()->getName() === 'file') {
-                $extension = '.' . pathinfo($resource->getHashName(), PATHINFO_EXTENSION);
-                if (!preg_match("#$extension#", $filename)) $filename .= $extension;
-            }
+                    if ($node->getResourceType()->getName() !== 'directory') {
+                        $event = $this->dispatcher->dispatch(
+                            "download_{$node->getResourceType()->getName()}",
+                            'DownloadResource',
+                            array($resource)
+                        );
 
-            if ($node->getResourceType()->getName() !== 'directory') {
-                $event = $this->dispatcher->dispatch(
-                    "download_{$node->getResourceType()->getName()}",
-                    'DownloadResource',
-                    array($resource)
-                );
+                        $obj = $event->getItem();
 
-                $obj = $event->getItem();
+                        if ($obj !== null) {
+                            $archive->addFile($obj, iconv(mb_detect_encoding($filename), $this->getEncoding(), $filename));
+                        } else {
+                             $archive->addFromString(iconv(mb_detect_encoding($filename), $this->getEncoding(), $filename), '');
+                        }
+                    } else {
+                        $archive->addEmptyDir(iconv(mb_detect_encoding($filename), $this->getEncoding(), $filename));
+                    }
 
-                if ($obj !== null) {
-                    $archive->addFile($obj, iconv(mb_detect_encoding($filename), $this->getEncoding(), $filename));
-                } else {
-                     $archive->addFromString(iconv(mb_detect_encoding($filename), $this->getEncoding(), $filename), '');
+                    $this->dispatcher->dispatch('log', 'Log\LogResourceExport', array($node));
                 }
-            } else {
-                $archive->addEmptyDir(iconv(mb_detect_encoding($filename), $this->getEncoding(), $filename));
             }
-
-            $this->dispatcher->dispatch('log', 'Log\LogResourceExport', array($node));
         }
 
         $archive->close();
@@ -1148,11 +1178,11 @@ class ResourceManager
      * Changes a node icon.
      *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode  $node
-     * @param \Symfony\Component\HttpFoundation\File\UploadedFile $file
+     * @param \Symfony\Component\HttpFoundation\File\File $file
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceIcon
      */
-    public function changeIcon(ResourceNode $node, UploadedFile $file)
+    public function changeIcon(ResourceNode $node, File $file)
     {
         $this->om->startFlushSuite();
         $icon = $this->iconManager->createCustomIcon($file, $node->getWorkspace());
@@ -1449,6 +1479,7 @@ class ResourceManager
         $newNode->setLicense($node->getLicense());
         $newNode->setAuthor($node->getAuthor());
         $newNode->setIndex($index);
+        $newNode->setGuid($this->container->get('claroline.utilities.misc')->generateGuid());
 
         if ($withRights) {
             //if everything happens inside the same workspace and no specific rights have been given,
@@ -1720,11 +1751,14 @@ class ResourceManager
             );
         }
 
-        if ($node = $this->container->get('request')->getSession()->get('current_resource_node')) {
-            $defaults = array_merge(
-                $defaults,
-                $this->directoryRepo->findDefaultUploadDirectories($node->getWorkspace())
-            );
+        $node = $this->container->get('request')->getSession()->get('current_resource_node');
+
+        if ($node && $node->getWorkspace()) {
+            $root = $this->directoryRepo->findDefaultUploadDirectories($node->getWorkspace());
+            
+            if ($this->container->get('security.authorization_checker')->isGranted('CREATE', $root)) {
+                $defaults = array_merge($defaults, $root);
+            }
         }
 
         return $defaults;
@@ -1752,5 +1786,33 @@ class ResourceManager
         }
 
         return $lastIndex;
+    }
+
+    public function getRealTarget(ResourceNode $node, $throwException = true)
+    {
+        if ($node->getClass() === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
+            $resource = $this->getResourceFromNode($node);
+            if ($resource === null) {
+                if ($throwException) throw new \Exception('The resource was removed.');
+                return null;
+            }
+            $node = $resource->getTarget();
+            if ($node === null) {
+                if ($throwException) throw new \Exception('The node target was removed.');
+                return null;
+            }
+        }
+
+        return $node;
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    public function getLogger()
+    {
+        return $this->logger;
     }
 }

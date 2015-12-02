@@ -19,32 +19,30 @@
                  data-resource-name="{{ _resource.getName() }}"
             >
             </div>
-            {% if not is_path_mode  %}
-                <ul class="breadcrumb">
-                    {% if not has_role('ROLE_ANONYMOUS') %}
-                        <li><a href="{{ path('claro_workspace_list') }}"><i class="fa fa-book"></i> {{ 'workspaces'|trans({}, 'platform') }}</a></li>
-                        <li>
-                            {# we're finding wich is the workspace we want to display here #}
-                            {% set node = app.session.get('current_resource_node') %}
-                            {% if node is not null %}
-                                {% set workspace = node.getWorkspace() %}
-                            {% else %}
-                                {% set workspace = _resource.getResourceNode().getWorkspace() %}
-                            {% endif %}
-                            <a href="{{ path('claro_workspace_open_tool', {'toolName': 'home', 'workspaceId': workspace.getId() }) }}">
-                                {{ workspace.getName() ~ ' (' ~ workspace.getCode() ~ ') ' }}
-                            </a>
-                        </li>
-                        {% render(controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
-                            {'node': _resource.getResourceNode(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}))
-                        %}
-                    {% endif %}
-                        
-                    {% block resourceBreadcrumb %}
-                        <li class="active">{{ _resource.getResourceNode().getName() }}</li>
-                    {% endblock %}
-                </ul>
-            {% endif %}
+            <ul class="breadcrumb">
+                {% if not has_role('ROLE_ANONYMOUS') %}
+                    <li><a href="{{ path('claro_workspace_list') }}"><i class="fa fa-book"></i> {{ 'workspaces'|trans({}, 'platform') }}</a></li>
+                    <li>
+                        {# we're finding wich is the workspace we want to display here #}
+                        {% set node = app.session.get('current_resource_node') %}
+                        {% if node is not null %}
+                            {% set workspace = node.getWorkspace() %}
+                        {% else %}
+                            {% set workspace = _resource.getResourceNode().getWorkspace() %}
+                        {% endif %}
+                        <a href="{{ path('claro_workspace_open_tool', {'toolName': 'home', 'workspaceId': workspace.getId() }) }}">
+                            {{ workspace.getName() ~ ' (' ~ workspace.getCode() ~ ') ' }}
+                        </a>
+                    </li>
+                    {% render(controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
+                        {'node': _resource.getResourceNode(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}))
+                    %}
+                {% endif %}
+
+                {% block resourceBreadcrumb %}
+                    <li class="active">{{ _resource.getResourceNode().getName() }}</li>
+                {% endblock %}
+            </ul>
         {% endif %}
     </div>
 {% endblock %}
@@ -59,11 +57,10 @@
             {% set workspace = _resource.getResourceNode().getWorkspace() %}
         {% endif %}
     {% endif %}
-    {% if not is_path_mode and workspace is defined %}
+    {% if workspace is defined %}
         {% if is_granted('OPEN', workspace) %}
             {% render(controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspace': workspace, '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})) %}
         {% endif %}
-
     {% endif %}
 {% endblock %}
 
@@ -95,11 +92,7 @@
 {% block stylesheets %}
     {{ parent() }}
     <style type="text/css">
-        {% if workspace is not empty and
-              workspace.getOptions() is not empty and
-              workspace.getOptions().getDetails() is not empty and
-              workspace.getOptions().getDetails()['background_color'] is defined
-        %}
+        {% if workspace is defined and workspace.backgroundColor is not null %}
             body {
                 background-color: {{ workspace.getOptions().getDetails()['background_color'] }};
             }

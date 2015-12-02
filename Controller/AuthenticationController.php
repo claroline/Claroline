@@ -32,6 +32,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Entity\User;
 
 /**
  * Authentication/login controller.
@@ -127,6 +128,8 @@ class AuthenticationController
         } else {
             $error = $this->request->getSession()->get(SecurityContext::AUTHENTICATION_ERROR);
         }
+
+        $session = $this->request->getSession();
 
         return array(
             'last_username' => $lastUsername,
@@ -299,6 +302,61 @@ class AuthenticationController
             'hash' => $hash,
             'form' => $form->createView()
         );
+    }
+
+    /**
+     * @Route(
+     *     "/validate/email/{hash}",
+     *     name="claro_security_validate_email",
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     *
+     * @Template("ClarolineCoreBundle:Authentication:resetPassword.html.twig")
+     */
+    public function validateEmailAction($hash)
+    {
+        $this->userManager->validateEmailHash($hash);
+
+        $this->request->getSession()
+            ->getFlashBag()
+            ->add('success', $this->translator->trans('email_validated', array(), 'platform'));
+
+        return new RedirectResponse($this->router->generate('claro_desktop_open'));
+    }
+
+    /**
+     * @Route(
+     *     "/send/email/validation/{hash}",
+     *     name="claro_security_validate_email_send",
+     *     options={"expose"=true}
+     * )
+     */
+    public function sendEmailValidationAction($hash)
+    {
+        $this->mailManager->sendValidateEmail($hash);
+        $users = $this->userManager->getByEmailValidationHash($hash);
+        $user = $users[0];
+        $this->request->getSession()
+            ->getFlashBag()
+            ->add('success', $this->translator->trans('email_sent', array('%email%' => $user->getMail()), 'platform'));
+
+        return new RedirectResponse($this->router->generate('claro_desktop_open'));
+    }
+
+    /**
+     * @Route(
+     *     "/hide/email/validation",
+     *     name="claro_security_validate_email_hide",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     */
+    public function hideEmailConformationAction(User $user)
+    {
+        $this->userManager->hideEmailValidation($user);
+
+        return new JsonResponse('success');
     }
 
     /**

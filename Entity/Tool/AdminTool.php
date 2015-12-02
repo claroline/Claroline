@@ -113,4 +113,9 @@ class AdminTool
     {
         return $this->plugin;
     }
+
+    public function __toString()
+    {
+        return $this->name;
+    }
 }

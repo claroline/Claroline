@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfiguration;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
@@ -41,7 +42,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
  */
 class UserManager
 {
-    const MAX_USER_BATCH_SIZE = 5;
+    const MAX_USER_BATCH_SIZE = 20;
 
     private $platformConfigHandler;
     private $strictEventDispatcher;
@@ -124,14 +125,16 @@ class UserManager
      *
      * @return \Claroline\CoreBundle\Entity\User
      */
-    public function createUser(User $user, $sendMail = true, $additionnalRoles = array(), $model = null)
+    public function createUser(User $user, $sendMail = true, $additionnalRoles = array(), $model = null, $publicUrl = null)
     {
-        $this->objectManager->startFlushSuite();
-
         if ($this->personalWorkspaceAllowed($additionnalRoles)) {
             $this->setPersonalWorkspace($user, $model);
         }
-        $user->setPublicUrl($this->generatePublicUrl($user));
+
+        $user->setGuid($this->container->get('claroline.utilities.misc')->generateGuid());
+        $user->setEmailValidationHash($this->container->get('claroline.utilities.misc')->generateGuid());
+        $this->objectManager->persist($user);
+        $publicUrl ? $user->setPublicUrl($publicUrl): $user->setPublicUrl($this->generatePublicUrl($user));
         $this->toolManager->addRequiredToolsToUser($user, 0);
         $this->toolManager->addRequiredToolsToUser($user, 1);
         $this->roleManager->setRoleToRoleSubject($user, PlatformRoles::USER);
@@ -145,18 +148,17 @@ class UserManager
             }
         }
 
-        $this->objectManager->endFlushSuite();
-
         if ($this->mailManager->isMailerAvailable() && $sendMail) {
             //send a validation by hash
-            if ($this->platformConfigHandler->getParameter('registration_mail_validation')) {
+            $mailValidation = $this->platformConfigHandler->getParameter('registration_mail_validation');
+            if ($mailValidation === PlatformConfiguration::REGISTRATION_MAIL_VALIDATION_FULL) {
                 $password = sha1(rand(1000, 10000) . $user->getUsername() . $user->getSalt());
                 $user->setResetPasswordHash($password);
                 $user->setIsEnabled(false);
                 $this->objectManager->persist($user);
                 $this->objectManager->flush();
                 $this->mailManager->sendEnableAccountMessage($user);
-            } else {
+            } elseif ($mailValidation === PlatformConfiguration::REGISTRATION_MAIL_VALIDATION_PARTIAL) {
             //don't change anything
                 $this->mailManager->sendCreationMessage($user);
             }
@@ -164,6 +166,8 @@ class UserManager
         
         $this->container->get('claroline.event.event_dispatcher')
             ->dispatch('user_created_event', 'UserCreated', array('user' => $user));
+            
+        $this->objectManager->flush();
 
         return $user;
     }
@@ -190,6 +194,8 @@ class UserManager
      */
     public function rename(User $user, $username)
     {
+        $userRole = $this->roleManager->getUserRoleByUser($user);
+        if ($userRole) $this->roleManager->renameUserRole($userRole, $user->getUsername());
         $user->setUsername($username);
         $personalWorkspaceName = $this->translator->trans('personal_workspace', array(), 'platform') . $user->getUsername();
         $pws = $user->getPersonalWorkspace();
@@ -237,10 +243,13 @@ class UserManager
             $this->objectManager->persist($ws);
         }
 
-        $this->objectManager->remove($userRole);
+        if ($userRole) {
+            $this->objectManager->remove($userRole);
+        }
         $this->objectManager->persist($user);
         $this->objectManager->flush();
 
+        $this->strictEventDispatcher->dispatch('claroline_users_delete', 'GenericDatas', array(array($user)));
         $this->strictEventDispatcher->dispatch('log', 'Log\LogUserDelete', array($user));
         $this->strictEventDispatcher->dispatch('delete_user', 'DeleteUser', array($user));
     }
@@ -317,7 +326,7 @@ class UserManager
             $lastName = $user[1];
             $username = $user[2];
             $pwd = $user[3];
-            $email = $user[4];
+            $email = trim($user[4]);
 
             if (isset($user[5])) {
                 $code = trim($user[5]) === '' ? null: $user[5];
@@ -361,7 +370,7 @@ class UserManager
             $newUser->setPhone($phone);
             $newUser->setLocale($lg);
             $newUser->setAuthentication($authentication);
-            $this->createUser($newUser, $sendMail, $additionalRoles, $model);
+            $this->createUser($newUser, $sendMail, $additionalRoles, $model, $username . uniqid());
             $this->objectManager->persist($newUser);
             $returnValues[] = $firstName . ' ' . $lastName;
 
@@ -372,7 +381,6 @@ class UserManager
 
             if ($i % self::MAX_USER_BATCH_SIZE === 0) {
                 if ($logger) $logger(" [UOW size: " . $this->objectManager->getUnitOfWork()->size() . "]");
-                $i = 0;
                 $this->objectManager->forceFlush();
 
                 if ($logger) $logger(" flushing users...");
@@ -405,12 +413,20 @@ class UserManager
     {
         $locale = $this->platformConfigHandler->getParameter('locale_language');
         $this->translator->setLocale($locale);
+        $created = $this->workspaceManager->getWorkspaceByCode($user->getUsername());
+
+        if (count($created) > 0) {
+            $code = $user->getUsername() . '~' . uniqid();
+        } else {
+            $code = $user->getUsername();
+        }
+
         $personalWorkspaceName = $this->translator->trans('personal_workspace', array(), 'platform') . ' - ' . $user->getUsername();
 
         if (!$model) {
             $config = Configuration::fromTemplate($this->personalWsTemplateFile);
             $config->setWorkspaceName($personalWorkspaceName);
-            $config->setWorkspaceCode($user->getUsername());
+            $config->setWorkspaceCode($code);
             $workspace = $this->transfertManager->createWorkspace($config, $user, true);
         } else {
             $workspace = $this->workspaceManager->createWorkspaceFromModel(
@@ -655,7 +671,7 @@ class UserManager
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getUsersByWorkspaces(array $workspaces, $page, $max = 20, $withPager = true)
+    public function getUsersByWorkspaces(array $workspaces, $page = 1, $max = 20, $withPager = true)
     {
         if ($withPager) {
             $query = $this->userRepo->findUsersByWorkspaces($workspaces, false);
@@ -914,6 +930,25 @@ class UserManager
     public function getByResetPasswordHash($resetPassword)
     {
         return $this->userRepo->findOneByResetPasswordHash($resetPassword);
+    }
+
+    /**
+     * @param string $validationHash
+     *
+     * @return User
+     */
+    public function getByEmailValidationHash($validationHash)
+    {
+        return $this->userRepo->findByEmailValidationHash($validationHash);
+    }
+
+    public function validateEmailHash($validationHash)
+    {
+        $users = $this->getByEmailValidationHash($validationHash);
+        $user = $users[0];
+        $user->setIsMailValidated(true);
+        $this->objectManager->persist($user);
+        $this->objectManager->flush();
     }
 
     /**
@@ -1283,6 +1318,7 @@ class UserManager
     public function activateUser(User $user)
     {
         $user->setIsEnabled(true);
+        $user->setIsMailValidated(true);
         $user->setResetPasswordHash(null);
         $user->setInitDate(new \DateTime());
         $this->objectManager->persist($user);
@@ -1451,12 +1487,19 @@ class UserManager
 
         return $restrictions;
     }
-    
+
     public function initializePassword(User $user)
     {
         $user->setHashTime(time());
         $password = sha1(rand(1000, 10000) . $user->getUsername() . $user->getSalt());
         $user->setResetPasswordHash($password);
+        $this->objectManager->persist($user);
+        $this->objectManager->flush();
+    }
+
+    public function hideEmailValidation(User $user)
+    {
+        $user->setHideMailWarning(true);
         $this->objectManager->persist($user);
         $this->objectManager->flush();
     }

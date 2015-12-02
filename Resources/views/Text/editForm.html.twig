@@ -2,6 +2,8 @@
 
 {% if isDesktop() %}
     {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% else %}
+    {% set workspace = _resource.getResourceNode().getWorkspace() %}
 {% endif %}
 
 {% extends layout %}
@@ -16,7 +18,7 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ _resource.getResourceNode().getName() }}</h3>
     </div>
-    <form role="form" novalidate="validate" method="post" action="{{ _path('claro_text_edit', {'old':_resource.getId()}) }}" id="edit_form">
+    <form role="form" novalidate="validate" method="post" action="{{ path('claro_text_edit', {'old':_resource.getId()}) }}" id="edit_form">
         <div class="panel-body">
             <textarea name="content" cols="50" rows="15" class="hide claroline-tiny-mce">{{ text|raw }}</textarea>
         </div>

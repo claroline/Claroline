@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class ResourcePropertiesController extends Controller
 {
@@ -39,6 +40,7 @@ class ResourcePropertiesController extends Controller
     private $resourceManager;
     private $request;
     private $dispatcher;
+    private $translator;
 
     /**
      * @DI\InjectParams({
@@ -47,17 +49,18 @@ class ResourcePropertiesController extends Controller
      *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "request"         = @DI\Inject("request"),
-     *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher")
+     *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "translator"      = @DI\Inject("translator")
      * })
      */
-    public function __construct
-    (
+    public function __construct(
         FormFactory $formFactory,
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
         ResourceManager $resourceManager,
         Request $request,
-        StrictDispatcher $dispatcher
+        StrictDispatcher $dispatcher,
+        TranslatorInterface $translator
     )
     {
         $this->formFactory = $formFactory;
@@ -66,6 +69,7 @@ class ResourcePropertiesController extends Controller
         $this->resourceManager = $resourceManager;
         $this->request = $request;
         $this->dispatcher = $dispatcher;
+        $this->translator = $translator;
     }
 
     /**
@@ -148,7 +152,7 @@ class ResourcePropertiesController extends Controller
         $isDir = $node->getResourceType()->getName() === 'directory';
 
         $form = $this->formFactory->create(
-            new ResourcePropertiesType($username),
+            new ResourcePropertiesType($username, $this->translator),
             $node
         );
 
@@ -180,8 +184,9 @@ class ResourcePropertiesController extends Controller
         $collection = new ResourceCollection(array($node));
         $this->checkAccess('EDIT', $collection);
         $creatorUsername = $node->getCreator()->getUsername();
+        $wasPublished = $node->isPublished();
         $form = $this->formFactory->create(
-            new ResourcePropertiesType($creatorUsername),
+            new ResourcePropertiesType($creatorUsername, $this->translator),
             $node
         );
         $form->handleRequest($this->request);
@@ -205,10 +210,17 @@ class ResourcePropertiesController extends Controller
                     ->changeAccessibilityDate($node, $accessibleFrom, $accessibleUntil);
             }
 
+            if ($node->isPublished() !== $wasPublished) {
+                $eventName = "publication_change_{$node->getResourceType()->getName()}";
+                $resource = $this->resourceManager->getResourceFromNode($node);
+                $this->dispatcher->dispatch($eventName, 'PublicationChange', [$resource]);
+            }
+
             $arrayNode = $this->resourceManager->toArray($node, $this->tokenStorage->getToken());
 
             return new JsonResponse($arrayNode);
         }
+
         $isDir = $node->getResourceType()->getName() === 'directory';
 
         return array(

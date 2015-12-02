@@ -22,6 +22,7 @@ use Claroline\CoreBundle\Pager\PagerFactory;
 use Symfony\Component\Translation\TranslatorInterface;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("claroline.manager.group_manager")
@@ -46,7 +47,8 @@ class GroupManager
      *     "pagerFactory"    = @DI\Inject("claroline.pager.pager_factory"),
      *     "translator"      = @DI\Inject("translator"),
      *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager")
+     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
+     *     "container"       = @DI\Inject("service_container")
      * })
      */
     public function __construct(
@@ -54,7 +56,8 @@ class GroupManager
         PagerFactory $pagerFactory,
         TranslatorInterface $translator,
         StrictDispatcher $eventDispatcher,
-        RoleManager $roleManager
+        RoleManager $roleManager,
+        ContainerInterface $container
     )
     {
         $this->om = $om;
@@ -64,6 +67,7 @@ class GroupManager
         $this->translator = $translator;
         $this->eventDispatcher = $eventDispatcher;
         $this->roleManager = $roleManager;
+        $this->container = $container;
     }
 
     /**
@@ -73,6 +77,7 @@ class GroupManager
      */
     public function insertGroup(Group $group)
     {
+        $group->setGuid($this->container->get('claroline.utilities.misc')->generateGuid());
         $this->om->persist($group);
         $this->eventDispatcher->dispatch('log', 'Log\LogGroupCreate', array($group));
         $this->om->flush();
@@ -85,6 +90,12 @@ class GroupManager
      */
     public function deleteGroup(Group $group)
     {
+        $this->eventDispatcher->dispatch(
+            'claroline_groups_delete',
+            'GenericDatas',
+            array(array($group))
+        );
+
         $this->om->remove($group);
         $this->om->flush();
     }

@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Workspace;
 
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -117,6 +118,7 @@ class Workspace
      *     mappedBy="workspace",
      *     cascade={"persist", "merge"}
      * )
+     * @ORM\OrderBy({"order" = "ASC"})
      */
     protected $orderedTools;
 
@@ -284,6 +286,18 @@ class Workspace
         return $this->roles;
     }
 
+    public function addRole(Role $role)
+    {
+        if (!$this->roles->contains($role)) {
+            $this->roles->add($role);
+        }
+    }
+
+    public function removeRole(Role $role)
+    {
+        $this->roles->removeElement($role);
+    }
+
     public function getCreator()
     {
         return $this->creator;
@@ -415,7 +429,7 @@ class Workspace
         return $this->startDate;
     }
 
-    public function setStartDate($startDate)
+    public function setStartDate(\DateTime $startDate = null)
     {
         $this->startDate = $startDate;
     }
@@ -425,7 +439,7 @@ class Workspace
         return $this->endDate;
     }
 
-    public function setEndDate(\DateTime $endDate)
+    public function setEndDate(\DateTime $endDate = null)
     {
         $this->endDate = $endDate;
     }
@@ -465,6 +479,9 @@ class Workspace
         return $this->name . ' [' . $this->code . ']';
     }
 
+    /**
+     * @return \Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions
+     */
     public function getOptions()
     {
         return $this->options;
@@ -473,5 +490,38 @@ class Workspace
     public function setOptions(WorkspaceOptions $options = null)
     {
         $this->options = $options;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getBackgroundColor()
+    {
+        $backgroundColor = null;
+        $workspaceOptions = $this->getOptions();
+
+        if (null !== $workspaceOptions) {
+            $workspaceOptionsDetails = $workspaceOptions->getDetails();
+
+            if (isset($workspaceOptionsDetails['background_color'])) {
+                $backgroundColor = $workspaceOptionsDetails['background_color'];
+            }
+        }
+
+        return $backgroundColor;
+    }
+
+    public function __toString()
+    {
+        return $this->name . ' [' . $this->code . ']';
+    }
+
+    public function getManagerRole()
+    {
+        foreach ($this->roles as $role) {
+            if (strpos('_' . $role->getName(), 'ROLE_WS_MANAGER') === 1) return $role;
+        }
+
+        return null;
     }
 }

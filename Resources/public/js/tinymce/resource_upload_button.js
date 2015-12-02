@@ -3,12 +3,9 @@
 
     var tinymce = window.tinymce;
     var common = window.Claroline.Common;
-    var home = window.Claroline.Home;
     var modal = window.Claroline.Modal;
     var resourceManager = window.Claroline.ResourceManager;
     var translator = window.Translator;
-    var routing =  window.Routing;
-    var buttons = window.tinymce.claroline.buttons || {};
 
     /**
      * Open a directory picker from a TinyMCE editor.

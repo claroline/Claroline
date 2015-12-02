@@ -23,7 +23,8 @@
 
         </div>
         <div class="panel-footer">
-            <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+            {% set returnUrl = app.request.headers.get('referer') %}
+            <a href="{{ returnUrl }}" type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</a>
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
         </div>
     </form>

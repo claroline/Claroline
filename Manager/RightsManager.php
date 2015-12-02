@@ -27,12 +27,17 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Claroline\BundleRecorder\Log\LoggableTrait;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 
 /**
  * @DI\Service("claroline.manager.rights_manager")
  */
 class RightsManager
 {
+    use LoggableTrait;
+
     /** @var MaskManager */
     private $maskManager;
     /** @var ResourceRightsRepository */
@@ -85,6 +90,7 @@ class RightsManager
         $this->roleManager = $roleManager;
         $this->maskManager = $maskManager;
         $this->container = $container;
+        $this->logger = null;
     }
 
     /**
@@ -121,6 +127,7 @@ class RightsManager
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      * @param boolean                                            $isRecursive
      * @param array                                              $creations
+     * @param boolean                                            $mergePerm do we want to merge the permissions (only work for integers perm)
      *
      * @return array|\Claroline\CoreBundle\Entity\Resource\ResourceRights[]
      */
@@ -129,39 +136,46 @@ class RightsManager
         Role $role,
         ResourceNode $node,
         $isRecursive = false,
-        $creations = array()
+        $creations = array(),
+        $mergePerms = false
     )
     {
-        //Bugfix: If the flushSuite is uncommented, doctrine returns an error. It probably happens because rights
-        //weren't created already
-        //(ResourceRights duplicate)
+        $this->log('Editing permissions...');
         $this->om->startFlushSuite();
 
         $arRights = $isRecursive ?
             $this->updateRightsTree($role, $node):
             array($this->getOneByRoleAndResource($role, $node));
 
+        $this->log('Encoding masks for ' . count($arRights) . ' elements...');
+
         foreach ($arRights as $toUpdate) {
 
             if ($isRecursive) {
-                if (is_int($permissions)) {
-                    $permissions = $this->mergeTypePermissions($permissions, $toUpdate->getMask());
-                } else {
+                if (!is_int($permissions)) {
                     $resourceType = $toUpdate->getResourceNode()->getResourceType();
                     $permissionsMask = $this->maskManager->encodeMask($permissions, $resourceType);
                     $permissionsMask = $this->mergeTypePermissions($permissionsMask, $toUpdate->getMask());
                     $permissions = $this->maskManager->decodeMask($permissionsMask, $resourceType);
+                } else {
+                    $permissions = $this->mergeTypePermissions($permissions, $toUpdate->getMask());
                 }
             }
 
-            is_int($permissions) ?
-                $toUpdate->setMask($permissions) :
+            if (is_int($permissions)) {
+                if ($mergePerms) $permissions = $permissions | $toUpdate->getMask();
+                $toUpdate->setMask($permissions);
+            } else {
                 $this->setPermissions($toUpdate, $permissions);
+            }
 
             $this->om->persist($toUpdate);
-            $this->logChangeSet($toUpdate);
-            $this->dispatcher->dispatch('resource_change_permissions', 'UpdateResourceRights', array($node, $toUpdate));
 
+            //this is bad but for a huge datatree, logging everythings takes way too much time.
+            if (!$isRecursive) {
+                $this->logChangeSet($toUpdate);
+                $this->dispatcher->dispatch('resource_change_permissions', 'UpdateResourceRights', array($node, $toUpdate));
+            }
         }
 
         //exception for activities
@@ -249,6 +263,7 @@ class RightsManager
      */
     public function updateRightsTree(Role $role, ResourceNode $node)
     {
+        $this->log('Updating the right tree');
         $alreadyExistings = $this->rightsRepo->findRecursiveByResourceAndRole($node, $role);
         $descendants = $this->resourceRepo->findDescendants($node, true);
         $finalRights = array();
@@ -273,6 +288,7 @@ class RightsManager
         }
 
         $this->om->flush();
+        $this->log('Right tree updated');
 
         return $finalRights;
     }
@@ -486,7 +502,7 @@ class RightsManager
     {
         // extract base permissions ("open", "edit", etc. -> i.e. 5 out of 32
         // possible permissions) by getting the last 5 bits of the mask
-        $baseMask = $resourceMask % 32;
+        $baseMask = $resourceMask % 64;
         // keep only specific permissions
         $typeMask = $resourceMask - $baseMask;
 
@@ -643,6 +659,8 @@ class RightsManager
      */
     public function canEditPwsPerm(TokenInterface $token)
     {
+        if ($this->container->get('security.context')->isGranted('ROLE_ADMIN')) return true;
+
         $roles = $this->roleManager->getStringRolesFromToken($token);
         $accesses = $this->om
             ->getRepository('ClarolineCoreBundle:Resource\PwsRightsManagementAccess')
@@ -653,5 +671,51 @@ class RightsManager
         }
 
         return false;
+    }
+
+    public function checkIntegrity()
+    {
+        $this->log('Checking roles integrity for resources... This may take a while.');
+        $workspaceManager = $this->container->get('claroline.manager.workspace_manager');
+        $workspaces = $this->om->getRepository('Claroline\CoreBundle\Entity\Workspace\Workspace')->findAll();
+        $this->om->startFlushSuite();
+        $i = 0;
+
+        foreach ($workspaces as $workspace) {
+            $this->log('Checking ' . $workspace->getCode() . '...');
+            $roles = $workspace->getRoles();
+            $root = $this->container->get('claroline.manager.resource_manager')->getWorkspaceRoot($workspace);
+            $collaboratorRole = $this->roleManager->getCollaboratorRole($workspace);
+
+            if ($root && $collaboratorRole) {
+                $collaboratorFound = false;
+
+                foreach ($root->getRights() as $right) {
+                    if ($right->getRole()->getName() == $this->roleManager->getCollaboratorRole($workspace)->getName()) {
+                        $collaboratorFound = true;
+                    }
+                }
+
+                if (!$collaboratorFound) {
+                    $this->log('Adding missing right on root for ' . $workspace->getCode() . '.', LogLevel::DEBUG);
+                    $collaboratorRole = $this->roleManager->getCollaboratorRole($workspace);
+                    $this->editPerms(5, $collaboratorRole, $root, true, array(), true);
+                    $i++;
+
+                    if ($i % 3 === 0) {
+                        $this->log('flushing...');
+                        $this->om->forceFlush();
+                        $this->om->clear();
+                    }
+                }
+            }
+        }
+
+        $this->om->endFlushSuite();
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 }

@@ -32,6 +32,7 @@
     "@ClarolineCoreBundle/Resources/views/Resource/tabs.html.twigjs"
     "@ClarolineCoreBundle/Resources/views/Resource/treenode.html.twigjs"
     "@ClarolineCoreBundle/Resources/views/Resource/deleteConfirm.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Resource/userRightsRow.html.twig"
     "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
     "@ClarolineCoreBundle/Resources/views/Modal/validationFooter.html.twigjs"
     "@ClarolineCoreBundle/Resources/views/Modal/errorFooter.html.twigjs"
@@ -157,3 +158,15 @@
     '@InnovaAngularUIResourcePickerBundle/Resources/public/js/*'
 %}
 {% endjavascripts %}
+
+<script type="text/javascript">
+    $('#hide-email-confirmation').on('click', function(event) {
+        $.ajax({
+            url: Routing.generate('claro_security_validate_email_hide'),
+            type: 'GET',
+            success: function (datas) {
+                $('.alert-email-confirm').hide();
+            }
+        });
+    });
+</script>

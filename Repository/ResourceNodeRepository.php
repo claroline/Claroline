@@ -26,6 +26,18 @@ use Claroline\CoreBundle\Repository\Exception\UnknownFilterException;
  */
 class ResourceNodeRepository extends MaterializedPathRepository
 {
+    public function find($id)
+    {
+        $dql = '
+            SELECT n FROM Claroline\CoreBundle\Entity\Resource\ResourceNode n
+            WHERE n.id = :id OR n.guid LIKE :id
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('id', $id);
+
+        return $query->getOneOrNullResult();
+    }
+
     /**
      * Returns the root directory of a workspace.
      *
@@ -89,6 +101,9 @@ class ResourceNodeRepository extends MaterializedPathRepository
      */
     public function findChildren(ResourceNode $parent, array $roles, $user, $withLastOpenDate = false)
     {
+        //if we usurpate a role, then it's like we're anonymous.
+        if (in_array('ROLE_USURPATE_WORKSPACE_ROLE', $roles)) $user = 'anon.';
+
         if (count($roles) === 0) {
             throw new \RuntimeException('Roles cannot be empty');
         }

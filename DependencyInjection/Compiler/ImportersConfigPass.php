@@ -29,4 +29,4 @@ class ImportersConfigPass implements CompilerPassInterface
             $transfertManager->addMethodCall('addImporter', array(new Reference($id)));
         }
     }
-} 
+}

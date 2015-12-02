@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle;
 use Claroline\CoreBundle\DependencyInjection\Compiler\DoctrineEntityListenerPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\DynamicConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\ImportersConfigPass;
+use Claroline\CoreBundle\DependencyInjection\Compiler\RichTextFormatterConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\RuleConstraintsConfigPass;
 use FOS\OAuthServerBundle\FOSOAuthServerBundle;
 use IDCI\Bundle\ExporterBundle\IDCIExporterBundle;
@@ -35,6 +36,7 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
 
         $container->addCompilerPass(new DynamicConfigPass());
         $container->addCompilerPass(new ImportersConfigPass());
+        $container->addCompilerPass(new RichTextFormatterConfigPass());
         $container->addCompilerPass(new DoctrineEntityListenerPass());
         $container->addCompilerPass(new RuleConstraintsConfigPass());
     }
@@ -74,7 +76,6 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
         );
         // simple container configuration, same for every environment
         $simpleConfigs = array(
-            'Symfony\Bundle\SecurityBundle\SecurityBundle'                  => 'security',
             'Symfony\Bundle\TwigBundle\TwigBundle'                          => 'twig',
             'Symfony\Bundle\AsseticBundle\AsseticBundle'                    => 'assetic',
             'JMS\DiExtraBundle\JMSDiExtraBundle'                            => 'jms_di_extra',
@@ -90,6 +91,7 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
         // one configuration file for every standard environment (prod, dev, test)
         $envConfigs = array(
             'Symfony\Bundle\FrameworkBundle\FrameworkBundle'     => 'framework',
+            'Symfony\Bundle\SecurityBundle\SecurityBundle'       => 'security',
             'Symfony\Bundle\MonologBundle\MonologBundle'         => 'monolog',
             'Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle' => 'swiftmailer',
             'Doctrine\Bundle\DoctrineBundle\DoctrineBundle'      => 'doctrine'

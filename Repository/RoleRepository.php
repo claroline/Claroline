@@ -255,7 +255,7 @@ class RoleRepository extends EntityRepository
         ";
         $query = $this->_em->createQuery($dql);
 
-        return $query->getSingleResult();
+        return $query->getOneOrNullResult();
     }
 
     public function searchByName($search)

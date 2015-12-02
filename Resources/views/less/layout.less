@@ -97,6 +97,10 @@ body.iframe {
 /*  SideBar */
 /*************/
 
+.popover {
+    z-index: (@zindex-navbar-fixed + 1);
+}
+
 #left-bar, #right-bar {
     position: fixed;
     top: 0;
@@ -1015,6 +1019,14 @@ form .global-error {
   z-index: 10000; /* @todo: somehow find a "good" z-index */
   top: 35px;
   text-align: center;
+}
+
+.alert-email-confirm {
+    width: 100%;
+    position: fixed;
+    z-index: 10000; /* @todo: somehow find a "good" z-index */
+    top: 35px;
+    text-align: center;
 }
 
 .loading {

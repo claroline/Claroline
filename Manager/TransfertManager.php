@@ -28,12 +28,16 @@ use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Symfony\Component\Yaml\Yaml;
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Claroline\CoreBundle\Manager\Exception\ToolPositionAlreadyOccupiedException;
+use Claroline\BundleRecorder\Log\LoggableTrait;
+use Psr\Log\LoggerInterface;
 
 /**
  * @DI\Service("claroline.manager.transfert_manager")
  */
 class TransfertManager
 {
+    use LoggableTrait;
+
     private $listImporters;
     private $rootPath;
     private $om;
@@ -134,6 +138,9 @@ class TransfertManager
     {
         $this->om->startFlushSuite();
         $data = $configuration->getData();
+        $data = $this->reorderData($data);
+        //now we need to reorder the data because well...
+
         //refactor how workspace are created because this sucks
         $this->data = $configuration->getData();
         $this->workspace = $workspace;
@@ -146,12 +153,14 @@ class TransfertManager
 
         if ($importRoles) {
             $importedRoles = $this->getImporterByName('roles')->import($data['roles'], $workspace);
+            $this->om->forceFlush();
         }
 
         foreach ($entityRoles as $key => $entityRole) {
             $importedRoles[$key] = $entityRole;
         }
 
+        $this->log('Importing tools...');
         $tools = $this->getImporterByName('tools')->import($data['tools'], $workspace, $importedRoles, $root);
         $this->om->endFlushSuite();
     }
@@ -196,15 +205,12 @@ class TransfertManager
         $workspace->setSelfUnregistration($configuration->getSelfUnregistration());
         $date = new \Datetime(date('d-m-Y H:i'));
         $workspace->setCreationDate($date->getTimestamp());
-
-        if ($owner) {
-            $workspace->setCreator($owner);
-        }
-
         $this->om->persist($workspace);
         $this->om->flush();
+        $this->log('Base workspace created...');
 
         //load roles
+        $this->log('Importing roles...');
         $entityRoles = $this->getImporterByName('roles')->import($data['roles'], $workspace);
         //The manager role is required for every workspace
         $entityRoles['ROLE_WS_MANAGER'] = $this->container->get('claroline.manager.role_manager')->createWorkspaceRole(
@@ -214,6 +220,14 @@ class TransfertManager
             true
         );
 
+        $defaultZip = $this->container->getParameter('claroline.param.templates_directory') . 'default.zip';
+
+        //batch import with default template shouldn't be flushed
+        if ($configuration->getArchive() !== $defaultZip) {
+            $this->om->forceFlush();
+        }
+
+        $this->log('Roles imported...');
         $owner->addRole($entityRoles['ROLE_WS_MANAGER']);
         $this->om->persist($owner);
 
@@ -244,8 +258,15 @@ class TransfertManager
             array()
         );
 
+        $this->log('Populating the workspace...');
         $this->populateWorkspace($workspace, $configuration, $root, $entityRoles, true, false);
         $this->container->get('claroline.manager.workspace_manager')->createWorkspace($workspace);
+
+        if ($owner) {
+            $this->log('Set the owner...');
+            $workspace->setCreator($owner);
+        }
+
         $this->om->endFlushSuite();
         $fs = new FileSystem();
 
@@ -255,9 +276,11 @@ class TransfertManager
     //refactor how workspace are created because this sucks
     public function importRichText()
     {
+        $this->log('Parsing rich texts...');
         //now we have to parse everything in case there is a rich text
         //rich texts must be located in the tools section
         $data = $this->data;
+        //@todo remove the line for claroline v6
         $this->container->get('claroline.importer.rich_text_formatter')->setData($data);
         $this->container->get('claroline.importer.rich_text_formatter')->setWorkspace($this->workspace);
 
@@ -289,6 +312,9 @@ class TransfertManager
         return null;
     }
 
+    /**
+     * Full workspace export
+     */
     public function export(Workspace $workspace)
     {
         foreach ($this->listImporters as $importer) {
@@ -299,9 +325,17 @@ class TransfertManager
         $files = [];
         $data['roles'] = $this->getImporterByName('roles')->export($workspace, $files, null);
         $data['tools'] = $this->getImporterByName('tools')->export($workspace, $files, null);
+        $_resManagerData = array();
 
+        foreach ($data['tools'] as &$_tool) {
+            if ($_tool['tool']['type'] === 'resource_manager') {
+                $_resManagerData = &$_tool['tool'];
+            }
+        }
+
+        //then we parse and replace the text, we also add missing files in $resManagerData
         $files = $this->container->get('claroline.importer.rich_text_formatter')
-            ->setPlaceHolders($files);
+            ->setPlaceHolders($files, $_resManagerData);
         //throw new \Exception();
         //generate the archive in a temp dir
         $content = Yaml::dump($data, 10);
@@ -329,7 +363,10 @@ class TransfertManager
         return $archPath;
     }
 
-    public function exportResources(Workspace $workspace, array $resourceNodes)
+    /**
+     * Partial export for ressources
+     */
+    public function exportResources(Workspace $workspace, array $resourceNodes, $parseAndReplace = true)
     {
         foreach ($this->listImporters as $importer) {
             $importer->setListImporters($this->listImporters);
@@ -344,9 +381,19 @@ class TransfertManager
         $resourceImporter = $this->container->get('claroline.tool.resource_manager_importer');
         $tool['data'] = $resourceImporter->exportResources($workspace, $resourceNodes, $files, null);
         $data['tools'] = array(0 => array('tool' => $tool));
+        $_resManagerData = array();
 
-        $files = $this->container->get('claroline.importer.rich_text_formatter')
-            ->setPlaceHolders($files);
+        foreach ($data['tools'] as &$_tool) {
+            if ($_tool['tool']['type'] === 'resource_manager') {
+                $_resManagerData = &$_tool['tool'];
+            }
+        }
+
+        if ($parseAndReplace) {
+            $files = $this->container->get('claroline.importer.rich_text_formatter')
+                ->setPlaceHolders($files, $_resManagerData);
+        }
+
         //throw new \Exception();
         //generate the archive in a temp dir
         $content = Yaml::dump($data, 10);
@@ -392,6 +439,8 @@ class TransfertManager
             }
             $importer->setConfiguration($data);
             $importer->setListImporters($this->listImporters);
+
+            if ($this->logger) $importer->setLogger($this->logger);
         }
     }
 
@@ -430,6 +479,7 @@ class TransfertManager
     {
         $configuration->setOwner($owner);
         $data = $configuration->getData();
+        $data = $this->reorderData($data);
         $this->data = $data;
         $this->workspace = $directory->getWorkspace();
         $this->om->startFlushSuite();
@@ -443,11 +493,56 @@ class TransfertManager
                 $tool = $dataTool['tool'];
 
                 if ($tool['type'] === 'resource_manager') {
-                    $resourceImporter->importResources($tool, $this->workspace, $directory);
+                    $resourceImporter->import(
+                        $tool,
+                        $this->workspace,
+                        array(),
+                        $this->container->get('claroline.manager.resource_manager')->getResourceFromNode($directory),
+                        false
+                    );
                     break;
                 }
             }
         }
         $this->om->endFlushSuite();
+    }
+
+    private function reorderData(array $data)
+    {
+        $resManager = null;
+
+        foreach ($data['tools'] as $dataTool) {
+            if ($dataTool['tool']['type'] === 'resource_manager') $resManager = $dataTool;
+        }
+
+        $priorities = array();
+
+        //we currently only reorder resources...
+        if (isset($resManager['tool']['data']['items'])) {
+            foreach ($resManager['tool']['data']['items'] as $item) {
+                $importer = $this->getImporterByName($item['item']['type']);
+                if ($importer) $priorities[$importer->getPriority()][] = $item;
+            }
+        }
+
+        ksort($priorities);
+        $ordered = array();
+
+        foreach ($priorities as $priority) {
+            $ordered = array_merge($ordered, $priority);
+        }
+
+        foreach ($data['tools'] as &$dataTool) {
+            if ($dataTool['tool']['type'] === 'resource_manager') {
+                $dataTool['tool']['data']['items'] = $ordered;
+            }
+        }
+
+        return $data;
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 }

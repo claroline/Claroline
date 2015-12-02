@@ -26,8 +26,8 @@ class PlatformConfigurationHandler
 {
     private $configFile;
     private $parameters;
-    private $defaultParameters = array(
-        'name' => null,
+    public static $defaultParameters = array(
+        'name' => 'claroline',
         'nameActive' => true,
         'support_email' => null,
         'footer' => null,
@@ -77,13 +77,18 @@ class PlatformConfigurationHandler
         'repository_api' => 'http://packages.claroline.net/api.php',
         'use_repository_test' => false,
         'auto_logging_after_registration' => false,
-        'registration_mail_validation' => false,
+        'registration_mail_validation' => PlatformConfiguration::REGISTRATION_MAIL_VALIDATION_PARTIAL,
         'resource_soft_delete' => false,
         'show_help_button' => false,
         'help_url' => 'http://claroline.net/workspaces/125/open/tool/home',
         'register_button_at_login' => false,
         'send_mail_at_workspace_registration' => true,
-        'locales' => array('fr', 'en', 'es')
+        'locales' => array('fr', 'en', 'es'),
+        'domain_name' => null,
+        'platform_url' => null,
+        'mailer_from' => null,
+        'default_workspace_tag' => null,
+        'is_pdf_export_active' => false,
     );
     private $lockedParameters;
 
@@ -194,6 +199,9 @@ class PlatformConfigurationHandler
         $config->setRegisterButtonAtLogin($this->parameters['register_button_at_login']);
         $config->setSendMailAtWorkspaceRegistration($this->parameters['send_mail_at_workspace_registration']);
         $config->setLocales($this->parameters['locales']);
+        $config->setDomainName($this->parameters['domain_name']);
+        $config->setDefaultWorkspaceTag($this->parameters['default_workspace_tag']);
+        $config->setIsPdfExportActive($this->parameters['is_pdf_export_active']);
 
         return $config;
     }
@@ -207,7 +215,7 @@ class PlatformConfigurationHandler
         }
 
         $configParameters = Yaml::parse(file_get_contents($this->configFile)) ?: array();
-        $parameters = $this->defaultParameters;
+        $parameters = self::$defaultParameters;
 
         foreach ($configParameters as $parameter => $value) {
             $parameters[$parameter] = $value;
@@ -232,7 +240,7 @@ class PlatformConfigurationHandler
 
     public function getDefaultParameters()
     {
-        return $this->defaultParameters;
+        return self::$defaultParameters;
     }
 
     public function getLockedParamaters()

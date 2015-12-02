@@ -11,13 +11,13 @@
 
 namespace Claroline\CoreBundle\Library\Logo;
 
-use JMS\DiExtraBundle\Annotation\Service;
+use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * @Service("claroline.common.logo_service")
+ * @DI\Service("claroline.common.logo_service")
  */
 class LogoService
 {
@@ -25,9 +25,14 @@ class LogoService
     private $fileTypes;
     private $finder;
 
-    public function __construct()
+    /**
+     * @DI\InjectParams({
+     *     "path" = @DI\Inject("%claroline.param.logos_directory%")
+     * })
+     */
+    public function __construct($path)
     {
-        $this->path = __DIR__."/../../../../../../../web/uploads/logos/";
+        $this->path = $path . '/';
         $this->fileTypes = '/\.jpg$|\.png$|\.gif$|\.jpeg$/';
         $this->finder = new Finder();
     }

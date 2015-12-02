@@ -14,6 +14,7 @@ activate_account: 'Activation du compte'
 activate_account_click: 'Cliquez ici pour activer votre compte.'
 activate_maintenance_mode: 'Vous devriez activer le mode de maintenance afin de signaler aux utilisateurs qu''une mise à jour est en cours.'
 activate_notifications: 'Activer les notifications'
+activate_pdf_export: "Activer l'export PDF"
 activate_personal_workspace_creation: 'Activer la création des espaces personnels.'
 active_widgets: 'Widgets actifs'
 activities: Activités
@@ -239,7 +240,7 @@ date_range.first_day: '1'
 date_range.format: d/m/Y
 date_range.format.with_hours: 'd/m/Y H:i:s'
 date_range.from: De
-date_range.js_format: dd/MM/yyyy
+date_range.js_format: DD/MM/YYYY
 date_range.last_month: 'Mois précédent'
 date_range.last_school_year: 'Année sco. précédente'
 date_range.last_seven_days: '7 derniers jours'
@@ -324,7 +325,7 @@ edit_your_profile_error: 'Une erreur est survenue pendant la modification de vot
 edit_your_profile_success: 'Modification de votre profil effectué avec succès.'
 editable: Modifiable
 editable_facet_form_explanation: 'Le champ "Modifiable" permet de spécifier si l''élément doit être modifiable ou non par l''utilisateur.'
-email: 'Adresse email'
+email: 'E-Mail-Adresse'
 email_found_at: 'L''email %email% a été trouvé aux lignes: %lines%'
 empty_file: 'Fichier vide'
 encryption: Encryption
@@ -591,7 +592,7 @@ my_public_documents: 'Mes documents publics'
 my_resources: 'Mes ressources'
 my_workspace: 'Espace personnel'
 my_workspaces: 'Mes espaces d''activités'
-name: Name
+name: 'Name'
 name_required: 'Nom requis'
 new: Nouveau
 new_folder_in_current_ws: 'Nouveau répertoire dans l''espace d''activité courant'
@@ -664,11 +665,12 @@ parameters_save_error: 'Une erreur est survenue pendant la sauvegarde des param�
 parameters_save_success: 'Paramètres sauvegardés avec succès.'
 passed: Réussi
 passing_score: 'Score pour réussir'
-password: Password
+password: 'Passwort'
 password_mismatch: 'Les mots de passe ne correspondent pas.'
 password_ok: 'Votre mot de passe a été modifié. Vous pouvez maintenant vous connecter.'
 paste: Coller
 path: Emplacement
+pdf_export: Export PDF
 pending: 'En attente'
 pending_friends: pending_friends
 pending_users_list: 'Liste des utilisateurs en attente'
@@ -678,7 +680,7 @@ personal_workspace: 'Espace personnel'
 personal_workspace_management: 'Gestion de l''espace personnel'
 personal_workspace_tools_management: 'Gestion des outils de l''espace personnel'
 personal_workspaces_only: 'Les espaces personnels seulement'
-phone: Téléphone
+phone: 'Telefonnummer'
 picture: 'Photo de profil'
 picture_profile: 'Photo de profil'
 placeholder_first_name_message: 'Ce placeholder est optionnel et sera remplacé par le prénom de l''auteur'
@@ -1048,7 +1050,7 @@ user_public_profile_not_visible: 'Votre profil public n''est visible à personne
 user_removed: 'Utilisateur supprimé'
 user_selector: 'Sélecteur d''utilisateurs'
 user_visit: 'Audience/Visites utilisateurs'
-username: 'User Name'
+username: 'Gebrauchername'
 username_and_email_from_two_different_users: 'Le nom d''utilisateur %username% et l''adresse mail %email% sont tous deux utilisés et n''appartiennent pas au même utilisateur.'
 username_found_at: 'Le nom d''utilisateur %username% a été trouvé aux lignes: %lines%'
 username_or_email: 'Nom d''utilisateur ou email'

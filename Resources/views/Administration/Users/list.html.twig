@@ -44,6 +44,12 @@
                 {{ 'create_user'|trans({}, 'platform') }}
             </a>
         {% endif %}
+        {% if canUserBeCreated == true %}
+            <a href="{{path('claro_admin_import_users_form')}}" class="btn btn-default">
+                <i class="fa fa-plus"></i>
+                {{ 'import_csv'|trans({}, 'platform') }}
+            </a>
+        {% endif %}
         <a class="btn btn-default action-button table-control"
             href="{{ path('claro_admin_export_users', {'format': 'xls'}) }}">
             {{ 'excel_export'|trans({}, 'platform') }}
@@ -205,6 +211,8 @@
                                 <a class='btn btn-default' href="{{ path('claro_admin_user_workspaces', {'user': user.getId()}) }}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{ 'workspaces'|trans({}, 'platform') }}" role="button">
                                     <i class='fa fa-book'></i>
                                 </a>
+                                {% set menu = knp_menu_get('ClarolineCoreBundle:Builder:userActionsMenu', [], {'user': user} ) %}
+                                {{ knp_menu_render(menu, {}, 'user_additional_actions') }}
                             </td>
                         </tr>
                     {% endfor %}
@@ -264,5 +272,23 @@
             })
         });
 
+    </script>
+    <script>
+        $('#user-table-body').on('click', '.user-additional-action', function (event) {
+            var child = $(this).children('.user-action');
+            var url = child.data('url');
+            var displayMode = child.data('display-mode');
+            
+            if (displayMode === 'modal_form') {
+                window.Claroline.Modal.displayForm(
+                    url,
+                    function () {},
+                    function() {}
+                );
+                
+            } else {
+                window.location = url;
+            }
+        });
     </script>
 {% endblock %}

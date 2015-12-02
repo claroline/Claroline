@@ -14,6 +14,7 @@ activate_account: activate_account
 activate_account_click: activate_account_click
 activate_maintenance_mode: activate_maintenance_mode
 activate_notifications: 'Activar notificaciones'
+activate_pdf_export: 'Activar exportación a PDF'
 activate_personal_workspace_creation: 'Activar la creación de espacios personales.'
 active_widgets: 'Widgets activos'
 activities: Actividades
@@ -73,6 +74,7 @@ admin_third_party_application: 'Aplicaciones terceras'
 admin_workspace_tag_form_name: Nombre
 administration: Administración
 administrative_code: 'Código administrativo'
+administrativeCode: 'Código administrativo'
 advanced: Avanzado
 advanced_parameters: advanced_parameters
 agreeing: 'Al estar de acuerdo para enviar los datos, podrá disfrutar de un mejor servicio que contribuirá a mejorar la plataforma Claroline Connect que usted está instalando.'
@@ -240,7 +242,7 @@ date_range.first_day: '0'
 date_range.format: m/d/Y
 date_range.format.with_hours: 'm/d/Y H:i:s'
 date_range.from: de
-date_range.js_format: dd/MM/yyyy
+date_range.js_format: DD/MM/YYYY
 date_range.last_month: 'Último mes'
 date_range.last_school_year: 'Último año escolar'
 date_range.last_seven_days: 'Últimos 7 días'
@@ -410,8 +412,10 @@ has_been_unregistered_from_workspace: has_been_unregistered_from_workspace
 has_been_updated: 'ha sido actualizado'
 has_not_been_imported: 'No se ha importado'
 has_not_been_imported_into_the_group: 'no ha sido importado en un grupo'
+height: Altura
 help_url: 'URL de ayuda'
 hide: Ocultar
+hide_breadcrumb: 'Ocultar hilo de Ariadna'
 hide_tools_menu: 'Ocultar el menú de herramientas (excepto para los administradores)'
 history: Historial
 home: Inicio
@@ -642,6 +646,7 @@ occurrence: Ocurrencia
 ok: Ok
 only_for_workspace_creation: 'Sólo en la creación de un espacio de trabajo'
 open: Abrir
+open_resource_when_opening_ws: 'Abrir un recurso en la apertura del espacio de trabajo'
 operation_done: 'Operación terminada.'
 options: Opciones
 or: O
@@ -672,6 +677,7 @@ password_mismatch: 'Las contraseñas no coinciden'
 password_ok: 'Su contraseña ha cambiado, ahora pude conectarse'
 paste: Pegar
 path: Ruta
+pdf_export: Exportación a PDF
 pending: pending
 pending_friends: pending_friends
 pending_users_list: pending_users_list
@@ -806,6 +812,7 @@ resource_creation_wrong_type: 'Usted no tiene el permiso de crear un tipo %type%
 resource_delete: '¿Está seguro que desea suprimir este recurso?'
 resource_limit_exceeded: resource_limit_exceeded
 resource_picker: 'Selector de recursos'
+resource_to_open: 'Recurso a abrir'
 resource_type: 'Tipo de recurso'
 resources: Recursos
 resources_delete: '¿Está seguro que desea suprimir estos recursos?'
@@ -1084,6 +1091,7 @@ warning_workspace_impersonation: 'Usted esta conectado como %role% del espacio d
 warnings: warnings
 widget: Widget
 widget_configuration: 'Configuración del Widget'
+widget_creation_roles: 'Roles que pueden crear el widget en su escritorio'
 widget_home_tab_delete_confirm_message: '¿Está seguro que desea retirar este widget de esta pestaña?'
 widget_home_tab_delete_confirm_title: 'Retirar widgets de esta pestaña'
 widget_settings: 'Configuración del Widget'
@@ -1091,6 +1099,7 @@ widget_visible_actions: 'Escoger una acción visible en el widget'
 widget_workspace_pick: 'Escoger un espacio de trabajo visible en el widget'
 widgets: Widgets
 widgets_configuration: 'Configuración del Widget'
+width: Ancho
 with_role: with_role
 with_tutor: Tutelado
 workspace: 'Espacio de trabajo'

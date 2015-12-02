@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Widget\WidgetDisplayConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
@@ -36,12 +37,16 @@ use Claroline\CoreBundle\Manager\WidgetManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\BundleRecorder\Log\LoggableTrait;
+use Psr\Log\LoggerInterface;
 
 /**
  * @DI\Service("claroline.manager.workspace_model_manager")
  */
 class WorkspaceModelManager
 {
+    use LoggableTrait;
+
     private $dispatcher;
     private $homeTabManager;
     private $om;
@@ -351,6 +356,7 @@ class WorkspaceModelManager
         User $user
     )
     {
+        $this->log('Duplicating roles...');
         $guid = $workspace->getGuid();
         $roles = $source->getRoles();
         $unusedRolePartName = '_' . $source->getGuid();
@@ -380,6 +386,7 @@ class WorkspaceModelManager
      */
     private function duplicateOrderedTools(Workspace $source, Workspace $workspace)
     {
+        $this->log('Duplicating tools...');
         $orderedTools = $source->getOrderedTools();
         $workspaceRoles = $this->getArrayRolesByWorkspace($workspace);
 
@@ -428,6 +435,7 @@ class WorkspaceModelManager
         User $user
     )
     {
+        //$this->log('Duplicating root directory...');
         $rootDirectory = new Directory();
         $rootDirectory->setName($workspace->getName());
         $directoryType = $this->resourceManager->getResourceTypeByName('directory');
@@ -485,16 +493,19 @@ class WorkspaceModelManager
     private function duplicateHomeTabs(
         Workspace $source,
         Workspace $workspace,
-        array $homeTabs
+        array $homeTabs,
+        $resourceInfos,
+        &$tabsInfos = array()
     )
     {
+        $this->log('Duplicating home tabs...');
         $this->om->startFlushSuite();
-
         $homeTabConfigs = $this->homeTabManager
             ->getHomeTabConfigsByWorkspaceAndHomeTabs($source, $homeTabs);
         $order = 1;
         $widgetCongigErrors = array();
         $widgetDisplayConfigs = array();
+        $widgets = array();
 
         foreach ($homeTabConfigs as $homeTabConfig) {
             $homeTab = $homeTabConfig->getHomeTab();
@@ -514,6 +525,7 @@ class WorkspaceModelManager
             $newHomeTab->setWorkspace($workspace);
             $newHomeTab->setName($homeTab->getName());
             $this->om->persist($newHomeTab);
+            $tabsInfos[] = array('original' => $homeTab, 'copy' => $newHomeTab);
 
             $newHomeTabConfig = new HomeTabConfig();
             $newHomeTabConfig->setHomeTab($newHomeTab);
@@ -572,27 +584,33 @@ class WorkspaceModelManager
                     $newWidgetDisplayConfig->setWidth($widget->getDefaultWidth());
                     $newWidgetDisplayConfig->setHeight($widget->getDefaultHeight());
                 }
+                
+                $widgets[] = array('widget' => $widget, 'original' => $widgetInstance, 'copy' => $newWidgetInstance);
                 $this->om->persist($newWidgetDisplayConfig);
-
-                if ($widget->isConfigurable()) {
-
-                    try {
-                        $this->dispatcher->dispatch(
-                            'copy_widget_config_' . $widget->getName(),
-                            'CopyWidgetConfiguration',
-                            array($widgetInstance, $newWidgetInstance)
-                        );
-                    } catch (NotPopulatedEventException $e) {
-                        $widgetCongigErrors[] = array(
-                            'widgetName' => $widget->getName(),
-                            'widgetInstanceName' => $widgetInstance->getName(),
-                            'error' => $e->getMessage()
-                        );
-                    }
-                }
             }
         }
         $this->om->endFlushSuite();
+        $this->om->forceFlush();
+        
+        foreach ($widgets as $widget) {
+            if ($widget['widget']->isConfigurable()) {
+                try {
+                    $this->dispatcher->dispatch(
+                        'copy_widget_config_' . $widget['widget']->getName(),
+                        'CopyWidgetConfiguration',
+                        array($widget['original'], $widget['copy'], $resourceInfos, $tabsInfos)
+                    );
+                } catch (NotPopulatedEventException $e) {
+                    $widgetCongigErrors[] = array(
+                        'widgetName' => $widget['widget']->getName(),
+                        'widgetInstanceName' => $widget['original']->getName(),
+                        'error' => $e->getMessage()
+                    );
+                }
+            }
+        }
+        
+        
 
         return $widgetCongigErrors;
     }
@@ -607,21 +625,24 @@ class WorkspaceModelManager
         array $resourcesModels,
         Directory $rootDirectory,
         Workspace $workspace,
-        User $user
+        User $user,
+        &$resourcesInfos
     )
     {
+        $this->log('Duplicating ' . count($resourcesModels) . ' resources...');
         $this->om->startFlushSuite();
 
         $copies = array();
         $resourcesErrors = array();
         $workspaceRoles = $this->getArrayRolesByWorkspace($workspace);
 
-        foreach ($resourcesModels as $resourceModel) {
+        foreach ($resourcesModels as $key => $resourceModel) {
             $resourceNode = $resourceModel->getResourceNode();
 
             if ($resourceModel->isCopy()) {
 
                 try {
+                    $this->log('Duplicating ' . $resourceNode->getName() . ' from type ' . $resourceNode->getResourceType()->getName());
                     $copy = $this->resourceManager->copy(
                         $resourceNode,
                         $rootDirectory->getResourceNode(),
@@ -629,7 +650,9 @@ class WorkspaceModelManager
                         false,
                         false
                     );
-                    $copies[] = $copy;
+                    $copy->getResourceNode()->setIndex($resourceNode->getIndex());
+                    $this->om->persist($copy->getResourceNode());
+                    $resourcesInfos['copies'][] = array('original' => $resourceNode, 'copy' => $copy->getResourceNode());
                 } catch (NotPopulatedEventException $e) {
                     $resourcesErrors[] = array(
                         'resourceName' => $resourceNode->getName(),
@@ -653,7 +676,8 @@ class WorkspaceModelManager
                         $resourceNode,
                         $copy->getResourceNode(),
                         $user,
-                        $workspaceRoles
+                        $workspaceRoles,
+                        $resourcesInfos
                     );
                     $resourcesErrors = array_merge_recursive($resourcesErrors, $errors);
                 }
@@ -666,6 +690,10 @@ class WorkspaceModelManager
                 );
                 $copies[] = $shortcut;
             }
+
+            $position = $key + 1;
+
+            $this->log('Resource [' . $resourceModel->getResourceNode()->getName() . '] ' . $position . '/' . count($resourcesModels) . ' copied');
         }
 
         /*** Sets previous and next for each copied resource ***/
@@ -727,6 +755,7 @@ class WorkspaceModelManager
         array $workspaceRoles
     )
     {
+        //$this->log('Duplicating rights...');
         $rights = $resourceNode->getRights();
         $workspace = $resourceNode->getWorkspace();
 
@@ -764,15 +793,18 @@ class WorkspaceModelManager
         ResourceNode $directory,
         ResourceNode $directoryCopy,
         User $user,
-        array $workspaceRoles
+        array $workspaceRoles,
+        &$resourcesInfos
     )
     {
+        $this->log('Duplicating directory content...');
         $children = $directory->getChildren();
         $copies = array();
         $resourcesErrors = array();
 
         foreach ($children as $child) {
            try {
+                $this->log('Duplicating ' . $resourceNode->getName() . ' from type ' . $resourceNode->getResourceType()->getName());
                 $copy = $this->resourceManager->copy(
                     $child,
                     $directoryCopy,
@@ -781,6 +813,7 @@ class WorkspaceModelManager
                     false
                 );
                 $copies[] = $copy;
+                $resourcesInfos['copies'][] = array('original' => $child, 'copy' => $copy->getResourceNode());
             } catch (NotPopulatedEventException $e) {
                 $resourcesErrors[] = array(
                     'resourceName' => $child->getName(),
@@ -804,7 +837,8 @@ class WorkspaceModelManager
                     $child,
                     $copy->getResourceNode(),
                     $user,
-                    $workspaceRoles
+                    $workspaceRoles,
+                    $resourcesInfos
                 );
                 $resourcesErrors = array_merge_recursive($resourcesErrors, $errors);
             }
@@ -821,16 +855,30 @@ class WorkspaceModelManager
         $modelWorkspace = $model->getWorkspace();
         $resourcesModels = $model->getResourcesModel();
         $homeTabs = $model->getHomeTabs();
+        $resourcesInfos = array();
 
         $this->duplicateWorkspaceRoles($modelWorkspace, $workspace, $user);
         $this->duplicateOrderedTools($modelWorkspace, $workspace);
         $rootDirectory = $this->duplicateRootDirectory($modelWorkspace, $workspace, $user);
-        $errors['widgetConfigErrors'] = $this->duplicateHomeTabs($modelWorkspace, $workspace, $homeTabs->toArray());
         $errors['resourceErrors'] = $this->duplicateResources(
             $resourcesModels->toArray(),
             $rootDirectory,
             $workspace,
-            $user
+            $user,
+            $resourcesInfos
         );
+        $this->om->forceFlush();
+        
+        $errors['widgetConfigErrors'] = $this->duplicateHomeTabs($modelWorkspace, $workspace, $homeTabs->toArray(), $resourcesInfos);
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    public function getLogger()
+    {
+        return $this->logger;
     }
 }

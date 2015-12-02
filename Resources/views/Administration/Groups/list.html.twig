@@ -131,7 +131,7 @@
                     </thead>
                     <tbody id="group-table-body">
                         {% for group in pager.currentPageResults %}
-                            <tr id="group-{{ group.getId() }}" class="row-group"/>
+                            <tr id="group-{{ group.getId() }}" class="row-group">
                                 <td>
                                     <input type="checkbox" class="chk-item" value="{{ group.getId() }}"></input>
                                 </td>
@@ -145,6 +145,8 @@
                                        href="{{ path('claro_admin_group_settings_form', {'groupId': group.getId()}) }}" id="link-settings-{{ group.getId() }}"  data-toggle="tooltip" data-placement="bottom" title="{{ 'settings'|trans({}, 'platform') }}" alt="{{ 'settings'|trans({}, 'platform') }}">
                                         <i class="fa fa-cog"></i>
                                     </a>
+                                    {% set menu = knp_menu_get('ClarolineCoreBundle:Builder:groupActionsMenu', [], {'group': group} ) %}
+                                    {{ knp_menu_render(menu, {}, 'group_additional_actions') }}
                                 </td>
                             </tr>
                         {% endfor %}
@@ -172,5 +174,23 @@
         parameters.route.search = {"route": "claro_admin_group_list_search", "parameters": {'order': '{{ order }}'}};
         parameters.route.action.remove = {"route": "claro_admin_multidelete_group", "parameters": {}, "type": "DELETE", "confirmTemplate": removeGroupConfirm, "delete": true};
         Claroline.Table.initialize(parameters);
+    </script>
+    <script>
+        $('#group-table-body').on('click', '.group-additional-action', function (event) {
+            var child = $(this).children('.group-action');
+            var url = child.data('url');
+            var displayMode = child.data('display-mode');
+            
+            if (displayMode === 'modal_form') {
+                window.Claroline.Modal.displayForm(
+                    url,
+                    function () {},
+                    function() {}
+                );
+                
+            } else {
+                window.location = url;
+            }
+        });
     </script>
 {% endblock %}

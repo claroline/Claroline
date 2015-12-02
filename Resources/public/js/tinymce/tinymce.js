@@ -234,17 +234,22 @@
         return '<user id="' + item.id + '"><a href="' + publicProfileUrl + item.id + '">' + item.name + '</a></user>';
     };
 
+
     /**
      * Configuration and parameters of a TinyMCE editor.
      */
+
+    // Get theme to load inside tinymce in order to have no display differences
+    var themeCSS = _.find(_.pluck(document.styleSheets, 'href'), function(link){return link.indexOf("themes/") !== -1});
     tinymce.claroline.configuration = {
+        paste_data_images: true,
         'relative_urls': false,
         'theme': 'modern',
         'language': home.locale.trim(),
         'browser_spellcheck': true,
         'autoresize_min_height': 100,
         'autoresize_max_height': 500,
-        'content_css': home.asset + 'css/clarolinecore/tinymce.css',
+        'content_css':  [themeCSS, home.asset + 'css/clarolinecore/tinymce.css'],
         'toolbar2': 'styleselect | undo redo | forecolor backcolor | bullist numlist | outdent indent | ' +
                     'media link charmap | print preview code',
         'extended_valid_elements': 'user[id], a[data-toggle|data-parent]',

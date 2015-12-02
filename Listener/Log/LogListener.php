@@ -101,10 +101,12 @@ class LogListener
         $log = new Log();
 
         //Simple type properties
-        $log->setAction($event->getAction());
-        $log->setToolName($event->getToolName());
-        $log->setIsDisplayedInAdmin($event->getIsDisplayedInAdmin());
-        $log->setIsDisplayedInWorkspace($event->getIsDisplayedInWorkspace());
+        $log
+            ->setAction($event->getAction())
+            ->setToolName($event->getToolName())
+            ->setIsDisplayedInAdmin($event->getIsDisplayedInAdmin())
+            ->setIsDisplayedInWorkspace($event->getIsDisplayedInWorkspace())
+            ->setOtherElementId($event->getOtherElementId());
 
         //Object properties
         $log->setOwner($event->getOwner());

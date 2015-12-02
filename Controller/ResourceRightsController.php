@@ -24,6 +24,7 @@ use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -161,12 +162,13 @@ class ResourceRightsController
         $this->checkAccess('ADMINISTRATE', $collection);
         $datas = $this->getPermissionsFromRequest($node->getResourceType());
         $isRecursive = $this->request->getCurrentRequest()->request->get('isRecursive');
+        $perms = array();
 
         foreach ($datas as $data) {
-            $this->rightsManager->editPerms($data['permissions'], $data['role'], $node, $isRecursive);
+            $perms[] = $this->rightsManager->editPerms($data['permissions'], $data['role'], $node, $isRecursive);
         }
 
-        return new Response('', 200, array('Content-Type' => 'application/json'));
+        return new JsonResponse($datas, 200);
     }
 
 
@@ -334,87 +336,6 @@ class ResourceRightsController
         );
     }
 
-    /**
-     * @EXT\Route(
-     *     "/{node}/rights/users/without/rights/ordered/by/{orderedBy}/order/{order}/page/{page}/max/{max}/form/search/{search}",
-     *     name="claro_resources_rights_users_without_rights_form",
-     *     options={"expose"=true},
-     *     defaults={"search"="","ordered"="firstName","order"="ASC","page"=1,"max"=50}
-     * )
-     * @EXT\Template("ClarolineCoreBundle:Resource:resourcesRightsUsersWithoutRightsForm.html.twig")
-     *
-     * Displays the resource rights form for all users.
-     *
-     * @param ResourceNode $node
-     * @param string $search
-     * @param string $orderedBy
-     * @param string $order
-     * @param int $page
-     * @param int $max
-     *
-     * @return Response
-     */
-    public function resourcesRightsUsersWithoutRightsFormAction(
-        ResourceNode $node,
-        $search = '',
-        $orderedBy = 'firstName',
-        $order = 'ASC',
-        $page = 1,
-        $max = 50
-    )
-    {
-        $collection = new ResourceCollection(array($node));
-        $this->checkAccess('ADMINISTRATE', $collection);
-        $isDir = $node->getResourceType()->getName() === 'directory';
-        $resourceType = $node->getResourceType();
-        $mask = $this->maskManager
-            ->decodeMask($resourceType->getDefaultMask(), $resourceType);
-
-        $users = empty($search) ?
-            $this->userManager
-                ->getUsersWithoutRights($node, $orderedBy, $order, $page, $max) :
-            $this->userManager->getSearchedUsersWithoutRights(
-                $node,
-                $search,
-                $orderedBy,
-                $order,
-                $page,
-                $max
-            );
-        $roleKeys = array();
-        $usersRoles = array();
-        $usersRights = array();
-
-        foreach ($users as $user) {
-            $roleKeys[] = $user->getUsername();
-        }
-        $usersRolesRaw = $this->roleManager
-            ->getUserRolesByTranslationKeys($roleKeys);
-
-        foreach ($usersRolesRaw as $userRole) {
-            $usersRoles[$userRole->getTranslationKey()] = $userRole;
-        }
-        $userRolesRights = $this->rightsManager
-            ->getUserRolesResourceRights($node, $roleKeys);
-
-        foreach ($userRolesRights as $right) {
-            $usersRights[$right->getRole()->getTranslationKey()] = $right;
-        }
-
-        return array(
-            'resource' => $node,
-            'isDir' => $isDir,
-            'mask' => $mask,
-            'users' => $users,
-            'usersRoles' => $usersRoles,
-            'usersRights' => $usersRights,
-            'orderedBy' => $orderedBy,
-            'order' => $order,
-            'max' => $max,
-            'search' => $search
-        );
-    }
-
     public function getPermissionsFromRequest(ResourceType $type)
     {
         $permsMap = $this->maskManager->getPermissionMap($type);
@@ -434,6 +355,7 @@ class ResourceRightsController
 
                 $data[] = array(
                     'role' => $this->roleManager->getRole($roleId),
+                    'role_name' => $this->roleManager->getRole($roleId)->getName(),
                     'permissions' => $changedPerms
                 );
             }
@@ -442,17 +364,19 @@ class ResourceRightsController
         foreach ($roles as $roleId => $perms) {
 
             foreach ($permsMap as $perm) {
-                $changedPerms[$perm] = (array_key_exists($perm, $perms)) ? true: false;
+                $changedPerms[$perm] = (array_key_exists(trim($perm), $perms)) ? true: false;
             }
 
             $data[] = array(
                 'role' => $this->roleManager->getRole($roleId),
+                'role_name' => $this->roleManager->getRole($roleId)->getName(),
                 'permissions' => $changedPerms
             );
         }
 
         return $data;
     }
+
 
     /**
      * Checks if the current user has the right to perform an action on a ResourceCollection.

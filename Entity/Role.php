@@ -370,4 +370,11 @@ class Role implements RoleInterface
     {
         $this->profileProperties->add($property);
     }
+
+    public function __toString()
+    {
+        return is_null($this->workspace) ?
+            $this->translationKey :
+            '[' . $this->workspace->getName() . '] ' . $this->translationKey;
+    }
 }

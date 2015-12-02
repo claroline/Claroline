@@ -343,7 +343,6 @@ class ModelController extends Controller
      *     options={"expose"=true},
      *     defaults={"page"=1, "search"=""}
      * )
-     * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters\model:groupShare.html.twig")
      *
      *

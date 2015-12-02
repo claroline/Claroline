@@ -14,6 +14,7 @@ activate_account: 'Activate your account'
 activate_account_click: 'Click here to activate your account'
 activate_maintenance_mode: 'You should activate the maintenance mode before going further.'
 activate_notifications: 'Activate notifications'
+activate_pdf_export: 'Activate PDF export'
 activate_personal_workspace_creation: 'Activate personal workspace creation.'
 active_widgets: 'Active widgets'
 activities: Activities
@@ -73,6 +74,7 @@ admin_third_party_application: 'Third-party applications'
 admin_workspace_tag_form_name: Name
 administration: Administration
 administrative_code: 'Administrative code'
+administrativeCode: 'Administrative code'
 advanced: Advanced
 advanced_parameters: 'Advanced parameters'
 agreeing: 'By agreeing to send the data, you will enjoy a better service and you will contribute to improving the Claroline Connect platform that you are installing.'
@@ -93,6 +95,7 @@ analytics_connections: Connections
 analytics_home: Home
 analytics_resources: Resources
 analytics_top: Top
+analytics_return_platform_content: "Back to global platform content statistics"
 anonymous: Anonymous
 answer: Answer
 anywhere: Anywhere
@@ -213,6 +216,7 @@ csv_group_import_infos_format: 'Format: username list separated by a carriage re
 csv_users_import_infos: 'CSV file informations'
 csv_users_import_infos_format: Format
 csv_users_import_infos_format_a: 'User informations must be defined in one line and separated by semicolon'
+csv_workspaces_import_infos_format_a: 'Workspaces informations must be defined in one line and separated by semicolon'
 csv_users_import_infos_format_b: 'Note that you must not add a file header'
 csv_users_import_infos_optional: Optional
 csv_users_import_infos_required: Required
@@ -240,7 +244,7 @@ date_range.first_day: '0'
 date_range.format: m/d/Y
 date_range.format.with_hours: 'm/d/Y H:i:s'
 date_range.from: From
-date_range.js_format: MM/dd/yyyy
+date_range.js_format: MM/DD/YYYY
 date_range.last_month: 'Last month'
 date_range.last_school_year: 'Last school year'
 date_range.last_seven_days: 'Last 7 days'
@@ -261,6 +265,7 @@ db_table: 'Database table'
 decline: Decline
 default_language: 'Default Language'
 default_role: 'Default role'
+default_workspace_tag: 'Tag of the workspace that will be opened at connection'
 deletable: Deletable
 delete: Delete
 delete_category: 'Delete category'
@@ -410,8 +415,10 @@ has_been_unregistered_from_workspace: 'has been unregistered from workspace'
 has_been_updated: 'has been updated'
 has_not_been_imported: 'has not been imported'
 has_not_been_imported_into_the_group: 'has not been imported into the group'
+height: Height
 help_url: 'Help URL'
 hide: Hide
+hide_breadcrumb: 'Hide breadcrumb'
 hide_tools_menu: 'Hide tools menu (except for managers)'
 history: History
 home: Home
@@ -487,6 +494,7 @@ last_30_days_activity: 'Activity over the last 30 days'
 last_action: '{1} Last action|[1,Inf] Last %logAmount% actions'
 last_attempt_date: 'Last attempt'
 last_manager_error_message: 'You can''t remove every manager.'
+last_modification: Last modification
 last_name: 'Last name'
 layout: Layout
 learning_outcomes: 'Learning outcomes'
@@ -642,6 +650,7 @@ occurrence: Occurrence
 ok: Ok
 only_for_workspace_creation: 'Only for workspace creation'
 open: Open
+open_resource_when_opening_ws: 'Open a resource when opening the workspace'
 operation_done: 'Operation done.'
 options: Options
 or: Or
@@ -672,6 +681,7 @@ password_mismatch: 'Passwords mismatch'
 password_ok: 'Your password has been changed, you can login now'
 paste: Paste
 path: Path
+pdf_export: Export in PDF
 pending: Pending
 pending_friends: 'Pending friends'
 pending_users_list: 'Pending users list'
@@ -806,6 +816,7 @@ resource_creation_wrong_type: 'You don''t have the permission to create a(n) %ty
 resource_delete: 'Are you sure you want to delete this resource ?'
 resource_limit_exceeded: 'The maximmum amount of resource (%max%) has been reached. You already have %current% resources.'
 resource_picker: 'Resource picker'
+resource_to_open: 'Resource to open'
 resource_type: 'Resource type'
 resources: Resources
 resources_delete: 'Are you sure you want to delete these resources?'
@@ -834,7 +845,7 @@ roles_facet_form_explanation: 'This form allows you to set wich roles can see th
 roles_fields_form_explanation: 'This form allows you to set wich roles can see and edit the field in the public profile.'
 roles_management: 'Roles management'
 save: Save
-save_as_template: 'Save as template'
+save_as_template: 'Export'
 save_workspace_as_template: 'Save workspace as template'
 saved_changes: 'Your changes have been saved'
 score: Score
@@ -1084,6 +1095,7 @@ warning_workspace_impersonation: 'You are connected as %role% from the workspace
 warnings: Warnings
 widget: Widget
 widget_configuration: 'Widget configuration'
+widget_creation_roles: 'Roles that can create the widget in their desktop'
 widget_home_tab_delete_confirm_message: 'Do you really want to remove this widget from this Home tab?'
 widget_home_tab_delete_confirm_title: 'Remove widget from Home tab'
 widget_settings: 'Widget settings'
@@ -1091,6 +1103,7 @@ widget_visible_actions: 'Choose visible actions in the widget'
 widget_workspace_pick: 'Choose workspaces displayed in the widget'
 widgets: Widgets
 widgets_configuration: 'Widgets configuration'
+width: Width
 with_role: 'with role'
 with_tutor: Tutored
 workspace: Workspace
@@ -1152,3 +1165,55 @@ initialize_your_password: Password initialization
 hide_client: Hide a client
 hide_client_message: Do you really want to hide this client ?
 filter_by: Filter by
+domain_name: 'Domain name'
+import_csv: 'Import csv'
+admin_profile_properties_explanations: 'Selected properties will be editable by users.'
+self_unregistration: Self unregistration
+is_visible: Is visible
+year: year
+month: month
+week: week
+day: day
+hour: hour
+minute: minute
+second: second
+years: years
+months: months
+weeks: weeks
+days: days
+hours: hours
+minutes: minutes
+seconds: seconds
+time_ago: %count% %unit% ago
+mail_options: Email options
+mailer_from: Email "from" field
+desktop_root_directory_upload_error: You can't add resources at the desktop root directory.
+pick_a_resource: Pick a resource
+invalid_host: Invalid host (access to %url% refused).
+request_friend: Request friend
+activated: Activated
+not_activated: Not activated
+add_pending: Add a friend platform
+add_friend_confirm_message: Do you really want to add this friend platform ?
+edit_client: Edit a client
+0_or_1: 0 or 1
+import_resources_explanation: The resource import requires a zip file generated by claroline containing the file manifest.yml. If you want to import an other zip file, please create a new 'File' resource and select 'uncompress'.
+import_resources_explanation: L'import de ressources demande un fichier .zip généré par claroline contenant le fichier manifest.yml. Si vous désirez importer un autre fichier zip, veuillez créer une ressource de type 'Fichier' et sélectionnez 'décompresser'.
+root_rights_change_explanation: This page allows you to change rights on the root resource of a workspace. If you want to edit every resources, select 'Apply to the contents of the directory and its subdirectories '.
+registration_mail_validation: User registration validation
+send_mail_info: send confirmation email
+force_mail_validation: force the email confirmation
+replace_validation_email_message: will display the email validation link
+email_not_activated_part_1: Your email address has not been validated yet (%email%). Click
+email_not_activated_part_2: here
+email_not_activated_part_3: to activate
+email_confirmation_message: The platform cannot send your every email as long as your adress is not confirmed.
+email_sent: Email sent at the adress %email%. If you didn't receive anything, please check your spam folder.
+email_validation: Email validation
+email_validation_url_display: Please use the following link to confirm your email: %url%
+email_validated: Email validated
+oauth_application_request: The application "%name%" wants to connect to %platform%
+oauth_required_data: The following datas will be sent:
+client_list: Client list
+allow_authentication: Allow authentication
+user_subscription_notification_for_admin: subscribed to the workspace %workspace%

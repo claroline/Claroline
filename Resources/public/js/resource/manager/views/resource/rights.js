@@ -30,7 +30,7 @@
             'click #search-user-without-rights-btn': 'searchUsersWithoutRights',
             'click .pagination > ul > li > a': 'pagination',
             'click th > a': 'reorder',
-            'click #add-new-user-rights-btn': 'switchUserRightsTab',
+            'click #add-new-user-rights-btn': 'addUserClick',
             'click #search-workspaces-btn': 'searchWorkspaces'
         },
         initialize: function (dispatcher) {
@@ -141,22 +141,6 @@
                 }
             });
         },
-        searchUsersWithoutRights: function () {
-            var search = $('#search-user-without-rights-input').val();
-            var nodeId = $('#users-without-rights-datas').attr('data-node-id');
-
-            $.ajax({
-                url: Routing.generate(
-                    'claro_resources_rights_users_without_rights_form',
-                    {'node': nodeId, 'search': search}
-                ),
-                type: 'GET',
-                success: function (datas) {
-                    $('#users-without-rights-tab').empty();
-                    $('#users-without-rights-tab').append(datas);
-                }
-            });
-        },
         searchWorkspaces: function () {
             var search = $('#search-workspaces-input').val();
             var nodeId = $('#workspaces-datas').data('node-id');
@@ -188,7 +172,7 @@
                     url: url,
                     type: 'GET',
                     success: function (datas) {
-                        
+
                         if (type === 'with') {
                             $('#users-with-rights-tab').empty();
                             $('#users-with-rights-tab').append(datas);
@@ -217,7 +201,7 @@
                     url: url,
                     type: 'GET',
                     success: function (datas) {
-                        
+
                         if (type === 'with') {
                             $('#users-with-rights-tab').empty();
                             $('#users-with-rights-tab').append(datas);
@@ -243,9 +227,42 @@
 
             return type;
         },
-        switchUserRightsTab: function () {
-            $('#users-with-rights-list-tab').removeClass('active');
-            $('#users-without-rights-list-tab').addClass('active');
+        addUserClick: function (event) {
+            var rights = $('#rights-list').attr('data-rights');
+            var isDir = $('#rights-list').attr('data-is-dir');
+            var nodeId = $('#rights-list').attr('data-node-id');
+            rights = rights.split(',');
+            var trimmed = [];
+
+            for (var i = 0; i < rights.length; i++) {
+                trimmed.push(rights[i].trim());
+            }
+
+            var picker = new UserPicker();
+            var settings = {
+                'multiple': true,
+                'picker_name': 'user_res_picker',
+                'return_datas': true
+            };
+            picker.configure(
+                settings,
+                function (users) {
+                    $.each(users, function(index, val) {
+                        console.debug(val);
+                        //add the row to the tab
+                        var twigParams = {
+                            'user': val,
+                            'isDir': true,
+                            'rights': trimmed,
+                            'nodeId': nodeId
+                        };
+
+                        var el = Twig.render(ResourceRightsRow, twigParams);
+                        $('.rights-single-user').append(el);
+                    });
+                }
+            );
+            picker.open();
         }
     });
 })();

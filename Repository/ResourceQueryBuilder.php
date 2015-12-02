@@ -95,7 +95,9 @@ class ResourceQueryBuilder
             "    node.index as index_dir,{$eol}" .
             "    node.creationDate as creation_date,{$eol}" .
             "    node.modificationDate as modification_date,{$eol}" .
-            "    node.published as published";
+            "    node.published as published,{$eol}" .
+            "    node.accessibleFrom as accessible_from,{$eol}" .
+            "    node.accessibleUntil as accessible_until{$eol}";
 
         if ($withMaxPermissions) {
             $this->leftJoinRights = true;

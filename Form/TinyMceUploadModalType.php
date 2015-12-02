@@ -40,8 +40,9 @@ class TinyMceUploadModalType extends AbstractType
         $builder->add('name', 'hidden', array('data' => 'tmpname'));
         $builder->add(
             'file',
-            'file',
+            'hidden',
             array(
+                'label' => 'file',
                 'required' => true,
                 'mapped' => false,
                 'constraints' => array(
@@ -50,16 +51,17 @@ class TinyMceUploadModalType extends AbstractType
                 )
            )
         );
-
-        $builder->add(
-            'destination',
-            'choice',
-            array(
-                'label' => 'destination',
-                'mapped' => false,
-                'choices' => $this->destinations
-            )
-        );
+        if (count($this->destinations) > 1) {
+            $builder->add(
+                'destination',
+                'choice',
+                array(
+                    'label' => 'destination',
+                    'mapped' => false,
+                    'choices' => $this->destinations
+                )
+            );
+        }
         if ($this->uncompress) {
             $builder->add(
                 'uncompress',
@@ -75,6 +77,7 @@ class TinyMceUploadModalType extends AbstractType
             'published',
             'checkbox',
             array(
+                'label' => 'published',
                 'required' => true,
                 'mapped' => false,
                 'attr' => array('checked' => 'checked')

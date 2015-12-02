@@ -74,8 +74,12 @@ class CreatePluginCommand extends ContainerAwareCommand
             InputOption::VALUE_REQUIRED,
             'When set to true, add a default config for the theme'
         );
-        //todo top bar shortcut
-
+        $this->addOption(
+            'file_player_mime',
+            null,
+            InputOption::VALUE_REQUIRED,
+            'When set to true, add a player for the file_player mime type'
+        );
         $this->addOption(
             'install',
             'i',
@@ -149,6 +153,7 @@ class CreatePluginCommand extends ContainerAwareCommand
         $eAuth = $input->getOption('external_authentication');
         $theme = $input->getOption('theme');
         $aTool = $input->getOption('admin_tool');
+        $fmime = $input->getOption('file_player_mime');
 
         $config = array(
             'plugin' => array(
@@ -162,6 +167,7 @@ class CreatePluginCommand extends ContainerAwareCommand
         if ($eAuth) $this->addAuthentication($rootDir, $ivendor, $ibundle, $eAuth, $config);
         if ($theme) $this->addTheme($rootDir, $ivendor, $ibundle, $theme, $config);
         if ($aTool) $this->addAdminTool($rootDir, $ivendor, $ibundle, $aTool, $config);
+        if ($fmime) $this->addPlayer($rootDir, $ivendor, $ibundle, $fmime, $config);
 
         $yaml = Yaml::dump($config, 5);
         file_put_contents($rootDir . '/Resources/config/config.yml', $yaml);
@@ -174,7 +180,8 @@ class CreatePluginCommand extends ContainerAwareCommand
             $tType,
             $wType,
             $eAuth,
-            $aTool
+            $aTool,
+            $fmime
         );
 
         if ($input->getOption('install')) {
@@ -465,7 +472,20 @@ class CreatePluginCommand extends ContainerAwareCommand
         foreach ($fileList as $file) {
             copy($tempthemedir . '/' . $file, $themedir . '/' . $file);
         }
+    }
 
+    public function addPlayer($rootDir, $ivendor, $ibundle, $fmime, &$config)
+    {
+        $className = ucfirst($fmime) . 'PlayerListener';
+        $newPath = $rootDir . '/Listener/' . $className . '.php';
+        $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_player_directory');
+        $content = file_get_contents($templateDir . '/listener.tmp');
+        file_put_contents($newPath, $content);
+
+        $viewName = strtolower($fmime);
+        $newPath = $rootDir . '/Resources/views/' . $viewName . '.html.twig';
+        $content = file_get_contents($templateDir . '/view.tmp');
+        file_put_contents($newPath, $content);
     }
 
     private function getNewRoutingFile($rootDir)
@@ -518,7 +538,8 @@ class CreatePluginCommand extends ContainerAwareCommand
         $tType = null,
         $wType = null,
         $eAuth = null,
-        $aTool = null
+        $aTool = null,
+        $fmime = null
     ) {
         $iterator = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($path),
@@ -531,7 +552,7 @@ class CreatePluginCommand extends ContainerAwareCommand
                 $content = file_get_contents($filepath);
                 file_put_contents(
                     $filepath,
-                    $this->replaceCommonPlaceHolders($content, $vendor, $bundle, $rType, $tType, $wType, $eAuth, $aTool)
+                    $this->replaceCommonPlaceHolders($content, $vendor, $bundle, $rType, $tType, $wType, $eAuth, $aTool, $fmime)
                 );
             }
         }
@@ -565,7 +586,8 @@ class CreatePluginCommand extends ContainerAwareCommand
         $tType = '',
         $wType = '',
         $eAuth = '',
-        $adminTool = ''
+        $adminTool = '',
+        $fmime = ''
     )
     {
         $patterns = array(
@@ -581,7 +603,9 @@ class CreatePluginCommand extends ContainerAwareCommand
             '/\[\[widget\]\]/',
             '/\[\[external_authentication\]\]/',
             '/\[\[Admin_Tool\]\]/',
-            '/\[\[admin_tool\]\]/'
+            '/\[\[admin_tool\]\]/',
+            '/\[\[File_Mime\]\]/',
+            '/\[\[file_mime\]\]/'
         );
 
         $replacements = array(
@@ -597,7 +621,9 @@ class CreatePluginCommand extends ContainerAwareCommand
             strtolower($wType),
             strtolower($eAuth),
             ucfirst($adminTool),
-            strtolower($adminTool)
+            strtolower($adminTool),
+            ucfirst($fmime),
+            strtolower($fmime)
         );
 
         return preg_replace($patterns, $replacements, $content);

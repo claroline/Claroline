@@ -28,6 +28,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Role;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * @DI\Service("claroline.tool.resource_manager_importer")
@@ -45,6 +46,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
     private $om;
     private $availableCreators;
     private $env;
+    private $extendedData;
 
     /**
      * @DI\InjectParams({
@@ -109,8 +111,10 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         }
     }
 
-    public function import(array $data, $workspace, $entityRoles, Directory $root)
+    public function import(array $data, $workspace, $entityRoles, Directory $root, $fullImport = true)
     {
+        $this->log('Importing resources...');
+
         /*
          * Each directory is created without parent.
          * The parent is set after the ResourceManager::create method is fired.
@@ -120,9 +124,14 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
          * The implementation will change later (if we need to change the perms of
          * ROLE_USER and ROLE_ANONYMOUS) but it's easier to code it that way.
          */
-
         $createdResources = array();
-        $directories[$data['data']['root']['uid']] = $root;
+
+        if ($fullImport) {
+            $directories[$data['data']['root']['uid']] = $root;
+        } else {
+            $directories[$root->getResourceNode()->getId()] = $root;
+        }
+
         $resourceNodes = [];
 
         /*************************/
@@ -130,6 +139,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         /*************************/
 
         if (isset($data['data']['directories'])) {
+            $this->log('Importing directories...');
             //build the nodes
             foreach ($data['data']['directories'] as $directory) {
                 $directoryEntity = new Directory();
@@ -143,45 +153,76 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                     $owner = $this->getOwner();
                 }
 
+                $isDirectoryPublished = isset($directory['directory']['published']) || false === $directory['directory']['published'] ? $directory['directory']['published'] : true;
+                $icon = null;
+                //add the custom icons
+                if (isset($directory['directory']['icon']) && $directory['directory']['icon']) {
+                    $icon = $this->generateIcon(
+                        $this->getRootPath() . '/' . $directory['directory']['icon']
+                    );
+                }
+
+
                 $directories[$directory['directory']['uid']] = $this->resourceManager->create(
                     $directoryEntity,
                     $this->om->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneByName('directory'),
                     $owner,
                     $workspace,
                     null,
-                    null,
-                    array()
+                    $icon,
+                    array(),
+                    $isDirectoryPublished
                 );
 
-                //add the missing roles
-                foreach ($directory['directory']['roles'] as $role) {
-                    $this->setPermissions($role, $entityRoles[$role['role']['name']], $directoryEntity);
+                //let's order everything !
+                if (isset($directory['directory']['index'])) {
+                    $node = $directoryEntity->getResourceNode();
+                    $node->setIndex($directory['directory']['index']);
+                    $this->om->persist($node);
+                    $this->om->flush();
+                }
+
+                if ($fullImport) {
+                    //add the missing roles
+                    foreach ($directory['directory']['roles'] as $role) {
+                        $this->setPermissions($role, $entityRoles[$role['role']['name']], $directoryEntity);
+                    }
                 }
             }
 
             //set the correct parent
             foreach ($data['data']['directories'] as $directory) {
                 $node = $directories[$directory['directory']['uid']]->getResourceNode();
-                $node->setParent($directories[$directory['directory']['parent']]->getResourceNode());
-                $this->om->persist($node);
+
+                ($directory['directory']['parent'] && isset($directories[$directory['directory']['parent']])) ?
+                    $node->setParent($directories[$directory['directory']['parent']]->getResourceNode()):
+                    $node->setParent($root->getResourceNode());
             }
+
+            $this->log('Directories imported...');
         }
 
         /*************/
         /* RESOURCES */
         /*************/
 
+        $created = array();
+
         if (isset($data['data']['items'])) {
+            $this->log('Importing resources...');
             foreach ($data['data']['items'] as $item) {
+                //THIS IS WHERE RES COME FROM !
                 $res = array();
                 if (isset($item['item']['data'])) $res['data'] = $item['item']['data'];
                 //get the entity from an importer
                 $importer = $this->getImporterByName($item['item']['type']);
 
                 if ($importer) {
-                    $entity = $importer->import($res, $item['item']['name']);
+                    $this->log("Importing {$item['item']['name']} - uid={$item['item']['uid']} - type={$item['item']['type']}");
+                    $entity = $importer->import($res, $item['item']['name'], $created, $workspace);
                     //some importers are not fully functionnal yet
                     if ($entity) {
+                        $created[$item['item']['uid']] = $entity;
                         $entity->setName($item['item']['name']);
                         $type = $this->om
                             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
@@ -195,23 +236,50 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                             $owner = $this->getOwner();
                         }
 
+                        $isPublished = isset($item['item']['published']) || false === $item['item']['published'] ? $item['item']['published'] : true;
+
+                        //add the custom icons
+                        $icon = null;
+
+                        if (isset($item['item']['icon']) && $item['item']['icon']) {
+                            $icon = $this->generateIcon(
+                                $this->getRootPath() . '/' . $item['item']['icon']
+                            );
+                        }
+
                         $entity = $this->resourceManager->create(
                             $entity,
                             $type,
                             $owner,
                             $workspace,
                             null,
-                            null,
-                            array()
+                            $icon,
+                            array(),
+                            $isPublished
                         );
 
-                        $entity->getResourceNode()->setParent($directories[$item['item']['parent']]->getResourceNode());
+                        if ($item['item']['parent'] && isset($directories[$item['item']['parent']])) {
+                            $entity->getResourceNode()->setParent($directories[$item['item']['parent']]->getResourceNode());
+                        } else {
+                            $entity->getResourceNode()->setParent($root->getResourceNode());
+                        }
+
+                        //let's order everything !
+                        if (isset($item['item']['index'])) {
+                            $node = $entity->getResourceNode();
+                            $node->setIndex($directory['directory']['index']);
+                            $this->om->persist($node);
+                            $this->om->flush();
+                        }
+
                         $this->om->persist($entity);
 
-                        //add the missing roles
-                        if (isset($item['item']['roles'])) {
-                            foreach ($item['item']['roles'] as $role) {
-                                $this->setPermissions($role, $entityRoles[$role['role']['name']], $entity);
+                        if ($fullImport) {
+                            //add the missing roles
+                            if (isset($item['item']['roles'])) {
+                                foreach ($item['item']['roles'] as $role) {
+                                    $this->setPermissions($role, $entityRoles[$role['role']['name']], $entity);
+                                }
                             }
                         }
 
@@ -219,154 +287,30 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                     }
                 }
             }
+            $this->log('Resources import done !');
         }
 
         /***************/
         /* ROOT RIGHTS */
         /***************/
 
-        //add the missing roles
-        foreach ($data['data']['root']['roles'] as $role) {
-            $this->setPermissions($role, $entityRoles[$role['role']['name']], $root);
+        if ($fullImport) {
+            //add the missing roles
+            foreach ($data['data']['root']['roles'] as $role) {
+                $this->setPermissions($role, $entityRoles[$role['role']['name']], $root);
+            }
         }
 
-        //We need to force the flush in order to add the rich text.
-        //$this->om->forceFlush();
-
-        /*************/
-        /* RICH TEXT */
-        /*************/
-
-        /*
-        if (isset($data['data']['items'])) {
-            foreach ($data['data']['items'] as $item) {
-                if (isset ($item['item']['is_rich'])) {
-                    if ($item['item']['is_rich']) {
-                        $this->getImporterByName($item['item']['type'])
-                            ->format($res, array('directories' => $directories, 'items' => $resourceNodes));
-                    }
-                }
-            }
-        }*/
+        //throw new \Exception('boom');
     }
 
-    public function importResources(array $data, $workspace, ResourceNode $root)
+    public function export(Workspace $workspace, array &$_files, $object)
     {
-        $directories = array();
-        $resourceNodes = array();
-
-        /*************************/
-        /* WORKSPACE DIRECTORIES */
-        /*************************/
-
-        if (isset($data['data']['directories'])) {
-            //build the nodes
-            foreach ($data['data']['directories'] as $directory) {
-                $directoryEntity = new Directory();
-                $directoryEntity->setName($directory['directory']['name']);
-
-                if ($directory['directory']['creator']) {
-                    $owner = $this->om
-                        ->getRepository('ClarolineCoreBundle:User')
-                        ->findOneByUsername($directory['directory']['creator']);
-                } else {
-                    $owner = $this->getOwner();
-                }
-
-                $directories[$directory['directory']['uid']] = $this->resourceManager->create(
-                    $directoryEntity,
-                    $this->om->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneByName('directory'),
-                    $owner,
-                    $workspace,
-                    null,
-                    null,
-                    array(),
-                    true,
-                    false
-                );
-            }
-
-            //set the correct parent
-            foreach ($data['data']['directories'] as $directory) {
-                $node = $directories[$directory['directory']['uid']]->getResourceNode();
-
-                if ($directory['directory']['parent'] && isset($directories[$directory['directory']['parent']])) {
-                    $node->setParent($directories[$directory['directory']['parent']]->getResourceNode());
-                } else {
-                    $node->setParent($root);
-                }
-                $this->resourceManager->setRights($node, $root);
-                $this->om->persist($node);
-            }
-        }
-
-        /*************/
-        /* RESOURCES */
-        /*************/
-
-        if (isset($data['data']['items'])) {
-
-            foreach ($data['data']['items'] as $item) {
-                $res = array();
-
-                if (isset($item['item']['data'])) {
-                    $res['data'] = $item['item']['data'];
-                }
-                //get the entity from an importer
-                $importer = $this->getImporterByName($item['item']['type']);
-
-                if ($importer) {
-                    $entity = $importer->import($res, $item['item']['name']);
-                    //some importers are not fully functionnal yet
-                    if ($entity) {
-                        $entity->setName($item['item']['name']);
-                        $type = $this->om
-                            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
-                            ->findOneByName($item['item']['type']);
-
-                        if ($item['item']['creator']) {
-                            $owner = $this->om
-                                ->getRepository('ClarolineCoreBundle:User')
-                                ->findOneByUsername($item['item']['creator']);
-                        } else {
-                            $owner = $this->getOwner();
-                        }
-
-                        $entity = $this->resourceManager->create(
-                            $entity,
-                            $type,
-                            $owner,
-                            $workspace,
-                            null,
-                            null,
-                            array(),
-                            true,
-                            false
-                        );
-
-
-                        if ($item['item']['parent'] && isset($directories[$item['item']['parent']])) {
-                            $entity->getResourceNode()->setParent($directories[$item['item']['parent']]->getResourceNode());
-                        } else {
-                            $entity->getResourceNode()->setParent($root);
-                        }
-                        $this->resourceManager->setRights($entity->getResourceNode(), $root);
-                        $this->om->persist($entity);
-
-                        $resourceNodes[$item['item']['uid']] = $entity;
-                    }
-                }
-            }
-        }
-    }
-
-    public function export(Workspace $workspace, array &$files, $object)
-    {
-        $data = [];
+        $_data = [];
         //first we get the root
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
         $rootRights = $root->getRights();
-        $data['root'] = array(
+        $_data['root'] = array(
             'uid'   => $root->getId(),
             'roles' => $this->getPermsArray($root)
         );
@@ -375,13 +319,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
         foreach ($resourceNodes as $resourceNode) {
             if ($resourceNode->getParent() !== null) {
-                $data['directories'][] = array('directory' => array(
-                    'name'    => $resourceNode->getName(),
-                    'creator' => null,
-                    'parent'  => $resourceNode->getParent()->getId(),
-                    'uid'     => $resourceNode->getId(),
-                    'roles'   => $this->getPermsArray($resourceNode)
-                ));
+                $_data['directories'][] = $this->getDirectoryElement($resourceNode, $_files);
             }
         }
 
@@ -389,138 +327,65 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
             $children = $resourceNode->getChildren();
 
             foreach ($children as $child) {
-                if ($child->getResourceType()->getName() !== 'directory') {
-                    $importer = $this->getImporterByName($child->getResourceType()->getName());
-                    $childData = array();
-
-                    if ($importer) {
-                        $childData = $importer->export(
-                            $workspace,
-                            $files,
-                            $this->resourceManager->getResourceFromNode($child)
-                        );
+                if ($child && $child->getResourceType()->getName() !== 'directory') {
+                    $item = $this->getResourceElement($child, $workspace, $_files, $_data);
+                    if (!empty($item)) {
+                        $_data['items'][] = $item;
                     }
-
-                    $data['items'][] = array('item' => array(
-                        'name'    => $child->getName(),
-                        'creator' => null,
-                        'parent'  => $resourceNode->getId(),
-                        'type'    => $child->getResourceType()->getName(),
-                        'roles'   => $this->getPermsArray($child),
-                        'uid'     => $child->getId(),
-                        'data'    => $childData
-                    ));
                 }
             }
         }
 
-        return $data;
+        return $_data;
     }
 
-    public function exportResources(Workspace $workspace, array $resourceNodes, array &$files)
+    public function exportResources(Workspace $workspace, array $resourceNodes, array &$_files)
     {
-        $data = array();
+        $_data = array();
 
         foreach ($resourceNodes as $resourceNode) {
             $resourceTypeName = $resourceNode->getResourceType()->getName();
 
             if ($resourceTypeName === 'directory') {
-                $data['directories'][] = array(
-                    'directory' => array(
-                        'name'    => $resourceNode->getName(),
-                        'creator' => null,
-                        'parent'  => null,
-                        'uid'     => $resourceNode->getId(),
-                        'roles'   => $this->getPermsArray($resourceNode)
-                    )
-                );
+                $_data['directories'][] = $this->getDirectoryElement($resourceNode, $_files, true);
                 $this->exportChildrenResources(
                     $workspace,
                     $resourceNode->getChildren()->toArray(),
-                    $files,
-                    $data,
-                    $resourceNode->getId()
+                    $_files,
+                    $_data
                 );
             } else {
-                $nodeData = array();
-                $importer = $this->getImporterByName($resourceTypeName);
-
-                if ($importer) {
-                    $nodeData = $importer->export(
-                        $workspace,
-                        $files,
-                        $this->resourceManager->getResourceFromNode($resourceNode)
-                    );
+                if ($this->container->get('security.context')->isGranted('EXPORT', $resourceNode)) {
+                    $_data['items'][] = $this->getResourceElement($resourceNode, $workspace, $_files, $_data, true);
                 }
-
-                $data['items'][] = array(
-                    'item' => array(
-                        'name'    => $resourceNode->getName(),
-                        'creator' => null,
-                        'parent'  => null,
-                        'type'    => $resourceTypeName,
-                        'roles'   => $this->getPermsArray($resourceNode),
-                        'uid'     => $resourceNode->getId(),
-                        'data'    => $nodeData
-                    )
-                );
             }
         }
 
-        return $data;
+        return $_data;
     }
 
     private function exportChildrenResources(
         Workspace $workspace,
         array $children,
-        array &$files,
-        array &$data,
-        $parentId
+        array &$_files,
+        array &$_data
     )
     {
         foreach ($children as $child) {
             $resourceTypeName = $child->getResourceType()->getName();
 
             if ($resourceTypeName === 'directory') {
-                $data['directories'][] = array(
-                    'directory' => array(
-                        'name'    => $child->getName(),
-                        'creator' => null,
-                        'parent'  => $parentId,
-                        'uid'     => $child->getId(),
-                        'roles'   => $this->getPermsArray($child)
-                    )
-                );
+                $_data['directories'][] = $this->getDirectoryElement($child, $_files);
                 $this->exportChildrenResources(
                     $workspace,
                     $child->getChildren()->toArray(),
-                    $files,
-                    $data,
-                    $child->getId()
+                    $_files,
+                    $_data
                 );
             } else {
-                $childData = array();
-                $importer = $this->getImporterByName($resourceTypeName);
-
-                if ($importer) {
-                    $childData = $importer->export(
-                        $workspace,
-                        $files,
-                        $this->resourceManager->getResourceFromNode($child)
-                    );
+                if ($this->container->get('security.context')->isGranted('EXPORT', $child)) {
+                    $_data['items'][] = $this->getResourceElement($child, $workspace, $_files, $_data);
                 }
-
-                $data['items'][] = array(
-                    'item' => array(
-                        'name'    => $child->getName(),
-                        'creator' => null,
-                        'parent'  => $parentId,
-                        'type'    => $resourceTypeName,
-                        'roles'   => $this->getPermsArray($child),
-                        'uid'     => $child->getId(),
-                        'data'    => $childData
-                    )
-                );
             }
         }
     }
@@ -532,6 +397,8 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
     public function addResourceSection($rootNode)
     {
+        $rootPath = $this->getRootPath();
+
         $availableRoleName = [];
         $configuration = $this->getConfiguration();
         $data = $this->getData();
@@ -625,6 +492,20 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                                 ->children()
                                     ->scalarNode('name')->isRequired()->end()
                                     ->scalarNode('uid')->isRequired()->end()
+                                    ->scalarNode('index')->defaultNull()->end()
+                                    ->scalarNode('icon')
+                                        ->validate()
+                                            ->ifTrue(
+                                                function ($v) use ($rootPath) {
+                                                    return call_user_func_array(
+                                                        __CLASS__ . '::fileNotExists',
+                                                        array($v, $rootPath)
+                                                    );
+                                                }
+                                            )
+                                            ->thenInvalid("The file %s doesn't exists")
+                                        ->end()
+                                    ->end()
                                     ->scalarNode('creator')->isRequired()
                                         ->validate()
                                             ->ifTrue(
@@ -638,6 +519,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                                             ->thenInvalid("The creator username %s doesn't exists")
                                         ->end()
                                     ->end()
+
                                     ->scalarNode('parent')->isRequired()
                                         ->validate()
                                             ->ifTrue(
@@ -651,6 +533,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                                             ->thenInvalid("The parent name %s doesn't exists")
                                         ->end()
                                     ->end()
+                                    ->booleanNode('published')->end()
                                     ->arrayNode('roles')
                                         ->prototype('array')
                                             ->children()
@@ -688,7 +571,20 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                                     ->scalarNode('name')->end()
                                     ->scalarNode('creator')->end()
                                     ->scalarNode('uid')->end()
-                                    ->booleanNode('is_rich')->defaultFalse()->end()
+                                    ->scalarNode('index')->defaultNull()->end()
+                                    ->scalarNode('icon')
+                                        ->validate()
+                                            ->ifTrue(
+                                                function ($v) use ($rootPath) {
+                                                    return call_user_func_array(
+                                                        __CLASS__ . '::fileNotExists',
+                                                        array($v, $rootPath)
+                                                    );
+                                                }
+                                            )
+                                            ->thenInvalid("The file %s doesn't exists")
+                                        ->end()
+                                    ->end()
                                     ->scalarNode('parent')
                                         ->validate()
                                         ->ifTrue(
@@ -702,6 +598,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                                         ->thenInvalid("The parent uid %s doesn't exists")
                                         ->end()
                                     ->end()
+                                    ->booleanNode('published')->end()
                                     ->scalarNode('type')->end()
                                     ->variableNode('data')->end()
                                     ->arrayNode('import')
@@ -823,10 +720,18 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         $uow = $this->om->getUnitOfWork();
         $map = $uow->getIdentityMap();
 
-        $createdRights = $this->rightManager->getRightsFromIdentityMap(
+        //is it in the identity map ?
+        $createdRights = $this->rightManager->getRightsFromIdentityMapOrScheduledForInsert(
             $role['role']['name'],
             $resourceEntity->getResourceNode()
         );
+
+        //is it already on the database ?
+        if ($createdRights === null) {
+            $createdRights = $this->rightManager
+                ->getOneByRoleAndResource($entityRole, $resourceEntity->getResourceNode());
+        }
+
         //There is no ResourceRight in the IdentityMap so we must create it
         if ($createdRights === null) {
             $this->rightManager->create(
@@ -842,24 +747,131 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                     $role['role']['rights'],
                     $createdRights->getResourceNode()->getResourceType())
             );
+            $this->om->persist($createdRights);
         }
     }
 
     public function format($data)
     {
-        foreach ($data['data']['items'] as $item) {
-            foreach ($this->getListImporters() as $importer) {
-                if ($importer->getName() == $item['item']['type']) {
-                    $resourceImporter = $importer;
-                }
-            }
+        $resourceImporter = null;
 
-            if ($resourceImporter instanceof RichTextInterface) {
-                if (isset($item['item']['data']) && $resourceImporter) {
-                    $itemData = $item['item']['data'];
-                    $resourceImporter->format($itemData);
+        if (isset($data['data']['items'])) {
+            foreach ($data['data']['items'] as $item) {
+                foreach ($this->getListImporters() as $importer) {
+                    if ($importer->getName() == $item['item']['type']) {
+                        $resourceImporter = $importer;
+                    }
+                }
+
+                if ($resourceImporter && $resourceImporter instanceof RichTextInterface) {
+                    if (isset($item['item']['data']) && $resourceImporter) {
+                        $itemData = $item['item']['data'];
+                        $resourceImporter->format($itemData);
+                    }
                 }
             }
         }
+    }
+
+    private function getDirectoryElement(ResourceNode $resourceNode, &$_files, $setParentNull = false)
+    {
+        $parentId = $resourceNode->getParent() ? $resourceNode->getParent()->getId(): null;
+        if ($setParentNull) $parentId = null;
+
+        $resElement = array('directory' => array(
+            'name'      => $resourceNode->getName(),
+            'creator'   => null,
+            'parent'    => $parentId,
+            'published' => $resourceNode->isPublished(),
+            'uid'       => $resourceNode->getId(),
+            'roles'     => $this->getPermsArray($resourceNode),
+            'index'     => $resourceNode->getIndex()
+        ));
+
+        if ($icon = $this->getIcon($resourceNode, $_files)) {
+            $resElement['directory']['icon'] = $icon;
+        }
+
+        return $resElement;
+    }
+
+    public function getResourceElement(
+        ResourceNode $resourceNode,
+        Workspace $workspace,
+        &$_files,
+        &$_data,
+        $setParentNull = false
+    )
+    {
+        $parentId = $resourceNode->getParent() ? $resourceNode->getParent()->getId(): null;
+        $resourceNode = $this->resourceManager->getRealTarget($resourceNode, false);
+
+        $data = array();
+        $resElement = array();
+
+        $resource = $this->resourceManager->getResourceFromNode($resourceNode);
+        
+        if ($resource) {
+            // We are not processing an orphan Node so we can run the export of the Resource
+            $importer = $this->getImporterByName($resourceNode->getResourceType()->getName());
+            if ($importer) {
+                $importer->setExtendedData($_data);
+                $data = $importer->export(
+                    $workspace,
+                    $_files,
+                    $resource,
+                    $_data
+                );
+            }
+
+            if ($setParentNull) $parentId = null;
+
+            $resElement = array('item' => array(
+                'name'      => $resourceNode->getName(),
+                'creator'   => null,
+                'parent'    => $parentId,
+                'published' => $resourceNode->isPublished(),
+                'type'      => $resourceNode->getResourceType()->getName(),
+                'roles'     => $this->getPermsArray($resourceNode),
+                'uid'       => $resourceNode->getId(),
+                'data'      => $data,
+            ));
+
+            if ($icon = $this->getIcon($resourceNode, $_files)) {
+                $resElement['item']['icon'] = $icon;
+            }
+        }
+
+        return $resElement;
+    }
+
+    private function getIcon(ResourceNode $resourceNode, &$_files)
+    {
+        $icon = $resourceNode->getIcon();
+        if ($icon->getMimeType() !== 'custom') return null;
+        $iconPath = $this->container->getParameter('claroline.param.web_directory') . '/' . $icon->getRelativeUrl();
+        $uid = uniqid() . '.' . pathinfo($iconPath, PATHINFO_EXTENSION);
+
+        if (file_exists($iconPath)) {
+            $_files[$uid] = $iconPath;
+
+            return $uid;
+        }
+
+        return null;
+    }
+
+    private function generateIcon($iconpath)
+    {
+        $file = new File($iconpath);
+
+        return $this->container->get('claroline.manager.icon_manager')->createCustomIcon($file, $this->getWorkspace());
+    }
+
+    public static function fileNotExists($v, $rootpath)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+
+        return !file_exists($rootpath . $ds . $v);;
     }
 }

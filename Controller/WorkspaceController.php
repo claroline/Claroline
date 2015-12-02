@@ -50,6 +50,7 @@ use Claroline\CoreBundle\Manager\WidgetManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
+use Claroline\CoreBundle\Library\Logger\FileLogger;
 
 /**
  * This controller is able to:
@@ -348,6 +349,9 @@ class WorkspaceController extends Controller
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE, array($user));
         $form->handleRequest($this->request);
         $ds = DIRECTORY_SEPARATOR;
+        $modelLog = $this->container->getParameter('kernel.root_dir') . '/logs/models.log';
+        $logger = FileLogger::get($modelLog);
+        $this->workspaceManager->setLogger($logger);
 
         if ($form->isValid()) {
             $model = $form->get('model')->getData();
@@ -442,6 +446,8 @@ class WorkspaceController extends Controller
     public function renderToolListAction(Workspace $workspace, $_breadcrumbs)
     {
         //first we add check if some tools will be missing from the navbar and we add them if necessary
+        //lets be sure we loaded everything properly because the pathbundle broke something
+        $workspace = $this->workspaceManager->getWorkspaceByCode($workspace->getCode());
         $this->toolManager->addMissingWorkspaceTools($workspace);
 
         if ($_breadcrumbs != null) {
@@ -697,7 +703,7 @@ class WorkspaceController extends Controller
     )
     {
         $this->assertIsGranted('home', $workspace);
-        $canEdit = $this->authorization->isGranted('parameters', $workspace);
+        $canEdit = $this->authorization->isGranted(array('home', 'edit'), $workspace);
         $widgets = array();
         $homeTab = $this->homeTabManager->getHomeTabByIdAndWorkspace($homeTabId, $workspace);
         $isHomeTab = (intval($valid) === 1);
@@ -777,6 +783,32 @@ class WorkspaceController extends Controller
      */
     public function openAction(Workspace $workspace)
     {
+        $options = $workspace->getOptions();
+
+        if (!is_null($options)) {
+            $details = $options->getDetails();
+
+            if (isset($details['use_workspace_opening_resource']) &&
+                $details['use_workspace_opening_resource'] &&
+                isset($details['workspace_opening_resource']) &&
+                !empty($details['workspace_opening_resource'])) {
+
+                $resourceNode = $this->resourceManager->getById($details['workspace_opening_resource']);
+
+                if (!is_null($resourceNode)) {
+                    $this->session->set('isDesktop', false);
+                    $route = $this->router->generate(
+                        'claro_resource_open',
+                        array(
+                            'node' => $resourceNode->getId(),
+                            'resourceType' => $resourceNode->getResourceType()->getName()
+                        )
+                    );
+
+                    return new RedirectResponse($route);
+                }
+            }
+        }
         $roles = $this->utils->getRoles($this->tokenStorage->getToken());
         $tool = $this->workspaceManager->getFirstOpenableTool($workspace);
 
@@ -1274,7 +1306,7 @@ class WorkspaceController extends Controller
     public function displayWorkspaceHomeTabAction(Workspace $workspace, $tabId)
     {
         $this->assertIsGranted('home', $workspace);
-        $canEdit = $this->authorization->isGranted('parameters', $workspace);
+        $canEdit = $this->authorization->isGranted(array('home', 'edit'), $workspace);
         $roleNames = $this->utils->getRoles($this->tokenStorage->getToken());
         $workspaceHomeTabConfigs = $canEdit ?
             $this->homeTabManager->getWorkspaceHomeTabConfigsByWorkspace($workspace):
@@ -1437,10 +1469,11 @@ class WorkspaceController extends Controller
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
         $response->headers->set('Content-Disposition', 'attachment; filename=' . urlencode($fileName));
+        $response->headers->set('Content-Length', filesize($archive));
         $response->headers->set('Content-Type', $mimeType);
         $response->headers->set('Connection', 'close');
 
-        return $response;
+        return $response->send();
     }
 
     /**
@@ -1490,7 +1523,12 @@ class WorkspaceController extends Controller
             $this->workspaceManager->create($config, $this->tokenStorage->getToken()->getUser());
             $this->workspaceManager->importRichText();
         } else {
-            throw new \Exception('Invalid form');
+            return new Response(
+                $this->templating->render(
+                    "ClarolineCoreBundle:Workspace:importForm.html.twig",
+                    array('form' => $form->createView())
+                )
+            );
         }
 
         $route = $this->router->generate('claro_workspace_by_user');

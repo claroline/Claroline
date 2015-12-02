@@ -161,13 +161,15 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             SELECT u, r, g FROM Claroline\CoreBundle\Entity\User u
             JOIN u.roles r
             LEFT JOIN u.groups g
-            WHERE UPPER(u.lastName) LIKE :search
+            WHERE (
+            UPPER(u.lastName) LIKE :search
             OR UPPER(u.firstName) LIKE :search
             OR UPPER(u.username) LIKE :search
             OR UPPER(u.administrativeCode) LIKE :search
             OR UPPER(u.mail) LIKE :search
             OR CONCAT(UPPER(u.firstName), CONCAT(' ', UPPER(u.lastName))) LIKE :search
             OR CONCAT(UPPER(u.lastName), CONCAT(' ', UPPER(u.firstName))) LIKE :search
+            )
             AND u.isEnabled = true
             AND r.type = 1
             ORDER BY u.{$orderedBy} {$order}
@@ -288,8 +290,14 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $dql = '
             SELECT DISTINCT u FROM Claroline\CoreBundle\Entity\User u
             JOIN u.roles wr
+            LEFT JOIN u.groups g
+            LEFT JOIN g.roles gr
+            LEFT JOIN gr.workspace gw
             LEFT JOIN wr.workspace w
-            WHERE w IN (:workspaces)
+            WHERE (
+              w IN (:workspaces) OR
+              gw IN (:workspaces)
+            )
             AND u.isEnabled = true
             ORDER BY u.id
         ';
@@ -315,8 +323,14 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $dql = '
             SELECT DISTINCT u FROM Claroline\CoreBundle\Entity\User u
             JOIN u.roles wr
+            LEFT JOIN u.groups g
+            LEFT JOIN g.roles gr
+            LEFT JOIN gr.workspace gw
             LEFT JOIN wr.workspace w
-            WHERE w IN (:workspaces)
+            WHERE (
+              w IN (:workspaces) OR
+              gw IN (:workspaces)
+            )
             AND (
                 UPPER(u.firstName) LIKE :search
                 OR UPPER(u.lastName) LIKE :search
@@ -1211,7 +1225,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $dql = "
             SELECT u, ff
             FROM Claroline\CoreBundle\Entity\User u
-            LEFT JOIN u.fieldsFacetValue ff"
+            LEFT JOIN u.fieldsFacetValue ff
+            WHERE u.isEnabled = true"
         ;
 
         $query = $this->_em->createQuery($dql);
@@ -1230,8 +1245,9 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             LEFT JOIN g.roles gr
             LEFT JOIN gr.workspace grws
             LEFT JOIN ur.workspace uws
-            WHERE uws.id = :wsId
-            OR grws.id = :wsId
+            WHERE (uws.id = :wsId
+            OR grws.id = :wsId)
+            AND u.isEnabled = true
         ";
 
         $query = $this->_em->createQuery($dql);
@@ -1363,14 +1379,14 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                     u IN (
                         SELECT ur
                         FROM Claroline\CoreBundle\Entity\User ur
-                        JOIN ur.roles urr
+                        LEFT JOIN ur.roles urr
                         WITH urr IN (:roleRestrictions)
                     )
                     OR u IN (
                         SELECT ur2
                         FROM Claroline\CoreBundle\Entity\User ur2
-                        JOIN ur2.groups ur2g
-                        JOIN ur2g.roles ur2gr
+                        LEFT JOIN ur2.groups ur2g
+                        LEFT JOIN ur2g.roles ur2gr
                         WITH ur2gr IN (:roleRestrictions)
                     )
                 ';
@@ -1386,7 +1402,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                     u IN (
                         SELECT ug
                         FROM Claroline\CoreBundle\Entity\User ug
-                        JOIN ug.groups ugg
+                        LEFT JOIN ug.groups ugg
                         WITH ugg IN (:groupRestrictions)
                     )
                 ';
@@ -1402,14 +1418,14 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                     u IN (
                         SELECT uw
                         FROM Claroline\CoreBundle\Entity\User uw
-                        JOIN uw.roles uwr
+                        LEFT JOIN uw.roles uwr
                         WITH uwr.workspace IN (:workspaceRestrictions)
                     )
                     OR u IN (
                         SELECT uw2
                         FROM Claroline\CoreBundle\Entity\User uw2
-                        JOIN uw2.groups uw2g
-                        JOIN uw2g.roles uw2gr
+                        LEFT JOIN uw2.groups uw2g
+                        LEFT JOIN uw2g.roles uw2gr
                         WITH uw2gr.workspace IN (:workspaceRestrictions)
                     )
                 ';
@@ -1436,7 +1452,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 AND u IN (
                     SELECT ufg
                     FROM Claroline\CoreBundle\Entity\User ufg
-                    JOIN ufg.groups ufgg
+                    LEFT JOIN ufg.groups ufgg
                     WITH ufgg IN (:forcedGroups)
                 )
             ';
@@ -1448,14 +1464,14 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                     u IN (
                         SELECT ufr
                         FROM Claroline\CoreBundle\Entity\User ufr
-                        JOIN ufr.roles ufrr
+                        LEFT JOIN ufr.roles ufrr
                         WITH ufrr IN (:forcedRoles)
                     )
                     OR u IN (
                         SELECT ufr2
                         FROM Claroline\CoreBundle\Entity\User ufr2
-                        JOIN ufr2.groups ufr2g
-                        JOIN ufr2g.roles ufr2gr
+                        LEFT JOIN ufr2.groups ufr2g
+                        LEFT JOIN ufr2g.roles ufr2gr
                         WITH ufr2gr IN (:forcedRoles)
                     )
                 )
@@ -1468,14 +1484,14 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                     u IN (
                         SELECT ufw
                         FROM Claroline\CoreBundle\Entity\User ufw
-                        JOIN ufw.roles ufwr
+                        LEFT JOIN ufw.roles ufwr
                         WITH ufwr.workspace IN (:forcedWorkspaces)
                     )
                     OR u IN (
                         SELECT ufw2
                         FROM Claroline\CoreBundle\Entity\User ufw2
-                        JOIN ufw2.groups ufw2g
-                        JOIN ufw2g.roles ufw2gr
+                        LEFT JOIN ufw2.groups ufw2g
+                        LEFT JOIN ufw2g.roles ufw2gr
                         WITH ufw2gr.workspace IN (:forcedWorkspaces)
                     )
                 )

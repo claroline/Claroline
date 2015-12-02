@@ -9,6 +9,7 @@
         data-mime-type="{{ node.mime_type }}"
         data-path="{{ node.path_for_display }}"
         data-allow-select="{{ isSelectionAllowed}}"
+        data-mask="{{ node.mask }}"
         {% if isSelectionAllowed == false %}style="visibility: collapse;"{% endif %}
         />
 </div>
@@ -44,6 +45,7 @@
                             href="#"
                             class="node-menu-action"
                             data-action="{{ action }}"
+                            data-node-name="{{ node.name }}"
                             data-is-custom="{{ attributes.isCustom }}"
                             data-id="{{ node.id }}" tabindex="-1" href="#"
                             {% if attributes.isForm %}

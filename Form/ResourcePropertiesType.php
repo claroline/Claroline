@@ -14,18 +14,35 @@ namespace Claroline\CoreBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class ResourcePropertiesType extends AbstractType
 {
     private $creator;
+    private $translator;
 
-    public function __construct($creator)
+    public function __construct($creator, TranslatorInterface $translator)
     {
         $this->creator = $creator;
+        $this->translator = $translator;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $dateFormat = $this->translator->trans('date_form_format', array(), 'platform');
+        $attrParams = array(
+                'class' => 'datepicker input-small',
+                'data-date-format' => $this->translator->trans('date_form_datepicker_format', array(), 'platform'),
+                'autocomplete' => 'off'
+            );
+
+        $dateParams = array(
+            'format' => $dateFormat,
+            'widget' => 'single_text',
+            'input' => 'datetime',
+            'attr' => $attrParams
+        );
+
         $builder->add('name', 'text', array('label' => 'name'));
         $builder->add(
             'newIcon',
@@ -42,8 +59,18 @@ class ResourcePropertiesType extends AbstractType
             array(
                 'disabled' => true,
                 'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd',
+                'format' => $dateFormat,
                 'label' => 'creation_date'
+            )
+        );
+        $builder->add(
+            'modificationDate',
+            'date',
+            array(
+                'disabled' => true,
+                'widget' => 'single_text',
+                'format' => $dateFormat,
+                'label' => 'last_modification'
             )
         );
         $builder->add(
@@ -51,32 +78,19 @@ class ResourcePropertiesType extends AbstractType
             'checkbox',
             array( 'required' => true, 'label' => 'published')
         );
-        $builder->add(
-            'accessibleFrom',
-            'date',
-            array(
-                'required' => false,
-                'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd',
-                'label' => 'accessible_from'
-            )
-        );
-        $builder->add(
-            'accessibleUntil',
-            'date',
-            array(
-                'required' => false,
-                'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd',
-                'label' => 'accessible_until'
-            )
-        );
+        $accessibleFromParams = $dateParams;
+        $accessibleFromParams['label'] = 'accessible_from';
+        $builder->add('accessibleFrom', 'datepicker', $accessibleFromParams);
+        $accessibleUntilParams = $dateParams;
+        $accessibleUntilParams['label'] = 'accessible_until';
+        $builder->add('accessibleUntil', 'datepicker', $accessibleFromParams);
         $builder->add(
             'resourceType',
             'entity',
             array(
                 'class' => 'Claroline\CoreBundle\Entity\Resource\ResourceType',
                 'choice_translation_domain' => true,
+                'translation_domain' => 'resource',
                 'expanded' => false,
                 'multiple' => false,
                 'property' => 'name',

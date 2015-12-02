@@ -1,0 +1,22 @@
+{% extends "ClarolineCoreBundle:Administration\\Oauth:clientModalForm.html.twig" %}
+
+{% block header %}
+    {{ 'authentication'|trans({}, 'platform') }}
+{% endblock %}
+
+{% block form %}
+    <form role="form"
+          class="form-horizontal"
+          action="{{ path('oauth_request_authentication_submit', {'friend': friend.getId()}) }}"
+          method="post" {{ form_enctype(form) }}
+          id="oauth_request_authentication_form"
+            >
+        <div class="modal-body">
+            {{ form_widget(form) }}
+        </div>
+        <div class="modal-footer">
+            <button type="submit" id="submit-panel-creation-form" class="btn btn-primary" aria-hidden="true">{{ 'validate'|trans({}, 'platform') }}</button>
+            <div class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ 'cancel'|trans({}, 'platform') }}</div>
+        </div>
+    </form>
+{% endblock %}

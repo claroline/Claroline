@@ -56,6 +56,14 @@
         active: false,
 
         add: function (file) {
+            var manager = Claroline.ResourceManager.get('main');
+            var currentDirectoryId = manager.parameters.currentDirectoryId || manager.parameters.directoryId;
+
+            if (currentDirectoryId == 0) {
+                window.Claroline.Modal.simpleContainer(null, Translator.trans('desktop_root_directory_upload_error', {}, 'platform'));
+                return;
+            }
+            
             FU.files.push(file);
         },
 

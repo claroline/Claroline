@@ -46,7 +46,7 @@
             </a>
         </li>
         <li>
-            <a class="import" data-toggle="tooltip" data-placement="bottom" title="{{ 'import'|trans({}, 'platform') }}">
+            <a class="{% if isAddAllowed == false %}disabled{% else %}import{% endif %}" data-toggle="tooltip" data-placement="bottom" title="{{ 'import'|trans({}, 'platform') }}">
                 <i class="fa fa-sign-in"></i>
             </a>
         </li>
