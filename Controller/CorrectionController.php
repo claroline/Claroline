@@ -41,8 +41,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Innova\CollecticielBundle\Event\Log\LogDropzoneAddCommentEvent;
 
 
-
-
 class CorrectionController extends DropzoneBaseController
 {
     private function checkRightToCorrect($dropzone, $user)

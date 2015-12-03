@@ -86,7 +86,7 @@
         </div>
 
         {# Publication. Ajout de cette zone, demande JJQ. InnovaERV #}
-        {# PArtie sans form_row car c'est une extraData. InnovaERV #}
+        {# Partie sans form_row car c'est une extraData. InnovaERV #}
         <div>
             <h4>{{ 'Publication Title'|trans({}, 'innova_collecticiel') }}</h4>
             <div class="row form-group">
@@ -105,6 +105,17 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        {# Accusé de réception. Ajout de cette zone, demande JJQ. InnovaERV  #}
+        <div id="return_receipt">
+            <h4>{{ 'Return receipt'|trans({}, 'innova_collecticiel') }}</h4>
+            <div class="row form-group">
+                <div class="col-md-6">
+                    {{ form_row(form.returnReceipt, {'label_attr': {'class': 'control-label col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
+                     ) }}
+                 </div>
+             </div>
         </div>
 
         {# Submit #}
