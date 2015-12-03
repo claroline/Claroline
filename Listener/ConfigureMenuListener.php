@@ -8,6 +8,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Translation\TranslatorInterface;
 use Icap\NotificationBundle\Manager\NotificationManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 
 /**
  * @DI\Service()
@@ -18,25 +19,29 @@ class ConfigureMenuListener
     private $notificationManager;
     private $templating;
     private $tokenStorage;
+    private $ch;
 
     /**
      * @DI\InjectParams({
      *     "translator"          = @DI\Inject("translator"),
      *     "notificationManager" = @DI\Inject("icap.notification.manager"),
      *     "templating"          = @DI\Inject("templating"),
-     *     "tokenStorage"     = @DI\Inject("security.token_storage")
+     *     "tokenStorage"        = @DI\Inject("security.token_storage"),
+     *     "ch"                  = @DI\Inject("claroline.config.platform_config_handler")
      * })
      */
     public function __construct(
         TranslatorInterface $translator,
         NotificationManager $notificationManager,
         TwigEngine $templating,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        PlatformConfigurationHandler $ch
     ) {
         $this->translator = $translator;
         $this->notificationManager = $notificationManager;
         $this->templating = $templating;
         $this->tokenStorage = $tokenStorage;
+        $this->ch = $ch;
     }
 
     /**
@@ -49,7 +54,10 @@ class ConfigureMenuListener
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if ($user !== 'anon.') {
+        //this is still configurable in the core bundle and should be changed...
+        $isActive = $this->ch->getParameter('is_notification_active');
+
+        if ($user !== 'anon.' && $isActive) {
             $countUnviewedNotifications = $this->notificationManager->countUnviewedNotifications($user->getId());
 
             $end = $this->templating->render(
