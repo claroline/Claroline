@@ -44,6 +44,10 @@
                 }
             };
 
+            this.getCurrentStep = function () {
+                return this.currentStep;
+            };
+
             /**
              * Get the step number for display
              * @returns {Number}
