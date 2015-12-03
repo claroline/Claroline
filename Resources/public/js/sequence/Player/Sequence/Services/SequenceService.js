@@ -56,9 +56,12 @@
                                 deferred.resolve(response);
                             })
                             .error(function (data, status) {
-                                deferred.reject([]);
+                                /*deferred.reject([]);
                                 var url = Routing.generate('ujm_sequence_error', {message:data.error.message, code:data.error.code});
-                                $window.location = url;
+                                $window.location = url;*/
+                                console.log("endSequence");
+                                console.log(data);
+                                console.log(status);
                             });
                     return deferred.promise;
                 } /*,

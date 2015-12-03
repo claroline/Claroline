@@ -154,7 +154,7 @@
                     this.setCurrentStep(index);
                     CommonService.setCurrentQuestionPaperData(this.currentStep.items[0]);
                 } else if (action && action === 'end') {
-                    var endPromise = SequenceService.endSequence(paper)
+                    var endPromise = SequenceService.endSequence(paper);
                     endPromise.then(function (result) {
                         if (this.checkCorrectionAvailability()) {
                             // go to paper correction view
