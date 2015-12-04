@@ -99,6 +99,38 @@ class BadgeRepository extends EntityRepository
     }
 
     /**
+     * @param $name
+     * @param $locale
+     * @param $userId
+     * @param bool|true $executeQuery
+     *
+     * @return array|Query
+     */
+    public function findByNameLocaleAndUserId($name, $locale, $userId, $executeQuery = true)
+    {
+        $name  = strtoupper($name);
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT b, t
+                FROM IcapBadgeBundle:Badge b
+                JOIN b.translations t
+                WHERE UPPER(t.name) LIKE :name
+                AND t.locale = :locale
+                AND b.workspace IS NULL
+                OR b.workspace IN (SELECT w FROM ClarolineCoreBundle:Workspace\Workspace w
+                    JOIN w.roles r
+                    JOIN r.users u
+                    WHERE u.id = :userId)
+                ORDER BY t.name ASC'
+            )
+            ->setParameter('userId', $userId)
+            ->setParameter('name', "%{$name}%")
+            ->setParameter('locale', $locale);
+
+        return $executeQuery ? $query->getResult(): $query;
+    }
+
+    /**
      * @param string $name
      *
      * @return Badge
@@ -120,41 +152,24 @@ class BadgeRepository extends EntityRepository
     /**
      * @param string $search
      *
-     * @return array
-     */
-    public function findByNameFrForAjax($search)
-    {
-        return $this->findByNameForAjax($search, 'fr');
-    }
-
-    /**
-     * @param string $search
+     * @param string $data
      *
      * @return array
      */
-    public function findByNameEnForAjax($search)
-    {
-        return $this->findByNameForAjax($search, 'en');
-    }
-
-    /**
-     * @param string $search
-     *
-     * @param string $locale
-     *
-     * @return array
-     */
-    public function findByNameForAjax($search, $locale)
+    public function findByNameForAjax($search, $data)
     {
         $resultArray = array();
+        $locale = $data['locale'];
+        $userId = $data['userId'];
 
         /** @var Badge[] $badges */
-        $badges = $this->findByNameAndLocale($search, $locale);
+        $badges = $this->findByNameLocaleAndUserId($search, $locale, $userId);
 
         foreach ($badges as $badge) {
             $resultArray[] = array(
                 'id'   => $badge->getId(),
-                'text' => $badge->getName($locale)
+                'text' => $badge->getName($locale),
+                'icon' => '<img src="/'.$badge->getWebPath().'" style="max-height:20px; max-width:20px;"/>'
             );
         }
 
