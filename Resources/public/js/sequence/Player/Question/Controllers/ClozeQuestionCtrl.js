@@ -2,8 +2,10 @@
     'use strict';
 
     angular.module('Question').controller('ClozeQuestionCtrl', [
+        '$ngBootbox',
         'CommonService',
-        function (CommonService) {
+        'QuestionService',
+        function ($ngBootbox, CommonService, QuestionService) {
 
             this.question = {};
             this.formatedClozeText = '';
@@ -146,6 +148,10 @@
              */
             this.questionHasOtherMeta = function () {
                 return this.question.meta.licence || this.question.meta.created || this.question.meta.modified || this.question.meta.description;
+            };
+            
+            this.updateStudentData = function (choiceId) {
+                CommonService.setStudentData(this.question, this.currentQuestionPaperData);
             };
         }
     ]);
