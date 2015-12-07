@@ -25,9 +25,23 @@
     <th style="width:50px;" class="centered">{{ 'Condition'|trans({},'innova_collecticiel') }}</th>
     <!-- Colonne ajoutée "Voir" modifiée en "Commentaire  - Evaluation"  -->
     <th style="width:140px;" class="centered no-sort">{{ 'Comment evaluation'|trans({},'innova_collecticiel') }}</th>
-    </thead>
-    <tbody>
 
+    {# On affiche cette colonne si le créateur du collecticiel veut afficher les accusés de réception. #}
+    {# Demande JJQ. InnovaERV #}
+    {% if adminInnova %}
+        {% if dropzone.returnReceipt == 1  %}
+            <th class="centered">{{ 'Return receipt'|trans({}, 'innova_collecticiel') }}</th>
+        {% endif %}
+        {# On affiche cette colonne si le créateur du collecticiel veut afficher/gérer les évaluations. #}
+        {# Demande JJQ. InnovaERV #}
+        {% if dropzone.evaluation == 1  %}
+            <th class="centered">{{ 'Evaluation'|trans({}, 'innova_collecticiel') }}</th>
+        {% endif %}
+    {% endif %}
+
+    </thead>
+
+    <tbody>
     {# Parcours du tableau, des données et affichage du tableau. InnovaERV #}
     {% for drop in pager.currentPageResults %}
         {% for document in drop.documents %}
@@ -36,6 +50,7 @@
         {% endfor %}
     {% endfor %}
     </tbody>
+
 </table>
 
 <script src="{{ asset('bundles/innovacollecticiel/js/tooltip.js') }}"></script>

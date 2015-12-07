@@ -60,21 +60,6 @@
         </a>
     </td>
 
-    {% if adminInnova %}
-        {# On affiche cette colonne si le créateur du collecticiel veut gérer les accusés de réception. Demande JJQ. InnovaERV #}
-        {% if dropzone.returnreceipt == 1  %}
-            <td class={{ classArray }}>ce qu'il faut afficher/à terminer
-            </td>
-        {% endif %}
-
-        {# On affiche cette colonne si le créateur du collecticiel veut gérer les évaluations. Demande JJQ. InnovaERV #}
-        {% if dropzone.evaluation == 1  %}
-            <td class={{ classArray }}>ce qu'il faut afficher/à terminer
-            </td>
-        {% endif %}
-    {% endif %}
-
-
     {# #146 : changement de gestion des annulations et des suppressions, demande de JJQ #}
     {% if adminInnova %}
         {% if mode == 'complete' %}
