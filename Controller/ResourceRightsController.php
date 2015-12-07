@@ -31,8 +31,10 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
+use Claroline\CoreBundle\Library\Logger\FileLogger;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class ResourceRightsController
+class ResourceRightsController extends Controller
 {
     private $rightsManager;
     private $maskManager;
@@ -158,6 +160,9 @@ class ResourceRightsController
      */
     public function editPermsAction(ResourceNode $node)
     {
+        $rightsLog = $this->container->getParameter('kernel.root_dir') . '/logs/rights.log';
+        $logger = FileLogger::get($rightsLog);
+        $this->rightsManager->setLogger($logger);
         $collection = new ResourceCollection(array($node));
         $this->checkAccess('ADMINISTRATE', $collection);
         $datas = $this->getPermissionsFromRequest($node->getResourceType());
