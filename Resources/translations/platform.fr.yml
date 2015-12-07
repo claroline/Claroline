@@ -1217,3 +1217,4 @@ oauth_required_data: Les informations suivantes seront envoyées:
 client_list: Liste des clients
 allow_authentication: Autoriser l'authentification
 user_subscription_notification_for_admin: s'est inscrit dans l'espace d'activité %workspace%
+loading: Chargement
