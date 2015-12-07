@@ -29,7 +29,7 @@ genericSearch.config(function ($httpProvider) {
 	});
 });
 
-genericSearch.controller('genericSearchCtrl', function(
+genericSearch.controller('GenericSearchCtrl', function(
 	$scope,
 	$log,
 	$http,
@@ -67,11 +67,14 @@ genericSearch.controller('genericSearchCtrl', function(
 		$scope.selected = $select.selected;
 	}
 
+	$scope.search = function(searches) {
+		console.log('go');
+		$scope.onSearch(searches);
+	}
+
 	var getOptionValue = function(field, search) {
 		if (!field) return;
-
 		search = !search ? '': search.trim();
-		console.log(field, search);
 		
 		return translator.trans('filter_by', {}, 'platform') + ' ' + translator.trans(field, {}, 'platform').toLowerCase() + ': ' + search + ''; 
 	}
@@ -99,7 +102,12 @@ genericSearch.directive('clarolinesearch', [
 		return {
 			restrict: 'E',
 			templateUrl: AngularApp.webDir + 'bundles/clarolinecore/js/angular/search/generic/views/search.html',
-			replace: false
+			replace: false,
+			controller: 'GenericSearchCtrl',
+		    bindToController: {
+		      onSearch: '&'
+		    },
+	    	controllerAs: 'cs',
 		}
 	}
 ]);
@@ -107,13 +115,28 @@ genericSearch.directive('clarolinesearch', [
 genericSearch.provider("clarolineSearch", function() {
 	var baseRoute = searchRoute = fieldRoute = '';
 	var enablePager = true;
+	var baseParam = {};
+	var searchParam = {};
+	var that = this;
 
-	this.setBaseRoute = function(route) {
+	var mergeObject = function(obj1, obj2) {
+
+		for (var attrname in obj2) { 
+			obj1[attrname] = obj2[attrname]; 
+		}
+
+		return obj1;
+	}
+
+	this.setBaseRoute = function(route, baseParam) {
 		baseRoute = route;
+		that.baseParam = baseParam || {};
+		console.log(baseParam);
 	};
 	
-	this.setSearchRoute = function(route) {
+	this.setSearchRoute = function(route, searchParam) {
 		searchRoute = route;
+		that.searchParam = searchParam || {};
 	};
 
 	this.setFieldRoute = function(route) {
@@ -145,11 +168,13 @@ genericSearch.provider("clarolineSearch", function() {
 						qs += searches[i].field +'[]=' + searches[i].value + '&';
 					} 
 
-					var route = Routing.generate(searchRoute, params);
-					route += qs;
+					params = mergeObject(params, that.searchParam);
+					var route = Routing.generate(searchRoute, params) + qs;
 
 					return $http.get(route);
 				} else {
+					params = mergeObject(params, that.baseParam);
+
 					return $http.get(Routing.generate(baseRoute, params));
 				}
 			}
