@@ -44,10 +44,10 @@
                             .error(function (data, status) {
                                 console.log('PapersService, getOne method error');
                                 deferred.reject([]);
-                                console.log(exoId + ' ' + paperId);
-                                console.log(data);
-                                //var url = Routing.generate('ujm_sequence_error', {message: data.error.message, code: data.error.code});
-                                //$window.location = url;
+                                //console.log(exoId + ' ' + paperId);
+                                //console.log(data);
+                                var url = Routing.generate('ujm_sequence_error', {message: data.error.message, code: data.error.code});
+                                $window.location = url;
                             });
 
                     return deferred.promise;

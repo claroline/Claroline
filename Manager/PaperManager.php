@@ -82,6 +82,7 @@ class PaperManager
 
         $paperNum = $lastPaper ? $lastPaper->getNumPaper() + 1 : 1;
         $questions = $this->exerciseManager->pickQuestions($exercise);
+        
         $order = '';
 
         foreach ($questions as $question) {
@@ -121,7 +122,7 @@ class PaperManager
             $paper = $papers[0];
             $questions = $this->exportPaperQuestions($paper);
         }
-
+        
         return [
             'id' => $paper->getId(),
             'number' => $paper->getNumPaper(),

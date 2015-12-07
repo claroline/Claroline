@@ -148,10 +148,16 @@ class QcmHandler implements QuestionHandlerInterface
     {
         $repo = $this->om->getRepository('UJMExoBundle:InteractionQCM');
         $qcm = $repo->findOneBy(['question' => $question]);
+        $exportData->random = $qcm->getShuffle();
+        // if needed shuffle choices
+        if($exportData->random){
+            $qcm->shuffleChoices();
+        }
+        
         $choices = $qcm->getChoices()->toArray();
 
         $exportData->multiple = $qcm->getTypeQCM()->getCode() === 1;
-        $exportData->random = $qcm->getShuffle();
+    
         $exportData->choices = array_map(function ($choice) {
             $choiceData = new \stdClass();
             $choiceData->id = (string) $choice->getId();

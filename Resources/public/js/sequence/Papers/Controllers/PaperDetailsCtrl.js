@@ -8,7 +8,7 @@
         function (paperPromise, paperExercise, user) {           
             this.paper = paperPromise.paper;
             this.questions = paperPromise.questions;
-            this.sequence = paperExercise;            
+            this.exercise = paperExercise;            
             this.user = user;
             
             

@@ -4,16 +4,13 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="btn-group" role="group">
-                    <a class="btn btn-default" data-ng-href="{{correctionCtrl.generateUrl('exercise-home', correctionCtrl.sequence.id)}}">{{ 'link_exercice_home'|trans:{}:'ujm_sequence' }}</a>
+                    <a class="btn btn-default" data-ng-href="{{correctionCtrl.generateUrl('exercise-home', correctionCtrl.exercise.id)}}">{{ 'link_exercice_home'|trans:{}:'ujm_sequence' }}</a>
                     <!-- paper-list -->
-                    <a class="btn btn-default" data-ng-href="{{correctionCtrl.generateUrl('paper-list', correctionCtrl.sequence.id)}}#/{{correctionCtrl.sequence.id}}">{{ 'paper_list'|trans:{}:'ujm_sequence' }}</a>
+                    <a class="btn btn-default" data-ng-href="{{correctionCtrl.generateUrl('paper-list', correctionCtrl.exercise.id)}}#/{{correctionCtrl.exercise.id}}">{{ 'paper_list'|trans:{}:'ujm_sequence' }}</a>
                 </div>                
-                <a data-ng-if="correctionCtrl.displayRetryExerciseLink && correctionCtrl.from ==='from-list'" class="btn btn-default pull-right" data-ng-href="{{correctionCtrl.generateUrl('exercise-play', correctionCtrl.sequence.id)}}">
+                <a data-ng-if="correctionCtrl.displayRetryExerciseLink" class="btn btn-default pull-right" data-ng-href="{{correctionCtrl.generateUrl('exercise-play', correctionCtrl.exercise.id)}}#/{{correctionCtrl.exercise.id}}">
                     <i class="fa fa-check-square-o"> {{ 'link_exercise_retry'|trans:{}:'ujm_sequence' }}</i>
                 </a>
-                <button data-ng-if="correctionCtrl.displayRetryExerciseLink && correctionCtrl.from ==='from-player'" class="btn btn-default pull-right" data-ng-click="correctionCtrl.reload()">
-                    <i class="fa fa-check-square-o"> {{ 'link_exercise_retry'|trans:{}:'ujm_sequence' }}</i>
-                </button>
             </div>
         </div>
         <hr/>

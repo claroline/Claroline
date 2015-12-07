@@ -6,13 +6,12 @@
     'use strict';
 
     angular.module('Correction').controller('CorrectionCtrl', [
-        '$window',
         'CommonService',
         'CorrectionService',
-        function ($window, CommonService, CorrectionService) {
+        function (CommonService, CorrectionService) {
 
             this.paper = {};
-            this.sequence = {};
+            this.exercise = {};
             this.questions = {};
             this.user = {};
 
@@ -22,31 +21,14 @@
             this.globalNote = 0.0;
             this.displayRetryExerciseLink = false;
 
-            this.init = function (paper, questions, sequence, user, from) {
-               
-                this.sequence = sequence;
+            this.init = function (paper, questions, exercise, user, from) {
+                this.exercise = exercise;
                 this.paper = paper;
                 this.user = user;
-                this.from = from;
-                
-                if (from && from === 'from-list') {                
-                    this.questions = questions;
-                    this.globalNote = CommonService.getPaperScore(this.paper, this.questions);                    
-                    this.showHideRetryLink();
-                }
-                else if(from && from === 'from-player'){
-                    var promise = CorrectionService.getOne(this.sequence.id, this.paper.id);
-                    promise.then(function(result){
-                        this.paper = result.paper;
-                        this.questions = result.questions;
-                        this.globalNote = CommonService.getPaperScore(this.paper, this.questions);                        
-                        this.showHideRetryLink();
-                    }.bind(this));
-                }
-                else{
-                    var url = Routing.generate('ujm_sequence_error', {message: 'invalid context', code: '400'});
-                    $window.location = url;
-                }
+
+                this.questions = questions;
+                this.globalNote = CommonService.getPaperScore(this.paper, this.questions);
+                this.showHideRetryLink();
             };
 
             this.toggleDetails = function (id) {
@@ -165,23 +147,15 @@
              * @returns {Boolean}
              */
             this.showHideRetryLink = function () {
-              
-                if (this.user.admin || this.sequence.meta.maxAttempts === 0) {
+
+                if (this.user.admin || this.exercise.meta.maxAttempts === 0) {
                     this.displayRetryExerciseLink = true;
                 } else {
-                    var promise = CommonService.countFinishedPaper(this.sequence.id);
+                    var promise = CommonService.countFinishedPaper(this.exercise.id);
                     promise.then(function (result) {
-                        this.displayRetryExerciseLink = result < this.sequence.meta.maxAttempts;
+                        this.displayRetryExerciseLink = result < this.exercise.meta.maxAttempts;
                     }.bind(this));
                 }
-            };
-            /**
-             * When used in player context replay link just has no effect
-             * we need to reload the app
-             * @returns {undefined}
-             */
-            this.reload = function (){
-                $window.location.reload();
             };
 
             this.generateUrl = function (witch, _id) {

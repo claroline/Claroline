@@ -1,5 +1,5 @@
 /**
- * SequencePlayerApp
+ * ExercisePlayerApp
  */
 
 (function () {
@@ -15,12 +15,9 @@
         'Common',
         'PlayerSharedServices',
         'Question'
-        //'Step',
-        //'Correction'
     ];
     // exercise player module
     var ExercisePlayerApp = angular.module('ExercisePlayerApp', dependencies);
-    
     
    
     
@@ -56,27 +53,19 @@
     };
     
     
+    
+    
     ExercisePlayerApp.config([
         '$routeProvider',
         'cfpLoadingBarProvider',
         function ExercisePlayerAppConfig($routeProvider, cfpLoadingBarProvider) {
             $routeProvider
                     .when('/:eid/:sid?', {
-                        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Player/Exercise/Partials/exercise.step.show.html',
+                        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Player/Exercise/Partials/exercise.step.html',
                         controller: 'ExerciseCtrl',
                         controllerAs: 'exerciseCtrl',
                         resolve: resolvePlayerData
-                    })/*
-                    .when('/:eid/:sid/correction', {
-                        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Player/Exercise/Partials/exercise.partial.correction.html',
-                        controller: 'ExercisePartialCorrectionCtrl',
-                        controllerAs: 'exercisePartialCorrectionCtrl'
                     })
-                    .when('/:eid/correction', {
-                        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Player/Exercise/Partials/exercise.full.correction.html',
-                        controller: 'ExerciseFullCorrectionCtrl',
-                        controllerAs: 'exerciseFullCorrectionCtrl'
-                    })*/
                     .otherwise({
                         redirectTo: '/:eid'
                     });

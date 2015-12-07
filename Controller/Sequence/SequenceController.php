@@ -32,6 +32,8 @@ class SequenceController extends Controller
             throw new AccessDeniedHttpException();
         }
         
+        // also check if max attempts...
+        
         return $this->render('UJMExoBundle:Sequence:play.html.twig', array(
                     '_resource' => $exercise
             )
@@ -50,6 +52,7 @@ class SequenceController extends Controller
     {
         $message = $request->get('message');
         $code = $request->get('code');
+        die($message);
         switch ($code){
             case '403':
                 throw new AccessDeniedHttpException($message);
@@ -63,11 +66,7 @@ class SequenceController extends Controller
     private function isExerciseAdmin(Exercise $exercise)
     {
         $collection = new ResourceCollection(array($exercise->getResourceNode())); 
-        if ( $this->container->get('security.authorization_checker')->isGranted('ADMINISTRATE', $collection)) {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->container->get('security.authorization_checker')->isGranted('ADMINISTRATE', $collection);        
     }
     
     /**

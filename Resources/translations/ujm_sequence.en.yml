@@ -3,6 +3,7 @@ btn_end_sequence_label: End sequence
 btn_interrupt_sequence_label: Interrupt
 btn_prev_step_label: Go to previous step
 btn_next_step_label: Go to next step
+btn_feedback_display: View feedback
 
 # d
 dropdown_step_navigate_choice_label: Step N°%1% / %2%

@@ -4,54 +4,28 @@
     angular.module('ExercisePlayerApp').controller('ExerciseCtrl', [
         '$window',
         '$route',
+        '$location',
         'ExerciseService',
         'CommonService',
         'PlayerDataSharing',
         'data',
         'user',
-        function ($window, $route, ExerciseService, CommonService, PlayerDataSharing, data, user) {
+        function ($window, $route, $location, ExerciseService, CommonService, PlayerDataSharing, data, user) {
 
-            console.log('data');
-            console.log(data);
+            this.exercise = PlayerDataSharing.setExercise(data.exercise); // data.exercise
             
-            this.exercise = data.exercise;
+            console.log(data);
             this.paper = PlayerDataSharing.setPaper(data.paper);
             this.user = PlayerDataSharing.setUser(user);
-            
+
             this.isFinished = false;
             this.isLastStep = false;
             this.isFirstStep = true;
-            
-            this.currentStepIndex = $route.current.params.sid ? $route.current.params.sid : 0;
-           
-            
-            
-            console.log('ok ?');
-            console.log($route.current.params ? 'params OK' : 'params KO');
-            console.log($route.current.params.eid ?  'eid :: ' + $route.current.params.eid : 'no eid');
-            console.log($route.current.params.sid ?  'step index :: ' + $route.current.params.sid : 'no sid');
-            
-            
-            
-            this.init = function () {
+            this.feedbackIsShown = false;
 
-                // shuffle each question choices order if needed
-                for (var i = 0; i < this.exercise.steps.length; i++) {                   
-                    // shuffle each step choices order if needed
-                    for (var j = 0; j < this.exercise.steps[i].items.length; j++) {
-                        // current item = a question
-                        if (this.exercise.steps[i].items[j].random && this.exercise.steps[i].items[j].type === 'application/x.choice+json') {
-                            this.exercise.steps[i].items[j].choices = ExerciseService.shuffleArray(this.exercise.steps[i].items[j].choices);
-                        }
-                    }
-                }
-                // set the exercise for sharing after shuffle
-                this.exercise = PlayerDataSharing.setExercise(this.exercise);
-            };
-            
-            this.init();
-            
-             /**
+            this.currentStepIndex = $route.current.params && $route.current.params.sid ? parseInt($route.current.params.sid) : 0;
+
+            /**
              * Check index data validity and set current step
              * @param {Number} index
              */
@@ -62,21 +36,22 @@
                 if (index < this.exercise.steps.length && index >= 0) {
                     this.currentStep = this.exercise.steps[index];
                 } else {
-                    var url = Routing.generate('ujm_sequence_error', {message:'index out of bounds', code:'400'});
+                    var url = Routing.generate('ujm_sequence_error', {message: 'index out of bounds', code: '400'});
                     $window.location = url;
+                    console.log(index);
                 }
             };
-            
-            // dunow if useful
-            this.setCurrentStep(this.currentStepIndex);
-            
 
-            
-            this.getCurrentStepNumber = function(){
-                var index = this.currentStepIndex;
-                index ++;
-                return index;
-            };         
+            // set current step
+            this.setCurrentStep(this.currentStepIndex);
+
+            /**
+             * Get the step number for display
+             * @returns {Number}
+             */
+            this.getCurrentStepNumber = function () {
+                return this.currentStepIndex + 1;
+            };
 
             /**
              * When using the drop down to jump to a specific step
@@ -100,27 +75,24 @@
                 $('.tooltip').each(function () {
                     $(this).hide();
                 });
-                // get current step index
-                
+
                 // get next step index
                 this.currentStepIndex = this.getNextStepIndex(this.currentStepIndex, action, index);
-                console.log('next :: ' + this.currentStepIndex);
-                
-                
+
                 // data set by question directive
-                // var studentData = CommonService.getStudentData();
+                var studentData = PlayerDataSharing.getStudentData();
                 // If anwsers exist we need to save them
-                /*if (studentData.answers && studentData.answers.length > 0) {
+                if (studentData.answers && studentData.answers.length > 0) {
                     // save anwsers
-                    var submitPromise = SequenceService.submitAnswer(this.paper.id, studentData);
+                    var submitPromise = ExerciseService.submitAnswer(this.paper.id, studentData);
                     submitPromise.then(function (result) {
                         // then navigate to desired step / end / terminate exercise
-                        this.handleStepNavigation(action, newIndex, studentData.paper);
+                        this.handleStepNavigation(action, studentData.paper);
                     }.bind(this));
-                } else {     
+                } else {
                     // navigate to desired step / end / terminate exercise
-                    this.handleStepNavigation(action, newIndex, studentData.paper);
-                }*/
+                    this.handleStepNavigation(action, studentData.paper);
+                }
             };
 
             /**
@@ -143,27 +115,22 @@
             /**
              * Navigate to desired step or end exercise and redirect to appropriate view 
              * @param {string} action
-             * @param {number} index
              * @param {object} paper
              */
-            this.handleStepNavigation = function (action, index, paper) {
+            this.handleStepNavigation = function (action, paper) {
                 if (action && (action === 'forward' || action === 'backward' || action === 'goto')) {
-                    this.setCurrentStep(index);
-                    // CommonService.setCurrentQuestionPaperData(this.currentStep.items[0]);
+                    $location.path('/' + this.exercise.id + '/' + this.currentStepIndex);
                 } else if (action && action === 'end') {
                     var endPromise = ExerciseService.endSequence(paper)
                     endPromise.then(function (result) {
-                        if (this.checkCorrectionAvailability()) {
-                            // display correction directive
-                            this.isFinished = true;
-                            
+                        if (this.checkCorrectionAvailability()) {                      
                             // go to paper correction view
-                            //var url = CommonService.generateUrl('paper-list', this.sequence.id) + '#/' + this.sequence.id + '/' + paper.id;
-                            //$window.location = url;
+                            var url = CommonService.generateUrl('paper-list', this.exercise.id) + '#/' + this.exercise.id + '/' + paper.id;
+                            $window.location = url;
                         }
                         else {
-                           var url = CommonService.generateUrl('exercise-home', this.exercise.id);
-                           $window.location = url;
+                            var url = CommonService.generateUrl('exercise-home', this.exercise.id);
+                            $window.location = url;
                         }
                     }.bind(this));
                 } else if (action && action === 'interrupt') {
@@ -171,12 +138,12 @@
                     var url = CommonService.generateUrl('exercise-home', this.exercise.id);
                     $window.location = url;
                 } else {
-                    var url = Routing.generate('ujm_sequence_error', {message:'action not allowed', code:'400'});
+                    var url = Routing.generate('ujm_sequence_error', {message: 'action not allowed', code: '400'});
                     $window.location = url;
                 }
             };
-            
-            
+
+
             /**
              * Check if correction is available for an exercise
              * @returns {Boolean}
@@ -192,7 +159,7 @@
                         return this.paper.number === this.exercise.meta.maxAttempts;
                         break;
                     case "after-date":
-                        var now = new Date();                        
+                        var now = new Date();
                         var searched = new RegExp('-', 'g');
                         var correctionDate = new Date(Date.parse(this.exercise.meta.correctionDate.replace(searched, '/')));
                         return now >= correctionDate;
@@ -204,6 +171,15 @@
                         return false;
                 }
 
+            };
+
+            /**
+             * Checks if feedback fields can be visible at some times
+             * @returns {Boolean}
+             */
+            this.checkIfFeedbackIsAvailable = function () {
+                //return this.exercise.meta.exerciseType === 'formatif';
+                return true;
             };
         }
     ]);

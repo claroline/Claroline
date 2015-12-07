@@ -9,8 +9,8 @@
         '$filter',
         '$q',
         '$window',
-        'CommonService',
-        function QuestionService($http, $filter, $q, $window, CommonService) {
+        'PlayerDataSharing',
+        function QuestionService($http, $filter, $q, $window, PlayerDataSharing) {
 
             return {
                 /**
@@ -19,7 +19,7 @@
                  */
                 getHint: function (hid) {
                     var deferred = $q.defer();
-                    var paper = CommonService.getPaper();
+                    var paper = PlayerDataSharing.getPaper();
                     $http
                             .get(
                                     Routing.generate('exercice_hint', {paperId: paper.id, hintId: hid})
@@ -28,8 +28,10 @@
                                 deferred.resolve(response);
                             })
                             .error(function (data, status) {
-                                deferred.reject([]);                               
-                                var url = Routing.generate('ujm_sequence_error', {message:data.error.message, code:data.error.code});
+                                deferred.reject([]);
+                                var msg = data && data.error && data.error.message ? data.error.message : 'unknown';
+                                var code = data && data.error && data.error.code ? data.error.code : 400; 
+                                var url = Routing.generate('ujm_sequence_error', {message:msg, code:code});
                                 $window.location = url;
                             });
 
@@ -47,6 +49,28 @@
                             return collection[i].penalty;
                         }
                     }
+                },
+                /**
+                 * Used for displaying in-context question feedback and solutions
+                 * @param {type} id question id
+                 * @returns {$q@call;defer.promise}
+                 */
+                getQuestionSolutions:function(id){
+                    var deferred = $q.defer();
+                    $http
+                            .get(
+                                Routing.generate('get_question_solutions', {id: id})
+                            )
+                            .success(function (response) {
+                                deferred.resolve(response);
+                            })
+                            .error(function (data, status) {
+                                deferred.reject([]);
+                                var url = Routing.generate('ujm_sequence_error', {message:data.error.message, code:data.error.code});
+                                $window.location = url;
+                            });
+
+                    return deferred.promise;
                 }
 
             };

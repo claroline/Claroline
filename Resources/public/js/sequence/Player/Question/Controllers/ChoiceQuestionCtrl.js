@@ -6,20 +6,29 @@
         '$window',
         'CommonService',
         'QuestionService',
-        function ($ngBootbox, $window, CommonService, QuestionService) {
+        'PlayerDataSharing',
+        'ExerciseService',
+        function ($ngBootbox, $window, CommonService, QuestionService, PlayerDataSharing, ExerciseService) {
             this.question = {};
             // keep choice(s)
             this.multipleChoice = {};
             this.uniqueChoice = [];
             this.currentQuestionPaperData = {};
-            this.usedHints = [];// contains hints texts
+            this.usedHints = [];
 
-            this.init = function (question) {
+            // instant feedback data
+            this.canSeeFeedback = false;
+            this.feedbackIsVisible = false;
+            this.solutions = {};
+            this.questionFeedback = '';
+
+            this.init = function (question, canSeeFeedback) {
                 // those data are updated by view and sent to common service as soon as they change
-                this.currentQuestionPaperData = CommonService.setCurrentQuestionPaperData(question);
+                this.currentQuestionPaperData = PlayerDataSharing.setCurrentQuestionPaperData(question);
                 this.question = question;
+                this.canSeeFeedback = canSeeFeedback;
                 // init student data question object
-                CommonService.setStudentData(question);
+                PlayerDataSharing.setStudentData(question);
 
                 if (this.currentQuestionPaperData.hints && this.currentQuestionPaperData.hints.length > 0) {
                     // init used hints display
@@ -32,6 +41,52 @@
                     // init previously given answer
                     this.checkChoices(this.question.multiple);
                 }
+            };
+
+            /**
+             * 
+             * @param {type} choice
+             * @returns {Number} 
+             *  0 = nothing, (unexpected answer not checked by student) 
+             *  1 = valid, (expected answer checked by student) 
+             *  2 = false (unexpected answer checked by student) 
+             */
+            this.choiceIsValid = function (choice) {
+                var isValid = 0;
+                var sdata = PlayerDataSharing.getStudentData();
+                // if ther is any answer in student data
+                if (sdata.answers.length > 0) {
+                    for (var i = 0; i < this.solutions.length; i++) {
+                        // search for valid solutions (score > 0)
+                        if (this.solutions[i].id === choice.id && this.solutions[i].score > 0) {
+                            // search for expected answer checked by student
+                            for (var j = 0; j < sdata.answers.length; j++) {
+                                if (sdata.answers[j] === choice.id) {
+                                    isValid = 1;
+                                }
+                            }
+                        } else if(this.solutions[i].id === choice.id && this.solutions[i].score <= 0){
+                            // search for unexpected answer checked by student
+                            for (var j = 0; j < sdata.answers.length; j++) {
+                                if (sdata.answers[j] === choice.id) {
+                                    isValid = 2;
+                                }
+                            }
+                        }
+                    }
+                }
+                return isValid;
+            };
+
+            this.getChoiceFeedback = function (choice) {
+
+                for (var i = 0; i < this.solutions.length; i++) {
+                    if (this.solutions[i].id === choice.id) {
+                        return this.solutions[i].feedback;
+                    }
+                }
+                ;
+
             };
 
             /**
@@ -62,7 +117,7 @@
                             this.getHintData(id);
                             this.currentQuestionPaperData.hints.push(id);
                             this.updateStudentData();
-                            // hide button
+                            // hide hint button
                             angular.element('#hint-' + id).hide();
                         }.bind(this));
             };
@@ -126,7 +181,7 @@
              * @returns {boolean}
              */
             this.questionHasOtherMeta = function () {
-                return CommonService.objectHasOtherMeta(this.question);
+                return ExerciseService.objectHasOtherMeta(this.question);
             };
 
             /**
@@ -149,7 +204,7 @@
                         this.currentQuestionPaperData.answer.push(choiceId);
                     }
                     else {
-                        //usnset from this.currentQuestionPaperData.answer
+                        // usnset from this.currentQuestionPaperData.answer
                         for (var i = 0; i < this.currentQuestionPaperData.answer.length; i++) {
                             if (this.currentQuestionPaperData.answer[i] === choiceId) {
                                 this.currentQuestionPaperData.answer.splice(i, 1);
@@ -158,11 +213,46 @@
                     }
                 }
                 else {
-                    if (this.uniqueChoice.length > 0) { 
+                    if (this.uniqueChoice.length > 0) {
                         this.currentQuestionPaperData.answer[0] = this.uniqueChoice;
                     }
                 }
-                CommonService.setStudentData(this.question, this.currentQuestionPaperData);
+                PlayerDataSharing.setStudentData(this.question, this.currentQuestionPaperData);
+            };
+
+            this.showFeedback = function () {
+                // get question answers and feedback ONLY IF NEEDED
+                var promise = QuestionService.getQuestionSolutions(this.question.id);
+                promise.then(function (result) {
+                    //console.log(elem);
+                    angular.element('#btn-show-feedback-' + this.question.id).prop('disabled', 'disabled');
+                    //elem.disabled = true;
+                    this.feedbackIsVisible = true;
+                    this.solutions = result.solutions;
+                    this.questionFeedback = result.feedback;
+                }.bind(this));
+            };
+
+            this.toggleDetails = function (id) {
+                // $('#question-body-' + id).toggle();
+                // custom toggle function to avoid the use of jquery
+                if (angular.element('#question-body-' + id).attr('style') === undefined) {
+                    angular.element('#question-body-' + id).attr('style', 'display: none;');
+                } else {
+                    // hide / show panel body
+                    if (angular.element('#question-body-' + id).attr('style') === 'display: none;') {
+                        angular.element('#question-body-' + id).attr('style', 'display: block;');
+                    } else if (angular.element('#question-body-' + id).attr('style') === 'display: block;') {
+                        angular.element('#question-body-' + id).attr('style', 'display: none;');
+                    }
+                }
+
+                if (angular.element('#question-toggle-' + id).hasClass('fa-chevron-down')) {
+                    angular.element('#question-toggle-' + id).removeClass('fa-chevron-down').addClass('fa-chevron-right');
+                }
+                else if (angular.element('#question-toggle-' + id).hasClass('fa-chevron-right')) {
+                    angular.element('#question-toggle-' + id).removeClass('fa-chevron-right').addClass('fa-chevron-down');
+                }
             };
         }
     ]);

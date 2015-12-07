@@ -21,7 +21,6 @@
                         deferred.resolve(response);
                     }).error(function(data, status){
                         deferred.reject([]);
-                        console.log(data);
                         var url = Routing.generate('ujm_sequence_error', {message:data.error.message, code:data.error.code});
                         $window.location = url;
                     });
@@ -38,7 +37,6 @@
                             })
                             .error(function (data, status) {
                                 deferred.reject([]);
-                        console.log(data);
                                 var url = Routing.generate('ujm_sequence_error', {message: data.error.message, code: data.error.code});
                                 $window.location = url;
                             });

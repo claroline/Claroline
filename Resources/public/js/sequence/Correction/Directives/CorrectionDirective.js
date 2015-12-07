@@ -13,12 +13,11 @@
                 scope: {
                     paper: '=',
                     questions: '=',
-                    sequence: '=',
-                    user: '=',
-                    from: '@'
+                    exercise: '=',
+                    user: '='
                 },
                 link: function (scope, element, attr, correctionCtrl) {
-                    correctionCtrl.init(scope.paper, scope.questions, scope.sequence, scope.user, scope.from);
+                    correctionCtrl.init(scope.paper, scope.questions, scope.exercise, scope.user);
                 }
             };
         }
