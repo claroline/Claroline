@@ -67,6 +67,11 @@ genericSearch.controller('GenericSearchCtrl', function(
 		$scope.selected = $select.selected;
 	}
 
+	$scope.search = function(searches) {
+		console.log('go');
+		$scope.onSearch(searches);
+	}
+
 	var getOptionValue = function(field, search) {
 		if (!field) return;
 		search = !search ? '': search.trim();
@@ -98,7 +103,11 @@ genericSearch.directive('clarolinesearch', [
 			restrict: 'E',
 			templateUrl: AngularApp.webDir + 'bundles/clarolinecore/js/angular/search/generic/views/search.html',
 			replace: false,
-			controller: 'GenericSearchCtrl'
+			controller: 'GenericSearchCtrl',
+		    bindToController: {
+		      onSearch: '&'
+		    },
+	    	controllerAs: 'cs',
 		}
 	}
 ]);
