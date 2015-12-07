@@ -144,6 +144,11 @@ class CourseSession
      * )
      */
     protected $sessionGroups;
+   
+    /** 
+     * @Groups({"bulletin"})
+     */
+    protected $extra;
 
     public function __construct()
     {
@@ -356,5 +361,15 @@ class CourseSession
     public function __toString()
     {
         return $this->getName();
+    }
+    
+    public function setExtra(array $extra)
+    {
+        $this->extra = $extra;
+    }
+    
+    public function getExtra()
+    {
+        return $this->extra;
     }
 }
