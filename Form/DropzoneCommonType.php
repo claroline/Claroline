@@ -75,6 +75,14 @@ class DropzoneCommonType extends AbstractType
 //                     'attr' => array('checked' => 'checked'),
                      'required' => false)
                       )
+
+            // Evaluation. Ajout de cette zone, demande JJQ. InnovaERV
+            ->add('evaluation', 'checkbox',
+                 array(
+                     'required' => false)
+                      )
+
+
             ;
     }
 

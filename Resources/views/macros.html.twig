@@ -32,10 +32,17 @@
                                 <th class="centered" style="width:140px;">{{ 'Commented document'|trans({}, 'innova_collecticiel') }}</th>
                                 {#  {% endif %} #}
                                 <th class="centered" style="width:120px;">{{ 'Comment'|trans({}, 'innova_collecticiel') }}</th>
-                                {# On affiche cette colonne si le créateur du collecticiel veut gérer les accusés de réception. #}
+                                {# On affiche cette colonne si le créateur du collecticiel veut afficher les accusés de réception. #}
                                 {# Demande JJQ. InnovaERV #}
-                                {% if dropzone.returnReceipt == 1  %}
-                                    <th class="centered">{{ 'Return receipt'|trans({}, 'innova_collecticiel') }}</th>
+                                {% if adminInnova %}
+                                    {% if dropzone.returnReceipt == 1  %}
+                                        <th class="centered">{{ 'Return receipt'|trans({}, 'innova_collecticiel') }}</th>
+                                    {% endif %}
+                                    {# On affiche cette colonne si le créateur du collecticiel veut afficher/gérer les évaluations. #}
+                                    {# Demande JJQ. InnovaERV #}
+                                    {% if dropzone.evaluation == 1  %}
+                                        <th class="centered">{{ 'Evaluation'|trans({}, 'innova_collecticiel') }}</th>
+                                    {% endif %}
                                 {% endif %}
                                 {% if adminInnova %}
                                     <th class="no-sort" style="width: 120px;"></th>

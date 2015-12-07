@@ -118,6 +118,17 @@
              </div>
         </div>
 
+        {# Evaluation. Ajout de cette zone, demande JJQ. InnovaERV  #}
+        <div id="evaluation">
+            <h4>{{ 'Evaluation'|trans({}, 'innova_collecticiel') }}</h4>
+            <div class="row form-group">
+                <div class="col-md-6">
+                    {{ form_row(form.evaluation, {'label_attr': {'class': 'control-label col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
+                     ) }}
+                 </div>
+             </div>
+        </div>
+
         {# Submit #}
         <div class="btn-group pull-right">
             <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}) }}"
