@@ -35,7 +35,6 @@
                 var promise = null;
                 if ($route.current.params && $route.current.params.eid && $route.current.params.pid) {
                     promise = CorrectionService.getOne($route.current.params.eid, $route.current.params.pid);
-
                 }
                 return promise;
             }
@@ -48,7 +47,6 @@
                 var promise = null;
                 if ($route.current.params && $route.current.params.eid) {
                     promise = PapersService.getSequence($route.current.params.eid);
-
                 }
                 return promise;
             }

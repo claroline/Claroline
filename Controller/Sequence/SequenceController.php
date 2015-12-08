@@ -53,9 +53,7 @@ class SequenceController extends Controller
                     'currentStepIndex' => 0
             )
         );
-    }
-
-    
+    }   
     
     
     /**
@@ -83,22 +81,4 @@ class SequenceController extends Controller
         $collection = new ResourceCollection(array($exercise->getResourceNode())); 
         return $this->container->get('security.authorization_checker')->isGranted('ADMINISTRATE', $collection);        
     }
-    
-    /**
-     *  @Route("/exercise/{id}/user", name="sequence_get_connected_user", options={"expose"=true})
-     */
-    /*public function getCurrentUser(Exercise $exercise){        
-         // get user
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
-        
-         
-        $u = array(
-            'id' => $user->getId(),
-            'name' => $user->getFirstName() . ' ' . $user->getLastName(),
-            'admin' => $this->isExerciseAdmin($exercise)
-        );       
-        
-        return new JsonResponse($u);
-        
-    }*/
 }
