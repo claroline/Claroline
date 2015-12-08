@@ -1,29 +1,33 @@
 (function () {
     'use strict';
 
-    angular.module('ExercisePlayerApp').controller('ExerciseCtrl', [
+    angular.module('ExercisePlayerApp').controller('ExercisePlayerCtrl', [
         '$window',
         '$route',
         '$location',
         'ExerciseService',
         'CommonService',
         'PlayerDataSharing',
-        'data',
-        'user',
-        function ($window, $route, $location, ExerciseService, CommonService, PlayerDataSharing, data, user) {
+        function ($window, $route, $location, ExerciseService, CommonService, PlayerDataSharing) {
 
-            this.exercise = PlayerDataSharing.setExercise(data.exercise); // data.exercise
-            
-            console.log(data);
-            this.paper = PlayerDataSharing.setPaper(data.paper);
-            this.user = PlayerDataSharing.setUser(user);
+            this.exercise = {};
+            this.paper = {};
+            this.user = {};
 
             this.isFinished = false;
             this.isLastStep = false;
             this.isFirstStep = true;
             this.feedbackIsShown = false;
-
-            this.currentStepIndex = $route.current.params && $route.current.params.sid ? parseInt($route.current.params.sid) : 0;
+            this.currentStepIndex = 0;
+            
+            // init directive with appropriate data
+            this.init = function (paper, exercise, user, currentStepIndex){
+                this.exercise = PlayerDataSharing.setExercise(exercise);
+                this.paper = PlayerDataSharing.setPaper(paper);
+                this.user = PlayerDataSharing.setUser(user);
+                this.currentStepIndex = currentStepIndex;
+                this.setCurrentStep(this.currentStepIndex);
+            };
 
             /**
              * Check index data validity and set current step
@@ -38,12 +42,8 @@
                 } else {
                     var url = Routing.generate('ujm_sequence_error', {message: 'index out of bounds', code: '400'});
                     $window.location = url;
-                    console.log(index);
                 }
             };
-
-            // set current step
-            this.setCurrentStep(this.currentStepIndex);
 
             /**
              * Get the step number for display
@@ -119,7 +119,7 @@
              */
             this.handleStepNavigation = function (action, paper) {
                 if (action && (action === 'forward' || action === 'backward' || action === 'goto')) {
-                    $location.path('/' + this.exercise.id + '/' + this.currentStepIndex);
+                    this.setCurrentStep(this.currentStepIndex);
                 } else if (action && action === 'end') {
                     var endPromise = ExerciseService.endSequence(paper)
                     endPromise.then(function (result) {
@@ -129,12 +129,13 @@
                             $window.location = url;
                         }
                         else {
+                            // go to exercise home page
                             var url = CommonService.generateUrl('exercise-home', this.exercise.id);
                             $window.location = url;
                         }
                     }.bind(this));
                 } else if (action && action === 'interrupt') {
-                    // got to exercise home page
+                    // go to exercise home page
                     var url = CommonService.generateUrl('exercise-home', this.exercise.id);
                     $window.location = url;
                 } else {

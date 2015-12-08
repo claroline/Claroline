@@ -183,6 +183,25 @@ class QcmHandler implements QuestionHandlerInterface
 
         return $exportData;
     }
+    
+    public function convertQuestionAnswers(Question $question, \stdClass $exportData){
+        $repo = $this->om->getRepository('UJMExoBundle:InteractionQCM');
+        $qcm = $repo->findOneBy(['question' => $question]);
+        
+        $choices = $qcm->getChoices()->toArray();
+        $exportData->solutions = array_map(function ($choice) {
+                $solutionData = new \stdClass();
+                $solutionData->id = (string) $choice->getId();
+                $solutionData->score = $choice->getWeight();
+
+                if ($choice->getFeedback()) {
+                    $solutionData->feedback = $choice->getFeedback();
+                }
+
+                return $solutionData;
+            }, $choices);
+        return $exportData;
+    }
 
     /**
      * {@inheritdoc}

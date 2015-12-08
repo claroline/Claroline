@@ -19,7 +19,7 @@ class SequenceController extends Controller
 {
     /**
      * Render the Exercise player main view.
-     * This view instaciate the angular PlayerApp
+     * This view instaciate the angular player directive
      * @Route("/play/{id}", requirements={"id" = "\d+"}, name="ujm_exercise_play", options={"expose"=true})
      * @Method("GET")
      */
@@ -27,15 +27,30 @@ class SequenceController extends Controller
     {
         // check authorisation
         $collection = new ResourceCollection([$exercise->getResourceNode()]);
-        // $this->authorization : commenton le récupère ?
         if (!$this->container->get('security.authorization_checker')->isGranted('OPEN', $collection)) {
             throw new AccessDeniedHttpException();
         }
         
-        // also check if max attempts...
+        // get user
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();   
+
+        $paperManager = $this->get('ujm.exo.paper_manager');
+        $apiData = $paperManager->openPaper($exercise, $user, false);
+        $exo = json_encode($apiData['exercise']);
+        $paper = json_encode($apiData['paper']);
+        
+        $u = array(
+            'id' => $user->getId(),
+            'name' => $user->getFirstName() . ' ' . $user->getLastName(),
+            'admin' => $this->isExerciseAdmin($exercise)
+        );
         
         return $this->render('UJMExoBundle:Sequence:play.html.twig', array(
-                    '_resource' => $exercise
+                    '_resource' => $exercise,
+                    'exercise' => $exo,
+                    'paper' => $paper,
+                    'user' => json_encode($u),
+                    'currentStepIndex' => 0
             )
         );
     }
@@ -44,7 +59,7 @@ class SequenceController extends Controller
     
     
     /**
-     * handle AngularServices errors
+     * handle all AngularServices errors
      * @Route("/error/", name="ujm_sequence_error", options={"expose"=true})
      * @Method("GET")
      */
@@ -72,7 +87,7 @@ class SequenceController extends Controller
     /**
      *  @Route("/exercise/{id}/user", name="sequence_get_connected_user", options={"expose"=true})
      */
-    public function getCurrentUser(Exercise $exercise){        
+    /*public function getCurrentUser(Exercise $exercise){        
          // get user
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         
@@ -85,5 +100,5 @@ class SequenceController extends Controller
         
         return new JsonResponse($u);
         
-    }
+    }*/
 }

@@ -25,7 +25,7 @@
                         $window.location = url;
                     });
                     return deferred.promise;
-                },
+                },/*
                 getConnectedUser: function (id) {
                     var deferred = $q.defer();
                     $http
@@ -42,7 +42,7 @@
                             });
 
                     return deferred.promise;
-                },
+                },*/
                 /**
                  * Save the answer given to a question
                  * @param {number} paperId

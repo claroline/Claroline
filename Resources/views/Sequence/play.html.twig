@@ -8,7 +8,7 @@
 
 {% block content %} 
     <div class="ujm-sequence-container" data-ng-app="ExercisePlayerApp" data-ng-cloak="">
-        <ng-view></ng-view>
+        <exercise-player class="player-container" data-current-step-index="{{ currentStepIndex }}" data-paper="{{ paper }}" data-exercise="{{ exercise }}" data-user="{{ user }}"></exercise-player>   
     </div>
 {% endblock %}
 
@@ -27,6 +27,7 @@
 
         '@UJMExoBundle/Resources/public/js/sequence/Player/Exercise/*'
         '@UJMExoBundle/Resources/public/js/sequence/Player/Exercise/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Player/Exercise/Directives/*'
         '@UJMExoBundle/Resources/public/js/sequence/Player/Exercise/Services/*'
 
         '@UJMExoBundle/Resources/public/js/sequence/Player/Question/*'

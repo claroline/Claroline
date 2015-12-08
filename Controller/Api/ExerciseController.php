@@ -249,7 +249,7 @@ class ExerciseController
      */
     public function getQuestionSolutions(User $user, Question $question)
     {
-        $data = $this->questionManager->exportQuestion($question);
+        $data = $this->questionManager->exportQuestionAnswers($question);
         return new JsonResponse($data);
     }
 
