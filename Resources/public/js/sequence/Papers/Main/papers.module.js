@@ -31,13 +31,12 @@
          */
         paperPromise: [
             '$route',
-            'PapersService',
-            function getPaper($route, PapersService) {
+            'CorrectionService',
+            function getPaper($route, CorrectionService) {
 
                 var promise = null;
                 if ($route.current.params && $route.current.params.eid && $route.current.params.pid) {
-                    promise = PapersService.getOne($route.current.params.eid, $route.current.params.pid);
-
+                    promise = CorrectionService.getOne($route.current.params.eid, $route.current.params.pid);
                 }
                 return promise;
             }
@@ -50,7 +49,6 @@
                 var promise = null;
                 if ($route.current.params && $route.current.params.eid) {
                     promise = PapersService.getSequence($route.current.params.eid);
-
                 }
                 return promise;
             }
@@ -105,13 +103,13 @@
         function PapersModuleConfig($routeProvider, $locationProvider, cfpLoadingBarProvider) {
             $routeProvider
                     .when('/:eid', {
-                        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Papers/Main/Partials/papers.list.html',
+                        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Papers/Partials/papers.list.html',
                         controller: 'PaperListCtrl',
                         controllerAs: 'paperListCtrl',
                         resolve: resolvePaperListData
                     })
                     .when('/:eid/:pid', {
-                        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Papers/Main/Partials/paper.show.html',
+                        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Papers/Partials/paper.show.html',
                         controller: 'PaperDetailsCtrl',
                         controllerAs: 'paperDetailsCtrl',
                         resolve: resolvePaperDetailsData
@@ -119,6 +117,7 @@
                     .otherwise({
                         redirectTo: '/:eid'
                     });
+            //$locationProvider.html5Mode({enabled:true, requireBase:false});
             // please wait spinner config
             cfpLoadingBarProvider.latencyThreshold = 200;
             cfpLoadingBarProvider.includeBar = false;

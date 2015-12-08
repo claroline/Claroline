@@ -3,6 +3,7 @@ btn_end_sequence_label: End sequence
 btn_interrupt_sequence_label: Interrupt
 btn_prev_step_label: Go to previous step
 btn_next_step_label: Go to next step
+btn_feedback_display: View feedback
 
 # d
 dropdown_step_navigate_choice_label: Step N°%1% / %2%
@@ -10,6 +11,7 @@ dropdown_step_navigate_choice_label: Step N°%1% / %2%
 # l
 link_exercice_home: Exercise home
 link_exercise_retry: Retry
+link_exercise_play: Answer
 link_exercise_docimology: Docimology
 link_csv_export: CSV export
 label_exercise_score: Global score
@@ -17,6 +19,7 @@ label_exercise_correction: Correction
 
 # p
 paper_list: Paper list
+paper_list_no_paper: Currently no paper
 paper_search: Search a paper
 paper_list_table_user: User
 paper_list_table_paper_number: Paper number
@@ -52,3 +55,4 @@ sequence_attempts_infos: You have %1% attempt(s)
 sequence_nb_attempts: Attempt N° %1%
 sequence_interrupt_sequence_confirm: Are you sure you want to go to interrupt the sequence ?
 sequence_end_sequence_confirm: Are you sure you want to go to finish the sequence ? <br/> Yon won't be able to edit your answers.
+sequence_play_leave_confirm: Are you sure you want to leave the application ?

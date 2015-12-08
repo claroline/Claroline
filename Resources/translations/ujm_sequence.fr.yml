@@ -3,6 +3,7 @@ btn_end_sequence_label: Terminer la séquence
 btn_interrupt_sequence_label: Interrompre
 btn_prev_step_label: Aller à l'étape précédente
 btn_next_step_label: Aller à l'étape suivante
+btn_feedback_display: Voir le feedback
 
 # d
 dropdown_step_navigate_choice_label: Etape n°%1% / %2%
@@ -10,6 +11,7 @@ dropdown_step_navigate_choice_label: Etape n°%1% / %2%
 # l
 link_exercice_home: Accueil de l'exercise
 link_exercise_retry: Recommencer
+link_exercise_play: Répondre
 link_exercise_docimology: Docimologie
 link_csv_export: Export CSV
 label_exercise_score: Note
@@ -17,6 +19,7 @@ label_exercise_correction: Correction
 
 # p
 paper_list: Liste des copies
+paper_list_no_paper: Aucune copie actuellement
 paper_search: Rechercher une copie
 paper_list_table_user: Utilisateur
 paper_list_table_paper_number: Numéro de copie
@@ -52,3 +55,4 @@ sequence_attempts_infos: Vous avez le droit à %1% essai(s)
 sequence_nb_attempts: Essais N° %1%
 sequence_interrupt_sequence_confirm: Êtes vous sur de vouloir interrompre la séquence ?
 sequence_end_sequence_confirm: Êtes vous sur de vouloir terminer la séquence ? <br/> Vous ne pourrez plus modifier vos réponses.
+sequence_play_leave_confirm: Êtes vous sur de vouloir quitter l'application ?

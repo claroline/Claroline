@@ -82,6 +82,7 @@ class PaperManager
 
         $paperNum = $lastPaper ? $lastPaper->getNumPaper() + 1 : 1;
         $questions = $this->exerciseManager->pickQuestions($exercise);
+        
         $order = '';
 
         foreach ($questions as $question) {
@@ -121,10 +122,10 @@ class PaperManager
             $paper = $papers[0];
             $questions = $this->exportPaperQuestions($paper);
         }
-
+        
         return [
             'id' => $paper->getId(),
-            'paperNumber' => $paper->getNumPaper(),
+            'number' => $paper->getNumPaper(),
             'questions' => $questions
         ];
     }
@@ -313,10 +314,10 @@ class PaperManager
             ->findBy(['exercise' => $exercise]);
 
         $papers = array_map(function ($paper) {
-            $_user = $paper->getUser();
+            $user = $paper->getUser();
             return [
                 'id' => $paper->getId(),
-                'user' => $_user->getFirstName().' '.$_user->getLastName(),
+                'user' => $user->getFirstName().' '.$user->getLastName(),
                 'number' => $paper->getNumPaper(),
                 'start' => $paper->getStart()->format('Y-m-d H:i:s'),
                 'end' => $paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : null,

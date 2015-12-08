@@ -120,6 +120,18 @@ class QuestionManager
 
         return $data;
     }
+    
+    public function exportQuestionAnswers(Question $question){
+        $handler = $this->handlerCollector->getHandlerForInteractionType($question->getType());
+        // question infos
+        $data = new \stdClass();
+        $data->id = $question->getId();
+        $data->feedback = $question->getFeedback() ? $question->getFeedback():'';
+
+        $handler->convertQuestionAnswers($question, $data);
+
+        return $data;
+    }
 
     /**
      * Ensures the format of the answer is correct and returns a list of

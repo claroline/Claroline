@@ -107,6 +107,15 @@ class InteractionMatching extends AbstractInteraction
         $this->labels->add($label);
         $label->setInteractionMatching($this);
     }
+    
+    /**
+     * @return ArrayCollection
+     */
+    public function setProposals(ArrayCollection $proposals)
+    {
+        $this->proposals = $proposals;
+        return $this->proposals;
+    }
 
     /**
      * @return ArrayCollection

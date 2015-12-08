@@ -24,6 +24,7 @@ use UJM\ExoBundle\Manager\QuestionManager;
  */
 class ExerciseController
 {
+
     private $authorization;
     private $exerciseManager;
     private $questionManager;
@@ -43,10 +44,7 @@ class ExerciseController
      * @param PaperManager                  $paperManager
      */
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        ExerciseManager $exerciseManager,
-        QuestionManager $questionManager,
-        PaperManager $paperManager
+    AuthorizationCheckerInterface $authorization, ExerciseManager $exerciseManager, QuestionManager $questionManager, PaperManager $paperManager
     )
     {
         $this->authorization = $authorization;
@@ -70,8 +68,8 @@ class ExerciseController
 
         return new JsonResponse($this->exerciseManager->exportExercise($exercise));
     }
-    
-     /**
+
+    /**
      * Exports the minimal representation of an exercise (id + meta)
      * in a JSON format.
      *
@@ -80,19 +78,20 @@ class ExerciseController
      * @param Exercise $exercise
      * @return JsonResponse
      */
-    public function minimalExportAction(Exercise $exercise){
-        
+    public function minimalExportAction(Exercise $exercise)
+    {
+
         $this->assertHasPermission('OPEN', $exercise);
 
         return new JsonResponse($this->exerciseManager->exportExerciseMinimal($exercise));
     }
 
     /**
-     * @todo max attempt check
      *
      * Opens an exercise, creating a new paper or re-using an unfinished one.
+     * Also check that max attempts are not reached if needed
      *
-     * @EXT\Route("/exercises/{id}/attempts")
+     * @EXT\Route("/exercises/{id}/attempts", name="exercise_new_attempt")
      * @EXT\Method("POST")
      * @EXT\ParamConverter("user", converter="current_user")
      *
@@ -103,8 +102,19 @@ class ExerciseController
     public function attemptAction(User $user, Exercise $exercise)
     {
         $this->assertHasPermission('OPEN', $exercise);
+        
+        // if not admin user (ie student) check if exercise max attempts is reached
+        if (!$this->isAdmin($exercise)) {
 
-        return new JsonResponse($this->paperManager->openPaper($exercise, $user, false));
+            $max = $exercise->getMaxAttempts();
+            $nbFinishedPapers = $this->paperManager->countUserFinishedPapers($exercise, $user);
+            
+            if($nbFinishedPapers >= $max){
+                throw new AccessDeniedHttpException();
+            }
+        }
+        $data = $this->paperManager->openPaper($exercise, $user, false);
+        return new JsonResponse($data);
     }
 
     /**
@@ -127,7 +137,7 @@ class ExerciseController
         $this->assertHasPaperAccess($user, $paper);
 
         $data = $request->request->get('data');
-        
+
         $errors = $this->questionManager->validateAnswerFormat($question, $data);
 
         if (count($errors) !== 0) {
@@ -200,8 +210,7 @@ class ExerciseController
     {
         return new JsonResponse($this->paperManager->exportUserPapers($exercise, $user));
     }
-    
-    
+
     /**
      * Returns all the papers associated with an exercise.
      *
@@ -217,7 +226,7 @@ class ExerciseController
         $this->assertHasPermission('ADMINISTRATE', $exercise);
         return new JsonResponse($this->paperManager->exportExercisePapers($exercise));
     }
-    
+
     /**
      * Returns the number of finished paper for a given user and exercise
      *
@@ -228,10 +237,22 @@ class ExerciseController
      * @param Exercise  $exercise
      * @return JsonResponse
      */
-    public function countFinishedPaperAction(User $user, Exercise $exercise){
+    public function countFinishedPaperAction(User $user, Exercise $exercise)
+    {
         return new JsonResponse($this->paperManager->countUserFinishedPapers($exercise, $user));
     }
-    
+
+    /**
+     * Return a question solutions, global feedback, choices / proposals and for each proposal the feedback 
+     * @EXT\Route("/question/{id}", name="get_question_solutions")
+     * @EXT\ParamConverter("user", converter="current_user")
+     */
+    public function getQuestionSolutions(User $user, Question $question)
+    {
+        $data = $this->questionManager->exportQuestionAnswers($question);
+        return new JsonResponse($data);
+    }
+
     /**
      * Returns one paper.
      * Also includes the complete definition and solution of each question
@@ -261,10 +282,18 @@ class ExerciseController
         }
     }
 
+    private function isAdmin(Exercise $exercise)
+    {
+        $collection = new ResourceCollection([$exercise->getResourceNode()]);
+
+        return $this->authorization->isGranted('ADMINISTRATE', $collection);
+    }
+
     private function assertHasPaperAccess(User $user, Paper $paper)
     {
         if ($paper->getEnd() || $user !== $paper->getUser()) {
             throw new AccessDeniedHttpException();
         }
     }
+
 }

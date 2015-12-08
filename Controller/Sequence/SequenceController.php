@@ -9,6 +9,7 @@ use UJM\ExoBundle\Entity\Exercise;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Symfony\Component\HttpFoundation\JsonResponse;
 /**
  * Description of SequenceController.
  */
@@ -16,7 +17,7 @@ class SequenceController extends Controller
 {
     /**
      * Render the Exercise player main view.
-     * This view instaciate the angular PlayerApp
+     * This view instaciate the angular player directive
      * @Route("/play/{id}", requirements={"id" = "\d+"}, name="ujm_exercise_play", options={"expose"=true})
      * @Method("GET")
      */
@@ -24,10 +25,10 @@ class SequenceController extends Controller
     {
         // check authorisation
         $collection = new ResourceCollection([$exercise->getResourceNode()]);
-        // $this->authorization : commenton le récupère ?
         if (!$this->container->get('security.authorization_checker')->isGranted('OPEN', $collection)) {
             throw new AccessDeniedHttpException();
         }
+        
         // get user
         $user = $this->container->get('security.token_storage')->getToken()->getUser();   
         $paperManager = $this->get('ujm.exo.paper_manager');
@@ -37,23 +38,23 @@ class SequenceController extends Controller
         
         $u = array(
             'id' => $user->getId(),
-            'name' => $user->getFirstName() . '' . $user->getLastName(),
+            'name' => $user->getFirstName() . ' ' . $user->getLastName(),
             'admin' => $this->isExerciseAdmin($exercise)
         );
         
         return $this->render('UJMExoBundle:Sequence:play.html.twig', array(
                     '_resource' => $exercise,
-                    'sequence' => $exo,
+                    'exercise' => $exo,
                     'paper' => $paper,
-                    'user' => json_encode($u)
+                    'user' => json_encode($u),
+                    'currentStepIndex' => 0
             )
         );
-    }
-    
+    }   
     
     
     /**
-     * handle AngularServices errors
+     * handle all AngularServices errors
      * @Route("/error/", name="ujm_sequence_error", options={"expose"=true})
      * @Method("GET")
      */
@@ -61,6 +62,7 @@ class SequenceController extends Controller
     {
         $message = $request->get('message');
         $code = $request->get('code');
+        die($message);
         switch ($code){
             case '403':
                 throw new AccessDeniedHttpException($message);
@@ -74,10 +76,6 @@ class SequenceController extends Controller
     private function isExerciseAdmin(Exercise $exercise)
     {
         $collection = new ResourceCollection(array($exercise->getResourceNode())); 
-        if ( $this->container->get('security.authorization_checker')->isGranted('ADMINISTRATE', $collection)) {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->container->get('security.authorization_checker')->isGranted('ADMINISTRATE', $collection);        
     }
 }
