@@ -145,11 +145,6 @@ class CourseSession
      */
     protected $sessionGroups;
    
-    /** 
-     * @Groups({"bulletin"})
-     */
-    protected $extra;
-
     /**
      * @Groups({"bulletin"})
      * @SerializedName("extra")
@@ -372,16 +367,6 @@ class CourseSession
 
 
         return $shortTitle . ' - ' . $this->getName();
-    }
-
-    public function setExtra($extra)
-    {
-        $this->extra = $extra;
-    }
-
-    public function getExtra()
-    {
-        return $this->extra;
     }
 
     public function __toString()
