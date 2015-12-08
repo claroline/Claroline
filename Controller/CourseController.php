@@ -451,26 +451,11 @@ class CourseController extends Controller
         if ($form->isValid()) {
             $creationDate = new \DateTime();
             $session->setCreationDate($creationDate);
-            $session->setCourse($course);
-            $workspace = $this->cursusManager->generateWorkspace(
-                $course,
+            $this->cursusManager->createCourseSessionFromSession(
                 $session,
+                $course,
                 $authenticatedUser
             );
-            $session->setWorkspace($workspace);
-            $learnerRole = $this->cursusManager->generateRoleForSession(
-                $workspace,
-                $course->getLearnerRoleName(),
-                0
-            );
-            $tutorRole = $this->cursusManager->generateRoleForSession(
-                $workspace,
-                $course->getTutorRoleName(),
-                1
-            );
-            $session->setLearnerRole($learnerRole);
-            $session->setTutorRole($tutorRole);
-            $this->cursusManager->persistCourseSession($session);
 
             return new JsonResponse('success', 200);
         } else {

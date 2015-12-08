@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Event\PluginOptionsEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 
 /**
  * @DI\Service
@@ -28,16 +29,19 @@ class CursusListener
     /**
      * @DI\InjectParams({
      *     "httpKernel"         = @DI\Inject("http_kernel"),
-     *     "requestStack"       = @DI\Inject("request_stack")
+     *     "requestStack"       = @DI\Inject("request_stack"),
+     *     "om"                 = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
         HttpKernelInterface $httpKernel,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        ObjectManager $om
     )
     {
         $this->httpKernel = $httpKernel;
         $this->request = $requestStack->getCurrentRequest();
+        $this->om = $om;
     }
     
     /**

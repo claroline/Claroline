@@ -64,7 +64,7 @@ class CursusManager
     private $translator;
     private $ut;
     private $workspaceManager;
-
+    private $clarolineDispatcher;
     private $courseRepo;
     private $courseQueueRepo;
     private $courseSessionRepo;
@@ -82,6 +82,7 @@ class CursusManager
      *     "container"        = @DI\Inject("service_container"),
      *     "contentManager"   = @DI\Inject("claroline.manager.content_manager"),
      *     "eventDispatcher"  = @DI\Inject("event_dispatcher"),
+     *     "clarolineDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
      *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
      *     "pagerFactory"     = @DI\Inject("claroline.pager.pager_factory"),
      *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
@@ -92,6 +93,7 @@ class CursusManager
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
+    // why no claroline dispatcher ?
     public function __construct(
         ContainerInterface $container,
         ContentManager $contentManager,
@@ -103,7 +105,8 @@ class CursusManager
         $templateDir,
         TranslatorInterface $translator,
         ClaroUtilities $ut,
-        WorkspaceManager $workspaceManager
+        WorkspaceManager $workspaceManager,
+        $clarolineDispatcher
     )
     {
         $this->archiveDir = $container->getParameter('claroline.param.platform_generated_archive_path');
@@ -118,7 +121,8 @@ class CursusManager
         $this->templateDir = $templateDir;
         $this->translator = $translator;
         $this->ut = $ut;
-        $this->workspaceManager = $workspaceManager;
+        $this->workspaceManager = $workspaceManager; 
+        $this->clarolineDispatcher = $clarolineDispatcher;
 
         $this->courseRepo =
             $om->getRepository('ClarolineCursusBundle:Course');
@@ -1009,15 +1013,21 @@ class CursusManager
             $registrationDate = new \DateTime();
         }
         $session = new CourseSession();
-        $session->setName($sessionName);
-        $session->setCourse($course);
-        $session->addCursu($cursus);
+        if ($sessionName) $session->setName($sessionName);
+        if ($cursus) $session->addCursus($cursus);
         $session->setCreationDate($registrationDate);
         $session->setPublicRegistration($course->getPublicRegistration());
         $session->setPublicUnregistration($course->getPublicUnregistration());
         $session->setRegistrationValidation($course->getRegistrationValidation());
-        $session->setStartDate($startDate);
-        $session->setEndDate($endDate);
+        if ($startDate) $session->setStartDate($startDate);
+        if ($endDate) $session->setEndDate($endDate);
+        $this->createCourseSessionFromSession($session, $course, $user);
+
+        return $session;
+    }
+
+    public function createCourseSessionFromSession(CourseSession $session, Course $course, User $user) {
+        $session->setCourse($course);
 
         $workspace = $this->generateWorkspace(
             $course,
@@ -1039,7 +1049,8 @@ class CursusManager
         $session->setTutorRole($tutorRole);
         $this->persistCourseSession($session);
 
-        return $session;
+        //the event will be listened by FormaLibreBulletinBundle (it adds some MatiereOptions)
+        $this->clarolineDispatcher->dispatch('create_course_session', 'Claroline\CursusBundle\Event\CreateCourseSessionEvent', array($session));
     }
 
     public function deleteCourseSessionUsers(array $sessionUsers)

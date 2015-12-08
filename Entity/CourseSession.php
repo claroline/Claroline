@@ -145,6 +145,12 @@ class CourseSession
      */
     protected $sessionGroups;
 
+    /**
+     * @Groups({"bulletin"})
+     * @SerializedName("extra")
+     */
+    protected $extra = array();
+
     public function __construct()
     {
         $this->cursus = new ArrayCollection();
@@ -197,7 +203,17 @@ class CourseSession
         return $this->cursus->toArray();
     }
 
+    //wtf... so lazy...
     public function addCursu(Cursus $cursus)
+    {
+        if (!$this->cursus->contains($cursus)) {
+            $this->cursus->add($cursus);
+        }
+
+        return $this;
+    }
+
+    public function addCursus(Cursus $cursus)
     {
         if (!$this->cursus->contains($cursus)) {
             $this->cursus->add($cursus);
@@ -351,6 +367,16 @@ class CourseSession
 
 
         return $shortTitle . ' - ' . $this->getName();
+    }
+
+    public function setExtra($extra)
+    {
+        $this->extra = $extra;
+    }
+
+    public function getExtra()
+    {
+        return $this->extra;
     }
 
     public function __toString()
