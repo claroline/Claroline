@@ -11,6 +11,7 @@ dropdown_step_navigate_choice_label: Etape n°%1% / %2%
 # l
 link_exercice_home: Accueil de l'exercise
 link_exercise_retry: Recommencer
+link_exercise_play: Répondre
 link_exercise_docimology: Docimologie
 link_csv_export: Export CSV
 label_exercise_score: Note
@@ -18,6 +19,7 @@ label_exercise_correction: Correction
 
 # p
 paper_list: Liste des copies
+paper_list_no_paper: Aucune copie actuellement
 paper_search: Rechercher une copie
 paper_list_table_user: Utilisateur
 paper_list_table_paper_number: Numéro de copie

@@ -13,13 +13,15 @@
                 </div>
                 <!-- play exercise -->
                 <a data-ng-if="paperListCtrl.displayRetryExerciseLink" class="btn btn-default pull-right" href="{{paperListCtrl.generateUrl('exercise-play', paperListCtrl.exercise.id)}}#/{{paperListCtrl.exercise.id}}">
-                    <i class="fa fa-check-square-o"> {{ 'link_exercise_retry'|trans:{}:'ujm_sequence' }}</i>
+                    <i data-ng-if="paperListCtrl.filtered.length > 0" class="fa fa-check-square-o"> {{ 'link_exercise_retry'|trans:{}:'ujm_sequence' }}</i>
+                     <i data-ng-if="paperListCtrl.filtered.length === 0" class="fa fa-check-square-o"> {{ 'link_exercise_play'|trans:{}:'ujm_sequence' }}</i>
                 </a>
             </div>
         </div>
-        <hr/>
+        
         <!-- Search row -->
-        <div class="form-inline row">
+        <div class="form-inline row" data-ng-if="paperListCtrl.filtered.length > 0">
+            <hr/>
             <div class="form-group col-md-9">               
                 <div class="input-group">
                     <input type="text" class="form-control" data-ng-model="paperListCtrl.query" data-ng-change="paperListCtrl.updateFilteredList()" placeholder="{{ 'paper_search'|trans:{}:'ujm_sequence' }}">
@@ -40,9 +42,10 @@
                 </div>
             </div>
         </div>
-        <hr/>
+       
         <!-- paper list row 2 -->
-        <div class="row">
+        <div class="row" data-ng-if="paperListCtrl.filtered.length > 0">
+            <hr/>
             <div class="col-md-12">
                 <table at-table at-list="paperListCtrl.filtered" class="table table-striped table-centered" at-paginated at-config="paperListCtrl.config">
                     <thead></thead>
@@ -62,6 +65,12 @@
                     </tbody>
                 </table>
                 <at-pagination data-ng-if="paperListCtrl.showPagination" at-config="paperListCtrl.config" at-list="paperListCtrl.filtered"></at-pagination>
+            </div>
+        </div>
+        <div class="row center-text" data-ng-if="paperListCtrl.filtered.length === 0">
+            <hr/>
+            <div class="col-md-12">
+                <h4>{{ 'paper_list_no_paper'|trans:{}:'ujm_sequence' }}</h4>               
             </div>
         </div>
     </div>
