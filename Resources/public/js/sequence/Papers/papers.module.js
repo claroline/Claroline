@@ -13,9 +13,7 @@
         'angular-loading-bar',
         'ngRoute',
         'ui.bootstrap',
-        'ui.tinymce',
         'ui.translation',
-        'ui.resourcePicker',
         'ngBootbox',
         'angular-table',
         'Common',
@@ -117,7 +115,6 @@
                     .otherwise({
                         redirectTo: '/:eid'
                     });
-            //$locationProvider.html5Mode({enabled:true, requireBase:false});
             // please wait spinner config
             cfpLoadingBarProvider.latencyThreshold = 200;
             cfpLoadingBarProvider.includeBar = false;

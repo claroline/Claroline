@@ -41,7 +41,7 @@
                     if (!object.meta || object.meta === undefined || object.meta === 'undefined') {
                         return null;
                     }
-                    return object.meta.licence || object.meta.created || object.meta.modified || (object.meta.description && object.meta.description !== '');
+                    return object.meta.licence || object.meta.created || object.meta.modified || (object.meta.description && object.meta.description !== '');
                 },
                 // set / update the student data
                 setStudentData: function (question, currentQuestionPaperData) {
