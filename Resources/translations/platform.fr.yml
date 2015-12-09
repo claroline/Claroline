@@ -1165,6 +1165,7 @@ your_workspace_activity_overview: 'Aperçu des activités récentes de vos espac
 initialize_your_password: Initialisation du mot de passe
 hide_client: Cacher un client
 hide_client_message: Êtes-vous sûr de vouloir cacher ce client ?
+filter_by: Filtrer sur
 domain_name: 'Nom de domaine'
 import_csv: 'Importer un csv'
 admin_profile_properties_explanations: 'Les propriétés cochées seront modifiable par les utilisateurs disposant du rôle requis.'
@@ -1217,3 +1218,4 @@ client_list: Liste des clients
 allow_authentication: Autoriser l'authentification
 user_subscription_notification_for_admin: s'est inscrit dans l'espace d'activité %workspace%
 filter_by: Filtrer sur
+loading: Chargement

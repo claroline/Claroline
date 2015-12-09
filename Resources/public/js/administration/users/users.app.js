@@ -7,7 +7,7 @@ usersManager.config(function(clarolineSearchProvider) {
 	clarolineSearchProvider.setFieldRoute('api_get_user_searchable_fields');
 });
 
-usersManager.controller('usersCtrl', function(
+usersManager.controller('UsersCtrl', function(
 	$scope,
 	$log,
 	$http,
@@ -44,16 +44,12 @@ usersManager.controller('usersCtrl', function(
  		}
 	};
 
-	$scope.$watch('columns', function(n){
-            console.log('columns changed', n)
-          }, true)
-	
 	clarolineSearch.find([], 1, 10).then(function(d) {
 		$scope.users = d.data.users;
 		$scope.dataTableOptions.paging.count = d.data.total;
 	});
 	
-	$scope.clarolineSearch = function(searches) {
+	$scope.onSearch = function(searches) {
 		$scope.savedSearch = searches;
 		clarolineSearch.find(searches, $scope.dataTableOptions.paging.offset + 1, $scope.dataTableOptions.paging.size).then(function(d) {
 			$scope.users = d.data.users;

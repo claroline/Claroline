@@ -15,6 +15,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\PwsRightsManagementAccess;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
@@ -152,14 +153,14 @@ class RightsManager
         foreach ($arRights as $toUpdate) {
 
             if ($isRecursive) {
+                $resourceType = $toUpdate->getResourceNode()->getResourceType();
                 if (!is_int($permissions)) {
-                    $resourceType = $toUpdate->getResourceNode()->getResourceType();
                     $permissionsMask = $this->maskManager->encodeMask($permissions, $resourceType);
-                    $permissionsMask = $this->mergeTypePermissions($permissionsMask, $toUpdate->getMask());
-                    $permissions = $this->maskManager->decodeMask($permissionsMask, $resourceType);
+                    $permissions = $this->mergeTypePermissions($permissionsMask, $toUpdate->getMask(), $resourceType);
                 } else {
-                    $permissions = $this->mergeTypePermissions($permissions, $toUpdate->getMask());
+                    $permissions = $this->mergeTypePermissions($permissions, $toUpdate->getMask(), $resourceType);
                 }
+                $this->log('Editing ' . $toUpdate->getResourceNode()->getName() . ': old mask = ' . $toUpdate->getMask() . ' | new mask = ' . $permissions);
             }
 
             if (is_int($permissions)) {
@@ -172,10 +173,11 @@ class RightsManager
             $this->om->persist($toUpdate);
 
             //this is bad but for a huge datatree, logging everythings takes way too much time.
-            if (!$isRecursive) {
+            //well, nowadays I think we can do this.
+            //if (!$isRecursive) {
                 $this->logChangeSet($toUpdate);
                 $this->dispatcher->dispatch('resource_change_permissions', 'UpdateResourceRights', array($node, $toUpdate));
-            }
+            //}
         }
 
         //exception for activities
@@ -498,15 +500,23 @@ class RightsManager
      * @param int $resourceMask     A specific resource mask
      * @return int
      */
-    private function mergeTypePermissions($dirMask, $resourceMask)
+    private function mergeTypePermissions($dirMask, $resourceMask, ResourceType $resourceType)
     {
-        // extract base permissions ("open", "edit", etc. -> i.e. 5 out of 32
-        // possible permissions) by getting the last 5 bits of the mask
-        $baseMask = $resourceMask % 64;
-        // keep only specific permissions
-        $typeMask = $resourceMask - $baseMask;
+        $baseArray = array();
+        $defaultActions = $this->maskManager->getDefaultActions();
 
-        return $dirMask | $typeMask; // merge
+        foreach ($defaultActions as $action) {
+            $baseArray[$action] = true;
+        }
+
+        $basePerms = $this->maskManager->encodeMask($baseArray, $resourceType); 
+
+        //a little bit of magic goes here.
+        $all = $resourceMask | $basePerms; //merge
+        $typeMask = $all ^ $basePerms; //extract perm from type
+        $this->log('resource mask is ' .  $resourceMask . '  | basePerms is ' . $basePerms . ' | base mask is ' . $typeMask);
+
+        return $dirMask | $typeMask; // merge perm from type and new perms
     }
 
     /**
