@@ -20,6 +20,8 @@
     home.locale = $('#homeLocale').html(); //global
     home.asset = $('#homeAsset').html(); //global
 
+    console.log(home.path);
+
     if (!home.path) {
         home.path = './';
     }

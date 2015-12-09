@@ -21,6 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\CacheWarmerInterface;
 use Claroline\CoreBundle\Event\RefreshCacheEvent;
+use Symfony\Component\DependencyInjection\Exception\InactiveScopeException;
 
 /**
  * @DI\Service("claroline.manager.mail_manager")
@@ -160,6 +161,8 @@ class MailManager
     public function send($subject, $body, array $users, $from = null, array $extra = array())
     {
         if ($this->isMailerAvailable()) {
+            $body = $this->parseBodyUrl($body);
+
             $to = [];
 
             $layout = $this->contentManager->getTranslatedContent(array('type' => 'claro_mail_layout'));
@@ -281,5 +284,29 @@ class MailManager
         }
 
         return $this->ch->getParameter('support_email');
+    }
+
+    private function parseBodyUrl($body)
+    {
+        try {
+            $request = $this->container->get('request');
+            //grep href content
+            $regex = "#href=(\"|')([^\"']+)#";
+
+            preg_match_all($regex, $body, $matches, PREG_SET_ORDER);
+
+            foreach ($matches as $match) {
+                $url = $match[2];
+
+                if (strpos($url, 'http:') === false) {
+                    $newUrl = $request->getSchemeAndHttpHost() . $url;
+                    $body = str_replace($url, $newUrl, $body);
+                }
+            }
+        } catch (InactiveScopeException $e) {
+            //the scope is inactive so we can't do anything.
+        }
+
+        return $body;
     }
 }
