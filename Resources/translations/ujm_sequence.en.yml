@@ -1,9 +1,9 @@
 # b
-btn_end_sequence_label: End sequence
+btn_end_sequence_label: End exercise
 btn_interrupt_sequence_label: Interrupt
 btn_prev_step_label: Go to previous step
 btn_next_step_label: Go to next step
-btn_feedback_display: View feedback
+btn_validate_step: Valider l'étape
 
 # d
 dropdown_step_navigate_choice_label: Step N°%1% / %2%
@@ -53,6 +53,6 @@ question_show_hint_confirm: Are you sure you want to see this hint ? <br/> This 
 sequence_step: Step
 sequence_attempts_infos: You have %1% attempt(s)
 sequence_nb_attempts: Attempt N° %1%
-sequence_interrupt_sequence_confirm: Are you sure you want to go to interrupt the sequence ?
-sequence_end_sequence_confirm: Are you sure you want to go to finish the sequence ? <br/> Yon won't be able to edit your answers.
+sequence_interrupt_sequence_confirm: Are you sure you want to go to interrupt the exercise ?
+sequence_end_sequence_confirm: Are you sure you want to go to finish the exercise ? <br/> Yon won't be able to edit your answers.
 sequence_play_leave_confirm: Are you sure you want to leave the application ?

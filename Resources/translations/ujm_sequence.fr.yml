@@ -1,9 +1,9 @@
 # b
-btn_end_sequence_label: Terminer la séquence
+btn_end_sequence_label: Terminer l'execice
 btn_interrupt_sequence_label: Interrompre
 btn_prev_step_label: Aller à l'étape précédente
 btn_next_step_label: Aller à l'étape suivante
-btn_feedback_display: Voir le feedback
+btn_validate_step: Validate step
 
 # d
 dropdown_step_navigate_choice_label: Etape n°%1% / %2%
@@ -53,6 +53,6 @@ question_show_hint_confirm: Êtes vous sur de vouloir utiliser l'indice ? <br/> 
 sequence_step: Etape
 sequence_attempts_infos: Vous avez le droit à %1% essai(s)
 sequence_nb_attempts: Essais N° %1%
-sequence_interrupt_sequence_confirm: Êtes vous sur de vouloir interrompre la séquence ?
-sequence_end_sequence_confirm: Êtes vous sur de vouloir terminer la séquence ? <br/> Vous ne pourrez plus modifier vos réponses.
+sequence_interrupt_sequence_confirm: Êtes vous sur de vouloir interrompre l'exercice ?
+sequence_end_sequence_confirm: Êtes vous sur de vouloir terminer l'exercice ? <br/> Vous ne pourrez plus modifier vos réponses.
 sequence_play_leave_confirm: Êtes vous sur de vouloir quitter l'application ?

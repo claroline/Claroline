@@ -3,12 +3,12 @@
 
     angular.module('Question').controller('ChoiceQuestionCtrl', [
         '$ngBootbox',
-        '$window',
+        '$scope',
         'CommonService',
         'QuestionService',
         'PlayerDataSharing',
         'ExerciseService',
-        function ($ngBootbox, $window, CommonService, QuestionService, PlayerDataSharing, ExerciseService) {
+        function ($ngBootbox, $scope, CommonService, QuestionService, PlayerDataSharing, ExerciseService) {
             this.question = {};
             // keep choice(s)
             this.multipleChoice = {};
@@ -44,34 +44,48 @@
             };
 
             /**
-             * 
-             * @param {type} choice
+             * Check if choice is valid or not
+             * @TODO expected answers not checked by user should not be shown as bad result except after the last step try
+             * @param {Object} choice
              * @returns {Number} 
-             *  0 = nothing, (unexpected answer not checked by student) 
-             *  1 = valid, (expected answer checked by student) 
-             *  2 = false (unexpected answer checked by student) 
+             *  0 = nothing, (unexpected answer not checked by user) 
+             *  1 = valid, (expected answer checked by user) 
+             *  2 = false (unexpected answer checked by user OR valid answer not checked by user) 
              */
             this.choiceIsValid = function (choice) {
                 var isValid = 0;
                 var sdata = PlayerDataSharing.getStudentData();
-                // if ther is any answer in student data
+                // if there is any answer in student data
                 if (sdata.answers.length > 0) {
                     for (var i = 0; i < this.solutions.length; i++) {
                         // search for valid solutions (score > 0)
                         if (this.solutions[i].id === choice.id && this.solutions[i].score > 0) {
+                            var found = false;
                             // search for expected answer checked by student
                             for (var j = 0; j < sdata.answers.length; j++) {
                                 if (sdata.answers[j] === choice.id) {
                                     isValid = 1;
+                                    found = true;
                                 }
                             }
-                        } else if(this.solutions[i].id === choice.id && this.solutions[i].score <= 0){
+                            // expected answer not checked by student
+                            if(!found){
+                                isValid = 2;
+                            }
+                        } else if (this.solutions[i].id === choice.id && this.solutions[i].score <= 0) {
                             // search for unexpected answer checked by student
                             for (var j = 0; j < sdata.answers.length; j++) {
                                 if (sdata.answers[j] === choice.id) {
                                     isValid = 2;
                                 }
                             }
+                        }
+                    }
+                } else {
+                    for (var i = 0; i < this.solutions.length; i++) {
+                        if (this.solutions[i].id === choice.id && this.solutions[i].score > 0) {
+                            // expected answer not checked by student
+                            isValid = 2;
                         }
                     }
                 }
@@ -85,7 +99,6 @@
                         return this.solutions[i].feedback;
                     }
                 }
-                ;
 
             };
 
@@ -220,21 +233,32 @@
                 PlayerDataSharing.setStudentData(this.question, this.currentQuestionPaperData);
             };
 
+
+
+
             this.showFeedback = function () {
                 // get question answers and feedback ONLY IF NEEDED
                 var promise = QuestionService.getQuestionSolutions(this.question.id);
                 promise.then(function (result) {
-                    //console.log(elem);
-                    angular.element('#btn-show-feedback-' + this.question.id).prop('disabled', 'disabled');
-                    //elem.disabled = true;
                     this.feedbackIsVisible = true;
                     this.solutions = result.solutions;
                     this.questionFeedback = result.feedback;
                 }.bind(this));
             };
 
+            /**
+             * Listen to show-feedback event (broadcasted by ExercisePlayerCtrl)
+             */
+            $scope.$on('show-feedback', function (event, data) {
+                this.showFeedback();
+            }.bind(this));
+
+            /**
+             * Hide / show a specific panel content and handle hide / show button icon 
+             * @param {string} id (part of the panel id)
+             */
             this.toggleDetails = function (id) {
-                // $('#question-body-' + id).toggle();
+
                 // custom toggle function to avoid the use of jquery
                 if (angular.element('#question-body-' + id).attr('style') === undefined) {
                     angular.element('#question-body-' + id).attr('style', 'display: none;');
@@ -246,7 +270,8 @@
                         angular.element('#question-body-' + id).attr('style', 'display: none;');
                     }
                 }
-
+                
+                // handle hide / show button icon 
                 if (angular.element('#question-toggle-' + id).hasClass('fa-chevron-down')) {
                     angular.element('#question-toggle-' + id).removeClass('fa-chevron-down').addClass('fa-chevron-right');
                 }

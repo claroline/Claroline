@@ -3,12 +3,11 @@
 
     angular.module('ExercisePlayerApp').controller('ExercisePlayerCtrl', [
         '$window',
-        '$route',
-        '$location',
+        '$scope',
         'ExerciseService',
         'CommonService',
         'PlayerDataSharing',
-        function ($window, $route, $location, ExerciseService, CommonService, PlayerDataSharing) {
+        function ($window, $scope, ExerciseService, CommonService, PlayerDataSharing) {
 
             this.exercise = {};
             this.paper = {};
@@ -118,6 +117,7 @@
              * @param {object} paper
              */
             this.handleStepNavigation = function (action, paper) {
+                this.feedbackIsShown = false;
                 if (action && (action === 'forward' || action === 'backward' || action === 'goto')) {
                     this.setCurrentStep(this.currentStepIndex);
                 } else if (action && action === 'end') {
@@ -172,6 +172,12 @@
                         return false;
                 }
 
+            };
+            
+            this.showFeedback = function (){
+                this.feedbackIsShown = true;
+                console.log('fired');
+                $scope.$broadcast('show-feedback');
             };
 
             /**
