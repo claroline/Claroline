@@ -1,87 +1,55 @@
 (function () {
     'use strict';
 
-    angular.module('Sequence').controller('SequencePlayCtrl', [
+    angular.module('ExercisePlayerApp').controller('ExercisePlayerCtrl', [
         '$window',
-        'SequenceService',
+        '$scope',
+        'ExerciseService',
         'CommonService',
-        function ($window, SequenceService, CommonService) {
+        'PlayerDataSharing',
+        function ($window, $scope, ExerciseService, CommonService, PlayerDataSharing) {
 
-            this.sequence = {};
-            this.currentStep = {};
+            this.exercise = {};
+            this.paper = {};
             this.user = {};
 
+            this.isFinished = false;
             this.isLastStep = false;
             this.isFirstStep = true;
-            this.paper = {};
-
-            /**
-             * Init the sequence
-             * @param {object} sequence
-             * @param {object} sequence paper
-             * @param {number} user id
-             */
-            this.init = function (sequence, paper, user) {
-                // shuffle each question choices order if needed
-                for (var i = 0; i < sequence.steps.length; i++) {
-                    // shuffle step question order
-                    if (sequence.meta.random && sequence.steps[i].items.length > 1) {
-                        sequence.steps[i].items = CommonService.shuffleArray(sequence.steps[i].items);
-                    }
-                    // shuffle each step choices order if needed
-                    for (var j = 0; j < sequence.steps[i].items.length; j++) {
-                        if (sequence.steps[i].items[j].random && sequence.steps[i].items[j].type === 'application/x.choice+json') {
-                            sequence.steps[i].items[j].choices = CommonService.shuffleArray(sequence.steps[i].items[j].choices);
-                        }
-                    }
-                }
-
-                // need to set the sequence and paper in CommonService so that other directives can retrieve the data
-                this.sequence = CommonService.setSequence(sequence);
-                this.paper = CommonService.setPaper(paper);
-                this.user = CommonService.setUser(user);
-                // set current step
-                this.setCurrentStep(0);
-
+            this.feedbackIsShown = false;
+            this.currentStepIndex = 0;
+            
+            // init directive with appropriate data
+            this.init = function (paper, exercise, user, currentStepIndex){
+                this.exercise = PlayerDataSharing.setExercise(exercise);
+                this.paper = PlayerDataSharing.setPaper(paper);
+                this.user = PlayerDataSharing.setUser(user);
+                this.currentStepIndex = currentStepIndex;
+                this.setCurrentStep(this.currentStepIndex);
             };
 
             /**
-             * Check if the question has meta like created / licence / description...
-             */
-            this.questionHasOtherMeta = function () {
-                return CommonService.objectHasOtherMeta(this.sequence);
-            };
-
-            /**
-             * Check data validity and set current step
-             * also set the current paper step for questions directive
-             * @param {number} index
+             * Check index data validity and set current step
+             * @param {Number} index
              */
             this.setCurrentStep = function (index) {
                 this.isFirstStep = index === 0;
-                this.isLastStep = index === this.sequence.steps.length - 1;
+                this.isLastStep = index === this.exercise.steps.length - 1;
                 // check new index is in computable range
-                if (index < this.sequence.steps.length && index >= 0) {
-                    this.currentStep = this.sequence.steps[index];
-                    // CommonService.getCurrentQuestionPaperData(this.currentStep.items[0]);
+                if (index < this.exercise.steps.length && index >= 0) {
+                    this.currentStep = this.exercise.steps[index];
                 } else {
-                    // console.log('set current step error');
-                    var url = Routing.generate('ujm_sequence_error');
+                    var url = Routing.generate('ujm_sequence_error', {message: 'index out of bounds', code: '400'});
                     $window.location = url;
                 }
             };
 
-            this.getCurrentStep = function () {
-                return this.currentStep;
-            };
-
             /**
-             * use for display 
-             * @returns the current step index (+1 for human readability)
+             * Get the step number for display
+             * @returns {Number}
              */
-            this.getCurrentStepIndex = function () {
-                var index = this.sequence.steps.indexOf(this.currentStep);
-                return index + 1;
+            this.getCurrentStepNumber = function () {
+                return this.currentStepIndex + 1;
             };
 
             /**
@@ -89,15 +57,15 @@
              * @param {Object} step
              */
             this.jumpToStep = function (step) {
-                if (this.sequence.steps.indexOf(step) !== this.sequence.steps.indexOf(this.currentStep)) {
-                    this.validateStep('goto', this.sequence.steps.indexOf(step));
+                if (this.exercise.steps.indexOf(step) !== this.exercise.steps.indexOf(this.currentStep)) {
+                    this.validateStep('goto', this.exercise.steps.indexOf(step));
                 }
             };
 
             /**
              * save the current step in paper js object
-             * in some case end the sequence
-             * go to another step or end sequence
+             * in some case end the exercise
+             * go to another step or end exercise
              * @param {String} action
              * @param {Number} index (nullable) the step index when using direct access
              */
@@ -106,23 +74,23 @@
                 $('.tooltip').each(function () {
                     $(this).hide();
                 });
-                // get current step index
-                var currentStepIndex = this.sequence.steps.indexOf(this.currentStep);
+
                 // get next step index
-                var newIndex = this.getNextStepIndex(currentStepIndex, action, index);
+                this.currentStepIndex = this.getNextStepIndex(this.currentStepIndex, action, index);
+
                 // data set by question directive
-                var studentData = CommonService.getStudentData();
+                var studentData = PlayerDataSharing.getStudentData();
                 // If anwsers exist we need to save them
                 if (studentData.answers && studentData.answers.length > 0) {
                     // save anwsers
-                    var submitPromise = SequenceService.submitAnswer(this.paper.id, studentData);
+                    var submitPromise = ExerciseService.submitAnswer(this.paper.id, studentData);
                     submitPromise.then(function (result) {
-                        // then navigate to desired step / end / terminate sequence
-                        this.handleStepNavigation(action, newIndex, studentData.paper);
+                        // then navigate to desired step / end / terminate exercise
+                        this.handleStepNavigation(action, studentData.paper);
                     }.bind(this));
-                } else {     
-                    // navigate to desired step / end / terminate sequence
-                    this.handleStepNavigation(action, newIndex, studentData.paper);
+                } else {
+                    // navigate to desired step / end / terminate exercise
+                    this.handleStepNavigation(action, studentData.paper);
                 }
             };
 
@@ -144,57 +112,57 @@
             };
 
             /**
-             * Navigate to desired step or end sequence and redirect to appropriate view 
+             * Navigate to desired step or end exercise and redirect to appropriate view 
              * @param {string} action
-             * @param {number} index
              * @param {object} paper
              */
-            this.handleStepNavigation = function (action, index, paper) {
+            this.handleStepNavigation = function (action, paper) {
+                this.feedbackIsShown = false;
                 if (action && (action === 'forward' || action === 'backward' || action === 'goto')) {
-                    this.setCurrentStep(index);
-                    CommonService.setCurrentQuestionPaperData(this.currentStep.items[0]);
+                    this.setCurrentStep(this.currentStepIndex);
                 } else if (action && action === 'end') {
-                    var endPromise = SequenceService.endSequence(paper);
+                    var endPromise = ExerciseService.endSequence(paper)
                     endPromise.then(function (result) {
-                        if (this.checkCorrectionAvailability()) {
+                        if (this.checkCorrectionAvailability()) {                      
                             // go to paper correction view
-                            var url = CommonService.generateUrl('paper-list', this.sequence.id) + '#/' + this.sequence.id + '/' + paper.id;
+                            var url = CommonService.generateUrl('paper-list', this.exercise.id) + '#/' + this.exercise.id + '/' + paper.id;
                             $window.location = url;
                         }
                         else {
-                            var url = CommonService.generateUrl('exercise-home', this.sequence.id);
+                            // go to exercise home page
+                            var url = CommonService.generateUrl('exercise-home', this.exercise.id);
                             $window.location = url;
                         }
                     }.bind(this));
                 } else if (action && action === 'interrupt') {
-                    // got to exercise home page
-                    var url = CommonService.generateUrl('exercise-home', this.sequence.id);
+                    // go to exercise home page
+                    var url = CommonService.generateUrl('exercise-home', this.exercise.id);
                     $window.location = url;
                 } else {
-                    var url = Routing.generate('ujm_sequence_error');
+                    var url = Routing.generate('ujm_sequence_error', {message: 'action not allowed', code: '400'});
                     $window.location = url;
                 }
             };
-            
-            
+
+
             /**
-             * Check if correction is available for a sequence
+             * Check if correction is available for an exercise
              * @returns {Boolean}
              */
             this.checkCorrectionAvailability = function () {
-                var correctionMode = CommonService.getCorrectionMode(this.sequence.meta.correctionMode);
+                var correctionMode = CommonService.getCorrectionMode(this.exercise.meta.correctionMode);
                 switch (correctionMode) {
                     case "test-end":
                         return true;
                         break;
                     case "last-try":
                         // check if current try is the last one ?
-                        return this.paper.numberNumber === sequence.meta.maxAttempts;
+                        return this.paper.number === this.exercise.meta.maxAttempts;
                         break;
                     case "after-date":
-                        var now = new Date();                        
+                        var now = new Date();
                         var searched = new RegExp('-', 'g');
-                        var correctionDate = new Date(Date.parse(this.sequence.meta.correctionDate.replace(searched, '/')));
+                        var correctionDate = new Date(Date.parse(this.exercise.meta.correctionDate.replace(searched, '/')));
                         return now >= correctionDate;
                         break;
                     case "never":
@@ -204,6 +172,21 @@
                         return false;
                 }
 
+            };
+            
+            this.showFeedback = function (){
+                this.feedbackIsShown = true;
+                console.log('fired');
+                $scope.$broadcast('show-feedback');
+            };
+
+            /**
+             * Checks if feedback fields can be visible at some times
+             * @returns {Boolean}
+             */
+            this.checkIfFeedbackIsAvailable = function () {
+                //return this.exercise.meta.exerciseType === 'formatif';
+                return true;
             };
         }
     ]);
