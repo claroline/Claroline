@@ -153,10 +153,19 @@
                     var score = 0.0;
                     for (var i = 0; i < nbQuestions; i++) {
                         var currentQuestion = questions[i];
-                        // update exercise total points
-                        for (var j = 0; j < currentQuestion.solutions.length; j++) {
-                            // update total points for the sequence
-                            score += currentQuestion.solutions[j].score;
+                        if (currentQuestion.type === "application/x.choice+json") {
+                            // update exercise total points
+                            for (var j = 0; j < currentQuestion.solutions.length; j++) {
+                                // update total points for the sequence
+                                score += currentQuestion.solutions[j].score;
+                            }
+                        }
+                        else if (currentQuestion.type === "application/x.cloze+json") {
+                            for (var j = 0; j < currentQuestion.holes.length; j++) {
+                                for (var k = 0; k < currentQuestion.holes[j].wordResponses.length; k++) {
+                                    score =+ currentQuestion.holes[j].wordResponses[k].score;
+                                }
+                            }
                         }
                     }
                     return score;
