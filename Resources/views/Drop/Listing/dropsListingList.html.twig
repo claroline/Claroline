@@ -36,19 +36,23 @@
     </td>
 
     {% if adminInnova %}
-        {# On affiche cette colonne si le créateur du collecticiel veut gérer les accusés de réception. Demande JJQ. InnovaERV #}
+        {# Affiche cette colonne si le créateur du collecticiel veut gérer les accusés de réception. Demande JJQ. InnovaERV #}
         {% if dropzone.returnreceipt == 1  %}
-            <td class="centered">à faire</td>
+            <td class="centered">
+                {# Afficher ici la valeur de l'accusé de réception #}
+                {% include 'InnovaCollecticielBundle:Document:returnReceipt.html.twig' %}
+            </td>
         {% endif %}
 
         {# On affiche cette colonne si le créateur du collecticiel veut gérer les évaluations. Demande JJQ. InnovaERV #}
         {% if dropzone.evaluation == 1  %}
-            <td class="centered">à faire</td>
+            <td class="centered"></td>
         {% endif %}
     {% endif %}
 
     <td class="centered">
-        <input type="checkbox" id="{{document.id}}" name="documentId" value="{{ document.id }}" />
+        {# Affiche de la case à cocher en étant "coché" ou "décoche". Demande JJQ. InnovaERV #}
+        {% include 'InnovaCollecticielBundle:Document:inputReturnReceipt.html.twig' %}
     </td>
 
 </tr>

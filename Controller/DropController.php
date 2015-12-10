@@ -518,6 +518,7 @@ class DropController extends DropzoneBaseController
         // Déclarations des nouveaux tableaux, qui seront passés à la vue
         $userToCommentCount = array();
         $userNbTextToRead = array();
+        $haveReturnReceiptOrNotArray = array();
 
         foreach ($dropzone->getDrops() as $drop) {
             /** InnovaERV : ajout pour calculer les 2 zones **/
@@ -531,6 +532,22 @@ class DropController extends DropzoneBaseController
             $nbTextToRead = $this->getDoctrine()
                                 ->getRepository('InnovaCollecticielBundle:Document')
                                 ->countTextToRead($drop->getUser(), $drop->getDropZone());
+
+            // Nombre de demandes adressées/ Repo : Document
+            $haveReturnReceiptOrNot = $this->getDoctrine()
+                                ->getRepository('InnovaCollecticielBundle:ReturnReceipt')
+                                ->haveReturnReceiptOrNot(
+                                    $this->get('security.token_storage')->getToken()->getUser(),
+                                    $drop->getDropZone());
+
+            // Parcours du tableau
+            $arrayCount = count($haveReturnReceiptOrNot)-1;
+            for ($indice = 0; $indice<=$arrayCount; $indice++)
+            {
+                $documentId = $haveReturnReceiptOrNot[$indice]->getDocument()->getId();
+                $returnReceiptTypeId = $haveReturnReceiptOrNot[$indice]->getReturnReceiptType()->getId();
+                $haveReturnReceiptOrNotArray[$documentId]=$returnReceiptTypeId;
+            }
 
             // Affectations des résultats dans les tableaux
             $userToCommentCount[$drop->getUser()->getId()] = $nbCommentsPerUser;
@@ -575,6 +592,7 @@ class DropController extends DropzoneBaseController
             'userNbTextToRead' => $userNbTextToRead,
             'adminInnova' => $adminInnova,
             'collecticielOpenOrNot' => $collecticielOpenOrNot,
+            'haveReturnReceiptOrNotArray' => $haveReturnReceiptOrNotArray,
         ));
 
         return $dataToView;
@@ -1112,7 +1130,8 @@ class DropController extends DropzoneBaseController
         
         // Récupération de l'ID de l'accusé de réception choisi
         $returnReceiptId = $this->get('request')->query->get('returnReceiptId');
-        $returnReceiptType = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:ReturnReceiptType')->find($returnReceiptId);
+        $returnReceiptType = 
+        $this->getDoctrine()->getRepository('InnovaCollecticielBundle:ReturnReceiptType')->find($returnReceiptId);
 
         // Récupération de l'ID du dropzone choisi
         $dropzoneId = $this->get('request')->query->get('dropzoneId');

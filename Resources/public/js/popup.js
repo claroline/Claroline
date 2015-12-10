@@ -85,6 +85,9 @@ $(document).ready(function () {
         event.preventDefault();
  
         var returnReceiptId;
+        if (document.getElementById('choix0').checked) {
+            returnReceiptId = document.getElementById('choix0').value;
+        }
         if (document.getElementById('choix1').checked) {
             returnReceiptId = document.getElementById('choix1').value;
         }
@@ -101,23 +104,8 @@ $(document).ready(function () {
             returnReceiptId = document.getElementById('choix5').value;
         }
 
-//for(var i = 0; i < boutons.length; i++){
-//if(boutons[i].checked){
-//valeur = boutons[i].value;
-//}
-//}
-
-//        alert("Choix de AR ");alert(returnReceiptId);
-
-         // Récupération de l'id du document
+        // Récupération de l'id du document
         var dropzoneId = $(this).attr("data-dropzone_id");
-//        alert("Dropzone ");alert(dropzoneId);
-
-
-//        var docs = $('#checkbox').is(':checked')
-
-//        $("input.toto :checked")
-
 
         var arrayDocsId = [];
 
@@ -125,9 +113,6 @@ $(document).ready(function () {
             function() {
                 arrayDocsId.push($(this).attr('id'));
             });          
-
-        alert("arrayDocsId ");alert(arrayDocsId);
-
 
         $.ajax({
             url: Routing.generate('innova_collecticiel_return_receipt',

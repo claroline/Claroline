@@ -1,0 +1,12 @@
+{% set found = false %}
+{% for key, value in haveReturnReceiptOrNotArray %}
+	{% if key == document.id %}
+		{% set found = true %}
+	{% endif %}
+{% endfor %}
+
+{% if found %}
+	<input type="checkbox" id="{{document.id}}" name="documentId" checked value="{{ document.id }}" />
+{% else %}
+	<input type="checkbox" id="{{document.id}}" name="documentId" value="{{ document.id }}" />
+{% endif %}
