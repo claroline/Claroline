@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Innova\CollecticielBundle\Repository\ReturnReceiptTypeRepository")
- * @ORM\Table(name="innova_collecticielbundle_return_recept_type")
+ * @ORM\Table(name="innova_collecticielbundle_return_receipt_type")
  */
 class ReturnReceiptType {
 

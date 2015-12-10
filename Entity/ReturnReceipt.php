@@ -12,7 +12,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="Innova\CollecticielBundle\Repository\ReturnReceiptRepository")
- * @ORM\Table(name="innova_collecticielbundle_return_recept")
+ * @ORM\Table(name="innova_collecticielbundle_return_receipt")
  */
 class ReturnReceipt {
 
