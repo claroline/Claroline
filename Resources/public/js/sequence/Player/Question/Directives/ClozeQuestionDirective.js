@@ -17,6 +17,7 @@
                 },
                 link: function (scope, element, attr, clozeQuestionCtrl) {
                     console.log('clozeQuestion directive link method called');
+                    console.log(scope.question);
                     clozeQuestionCtrl.init(scope.question);
                     clozeQuestionCtrl.setQuestion(scope.question);
                     clozeQuestionCtrl.setQuestionText(scope.question.text);

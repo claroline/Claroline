@@ -52,6 +52,7 @@
                     }
                 },
                 getStudentData: function () {
+                    console.log("get student data");
                     return{
                         question: this.currentQuestion,
                         paper: this.paper,
@@ -59,6 +60,7 @@
                     };
                 },
                 setPaper: function (paper) {
+                    console.log("set paper");
                     this.paper = paper;
                     return this.paper;
                 },
@@ -78,6 +80,7 @@
                  * @returns {object}
                  */
                 setCurrentQuestionPaperData: function (question) {
+                    console.log("set current question paper data");
                     // search for an existing answer to the question in paper
                     for (var i = 0; i < this.paper.questions.length; i++) {
                         if (this.paper.questions[i].id === question.id.toString()) {
