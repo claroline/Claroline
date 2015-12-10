@@ -26,7 +26,7 @@
                 {% set workspace = _resource.getResourceNode().getWorkspace() %}
             {% endif %}
             <ul class="breadcrumb">
-                {% if not has_role('ROLE_ANONYMOUS') and workspace is %}
+                {% if not has_role('ROLE_ANONYMOUS') and workspace is defined and workspace != null %}
                         {# we're finding wich is the workspace we want to display here #}
                         <a href="{{ path('claro_workspace_open_tool', {'toolName': 'home', 'workspaceId': workspace.getId() }) }}">
                             {{ workspace.getName() ~ ' (' ~ workspace.getCode() ~ ') ' }}
