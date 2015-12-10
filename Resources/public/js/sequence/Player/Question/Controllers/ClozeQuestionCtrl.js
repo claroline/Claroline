@@ -4,8 +4,9 @@
     angular.module('Question').controller('ClozeQuestionCtrl', [
         '$ngBootbox',
         'CommonService',
+        'PlayerDataSharing',
         'QuestionService',
-        function ($ngBootbox, CommonService, QuestionService) {
+        function ($ngBootbox, CommonService, PlayerDataSharing, QuestionService) {
 
             this.question = {};
             this.formatedClozeText = '';
@@ -15,10 +16,10 @@
             
             this.init = function (question) {
                 // those data are updated by view and sent to common service as soon as they change
-                this.currentQuestionPaperData = CommonService.setCurrentQuestionPaperData(question);
+                this.currentQuestionPaperData = PlayerDataSharing.setCurrentQuestionPaperData(question);
                 this.question = question;
                 // init student data question object
-                CommonService.setStudentData(question);
+                PlayerDataSharing.setStudentData(question);
 
                 if (this.currentQuestionPaperData.hints && this.currentQuestionPaperData.hints.length > 0) {
                     // init used hints display
