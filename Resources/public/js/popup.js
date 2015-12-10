@@ -78,6 +78,78 @@ $(document).ready(function () {
 
     });
 
+
+    // InnovaERV
+    // Ajout pour le traitement de la modal de choix du type d'accusé de réception
+    $('#modal_confirm_return_receipt').on('click', function(event) {
+        event.preventDefault();
+ 
+        var returnReceiptId;
+        if (document.getElementById('choix1').checked) {
+            returnReceiptId = document.getElementById('choix1').value;
+        }
+        if (document.getElementById('choix2').checked) {
+            returnReceiptId = document.getElementById('choix2').value;
+        }
+        if (document.getElementById('choix3').checked) {
+            returnReceiptId = document.getElementById('choix3').value;
+        }
+        if (document.getElementById('choix4').checked) {
+            returnReceiptId = document.getElementById('choix4').value;
+        }
+        if (document.getElementById('choix5').checked) {
+            returnReceiptId = document.getElementById('choix5').value;
+        }
+
+//for(var i = 0; i < boutons.length; i++){
+//if(boutons[i].checked){
+//valeur = boutons[i].value;
+//}
+//}
+
+//        alert("Choix de AR ");alert(returnReceiptId);
+
+         // Récupération de l'id du document
+        var dropzoneId = $(this).attr("data-dropzone_id");
+//        alert("Dropzone ");alert(dropzoneId);
+
+
+//        var docs = $('#checkbox').is(':checked')
+
+//        $("input.toto :checked")
+
+
+        var arrayDocsId = [];
+
+        $("input[type='checkbox']:checked").each(
+            function() {
+                arrayDocsId.push($(this).attr('id'));
+            });          
+
+        alert("arrayDocsId ");alert(arrayDocsId);
+
+
+        $.ajax({
+            url: Routing.generate('innova_collecticiel_return_receipt',
+                { 
+                dropzoneId: dropzoneId,
+                returnReceiptId: returnReceiptId,
+                }),
+            method: "GET",
+            data:
+            {
+                arrayDocsId: arrayDocsId
+            },
+            complete : function(data) {
+            }
+        });
+
+        // Fermeture de la modal
+        $('#validate-modal').modal('hide');
+
+    });
+
+
     // InnovaERV
     // Ajout pour le traitement de la demande de commentaire : mise à jour de la table Document
     // Mise à jour de la colonne "validate"
