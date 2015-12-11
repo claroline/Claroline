@@ -1,8 +1,3 @@
-{# Variable qui va compter le nombre de commentaires 
-{{ haveReturnReceiptOrNotArray[document.id] }}
-                {% for j in 0..taille2 -1 %}
-{{ haveReturnReceiptOrNotArray[document.id] }}  
-#}
 {% set found = false %}
 {% for key, value in haveReturnReceiptOrNotArray %}
 	{% if key == document.id %}
@@ -28,20 +23,3 @@
 {% if found == false %}
 	<span class="fa fa-minus" title="{{ 'No return recept'|trans({}, 'innova_collecticiel') }}"> </span>
 {% endif %}
-
-{#
-    {% if document.id == key %}
-        {{ "ok" }}
-	{% else %}
-		{{ "KO" }}  
-    {% endif %}
-{% set tailleArray = haveReturnReceiptOrNotArray|length %}
-{% for j in 0..tailleArray -1 %}
-	{% if document.id is defined %}  
-		{% set docId = document.id %}  
-	      {{ "OK" }}{{ tailleArray }}{{ j }}
-	{% else %}
-	      {{ "KO" }}  
-	{% endif %}
-{% endfor %}
-#}
