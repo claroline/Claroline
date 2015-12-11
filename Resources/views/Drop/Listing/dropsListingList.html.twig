@@ -21,10 +21,12 @@
         {% include 'InnovaCollecticielBundle:Drop:dropsNbComments.html.twig' %}  #}
     </td>
 
+    {% if dropzone.evaluation != 1  %}
     <td class="centered">
         {# Afficher ici la valeur "Devoirs à corriger" modifiée en "Etat" #}
         {% include 'InnovaCollecticielBundle:Document:documentsNbTextToRead.html.twig' %}
     </td>
+    {% endif %}
 
     <td class="centered">
     {# Appel de la vue "Vue d'un fichier" où seront affichés les différents commentaires. #}

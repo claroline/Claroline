@@ -40,8 +40,11 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
 
     <!-- Colonne ajoutée "Commentaires non lus" modifiée en "Document" -->
     <th>{{ 'Document'|trans({},'innova_collecticiel') }}</th>
-    <!-- Colonne ajoutée "Devoirs à corriger" modifiée en "Etat" -->
-    <th style="width:50px;" class="centered">{{ 'Condition'|trans({},'innova_collecticiel') }}</th>
+
+    {% if dropzone.evaluation != 1  %}
+        <!-- Colonne ajoutée "Devoirs à corriger" modifiée en "Etat" -->
+        <th style="width:50px;" class="centered">{{ 'Condition'|trans({},'innova_collecticiel') }}</th>
+    {% endif %}
     <!-- Colonne ajoutée "Voir" modifiée en "Commentaire  - Evaluation"  -->
     <th style="width:140px;" class="centered no-sort">{{ 'Comment evaluation'|trans({},'innova_collecticiel') }}</th>
 
