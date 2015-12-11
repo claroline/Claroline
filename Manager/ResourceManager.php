@@ -183,7 +183,17 @@ class ResourceManager
         $node->setName($resource->getName());
         $name = $this->getUniqueName($node, $parent);
         $node->setCreator($creator);
-        if ($workspace) $node->setWorkspace($workspace);
+
+        if (!$workspace && $parent) {
+            if ($parent->getWorkspace()) {
+                $workspace = $parent->getWorkspace();
+            }
+        }
+
+        if ($workspace) {
+            $node->setWorkspace($workspace);
+        } 
+
         $node->setParent($parent);
         $node->setName($name);
         $node->setClass(get_class($resource));
@@ -599,9 +609,9 @@ class ResourceManager
         $child->setName($this->getUniqueName($child, $parent));
 
         if ($child->getWorkspace()->getId() !== $parent->getWorkspace()->getId()) {
-
             $this->updateWorkspace($child, $parent->getWorkspace());
         }
+        
         $this->om->persist($child);
         $this->om->endFlushSuite();
         $this->dispatcher->dispatch('log', 'Log\LogResourceMove', array($child, $parent));
@@ -1804,6 +1814,30 @@ class ResourceManager
         }
 
         return $node;
+    }
+
+    public function checkIntegrity()
+    {
+        $resources = $this->resourceNodeRepo->findAll();
+        $batchSize = 500;
+        $i = 0;
+
+        foreach ($resources as $resource) {
+            if ($resource->getWorkspace() === null && $parent = $resource->getParent()) {
+                if ($workspace = $parent->getWorkspace()) {
+                    $resource->setWorkspace($workspace);
+                    $this->om->persist($workspace);
+                    $this->log('Set workspace ' . $workspace->getName() . ' for ' . $resource->getName());
+                    $i++;
+
+                    if ($batchSize % $i === 0) {
+                        $this->om->flush();
+                    }
+                }
+            }
+        }
+
+        $this->om->flush();
     }
 
     public function setLogger(LoggerInterface $logger)

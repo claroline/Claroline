@@ -19,17 +19,15 @@
                  data-resource-name="{{ _resource.getName() }}"
             >
             </div>
+            {% set node = app.session.get('current_resource_node') %}
+            {% if node is not null %}
+                {% set workspace = node.getWorkspace() %}
+            {% else %}
+                {% set workspace = _resource.getResourceNode().getWorkspace() %}
+            {% endif %}
             <ul class="breadcrumb">
-                {% if not has_role('ROLE_ANONYMOUS') %}
-                    <li><a href="{{ path('claro_workspace_list') }}"><i class="fa fa-book"></i> {{ 'workspaces'|trans({}, 'platform') }}</a></li>
-                    <li>
+                {% if not has_role('ROLE_ANONYMOUS') and workspace is defined and workspace != null %}
                         {# we're finding wich is the workspace we want to display here #}
-                        {% set node = app.session.get('current_resource_node') %}
-                        {% if node is not null %}
-                            {% set workspace = node.getWorkspace() %}
-                        {% else %}
-                            {% set workspace = _resource.getResourceNode().getWorkspace() %}
-                        {% endif %}
                         <a href="{{ path('claro_workspace_open_tool', {'toolName': 'home', 'workspaceId': workspace.getId() }) }}">
                             {{ workspace.getName() ~ ' (' ~ workspace.getCode() ~ ') ' }}
                         </a>
@@ -57,7 +55,7 @@
             {% set workspace = _resource.getResourceNode().getWorkspace() %}
         {% endif %}
     {% endif %}
-    {% if workspace is defined %}
+    {% if workspace is defined and workspace != null %}
         {% if is_granted('OPEN', workspace) %}
             {% render(controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspace': workspace, '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})) %}
         {% endif %}

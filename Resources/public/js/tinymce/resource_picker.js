@@ -33,6 +33,7 @@
             var nodeId = _.keys(nodes)[0];
             var mimeType = nodes[_.keys(nodes)][2] !== '' ? nodes[_.keys(nodes)][2] : 'unknown/mimetype';
             var openInNewTab = tinymce.activeEditor.getParam('picker').openResourcesInNewTab ? '1' : '0';
+            console.log(home.path);
 
             $.ajax(home.path + 'resource/embed/' + nodeId + '/' + mimeType + '/' + openInNewTab)
                 .done(function (data) {
