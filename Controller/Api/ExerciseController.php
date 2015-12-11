@@ -24,7 +24,6 @@ use UJM\ExoBundle\Manager\QuestionManager;
  */
 class ExerciseController
 {
-
     private $authorization;
     private $exerciseManager;
     private $questionManager;
@@ -44,7 +43,10 @@ class ExerciseController
      * @param PaperManager                  $paperManager
      */
     public function __construct(
-    AuthorizationCheckerInterface $authorization, ExerciseManager $exerciseManager, QuestionManager $questionManager, PaperManager $paperManager
+        AuthorizationCheckerInterface $authorization,
+        ExerciseManager $exerciseManager,
+        QuestionManager $questionManager,
+        PaperManager $paperManager
     )
     {
         $this->authorization = $authorization;
@@ -103,14 +105,14 @@ class ExerciseController
     {
         $this->assertHasPermission('OPEN', $exercise);
         
-        // if not admin user (ie student) check if exercise max attempts is reached
+        // if not admin of the resource check if exercise max attempts is reached
         if (!$this->isAdmin($exercise)) {
 
             $max = $exercise->getMaxAttempts();
             $nbFinishedPapers = $this->paperManager->countUserFinishedPapers($exercise, $user);
             
-            if($nbFinishedPapers >= $max){
-                throw new AccessDeniedHttpException();
+            if($max > 0 && $nbFinishedPapers >= $max){
+                throw new AccessDeniedHttpException('max attempts reached');
             }
         }
         $data = $this->paperManager->openPaper($exercise, $user, false);
@@ -208,6 +210,9 @@ class ExerciseController
      */
     public function papersAction(User $user, Exercise $exercise)
     {
+        if($this->isAdmin($exercise)){
+            return new JsonResponse($this->paperManager->exportExercisePapers($exercise));
+        }
         return new JsonResponse($this->paperManager->exportUserPapers($exercise, $user));
     }
 
@@ -221,11 +226,11 @@ class ExerciseController
      * @param Exercise  $exercise
      * @return JsonResponse
      */
-    public function papersAdminAction(User $user, Exercise $exercise)
+    /*public function papersAdminAction(User $user, Exercise $exercise)
     {
         $this->assertHasPermission('ADMINISTRATE', $exercise);
         return new JsonResponse($this->paperManager->exportExercisePapers($exercise));
-    }
+    }*/
 
     /**
      * Returns the number of finished paper for a given user and exercise
@@ -295,5 +300,4 @@ class ExerciseController
             throw new AccessDeniedHttpException();
         }
     }
-
 }

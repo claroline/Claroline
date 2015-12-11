@@ -156,8 +156,7 @@ class QcmHandler implements QuestionHandlerInterface
         
         $choices = $qcm->getChoices()->toArray();
 
-        $exportData->multiple = $qcm->getTypeQCM()->getCode() === 1;
-    
+        $exportData->multiple = $qcm->getTypeQCM()->getCode() === 1;    
         $exportData->choices = array_map(function ($choice) {
             $choiceData = new \stdClass();
             $choiceData->id = (string) $choice->getId();
@@ -223,6 +222,7 @@ class QcmHandler implements QuestionHandlerInterface
         if (!is_array($data)) {
             return ['Answer data must be an array, ' . gettype($data) . ' given'];
         }
+        
         $count = 0;
 
         if (0 === $count = count($data)) {
@@ -236,7 +236,6 @@ class QcmHandler implements QuestionHandlerInterface
         }, $interaction->getChoices()->toArray());
 
         foreach ($data as $id) {
-            //var_dump($id);
             if (!is_string($id)) {
                 return ['Answer array must contain only string identifiers'];
             }
@@ -245,7 +244,7 @@ class QcmHandler implements QuestionHandlerInterface
                 return ['Answer array identifiers must reference question choices'];
             }
         }
-//die;
+        
         if ($interaction->getTypeQCM()->getCode() === 2 && $count > 1) {
             return ['This question does not allow multiple answers'];
         }
