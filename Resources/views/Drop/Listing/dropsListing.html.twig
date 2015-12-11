@@ -1,17 +1,16 @@
 <form class="form-horizontal" method="GET"
 action="{{ path('innova_collecticiel_return_receipt')}}">
 
-        <div class="btn-group">
-            <button type="submit" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#validate-modal" data-dropzone_id="{{ dropzone.id }}">
-                {{ 'Return receipt'|trans({}, 'innova_collecticiel') }}
-            </button>
-        </div>
-        <div class="btn-group">
-            <button type="submit" class="btn btn-primary btn-sm">
-                {{ 'Comment Auto'|trans({}, 'innova_collecticiel') }}
-            </button>
-        </div>
-
+<div class="btn-group">
+    <button type="submit" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#validate-modal" data-dropzone_id="{{ dropzone.id }}">
+        {{ 'Return receipt'|trans({}, 'innova_collecticiel') }}
+    </button>
+</div>
+<div class="btn-group">
+    <button type="submit" class="btn btn-primary btn-sm">
+        {{ 'Comment Auto'|trans({}, 'innova_collecticiel') }}
+    </button>
+</div>
 
 <!-- Vue donnant la liste des copies. Exemple d'URL : innovacollecticielbundle/2/drops/awaiting -->
 <table class="table table-striped table-hover sharedSpacesTable datatable">
@@ -48,16 +47,20 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
     <!-- Colonne ajoutée "Voir" modifiée en "Commentaire  - Evaluation"  -->
     <th style="width:140px;" class="centered no-sort">{{ 'Comment evaluation'|trans({},'innova_collecticiel') }}</th>
 
-    {# On affiche cette colonne si le créateur du collecticiel veut afficher les accusés de réception. #}
-    {# Demande JJQ. InnovaERV #}
     {% if adminInnova %}
+        {# On affiche cette colonne si le créateur du collecticiel veut afficher les accusés de réception. #}
+        {# Demande JJQ. InnovaERV #}
         {% if dropzone.returnReceipt == 1  %}
             <th class="centered">{{ 'Return receipt'|trans({}, 'innova_collecticiel') }}</th>
         {% endif %}
+
         {# On affiche cette colonne si le créateur du collecticiel veut afficher/gérer les évaluations. #}
         {# Demande JJQ. InnovaERV #}
         {% if dropzone.evaluation == 1  %}
             <th class="centered">{{ 'Evaluation'|trans({}, 'innova_collecticiel') }}</th>
+        {% endif %}
+        {% if dropzone.evaluation == 1  %}
+            <th class="centered">{{ 'Transmitted evaluation'|trans({}, 'innova_collecticiel') }}</th>
         {% endif %}
 
         <th class="centered">{{ 'Selection'|trans({}, 'innova_collecticiel') }}</th>
