@@ -86,7 +86,7 @@ class ExerciseControllerTest extends TransactionalTestCase
     
     /**
      * Minimal exercise export is used to get exercise data from paper list and paper details views
-     * It returns only exercise metadata and id and is available for all CAN OPEN RESOURCE users
+     * It returns only exercise metadata and id and is available for all "CAN OPEN RESOURCE" users
      */
     public function testMinimalExport(){
         $this->request('GET', "/exercise/api/exercises/{$this->ex1->getId()}/minimal", $this->john);

@@ -22,13 +22,6 @@
                 getAll: function (id, user) {
                     var deferred = $q.defer();
                     var url = Routing.generate('exercise_papers', {id: id});
-                    /*
-                    var url = '';
-                    if (user.admin) {
-                        url = Routing.generate('exercise_papers_admin', {id: id})
-                    } else {
-                        url = Routing.generate('exercise_papers', {id: id})
-                    }*/
                     $http
                             .get(
                                 url

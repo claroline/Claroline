@@ -217,22 +217,6 @@ class ExerciseController
     }
 
     /**
-     * Returns all the papers associated with an exercise.
-     *
-     * @EXT\Route("/exercises/{id}/papers/admin", name="exercise_papers_admin")
-     * @EXT\ParamConverter("user", converter="current_user")
-     *
-     * @param User      $user
-     * @param Exercise  $exercise
-     * @return JsonResponse
-     */
-    /*public function papersAdminAction(User $user, Exercise $exercise)
-    {
-        $this->assertHasPermission('ADMINISTRATE', $exercise);
-        return new JsonResponse($this->paperManager->exportExercisePapers($exercise));
-    }*/
-
-    /**
      * Returns the number of finished paper for a given user and exercise
      *
      * @EXT\Route("/exercises/{id}/papers/count", name="exercise_papers_count")
