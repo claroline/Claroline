@@ -1,5 +1,18 @@
 {# Affichage du tableau de l'onglet "Demandes adressées" #}
 <tr>
+    {# Affichage de l'image de profil #}
+    <td>
+        {% if drop.user.getPicture() != '' %}
+            <i class="direct-chat-img direct-chat-img-you right" >
+            <img src="{{ asset('uploads/pictures/') ~  drop.user.getPicture() }}"
+            class="profile_picture img-responsive"
+            alt="{{ drop.user.getLastName() ~ ' ' ~ drop.user.getFirstName() }}">
+            </i>
+        {% else %}
+            <i class="direct-chat-img direct-chat-img-you right fa fa-user" ></i>
+        {% endif %}
+    </td>
+
     <td>{{ drop.user.lastName|upper }}</td>
 
     <td>{{ drop.user.firstName|capitalize }}</td>
