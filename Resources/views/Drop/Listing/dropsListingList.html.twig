@@ -44,9 +44,21 @@
     <td class="centered">
     {# Appel de la vue "Vue d'un fichier" où seront affichés les différents commentaires. #}
         <div class="btn-group ">
-            <a href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" type="button" class="btn btn-default btn-sm">
-                {{ 'To drop'|trans({}, 'innova_collecticiel') }}
-            </a>
+           {# Variable qui va compter le nombre de commentaires #}
+           {# Affichage d'un bouton si pas de commentaires #}
+            {% if document.comments|length == 0 %}
+                <a href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" type="button" class="btn btn-default btn-sm">
+                    {{ 'To drop'|trans({}, 'innova_collecticiel') }}
+                </a>
+           {# Sinon affichage du compteur et des nouveaux commentaires #}
+            {% else %}
+                <a href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" type="button">
+                    {{ document.comments|length }}
+                    {% if document.getUnReadComments( app.user.id ) != 0 %}
+                        ({{ document.getUnReadComments( app.user.id ) }} nouveau{% if document.getUnReadComments( app.user.id ) > 1 %}x{% endif %})
+                    {% endif %}
+                </a>
+            {% endif %}
         </div>
     </td>
 
