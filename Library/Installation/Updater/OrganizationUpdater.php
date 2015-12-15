@@ -12,24 +12,32 @@ namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
 
-class Updater060607 extends Updater
+class OrganizationUpdater extends Updater
 {
     private $container;
 
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
+        $this->om = $container->get('claroline.persistence.object_manager');
     }
 
     public function postUpdate()
     {
-        $this->checkResourceWorkspaces();
+        if (!$this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findOneByName('organization_management')) {
+            $this->createTool();
+        }
     }
 
-    private function checkResourceWorkspaces()
+    private function createTool()
     {
-        $this->log('Checking resources integrity...');
-        $this->container->get('claroline.manager.resource_manager')->checkIntegrity();
+        $this->log('Creating institution admin tool...');
+        $entity = new AdminTool();
+        $entity ->setName('organization_management');
+        $entity ->setClass('institution');
+        $this->om->persist($entity);
+        $this->om->flush();
     }
 }

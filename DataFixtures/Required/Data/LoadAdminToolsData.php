@@ -37,7 +37,8 @@ class LoadAdminToolsData implements RequiredFixture
             array('platform_logs', 'bars'),
             array('platform_analytics', 'bar-chart-o'),
             array('roles_management', 'users'),
-            array('widgets_management', 'list-alt')
+            array('widgets_management', 'list-alt'),
+            array('organization_management', 'institution')
         );
 
         foreach ($tools as $tool) {

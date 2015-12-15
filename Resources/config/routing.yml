@@ -306,6 +306,14 @@ claro_group_api:
     options:
         expose: true
 
+claro_organization_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Admin/OrganizationController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
 claro_parameters_api:
     resource: "@ClarolineCoreBundle/Controller/API/Admin/ParametersController.php"
     type: rest

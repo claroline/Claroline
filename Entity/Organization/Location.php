@@ -15,6 +15,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * @ORM\Entity()
@@ -27,54 +29,63 @@ class Location
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api"})
      */
     protected $id;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
+     * @Groups({"api"})
      */
     protected $name;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
+     * @Groups({"api"})
      */
     protected $street;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
+     * @Groups({"api"})
      */
     protected $pc;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
+     * @Groups({"api"})
      */
     protected $town;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
+     * @Groups({"api"})
      */
     protected $country;
 
     /**
      * @ORM\Column(type="float")
      * @Assert\NotBlank()
+     * @Groups({"api"})
      */
     protected $latitude;
 
     /**
      * @ORM\Column(type="float")
      * @Assert\NotBlank()
+     * @Groups({"api"})
      */
     protected $longitude;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
+     * @Groups({"api"})
      */
     protected $tel;
 

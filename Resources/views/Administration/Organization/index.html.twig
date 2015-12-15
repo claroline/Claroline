@@ -1,0 +1,65 @@
+
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'organizations' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'organization_management'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div id="organization-panel" class="panel panel-default" ng-app="organizationManager">
+        <div class="panel-body" ng-controller="OrganizationController">
+            <div class="col-md-8">
+                <organizationslist></organizationslist>
+            </div>
+            <div class="col-md-4">
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link 
+        rel="stylesheet" 
+        href="{{ asset('bundles/clarolineangularuitree/angular-ui-tree.min.css') }}"
+    />
+    <link 
+        rel="stylesheet" 
+        href="{{ asset('bundles/clarolineangularuitree/app.css') }}"
+    />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+
+    <script type="text/javascript" src="{{ asset('vendor/angular/angular.js')}}"> </script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolineangularuitree/angular-ui-tree.min.js') }}">
+    </script>
+
+    {# Set some vars needed by Angular parts #}
+    <script type="text/javascript">
+        {# Make Twig variables accessibles by AngularJS #}
+
+        var AngularApp = {};
+        AngularApp.webDir = "{{ asset('') }}";
+    </script>
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/angular/services/api.services.js') }}></script>
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/angular/search/generic/search.app.js') }}></script>
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/organization/organization.app.js') }}></script>
+
+{% endblock %}

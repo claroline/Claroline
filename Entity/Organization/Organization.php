@@ -15,11 +15,15 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * @ORM\Entity()
  * @ORM\Table(name="claro__organization")
  * @DoctrineAssert\UniqueEntity("name")
+ * @Gedmo\Tree(type="nested")
  */
 class Organization
 {
@@ -27,24 +31,32 @@ class Organization
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api"})
      */
     protected $id;
 
     /**
+     * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"api"})
+     */
+    protected $position;
+
+    /**
      * @ORM\Column()
      * @Assert\NotBlank()
+     * @Groups({"api"})    
      */
     protected $name;
 
     /**
-     * @ORM\Column()
-     * @Assert\NotBlank()
+     * @ORM\Column(nullable=true)
+     * @Groups({"api"})
      */
     protected $logo;
 
     /**
-     * @ORM\Column()
-     * @Assert\NotBlank()
+     * @ORM\Column(nullable=true)
+     * @Groups({"api"})
      */
     protected $phone;
 
@@ -54,18 +66,49 @@ class Organization
      *     mappedBy="organization",
      *     cascade={"persist"}
      * )
+     * @Groups({"api"})
      */
     protected $locations;
 
-        /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Organization\Department",
-     *     mappedBy="organization",
-     *     cascade={"persist"}
-     * )
+    /**
+     * @Gedmo\TreeLeft
+     * @ORM\Column(name="lft", type="integer")
      */
-    protected $departments;
+    private $lft;
 
+    /**
+     * @Gedmo\TreeLevel
+     * @ORM\Column(name="lvl", type="integer")
+     */
+    private $lvl;
+
+    /**
+     * @Gedmo\TreeRight
+     * @ORM\Column(name="rgt", type="integer")
+     */
+    private $rgt;
+
+    /**
+     * @Gedmo\TreeRoot
+     * @ORM\Column(name="root", type="integer", nullable=true)
+     */
+    private $root;
+
+    /**
+     * @Gedmo\TreeParent
+     * @ORM\ManyToOne(targetEntity="Organization", inversedBy="children")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
+     * @Groups({"api"})
+     */
+    private $parent;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Organization", mappedBy="parent")
+     * @ORM\OrderBy({"lft" = "ASC"})
+     * @Groups({"api"})
+     */
+    private $children;
+    
     public function __construct()
     {
         $this->locations    = new ArrayCollection();
@@ -115,5 +158,25 @@ class Organization
     public function getLocations()
     {
         return $this->locations;
+    }
+
+    public function setPosition($position)
+    {
+        $this->position = $position;
+    }
+
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
     }
 }
