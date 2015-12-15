@@ -198,12 +198,12 @@
             return $http.put(baseUrl+"/"+this.id+"/"+newParent.id+"/"+previousSiblingId, {})
                 .then(function(response) {
                     if(typeof response.data === 'object'){
-                        oldParent.removeChildPageNode(pageNode, oldIndex);
-                        newParent.insertNode(pageNode, newIndex);
                         pageNode.tree.changeCurrentPageNode(pageNode);
-
                         return true;
                     } else {
+                        newParent.removeChildPageNode(pageNode, newIndex);
+                        oldParent.insertNode(pageNode, oldIndex);
+                        pageNode.tree.changeCurrentPageNode(pageNode);
                         return false;
                     }
                 }, function(response) {

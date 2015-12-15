@@ -2,6 +2,6 @@
     'use strict';
 
     angular.element(document).ready(function() {
-        angular.bootstrap(document, ['app']);
+        angular.bootstrap(document.getElementsByTagName('body')[0], ['app']);
     });
 })();

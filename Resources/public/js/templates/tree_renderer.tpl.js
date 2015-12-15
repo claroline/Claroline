@@ -10,7 +10,7 @@ angular.module('app').run([
                 '<span data-ng-class="{\'tree-node-section\':node.isSection, \'tree-node-invisible\':!node.visible}">{{node.title}}</span>'+
             '</div>'+
             '<ul ui-tree-nodes data-ng-model="node.children" sortable="sortOptions" data-ng-class="{hidden: collapsed}">'+
-                '<li id="nd-{{node.id}}" data-ng-repeat="node in node.children" ui-tree-node ui-tree-handle data-ng-include="\'tree_renderer.tpl\'"></li>'+
+                '<li id="nd-{{node.id}}" data-ng-repeat="node in node.children" ui-tree-node data-ng-include="\'tree_renderer.tpl\'"></li>'+
             '</ul>'
         )
     }

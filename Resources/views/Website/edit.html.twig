@@ -112,9 +112,6 @@
                     {% endfor %}
                 }
             };
-
-            console.log(websiteData);
-
             angular
                     .module('website.constants', [])
                     .constant('website.data', websiteData);
@@ -201,26 +198,17 @@
     {% javascripts debug=false filter='jsmin' output='js/website/app/app.edit.js'
     '@IcapWebsiteBundle/Resources/public/js/edit-app/app.js'
     '@IcapWebsiteBundle/Resources/public/js/edit-app/app.config.js'
+    '@IcapWebsiteBundle/Resources/public/js/components/tinyMceConfig/tinyMceConfig.js'
+    '@IcapWebsiteBundle/Resources/public/js/edit-app/websiteTree/websiteTreeNode.service.js'
+    '@IcapWebsiteBundle/Resources/public/js/edit-app/websiteTree/websiteTree.service.js'
+    '@IcapWebsiteBundle/Resources/public/js/edit-app/websiteOptions/websiteOptions.service.js'
+    '@IcapWebsiteBundle/Resources/public/js/edit-app/main.controller.js'
+    '@IcapWebsiteBundle/Resources/public/js/templates/menu_renderer.tpl.js'
+    '@IcapWebsiteBundle/Resources/public/js/templates/tree_renderer.tpl.js'
     '@IcapWebsiteBundle/Resources/public/js/app.bootstrap.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
-
-    {#
-        Import website tree component
-    #}
-    {% javascripts debug=false filter='jsmin' output='js/website/app/websiteTree.js'
-    '@IcapWebsiteBundle/Resources/public/js/edit-app/websiteTree/websiteTreeNode.service.js'
-    '@IcapWebsiteBundle/Resources/public/js/edit-app/websiteTree/websiteTree.service.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/edit-app/websiteOptions/websiteOptions.service.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/edit-app/main.controller.js') }}"></script>
-
-    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/templates/menu_renderer.tpl.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/templates/tree_renderer.tpl.js') }}"></script>
 
     <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_website' }) }}"></script>
 {% endblock %}

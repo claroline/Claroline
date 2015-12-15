@@ -158,11 +158,10 @@
     '@IcapWebsiteBundle/Resources/public/js/view-app/app.js'
     '@IcapWebsiteBundle/Resources/public/js/view-app/app.config.js'
     '@IcapWebsiteBundle/Resources/public/js/app.bootstrap.js'
+    '@IcapWebsiteBundle/Resources/public/js/view-app/main.controller.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
-
-    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/view-app/main.controller.js') }}"></script>
 
     {% if options.analyticsProvider=="google" and options.analyticsId is not empty %}
         <script>

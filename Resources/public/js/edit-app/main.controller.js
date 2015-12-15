@@ -5,13 +5,13 @@
         .module('app')
         .controller('MainController', MainController);
 
-    MainController.$inject = ['websiteOptions', 'websiteTree'];
+    MainController.$inject = ['websiteOptions', 'websiteTree', 'tinyMceConfig'];
 
-    function MainController(websiteOptions, websiteTree){
+    function MainController(websiteOptions, websiteTree, tinyMceConfig){
         var vm = this;
         vm.options = websiteOptions;
         vm.menu = websiteTree;
-        vm.tinymceConfig = tinymce.claroline.configuration;
+        vm.tinymceConfig = tinyMceConfig;
         vm.uploadImage = function($files, imageStr) {
             vm.options.proceedImageUpload($files, imageStr);
         }
@@ -77,17 +77,17 @@
         vm.treeOptions = {
             beforeDrop: function (event) {
                 //event.source.itemScope.modelValue.status = event.dest.sortableScope.$parent.column.name;
-                var sourceNode = angular.isDefined(event.source.nodesScope.node)?event.source.nodesScope.node:null;
+                var sourceNode = (event.source.nodesScope.$nodeScope!==null)?event.source.nodesScope.$nodeScope.$modelValue:null;
                 var sourceIndex = event.source.index;
-                var destNode = angular.isDefined(event.dest.nodeScope.node)?event.dest.nodeScope.node:null;
+                var destNode = (event.dest.nodesScope.$nodeScope!==null)?event.dest.nodesScope.$nodeScope.$modelValue:null;
                 var destIndex = event.dest.index;
-                var currentNode = event.source.nodeScope.node;
+                var currentNode = event.source.nodeScope.$modelValue;
 
                 if (sourceNode != destNode || sourceIndex != destIndex) {
                     vm.menu.movePageNode(currentNode, sourceNode, destNode, sourceIndex, destIndex);
                 }
 
-                return false;
+                //return false;
             }
         };
 
