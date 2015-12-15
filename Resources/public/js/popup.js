@@ -58,7 +58,7 @@ $(document).ready(function () {
         var req = "#request_id_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
 
         // Ajout : vu avec Arnaud.
-        // Ajout de "complete" afin de mettre à jour la partie "HTML" qui va actualisé et afficher "Demande transmise"
+        // Ajout de "complete" afin de mettre à jour la partie "HTML" qui va actualiser et afficher "Demande transmise"
         $.ajax({
             url: Routing.generate('innova_collecticiel_validate_document',
                 { documentId: docId
@@ -156,9 +156,41 @@ $(document).ready(function () {
         );
     });
 
+    // InnovaERV : sélection et déselection dans la liste des demandes adressées.
+    $('#document_id_0').on('click', function(event) {
+
+        var selector = "#document_id_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
+        var selectorId = $(this).attr("data-document_id"); // Extract info from data-* attributes
+
+        // Récupération du choix de l'utilisateur : tout sélectionner ou tout déselectionner
+        if (selectorId == 0) {
+            if ($(selector).prop('checked') == false)
+            {
+                var checkedDisplay = false;
+                $(selector).prop('checked', checkedDisplay); // Cocher la case "Valider"
+            }
+            else
+            {
+                var checkedDisplay = true;
+                $(selector).prop('checked', checkedDisplay); // Cocher la case "Valider"
+            }   
+        }   
+
+        // Affectation du choix "tout sélectionner" ou "tout déselectionner" au reste des documents
+        $("input[type='checkbox']").each(
+            function() {
+                var selector = "#document_id_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
+                var id = $(this).attr("data-document_id"); // Extract info from data-* attributes
+                if (id != 0) {
+                    $(selector).prop('checked', checkedDisplay); // Cocher la case "Valider"
+                }
+            }
+        );          
+    });
+
     // InnovaERV : ajout du bouton "Retour" dans la liste des commentaires.
     $('.backLink').on('click', function(event) {
-        event.preventDefault();
+        alert("back link");
         history.back(-1);
     });
 

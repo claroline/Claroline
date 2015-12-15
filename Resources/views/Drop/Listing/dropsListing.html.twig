@@ -65,7 +65,11 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
             <th class="centered">{{ 'Transmitted evaluation'|trans({}, 'innova_collecticiel') }}</th>
         {% endif %}
 
-        <th class="centered">{{ 'Selection'|trans({}, 'innova_collecticiel') }}</th>
+        <th class="centered">
+            {{ 'Selection'|trans({}, 'innova_collecticiel') }}
+            <input id="document_id_0" data-dropzone-select_id={{ dropzone.id }} type="checkbox" name="documentId" data-document_id="0" class="btn btn-danger btn-sm" />
+
+        </th>
     {% endif %}
  
     </thead>
