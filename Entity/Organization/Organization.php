@@ -49,16 +49,10 @@ class Organization
     protected $name;
 
     /**
-     * @ORM\Column(nullable=true)
-     * @Groups({"api"})
+     * @ORM\Column()
+     * @Groups({"api"})    
      */
-    protected $logo;
-
-    /**
-     * @ORM\Column(nullable=true)
-     * @Groups({"api"})
-     */
-    protected $phone;
+    protected $email;
 
     /**
      * @ORM\OneToMany(
@@ -111,8 +105,8 @@ class Organization
     
     public function __construct()
     {
-        $this->locations    = new ArrayCollection();
-        $this->departments  = new ArrayCollection();
+        $this->locations   = new ArrayCollection();
+        $this->departments = new ArrayCollection();
     }
 
     public function getId()
@@ -128,26 +122,6 @@ class Organization
     public function getName()
     {
         return $this->name;
-    }
-
-    public function setLogo($logo)
-    {
-        $this->logo = $logo;
-    }
-
-    public function getLogo()
-    {
-        return $this->logo;
-    }
-
-    public function setPhone($phone)
-    {
-        $this->phone = $phone;
-    }
-
-    public function getPhone()
-    {
-        return $this->phone;
     }
 
     public function getDepartments()

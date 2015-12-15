@@ -25,6 +25,9 @@ use JMS\Serializer\Annotation\SerializedName;
  */
 class Location
 {
+    const TYPE_DEPARTMENT = 1;
+    const TYPE_USER       = 2;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -35,59 +38,64 @@ class Location
 
     /**
      * @ORM\Column()
-     * @Assert\NotBlank()
      * @Groups({"api"})
      */
     protected $name;
 
     /**
      * @ORM\Column()
-     * @Assert\NotBlank()
      * @Groups({"api"})
      */
     protected $street;
 
     /**
      * @ORM\Column()
-     * @Assert\NotBlank()
+     * @Groups({"api"})
+     */
+    protected $streetNumber;
+
+    /**
+     * @ORM\Column(nullable=true)
+     * @Groups({"api"})
+     */
+    protected $boxNumber;
+
+    /**
+     * @ORM\Column()
      * @Groups({"api"})
      */
     protected $pc;
 
     /**
      * @ORM\Column()
-     * @Assert\NotBlank()
      * @Groups({"api"})
      */
     protected $town;
 
     /**
      * @ORM\Column()
-     * @Assert\NotBlank()
      * @Groups({"api"})
      */
     protected $country;
 
     /**
-     * @ORM\Column(type="float")
-     * @Assert\NotBlank()
+     * @ORM\Column(type="float", nullable=true)
      * @Groups({"api"})
      */
     protected $latitude;
 
     /**
-     * @ORM\Column(type="float")
-     * @Assert\NotBlank()
+     * @ORM\Column(type="float", nullable=true)
      * @Groups({"api"})
      */
     protected $longitude;
 
     /**
-     * @ORM\Column()
-     * @Assert\NotBlank()
+     * @ORM\Column(nullable=true)
      * @Groups({"api"})
      */
-    protected $tel;
+    protected $phone;
+
 
     /**
      * @var Role[]|ArrayCollection
@@ -104,9 +112,14 @@ class Location
      *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization",
      *     inversedBy="locations"
      * )
-     * @ORM\JoinColumn(name="organization_id", onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(name="organization_id", onDelete="CASCADE", nullable=true)
      */
     protected $organization;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $type = self::TYPE_DEPARTMENT;
 
     public function __construct()
     {
@@ -201,5 +214,45 @@ class Location
     public function getOrganization()
     {
         return $this->organization;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function setStreetNumber($streetNumber)
+    {
+        $this->streetNumber = $streetNumber;
+    }
+
+    public function getStreetNumber()
+    {
+        return $this->streetNumber;
+    }
+
+    public function setBoxNumber($boxNumber)
+    {
+        $this->boxNumber = $boxNumber;
+    }
+
+    public function getBoxNumber()
+    {
+        return $this->boxNumber;
+    }
+
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+    }
+
+    public function getPhone()
+    {
+        return $this->phone;
     }
 }

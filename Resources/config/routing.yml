@@ -271,6 +271,11 @@ claro_admin_oauth:
     prefix: admin/oauth
     type: annotation
 
+claro_admin_organization:
+    resource: "@ClarolineCoreBundle/Controller/Administration/OrganizationController.php"
+    prefix: admin/organization
+    type: annotation
+
 claro_admin_i18n:
     resource: "@ClarolineCoreBundle/Controller/Administration/InternationalizationController.php"
     prefix: admin/i18n
@@ -314,6 +319,14 @@ claro_organization_api:
     options:
         expose: true
 
+claro_location_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Admin/LocationController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
 claro_parameters_api:
     resource: "@ClarolineCoreBundle/Controller/API/Admin/ParametersController.php"
     type: rest
@@ -334,7 +347,7 @@ claro_contact:
     resource: "@ClarolineCoreBundle/Controller/ContactController.php"
     prefix: contact
     type: annotation
-    
+
 claro_admin_widget:
     prefix: admin/widget
     resource: "@ClarolineCoreBundle/Controller/Administration/WidgetController.php"

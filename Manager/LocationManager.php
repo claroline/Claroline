@@ -13,12 +13,12 @@ namespace Claroline\CoreBundle\Manager;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Organization\Organization;
+use Claroline\CoreBundle\Entity\Organization\Location;
 
 /**
- * @DI\Service("claroline.manager.organization_manager")
+ * @DI\Service("claroline.manager.location_manager")
  */
-class OrganizationManager
+class LocationManager
 {
     private $om;
 
@@ -30,38 +30,38 @@ class OrganizationManager
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
-        $this->repo = $om->getRepository('ClarolineCoreBundle:Organization\Organization');
+        $this->repo = $om->getRepository('ClarolineCoreBundle:Organization\Location');
     }
 
-    public function create(Organization $organization)
+    public function create(Location $location)
     {
-        $this->om->persist($organization);
+        $this->om->persist($location);
         $this->om->flush();
 
-        return $organization;
+        return $location;
     }
 
-    public function edit(Organization $organization)
+    public function edit(Location $location)
     {
-        $this->om->persist($organization);
+        $this->om->persist($location);
         $this->om->flush();
 
-        return $organization;
+        return $location;
     }
 
-    public function delete(Organization $organization)
+    public function delete(Location $location)
     {
-        $this->om->remove($organization);
+        $this->om->remove($location);
         $this->om->flush();
     }
 
-    public function getAll()
+    public function getByType($type)
     {
-        return $this->repo->findAll();
+        return $this->repo->findBy(array('type' => $type));
     }
 
-    public function getRoots()
+    public function setCoordinates(Location $location)
     {
-        return $this->repo->findBy(array('parent' => null));
+        //do stuff here
     }
 } 

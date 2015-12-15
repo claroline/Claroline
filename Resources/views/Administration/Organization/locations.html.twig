@@ -1,0 +1,72 @@
+
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'locations' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'organization_management'|trans({}, 'platform'),
+                'href': path('claro_organization_index')
+            },
+            {
+                'name': 'locations'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div id="location-panel" class="panel panel-default" ng-app="LocationManager">
+        <div class="panel-body" ng-controller="LocationController" id="angular-app">
+            <locationsmanager>
+            </locationsmanager>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link 
+        rel="stylesheet" 
+        href="{{ asset('bundles/clarolineangulardatatable/js/release/dataTable.css') }}"
+    />
+    <link 
+        rel="stylesheet" 
+        href="{{ asset('bundles/clarolineangulardatatable/js/release/material.css') }}"
+    />
+    <link rel="stylesheet" 
+          href="{{ asset('bundles/clarolineangularuiselectize/select.css')}}"
+    />
+    <link href="http://fontastic.s3.amazonaws.com/Jnf54BZCm7mSjGCxNRbfp3/icons.css" rel="stylesheet">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+
+    <script type="text/javascript" src="{{ asset('vendor/angular/angular.js')}}"> </script>
+    <script type="text/javascript" src="{{ asset('vendor/angular/angular-ui.js')}}"> </script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolineangulardatatable/js/release/dataTable.helpers.min.js') }}">
+    </script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolineangularuiselectize/select.min.js')}}"> </script>
+
+    {# Set some vars needed by Angular parts #}
+    <script type="text/javascript">
+        {# Make Twig variables accessibles by AngularJS #}
+
+        var AngularApp = {};
+        AngularApp.webDir = "{{ asset('') }}";
+    </script>
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/angular/services/api.services.js') }}></script>
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/location/locations.app.js') }}></script>
+
+{% endblock %}

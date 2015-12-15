@@ -1,0 +1,21 @@
+{% extends "ClarolineCoreBundle:Administration\\Organization:modal.html.twig" %}
+
+{% block header %}
+    {{ 'create_location'|trans({}, 'platform') }}
+{% endblock %}
+{% block form %}
+<form
+    role="form"
+    class="form-horizontal"
+    ng-submit="submit()"
+    method="post" {{ form_enctype(form) }}
+>
+    <div class="modal-body">
+        {{ form_widget(form) }}
+    </div>
+    <div class="modal-footer">
+        <button id="create-location-btn" class="btn btn-primary" aria-hidden="true">{{ 'create'|trans({}, 'platform') }}</button>
+        <div class="btn btn-default" data-dismiss="modal" aria-hidden="true" ng-click="test()">{{ 'cancel'|trans({}, 'platform') }}</div>
+    </div>
+</form>
+{% endblock %}
