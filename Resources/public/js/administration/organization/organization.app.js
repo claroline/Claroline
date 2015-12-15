@@ -40,11 +40,11 @@ organizationManager.controller('OrganizationController', function(
 
     var removeOrganization = function(organizations, organizationId) {
         for (var i = 0; i < organizations.length; i++) {
-            removeOrganization(organizations[i].children, organizationId);
+            if (organizations[i].children) removeOrganization(organizations[i].children, organizationId);
 
             if (organizations[i].id === organizationId) {
                 organizations.splice(i, 1);
-            }
+            } 
         }
     }
 
@@ -59,6 +59,8 @@ organizationManager.controller('OrganizationController', function(
     }
 
     $scope.deleteOrganization = function(organization) {
+        console.log(organization);
+
         organizationAPI.delete(organization.id).then(function(d) {
             removeOrganization($scope.organizations, organization.id);
         });
@@ -67,6 +69,7 @@ organizationManager.controller('OrganizationController', function(
     $scope.addDepartment = function(organization)
     {
         organizationAPI.create('Organization' + Math.random(), organization.id).then(function(d) {
+            if (organization.children === undefined) organization.children = [];
             organization.children.push(d.data);
         });
     }
