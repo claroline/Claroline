@@ -1148,10 +1148,30 @@ class DropController extends DropzoneBaseController
         // Parcours des documents sélectionnés et insertion en base de données
         foreach($arrayDocsId as $documentId)
         {
-            $document = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Document')->find($documentId);
+            // Par le JS, le document est transmis sous la forme "document_id_XX"
+            $docIdS = explode("_", $documentId);
+            $docId = $docIdS[2];
 
+            // Récupération de l'objet document
+            $document = $this->getDoctrine()
+            ->getRepository('InnovaCollecticielBundle:Document')->findBy(array('id' => $docId));
+
+            // Nombre de demandes adressées/ Repo : Document
+            $countHaveReturnReceiptOrNotForADocument = $this->getDoctrine()
+                                ->getRepository('InnovaCollecticielBundle:ReturnReceipt')
+                                ->haveReturnReceiptOrNotForADocument($user, $dropzone, $document[0]);
+
+            // S'il y a déjà un accusé de réception alors je le supprime avant de créer le nouveau
+            if ($countHaveReturnReceiptOrNotForADocument != 0) {
+                // Nombre de demandes adressées/ Repo : Document
+                $reqDeleteReturnReceipt = $this->getDoctrine()
+                                    ->getRepository('InnovaCollecticielBundle:ReturnReceipt')
+                                    ->deleteReturnReceipt($user, $dropzone, $document[0]);
+            }
+
+            // Création du nouvel accusé de réception
             $returnReceipt = new ReturnReceipt();
-            $returnReceipt->setDocument($document);
+            $returnReceipt->setDocument($document[0]);
             $returnReceipt->setUser($user);
             $returnReceipt->setDropzone($dropzone);
             $returnReceipt->setReturnReceiptType($returnReceiptType);
