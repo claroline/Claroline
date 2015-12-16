@@ -38,18 +38,21 @@ class Location
 
     /**
      * @ORM\Column()
+     * @Assert\NotBlank()
      * @Groups({"api"})
      */
     protected $name;
 
     /**
      * @ORM\Column()
+     * @Assert\NotBlank()
      * @Groups({"api"})
      */
     protected $street;
 
     /**
      * @ORM\Column()
+     * @Assert\NotBlank()
      * @Groups({"api"})
      */
     protected $streetNumber;
@@ -62,18 +65,21 @@ class Location
 
     /**
      * @ORM\Column()
+     * @Assert\NotBlank()
      * @Groups({"api"})
      */
     protected $pc;
 
     /**
      * @ORM\Column()
+     * @Assert\NotBlank()
      * @Groups({"api"})
      */
     protected $town;
 
     /**
      * @ORM\Column()
+     * @Assert\NotBlank()
      * @Groups({"api"})
      */
     protected $country;

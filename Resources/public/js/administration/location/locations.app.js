@@ -34,24 +34,22 @@ locationManager.config(function ($httpProvider) {
 
 locationManager.controller('LocationController', function(
     $scope,
-    $log,
     $http,
     $modal,
-    $compile,
-    $rootElement,
-    locationAPI,
-    clarolineAPI
+    locationAPI
     ) {
 
     $scope.createForm = function() {
         $modal.open({
-            templateUrl: Routing.generate('claro_admin_location_create_form'),
+            templateUrl: Routing.generate('api_get_create_location_form', {'_format': 'html'}),
             controller: 'LocationController'
         });
     }
 
     $scope.submit = function() {
-        console.log($scope.newLocation);
+        locationAPI.create($scope.newLocation).then(function(d) {
+            $scope.location.push(d.data);
+        });
     }
 
     $scope.locations = undefined;
@@ -65,16 +63,28 @@ locationManager.controller('LocationController', function(
         {
             name: translate('name'),
             prop: 'name',
-            width: 250, 
             canAutoResize: false
         },
         {
             name: translate('address'),
-            width: 300,
             cellRenderer: function() {
-                return '<div>{{ $row.street_number}}, {{ $row.street }}, {{ $row.pc }}, {{ $row.town }}, {{ $row.country }}</div>'
+                return '<div>{{ $row.street_number}}, {{ $row.street }}, {{ $row.pc }}, {{ $row.town }}, {{ $row.country }}</div>';
+            }
+        },
+        {
+            name: translate('actions'),
+            cellRenderer: function() {
+                return '<div><a class="btn-primary btn-xs" ng-click="editLocation($row)" style="margin-right: 8px;"><span class="fa fa-pencil-square-o"></span></a><a class="btn-danger btn-xs" ng-click="removeLocation($row)"><span class="fa fa-trash"></span></a></div>';
+            }
+        },
+        {
+            name: translate('coordinates'),
+            cellRenderer: function() {
+                '<div> blablabla + liens </div>'
             }
         }
+
+
     ];
 
     $scope.dataTableOptions = {
@@ -96,10 +106,19 @@ locationManager.directive('locationsmanager', [
     }
 ]);
 
-locationManager.factory('locationAPI', function($http) {
+locationManager.factory('locationAPI', function($http, clarolineAPI) {
     return {
         findAll: function() {
             return $http.get(Routing.generate('api_get_locations'));
+        },
+        create: function(newLocation) {
+            var data = clarolineAPI.formSerialize('location_form', newLocation);
+
+            return $http.post(
+                Routing.generate('api_post_location', {'_format': 'html'}),
+                data,
+                {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
+            );
         }
     }
 });

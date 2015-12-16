@@ -13,10 +13,12 @@ namespace Claroline\CoreBundle\Manager;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Oauth\Client;
 use Claroline\CoreBundle\Entity\Oauth\FriendRequest;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\AbstractType;
+use FOS\RestBundle\View\View;
+use JMS\Serializer\SerializationContext;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @DI\Service("claroline.manager.api_manager")
@@ -30,18 +32,24 @@ class ApiManager
      * @DI\InjectParams({
      *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
      *     "oauthManager" = @DI\Inject("claroline.manager.oauth_manager"),
-     *     "curlManager"  = @DI\Inject("claroline.manager.curl_manager")
+     *     "curlManager"  = @DI\Inject("claroline.manager.curl_manager"),
+     *     "viewHandler"  = @DI\Inject("fos_rest.view_handler"),
+     *     "container"    = @DI\Inject("service_container")
      * })
      */
     public function __construct(
         ObjectManager $om,
         OauthManager $oauthManager,
-        CurlManager $curlManager
+        CurlManager $curlManager,
+        $viewHandler,
+        $container
     )
     {
         $this->om = $om;
         $this->oauthManager = $oauthManager;
-        $this->curlManager = $curlManager;
+        $this->curlManager  = $curlManager;
+        $this->viewHandler  = $viewHandler;
+        $this->container    = $container;
     }
 
     /**
@@ -98,6 +106,40 @@ class ApiManager
         }
 
         return $payload;
+    }
+
+    //helper for the API controllers methods. We only do this in case of html request
+    public function handleFormView($template, $form, array $options = array())
+    {
+        $httpCode = isset($options['http_code']) ? $options['http_code']: 200;
+
+        return $form->isValid() ?
+            $this->createSerialized($options['extra_parameters']):
+            $this->createFormView($template, $form, $httpCode);
+
+    }
+
+    private function createFormView($template, $form, $formHttpCode)
+    {
+        $formHttpCode = $formHttpCode ?:200;
+        $view = View::create($form, $formHttpCode);
+        $view->setTemplate($template);
+        $view->setFormat($this->container->get('request')->getRequestFormat());
+
+        return $this->viewHandler->handle($view);
+    }
+
+    private function createSerialized($data)
+    {
+        $context = new SerializationContext();
+        $format = $this->container->get('request')->getRequestFormat();
+        $format = $format === 'html' ? 'json': $format;
+        $context->setGroups('api');
+        $content = $this->container->get('serializer')->serialize($data, $format, $context);
+        $response = new Response($content);
+        $response->headers->set('Content-Type', $this->container->get('request')->getMimeType($format));
+
+        return $response;
     }
 
     private function validateUrl($url)

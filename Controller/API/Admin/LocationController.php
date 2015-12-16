@@ -15,6 +15,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use FOS\RestBundle\Controller\FOSRestController;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Manager\LocationManager;
+use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\CoreBundle\Entity\Organization\Location;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,6 +23,8 @@ use FOS\RestBundle\Controller\Annotations\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Claroline\CoreBundle\Form\LocationType;
+use FOS\RestBundle\View\View as FOSView;
 
 /**
  * @NamePrefix("api_")
@@ -32,6 +35,7 @@ class LocationController extends FOSRestController
      * @DI\InjectParams({
      *     "formFactory"     = @DI\Inject("form.factory"),
      *     "locationManager" = @DI\Inject("claroline.manager.location_manager"),
+     *     "apiManager"      = @DI\Inject("claroline.manager.api_manager"),
      *     "request"         = @DI\Inject("request"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager")
      * })
@@ -39,6 +43,7 @@ class LocationController extends FOSRestController
     public function __construct(
         FormFactory          $formFactory,
         LocationManager      $locationManager,
+        ApiManager           $apiManager,
         ObjectManager        $om,
         Request              $request
     )
@@ -47,6 +52,7 @@ class LocationController extends FOSRestController
         $this->locationManager = $locationManager;
         $this->om              = $om;
         $this->request         = $request;
+        $this->apiManager      = $apiManager;
     }
 
 
@@ -62,8 +68,79 @@ class LocationController extends FOSRestController
         return $this->locationManager->getByType(Location::TYPE_DEPARTMENT);
     }
 
-    public function getCreateFormAction()
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Returns the location creation form",
+     *     views = {"location"}
+     * )
+     */
+    public function getCreateLocationFormAction()
     {
-        
+        $form = $this->createForm(new LocationType());
+
+        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Admin\Location\locationForm.html.twig', $form);
+    }
+
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Returns the location edition form",
+     *     views = {"location"}
+     * )
+     */
+    public function getEditLocationFormAction(Location $location)
+    {
+        $form = $this->createForm(new LocationType(), $location);
+
+        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Admin\Location\locationForm.html.twig', $form);
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Creates a location",
+     *     views = {"location"},
+     *     input="Claroline\CoreBundle\Form\LocationType"
+     * )
+     */
+    public function postLocationAction()
+    {
+        $locationType = new LocationType();
+        $locationType->enableApi();
+        $form = $this->formFactory->create($locationType, new Location());
+        $form->submit($this->request);
+        $location = null;
+        $httpCode = 200;
+
+        if ($form->isValid()) {
+            $location = $form->getData();
+            $location = $this->locationManager->create($location);
+            $httpCode = 400;
+        }
+
+        $options = array(
+            'http_code' => $httpCode,
+            'extra_parameters' => $location
+        );
+
+        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Admin\Location\locationForm.html.twig', $form, $options);
+    }
+
+    /**
+     * @View()
+     * @ApiDoc(
+     *     description="Removes a location",
+     *     section="location",
+     *     views = {"api"}
+     * )
+     * @EXT\ParamConverter("location", class="ClarolineCoreBundle:Organization\Location",)
+     */
+    public function deleteLocationAction(Location $location)
+    {
+        $this->locationManager->delete($location);
+
+        return array('success');
     }
 }

@@ -35,6 +35,7 @@ class LocationManager
 
     public function create(Location $location)
     {
+        $this->setCoordinates($location);
         $this->om->persist($location);
         $this->om->flush();
 
@@ -43,6 +44,7 @@ class LocationManager
 
     public function edit(Location $location)
     {
+        $this->setCoordinates($location);
         $this->om->persist($location);
         $this->om->flush();
 
