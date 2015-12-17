@@ -384,7 +384,9 @@ class WorkspaceParametersController extends Controller
             $this->workspaceManager->importInExistingWorkspace($config, $workspace);
         }
 
-        return new Response('under construction');
+        $url = $this->router->generate('claro_workspace_edit_form', array('workspace' => $workspace->getId()));
+
+        return new RedirectResponse($url);
     }
 
     private function checkAccess(Workspace $workspace)
