@@ -55,12 +55,19 @@
         "claroline/installation-bundle": "~6.0",
         "claroline/front-end-bundle": "~6.0",
         "claroline/migration-bundle": "~6.0",
-	    "claroline/angular-ui-selectize-bundle": "dev-master",
-	    "claroline/angular-data-table-bundle": "dev-master",
+    	"claroline/angular-ui-selectize-bundle": "dev-master",
+    	"claroline/angular-data-table-bundle": "dev-master",
         "johngrogg/ics-parser": "dev-master",
         "gregwar/captcha-bundle": "1.0.12",
         "knplabs/knp-menu-bundle": "2.0.0",
-        "cocur/slugify": "~1.0"
+        "cocur/slugify": "~1.0",
+        "innova/angular-js-bundle" : "*",
+        "innova/angular-ui-bootstrap-bundle" : "*",
+        "innova/angular-ui-tinymce-bundle" : "*",
+        "innova/angular-ui-pageslide-bundle" : "*",
+        "innova/angular-ui-tree-bundle" : "*",
+        "innova/angular-ui-translation-bundle" : "*",
+        "innova/angular-ui-resource-picker-bundle" : "*"
     },
     "autoload": {
         "psr-0": { "Claroline\\CoreBundle": "" }
