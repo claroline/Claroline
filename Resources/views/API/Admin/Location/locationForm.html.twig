@@ -14,8 +14,8 @@
             {{ form_widget(form) }}
         </div>
         <div class="modal-footer">
-            <button id="create-location-btn" class="btn btn-primary" aria-hidden="true">{{ 'create'|trans({}, 'platform') }}</button>
-            <div class="btn btn-default" data-dismiss="modal" aria-hidden="true" ng-click="test()">{{ 'cancel'|trans({}, 'platform') }}</div>
+            <button id="create-location-btn" class="btn btn-primary">{{ 'create'|trans({}, 'platform') }}</button>
+            <div class="btn btn-default" data-dismiss="modal" ng-click="closeModal()">{{ 'cancel'|trans({}, 'platform') }}</div>
         </div>
     </form>
 {% endblock %}

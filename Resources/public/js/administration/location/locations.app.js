@@ -35,15 +35,22 @@ locationManager.config(function ($httpProvider) {
 locationManager.controller('LocationController', function(
     $scope,
     $http,
-    $modal,
+    $uibModal,
+    $uibModalStack,
     locationAPI
     ) {
 
+    $scope.closeModal = function() {
+        $uibModalStack.dismissAll();
+    }
+
     $scope.createForm = function() {
-        $modal.open({
+        $uibModal.open({
             templateUrl: Routing.generate('api_get_create_location_form', {'_format': 'html'}),
-            controller: 'LocationController'
+            controller: 'LocationController',
+            animation: true
         });
+        
     }
 
     $scope.submit = function() {
