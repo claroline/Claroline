@@ -144,6 +144,7 @@ class HoleHandler implements QuestionHandlerInterface
             $holeData->wordResponses = array_map(function ($wr) {
                 $wrData = new \stdClass();
                 $wrData->id = (string) $wr->getId();
+                $wrData->response = (string) $wr->getResponse();
                 $wrData->score = $wr->getScore();
                 return $wrData;
             }, $hole->getWordResponses()->toArray());
@@ -179,7 +180,7 @@ class HoleHandler implements QuestionHandlerInterface
         if (0 === $count = count($data)) {
             return ['Answer data cannot be empty'];
         }
-
+/*
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionHole')
             ->findOneByQuestion($question);
         $holeIds = array_map(function ($hole) {
@@ -194,7 +195,7 @@ class HoleHandler implements QuestionHandlerInterface
             if (!in_array($id, $holeIds)) {
                 return ['Answer array identifiers must reference question choices'];
             }
-        }
+        }*/
 
         return [];
     }
@@ -209,23 +210,41 @@ class HoleHandler implements QuestionHandlerInterface
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionHole')
             ->findOneByQuestion($question);
 
-        if (!$interaction->getWeightResponse()) {
+    /*    if (!$interaction->getWeightResponse()) {
             throw new \Exception('Global score not implemented yet');
-        }
+        }*/
 
         $mark = 0;
-/*
+
         foreach ($interaction->getHoles() as $hole) {
-            if (in_array((string) $hole->getId(), $data)) {
-                $mark += $hole->getWeight();
+            foreach ($hole->getWordResponses() as $wd) {
+                if (in_array((string) $wd->getResponse(), $data)) {
+                    $mark += $wd->getScore();
+                }
             }
-        }*/
+        }
+        
+        $answers = "{";
+        $i=1;
+        $length = count($data);
+        foreach ($data as $answer) {
+            $answers .= "\"" . $i . "\":\"" . $answer . "\"";
+            
+            if ($i === $length) {
+                $answers .= "}";
+            }
+            else {
+                $answers .= ",";
+            }
+            
+            $i++;
+        }
 
         if ($mark < 0) {
             $mark = 0;
         }
-
-        $response->setResponse(implode(';', $data) . ';');
+        
+        $response->setResponse($answers);
         $response->setMark($mark);
     }
 }
