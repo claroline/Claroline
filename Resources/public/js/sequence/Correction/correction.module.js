@@ -5,7 +5,6 @@
     'use strict';
 
     angular.module('Correction', [
-        
-       
+               
     ]);
 })();

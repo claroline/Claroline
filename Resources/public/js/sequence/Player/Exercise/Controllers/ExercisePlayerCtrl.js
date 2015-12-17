@@ -186,7 +186,7 @@
              */
             this.checkIfFeedbackIsAvailable = function () {
                 //return this.exercise.meta.exerciseType === 'formatif';
-                return true;
+                return false;
             };
         }
     ]);

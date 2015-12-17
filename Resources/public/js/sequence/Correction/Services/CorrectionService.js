@@ -9,24 +9,24 @@
         '$http',
         '$filter',
         '$q',
-        function PaperService($window, $http, $filter, $q) {       
-           
+        function PaperService($window, $http, $filter, $q) {
+            this.paper = {};
 
             return {
-               getQuestionScore:function(question, paper){
-                   var solutions = question.solutions;
-                   var hints = question.hints;
-                   var score = 0.0;
-                   for (var i = 0; i < paper.questions.length; i++){
-                       if(paper.questions[i].id === question.id.toString()){
-                           
-                       }
-                   }
-                   
-                   return score;
-                   
-               },
-               /**
+                getQuestionScore: function (question, paper) {
+                    var solutions = question.solutions;
+                    var hints = question.hints;
+                    var score = 0.0;
+                    for (var i = 0; i < paper.questions.length; i++) {
+                        if (paper.questions[i].id === question.id.toString()) {
+
+                        }
+                    }
+
+                    return score;
+
+                },
+                /**
                  * Get one paper details
                  * @param {type} exoId
                  * @param {type} paperId
@@ -52,8 +52,6 @@
 
                     return deferred.promise;
                 }
-               
-                
             };
         }
     ]);

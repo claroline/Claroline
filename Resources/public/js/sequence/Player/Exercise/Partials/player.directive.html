@@ -53,7 +53,7 @@
                     <button role="button" data-ng-disabled="exercisePlayerCtrl.getCurrentStepNumber() === exercisePlayerCtrl.exercise.steps.length" data-container="body" data-toggle="tooltip" title="{{ 'btn_next_step_label'|trans:{}:'ujm_sequence' }}" type="button" data-ng-click="exercisePlayerCtrl.validateStep('forward')" class="btn btn-default fa fa-arrow-circle-right">    
                     </button>
                     -->
-                    <button role="button" data-ng-disabled="exercisePlayerCtrl.getCurrentStepNumber() === exercisePlayerCtrl.exercise.steps.length || !exercisePlayerCtrl.feedbackIsShown" data-container="body" data-toggle="tooltip" title="{{ 'btn_next_step_label'|trans:{}:'ujm_sequence' }}" type="button" data-ng-click="exercisePlayerCtrl.validateStep('forward')" class="btn btn-default">    
+                    <button role="button" data-ng-disabled="exercisePlayerCtrl.getCurrentStepNumber() === exercisePlayerCtrl.exercise.steps.length || (exercisePlayerCtrl.feedbackIsShown && exercisePlayerCtrl.checkIfFeedbackIsAvailable())" data-container="body" data-toggle="tooltip" title="{{ 'btn_next_step_label'|trans:{}:'ujm_sequence' }}" type="button" data-ng-click="exercisePlayerCtrl.validateStep('forward')" class="btn btn-default">    
                         <i class="fa fa-arrow-circle-right"></i>
                     </button>
                     

@@ -1,0 +1,29 @@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th class="center-text">{{ 'paper_details_table_choice'|trans:{}:'ujm_sequence' }}</th>
+            <th class="center-text">{{ 'paper_details_table_expected_answer'|trans:{}:'ujm_sequence' }}</th>
+            <th class="center-text">{{ 'paper_details_table_your_answer'|trans:{}:'ujm_sequence' }}</th>
+            <th class="center-text">{{ 'paper_details_table_comment'|trans:{}:'ujm_sequence' }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr data-ng-repeat="choice in correctionQCMCtrl.question.choices">
+            <td class="center-text">
+                <img class="image" data-ng-if="correctionQCMCtrl.getChoiceSimpleType(choice) == 'encoded-image'" data-ng-src="data:{{choice.type}};{{choice.encoding}}, {{choice.data}}"/>
+                <img class="image" data-ng-if="correctionQCMCtrl.getChoiceSimpleType(choice) == 'web-image'" data-ng-src="{{choice.url}}"/>
+                <div data-ng-if="correctionQCMCtrl.getChoiceSimpleType(choice) == 'simple-text'">{{choice.data}}</div>
+                <div data-ng-if="correctionQCMCtrl.getChoiceSimpleType(choice) == 'html-text'" data-ng-bind-html="choice.data | unsafe"></div>
+            </td>
+            <td class="center-text">
+                <div class="fa" data-ng-class="correctionQCMCtrl.isChoiceValid(question, choice) ? 'fa-check':'fa-remove'"></div>
+            </td>
+            <td class="center-text">
+                <div class="fa" data-ng-class="correctionQCMCtrl.isStudentChoice(question, choice) ? 'fa-check':'fa-remove'"></div>
+            </td>
+            <td class="center-text">
+                <span>{{correctionQCMCtrl.getCurrentChoiceFeedBack(question, choice)}}</span>
+            </td>
+        </tr>
+    </tbody>
+</table>
