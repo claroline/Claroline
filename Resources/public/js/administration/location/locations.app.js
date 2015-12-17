@@ -6,6 +6,7 @@ var translate = function(key) {
 }
 
 locationManager.config(function ($httpProvider) {
+    $httpProvider.useApplyAsync(true);
     $httpProvider.interceptors.push(function ($q) {
         return {
             'request': function(config) {
@@ -32,6 +33,33 @@ locationManager.config(function ($httpProvider) {
     });
 });
 
+locationManager.controller('CreateModalController', function(locationAPI, $scope, locations, $uibModalStack, $uibModal) {
+    $scope.newLocation = {};
+
+    $scope.submit = function() {
+        locationAPI.create($scope.newLocation).then(
+            function successHandler (d) {
+                $uibModalStack.dismissAll();
+                locations.push(d.data);
+            },
+            function errorHandler (d) {
+                if (d.status === 400) {
+                    $uibModalStack.dismissAll();
+                    $uibModal.open({
+                        template: d.data,
+                        controller: 'CreateModalController',
+                        resolve: {
+                            locations: function() {
+                                return locations;
+                            }
+                        }
+                    })
+                }
+            }
+        );
+    }
+});
+
 locationManager.controller('LocationController', function(
     $scope,
     $http,
@@ -40,27 +68,19 @@ locationManager.controller('LocationController', function(
     locationAPI
     ) {
 
-    $scope.closeModal = function() {
-        $uibModalStack.dismissAll();
-    }
+    $scope.locations = undefined;
 
     $scope.createForm = function() {
         $uibModal.open({
             templateUrl: Routing.generate('api_get_create_location_form', {'_format': 'html'}),
-            controller: 'LocationController',
-            animation: true
-        });
-        
-    }
-
-    $scope.submit = function() {
-        locationAPI.create($scope.newLocation).then(function(d) {
-            $scope.location.push(d.data);
+            controller: 'CreateModalController',
+            resolve: {
+                locations: function() {
+                    return $scope.locations;
+                }
+            }
         });
     }
-
-    $scope.locations = undefined;
-    $scope.newLocation = {};
 
     locationAPI.findAll().then(function(d) {
         $scope.locations = d.data;
