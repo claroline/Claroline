@@ -138,3 +138,16 @@ start_to_award_this_badge: 'Comenzar a <a href="%url%" id="awardUser" role="butt
 badge_edit_create_new_version: "<strong>Advertencia!!!</strong> esta insignia ya a sido atribuida. Modificar las reglas de atribución creara una nueva versión de la insignia."
 badges_management: 'Gestión de insignias'
 my_badges: 'Mis insignias'
+last_awarded_badges: 'Sus ultimas insignias obtenidas aqui'
+ladder_awarded_badges: 'Top de las insignias del espacio'
+badge_usage_widget_form_simple_view: 'Activar la visualización simplificada'
+no_badges_obtained:  'Usted no obtuvo insignias para este espacio de trabajo'
+workspace_manage_badges: 'Gestión de las insignias del espacio de trabajo'
+list_by_user: 'Poner en una lista por usuario'
+show_all_badges: 'Mostrar todas las insignias'
+back_to_badge_list: 'Volver a la lista de insignias'
+availables_badges : 'Insignias disponibles'
+badges_per_user: Nombre de badge par utilisateurs
+top_10_most_awarded_badges: Top 10 des Badges les plus attribués
+badges_number: Nombre des badges
+user_number: Nombre des utilisateurs

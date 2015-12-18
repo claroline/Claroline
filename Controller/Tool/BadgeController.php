@@ -5,6 +5,7 @@ namespace Icap\BadgeBundle\Controller\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Icap\BadgeBundle\Entity\Badge;
+use Icap\BadgeBundle\Entity\Widget\BadgeUsageConfig;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class BadgeController extends Controller
@@ -59,6 +60,7 @@ class BadgeController extends Controller
             );
         }
 
+
         $claimedBadges = [];
 
         if (count($finishedBadges) > 0) {
@@ -95,6 +97,7 @@ class BadgeController extends Controller
             );
         }
 
+
         /** @var \Claroline\CoreBundle\Pager\PagerFactory $pagerFactory */
         $pagerFactory = $this->get('claroline.pager.pager_factory');
         $badgePager   = $pagerFactory->createPagerFromArray($displayedBadges, $badgePage, 10);
@@ -102,9 +105,9 @@ class BadgeController extends Controller
         return $this->render(
             'IcapBadgeBundle:Template:Tool/list.html.twig',
             array(
-                'badgePager' => $badgePager,
-                'workspace'  => $workspace,
-                'badgePage'  => $badgePage
+                'badgePager'     => $badgePager,
+                'workspace'      => $workspace,
+                'badgePage'      => $badgePage
             )
         );
     }

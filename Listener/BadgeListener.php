@@ -175,11 +175,24 @@ class BadgeListener
      */
     private function badgesManagement(Workspace $workspace)
     {
+        /** @var \Icap\BadgeBundle\Repository\BadgeRepository $badgeRepository */
+        $badgeRepository = $this->doctrine->getRepository('IcapBadgeBundle:Badge');
+
+        /** @var \Icap\BadgeBundle\Repository\UserBadgeRepository $userBadgeRepository */
+        $userBadgeRepository = $this->doctrine->getRepository('IcapBadgeBundle:UserBadge');
+
+        $totalBadges       = $badgeRepository->countByWorkspace($workspace);
+        $totalBadgeAwarded = $userBadgeRepository->countAwardedBadgeByWorkspace($workspace);
+        $mostAwardedBadges = $userBadgeRepository->findWorkspaceMostAwardedBadges($workspace);
+        $countBadgesPerUser= $userBadgeRepository->countBadgesPerUser($workspace);
+
         $parameters = array(
             'badgePage'    => 1,
             'claimPage'    => 1,
             'userPage'    => 1,
             'workspace'    => $workspace,
+            'mostAwardedBadges' => $mostAwardedBadges,
+            'badges_per_user' => $countBadgesPerUser,
             'add_link'     => 'icap_badge_workspace_tool_badges_add',
             'edit_link'    => array(
                 'url'    => 'icap_badge_workspace_tool_badges_edit',
@@ -189,8 +202,11 @@ class BadgeListener
             'view_link'        => 'icap_badge_workspace_tool_badges_edit',
             'current_link'     => 'icap_badge_workspace_tool_badges',
             'claim_link'       => 'icap_badge_workspace_tool_manage_claim',
-            'claim_link'       => 'icap_badge_workspace_tool_manage_claim',
             'statistics_link'  => 'icap_badge_workspace_tool_badges_statistics',
+            'totalBadges'          => $totalBadges,
+            'totalAwarding'        => $userBadgeRepository->countAwardingByWorkspace($workspace),
+            'totalBadgeAwarded'    => $totalBadgeAwarded,
+            'totalBadgeNotAwarded' => $totalBadges - $totalBadgeAwarded,
             'route_parameters' => array(
                 'workspaceId' => $workspace->getId()
             ),

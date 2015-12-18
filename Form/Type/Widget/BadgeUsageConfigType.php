@@ -26,7 +26,15 @@ class BadgeUsageConfigType extends AbstractType
                     'label_width' => 'col-md-7',
                     'control_width' => 'col-md-2'
                 )
+            ))
+            ->add('simple_view', 'checkbox', array(
+                'required' => false,
+                'theme_options' => array(
+                    'label_width' => 'col-md-7',
+                    'control_width' => 'col-md-2'
+                )
             ));
+
     }
 
     public function getName()

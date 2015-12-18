@@ -1,25 +1,173 @@
 <ul class="nav nav-tabs" role="tablist">
-    <li class="active"><a href="#badges" role="tab" data-toggle="tab">Badges</a></li>
-    <li>
-        <a href="#users" role="tab" data-toggle="tab">
-            Utilisateurs{% if 0 < claimPager|length %} <span class="badge badge-info" data-toggle="tooltip" data-container="body"
-            title="{{ 'badge_current_claimed_badges_manage'|transchoice(claimPager|length, {'%claimedBadgeCount%': claimPager|length}, 'icap_badge') }}">
+    <li class="active">
+        <a href="#badges" class="btn btn-default btn-md " title="{{ 'show_all_badges'|trans({}, 'icap_badge') }}" role="tab" data-toggle="tab">
+            {{ 'show_all_badges'|trans({}, 'icap_badge') }}{% if 0 < claimPager|length %} <span class="badge badge-info" data-toggle="tooltip" data-container="body" title="{{ 'badge_current_claimed_badges_manage'|transchoice(claimPager|length, {'%claimedBadgeCount%': claimPager|length}, 'icap_badge') }}">
             {{ claimPager|length }}</span>{% endif %}
         </a>
     </li>
+    <li>
+        <a href="#users" class="btn btn-default btn-md" title="{{ 'list_by_user'|trans({}, 'icap_badge') }}" role="tab" data-toggle="tab">
+            {{ 'list_by_user'|trans({}, 'icap_badge') }}{% if 0 < claimPager|length %} <span class="badge badge-info" data-toggle="tooltip" data-container="body" title="{{ 'badge_current_claimed_badges_manage'|transchoice(claimPager|length, {'%claimedBadgeCount%': claimPager|length}, 'icap_badge') }}">
+                {{ claimPager|length }}</span>{% endif %}
+        </a>
+    </li>
+    {% if parameters.badges_per_user is defined %}
+    <li>
+        <a href="#stats" class="btn btn-default btn-md" title="{{ 'badge_statistics'|trans({}, 'icap_badge') }}" role="tab" data-toggle="tab">
+            <span class="fa fa-bar-chart"></span> {{ 'badge_statistics'|trans({}, 'icap_badge') }}
+        </a>
+        <!-- {{ path(parameters.statistics_link, parameters.route_parameters) }} -->
+    </li>
+    {% endif %}
 </ul>
 
 <!-- Tab panes -->
 <div class="tab-content badge_tabs">
     <div class="tab-pane active" id="badges">
+        <a href="{{ path(parameters.add_link, parameters.route_parameters) }}" title="{{ 'add_badge'|trans({}, 'icap_badge') }}" role="button" class="btn btn-primary btn-md">
+            <span class="fa fa-plus"></span> {{ 'add_badge'|trans({}, 'icap_badge') }}
+        </a>
         {% include 'IcapBadgeBundle:Template:list_badges.html.twig'%}
     </div>
     <div class="tab-pane" id="users">
         {% include 'IcapBadgeBundle:Template:list_badges_claim.html.twig'%}
         {% include 'IcapBadgeBundle:Template:list_users.html.twig'%}
     </div>
+    {% if parameters.badges_per_user is defined %}
+    <div class="tab-pane" id="stats">
+        {% include 'IcapBadgeBundle:Template:statistics.html.twig'%}
+    </div>
+    {% endif %}
 </div>
 
 {% block javascripts %}
-<script type="text/javascript" src='{{ asset('bundles/icapbadge/js/list.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/icapbadge/js/list.js') }}'></script>
+    {% if parameters.badges_per_user is defined %}
+    <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/excanvas.min.js') }}"></script><![endif]-->
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-2.1.0.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/jquery.jqplot.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.pieRenderer.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.donutRenderer.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.barRenderer.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.pieRenderer.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.categoryAxisRenderer.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasAxisLabelRenderer.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasTextRenderer.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.pointLabels.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
+
+
+
+    <script type="text/javascript">
+        var jqplotInitialized = false;
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            $target = $(e.target).attr("href");
+            if ($target == "#stats" && !jqplotInitialized) {
+
+                var s1 = [['{{ 'awarded_badges'|trans({}, 'icap_badge') }}',{{ parameters.totalBadgeAwarded }}], ['{{ 'availables_badges'|trans({}, 'icap_badge') }}',{{ parameters.totalBadgeNotAwarded }}]];
+
+                var plot = $.jqplot('globalAttrib', [s1], {
+                    grid: {
+                        drawBorder: false,
+                        background: 'white',
+                        shadow: false
+                    },
+                    seriesDefaults: {
+                        // make this a donut chart.
+                        renderer:$.jqplot.DonutRenderer,
+                        rendererOptions:{
+                            shadow: false,
+                            sliceMargin: 3,
+                            startAngle: 90,
+                            color:'white',
+                            showDataLabels: true,
+                            dataLabels: 'value',
+                            padding: 5,
+                            animation:{show:!$.jqplot.use_excanvas}
+                        }
+                    },
+                    legend: { show:true, location: 'e' }
+                });
+
+                $.jqplot.config.enablePlugins = true;
+                var badges_per_user = {{ parameters.badges_per_user|json_encode|raw }};
+                var dataLength = badges_per_user.length;
+                var maxNbBadge = parseInt(badges_per_user[dataLength-1][0]);
+                var barchartWidth = $("#badgesPerUsers").width()-50;
+
+                plot1 = $.jqplot('badgesPerUsers', [badges_per_user], {
+                    axesDefaults: {
+                        labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                        min: 0,
+                        tickOptions: {
+                            formatString: '%d'
+                        }
+                    },
+                    animate: !$.jqplot.use_excanvas,
+                    grid: {
+                        drawBorder: false,
+                        background: 'white',
+                        shadow: false
+                    },
+                    seriesDefaults:{
+                        shadow: false,
+                        renderer:$.jqplot.BarRenderer,
+                        pointLabels: { show: true },
+                        rendererOptions: {
+                            barWidth: Math.floor(barchartWidth/(maxNbBadge+10)),
+                            animation:{show:!$.jqplot.use_excanvas}
+                        }
+                    },
+                    axes: {
+                        xaxis: {
+                            label: "{{ 'badges_number'|trans({}, "icap_badge") }}",
+                            renderer: $.jqplot.LinearAxisRenderer,
+                            tickInterval: 1,
+                            numberTicks: maxNbBadge+2
+                        },
+                        yaxis: {
+                            label: "{{ 'user_number'|trans({}, "icap_badge") }}",
+                            forceTickAt0: true
+                        }
+                    },
+                    highlighter: { show: false }
+                });
+
+                $('#badgesPerUsers').bind('jqplotDataClick',
+                        function (ev, seriesIndex, pointIndex, data) {
+                            $('#info1').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
+                        }
+                );
+
+                //On recupere le nom du badge attribué, ainsi que son nombre
+                var plot2 = $.jqplot('repartitionBadges', [[ {% for awardedBadge in parameters.mostAwardedBadges %} ["{{ awardedBadge.userBadge.badge.name }}",{{ awardedBadge.awardedNumber }}],{% endfor %} ]], {
+                    grid: {
+                        drawBorder: false,
+                        background: 'white',
+                        shadow: false
+                    },
+                    animate: !$.jqplot.use_excanvas,
+                    seriesDefaults:{
+                        shadow: false,
+                        renderer:$.jqplot.PieRenderer,
+                        rendererOptions: {
+                            showDataLabels: true,
+                            dataLabels: 'value',
+                            padding:5
+                        },
+                        trendline:{
+                            show: true
+                        }
+                    },
+                    legend:{
+                        show: true
+                    }
+                });
+
+                jqplotInitialized = true;
+            }
+        });
+    </script>
+
+    {% endif %}
 {% endblock %}

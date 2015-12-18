@@ -10,7 +10,7 @@
             workspace,
             [
                 {
-                    'name': 'workspace_badges'|trans({}, 'icap_badge'),
+                    'name': 'workspace_manage_badges'|trans({}, 'icap_badge'),
                     'href': ''
                 }
             ]
@@ -19,13 +19,7 @@
 {% endblock %}
 
 {% block section_title %}
-    {{ 'workspace_badges'|trans({}, 'icap_badge') }}
-    <a href="{{ path(parameters.add_link, parameters.route_parameters) }}" title="{{ 'add_badge'|trans({}, 'icap_badge') }}" class="btn btn-default btn-sm">
-        <span class="fa fa-plus"></span> {{ 'add_badge'|trans({}, 'icap_badge') }}
-    </a>
-    <a href="{{ path(parameters.statistics_link, parameters.route_parameters) }}" title="{{ 'badge_statistics'|trans({}, 'icap_badge') }}" class="btn btn-default btn-sm pull-right" data-toggle="tooltip">
-        <span class="fa fa-bar-chart"></span>
-    </a>
+    {{ 'workspace_manage_badges'|trans({}, 'icap_badge') }}
 {% endblock %}
 
 {% block section_body %}

@@ -12,7 +12,7 @@
             workspace,
             [
                 {
-                    'name': 'workspace_badges'|trans({}, 'icap_badge'),
+                    'name': 'workspace_manage_badges'|trans({}, 'icap_badge'),
                     'href': path('claro_workspace_open_tool', {'workspaceId': workspace.id, 'toolName': 'badges'})
                 },
                 {
@@ -27,10 +27,20 @@
 {% block section_title %}{{ 'edit_badge'|trans({'%badge_name%': badge.name}, 'icap_badge') }}{% endblock %}
 
 {% block section_body %}
-    <ul class="nav nav-tabs">
+    <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.id, 'toolName': 'badges'}) }}" class="btn btn-default btn-md btn-back" role="button"><span class="fa fa-reply"></span>
+        {{ 'back_to_badge_list'|trans({}, 'icap_badge') }}</a>
+    <a href="#edit" class="btn btn-primary btn-md" role="button" data-toggle="tab">{{ 'edit'|trans({}, 'platform') }}</a>
+    <a href="{{ path('icap_badge_workspace_tool_badges_delete', {'workspaceId': workspace.id, 'slug': badge.slug}) }}" title="{{ 'delete'|trans({}, 'platform') }}" class="btn btn-md btn-danger confirm delete"
+       data-confirm-title="{{ 'badge_delete_confirm_title'|trans }}"
+       data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name}, 'icap_badge') }}"
+       data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"
+       data-confirm-style="danger" role="button">
+        <span class="fa fa-trash-o"></span> {{ 'delete'|trans({}, 'platform') }}
+    </a>
+    <!--<ul class="nav nav-tabs">
         <li class="active"><a href="#view" data-toggle="tab">{{ 'view'|trans({}, 'platform') }}</a></li>
         <li><a href="#edit" data-toggle="tab">{{ 'edit'|trans({}, 'platform') }}</a></li>
-    </ul>
+    </ul>-->
     <div class="tab-content view_badge">
         <div class="tab-pane active view" id="view">
             <div class="row">
@@ -140,9 +150,6 @@
         <div class="tab-pane" id="edit">
             <h3 id='user-list-block' class="sub-section-header">
                 {{ 'edit_badge'|trans({'%badge_name%' : badge.name}) }}
-                <a href="{{ path('icap_badge_workspace_tool_badges_delete', {'workspaceId': workspace.id, 'slug': badge.slug}) }}" title="{{ 'delete'|trans({}, 'platform') }}" class="btn btn-sm btn-danger delete pull-right" data-confirm-title="{{ 'badge_delete_confirm_title'|trans }}" data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name}) }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger" role="button">
-                    <span class="fa fa-trash-o"></span>
-                </a>
             </h3>
             {% if 0 < pager.currentPageResults|length %}
                 <div class="alert alert-warning">
@@ -253,8 +260,7 @@
                 {{ form_rest(form) }}
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
-                    <a href="{{ path('icap_badge_workspace_tool_badges', {'workspaceId': workspace.id}) }}"
-                       title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-danger" role="button">
+                    <a href="#view" class="btn btn-default" role="button" data-toggle="tab" title="{{ 'cancel'|trans({}, 'platform') }}">
                         {{ 'cancel'|trans({}, 'platform') }}
                     </a>
                 </div>
@@ -267,6 +273,8 @@
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('bundles/frontend/jquery/plugin/select2/select2.css') }}" screen="media" />
 {% endblock %}
+
+
 
 
 {% block javascripts %}

@@ -6,7 +6,8 @@
     {% endstylesheets %}
 {% endblock %}
 
-<p>{{ 'last_awarded_badges'|trans({}, 'icap_badge') }} :</p>
+<div {% if simple_view_widget %}class="widget_simple_view"{% endif %}>
+<p class="no_simple_view">{{ 'last_awarded_badges'|trans({}, 'icap_badge') }} :</p>
 <ul class="media-list list-inline">
     {% for userBadge in lastAwardedBadges %}
         <li class="media">
@@ -16,11 +17,7 @@
 
             <div class="media-body">
                 <h4 class="media-heading"><a href="{{ path('icap_badge_view_badge', {'slug': userBadge.badge.slug}) }}" title="{{ userBadge.badge.name }}">{{ userBadge.badge.name }}</a></h4>
-                {% if userBadge.issuer is null %}
-                <p>{{ 'badge_awarded_to_full_platform' | trans({'%userUrl%': path('claro_public_profile_view', {'publicUrl': userBadge.user.publicUrl}), '%user%': userBadge.user.lastName ~ ' ' ~ userBadge.user.firstName, '%systemName%': systemName}, 'icap_badge') | raw }}</p>
-                {% else %}
-                <p>{{ 'badge_awarded_to_full' | trans({'%userUrl%': path('claro_public_profile_view', {'publicUrl': userBadge.user.publicUrl}), '%user%': userBadge.user.lastName ~ ' ' ~ userBadge.user.firstName, '%issuerUrl%': path('claro_public_profile_view', {'publicUrl': userBadge.issuer.publicUrl}), '%issuer%': userBadge.user.lastName ~ ' ' ~ userBadge.user.firstName}, 'icap_badge') | raw }}</p>
-                {% endif %}
+                <span class="description">{{ userBadge.badge.description }}</span>
             </div>
         </li>
     {% else %}
@@ -28,20 +25,67 @@
     {% endfor %}
 </ul>
 
-<p>{{ 'ladder_awarded_badges'|trans({}, 'icap_badge') }} :</p>
-<ul class="media-list list-inline">
-    {% for userBadge in mostAwardedBadges %}
+<p class="no_simple_view">{{ 'ladder_awarded_badges'|trans({}, 'icap_badge') }} :</p>
+<ul class="media-list list-inline no_simple_view">
+    {% for badgeLine in mostAwardedBadges %}
     <li class="media">
-        <a class="pull-left" href="#">
-            <img class="media-object badge_image" src="{{ asset(userBadge.0.badge.webPath) }}" alt="{{ userBadge.0.badge.name }}">
+        <a class="pull-left" href="#" title="{{ badgeLine.userBadge.badge.name }}">
+            <img class="media-object badge_image" src="{{ asset(badgeLine.userBadge.badge.webPath) }}" alt="{{ badgeLine.userBadge.badge.name }}">
         </a>
 
         <div class="media-body">
-            <h4 class="media-heading"><a href="{{ path('icap_badge_view_badge', {'slug': userBadge.0.badge.slug}) }}" title="{{ userBadge.0.badge.name }}">{{ userBadge.0.badge.name }}</a></h4>
-            <p>{{ 'badge_awarded_nb_times'|trans({'%nbTimes%': userBadge.awardedNumber}, 'icap_badge') }}</p>
+            <h4 class="media-heading"><a href="{{ path('icap_badge_view_badge', {'slug': badgeLine.userBadge.badge.slug}) }}" title="{{ badgeLine.userBadge.badge.name }}">{{ badgeLine.userBadge.badge.name }}</a></h4>
+            <span class="description">{{ badgeLine.userBadge.badge.description }}</span>
         </div>
     </li>
     {% else %}
         <li>{{ 'no_badges'|trans({}, 'icap_badge') }}</li>
     {% endfor %}
 </ul>
+
+{%  if availableBadges %}
+<ul class="media-list list-inline available_badges_simple_view">
+    {% for userBadge in availableBadges %}
+        <li class="media">
+            <a class="pull-left" href="#" title="{{ userBadge.name }}">
+                <img class="media-object badge_image" src="{{ asset(userBadge.webPath) }}" alt="{{ userBadge.name }}">
+            </a>
+        </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+
+</div>
+
+<script>
+    //Add event listener on image load to resize image
+    $(document).ready(function(){
+        $('.media .pull-left .badge_image').each(function(){
+            $(this).load(function(){
+                resizeBadgeImage(this);
+            });
+        });
+    });
+
+    //When the page is fully loaded, resize images
+    $(window).load(function() {
+        var image = $('.media .pull-left .badge_image');
+        image.each(function(){
+            resizeBadgeImage(this);
+        });
+    });
+
+    function resizeBadgeImage(element) {
+        if ($( element ).width() > $( element ).height()) {
+            $( element ).css('height', '64px');
+            $( element ).css('marginLeft', -($( element ).width())/2);
+            $( element ).css('marginTop', -($( element ).height())/2);
+        }
+        else{
+            $( element ).css('width', '64px');
+            $( element ).css('marginLeft', -($( element ).width())/2);
+            $( element ).css('marginTop', -($( element ).height())/2);
+        }
+    }
+</script>

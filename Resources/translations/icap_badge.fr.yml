@@ -12,6 +12,7 @@ back_to_badges_list: 'Retour à la liste des badges'
 back_to_my_badges: 'Retour à mes badges'
 back_to_users_badge: 'Retour à la liste des utilisateurs'
 badge: Badge
+badge_count: badge|badges
 badge_add_error_message: 'Erreur lors de l''ajout du badge.'
 badge_add_success_message: 'Badge ajouté avec succès.'
 badge_already_award_info_message: 'Validation de l''attribution du badge inutile, l''utilisateur possède déjà ce badge.'
@@ -126,8 +127,10 @@ edit_is_unshared_collection_error: 'Une erreur est survenue lors de la suppressi
 edit_title_collection_error: 'Une erreur est survenue lors de la modification du nom de la collection.'
 month: mois
 my_collections: 'Mes collections'
-my_badges: Mes badges
+my_badges: Badges de l'espace de travail
 no_badge_claim: 'Aucune demande d''attribution.'
+my_latest_badges: Mes derniers badges
+availables_badges: Badges disponibles
 no_badge_in_collection: 'Il n''y a aucun badge dans cette collection.'
 no_badges: 'Aucun badge.'
 no_badges_create_to_motivate: 'Aucun badge actuellement, vous pouvez en <a href="%url%">créer</a> pour motiver vos utilisateurs.'
@@ -160,9 +163,10 @@ workspace_badges_statistics: 'Statistiques des badges de l''espace de travail'
 badges_platform_statistics: 'Statistiques des badges de la plateforme'
 awarded_badges: 'Badges attribués'
 badge_usage_widget_form_number_last_awarded_badge: 'Badges attribués à afficher'
-badge_usage_widget_form_number_most_awarded_badge: 'Badges à afficher pour le classement'
-last_awarded_badges: 'Derniers badges attribués'
-ladder_awarded_badges: 'Classement d''attribution des badges'
+badge_usage_widget_form_number_most_awarded_badge: 'Badges à afficher dans le top'
+badge_usage_widget_form_simple_view: 'Activer l''affichage simplifié'
+last_awarded_badges: 'Vos derniers badges obtenus ici'
+ladder_awarded_badges: 'Top des badges de l''espace'
 badge_awarded_nb_times: 'Atrribué %nbTimes% fois'
 badge_awarding_finished: 'Règles respectées, réclamer le badge'
 badge_claimed: 'Badge réclamé'
@@ -181,3 +185,13 @@ total_awarded_badge: 'badge attribué|badges attribués'
 total_not_awarded_badge: 'badge non-attribué|badges non-attribués'
 badge-shared: "Partagé"
 badge-private: "Privé"
+no_badges_obtained: 'Vous n''avez pas obtenu de badge pour cet espace de travail'
+workspace_manage_badges: 'Gestion des badges de l''espace de travail'
+list_by_user: 'Lister par utilisateur'
+show_all_badges: 'Afficher tous les badges'
+back_to_badge_list: 'Retour à la liste de badge'
+badges_per_user: Nombre de badge par utilisateurs
+top_10_most_awarded_badges: Top 10 des Badges les plus attribués
+badges_number: Nombre des badges
+user_number: Nombre des utilisateurs
+

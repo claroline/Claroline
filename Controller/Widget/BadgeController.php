@@ -40,3 +40,4 @@ class BadgeController extends Controller
         return new Response('success', 204);
     }
 }
+

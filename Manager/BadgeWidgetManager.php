@@ -53,6 +53,7 @@ class BadgeWidgetManager
         $defaultBadgeUsageConfig
             ->setNumberLastAwardedBadge(10)
             ->setNumberMostAwardedBadge(3);
+        $defaultBadgeUsageConfig->setSimpleView(false);
 
         return $defaultBadgeUsageConfig;
     }

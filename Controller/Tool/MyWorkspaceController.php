@@ -126,9 +126,9 @@ class MyWorkspaceController extends Controller
 
         $userBadge = $this->getDoctrine()->getRepository('IcapBadgeBundle:UserBadge')->findOneBy(array('badge' => $badge, 'user' => $user));
 
-        if (null === $userBadge) {
+        /*if (null === $userBadge) {
             throw $this->createNotFoundException("User don't have this badge.");
-        }
+        }*/
 
         return array(
             'workspace'    => $workspace,

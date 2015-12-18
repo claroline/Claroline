@@ -29,10 +29,22 @@
 {% block section_title %}{{ 'view_badge'|trans({'%badge_name%': badge.name}, 'icap_badge') }}{% endblock %}
 
 {% block section_body %}
+    <a href="{{ path('icap_badge_admin_badges') }}" class="btn btn-default btn-md btn-back" role="button"><i class="fa fa-reply"></i>
+        {{ 'back_to_badge_list'|trans({}, 'icap_badge') }}</a>
+    <a href="#edit" class="btn btn-primary btn-md" role="button" data-toggle="tab">{{ 'edit'|trans({}, 'platform') }}</a>
+    <a href="{{ path('icap_badge_admin_badges_delete', {'slug': badge.slug}) }}" title="{{ 'delete'|trans({}, 'platform') }}" class="btn btn-md btn-danger confirm"
+       data-confirm-title="{{ 'badge_delete_confirm_title'|trans }}"
+       data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name}) }}"
+       data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"
+       data-confirm-style="danger"><span class="fa fa-trash-o"></span> {{ 'delete'|trans({}, 'platform') }}</a>
+
+    <!--
     <ul class="nav nav-tabs">
         <li class="active"><a href="#view" data-toggle="tab">{{ 'view'|trans({}, 'platform') }}</a></li>
+        test
         <li><a href="#edit" data-toggle="tab">{{ 'edit'|trans({}, 'platform') }}</a></li>
     </ul>
+    -->
     <div class="tab-content view_badge">
         <div class="tab-pane active view" id="view">
             <div class="row">
@@ -141,11 +153,6 @@
         <div class="tab-pane" id="edit">
             <h3 id='user-list-block' class="sub-section-header">
                 {{ 'edit_badge'|trans({'%badge_name%' : badge.name}) }}
-                <a href="{{ path('icap_badge_admin_badges_delete', {'slug': badge.slug}) }}" title="{{ 'delete'|trans({}, 'platform') }}" class="btn btn-sm btn-danger confirm pull-right"
-                   data-confirm-title="{{ 'badge_delete_confirm_title'|trans }}"
-                   data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name}) }}"
-                   data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"
-                   data-confirm-style="danger"><span class="fa fa-trash-o"></span></a>
             </h3>
             {% if 0 < pager.currentPageResults|length %}
                 <div class="alert alert-warning">

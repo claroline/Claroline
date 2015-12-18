@@ -163,6 +163,7 @@ badges_platform_statistics: 'Platform badge statistics'
 awarded_badges: 'Awarded badges'
 badge_usage_widget_form_number_last_awarded_badge: 'Awarded badge to display'
 badge_usage_widget_form_number_most_awarded_badge: 'Badges to display in the ladder'
+badge_usage_widget_form_simple_view: 'Activate the simplified display'
 last_awarded_badges: 'Last awarded badges'
 ladder_awarded_badges: 'Awarded badges ladder'
 badge_awarded_nb_times: 'Awarded %nbTimes% times'
@@ -183,3 +184,13 @@ total_awarded_badge: 'awarded badge|awarded badges'
 total_not_awarded_badge: 'not awarded badge|not awarded badges'
 badge-shared: "Shared"
 badge-private: "Private"
+no_badges_obtained:  'You did not obtain badge for this workspace'
+workspace_manage_badges: 'Management of the badges of the workspace'
+list_by_user: 'list by user'
+show_all_badges: 'Show all the badges'
+back_to_badge_list: 'Back to the list of badges'
+availables_badges: 'Availables badges'
+badges_per_user: Badges number by number of users
+top_10_most_awarded_badges: Top 10 of most awarded badges
+badges_number: Badges number
+user_number: Users number

@@ -43,6 +43,15 @@ class WorkspaceController extends Controller
     {
         $this->checkUserIsAllowed($workspace);
 
+        /** @var \Icap\BadgeBundle\Repository\BadgeRepository $badgeRepository */
+        $badgeRepository = $this->getDoctrine()->getRepository('IcapBadgeBundle:Badge');
+
+        /** @var \Icap\BadgeBundle\Repository\UserBadgeRepository $userBadgeRepository */
+        $userBadgeRepository = $this->getDoctrine()->getRepository('IcapBadgeBundle:UserBadge');
+
+        $totalBadges       = $badgeRepository->countByWorkspace($workspace);
+        $totalBadgeAwarded = $userBadgeRepository->countAwardedBadgeByWorkspace($workspace);
+
         $parameters = array(
             'badgePage'    => $badgePage,
             'claimPage'    => $claimPage,
@@ -58,10 +67,15 @@ class WorkspaceController extends Controller
             'current_link'     => 'icap_badge_workspace_tool_badges',
             'claim_link'       => 'icap_badge_workspace_tool_manage_claim',
             'statistics_link'  => 'icap_badge_workspace_tool_badges_statistics',
+            'totalBadges'          => $totalBadges,
+            'totalAwarding'        => $userBadgeRepository->countAwardingByWorkspace($workspace),
+            'totalBadgeAwarded'    => $totalBadgeAwarded,
+            'totalBadgeNotAwarded' => $totalBadges - $totalBadgeAwarded,
             'route_parameters' => array(
                 'workspaceId' => $workspace->getId()
             ),
         );
+
 
         return array(
             'workspace'   => $workspace,

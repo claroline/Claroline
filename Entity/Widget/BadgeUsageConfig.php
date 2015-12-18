@@ -38,6 +38,12 @@ class BadgeUsageConfig
     protected $numberMostAwardedBadge;
 
     /**
+     * @var boolean
+     * @ORM\Column(type="boolean")
+     */
+    protected $simple_view;
+
+    /**
      * @return mixed
      */
     public function getId()
@@ -103,6 +109,22 @@ class BadgeUsageConfig
     public function getNumberMostAwardedBadge()
     {
         return $this->numberMostAwardedBadge;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isSimpleView()
+    {
+        return $this->simple_view;
+    }
+
+    /**
+     * @param boolean $simple_view
+     */
+    public function setSimpleView($simple_view)
+    {
+        $this->simple_view = $simple_view;
     }
 }
  

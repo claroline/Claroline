@@ -9,12 +9,6 @@
         color: green;
     }
 }
-
-.badge_tabs {
-    .tab-pane {
-        padding-top: 20px;
-    }
-}
 .badge_list {
     .badge_container {
         margin: 5px 0 0 5px;
@@ -59,22 +53,52 @@
         }
     }
 }
-
-.user_badge_list {
-    .username {
-        width: 150px;
+.panel{
+    .user_badge_list {
+        .username {
+            width: 150px;
+        }
+        tbody > tr > td {
+            padding-bottom: 0;
+        }
+        .user_badge {
+            margin-bottom: 0;
+            li {
+                margin-bottom: 5px;
+                a {
+                    display: inline-block;
+                    overflow: hidden;
+                    width: 32px;
+                    height: 32px;
+                    .badge_image {
+                        left: 50%;
+                        position: relative;
+                        top:50%;
+                        max-width: none;
+                    }
+                }
+            }
+        }
     }
-    .badge_image {
-        width:  32px;
-        height: 32px;
+    #users.tab-pane {
+        .badge_image{left: 0; top: 0; max-width: 100%; max-height: 100%;}
     }
-    tbody > tr > td {
-        padding-bottom: 0;
-    }
-    .user_badge {
-        margin-bottom: 0;
-        li {
-            margin-bottom: 5px;
+}
+.media{
+    display:block !important;
+    padding-left:0 !important;
+    padding-right: 0 !important;
+    .pull-left{
+        height: 64px;
+        overflow: hidden;
+        width: 64px;
+        .badge_image {
+            width:  auto;
+            height: auto;
+            max-width:none;
+            position:relative;
+            left:50%;
+            top: 50%;
         }
     }
 }
@@ -88,20 +112,110 @@
 }
 
 .badge_image {
-    width:  64px;
-    height: 64px;
+    width:  100px;
+    height: 100px;
+}
+.my_badges{
+    .panel{
+        &.panel-default {
+            border-color: rgba(0, 0, 0, 0);
+            margin: 0;
+        }
+        .col-md-4{
+            width:125px;
+            .img_container{
+                height: 100px;
+                width:100px;
+                overflow: hidden;
+                display:block;
+                .badge_image_informations {
+                    left: 50%;
+                    position: relative;
+                    top:50%;
+                    max-width: none;
+                }
+            }
+        }
+    }
 }
 
-.badge_image_informations {
-    width:  128px;
-    height: 128px;
+
+.badge_simple_display
+{
+    display:none;
 }
+
+.simple_display{
+    .col-md-6{
+        width:auto;
+    }
+    .badge_simple_display {
+        display:inline-block;
+        height: 128px;
+        overflow: hidden;
+        width: 128px;
+        padding: 0;
+        text-align: initial;
+        img{
+            left:50%;
+            top:50%;
+            position:relative;
+            max-width: none;
+        }
+    }
+    .simple_available_badge{
+        opacity:0.5;
+        border-radius: 4px;
+    }
+    .panel.panel-default.badge_panel.owned_badge{
+        display:none;
+    }
+    .panel.panel-default.badge_panel.available_badges{
+        display:none;
+    }
+}
+
+.widget_simple_view{
+    .media-list.list-inline {
+        display: inline-block;
+    }
+    .no_simple_view {
+        display: none !important;
+    }
+    .available_badges_simple_view {
+        opacity:0.5;
+        .badge_image {
+            cursor: auto;
+        }
+    }
+    .media{
+        margin-top: 0;
+        display:inline-block !important;
+        .media-body {
+            display: none;
+        }
+    }
+}
+
+.available_badges_simple_view{
+    display:none;
+}
+
+.list_my_badges{
+    float:left;
+}
+#badges{
+    .btn.btn-primary.btn-md {
+        margin-bottom: 25px;
+        margin-top: 25px;
+    }
+}
+
 
 .badge_management_container {
     .collections_container {
         padding-right: 0;
         padding-left:  0;
-
         h3 {
             margin-top:  0;
             margin-left: 10px;
@@ -223,6 +337,19 @@
         padding:       5px;
     }
 }
+.widget-instance-content-body {
+    .media-body {
+        color: silver;
+        font-size:12px;
+    }
+}
+
+#globalAttrib{
+    .jqplot-donut-series.jqplot-data-label{
+        color:white;
+    }
+}
+
 
 div.alert-info {
     overflow:    auto;
@@ -258,6 +385,22 @@ table.badge_informations {
     }
 }
 
+.panel-body
+{
+    p{
+        margin:0;
+    }
+    h3{
+        margin-top:0;
+    }
+    .criteria{
+        color:silver;
+    }
+    .award_text{
+        color:green;
+    }
+}
+
 .my_badges {
     .badge_panel {
         border-radius: 0px;
@@ -288,6 +431,22 @@ table.badge_informations {
                     color: #428bca;
                 }
             }
+            h3{
+                a {
+                    color: darkgrey;
+                }
+            }
+            .badge_image_informations {
+                filter: grayscale(90%); /* Standard CSS */
+                -webkit-filter: grayscale(90%); /* CSS for Webkit Browsers */
+                transition: filter 0.5s;
+                -webkit-transition: filter 0.5s; /* Safari */
+            }
+            .badge_image_informations:hover {
+                filter: grayscale(50%); /* Standard CSS */
+                -webkit-filter: grayscale(50%); /* CSS for Webkit Browsers */
+            }
+
         }
     }
 }

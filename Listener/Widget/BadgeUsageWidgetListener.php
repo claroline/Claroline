@@ -10,6 +10,7 @@ use Icap\BadgeBundle\Manager\BadgeWidgetManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Entity\User;
 
 /**
  * @DI\Service()
@@ -46,6 +47,7 @@ class BadgeUsageWidgetListener
      *     "templating"         = @DI\Inject("templating"),
      *     "badgeUsageForm"     = @DI\Inject("icap_badge.widget.form.badge_usage"),
      *     "badgeManager"       = @DI\Inject("icap_badge.manager.badge"),
+     *     "badgeClaimManager"  = @DI\Inject("icap_badge.manager.badge_claim"),
      *     "badgeWidgetManager" = @DI\Inject("icap_badge.manager.badge_widget"),
      *     "configHandler"      = @DI\Inject("claroline.config.platform_config_handler"),
      * })
@@ -67,19 +69,24 @@ class BadgeUsageWidgetListener
      * @DI\Observe("widget_badge_usage")
      *
      * @param DisplayWidgetEvent $event
+     *
      */
     public function onDisplay(DisplayWidgetEvent $event)
     {
-        $widgetInstance    = $event->getInstance();
-        $badgeWidgetConfig = $this->badgeWidgetManager->getBadgeUsageConfigForInstance($widgetInstance);
-        $lastAwardedBadges = $this->badgeManager->getWorkspaceLastAwardedBadges($widgetInstance->getWorkspace(), $badgeWidgetConfig->getNumberLastAwardedBadge());
-        $mostAwardedBadges = $this->badgeManager->getWorkspaceMostAwardedBadges($widgetInstance->getWorkspace(), $badgeWidgetConfig->getNumberMostAwardedBadge());
+        $widgetInstance     = $event->getInstance();
+        $badgeWidgetConfig  = $this->badgeWidgetManager->getBadgeUsageConfigForInstance($widgetInstance);
+        $lastAwardedBadges  = $this->badgeManager->getWorkspaceLastAwardedBadgesToLoggedUser($widgetInstance->getWorkspace(), $badgeWidgetConfig->getNumberLastAwardedBadge());
+        $mostAwardedBadges  = $this->badgeManager->getWorkspaceMostAwardedBadges($widgetInstance->getWorkspace(), $badgeWidgetConfig->getNumberMostAwardedBadge());
+        $simple_view_widget = $badgeWidgetConfig->isSimpleView();
+        $availableBadges    = $this->badgeManager->getWorkspaceAvailableBadges($widgetInstance->getWorkspace());
 
         $content = $this->templating->render(
             'IcapBadgeBundle:Widget:badge_usage.html.twig',
             array(
                 'lastAwardedBadges' => $lastAwardedBadges,
                 'mostAwardedBadges' => $mostAwardedBadges,
+                'availableBadges' => $availableBadges,
+                'simple_view_widget' => $simple_view_widget,
                 'systemName' => $this->platformName
             )
         );

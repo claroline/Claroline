@@ -2,6 +2,7 @@
 
 namespace Icap\BadgeBundle\Repository;
 
+use Doctrine\ORM\Query\ResultSetMapping;
 use Icap\BadgeBundle\Entity\Badge;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -127,6 +128,31 @@ class UserBadgeRepository extends EntityRepository
 
     /**
      * @param Workspace $workspace
+     * @param User $user
+     * @param int $limit
+     * @return \Icap\BadgeBundle\Entity\Badge[]
+     */
+    public function findWorkspaceLastAwardedBadgesToUser(Workspace $workspace, User $user, $limit = 10)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT ub, b
+                FROM IcapBadgeBundle:UserBadge ub
+                JOIN ub.badge b
+                WHERE ub.user = :user
+                AND b.workspace = :workspaceId
+                ORDER BY ub.issuedAt DESC'
+            )
+            ->setParameter('workspaceId', $workspace->getId())
+            ->setParameter('user', $user->getId());
+
+        return $query
+            ->setMaxResults($limit)
+            ->getResult();
+    }
+
+    /**
+     * @param Workspace $workspace
      * @param int       $limit
      *
      * @return Badge[]
@@ -135,11 +161,11 @@ class UserBadgeRepository extends EntityRepository
     {
         $query = $this->getEntityManager()
             ->createQuery(
-                'SELECT ub, b, COUNT(ub) AS awardedNumber
+                'SELECT ub AS userBadge, b, COUNT (ub) AS awardedNumber
                 FROM IcapBadgeBundle:UserBadge ub
                 JOIN ub.badge b
                 WHERE b.workspace = :workspaceId
-                GROUP BY ub.badge
+                GROUP BY b
                 ORDER BY awardedNumber DESC'
             )
             ->setParameter('workspaceId', $workspace->getId());
@@ -148,6 +174,36 @@ class UserBadgeRepository extends EntityRepository
                 ->setMaxResults($limit)
                 ->getResult();
     }
+
+
+    /**
+     * @param Workspace $workspace
+     *
+     * @return Badge[]
+     */
+    public function countBadgesPerUser(Workspace $workspace)
+    {
+        $sql = "SELECT qr1.nb_badge AS nb_badge, COUNT(qr1.id) AS nb_user
+                FROM (SELECT userBadge.user_id AS id, COUNT(userBadge.id) AS nb_badge
+                FROM claro_user_badge AS userBadge
+                LEFT JOIN claro_badge AS badge ON userBadge.badge_id = badge.id
+                WHERE badge.workspace_id = :workspaceId
+                GROUP BY userBadge.user_id) AS qr1
+                GROUP BY qr1.nb_badge
+                ORDER BY qr1.nb_badge";
+
+        $rsm = new ResultSetMapping();
+        $rsm
+            ->addScalarResult("nb_user","nb_user")
+            ->addScalarResult("nb_badge", "nb_badge");
+
+        $query = $this->getEntityManager()
+            ->createNativeQuery($sql, $rsm)
+            ->setParameter('workspaceId', $workspace->getId());
+
+        return $query->getResult('PairHydrator');
+    }
+
 
     /**
      * @param Badge $badge
