@@ -144,13 +144,13 @@ class QcmHandler implements QuestionHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true)
+    public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true, $forPaperList = false)
     {
         $repo = $this->om->getRepository('UJMExoBundle:InteractionQCM');
         $qcm = $repo->findOneBy(['question' => $question]);
         $exportData->random = $qcm->getShuffle();
         // if needed shuffle choices
-        if($exportData->random){
+        if($exportData->random && !$forPaperList){
             $qcm->shuffleChoices();
         }
         
