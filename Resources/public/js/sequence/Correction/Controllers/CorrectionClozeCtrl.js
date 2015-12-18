@@ -8,11 +8,19 @@
     angular.module('Correction').controller('CorrectionClozeCtrl', [
         'CommonService',
         'CorrectionService',
-        function (CommonService, CorrectionService) {
-
+        '$timeout',
+        function (CommonService, CorrectionService, $timeout) {
 
             this.question = {};
             this.paper = {};
+                    
+            $timeout(function () {
+                console.log("load");
+                var inputs = document.getElementsByClassName('blank');
+                for (var i=0; i<inputs.length; i++) {
+                    inputs[i].setAttribute("disabled", true);
+                }
+            });
 
             this.init = function (question, paper) {
                 this.question = question;
