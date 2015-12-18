@@ -15,6 +15,8 @@ use Innova\CollecticielBundle\Entity\Document;
 use Innova\CollecticielBundle\Entity\Grade;
 use Innova\CollecticielBundle\Entity\Comment;
 use Innova\CollecticielBundle\Entity\CommentRead;
+use Innova\CollecticielBundle\Entity\ReturnReceipt;
+use Innova\CollecticielBundle\Entity\ReturnReceiptType;
 use Innova\CollecticielBundle\Event\Log\LogCorrectionDeleteEvent;
 use Innova\CollecticielBundle\Event\Log\LogCorrectionEndEvent;
 use Innova\CollecticielBundle\Event\Log\LogCorrectionStartEvent;
@@ -39,6 +41,18 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Innova\CollecticielBundle\Event\Log\LogDropzoneAddCommentEvent;
+
+
+
+use Innova\CollecticielBundle\Event\Log\LogDropEndEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropStartEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropReportEvent;
+use Innova\CollecticielBundle\Form\CorrectionReportType;
+use Innova\CollecticielBundle\Form\DropType;
+use Innova\CollecticielBundle\Form\DocumentType;
+use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Symfony\Component\Form\FormError;
+
 
 
 class CorrectionController extends DropzoneBaseController
@@ -842,7 +856,6 @@ class CorrectionController extends DropzoneBaseController
             new CommentType(new Comment(),null))
         ;
 
-
         $form = $this->createForm(
             new CorrectionCriteriaPageType(),
             $oldData,
@@ -916,6 +929,7 @@ class CorrectionController extends DropzoneBaseController
 
         $dropzoneVoter = $this->get('innova.manager.dropzone_voter');
         $canEdit = $dropzoneVoter->checkEditRight($dropzone);
+
 
         // Appel de la vue qui va gérer l'ajout des commentaires. InnovaERV.
         $view = 'InnovaCollecticielBundle:Correction:correctCriteria.html.twig';
@@ -2053,7 +2067,14 @@ class CorrectionController extends DropzoneBaseController
         $request = $this->get('request');
 
         if ($request->isMethod('POST')) {
+
             $form->handleRequest($request);
+
+$docs = $this->getRequest()->request->get('arrayDocsToView');
+var_dump($docs);
+var_dump($form);
+die();
+
 
             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
@@ -2096,5 +2117,225 @@ class CorrectionController extends DropzoneBaseController
             )
         );
     }
+
+    /**
+     * @Route(
+     *      "/dropzone/comments",
+     *      name="innova_collecticiel_add_more_comments",
+     *      options={"expose"=true}
+     * )
+     * @Template()
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function dropzoneAddMoreCommentsAction()
+    {
+       
+        $em = $this->getDoctrine()->getManager();
+        $dropzoneManager = $this->get('innova.manager.dropzone_manager');
+
+        // Récupération de l'utilisateur
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        // Récupération de l'ID du dropzone choisi
+        $dropzoneId = $this->get('request')->query->get('dropzoneId');
+        $dropzone = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Dropzone')->find($dropzoneId);
+
+        $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
+
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+
+        // Récupération des documents sélectionnés
+        $arrayDocsId = $this->get('request')->query->get('arrayDocsId');
+        $arrayDocsToView = array();
+
+        $arrayDropsId = $this->get('request')->query->get('arrayDropsId');
+        $arrayDropsToView = array();
+
+        $cpt = 0;
+        // Parcours des documents sélectionnés et insertion en base de données
+        foreach($arrayDocsId as $documentId)
+        {
+            // Par le JS, le document est transmis sous la forme "document_id_XX"
+            $docIdS = explode("_", $documentId);
+            $docId = $docIdS[2];
+            $arrayDocsToView[] = $docId;
+
+            $dropId = $arrayDropsId[$cpt];
+            $drop = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Drop')->find($dropId);
+            $arrayDropsToView[] = $dropId;
+
+            $correction = new Correction();
+            $correction->setUser($user);
+            $correction->setDropzone($dropzone);
+            $correction->setDrop($drop);
+            //Allow admins to edit this correction
+            $correction->setEditable(true);;
+            $em->persist($correction);
+            $em->flush();
+
+            $event = new LogCorrectionStartEvent($dropzone, $drop, $correction);
+            $this->dispatch($event);
+
+            $cpt++;
+        }
+
+        $edit = 'edit';
+        $state = 'edit';
+
+        $oldData = array();
+
+        $dropzoneVoter = $this->get('innova.manager.dropzone_voter');
+        $canEdit = $dropzoneVoter->checkEditRight($dropzone);
+
+        $page = 1;
+
+        $pager = $this->getCriteriaPager($dropzone);
+        try {
+            $pager->setCurrentPage($page);
+        } catch (NotValidCurrentPageException $e) {
+            throw new NotFoundHttpException();
+        }
+
+        $formComment = $this->createForm(
+            new CommentType(new Comment(),null))
+        ;
+
+        $form = $this->createForm(
+            new CorrectionCriteriaPageType(),
+            $oldData,
+            array(
+                'edit' => $edit,
+                'criteria' => $pager->getCurrentPageResults(),
+                'totalChoice' => $dropzone->getTotalCriteriaColumn()
+            )
+        );
+
+        // Appel de la vue qui va gérer l'ajout des commentaires. InnovaERV.
+        $view = 'InnovaCollecticielBundle:Correction:correctAddMoreComments.html.twig';
+
+        return $this->render(
+            $view,
+            array(
+                'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+                '_resource' => $dropzone,
+                'dropzone' => $dropzone,
+                'form' => $form->createView(),
+                'formComment' => $formComment->createView(),
+                'admin' => true,
+                'pager' => $pager,
+                'edit' => $edit,
+                'state' => $state,
+                'arrayDocsToView' => $arrayDocsToView,
+                'arrayDropsToView' => $arrayDropsToView,
+                'user' => $user,
+                'adminInnova' => $canEdit,
+                'collecticielOpenOrNot' => $collecticielOpenOrNot
+            )
+        );
+    }
+
+    /**
+     * @Route(
+     *      "/add/more/comments",
+     *      name="innova_collecticiel_add_more_comment",
+     *      requirements={}
+     * )
+     * @Method("POST")
+     * @Template()
+     */
+    public function AddMoreCommentsInnovaAction()
+    {
+
+        $em = $this->getDoctrine()->getManager();
+
+        // Valorisation du commentaire
+        $comment = new Comment();
+//        $comment->setUser($user);
+
+        $form = $this->get('form.factory')->createBuilder(new CommentType(), $comment)->getForm();
+
+        // Récupération de la saisie du commentaire
+        $request = $this->get('request');
+
+        if ($request->isMethod('POST')) {
+ 
+          $docs = $this->get('request')->query->get('arrayDocsToView');
+
+
+//        $request = $this->get('request');
+
+//        $whatToFind = $request->query->get('whatToFind'); // Which text to find
+
+var_dump("tableau : ");
+var_dump($docs);
+
+$form->handleRequest($request);
+var_dump($form->getData());
+
+die();
+            // Ici il faut que je boucle sur la liste des documents 
+//            $comment->setDocument($document);
+
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                // Insertion en base du commentaire
+//                $em->persist($comment);
+
+            }
+        }
+
+
+        $em->flush();
+
+
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+
+                // Insertion en base du commentaire
+                $em->persist($comment);
+                $em->flush();
+
+                $dropzoneManager = $this->get('innova.manager.dropzone_manager');
+
+                // Envoi notification. InnovaERV
+//                $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
+                $usersIds = array();
+                $usersIds[] = $dropzone->getResourceNode()->getCreator()->getId();
+                $usersIds[] = $document->getSender()->getId();
+                $event = new LogDropzoneAddCommentEvent($dropzone, $dropzone->getManualState(), $usersIds);
+                $this->get('event_dispatcher')->dispatch('log', $event);
+            }
+        }
+
+        // Ajouter la création du log de la création du commentaire. InnovaERV.
+        $unitOfWork = $em->getUnitOfWork();
+        $unitOfWork->computeChangeSets();
+        $dropzoneChangeSet = $unitOfWork->getEntityChangeSet($dropzone);
+
+        $event = new LogCommentCreateEvent($dropzone, $dropzoneChangeSet, $comment);
+
+        $this->dispatch($event);
+
+        // Redirection vers la page des commentaires. InnovaERV.
+        return $this->redirect(
+            $this->generateUrl(
+                'innova_collecticiel_drops_detail_comment',
+                array(
+                    'resourceId' => $dropzone->getId(),
+                    'state' => 'edit',
+                    'correctionId' => $correction->getId(),
+                    'documentId' => $document->getId(),
+                )
+            )
+        );
+
+
+
+    }
+
 
 }

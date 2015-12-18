@@ -1,16 +1,23 @@
-<form class="form-horizontal" method="GET"
+<form class="form-horizontal" method="GET" 
 action="{{ path('innova_collecticiel_return_receipt')}}">
 
 <div class="btn-group">
-    <button type="submit" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#validate-modal" data-dropzone_id="{{ dropzone.id }}">
+    <button type="submit" class="btn btn-primary btn-sm"
+    data-toggle="modal" data-target="#validate-modal" data-dropzone_id="{{ dropzone.id }}">
         {{ 'Return receipt'|trans({}, 'innova_collecticiel') }}
     </button>
 </div>
 <div class="btn-group">
-    <button type="submit" class="btn btn-primary btn-sm">
+    <button type="submit" class="btn btn-primary btn-sm comment_validate"
+    id="dropzone_id_{{dropzone.id}}" name="dropzoneId" data-dropzone_id="{{ dropzone.id }}">
         {{ 'Comment Auto'|trans({}, 'innova_collecticiel') }}
     </button>
 </div>
+
+{# 
+    <a href="{{ path('innova_collecticiel_add_more_comments', {'resourceId': dropzone.id}) }}"
+    type="button" class="btn btn-default btn-sm">{{ 'Comment Auto'|trans({}, 'innova_collecticiel') }}</a>
+#}
 
 <!-- Vue donnant la liste des copies. Exemple d'URL : innovacollecticielbundle/2/drops/awaiting -->
 <table class="table table-striped table-hover sharedSpacesTable datatable">

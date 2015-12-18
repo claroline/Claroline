@@ -20,6 +20,11 @@ use Innova\CollecticielBundle\Event\Log\LogDropReportEvent;
 use Innova\CollecticielBundle\Form\CorrectionReportType;
 use Innova\CollecticielBundle\Form\DropType;
 use Innova\CollecticielBundle\Form\DocumentType;
+use Innova\CollecticielBundle\Form\CommentType;
+use Innova\CollecticielBundle\Form\CorrectionCommentType;
+use Innova\CollecticielBundle\Form\CorrectionCriteriaPageType;
+use Innova\CollecticielBundle\Form\CorrectionStandardType;
+use Innova\CollecticielBundle\Form\CorrectionDenyType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
@@ -1115,6 +1120,8 @@ class DropController extends DropzoneBaseController
 
         return $dataToView;
     }
+
+
 
     /**
      * @Route(
