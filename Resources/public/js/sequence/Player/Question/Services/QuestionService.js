@@ -29,7 +29,7 @@
                             })
                             .error(function (data, status) {
                                 deferred.reject([]);
-                                var msg = data && data.error && data.error.message ? data.error.message : 'unknown';
+                                var msg = data && data.error && data.error.message ? data.error.message : 'QuestionService get hint error';
                                 var code = data && data.error && data.error.code ? data.error.code : 400; 
                                 var url = Routing.generate('ujm_sequence_error', {message:msg, code:code});
                                 $window.location = url;
@@ -66,7 +66,9 @@
                             })
                             .error(function (data, status) {
                                 deferred.reject([]);
-                                var url = Routing.generate('ujm_sequence_error', {message:data.error.message, code:data.error.code});
+                                var msg = data && data.error && data.error.message ? data.error.message : 'QuestionService get solutions error';
+                                var code = data && data.error && data.error.code ? data.error.code : 400; 
+                                var url = Routing.generate('ujm_sequence_error', {message:msg, code:code});
                                 $window.location = url;
                             });
 

@@ -22,9 +22,9 @@
             this.showPagination = true;
 
 
-            // initiate paper list depending on user profil
+            // initiate paper list
             if ($route.current.params && $route.current.params.eid) {
-                var promise = PapersService.getAll($route.current.params.eid, user);
+                var promise = PapersService.getAll($route.current.params.eid);
                 promise.then(function (result) {
                     this.papers = result.papers;
                     this.questions = result.questions;

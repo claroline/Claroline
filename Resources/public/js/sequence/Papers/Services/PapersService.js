@@ -19,7 +19,7 @@
                  * @param {string} id
                  * @returns {$q@call;defer.promise}
                  */
-                getAll: function (id, user) {
+                getAll: function (id) {
                     var deferred = $q.defer();
                     var url = Routing.generate('exercise_papers', {id: id});
                     $http
@@ -31,7 +31,9 @@
                             })
                             .error(function (data, status) {
                                 deferred.reject([]);
-                                var url = Routing.generate('ujm_sequence_error', {message: data.error.message, code: data.error.code});
+                                var msg = data && data.error && data.error.message ? data.error.message : 'Papers get all error';
+                                var code = data && data.error && data.error.code ? data.error.code : 403;
+                                var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});
                                 $window.location = url;
                             });
 
@@ -53,7 +55,9 @@
                             })
                             .error(function (data, status) {
                                 deferred.reject([]);
-                                var url = Routing.generate('ujm_sequence_error', {message: data.error.message, code: data.error.code});
+                                var msg = data && data.error && data.error.message ? data.error.message : 'Papers get sequence error';
+                                var code = data && data.error && data.error.code ? data.error.code : 403;
+                                var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});
                                 $window.location = url;
                             });
 
@@ -70,7 +74,9 @@
                             })
                             .error(function (data, status) {
                                 deferred.reject([]);
-                                var url = Routing.generate('ujm_sequence_error', {message: data.error.message, code: data.error.code});
+                                var msg = data && data.error && data.error.message ? data.error.message : 'Papers get user error';
+                                var code = data && data.error && data.error.code ? data.error.code : 403;
+                                var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});
                                 $window.location = url;
                             });
 
@@ -86,8 +92,10 @@
                                 deferred.resolve(response);
                             })
                             .error(function(data, status){
-                                 deferred.reject([]);    
-                                var url = Routing.generate('ujm_sequence_error', {message: data.error.message, code: data.error.code});
+                                deferred.reject([]);
+                                var msg = data && data.error && data.error.message ? data.error.message : 'Papers count papers error';
+                                var code = data && data.error && data.error.code ? data.error.code : 403;
+                                var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});                                
                                 $window.location = url;
                             });
                     return deferred.promise;

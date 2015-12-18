@@ -9,10 +9,15 @@
         '$http',
         '$filter',
         '$q',
-        function PaperService($window, $http, $filter, $q) {
-            this.paper = {};
+        function CorrectionService($window, $http, $filter, $q) {
 
             return {
+                /**
+                 * NOT IMPLEMENTED YET
+                 * @param {type} question
+                 * @param {type} paper
+                 * @returns {Number}
+                 */
                 getQuestionScore: function (question, paper) {
                     var solutions = question.solutions;
                     var hints = question.hints;
@@ -42,11 +47,10 @@
                                 deferred.resolve(response);
                             })
                             .error(function (data, status) {
-                                console.log('PapersService, getOne method error');
                                 deferred.reject([]);
-                                //console.log(exoId + ' ' + paperId);
-                                //console.log(data);
-                                var url = Routing.generate('ujm_sequence_error', {message: data.error.message, code: data.error.code});
+                                var msg = data && data.error && data.error.message ? data.error.message : 'Correction get one error';
+                                var code = data && data.error && data.error.code ? data.error.code : 403;
+                                var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});
                                 $window.location = url;
                             });
 
