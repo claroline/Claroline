@@ -20,7 +20,7 @@ class AdditionalInstaller extends BaseInstaller
         $updater->setLogger($this->logger);
         $updater->postInstall();
 
-        $updater060300 = new Updater\Updater060300();
+        $updater060300 = new Updater\Updater060300($this->container);
         $updater060300->setLogger($this->logger);
         $updater060300->postInstall($this->container->get('doctrine.dbal.default_connection'), $this->container->get('kernel'));
     }
@@ -43,7 +43,7 @@ class AdditionalInstaller extends BaseInstaller
         }
 
         if (version_compare($currentVersion, '6.3.0', '<=')) {
-            $updater060300 = new Updater\Updater060300();
+            $updater060300 = new Updater\Updater060300($this->container);
             $updater060300->setLogger($this->logger);
             $updater060300->postUpdate($this->container->get('doctrine.dbal.default_connection'), $this->container->get('kernel'));
         }

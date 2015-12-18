@@ -8,9 +8,17 @@ use Claroline\MigrationBundle\Migrator\Migrator;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Migrations\Configuration\Configuration;
 use Doctrine\DBAL\Migrations\Migration;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Updater060300 extends Updater
 {
+    private $container;
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
     /**
      * @param Connection $connection
      * @param AppKernel  $kernel
@@ -39,23 +47,19 @@ class Updater060300 extends Updater
      */
     protected function migrateBadgeTables(Connection $connection, AppKernel $kernel)
     {
-        /** @var \Symfony\Component\HttpKernel\Bundle\Bundle[] $bundles */
-        $bundles = $kernel->getBundles();
-        $isPortfolioBundleInstalled = false;
-        foreach ($bundles as $bundle) {
-            if ('IcapPortfolioBundle' === $bundle->getName()) {
-                $isPortfolioBundleInstalled = true;
-            }
-        }
+        $portfolioBundle = $this->container->get('claroline.persistence.object_manager')->getRepository('ClarolineCoreBundle:Plugin')->findBy(
+            array('vendorName' => 'Icap', 'bundleName' => 'PortfolioBundle')
+        );
+        $portfolioBundle = count($portfolioBundle) === 1 ? true: false;
 
-        if (!$isPortfolioBundleInstalled && $connection->getSchemaManager()->tablesExist(['icap__portfolio_widget_badges'])) {
+        if (!$portfolioBundle && $connection->getSchemaManager()->tablesExist(['icap__portfolio_widget_badges'])) {
             $this->log('Deleting portfolios badges tables...');
             $connection->getSchemaManager()->dropTable('icap__portfolio_widget_badges_badge');
             $connection->getSchemaManager()->dropTable('icap__portfolio_widget_badges');
             $this->log('Portfolios badges tables deleted.');
         }
 
-        if ($isPortfolioBundleInstalled && !$connection->getSchemaManager()->tablesExist(['icap__portfolio_widget_badges'])) {
+        if ($portfolioBundle && !$connection->getSchemaManager()->tablesExist(['icap__portfolio_widget_badges'])) {
             $badgeBundle = $kernel->getBundle('IcapBadgeBundle');
             $this->log("Executing migrations for portfolio interaction");
 
