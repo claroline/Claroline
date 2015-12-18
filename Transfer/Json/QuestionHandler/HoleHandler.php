@@ -137,6 +137,9 @@ class HoleHandler implements QuestionHandlerInterface
         $text = $holeQuestion->getHtmlWithoutValue();
 
         $exportData->text = $text;
+        if ($withSolution) {
+            $exportData->solution = $holeQuestion->getHtml();
+        }
         $exportData->holes = array_map(function ($hole) {
             $holeData = new \stdClass();
             $holeData->id = (string) $hole->getId();
