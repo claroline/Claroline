@@ -24,6 +24,42 @@ $(document).ready(function () {
         ;
     });
 
+
+    // InnovaERV
+    // Ajout pour le traitement de la case à cocher pour la création de commentaire à la volée
+    $('.comment_validate').on('click', function (event) {
+        event.preventDefault();
+ 
+        // Récupération de l'id du document
+        var dropzoneId = $(this).attr("data-dropzone_id");
+
+        var arrayDocsId = [];
+        var arrayDropsId = [];
+
+        $("input[type='checkbox']:checked").each(
+            function() {
+                arrayDocsId.push($(this).attr('id'));
+                arrayDropsId.push($(this).attr("data-drop_id"));
+            });          
+
+        $.ajax({
+            url: Routing.generate('innova_collecticiel_add_more_comments',
+                { 
+                    dropzoneId: dropzoneId,
+                }),
+            method: "GET",
+            data:
+            {
+                arrayDocsId: arrayDocsId,
+                arrayDropsId: arrayDropsId
+            },
+            complete : function(data) {
+            }
+        });
+
+    });
+
+
     // InnovaERV
     // Ajout pour le traitement de la case à cocher lors de la soumission de documents
     $('#validate-modal').on('show.bs.modal', function (event) {
@@ -134,7 +170,6 @@ $(document).ready(function () {
 
     });
 
-
     // InnovaERV
     // Ajout pour le traitement de la demande de commentaire : mise à jour de la table Document
     // Mise à jour de la colonne "validate"
@@ -190,7 +225,7 @@ $(document).ready(function () {
 
     // InnovaERV : ajout du bouton "Retour" dans la liste des commentaires.
     $('.backLink').on('click', function(event) {
-        alert("back link");
+        event.preventDefault();
         history.back(-1);
     });
 
