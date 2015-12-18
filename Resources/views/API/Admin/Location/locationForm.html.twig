@@ -4,12 +4,13 @@
     {{ 'create_location'|trans({}, 'platform') }}
 {% endblock %}
 {% block form %}
+    {% form_theme form 'ClarolineCoreBundle::form_theme_angular.html.twig' %}
     <form novalidate
             role="form"
             class="form-horizontal"
             ng-submit="submit($scope)"
             method="post" {{ form_enctype(form) }}
-            >
+        >
         <div class="modal-body">
             {{ form_widget(form) }}
         </div>

@@ -6,7 +6,6 @@ var translate = function(key) {
 }
 
 locationManager.config(function ($httpProvider) {
-    $httpProvider.useApplyAsync(true);
     $httpProvider.interceptors.push(function ($q) {
         return {
             'request': function(config) {
@@ -34,10 +33,10 @@ locationManager.config(function ($httpProvider) {
 });
 
 locationManager.controller('CreateModalController', function(locationAPI, $scope, locations, $uibModalStack, $uibModal) {
-    $scope.newLocation = {};
+    $scope.location = {};
 
     $scope.submit = function() {
-        locationAPI.create($scope.newLocation).then(
+        locationAPI.create($scope.location).then(
             function successHandler (d) {
                 $uibModalStack.dismissAll();
                 locations.push(d.data);
@@ -48,6 +47,34 @@ locationManager.controller('CreateModalController', function(locationAPI, $scope
                     $uibModal.open({
                         template: d.data,
                         controller: 'CreateModalController',
+                        bindToController: true,
+                        resolve: {
+                            locations: function() {
+                                return locations;
+                            }
+                        }
+                    })
+                }
+            }
+        );
+    }
+});
+
+locationManager.controller('EditModalController', function(locationAPI, $scope, locations, $uibModalStack, $uibModal) {
+    //$scope.location = {};
+
+    $scope.submit = function() {
+        locationAPI.create($scope.location).then(
+            function successHandler (d) {
+                $uibModalStack.dismissAll();
+                //locations.push(d.data);
+            },
+            function errorHandler (d) {
+                if (d.status === 400) {
+                    $uibModalStack.dismissAll();
+                    $uibModal.open({
+                        template: d.data,
+                        controller: 'EditModalController',
                         resolve: {
                             locations: function() {
                                 return locations;
@@ -70,6 +97,11 @@ locationManager.controller('LocationController', function(
 
     $scope.locations = undefined;
 
+    var removeLocation = function(location) {
+        var index = $scope.locations.indexOf(location);
+        if (index > -1 ) $scope.locations.splice(index, 1);
+    }
+
     $scope.createForm = function() {
         $uibModal.open({
             templateUrl: Routing.generate('api_get_create_location_form', {'_format': 'html'}),
@@ -79,6 +111,24 @@ locationManager.controller('LocationController', function(
                     return $scope.locations;
                 }
             }
+        });
+    };
+
+    $scope.editLocation = function(location) {
+        $uibModal.open({
+            templateUrl: Routing.generate('api_get_edit_location_form', {'_format': 'html', 'location': location.id}),
+            controller: 'EditModalController',
+            resolve: {
+                locations: function() {
+                    return $scope.locations;
+                }
+            }
+        });
+    }
+
+    $scope.removeLocation = function(location) {
+        locationAPI.delete(location.id).then(function(d) {
+            removeLocation(location);
         });
     }
 
@@ -101,7 +151,7 @@ locationManager.controller('LocationController', function(
         {
             name: translate('actions'),
             cellRenderer: function() {
-                return '<div><a class="btn-primary btn-xs" ng-click="editLocation($row)" style="margin-right: 8px;"><span class="fa fa-pencil-square-o"></span></a><a class="btn-danger btn-xs" ng-click="removeLocation($row)"><span class="fa fa-trash"></span></a></div>';
+                return '<button class="btn-primary btn-xs" ng-click="editLocation($row)" style="margin-right: 8px;"><i class="fa fa-pencil-square-o"></i></button><button class="btn-danger btn-xs" ng-click="removeLocation($row)"><i class="fa fa-trash"></i></button>';
             }
         },
         {
@@ -110,8 +160,6 @@ locationManager.controller('LocationController', function(
                 '<div> blablabla + liens </div>'
             }
         }
-
-
     ];
 
     $scope.dataTableOptions = {
@@ -146,6 +194,12 @@ locationManager.factory('locationAPI', function($http, clarolineAPI) {
                 data,
                 {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
             );
+        },
+        delete: function(locationId) {
+            return $http.delete(Routing.generate('api_delete_location', {'location': locationId}));
+        },
+        update: function(updatedLocation) {
+
         }
     }
 });
