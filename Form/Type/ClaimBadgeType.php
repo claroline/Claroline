@@ -52,8 +52,8 @@ class ClaimBadgeType extends AbstractType
                 'placeholder'    => $this->translator->trans('badge_form_badge_selection', array(), 'icap_badge'),
                 'class'          => 'IcapBadgeBundle:Badge',
                 'use_controller' => true,
-                'property'       => sprintf("%sName", $locale),
-                'repo_method'    => sprintf('findByName%sForAjax', ucfirst($locale))
+                'repo_method'    => sprintf('findByNameForAjax'),
+                'extra_data'     => array('userId' => $user->getId(), 'locale' => $locale)
             ));
     }
 
