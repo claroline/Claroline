@@ -2,6 +2,8 @@
   "id": "1",
   "type": "application/x.choice+json",
   "title": "Question ?",
+  "description":null,
+  "invite":"Question ?",
   "choices": [
     {
       "id": "1",

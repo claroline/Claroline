@@ -127,7 +127,6 @@ class ExerciseManager
      */
     public function pickQuestions(Exercise $exercise)
     {
-       
         $originalQuestions = $questions = $this->om
             ->getRepository('UJMExoBundle:Question')
             ->findByExercise($exercise);
@@ -238,12 +237,12 @@ class ExerciseManager
     private function exportSteps(Exercise $exercise, $withSolutions = true)
     {
         $questionRepo = $this->om->getRepository('UJMExoBundle:Question'); 
+
         return array_map(function ($question) use ($withSolutions) {
             return [
                 'id' => '(unknown)',
                 'items' => [$this->questionManager->exportQuestion($question, $withSolutions)]
             ];
         }, $questionRepo->findByExercise($exercise));
-        
     }
 }

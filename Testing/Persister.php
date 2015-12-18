@@ -4,6 +4,7 @@ namespace UJM\ExoBundle\Testing;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -75,13 +76,15 @@ class Persister
     /**
      * @param string    $title
      * @param Choice[]  $choices
+     * @param string    $description
      * @return Question
      */
-    public function qcmQuestion($title, array $choices = [])
+    public function qcmQuestion($title, array $choices = [], $description = '')
     {
         $question = new Question();
         $question->setTitle($title);
         $question->setInvite('Invite...');
+        $question->setDescription($description);
 
         if (!$this->multipleChoiceType) {
             $this->multipleChoiceType = new TypeQCM();
@@ -174,6 +177,11 @@ class Persister
     {
         return $this->paperManager->createPaper($user, $exercise);
     }
+    
+    public function finishpaper(Paper $paper)
+    {
+        return $this->paperManager->finishPaper($paper);
+    }
 
     /**
      * @param string $username
@@ -234,6 +242,17 @@ class Persister
         $this->om->persist($role);
 
         return $role;
+    }
+    
+    public function maskDecoder(ResourceType $type, $permission, $value)
+    {
+      $decoder = new MaskDecoder();
+      $decoder->setResourceType($type);
+      $decoder->setName($permission);
+      $decoder->setValue($value);
+      $this->om->persist($decoder);
+
+      return $decoder;
     }
 
     public function hint(Question $question, $text, $penalty = 1)

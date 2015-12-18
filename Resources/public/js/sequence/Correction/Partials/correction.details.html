@@ -57,37 +57,18 @@
                                 </div>
                                 <hr/>
                             </div>
-                            <!-- QUESTION SCORE ROW ?? -->
-                            <!-- for choice question only ? use a directive ? -->
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th class="center-text">{{ 'paper_details_table_choice'|trans:{}:'ujm_sequence' }}</th>
-                                        <th class="center-text">{{ 'paper_details_table_expected_answer'|trans:{}:'ujm_sequence' }}</th>
-                                        <th class="center-text">{{ 'paper_details_table_your_answer'|trans:{}:'ujm_sequence' }}</th>
-                                        <th class="center-text">{{ 'paper_details_table_comment'|trans:{}:'ujm_sequence' }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr data-ng-repeat="choice in question.choices">
-                                        <td class="center-text">
-                                            <img class="image" data-ng-if="correctionCtrl.getChoiceSimpleType(choice) == 'encoded-image'" data-ng-src="data:{{choice.type}};{{choice.encoding}}, {{choice.data}}"/>
-                                            <img class="image" data-ng-if="correctionCtrl.getChoiceSimpleType(choice) == 'web-image'" data-ng-src="{{choice.url}}"/>
-                                            <div data-ng-if="correctionCtrl.getChoiceSimpleType(choice) == 'simple-text'">{{choice.data}}</div>
-                                            <div data-ng-if="correctionCtrl.getChoiceSimpleType(choice) == 'html-text'" data-ng-bind-html="choice.data | unsafe"></div>
-                                        </td>
-                                        <td class="center-text">
-                                            <div class="fa" data-ng-class="correctionCtrl.isChoiceValid(question, choice) ? 'fa-check':'fa-remove'"></div>
-                                        </td>
-                                        <td class="center-text">
-                                            <div class="fa" data-ng-class="correctionCtrl.isStudentChoice(question, choice) ? 'fa-check':'fa-remove'"></div>
-                                        </td>
-                                        <td class="center-text">
-                                            <span>{{correctionCtrl.getCurrentChoiceFeedBack(question, choice)}}</span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                          
+                            <!-- QUESTION SOLUTIONs / FEEDBACKs ROW -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div data-ng-switch="question.type">
+                                         <!-- for choice question only we use a directive -->
+                                        <div data-ng-switch-when="application/x.choice+json">
+                                            <correction-qcm data-question="question" data-paper="correctionCtrl.paper"></correction-qcm>                                         
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <!-- global feedback -->
                             <div data-ng-if="question.feedback !== '' && question.feedback !== undefined" class="row">                                
                                 <hr/>

@@ -3,12 +3,11 @@
 
     angular.module('ExercisePlayerApp').controller('ExercisePlayerCtrl', [
         '$window',
-        '$route',
-        '$location',
+        '$scope',
         'ExerciseService',
         'CommonService',
         'PlayerDataSharing',
-        function ($window, $route, $location, ExerciseService, CommonService, PlayerDataSharing) {
+        function ($window, $scope, ExerciseService, CommonService, PlayerDataSharing) {
 
             this.exercise = {};
             this.paper = {};
@@ -118,6 +117,7 @@
              * @param {object} paper
              */
             this.handleStepNavigation = function (action, paper) {
+                this.feedbackIsShown = false;
                 if (action && (action === 'forward' || action === 'backward' || action === 'goto')) {
                     this.setCurrentStep(this.currentStepIndex);
                 } else if (action && action === 'end') {
@@ -173,6 +173,12 @@
                 }
 
             };
+            
+            this.showFeedback = function (){
+                this.feedbackIsShown = true;
+                console.log('fired');
+                $scope.$broadcast('show-feedback');
+            };
 
             /**
              * Checks if feedback fields can be visible at some times
@@ -180,7 +186,7 @@
              */
             this.checkIfFeedbackIsAvailable = function () {
                 //return this.exercise.meta.exerciseType === 'formatif';
-                return true;
+                return false;
             };
         }
     ]);

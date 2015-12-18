@@ -43,16 +43,20 @@
             <div class="col-md-12">
                 <!-- NEXT / PREV -->
                 <div class="btn-group" role="group">
-                    <button role="button" data-ng-disabled="exercisePlayerCtrl.currentStepIndex === 0" data-container="body" data-toggle="tooltip" title="{{ 'btn_prev_step_label'|trans:{}:'ujm_sequence' }}" type="button" data-ng-click="exercisePlayerCtrl.validateStep('backward')" class="btn btn-default fa fa-arrow-circle-left">    
+                    <button role="button" data-ng-disabled="exercisePlayerCtrl.currentStepIndex === 0" data-container="body" data-toggle="tooltip" title="{{ 'btn_prev_step_label'|trans:{}:'ujm_sequence' }}" type="button" data-ng-click="exercisePlayerCtrl.validateStep('backward')" class="btn btn-default">    
+                        <i class="fa fa-arrow-circle-left"></i>
                     </button>
-                    <button role="button" data-ng-show="exercisePlayerCtrl.checkIfFeedbackIsAvailable()" data-container="body" data-toggle="tooltip" title="{{ 'btn_feedback_display'|trans:{}:'ujm_sequence' }}" type="button" data-ng-click="exercexercisePlayerCtrliseCtrl.showFeedback()" class="btn btn-default fa fa-comment">    
-                    </button>                    
+                    <button role="button" data-ng-show="exercisePlayerCtrl.checkIfFeedbackIsAvailable()" data-container="body" data-toggle="tooltip" type="button" data-ng-click="exercisePlayerCtrl.showFeedback()" class="btn btn-default">    
+                        <i class="fa fa-check"> {{ 'btn_validate_step'|trans:{}:'ujm_sequence' }}</i>
+                    </button> 
+                    <!--
                     <button role="button" data-ng-disabled="exercisePlayerCtrl.getCurrentStepNumber() === exercisePlayerCtrl.exercise.steps.length" data-container="body" data-toggle="tooltip" title="{{ 'btn_next_step_label'|trans:{}:'ujm_sequence' }}" type="button" data-ng-click="exercisePlayerCtrl.validateStep('forward')" class="btn btn-default fa fa-arrow-circle-right">    
                     </button>
-                    <!--
-                    <button role="button" data-ng-disabled="exercisePlayerCtrl.getCurrentStepNumber() === exercisePlayerCtrl.exercise.steps.length || !exercisePlayerCtrl.feedbackIsShown" data-container="body" data-toggle="tooltip" title="{{ 'btn_next_step_label'|trans:{}:'ujm_sequence' }}" type="button" data-ng-click="exercisePlayerCtrl.validateStep('forward')" class="btn btn-default fa fa-arrow-circle-right">    
-                    </button>
                     -->
+                    <button role="button" data-ng-disabled="exercisePlayerCtrl.getCurrentStepNumber() === exercisePlayerCtrl.exercise.steps.length || (exercisePlayerCtrl.feedbackIsShown && exercisePlayerCtrl.checkIfFeedbackIsAvailable())" data-container="body" data-toggle="tooltip" title="{{ 'btn_next_step_label'|trans:{}:'ujm_sequence' }}" type="button" data-ng-click="exercisePlayerCtrl.validateStep('forward')" class="btn btn-default">    
+                        <i class="fa fa-arrow-circle-right"></i>
+                    </button>
+                    
                 </div>
                 <!-- JUMP TO -->
                 <div class="btn-group">
