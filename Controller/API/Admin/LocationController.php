@@ -77,9 +77,11 @@ class LocationController extends FOSRestController
      */
     public function getCreateLocationFormAction()
     {
-        $form = $this->createForm(new LocationType());
+        $formType = new LocationType();
+        $formType->enableApi();
+        $form = $this->createForm($formType);
 
-        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Admin\Location\locationForm.html.twig', $form);
+        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Admin\Location\createLocationForm.html.twig', $form);
     }
 
 
@@ -92,9 +94,11 @@ class LocationController extends FOSRestController
      */
     public function getEditLocationFormAction(Location $location)
     {
-        $form = $this->createForm(new LocationType(), $location);
+        $formType = new LocationType();
+        $formType->enableApi();
+        $form = $this->createForm($formType, $location);
 
-        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Admin\Location\locationForm.html.twig', $form);
+        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Admin\Location\editLocationForm.html.twig', $form);
     }
 
     /**
@@ -125,7 +129,37 @@ class LocationController extends FOSRestController
             'extra_parameters' => $location
         );
 
-        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Admin\Location\locationForm.html.twig', $form, $options);
+        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Admin\Location\createLocationForm.html.twig', $form, $options);
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Update a location",
+     *     views = {"location"},
+     *     input="Claroline\CoreBundle\Form\LocationType"
+     * )
+     */
+    public function putLocationAction(Location $location)
+    {
+        $locationType = new LocationType();
+        $locationType->enableApi();
+        $form = $this->formFactory->create($locationType, $location);
+        $form->submit($this->request);
+        $httpCode = 200;
+
+        if ($form->isValid()) {
+            $location = $form->getData();
+            $location = $this->locationManager->edit($location);
+            $httpCode = 400;
+        }
+
+        $options = array(
+            'http_code' => $httpCode,
+            'extra_parameters' => $location
+        );
+
+        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Admin\Location\editLocationForm.html.twig', $form, $options);
     }
 
     /**

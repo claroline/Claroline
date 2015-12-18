@@ -1,5 +1,32 @@
 var clarolineAPI = angular.module('clarolineAPI', []);
 
+clarolineAPI.config(function ($httpProvider) {
+    $httpProvider.interceptors.push(function ($q) {
+        return {
+            'request': function(config) {
+                $('.please-wait').show();
+
+                return config;
+            },
+            'requestError': function(rejection) {
+                $('.please-wait').hide();
+
+                return $q.reject(rejection);
+            },
+            'responseError': function(rejection) {
+                $('.please-wait').hide();
+
+                return $q.reject(rejection);
+            },
+            'response': function(response) {
+                $('.please-wait').hide();
+
+                return response;
+            }
+        };
+    });
+});
+
 clarolineAPI.factory('clarolineAPI', function($http, $httpParamSerializerJQLike) {
     return {
         formEncode: function(formName, parameters) {
@@ -16,6 +43,23 @@ clarolineAPI.factory('clarolineAPI', function($http, $httpParamSerializerJQLike)
             data[formName] = parameters;
 
             return $httpParamSerializerJQLike(data);
+        },
+        //replace element in array whose id is element.id
+        replaceById: function(element, elements) {
+            var index = null;
+
+            for (var i = 0; i < elements.length; i++) {
+                if (element.id === elements[i].id) {
+                    index = i;
+                    break;
+                }
+            }
+
+            if (index) {
+                elements[index] = element;
+            }
+
+            return elements;
         }
     }
 });

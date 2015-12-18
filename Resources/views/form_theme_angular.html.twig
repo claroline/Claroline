@@ -8,5 +8,5 @@
 {% block widget_attributes %}
     {{ parent() }}
     ng-model="{{ model }}.{{ name }}"
-    ng-init='{{ model }}.{{ name }}="{{ value|ng_espace }}"'
+    ng-init='{{ model }}.{{ name }}="{{ value|ng_escape }}"'
 {% endblock widget_attributes %}

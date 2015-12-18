@@ -5,8 +5,7 @@
 {% endblock %}
 {% block form %}
     {% form_theme form 'ClarolineCoreBundle::form_theme_angular.html.twig' %}
-    <form novalidate
-            role="form"
+    <form role="form"
             class="form-horizontal"
             ng-submit="submit($scope)"
             method="post" {{ form_enctype(form) }}

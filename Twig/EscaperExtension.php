@@ -11,12 +11,8 @@
 
 namespace Claroline\CoreBundle\Twig;
 
-use JMS\DiExtraBundle\Annotation\Inject;
-use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
 use JMS\DiExtraBundle\Annotation\Tag;
-use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * @Service
@@ -30,16 +26,16 @@ class EscaperExtension extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            'ng_espace' => new \Twig_Filter_Method($this, 'ngEspace'),
+            'ng_escape' => new \Twig_Filter_Method($this, 'ngEscape'),
         );
     }
 
     public function getName()
     {
-        return 'espacer_extension';
+        return 'escaper_extension';
     }
 
-    public function ngEspace($content)
+    public function ngEscape($content)
     {
         return str_replace('"', '\"', $content);
     }

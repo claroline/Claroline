@@ -5,33 +5,6 @@ var translate = function(key) {
     return translator.trans(key, {}, 'platform');
 }
 
-locationManager.config(function ($httpProvider) {
-    $httpProvider.interceptors.push(function ($q) {
-        return {
-            'request': function(config) {
-                $('.please-wait').show();
-
-                return config;
-            },
-            'requestError': function(rejection) {
-                $('.please-wait').hide();
-
-                return $q.reject(rejection);
-            },  
-            'responseError': function(rejection) {
-                $('.please-wait').hide();
-
-                return $q.reject(rejection);
-            },
-            'response': function(response) {
-                $('.please-wait').hide();
-
-                return response;
-            }
-        };
-    });
-});
-
 locationManager.controller('CreateModalController', function(locationAPI, $scope, locations, $uibModalStack, $uibModal) {
     $scope.location = {};
 
@@ -60,14 +33,22 @@ locationManager.controller('CreateModalController', function(locationAPI, $scope
     }
 });
 
-locationManager.controller('EditModalController', function(locationAPI, $scope, locations, $uibModalStack, $uibModal) {
-    //$scope.location = {};
+locationManager.controller('EditModalController', function(
+    locationAPI,
+    $scope,
+    locations,
+    location,
+    $uibModalStack,
+    $uibModal,
+    clarolineAPI
+) {
+    $scope.location = {};
 
     $scope.submit = function() {
-        locationAPI.create($scope.location).then(
+        locationAPI.update(location.id, $scope.location).then(
             function successHandler (d) {
                 $uibModalStack.dismissAll();
-                //locations.push(d.data);
+                clarolineAPI.replaceById(d.data, locations);
             },
             function errorHandler (d) {
                 if (d.status === 400) {
@@ -121,6 +102,9 @@ locationManager.controller('LocationController', function(
             resolve: {
                 locations: function() {
                     return $scope.locations;
+                },
+                location: function() {
+                    return location;
                 }
             }
         });
@@ -157,7 +141,7 @@ locationManager.controller('LocationController', function(
         {
             name: translate('coordinates'),
             cellRenderer: function() {
-                '<div> blablabla + liens </div>'
+                return '<div>' + translate('latitude') + ': {{ $row.latitude }} | ' + translate('longitude') + ': {{ $row.longitude }} </div>'
             }
         }
     ];
@@ -198,8 +182,14 @@ locationManager.factory('locationAPI', function($http, clarolineAPI) {
         delete: function(locationId) {
             return $http.delete(Routing.generate('api_delete_location', {'location': locationId}));
         },
-        update: function(updatedLocation) {
+        update: function(locationId, updatedLocation) {
+            var data = clarolineAPI.formSerialize('location_form', updatedLocation);
 
+            return $http.put(
+                Routing.generate('api_put_location', {'location': locationId, '_format': 'html'}),
+                data,
+                {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
+            );
         }
     }
 });

@@ -72,6 +72,9 @@ class PlatformConfiguration
     private $domainName;
     private $defaultWorkspaceTag;
     private $isPdfExportActive;
+    private $googleGeocodingClientId;
+    private $googleGeocodingSignature;
+    private $googleGeocodingKey;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -693,5 +696,35 @@ class PlatformConfiguration
         $this->isPdfExportActive = $isPdfExportActive;
 
         return $this;
+    }
+
+    public function setGoogleGeocodingClientId($id)
+    {
+        $this->googleGeocodingClientId = $id;
+    }
+
+    public function getGoogleGeocodingClientId()
+    {
+        return $this->googleGeocodingClientId;
+    }
+
+    public function setGoogleGeocodingSignature($sig)
+    {
+        $this->googleGeocodingSignature = $sig;
+    }
+
+    public function getGoogleGeocodingSignature()
+    {
+        return $this->googleGeocodingSignature;
+    }
+
+    public function setGoogleGeocodingKey($key)
+    {
+        $this->googleGeocodingKey = $key;
+    }
+
+    public function getGoogleGeocodingKey()
+    {
+        return $this->googleGeocodingKey;
     }
 }

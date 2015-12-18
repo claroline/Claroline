@@ -26,13 +26,13 @@ class LocationType extends AngularType
     {
         $builder
             ->add('name', 'text', array('label' => 'name', 'required' => true))
-            ->add('street', 'text', array('label' => 'street', 'required' => true))
+            ->add('boxNumber', 'text', array('label' => 'box_number', 'required' => false))
             ->add('streetNumber', 'text', array('label' => 'street_number', 'required' => true))
-            ->add('boxNumber', 'text', array('label' => 'box_number', 'required' => true))
+            ->add('street', 'text', array('label' => 'street', 'required' => true))
             ->add('pc', 'text', array('label' => 'postal_code', 'required' => true))
             ->add('town', 'text', array('label' => 'town', 'required' => true))
             ->add('country', 'text', array('label' => 'country', 'required' => true))
-            ->add('phone', 'text', array('label' => 'phone', 'required' => true));
+            ->add('phone', 'text', array('label' => 'phone', 'required' => false));
     }
 
     public function getName()
