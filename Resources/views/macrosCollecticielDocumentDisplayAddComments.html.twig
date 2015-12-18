@@ -1,0 +1,29 @@
+{% macro innovaDocumentDisplay(dropzone, width, mode, documentListText, arrayDocsToView) %}
+    <div class="row">
+        <div class="col-md-{{ width }}">
+            {% if documentListText is not null %}
+                <h4 class="text-muted">{{ documentListText }}</h4>
+            {% endif %}
+            <table class="table table-responsive {% if mode == "condensed" %}table-condensed{% endif %} well table-striped">
+                    <thead>
+                        <tr class="text-left">
+                            <th></th>
+                            <th>{{ 'Type of document'|trans({}, 'innova_collecticiel') }}</th>
+                            <th>{{ 'Name of document'|trans({}, 'innova_collecticiel') }}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for key,value in arrayDocsToView %}
+                            <tr id="row">
+                                {# Suppression de l'ID
+                                <td>{{ document.id }}</td> #}
+                                <td></td>
+                                <td>{{ value }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+            </table>
+        </div>
+    </div>
+{% endmacro %}
