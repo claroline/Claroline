@@ -277,28 +277,6 @@ class Scorm2004Listener
     }
 
     /**
-<<<<<<< HEAD
-=======
-     * Unzip a given ZIP file into the web resources directory
-     *
-     * @param UploadedFile $file
-     * @param $hashName name of the destination directory
-     */
-    private function unzipScormArchive(UploadedFile $file, $hashName, $prefix)
-    {
-        $zip = new \ZipArchive();
-        $zip->open($file);
-        $destinationDir = $this->scormResourcesPath . $prefix . DIRECTORY_SEPARATOR . $hashName;
-
-        if (!file_exists($destinationDir)) {
-            mkdir($destinationDir, 0777, true);
-        }
-        $zip->extractTo($destinationDir);
-        $zip->close();
-    }
-
-    /**
->>>>>>> 337aef77fd98fc412b12f1ceab8f764cd6273449
      * Deletes recursively a directory and its content.
      *
      * @param $dir The path to the directory to delete.
