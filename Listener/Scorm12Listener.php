@@ -131,6 +131,7 @@ class Scorm12Listener
         try {
             if ($form->isValid()) {
                 $tmpFile = $form->get('file')->getData();
+                $workspace = $event->getParent()->getWorkspace();
 
                 if ($this->isScormArchive($tmpFile)) {
                     $scormResource = $this->container

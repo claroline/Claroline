@@ -96,9 +96,9 @@ class ScormManager
         } else {
             throw new InvalidScormArchiveException('no_sco_in_scorm_archive_message');
         }
-        $this->unzipScormArchive($tmpFile, $hashName);
+        $this->unzipScormArchive($tmpFile, $hashName, $prefix);
         // Move Scorm archive in the files directory
-        $tmpFile->move($this->filePath, $hashName);
+        $tmpFile->move($this->filePath . DIRECTORY_SEPARATOR . $prefix, $hashName);
 
         return $scormResource;
     }
@@ -370,7 +370,7 @@ class ScormManager
      * @param UploadedFile $file
      * @param $hashName name of the destination directory
      */
-    private function unzipScormArchive(\SplFileInfo $file, $hashName)
+    private function unzipScormArchive(\SplFileInfo $file, $hashName, $prefix)
     {
         $zip = new \ZipArchive();
         $zip->open($file);
