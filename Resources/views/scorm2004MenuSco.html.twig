@@ -78,6 +78,17 @@
             }
         }
 
+        $('#menu-display-btn').on('click', function () {
+            if ($('#menu-box').hasClass('hidden')) {
+                $('#content-box').removeClass('col-md-12');
+                $('#content-box').addClass('col-md-9');
+                $('#menu-box').removeClass('hidden');
+            } else {
+                $('#menu-box').addClass('hidden');
+                $('#content-box').removeClass('col-md-9');
+                $('#content-box').addClass('col-md-12');
+            }
+        });
     </script>
 {% endblock %}
 
@@ -86,18 +97,20 @@
         <h3 class="panel-title"> {{ currentSco.getTitle() }} </h3>
     </div>
     <div class="panel-body">
+        <i id="menu-display-btn" class="btn btn-default fa fa-list pull-left"></i>
         <div class="text-right">
             <a class="btn btn-primary pointer-hand" onClick="javascript:enterFullScreen()">
                 <i class="fa fa-expand"></i>
             </a>
         </div>
+        <br>
         <div class="row">
-            <div class="col-md-3 menu-style">
+            <div id="menu-box" class="col-md-3 menu-style hidden">
                 <div id="scorm-menu">
                     {{ renderMenu(scos) }}
                     <br>
                     <div class="center-text">
-                        <a href="{{ path('claro_render_scorm_2004_resource', {'scormId': resource.getId()}) }}"
+                        <a href="{{ path('claro_render_scorm_2004_resource', {'scormId': resource.getId(), 'mode': 1}) }}"
                            class="btn btn-default">
                             {{ 'quit'|trans({}, 'resource') }}
                         </a>
@@ -105,7 +118,7 @@
                     <br>
                 </div>
             </div>
-            <div class="col-md-9">
+            <div id="content-box" class="col-md-12">
                 <div class="full-size">
                     <div id="twig-scorm-data"
                          data-sco-id="{{scoTracking.getSco().getId()}}">

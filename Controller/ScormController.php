@@ -23,8 +23,10 @@ use Claroline\ScormBundle\Event\Log\LogScorm2004ResultEvent;
 use Claroline\ScormBundle\Manager\ScormManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -36,16 +38,18 @@ class ScormController extends Controller
     private $eventDispatcher;
     private $om;
     private $request;
+    private $router;
     private $scormManager;
     private $tokenStorage;
     private $authorization;
 
     /**
      * @DI\InjectParams({
-     *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
-     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "requestStack"       = @DI\Inject("request_stack"),
-     *     "scormManager"       = @DI\Inject("claroline.manager.scorm_manager"),
+     *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "requestStack"    = @DI\Inject("request_stack"),
+     *     "router"          = @DI\Inject("router"),
+     *     "scormManager"    = @DI\Inject("claroline.manager.scorm_manager"),
      *     "authorization"   = @DI\Inject("security.authorization_checker"),
      *     "tokenStorage"    = @DI\Inject("security.token_storage")
      * })
@@ -54,6 +58,7 @@ class ScormController extends Controller
         EventDispatcherInterface $eventDispatcher,
         ObjectManager $om,
         RequestStack $requestStack,
+        RouterInterface $router,
         ScormManager $scormManager,
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization
@@ -62,6 +67,7 @@ class ScormController extends Controller
         $this->eventDispatcher = $eventDispatcher;
         $this->om = $om;
         $this->request = $requestStack;
+        $this->router = $router;
         $this->scormManager = $scormManager;
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
@@ -69,8 +75,9 @@ class ScormController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/render/scorm/12/{scormId}",
-     *     name = "claro_render_scorm_12_resource"
+     *     "/render/scorm/12/{scormId}/mode/{mode}",
+     *     name = "claro_render_scorm_12_resource",
+     *     defaults={"mode"=0}
      * )
      * @EXT\ParamConverter(
      *      "scorm",
@@ -83,7 +90,7 @@ class ScormController extends Controller
      *
      * @return Response
      */
-    public function renderScorm12ResourceAction(Scorm12Resource $scorm)
+    public function renderScorm12ResourceAction(Scorm12Resource $scorm, $mode = 0)
     {
         $this->checkAccess('OPEN', $scorm);
         $user = $this->tokenStorage->getToken()->getUser();
@@ -91,6 +98,8 @@ class ScormController extends Controller
         $rootScos = array();
         $trackings = array();
         $scos = $scorm->getScos();
+        $nbActiveScos = 0;
+        $lastActiveSco = null;
 
         if (!$isAnon) {
             $scosTracking = $this->scormManager
@@ -114,16 +123,32 @@ class ScormController extends Controller
                 $trackings[$sco->getId()] = $this->scormManager
                     ->createScorm12ScoTracking($user, $sco);
             }
-        }
 
-        return array(
-            'resource' => $scorm,
-            '_resource' => $scorm,
-            'scos' => $rootScos,
-            'workspace' => $scorm->getResourceNode()->getWorkspace(),
-            'trackings' => $trackings,
-            'isAnon' => $isAnon
-        );
+            if (!$sco->getIsBlock()) {
+                $nbActiveScos++;
+                $lastActiveSco = $sco;
+            }
+        }
+        
+        if ($mode === 0 && $nbActiveScos === 1) {
+
+            return new RedirectResponse(
+                $this->router->generate(
+                    'claro_render_scorm_12_sco',
+                    array('scoId' => $lastActiveSco->getId())
+                )
+            );
+        } else {
+
+            return array(
+                'resource' => $scorm,
+                '_resource' => $scorm,
+                'scos' => $rootScos,
+                'workspace' => $scorm->getResourceNode()->getWorkspace(),
+                'trackings' => $trackings,
+                'isAnon' => $isAnon
+            );
+        }
     }
 
     /**
@@ -375,8 +400,9 @@ class ScormController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/render/scorm/2004/{scormId}",
-     *     name = "claro_render_scorm_2004_resource"
+     *     "/render/scorm/2004/{scormId}/mode/{mode}",
+     *     name = "claro_render_scorm_2004_resource",
+     *     defaults={"mode"=0}
      * )
      * @EXT\ParamConverter(
      *      "scorm",
@@ -389,7 +415,7 @@ class ScormController extends Controller
      *
      * @return Response
      */
-    public function renderScorm2004ResourceAction(Scorm2004Resource $scorm)
+    public function renderScorm2004ResourceAction(Scorm2004Resource $scorm, $mode = 0)
     {
         $this->checkScorm2004ResourceAccess('OPEN', $scorm);
         $user = $this->tokenStorage->getToken()->getUser();
@@ -397,6 +423,8 @@ class ScormController extends Controller
         $rootScos = array();
         $trackings = array();
         $scos = $scorm->getScos();
+        $nbActiveScos = 0;
+        $lastActiveSco = null;
 
         if (!$isAnon) {
             $scosTracking = $this->scormManager
@@ -421,16 +449,32 @@ class ScormController extends Controller
                 $trackings[$sco->getId()] = $this->scormManager
                     ->createScorm2004ScoTracking($user, $sco);
             }
+
+            if (!$sco->getIsBlock()) {
+                $nbActiveScos++;
+                $lastActiveSco = $sco;
+            }
         }
 
-        return array(
-            'resource' => $scorm,
-            '_resource' => $scorm,
-            'scos' => $rootScos,
-            'workspace' => $scorm->getResourceNode()->getWorkspace(),
-            'trackings' => $trackings,
-            'isAnon' => $isAnon
-        );
+        if ($mode === 0 && $nbActiveScos === 1) {
+
+            return new RedirectResponse(
+                $this->router->generate(
+                    'claro_render_scorm_2004_sco',
+                    array('scoId' => $lastActiveSco->getId())
+                )
+            );
+        } else {
+
+            return array(
+                'resource' => $scorm,
+                '_resource' => $scorm,
+                'scos' => $rootScos,
+                'workspace' => $scorm->getResourceNode()->getWorkspace(),
+                'trackings' => $trackings,
+                'isAnon' => $isAnon
+            );
+        }
     }
 
     /**

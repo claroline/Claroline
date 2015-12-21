@@ -87,7 +87,7 @@ class Scorm2004Listener
         $this->router = $router;
         $this->scormResourceRepo = $om->getRepository('ClarolineScormBundle:Scorm2004Resource');
         $this->scormResourcesPath = $this->container
-            ->getParameter('kernel.root_dir') . '/../web/uploads/scormresources/';
+            ->getParameter('claroline.param.uploads_directory') . '/scormresources/';
         $this->scorm2004ScoTrackingRepo = $om->getRepository('ClarolineScormBundle:Scorm2004ScoTracking');
         $this->templating = $templating;
         $this->translator = $translator;
@@ -131,6 +131,8 @@ class Scorm2004Listener
         try {
             if ($form->isValid()) {
                 $tmpFile = $form->get('file')->getData();
+                $workspace = $event->getParent()->getWorkspace();
+                $prefix = 'WORKSPACE_' . $workspace->getId();
 
                 if ($this->isScormArchive($tmpFile)) {
                     $scormResource = $this->container
@@ -247,6 +249,7 @@ class Scorm2004Listener
     public function onDownload(DownloadResourceEvent $event)
     {
         $event->setItem($this->filePath . $event->getResource()->getHashName());
+        $event->setExtension('zip');
         $event->stopPropagation();
     }
 
@@ -274,6 +277,28 @@ class Scorm2004Listener
     }
 
     /**
+<<<<<<< HEAD
+=======
+     * Unzip a given ZIP file into the web resources directory
+     *
+     * @param UploadedFile $file
+     * @param $hashName name of the destination directory
+     */
+    private function unzipScormArchive(UploadedFile $file, $hashName, $prefix)
+    {
+        $zip = new \ZipArchive();
+        $zip->open($file);
+        $destinationDir = $this->scormResourcesPath . $prefix . DIRECTORY_SEPARATOR . $hashName;
+
+        if (!file_exists($destinationDir)) {
+            mkdir($destinationDir, 0777, true);
+        }
+        $zip->extractTo($destinationDir);
+        $zip->close();
+    }
+
+    /**
+>>>>>>> 337aef77fd98fc412b12f1ceab8f764cd6273449
      * Deletes recursively a directory and its content.
      *
      * @param $dir The path to the directory to delete.

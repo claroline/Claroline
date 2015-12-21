@@ -13,6 +13,7 @@
 namespace Claroline\ScormBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ScormBundle\Entity\Scorm12Resource;
 use Claroline\ScormBundle\Entity\ScormResource;
@@ -74,7 +75,7 @@ class ScormManager
         $this->scorm2004ScoTrackingRepo =
             $om->getRepository('ClarolineScormBundle:Scorm2004ScoTracking');
         $this->scormResourcesPath = $this->container
-            ->getParameter('kernel.root_dir') . '/../web/uploads/scormresources/';
+            ->getParameter('claroline.param.uploads_directory') . '/scormresources/';
         $this->filePath = $this->container
             ->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR;
     }
@@ -373,7 +374,7 @@ class ScormManager
     {
         $zip = new \ZipArchive();
         $zip->open($file);
-        $destinationDir = $this->scormResourcesPath . $hashName;
+        $destinationDir = $this->scormResourcesPath . DIRECTORY_SEPARATOR . $hashName;
 
         if (!file_exists($destinationDir)) {
             mkdir($destinationDir, 0777, true);
