@@ -4,7 +4,7 @@
         <th class="center-text">{{ 'paper_details_right_answers'|trans:{}:'ujm_sequence' }}</th>
     </tr>
     <tr>
-        <td data-ng-bind-html="question.text | unsafe" class="center-text"></td>
+        <td data-ng-bind-html="correctionClozeCtrl.answer | unsafe" class="center-text"></td>
         <td data-ng-bind-html="question.solution | unsafe" class="center-text"></td>
     </tr>
 </table>

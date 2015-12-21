@@ -227,14 +227,14 @@ class HoleHandler implements QuestionHandlerInterface
             }
         }
         
-        $answers = "{";
+        $answers = "[";
         $i=1;
         $length = count($data);
         foreach ($data as $answer) {
-            $answers .= "\"" . $i . "\":\"" . $answer . "\"";
+            $answers .= "{\"id\":\"" . $i . ",\"answer\":\"" . $answer . "\"}";
             
             if ($i === $length) {
-                $answers .= "}";
+                $answers .= "]";
             }
             else {
                 $answers .= ",";
