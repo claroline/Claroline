@@ -43,7 +43,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Innova\CollecticielBundle\Event\Log\LogDropzoneAddCommentEvent;
 
 
-
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Innova\CollecticielBundle\Event\Log\LogDropEndEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropStartEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropReportEvent;
@@ -2127,7 +2127,7 @@ die();
      * @Template()
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function dropzoneAddMoreCommentsAction()
+    public function ajaxDropzoneAddMoreCommentsAction()
     {
        
         $em = $this->getDoctrine()->getManager();
@@ -2210,6 +2210,122 @@ die();
             )
         );
 
+
+        // Construction de la fin de l'URL
+        $endURL = "dropzoneId=". $dropzoneId;
+
+        foreach($arrayDocsId as $documentId)
+        {
+            // Par le JS, le document est transmis sous la forme "document_id_XX"
+            $docIdS = explode("_", $documentId);
+
+            $endURL = $endURL . "&arrayDocsId%5B%5D=".$documentId;
+        }
+
+        foreach($arrayDropsId as $dropId)
+        {
+            $endURL = $endURL . "&arrayDropsId%5B%5D=".$dropId;
+        }
+
+//http://localhost/eric/Claroline_v6/Claroline/web/app_dev.php/innovacollecticielbundle/dropzone/comments
+//        ?dropzoneId=2&arrayDocsId%5B%5D=document_id_2&arrayDropsId%5B%5D=2
+
+//        ?dropzoneId=2&arrayDocsId%5B%5D=document_id_2&arrayDropsId%5B%5D=2&arrayDropsId%5B%5D=2
+
+
+//$webRoot =  $this->get('kernel')->getRootDir() . '/../web' . $this->getRequest()->getBasePath();
+
+$webRoot = realpath($this->get('kernel')->getRootDir() . '/../web/');
+
+$redirectRoot = $webRoot . "/innovacollecticielbundle/dropzone/comments/view?" . $endURL;
+
+//        $redirectRoot = $this->get('router')->generate(
+//            'innova_collecticiel_add_more_comments_view'
+//            array(
+//                'dropzoneId' => $dropzoneId
+//                'node' => $old->getResourceNode()->getId()
+//                )
+//            );
+
+//var_dump($redirectRoute);
+//die();
+        return new JsonResponse(
+            array(
+                'link' => $redirectRoot
+            )
+        );
+
+    }
+
+
+    /**
+     * @Route(
+     *      "/dropzone/comments/view",
+     *      name="innova_collecticiel_add_more_comments_view",
+     *      options={"expose"=true}
+     * )
+     * @Template()
+     */
+    public function dropzoneAddMoreCommentsAction()
+    {
+       
+
+
+        $em = $this->getDoctrine()->getManager();
+        $dropzoneManager = $this->get('innova.manager.dropzone_manager');
+
+        // Récupération de l'utilisateur
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        // Récupération de l'ID du dropzone choisi
+        $dropzoneId = $this->get('request')->query->get('dropzoneId');
+var_dump("DropzoneId : " . $dropzoneId);
+       var_dump("<br />suis ici");die();
+
+        $dropzone = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Dropzone')->find($dropzoneId);
+
+        $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
+
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+
+        // Récupération des documents sélectionnés
+        $arrayDocsId = $this->get('request')->query->get('arrayDocsId');
+        $arrayDocsToView = array();
+
+        $arrayDropsId = $this->get('request')->query->get('arrayDropsId');
+        $arrayDropsToView = array();
+
+        $edit = 'edit';
+        $state = 'edit';
+
+        $oldData = array();
+
+        $dropzoneVoter = $this->get('innova.manager.dropzone_voter');
+        $canEdit = $dropzoneVoter->checkEditRight($dropzone);
+
+        $page = 1;
+
+        $pager = $this->getCriteriaPager($dropzone);
+        try {
+            $pager->setCurrentPage($page);
+        } catch (NotValidCurrentPageException $e) {
+            throw new NotFoundHttpException();
+        }
+
+        $formComment = $this->createForm(
+            new CommentType(new Comment(),null))
+        ;
+
+        $form = $this->createForm(
+            new CorrectionCriteriaPageType(),
+            $oldData,
+            array(
+                'edit' => $edit,
+                'criteria' => $pager->getCurrentPageResults(),
+                'totalChoice' => $dropzone->getTotalCriteriaColumn()
+            )
+        );
+
         // Appel de la vue qui va gérer l'ajout des commentaires. InnovaERV.
         $view = 'InnovaCollecticielBundle:Correction:correctAddMoreComments.html.twig';
 
@@ -2232,7 +2348,10 @@ die();
                 'collecticielOpenOrNot' => $collecticielOpenOrNot
             )
         );
+
+
     }
+
 
     /**
      * @Route(

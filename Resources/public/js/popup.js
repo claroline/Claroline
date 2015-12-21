@@ -54,6 +54,14 @@ $(document).ready(function () {
                 arrayDropsId: arrayDropsId
             },
             complete : function(data) {
+//                alert(JSON.stringify(data.responseText));
+                    var data = $.parseJSON(data.responseText)
+//                    var resource = data[0];
+
+                if (data !== 'false') {
+                    console.log(" data.link : " + data.link);
+                    document.location.href=data.link;
+                }
             }
         });
 
