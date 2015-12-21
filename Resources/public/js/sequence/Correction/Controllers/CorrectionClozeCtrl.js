@@ -28,22 +28,44 @@
                 
                 this.setAnswer(this.question.text);
                 
-                for (var i=0; i<this.paper.questions; i++) {
-                    if (this.question.id === this.paper.questions[i].id) {
-                        console.log(this.paper.questions[i].answer);
+                console.log("question");
+                console.log(this.question);
+                console.log("paper");
+                console.log(this.paper);
+                
+                for (var i=0; i<this.paper.questions.length; i++) {
+                    if (question.id.toString() === this.paper.questions[i].id) {
+                        var answers = $.parseJSON(this.paper.questions[i].answer);
+                        
+                        // loop to update the value in the string, since we don't have access to the HTML object
+                        var l=0;
+                        var k=0;
+                        while (k<this.answer.length) {
+                            if (this.answer.substr(k,4) === "id=\"") {
+                                k = k+4;
+                                l=k;
+                                while (this.answer.substr(k,1) !== "\"") {
+                                    k++;
+                                }
+                                
+                                for (var j=0; j<answers.length; j++) {
+                                    if (answers[j].id === this.answer.substr(l,k-l)) {
+                                        while (this.answer.substr(k,7) !== "value=\"") {
+                                            k++;
+                                        }
+                                        
+                                        this.answer = this.answer.substr(0,k+7) + answers[j].answer + this.answer.substr(k+7,this.answer.length);
+                                    }
+                                }
+                            }
+                            k++;
+                        }
+                
                     }
                 }
                 
-                //------------------ Changer format d'enregistrement BDD? --------------------//
-                var answers = $.parseJSON(this.paper.questions[0].answer);;
-                console.log(answers);
-                
-                for (var i=0; i<answers.length; i++) {
-                    console.log(answers[i]);
-                }
-                
-                console.log(this.question);
-                console.log(this.paper);
+                console.log("answer");
+                console.log(this.answer);
             };
             
             this.getAnswer = function () {
