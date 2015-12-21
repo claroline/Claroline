@@ -22,13 +22,13 @@ use Claroline\CoreBundle\Form\FileType;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\Iterator\RecursiveDirectoryIterator;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 /**
- * @DI\Service
+ * @DI\Service("claroline.listener.web_resource_listener")
  */
 class WebResourceListener
 {
@@ -77,6 +77,8 @@ class WebResourceListener
         $this->container = $container;
         $this->zipPath = $this->container->getParameter('claroline.param.uploads_directory') . '/webresource/';
         $this->filesPath = $this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR;
+        $this->tokenStorage = $this->container->get('security.token_storage');
+        $this->workspaceManager = $this->container->get('claroline.manager.workspace_manager');
     }
 
     /**
@@ -107,6 +109,7 @@ class WebResourceListener
     public function onCreate(CreateResourceEvent $event)
     {
         $request = $this->container->get('request');
+        $workspace = $event->getParent()->getWorkspace();
         $form = $this->container->get('form.factory')->create(new FileType, new File());
         $form->handleRequest($request);
 
@@ -115,7 +118,7 @@ class WebResourceListener
                 $error = $this->container->get('translator')->trans('not_a_zip', array(), 'resource');
                 $form->addError(new FormError($error));
             } else {
-                $event->setResources(array($this->createResource($form)));
+                $event->setResources(array($this->create($form->get('file')->getData(), $workspace)));
                 $event->stopPropagation();
 
                 return;
@@ -341,17 +344,9 @@ class WebResourceListener
         return $isZip;
     }
 
-    /**
-     * Creates a web resource from a valid form containing the zip file.
-     *
-     * @param \Symfony\Component\Form\Form $form
-     *
-     * @return \Claroline\CoreBundle\Entity\Resource\File
-     */
-    private function createResource(Form $form)
+    public function create(UploadedFile $tmpFile, Workspace $workspace = null)
     {
-        $file = $form->getData();
-        $tmpFile = $form->get('file')->getData();
+        $file = new File();
         $fileName = $tmpFile->getClientOriginalName();
         $hash = $this->getHash(pathinfo($fileName, PATHINFO_EXTENSION));
         $file->setSize(filesize($tmpFile));
