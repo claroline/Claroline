@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Claroline\ScormBundle\Repository\Scorm2004ResourceRepository")
  * @ORM\Table(name="claro_scorm_2004_resource")
  */
-class Scorm2004Resource extends AbstractResource
+class Scorm2004Resource extends AbstractResource implements ScormResource
 {
     /**
      * @ORM\Column(name="hash_name", length=50)

@@ -133,25 +133,9 @@ class Scorm2004Listener
                 $tmpFile = $form->get('file')->getData();
 
                 if ($this->isScormArchive($tmpFile)) {
-                    $scormResource = new Scorm2004Resource();
-                    $scormResource->setName($form['name']->getData());
-                    $fileName = $tmpFile->getClientOriginalName();
-                    $extension = pathinfo($fileName, PATHINFO_EXTENSION);
-                    $hashName = $this->container->get('claroline.utilities.misc')
-                        ->generateGuid() . "." . $extension;
-                    $scormResource->setHashName($hashName);
-                    $scos = $this->generateScosFromScormArchive($tmpFile);
-
-                    if (count($scos) > 0) {
-                        $this->om->persist($scormResource);
-                        $this->persistScos($scormResource, $scos);
-                    } else {
-                        throw new InvalidScormArchiveException('no_sco_in_scorm_archive_message');
-                    }
-                    $this->unzipScormArchive($tmpFile, $hashName);
-                    // Move Scorm archive in the files directory
-                    $tmpFile->move($this->filePath, $hashName);
-
+                    $scormResource = $this->container
+                        ->get('claroline.manager.scorm_manager')
+                        ->createScorm($tmpFile, $form->get('name')->getData(), '2004');
                     $event->setResources(array($scormResource));
                     $event->stopPropagation();
 
@@ -290,25 +274,6 @@ class Scorm2004Listener
     }
 
     /**
-     * Unzip a given ZIP file into the web resources directory
-     *
-     * @param UploadedFile $file
-     * @param $hashName name of the destination directory
-     */
-    private function unzipScormArchive(UploadedFile $file, $hashName)
-    {
-        $zip = new \ZipArchive();
-        $zip->open($file);
-        $destinationDir = $this->scormResourcesPath . $hashName;
-
-        if (!file_exists($destinationDir)) {
-            mkdir($destinationDir, 0777, true);
-        }
-        $zip->extractTo($destinationDir);
-        $zip->close();
-    }
-
-    /**
      * Deletes recursively a directory and its content.
      *
      * @param $dir The path to the directory to delete.
@@ -324,47 +289,6 @@ class Scorm2004Listener
             }
         }
         rmdir($dirPath);
-    }
-
-    /**
-     * Parses imsmanifest.xml file of a Scorm archive and
-     * creates Scos defined in it.
-     *
-     * @param UploadedFile $file
-     *
-     * @return array of Scorm resources
-     */
-    private function generateScosFromScormArchive(UploadedFile $file)
-    {
-        $contents = '';
-        $zip = new \ZipArchive();
-
-        $zip->open($file);
-        $stream = $zip->getStream("imsmanifest.xml");
-
-        while (!feof($stream)) {
-            $contents .= fread($stream, 2);
-        }
-        $dom = new \DOMDocument();
-
-        if (!$dom->loadXML($contents)) {
-
-            throw new InvalidScormArchiveException('cannot_load_imsmanifest_message');
-        }
-
-        $scormVersionElements = $dom->getElementsByTagName('schemaversion');
-
-        if ($scormVersionElements->length > 0
-            && $scormVersionElements->item(0)->textContent !== 'CAM 1.3'
-            && $scormVersionElements->item(0)->textContent !== '2004 3rd Edition'
-            && $scormVersionElements->item(0)->textContent !== '2004 4th Edition') {
-
-            throw new InvalidScormArchiveException('invalid_scorm_version_2004_message');
-        }
-
-        $scos = $this->parseOrganizationsNode($dom);
-
-        return $scos;
     }
 
     /**

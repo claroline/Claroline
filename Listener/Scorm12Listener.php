@@ -138,7 +138,7 @@ class Scorm12Listener
                 if ($this->isScormArchive($tmpFile)) {
                     $scormResource = $this->container
                         ->get('claroline.manager.scorm_manager')
-                        ->createScorm12($tmpFile, $form->get('name')->getData());
+                        ->createScorm($tmpFile, $form->get('name')->getData(), '1.2');
                     $event->setResources(array($scormResource));
                     $event->stopPropagation();
 
