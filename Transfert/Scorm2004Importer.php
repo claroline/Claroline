@@ -15,10 +15,10 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Service("claroline.tool.resources.scorm12_importer")
+ * @DI\Service("claroline.tool.resources.scorm2004_importer")
  * @DI\Tag("claroline.importer")
  */
-class Scorm12Importer extends ScormImporter implements ConfigurationInterface
+class Scorm2004Importer extends ScormImporter implements ConfigurationInterface
 {
     private $container;
 
@@ -34,6 +34,6 @@ class Scorm12Importer extends ScormImporter implements ConfigurationInterface
 
     public function getName()
     {
-        return 'claroline_scorm_12';
+        return 'claroline_scorm_2004';
     }
 } 
