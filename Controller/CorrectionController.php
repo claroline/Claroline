@@ -2070,12 +2070,6 @@ class CorrectionController extends DropzoneBaseController
 
             $form->handleRequest($request);
 
-$docs = $this->getRequest()->request->get('arrayDocsToView');
-var_dump($docs);
-var_dump($form);
-die();
-
-
             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
 
@@ -2264,7 +2258,6 @@ die();
 
         // Récupération de l'ID du dropzone choisi
         $dropzoneId = $this->get('request')->query->get('dropzoneId');
-var_dump($dropzoneId);
 
         $dropzone = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Dropzone')->find($dropzoneId);
 
@@ -2280,11 +2273,14 @@ var_dump($dropzoneId);
         $arrayDropsToView = array();
 
         $cpt=0;
+        $stringDocsId="";
         foreach($arrayDocsId as $documentId)
         {
             // Par le JS, le document est transmis sous la forme "document_id_XX"
             $docIdS = explode("_", $documentId);
             $docId = $docIdS[2];
+            $stringDocsId=$stringDocsId . $docId . "|";
+
             $document = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Document')->find($docId);
             $arrayDocsToView[] = $document;
 
@@ -2346,6 +2342,7 @@ var_dump($dropzoneId);
                 'state' => $state,
                 'arrayDocsToView' => $arrayDocsToView,
                 'arrayDropsToView' => $arrayDropsToView,
+                'stringDocsId' => $stringDocsId,
                 'user' => $user,
                 'adminInnova' => $canEdit,
                 'collecticielOpenOrNot' => $collecticielOpenOrNot
@@ -2388,14 +2385,7 @@ var_dump($dropzoneId);
 
 //        $whatToFind = $request->query->get('whatToFind'); // Which text to find
 
-var_dump("tableau : ");
-var_dump($docs);
-
-$form->handleRequest($request);
-var_dump($form->getData());
-
-die();
-            // Ici il faut que je boucle sur la liste des documents 
+          // Ici il faut que je boucle sur la liste des documents 
 //            $comment->setDocument($document);
 
             $form->handleRequest($request);
@@ -2459,5 +2449,97 @@ die();
 
     }
 
+
+
+    /**
+     * @Route(
+     *      "/add/comments/{userId}/{dropzoneId}",
+     *      name="innova_collecticiel_add_comment_for_docs",
+     *      requirements={"userId" = "\d+", "dropzoneId" = "\d+"}
+     * )
+     * @ParamConverter("user",class="ClarolineCoreBundle:User",options={"id" = "userId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "dropzoneId"})
+     * @Method("POST")
+     * @Template()
+     */
+    public function AddCommentForDocsInnovaAction(User $user, Dropzone $dropzone)
+    {
+
+        // Récupération de l'USER
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $comment = new Comment();
+        $form = $this->get('form.factory')->createBuilder(new CommentType(), $comment)->getForm();
+
+        // Récupération de la saisie du commentaire
+        $request = $this->get('request');
+
+        if ($request->isMethod('POST')) {
+
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+
+                $dropzoneManager = $this->get('innova.manager.dropzone_manager');
+
+                // Récupération du commentaire
+                $commentText = $comment->getCommentText();
+
+                // Récupération des documents sur lesquels porte le commentaire saisi
+                $docs = $this->getRequest()->request->get('docs');
+
+                // Récupération des ID des documents
+                $explodeDocIdS = explode("|", $docs);
+
+                // Parcours du tableau des documents
+                foreach($explodeDocIdS as $documentId)
+                {
+                    // Je ne prends pas le dernier élément du tableau
+                    if (is_numeric($documentId)) {
+                        // Création du nouveau commentaire
+                        $document = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Document')->find($documentId);
+                        // Valorisation du commentaire
+                        $comment = new Comment();
+                        $comment->setDocument($document);
+                        $comment->setCommentText($commentText);
+                        $comment->setUser($user);
+                        var_dump($documentId);
+                        // Insertion en base du commentaire
+                        $em->persist($comment);
+                    }
+                }
+
+                $em->flush();
+                // Envoi notification. InnovaERV
+                $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
+                $usersIds = array();
+                $usersIds[] = $dropzone->getResourceNode()->getCreator()->getId();
+                $usersIds[] = $document->getSender()->getId();
+                $event = new LogDropzoneAddCommentEvent($dropzone, $dropzone->getManualState(), $usersIds);
+                $this->get('event_dispatcher')->dispatch('log', $event);
+            }
+        }
+
+        // Ajouter la création du log de la création du commentaire. InnovaERV.
+        $unitOfWork = $em->getUnitOfWork();
+        $unitOfWork->computeChangeSets();
+        $dropzoneChangeSet = $unitOfWork->getEntityChangeSet($dropzone);
+
+        $event = new LogCommentCreateEvent($dropzone, $dropzoneChangeSet, $comment);
+
+        $this->dispatch($event);
+
+        // Redirection vers les demandes adressées. InnovaERV.
+        return $this->redirect(
+            $this->generateUrl(
+                'innova_collecticiel_drops_awaiting',
+                array(
+                    'resourceId' => $dropzone->getId()
+                )
+            )
+        );
+    }
 
 }

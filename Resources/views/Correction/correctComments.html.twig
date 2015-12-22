@@ -140,7 +140,7 @@
             {% block dropzone_list_comment %}
                 {# Partie "Ajout d'un commentaire" #}
                 <div class="form-group">
-                    {% include 'InnovaCollecticielBundle:Comment:addMoreComment.html.twig' %}
+                    {% include 'InnovaCollecticielBundle:Comment:addMoreComment.html.twig' with {'docs': arrayDocsToView } %}
                 </div>
 
             {% endblock %}

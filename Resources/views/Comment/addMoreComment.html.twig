@@ -2,10 +2,11 @@
 
     <h3>{{ 'Add comment'|trans({}, 'innova_collecticiel') }}</h3>
     <div class="container">
-        <form class="form-horizontal" role="form" method="POST" {{ form_enctype(form) }}
-        action="{{ path('innova_collecticiel_add_more_comment') }}">
-            {{ form(formComment) }}
-            <input class="form-control" type="hidden" value="88888" name="arrayDocsToView" id="arrayDocsToView" />
+
+        <form class="form-horizontal" role="form" method="POST" 
+        action="{{ path('innova_collecticiel_add_comment_for_docs', {'userId': user.id, 'dropzoneId': dropzone.id}) }}">
+            {{ form_widget(formComment) }}
+            <input class="form-control" type="hidden" value="{{ stringDocsId }}" name="docs" id="docs" />
             <hr>
         </form>
     </div>
