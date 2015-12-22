@@ -20,6 +20,24 @@
                 for (var i=0; i<inputs.length; i++) {
                     inputs[i].setAttribute("disabled", true);
                 }
+                
+                var answers_fields = document.getElementsByName('users_answer');
+                var solutions_fields = document.getElementsByName('teachers_solution');
+                
+                for (var i=0; i<answers_fields.length; i++) {
+                    var answers_inputs = answers_fields[i].getElementsByTagName('input');
+                    var solutions_inputs = solutions_fields[i].getElementsByTagName('input');
+                    
+                    for (var j=0; j<answers_inputs.length; j++) {
+                        if (answers_inputs[j].value === solutions_inputs[j].value) {
+                            answers_inputs[j].style.color = "#2289b5";
+                        }
+                        else {
+                            answers_inputs[j].style.color = "#FC0204";
+                        }
+                        solutions_inputs[j].style.color = "black";
+                    }
+                }
             });
 
             this.init = function (question, paper) {
@@ -27,11 +45,6 @@
                 this.paper = paper;
                 
                 this.setAnswer(this.question.text);
-                
-                console.log("question");
-                console.log(this.question);
-                console.log("paper");
-                console.log(this.paper);
                 
                 for (var i=0; i<this.paper.questions.length; i++) {
                     if (question.id.toString() === this.paper.questions[i].id) {
@@ -63,9 +76,6 @@
                 
                     }
                 }
-                
-                console.log("answer");
-                console.log(this.answer);
             };
             
             this.getAnswer = function () {
