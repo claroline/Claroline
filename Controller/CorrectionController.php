@@ -2227,28 +2227,15 @@ die();
             $endURL = $endURL . "&arrayDropsId%5B%5D=".$dropId;
         }
 
-//http://localhost/eric/Claroline_v6/Claroline/web/app_dev.php/innovacollecticielbundle/dropzone/comments
-//        ?dropzoneId=2&arrayDocsId%5B%5D=document_id_2&arrayDropsId%5B%5D=2
+        $redirectRoot = $this->generateUrl(
+            'innova_collecticiel_add_more_comments_view',
+            array(
+                'dropzoneId' => $dropzoneId,
+                'arrayDocsId' => $arrayDocsId,
+                'arrayDropsId' => $arrayDropsId
+                )
+            );
 
-//        ?dropzoneId=2&arrayDocsId%5B%5D=document_id_2&arrayDropsId%5B%5D=2&arrayDropsId%5B%5D=2
-
-
-//$webRoot =  $this->get('kernel')->getRootDir() . '/../web' . $this->getRequest()->getBasePath();
-
-$webRoot = realpath($this->get('kernel')->getRootDir() . '/../web/');
-
-$redirectRoot = $webRoot . "/innovacollecticielbundle/dropzone/comments/view?" . $endURL;
-
-//        $redirectRoot = $this->get('router')->generate(
-//            'innova_collecticiel_add_more_comments_view'
-//            array(
-//                'dropzoneId' => $dropzoneId
-//                'node' => $old->getResourceNode()->getId()
-//                )
-//            );
-
-//var_dump($redirectRoute);
-//die();
         return new JsonResponse(
             array(
                 'link' => $redirectRoot
@@ -2269,8 +2256,6 @@ $redirectRoot = $webRoot . "/innovacollecticielbundle/dropzone/comments/view?" .
     public function dropzoneAddMoreCommentsAction()
     {
        
-
-
         $em = $this->getDoctrine()->getManager();
         $dropzoneManager = $this->get('innova.manager.dropzone_manager');
 
@@ -2279,8 +2264,7 @@ $redirectRoot = $webRoot . "/innovacollecticielbundle/dropzone/comments/view?" .
 
         // Récupération de l'ID du dropzone choisi
         $dropzoneId = $this->get('request')->query->get('dropzoneId');
-var_dump("DropzoneId : " . $dropzoneId);
-       var_dump("<br />suis ici");die();
+var_dump($dropzoneId);
 
         $dropzone = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Dropzone')->find($dropzoneId);
 
@@ -2294,6 +2278,25 @@ var_dump("DropzoneId : " . $dropzoneId);
 
         $arrayDropsId = $this->get('request')->query->get('arrayDropsId');
         $arrayDropsToView = array();
+
+        $cpt=0;
+        foreach($arrayDocsId as $documentId)
+        {
+            // Par le JS, le document est transmis sous la forme "document_id_XX"
+            $docIdS = explode("_", $documentId);
+            $docId = $docIdS[2];
+            $document = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Document')->find($docId);
+            $arrayDocsToView[] = $document;
+
+            $dropId = $arrayDropsId[$cpt];
+            $drop = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Drop')->find($dropId);
+            $arrayDropsToView[] = $drop;
+            $cpt++;
+        }
+
+//var_dump($arrayDocsToView);
+//var_dump($arrayDropsToView);
+
 
         $edit = 'edit';
         $state = 'edit';

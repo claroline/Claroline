@@ -10,20 +10,28 @@
                             <th></th>
                             <th>{{ 'Type of document'|trans({}, 'innova_collecticiel') }}</th>
                             <th>{{ 'Name of document'|trans({}, 'innova_collecticiel') }}</th>
-                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for key,value in arrayDocsToView %}
-                            <tr id="row">
+                        {% for document in arrayDocsToView %}
+                            <tr id="row_{{ document.id }}">
                                 {# Suppression de l'ID
                                 <td>{{ document.id }}</td> #}
                                 <td></td>
-                                <td>{{ value }}</td>
+                                <td>{{ (document.type~'_type')|trans({}, 'innova_collecticiel') }}</td>
+                                <td>
+                                {% if document.url is not null %}
+                                    <a target="_blank"
+                                       href="{{ document.url }}">{{ document.url | length > 40 ? document.url | slice(0, 40) ~ '...' :document.url }}</a>
+                                {% else %}
+                                    <a target="_blank"
+                                       href="{{ path('innova_collecticiel_open_resource', {'resourceId': dropzone.id, 'documentId': document.id}) }}">{{ document.resourceNode.name }}</a>
+                                {% endif %}
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
             </table>
         </div>
-    </div>{
+    </div>
 {% endmacro %}
