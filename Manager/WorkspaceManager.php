@@ -868,11 +868,10 @@ class WorkspaceManager
             $entityRoles[$this->roleManager->getWorkspaceRoleBaseName($wsRole)] = $wsRole;
         }
 
-        $workspace = $this->container->get('claroline.manager.transfert_manager')->populateWorkspace(
-            $workspace,
+        $workspace = $this->container->get('claroline.manager.transfert_manager')->importResources(
             $configuration,
-            $root,
-            $entityRoles
+            $workspace->getCreator(),
+            $root->getResourceNode()
         );
 
         $this->importRichText();

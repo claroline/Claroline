@@ -227,7 +227,7 @@ class MailManager
                 ->setFrom($fromEmail)
                 ->setBody($body, 'text/html');
 
-            if ($from !== null) {
+            if ($from !== null && filter_var($from->getMail(), FILTER_VALIDATE_EMAIL)) {
                 $message->setReplyTo($from->getMail());
             }
 

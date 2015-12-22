@@ -835,6 +835,7 @@ class ResourceManager
         $resourceArray['name'] = $node->getName();
         $resourceArray['parent_id'] = ($node->getParent() != null) ? $node->getParent()->getId() : null;
         $resourceArray['creator_username'] = $node->getCreator()->getUsername();
+        $resourceArray['creator_id'] = $node->getCreator()->getId();
         $resourceArray['type'] = $node->getResourceType()->getName();
         $resourceArray['large_icon'] = $node->getIcon()->getRelativeUrl();
         $resourceArray['path_for_display'] = $node->getPathForDisplay();

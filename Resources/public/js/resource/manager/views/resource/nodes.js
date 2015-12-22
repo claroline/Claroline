@@ -218,7 +218,7 @@
         },
         renderNode: function(node) {
             //1023 is the "I can do everything" mask.
-            if (this.parameters.restrictForOwner == 1 && node.mask != 1023 && node.type !== 'directory') {
+            if (this.parameters.restrictForOwner == 1 && node.creator_id != this.parameters.currentUserId && node.type !== 'directory') {
                 return;
             }
 

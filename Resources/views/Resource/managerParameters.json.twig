@@ -1,6 +1,14 @@
 {% set directoryId = app.session.get('pickerDirectoryId', '0') %}
+{% set currentUsername = 'anon.' %}
+{% set currentUserId = 'anon.' %}
+{% if app.user %}
+    {% set currentUsername = app.user.getUsername() %}
+    {% set currentUserId   = app.user.getId() %}
+{% endif %}
 
 {
+    "currentUsername": "{{ currentUsername }}",
+    "currentUserId": "{{ currentUserId }}",
     "webPath": "{{ asset('') }}",
     "language": "{{ app.request.locale }}",
     "zoom": "{{ app.session.get('zoom') }}",
