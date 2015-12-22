@@ -89,6 +89,7 @@ class ResourceQueryBuilder
             "    node.path as path,{$eol}" .
             "    parent.id as parent_id,{$eol}" .
             "    creator.username as creator_username,{$eol}" .
+            "    creator.id as creator_id,{$eol}" .
             "    resourceType.name as type,{$eol}" .
             "    icon.relativeUrl as large_icon,{$eol}" .
             "    node.mimeType as mime_type,{$eol}" .

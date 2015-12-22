@@ -219,7 +219,9 @@
             isPickerMultiSelectAllowed: isDefault || parameters.isPickerMultiSelectAllowed || false,
             isDirectorySelectionAllowed: allowDirectorySelection,
             currentDirectoryId: null,
-            isTinyMce: parameters.isTinyMce || false
+            isTinyMce: parameters.isTinyMce || false,
+            currentUsername: fetchedParameters.currentUsername,
+            currentUserId: fetchedParameters.currentUserId
         };
 
         if (mergedParameters.preFetchedDirectory) {
@@ -269,6 +271,8 @@
                 fetchedParameters.language = data.language;
                 fetchedParameters.webPath = data.webPath;
                 fetchedParameters.zoom = data.zoom;
+                fetchedParameters.currentUsername = data.currentUsername;
+                fetchedParameters.currentUserId = data.currentUserId;
                 hasFetchedParameters = true;
                 callback();
             });
