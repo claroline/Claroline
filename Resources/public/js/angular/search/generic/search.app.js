@@ -68,7 +68,6 @@ genericSearch.controller('GenericSearchCtrl', ['$log', '$http', 'clarolineSearch
 	}.bind(this);
 
 	this.search = function(searches) {
-		console.log(this);
 		this.onSearch(searches);
 	}.bind(this);
 }]);
@@ -82,7 +81,6 @@ genericSearch.service('searchOptionsService', function() {
 	}
 
 	this.generateOptions = function(fields) {
-		console.log('generate');
 		var options = [];
 
 		for (var i = 0; i < fields.length; i++) {
@@ -120,7 +118,6 @@ genericSearch.provider("clarolineSearch", function() {
 	this.setBaseRoute = function(route, baseParam) {
 		baseRoute = route;
 		this.baseParam = baseParam || {};
-		console.log(baseParam);
 	}.bind(this);
 	
 	this.setSearchRoute = function(route, searchParam) {
@@ -176,19 +173,20 @@ genericSearch.provider("clarolineSearch", function() {
 
 genericSearch.directive('clarolinesearch', [
 	function clarolinesearch() {
+		var bindings = {
+			onSearch: '&'
+		};
+
 		return {
 			scope: {},
 			restrict: 'E',
 			templateUrl: AngularApp.webDir + 'bundles/clarolinecore/js/angular/search/generic/views/search.html',
 			replace: false,
 			controller: 'GenericSearchCtrl',
-			bindToController: {
-				onSearch: '&'
-			},
+			bindToController: bindings,
 			controllerAs: 'cs',
-			link: function(scope) {
-				var ctrl = scope.cs;
-				ctrl.onSearch = scope.onSearch;
+			link: function(scope, elem, attrs) {
+				//scope.onSearch()(scope.searches);
 			}
 		}
 	}
