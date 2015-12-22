@@ -28,8 +28,16 @@
                     var answers_inputs = answers_fields[i].getElementsByTagName('input');
                     var solutions_inputs = solutions_fields[i].getElementsByTagName('input');
                     
+                    var answers_select = answers_fields[i].getElementsByTagName('select');
                     var solutions_select = solutions_fields[i].getElementsByTagName('select');
-                    for (var j=0; j<solutions_select.length; j++) {
+                    
+                    for (var j=0; j<answers_select.length; j++) {
+                        if (answers_select[j].options[answers_select[j].selectedIndex].innerHTML === solutions_select[j].options[solutions_select[j].selectedIndex].value) {
+                            answers_select[j].style.color = "#2289b5";
+                        }
+                        else {
+                            answers_select[j].style.color = "#FC0204";
+                        }
                         solutions_select[j].style.color = "black";
                     }
                     
