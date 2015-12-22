@@ -46,6 +46,8 @@
                 
                 this.setAnswer(this.question.text);
                 
+                var type_answer = "";
+                
                 for (var i=0; i<this.paper.questions.length; i++) {
                     if (question.id.toString() === this.paper.questions[i].id) {
                         var answers = $.parseJSON(this.paper.questions[i].answer);
@@ -54,7 +56,16 @@
                         var l=0;
                         var k=0;
                         while (k<this.answer.length) {
-                            if (this.answer.substr(k,4) === "id=\"") {
+                        /*    if (this.answer.substr(k,7) === "<select") {
+                                type_answer = "select";
+                                console.log(type_answer);
+                            }
+                            else if (this.answer.substr(k,6) === "<input") {
+                                type_answer = "input";
+                                console.log(type_answer);
+                            }*/
+                            
+                            if (this.answer.substr(k,4) === "id=\"" /*&& type_answer === "input"*/) {
                                 k = k+4;
                                 l=k;
                                 while (this.answer.substr(k,1) !== "\"") {
@@ -63,6 +74,8 @@
                                 
                                 for (var j=0; j<answers.length; j++) {
                                     if (answers[j].id === this.answer.substr(l,k-l)) {
+                                        console.log(answers[j]);
+                                        console.log(this.answer.substr(l,k-l));
                                         while (this.answer.substr(k,7) !== "value=\"") {
                                             k++;
                                         }

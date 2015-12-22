@@ -231,7 +231,7 @@ class HoleHandler implements QuestionHandlerInterface
         $i=1;
         $length = count($data);
         foreach ($data as $answer) {
-            $answers .= "{\"id\":\"" . $i . "\",\"answer\":\"" . $answer . "\"}";
+            $answers .= "{\"id\":\"" . $answer["id"] . "\",\"answer\":\"" . $answer["answer"] . "\"}";
             
             if ($i === $length) {
                 $answers .= "]";

@@ -76,7 +76,7 @@
                     var answers = new Array();
                     
                     for (var i=0; i<inputs.length; i++) {
-                        answers.push(inputs[i].value);
+                        answers.push({"id" : inputs[i].id, "answer" : inputs[i].value});
                     }
                     this.paper.questions[this.currentStepIndex].answer = answers;
                 }
