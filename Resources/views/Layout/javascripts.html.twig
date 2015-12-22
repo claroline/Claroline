@@ -138,27 +138,6 @@
     $('.maintenance-popover').popover();
 </script>
 
-{# Angular JS #}
-{% javascripts debug=false filter='jsmin' output='vendor/angular/angular.js'
-    '@InnovaAngularJSBundle/Resources/public/js/angular.min.js'
-    '@InnovaAngularJSBundle/Resources/public/js/angular-sanitize.min.js'
-    '@InnovaAngularJSBundle/Resources/public/js/angular-route.min.js'
-    '@InnovaAngularJSBundle/Resources/public/js/angular-resource.min.js'
-    '@InnovaAngularJSBundle/Resources/public/js/angular-touch.min.js'
-%}
-{% endjavascripts %}
-
-{# Angular UI #}
-{% javascripts debug=false filter='jsmin' output='vendor/angular/angular-ui.js'
-    '@InnovaAngularUIBootstrapBundle/Resources/public/js/*'
-    '@InnovaAngularUITreeBundle/Resources/public/js/*'
-    '@InnovaAngularUIPageslideBundle/Resources/public/js/*'
-    '@InnovaAngularUITinyMCEBundle/Resources/public/js/*'
-    '@InnovaAngularUITranslationBundle/Resources/public/js/*'
-    '@InnovaAngularUIResourcePickerBundle/Resources/public/js/*'
-%}
-{% endjavascripts %}
-
 <script type="text/javascript">
     $('#hide-email-confirmation').on('click', function(event) {
         $.ajax({
