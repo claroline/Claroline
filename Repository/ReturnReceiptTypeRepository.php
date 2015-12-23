@@ -9,9 +9,9 @@ namespace Innova\CollecticielBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\User;
-use Innova\CollecticielBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Entity\ReturnReceiptType;
 
-class DropZoneRepository extends EntityRepository
+class ReturnReceiptTypeRepository extends EntityRepository
 {
 
 }

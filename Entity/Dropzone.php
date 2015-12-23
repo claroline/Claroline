@@ -3,6 +3,8 @@
  * Created by : Vincent SAISSET
  * Date: 21/08/13
  * Time: 15:18
+ * Modifiey by : Eric VINCENT InnovaERV Add ReturnReceipt Column
+ * Modifiey by : Eric VINCENT InnovaERV Add Evaluation Column
  */
 
 namespace Innova\CollecticielBundle\Entity;
@@ -236,6 +238,23 @@ class Dropzone extends AbstractResource
      * @ORM\Column(name="notify_on_drop",type="boolean",nullable=false,options={"default" = false})
      */
     protected $notifyOnDrop = false;
+
+    /**
+     * @var bool
+     * Return recept admins
+     *
+     * @ORM\Column(name="return_receipt",type="boolean",nullable=false,options={"default" = false})
+     */
+    protected $returnReceipt = false;
+
+    /**
+     * @var bool
+     * Evaluation admins
+     *
+     * @ORM\Column(name="evaluation",type="boolean",nullable=false,options={"default" = false})
+     */
+    protected $evaluation = false;
+
 
     /**
      * @var Event
@@ -1003,5 +1022,53 @@ class Dropzone extends AbstractResource
     public function getResourceNode()
     {
         return $this->resourceNode;
+    }
+
+    /**
+     * Set returnReceipt
+     *
+     * @param boolean $returnReceipt
+     *
+     * @return Dropzone
+     */
+    public function setReturnReceipt($returnReceipt)
+    {
+        $this->returnReceipt = $returnReceipt;
+
+        return $this;
+    }
+
+    /**
+     * Get returnReceipt
+     *
+     * @return boolean
+     */
+    public function getReturnReceipt()
+    {
+        return $this->returnReceipt;
+    }
+
+    /**
+     * Set evaluation
+     *
+     * @param boolean $evaluation
+     *
+     * @return Dropzone
+     */
+    public function setEvaluation($evaluation)
+    {
+        $this->evaluation = $evaluation;
+
+        return $this;
+    }
+
+    /**
+     * Get evaluation
+     *
+     * @return boolean
+     */
+    public function getEvaluation()
+    {
+        return $this->evaluation;
     }
 }

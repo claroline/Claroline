@@ -68,6 +68,21 @@ class DropzoneCommonType extends AbstractType
             //        'mapped' => false,
             //        'required' => false)
             //         )
+
+            // Accusé de réception. Ajout de cette zone, demande JJQ. InnovaERV
+            ->add('returnReceipt', 'checkbox',
+                 array(
+//                     'attr' => array('checked' => 'checked'),
+                     'required' => false)
+                      )
+
+            // Evaluation. Ajout de cette zone, demande JJQ. InnovaERV
+            ->add('evaluation', 'checkbox',
+                 array(
+                     'required' => false)
+                      )
+
+
             ;
     }
 

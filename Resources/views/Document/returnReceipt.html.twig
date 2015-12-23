@@ -1,0 +1,25 @@
+{% set found = false %}
+{% for key, value in haveReturnReceiptOrNotArray %}
+	{% if key == document.id %}
+		{% set found = true %}
+		{% if value == 1 %}
+	        <span class="fa fa-thumbs-o-up" title="{{ 'Doubloon'|trans({}, 'innova_collecticiel') }}"> </span>
+		{% endif %}
+		{% if value == 2 %}
+	        <span class="fa fa-thumbs-o-up" title="{{ 'Document received'|trans({}, 'innova_collecticiel') }}"> </span>
+		{% endif %}
+		{% if value == 3 %}
+	        <span class="fa fa-ambulance" title="{{ 'Document unreadable'|trans({}, 'innova_collecticiel') }}"> </span>
+		{% endif %}
+		{% if value == 4 %}
+	        <span class="fa fa-ambulance" title="{{ 'Incomplete document'|trans({}, 'innova_collecticiel') }}"> </span>
+		{% endif %}
+		{% if value == 5 %}
+	        <span class="fa fa-ambulance" title="{{ 'Error document'|trans({}, 'innova_collecticiel') }}"> </span>
+		{% endif %}
+	{% endif %}
+{% endfor %}
+
+{% if found == false %}
+	<span class="fa fa-minus" title="{{ 'No return recept'|trans({}, 'innova_collecticiel') }}"> </span>
+{% endif %}

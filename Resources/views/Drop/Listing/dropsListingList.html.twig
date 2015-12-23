@@ -1,10 +1,27 @@
 {# Affichage du tableau de l'onglet "Demandes adressées" #}
 <tr>
+    {# Affichage de l'image de profil #}
+    <td>
+        {% if drop.user.getPicture() != '' %}
+            <i class="direct-chat-img direct-chat-img-you right" >
+            <img src="{{ asset('uploads/pictures/') ~  drop.user.getPicture() }}"
+            class="profile_picture img-responsive"
+            alt="{{ drop.user.getLastName() ~ ' ' ~ drop.user.getFirstName() }}">
+            </i>
+        {% else %}
+            <i class="direct-chat-img direct-chat-img-you right fa fa-user" ></i>
+        {% endif %}
+    </td>
+
     <td>{{ drop.user.lastName|upper }}</td>
+
     <td>{{ drop.user.firstName|capitalize }}</td>
+
     <td>{{ drop.user.userName|capitalize }}</td>
+
     {# En date du #}
     <td>{{ document.documentDate|date('formatDatetime'|trans({}, 'innova_collecticiel')) }}</td>
+
     <td>
         <a target="_blank" href="{{ path('innova_collecticiel_open_resource', {'resourceId': dropzone.id, 'documentId': document.id}) }}">
             {# fix68 : Problème d'affichage du nom du document #}
@@ -16,16 +33,54 @@
         {#  Afficher ici la valeur "Commentaires non lus"
         {% include 'InnovaCollecticielBundle:Drop:dropsNbComments.html.twig' %}  #}
     </td>
+
+    {% if dropzone.evaluation != 1  %}
     <td class="centered">
         {# Afficher ici la valeur "Devoirs à corriger" modifiée en "Etat" #}
         {% include 'InnovaCollecticielBundle:Document:documentsNbTextToRead.html.twig' %}
     </td>
+    {% endif %}
+
     <td class="centered">
     {# Appel de la vue "Vue d'un fichier" où seront affichés les différents commentaires. #}
         <div class="btn-group ">
-            <a href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" type="button" class="btn btn-default btn-sm">
-                {{ 'To drop'|trans({}, 'innova_collecticiel') }}
-            </a>
+           {# Variable qui va compter le nombre de commentaires #}
+           {# Affichage d'un bouton si pas de commentaires #}
+            {% if document.comments|length == 0 %}
+                <a href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" type="button" class="btn btn-default btn-sm">
+                    {{ 'To drop'|trans({}, 'innova_collecticiel') }}
+                </a>
+           {# Sinon affichage du compteur et des nouveaux commentaires #}
+            {% else %}
+                <a href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" type="button">
+                    {{ document.comments|length }}
+                    {% if document.getUnReadComments( app.user.id ) != 0 %}
+                        ({{ document.getUnReadComments( app.user.id ) }} nouveau{% if document.getUnReadComments( app.user.id ) > 1 %}x{% endif %})
+                    {% endif %}
+                </a>
+            {% endif %}
         </div>
     </td>
+
+    {% if adminInnova %}
+        {# Affiche cette colonne si le créateur du collecticiel veut gérer les accusés de réception. Demande JJQ. InnovaERV #}
+        {% if dropzone.returnreceipt == 1  %}
+            <td class="centered">
+                {# Afficher ici la valeur de l'accusé de réception #}
+                {% include 'InnovaCollecticielBundle:Document:returnReceipt.html.twig' %}
+            </td>
+        {% endif %}
+
+        {# On affiche cette colonne si le créateur du collecticiel veut gérer les évaluations. Demande JJQ. InnovaERV #}
+        {% if dropzone.evaluation == 1  %}
+            <td class="centered">&</td>
+            <td class="centered">&</td>
+        {% endif %}
+    {% endif %}
+
+    <td class="centered">
+        {# Affiche de la case à cocher en étant "coché" ou "décoche". Demande JJQ. InnovaERV #}
+        {% include 'InnovaCollecticielBundle:Document:inputReturnReceipt.html.twig' %}
+    </td>
+
 </tr>

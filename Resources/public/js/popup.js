@@ -24,6 +24,50 @@ $(document).ready(function () {
         ;
     });
 
+
+    // InnovaERV
+    // Ajout pour le traitement de la case à cocher pour la création de commentaire à la volée
+    $('.comment_validate').on('click', function (event) {
+        event.preventDefault();
+ 
+        // Récupération de l'id du document
+        var dropzoneId = $(this).attr("data-dropzone_id");
+
+        var arrayDocsId = [];
+        var arrayDropsId = [];
+
+        $("input[type='checkbox']:checked").each(
+            function() {
+                arrayDocsId.push($(this).attr('id'));
+                arrayDropsId.push($(this).attr("data-drop_id"));
+            });          
+
+        $.ajax({
+            url: Routing.generate('innova_collecticiel_add_more_comments',
+                { 
+                    dropzoneId: dropzoneId,
+                }),
+            method: "GET",
+            data:
+            {
+                arrayDocsId: arrayDocsId,
+                arrayDropsId: arrayDropsId
+            },
+            complete : function(data) {
+//                alert(JSON.stringify(data.responseText));
+                    var data = $.parseJSON(data.responseText)
+//                    var resource = data[0];
+
+                if (data !== 'false') {
+                    console.log(" data.link : " + data.link);
+                    document.location.href=data.link;
+                }
+            }
+        });
+
+    });
+
+
     // InnovaERV
     // Ajout pour le traitement de la case à cocher lors de la soumission de documents
     $('#validate-modal').on('show.bs.modal', function (event) {
@@ -58,7 +102,7 @@ $(document).ready(function () {
         var req = "#request_id_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
 
         // Ajout : vu avec Arnaud.
-        // Ajout de "complete" afin de mettre à jour la partie "HTML" qui va actualisé et afficher "Demande transmise"
+        // Ajout de "complete" afin de mettre à jour la partie "HTML" qui va actualiser et afficher "Demande transmise"
         $.ajax({
             url: Routing.generate('innova_collecticiel_validate_document',
                 { documentId: docId
@@ -70,6 +114,62 @@ $(document).ready(function () {
             },
             complete : function(data) {
                 $("#is-validate-"+docId).html(data.responseText);
+            }
+        });
+
+        // Fermeture de la modal
+        $('#validate-modal').modal('hide');
+
+    });
+
+
+    // InnovaERV
+    // Ajout pour le traitement de la modal de choix du type d'accusé de réception
+    $('#modal_confirm_return_receipt').on('click', function(event) {
+        event.preventDefault();
+ 
+        var returnReceiptId;
+        if (document.getElementById('choix0').checked) {
+            returnReceiptId = document.getElementById('choix0').value;
+        }
+        if (document.getElementById('choix1').checked) {
+            returnReceiptId = document.getElementById('choix1').value;
+        }
+        if (document.getElementById('choix2').checked) {
+            returnReceiptId = document.getElementById('choix2').value;
+        }
+        if (document.getElementById('choix3').checked) {
+            returnReceiptId = document.getElementById('choix3').value;
+        }
+        if (document.getElementById('choix4').checked) {
+            returnReceiptId = document.getElementById('choix4').value;
+        }
+        if (document.getElementById('choix5').checked) {
+            returnReceiptId = document.getElementById('choix5').value;
+        }
+
+        // Récupération de l'id du document
+        var dropzoneId = $(this).attr("data-dropzone_id");
+
+        var arrayDocsId = [];
+
+        $("input[type='checkbox']:checked").each(
+            function() {
+                arrayDocsId.push($(this).attr('id'));
+            });          
+
+        $.ajax({
+            url: Routing.generate('innova_collecticiel_return_receipt',
+                { 
+                dropzoneId: dropzoneId,
+                returnReceiptId: returnReceiptId,
+                }),
+            method: "GET",
+            data:
+            {
+                arrayDocsId: arrayDocsId
+            },
+            complete : function(data) {
             }
         });
 
@@ -97,6 +197,38 @@ $(document).ready(function () {
                 }
             }
         );
+    });
+
+    // InnovaERV : sélection et déselection dans la liste des demandes adressées.
+    $('#document_id_0').on('click', function(event) {
+
+        var selector = "#document_id_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
+        var selectorId = $(this).attr("data-document_id"); // Extract info from data-* attributes
+
+        // Récupération du choix de l'utilisateur : tout sélectionner ou tout déselectionner
+        if (selectorId == 0) {
+            if ($(selector).prop('checked') == false)
+            {
+                var checkedDisplay = false;
+                $(selector).prop('checked', checkedDisplay); // Cocher la case "Valider"
+            }
+            else
+            {
+                var checkedDisplay = true;
+                $(selector).prop('checked', checkedDisplay); // Cocher la case "Valider"
+            }   
+        }   
+
+        // Affectation du choix "tout sélectionner" ou "tout déselectionner" au reste des documents
+        $("input[type='checkbox']").each(
+            function() {
+                var selector = "#document_id_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
+                var id = $(this).attr("data-document_id"); // Extract info from data-* attributes
+                if (id != 0) {
+                    $(selector).prop('checked', checkedDisplay); // Cocher la case "Valider"
+                }
+            }
+        );          
     });
 
     // InnovaERV : ajout du bouton "Retour" dans la liste des commentaires.

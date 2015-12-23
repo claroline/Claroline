@@ -76,6 +76,9 @@ class DropzoneController extends DropzoneBaseController
             $resourceId = $dropzone->getResourceNode()->getId();
             $resourceNodes = $dropzoneManager->updatePublished($resourceId, $extraDataPublished);
 
+
+//var_dump($form->getData());
+//die();
             $dropzone = $form->getData();
             $form = $this->handleFormErrors($form, $dropzone);
 
