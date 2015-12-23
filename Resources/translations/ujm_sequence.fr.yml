@@ -42,6 +42,8 @@ paper_details_table_comment: Commentaire
 paper_details_paper_score: Score global
 paper_details_question_score: Score de la question
 paper_details_correction_label: Correction
+paper_details_your_answers: Vos réponses
+paper_details_right_answers: Bonnes réponses
 
 # q
 question_hints: Indices
