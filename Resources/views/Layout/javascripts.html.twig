@@ -63,11 +63,12 @@
     "@ClarolineCoreBundle/Resources/views/Tool/workspace/parameters/model/tabElement.html.twig"
     %}<script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
+
 {% javascripts debug=false filter='jsmin' output='vendor/jquery/ui/jqueryui.js'
-    'bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.core.min.js'
-    'bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.widget.min.js'
-    'bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.mouse.min.js'
-    'bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.sortable.min.js'
+    'bundles/frontend/jquery-ui-old/ui/minified/jquery.ui.core.min.js'
+    'bundles/frontend/jquery-ui-old/ui/minified/jquery.ui.widget.min.js'
+    'bundles/frontend/jquery-ui-old/ui/minified/jquery.ui.mouse.min.js'
+    'bundles/frontend/jquery-ui-old/ui/minified/jquery.ui.sortable.min.js'
     %}<script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
 
@@ -81,13 +82,13 @@
 
 <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
 <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/bootstrap-datepicker/dist/js/bootstrap-datepicker.js') }}"></script>
 {% if 'en' != app.request.locale %}
-    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/locales/bootstrap-datepicker.' ~ app.request.locale ~ '.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/bootstrap-datepicker/js/locales/bootstrap-datepicker.' ~ app.request.locale ~ '.js') }}"></script>
 {% endif %}
 
-<script type="text/javascript" src="{{ asset('bundles/frontend/underscore/underscore-1.6.0.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/backbone/backbone-1.1.2.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/underscore/underscore.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/backbone/backbone.js') }}"></script>
 
 {% javascripts debug=false filter='jsmin' output='vendor/claroline/js/libraries.js'
     'bundles/clarolinecore/js/common.js'
@@ -122,6 +123,27 @@
     <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
 
+{# Angular JS #}
+{% javascripts debug=false filter='jsmin' output='vendor/angular/angular.js'
+    'bundles/frontend/angular/angular.min.js'
+%}
+{% endjavascripts %}
+
+{# Angular UI #}
+{% javascripts debug=false filter='jsmin' output='vendor/angular/angular-ui.js'
+    'bundles/frontend/angular-bootstrap/ui-bootstrap.min.js'
+    'bundles/frontend/angular-ui-tree/dist/angular-ui-tree.js'
+    'bundles/frontend/angular-ui-select/dist/select.min.js'
+    'bundles/frontend/angular-data-table/release/dataTable.helpers.min.js'
+%}
+{% endjavascripts %}
+
+{# Angular2 JS #}
+{% javascripts debug=false filter='jsmin' output='vendor/angular/angular2.js'
+    'bundles/frontend/npm/angular2/bundles/angular2.min.js'
+%}
+{% endjavascripts %}
+
 <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js') }}"></script><!-- this is not duplicated file -->
 <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/tinymce.js') }}"></script>
@@ -149,24 +171,3 @@
         });
     });
 </script>
-
-{# Angular JS #}
-{% javascripts debug=false filter='jsmin' output='vendor/angular/angular.js'
-    '@InnovaAngularJSBundle/Resources/public/js/angular.min.js'
-    '@InnovaAngularJSBundle/Resources/public/js/angular-sanitize.min.js'
-    '@InnovaAngularJSBundle/Resources/public/js/angular-route.min.js'
-    '@InnovaAngularJSBundle/Resources/public/js/angular-resource.min.js'
-    '@InnovaAngularJSBundle/Resources/public/js/angular-touch.min.js'
-%}
-{% endjavascripts %}
-
-{# Angular UI #}
-{% javascripts debug=false filter='jsmin' output='vendor/angular/angular-ui.js'
-    '@InnovaAngularUIBootstrapBundle/Resources/public/js/*'
-    '@InnovaAngularUITreeBundle/Resources/public/js/*'
-    '@InnovaAngularUIPageslideBundle/Resources/public/js/*'
-    '@InnovaAngularUITinyMCEBundle/Resources/public/js/*'
-    '@InnovaAngularUITranslationBundle/Resources/public/js/*'
-    '@InnovaAngularUIResourcePickerBundle/Resources/public/js/*'
-%}
-{% endjavascripts %}

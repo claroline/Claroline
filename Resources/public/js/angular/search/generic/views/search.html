@@ -8,7 +8,6 @@
             reset-search-input="true"
             tagging multiple
             on-remove="cs.onRemove($item, $model, $select)"
-            on-search="onSearch(searches)"
         >
             <ui-select-match>
                 {{ $item.name }}
@@ -27,7 +26,7 @@
             <button
                 class="filter btn btn-default"
                 type="button"
-                ng-click="cs.search()"
+                ng-click="cs.search(cs.searches)"
                 id="search-button">
                 <i class="fa fa-search"></i>
             </button>

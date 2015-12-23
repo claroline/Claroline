@@ -49,7 +49,7 @@ usersManager.controller('UsersCtrl', function(
 		$scope.dataTableOptions.paging.count = d.data.total;
 	});
 	
-	$scope.find = function(searches) {
+	$scope.refresh = function(searches) {
 		console.log(searches);
 		$scope.savedSearch = searches;
 		clarolineSearch.find(searches, $scope.dataTableOptions.paging.offset + 1, $scope.dataTableOptions.paging.size).then(function(d) {

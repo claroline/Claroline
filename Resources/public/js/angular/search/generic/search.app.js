@@ -29,11 +29,12 @@ genericSearch.config(function ($httpProvider) {
 	});
 });
 
-genericSearch.controller('GenericSearchCtrl', ['$log', '$http', 'clarolineSearch', 'searchOptionsService', function(
+genericSearch.controller('GenericSearchCtrl', ['$log', '$http', 'clarolineSearch', 'searchOptionsService', '$scope', function(
 	$log,
 	$http,
 	clarolineSearch,
-	searchOptionsService
+	searchOptionsService,
+	$scope
 ) {
 	this.fields   = [];
 	this.$log     = $log;

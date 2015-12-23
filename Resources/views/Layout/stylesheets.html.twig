@@ -15,8 +15,6 @@
     <link rel="stylesheet" href="{{ asset_url }}" />
 {% endstylesheets %}
 
-
-
 {% image debug=false output='vendor/fortawesome/font-awesome/fonts/FontAwesome.otf'
     '../vendor/fortawesome/font-awesome/fonts/FontAwesome.otf' %}
 {% endimage %}
@@ -41,4 +39,13 @@
     '../vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.woff2' %}
 {% endimage %}
 
-<link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker3.css')}}'>
+<link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css')}}'>
+
+{# Angular UI #}
+{% stylesheets debug=false output='vendor/angular/angular-ui.css'
+    'bundles/frontend/angular-ui-tree/dist/angular-ui-tree.min.css'
+    'bundles/frontend/angular-ui-select/dist/select.min.css'
+    'bundles/frontend/angular-data-table/release/dataTable.css'
+    'bundles/frontend/angular-data-table/release/material.css'
+%}
+{% endstylesheets %}
