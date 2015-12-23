@@ -1844,9 +1844,6 @@ class CorrectionController extends DropzoneBaseController
         );
     }
 
-
-
-
     /**
      * @Route(
      *      "/{resourceId}/drops/detail/correction/{state}/{correctionId}",
@@ -2204,23 +2201,6 @@ class CorrectionController extends DropzoneBaseController
             )
         );
 
-
-        // Construction de la fin de l'URL
-        $endURL = "dropzoneId=". $dropzoneId;
-
-        foreach($arrayDocsId as $documentId)
-        {
-            // Par le JS, le document est transmis sous la forme "document_id_XX"
-            $docIdS = explode("_", $documentId);
-
-            $endURL = $endURL . "&arrayDocsId%5B%5D=".$documentId;
-        }
-
-        foreach($arrayDropsId as $dropId)
-        {
-            $endURL = $endURL . "&arrayDropsId%5B%5D=".$dropId;
-        }
-
         $redirectRoot = $this->generateUrl(
             'innova_collecticiel_add_more_comments_view',
             array(
@@ -2290,10 +2270,6 @@ class CorrectionController extends DropzoneBaseController
             $cpt++;
         }
 
-//var_dump($arrayDocsToView);
-//var_dump($arrayDropsToView);
-
-
         $edit = 'edit';
         $state = 'edit';
 
@@ -2348,8 +2324,6 @@ class CorrectionController extends DropzoneBaseController
                 'collecticielOpenOrNot' => $collecticielOpenOrNot
             )
         );
-
-
     }
 
 
@@ -2369,7 +2343,6 @@ class CorrectionController extends DropzoneBaseController
 
         // Valorisation du commentaire
         $comment = new Comment();
-//        $comment->setUser($user);
 
         $form = $this->get('form.factory')->createBuilder(new CommentType(), $comment)->getForm();
 
@@ -2377,31 +2350,9 @@ class CorrectionController extends DropzoneBaseController
         $request = $this->get('request');
 
         if ($request->isMethod('POST')) {
- 
-          $docs = $this->get('request')->query->get('arrayDocsToView');
 
+            $docs = $this->get('request')->query->get('arrayDocsToView');
 
-//        $request = $this->get('request');
-
-//        $whatToFind = $request->query->get('whatToFind'); // Which text to find
-
-          // Ici il faut que je boucle sur la liste des documents 
-//            $comment->setDocument($document);
-
-            $form->handleRequest($request);
-
-            if ($form->isValid()) {
-                // Insertion en base du commentaire
-//                $em->persist($comment);
-
-            }
-        }
-
-
-        $em->flush();
-
-
-        if ($request->isMethod('POST')) {
             $form->handleRequest($request);
 
             if ($form->isValid()) {
@@ -2448,8 +2399,6 @@ class CorrectionController extends DropzoneBaseController
 
 
     }
-
-
 
     /**
      * @Route(
