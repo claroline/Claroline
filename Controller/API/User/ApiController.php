@@ -15,11 +15,13 @@ use FOS\RestBundle\Util\Codes;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use FOS\RestBundle\Controller\Annotations\View;
 
 class ApiController extends Controller
 {
     /**
      * @Route("/connected_user")
+     * @View(serializerGroups={"api"})
      */
     public function connectedUserAction()
     {
@@ -28,23 +30,9 @@ class ApiController extends Controller
         $securityToken   = $tokenStorage->getToken();
 
         if (null !== $securityToken) {
-            /** @var \Claroline\CoreBundle\Entity\User $user */
-            $user = $securityToken->getUser();
-
-            if ($user) {
-                return new JsonResponse(array(
-                        'id'       => $user->getId(),
-                        'username' => $user->getUsername(),
-                        'user_id'  => $user->getUsername() . $user->getId(),
-                        'first_name' => $user->getFirstName(),
-                        'last_name' => $user->getLastName(),
-                        'email' => $user->getMail()
-                    ));
-            }
+            return $securityToken->getUser();
         }
 
-        return new JsonResponse(array(
-            'message' => 'User is not identified'
-        ), Codes::HTTP_NOT_FOUND);
+        throw new \Exception('No user connected');
     }
 }

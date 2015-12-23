@@ -11,4 +11,6 @@ fos_oauth_server:
             refresh_token_lifetime: 1209600
             auth_code_lifetime: 30
             #enforce_redirect: true
-            #supported_scopes: scope_admin scope_user
+            #That way we can have a security token with either role_admin or role_user
+            #There is no implementation for the rest atm
+            supported_scopes: admin user
