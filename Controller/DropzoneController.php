@@ -76,9 +76,6 @@ class DropzoneController extends DropzoneBaseController
             $resourceId = $dropzone->getResourceNode()->getId();
             $resourceNodes = $dropzoneManager->updatePublished($resourceId, $extraDataPublished);
 
-
-//var_dump($form->getData());
-//die();
             $dropzone = $form->getData();
             $form = $this->handleFormErrors($form, $dropzone);
 
@@ -106,12 +103,16 @@ class DropzoneController extends DropzoneBaseController
 
             // InnovaERV : ici, on a changé l'état du collecticiel.
             // InnovaERV : j'ajoute une notification.
-            if ($oldManualPlanningOption != $dropzone->getManualState())
+            // InnovaERV : #171 Bug : lors de la création d'un collecticiel et de la notification
+            if (count($dropzone->getDrops()) > 0)
             {
-                // send notification.
-                $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
-                $event = new LogDropzoneManualStateChangedEvent($dropzone, $dropzone->getManualState(), $usersIds);
-                $this->get('event_dispatcher')->dispatch('log', $event);
+                if ($oldManualPlanningOption != $dropzone->getManualState())
+                {
+                    // send notification.
+                    $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
+                    $event = new LogDropzoneManualStateChangedEvent($dropzone, $dropzone->getManualState(), $usersIds);
+                    $this->get('event_dispatcher')->dispatch('log', $event);
+                }
             }
 
             $em->persist($dropzone);
