@@ -1,5 +1,4 @@
 <div>
-    {{ cs.selected }}
     <div class="input-group">
         <ui-select
             ng-model="cs.searches"
@@ -26,7 +25,7 @@
             <button
                 class="filter btn btn-default"
                 type="button"
-                ng-click="cs.search(cs.searches)"
+                ng-click="cs.search()"
                 id="search-button">
                 <i class="fa fa-search"></i>
             </button>

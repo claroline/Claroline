@@ -1120,4 +1120,21 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     {
         return $this->hideMailWarning;
     }
+
+    public static function getUserSearchableFields()
+    {
+        return array(
+            'firstName',
+            'lastName',
+            'email',
+            'administrativeCode',
+            'username',
+            'groups'
+        );
+    }
+    
+    public static function getSearchableFields()
+    {
+        return self::getUserSearchableFields();
+    }
 }

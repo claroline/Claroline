@@ -104,7 +104,7 @@ class Location
 
 
     /**
-     * @var Role[]|ArrayCollection
+     * @var User[]|ArrayCollection
      *
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\User"

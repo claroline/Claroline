@@ -105,23 +105,7 @@ class UserController extends FOSRestController
      *     views = {"user"}
      * )
      */
-    public function getPartialListUsersAction($page, $limit)
-    {
-        $users = $this->userManager->getPartialList($page, $limit);
-        $count = $this->userManager->getCountAllEnabledUsers();
-
-        return array('users' => $users, 'total' => $count);
-
-    }
-
-    /**
-     * @View(serializerGroups={"admin"})
-     * @ApiDoc(
-     *     description="Returns the users list",
-     *     views = {"user"}
-     * )
-     */
-    public function searchPartialListUsersAction($page, $limit)
+    public function getSearchUsersAction($page, $limit)
     {
         $data = [];
         $searches = $this->request->query->all();
@@ -138,7 +122,7 @@ class UserController extends FOSRestController
         }
 
         $users = $this->userManager->searchPartialList($data, $page, $limit);
-        $count = $this->userManager->countSearchPartialList($data);
+        $count = $this->userManager->searchPartialList($data, $page, $limit, true);
 
         return array('users' => $users, 'total' => $count);
     }
@@ -153,17 +137,10 @@ class UserController extends FOSRestController
     {
         $fields = $this->facetManager->getFieldFacets();
 
-        $baseFields = array(
-            'first_name', 
-            'last_name', 
-            'email', 
-            'administrative_code', 
-            'username',
-            'groups'
-        );
+        $baseFields = User::getSearchableFields();
 
         foreach ($fields as $field) {
-                $baseFields[] = $field->getName();
+            $baseFields[] = $field->getName();
         }
 
         return $baseFields;

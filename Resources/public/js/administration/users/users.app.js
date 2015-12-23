@@ -2,8 +2,7 @@ var usersManager = angular.module('usersManager', ['genericSearch', 'data-table'
 var translator = window.Translator;
 
 usersManager.config(function(clarolineSearchProvider) {
-	clarolineSearchProvider.setBaseRoute('api_search_partial_list_users');
-	clarolineSearchProvider.setSearchRoute('api_get_partial_list_users');
+	clarolineSearchProvider.setSearchRoute('api_get_search_users');
 	clarolineSearchProvider.setFieldRoute('api_get_user_searchable_fields');
 });
 
@@ -44,22 +43,16 @@ usersManager.controller('UsersCtrl', function(
  		}
 	};
 
-	clarolineSearch.find([], 1, 10).then(function(d) {
-		$scope.users = d.data.users;
-		$scope.dataTableOptions.paging.count = d.data.total;
-	});
-	
-	$scope.refresh = function(searches) {
-		console.log(searches);
+	$scope.onSearch = function(searches) {
 		$scope.savedSearch = searches;
-		clarolineSearch.find(searches, $scope.dataTableOptions.paging.offset + 1, $scope.dataTableOptions.paging.size).then(function(d) {
+		clarolineSearch.find(searches, $scope.dataTableOptions.paging.offset, $scope.dataTableOptions.paging.size).then(function(d) {
 			$scope.users = d.data.users;
 			$scope.dataTableOptions.paging.count = d.data.total;
 		});
 	};
 
 	$scope.paging = function(offset, size) {
-		clarolineSearch.find($scope.savedSearch, offset + 1, size).then(function(d) {
+		clarolineSearch.find($scope.savedSearch, offset, size).then(function(d) {
 			var users = d.data.users;
 
 			//I know it's terrible... but I have no other choice with this table.

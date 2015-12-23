@@ -1511,9 +1511,9 @@ class UserManager
         return $this->userRepo->findPartialList($page, $limit);
     }
 
-    public function searchPartialList($searches, $page, $limit)
+    public function searchPartialList($searches, $page, $limit, $count = false)
     {
-        return $this->userRepo->searchPartialList($searches, $page, $limit);
+        return $this->userRepo->searchPartialList($searches, $page, $limit, $count);
     }
 
     public function countSearchPartialList($searches)

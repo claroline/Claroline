@@ -33,12 +33,10 @@ genericSearch.controller('GenericSearchCtrl', ['$log', '$http', 'clarolineSearch
 	$log,
 	$http,
 	clarolineSearch,
-	searchOptionsService,
-	$scope
+	searchOptionsService
 ) {
 	this.fields   = [];
 	this.$log     = $log;
-	this.searches = [];
 	this.selected = [];
 	this.options  = [];
 
@@ -61,15 +59,17 @@ genericSearch.controller('GenericSearchCtrl', ['$log', '$http', 'clarolineSearch
 		var cloned = angular.copy($item);
 		$select.selected.push(cloned);
 		this.options.push(searchOptionsService.getOptionValue($item.field));
-		this.selected = $select.selected;
+		this.selected = angular.copy($select.selected);
 	}.bind(this);
 
 	this.onRemove = function($item, $model, $select) {
 		this.selected = $select.selected;
 	}.bind(this);
 
-	this.search = function(searches) {
-		this.onSearch(searches);
+	this.search = function() {
+		//what the actual fuck ?
+		//#brainmalfunction
+		this.onSearch()(this.selected);
 	}.bind(this);
 }]);
 
@@ -100,12 +100,11 @@ genericSearch.service('searchOptionsService', function() {
 });
 
 genericSearch.provider("clarolineSearch", function() {
-	var baseRoute = searchRoute = fieldRoute = '';
-
 	this.enablePager = true;
 	this.baseParam = {};
 	this.searchParam = {};
-	var that = this;
+	this.fieldRoute = '';
+	this.searchRoute = '';
 
 	var mergeObject = function(obj1, obj2) {
 
@@ -116,57 +115,38 @@ genericSearch.provider("clarolineSearch", function() {
 		return obj1;
 	}
 
-	this.setBaseRoute = function(route, baseParam) {
-		baseRoute = route;
-		this.baseParam = baseParam || {};
-	}.bind(this);
-	
 	this.setSearchRoute = function(route, searchParam) {
-		searchRoute = route;
+		this.searchRoute = route;
 		this.searchParam = searchParam || {};
 	}.bind(this);
 
 	this.setFieldRoute = function(route) {
-		fieldRoute = route;
-	};
+		this.fieldRoute = route;
+	}.bind(this);
 
 	this.disablePager = function() {
 		this.enablePager = false;
 	}.bind(this);
 
-	//I should remove that
-	var that = this;
+	var vm = this;
 
 	this.$get = function($http) {
 		return {
-			getBaseRoute: function() {
-				return baseRoute;
-			},
-			getSearchRoute: function() {
-				return searchRoute;
-			},
 			getFieldRoute: function() {
-				return fieldRoute;
+				return vm.fieldRoute;
 			},
 			find: function(searches, page, limit) {
-				var params = that.enablePager ? {'page': page, 'limit': limit}: {};
+				var params = vm.enablePager ? {'page': page, 'limit': limit}: {};
+				var qs = '?';
 
-				if (searches.length > 0) {
-					var qs = '?';
-
-					for (var i = 0; i < searches.length; i++) {
-						qs += searches[i].field +'[]=' + searches[i].value + '&';
-					} 
-
-					params = mergeObject(params, that.searchParam);
-					var route = Routing.generate(searchRoute, params) + qs;
-
-					return $http.get(route);
-				} else {
-					params = mergeObject(params, that.baseParam);
-
-					return $http.get(Routing.generate(baseRoute, params));
+				for (var i = 0; i < searches.length; i++) {
+					qs += searches[i].field +'[]=' + searches[i].value + '&';
 				}
+
+				params = mergeObject(params, vm.searchParam);
+				var route = Routing.generate(vm.searchRoute, params) + qs;
+
+				return $http.get(route);
 			}
 		}
 	};
@@ -185,10 +165,7 @@ genericSearch.directive('clarolinesearch', [
 			replace: false,
 			controller: 'GenericSearchCtrl',
 			bindToController: bindings,
-			controllerAs: 'cs',
-			link: function(scope, elem, attrs) {
-				//scope.onSearch()(scope.searches);
-			}
+			controllerAs: 'cs'
 		}
 	}
 ]);

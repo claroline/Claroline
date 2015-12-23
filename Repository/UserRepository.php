@@ -1586,72 +1586,46 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $query->getOneOrNullResult();
     }
 
-    public function findPartialList($page, $limit)
+    public function searchPartialList(array $searches = array(), $page = null, $limit = null, $count = false)
     {
-        $page--;
-        $dql = 'SELECT u FROM Claroline\CoreBundle\Entity\User u where u.isEnabled = true';
-        $query = $this->_em->createQuery($dql);
-        $query->setMaxResults($limit);
-        $query->setFirstResult($page * $limit);
+        $baseFieldsName = User::getUserSearchableFields();
+        $facetFields = $this->_em->getRepository('ClarolineCoreBundle:Facet\FieldFacet')->findAll();
+        $facetFieldsName = array();
 
-        return $query->getResult();
-    }
+        foreach ($facetFields as $facetField) {
+            $facetFieldsName[] = $facetField->getName();
+        }
 
-    public function searchPartialList(array $searches, $page, $limit)
-    {
-        $page--;
-        $dql = 'SELECT u FROM Claroline\CoreBundle\Entity\User u where u.isEnabled = true';
+        $qb = $this->_em->createQueryBuilder();
+        $count ? $qb->select('count(u)'): $qb->select('u');
+        $qb->from('Claroline\CoreBundle\Entity\User', 'u')
+            ->where('u.isEnabled = true');
 
         foreach ($searches as $key => $search) {
             foreach ($search as $id => $el) {
-                $dql .= ' AND UPPER (u.' . $key . ') LIKE :' . $key . $id;
+                if (in_array($key, $baseFieldsName)) {
+                    $qb->andWhere("UPPER (u.{$key}) LIKE :{$key}{$id}");
+                    $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
+                }
+                if (in_array($key, $facetFieldsName)) {
+                    $qb->join('u.fieldsFacetValue', "ffv{$id}");
+                    $qb->join("ffv{$id}.fieldFacet", "f{$id}");
+                    $qb->andWhere("UPPER (ffv{$id}.stringValue) LIKE :{$key}{$id}");
+                    $qb->orWhere("ffv{$id}.floatValue = :{$key}{$id}");
+                    $qb->andWhere("f{$id}.name LIKE :facet{$id}");
+                    $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
+                    $qb->setParameter("facet{$id}", $key);
+                }
             }
         }
 
-        $query = $this->_em->createQuery($dql);
+        $query = $qb->getQuery();
 
-
-        foreach ($searches as $key => $search) {
-            foreach ($search as $id => $el) {
-                $query->setParameter($key . $id, '%' . strtoupper($el) . '%');
-            }
+        if ($page && $limit) {
+            $query->setMaxResults($limit);
+            $query->setFirstResult($page * $limit);
         }
 
-        $query->setMaxResults($limit);
-        $query->setFirstResult($page * $limit);
-
-        return $query->getResult();
-    }
-
-    public function countSearchPartialList(array $searches)
-    {
-        $dql = 'SELECT count(u) FROM Claroline\CoreBundle\Entity\User u where u.isEnabled = true';
-
-        foreach ($searches as $key => $search) {
-            foreach ($search as $id => $el) {
-                $dql .= ' AND UPPER (u.' . $key . ') LIKE :' . $key . $id;
-            }
-        }
-
-        $query = $this->_em->createQuery($dql);
-
-        foreach ($searches as $key => $search) {
-            foreach ($search as $id => $el) {
-                $query->setParameter($key . $id, '%' . strtoupper($el) . '%');
-            }
-            
-        }
-
-        return $query->getSingleScalarResult();
-    }
-
-    private function buildPartialJoinClause()
-    {
-
-    }
-
-    private function buildPartialWhereClause()
-    {
-
+        return $count ? $query->getSingleScalarResult(): $query->getResult();
     }
 }
