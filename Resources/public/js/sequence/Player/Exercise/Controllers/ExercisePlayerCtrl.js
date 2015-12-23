@@ -70,6 +70,17 @@
              * @param {Number} index (nullable) the step index when using direct access
              */
             this.validateStep = function (action, index) {
+                
+                if (this.exercise.steps[this.currentStepIndex].items[0].type === "application/x.cloze+json") {
+                    var inputs = document.getElementsByClassName('blank');
+                    var answers = new Array();
+                    
+                    for (var i=0; i<inputs.length; i++) {
+                        answers.push({"id" : inputs[i].id, "answer" : inputs[i].value});
+                    }
+                    this.paper.questions[this.currentStepIndex].answer = answers;
+                }
+                
                 // manualy disable tooltips...
                 $('.tooltip').each(function () {
                     $(this).hide();
@@ -121,7 +132,7 @@
                 if (action && (action === 'forward' || action === 'backward' || action === 'goto')) {
                     this.setCurrentStep(this.currentStepIndex);
                 } else if (action && action === 'end') {
-                    var endPromise = ExerciseService.endSequence(paper)
+                    var endPromise = ExerciseService.endSequence(paper);
                     endPromise.then(function (result) {
                         if (this.checkCorrectionAvailability()) {                      
                             // go to paper correction view
