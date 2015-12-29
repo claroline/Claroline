@@ -45,7 +45,6 @@
         "hevinci/competency-bundle": "~6.0",
         "hevinci/url-bundle": "~6.0",
         "hevinci/favourite-bundle": "~6.0",
-        "claroline/cursus-bundle": "~6.0",
         "formalibre/reservation-bundle": "~6.0",
         "formalibre/presence-bundle": "~6.0",
         "formalibre/support-bundle": "~6.0"
