@@ -81,6 +81,10 @@
                     this.paper.questions[this.currentStepIndex].answer = answers;
                 }
                 
+                if (this.exercise.steps[this.currentStepIndex].items[0].type === "application/x.short+json") {
+                    
+                }
+                
                 // manualy disable tooltips...
                 $('.tooltip').each(function () {
                     $(this).hide();
