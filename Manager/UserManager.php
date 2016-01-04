@@ -224,6 +224,7 @@ class UserManager
         $user->setPlainPassword(uniqid());
         $user->setUsername('username#' . $user->getId());
         $user->setPublicUrl('removed#' . $user->getId());
+        $user->setAdministrativeCode('code#' . $user->getId());
         $user->setIsEnabled(false);
 
         // keeping the user's workspace with its original code
