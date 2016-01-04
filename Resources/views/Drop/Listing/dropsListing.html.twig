@@ -30,7 +30,10 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
     <th class="nameColumn">{{ 'Name'|trans({},'innova_collecticiel') }}</th>
     <th class="nameColumn">{{ 'First name'|trans({},'innova_collecticiel') }}</th>
     <th class="usernameColumn">{{ 'Nickname'|trans({},'innova_collecticiel') }}</th>
-    <th class="dateColumn centered"><i class="fa fa-calendar-o"></i></th>
+    <th class="dateColumn centered">
+    <i class="fa fa-calendar-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Dated'|trans({},'innova_collecticiel') }}">
+    </i>
+    </th>
     
     {# 
     <!-- Colonnes supprimées : -->
@@ -47,7 +50,9 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
     #}
 
     <!-- Colonne ajoutée "Commentaires non lus" modifiée en "Document" -->
-    <th class="centered"><i class="fa fa-file-o"></i></th>
+    <th class="centered">
+    <i class="fa fa-file-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Document'|trans({},'innova_collecticiel') }}">
+    </i></th>
 
     {% if dropzone.evaluation != 1  %}
         <!-- Colonne ajoutée "Devoirs à corriger" modifiée en "Etat" -->
@@ -55,7 +60,10 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
     {% endif %}
 
     <!-- Colonne ajoutée "Voir" modifiée en "Commentaire  - Evaluation"  -->
-    <th style="width:140px;" class="centered no-sort"><i class="fa fa-comment-o"></i></th>
+    <th style="width:140px;" class="centered no-sort">
+    <i class="fa fa-comment-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Comment evaluation'|trans({},'innova_collecticiel') }}">
+    </i>
+    </th>
 
     {% if adminInnova %}
         {# On affiche cette colonne si le créateur du collecticiel veut afficher les accusés de réception. #}
