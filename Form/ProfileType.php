@@ -94,6 +94,19 @@ class ProfileType extends AbstractType
                 'description',
                 'tinymce',
                 array('required' => false, 'label' => 'description',  'read_only' => !$this->accesses['description'], 'disabled' => !$this->accesses['description'])
+            )
+            ->add(
+                'organizations',
+                'entity',
+                array(
+                    'label' => 'organizations',
+                    'class' => 'Claroline\CoreBundle\Entity\Organization\Organization',
+                    'expanded' => true,
+                    'multiple' => true,
+                    'property' => 'name',
+                    'read_only' => true,
+                    'disabled' => true
+                )
             );
 
         if ($this->isAdmin || $this->isGrantedUserAdministration) {
@@ -160,7 +173,19 @@ class ProfileType extends AbstractType
                     'description',
                     'tinymce',
                     array('required' => false, 'label' => 'description')
+                )
+                ->add(
+                    'organizations',
+                    'entity',
+                    array(
+                        'label' => 'organizations',
+                        'class' => 'Claroline\CoreBundle\Entity\Organization\Organization',
+                        'expanded' => true,
+                        'multiple' => true,
+                        'property' => 'name',
+                    )
                 );
+
         }
     }
 

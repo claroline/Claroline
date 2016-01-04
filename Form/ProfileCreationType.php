@@ -110,6 +110,17 @@ class ProfileCreationType extends AbstractType
                         return $query;
                     }
                 )
+            )
+            ->add(
+                'organizations',
+                'entity',
+                array(
+                    'label' => 'organizations',
+                    'class' => 'Claroline\CoreBundle\Entity\Organization\Organization',
+                    'expanded' => true,
+                    'multiple' => true,
+                    'property' => 'name'
+                )
             );
     }
 

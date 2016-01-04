@@ -25,7 +25,21 @@ usersManager.controller('UsersCtrl', function(
 		{name: translate('username'), prop: "username", isCheckboxColumn: true, headerCheckbox: true},
 		{name: translate('first_name'), prop: "firstName"},
 		{name: translate('last_name'), prop:"lastName"},
-		{name: translate('email'), prop: "mail"}
+		{name: translate('email'), prop: "mail"},
+		{
+			name: translate('actions'),
+			cellRenderer: function(scope) {
+				var route = Routing.generate('claro_desktop_open', {'_switch': scope.$row.username });
+
+				var showAsLink = "<a class='btn btn-default' href='" + route + "' data-toggle='tooltip' data-placement='bottom' data-original-title='show_as' role='button'>" +
+				"<i class='fa fa-eye'></i>" +
+				"</a>";
+
+				var actions = showAsLink;
+
+				return actions;
+			}
+		}
 	];
 
 	$scope.dataTableOptions = {
