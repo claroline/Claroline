@@ -78,10 +78,13 @@ class LocationManager
     {
         $data = $this->geolocate($location);
         $data = json_decode($data, true);
-        $loc = $data['results'][0]['geometry']['location'];
 
-        $location->setLongitude($loc['lng']);
-        $location->setLatitude($loc['lat']);
+        if (isset($data['results'][0])) {
+            $loc = $data['results'][0]['geometry']['location'];
+
+            $location->setLongitude($loc['lng']);
+            $location->setLatitude($loc['lat']);
+        }
 
         return $location;
     }

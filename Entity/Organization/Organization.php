@@ -49,7 +49,7 @@ class Organization
     protected $name;
 
     /**
-     * @ORM\Column()
+     * @ORM\Column(nullable=true)
      * @Groups({"api"})    
      */
     protected $email;
@@ -102,11 +102,22 @@ class Organization
      * @Groups({"api"})
      */
     private $children;
+
+    /**
+     * @var User[]|ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\User"
+     * )
+     * @ORM\JoinTable(name="claro_user_organization")
+     */
+    protected $users;
     
     public function __construct()
     {
         $this->locations   = new ArrayCollection();
         $this->departments = new ArrayCollection();
+        $this->users       = new ArrayCollection();
     }
 
     public function getId()

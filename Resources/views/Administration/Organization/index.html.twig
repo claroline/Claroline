@@ -34,23 +34,15 @@
 {% endblock %}
 {% block stylesheets %}
     {{ parent() }}
-    <link 
-        rel="stylesheet" 
-        href="{{ asset('bundles/clarolineangularuitree/angular-ui-tree.min.css') }}"
-    />
-    <link 
-        rel="stylesheet" 
-        href="{{ asset('bundles/clarolineangularuitree/app.css') }}"
-    />
+    <link rel="stylesheet"  href="{{ asset('vendor/angular-ui.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
 
+    <script type="text/javascript" src="{{ asset('vendor/angular.js')}}"> </script>
+    <script type="text/javascript" src="{{ asset('vendor/angular-ui.js')}}"> </script>
 
-    <script type="text/javascript" src="{{ asset('vendor/angular/angular.js')}}"> </script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolineangularuitree/angular-ui-tree.min.js') }}">
-    </script>
 
     {# Set some vars needed by Angular parts #}
     <script type="text/javascript">

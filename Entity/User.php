@@ -22,6 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Validator\Constraints as ClaroAssert;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -380,6 +381,15 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     protected $emailValidationHash;
 
+    /**
+     * @var Organization[]|ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization"
+     * )
+     */
+    protected $organizations;
+
     public function __construct()
     {
         parent::__construct();
@@ -390,6 +400,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $this->orderedTools      = new ArrayCollection();
         $this->fieldsFacetValue  = new ArrayCollection();
         $this->models            = new ArrayCollection();
+        $this->organizations     = new ArrayCollection();
     }
 
     /**

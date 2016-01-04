@@ -1,4 +1,4 @@
-var locationManager = angular.module('LocationManager', ['data-table', 'clarolineAPI', 'ui.bootstrap']);
+var locationManager = angular.module('LocationManager', ['data-table', 'clarolineAPI', 'ui.bootstrap', 'ui.bootstrap.tpls']);
 var translator = window.Translator;
 
 var translate = function(key) {

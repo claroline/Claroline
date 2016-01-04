@@ -35,17 +35,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link 
-        rel="stylesheet" 
-        href="{{ asset('bundles/clarolineangulardatatable/js/release/dataTable.css') }}"
-    />
-    <link 
-        rel="stylesheet" 
-        href="{{ asset('bundles/clarolineangulardatatable/js/release/material.css') }}"
-    />
-    <link rel="stylesheet" 
-          href="{{ asset('bundles/clarolineangularuiselectize/select.css')}}"
-    />
+    <link rel="stylesheet"  href="{{ asset('vendor/angular-ui.css') }}" />
     <link href="http://fontastic.s3.amazonaws.com/Jnf54BZCm7mSjGCxNRbfp3/icons.css" rel="stylesheet">
 {% endblock %}
 
@@ -53,11 +43,9 @@
     {{ parent() }}
 
 
-    <script type="text/javascript" src="{{ asset('vendor/angular/angular.js')}}"> </script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolineangularuibootstrap/ui-bootstrap.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolineangulardatatable/js/release/dataTable.helpers.js') }}">
-    </script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolineangularuiselectize/select.min.js')}}"> </script>
+    <script type="text/javascript" src="{{ asset('vendor/angular.js')}}"> </script>
+    <script type="text/javascript" src="{{ asset('vendor/angular-ui.js')}}"> </script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/angular-bootstrap/ui-bootstrap-tpls.js') }}"> </script>
 
     {# Set some vars needed by Angular parts #}
     <script type="text/javascript">

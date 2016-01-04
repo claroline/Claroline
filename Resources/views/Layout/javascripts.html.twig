@@ -124,23 +124,16 @@
 {% endjavascripts %}
 
 {# Angular JS #}
-{% javascripts debug=false filter='jsmin' output='vendor/angular/angular.js'
+{% javascripts debug=false filter='jsmin' output='vendor/angular.js'
     'bundles/frontend/angular/angular.min.js'
 %}
 {% endjavascripts %}
 
 {# Angular UI #}
-{% javascripts debug=false filter='jsmin' output='vendor/angular/angular-ui.js'
-    'bundles/frontend/angular-bootstrap/ui-bootstrap.min.js'
+{% javascripts debug=false filter='jsmin' output='vendor/angular-ui.js'
     'bundles/frontend/angular-ui-tree/dist/angular-ui-tree.js'
     'bundles/frontend/angular-ui-select/dist/select.min.js'
     'bundles/frontend/angular-data-table/release/dataTable.helpers.min.js'
-%}
-{% endjavascripts %}
-
-{# Angular2 JS #}
-{% javascripts debug=false filter='jsmin' output='vendor/angular/angular2.js'
-    'bundles/frontend/npm/angular2/bundles/angular2.min.js'
 %}
 {% endjavascripts %}
 
