@@ -176,6 +176,8 @@ class OpenHandler implements QuestionHandlerInterface
      */
     public function storeAnswerAndMark(Question $question, Response $response, $data)
     {
+        die();
+        
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionOpen')
             ->findOneByQuestion($question);
 
