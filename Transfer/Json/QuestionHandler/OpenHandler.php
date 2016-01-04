@@ -156,7 +156,7 @@ class OpenHandler implements QuestionHandlerInterface
      * {@inheritdoc}
      */
     public function validateAnswerFormat(Question $question, $data)
-    {
+    {/*
         if (!is_array($data)) {
             return ['Answer data must be an array, ' . gettype($data) . ' given'];
         }
@@ -164,7 +164,7 @@ class OpenHandler implements QuestionHandlerInterface
 
         if (0 === $count = count($data)) {
             return ['Answer data cannot be empty'];
-        }
+        }*/
 
         return [];
     }
@@ -176,7 +176,6 @@ class OpenHandler implements QuestionHandlerInterface
      */
     public function storeAnswerAndMark(Question $question, Response $response, $data)
     {
-        die();
         
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionOpen')
             ->findOneByQuestion($question);

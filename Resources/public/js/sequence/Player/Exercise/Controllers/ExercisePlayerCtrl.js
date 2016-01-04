@@ -71,6 +71,8 @@
              */
             this.validateStep = function (action, index) {
                 
+                console.log(this.paper.questions);
+                
                 if (this.exercise.steps[this.currentStepIndex].items[0].type === "application/x.cloze+json") {
                     var inputs = document.getElementsByClassName('blank');
                     var answers = new Array();
@@ -82,7 +84,9 @@
                 }
                 
                 if (this.exercise.steps[this.currentStepIndex].items[0].type === "application/x.short+json") {
+                    var input = document.getElementById('openTextArea');
                     
+                    this.paper.questions[this.currentStepIndex].answer = input.value;
                 }
                 
                 // manualy disable tooltips...
