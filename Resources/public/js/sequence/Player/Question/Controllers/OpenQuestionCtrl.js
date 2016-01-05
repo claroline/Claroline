@@ -21,7 +21,6 @@
             this.questionFeedback = '';
 
             this.init = function (question, canSeeFeedback) {
-                console.log(question);
                 // those data are updated by view and sent to common service as soon as they change
                 this.currentQuestionPaperData = PlayerDataSharing.setCurrentQuestionPaperData(question);
                 this.question = question;
@@ -34,11 +33,6 @@
                     for (var i = 0; i < this.currentQuestionPaperData.hints.length; i++) {
                         this.getHintData(this.currentQuestionPaperData.hints[i]);
                     }
-                }
-                //this.checkChoices(this.question.multiple);
-                if (this.currentQuestionPaperData.answer && this.currentQuestionPaperData.answer.length > 0) {
-                    // init previously given answer
-                    this.checkChoices(this.question.multiple);
                 }
             };
 
