@@ -23,7 +23,7 @@
                 <div class="form-group">
                     <div data-ng-repeat="hint in openQuestionCtrl.question.hints" style="margin-bottom: 10px;">                        
                         <div data-ng-if="!openQuestionCtrl.hintIsUsed(hint.id)">
-                            <button type="button" role="button" class="btn btn-default fa fa-eye" title="{{ 'question_hint_show_title'|trans:{}:'ujm_sequence' }}" data-ng-click="clozeQuestionCtrl.showHint(hint.id)" id="hint-{{hint.id}}"> {{ 'question_hint_label'|trans:{}:'ujm_sequence' }} {{$index + 1}}</button>
+                            <button type="button" role="button" class="btn btn-default fa fa-eye" title="{{ 'question_hint_show_title'|trans:{}:'ujm_sequence' }}" data-ng-click="openQuestionCtrl.showHint(hint.id)" id="hint-{{hint.id}}"> {{ 'question_hint_label'|trans:{}:'ujm_sequence' }} {{$index + 1}}</button>
                         </div>
                     </div>
                     <div data-ng-repeat="used in openQuestionCtrl.usedHints" id="visible-hints">
