@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations\View;
 use Claroline\CoreBundle\Form\GroupType;
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
@@ -175,5 +174,34 @@ class GroupController extends FOSRestController
         $this->roleManager->dissociateRole($group, $role);
 
         return array('success');
+    }
+
+    /**
+     * @View(serializerGroups={"admin"})
+     * @ApiDoc(
+     *     description="Returns the users list",
+     *     views = {"user"}
+     * )
+     */
+    public function getSearchGroupsAction($page, $limit)
+    {
+        $data = $this->request->query->all();
+        $groups = $this->groupManager->searchPartialList($data, $page, $limit);
+        $count = $this->groupManager->searchPartialList($data, $page, $limit, true);
+
+        return array('groups' => $groups, 'total' => $count);
+    }
+
+    /**
+     * @ApiDoc(
+     *     description="Returns the searchable user fields",
+     *     views = {"user"}
+     * )
+     */
+    public function getGroupSearchableFieldsAction()
+    {
+        $baseFields = Group::getSearchableFields();
+
+        return $baseFields;
     }
 }

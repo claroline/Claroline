@@ -164,6 +164,21 @@ class GroupsController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/index",
+     *     name="claro_admin_group_index",
+     *     options={"expose"=true},
+     * )
+     * @EXT\Template()
+     *
+     * @return array
+     */
+    public function indexAction()
+    {
+        return array();
+    }
+
+    /**
+     * @EXT\Route(
      *     "/",
      *     name="claro_admin_multidelete_group",
      *     options={"expose"=true}

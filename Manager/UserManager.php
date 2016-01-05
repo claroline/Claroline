@@ -1507,18 +1507,8 @@ class UserManager
         $this->objectManager->flush();
     }
 
-    public function getPartialList($page, $limit)
-    {
-        return $this->userRepo->findPartialList($page, $limit);
-    }
-
     public function searchPartialList($searches, $page, $limit, $count = false)
     {
         return $this->userRepo->searchPartialList($searches, $page, $limit, $count);
-    }
-
-    public function countSearchPartialList($searches)
-    {
-        return $this->userRepo->countSearchPartialList($searches);
     }
 }

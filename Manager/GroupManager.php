@@ -529,4 +529,9 @@ class GroupManager
     {
         return $this->groupRepo->findAllGroups($orderedBy, $order, $executeQuery);
     }
+
+    public function searchPartialList($searches, $page, $limit, $count = false)
+    {
+        return $this->groupRepo->searchPartialList($searches, $page, $limit, $count);
+    }
 }

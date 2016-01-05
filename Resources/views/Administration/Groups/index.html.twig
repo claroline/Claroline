@@ -1,7 +1,6 @@
-
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'users' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'groups' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -13,21 +12,24 @@
             },
             {
                 'name': 'users_management'|trans({}, 'platform'),
-                'href': ''
+                'href': path('claro_admin_users_index')
+            },
+            {
+                'name': 'groups_management'|trans({}, 'platform'),
+                'href':''
             }
         ])
     }}
 {% endblock %}
+
 {% block section_content %}
-    <div id="users-panel" class="panel panel-default" ng-app="usersManager">
-        <div class="panel-body" ng-controller="UsersCtrl">
-            <usersearch>
-            </usersearch>
-            <userlist>
-            </userlist>
+    <div id="groups-panel" class="panel panel-default" ng-app="groupsManager">
+        <div class="panel-body">
+            <groupsearch>
+            </groupsearch>
+            <grouplist>
+            </grouplist>
         </div>
-        <a href="{{ path('claro_admin_facet_index') }}"> facets </a>
-        <a href="{{ path('claro_admin_user_creation_form') }}"> create user </a>
     </div>
 
 {% endblock %}
@@ -50,6 +52,6 @@
         AngularApp.webDir = "{{ asset('') }}";
     </script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/angular/search/generic/search.app.js') }}></script>
-    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/users/users.app.js') }}></script>
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/groups/groups.app.js') }}></script>
 
 {% endblock %}

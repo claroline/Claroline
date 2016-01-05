@@ -130,22 +130,6 @@ class UsersController extends Controller
     }
 
     /**
-     * @EXT\Route("/menu", name="claro_admin_users_management")
-     * @EXT\Template
-     *
-     * @return Response
-     */
-    public function indexAction()
-    {
-        $canUserBeCreated = $this->roleManager->validateRoleInsert(
-            new User(),
-            $this->roleManager->getRoleByName('ROLE_USER')
-        );
-
-        return array('canUserBeCreated' => $canUserBeCreated);
-    }
-
-    /**
      * @EXT\Route("/new", name="claro_admin_user_creation_form")
      * @EXT\Template
      *
@@ -282,8 +266,8 @@ class UsersController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/list",
-     *     name="claro_admin_user_list",
+     *     "/index",
+     *     name="claro_admin_users_index",
      *     options = {"expose"=true}
      * )
      * @EXT\Template
@@ -292,40 +276,9 @@ class UsersController extends Controller
      *
      * @return array
      */
-    public function listAction()
+    public function indexAction()
     {
         return array();
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/page/{page}/pic",
-     *     name="claro_admin_user_list_pics",
-     *     defaults={"page"=1, "search"=""},
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Route(
-     *     "/page/{page}/pic/search/{search}",
-     *     name="claro_admin_user_list_search_pics",
-     *     defaults={"page"=1},
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Template
-     *
-     * Displays the platform user list.
-     *
-     * @param integer $page
-     * @param string  $search
-     *
-     * @return array
-     */
-    public function listPicsAction($page, $search)
-    {
-        $pager = $search === '' ?
-            $this->userManager->getAllUsers($page) :
-            $this->userManager->getUsersByName($search, $page);
-
-        return array('pager' => $pager, 'search' => $search);
     }
 
     /**

@@ -29,7 +29,7 @@ genericSearch.config(function ($httpProvider) {
 	});
 });
 
-genericSearch.controller('GenericSearchCtrl', ['$log', '$http', 'clarolineSearch', 'searchOptionsService', '$scope', function(
+genericSearch.controller('GenericSearchCtrl', ['$log', '$http', 'clarolineSearch', 'searchOptionsService', function(
 	$log,
 	$http,
 	clarolineSearch,

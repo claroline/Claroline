@@ -1,6 +1,7 @@
+
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'users_management' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'users' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -17,36 +18,41 @@
         ])
     }}
 {% endblock %}
-
 {% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'users_management'|trans({}, 'platform') }}</h3>
+    <div>
+        <a href="{{ path('claro_admin_facet_index') }}"> facets </a>
+        <a href="{{ path('claro_admin_user_creation_form') }}"> create user </a>
+        <a href="{{ path('claro_admin_group_index') }}"> group management</a>
     </div>
-    <div class="list-group">
-        {% if not canUserBeCreated %} <div {% else %} <a {% endif %} class="list-group-item {% if not canUserBeCreated %}text-muted{% endif %}" href="{{ path('claro_admin_user_creation_form') }}" id="link_add_user">
-            {{ 'create_user'|trans({}, 'platform') }}
-        {% if not canUserBeCreated %} </div> {% else %} </a> {% endif %}
-        <a class="list-group-item" href="{{ path('claro_admin_user_list') }}" id="link_list_user">
-            {{ 'list_users'|trans({}, 'platform') }}
-        </a>
+    <div id="users-panel" class="panel panel-default" ng-app="usersManager">
+        <div class="panel-body" ng-controller="UsersCtrl">
+            <usersearch>
+            </usersearch>
+            <userlist>
+            </userlist>
+        </div>
+    </div>
 
-        {% if not canUserBeCreated %} <div {% else %} <a {% endif %}  class="list-group-item {% if not canUserBeCreated %}text-muted {% endif %}" href="{{ path('claro_admin_import_users_form') }}">
-            {{ 'import_users'|trans({}, 'platform') }}
-        {% if not canUserBeCreated %} </div> {% else %} </a> {% endif %}
-        <a class="list-group-item" href="{{ path('claro_admin_group_creation_form') }}" id="link_group_create_form">
-            {{ 'create_group'|trans({}, 'platform') }}
-        </a>
-        <a class="list-group-item" href="{{ path('claro_admin_group_list') }}" id="link_group_list">
-            {{ 'list_groups'|trans({}, 'platform') }}
-        </a>
-        <a class="list-group-item" href="{{ path('claro_admin_facet_index') }}" id="link_facet_index">
-            {{ 'profile_management'|trans({}, 'platform') }}
-        </a>
-        <a class="list-group-item" href="{{ path('claro_admin_user_personal_workspace_index') }}" id="link_personnal_workspace">
-            {{ 'personal_workspace_management'|trans({}, 'platform') }}
-        </a>
-        <a class="list-group-item" href="{{ path('import_profile_pics_form') }}" id="link_personnal_workspace">
-            {{ 'import_profile_pics'|trans({}, 'platform') }}
-        </a>
-    </div>
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link rel="stylesheet" href="{{ asset('vendor/angular/angular-ui.css')}}"> </link>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('vendor/angular/angular.js')}}"> </script>
+    <script type="text/javascript" src="{{ asset('vendor/angular/angular-ui.js')}}"> </script>
+
+    {# Set some vars needed by Angular parts #}
+    <script type="text/javascript">
+        {# Make Twig variables accessibles by AngularJS #}
+
+        var AngularApp = {};
+        AngularApp.webDir = "{{ asset('') }}";
+    </script>
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/angular/search/generic/search.app.js') }}></script>
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/users/users.app.js') }}></script>
+
 {% endblock %}
