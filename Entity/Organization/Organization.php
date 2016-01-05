@@ -50,19 +50,19 @@ class Organization
 
     /**
      * @ORM\Column(nullable=true)
+     * @Assert\Email()
      * @Groups({"api"})    
      */
     protected $email;
 
     /**
-     * @ORM\OneToMany(
+     * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Organization\Location",
-     *     mappedBy="organization",
      *     cascade={"persist"}
      * )
      * @Groups({"api"})
      */
-    protected $locations;
+    protected $location;
 
     /**
      * @Gedmo\TreeLeft
@@ -115,7 +115,6 @@ class Organization
     
     public function __construct()
     {
-        $this->locations   = new ArrayCollection();
         $this->departments = new ArrayCollection();
         $this->users       = new ArrayCollection();
     }
@@ -163,5 +162,25 @@ class Organization
     public function setParent($parent)
     {
         $this->parent = $parent;
+    }
+
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    public function setLocation($location)
+    {
+        $this->location = $location;
+    }
+
+    public function getLocation()
+    {
+        return $this->location;
     }
 }

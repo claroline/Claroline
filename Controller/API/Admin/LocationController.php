@@ -24,7 +24,6 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Form\LocationType;
-use FOS\RestBundle\View\View as FOSView;
 
 /**
  * @NamePrefix("api_")
@@ -146,12 +145,12 @@ class LocationController extends FOSRestController
         $locationType->enableApi();
         $form = $this->formFactory->create($locationType, $location);
         $form->submit($this->request);
-        $httpCode = 200;
+        $httpCode = 400;
 
         if ($form->isValid()) {
             $location = $form->getData();
             $location = $this->locationManager->edit($location);
-            $httpCode = 400;
+            $httpCode = 200;
         }
 
         $options = array(

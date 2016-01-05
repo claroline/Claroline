@@ -182,7 +182,7 @@ class ProfileType extends AbstractType
                         'class' => 'Claroline\CoreBundle\Entity\Organization\Organization',
                         'expanded' => true,
                         'multiple' => true,
-                        'property' => 'name',
+                        'property' => 'name'
                     )
                 );
 

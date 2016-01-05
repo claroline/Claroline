@@ -33,15 +33,7 @@ locationManager.controller('CreateModalController', function(locationAPI, $scope
     }
 });
 
-locationManager.controller('EditModalController', function(
-    locationAPI,
-    $scope,
-    locations,
-    location,
-    $uibModalStack,
-    $uibModal,
-    clarolineAPI
-) {
+locationManager.controller('EditModalController', function(locationAPI, $scope, locations, location, $uibModalStack, $uibModal, clarolineAPI) {
     $scope.location = {};
 
     $scope.submit = function() {
@@ -59,6 +51,9 @@ locationManager.controller('EditModalController', function(
                         resolve: {
                             locations: function() {
                                 return locations;
+                            },
+                            location: function() {
+                                return location;
                             }
                         }
                     })
@@ -97,7 +92,8 @@ locationManager.controller('LocationController', function(
 
     $scope.editLocation = function(location) {
         $uibModal.open({
-            templateUrl: Routing.generate('api_get_edit_location_form', {'_format': 'html', 'location': location.id}),
+            //bust = no cache
+            templateUrl: Routing.generate('api_get_edit_location_form', {'_format': 'html', 'location': location.id}) + '?bust=' + Math.random().toString(36).slice(2),
             controller: 'EditModalController',
             resolve: {
                 locations: function() {

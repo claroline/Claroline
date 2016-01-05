@@ -113,14 +113,13 @@ class Location
      */
     protected $users;
 
-    /**
+    /*
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization",
-     *     inversedBy="locations"
+     *     inversedBy="location"
      * )
-     * @ORM\JoinColumn(name="organization_id", onDelete="CASCADE", nullable=true)
      */
-    protected $organization;
+    protected $organizations;
 
     /**
      * @ORM\Column(type="integer")
@@ -130,6 +129,7 @@ class Location
     public function __construct()
     {
         $this->users  = new ArrayCollection();
+        $this->organizations = new ArrayCollection();
     }
 
     public function getId()
@@ -212,9 +212,9 @@ class Location
         return $this->users;
     }
 
-    public function setOrganization(Organization $organization)
+    public function setOrganizations(Organization $organizations)
     {
-        $this->organization = $organization;
+        $this->organizations = $organizations;
     }
 
     public function getOrganization()

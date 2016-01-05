@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\API\Admin;
 
+use Claroline\CoreBundle\Manager\ApiManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use FOS\RestBundle\Controller\FOSRestController;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -23,6 +24,7 @@ use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Form\OrganizationType;
+use Claroline\CoreBundle\Form\OrganizationParametersType;
 use Claroline\CoreBundle\Form\OrganizationNameType;
 
 /**
@@ -35,20 +37,23 @@ class OrganizationController extends FOSRestController
      *     "formFactory"         = @DI\Inject("form.factory"),
      *     "organizationManager" = @DI\Inject("claroline.manager.organization_manager"),
      *     "request"             = @DI\Inject("request"),
-     *     "om"                  = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
+     *     "apiManager"          = @DI\Inject("claroline.manager.api_manager")
      * })
      */
     public function __construct(
         FormFactory          $formFactory,
         OrganizationManager  $organizationManager,
         ObjectManager        $om,
-        Request              $request
+        Request              $request,
+        ApiManager           $apiManager
     )
     {
         $this->formFactory         = $formFactory;
         $this->organizationManager = $organizationManager;
         $this->om                  = $om;
         $this->request             = $request;
+        $this->apiManager          = $apiManager;
     }
 
     /**
@@ -79,13 +84,13 @@ class OrganizationController extends FOSRestController
     /**
      * @View(serializerGroups={"api"})
      * @ApiDoc(
-     *     description="Update an organization",
+     *     description="Update an organization name",
      *     views = {"organization"},
      *     input="Claroline\CoreBundle\Form\OrganizationType"
      * )
      * @EXT\ParamConverter("organization", class="ClarolineCoreBundle:Organization\Organization")
      */
-    public function putOrganizationAction(Organization $organization)
+    public function putOrganizationNameAction(Organization $organization)
     {
         $organizationNameType = new OrganizationNameType();
         $organizationNameType->enableApi();
@@ -94,8 +99,7 @@ class OrganizationController extends FOSRestController
         //form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $organization = $form->getData();
-            $organization = $this->organizationManager->edit($organization);
+            $this->organizationManager->edit($form->getData());
 
             return array('success');
         }
@@ -131,4 +135,49 @@ class OrganizationController extends FOSRestController
         return $this->organizationManager->getRoots();
     }
 
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Returns the location edition form",
+     *     views = {"location"}
+     * )
+     */
+    public function getEditOrganizationFormAction(Organization $organization)
+    {
+        $formType = new OrganizationParametersType();
+        $formType->enableApi();
+        $form = $this->createForm($formType, $organization);
+
+        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Admin\Organization\editOrganizationForm.html.twig', $form);
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Update an organization",
+     *     views = {"location"},
+     *     input="Claroline\CoreBundle\Form\LocationType"
+     * )
+     */
+    public function putOrganizationAction(Organization $organization)
+    {
+        $formType = new OrganizationParametersType();
+        $formType->enableApi();
+        $form = $this->formFactory->create($formType, $organization);
+        $form->submit($this->request);
+        $httpCode = 400;
+
+        if ($form->isValid()) {
+            $organization = $form->getData();
+            $organization = $this->organizationManager->edit($organization);
+            $httpCode = 200;
+        }
+
+        $options = array(
+            'http_code' => $httpCode,
+            'extra_parameters' => $organization
+        );
+
+        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Admin\Location\editLocationForm.html.twig', $form, $options);
+    }
 }
