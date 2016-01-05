@@ -147,6 +147,8 @@ class OpenHandler implements QuestionHandlerInterface
             }, $responses->toArray());
         }
         
+        $exportData->typeOpen = $openQuestion->getTypeOpenQuestion()->getValue();
+        
         return $exportData;
     }
 

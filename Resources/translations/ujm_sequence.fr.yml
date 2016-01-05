@@ -24,6 +24,9 @@ link_csv_export: Export CSV
 label_exercise_score: Note
 label_exercise_correction: Correction
 
+# n
+need_correction: Cette réponse nécessite une correction
+
 # p
 paper_list: Liste des copies
 paper_list_no_paper: Aucune copie actuellement
