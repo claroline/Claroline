@@ -33,6 +33,7 @@ organizationManager.controller('EditModalController', function(organizationAPI, 
     $scope.organization = {};
 
     $scope.submit = function() {
+        console.log($scope.organization);
         organizationAPI.update(organization.id, $scope.organization).then(
             function successHandler (d) {
                 $uibModalStack.dismissAll();

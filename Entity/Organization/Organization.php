@@ -56,13 +56,13 @@ class Organization
     protected $email;
 
     /**
-     * @ORM\ManyToOne(
+     * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Organization\Location",
      *     cascade={"persist"}
      * )
      * @Groups({"api"})
      */
-    protected $location;
+    protected $locations;
 
     /**
      * @Gedmo\TreeLeft
@@ -115,6 +115,7 @@ class Organization
     
     public function __construct()
     {
+        $this->locations   = new ArrayCollection();
         $this->departments = new ArrayCollection();
         $this->users       = new ArrayCollection();
     }
@@ -139,10 +140,6 @@ class Organization
         return $this->departments;
     }
 
-    public function getLocations()
-    {
-        return $this->locations;
-    }
 
     public function setPosition($position)
     {
@@ -174,13 +171,13 @@ class Organization
         return $this->email;
     }
 
-    public function setLocation($location)
+    public function setLocations($locations)
     {
-        $this->location = $location;
+        $this->locations = $locations;
     }
 
-    public function getLocation()
+    public function getLocations()
     {
-        return $this->location;
+        return $this->locations;
     }
 }

@@ -265,7 +265,7 @@ class ProfileController extends Controller
             $successMessage = $translator->trans('edit_profile_success', array(), 'platform');
             $errorMessage   = $translator->trans('edit_profile_error', array(), 'platform');
             $errorRight = $translator->trans('edit_profile_error_right', array(), 'platform');
-            $redirectUrl = $this->generateUrl('claro_admin_user_list');
+            $redirectUrl = $this->generateUrl('claro_admin_users_index');
 
             if ($editYourself) {
                 $successMessage = $translator->trans('edit_your_profile_success', array(), 'platform');

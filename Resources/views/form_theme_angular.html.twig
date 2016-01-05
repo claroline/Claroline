@@ -7,6 +7,18 @@
 {# Make data available to current scope as $scope.data - will not work with hidden fields #}
 {% block widget_attributes %}
     {{ parent() }}
-    ng-model="{{ model }}.{{ name }}"
-    ng-init='{{ model }}.{{ name }}="{{ value|ng_escape }}"'
+    {# if name is integer, it's an array and we don't want to init it this way #}
+    {% if not is_int(name) %}
+        ng-model="{{ model }}.{{ name }}"
+        ng-init='{{ model }}.{{ name }}="{{ value|ng_escape }}"'
+    {% else %}
+        ng-model="{{ model }}.{{ form.parent.vars.name }}[{{ name }}]"
+        {# here I assume we use checkboxes... this could be bad tho #}
+        {% if checked is defined and checked == true %}
+            {# ng-checked="true" #}
+            ng-init="{{ model }}.{{ form.parent.vars.name }}[{{ name }}]=true"
+        {% else %}
+            ng-init="{{ model }}.{{ form.parent.vars.name }}[{{ name }}]=false"
+        {% endif %}
+    {% endif %}
 {% endblock widget_attributes %}

@@ -420,7 +420,7 @@ class UsersController extends Controller
                 $sessionFlashBag->add('success', $msg);
             }
 
-            return new RedirectResponse($this->router->generate('claro_admin_user_list'));
+            return new RedirectResponse($this->router->generate('claro_admin_user_index'));
         }
 
         return array('form' => $form->createView());

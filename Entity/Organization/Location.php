@@ -113,10 +113,10 @@ class Location
      */
     protected $users;
 
-    /*
-     * @ORM\ManyToOne(
+    /**
+     * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization",
-     *     inversedBy="location"
+     *     inversedBy="locations"
      * )
      */
     protected $organizations;
@@ -217,9 +217,9 @@ class Location
         $this->organizations = $organizations;
     }
 
-    public function getOrganization()
+    public function getOrganizations()
     {
-        return $this->organization;
+        return $this->organizations;
     }
 
     public function setType($type)

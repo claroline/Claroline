@@ -29,13 +29,13 @@ class OrganizationParametersType extends AngularType
             ->add('name', 'text', array('required' => true))
             ->add('email', 'email', array('required' => false, 'label' => 'email'))
             ->add(
-                'location',
+                'locations',
                 'entity',
                 array(
-                    'label' => 'location',
+                    'label' => 'locations',
                     'class' => 'Claroline\CoreBundle\Entity\Organization\Location',
-                    'expanded' => false,
-                    'multiple' => false,
+                    'expanded' => true,
+                    'multiple' => true,
                     'property' => 'name'
                 )
             );
