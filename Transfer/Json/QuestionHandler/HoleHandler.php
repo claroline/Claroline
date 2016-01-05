@@ -230,7 +230,10 @@ class HoleHandler implements QuestionHandlerInterface
         $answers = "[";
         $i=1;
         $length = count($data);
-        foreach ($data as $answer) {
+        foreach ($data as $answer) {/*
+            $answer = [ "id" => $answer["id"], "answer" => $answer["answer"]];
+            array_push($answers, $answer);
+            */
             $answers .= "{\"id\":\"" . $answer["id"] . "\",\"answer\":\"" . $answer["answer"] . "\"}";
             
             if ($i === $length) {
@@ -247,6 +250,7 @@ class HoleHandler implements QuestionHandlerInterface
             $mark = 0;
         }
         
+    //    $response->setResponse(json_encode($answers));
         $response->setResponse($answers);
         $response->setMark($mark);
     }

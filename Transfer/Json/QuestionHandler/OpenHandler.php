@@ -130,11 +130,21 @@ class OpenHandler implements QuestionHandlerInterface
      */
     public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true)
     {
-        $repo = $this->om->getRepository('UJMExoBundle:InteractionHole');
-        $holeQuestion = $repo->findOneBy(['question' => $question]);
+        $repo = $this->om->getRepository('UJMExoBundle:InteractionOpen');
+        $openQuestion = $repo->findOneBy(['question' => $question]);
 
         if ($withSolution) {
-            $exportData->solution = $holeQuestion->getHtml();
+            $responses = $openQuestion->getWordResponses();
+            
+            $exportData->solutions = array_map(function ($wr) {
+                $responseData = new \stdClass();
+                $responseData->id = (string) $wr->getId();
+                $responseData->word = $wr->getResponse();
+                $responseData->caseSensitive = $wr->getCaseSensitive();
+                $responseData->score = $wr->getScore();
+                $responseData->feedback = $wr->getFeedback();
+                return $responseData;
+            }, $responses->toArray());
         }
         
         return $exportData;

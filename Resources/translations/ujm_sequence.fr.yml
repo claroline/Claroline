@@ -5,8 +5,15 @@ btn_prev_step_label: Aller à l'étape précédente
 btn_next_step_label: Aller à l'étape suivante
 btn_validate_step: Validate step
 
+# c
+case_sensitive: Respecter la casse
+comment: Commentaire
+
 # d
 dropdown_step_navigate_choice_label: Etape n°%1% / %2%
+
+# k
+keys_words: Mots clés
 
 # l
 link_exercice_home: Accueil de l'exercise
@@ -44,6 +51,8 @@ paper_details_question_score: Score de la question
 paper_details_correction_label: Correction
 paper_details_your_answers: Vos réponses
 paper_details_right_answers: Bonnes réponses
+
+points: Points
 
 # q
 question_hints: Indices

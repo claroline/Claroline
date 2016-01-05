@@ -70,6 +70,10 @@
                                         <div data-ng-switch-when="application/x.cloze+json">
                                             <correction-cloze data-question="question" data-paper="correctionCtrl.paper"></correction-cloze>                                         
                                         </div>
+                                         <!-- for open question only we use a directive -->
+                                        <div data-ng-switch-when="application/x.short+json">
+                                            <correction-short data-question="question" data-paper="correctionCtrl.paper"></correction-short>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
