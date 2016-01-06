@@ -40,7 +40,8 @@ clarolineAPI.factory('clarolineAPI', function($http, $httpParamSerializerJQLike)
         },
         formSerialize: function(formName, parameters) {
             var data = {};
-            console.log(parameters);
+            var serialized = angular.copy(parameters);
+
             //quick and dirty fix for array of checkboxes. It probably won't work for (multi)select and radio buttons but... hey. It's a start.
             //I do all of this because by default, the serializer expects an array for sf2 BUT ng-init will do an object and it won't work.
             for (var key in parameters) {
@@ -54,14 +55,12 @@ clarolineAPI.factory('clarolineAPI', function($http, $httpParamSerializerJQLike)
                         }
                     }
 
-                    parameters[key] = array;
+                    serialized[key] = array;
                 }
             }
 
-            console.log(parameters);
-
             ///q&d fixe for submission
-            data[formName] = parameters;
+            data[formName] = serialized;
 
             return $httpParamSerializerJQLike(data);
         },

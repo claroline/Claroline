@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * @DI\Service("claroline.transformer.user_picker")
@@ -23,6 +24,7 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 class UserPickerTransfromer implements DataTransformerInterface
 {
     private $userManager;
+    private $options;
 
     /**
      * @DI\InjectParams({
@@ -32,6 +34,7 @@ class UserPickerTransfromer implements DataTransformerInterface
     public function __construct(UserManager $userManager)
     {
         $this->userManager = $userManager;
+        $this->options = array();
     }
 
     public function transform($value)
@@ -63,47 +66,47 @@ class UserPickerTransfromer implements DataTransformerInterface
     public function reverseTransform($userId)
     {
         if (empty($userId)) {
-
             return null;
-        } elseif (is_array($userId)) {
-            $idsTxt = $userId[0];
+        } elseif (strpos($userId, ',')) {
+            $ids = explode(',', $userId);
+            $users = $this->getByIds($ids);
 
-            if (trim($idsTxt) === '') {
-
-                return array();
+            if (count($users) === 0) {
+                return ($this->options['multiple']) ? array(): null;
             } else {
-                $ids = explode(',', $idsTxt);
-                $users = array();
 
-                foreach ($ids as $id) {
-                    $user = $this->userManager->getUserById(intval($id));
-
-                    if (is_null($user)) {
-
-                        throw new TransformationFailedException();
-                    } else {
-                        $users[] = $user;
-                    }
-                }
-
-                if (count($users) === 0) {
-
-                    return null;
-                } else {
-
-                    return $users;
-                }
+                return $users;
             }
         } else {
             $user = $this->userManager->getUserById($userId);
-
             if (is_null($user)) {
-
                 throw new TransformationFailedException();
             } else {
 
-                return $user;
+                return ($this->options['multiple']) ? array($user): $user;
             }
         }
     }
+
+    private function getByIds($ids)
+    {
+        $users = array();
+
+        foreach ($ids as $id) {
+            $user = $this->userManager->getUserById(intval($id));
+            if (is_null($user)) {
+                throw new TransformationFailedException();
+            } else {
+                $users[] = $user;
+            }
+        }
+
+        return $users;
+    }
+
+    public function setOptions($options)
+    {
+        $this->options = $options;
+    }
+
 }

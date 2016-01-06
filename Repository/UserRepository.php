@@ -1570,7 +1570,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             $query->setParameter('search', "%{$upperSearch}%");
         }
 
-        return $executeQuery ? limit : $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findForApi($data)

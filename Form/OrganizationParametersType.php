@@ -38,9 +38,14 @@ class OrganizationParametersType extends AngularType
                     'multiple' => true,
                     'property' => 'name'
                 )
+            )
+            ->add(
+                'administrators',
+                'userpicker',
+                array(
+                    'multiple' => true
+                )
             );
-
-
     }
 
     public function getName()

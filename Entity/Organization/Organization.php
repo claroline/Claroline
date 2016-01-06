@@ -16,6 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Claroline\CoreBundle\Entity\User;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 
@@ -112,12 +113,24 @@ class Organization
      * @ORM\JoinTable(name="claro_user_organization")
      */
     protected $users;
+
+    /**
+     * @var User[]|ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\User"
+     * )
+     * @ORM\JoinTable(name="claro_user_administrator")
+     * @Groups({"api"})
+     */
+    protected $administrators;
     
     public function __construct()
     {
-        $this->locations   = new ArrayCollection();
-        $this->departments = new ArrayCollection();
-        $this->users       = new ArrayCollection();
+        $this->locations      = new ArrayCollection();
+        $this->departments    = new ArrayCollection();
+        $this->users          = new ArrayCollection();
+        $this->administrators = new ArrayCollection();
     }
 
     public function getId()
@@ -179,5 +192,25 @@ class Organization
     public function getLocations()
     {
         return $this->locations;
+    }
+
+    public function getAdministrators()
+    {
+        return $this->administrators;
+    }
+
+    public function addAdministrator(User $user)
+    {
+        if (!$this->administrators->contains($user)) $this->administrators->add($user);
+    }
+
+    public function removeAdministrator(User $user)
+    {
+        if ($this->administrators->contains($user)) $this->administrators->removeElement($user);
+    }
+
+    public function setAdministrators(ArrayCollection $users)
+    {
+        $this->administrators = $users;
     }
 }
