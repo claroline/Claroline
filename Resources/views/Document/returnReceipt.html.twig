@@ -2,24 +2,35 @@
 {% for key, value in haveReturnReceiptOrNotArray %}
 	{% if key == document.id %}
 		{% set found = true %}
+		{# 1 : doublon #}
 		{% if value == 1 %}
-	        <span class="fa fa-thumbs-o-up" title="{{ 'Doubloon'|trans({}, 'innova_collecticiel') }}"> </span>
+	        <span class="fa fa-hand-paper-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Doubloon'|trans({}, 'innova_collecticiel') }}"> </span>
 		{% endif %}
+		{# 2 : document bien reçu #}
 		{% if value == 2 %}
-	        <span class="fa fa-thumbs-o-up" title="{{ 'Document received'|trans({}, 'innova_collecticiel') }}"> </span>
+	        <span class="fa fa-thumbs-o-up" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Document received'|trans({},'innova_collecticiel') }}"> </span>
 		{% endif %}
+		{# 3 : document illisible #}
 		{% if value == 3 %}
-	        <span class="fa fa-ambulance" title="{{ 'Document unreadable'|trans({}, 'innova_collecticiel') }}"> </span>
+	        <span class="fa fa-hand-paper-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Document unreadable'|trans({}, 'innova_collecticiel') }}"> </span>
 		{% endif %}
+		{# 4 : document incomplet #}
 		{% if value == 4 %}
-	        <span class="fa fa-ambulance" title="{{ 'Incomplete document'|trans({}, 'innova_collecticiel') }}"> </span>
+	        <span class="fa fa-hand-paper-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Incomplete document'|trans({}, 'innova_collecticiel') }}"> </span>
 		{% endif %}
+		{# 5 : erreur de document #}
 		{% if value == 5 %}
-	        <span class="fa fa-ambulance" title="{{ 'Error document'|trans({}, 'innova_collecticiel') }}"> </span>
+	        <span class="fa fa-hand-paper-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Error document'|trans({}, 'innova_collecticiel') }}"> </span>
 		{% endif %}
 	{% endif %}
 {% endfor %}
 
+{# 0 : pas d'accusé de réception #}
 {% if found == false %}
-	<span class="fa fa-minus" title="{{ 'No return recept'|trans({}, 'innova_collecticiel') }}"> </span>
+	<a href="#validate-modal" data-toggle="modal" data-dropzone_id="{{ dropzone.id }}">
+			        <span class="fa fa-hand-paper-o"  data-toggle="tooltip" data-placement="top" data-original-title="{{ 'No return recept'|trans({},'innova_collecticiel') }}" class="fa fa-hand-o-right"> </span>
+
+
+		
+	</a>
 {% endif %}

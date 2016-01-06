@@ -32,10 +32,10 @@ class ReturnReceiptRepository extends EntityRepository
     {
 
         /* requête avec CreateQuery : */
-        $qb = $this->createQueryBuilder('returnrecept')
-            ->select('returnrecept')
-            ->andWhere('returnrecept.user = :user')
-            ->andWhere('returnrecept.dropzone = :dropzone')
+        $qb = $this->createQueryBuilder('returnreceipt')
+            ->select('returnreceipt')
+            ->andWhere('returnreceipt.user = :user')
+            ->andWhere('returnreceipt.dropzone = :dropzone')
             ->setParameter('user', $user)
             ->setParameter('dropzone', $dropzone);
             ;
@@ -56,11 +56,11 @@ class ReturnReceiptRepository extends EntityRepository
     {
 
         /* requête avec CreateQuery : */
-        $qb = $this->createQueryBuilder('returnrecept')
-            ->select('returnrecept')
-            ->andWhere('returnrecept.user = :user')
-            ->andWhere('returnrecept.dropzone = :dropzone')
-            ->andWhere('returnrecept.document = :document')
+        $qb = $this->createQueryBuilder('returnreceipt')
+            ->select('returnreceipt')
+            ->andWhere('returnreceipt.user = :user')
+            ->andWhere('returnreceipt.dropzone = :dropzone')
+            ->andWhere('returnreceipt.document = :document')
             ->setParameter('user', $user)
             ->setParameter('dropzone', $dropzone)
             ->setParameter('document', $document);
@@ -79,11 +79,11 @@ class ReturnReceiptRepository extends EntityRepository
     {
 
         /* requête avec CreateQuery : */
-        $qb = $this->createQueryBuilder('returnrecept')
+        $qb = $this->createQueryBuilder('returnreceipt')
             ->delete()
-            ->andWhere('returnrecept.user = :user')
-            ->andWhere('returnrecept.dropzone = :dropzone')
-            ->andWhere('returnrecept.document = :document')
+            ->andWhere('returnreceipt.user = :user')
+            ->andWhere('returnreceipt.dropzone = :dropzone')
+            ->andWhere('returnreceipt.document = :document')
             ->setParameter('user', $user)
             ->setParameter('dropzone', $dropzone)
             ->setParameter('document', $document);

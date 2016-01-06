@@ -30,7 +30,10 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
     <th class="nameColumn">{{ 'Name'|trans({},'innova_collecticiel') }}</th>
     <th class="nameColumn">{{ 'First name'|trans({},'innova_collecticiel') }}</th>
     <th class="usernameColumn">{{ 'Nickname'|trans({},'innova_collecticiel') }}</th>
-    <th class="dateColumn">{{ 'Dated'|trans({},'innova_collecticiel') }}</th>
+    <th class="dateColumn centered">
+    <i class="fa fa-calendar-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Dated'|trans({},'innova_collecticiel') }}">
+    </i>
+    </th>
     
     {# 
     <!-- Colonnes supprimées : -->
@@ -47,33 +50,41 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
     #}
 
     <!-- Colonne ajoutée "Commentaires non lus" modifiée en "Document" -->
-    <th>{{ 'Document'|trans({},'innova_collecticiel') }}</th>
+    <th class="centered">
+    <i class="fa fa-file-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Document'|trans({},'innova_collecticiel') }}">
+    </i></th>
 
     {% if dropzone.evaluation != 1  %}
         <!-- Colonne ajoutée "Devoirs à corriger" modifiée en "Etat" -->
-        <th style="width:50px;" class="centered">{{ 'Condition'|trans({},'innova_collecticiel') }}</th>
+        <th style="width:50px;" class="centered"><i class="fa fa-yelp"></i></th>
     {% endif %}
+
     <!-- Colonne ajoutée "Voir" modifiée en "Commentaire  - Evaluation"  -->
-    <th style="width:140px;" class="centered no-sort">{{ 'Comment evaluation'|trans({},'innova_collecticiel') }}</th>
+    <th style="width:140px;" class="centered no-sort">
+    <i class="fa fa-commenting-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Comment evaluation'|trans({},'innova_collecticiel') }}">
+    </i>
+    </th>
 
     {% if adminInnova %}
         {# On affiche cette colonne si le créateur du collecticiel veut afficher les accusés de réception. #}
         {# Demande JJQ. InnovaERV #}
         {% if dropzone.returnReceipt == 1  %}
-            <th class="centered">{{ 'Return receipt'|trans({}, 'innova_collecticiel') }}</th>
+            <th class="centered"><i class="fa fa-hand-o-right"></th>
         {% endif %}
 
         {# On affiche cette colonne si le créateur du collecticiel veut afficher/gérer les évaluations. #}
         {# Demande JJQ. InnovaERV #}
         {% if dropzone.evaluation == 1  %}
-            <th class="centered">{{ 'Evaluation'|trans({}, 'innova_collecticiel') }}</th>
+            <th class="centered"><i class="fa fa-graduation-cap"></th>
         {% endif %}
         {% if dropzone.evaluation == 1  %}
-            <th class="centered">{{ 'Transmitted evaluation'|trans({}, 'innova_collecticiel') }}</th>
+            <th class="centered"><i class="fa fa-mail-forward"></th>
         {% endif %}
 
         <th class="centered">
+        {# Demande JJQ. InnovaERV
             {{ 'Selection'|trans({}, 'innova_collecticiel') }}
+        #}
             <input id="document_id_0" data-dropzone-select_id={{ dropzone.id }} type="checkbox" name="documentId" data-document_id="0" class="btn btn-danger btn-sm" />
 
         </th>
