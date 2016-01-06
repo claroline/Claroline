@@ -14,18 +14,19 @@
             {
                 'name': 'users_management'|trans({}, 'platform'),
                 'href': ''
+            },
+            {
+                'name': 'user_list'|trans({}, 'platform'),
+                'href': ''
             }
         ])
     }}
 {% endblock %}
 {% block section_content %}
-    <div>
-        <a href="{{ path('claro_admin_facet_index') }}"> facets </a>
-        <a href="{{ path('claro_admin_user_creation_form') }}"> create user </a>
-        <a href="{{ path('claro_admin_group_index') }}"> group management</a>
-    </div>
     <div id="users-panel" class="panel panel-default" ng-app="usersManager">
         <div class="panel-body" ng-controller="UsersCtrl">
+            {% include 'ClarolineCoreBundle:Administration:Users\\actionbar.html.twig' %}
+            <h1>{{ 'user_list'|trans({}, 'platform') }}</h1>
             <usersearch>
             </usersearch>
             <userlist>

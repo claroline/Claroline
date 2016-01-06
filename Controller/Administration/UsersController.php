@@ -210,7 +210,7 @@ class UsersController extends Controller
                 $this->translator->trans('user_creation_success', array(), 'platform')
             );
 
-            return $this->redirect($this->generateUrl('claro_admin_user_list'));
+            return $this->redirect($this->generateUrl('claro_admin_users_index'));
         }
 
         $error = null;
@@ -420,7 +420,7 @@ class UsersController extends Controller
                 $sessionFlashBag->add('success', $msg);
             }
 
-            return new RedirectResponse($this->router->generate('claro_admin_user_index'));
+            return new RedirectResponse($this->router->generate('claro_admin_users_index'));
         }
 
         return array('form' => $form->createView());

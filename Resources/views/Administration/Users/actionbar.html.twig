@@ -1,0 +1,38 @@
+<div class="btn-group">
+    <button type="button" class="btn btn-default"> {{ 'users'|trans({}, 'platform') }} </button>
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+        <span class="sr-only">Toggle Dropdown</span>
+    </button>
+    <ul class="dropdown-menu">
+        <li><a href="{{ path('claro_admin_users_index') }}"> {{ 'list'|trans({}, 'platform') }}</a></li>
+        <li><a href="{{ path('claro_admin_user_creation_form') }}"> {{ 'create'|trans({}, 'platform') }} </a></li>
+        <li><a href="{{ path('claro_admin_import_users_form') }}"> {{ 'import'|trans({}, 'platform') }} </a></li>
+        <li><a href="{{ path('claro_admin_export_users', {'format': 'xls'}) }}"> {{ 'excel_export'|trans({}, 'platform') }} </a></li>
+        <li><a href="{{ path('claro_admin_export_users', {'format': 'csv'}) }}"> {{ 'csv_export'|trans({}, 'platform') }} </a></li>
+    </ul>
+</div>
+
+
+<div class="btn-group">
+    <button type="button" class="btn btn-default"> {{ 'groups'|trans({}, 'platform') }} </button>
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+        <span class="sr-only">Toggle Dropdown</span>
+    </button>
+    <ul class="dropdown-menu">
+        <li><a href="{{ path('claro_admin_group_index') }}"> {{ 'list'|trans({}, 'platform') }} </a></li>
+    </ul>
+</div>
+
+
+<div class="btn-group">
+    <button type="button" class="btn btn-default"> {{ 'facets'|trans({}, 'platform') }} </button>
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+        <span class="sr-only">Toggle Dropdown</span>
+    </button>
+    <ul class="dropdown-menu">
+        <li><a href="{{ path('claro_admin_facet_index') }}"> {{ 'list'|trans({}, 'platform') }} </a></li>
+    </ul>
+</div>

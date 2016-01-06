@@ -35,7 +35,13 @@ usersManager.controller('UsersCtrl', function(
 				"<i class='fa fa-eye'></i>" +
 				"</a>";
 
-				var actions = showAsLink;
+				var route = Routing.generate('claro_user_profile_edit', {'user': scope.$row.id});
+
+				var editLink = "<a class='btn btn-default' href='" + route + "' data-toggle='tooltip' data-placement='bottom' title='' data-original-title='edit' role='button'>" +
+					"<i class='fa fa-pencil'></i>" +
+					"</a>"
+
+				var actions = showAsLink + editLink;
 
 				return actions;
 			}

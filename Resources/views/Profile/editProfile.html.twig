@@ -15,7 +15,7 @@
             </div>
         {% endif %}
         {% set actionForm = editYourself ? path('claro_user_profile_edit') : path('claro_user_profile_edit', {'user': user.getId()}) %}
-        {% set cancelUrl  = editYourself ? path('claro_profile_view') : path('claro_admin_user_list') %}
+        {% set cancelUrl  = editYourself ? path('claro_profile_view') : path('claro_admin_users_index') %}
         <form role="form" class="form-horizontal" action="{{ actionForm }}" method="post" {{ form_enctype(form) }} id="profile_form">
             <div class="panel-body">
                 {% for role in unavailableRoles %}
