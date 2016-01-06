@@ -3,7 +3,7 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
 
 <div class="btn-group">
     <button type="submit" class="btn btn-primary btn-sm"
-    data-toggle="modal" data-target="#validate-modal" data-dropzone_id="{{ dropzone.id }}">
+    data-toggle="modal" data-target="#validate-modal-return-receipt" data-dropzone_id="{{ dropzone.id }}">
         {{ 'Return receipt'|trans({}, 'innova_collecticiel') }}
     </button>
 </div>
@@ -106,7 +106,7 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
 </form>
 
 {# Déclaration de la modal pour confirmation de la validation #}
-<div class="modal fade" id="validate-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="validate-modal-return-receipt" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
         <div class="modal-header">

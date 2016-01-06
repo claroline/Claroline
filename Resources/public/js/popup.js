@@ -26,11 +26,11 @@ $(document).ready(function () {
 
 
     // InnovaERV
-    // Ajout pour le traitement de la case à cocher pour la création de commentaire à la volée
+    // Ajout pour le traitement de la case Ã  cocher pour la crÃ©ation de commentaire Ã  la volÃ©e
     $('.comment_validate').on('click', function (event) {
         event.preventDefault();
  
-        // Récupération de l'id du document
+        // RÃ©cupÃ©ration de l'id du document
         var dropzoneId = $(this).attr("data-dropzone_id");
 
         var arrayDocsId = [];
@@ -67,15 +67,16 @@ $(document).ready(function () {
 
     });
 
-
     // InnovaERV
-    // Ajout pour le traitement de la case à cocher lors de la soumission de documents
+    // Ajout pour le traitement de la case Ã  cocher lors de la soumission de documents
     $('#validate-modal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget); // Button that triggered the modal
       var documentId = button.data('document_id'); // Extract info from data-* attributes
       // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
       // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
       var modal = $(this);
+      alert("ici1 validate-modal");
+      alert(documentId);
       modal.find('#modal_confirm').attr("data-document_id", documentId); //TODO change this to use data() instead of attr()
       //documentId
       //
@@ -94,15 +95,15 @@ $(document).ready(function () {
         $(selector).prop('checked', true); // Cocher la case "Valider"
         $(selector).prop('disabled', true); // Ne pas pouvoir modifier cette ligne
 
-        // Récupération de l'id du document
+        // RÃ©cupÃ©ration de l'id du document
         var docId = $(this).attr("data-document_id");
 
-        // Ajax : appel de la route qui va mettre à jour la base de données
+        // Ajax : appel de la route qui va mettre Ã  jour la base de donnÃ©es
         // Ajax : route "innova_collecticiel_validate_document" dans DocumentController
         var req = "#request_id_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
 
         // Ajout : vu avec Arnaud.
-        // Ajout de "complete" afin de mettre à jour la partie "HTML" qui va actualiser et afficher "Demande transmise"
+        // Ajout de "complete" afin de mettre Ã  jour la partie "HTML" qui va actualiser et afficher "Demande transmise"
         $.ajax({
             url: Routing.generate('innova_collecticiel_validate_document',
                 { documentId: docId
@@ -122,9 +123,20 @@ $(document).ready(function () {
 
     });
 
+    // InnovaERV
+    // Ajout pour le traitement de la case Ã  cocher lors de la soumission de documents
+    $('#validate-modal-return-receipt').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget); // Button that triggered the modal
+      var documentId = button.data('document_id'); // Extract info from data-* attributes
+      // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+      // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+      var modal = $(this);
+      $(".data-document_id").append(documentId);
+      modal.find('#modal_confirm_return_receipt').attr("data-document_id", documentId);
+    });
 
     // InnovaERV
-    // Ajout pour le traitement de la modal de choix du type d'accusé de réception
+    // Ajout pour le traitement de la modal de choix du type d'accusÃ© de rÃ©ception
     $('#modal_confirm_return_receipt').on('click', function(event) {
         event.preventDefault();
  
@@ -148,15 +160,27 @@ $(document).ready(function () {
             returnReceiptId = document.getElementById('choix5').value;
         }
 
-        // Récupération de l'id du document
+        // RÃ©cupÃ©ration de l'id du document
         var dropzoneId = $(this).attr("data-dropzone_id");
+
+        // RÃ©cupÃ©ration de l'id du document
+        var documentId = $(this).attr("data-document_id");
 
         var arrayDocsId = [];
 
-        $("input[type='checkbox']:checked").each(
-            function() {
-                arrayDocsId.push($(this).attr('id'));
+        if (!documentId)
+        {
+            $("input[type='checkbox']:checked").each(
+                function() {
+                    arrayDocsId.push($(this).attr('id'));
             });          
+        }
+        else
+        {
+            var numDocPush = $(this).attr('data-document_id');
+            var docPush = "document_id_"+$(this).attr('data-document_id');
+            arrayDocsId.push(docPush);
+        }
 
         $.ajax({
             url: Routing.generate('innova_collecticiel_return_receipt',
@@ -174,13 +198,13 @@ $(document).ready(function () {
         });
 
         // Fermeture de la modal
-        $('#validate-modal').modal('hide');
+        $('#validate-modal-return-receipt').modal('hide');
 
     });
 
     // InnovaERV
-    // Ajout pour le traitement de la demande de commentaire : mise à jour de la table Document
-    // Mise à jour de la colonne "validate"
+    // Ajout pour le traitement de la demande de commentaire : mise Ã  jour de la table Document
+    // Mise Ã  jour de la colonne "validate"
     $('.document_validate').on('click', function(event) {
     });
     
@@ -199,33 +223,25 @@ $(document).ready(function () {
         );
     });
 
-    // InnovaERV : sélection et déselection dans la liste des demandes adressées.
+    // InnovaERV : sÃ©lection et dÃ©selection dans la liste des demandes adressÃ©es.
     $('#document_id_0').on('click', function(event) {
 
         var selector = "#document_id_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
         var selectorId = $(this).attr("data-document_id"); // Extract info from data-* attributes
 
-        // Récupération du choix de l'utilisateur : tout sélectionner ou tout déselectionner
+        // RÃ©cupÃ©ration du choix de l'utilisateur : tout sÃ©lectionner ou tout dÃ©selectionner
         if (selectorId == 0) {
-            if ($(selector).prop('checked') == false)
-            {
-                var checkedDisplay = false;
-                $(selector).prop('checked', checkedDisplay); // Cocher la case "Valider"
-            }
-            else
-            {
-                var checkedDisplay = true;
-                $(selector).prop('checked', checkedDisplay); // Cocher la case "Valider"
-            }   
+            var checkedDisplay = $(selector).prop("checked");
+            $(selector).prop("checked", checkedDisplay);
         }   
 
-        // Affectation du choix "tout sélectionner" ou "tout déselectionner" au reste des documents
+        // Affectation du choix "tout sÃ©lectionner" ou "tout dÃ©selectionner" au reste des documents
         $("input[type='checkbox']").each(
             function() {
                 var selector = "#document_id_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
                 var id = $(this).attr("data-document_id"); // Extract info from data-* attributes
                 if (id != 0) {
-                    $(selector).prop('checked', checkedDisplay); // Cocher la case "Valider"
+                    $(selector).prop("checked", checkedDisplay); // Cocher la case "Valider"
                 }
             }
         );          

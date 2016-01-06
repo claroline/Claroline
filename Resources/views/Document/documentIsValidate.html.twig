@@ -7,7 +7,7 @@
 {% if not document.validate %}
 	{# Si le collecticiel est ouvert ... #}
     {% if collecticielOpenOrNot %}
-	    <input id="document_id_{{ document.id }}" value="document" type="checkbox" class="document_validate" name="document_id_{{ document.id }}" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#validate-modal" data-document_id="{{ document.id }}" data-dropzone_id="{{ dropzone.id }}" />
+   	    <input id="document_id_{{ document.id }}" value="document" type="checkbox" class="document_validate" name="document_id_{{ document.id }}" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#validate-modal" data-document_id="{{ document.id }}" data-dropzone_id="{{ dropzone.id }}" />
 	{% endif %}
 {% else %}
     <input id="document_id_{{ document.id }}" value="document" type="checkbox" name="document_id_{{ document.id }}" disabled checked />
