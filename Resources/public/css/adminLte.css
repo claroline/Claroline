@@ -334,8 +334,10 @@ a:hover, a:active, a:focus {
     clear: both;
 }
 .user-panel > .image > img {
-    height: 45px;
-    width: 45px;
+    width: 100%;
+    max-width: 45px;
+    height: auto;
+
 }
 .user-panel > .info {
     font-size: 14px;
@@ -3064,6 +3066,7 @@ table.text-center, table.text-center td, table.text-center th {
 .table-responsive {
     overflow: auto;
 }
+
 .table-responsive > .table tr th, .table-responsive > .table tr td {
     white-space: normal !important;
 }

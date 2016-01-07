@@ -3,11 +3,14 @@
     {# Affichage de l'image de profil #}
     <td>
         {% if drop.user.getPicture() != '' %}
-            <i class="direct-chat-img direct-chat-img-you right" >
-            <img src="{{ asset('uploads/pictures/') ~  drop.user.getPicture() }}"
-            class="profile_picture img-responsive"
+
+        <div class="user-panel">
+        <div class="pull-left image">
+            <img src="{{ asset('uploads/pictures/') ~ drop.user.getPicture() }}"
+            class="img-circle"
             alt="{{ drop.user.getLastName() ~ ' ' ~ drop.user.getFirstName() }}">
-            </i>
+        </div>
+        </div>
         {% else %}
             <i class="direct-chat-img direct-chat-img-you right fa fa-user" ></i>
         {% endif %}
