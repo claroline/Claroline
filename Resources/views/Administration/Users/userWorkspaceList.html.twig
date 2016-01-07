@@ -32,11 +32,7 @@
                 'href': path('claro_admin_users_index')
             },
             {
-                'name': 'users'|trans({}, 'platform'),
-                'href': path('claro_admin_users_index')
-            },
-            {
-                'name': user.getUsername()|trans({}, 'platform'),
+                'name': 'workspace_list'|trans({}, 'platform') ~ ' (' ~ user.getUsername() ~ ')',
                 'href': ''
             }
         ])
@@ -44,11 +40,9 @@
 {% endblock %}
 
 {% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'workspace_list'|trans({}, 'platform') }}</h3>
-    </div>
-
     <div class="panel-body">
+        <h3>{{ 'workspace_list'|trans({}, 'platform') }} ({{ user.getUsername() }})</h3>
+        {% include 'ClarolineCoreBundle:Administration:Users\\actionbar.html.twig' %}
         <div class="row">
             <div class="col-md-8">
                 {% if pager.getNbPages() > 1 %}

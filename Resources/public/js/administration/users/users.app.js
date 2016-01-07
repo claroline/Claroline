@@ -41,7 +41,13 @@ usersManager.controller('UsersCtrl', function(
 					"<i class='fa fa-pencil'></i>" +
 					"</a>"
 
-				var actions = showAsLink + editLink;
+				var route = Routing.generate('claro_admin_user_workspaces', {'user': scope.$row.id});
+
+				var wsLink = "<a class='btn btn-default' href='" + route + "' data-toggle='tooltip' data-placement='bottom' title='' data-original-title='workspace' role='button'>" +
+					"<i class='fa fa-book'></i>" +
+					"</a>";
+
+				var actions = showAsLink + editLink + wsLink;
 
 				return actions;
 			}
