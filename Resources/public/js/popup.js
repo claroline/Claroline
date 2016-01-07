@@ -225,27 +225,22 @@ $(document).ready(function () {
 
     // InnovaERV : sÃ©lection et dÃ©selection dans la liste des demandes adressÃ©es.
     $('#document_id_0').on('click', function(event) {
+        if($(this).is(':checked')){
+            $('input[type=checkbox]').each(function(i,k){
+                $(k).prop('checked',true);
+              })
+        }
+        else
+        {
+            $('input[type=checkbox]').each(function(i,k){
+                $(k).prop('checked',false);
+            })
+        }
+    })
 
-        var selector = "#document_id_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
-        var selectorId = $(this).attr("data-document_id"); // Extract info from data-* attributes
-
-        // RÃ©cupÃ©ration du choix de l'utilisateur : tout sÃ©lectionner ou tout dÃ©selectionner
-        if (selectorId == 0) {
-            var checkedDisplay = $(selector).prop("checked");
-            $(selector).prop("checked", checkedDisplay);
-        }   
-
-        // Affectation du choix "tout sÃ©lectionner" ou "tout dÃ©selectionner" au reste des documents
-        $("input[type='checkbox']").each(
-            function() {
-                var selector = "#document_id_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
-                var id = $(this).attr("data-document_id"); // Extract info from data-* attributes
-                if (id != 0) {
-                    $(selector).prop("checked", checkedDisplay); // Cocher la case "Valider"
-                }
-            }
-        );          
-    });
+    $('input[type=checkbox]').not('#document_id_0').click(function() {
+        $('#document_id_0').prop('indeterminate', true);
+    })
 
     // InnovaERV : ajout du bouton "Retour" dans la liste des commentaires.
     $('.backLink').on('click', function(event) {
