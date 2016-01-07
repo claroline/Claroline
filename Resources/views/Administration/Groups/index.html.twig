@@ -15,7 +15,7 @@
                 'href': path('claro_admin_users_index')
             },
             {
-                'name': 'groups_management'|trans({}, 'platform'),
+                'name': 'group_list'|trans({}, 'platform'),
                 'href':''
             }
         ])
@@ -25,6 +25,8 @@
 {% block section_content %}
     <div id="groups-panel" class="panel panel-default" ng-app="groupsManager">
         <div class="panel-body">
+            {% include 'ClarolineCoreBundle:Administration:Users\\actionbar.html.twig' %}
+            <h1>{{ 'group_list'|trans({}, 'platform') }}</h1>
             <groupsearch>
             </groupsearch>
             <grouplist>

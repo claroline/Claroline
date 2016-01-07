@@ -333,6 +333,15 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
             ->end()
+            ->arrayNode('admin_user_action')
+                ->prototype('array')
+                    ->children()
+                        ->scalarNode('tool_name')->isRequired()->end()
+                        ->scalarNode('displayed_name')->isRequired()->end()
+                        ->scalarNode('class')->isRequired()->end()
+                    ->end()
+                ->end()
+            ->end()
         ->end()->end();
     }
 
