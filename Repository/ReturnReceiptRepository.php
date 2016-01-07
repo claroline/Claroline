@@ -55,7 +55,6 @@ class ReturnReceiptRepository extends EntityRepository
     public function haveReturnReceiptOrNotForADocument(User $user, Dropzone $dropzone, Document $document)
     {
 
-var_dump($document->getId());
         /* requête avec CreateQuery : */
         $qb = $this->createQueryBuilder('returnreceipt')
             ->select('returnreceipt')

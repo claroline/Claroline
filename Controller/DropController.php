@@ -520,14 +520,19 @@ class DropController extends DropzoneBaseController
 
         $countUnterminatedDrops = $dropRepo->countUnterminatedDropsByDropzone($dropzone->getId());
 
+        // Déclaration du compteur de documents sans accusé de réception
+        $alertNbDocumentWithoutReturnReceipt = 0;
+
         // Déclarations des nouveaux tableaux, qui seront passés à la vue
         $userToCommentCount = array();
         $userNbTextToRead = array();
         $haveReturnReceiptOrNotArray = array();
 
         foreach ($dropzone->getDrops() as $drop) {
-            /** InnovaERV : ajout pour calculer les 2 zones **/
 
+            $countDocument = count($drop->getDocuments());
+
+            /** InnovaERV : ajout pour calculer les 2 zones **/
             // Nombre de commentaires non lus/ Repo : Comment
             $nbCommentsPerUser = $this->getDoctrine()
                                 ->getRepository('InnovaCollecticielBundle:Comment')
@@ -547,6 +552,17 @@ class DropController extends DropzoneBaseController
 
             // Parcours du tableau
             $arrayCount = count($haveReturnReceiptOrNot)-1;
+
+            // Calcul du compteur de documents sans accusé de réception
+            if ($arrayCount < 0) {
+                $alertNbDocumentWithoutReturnReceipt = $countDocument;
+            }
+            else
+            {
+                $alertNbDocumentWithoutReturnReceipt = $countDocument - $arrayCount - 1;
+            }
+
+            // Traitement du tableau
             for ($indice = 0; $indice<=$arrayCount; $indice++)
             {
                 $documentId = $haveReturnReceiptOrNot[$indice]->getDocument()->getId();
@@ -598,6 +614,7 @@ class DropController extends DropzoneBaseController
             'adminInnova' => $adminInnova,
             'collecticielOpenOrNot' => $collecticielOpenOrNot,
             'haveReturnReceiptOrNotArray' => $haveReturnReceiptOrNotArray,
+            'alertNbDocumentWithoutReturnReceipt' => $alertNbDocumentWithoutReturnReceipt,
         ));
 
         return $dataToView;
