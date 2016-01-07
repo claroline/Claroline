@@ -346,6 +346,36 @@ class WorkspaceParametersController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/user/subscribe/workspace/{workspace}",
+     *     name="claro_workspace_subscription_url_generate_user"
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:url_subscription_user_login.html.twig")
+     *
+     * @param Workspace $workspace
+     *
+     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+     */
+
+    public function userSubscriptionAction(Workspace $workspace)
+    {
+        $sc = $this->get('security.authorization_checker');
+
+        if (!$sc->isGranted('IS_AUTHENTICATED_FULLY')) {
+            throw new AccessDeniedException();
+        }
+
+        $this->workspaceManager->addUserAction($workspace, $this->get('security.token_storage')->getToken()->getUser());
+
+        return $this->redirect(
+            $this->generateUrl(
+                'claro_workspace_open', array('workspaceId' => $workspace->getId())
+            )
+        );
+    }
+
+    /**
+     * @EXT\Route(
      *     "/{workspace}/import/partial/form",
      *     name="claro_workspace_partial_import_form"
      * )
