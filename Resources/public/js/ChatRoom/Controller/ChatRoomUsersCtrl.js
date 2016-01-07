@@ -16,49 +16,114 @@
         'XmppMucService',
         function ($scope, $rootScope, XmppMucService) {
             $scope.users = [];
-
-            $scope.addUser = function (username, name, color) {
-                var isPresent = false;
-                for (var i = 0; i < $scope.users.length; i++) {
-                    var currentUsername =  $scope.users[i]['username'];
-
-                    if (username === currentUsername) {
-                        isPresent = true;
-                        break;
-                    }
-                }
-
-                if (!isPresent) {
-                    XmppMucService.addUser({username: username, name: name, color: color});
-                    $scope.users.push({username: username, name: name, color: color});
-                    $scope.$apply();
-                    $rootScope.$broadcast('newPresenceEvent', {username: username, name: name, status: 'connection'});
-                }
+            $scope.bannedUsers = [];
+            
+            $scope.kickUser = function (username) {
+                XmppMucService.kickUser(username);
             };
-
-            $scope.removeUser = function (username) {
-
-                for (var i = 0; i < $scope.users.length; i++) {
-                    var currentUsername =  $scope.users[i]['username'];
-
-                    if (username === currentUsername) {
-                        var currentName = $scope.users[i]['name'];
-                        var currentUsername = $scope.users[i]['username'];
-                        XmppMucService.removeUser(i);
-                        $scope.users.splice(i, 1);
-                        $scope.$apply();
-                        $rootScope.$broadcast('newPresenceEvent', {username: currentUsername, name: currentName, status: 'disconnection'});
-                        break;
-                    }
-                }
+            
+            $scope.muteUser = function (username) {
+                XmppMucService.muteUser(username);
             };
-
-            $scope.$on('userConnectionEvent', function (event, userDatas) {
-                $scope.addUser(userDatas['username'], userDatas['name'], userDatas['color']);
+            
+            $scope.unmuteUser = function (username) {
+                XmppMucService.unmuteUser(username);
+            };
+            
+            $scope.banUser = function (username) {
+                XmppMucService.banUser(username);
+            };
+            
+            $scope.unbanUser = function (username) {
+                XmppMucService.unbanUser(username);
+            };
+            
+//            $scope.addBannedUser = function (username) {
+//                var isPresent = false;
+//                for (var i = 0; i < $scope.bannedUsers.length; i++) {
+//                    var currentUsername =  $scope.bannedUsers[i];
+//
+//                    if (username === currentUsername) {
+//                        isPresent = true;
+//                        break;
+//                    }
+//                }
+//
+//                if (!isPresent) {
+//                    $scope.bannedUsers.push(username);
+//                    $scope.$apply();
+//                }
+//            };
+//
+//            $scope.removeBannedUser = function (username) {
+//
+//                for (var i = 0; i < $scope.bannedUsers.length; i++) {
+//                    var currentUsername =  $scope.bannedUsers[i];
+//
+//                    if (username === currentUsername) {
+//                        $scope.bannedUsers.splice(i, 1);
+//                        $scope.$apply();
+//                        break;
+//                    }
+//                }
+//            };
+            
+            $scope.isAdmin = function () {
+                
+                return XmppMucService.isAdmin();
+            };
+            
+            $scope.isModerator = function () {
+                
+                return XmppMucService.isModerator();
+            };
+            
+            $scope.$on('userMucPresenceUpdateEvent', function () {
+                $scope.users = XmppMucService.getUsers();
+                $scope.$apply();
             });
 
-            $scope.$on('userDisconnectionEvent', function (event, username) {
-                $scope.removeUser(username);
+            $scope.$on('userConnectionEvent', function (event, userDatas) {
+                $scope.users = XmppMucService.getUsers();
+                $scope.$apply();
+            });
+
+            $scope.$on('userDisconnectionEvent', function (event, userDatas) {
+                $scope.users = XmppMucService.getUsers();
+                $scope.$apply();
+                var status = 'disconnection';
+                
+                switch (userDatas['statusCode']) {
+                    case '301':
+                        status = 'banned';
+                        break;
+                    case '307':
+                        status = 'kicked';
+                        break;
+                    default:
+                        status = 'disconnection';
+                }
+                
+                $rootScope.$broadcast(
+                    'newPresenceEvent',
+                    {
+                        username: userDatas['username'], 
+                        name: userDatas['name'], 
+                        status: status
+                    }
+                );
+            });
+
+            $rootScope.$on('xmppMucBanUserEvent', function (event, username) {
+                $scope.bannedUsers = XmppMucService.getBannedUsers();
+                $scope.$apply();
+//                $scope.addBannedUser(username);
+            });
+
+            $rootScope.$on('xmppMucUnbanUserEvent', function (event, username) {
+                $scope.bannedUsers = XmppMucService.getBannedUsers();
+                $scope.$apply();
+//                $scope.removeBannedUser(username);
             });
         }
     ]);

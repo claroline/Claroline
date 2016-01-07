@@ -28,6 +28,23 @@
                     <div class="alert alert-warning">
                         {{ 'chat_room_uninitialized_msg'|trans({}, 'chat') }}
                     </div>
+                    
+                    {% if canChat and canEdit %}
+                        <div id="chat-room-app" ng-cloak="" ng-app="ChatRoomModule">
+                            <chat-room-init chat-room-xmpp-host="{{ xmppHost }}"
+                                            chat-room-xmpp-muc-host="{{ xmppMucHost }}"
+                                            chat-room-bosh-port="{{ boshPort }}"
+                                            chat-room-id="{{ chatRoom.getId() }}"
+                                            chat-room-name="{{ chatRoom.getRoomName() }}"
+                                            chat-room-user-username="{{ chatUser.getChatUsername() }}"
+                                            chat-room-user-password="{{ chatUser.getChatPassword() }}"
+                                            chat-room-user-first-name="{{ chatUser.getUser().getFirstName() }}"
+                                            chat-room-user-last-name="{{ chatUser.getUser().getLastName() }}"
+                                            chat-room-user-color="{{ color }}"
+                            >
+                            </chat-room-init>
+                        </div>
+                    {% endif %}
                 {% elseif chatRoomStatus == constant('Claroline\\ChatBundle\\Entity\\ChatRoom::CLOSED') %}
                     <div class="alert alert-success">
                         {{ 'chat_room_closed_msg'|trans({}, 'chat') }}

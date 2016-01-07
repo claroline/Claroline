@@ -16,6 +16,9 @@
         'XmppService', 
         'XmppMucService',
         function ($scope, $rootScope, XmppService, XmppMucService) {
+            $scope.connected = false;
+            $scope.message = Translator.trans('connecting', {}, 'chat');
+            $scope.messageType = 'info';
             
             $scope.connect = function (
                 server,
@@ -42,10 +45,45 @@
                     color
                 );
             };
+            
             $scope.disconnect = function () {
                 XmppMucService.disconnect();
                 console.log('disconnected');
             };
+            
+            $scope.isConnected = function () {
+                
+                return $scope.connected;
+            };
+            
+            $scope.setMessage = function (message) {
+                $scope.message = message;
+            };
+            
+            $rootScope.$on('xmppMucConnectedEvent', function () {
+                $scope.connected = true;
+                $scope.$apply();
+            });
+            
+            $rootScope.$on('xmppMucForbiddenConnectionEvent', function () {
+                $scope.message = Translator.trans('not_authorized_msg', {}, 'chat');
+                $scope.messageType = 'danger';
+                $scope.$apply();
+            });
+            
+            $rootScope.$on('xmppMucBannedEvent', function () {
+                $scope.connected = false;
+                $scope.message = Translator.trans('banned_msg', {}, 'chat');
+                $scope.messageType = 'danger';
+                $scope.$apply();
+            });
+            
+            $rootScope.$on('xmppMucKickedEvent', function () {
+                $scope.connected = false;
+                $scope.message = Translator.trans('kicked_msg', {}, 'chat');
+                $scope.messageType = 'warning';
+                $scope.$apply();
+            });
         }
     ]);
 })();

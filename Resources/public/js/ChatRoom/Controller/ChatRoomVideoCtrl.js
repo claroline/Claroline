@@ -244,6 +244,7 @@ var myUsername = null;
             }
 
             $rootScope.$on('xmppMucConnectedEvent', function (event) {
+                XmppMucService.getRoomConfiguration();
 //                var connection = XmppService.getConnection();
 //                var roomjid = XmppMucService.getRoom();
 //                var myroomjid = XmppMucService.getRoom() + '/' + XmppService.getUsername();

@@ -17,6 +17,14 @@
                         {{ message['name'] }}
                         {{ 'has_left_the_chat_room'|trans:{}:'chat' }}
                     </span>
+                    <span ng-switch-when="kicked">
+                        {{ message['name'] }}
+                        {{ 'has_been_kicked_from_the_chat_room'|trans:{}:'chat' }}
+                    </span>
+                    <span ng-switch-when="banned">
+                        {{ message['name'] }}
+                        {{ 'has_been_banned_from_the_chat_room'|trans:{}:'chat' }}
+                    </span>
                 </b>
             </div>
         </div>

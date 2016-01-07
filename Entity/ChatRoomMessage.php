@@ -31,7 +31,8 @@ class ChatRoomMessage
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\ChatBundle\Entity\ChatRoom"
+     *     targetEntity="Claroline\ChatBundle\Entity\ChatRoom",
+     *     inversedBy="messages"
      * )
      * @ORM\JoinColumn(name="chat_room_id", onDelete="CASCADE", nullable=false)
      */

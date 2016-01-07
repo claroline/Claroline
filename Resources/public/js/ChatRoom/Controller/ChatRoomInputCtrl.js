@@ -23,6 +23,11 @@
                     $scope.input = '';
                 }
             };
+            
+            $scope.canParticipate = function () {
+                
+                return XmppMucService.canParticipate();
+            };
         }
     ]);     
 })();

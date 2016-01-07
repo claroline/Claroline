@@ -221,6 +221,23 @@ class ChatController extends Controller
         }
     }
 
+    /**
+     * @EXT\Route(
+     *     "/chat/room/{chatRoom}/status/{roomStatus}/edit",
+     *     name="claro_chat_room_status_edit",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function chatRoomStatusEditAction(ChatRoom $chatRoom, $roomStatus)
+    {
+        $this->checkChatRoomRight($chatRoom, 'EDIT');
+        $chatRoom->setRoomStatus($roomStatus);
+        $this->chatManager->persistChatRoom($chatRoom);
+
+        return new JsonResponse('success', 200);
+    }
+
     private function checkChatRoomRight(ChatRoom $chatRoom, $right)
     {
         $collection = new ResourceCollection(array($chatRoom->getResourceNode()));

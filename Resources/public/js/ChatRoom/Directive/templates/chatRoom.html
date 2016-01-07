@@ -1,13 +1,20 @@
 <div id="chat-room-main" ng-controller="ChatRoomXmppCtrl">
-    <div class="row chat-room-row">
-        <div id="chat-room-content-panel" class="col-md-9">
-            <chat-room-messages></chat-room-messages>
+    <div ng-if="isConnected()">
+        <div class="row chat-room-row">
+            <div id="chat-room-content-panel" class="col-md-9">
+                <chat-room-messages></chat-room-messages>
+            </div>
+            <div id="chat-room-users-panel" class="col-md-3 hidden-xs hidden-sm">
+                <chat-room-users></chat-room-users>
+            </div>
         </div>
-        <div id="chat-room-users-panel" class="col-md-3 hidden-xs hidden-sm">
-            <chat-room-users></chat-room-users>
+        <div class="row chat-room-row">
+            <chat-room-input></chat-room-input>
         </div>
     </div>
-    <div class="row chat-room-row">
-        <chat-room-input></chat-room-input>
+    <div ng-if="!isConnected()">
+        <div class="alert alert-{{ messageType }}">
+            {{ message }}
+        </div>
     </div>
 </div>

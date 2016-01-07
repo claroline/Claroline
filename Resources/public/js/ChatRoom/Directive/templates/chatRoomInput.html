@@ -4,9 +4,14 @@
                id="msg-input"
                class="form-control"
                ng-model="input"
+               ng-disabled="!canParticipate()"
         >
         <span class="input-group-btn">
-            <button id="send-msg-btn" class="btn btn-default" ng-click="sendMessage()">
+            <button id="send-msg-btn"
+                    class="btn btn-default"
+                    ng-click="sendMessage()"
+                    ng-disabled="!canParticipate()"
+            >
                 <i class="fa fa-comment"></i>
             </button>
         </span>
