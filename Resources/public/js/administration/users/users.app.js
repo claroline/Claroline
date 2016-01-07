@@ -6,22 +6,16 @@ usersManager.config(function(clarolineSearchProvider) {
 	clarolineSearchProvider.setFieldRoute('api_get_user_searchable_fields');
 });
 
-usersManager.controller('UsersCtrl', function(
-	$scope,
-	$log,
-	$http,
-	$cacheFactory,
-	clarolineSearch
-) {
+usersManager.controller('UsersCtrl', ['$http', 'clarolineSearch', function($http, clarolineSearch) {
 	var translate = function(key) {
 		return translator.trans(key, {}, 'platform');
 	}
 
-	$scope.search = '';
-	$scope.savedSearch = [];
-	$scope.users = [];
+	this.search = '';
+	this.savedSearch = [];
+	this.users = [];
 
-	$scope.columns = [
+	var columns = [
 		{name: translate('username'), prop: "username", isCheckboxColumn: true, headerCheckbox: true},
 		{name: translate('first_name'), prop: "firstName"},
 		{name: translate('last_name'), prop:"lastName"},
@@ -54,7 +48,7 @@ usersManager.controller('UsersCtrl', function(
 		}
 	];
 
-	$scope.dataTableOptions = {
+	this.dataTableOptions = {
 		scrollbarV: false,
  		columnMode: 'force',
         headerHeight: 50,
@@ -62,42 +56,44 @@ usersManager.controller('UsersCtrl', function(
         selectable: true,
         multiSelect: true,
         checkboxSelection: true,
- 		columns: $scope.columns,
+ 		columns: columns,
  		paging: {
  			externalPaging: true,
  			size: 10
  		}
 	};
 
-	$scope.onSearch = function(searches) {
-		$scope.savedSearch = searches;
-		clarolineSearch.find(searches, $scope.dataTableOptions.paging.offset, $scope.dataTableOptions.paging.size).then(function(d) {
-			$scope.users = d.data.users;
-			$scope.dataTableOptions.paging.count = d.data.total;
-		});
-	};
+	this.onSearch = function(searches) {
+		this.savedSearch = searches;
+		clarolineSearch.find(searches, this.dataTableOptions.paging.offset, this.dataTableOptions.paging.size).then(function(d) {
+			this.users = d.data.users;
+			this.dataTableOptions.paging.count = d.data.total;
+		}.bind(this));
+	}.bind(this);
 
-	$scope.paging = function(offset, size) {
-		clarolineSearch.find($scope.savedSearch, offset, size).then(function(d) {
+	this.paging = function(offset, size) {
+		clarolineSearch.find(this.savedSearch, offset, size).then(function(d) {
 			var users = d.data.users;
 
 			//I know it's terrible... but I have no other choice with this table.
 			for (var i = 0; i < offset * size; i++) {
 				users.unshift({});
 			}
-			
-			$scope.users = users;
-			$scope.dataTableOptions.paging.count = d.data.total;
-		});
-	}
-});
+
+			this.users = users;
+			this.dataTableOptions.paging.count = d.data.total;
+		}.bind(this));
+	}.bind(this);
+}]);
 
 usersManager.directive('userlist', [
 	function userlist() {
 		return {
 			restrict: 'E',
 			templateUrl: AngularApp.webDir + 'bundles/clarolinecore/js/administration/users/views/userlist.html',
-			replace: true
+			replace: true,
+			controller: 'UsersCtrl',
+			controllerAs: 'uc'
 		}
 	}
 ]);
@@ -107,7 +103,9 @@ usersManager.directive('usersearch', [
 		return {
 			restrict: 'E',
 			templateUrl: AngularApp.webDir + 'bundles/clarolinecore/js/administration/users/views/usersearch.html',
-			replace: true
+			replace: true,
+			controller: 'UsersCtrl',
+			controllerAs: 'uc'
 		}
 	}
 ]);

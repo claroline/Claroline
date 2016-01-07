@@ -31,11 +31,25 @@ class UserAdminAction
     /**
      * @var string
      *
-     * @ORM\Column(name="name")
+     * @ORM\Column()
      * @Groups({"api"})
-     * @SerializedName("name")
      */
-    protected $name;
+    protected $toolName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column()
+     * @Groups({"api"})
+     */
+    protected $displayedName;
+
+    /**
+     * @ORM\Column()
+     */
+    protected $class;
+
+
 
     public function getId()
     {
@@ -47,13 +61,33 @@ class UserAdminAction
         $this->id = $id;
     }
 
-    public function setName($name)
+    public function setToolName($toolName)
     {
-        $this->name = $name;
+        $this->toolName = $toolName;
     }
 
-    public function getName()
+    public function getToolName()
     {
-        return $this->name;
+        return $this->toolName;
+    }
+
+    public function setDisplayedName($displayedName)
+    {
+        $this->displayedName = $displayedName;
+    }
+
+    public function getDisplayedName()
+    {
+        return $this->displayedName;
+    }
+
+    public function setClass($class)
+    {
+        $this->class = $class;
+    }
+
+    public function getClass()
+    {
+        return $this->class;
     }
 }

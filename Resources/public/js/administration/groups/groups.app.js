@@ -13,7 +13,7 @@ groupsManager.controller('GroupsCtrl', ['$http', 'clarolineSearch', function($ht
 
 	this.search = '';
 	this.savedSearch = [];
-	this.groups = [{name: 'hey'}];
+	this.groups = [];
 
 	var columns = [
 		{name: translate('name'), prop: "name", isCheckboxColumn: true, headerCheckbox: true},
