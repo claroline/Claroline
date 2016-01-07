@@ -319,4 +319,16 @@ class UserController extends FOSRestController
 
         return array('success');
     }
+
+    /**
+     * @View()
+     * @ApiDoc(
+     *     description="Returns the list of actions an admin can do on a user",
+     *     views = {"user"}
+     * )
+     */
+    public function getUserAdminActionsAction()
+    {
+        return $this->om->getRepository('Claroline\CoreBundle\Entity\UserAdminAction')->findAll();
+    }
 }

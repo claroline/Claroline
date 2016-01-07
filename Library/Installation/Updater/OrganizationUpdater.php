@@ -29,6 +29,8 @@ class OrganizationUpdater extends Updater
         if (!$this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findOneByName('organization_management')) {
             $this->createTool();
         }
+
+        $this->container->get('claroline.manager.administration_manager')->addDefaultUserAdminActions();
     }
 
     private function createTool()

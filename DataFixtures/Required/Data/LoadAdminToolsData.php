@@ -49,5 +49,7 @@ class LoadAdminToolsData implements RequiredFixture
         }
 
         $manager->flush();
+
+        $this->container->get('claroline.manager.administration_manager')->addDefaultUserAdminActions();
     }
 }

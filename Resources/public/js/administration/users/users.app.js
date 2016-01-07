@@ -7,9 +7,15 @@ usersManager.config(function(clarolineSearchProvider) {
 });
 
 usersManager.controller('UsersCtrl', ['$http', 'clarolineSearch', function($http, clarolineSearch) {
+	var vm = this;
 	var translate = function(key) {
 		return translator.trans(key, {}, 'platform');
 	}
+
+	this.userActions = [];
+	$http.get(Routing.generate('api_get_user_admin_actions')).then(function(d) {
+		vm.userActions = d.data;
+	}.bind(this));
 
 	this.search = '';
 	this.savedSearch = [];
@@ -23,27 +29,18 @@ usersManager.controller('UsersCtrl', ['$http', 'clarolineSearch', function($http
 		{
 			name: translate('actions'),
 			cellRenderer: function(scope) {
-				var route = Routing.generate('claro_desktop_open', {'_switch': scope.$row.username });
-
-				var showAsLink = "<a class='btn btn-default' href='" + route + "' data-toggle='tooltip' data-placement='bottom' data-original-title='show_as' role='button'>" +
-				"<i class='fa fa-eye'></i>" +
-				"</a>";
-
-				var route = Routing.generate('claro_user_profile_edit', {'user': scope.$row.id});
-
-				var editLink = "<a class='btn btn-default' href='" + route + "' data-toggle='tooltip' data-placement='bottom' title='' data-original-title='edit' role='button'>" +
-					"<i class='fa fa-pencil'></i>" +
-					"</a>"
-
-				var route = Routing.generate('claro_admin_user_workspaces', {'user': scope.$row.id});
-
-				var wsLink = "<a class='btn btn-default' href='" + route + "' data-toggle='tooltip' data-placement='bottom' title='' data-original-title='workspace' role='button'>" +
-					"<i class='fa fa-book'></i>" +
+				var content = "<a class='btn btn-default' href='" +  Routing.generate('claro_desktop_open', {'_switch': scope.$row.username}) + "' data-toggle='tooltip' data-placement='bottom' title='' data-original-title='show_as' role='button'>" +
+					"<i class='fa fa-eye'></i>" +
 					"</a>";
 
-				var actions = showAsLink + editLink + wsLink;
+				for (var i = 0; i < vm.userActions.length; i++) {
+					var route = Routing.generate('admin_user_action', {'user': scope.$row.id, 'action': vm.userActions[i]['tool_name']});
+					content += "<a class='btn btn-default' href='" + route + "'><i class='fa " + vm.userActions[i].class + "'></i></a>";
+				}
 
-				return actions;
+				console.log(content);
+
+				return '<div>' + content + '</div>';
 			}
 		}
 	];

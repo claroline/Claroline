@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Controller\Administration;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\UserAdminAction;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Administration\ProfilePicsImportType;
 use Claroline\CoreBundle\Form\ImportUserType;
@@ -628,5 +629,19 @@ class UsersController extends Controller
         }
 
         return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{user}/admin/{action}",
+     *     name="admin_user_action",
+     *     options={"expose"=true}
+     * )
+     */
+    public function executeAdminAction(User $user, $action)
+    {
+        $event = $this->eventDispatcher->dispatch('admin_user_action_' . $action, 'AdminUserAction', array('user' => $user));
+
+        return $event->getResponse();
     }
 }
