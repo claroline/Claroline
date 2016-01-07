@@ -459,16 +459,6 @@ class UsersController extends Controller
     }
 
     /**
-     * @EXT\Route("/user/workspace/index", name="claro_admin_user_personal_workspace_index"),
-     *
-     * @EXT\Template("ClarolineCoreBundle:Administration/Users:personnalWorkspaceIndex.html.twig")
-     */
-    public function personalWorkspaceIndexAction()
-    {
-        return array();
-    }
-
-    /**
      * @EXT\Route(
      *     "/workspace/personal/tool/config",
      *     name="claro_admin_workspace_tool_config_index"

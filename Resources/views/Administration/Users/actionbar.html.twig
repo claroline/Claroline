@@ -7,7 +7,12 @@
     <ul class="dropdown-menu">
         <li><a href="{{ path('claro_admin_users_index') }}"> {{ 'list'|trans({}, 'platform') }}</a></li>
         <li><a href="{{ path('claro_admin_user_creation_form') }}"> {{ 'create'|trans({}, 'platform') }} </a></li>
-        <li><a href="{{ path('claro_admin_import_users_form') }}"> {{ 'import'|trans({}, 'platform') }} </a></li>
+        <li><a href="{{ path('claro_admin_import_users_form') }}"> {{ 'users_import'|trans({}, 'platform') }} </a></li>
+        <li role="separator" class="divider"></li>
+        <li><a href="{{ path('import_profile_pics_form') }}">{{ 'import_profile_pics'|trans({}, 'platform') }}</a></li>
+        <li><a href="{{ path('claro_admin_workspace_tool_config_index') }}">{{ 'personal_workspace_tools_management'|trans({}, 'platform') }}</a></li>
+        <li><a href="{{ path('claro_admin_personal_workspace_resource_rights') }}">{{ 'claro_admin_personal_workspace_resource_rights'|trans({}, 'platform') }}</a></li>
+        <li role="separator" class="divider"></li>
         <li><a href="{{ path('claro_admin_export_users', {'format': 'xls'}) }}"> {{ 'excel_export'|trans({}, 'platform') }} </a></li>
         <li><a href="{{ path('claro_admin_export_users', {'format': 'csv'}) }}"> {{ 'csv_export'|trans({}, 'platform') }} </a></li>
     </ul>

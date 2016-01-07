@@ -1219,3 +1219,4 @@ allow_authentication: Allow authentication
 user_subscription_notification_for_admin: subscribed to the workspace %workspace%
 filter_by: Filter by
 loading: Loading
+user_list: User list

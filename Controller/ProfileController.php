@@ -207,7 +207,6 @@ class ProfileController extends Controller
         $isGrantedUserAdmin = $this->get('security.authorization_checker')->isGranted(
             'OPEN', $this->toolManager->getAdminToolByName('user_management')
         );
-        $editYourself = false;
 
         if (null !== $user && !$isAdmin && !$isGrantedUserAdmin) {
             throw new AccessDeniedException();
@@ -215,8 +214,9 @@ class ProfileController extends Controller
 
         if (null === $user) {
             $user = $loggedUser;
-            $editYourself = true;
         }
+
+        $editYourself = $user->getId() === $loggedUser->getId();
         $userRole = $this->roleManager->getUserRoleByUser($user);
         $roles = $this->roleManager->getPlatformRoles($user);
         $accesses = $this->profilePropertyManager->getAccessesForCurrentUser();

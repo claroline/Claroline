@@ -12,7 +12,7 @@
             },
             {
                 'name': 'users_management'|trans({}, 'platform'),
-                'href': path('claro_admin_users_management')
+                'href': path('claro_admin_users_index')
             },
             {
                 'name':'create_group'|trans({}, 'platform'),
@@ -31,7 +31,7 @@
         </div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-            <a href="{{ path('claro_admin_users_management') }}" class="btn btn-default" role="button">
+            <a href="{{ path('claro_admin_users_index') }}" class="btn btn-default" role="button">
                 {{ 'cancel'|trans({}, 'platform') }}
             </a>
         </div>

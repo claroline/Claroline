@@ -447,7 +447,7 @@ id_col: 'Colonne des identifiants'
 identical_group_name: 'Nom de groupe identique'
 identical_role_name: 'Nom de rôle identique'
 import: Importer
-import_profile_pics: 'Importer des profils d''utilisateurs'
+import_profile_pics: 'Importer des photos d''utilisateurs'
 import_profile_pics_explanation: 'Veuillez sélectionner une archive zip. Cette archive doit contenir une liste d''images dont les noms sont structurés de cette manière: identifiant.extension'
 import_roles: 'Importer des rôles'
 import_user_file_file: 'Importer depuis fichier csv'
