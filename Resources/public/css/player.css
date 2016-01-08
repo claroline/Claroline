@@ -58,8 +58,9 @@ input.form-control {
 }
 
 .sharedSpacesTable {
-    table-layout: fixed;
-    word-wrap: break-word;
+/* #179 : mise en commentaire car le responsive ne fonctionne pas avec le ... fixed. InnovaERV. */
+/* table-layout: fixed; */
+     word-wrap: break-word;
 }
 
 .nameColumn {
