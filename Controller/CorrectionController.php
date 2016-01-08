@@ -2149,24 +2149,26 @@ class CorrectionController extends DropzoneBaseController
             // Par le JS, le document est transmis sous la forme "document_id_XX"
             $docIdS = explode("_", $documentId);
             $docId = $docIdS[2];
-            $arrayDocsToView[] = $docId;
 
-            $dropId = $arrayDropsId[$cpt];
-            $drop = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Drop')->find($dropId);
-            $arrayDropsToView[] = $dropId;
+            if ($docId > 0) {
+                $arrayDocsToView[] = $docId;
 
-            $correction = new Correction();
-            $correction->setUser($user);
-            $correction->setDropzone($dropzone);
-            $correction->setDrop($drop);
-            //Allow admins to edit this correction
-            $correction->setEditable(true);;
-            $em->persist($correction);
-            $em->flush();
+                $dropId = $arrayDropsId[$cpt];
+                $drop = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Drop')->find($dropId);
+                $arrayDropsToView[] = $dropId;
 
-            $event = new LogCorrectionStartEvent($dropzone, $drop, $correction);
-            $this->dispatch($event);
+                $correction = new Correction();
+                $correction->setUser($user);
+                $correction->setDropzone($dropzone);
+                $correction->setDrop($drop);
+                //Allow admins to edit this correction
+                $correction->setEditable(true);;
+                $em->persist($correction);
+                $em->flush();
 
+                $event = new LogCorrectionStartEvent($dropzone, $drop, $correction);
+                $this->dispatch($event);
+            }
             $cpt++;
         }
 

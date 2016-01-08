@@ -38,8 +38,10 @@ $(document).ready(function () {
 
         $("input[type='checkbox']:checked").each(
             function() {
-                arrayDocsId.push($(this).attr('id'));
-                arrayDropsId.push($(this).attr("data-drop_id"));
+                if ($(this).attr('id') !== "document_id_0") {
+                    arrayDocsId.push($(this).attr('id'));
+                    arrayDropsId.push($(this).attr("data-drop_id"));
+                }
             });          
 
         $.ajax({
@@ -54,13 +56,11 @@ $(document).ready(function () {
                 arrayDropsId: arrayDropsId
             },
             complete : function(data) {
-//                alert(JSON.stringify(data.responseText));
-                    var data = $.parseJSON(data.responseText)
+                    var data_link = $.parseJSON(data.responseText)
 //                    var resource = data[0];
 
-                if (data !== 'false') {
-                    console.log(" data.link : " + data.link);
-                    document.location.href=data.link;
+                if (data_link !== 'false') {
+                    document.location.href=data_link.link;
                 }
             }
         });
@@ -75,8 +75,6 @@ $(document).ready(function () {
       // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
       // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
       var modal = $(this);
-      alert("ici1 validate-modal");
-      alert(documentId);
       modal.find('#modal_confirm').attr("data-document_id", documentId); //TODO change this to use data() instead of attr()
       //documentId
       //
