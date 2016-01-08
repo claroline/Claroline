@@ -209,8 +209,8 @@ class ExerciseController
      * @return JsonResponse
      */
     public function papersAction(User $user, Exercise $exercise)
-    {
-        if($this->isAdmin($exercise)){
+    {        
+        if($this->isAdmin($exercise)){          
             return new JsonResponse($this->paperManager->exportExercisePapers($exercise));
         }
         return new JsonResponse($this->paperManager->exportUserPapers($exercise, $user));

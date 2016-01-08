@@ -48,7 +48,10 @@
                                 var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService submit answer error';
                                 var code = data && data.error && data.error.code ? data.error.code : 403;
                                 var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});
-                                $window.location = url;
+                                console.log('error');
+                                console.log(data);
+                                console.log(status);
+                                // $window.location = url;
                             });
                     return deferred.promise;
                 },
