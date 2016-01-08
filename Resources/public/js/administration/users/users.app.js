@@ -1,4 +1,4 @@
-var usersManager = angular.module('usersManager', ['genericSearch', 'data-table']);
+var usersManager = angular.module('usersManager', ['genericSearch', 'data-table', 'ui.bootstrap.tpls']);
 var translator = window.Translator;
 
 usersManager.config(function(clarolineSearchProvider) {
@@ -20,6 +20,7 @@ usersManager.controller('UsersCtrl', ['$http', 'clarolineSearch', function($http
 	this.search = '';
 	this.savedSearch = [];
 	this.users = [];
+	this.selected = [];
 
 	var columns = [
 		{name: translate('username'), prop: "username", isCheckboxColumn: true, headerCheckbox: true},
@@ -29,16 +30,18 @@ usersManager.controller('UsersCtrl', ['$http', 'clarolineSearch', function($http
 		{
 			name: translate('actions'),
 			cellRenderer: function(scope) {
-				var content = "<a class='btn btn-default' href='" +  Routing.generate('claro_desktop_open', {'_switch': scope.$row.username}) + "' data-toggle='tooltip' data-placement='bottom' title='' data-original-title='show_as' role='button'>" +
+				var tr = translate('show_as');
+				var content = "<a class='btn btn-default' href='" + Routing.generate('claro_desktop_open', {'_switch': scope.$row.username}) + "' data-toggle='tooltip' data-placement='bottom' title='' data-original-title='" + tr + "' role='button'>" +
 					"<i class='fa fa-eye'></i>" +
 					"</a>";
 
 				for (var i = 0; i < vm.userActions.length; i++) {
-					var route = Routing.generate('admin_user_action', {'user': scope.$row.id, 'action': vm.userActions[i]['tool_name']});
+					var route = Routing.generate('admin_user_action', {
+						'user': scope.$row.id,
+						'action': vm.userActions[i]['tool_name']
+					});
 					content += "<a class='btn btn-default' href='" + route + "'><i class='fa " + vm.userActions[i].class + "'></i></a>";
 				}
-
-				console.log(content);
 
 				return '<div>' + content + '</div>';
 			}
@@ -81,10 +84,16 @@ usersManager.controller('UsersCtrl', ['$http', 'clarolineSearch', function($http
 			this.dataTableOptions.paging.count = d.data.total;
 		}.bind(this));
 	}.bind(this);
+
+	this.clickDelete = function() {
+		alert('gotcha');
+		console.log(this.selected);
+		clarolineAPI.confirm();
+	}
 }]);
 
-usersManager.directive('userlist', [
-	function userlist() {
+usersManager.directive('userList', [
+	function userList() {
 		return {
 			restrict: 'E',
 			templateUrl: AngularApp.webDir + 'bundles/clarolinecore/js/administration/users/views/userlist.html',
@@ -95,11 +104,23 @@ usersManager.directive('userlist', [
 	}
 ]);
 
-usersManager.directive('usersearch', [
-	function usersearch() {
+usersManager.directive('userSearch', [
+	function userSearch() {
 		return {
 			restrict: 'E',
 			templateUrl: AngularApp.webDir + 'bundles/clarolinecore/js/administration/users/views/usersearch.html',
+			replace: true,
+			controller: 'UsersCtrl',
+			controllerAs: 'uc'
+		}
+	}
+]);
+
+usersManager.directive('userActions', [
+	function userActions() {
+		return {
+			restrict: 'E',
+			templateUrl: AngularApp.webDir + 'bundles/clarolinecore/js/administration/users/views/useractions.html',
 			replace: true,
 			controller: 'UsersCtrl',
 			controllerAs: 'uc'

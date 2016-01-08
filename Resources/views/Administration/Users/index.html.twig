@@ -27,10 +27,9 @@
         <div class="panel-body" ng-controller="UsersCtrl">
             {% include 'ClarolineCoreBundle:Administration:Users\\actionbar.html.twig' %}
             <h1>{{ 'user_list'|trans({}, 'platform') }}</h1>
-            <usersearch>
-            </usersearch>
-            <userlist>
-            </userlist>
+            <user-actions></user-actions>
+            <user-search></user-search>
+            <user-list></user-list>
         </div>
     </div>
 
@@ -45,6 +44,9 @@
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('vendor/angular/angular.js')}}"> </script>
     <script type="text/javascript" src="{{ asset('vendor/angular/angular-ui.js')}}"> </script>
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/angular/services/api.services.js') }}></script>
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/angular/services/menu.services.js') }}></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/angular-bootstrap/ui-bootstrap-tpls.js') }}"> </script>
 
     {# Set some vars needed by Angular parts #}
     <script type="text/javascript">

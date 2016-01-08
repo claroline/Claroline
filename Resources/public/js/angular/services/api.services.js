@@ -80,6 +80,9 @@ clarolineAPI.factory('clarolineAPI', function($http, $httpParamSerializerJQLike)
             }
 
             return elements;
+        },
+        confirm: function(title, content, url, callback) {
+            alert('show modal and confirm');
         }
     }
 });
