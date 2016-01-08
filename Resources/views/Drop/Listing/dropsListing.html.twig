@@ -1,18 +1,6 @@
 <form class="form-horizontal" method="GET" 
 action="{{ path('innova_collecticiel_return_receipt')}}">
 
-<div class="btn-group">
-    <button type="submit" class="btn btn-primary btn-sm"
-    data-toggle="modal" data-target="#validate-modal-return-receipt" data-dropzone_id="{{ dropzone.id }}">
-        {{ 'Return receipt'|trans({}, 'innova_collecticiel') }}
-    </button>
-</div>
-<div class="btn-group">
-    <button type="submit" class="btn btn-primary btn-sm comment_validate"
-    id="dropzone_id_{{dropzone.id}}" name="dropzoneId" data-dropzone_id="{{ dropzone.id }}">
-        {{ 'Comment Auto'|trans({}, 'innova_collecticiel') }}
-    </button>
-</div>
 
 {# 
     <a href="{{ path('innova_collecticiel_add_more_comments', {'resourceId': dropzone.id}) }}"
@@ -98,6 +86,16 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
         {# Demande JJQ. InnovaERV
             {{ 'Selection'|trans({}, 'innova_collecticiel') }}
         #}
+            <div class="btn-group-vertical">
+                <button type="submit" class="btn btn-primary btn-xs comment_validate"
+                id="dropzone_id_{{dropzone.id}}" name="dropzoneId" data-dropzone_id="{{ dropzone.id }}">
+                    {{ 'Comment Auto'|trans({}, 'innova_collecticiel') }}
+                </button>
+                <button type="submit" class="btn btn-primary btn-xs"
+                data-toggle="modal" data-target="#validate-modal-return-receipt" data-dropzone_id="{{ dropzone.id }}">
+                    {{ 'Return receipt'|trans({}, 'innova_collecticiel') }}
+                </button>
+            </div><br />
             <input id="document_id_0" data-dropzone-select_id={{ dropzone.id }} type="checkbox" name="documentId" data-document_id="0" class="btn btn-danger btn-sm" />
         </th>
     {% endif %}
