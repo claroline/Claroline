@@ -1,0 +1,36 @@
+<div class="row">
+    <div class="col-md-12">
+        <h4>{{question.title}}</h4>
+        <hr/>
+        <div class="row">
+            <div class="col-md-12">
+                <div data-ng-bind-html="question.invite | unsafe"></div>   
+            </div>
+        </div>
+        <hr/>
+        <div class="row" data-ng-if="openQuestionCtrl.question.description">
+            <div class="col-md-12">
+             {{question.description}}
+            </div>
+        <hr/>
+        </div>
+        <textarea data-ng-if="openQuestionCtrl.question.typeOpen !== 'oneWord'" data-ng-change="openQuestionCtrl.updateStudentData()" data-ng-model="openQuestionCtrl.answer" data-ng-bind="openQuestionCtrl.answer" id="openTextArea" ></textarea>
+        <input type="text" data-ng-if="openQuestionCtrl.question.typeOpen === 'oneWord'" data-ng-change="openQuestionCtrl.updateStudentData()" data-ng-model="openQuestionCtrl.answer" data-ng-bind="openQuestionCtrl.answer" id="openTextArea" />
+        <div data-ng-if="openQuestionCtrl.question.hints">
+            <hr/>
+            <!-- Question hints row -->
+            <div class="form-inline">
+                <div class="form-group">
+                    <div data-ng-repeat="hint in openQuestionCtrl.question.hints" style="margin-bottom: 10px;">                        
+                        <div data-ng-if="!openQuestionCtrl.hintIsUsed(hint.id)">
+                            <button type="button" role="button" class="btn btn-default fa fa-eye" title="{{ 'question_hint_show_title'|trans:{}:'ujm_sequence' }}" data-ng-click="openQuestionCtrl.showHint(hint.id)" id="hint-{{hint.id}}"> {{ 'question_hint_label'|trans:{}:'ujm_sequence' }} {{$index + 1}}</button>
+                        </div>
+                    </div>
+                    <div data-ng-repeat="used in openQuestionCtrl.usedHints" id="visible-hints">
+                        <h4>{{used}}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

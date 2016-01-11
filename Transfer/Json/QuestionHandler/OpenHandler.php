@@ -4,17 +4,16 @@ namespace UJM\ExoBundle\Transfer\Json\QuestionHandler;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use UJM\ExoBundle\Entity\Hole;
-use UJM\ExoBundle\Entity\InteractionHole;
+use UJM\ExoBundle\Entity\InteractionOpen;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
 
 /**
- * @DI\Service("ujm.exo.hole_handler")
+ * @DI\Service("ujm.exo.open_handler")
  * @DI\Tag("ujm.exo.question_handler")
  */
-class HoleHandler implements QuestionHandlerInterface
+class OpenHandler implements QuestionHandlerInterface
 {
     private $om;
 
@@ -35,7 +34,7 @@ class HoleHandler implements QuestionHandlerInterface
      */
     public function getQuestionMimeType()
     {
-        return 'application/x.cloze+json';
+        return 'application/x.short+json';
     }
 
     /**
@@ -43,7 +42,7 @@ class HoleHandler implements QuestionHandlerInterface
      */
     public function getInteractionType()
     {
-        return InteractionHole::TYPE;
+        return InteractionOpen::TYPE;
     }
 
     /**
@@ -51,7 +50,7 @@ class HoleHandler implements QuestionHandlerInterface
      */
     public function getJsonSchemaUri()
     {
-        return 'http://json-quiz.github.io/json-quiz/schemas/question/cloze/schema.json';
+        return 'http://json-quiz.github.io/json-quiz/schemas/question/short/schema.json';
     }
 
     /**
@@ -103,7 +102,7 @@ class HoleHandler implements QuestionHandlerInterface
      */
     public function persistInteractionDetails(Question $question, \stdClass $importData)
     {
-        $interaction = new InteractionHole();
+        $interaction = new InteractionOpen();
 
         for ($i = 0, $max = count($importData->holes); $i < $max; ++$i) {
             // temporary limitation
@@ -131,29 +130,24 @@ class HoleHandler implements QuestionHandlerInterface
      */
     public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true)
     {
-        $repo = $this->om->getRepository('UJMExoBundle:InteractionHole');
-        $holeQuestion = $repo->findOneBy(['question' => $question]);
-        $holes = $holeQuestion->getHoles()->toArray();
-        $text = $holeQuestion->getHtmlWithoutValue();
+        $repo = $this->om->getRepository('UJMExoBundle:InteractionOpen');
+        $openQuestion = $repo->findOneBy(['question' => $question]);
 
-        $exportData->text = $text;
         if ($withSolution) {
-            $exportData->solution = $holeQuestion->getHtml();
+            $responses = $openQuestion->getWordResponses();
+            
+            $exportData->solutions = array_map(function ($wr) {
+                $responseData = new \stdClass();
+                $responseData->id = (string) $wr->getId();
+                $responseData->word = $wr->getResponse();
+                $responseData->caseSensitive = $wr->getCaseSensitive();
+                $responseData->score = $wr->getScore();
+                $responseData->feedback = $wr->getFeedback();
+                return $responseData;
+            }, $responses->toArray());
         }
-        $exportData->holes = array_map(function ($hole) {
-            $holeData = new \stdClass();
-            $holeData->id = (string) $hole->getId();
-            $holeData->type = 'text/html';
-            $holeData->wordResponses = array_map(function ($wr) {
-                $wrData = new \stdClass();
-                $wrData->id = (string) $wr->getId();
-                $wrData->response = (string) $wr->getResponse();
-                $wrData->score = $wr->getScore();
-                return $wrData;
-            }, $hole->getWordResponses()->toArray());
-
-            return $holeData;
-        }, $holes);
+        
+        $exportData->typeOpen = $openQuestion->getTypeOpenQuestion()->getValue();
         
         return $exportData;
     }
@@ -163,11 +157,13 @@ class HoleHandler implements QuestionHandlerInterface
      */
     public function convertAnswerDetails(Response $response)
     {
-        $parts = explode(';', $response->getResponse());
+    /*    $parts = explode(';', $response->getResponse());
 
         return array_filter($parts, function ($part) {
             return $part !== '';
         });
+        */
+        return $response->getResponse();
     }
 
     /**
@@ -175,30 +171,19 @@ class HoleHandler implements QuestionHandlerInterface
      */
     public function validateAnswerFormat(Question $question, $data)
     {
-        if (!is_array($data)) {
+        /*if (!is_array($data)) {
             return ['Answer data must be an array, ' . gettype($data) . ' given'];
+        }*/
+        
+        if (!is_string($data)) {
+            return ['Answer data must be an string, ' . gettype($data) . ' given'];
         }
+        
         $count = 0;
 
         if (0 === $count = count($data)) {
             return ['Answer data cannot be empty'];
         }
-/*
-        $interaction = $this->om->getRepository('UJMExoBundle:InteractionHole')
-            ->findOneByQuestion($question);
-        $holeIds = array_map(function ($hole) {
-            return (string) $hole->getId();
-        }, $interaction->getHoles()->toArray());
-
-        foreach ($data as $id) {
-            if (!is_string($id)) {
-                return ['Answer array must contain only string identifiers'];
-            }
-
-            if (!in_array($id, $holeIds)) {
-                return ['Answer array identifiers must reference question choices'];
-            }
-        }*/
 
         return [];
     }
@@ -210,48 +195,23 @@ class HoleHandler implements QuestionHandlerInterface
      */
     public function storeAnswerAndMark(Question $question, Response $response, $data)
     {
-        $interaction = $this->om->getRepository('UJMExoBundle:InteractionHole')
+        
+        $interaction = $this->om->getRepository('UJMExoBundle:InteractionOpen')
             ->findOneByQuestion($question);
 
-    /*    if (!$interaction->getWeightResponse()) {
-            throw new \Exception('Global score not implemented yet');
-        }*/
-
         $mark = 0;
-
-        foreach ($interaction->getHoles() as $hole) {
-            foreach ($hole->getWordResponses() as $wd) {
-                if (in_array((string) $wd->getResponse(), $data)) {
-                    $mark += $wd->getScore();
-                }
+        
+        $answer = $data;
+        
+        echo $answer;
+        
+        foreach ($interaction->getWordResponses() as $wd) {
+            if (strpos($answer,$wd->getResponse())) {
+                $mark += $wd->getScore();
             }
         }
         
-        $answers = "[";
-        $i=1;
-        $length = count($data);
-        foreach ($data as $answer) {/*
-            $answer = [ "id" => $answer["id"], "answer" => $answer["answer"]];
-            array_push($answers, $answer);
-            */
-            $answers .= "{\"id\":\"" . $answer["id"] . "\",\"answer\":\"" . $answer["answer"] . "\"}";
-            
-            if ($i === $length) {
-                $answers .= "]";
-            }
-            else {
-                $answers .= ",";
-            }
-            
-            $i++;
-        }
-
-        if ($mark < 0) {
-            $mark = 0;
-        }
-        
-    //    $response->setResponse(json_encode($answers));
-        $response->setResponse($answers);
+        $response->setResponse($answer);
         $response->setMark($mark);
     }
 }

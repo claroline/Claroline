@@ -5,8 +5,15 @@ btn_prev_step_label: Go to previous step
 btn_next_step_label: Go to next step
 btn_validate_step: Valider l'étape
 
+# c
+case_sensitive: Case sensitive
+comment: Comment
+
 # d
 dropdown_step_navigate_choice_label: Step N°%1% / %2%
+
+# k
+keys_words: Keys words
 
 # l
 link_exercice_home: Exercise home
@@ -16,6 +23,9 @@ link_exercise_docimology: Docimology
 link_csv_export: CSV export
 label_exercise_score: Global score
 label_exercise_correction: Correction
+
+# n
+need_correction: This answer needs a correction
 
 # p
 paper_list: Paper list
@@ -42,6 +52,8 @@ paper_details_table_comment: Comment
 paper_details_paper_score: Global score
 paper_details_question_score: Question score
 paper_details_correction_label: Correction
+
+points: Points
 
 # q
 question_hints: Hints
