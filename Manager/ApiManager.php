@@ -142,6 +142,22 @@ class ApiManager
         return $response;
     }
 
+    public function getParameters($name, $class)
+    {
+        $request = $this->container->get('request');
+        $data = $entities = array();
+
+        if ($request->request->has($name)) $data = $request->request->get($name);
+        if ($request->query->has($name)) $data = $request->query->get($name);
+
+        foreach ($data as $id) {
+
+            $entities[] = $this->om->getRepository($class)->find((int)$id);
+        }
+
+        return $entities;
+    }
+
     private function validateUrl($url)
     {
 

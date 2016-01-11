@@ -229,44 +229,6 @@ class UsersController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/",
-     *     name="claro_admin_multidelete_user",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Method("DELETE")
-     * @EXT\ParamConverter(
-     *     "users",
-     *      class="ClarolineCoreBundle:User",
-     *      options={"multipleIds" = true}
-     * )
-     *
-     * Removes many users from the platform.
-     *
-     * @param User[] $users
-     *
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function deleteAction(array $users)
-    {
-        $this->container->get('claroline.persistence.object_manager')->startFlushSuite();
-
-        foreach ($users as $user) {
-            if (!$this->authorization->isGranted('ROLE_ADMIN') && $user->hasRole('ROLE_ADMIN')) {
-                throw new AccessDeniedException();
-            }
-
-            $this->userManager->deleteUser($user);
-            $this->eventDispatcher->dispatch('log', 'Log\LogUserDelete', array($user));
-        }
-
-        $this->container->get('claroline.persistence.object_manager')->endFlushSuite();
-
-        return new Response('user(s) removed', 204);
-    }
-
-    /**
-     * @EXT\Route(
      *     "/index",
      *     name="claro_admin_users_index",
      *     options = {"expose"=true}

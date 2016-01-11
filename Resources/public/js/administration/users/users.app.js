@@ -1,4 +1,4 @@
-var usersManager = angular.module('usersManager', ['genericSearch', 'data-table', 'ui.bootstrap.tpls']);
+var usersManager = angular.module('usersManager', ['genericSearch', 'data-table', 'ui.bootstrap.tpls', 'clarolineAPI']);
 var translator = window.Translator;
 
 usersManager.config(function(clarolineSearchProvider) {
@@ -6,10 +6,39 @@ usersManager.config(function(clarolineSearchProvider) {
 	clarolineSearchProvider.setFieldRoute('api_get_user_searchable_fields');
 });
 
-usersManager.controller('UsersCtrl', ['$http', 'clarolineSearch', function($http, clarolineSearch) {
+usersManager.controller('UsersCtrl', ['$http', 'clarolineSearch', 'clarolineAPI', function(
+	$http,
+	clarolineSearch,
+	clarolineAPI
+) {
 	var vm = this;
+
 	var translate = function(key) {
 		return translator.trans(key, {}, 'platform');
+	}
+
+	var generateQsForSelected = function() {
+		var qs = '';
+
+		for (var i = 0; i < this.selected.length; i++) {
+			qs += 'userIds[]=' + this.selected[i].id + '&';
+		}
+
+		return qs;
+
+	}.bind(this);
+
+	var deleteCallback = function(data) {
+		clarolineAPI.removeElements(this.selected, this.users);
+		this.selected.splice(0, this.selected.length);
+		this.alerts.push({
+			type: 'success',
+			msg: translate('user_removed_success_message')
+		});0
+	}.bind(this);
+
+	var initPwdCallback = function(data) {
+		alert('yeah !!');
 	}
 
 	this.userActions = [];
@@ -21,6 +50,7 @@ usersManager.controller('UsersCtrl', ['$http', 'clarolineSearch', function($http
 	this.savedSearch = [];
 	this.users = [];
 	this.selected = [];
+	this.alerts = [];
 
 	var columns = [
 		{name: translate('username'), prop: "username", isCheckboxColumn: true, headerCheckbox: true},
@@ -86,10 +116,34 @@ usersManager.controller('UsersCtrl', ['$http', 'clarolineSearch', function($http
 	}.bind(this);
 
 	this.clickDelete = function() {
-		alert('gotcha');
-		console.log(this.selected);
-		clarolineAPI.confirm();
+		var url = Routing.generate('api_delete_users') + '?' + generateQsForSelected();
+
+		clarolineAPI.confirm(
+			{url: url, method: 'DELETE'},
+			deleteCallback,
+			translate('delete_users'),
+			translate('delete_users_confirm')
+		);
+	};
+
+	this.initPassword = function() {
+		var url = Routing.generate('api_users_password_initialize') + '?' + generateQsForSelected();
+
+		clarolineAPI.confirm(
+			{url: url, method: 'GET'},
+			initPwdCallback,
+			translate('init_password'),
+			translate('init_password_confirm')
+		);
 	}
+
+	this.addAlert = function() {
+		this.alerts.push({msg: 'Another alert!'});
+	}.bind(this);
+
+	this.closeAlert = function(index) {
+		this.alerts.splice(index, 1);
+	}.bind(this);
 }]);
 
 usersManager.directive('userList', [

@@ -16,8 +16,10 @@ use FOS\RestBundle\Controller\Annotations\View;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\ProfileCreationType;
 use Claroline\CoreBundle\Form\ProfileType;
+use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\GroupManager;
@@ -45,6 +47,7 @@ class UserController extends FOSRestController
      * @DI\InjectParams({
      *     "authenticationManager"  = @DI\Inject("claroline.common.authentication_manager"),
      *     "formFactory"            = @DI\Inject("form.factory"),
+     *     "eventDispatcher"        = @DI\Inject("claroline.event.event_dispatcher"),
      *     "localeManager"          = @DI\Inject("claroline.common.locale_manager"),
      *     "request"                = @DI\Inject("request"),
      *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
@@ -53,11 +56,13 @@ class UserController extends FOSRestController
      *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
      *     "profilePropertyManager" = @DI\Inject("claroline.manager.profile_property_manager"),
      *     "facetManager"           = @DI\Inject("claroline.manager.facet_manager"),
-     *     "mailManager"            = @DI\Inject("claroline.manager.mail_manager")  
+     *     "mailManager"            = @DI\Inject("claroline.manager.mail_manager"),
+     *     "apiManager"             = @DI\Inject("claroline.manager.api_manager")
      * })
      */
     public function __construct(
         AuthenticationManager $authenticationManager,
+        StrictDispatcher $eventDispatcher,
         FormFactory $formFactory,
         LocaleManager $localeManager,
         Request $request,
@@ -67,10 +72,12 @@ class UserController extends FOSRestController
         ObjectManager $om,
         FacetManager $facetManager,
         ProfilePropertyManager $profilePropertyManager,
-        MailManager $mailManager
+        MailManager $mailManager,
+        ApiManager $apiManager
     )
     {
         $this->authenticationManager  = $authenticationManager;
+        $this->eventDispatcher        = $eventDispatcher;
         $this->formFactory            = $formFactory;
         $this->localeManager          = $localeManager;
         $this->request                = $request;
@@ -84,6 +91,7 @@ class UserController extends FOSRestController
         $this->groupRepo              = $om->getRepository('ClarolineCoreBundle:Group');
         $this->profilePropertyManager = $profilePropertyManager;
         $this->mailManager            = $mailManager;
+        $this->apiManager             = $apiManager;
     }
 
     /**
@@ -261,6 +269,28 @@ class UserController extends FOSRestController
     }
 
     /**
+     * @EXT\ParamConverter(
+     *     "users",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"multipleIds" = true}
+     * )
+     */
+    public function deleteUsersAction()
+    {
+        $users = $this->apiManager->getParameters('userIds', 'Claroline\CoreBundle\Entity\User');
+        $this->container->get('claroline.persistence.object_manager')->startFlushSuite();
+
+        foreach ($users as $user) {
+            $this->userManager->deleteUser($user);
+            $this->eventDispatcher->dispatch('log', 'Log\LogUserDelete', array($user));
+        }
+
+        $this->container->get('claroline.persistence.object_manager')->endFlushSuite();
+
+        return array('success');
+    }
+
+    /**
      * @View()
      * @ApiDoc(
      *     description="Add a role to a user",
@@ -331,4 +361,23 @@ class UserController extends FOSRestController
     {
         return $this->om->getRepository('Claroline\CoreBundle\Entity\UserAdminAction')->findAll();
     }
+
+    /**
+     * @View()
+     * @ApiDoc(
+     *     description="Send the password initialization message for a user.",
+     *     views = {"user"}
+     * )
+     */
+    public function usersPasswordInitializeAction()
+    {
+        $users = $this->apiManager->getParameters('userIds', 'Claroline\CoreBundle\Entity\User');
+
+        foreach ($users as $user) {
+            $this->mailManager->sendForgotPassword($user);
+        }
+
+        return array('success');
+    }
+
 }

@@ -1,4 +1,5 @@
-var clarolineAPI = angular.module('clarolineAPI', []);
+var clarolineAPI = angular.module('clarolineAPI', ['ui.bootstrap', 'ui.bootstrap.tpls']);
+var modal = window.Claroline.Modal;
 
 clarolineAPI.config(function ($httpProvider) {
     $httpProvider.interceptors.push(function ($q) {
@@ -27,7 +28,7 @@ clarolineAPI.config(function ($httpProvider) {
     });
 });
 
-clarolineAPI.factory('clarolineAPI', function($http, $httpParamSerializerJQLike) {
+clarolineAPI.factory('clarolineAPI', function($http, $httpParamSerializerJQLike, $uibModal) {
     return {
         formEncode: function(formName, parameters) {
             var data = new FormData();
@@ -81,8 +82,49 @@ clarolineAPI.factory('clarolineAPI', function($http, $httpParamSerializerJQLike)
 
             return elements;
         },
-        confirm: function(title, content, url, callback) {
-            alert('show modal and confirm');
+        removeElements: function(toRemove, elements) {
+            var idxs = [];
+            console.log(toRemove);
+
+            for (var i = 0; i < toRemove.length; i++) {
+                idxs.push(elements.indexOf(toRemove[i]));
+            }
+
+            for (var i = 0; i < idxs.length; i++) {
+                elements.splice(idxs[i] - i, 1);
+                console.log('splice');
+            }
+
+            return elements;
+        },
+        confirm: function(urlObject, callback, title, content) {
+            $uibModal.open({
+                templateUrl: AngularApp.webDir + 'bundles/clarolinecore/js/angular/services/views/confirm_modal.html',
+                controller: 'ConfirmModalController',
+                resolve: {
+                    callback: function() {return callback;},
+                    urlObject: function() {return urlObject;},
+                    title: function() {return title;},
+                    content: function() {return content}
+                }
+            });
         }
+    }
+});
+
+clarolineAPI.controller('ConfirmModalController', function(callback, urlObject, title, content, $http, $scope, $uibModalStack) {
+    $scope.title = title;
+    $scope.content = content;
+    $scope.submit = function() {
+        $http(urlObject).then(
+            function successHandler(d) {
+                callback(d.data);
+                $uibModalStack.dismissAll();
+            },
+            function errorHandler (d) {
+                alert('An error occured');
+                $uibModalStack.dismissAll();
+            }
+        );
     }
 });

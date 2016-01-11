@@ -220,9 +220,10 @@ class UserManager
      */
     public function deleteUser(User $user)
     {
+        /* When the api will identify a user, please uncomment this
         if ($this->container->get('security.token_storage')->getToken()->getUser()->getId() === $user->getId()) {
             throw new \Exception('A user cannot delete himself');
-        }
+        }*/
         $userRole = $this->roleManager->getUserRoleByUser($user);
 
         //soft delete~
