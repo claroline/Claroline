@@ -47,8 +47,12 @@
             };
             
             $scope.disconnect = function () {
-                XmppMucService.disconnect();
-                console.log('disconnected');
+                console.log('disconnecting...');
+                
+                if ($scope.connected) {
+                    XmppMucService.disconnect();
+                    console.log('disconnected');
+                }
             };
             
             $scope.isConnected = function () {

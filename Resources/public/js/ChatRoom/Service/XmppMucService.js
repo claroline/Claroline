@@ -292,7 +292,10 @@
                             status: 'disconnection'
                         }
                     );
-                    $http.post(route);
+                    $.ajax({
+                        url: route,
+                        type: 'POST'
+                    });
                 },
                 sendMessageToRoom: function (message) {
                     XmppService.getConnection().send(

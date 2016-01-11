@@ -10,7 +10,7 @@
 var RTC = null;
 var ice_config = {
     iceServers: [
-        {url: 'stun:23.21.150.121'},
+//        {url: 'stun:23.21.150.121'},
         {url: 'stun:stun.l.google.com:19302'}
     ]
 };
