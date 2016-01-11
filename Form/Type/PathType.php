@@ -20,6 +20,7 @@ class PathType extends AbstractPathType
             )
         );
     }
+
     public function getName()
     {
         return 'innova_path';

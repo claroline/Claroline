@@ -2,59 +2,94 @@
 
 namespace Innova\PathBundle\EventListener;
 
+use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
-use Claroline\CoreBundle\Listener\NoHttpRequestException;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Innova\PathBundle\Form\Type\PathWidgetConfigType;
+use Innova\PathBundle\Manager\PathManager;
+use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\Form\FormFactoryInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
+ * Manages Path widgets
  * @DI\Service()
  */
 class PathWidgetListener
 {
-    private $request;
-    private $httpKernel;
+    /**
+     * @var \Symfony\Bundle\TwigBundle\TwigEngine
+     */
+    private $twig;
+
+    /**
+     * @var \Claroline\CoreBundle\Form\Factory\FormFactory
+     */
+    private $formFactory;
+
+    /**
+     * @var \Innova\PathBundle\Manager\PathManager
+     */
+    private $pathManager;
 
     /**
      * @DI\InjectParams({
-     *     "requestStack"   = @DI\Inject("request_stack"),
-     *     "httpKernel"     = @DI\Inject("http_kernel")
+     *     "twig"           = @DI\Inject("templating"),
+     *     "formFactory"    = @DI\Inject("form.factory"),
+     *     "pathManager"    = @DI\Inject("innova_path.manager.path")
      * })
      */
-    public function __construct(RequestStack $requestStack, HttpKernelInterface $httpKernel)
+    public function __construct(
+        TwigEngine           $twig,
+        FormFactoryInterface $formFactory,
+        PathManager          $pathManager)
     {
-        $this->request = $requestStack->getCurrentRequest();
-        $this->httpKernel = $httpKernel;
+        $this->twig        = $twig;
+        $this->formFactory = $formFactory;
+        $this->pathManager = $pathManager;
     }
 
     /**
      * @DI\Observe("widget_innova_path_widget")
      *
      * @param DisplayWidgetEvent $event
-     * @throws \Claroline\CoreBundle\Listener\NoHttpRequestException
      */
     public function onDisplay(DisplayWidgetEvent $event)
     {
-        if (!$this->request) {
-            throw new NoHttpRequestException();
-        }
-
         $widgetInstance = $event->getInstance();
         $workspace = $widgetInstance->getWorkspace();
-        $params = array();
 
-        if (is_null($workspace)) {
-            $params['_controller'] = 'InnovaPathBundle:Widget\MyPaths:pathsDesktopWidget';
-        } else {
-            $params['_controller'] = 'InnovaPathBundle:Widget\MyPaths:pathsWorkspaceWidget';
-            $params['workspaceId'] = $workspace->getId();
-        }
+        $config = $this->pathManager->getWidgetConfig($widgetInstance);
 
-        $subRequest = $this->request->duplicate(array(), null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $content = $this->twig->render('InnovaPathBundle:Widget:list.html.twig', array (
+            'workspace' => $workspace,
+            'isDesktop' => $widgetInstance->isDesktop(),
+            'paths'     => $this->pathManager->getWidgetPaths($config, $workspace),
+        ));
 
-        $event->setContent($response->getContent());
+        $event->setContent($content);
+        $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("widget_innova_path_widget_configuration")
+     *
+     * @param ConfigureWidgetEvent $event
+     */
+    public function onConfigure(ConfigureWidgetEvent $event)
+    {
+        $instance = $event->getInstance();
+        $config = $this->pathManager->getWidgetConfig($instance);
+
+        $form    = $this->formFactory->create(new PathWidgetConfigType(), $config);
+        $content = $this->twig->render(
+            'InnovaPathBundle:Widget:config.html.twig',
+            array(
+                'form'     => $form->createView(),
+                'instance' => $instance,
+            )
+        );
+
+        $event->setContent($content);
         $event->stopPropagation();
     }
 }

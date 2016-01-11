@@ -1,0 +1,48 @@
+<div class="row" style="margin-top: -15px; margin-bottom: -15px;">
+    <table class="table table-striped" style="margin-bottom: 0;">
+        <thead>
+            <tr>
+                <th scope="col">Status</th>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for path in paths %}
+            <tr>
+                {# Status of the Path #}
+                <td>
+                    {% if not path.entity.published %}
+                    <span class="text-danger">[{{ 'draft'|trans({}, 'path_wizards') }}]</span>
+                    {% elseif path.entity.published and not path.entity.modified %}
+                    <span class="text-success">[{{ 'published'|trans({}, 'path_wizards') }}]</span>
+                    {% elseif path.entity.published and path.entity.modified %}
+                    <span class="text-warning">[{{ 'published'|trans({}, 'path_wizards') }} {{ 'modified'|trans({}, 'path_wizards') }}]</span>
+                    {% endif %}
+                </td>
+
+                <td>
+                    <a href="{{ path('innova_path_player_wizard', { id: path.entity.id }) }}">
+                        {{ path.entity.resourceNode.name }}
+                    </a>
+                </td>
+
+                <td>
+                    <em>{{ path.entity.description | striptags | truncate(40, true, ' [...]') }}</em>
+                </td>
+
+                <td>
+                    {% if path.canEdit %}
+                    <a href="{{ path('innova_path_editor_wizard', { id: path.entity.id}) }}" class="btn btn-default btn-xs">
+                        <span class="fa fa-pencil"></span>
+                        {{ 'edit'|trans({}, 'innova_tools') }}
+                    </a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

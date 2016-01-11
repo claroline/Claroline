@@ -3,8 +3,11 @@ services:
     innova_path.controller.path:
         class: %innova_path.controller.path.class%
         arguments:
-            pathManager:       @innova_path.manager.path
-            publishingManager: @innova_path.manager.publishing
+            om:                   @doctrine.orm.entity_manager
+            formFactory:          @form.factory
+            authorizationChecker: @security.authorization_checker
+            pathManager:          @innova_path.manager.path
+            publishingManager:    @innova_path.manager.publishing
         scope: request
 
     # Path template controller

@@ -6,10 +6,11 @@ use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\ResourceQueryBuilder;
 use Doctrine\ORM\QueryBuilder;
+use Innova\PathBundle\Entity\PathWidgetConfig;
 
 class PathRepository extends EntityRepository
 {
-    public function findAccessibleByUser(array $roots = array(), array $userRoles)
+    public function findWidgetPaths(array $userRoles, array $roots = array(), PathWidgetConfig $config = null)
     {
         $builder = new ResourceQueryBuilder();
 
@@ -21,6 +22,32 @@ class PathRepository extends EntityRepository
 
         $builder->whereTypeIn(array('innova_path'));
         $builder->whereRoleIn($userRoles);
+
+        // Add widget filters
+        $statusList = $config->getStatus();
+        if (!empty($statusList)) {
+            $whereStatus = array ();
+            foreach ($statusList as $status) {
+                switch ($status) {
+                    case 'draft':
+                        $whereStatus[] = 'published = 0';
+                        break;
+
+                    case 'published':
+                        $whereStatus[] = 'published = 1';
+                        break;
+
+                    case 'modified':
+                        $whereStatus[] = '(published = 1 AND modified = 1)';
+                        break;
+                }
+            }
+
+            if (!empty($whereStatus)) {
+                $builder->where('(' . implode($whereStatus, ' OR ') . ')');
+            }
+        }
+
         $builder->orderByName();
 
         $dql = $builder->getDql();

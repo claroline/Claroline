@@ -3,8 +3,10 @@
 namespace Innova\PathBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Doctrine\Common\Persistence\ObjectManager;
+use Innova\PathBundle\Entity\PathWidgetConfig;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -112,30 +114,23 @@ class PathManager
     }
 
     /**
-     * Get all Paths of the Platform
-     * @param bool $toPublish If false, returns all paths, if true returns only paths which need publishing
+     * Get widget configuration
+     * @param WidgetInstance $config
+     * @return PathWidgetConfig
      */
-    public function getPlatformPaths($toPublish = false)
+    public function getWidgetConfig(WidgetInstance $config = null)
     {
-        return $this->om->getRepository('InnovaPathBundle:Path\Path')->findPlatformPaths($toPublish);
+        return $this->om->getRepository('InnovaPathBundle:PathWidgetConfig')
+            ->findOneBy(array('widgetInstance' => $config));
     }
 
     /**
-     * Get all Paths of a Workspace
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param bool $toPublish If false, returns all paths, if true returns only paths which need publishing
-     */
-    public function getWorkspacePaths(Workspace $workspace, $toPublish = false)
-    {
-        return $this->om->getRepository('InnovaPathBundle:Path\Path')->findWorkspacePaths($workspace, $toPublish);
-    }
-
-    /**
-     * Find accessible Paths
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * Get the list of Paths for Widgets
+     * @param PathWidgetConfig $config
+     * @param Workspace $workspace
      * @return array
      */
-    public function findAccessibleByUser(Workspace $workspace = null)
+    public function getWidgetPaths(PathWidgetConfig $config = null, Workspace $workspace = null)
     {
         $roots = array ();
         if (!empty($workspace)) {
@@ -146,7 +141,7 @@ class PathManager
         $token = $this->securityToken->getToken();
         $userRoles = $this->utils->getRoles($token);
 
-        $entities = $this->om->getRepository('InnovaPathBundle:Path\Path')->findAccessibleByUser($roots, $userRoles);
+        $entities = $this->om->getRepository('InnovaPathBundle:Path\Path')->findWidgetPaths($userRoles, $roots, $config);
 
         // Check edit and delete access for paths
         $paths = array ();
@@ -154,7 +149,6 @@ class PathManager
             $paths[] = array (
                 'entity'    => $entity,
                 'canEdit'   => $this->isAllow('EDIT', $entity),
-                'canDelete' => $this->isAllow('DELETE', $entity),
             );
         }
 
