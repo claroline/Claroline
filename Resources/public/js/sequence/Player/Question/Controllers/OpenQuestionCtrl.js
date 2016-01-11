@@ -35,9 +35,6 @@
                     }
                 }
                 
-                console.log("current question paper data");
-                console.log(this.currentQuestionPaperData);
-                
                 this.answer = this.currentQuestionPaperData.answer;
             };
 
