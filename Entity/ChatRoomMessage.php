@@ -14,7 +14,7 @@ namespace Claroline\ChatBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\ChatBundle\Repository\ChatRoomMessageRepository")
  * @ORM\Table(name="claro_chatbundle_room_message")
  */
 class ChatRoomMessage
@@ -42,6 +42,11 @@ class ChatRoomMessage
      * @ORM\Column(name="username", nullable=false)
      */
     protected $username;
+
+    /**
+     * @ORM\Column(name="user_full_name", nullable=false)
+     */
+    protected $userFullName;
 
     /**
      * @ORM\Column(name="content", nullable=true)
@@ -86,6 +91,16 @@ class ChatRoomMessage
     public function setUsername($username)
     {
         $this->username = $username;
+    }
+
+    public function getUserFullName()
+    {
+        return $this->userFullName;
+    }
+
+    public function setUserFullName($userFullName)
+    {
+        $this->userFullName = $userFullName;
     }
 
     public function getCreationDate()

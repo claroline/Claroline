@@ -15,8 +15,8 @@ var ice_config = {
     ]
 };
 var RTCPeerconnection = null;
-//var AUTOACCEPT = true;
-//var PRANSWER = false; // use either pranswer or autoaccept
+var AUTOACCEPT = true;
+var PRANSWER = false; // use either pranswer or autoaccept
 //var RAWLOGGING = true;
 //var MULTIPARTY = true;
 //var localStream = null;
@@ -93,6 +93,9 @@ var myUsername = null;
                 var sess = connection.jingle.sessions[sid];
                 sess.sendAnswer();
                 sess.accept();
+                $scope.addStream(sid);
+                console.log('+++++++++ OTHER STREAM ++++++++++');
+                console.log(sid);
 
                 // alternatively...
                 //sess.terminate(busy)
@@ -158,9 +161,11 @@ var myUsername = null;
             }
             
             function onCallActive(event, videoelem, sid) {
-                setStatus('call active ' + sid);
+                console.log('+++++++++++ CALL ACTIVE +++++++++++ ' + sid);
+//                setStatus('call active ' + sid);
 //                videoelem[0].style.display = 'inline-block';
-                $(videoelem).appendTo('#participant-stream-' + sid);
+//                $(videoelem).appendTo('#participant-stream-' + sid);
+                $(videoelem).appendTo('#participants-video-container');
 //                arrangeVideos('#participants-video-container >');
                 connection.jingle.sessions[sid].getStats(1000);
             }
@@ -223,13 +228,13 @@ var myUsername = null;
 //                    $('#participants-video-container #participant-video-' + sid).remove();
                 }
                 // works like charm, unfortunately only in chrome and FF nightly, not FF22 beta
-                /*
-                if (sess.peerconnection.signalingState == 'stable' && sess.peerconnection.iceConnectionState == 'connected') {
-                    var el = $("<video autoplay='autoplay' style='display:none'/>").attr('id', 'largevideo_' + sid);
-                    $(document).trigger('callactive.jingle', [el, sid]);
-                    RTC.attachMediaStream(el, sess.remoteStream); // moving this before the trigger doesn't work in FF?!
-                }
-                */
+//                
+//                if (sess.peerconnection.signalingState == 'stable' && sess.peerconnection.iceConnectionState == 'connected') {
+//                    var el = $("<video autoplay='autoplay' style='display:none'/>").attr('id', 'largevideo_' + sid);
+//                    $(document).trigger('callactive.jingle', [el, sid]);
+//                    RTC.attachMediaStream(el, sess.remoteStream); // moving this before the trigger doesn't work in FF?!
+//                }
+//                
             }
 
             function noStunCandidates(event) {
@@ -237,22 +242,18 @@ var myUsername = null;
                 console.warn('webrtc did not encounter stun candidates, NAT traversal will not work');
             }
             
-            function connectToPeers() {
-                var connectedUsers = XmppMucService.getUsers();
-                console.log('Connected users');
-                console.log(connectedUsers);
-            }
+//            function connectToPeers() {
+//                var connectedUsers = XmppMucService.getUsers();
+//                console.log('Connected users');
+//                console.log(connectedUsers);
+//            }
 
             $rootScope.$on('xmppMucConnectedEvent', function (event) {
-                XmppMucService.getRoomConfiguration();
-//                var connection = XmppService.getConnection();
-//                var roomjid = XmppMucService.getRoom();
-//                var myroomjid = XmppMucService.getRoom() + '/' + XmppService.getUsername();
                 connection = XmppService.getConnection();
                 roomjid = XmppMucService.getRoom();
                 myUsername = XmppService.getUsername();
                 
-                connectToPeers();
+//                connectToPeers();
                 
                 RTC = setupRTC();
                 getUserMediaWithConstraints(['audio', 'video']);
@@ -284,7 +285,7 @@ var myUsername = null;
                 RTCPeerconnection = RTC.peerconnection;
             });
             
-            $scope.$on('myPresenceConfirmationEvent', function () {
+            $rootScope.$on('myPresenceConfirmationEvent', function () {
                 var allUsers = XmppMucService.getUsers();
                 
                 for (var i = 0; i < allUsers.length; i++) {
@@ -297,6 +298,8 @@ var myUsername = null;
                         
                         if (session['sid']) {
                             $scope.addStream(session['sid']);
+                            console.log('+++++++++ MY STREAM ++++++++++');
+                            console.log(session['sid']);
                         }
                     }
                 }

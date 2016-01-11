@@ -38,36 +38,6 @@
                 XmppMucService.unbanUser(username);
             };
             
-//            $scope.addBannedUser = function (username) {
-//                var isPresent = false;
-//                for (var i = 0; i < $scope.bannedUsers.length; i++) {
-//                    var currentUsername =  $scope.bannedUsers[i];
-//
-//                    if (username === currentUsername) {
-//                        isPresent = true;
-//                        break;
-//                    }
-//                }
-//
-//                if (!isPresent) {
-//                    $scope.bannedUsers.push(username);
-//                    $scope.$apply();
-//                }
-//            };
-//
-//            $scope.removeBannedUser = function (username) {
-//
-//                for (var i = 0; i < $scope.bannedUsers.length; i++) {
-//                    var currentUsername =  $scope.bannedUsers[i];
-//
-//                    if (username === currentUsername) {
-//                        $scope.bannedUsers.splice(i, 1);
-//                        $scope.$apply();
-//                        break;
-//                    }
-//                }
-//            };
-            
             $scope.isAdmin = function () {
                 
                 return XmppMucService.isAdmin();
@@ -117,13 +87,11 @@
             $rootScope.$on('xmppMucBanUserEvent', function (event, username) {
                 $scope.bannedUsers = XmppMucService.getBannedUsers();
                 $scope.$apply();
-//                $scope.addBannedUser(username);
             });
 
             $rootScope.$on('xmppMucUnbanUserEvent', function (event, username) {
                 $scope.bannedUsers = XmppMucService.getBannedUsers();
                 $scope.$apply();
-//                $scope.removeBannedUser(username);
             });
         }
     ]);

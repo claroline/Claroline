@@ -1,0 +1,100 @@
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% set _resource = chatRoom %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ chatRoom.getResourceNode().getName() }}
+            [{{ 'archives'|trans({}, 'chat') }}]
+
+            {% if canEdit %}
+                <i class="fa fa-cogs pointer-hand pull-right"
+                   id="chat-room-archives-configuration-btn"
+                   data-chat-room-id="{{ chatRoom.getId() }}"
+                   data-toggle="tooltip"
+                   data-placement="left"
+                   title="{{ 'configuration'|trans({}, 'platform') }}"
+                >
+                </i>
+            {% endif %}
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div id="chat-room-content-archives-panel" class="col-md-9">
+            <div id="chat-content-archives" class="well well-sm">
+                {% for day, messages in messagesDatas %}
+                    <h3>
+                        {{ day }}
+                    </h3>
+                    
+                    {% for message in messages %}
+                        {% set type = message.getType() %}
+                        {% set content = message.getContent() %}
+                        {% set userFullName = message.getUserFullName() %}
+                        {% set creationDate = message.getCreationDate() %}
+
+                        ({{ creationDate|date("H:i:s") }})
+
+                        {% if type == constant('Claroline\\ChatBundle\\Entity\\ChatRoomMessage::MESSAGE') %}
+                            <b>
+                                {{ userFullName }}
+                            </b> :
+                            {{ content|raw }}
+                            <br>
+                        {% elseif type == constant('Claroline\\ChatBundle\\Entity\\ChatRoomMessage::PRESENCE') %}
+                            <b>
+                                {{ userFullName }}
+
+                                {% if content == 'connection' %}
+                                    {{ 'has_joined_the_chat_room'|trans({}, 'chat') }}
+                                {% elseif content == 'disconnection' %}
+                                    {{ 'has_left_the_chat_room'|trans({}, 'chat') }}
+                                {% elseif content == 'kicked' %}
+                                    {{ 'has_been_kicked_from_the_chat_room'|trans({}, 'chat') }}
+                                {% elseif content == 'banned' %}
+                                    {{ 'has_been_banned_from_the_chat_room'|trans({}, 'chat') }}
+                                {% endif %}
+                            </b>
+                            <br>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+        <div id="chat-room-users-list-archives-panel" class="col-md-3">
+            <div id="chat-room-users-list-archives" class="well well-sm">
+                <h4 class="text-center">
+                    {{ 'users'|trans({}, 'platform') }}
+                    <span class="badge">{{ users|length }}</span>
+                </h4>
+                
+                {% for user in users %}
+                    {{ user['userFullName'] }}
+                    <br>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript"
+            src="{{ url('bazinga_jstranslation_js', { 'domain': 'chat' }) }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/chatRoomArchives.js') }}"
+    >
+    </script>
+    
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet"
+          href="{{ asset('bundles/clarolinechat/css/chatRoomArchives.css') }}"
+          type="text/css"
+    />
+{% endblock %}

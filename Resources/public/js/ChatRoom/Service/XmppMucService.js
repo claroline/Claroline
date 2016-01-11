@@ -12,8 +12,9 @@
 
     angular.module('ChatRoomModule').factory('XmppMucService', [
         '$rootScope', 
+        '$http',
         'XmppService',
-        function ($rootScope, XmppService) {
+        function ($rootScope, $http, XmppService) {
             var room = null;
             var roomId = null;
             var roomName = null;
@@ -38,18 +39,24 @@
                         body = $(message).find('body').text();
                     }
                     var datas = $(message).find('datas');
-                    var firstName = datas.attr('firstName');
-                    var lastName = datas.attr('lastName');
-                    var color = datas.attr('color');
-                    color = (color === undefined) ? null : color;
+                    var status = datas.attr('status');
+                    
+                    if (status === 'closed') {
+                        $rootScope.$broadcast('closedRoomEvent');
+                    } else {
+                        var firstName = datas.attr('firstName');
+                        var lastName = datas.attr('lastName');
+                        var color = datas.attr('color');
+                        color = (color === undefined) ? null : color;
 
-                    var sender = (firstName !== undefined && lastName !== undefined) ?
-                        firstName + ' ' + lastName :
-                        Strophe.getResourceFromJid(from);
-                    $rootScope.$broadcast(
-                        'newMessageEvent', 
-                        {sender: sender, message: body, color: color}
-                    );
+                        var sender = (firstName !== undefined && lastName !== undefined) ?
+                            firstName + ' ' + lastName :
+                            Strophe.getResourceFromJid(from);
+                        $rootScope.$broadcast(
+                            'newMessageEvent', 
+                            {sender: sender, message: body, color: color}
+                        );
+                    }
                 }
 
                 return true;
@@ -98,25 +105,44 @@
                             $rootScope.$broadcast('xmppMucConnectedEvent');
                             $rootScope.$broadcast('myPresenceConfirmationEvent');
 
-                            $.ajax({
-                                url: Routing.generate(
-                                    'claro_chat_room_presence_register',
-                                    {
-                                        chatRoom: roomId, 
-                                        username: XmppService.getUsername(), 
-                                        status: 'connection'
-                                    }
-                                ),
-                                type: 'POST'
-                            });
+                            var route = Routing.generate(
+                                'claro_chat_room_presence_register',
+                                {
+                                    chatRoom: roomId, 
+                                    username: XmppService.getUsername(),
+                                    fullName: XmppService.getFullName(),
+                                    status: 'connection'
+                                }
+                            );
+                            $http.post(route);
                             
                             if (vm.isAdmin()) {
                                 vm.requestOutcastList();
                             }
                         } else if (statusCode === '301') {
                             $rootScope.$broadcast('xmppMucBannedEvent');
+                            var route = Routing.generate(
+                                'claro_chat_room_presence_register',
+                                {
+                                    chatRoom: roomId, 
+                                    username: XmppService.getUsername(), 
+                                    fullName: XmppService.getFullName(),
+                                    status: 'banned'
+                                }
+                            );
+                            $http.post(route);
                         } else if (statusCode === '307') {
                             $rootScope.$broadcast('xmppMucKickedEvent');
+                            var route = Routing.generate(
+                                'claro_chat_room_presence_register',
+                                {
+                                    chatRoom: roomId, 
+                                    username: XmppService.getUsername(), 
+                                    fullName: XmppService.getFullName(),
+                                    status: 'kicked'
+                                }
+                            );
+                            $http.post(route);
                         }
                     }
                     
@@ -257,17 +283,16 @@
                     connection.flush();
                     connection.disconnect();
         
-                    $.ajax({
-                        url: Routing.generate(
-                            'claro_chat_room_presence_register',
-                            {
-                                chatRoom: roomId, 
-                                username: XmppService.getUsername(), 
-                                status: 'disconnection'
-                            }
-                        ),
-                        type: 'POST'
-                    });
+                    var route = Routing.generate(
+                        'claro_chat_room_presence_register',
+                        {
+                            chatRoom: roomId, 
+                            username: XmppService.getUsername(), 
+                            fullName: XmppService.getFullName(),
+                            status: 'disconnection'
+                        }
+                    );
+                    $http.post(route);
                 },
                 sendMessageToRoom: function (message) {
                     XmppService.getConnection().send(
@@ -286,17 +311,16 @@
                         )
                     );
 
-                    $.ajax({
-                        url: Routing.generate(
-                            'claro_chat_room_message_register',
-                            {
-                                chatRoom: roomId, 
-                                username: XmppService.getUsername(), 
-                                message: message
-                            }
-                        ),
-                        type: 'POST'
-                    });
+                    var route = Routing.generate(
+                        'claro_chat_room_message_register',
+                        {
+                            chatRoom: roomId, 
+                            username: XmppService.getUsername(),
+                            fullName: XmppService.getFullName(),
+                            message: message
+                        }
+                    );
+                    $http.post(route);
                 },
                 getRoomConfiguration: function () {
                     var iq = $iq({
@@ -348,7 +372,6 @@
                         users.push({username: username, name: name, color: color, affiliation: affiliation, role: role});
                         $rootScope.$broadcast('newPresenceEvent', {username: username, name: name, status: 'connection'});
                     }
-//                    $rootScope.$broadcast('userMucPresenceUpdateEvent');
                     $rootScope.$broadcast(
                         'userConnectionEvent', 
                         {username: username, name: name, color: color, affiliation: affiliation, role: role}
@@ -363,7 +386,6 @@
                             var currentName = users[i]['name'];
                             var currentUsername = users[i]['username'];
                             users.splice(i, 1);
-//                            $rootScope.$broadcast('userMucPresenceUpdateEvent');
                             $rootScope.$broadcast(
                                 'userDisconnectionEvent',
                                 {
