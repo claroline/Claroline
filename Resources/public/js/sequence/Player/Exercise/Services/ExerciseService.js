@@ -21,7 +21,9 @@
                         deferred.resolve(response);
                     }).error(function(data, status){
                         deferred.reject([]);
-                        var url = Routing.generate('ujm_sequence_error', {message:data.error.message, code:data.error.code});
+                        var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService get exercise error';
+                        var code = data && data.error && data.error.code ? data.error.code : 403;
+                        var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});
                         $window.location = url;
                     });
                     return deferred.promise;
@@ -43,7 +45,9 @@
                             })
                             .error(function (data, status) {
                                 deferred.reject([]);
-                                var url = Routing.generate('ujm_sequence_error', {message:data.error.message, code:data.error.code});
+                                var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService submit answer error';
+                                var code = data && data.error && data.error.code ? data.error.code : 403;
+                                var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});
                                 $window.location = url;
                             });
                     return deferred.promise;
@@ -67,7 +71,9 @@
                             })
                             .error(function (data, status) {
                                 deferred.reject([]);
-                                var url = Routing.generate('ujm_sequence_error', {message:data.error.message, code:data.error.code});
+                                var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService end sequence error';
+                                var code = data && data.error && data.error.code ? data.error.code : 403;
+                                var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});
                                 $window.location = url;
                             });
                     return deferred.promise;

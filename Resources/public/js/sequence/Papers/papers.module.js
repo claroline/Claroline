@@ -66,6 +66,21 @@
     };
 
     var resolvePaperListData = {
+        /**
+         * Get the paper details
+         */
+        papersPromise: [
+            '$route',
+            'PapersService',
+            function getPapers($route, PapersService) {
+
+                var promise = null;
+                if ($route.current.params && $route.current.params.eid) {
+                    promise = PapersService.getAll($route.current.params.eid);
+                }
+                return promise;
+            }
+        ],
         paperExercise: [
             '$route',
             'PapersService',
@@ -134,7 +149,9 @@
                 return function (date) {
                     var searched = new RegExp('-', 'g');
                     var localDate = new Date(Date.parse(date.replace(searched, '/')));
-                    return localDate.toLocaleString();
+                    //return localDate.toLocaleString();
+                    //return localDate.toLocaleFormat();
+                    return localDate.toString();
                 };
             });
 })();

@@ -277,7 +277,7 @@ class PaperManager
         ];
 
         $questions = array_map(function ($question) {
-            return $this->questionManager->exportQuestion($question, true);
+            return $this->questionManager->exportQuestion($question, true, true);
         }, $questionRepo->findByExercise($exercise));
 
         return [
@@ -326,7 +326,7 @@ class PaperManager
         }, $papers);
 
         $questions = array_map(function ($question) {
-            return $this->questionManager->exportQuestion($question, true);
+            return $this->questionManager->exportQuestion($question, true, true);
         }, $questionRepo->findByExercise($exercise));
 
         return [

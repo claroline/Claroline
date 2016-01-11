@@ -8,23 +8,26 @@
         'paperExercise',
         'PapersService',
         'user',
-        function ($route, $filter, CommonService, paperExercise, PapersService, user) {
+        'papersPromise',
+        function ($route, $filter, CommonService, paperExercise, PapersService, user, papersPromise) {
 
-            this.papers = {};//paperList.papers;
-            this.questions = {};//paperList.questions;
+            this.papers = papersPromise.papers;
+            this.questions = papersPromise.questions;
             this.exercise = paperExercise;
             this.user = user;
             this.displayRetryExerciseLink = false;
 
             // table data
-            this.filtered = {};//this.papers;
+            this.filtered = this.papers;
             this.query = '';
             this.showPagination = true;
+            
+           
 
 
-            // initiate paper list depending on user profil
-            if ($route.current.params && $route.current.params.eid) {
-                var promise = PapersService.getAll($route.current.params.eid, user);
+            // initiate paper list
+           /* if ($route.current.params && $route.current.params.eid) {
+                var promise = PapersService.getAll($route.current.params.eid);
                 promise.then(function (result) {
                     this.papers = result.papers;
                     this.questions = result.questions;
@@ -32,7 +35,7 @@
                     this.setTableData();
                     this.showHideRetryLink();
                 }.bind(this));
-            }
+            }*/
 
 
             // table config
@@ -138,15 +141,15 @@
                 for (var i = 0; i < this.filtered.length; i++) {
                     // set scores in paper object and in the same time format end date
                     if (this.filtered[i].end) { // TODO check score availability
-                        this.filtered[i].endDate = $filter('mySqlDateToLocalDate')(this.filtered[i].end);// $filter('toLocalDate')(this.filtered[i].end);// d.toLocaleString();
+                        //this.filtered[i].endDate = $filter('mySqlDateToLocalDate')(this.filtered[i].end);// $filter('toLocalDate')(this.filtered[i].end);// d.toLocaleString();
                         this.filtered[i].score = CommonService.getPaperScore(this.filtered[i], this.questions) + '/20';
                     }
                     else {
-                        this.filtered[i].endDate = '-';
+                        this.filtered[i].end = '-';
                         this.filtered[i].score = '-';
                     }
                     // format start date
-                    this.filtered[i].startDate = $filter('mySqlDateToLocalDate')(this.filtered[i].start);
+                    //this.filtered[i].startDate = $filter('mySqlDateToLocalDate')(this.filtered[i].start);
 
                     // set interrupt property in a human readable way
                     if (this.filtered[i].interrupted) {
@@ -156,6 +159,9 @@
                     }
                 }
             };
+            
+            this.setTableData();
+            this.showHideRetryLink();
         }
     ]);
 })();

@@ -106,8 +106,10 @@
                                 deferred.resolve(response);
                             })
                             .error(function(data, status){
-                                 deferred.reject([]);    
-                                var url = Routing.generate('ujm_sequence_error', {message: data.error.message, code: data.error.code});
+                                deferred.reject([]);
+                                var msg = data && data.error && data.error.message ? data.error.message : 'Common count finished error';
+                                var code = data && data.error && data.error.code ? data.error.code : 403;
+                                var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});
                                 $window.location = url;
                             });
                     return deferred.promise;
