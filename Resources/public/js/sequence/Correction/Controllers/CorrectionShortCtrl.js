@@ -20,7 +20,7 @@
                 
                 for (var i=0; i<this.paper.questions.length; i++) {
                     if (question.id.toString() === this.paper.questions[i].id) {
-                        this.answer = this.paper.questions[i].answer[0];
+                        this.answer = this.paper.questions[i].answer;
                     }
                 }
             };

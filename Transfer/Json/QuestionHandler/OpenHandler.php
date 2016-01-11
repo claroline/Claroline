@@ -157,26 +157,33 @@ class OpenHandler implements QuestionHandlerInterface
      */
     public function convertAnswerDetails(Response $response)
     {
-        $parts = explode(';', $response->getResponse());
+    /*    $parts = explode(';', $response->getResponse());
 
         return array_filter($parts, function ($part) {
             return $part !== '';
         });
+        */
+        return $response->getResponse();
     }
 
     /**
      * {@inheritdoc}
      */
     public function validateAnswerFormat(Question $question, $data)
-    {/*
-        if (!is_array($data)) {
+    {
+        /*if (!is_array($data)) {
             return ['Answer data must be an array, ' . gettype($data) . ' given'];
+        }*/
+        
+        if (!is_string($data)) {
+            return ['Answer data must be an string, ' . gettype($data) . ' given'];
         }
+        
         $count = 0;
 
         if (0 === $count = count($data)) {
             return ['Answer data cannot be empty'];
-        }*/
+        }
 
         return [];
     }
@@ -194,13 +201,17 @@ class OpenHandler implements QuestionHandlerInterface
 
         $mark = 0;
         
+        $answer = $data;
+        
+        echo $answer;
+        
         foreach ($interaction->getWordResponses() as $wd) {
-            if (strpos($data,$wd->getResponse())) {
+            if (strpos($answer,$wd->getResponse())) {
                 $mark += $wd->getScore();
             }
         }
         
-        $response->setResponse($data);
+        $response->setResponse($answer);
         $response->setMark($mark);
     }
 }

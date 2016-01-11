@@ -34,6 +34,11 @@
                         this.getHintData(this.currentQuestionPaperData.hints[i]);
                     }
                 }
+                
+                console.log("current question paper data");
+                console.log(this.currentQuestionPaperData);
+                
+                this.answer = this.currentQuestionPaperData.answer;
             };
 
             /**
@@ -83,30 +88,12 @@
              * We need to share those informations with parent controllers
              * For that purpose we use a shared service
              */
-            this.updateStudentData = function (choiceId) {
-                if (this.question.multiple) {
-                    if (this.multipleChoice[choiceId]) {
-                        this.currentQuestionPaperData.answer.push(choiceId);
-                    }
-                    else {
-                        // usnset from this.currentQuestionPaperData.answer
-                        for (var i = 0; i < this.currentQuestionPaperData.answer.length; i++) {
-                            if (this.currentQuestionPaperData.answer[i] === choiceId) {
-                                this.currentQuestionPaperData.answer.splice(i, 1);
-                            }
-                        }
-                    }
-                }
-                else {
-                    if (this.uniqueChoice.length > 0) {
-                        this.currentQuestionPaperData.answer[0] = this.uniqueChoice;
-                    }
-                }
+            this.updateStudentData = function () {
+                
+                // save the answer in currentQuestionPaperData, tu be able to reuse it during the sequence
+                this.currentQuestionPaperData.answer = this.answer;
                 PlayerDataSharing.setStudentData(this.question, this.currentQuestionPaperData);
             };
-
-
-
 
             this.showFeedback = function () {
                 // get question answers and feedback ONLY IF NEEDED

@@ -14,8 +14,8 @@
             </div>
         <hr/>
         </div>
-        <textarea data-ng-if="openQuestionCtrl.question.typeOpen !== 'oneWord'" data-ng-bind="openQuestionCtrl.answer" id="openTextArea" ></textarea>
-        <input type="text" data-ng-if="openQuestionCtrl.question.typeOpen === 'oneWord'" data-ng-bind="openQuestionCtrl.answer" id="openTextArea" />
+        <textarea data-ng-if="openQuestionCtrl.question.typeOpen !== 'oneWord'" data-ng-click="openQuestionCtrl.updateStudentData()" data-ng-bind="openQuestionCtrl.answer" id="openTextArea" ></textarea>
+        <input type="text" data-ng-if="openQuestionCtrl.question.typeOpen === 'oneWord'" data-ng-click="openQuestionCtrl.updateStudentData()" data-ng-model="openQuestionCtrl.answer" data-ng-bind="openQuestionCtrl.answer" id="openTextArea" />
         <div data-ng-if="openQuestionCtrl.question.hints">
             <hr/>
             <!-- Question hints row -->
