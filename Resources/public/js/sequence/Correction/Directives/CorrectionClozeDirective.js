@@ -3,7 +3,8 @@
     'use strict';
 
     angular.module('Correction').directive('correctionCloze', [
-        function () {
+        '$timeout',
+        function ($timeout) {
             return {
                 restrict: 'E',
                 replace: false,
@@ -15,7 +16,9 @@
                     paper: '='
                 },
                 link: function (scope, element, attr, correctionClozeCtrl) {
-                    correctionClozeCtrl.init(scope.question, scope.paper);
+                    $timeout(function(){
+                        correctionClozeCtrl.init(scope.question, scope.paper);
+                    });
                 }
             };
         }
