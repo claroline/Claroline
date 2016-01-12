@@ -16,6 +16,7 @@ use Claroline\CoreBundle\DependencyInjection\Compiler\DynamicConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\ImportersConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\RichTextFormatterConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\RuleConstraintsConfigPass;
+use Claroline\CoreBundle\DependencyInjection\Factory\ApiFactory;
 use FOS\OAuthServerBundle\FOSOAuthServerBundle;
 use IDCI\Bundle\ExporterBundle\IDCIExporterBundle;
 use Nelmio\ApiDocBundle\NelmioApiDocBundle;
@@ -39,6 +40,9 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
         $container->addCompilerPass(new RichTextFormatterConfigPass());
         $container->addCompilerPass(new DoctrineEntityListenerPass());
         $container->addCompilerPass(new RuleConstraintsConfigPass());
+
+        $extension = $container->getExtension('security');
+        $extension->addSecurityListenerFactory(new ApiFactory());
     }
 
     public function supports($environment)

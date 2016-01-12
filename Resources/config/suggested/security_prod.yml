@@ -30,9 +30,9 @@ security:
 
         api:
             pattern:    ^/api
-            #fos_oauth:  true
+            claro_api: true
             #stateless:  true
-            security: false
+            security: true
 
         main:
             pattern: ^/
