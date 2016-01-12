@@ -179,13 +179,11 @@
                 <table class="table table-striped table-bordered table-condensed">
                     <thead>
                     <tr>
-                        {% if canEdit %}
-                            <th>
-                                <a href="{{ sortUrl(max, search, 'username', workspace.getId(), direction) }}">
-                                    {{ 'username'|trans({}, 'platform') }}
-                                </a>
-                            </th>
-                        {% endif %}
+                        <th>
+                            <a href="{{ sortUrl(max, search, 'username', workspace.getId(), direction) }}">
+                                {{ 'username'|trans({}, 'platform') }}
+                            </a>
+                        </th>
                         <th>
                             <a href="{{ sortUrl(max, search, 'lastName', workspace.getId(), direction) }}">
                                 {{ 'last_name'|trans({}, 'platform') }}
@@ -219,15 +217,13 @@
                             class="row-user"
                             data-user-id="{{ userId }}"
                         >
-                            {% if canEdit %}
-                                <td>
-                                    {% if user.getPublicUrl() != '' %}
-                                        <a href="{{ path('claro_public_profile_view', {'publicUrl':user.getPublicUrl()}) }}">{{ user.getUsername() }}</a>
-                                    {% else %}
-                                        {{ user.getUsername() }}
-                                    {% endif %}
-                                </td>
-                            {% endif %}
+                            <td>
+                                {% if user.getPublicUrl() != '' %}
+                                    <a href="{{ path('claro_public_profile_view', {'publicUrl':user.getPublicUrl()}) }}">{{ user.getUsername() }}</a>
+                                {% else %}
+                                    {{ user.getUsername() }}
+                                {% endif %}
+                            </td>
                             <td>{{ user.getLastName() }}</td>
                             <td>{{ user.getFirstName() }}</td>
 
