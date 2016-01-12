@@ -445,6 +445,42 @@ class ResourceController
 
     /**
      * @EXT\Route(
+     *     "/log/{node}/user",
+     *     name="claro_resource_logs_by_user",
+     *     defaults={"page" = 1},
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\Route(
+     *     "/log/{node}/user/{page}",
+     *     name="claro_resource_logs_by_user_paginated",
+     *     requirements={"page" = "\d+"},
+     *     defaults={"page" = 1},
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Resource/logs:logByUser.html.twig")
+     *
+     * Shows resource logs list
+     *
+     * @param ResourceNode $node the resource
+     * @param integer      $page
+     *
+     * @return Response
+     * @throws \Exception
+     */
+    public function logByUserAction(ResourceNode $node, $page)
+    {
+        $resource = $this->resourceManager->getResourceFromNode($node);
+        $collection = new ResourceCollection(array($node));
+        $this->checkAccess("ADMINISTRATE", $collection);
+
+        //$type = $node->getResourceType();
+        return $this->logManager->countByUserResourceList($resource, $page);
+    }
+
+    /**
+     * @EXT\Route(
      *     "/download",
      *     name="claro_resource_download",
      *     options={"expose"=true},
