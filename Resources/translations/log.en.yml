@@ -177,3 +177,7 @@ user: User
 workspace: Workspace
 log_resource-custom_action_update_file_shortname: Update
 log_resource-custom_action_update_file_sentence: The file was updated.
+global_tracking: Global tracking
+user_tracking: Tracking by user
+user_list: User list
+actions_per_day_chart: Actions per day chart

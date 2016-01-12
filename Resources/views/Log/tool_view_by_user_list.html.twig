@@ -2,29 +2,14 @@
     #logFilter label {font-weight: normal;}
     #logFilter div.row {padding-bottom: 3px;}
 </style>
-{% if workspace is not defined and _resource is not defined  %}
-<div class="panel-heading">
-    <h3 class="panel-title">{{ 'logs'|trans({}, 'tools') }}</h3>
-</div>
-{% endif %}
 <div class="panel-body logs-container">
     {% if _resource is defined %}
-        {% include 'ClarolineCoreBundle:Log:workspace_resource_tabs.html.twig' with {'_resource':_resource, 'activeTab': 'global'} %}
+        {% include 'ClarolineCoreBundle:Log:workspace_resource_tabs.html.twig' with {'_resource':_resource, 'activeTab': 'user'} %}
     {% elseif workspace is defined %}
-        {% include 'ClarolineCoreBundle:Log:workspace_resource_tabs.html.twig' with {'workspace':workspace, 'activeTab': 'global'} %}
+        {% include 'ClarolineCoreBundle:Log:workspace_resource_tabs.html.twig' with {'workspace':workspace, 'activeTab': 'user'} %}
     {% endif %}
-    <div>
-        {% if 0 < pager.nbResults %}
-            {% include 'ClarolineCoreBundle:Log:count_by_day_chart.html.twig'%}
-            <br/><br/>
-        {% else %}
-            <div style="text-align:center;">
-               <h3>{{ 'log_no_actions_found'|trans({}, 'log') }}.</h3>
-            </div>
-        {% endif %}
-
+    <div class="logs-form-container" style="margin: 20px 0;">
         <div class="panel panel-default">
-
             <div class="panel-body">
                 <legend>
                     {{ 'filter_actions'|trans({}, 'platform') }}
@@ -64,11 +49,10 @@
                 </form>
             </div>
         </div>
-        <br/><br/>
     </div>
     {% if 0 < pager.nbResults %}
         <legend>
-            {{ 'action_list'|trans({}, 'platform') }}
+            {{ 'user_list'|trans({}, 'log') }}
         </legend>
 
         <div class="text-center">
@@ -77,7 +61,7 @@
             {% endif %}
         </div>
 
-        {% include 'ClarolineCoreBundle:Log:view_list.html.twig' with {'logs': pager.currentPageResults, 'isDesktop': isDesktop} %}
+        {% include 'ClarolineCoreBundle:Log:view_user_list.html.twig' with {'logs': pager.currentPageResults, 'isDesktop': isDesktop} %}
 
         <div class="text-center">
             {% if pager.haveToPaginate %}

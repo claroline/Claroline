@@ -1,7 +1,7 @@
 {% extends 'ClarolineCoreBundle:Tool/workspace/logs:layout.html.twig' %}
 
 {% block section_content %}
-    {% set filterFormAction = path('claro_workspace_logs_show', {'workspaceId': workspace.id}) %}
+    {% set filterFormAction = path('claro_workspace_logs_by_user_show', {'workspaceId': workspace.id}) %}
     {% set pagination %}
         {{
             pagerfanta(
@@ -9,12 +9,12 @@
                 'twitter_bootstrap_translated',
                 {
                     'proximity' : 1,
-                    'routeName': 'claro_workspace_logs_show_paginated',
+                    'routeName': 'claro_workspace_logs_by_user_show_paginated',
                     'routeParams': {'workspaceId': workspace.id, 'filter': filter}
                 }
             )
         }}
     {% endset %}
 
-    {% include 'ClarolineCoreBundle:Log:tool_view_list.html.twig' with {'filterFormAction': filterFormAction, 'pagination': pagination, 'isDesktop': false} %}
+    {% include 'ClarolineCoreBundle:Log:tool_view_by_user_list.html.twig' with {'filterFormAction': filterFormAction, 'pagination': pagination, 'isDesktop': false} %}
 {% endblock %}

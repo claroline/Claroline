@@ -1,0 +1,17 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ "logs" | trans({}, "tools") | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+    macros.workspaceBreadcrumbs(
+    workspace,
+    [
+    {
+        'name': 'logs'|trans({}, 'tools'),
+        'href': ''
+    }
+    ]
+    )
+    }}
+{% endblock %}

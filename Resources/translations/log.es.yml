@@ -175,3 +175,7 @@ resource: Recurso
 role: Rol
 user: Usuario
 workspace: 'Espacio de trabajo'
+global_tracking: global_tracking
+user_tracking: user_tracking
+user_list: user_list
+actions_per_day_chart: actions_per_day_chart

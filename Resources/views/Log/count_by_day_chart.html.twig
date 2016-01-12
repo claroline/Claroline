@@ -22,10 +22,10 @@
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasAxisLabelRenderer.min.js') }}"></script>
 
-{% if actionName is not defined or actionName is empty %}
+{% if actionName is not defined or actionName is empty or '-' not in actionName %}
 <legend>{{ 'actions_per_day'|trans({}, 'platform') }}</legend>
 {% else %}
-<legend>{{ actionName|trans({}, 'platform') }}</legend>
+<legend>{{ ('log_'~actionName~'_filter')|trans({}, 'log') }}</legend>
 {% endif %}
 
 <div id="actions-line-chart" class="line-chart"></div>

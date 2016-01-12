@@ -1,0 +1,13 @@
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
+
+{% block title %}{{ _resource.resourceNode.name ~ ' - ' ~ "logs" | trans({}, "platform") | striptags | raw }}{% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li class="active">{{ _resource.getResourceNode().getName() ~ ' - ' ~ "logs" | trans({}, "platform") }}</li>
+{% endblock %}
