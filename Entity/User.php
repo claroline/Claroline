@@ -133,7 +133,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @Assert\NotBlank()
      * @Assert\Email(checkMX = false)
      * @Groups({"api", "admin"})
-     * @SerializedName("mail")
+     * @SerializedName("email")
      */
     protected $mail;
 

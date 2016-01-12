@@ -31,6 +31,7 @@ security:
         api:
             pattern:    ^/api
             claro_api: true
+            #fos_oauth: true
             #stateless:  true
             security: true
 

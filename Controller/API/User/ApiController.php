@@ -16,23 +16,51 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use FOS\RestBundle\Controller\Annotations\View;
+use JMS\Serializer\SerializationContext;
 
 class ApiController extends Controller
 {
     /**
      * @Route("/connected_user")
-     * @View(serializerGroups={"api"})
      */
     public function connectedUserAction()
     {
         /** @var \Symfony\Component\Security\Core\SecurityContext $securityContext */
-        $tokenStorage    = $this->container->get('security.token_storage');
-        $securityToken   = $tokenStorage->getToken();
+        $tokenStorage  = $this->container->get('security.token_storage');
+        $token = $tokenStorage->getToken();
 
-        if (null !== $securityToken) {
-            return $securityToken->getUser();
+        if ($token) {
+            $user = $token->getUser();
+            $context = new SerializationContext();
+            $context->setGroups('api');
+            $data = $this->container->get('serializer')->serialize($user, 'json', $context);
+            $users = json_decode($data);
+
+            return new JsonResponse($users);
         }
 
-        throw new \Exception('No user connected');
+        throw new \Exception('No security token.');
+    }
+
+    /**
+     * @Route("/connected_roles")
+     */
+    public function connectedRoles()
+    {
+        /** @var \Symfony\Component\Security\Core\SecurityContext $securityContext */
+        $tokenStorage  = $this->container->get('security.token_storage');
+        $token = $tokenStorage->getToken();
+
+        if ($token) {
+            $roles = $token->getRoles();
+            $context = new SerializationContext();
+            $context->setGroups('api');
+            $data = $this->container->get('serializer')->serialize($roles, 'json');
+            $roles = json_decode($data);
+
+            return new JsonResponse($roles);
+        }
+
+        throw new \Exception('No security token.');
     }
 }
