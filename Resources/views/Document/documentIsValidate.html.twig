@@ -3,16 +3,17 @@
 {# Ajout de la classe document_validate pour la validation du document #}
 {# Si le collecticiel n'est pas ouvert, il n'est pas possible de demander une évaluation. InnovaERV #}
 
-{# Si le document est validé ... #}
+{# Si aucune demande n'a pas transmise ... #}
 {% if not document.validate %}
 	{# Si le collecticiel est ouvert ... #}
     {% if collecticielOpenOrNot %}
-   	    <input id="document_id_{{ document.id }}" value="document" type="checkbox" class="document_validate" name="document_id_{{ document.id }}" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#validate-modal" data-document_id="{{ document.id }}" data-dropzone_id="{{ dropzone.id }}" />
+		{# flèche bleue : arrow right #}
+		<a href="#validate-modal" data-toggle="modal" data-dropzone_id="{{ dropzone.id }}" data-document_id="{{ document.id }}" id="document_id_{{ document.id }}" name="document_id_{{ document.id }}" class="document_validate" >
+	        <span data-toggle="tooltip" data-placement="top" data-original-title="{{ 'To add a return receipt'|trans({},'innova_collecticiel') }}" class="fa fa-hand-o-right">
+	        </span>
+		</a>
 	{% endif %}
 {% else %}
-    <input id="document_id_{{ document.id }}" value="document" type="checkbox" name="document_id_{{ document.id }}" disabled checked />
-    {# #32 ajout de "Demande transmise #}
-    <button disabled id="request_id_{{ document.id }}" class="btn btn-default btn-xs" type="button">
-        {{ 'Request sent'|trans({}, 'innova_collecticiel') }}
-    </button>
+	{# un "v" : check #}
+    <i class="fa fa-check" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Request sent'|trans({},'innova_collecticiel') }}"></i>
 {% endif %}

@@ -1,5 +1,19 @@
 {# Affichage du tableau de l'onglet "Espaces partagés" #}
 <tr>
+    {# Affichage de l'image de profil #}
+    <td>
+        {% if drop.user.getPicture() != '' %}
+            <div class="user-panel">
+                <div class="pull-left image">
+                    <img src="{{ asset('uploads/pictures/') ~ drop.user.getPicture() }}"
+                    class=""
+                    alt="{{ drop.user.getLastName() ~ ' ' ~ drop.user.getFirstName() }}">
+                </div>
+                </div>
+        {% else %}
+            <i class="direct-chat-img direct-chat-img-you right fa fa-user" ></i>
+        {% endif %}
+    </td>
     <td>{{ drop.user.lastName|upper }}</td>
     <td>{{ drop.user.firstName|capitalize }}</td>
     <td>{{ drop.user.userName|capitalize }}</td>

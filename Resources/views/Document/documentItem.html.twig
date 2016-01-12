@@ -11,6 +11,20 @@
 
 {# InnovaERV : Fin ajout : Affichage ... #}
 <tr id="row_{{ document.id }}">
+    {# Affichage de l'image de profil #}
+    <td class="{{ classArray }}">
+        {% if document.sender.getPicture() != '' %}
+            <div class="user-panel">
+                <div class="pull-left image">
+                    <img src="{{ asset('uploads/pictures/') ~ document.sender.getPicture() }}"
+                    class=""
+                    alt="{{ document.sender.getLastName() ~ ' ' ~ document.sender.getFirstName() }}">
+                </div>
+                </div>
+        {% else %}
+            <i class="direct-chat-img direct-chat-img-you right fa fa-user" ></i>
+        {% endif %}
+    </td>
     <td class="{{ classArray }}">
         {{ document.sender.lastName }}
     </td>
@@ -52,12 +66,23 @@
     {# {% endif %} #}
 
     <td class="{{ classArray }} centered">
-        <a href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" type="button">
-            {{ document.comments|length }}
-            {% if document.getUnReadComments( app.user.id ) != 0 %}
-                ({{ document.getUnReadComments( app.user.id ) }} nouveau{% if document.getUnReadComments( app.user.id ) > 1 %}x{% endif %})
+
+        <div class="btn-group ">
+           {# Variable qui va compter le nombre de commentaires #}
+           {# Affichage d'un bouton si pas de commentaires #}
+            {% if document.comments|length == 0 %}
+                <a data-toggle="tooltip" data-placement="top" data-original-title="{{ 'To drop'|trans({},'innova_collecticiel') }}" class="fa fa-commenting-o" href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" type="button" class="btn btn-default btn-sm">
+                </a>
+           {# Sinon affichage du compteur et des nouveaux commentaires #}
+            {% else %}
+                <a data-toggle="tooltip" data-placement="top" data-original-title="{{ 'To drop'|trans({},'innova_collecticiel') }}" class="fa fa-commenting-o" href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" type="button">
+                    <br />{{ document.comments|length }}
+                    {% if document.getUnReadComments( app.user.id ) != 0 %}
+                        (+{{ document.getUnReadComments( app.user.id ) }})
+                    {% endif %}
+                </a>
             {% endif %}
-        </a>
+        </div>
     </td>
 
     {# #146 : changement de gestion des annulations et des suppressions, demande de JJQ #}
@@ -84,13 +109,18 @@
             {# Si la document a été validé alors je ne peux pas le supprimer #}
             {% if not document.validate or (adminInnova and document.drop.user.id != document.sender.id) %}
                 <a href="{{ path('innova_collecticiel_delete_document', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}"
-                   class="btn btn-danger btn-sm launch-modal del_btn_td"
-                   id="delete_{{ document.id }}" >
-                    <span class="fa fa-trash-o"></span>
-                    {{ 'Delete'|trans({}, 'innova_collecticiel') }}
+                class="btn btn-danger btn-sm launch-modal del_btn_td" id="delete_{{ document.id }}" >
+                    {# Ajout de l'icône "supprimer" #}
+                    <i class="fa fa-trash" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Delete'|trans({},'innova_collecticiel') }}"></i>
                 </a>
             {% elseif document.validate and not adminInnova and document.comments|length == 0 and document.sender.id == document.drop.user.id %}
-                <a href="" class="btn btn-default cancel_button" id="cancel_{{ document.id }}" data-document_id="{{ document.id }}" >{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</a>
+                <a href="" class="btn btn-default cancel_button" id="cancel_{{ document.id }}" data-document_id="{{ document.id }}" >
+                    {# Ajout de l'icône "annuler" #}
+                    <i class="fa fa-undo" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Cancel'|trans({},'innova_collecticiel') }}"></i>
+                </a>
+            {% else %}
+                {# Ajout de l'icône "lock" #}
+                <i class="fa fa-lock" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'No action allowed'|trans({},'innova_collecticiel') }}"></i>
             {% endif %}
             </td>
             {% endif %}

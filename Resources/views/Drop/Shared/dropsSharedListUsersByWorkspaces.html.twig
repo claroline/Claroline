@@ -1,5 +1,19 @@
 {# Affichage du tableau de l'onglet "Espaces partagés" #}
 <tr>
+    {# Affichage de l'image de profil #}
+    <td>
+        {% if usersByWorkspace.getPicture() != '' %}
+            <div class="user-panel">
+                <div class="pull-left image">
+                    <img src="{{ asset('uploads/pictures/') ~ usersByWorkspace.getPicture() }}"
+                    class=""
+                    alt="{{ usersByWorkspace.getLastName() ~ ' ' ~ usersByWorkspace.getFirstName() }}">
+                </div>
+            </div>
+        {% else %}
+            <i class="direct-chat-img direct-chat-img-you right fa fa-user" ></i>
+        {% endif %}
+    </td>
     <td>{{ usersByWorkspace.lastName|upper }}</td>
     <td>{{ usersByWorkspace.firstName|capitalize }}</td>
     <td>{{ usersByWorkspace.userName|capitalize }}</td>
@@ -14,5 +28,4 @@
             </a>
         </div>
     </td>
-
 </tr>

@@ -19,33 +19,45 @@
                 <p>{{ 'No document associated'|trans({},'innova_collecticiel') }}</p>
             {% else %}
                 <table class="table table-responsive {% if mode == "condensed" %}table-condensed{% endif %} well datatable">
-                        <thead>
-                            <tr class="text-left">
-                                <th class="nameColumn">{{ 'Name'|trans({}, 'innova_collecticiel') }}</th>
-                                <th class="nameColumn">{{ 'First name'|trans({}, 'innova_collecticiel') }}</th>
-                                <th class="usernameColumn">{{ 'Nickname'|trans({}, 'innova_collecticiel') }}</th>
-                                <th>{{ 'Name of document'|trans({}, 'innova_collecticiel') }}</th>
-                                <th class="typeColumn">{{ 'Type of document'|trans({}, 'innova_collecticiel') }}</th>
-                                <th class="dateColumn">{{ 'Date hour'|trans({}, 'innova_collecticiel') }}</th>
-                                {# #146 : on affiche cette colonne même en tant qu'enseignant, demande de JJQ #}
-                                {#  {% if not adminInnova %} #}
-                                <th class="centered" style="width:140px;">{{ 'Commented document'|trans({}, 'innova_collecticiel') }}</th>
-                                {#  {% endif %} #}
-                                <th class="centered" style="width:120px;">{{ 'Comment'|trans({}, 'innova_collecticiel') }}</th>
-                                {% if adminInnova %}
-                                    <th class="no-sort" style="width: 120px;"></th>
-                                {% else %}
-                                    {% if collecticielOpenOrNot %}
-                                        <th class="no-sort" style="width: 120px;"></th>
-                                    {% endif %}
+                    <thead>
+                        <tr class="text-left">
+                            <th class="centered"></th>
+                            <th class="nameColumn">{{ 'Name'|trans({}, 'innova_collecticiel') }}</th>
+                            <th class="nameColumn">{{ 'First name'|trans({}, 'innova_collecticiel') }}</th>
+                            <th class="usernameColumn">{{ 'Nickname'|trans({}, 'innova_collecticiel') }}</th>
+                           
+                            <th class="centered">
+                                <i class="fa fa-file-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Name of document'|trans({},'innova_collecticiel') }}"></i>
+                            </th>
+                            <th class="typeColumn">
+                                <i class="fa fa-file-excel-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Type of document'|trans({},'innova_collecticiel') }}"></i>
+                            </th>
+                            <th class="dateColumn">
+                                <i class="fa fa-calendar-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Date hour'|trans({},'innova_collecticiel') }}"></i>
+                            </th>
+                            {# #146 : on affiche cette colonne même en tant qu'enseignant, demande de JJQ #}
+                            {#  {% if not adminInnova %} #}
+                            <th class="centered">
+                                <i class="fa fa-arrow-right" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Commented document'|trans({},'innova_collecticiel') }}"></i>
+                            </th>
+                            {#  {% endif %} #}
+                            <th class="centered">
+                                <i class="fa fa-commenting-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Comment evaluation'|trans({},'innova_collecticiel') }}"></i>
+                            </th>
+                            {% if adminInnova %}
+                                <th class="no-sort"></th>
+                            {% else %}
+                                {% if collecticielOpenOrNot %}
+                                    <th class="no-sort"</th>
                                 {% endif %}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for index, document in drop.documents %}
-                                {% include 'InnovaCollecticielBundle:Document:documentItem.html.twig' %}
-                            {% endfor %}
-                        </tbody>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for index, document in drop.documents %}
+                            {% include 'InnovaCollecticielBundle:Document:documentItem.html.twig' %}
+                        {% endfor %}
+                    </tbody>
                 </table>
             {% endif %}
         </div>
@@ -70,4 +82,11 @@
         </div>
     </div>
     {# Fin de la déclaration de la modal pour confirmation de la validation #}
+
+
+
+<script src="{{ asset('bundles/innovacollecticiel/js/tooltip.js') }}"></script>
+<script src="{{ asset('bundles/innovacollecticiel/js/popup.js') }}"></script>
+
+
 {% endmacro %}
