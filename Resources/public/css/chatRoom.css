@@ -31,3 +31,13 @@
 .chat-room-ban-btn {
     color: #D9534F;
 }
+
+#chat-room-video-row {
+    height: 60vh;
+}
+
+.participant-stream {
+    display: inline-block;
+    /*width: 100px;*/
+    padding: 15px;
+}

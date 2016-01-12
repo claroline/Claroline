@@ -11,22 +11,35 @@
     'use strict';
 
     angular.module('ChatRoomModule').directive('chatRoomVideo', [
-        function () {
+        'XmppMucService',
+        function (XmppMucService) {
             return {
                 restrict: 'E',
                 replace: true,
                 templateUrl: AngularApp.webDir + 'bundles/clarolinechat/js/ChatRoom/Directive/templates/chatRoomVideo.html',
                 link: function (scope, element, attrs) {
-                    scope.server = attrs['chatRoomXmppHost'];
-                    scope.mucServer = attrs['chatRoomXmppMucHost'];
-                    scope.boshPort = attrs['chatRoomBoshPort'];
-                    scope.roomId = attrs['chatRoomId'];
-                    scope.roomName = attrs['chatRoomName'];
-                    scope.username = attrs['chatRoomUserUsername'];
-                    scope.password = attrs['chatRoomUserPassword'];
-                    scope.firstName = attrs['chatRoomUserFirstName'];
-                    scope.lastName = attrs['chatRoomUserLastName'];
-                    scope.color = attrs['chatRoomUserColor'];
+                    var server = attrs['chatRoomXmppHost'];
+                    var mucServer = attrs['chatRoomXmppMucHost'];
+                    var boshPort = attrs['chatRoomBoshPort'];
+                    var roomId = attrs['chatRoomId'];
+                    var roomName = attrs['chatRoomName'];
+                    var username = attrs['chatRoomUserUsername'];
+                    var password = attrs['chatRoomUserPassword'];
+                    var firstName = attrs['chatRoomUserFirstName'];
+                    var lastName = attrs['chatRoomUserLastName'];
+                    var color = attrs['chatRoomUserColor'];
+                    XmppMucService.connect(
+                        server,
+                        mucServer, 
+                        boshPort, 
+                        roomId, 
+                        roomName, 
+                        username, 
+                        password, 
+                        firstName, 
+                        lastName, 
+                        color
+                    );
                 }
             };
         }

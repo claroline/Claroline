@@ -15,6 +15,7 @@
         '$http',
         'XmppService',
         function ($rootScope, $http, XmppService) {
+            var connected = false;
             var room = null;
             var roomId = null;
             var roomName = null;
@@ -272,6 +273,7 @@
                     );
                 },
                 disconnect: function () {
+                    connected = false;
                     var connection = XmppService.getConnection();
                     connection.send(
                         $pres({
@@ -333,6 +335,13 @@
                         type: 'get'
                     }).c('query', {xmlns: 'http://jabber.org/protocol/muc#owner'});
                     XmppService.getConnection().sendIQ(iq);
+                },
+                setConnected: function (isConnected) {
+                    connected = isConnected;
+                },
+                isConnected: function () {
+                    
+                    return connected;
                 },
                 getRoom: function () {
 

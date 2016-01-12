@@ -1,13 +1,35 @@
-<div id="chat-room-video" ng-controller="ChatRoomVideoCtrl">
-    <div id='participants-video-container'>
-        <div ng-repeat="stream in streams" id="participant-stream-{{ stream }}">
+<div id="chat-room-main" ng-controller="ChatRoomVideoCtrl">
+    <div id="chat-room-video-row" class="row">
+        <div class="col-md-8">
+            <div id='my-video-container'>
+                <video id='my-video' autoplay='autoplay'></video>
+                <div id='ownvolume'></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <chat-room-messages></chat-room-messages>
+            <chat-room-input></chat-room-input>
         </div>
     </div>
-    <div id='my-video-container'>
-        <video id='my-video' autoplay='autoplay' width="400px" height="250px"></video>
-        <div id='ownvolume'></div>
+    <hr>
+    <div class="row">
+        <div id='participants-video-container'>
+            <div ng-repeat="stream in streams" id="participant-stream-{{ stream['sid'] }}" class="participant-stream">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ stream['username'] }}</h3>
+                    </div>
+                    <div class="panel-body participant-video">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <chat-room chat-room-xmpp-host="{{ server }}"
+    <div class="hidden">
+        <chat-room-users></chat-room-users>
+    </div>
+    
+<!--    <chat-room chat-room-xmpp-host="{{ server }}"
                chat-room-xmpp-muc-host="{{ mucServer }}"
                chat-room-bosh-port="{{ boshPort }}"
                chat-room-id="{{ roomId }}"
@@ -18,5 +40,5 @@
                chat-room-user-last-name="{{ lastName }}"
                chat-room-user-color="{{ color }}"
     >
-    </chat-room>
+    </chat-room>-->
 </div>
