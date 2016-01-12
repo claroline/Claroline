@@ -217,7 +217,7 @@
                         this.currentQuestionPaperData.answer.push(choiceId);
                     }
                     else {
-                        // usnset from this.currentQuestionPaperData.answer
+                        // unset from this.currentQuestionPaperData.answer
                         for (var i = 0; i < this.currentQuestionPaperData.answer.length; i++) {
                             if (this.currentQuestionPaperData.answer[i] === choiceId) {
                                 this.currentQuestionPaperData.answer.splice(i, 1);

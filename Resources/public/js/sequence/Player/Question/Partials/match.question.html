@@ -49,7 +49,7 @@
                 </div>
             </div>
         </div>
-
+        <!-- TO DRAG SUB TYPE  -->
         <div data-ng-if="matchQuestionCtrl.question.subType == 'toDrag'" class="row center-text">
             <!-- PROPOSALS -->
             <div class="col-md-4">
@@ -72,9 +72,14 @@
                 <div data-ng-repeat="proposal in matchQuestionCtrl.question.secondSet" class="row droppable" id="droppable_{{proposal.id}}">
                     <div class="col-md-12 setLabel">
                         <ul>
-                            <li class="lidroppable">{{ proposal.data}}</li>
+                            <li class="lidroppable">{{proposal.data}}</li>
                         </ul>
-                        <ul class="dragDropped"></ul>
+                        <ul class="dragDropped">
+                            <li data-ng-repeat="item in matchQuestionCtrl.dropped" id="dropped_{{item.source}}" data-ng-if="item.target === proposal.id">
+                                {{item.label}}
+                                <span class="fa fa-trash" data-ng-click="matchQuestionCtrl.removeDropped(item.source, proposal.id)"></span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>

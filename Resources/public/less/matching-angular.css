@@ -73,3 +73,7 @@
     color: red;
     cursor:pointer;
 }
+
+.dragDropped li {
+    list-style-type:none;
+}

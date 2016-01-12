@@ -11,7 +11,7 @@ use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
 
 /**
- * @DI\Service("ujm.exo.qcm_handler")
+ * @DI\Service("ujm.exo.match_handler")
  * @DI\Tag("ujm.exo.question_handler")
  */
 class MatchHandler implements QuestionHandlerInterface {
@@ -166,7 +166,7 @@ class MatchHandler implements QuestionHandlerInterface {
 
 
         $exportData->secondSet = array();
-
+        $pushed = array(); // labels ids only used for check
         foreach ($proposals as $proposal) {
             $labels = $proposal->getAssociatedLabel();
             foreach ($labels as $label) {
@@ -174,15 +174,16 @@ class MatchHandler implements QuestionHandlerInterface {
                 $secondSetData->id = (string) $label->getId();
                 $secondSetData->type = 'text/plain';
                 $secondSetData->data = $label->getValue();
-                array_push($exportData->secondSet, $secondSetData);
+
+                // different proposals can be associated with same label
+                // we need to check that the label is not already in secondSet array
+                if (!in_array((string) $label->getId(), $pushed)) {
+                    array_push($exportData->secondSet, $secondSetData);
+                    array_push($pushed, (string) $label->getId());
+                }
             }
         }
 
-
-        // 3 tables are used : 
-        // - ujm_label (all info for a proposal including score_right_response)
-        // - ujm_proposal_label (link between proposal and label ==> proposal_id | label_id)
-        // - ujm_proposal (interaction_matching_id, value (== label), position_force, ordre)
         if ($withSolution) {
             $exportData->solutions = array_map(function ($proposal) {
 
@@ -231,8 +232,7 @@ class MatchHandler implements QuestionHandlerInterface {
      * {@inheritdoc}
      */
     public function convertAnswerDetails(Response $response) {
-        // for an answer we have : '1,2;2,1;' (to bindings proposals)
-        // each part is composed with proposalId,linkedToId
+
         $parts = explode(';', $response->getResponse());
 
         return array_filter($parts, function ($part) {
@@ -249,9 +249,9 @@ class MatchHandler implements QuestionHandlerInterface {
         }
 
         $count = 0;
-
         if (0 === $count = count($data)) {
-            return ['Answer data cannot be empty'];
+            // no need to check any data integrity if no answer
+            return [];
         }
 
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionMatching')->findOneByQuestion($question);
@@ -266,23 +266,20 @@ class MatchHandler implements QuestionHandlerInterface {
         foreach ($proposals as $proposal) {
             $labels = $proposal->getAssociatedLabel();
             foreach ($labels as $label) {
-
                 array_push($labelsIds, (string) $label->getId());
             }
         }
 
-        $answers = $data[0];
         $sourceIds = array();
         $targetIds = array();
-        if ($answers !== '') {
-            $idSets = explode(';', $answers);
-            foreach ($idSets as $set) {
-                $ids = explode(',', $set);
-                array_push($sourceIds, $ids[0]);
-                array_push($targetIds, $ids[1]);
+        foreach ($data as $answer) {
+            if ($answer !== '') {
+                $set = explode(',', $answer);
+                array_push($sourceIds, $set[0]);
+                array_push($targetIds, $set[1]);
             }
         }
-        
+
         foreach ($sourceIds as $id) {
             if (!is_string($id)) {
                 return ['Answer array must contain only string identifiers'];
@@ -292,7 +289,7 @@ class MatchHandler implements QuestionHandlerInterface {
                 return ['Answer array identifiers must reference a question proposal id'];
             }
         }
-        
+
         foreach ($targetIds as $id) {
             if (!is_string($id)) {
                 return ['Answer array must contain only string identifiers'];
@@ -302,17 +299,11 @@ class MatchHandler implements QuestionHandlerInterface {
                 return ['Answer array identifiers must reference a question proposal associated label id'];
             }
         }
-
-        if ($count > 1) {
-            return ['This question does not allow multiple answers'];
-        }
-
         return [];
     }
 
     /**
      * @todo handle global score option
-     * @todo check data format should be id1,id2 per proposal...
      *
      * {@inheritdoc}
      */
@@ -334,12 +325,21 @@ class MatchHandler implements QuestionHandlerInterface {
 
         $mark = 0;
 
+        $sourceIds = array();
+        $targetIds = array();
+        foreach ($data as $answer) {
+            if ($answer !== '') {
+                $set = explode(',', $answer);
+                array_push($sourceIds, $set[0]);
+                array_push($targetIds, $set[1]);
+            }
+        }
+
         foreach ($proposals as $p) {
-            // getAssociatedLabel return an ArrayCollection !!!
             $associatedLabels = $p->getAssociatedLabel();
             foreach ($associatedLabels as $label) {
-                // @todo check what to check for correct anwser (what is in $data ?) :: $p->getId(), $data is right... maybe need to split each data id1,id2
-                if (in_array((string) $label->getId(), $data)) {
+                // check that given answers have a corresponding proposal id and a corresponding label id
+                if (in_array((string) $p->getId(), $sourceIds) && in_array((string) $label->getId(), $targetIds)) {
                     $mark += $label->getScoreRightResponse();
                 }
             }
@@ -348,9 +348,12 @@ class MatchHandler implements QuestionHandlerInterface {
         if ($mark < 0) {
             $mark = 0;
         }
-
-        $response->setResponse(implode(';', $data) . ';');
+        $result = count($data) > 0 ? implode(';', $data) . ';' : '';
+        $response->setResponse($result);
         $response->setMark($mark);
+        /*
+          $response->setResponse(trim($data[0]));
+          $response->setMark($mark); */
     }
 
 }

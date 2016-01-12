@@ -226,7 +226,9 @@ class QcmHandler implements QuestionHandlerInterface
         $count = 0;
 
         if (0 === $count = count($data)) {
-            return ['Answer data cannot be empty'];
+            //return ['Answer data cannot be empty'];
+            // data CAN be empty ! (for example editing a multiple choice question and unchecking all choices)
+            return [];
         }
 
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionQCM')
@@ -277,8 +279,10 @@ class QcmHandler implements QuestionHandlerInterface
         if ($mark < 0) {
             $mark = 0;
         }
+        
+        $result = count($data) > 0 ? implode(';', $data) . ';' : '';
 
-        $response->setResponse(implode(';', $data) . ';');
+        $response->setResponse($result);
         $response->setMark($mark);
     }
 }

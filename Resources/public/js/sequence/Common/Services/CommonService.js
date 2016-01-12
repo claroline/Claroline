@@ -44,7 +44,7 @@
                     return object.meta.licence || object.meta.created || object.meta.modified || (object.meta.description && object.meta.description !== '');
                 },
                 // set / update the student data
-                setStudentData: function (question, currentQuestionPaperData) {
+                /*setStudentData: function (question, currentQuestionPaperData) {
                     this.currentQuestion = question;
                     // this will automatically update the paper object
                     if (currentQuestionPaperData) {
@@ -57,7 +57,7 @@
                         paper: this.paper,
                         answers: this.currentQuestionPaperData.answer
                     };
-                },
+                },*/
                 setPaper: function (paper) {
                     this.paper = paper;
                     return this.paper;
@@ -77,7 +77,7 @@
                  * @param {object} question
                  * @returns {object}
                  */
-                setCurrentQuestionPaperData: function (question) {
+                /*setCurrentQuestionPaperData: function (question) {
                     // search for an existing answer to the question in paper
                     for (var i = 0; i < this.paper.questions.length; i++) {
                         if (this.paper.questions[i].id === question.id.toString()) {
@@ -93,7 +93,7 @@
                     };
                     this.paper.questions.push(this.currentQuestionPaperData);
                     return this.currentQuestionPaperData;
-                },
+                },*/
                 countFinishedPaper:function(id){
                     var deferred = $q.defer();
                     $http
@@ -150,7 +150,7 @@
                  * @param {type} questions
                  * @returns {Number}
                  */
-                getExerciseTotalScore: function (questions) {
+                /*getExerciseTotalScore: function (questions) {
                     var nbQuestions = questions.length;
                     var score = 0.0;
                     for (var i = 0; i < nbQuestions; i++) {
@@ -162,8 +162,8 @@
                         }
                     }
                     return score;
-                },
-                getHintPenalty: function (searched, questions) {
+                },*/
+               /* getHintPenalty: function (searched, questions) {
                     var nbQuestions = questions.length;
                     var penalty = 0.0;
                     for (var i = 0; i < nbQuestions; i++) {
@@ -178,8 +178,8 @@
                         }
                     }
                     return penalty;
-                },
-                getAnswerScore: function (searched, questions) {
+                },*/
+                /*getAnswerScore: function (searched, questions) {
                     var nbQuestions = questions.length;
                     var score = 0.0;
                     for (var i = 0; i < nbQuestions; i++) {
@@ -192,7 +192,7 @@
                         }
                     }
                     return score;
-                },
+                },*/
                 // UTILS METHODS
                 /**
                  * get a sequence correction mode in a human readable word
@@ -251,7 +251,7 @@
                  * @param {array} the given array
                  * @returns {array} the shuffled array
                  */
-                shuffleArray: function (array) {
+                /*shuffleArray: function (array) {
                     var currentIndex = array.length, temporaryValue, randomIndex;
                     // While there remain elements to shuffle...
                     while (0 !== currentIndex) {
@@ -265,7 +265,7 @@
                         array[randomIndex] = temporaryValue;
                     }
                     return array;
-                },
+                },*/
                 generateUrl: function (witch, _id) {
                     switch (witch) {
                         case 'exercise-home':
