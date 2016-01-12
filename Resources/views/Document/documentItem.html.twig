@@ -94,11 +94,17 @@
             <a href="{{ path('innova_collecticiel_delete_document', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}"
                class="btn btn-danger btn-sm launch-modal del_btn_td"
                id="delete_{{ document.id }}" >
-                <span class="fa fa-trash-o"></span>
-                {{ 'Delete'|trans({}, 'innova_collecticiel') }}
+                    {# Ajout de l'icône "supprimer" #}
+                    <i class="fa fa-trash" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Delete'|trans({},'innova_collecticiel') }}"></i>
             </a>
         {% elseif document.validate and document.comments|length == 0 and document.sender.id == document.drop.user.id %}
-            <a href="" class="btn btn-default cancel_button" id="cancel_{{ document.id }}" data-document_id="{{ document.id }}" >{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</a>
+            <a href="" class="btn btn-default cancel_button" id="cancel_{{ document.id }}" data-document_id="{{ document.id }}" >
+                {# Ajout de l'icône "annuler" #}
+                <i class="fa fa-undo" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Cancel'|trans({},'innova_collecticiel') }}"></i>
+            </a>
+        {% else %}
+            {# Ajout de l'icône "lock" #}
+            <i class="fa fa-lock" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'No action allowed'|trans({},'innova_collecticiel') }}"></i>
         {% endif %}
         </td>
         {% endif %}
