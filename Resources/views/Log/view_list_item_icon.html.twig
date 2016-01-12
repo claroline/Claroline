@@ -1,19 +1,47 @@
 {% set icon_class = 'fa fa-file' %}
 
-{% if 'workspace_' in log.getAction() %}
+{% if 'workspace' in log.getAction() %}
     {% set icon_class = 'fa fa-book' %}
 {% endif %}
 
-{% if 'user_' in log.getAction() %}
+{% if 'user' in log.getAction() %}
     {% set icon_class = 'fa fa-user' %}
 {% endif %}
 
-{% if 'group_' in log.getAction() %}
+{% if 'group' in log.getAction() %}
     {% set icon_class = 'fa fa-users' %}
 {% endif %}
 
-{% if 'ws_role_' in log.getAction() %}
+{% if 'ws_role' in log.getAction() %}
     {% set icon_class = 'fa fa-circle-o' %}
+{% endif %}
+
+{% if 'tool' in log.getAction() %}
+    {% set icon_class = 'fa fa-wrench' %}
+{% endif %}
+
+{% if 'delete' in log.getAction() or 'remove' in log.getAction() %}
+    {% set icon_class = 'fa fa-remove' %}
+{% endif %}
+
+{% if 'edit' in log.getAction() or 'update' in log.getAction() %}
+    {% set icon_class = 'fa fa-pencil' %}
+{% endif %}
+
+{% if 'create' in log.getAction() or 'new' in log.getAction() %}
+    {% set icon_class = 'fa fa-plus' %}
+{% endif %}
+
+{% if 'download' in log.getAction() %}
+    {% set icon_class = 'fa fa-download' %}
+{% endif %}
+
+{% if 'upload' in log.getAction() %}
+    {% set icon_class = 'fa fa-upload' %}
+{% endif %}
+
+{% if 'enter' in log.getAction() %}
+    {% set icon_class = 'fa fa-mail-forward fa-flip-vertical' %}
 {% endif %}
 
 <i class='{{icon_class}}'></i>

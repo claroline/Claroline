@@ -12,8 +12,12 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
+use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use JMS\DiExtraBundle\Annotation as DI;
+use Pagerfanta\Adapter\ArrayAdapter;
+use Pagerfanta\Adapter\DoctrineCollectionAdapter;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Adapter\FixedAdapter;
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -33,22 +37,32 @@ class LogManager
 
     private $container;
 
+    private $em;
+
+    /** @var \CLaroline\CoreBundle\Repository\Log\LogRepository $logRepository */
+    private $logRepository;
+
     /**
      * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container")
+     *     "container"          = @DI\Inject("service_container"),
+     *     "entityManager"      = @DI\Inject("doctrine.orm.entity_manager")
      * })
+     * @param $container
+     * @param $entityManager
      */
-    public function __construct($container)
+    public function __construct($container, $entityManager)
     {
         $this->container = $container;
+        $this->em = $entityManager;
+        $this->logRepository = $entityManager->getRepository('ClarolineCoreBundle:Log\Log');
     }
 
     public function getDesktopWidgetList(WidgetInstance $instance)
     {
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
-        $em = $this->container->get('doctrine.orm.entity_manager');
 
-        $hiddenConfigs = $em
+
+        $hiddenConfigs = $this->em
             ->getRepository('ClarolineCoreBundle:Log\LogHiddenWorkspaceWidgetConfig')
             ->findBy(array('user' => $user));
 
@@ -60,7 +74,7 @@ class LogManager
 
         // Get manager and collaborator workspaces config
         /** @var \Claroline\CoreBundle\Entity\Workspace\Workspace[] $workspaces */
-        $workspaces = $em
+        $workspaces = $this->em
             ->getRepository('ClarolineCoreBundle:Workspace\Workspace')
             ->findByUserAndRoleNamesNotIn($user, array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'), $workspaceIds);
 
@@ -68,10 +82,13 @@ class LogManager
 
         if (count($workspaces) > 0) {
             //add this method to the repository @see ligne 68
-            $configs = $em->getRepository('ClarolineCoreBundle:Log\LogWidgetConfig')->findByWorkspaces($workspaces);
+            $configs = $this->em
+                ->getRepository('ClarolineCoreBundle:Log\LogWidgetConfig')->findByWorkspaces($workspaces);
         }
 
-        $defaultInstance = $em->getRepository('ClarolineCoreBundle:Widget\WidgetInstance')->findOneBy(
+        $defaultInstance = $this->em
+            ->getRepository('ClarolineCoreBundle:Widget\WidgetInstance')
+            ->findOneBy(
             array(
                 'widget' => $instance->getWidget(),
                 'isAdmin' => true,
@@ -86,7 +103,7 @@ class LogManager
         if ($defaultConfig === null) {
             $defaultConfig = new LogWidgetConfig();
             $defaultConfig->setRestrictions(
-                $this->container->get('claroline.log.manager')->getDefaultWorkspaceConfigRestrictions()
+                $this->getDefaultWorkspaceConfigRestrictions()
             );
             $defaultConfig->setAmount(5);
         }
@@ -129,14 +146,11 @@ class LogManager
             return null;
         }
 
-        /** @var \CLaroline\CoreBundle\Repository\Log\LogRepository $logRepository */
-        $logRepository = $em->getRepository('ClarolineCoreBundle:Log\Log');
-
         $desktopConfig = $this->getLogConfig($instance);
         $desktopConfig = $desktopConfig === null ? $defaultConfig: $desktopConfig;
-        $query = $logRepository->findLogsThroughConfigs($configs, $desktopConfig->getAmount());
+        $query = $this->logRepository->findLogsThroughConfigs($configs, $desktopConfig->getAmount());
         $logs = $query->getResult();
-        $chartData = $logRepository->countByDayThroughConfigs($configs, $this->getDefaultRange());
+        $chartData = $this->logRepository->countByDayThroughConfigs($configs, $this->getDefaultRange());
 
         //List item delegation
         $views = $this->renderLogs($logs);
@@ -162,14 +176,11 @@ class LogManager
         if (!$this->isAllowedToViewLogs($workspace)) {
             return null;
         }
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        /** @var \Claroline\CoreBundle\Repository\Log\LogRepository $repository */
-        $repository = $em->getRepository('ClarolineCoreBundle:Log\Log');
 
         $config = $this->getLogConfig($instance);
 
         if ($config === null) {
-            $defaultConfig = $em->getRepository('ClarolineCoreBundle:Widget\WidgetInstance')
+            $defaultConfig = $this->em->getRepository('ClarolineCoreBundle:Widget\WidgetInstance')
                 ->findOneBy(array('isDesktop' => false, 'isAdmin' => true));
 
             $config = new LogWidgetConfig();
@@ -193,9 +204,9 @@ class LogManager
             return null;
         }
 
-        $query = $repository->findLogsThroughConfigs(array($config), $config->getAmount());
+        $query = $this->logRepository->findLogsThroughConfigs(array($config), $config->getAmount());
         $logs = $query->getResult();
-        $chartData = $repository->countByDayThroughConfigs(array($config), $this->getDefaultRange());
+        $chartData = $this->logRepository->countByDayThroughConfigs(array($config), $this->getDefaultRange());
 
         //List item delegation
         $views = $this->renderLogs($logs);
@@ -251,7 +262,9 @@ class LogManager
             'workspace',
             $this->container->get('claroline.form.workspaceLogFilter'),
             $workspaceIds,
-            $maxResult
+            $maxResult,
+            null,
+            null
         );
         $params['workspace'] = $workspace;
 
@@ -286,66 +299,30 @@ class LogManager
         $resourceClass = null
     )
     {
-        $request = $this->container->get('request');
-        $data = $request->query->all();
-
-        $action = null;
-        $range = null;
-        $userSearch = null;
         $dateRangeToTextTransformer = new DateRangeToTextTransformer($this->container->get('translator'));
+        $data = $this->processFormData(
+            $actionsRestriction,
+            $logFilterFormType,
+            $workspaceIds,
+            $resourceClass,
+            $dateRangeToTextTransformer
+        );
+        $range = $data['range'];
 
-        if (array_key_exists('filter', $data)) {
-            $decodeFilter = json_decode(urldecode($data['filter']));
-            if ($decodeFilter !== null) {
-                $action = $decodeFilter->action;
-                $range = $dateRangeToTextTransformer->reverseTransform($decodeFilter->range);
-                $userSearch = $decodeFilter->user;
-            }
-        } else {
-            $dataClass['resourceClass'] = $resourceClass ? $resourceClass: null;
-            $tmpForm = $this->container->get('form.factory')->create($logFilterFormType, $dataClass);
-            $tmpForm->submit($request);
-            $formData = $tmpForm->getData();
-            $action = isset($formData['action']) ? $formData['action']: null;
-            $range = isset($formData['range']) ?$formData['range']:null;
-            $userSearch = isset($formData['user'])?$formData['user']:null;
-        }
-
-        if ($range == null) {
-            $range = $this->getDefaultRange();
-        }
-
-        $data = array();
-        $data['action'] = $action;
-        $data['range'] = $range;
-        $data['user'] = $userSearch;
-
-        if ($resourceClass !== null) {
-            $data['resourceClass'] = $resourceClass;
-        }
         $filterForm = $this->container->get('form.factory')->create($logFilterFormType, $data);
 
         $data['range'] = $dateRangeToTextTransformer->transform($range);
         $filter = urlencode(json_encode($data));
 
-        $entityManager = $this->container->get('doctrine.orm.entity_manager');
-        /** @var \Claroline\CoreBundle\Repository\Log\LogRepository $repository */
-        $repository = $entityManager->getRepository('ClarolineCoreBundle:Log\Log');
-
         //Find if action refers to an resource type
-        $actionString = $action;
-        $resourceType = null;
-        preg_match('/\[\[([^\]]+)\]\]/', $action, $matches);
-        if (!empty($matches)) {
-            $resourceType = $matches[1];
-            $actionString = preg_replace('/\[\[([^\]]+)\]\]/', '', $action);
-            $actionString = trim($actionString);
-        }
+        $actionData = $this->getResourceTypeFromAction($data['action']);
+        $actionString = $actionData['action'];
+        $resourceType = $actionData['resourceType'];
 
-        $query = $repository->findFilteredLogsQuery(
+        $query = $this->logRepository->findFilteredLogsQuery(
             $actionString,
             $range,
-            $userSearch,
+            $data['user'],
             $actionsRestriction,
             $workspaceIds,
             $maxResult,
@@ -363,10 +340,10 @@ class LogManager
             throw new NotFoundHttpException();
         }
 
-        $chartData = $repository->countByDayFilteredLogs(
+        $chartData = $this->logRepository->countByDayFilteredLogs(
             $actionString,
             $range,
-            $userSearch,
+            $data['user'],
             $actionsRestriction,
             $workspaceIds,
             false,
@@ -382,7 +359,161 @@ class LogManager
             'listItemViews' => $views,
             'filter' => $filter,
             'filterForm' => $filterForm->createView(),
-            'chartData' => $chartData
+            'chartData' => $chartData,
+            'actionName' => $actionString
+        );
+    }
+
+    public function countByUserWorkspaceList($workspace, $page)
+    {
+        if ($workspace == null) {
+            $workspaceIds = $this->getAdminOrCollaboratorWorkspaceIds();
+        } else {
+            $workspaceIds = array($workspace->getId());
+        }
+
+        $params = $this->countByUser(
+            $page,
+            'workspace',
+            $this->container->get('claroline.form.workspaceLogFilter'),
+            $workspaceIds,
+            null,
+            null
+        );
+        $params['workspace'] = $workspace;
+
+        return $params;
+    }
+
+    public function countByUserResourceList($resource, $page)
+    {
+        $resourceNodeIds = array($resource->getResourceNode()->getId());
+
+        $params = $this->countByUser(
+            $page,
+            'workspace',
+            $this->container->get('claroline.form.resourceLogFilter'),
+            null,
+            $resourceNodeIds,
+            get_class($resource)
+        );
+        $params['_resource'] = $resource;
+
+        return $params;
+    }
+
+    public function countByUser(
+        $page,
+        $actionsRestriction,
+        $logFilterFormType,
+        $workspaceIds = null,
+        $resourceNodeIds = null,
+        $resourceClass = null
+    )
+    {
+        $page = max(1, $page);
+        $dateRangeToTextTransformer = new DateRangeToTextTransformer($this->container->get('translator'));
+        $data = $this->processFormData(
+            $actionsRestriction,
+            $logFilterFormType,
+            $workspaceIds,
+            $resourceClass,
+            $dateRangeToTextTransformer
+        );
+        $range = $data['range'];
+        $orderBy = 'name';
+        if (isset($data['orderBy'])) {
+            $orderBy = $data['orderBy'];
+        }
+        $order = 'ASC';
+        if (isset($data['order'])) {
+            $order = $data['order'];
+        }
+
+        $filterForm = $this->container->get('form.factory')->create($logFilterFormType, $data);
+
+        $data['range'] = $dateRangeToTextTransformer->transform($range);
+        $filter = urlencode(json_encode($data));
+
+        //Find if action refers to an resource type
+        $actionData = $this->getResourceTypeFromAction($data['action']);
+        $actionString = $actionData['action'];
+        $resourceType = $actionData['resourceType'];
+
+        $nbUsers = $this->logRepository->countTopUsersByAction(
+            $actionString,
+            $range,
+            $data['user'],
+            $actionsRestriction,
+            $workspaceIds,
+            $resourceType,
+            $resourceNodeIds,
+            false
+        );
+
+        $maxResult = self::LOG_PER_PAGE;
+        if (($page-1)*$maxResult>$nbUsers) {
+            throw new NotFoundHttpException();
+        }
+
+        $topUsers = $this->logRepository->topUsersByActionQuery(
+            $actionString,
+            $range,
+            $data['user'],
+            $actionsRestriction,
+            $workspaceIds,
+            $maxResult,
+            $resourceType,
+            $resourceNodeIds,
+            false,
+            $page,
+            $orderBy,
+            $order
+        )->getResult();
+
+
+        $formatedData = $this->formatTopUserDataArray($topUsers);
+        $resultUserList = null;
+        if (!empty($formatedData)) {
+            $userActionsByDay = $this->logRepository->findUserActionsByDay(
+                $actionString,
+                $range,
+                $actionsRestriction,
+                $workspaceIds,
+                $resourceType,
+                $resourceNodeIds,
+                $formatedData['ids']
+            );
+            $userActionsByDay[] = null;
+            $resultUserList = $formatedData['userData'];
+            $currentUserId = null;
+            $userActionsArray = array();
+            foreach ($userActionsByDay as $userAction) {
+                if ($userAction === null || ($currentUserId !== null && $currentUserId != $userAction['id'])) {
+                    $resultUserList[$currentUserId]['stats'] = $this
+                        ->logRepository
+                        ->extractChartData($userActionsArray, $range);
+                    $resultUserList[$currentUserId]['maxValue'] = max(array_column($userActionsArray, 'total'));
+                    $userActionsArray = array();
+                }
+                if ($userAction !== null) {
+                    $currentUserId = $userAction['id'];
+                    $userActionsArray[] = $userAction;
+                }
+            }
+        }
+        $adapter = new FixedAdapter($nbUsers, $resultUserList);
+        $pager   = new PagerFanta($adapter);
+        $pager->setMaxPerPage(self::LOG_PER_PAGE);
+        $pager->setCurrentPage($page);
+
+        return array(
+            'pager'         => $pager,
+            'filter'        => $filter,
+            'filterForm'    => $filterForm->createView(),
+            'actionName'    => $actionString,
+            'orderBy'       => $orderBy,
+            'order'         => $order
         );
     }
 
@@ -390,12 +521,11 @@ class LogManager
     {
         $workspacesVisibility = array();
 
-        $em = $this->container->get('doctrine.orm.entity_manager');
         foreach ($workspaces as $workspace) {
             $workspacesVisibility[$workspace->getId()] = true;
         }
 
-        $hiddenWorkspaceConfigs = $em
+        $hiddenWorkspaceConfigs = $this->em
             ->getRepository('ClarolineCoreBundle:Log\LogHiddenWorkspaceWidgetConfig')
             ->findBy(array('user' => $user));
 
@@ -424,6 +554,89 @@ class LogManager
     public function getDefaultWorkspaceConfigRestrictions()
     {
         return $this->getDefaultConfigRestrictions(LogGenericEvent::DISPLAYED_WORKSPACE);
+    }
+
+    public function getLogConfig(WidgetInstance $config = null)
+    {
+        return $this->em
+            ->getRepository('ClarolineCoreBundle:Log\LogWidgetConfig')
+            ->findOneBy(array('widgetInstance' => $config));
+    }
+
+    protected function getResourceTypeFromAction($action)
+    {
+        //Find if action refers to an resource type
+        $actionString = $action;
+        $resourceType = null;
+        preg_match('/\[\[([^\]]+)\]\]/', $action, $matches);
+        if (!empty($matches)) {
+            $resourceType = $matches[1];
+            $actionString = preg_replace('/\[\[([^\]]+)\]\]/', '', $action);
+            $actionString = trim($actionString);
+        }
+
+        return array('action'=>$actionString, 'resourceType'=>$resourceType);
+    }
+
+    protected function processFormData(
+        $actionsRestriction,
+        $logFilterFormType,
+        $workspaceIds,
+        $resourceClass,
+        $dateRangeToTextTransformer
+    )
+    {
+        $request = $this->container->get('request');
+        $data = $request->query->all();
+
+        $action = null;
+        $range = null;
+        $userSearch = null;
+        if (!empty($data['orderBy'])) {
+            $orderBy = $data['orderBy'];
+            $order = $data['order'];
+        }
+
+        if (array_key_exists('filter', $data)) {
+            $decodeFilter = json_decode(urldecode($data['filter']));
+            if ($decodeFilter !== null) {
+                $action = $decodeFilter->action;
+                $range = $dateRangeToTextTransformer->reverseTransform($decodeFilter->range);
+                $userSearch = $decodeFilter->user;
+            }
+        } else {
+            $dataClass['resourceClass'] = $resourceClass ? $resourceClass: null;
+            $tmpForm = $this->container->get('form.factory')->create($logFilterFormType, $dataClass);
+            $tmpForm->submit($request);
+            $formData = $tmpForm->getData();
+            $action = isset($formData['action']) ? $formData['action']: null;
+            $range = isset($formData['range']) ?$formData['range']:null;
+            $userSearch = isset($formData['user'])?$formData['user']:null;
+        }
+
+        if ($range == null) {
+            $range = $this->getDefaultRange();
+        }
+
+        if ($action == null && $actionsRestriction == "workspace" && $workspaceIds !== null) {
+            $action = LogWorkspaceEnterEvent::ACTION;
+        }
+
+        $data = array();
+        $data['action'] = $action;
+        $data['range'] = $range;
+        $data['user'] = $userSearch;
+
+        if (isset($orderBy) && isset($order)) {
+            $data['orderBy'] = $orderBy;
+            $data['order'] = $order;
+        }
+
+        if ($resourceClass !== null) {
+            $data['resourceClass'] = $resourceClass;
+        }
+
+        return $data;
     }
 
     protected function isAllowedToViewLogs($workspace)
@@ -486,9 +699,7 @@ class LogManager
     {
         $workspaceIds = array();
         $loggedUser = $this->container->get('security.token_storage')->getToken()->getUser();
-        $workspaceIdsResult = $this
-            ->container
-            ->get('doctrine.orm.entity_manager')
+        $workspaceIdsResult = $this->em
             ->getRepository('ClarolineCoreBundle:Workspace\Workspace')
             ->findIdsByUserAndRoleNames($loggedUser, array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'));
 
@@ -499,10 +710,22 @@ class LogManager
         return $workspaceIds;
     }
 
-    public function getLogConfig(WidgetInstance $config = null)
+    protected function formatTopUserDataArray($topUsers)
     {
-        return $this->container->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Log\LogWidgetConfig')
-            ->findOneBy(array('widgetInstance' => $config));
+        if ($topUsers === null || count($topUsers) == 0) {
+            return array();
+        }
+
+        $topUsersFormatedArray = array();
+        $topUsersIdList = array();
+        foreach ($topUsers as $topUser) {
+            $id = $topUser['id'];
+            $topUser['stats'] = array();
+            $topUsersFormatedArray[$id] = $topUser;
+            $topUsersIdList[] = $id;
+        }
+
+        return array('ids' => $topUsersIdList, 'userData' => $topUsersFormatedArray);
     }
+
 }

@@ -1,0 +1,152 @@
+<style type="text/css">
+    .logs-list {
+        margin-top: 10px;
+    }
+    .logs-list .row {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .logs-list .row-odd {
+        background-color: #F9F9F9;
+    }
+    .logs-list > div.row {
+        border-top: 1px solid #DDDDDD;
+    }
+    .logs-list > div.row:first-child {
+        border-top: none;
+    }
+    .log_list_item_head {
+        font-size: 13px;
+        font-weight: bold;
+    }
+    .log_list_item {
+        font-size: 12px;
+    }
+    .jqplot-title{display:none;}
+    .jqplot-xaxis{margin-top:5px !important;}
+</style>
+
+<link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
+
+<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/excanvas.min.js') }}"></script><![endif]-->
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/jquery.jqplot.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.barRenderer.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.cursor.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.highlighter.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasTextRenderer.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.dateAxisRenderer.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasAxisLabelRenderer.min.js') }}"></script>
+
+{% set newNameOrder = 'ASC' %}
+{% set newActionsOrder = 'ASC' %}
+{% if orderBy == 'name' %}
+    {% set newNameOrder = (order == 'ASC')?'DESC':'ASC' %}
+{% elseif orderBy == 'actions' %}
+    {% set newActionsOrder = (order == 'ASC')?'DESC':'ASC' %}
+{% endif %}
+{% set route = app.request.attributes.get('_route') %}
+{% set routeParams = app.request.attributes.get('_route_params')|merge(app.request.query.all) %}
+<div class='logs-list'>
+    <div class='row'>
+        <div class="col-md-3 log_list_item_head">
+            <a href="{{ path(route, routeParams|merge({'orderBy':'name', 'order': newNameOrder})) }}">{{'user'|trans({}, 'platform')}} {% if orderBy == 'name' %} <i class="fa fa-sort-{{ order|lower }}"></i> {% endif %}</a>
+        </div>
+        <div class="col-md-6 log_list_item_head">
+            {{'actions_per_day_chart'|trans({}, 'log')}}
+        </div>
+        <div class="col-md-3 log_list_item_head">
+            <a href="{{ path(route, routeParams|merge({'orderBy':'actions', 'order': newActionsOrder})) }}">{{'actions'|trans({}, 'platform')}} {% if orderBy == 'actions' %} <i class="fa fa-sort-{{ order|lower }}"></i> {% endif %}</a>
+        </div>
+    </div>
+    {% for log in logs %}
+        <div class='row {% if loop.index is divisibleby(2) %}row-odd{% else %}row-even{% endif %}'>
+            <div class="col-md-3 log_list_item">
+                {{ log['name'] }}
+            </div>
+            <div class="col-md-6 log_list_item" style="padding: 0 50px 0 0;">
+                <div id="{{ log['id'] }}-user-bar-chart" style="height: 50px;"></div>
+                <script type="text/javascript">
+                    $(document).ready(function(){
+                        drawUserBarChart({{ log['stats']|json_encode|raw }}, "{{ log['id'] }}-user-bar-chart", {{ log['maxValue'] }});
+                    });
+                </script>
+            </div>
+            <div class="col-md-3 log_list_item">
+                {{ log['actions'] }}
+            </div>
+        </div>
+
+    {% endfor %}
+</div>
+
+<script type="text/javascript">
+    var bg_color = "transparent";
+    if (navigator.userAgent.match(/msie/i) && navigator.userAgent.match(/8/)) bg_color = "#fff";
+    function drawUserBarChart(chartData, containerId, maxValue) {
+        if (chartData.length>0) {
+            var barWidth = Math.max(Math.floor($("#"+containerId).width()/chartData.length) - 3, 3);
+            var actionsPlot = $.jqplot(
+                    containerId,
+                    [chartData],
+                    {
+                        title: {show: false},
+                        grid: {
+                            drawGridlines: false,
+                            drawBorder: false,
+                            shadow: false,
+                            background: bg_color
+                        },
+                        axesDefaults: {
+                            labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                            tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+                            tickOptions: {
+                                showGridline: false,
+                                show: true,
+                                showMark: false,
+                                fontSize: '10px'
+                            }
+                        },
+                        axes: {
+                            xaxis: {
+                                renderer: $.jqplot.DateAxisRenderer,
+                                tickOptions: {
+                                    formatString:'{{ 'jqplot_date_output_format'|trans({}, 'platform') }}'
+                                },
+                                numberTicks: 2,
+                                max: chartData[chartData.length-1][0]
+                            },
+                            yaxis: {
+                                min: 0,
+                                max: maxValue,
+                                numberTicks: 1
+                            }
+                        },
+                        highlighter: {
+                            show: true,
+                            showMarker:false,
+                            tooltipOffset:5,
+                            tooltipLocation:'n',
+                            tooltipAxes:'xy',
+                            formatString:'%s <br/> %d',
+                            tooltipFadeSpeed:'fast'
+                        },
+                        cursor: {
+                            show: false
+                        },
+                        seriesDefaults: {
+                            renderer: $.jqplot.BarRenderer,
+                            shadow:false,
+                            useNegativeColors: false,
+                            rendererOptions:{
+                                highlightMouseOver: true,
+                                highlightMouseDown: true,
+                                barWidth: barWidth,
+                                barMargin: 3
+                            }
+                        }
+                    }
+            );
+        }
+    };
+</script>

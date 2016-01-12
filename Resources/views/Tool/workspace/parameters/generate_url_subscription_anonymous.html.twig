@@ -4,19 +4,19 @@
 
 {% block breadcrumb %}
     {{
-    macros.workspaceBreadcrumbs(
-    workspace,
-    [
-    {
-    'name': 'parameters'|trans({}, 'platform'),
-    'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
-    },
-    {
-    'name': 'generate_url_subscription_anonyme'|trans({}, 'platform'),
-    'href': ''
-    }
-    ]
-    )
+        macros.workspaceBreadcrumbs(
+        workspace,
+        [
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
+            },
+            {
+                'name': 'generate_url_subscription_anonyme'|trans({}, 'platform'),
+                'href': ''
+            }
+        ]
+        )
     }}
 {% endblock %}
 {% block section_content %}
@@ -24,6 +24,10 @@
         <h3 class="panel-title">{{ 'generate_url_subscription_anonyme'|trans({}, 'platform') }}</h3>
     </div>
     <div class="panel-body">
+        <div class="well">
+            {% set url = '<a href="' ~ path('claro_workspace_subscription_url_generate_user', {'workspace': workspace.getId()}) ~ '">' ~ 'here'|trans({}, 'platform') ~ '</a>' %}
+            {{ 'register_to_workspace_account_exists'|trans({'%link%': url}, 'platform') | raw }}
+        </div>
         <form role="form" method="post" action="{{ path('claro_workspace_subscription_url_generate_anonymous',{'workspace':workspace.getId()}) }}" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>

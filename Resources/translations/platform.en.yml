@@ -1220,3 +1220,6 @@ user_subscription_notification_for_admin: subscribed to the workspace %workspace
 filter_by: Filter by
 loading: Loading
 user_list: User list
+loading: Loading
+register_to_workspace_account_exists: Already have an account ? click %link% to subscribe.
+here: here

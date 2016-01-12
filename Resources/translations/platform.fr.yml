@@ -1218,7 +1218,9 @@ client_list: Liste des clients
 allow_authentication: Autoriser l'authentification
 user_subscription_notification_for_admin: s'est inscrit dans l'espace d'activité %workspace%
 filter_by: Filtrer sur
-loading: Chargement
 user_list: Liste des utilisateurs
 list: Lister
 group_list: Liste des groupes
+loading: Chargement
+register_to_workspace_account_exists: Vous avez déjà un compte? Identifiez vous %link% pour vous inscrire.
+here: ici
