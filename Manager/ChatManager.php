@@ -27,6 +27,7 @@ class ChatManager
     private $om;
     private $pagerFactory;
 
+    private $chatRoomMessageRepo;
     private $chatUserRepo;
 
     /**
@@ -43,6 +44,7 @@ class ChatManager
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
 
+        $this->chatRoomMessageRepo = $om->getRepository('ClarolineChatBundle:ChatRoomMessage');
         $this->chatUserRepo = $om->getRepository('ClarolineChatBundle:ChatUser');
     }
 
@@ -88,6 +90,7 @@ class ChatManager
     public function saveChatRoomMessage(
         ChatRoom $chatRoom,
         $username,
+        $fullName,
         $message,
         $type = ChatRoomMessage::MESSAGE
     )
@@ -96,6 +99,7 @@ class ChatManager
         $roomMessage->setCreationDate(new \DateTime());
         $roomMessage->setChatRoom($chatRoom);
         $roomMessage->setUsername($username);
+        $roomMessage->setUserFullName($fullName);
         $roomMessage->setContent($message);
         $roomMessage->setType($type);
         $this->om->persist($roomMessage);
@@ -160,5 +164,15 @@ class ChatManager
         }
 
         return $users;
+    }
+
+
+    /***********************************************
+     * Access to ChatRoomMessageRepository methods *
+     ***********************************************/
+
+    public function getChatRoomParticipantsName(ChatRoom $chatRoom)
+    {
+        return $this->chatRoomMessageRepo->findChatRoomParticipantsName($chatRoom);
     }
 }

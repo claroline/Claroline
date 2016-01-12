@@ -19,15 +19,12 @@
 
             if (msgContent !== undefined && msgContent !== '') {
                 angular.element(document.getElementById('input-box')).scope().sendMessage(msgContent);
-    //            ChatRoom.send_message_to_room(msgContent);
             }
             $('#msg-input').val('');
         }
     });
 
     $(window).unload(function(){
-        console.log('disconnecting...');
         angular.element(document.getElementById('chat-room-main')).scope().disconnect();
-        console.log('unloaded');
     });
 })();

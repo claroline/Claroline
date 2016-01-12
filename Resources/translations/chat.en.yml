@@ -1,6 +1,9 @@
+archives: Archives
 audio_only: Audio only
 audio_video: Audio & video
 ban: Ban
+banned_msg: You have been banned from the Chat room.
+banned_users: Banned users
 bosh_server_port: BOSH server port
 chat: Chat
 chat_account_not_activated_msg: Your chat account is not activated
@@ -13,12 +16,18 @@ chat_room_uninitialized_msg: Chat room is not available yet
 chat_room_unknown_status_msg: Chat room has an unknown status
 chat_username: Chat username
 closed: Closed
+connecting: Connecting...
 create_chat_accounts: Create Chat accounts
+has_been_banned_from_the_chat_room: has been banned from the Chat room
+has_been_kicked_from_the_chat_room: has been kicked from the Chat room
 has_joined_the_chat_room: has joined the Chat room
 has_left_the_chat_room: has left the Chat room
 host: Host
+init_room: Initialize Chat room
+kicked_msg: You have been kicked from the Chat room.
 muc_host: MUC server
 mute: Mute
+not_authorized_msg: You are not authorized to connect to this Chat room.
 open: Open
 port: Port
 search_chat_users_infos: A search has to be performed in order to display users with a chat account.

@@ -12,15 +12,23 @@
 
     angular.module('ChatRoomModule').factory('XmppMucService', [
         '$rootScope', 
+        '$http',
         'XmppService',
-        function ($rootScope, XmppService) {
+        function ($rootScope, $http, XmppService) {
+            var connected = false;
             var room = null;
             var roomId = null;
             var roomName = null;
             var xmppMucHost = null;
+            var myUsername = null;
+            var myRole = null;
+            var myAffiliation = null;
             var users = [];
+            var bannedUsers = [];
+            var vm;
 
             var onRoomMessage = function (message) {
+                console.log(message);
                 var from = $(message).attr('from');
                 var type = $(message).attr('type');
                 var roomName = Strophe.getBareJidFromJid(from);
@@ -32,18 +40,24 @@
                         body = $(message).find('body').text();
                     }
                     var datas = $(message).find('datas');
-                    var firstName = datas.attr('firstName');
-                    var lastName = datas.attr('lastName');
-                    var color = datas.attr('color');
-                    color = (color === undefined) ? null : color;
+                    var status = datas.attr('status');
+                    
+                    if (status === 'closed') {
+                        $rootScope.$broadcast('closedRoomEvent');
+                    } else {
+                        var firstName = datas.attr('firstName');
+                        var lastName = datas.attr('lastName');
+                        var color = datas.attr('color');
+                        color = (color === undefined) ? null : color;
 
-                    var sender = (firstName !== undefined && lastName !== undefined) ?
-                        firstName + ' ' + lastName :
-                        Strophe.getResourceFromJid(from);
-                    $rootScope.$broadcast(
-                        'newMessageEvent', 
-                        {sender: sender, message: body, color: color}
-                    );
+                        var sender = (firstName !== undefined && lastName !== undefined) ?
+                            firstName + ' ' + lastName :
+                            Strophe.getResourceFromJid(from);
+                        $rootScope.$broadcast(
+                            'newMessageEvent', 
+                            {sender: sender, message: body, color: color}
+                        );
+                    }
                 }
 
                 return true;
@@ -53,31 +67,156 @@
                 console.log(presence);
                 var from = $(presence).attr('from');
                 var roomName = Strophe.getBareJidFromJid(from);
+                var status = $(presence).find('status');
+                var statusCode = status.attr('code');
+                var error = $(presence).find('error');
+                var errorCode = error.attr('code');
+                console.log('##### STATUS = ' + statusCode + ' ####');
+                console.log('##### ERROR = ' + errorCode + ' ####');
                 
                 if (roomName.toLowerCase() === room.toLowerCase()) {
                     var username = Strophe.getResourceFromJid(from);
+                    console.log('##### USERNAME = ' + username + ' ####');
                     var type = $(presence).attr('type');
                     var datas = $(presence).find('datas');
                     var firstName = datas.attr('firstName');
                     var lastName = datas.attr('lastName');
                     var color = datas.attr('color');
+                    var item = $(presence).find('item');
+                    var affiliation = item.attr('affiliation');
+                    var role = item.attr('role');
                     color = (color === undefined) ? null : color;
 
                     var name = (firstName !== undefined && lastName !== undefined) ?
                         firstName + ' ' + lastName :
                         username;
 
+                    if (errorCode === '403') {
+                        $rootScope.$broadcast('xmppMucForbiddenConnectionEvent');
+                        
+                        return true;
+                    }
+
                     if (username === XmppService.getUsername()) {
-                        $rootScope.$broadcast('myPresenceConfirmationEvent');
+                        myRole = role;
+                        myAffiliation = affiliation;
+                        
+                        if (statusCode === '110') {
+                            myUsername = username;
+                            $rootScope.$broadcast('xmppMucConnectedEvent');
+                            $rootScope.$broadcast('myPresenceConfirmationEvent');
+
+                            var route = Routing.generate(
+                                'claro_chat_room_presence_register',
+                                {
+                                    chatRoom: roomId, 
+                                    username: XmppService.getUsername(),
+                                    fullName: XmppService.getFullName(),
+                                    status: 'connection'
+                                }
+                            );
+                            $http.post(route);
+                            
+                            if (vm.isAdmin()) {
+                                vm.requestOutcastList();
+                            }
+                        } else if (statusCode === '301') {
+                            $rootScope.$broadcast('xmppMucBannedEvent');
+                            var route = Routing.generate(
+                                'claro_chat_room_presence_register',
+                                {
+                                    chatRoom: roomId, 
+                                    username: XmppService.getUsername(), 
+                                    fullName: XmppService.getFullName(),
+                                    status: 'banned'
+                                }
+                            );
+                            $http.post(route);
+                        } else if (statusCode === '307') {
+                            $rootScope.$broadcast('xmppMucKickedEvent');
+                            var route = Routing.generate(
+                                'claro_chat_room_presence_register',
+                                {
+                                    chatRoom: roomId, 
+                                    username: XmppService.getUsername(), 
+                                    fullName: XmppService.getFullName(),
+                                    status: 'kicked'
+                                }
+                            );
+                            $http.post(route);
+                        }
                     }
                     
                     if (type === 'unavailable') {
-                        $rootScope.$broadcast('userDisconnectionEvent', username);
+                        vm.removeUser(username, statusCode);
+//                        $rootScope.$broadcast('userDisconnectionEvent', username);
                     } else {
-                        $rootScope.$broadcast(
-                            'userConnectionEvent', 
-                            {username: username, name: name, color: color}
-                        );
+                        vm.addUser(username, name, color, affiliation, role);
+//                        $rootScope.$broadcast(
+//                            'userConnectionEvent', 
+//                            {username: username, name: name, color: color, affiliation: affiliation, role: role}
+//                        );
+                    }
+                    
+//                    if (statusCode === '301') {
+//                        console.log('Ban ===> ' + username);
+//                        vm.addBannedUser(username);
+//                    }
+                }
+
+                return true;
+            };
+
+            var onIQStanza = function (iq) {
+                console.log(iq);
+                var type = $(iq).attr('type');
+                var id = $(iq).attr('id');
+                console.log(type);
+                console.log(id);
+                
+                if (type === 'result') {
+                    
+                    if (id === 'room-config-request') {
+                        var iq = $iq({
+                            id: 'room-config-submit',
+                            from: XmppService.getUsername() + "@" + XmppService.getXmppHost() + '/' + roomName,
+                            to: room,
+                            type: 'set'
+                        }).c('query', {xmlns: 'http://jabber.org/protocol/muc#owner'})
+                        .c(
+                            'x',
+                            {
+                                xmlns: 'jabber:x:data',
+                                type: 'submit'
+                            }
+                        )
+                        .c('field', {var: 'FORM_TYPE'})
+                        .c('value').t('http://jabber.org/protocol/muc#roomconfig')
+                        .up()
+                        .up()
+                        .c('field', {var: 'muc#roomconfig_persistentroom'})
+                        .c('value').t(1)
+                        .up()
+                        .up()
+                        .c('field', {var: 'muc#roomconfig_whois'})
+                        .c('value').t('moderators');
+                        XmppService.getConnection().sendIQ(iq);
+                    } else if (id === 'room-config-submit') {
+                        $rootScope.$broadcast('xmppMucConfigurationSuccessEvent');
+                    } else if (id === 'room-outcast-list') {
+                        
+                        var items = $(iq).find('item');
+                        items.each(function () {
+                            var jid = $(this).attr('jid');
+                            var username = Strophe.getNodeFromJid(jid);
+                            vm.addBannedUser(username);
+                        });
+                    } else if (id.substring(0, 4) === 'ban-') {
+                        var username = id.substring(4, id.length);
+                        vm.addBannedUser(username);
+                    } else if (id.substring(0, 6) === 'unban-') {
+                        var username = id.substring(6, id.length);
+                        vm.removeBannedUser(username);
                     }
                 }
 
@@ -88,6 +227,7 @@
                 var connection = XmppService.getConnection();
                 connection.addHandler(onRoomPresence, null, 'presence');
                 connection.addHandler(onRoomMessage, null, 'message', 'groupchat');
+                connection.addHandler(onIQStanza, null, 'iq');
                 connection.send(
                     $pres({
                         to: room + "/" + XmppService.getUsername()
@@ -101,19 +241,6 @@
                         }
                     )
                 );
-                $rootScope.$broadcast('xmppMucConnectedEvent');
-        
-                $.ajax({
-                    url: Routing.generate(
-                        'claro_chat_room_presence_register',
-                        {
-                            chatRoom: roomId, 
-                            username: XmppService.getUsername(), 
-                            status: 'connection'
-                        }
-                    ),
-                    type: 'POST'
-                });
             });
 
             return {
@@ -129,6 +256,7 @@
                     lastName, 
                     color
                 ) {
+                    vm = this;
                     xmppMucHost = mucServer;
                     roomId = roomIdParam;
                     roomName = roomNameParam;
@@ -145,6 +273,7 @@
                     );
                 },
                 disconnect: function () {
+                    connected = false;
                     var connection = XmppService.getConnection();
                     connection.send(
                         $pres({
@@ -156,20 +285,22 @@
                     connection.flush();
                     connection.disconnect();
         
+                    var route = Routing.generate(
+                        'claro_chat_room_presence_register',
+                        {
+                            chatRoom: roomId, 
+                            username: XmppService.getUsername(), 
+                            fullName: XmppService.getFullName(),
+                            status: 'disconnection'
+                        }
+                    );
                     $.ajax({
-                        url: Routing.generate(
-                            'claro_chat_room_presence_register',
-                            {
-                                chatRoom: roomId, 
-                                username: XmppService.getUsername(), 
-                                status: 'disconnection'
-                            }
-                        ),
+                        url: route,
                         type: 'POST'
                     });
                 },
                 sendMessageToRoom: function (message) {
-                     XmppService.getConnection().send(
+                    XmppService.getConnection().send(
                         $msg({
                             to: room,
                             type: "groupchat"
@@ -185,17 +316,32 @@
                         )
                     );
 
-                    $.ajax({
-                        url: Routing.generate(
-                            'claro_chat_room_message_register',
-                            {
-                                chatRoom: roomId, 
-                                username: XmppService.getUsername(), 
-                                message: message
-                            }
-                        ),
-                        type: 'POST'
-                    });
+                    var route = Routing.generate(
+                        'claro_chat_room_message_register',
+                        {
+                            chatRoom: roomId, 
+                            username: XmppService.getUsername(),
+                            fullName: XmppService.getFullName(),
+                            message: message
+                        }
+                    );
+                    $http.post(route);
+                },
+                getRoomConfiguration: function () {
+                    var iq = $iq({
+                        id: 'room-config-request',
+                        from: XmppService.getUsername() + "@" + XmppService.getXmppHost() + '/' + roomName,
+                        to: room,
+                        type: 'get'
+                    }).c('query', {xmlns: 'http://jabber.org/protocol/muc#owner'});
+                    XmppService.getConnection().sendIQ(iq);
+                },
+                setConnected: function (isConnected) {
+                    connected = isConnected;
+                },
+                isConnected: function () {
+                    
+                    return connected;
                 },
                 getRoom: function () {
 
@@ -217,11 +363,158 @@
                     
                     return users;
                 },
-                addUser: function (userDatas) {
-                    users.push(userDatas);
+                getBannedUsers: function () {
+                  
+                    return bannedUsers;
                 },
-                removeUser: function (index) {
-                    users.splice(index, 1);
+                addUser: function (username, name, color, affiliation, role) {
+                    var isPresent = false;
+                    for (var i = 0; i < users.length; i++) {
+                        var currentUsername =  users[i]['username'];
+
+                        if (username === currentUsername) {
+                            isPresent = true;
+                            users[i]['affiliation'] = affiliation;
+                            users[i]['role'] = role;
+                            break;
+                        }
+                    }
+
+                    if (!isPresent) {
+                        users.push({username: username, name: name, color: color, affiliation: affiliation, role: role});
+                        $rootScope.$broadcast('newPresenceEvent', {username: username, name: name, status: 'connection'});
+                    }
+                    $rootScope.$broadcast(
+                        'userConnectionEvent', 
+                        {username: username, name: name, color: color, affiliation: affiliation, role: role}
+                    );
+                },
+                removeUser: function (username, statusCode) {
+
+                    for (var i = 0; i < users.length; i++) {
+                        var currentUsername =  users[i]['username'];
+
+                        if (username === currentUsername) {
+                            var currentName = users[i]['name'];
+                            var currentUsername = users[i]['username'];
+                            users.splice(i, 1);
+                            $rootScope.$broadcast(
+                                'userDisconnectionEvent',
+                                {
+                                    username: currentUsername, 
+                                    name: currentName, 
+                                    statusCode: statusCode
+                                }
+                            );
+//                            $rootScope.$broadcast('newPresenceEvent', {username: currentUsername, name: currentName, status: 'disconnection'});
+                            break;
+                        }
+                    }
+                },
+                kickUser: function (username) {
+                    var iq = $iq({
+                        id: 'kick-' + username,
+                        from: XmppService.getUsername() + "@" + XmppService.getXmppHost() + '/' + roomName,
+                        to: room,
+                        type: 'set'
+                    }).c('x', {xmlns: 'http://jabber.org/protocol/muc#admin'})
+                    .c('item', {nick: username, role: 'none'});
+                    XmppService.getConnection().sendIQ(iq);
+                },
+                muteUser: function (username) {
+                    var iq = $iq({
+                        id: 'mute-' + username,
+                        from: XmppService.getUsername() + "@" + XmppService.getXmppHost() + '/' + roomName,
+                        to: room,
+                        type: 'set'
+                    }).c('x', {xmlns: 'http://jabber.org/protocol/muc#admin'})
+                    .c('item', {nick: username, role: 'visitor'});
+                    XmppService.getConnection().sendIQ(iq);
+                },
+                unmuteUser: function (username) {
+                    var iq = $iq({
+                        id: 'unmute-' + username,
+                        from: XmppService.getUsername() + "@" + XmppService.getXmppHost() + '/' + roomName,
+                        to: room,
+                        type: 'set'
+                    }).c('x', {xmlns: 'http://jabber.org/protocol/muc#admin'})
+                    .c('item', {nick: username, role: 'participant'});
+                    XmppService.getConnection().sendIQ(iq);
+                },
+                banUser: function (username) {
+                    var iq = $iq({
+                        id: 'ban-' + username,
+                        from: XmppService.getUsername() + "@" + XmppService.getXmppHost() + '/' + roomName,
+                        to: room,
+                        type: 'set'
+                    }).c('query', {xmlns: 'http://jabber.org/protocol/muc#admin'})
+                    .c('item', {jid: username + "@" + XmppService.getXmppHost(), affiliation: 'outcast'});
+                    XmppService.getConnection().sendIQ(iq);
+                },
+                unbanUser: function (username) {
+                    var iq = $iq({
+                        id: 'unban-' + username,
+                        from: XmppService.getUsername() + "@" + XmppService.getXmppHost() + '/' + roomName,
+                        to: room,
+                        type: 'set'
+                    }).c('query', {xmlns: 'http://jabber.org/protocol/muc#admin'})
+                    .c('item', {jid: username + "@" + XmppService.getXmppHost(), affiliation: 'none'});
+                    XmppService.getConnection().sendIQ(iq);
+                },
+                addBannedUser: function (username) {
+                    var isPresent = false;
+                    for (var i = 0; i < bannedUsers.length; i++) {
+                        var currentUsername =  bannedUsers[i]['username'];
+
+                        if (username === currentUsername) {
+                            isPresent = true;
+                            break;
+                        }
+                    }
+
+                    if (!isPresent) {
+                        bannedUsers.push(username);
+                        $rootScope.$broadcast('xmppMucBanUserEvent', username);
+                    }
+                },
+                removeBannedUser: function (username) {
+
+                    for (var i = 0; i < bannedUsers.length; i++) {
+                        var currentUsername =  bannedUsers[i];
+
+                        if (username === currentUsername) {
+                            bannedUsers.splice(i, 1);
+                            $rootScope.$broadcast('xmppMucUnbanUserEvent', username);
+                            break;
+                        }
+                    }
+                },
+                requestOutcastList: function () {
+                    var iq = $iq({
+                        id: 'room-outcast-list',
+                        from: XmppService.getUsername() + "@" + XmppService.getXmppHost() + '/' + roomName,
+                        to: room,
+                        type: 'get'
+                    }).c('query', {xmlns: 'http://jabber.org/protocol/muc#admin'})
+                    .c(
+                        'item',
+                        {
+                            affiliation: 'outcast'
+                        }
+                    );
+                    XmppService.getConnection().sendIQ(iq);
+                },
+                isAdmin: function () {
+                    
+                    return myAffiliation === 'admin' || myAffiliation === 'owner';
+                },
+                isModerator: function () {
+                    
+                    return myRole === 'moderator';
+                },
+                canParticipate: function () {
+                    
+                    return myRole !== 'none' && myRole !== 'visitor';
                 }
             };
         }

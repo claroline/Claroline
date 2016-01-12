@@ -23,8 +23,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -35,6 +38,8 @@ class ChatController extends Controller
     private $formFactory;
     private $platformConfigHandler;
     private $request;
+    private $router;
+    private $tokenStorage;
     private $translator;
 
     /**
@@ -44,6 +49,8 @@ class ChatController extends Controller
      *     "formFactory"           = @DI\Inject("form.factory"),
      *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
      *     "requestStack"          = @DI\Inject("request_stack"),
+     *     "router"                = @DI\Inject("router"),
+     *     "tokenStorage"          = @DI\Inject("security.token_storage"),
      *     "translator"            = @DI\Inject("translator")
      * })
      */
@@ -53,6 +60,8 @@ class ChatController extends Controller
         FormFactory $formFactory,
         PlatformConfigurationHandler $platformConfigHandler,
         RequestStack $requestStack,
+        RouterInterface $router,
+        TokenStorageInterface $tokenStorage,
         TranslatorInterface $translator
     )
     {
@@ -61,6 +70,8 @@ class ChatController extends Controller
         $this->formFactory = $formFactory;
         $this->platformConfigHandler = $platformConfigHandler;
         $this->request = $requestStack->getCurrentRequest();
+        $this->router = $router;
+        $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
     }
 
@@ -93,17 +104,27 @@ class ChatController extends Controller
      *     name="claro_chat_room_open",
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template()
      */
-    public function chatRoomOpenAction(User $authenticatedUser, ChatRoom $chatRoom)
+    public function chatRoomOpenAction(ChatRoom $chatRoom)
     {
         $this->checkChatRoomRight($chatRoom, 'OPEN');
         $this->chatManager->initChatRoom($chatRoom);
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        if ($user === 'anon.' || $chatRoom->getRoomStatus() === ChatRoom::CLOSED) {
+
+            return new RedirectResponse(
+                $this->router->generate(
+                    'claro_chat_room_archives',
+                    array('chatRoom' => $chatRoom->getId())
+                )
+            );
+        }
         $xmppHost = $this->platformConfigHandler->getParameter('chat_xmpp_host');
         $xmppMucHost = $this->platformConfigHandler->getParameter('chat_xmpp_muc_host');
         $boshPort = $this->platformConfigHandler->getParameter('chat_bosh_port');
-        $chatUser = $this->chatManager->getChatUserByUser($authenticatedUser);
+        $chatUser = $this->chatManager->getChatUserByUser($user);
         $canChat = !is_null($chatUser);
         $canEdit = $this->hasChatRoomRight($chatRoom, 'EDIT');
         $color = null;
@@ -131,7 +152,42 @@ class ChatController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/chat/room/{chatRoom}/user/{username}/message/{message}",
+     *     "/chat/room/{chatRoom}/archives",
+     *     name="claro_chat_room_archives",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template()
+     */
+    public function chatRoomArchivesAction(ChatRoom $chatRoom)
+    {
+        $this->checkChatRoomRight($chatRoom, 'OPEN');
+        $canEdit = $this->hasChatRoomRight($chatRoom, 'EDIT');
+        $messages = $chatRoom->getMessages();
+        $messagesDatas = array();
+
+        foreach ($messages as $message) {
+            $creationDate = $message->getCreationDate();
+            $day = $creationDate->format('d/m/Y');
+
+            if (!isset($messagesDatas[$day])) {
+                $messagesDatas[$day] = array();
+            }
+            $messagesDatas[$day][] = $message;
+        }
+        $users = $this->chatManager->getChatRoomParticipantsName($chatRoom);
+
+        return array(
+            'chatRoom' => $chatRoom,
+            'canEdit' => $canEdit,
+//            'messages' => $messages,
+            'messagesDatas' => $messagesDatas,
+            'users' => $users
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/chat/room/{chatRoom}/user/{username}/full/{fullName}/message/{message}",
      *     name="claro_chat_room_message_register",
      *     defaults={"message"=""},
      *     requirements={"message"=".+"},
@@ -139,26 +195,48 @@ class ChatController extends Controller
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      */
-    public function chatRoomMessageRegisterAction(ChatRoom $chatRoom, $username, $message = '')
+    public function chatRoomMessageRegisterAction(
+        ChatRoom $chatRoom,
+        $username,
+        $fullName,
+        $message = ''
+    )
     {
         $this->checkChatRoomRight($chatRoom, 'OPEN');
-        $this->chatManager->saveChatRoomMessage($chatRoom, $username, $message, ChatRoomMessage::MESSAGE);
+        $this->chatManager->saveChatRoomMessage(
+            $chatRoom,
+            $username,
+            $fullName,
+            $message,
+            ChatRoomMessage::MESSAGE
+        );
 
         return new JsonResponse('success', 200);
     }
 
     /**
      * @EXT\Route(
-     *     "/chat/room/{chatRoom}/user/{username}/presence/status/{status}",
+     *     "/chat/room/{chatRoom}/user/{username}/full/{fullName}/presence/status/{status}",
      *     name="claro_chat_room_presence_register",
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      */
-    public function chatRoomPresenceRegisterAction(ChatRoom $chatRoom, $username, $status)
+    public function chatRoomPresenceRegisterAction(
+        ChatRoom $chatRoom,
+        $username,
+        $fullName,
+        $status
+    )
     {
         $this->checkChatRoomRight($chatRoom, 'OPEN');
-        $this->chatManager->saveChatRoomMessage($chatRoom, $username, $status, ChatRoomMessage::PRESENCE);
+        $this->chatManager->saveChatRoomMessage(
+            $chatRoom,
+            $username,
+            $fullName,
+            $status,
+            ChatRoomMessage::PRESENCE
+        );
 
         return new JsonResponse('success', 200);
     }
@@ -219,6 +297,23 @@ class ChatController extends Controller
                 'xmppMucHost' => $xmppMucHost
             );
         }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/chat/room/{chatRoom}/status/{roomStatus}/edit",
+     *     name="claro_chat_room_status_edit",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function chatRoomStatusEditAction(ChatRoom $chatRoom, $roomStatus)
+    {
+        $this->checkChatRoomRight($chatRoom, 'EDIT');
+        $chatRoom->setRoomStatus($roomStatus);
+        $this->chatManager->persistChatRoom($chatRoom);
+
+        return new JsonResponse('success', 200);
     }
 
     private function checkChatRoomRight(ChatRoom $chatRoom, $right)

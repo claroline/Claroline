@@ -10,13 +10,13 @@
 var RTC = null;
 var ice_config = {
     iceServers: [
-        {url: 'stun:23.21.150.121'},
+//        {url: 'stun:23.21.150.121'},
         {url: 'stun:stun.l.google.com:19302'}
     ]
 };
 var RTCPeerconnection = null;
-//var AUTOACCEPT = true;
-//var PRANSWER = false; // use either pranswer or autoaccept
+var AUTOACCEPT = true;
+var PRANSWER = false; // use either pranswer or autoaccept
 //var RAWLOGGING = true;
 //var MULTIPARTY = true;
 //var localStream = null;
@@ -38,10 +38,6 @@ var myUsername = null;
         function ($scope, $rootScope, XmppService, XmppMucService) {
             $scope.localStream = null;
             $scope.streams = [];
-            
-            function setStatus(txt) {
-                console.log('status', txt);
-            }
 
             function onMediaReady(event, stream) {
                 $scope.localStream = stream;
@@ -85,93 +81,36 @@ var myUsername = null;
             }
 
             function onMediaFailure() {
-                setStatus('media failure');
+                console.log('Media failure');
             }
 
             function onCallIncoming(event, sid) {
-                setStatus('incoming call' + sid);
+                console.log('Incoming call : ' + sid);
                 var sess = connection.jingle.sessions[sid];
+                var initiator = Strophe.getResourceFromJid(sess['initiator']);
                 sess.sendAnswer();
                 sess.accept();
+                $scope.addStream(sid, initiator);
 
                 // alternatively...
                 //sess.terminate(busy)
                 //connection.jingle.terminate(sid);
             }
             
-            function arrangeVideos(selector) {
-//                var floor = Math.floor,
-//                    elements = $(selector),
-//                    howMany = elements.length,
-//                    availableWidth = $(selector).parent().innerWidth(),
-//                    availableHeight = $(selector).parent().innerHeight(),
-//                    usedWidth = 0,
-//                    aspectRatio = 4 / 3;
-//                if (availableHeight < availableWidth / aspectRatio) {
-//                    availableWidth = availableHeight * aspectRatio;
-//                }
-//                elements.height(availableHeight);
-
-                var elements = $(selector);
-                elements.each(function (index) {
-                    $(elements[index]).removeAttr('style');
-                });
-
-                // hardcoded layout for up to four videos
-//                switch (howMany) {
-//                case 1:
-//                    usedWidth = availableWidth;
-//                    $(elements[0]).css('top', 0);
-//                    $(elements[0]).css('left', ($(selector).parent().innerWidth() - availableWidth) / 2);
-//                    break;
-//                case 2:
-//                    usedWidth = availableWidth / 2;
-//                    $(elements[0]).css({ left: '0px', top: '0px'});
-//                    $(elements[1]).css({ right: '0px', bottom: '0px'});
-//                    break;
-//                case 3:
-//                    usedWidth = availableWidth / 2;
-//                    $(elements[0]).css({ left: '0px', top: '0px'});
-//                    $(elements[1]).css({ right: '0px', top: '0px'});
-//                    $(elements[2]).css({ left: ($(selector).parent().innerWidth() - availableWidth + usedWidth) / 2, bottom: '0px' });
-//                    break;
-//                case 4:
-//                    usedWidth = availableWidth / 2;
-//                    $(elements[0]).css({ left: '0px', top: '0px'});
-//                    $(elements[0]).css('left', ($(selector).parent().innerWidth() - availableWidth) / 2);
-//                    $(elements[1]).css({ right: '0px', top: '0px'});
-//                    $(elements[1]).css('right', ($(selector).parent().innerWidth() - availableWidth) / 2);
-//                    $(elements[2]).css({ left: '0px', bottom: '0px'});
-//                    $(elements[2]).css('left', ($(selector).parent().innerWidth() - availableWidth) / 2);
-//                    $(elements[3]).css({ right: '0px', bottom: '0px'});
-//                    $(elements[3]).css('right', ($(selector).parent().innerWidth() - availableWidth) / 2);
-//                    break;
-//                }
-//                elements.each(function (index) {
-//                    $(elements[index]).css({
-//                        position: 'absolute',
-//                        width: usedWidth,
-//                        height: usedWidth / aspectRatio
-//                    });
-//                    $(elements[index]).show();
-//                });
-            }
-            
             function onCallActive(event, videoelem, sid) {
-                setStatus('call active ' + sid);
+                console.log('+++++++++++ CALL ACTIVE : ' + sid + ' +++++++++++');
 //                videoelem[0].style.display = 'inline-block';
-                $(videoelem).appendTo('#participant-stream-' + sid);
-//                arrangeVideos('#participants-video-container >');
+                $(videoelem).appendTo('#participant-stream-' + sid + ' .participant-video');
                 connection.jingle.sessions[sid].getStats(1000);
             }
 
             function onCallTerminated(event, sid, reason) {
-                setStatus('call terminated ' + sid + (reason ? (': ' + reason) : ''));
+                console.log('Call terminated ' + sid + (reason ? (': ' + reason) : ''));
+                
                 if (Object.keys(connection.jingle.sessions).length === 0) {
-                    setStatus('all calls terminated');
+                    console.log('All calls terminated');
                 }
                 $('#participants-video-container #participant-video-' + sid).remove();
-//                arrangeVideos('#participants-video-container >');
             }
             
             function waitForRemoteVideo(selector, sid) {
@@ -187,14 +126,16 @@ var myUsername = null;
             }
 
             function onRemoteStreamAdded(event, data, sid) {
-                setStatus('Remote stream for session ' + sid + ' added.');
+                console.log('Remote stream for session ' + sid + ' added.');
+                
                 if ($('#participant-video-' + sid).length !== 0) {
                     console.log('ignoring duplicate onRemoteStreamAdded...'); // FF 20
+                    
                     return;
                 }
                 // after remote stream has been added, wait for ice to become connected
                 // old code for compat with FF22 beta
-                var el = $("<video autoplay='autoplay'/>").attr('id', 'participant-video-' + sid);
+                var el = $("<video autoplay='autoplay' width='100px'/>").attr('id', 'participant-video-' + sid);
                 RTC.attachMediaStream(el, data.stream);
                 waitForRemoteVideo(el, sid);
                 /* does not yet work for remote streams -- https://code.google.com/p/webrtc/issues/detail?id=861
@@ -208,7 +149,7 @@ var myUsername = null;
             }
 
             function onRemoteStreamRemoved(event, data, sid) {
-                setStatus('Remote stream for session ' + sid + ' removed.');
+                console.log('Remote stream for session ' + sid + ' removed.');
             }
 
             function onIceConnectionStateChanged(event, sid, sess) {
@@ -216,43 +157,35 @@ var myUsername = null;
                 console.log('sig state for', sid, sess.peerconnection.signalingState);
                 
                 if (sess.peerconnection.iceConnectionState === 'connected') {
-                    $scope.addStream(sid);
+                    var initiator = Strophe.getResourceFromJid(sess['initiator']);
+                    console.log(initiator);
+                    $scope.addStream(sid, initiator);
                 } else if (sess.peerconnection.iceConnectionState === 'disconnected') {
                     connection.jingle.sessions[sid].terminate('disconnected');
                     $scope.removeStream(sid);
-//                    $('#participants-video-container #participant-video-' + sid).remove();
                 }
                 // works like charm, unfortunately only in chrome and FF nightly, not FF22 beta
-                /*
-                if (sess.peerconnection.signalingState == 'stable' && sess.peerconnection.iceConnectionState == 'connected') {
-                    var el = $("<video autoplay='autoplay' style='display:none'/>").attr('id', 'largevideo_' + sid);
-                    $(document).trigger('callactive.jingle', [el, sid]);
-                    RTC.attachMediaStream(el, sess.remoteStream); // moving this before the trigger doesn't work in FF?!
-                }
-                */
+//                
+//                if (sess.peerconnection.signalingState == 'stable' && sess.peerconnection.iceConnectionState == 'connected') {
+//                    var el = $("<video autoplay='autoplay' style='display:none'/>").attr('id', 'largevideo_' + sid);
+//                    $(document).trigger('callactive.jingle', [el, sid]);
+//                    RTC.attachMediaStream(el, sess.remoteStream); // moving this before the trigger doesn't work in FF?!
+//                }
+//                
             }
 
             function noStunCandidates(event) {
-                setStatus('webrtc did not encounter stun candidates, NAT traversal will not work');
+                console.log('webrtc did not encounter stun candidates, NAT traversal will not work');
                 console.warn('webrtc did not encounter stun candidates, NAT traversal will not work');
-            }
-            
-            function connectToPeers() {
-                var connectedUsers = XmppMucService.getUsers();
-                console.log('Connected users');
-                console.log(connectedUsers);
             }
 
             $rootScope.$on('xmppMucConnectedEvent', function (event) {
-//                var connection = XmppService.getConnection();
-//                var roomjid = XmppMucService.getRoom();
-//                var myroomjid = XmppMucService.getRoom() + '/' + XmppService.getUsername();
+                XmppMucService.setConnected(true);
                 connection = XmppService.getConnection();
                 roomjid = XmppMucService.getRoom();
                 myUsername = XmppService.getUsername();
                 
-                connectToPeers();
-                
+//                connection.jingle.getStunAndTurnCredentials();
                 RTC = setupRTC();
                 getUserMediaWithConstraints(['audio', 'video']);
                 $(document).bind('mediaready.jingle', onMediaReady);
@@ -272,7 +205,7 @@ var myUsername = null;
                     console.log('got stanza error for ' + sid, err);
                 });
                 $(document).bind('packetloss.jingle', function (event, sid, loss) {
-                    console.warn('packetloss', sid, loss);
+//                    console.warn('packetloss', sid, loss);
                 });
     
                 connection.jingle.ice_config = ice_config;
@@ -283,7 +216,7 @@ var myUsername = null;
                 RTCPeerconnection = RTC.peerconnection;
             });
             
-            $scope.$on('myPresenceConfirmationEvent', function () {
+            $rootScope.$on('myPresenceConfirmationEvent', function () {
                 var allUsers = XmppMucService.getUsers();
                 
                 for (var i = 0; i < allUsers.length; i++) {
@@ -295,25 +228,26 @@ var myUsername = null;
                         );
                         
                         if (session['sid']) {
-                            $scope.addStream(session['sid']);
+                            $scope.addStream(session['sid'], allUsers[i]['username']);
+                            console.log('Stream with ' + allUsers[i]['username'] + ' : ' + session['sid']);
                         }
                     }
                 }
             });
 
-            $scope.addStream = function (sid) {
+            $scope.addStream = function (sid, username) {
                 var isPresent = false;
                 
                 for (var i = 0; i < $scope.streams.length; i++) {
                     
-                    if ($scope.streams[i] === sid) {
+                    if ($scope.streams[i]['sid'] === sid) {
                         isPresent = true;
                         break;
                     }
                 }
                 
                 if (!isPresent) {
-                    $scope.streams.push(sid);
+                    $scope.streams.push({sid: sid, username: username});
                     $scope.$apply();
                 }
             };
@@ -322,12 +256,16 @@ var myUsername = null;
                 
                 for (var i = 0; i < $scope.streams.length; i++) {
                     
-                    if ($scope.streams[i] === sid) {
+                    if ($scope.streams[i]['sid'] === sid) {
                         $scope.streams.splice(i, 1);
                         $scope.$apply();
                     }
                 }
-            }
+            };
+            
+            $scope.disconnect = function () {
+                XmppMucService.disconnect();
+            };
         }
     ]);
 })();

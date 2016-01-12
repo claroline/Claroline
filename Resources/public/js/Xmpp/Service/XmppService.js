@@ -18,6 +18,7 @@
             var password = null;
             var firstName = null;
             var lastName = null;
+            var fullName = null;
             var color = null;
             var xmppHost = null;
             var boshPort = null;
@@ -57,6 +58,9 @@
                     password = passwordParam;
                     firstName = firstNameParam;
                     lastName = lastNameParam;
+                    fullName = (firstName !== undefined && lastName !== undefined) ?
+                        firstName + ' ' + lastName :
+                        username;
                     color = colorParam;
 
                     connection = new Strophe.Connection(boshService);
@@ -85,6 +89,10 @@
                 getLastName: function () {
 
                     return lastName;
+                },
+                getFullName: function () {
+
+                    return fullName;
                 },
                 getColor: function () {
 

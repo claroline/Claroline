@@ -1,0 +1,18 @@
+<div id="chat-room-init" ng-controller="ChatRoomInitCtrl">
+    <div ng-if="!isInit()">
+        <button class="btn btn-primary" ng-click="connect(
+                server,
+                mucServer, 
+                boshPort, 
+                roomId, 
+                roomName, 
+                username, 
+                password, 
+                firstName, 
+                lastName, 
+                color
+        )">
+            {{ 'init_room'|trans:{}:'chat' }}
+        </button>
+    </div>
+</div>
