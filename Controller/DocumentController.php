@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Innova\CollecticielBundle\Event\Log\LogDropzoneValidateDocumentEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropzoneAddDocumentEvent;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 class DocumentController extends DropzoneBaseController
 {
@@ -572,4 +573,40 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
         // Retour du template actualisé à l'Ajax et non plus du Json.
         return new Response($template);
     }
+
+    /**
+     *
+     * @param Document $document
+     * @param Dropzone $dropzone
+     *
+     * @return array
+     *
+     */
+    public function renderReturnReceiptAction(Document $document, Dropzone $dropzone)
+    {
+
+        // Nombre de demandes adressées/ Repo : Document
+        $returnReceiptType = $this->getDoctrine()
+        ->getRepository('InnovaCollecticielBundle:ReturnReceipt')
+        ->doneReturnReceiptForADocument($dropzone, $document);
+
+//var_dump("AR :");
+//var_dump($returnReceiptType[0]->getReturnReceiptType()->getId());die();
+
+            // Parcours du tableau
+            $arrayCount = count($returnReceiptType);
+
+            // Traitement du tableau
+            for ($indice = 0; $indice<$arrayCount; $indice++)
+            {
+                $id = $returnReceiptType[$indice]->getReturnReceiptType()->getId();
+            }
+
+
+        return array(
+            'id' => $id
+        );
+
+    }
+
 }

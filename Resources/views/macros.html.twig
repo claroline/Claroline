@@ -44,6 +44,12 @@
                             <th class="centered">
                                 <i class="fa fa-commenting-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Comment evaluation'|trans({},'innova_collecticiel') }}"></i>
                             </th>
+                            {# #187 : ajout de la colonne "Accusé de réception", demande de JJQ #}
+                            {% if dropzone.returnreceipt == 1  %}
+                                <th class="centered">
+                                    <i class="fa fa-hand-o-right" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'To add a return receipt'|trans({},'innova_collecticiel') }}">
+                                </th>
+                            {% endif %}
                             {% if adminInnova %}
                                 <th class="no-sort"></th>
                             {% else %}
