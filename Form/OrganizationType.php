@@ -33,8 +33,9 @@ class OrganizationType extends AbstractType
         $builder
             ->add('parent', 'entity', array(
                     'class' => 'ClarolineCoreBundle:Organization\Organization',
-                    'multiple' => true,
-                    'expanded' => true,
+                    'property' => 'name',
+                    'multiple' => false,
+                    'expanded' => false,
                     'required' => false
                 )
             );
