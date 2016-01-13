@@ -67,6 +67,10 @@
                 var wordResponse;
                 var users_answer;
                 var new_select;
+                var higher_score;
+                var higher_scores_word;
+                var style;
+                var is_right_answer;
                 
                 console.log("blablablahahahaha");
                 
@@ -115,15 +119,32 @@
                                             $('#solution_' + id_question).find('#'+id_answer).replaceWith(new_select);
                                         }
                                         
-                                        console.log(this.question.holes[k]); // problème d'id quelque part
                                         select_options = "";
+                                        style = "";
+                                        higher_score = 0;
+                                        higher_scores_word = null;
+                                        for (var l=0; l<this.question.holes[k].wordResponses.length; l++) {
+                                            wordResponse = this.question.holes[k].wordResponses[l];
+                                            if (wordResponse.score > higher_score) {
+                                                higher_score = wordResponse.score;
+                                                higher_scores_word = wordResponse;
+                                            }
+                                        }
+                                        
                                         for (var l=0; l<this.question.holes[k].wordResponses.length; l++) {
                                             wordResponse = this.question.holes[k].wordResponses[l];
                                             if (wordResponse.score > 0) {
-                                                select_options += "<option value='" + wordResponse.id + "'>" + wordResponse.response + "</option>";
+                                                if (wordResponse.id === higher_scores_word.id) {
+                                                    style = "style='color:#2289b5; text-weight: bold;' selected";
+                                                }
+                                                else {
+                                                    style = "style='color:#FFEE00;'";
+                                                }
+                                                select_options += "<option " + style + " value='" + wordResponse.id + "'>" + wordResponse.response + "</option>";
                                             }
                                         }
                                         $('#solution_' + id_question).find('#'+id_answer).html(select_options);
+                                        $('#solution_' + id_question).find('#'+id_answer).css("color", "#2289b5");
                                     }
                                 }
                             }
