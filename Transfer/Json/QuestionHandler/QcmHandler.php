@@ -279,7 +279,7 @@ class QcmHandler implements QuestionHandlerInterface
         if ($mark < 0) {
             $mark = 0;
         }
-        
+        // test if concatenation is necessary
         $result = count($data) > 0 ? implode(';', $data) . ';' : '';
 
         $response->setResponse($result);

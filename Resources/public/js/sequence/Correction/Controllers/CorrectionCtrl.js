@@ -26,7 +26,7 @@
                 this.user = user;
 
                 this.questions = questions;
-                this.globalNote = CommonService.getPaperScore(this.paper, this.questions);
+                this.globalNote = 0;//CommonService.getPaperScore(this.paper, this.questions);
                 this.showHideRetryLink();
             };
 

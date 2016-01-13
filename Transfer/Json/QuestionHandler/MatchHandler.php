@@ -351,9 +351,6 @@ class MatchHandler implements QuestionHandlerInterface {
         $result = count($data) > 0 ? implode(';', $data) . ';' : '';
         $response->setResponse($result);
         $response->setMark($mark);
-        /*
-          $response->setResponse(trim($data[0]));
-          $response->setMark($mark); */
     }
 
 }

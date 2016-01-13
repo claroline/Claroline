@@ -1,0 +1,59 @@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th class="center-text">{{ 'paper_details_table_choice'|trans:{}:'ujm_sequence' }}</th>
+            <th class="center-text">{{ 'paper_details_table_expected_answer'|trans:{}:'ujm_sequence' }}</th>
+            <!--
+            <th class="center-text">{{ 'paper_details_table_your_answer'|trans:{}:'ujm_sequence' }}</th>
+            -->
+            <th class="center-text">{{ 'paper_details_table_comment'|trans:{}:'ujm_sequence' }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr data-ng-repeat="label in correctionMatchCtrl.question.secondSet">
+            <!-- student answer -->
+            <td class="center-text">
+                <div class="panel" data-ng-class="correctionMatchCtrl.checkAnswerValidity(label) ? 'panel-success':'panel-danger'">
+                    <div class="panel-heading clearfix">
+                        <h4 class="panel-title pull-left">
+                            <span>{{label.data}}</span>
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        
+                        <ul>
+                            <li data-ng-repeat="item in correctionMatchCtrl.getStudentAnswers(label)">
+                                <span data-ng-class="correctionMatchCtrl.checkProposalValidity(item.id) ? '':'wrong-label'">{{item.data}}</span>
+                            </li>
+                            <li data-ng-if="item.length == 0" data-ng-repeat="item in correctionMatchCtrl.getStudentAnswers(label)">
+                                -
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </td>
+            <!-- awaited answer -->
+            <td class="center-text">
+                <div class="panel panel-default">
+                    <div class="panel-heading clearfix">
+                        <h4 class="panel-title pull-left">
+                            <span>{{label.data}}</span>
+                        </h4>                       
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            <li data-ng-repeat="item in correctionMatchCtrl.getCorrectAnswers(label)">
+                                {{item.data}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </td>
+            <!-- specific feedback -->
+            <td class="center-text">
+                <span>{{correctionMatchCtrl.getCurrentItemFeedBack(label)}}</span>
+            </td>
+        </tr>
+    </tbody>
+</table>

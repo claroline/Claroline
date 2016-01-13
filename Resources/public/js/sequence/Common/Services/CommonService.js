@@ -150,7 +150,7 @@
                  * @param {type} questions
                  * @returns {Number}
                  */
-                /*getExerciseTotalScore: function (questions) {
+                getExerciseTotalScore: function (questions) {
                     var nbQuestions = questions.length;
                     var score = 0.0;
                     for (var i = 0; i < nbQuestions; i++) {
@@ -162,7 +162,7 @@
                         }
                     }
                     return score;
-                },*/
+                },
                /* getHintPenalty: function (searched, questions) {
                     var nbQuestions = questions.length;
                     var penalty = 0.0;
@@ -179,7 +179,7 @@
                     }
                     return penalty;
                 },*/
-                /*getAnswerScore: function (searched, questions) {
+                getAnswerScore: function (searched, questions) {
                     var nbQuestions = questions.length;
                     var score = 0.0;
                     for (var i = 0; i < nbQuestions; i++) {
@@ -192,7 +192,7 @@
                         }
                     }
                     return score;
-                },*/
+                },
                 // UTILS METHODS
                 /**
                  * get a sequence correction mode in a human readable word
