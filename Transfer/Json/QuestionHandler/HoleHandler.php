@@ -163,9 +163,15 @@ class HoleHandler implements QuestionHandlerInterface
      */
     public function convertAnswerDetails(Response $response)
     {
-        $parts = explode(';', $response->getResponse());
+        $parts = json_decode($response->getResponse());
+        
+        foreach ($parts as $key=>$value) {
+            $array[$key] = $value;
+        }
+        
+    //    $parts = explode(';', $response->getResponse());
 
-        return array_filter($parts, function ($part) {
+        return array_filter($array, function ($part) {
             return $part !== '';
         });
     }
@@ -227,23 +233,11 @@ class HoleHandler implements QuestionHandlerInterface
             }
         }
         
-        $answers = "[";
-        $i=1;
-        $length = count($data);
-        foreach ($data as $answer) {/*
-            $answer = [ "id" => $answer["id"], "answer" => $answer["answer"]];
-            array_push($answers, $answer);
-            */
-            $answers .= "{\"id\":\"" . $answer["id"] . "\",\"answer\":\"" . $answer["answer"] . "\"}";
-            
-            if ($i === $length) {
-                $answers .= "]";
-            }
-            else {
-                $answers .= ",";
-            }
-            
-            $i++;
+        $answers = [];
+        foreach ($data as $answer) {
+            $k = $answer["id"];
+            $value = $answer["answer"];
+            $answers[$k] = $value;
         }
 
         if ($mark < 0) {
@@ -251,7 +245,8 @@ class HoleHandler implements QuestionHandlerInterface
         }
         
     //    $response->setResponse(json_encode($answers));
-        $response->setResponse($answers);
+        $json = json_encode($answers);
+        $response->setResponse($json);
         $response->setMark($mark);
     }
 }

@@ -59,7 +59,7 @@
                 
                 this.setAnswer(this.question.text);
                 
-                var type_answer = "";
+                var id_question;
                 var id_answer;
                 var currElem;
                 var currElemGParent;
@@ -71,19 +71,31 @@
                 
                 for (var i=0; i<this.paper.questions.length; i++) {
                     if (this.question.id.toString() === this.paper.questions[i].id) {
-                        var answers = $.parseJSON(this.paper.questions[i].answer);
+                        var answers = this.paper.questions[i].answer;
                         var elements = document.getElementsByClassName('blank');
                         
+                        /**
+                         * The following loop fills the fields in the "Your answers" column
+                         * with the user's answers
+                         */
                         for (var j=0; j<elements.length; j++) {
                             currElem = elements[j];
                             currElemGParent = elements[j].parentNode.parentNode;
                             if (currElemGParent.getAttribute('id') === "answer_" + this.question.id) {
                                 id_answer = elements[j].getAttribute("id");
-                                for (var k=0; k<answers.length; k++) {
-                                    if (answers[k].id === id_answer) {
-                                        $('#answer_' + this.question.id).find('#'+id_answer).val(answers[k].answer);
+                                id_question = this.question.id;
+                                Object.keys(answers).map(function(key){
+                                    if (key === id_answer) {
+                                        $('#answer_' + id_question).find('#'+id_answer).val(answers[key]);
                                     }
-                                }
+                                });
+                            }
+                            
+                            if (currElemGParent.getAttribute('id') === "solution_" + this.question.id) {
+                                id_answer = elements[j].getAttribute('id');
+                                /*
+                                 * A implémenter après discussion ujm
+                                 */
                             }
                         }
                     }
