@@ -38,6 +38,7 @@ var myUsername = null;
         function ($scope, $rootScope, XmppService, XmppMucService) {
             $scope.localStream = null;
             $scope.streams = [];
+            $scope.currentVideoId = null;
 
             function onMediaReady(event, stream) {
                 $scope.localStream = stream;
@@ -53,6 +54,7 @@ var myUsername = null;
                 $('#my-video')[0].volume = 0;
 
                 RTC.attachMediaStream($('#my-video'), $scope.localStream);
+                $scope.updateMainVideoSrc('my-video');
 
                 if (typeof hark === "function") {
                     var options = { interval: 400 };
@@ -100,7 +102,7 @@ var myUsername = null;
             function onCallActive(event, videoelem, sid) {
                 console.log('+++++++++++ CALL ACTIVE : ' + sid + ' +++++++++++');
 //                videoelem[0].style.display = 'inline-block';
-                $(videoelem).appendTo('#participant-stream-' + sid + ' .participant-video');
+                $(videoelem).appendTo('#participant-stream-' + sid + ' .participant-video-panel');
                 connection.jingle.sessions[sid].getStats(1000);
             }
 
@@ -135,7 +137,7 @@ var myUsername = null;
                 }
                 // after remote stream has been added, wait for ice to become connected
                 // old code for compat with FF22 beta
-                var el = $("<video autoplay='autoplay' width='100px'/>").attr('id', 'participant-video-' + sid);
+                var el = $('<video autoplay="autoplay" class="participant-video"/>').attr('id', 'participant-video-' + sid);
                 RTC.attachMediaStream(el, data.stream);
                 waitForRemoteVideo(el, sid);
                 /* does not yet work for remote streams -- https://code.google.com/p/webrtc/issues/detail?id=861
@@ -265,6 +267,18 @@ var myUsername = null;
             
             $scope.disconnect = function () {
                 XmppMucService.disconnect();
+            };
+            
+            $scope.updateMainVideoSrc = function (videoId) {
+                var element = $('#' + videoId);
+                document.getElementById("main-video").setAttribute('src', element.attr('src'));
+                
+                if ($scope.currentVideoId !== null) {
+                    $('#' + $scope.currentVideoId).closest('.participant-panel').removeClass('video-selected');
+                }
+                $scope.currentVideoId = videoId;
+                element.closest('.participant-panel').addClass('video-selected');
+                
             };
         }
     ]);

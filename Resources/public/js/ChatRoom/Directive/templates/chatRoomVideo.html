@@ -1,9 +1,8 @@
 <div id="chat-room-main" ng-controller="ChatRoomVideoCtrl">
     <div id="chat-room-video-row" class="row">
         <div class="col-md-8">
-            <div id='my-video-container'>
-                <video id='my-video' autoplay='autoplay'></video>
-                <div id='ownvolume'></div>
+            <div id="main-video-container">
+                <video id="main-video" autoplay="autoplay"></video>
             </div>
         </div>
         <div class="col-md-4">
@@ -14,12 +13,35 @@
     <hr>
     <div class="row">
         <div id='participants-video-container'>
-            <div ng-repeat="stream in streams" id="participant-stream-{{ stream['sid'] }}" class="participant-stream">
-                <div class="panel panel-default">
+            <div id='my-video-container' class="participant-stream">
+                <div class="panel panel-default participant-panel">
                     <div class="panel-heading">
-                        <h3 class="panel-title">{{ stream['username'] }}</h3>
+                        <h3 class="panel-title">
+                            {{ 'my_video'|trans:{}:'chat' }}
+                            <span class="pull-right">
+                                <i class="fa fa-microphone pointer-hand"></i>
+                                <i class="fa fa-video-camera pointer-hand"></i>
+                            </span>
+                        </h3>
                     </div>
-                    <div class="panel-body participant-video">
+                    <div class="panel-body participant-video-panel" ng-click="updateMainVideoSrc('my-video')">
+                        <video id="my-video" autoplay="autoplay" class="participant-video"></video>
+                        <div id="ownvolume"></div>
+                    </div>
+                </div>
+            </div>
+            <div ng-repeat="stream in streams" id="participant-stream-{{ stream['sid'] }}" class="participant-stream">
+                <div class="panel panel-default participant-panel">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            {{ stream['username'] }}
+                            <span class="pull-right">
+                                <i class="fa fa-microphone pointer-hand"></i>
+                                <i class="fa fa-video-camera pointer-hand"></i>
+                            </span>
+                        </h3>
+                    </div>
+                    <div class="panel-body participant-video-panel" ng-click="updateMainVideoSrc('participant-video-' + stream['sid'])">
                     </div>
                 </div>
             </div>
@@ -28,17 +50,4 @@
     <div class="hidden">
         <chat-room-users></chat-room-users>
     </div>
-    
-<!--    <chat-room chat-room-xmpp-host="{{ server }}"
-               chat-room-xmpp-muc-host="{{ mucServer }}"
-               chat-room-bosh-port="{{ boshPort }}"
-               chat-room-id="{{ roomId }}"
-               chat-room-name="{{ roomName }}"
-               chat-room-user-username="{{ username }}"
-               chat-room-user-password="{{ password }}"
-               chat-room-user-first-name="{{ firstName }}"
-               chat-room-user-last-name="{{ lastName }}"
-               chat-room-user-color="{{ color }}"
-    >
-    </chat-room>-->
 </div>

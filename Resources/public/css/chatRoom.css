@@ -41,3 +41,23 @@
     /*width: 100px;*/
     padding: 15px;
 }
+
+.participant-video {
+    width: 150px;
+}
+
+.video-selected {
+    border-width: 5px;
+    border-color: #5792DB;
+}
+
+#main-video-container {
+    height: 60vh;
+}
+
+#main-video {
+    height: 100%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto
+}
