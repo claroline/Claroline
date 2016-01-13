@@ -73,7 +73,7 @@ class Chapter
     /**
      * @Gedmo\TreeParent
      * @ORM\ManyToOne(targetEntity="Icap\LessonBundle\Entity\Chapter")
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="SET NULL")
      */
     private $parent;
 
