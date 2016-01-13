@@ -82,6 +82,18 @@ class DropzoneCommonType extends AbstractType
                      'required' => false)
                       )
 
+            // Picture. Ajout de cette zone, demande JJQ. InnovaERV
+            ->add('picture', 'checkbox',
+                 array(
+                     'required' => false)
+                      )
+
+            // Username. Ajout de cette zone, demande JJQ. InnovaERV
+            ->add('username', 'checkbox',
+                 array(
+                     'required' => false)
+                      )
+
 
             ;
     }

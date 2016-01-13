@@ -59,7 +59,7 @@
 
     {# #146 : on affiche cette colonne même en tant qu'enseignant, demande de JJQ #}
     {#  {% if not adminInnova %} #}
-        {# InnovaERV : Ajout d'id "is-valide" afin d'exécuter le traitement pour l'affichage de "Demande adressée" #}
+    {# InnovaERV : Ajout d'id "is-valide" afin d'exécuter le traitement pour l'affichage de "Demande adressée" #}
     <td class="{{ classArray }} centered" id="is-validate-{{ document.id }}">
         {% include 'InnovaCollecticielBundle:Document:documentIsValidate.html.twig' %}
     </td>
@@ -87,7 +87,13 @@
     {# #187 : ajout de la colonne "Accusé de réception", demande de JJQ #}
     {% if dropzone.returnreceipt == 1  %}
         <td class="{{ classArray }} centered" id="is-validate-{{ document.id }}">
-          {% include 'InnovaCollecticielBundle:Document:returnReceiptStudent.html.twig' with {'document':document, 'dropzone': dropzone}  %}
+
+{{ document.id }}
+{{ dropzone.id }}
+
+ {# {% render(controller('InnovaCollecticielBundle:Document:renderReturnReceipt', {'documentId': document.id, 'dropzoneId': dropzone.id})) %}   #}
+
+  {#        {% include 'InnovaCollecticielBundle:Document:returnReceiptStudent.html.twig' with {'document':document, 'dropzone': dropzone} %} #}
         </td>
     {% endif %}
     {# #146 : changement de gestion des annulations et des suppressions, demande de JJQ #}

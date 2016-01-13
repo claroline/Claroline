@@ -575,38 +575,37 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
     }
 
     /**
-     *
-     * @param Document $document
-     * @param Dropzone $dropzone
-     *
-     * @return array
-     *
+     * @ParamConverter("document", class="InnovaCollecticielBundle:Document", options={"id" = "documentId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "dropzoneId"})
+          * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function renderReturnReceiptAction(Document $document, Dropzone $dropzone)
+    public function renderReturnReceipt1Action(Document $document, Dropzone $dropzone)
     {
 
-        // Nombre de demandes adressées/ Repo : Document
+        // Récupération de l'accusé de réceptoin
         $returnReceiptType = $this->getDoctrine()
         ->getRepository('InnovaCollecticielBundle:ReturnReceipt')
         ->doneReturnReceiptForADocument($dropzone, $document);
 
-//var_dump("AR :");
-//var_dump($returnReceiptType[0]->getReturnReceiptType()->getId());die();
+        // Récupération de la valeur de l'accusé de réceptoin
+        $id = $returnReceiptType[0]->getReturnReceiptType()->getId();
 
-            // Parcours du tableau
-            $arrayCount = count($returnReceiptType);
-
-            // Traitement du tableau
-            for ($indice = 0; $indice<$arrayCount; $indice++)
-            {
-                $id = $returnReceiptType[$indice]->getReturnReceiptType()->getId();
-            }
-
-
-        return array(
-            'id' => $id
-        );
-
+        return new Response(); //return void and not an exeption
+//        return array($id);
     }
 
+    /**
+     * Render the page of the creator box.
+     *
+     * @Route("/content/creator/", name="claroline_content_creator", defaults={"father" = null})
+     *
+     * @param string $type The type of the content to create.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function renderReturnReceiptAction(Document $document, Dropzone $dropzone)
+    {
+
+        return new Response(); //return void and not an exeption
+    }
 }
