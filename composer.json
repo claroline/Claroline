@@ -53,7 +53,7 @@
         "claroline/bundle-recorder": "~6.0",
         "claroline/kernel-bundle": "~6.0",
         "claroline/installation-bundle": "~6.0",
-        "claroline/front-end-bundle": "~6.0",
+        "claroline/front-end-bundle": "~6.1",
         "claroline/migration-bundle": "~6.0",
     	"claroline/angular-ui-selectize-bundle": "dev-master",
     	"claroline/angular-data-table-bundle": "dev-master",
