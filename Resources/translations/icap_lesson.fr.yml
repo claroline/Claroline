@@ -20,7 +20,7 @@ duplicate_destination: 'Copier dans'
 duplicate_title: 'Nom de la copie'
 create_subchapter_button: 'Créer un sous-chapitre'
 delete_also_children: 'supprimer également ses sous-chapitres'
-delete_also_children_more: ' Dans le cas contraire ceux-ci seront remontés dans le parent immédiat.'
+delete_also_children_more: ' Dans le cas contraire, ceux-ci seront remontés dans le parent immédiat.'
 duplicate_chapter_button: 'Dupliquer ce chapitre'
 edit_chapter_button: 'Modifier un chapitre'
 edit: 'Modifier'
@@ -51,7 +51,7 @@ Your chapter has been deleted: 'Votre chapitre a été supprimé'
 Your chapter has not been deleted: 'Votre chapitre n''a pas été supprimé'
 Your chapter has been modified: 'Votre chapitre a été modifié'
 Your chapter has not been modified: 'Votre chapitre n''a pas été modifié'
-Your chapter has been deleted but no subchapter: 'Votre chapitre a été supprimé mais pas les sous-chapitres'
+Your chapter has been deleted but no subchapter: 'Votre chapitre a été supprimé, mais pas les sous-chapitres'
 
 
 
