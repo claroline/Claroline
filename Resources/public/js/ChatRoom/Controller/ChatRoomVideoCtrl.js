@@ -160,7 +160,6 @@ var myUsername = null;
                 
                 if (sess.peerconnection.iceConnectionState === 'connected') {
                     var initiator = Strophe.getResourceFromJid(sess['initiator']);
-                    console.log(initiator);
                     $scope.addStream(sid, initiator);
                 } else if (sess.peerconnection.iceConnectionState === 'disconnected') {
                     connection.jingle.sessions[sid].terminate('disconnected');
@@ -190,6 +189,13 @@ var myUsername = null;
 //                connection.jingle.getStunAndTurnCredentials();
                 RTC = setupRTC();
                 getUserMediaWithConstraints(['audio', 'video']);
+                connection.jingle.ice_config = ice_config;
+                
+                if (RTC) {
+                    connection.jingle.pc_constraints = RTC.pc_constraints;
+                }
+                RTCPeerconnection = RTC.peerconnection;
+                
                 $(document).bind('mediaready.jingle', onMediaReady);
                 $(document).bind('mediafailure.jingle', onMediaFailure);
                 $(document).bind('callincoming.jingle', onCallIncoming);
@@ -209,13 +215,6 @@ var myUsername = null;
                 $(document).bind('packetloss.jingle', function (event, sid, loss) {
 //                    console.warn('packetloss', sid, loss);
                 });
-    
-                connection.jingle.ice_config = ice_config;
-                
-                if (RTC) {
-                    connection.jingle.pc_constraints = RTC.pc_constraints;
-                }
-                RTCPeerconnection = RTC.peerconnection;
             });
             
             $rootScope.$on('myPresenceConfirmationEvent', function () {

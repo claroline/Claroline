@@ -9,7 +9,7 @@
 
 #chat-room-users-list {
     height: 60vh;
-    overflow-y: scroll;
+    overflow-y: auto;
     /*background-color: #D8B1B1;*/
 }
 
@@ -17,9 +17,9 @@
     overflow: hidden !important;
 }*/
 
-#chat-content {
+#chat-messages-panel {
     height: 60vh;
-    overflow-y: scroll;
+    overflow-y: auto;
     background-color: #FFFFFF;
 }
 
