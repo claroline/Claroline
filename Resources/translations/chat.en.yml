@@ -27,6 +27,7 @@ init_room: Initialize Chat room
 kicked_msg: You have been kicked from the Chat room.
 muc_host: MUC server
 mute: Mute
+my_video: My video
 not_authorized_msg: You are not authorized to connect to this Chat room.
 open: Open
 port: Port
