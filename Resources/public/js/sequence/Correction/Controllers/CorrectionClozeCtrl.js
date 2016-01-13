@@ -63,6 +63,10 @@
                 var id_answer;
                 var currElem;
                 var currElemGParent;
+                var select_options;
+                var wordResponse;
+                var users_answer;
+                var new_select;
                 
                 console.log("blablablahahahaha");
                 
@@ -81,21 +85,47 @@
                         for (var j=0; j<elements.length; j++) {
                             currElem = elements[j];
                             currElemGParent = elements[j].parentNode.parentNode;
+                            
+                            /**
+                             * Here, we fill the answers fields with the user's answers
+                             */
                             if (currElemGParent.getAttribute('id') === "answer_" + this.question.id) {
                                 id_answer = elements[j].getAttribute("id");
                                 id_question = this.question.id;
                                 Object.keys(answers).map(function(key){
                                     if (key === id_answer) {
                                         $('#answer_' + id_question).find('#'+id_answer).val(answers[key]);
+                                        $('#answer_' + id_question).find('#'+id_answer).prop('disabled', true);
                                     }
                                 });
                             }
                             
+                            /**
+                             * Here, we fill the solutions fields with the right answers
+                             */
                             if (currElemGParent.getAttribute('id') === "solution_" + this.question.id) {
                                 id_answer = elements[j].getAttribute('id');
-                                /*
-                                 * A implémenter après discussion ujm
-                                 */
+                                id_question = this.question.id;
+                                users_answer = $('#answer_' + id_question).find('#'+id_answer).val();
+                                for (var k=0; k<this.question.holes.length; k++) {
+                                    if (this.question.holes[k].position === id_answer) {
+                                        // If it was a text field, we replace it with a select field
+                                        if (currElem.tagName === "INPUT") {
+                                            new_select = "<select id='" + id_answer + "' class='blank' name='blank_" + id_answer + "'></select>";
+                                            $('#solution_' + id_question).find('#'+id_answer).replaceWith(new_select);
+                                        }
+                                        
+                                        console.log(this.question.holes[k]); // problème d'id quelque part
+                                        select_options = "";
+                                        for (var l=0; l<this.question.holes[k].wordResponses.length; l++) {
+                                            wordResponse = this.question.holes[k].wordResponses[l];
+                                            if (wordResponse.score > 0) {
+                                                select_options += "<option value='" + wordResponse.id + "'>" + wordResponse.response + "</option>";
+                                            }
+                                        }
+                                        $('#solution_' + id_question).find('#'+id_answer).html(select_options);
+                                    }
+                                }
                             }
                         }
                     }
