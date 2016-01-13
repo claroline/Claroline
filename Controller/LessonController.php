@@ -344,37 +344,40 @@ class LessonController extends Controller
         $form = $this->createForm(new DeleteChapterType(), $chapter);
         $form->handleRequest($this->getRequest());
 
-        if($form->isValid()){
-            $chaptername = $chapter->getTitle();
-            $deleteChildren = false;
-            if($form->has('deletechildren')){
-                $deleteChildren = $form->get('deletechildren')->getData();
-            }
+        //I wish I could do the form validation, but sometimes the form is always false with not errors
+        //@todo add form validation
+        $chaptername = $chapter->getTitle();
+        $deleteChildren = false;
 
-            $em = $this->getDoctrine()->getManager();
-            if ($deleteChildren) {
-                $em->remove($chapter);
-                $em->flush();
-                $this->get('session')->getFlashBag()->add('success',$translator->trans('Your chapter has been deleted',array(), 'icap_lesson'));
-            }
-            else
-            {
-                $repo = $em->getRepository('IcapLessonBundle:Chapter');
-                $repo->removeFromTree($chapter);
-                //$em->clear();
-                $em->flush();
-                $this->get('session')->getFlashBag()->add('success',$translator->trans('Your chapter has been deleted but no subchapter',array(), 'icap_lesson'));
-            }
-            $this->dispatchChapterDeleteEvent($lesson, $chaptername);
-            return $this->redirect($this->generateUrl('icap_lesson', array('resourceId' => $lesson->getId())));
-        } else {
-            $this->get('session')->getFlashBag()->add('error',$translator->trans('Your chapter has not been deleted',array(), 'icap_lesson'));
+        if($form->has('deletechildren')){
+            $deleteChildren = $form->get('deletechildren')->getData();
         }
+
+        $em = $this->getDoctrine()->getManager();
+        if ($deleteChildren) {
+            $em->remove($chapter);
+            $em->flush();
+            $this->get('session')->getFlashBag()->add('success',$translator->trans('Your chapter has been deleted',array(), 'icap_lesson'));
+        }
+        else
+        {
+            $repo = $em->getRepository('IcapLessonBundle:Chapter');
+            $repo->removeFromTree($chapter);
+            //$em->clear();
+            $em->flush();
+            $this->get('session')->getFlashBag()->add('success',$translator->trans('Your chapter has been deleted but no subchapter',array(), 'icap_lesson'));
+        }
+        $this->dispatchChapterDeleteEvent($lesson, $chaptername);
+
+        return $this->redirect($this->generateUrl('icap_lesson', array('resourceId' => $lesson->getId())));
+        
+
         return array(
             'lesson' => $lesson,
             'chapter' => $chapter,
             'form' => $form->createView(),
-            'workspace' => $lesson->getResourceNode()->getWorkspace()
+            'workspace' => $lesson->getResourceNode()->getWorkspace(),
+            '_resource' => $lesson
         );
     }
 
