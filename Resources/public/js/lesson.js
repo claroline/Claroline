@@ -3,17 +3,16 @@ function init(){
     $( document ).ready(function() {
         initTooltip();
         initCollapsor();
-        $(".lesson_tooltip.btn_up.btn-primary").hide();
         //fixLeftMenuAffixedSize();
         
         $(window).scroll(function(){
             if ($(window).scrollTop() <= 100)
             {
-                $(".lesson_tooltip.btn_up.btn-primary").hide();
+                $(".lesson_tooltip.btn_up.btn-primary").addClass("hidden");
             }
             else
             {
-                $(".lesson_tooltip.btn_up.btn-primary").show();
+                $(".lesson_tooltip.btn_up.btn-primary").removeClass("hidden");
             } 
         })
     });
@@ -52,7 +51,6 @@ function initSortable(){
         onDrop: function($item, container, _super) {
             var path = $item.data('path');
             var parentId = $item.parent().data('list');
-            console.log("parent:"+parentId);
             var $previous_element = $item.prev();
             var brother = false;
             var firstposition = true;
@@ -85,7 +83,7 @@ function initSortable(){
     $("#enable_move").on("click", function  (e) {
         //alert($(this).data("status"));
         $('.jquery-sortable-list').sortable($(this).data("status"));
-        $(this).toggleClass("btn btn-default active");
+        $(this).toggleClass("active");
         $(this).data("status", $(this).data("status") == "disable" ? "enable" : "disable");
         $('.menu-item').each(function() {
             $(this).toggleClass("cursor_move");
@@ -101,23 +99,22 @@ function initCollapsor(){
         $(this).click(function() {
             toggleCollapsor($(this));
         });
-        $('.deplie').hide();
     });
 
     $('#collapse_all').click(function() {
         $('.collapsor').each(function() {
             collapse($(this));
         });
-        $('.replie').hide();
-        $('.deplie').show();
+        $(this).addClass("hidden");
+        $('#expand_all').removeClass("hidden");
     });
 
     $('#expand_all').click(function() {
         $('.collapsor').each(function() {
             expand($(this));
         });
-        $('.deplie').hide();
-        $('.replie').show();
+        $(this).addClass("hidden");
+        $('#collapse_all').removeClass("hidden");
     });
 }
 

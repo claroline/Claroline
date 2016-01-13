@@ -63,6 +63,47 @@ class LessonController extends Controller
 
     /**
      * @Route(
+     *      "view/pdf/{resourceId}.{_format}",
+     *      name="icap_lesson_pdf",
+     *      requirements={"resourceId" = "\d+", "_format" = "pdf"},
+     *      defaults={"_format" = "pdf"}
+     * )
+     * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
+     */
+    public function viewLessonPdfAction(Lesson $lesson)
+    {
+        $this->checkAccess("OPEN", $lesson);
+        $chapterRepository = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter');
+        $tree = $chapterRepository->buildChapterTree($lesson->getRoot());
+        $content = $this->renderView(
+            "IcapLessonBundle:Lesson:view.pdf.twig",
+            array(
+                "_resource" => $lesson,
+                "tree" => $tree
+            )
+        );
+
+        return new Response(
+            $this->get('knp_snappy.pdf')->getOutputFromHtml(
+                $content,
+                array(
+                    'outline' => true,
+                    'footer-right' => '[page]/[toPage]',
+                    'footer-spacing' => 3,
+                    'footer-font-size' => 8
+                ),
+                true
+            ),
+            200,
+            array(
+                'Content-Type'          => 'application/pdf',
+                'Content-Disposition'   => 'inline; filename="'.$lesson->getResourceNode()->getName()
+            )
+        );
+    }
+
+    /**
+     * @Route(
      *      "view/{resourceId}/{chapterId}",
      *      name="icap_lesson_chapter",
      *      requirements={"resourceId" = "\d+"}
@@ -453,7 +494,7 @@ class LessonController extends Controller
      * @Template()
      * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
      */
-    public function choiceMoveChapterAction($lesson, $chapterId)
+    public function choiceMoveChapterAction($lesson, $chapterId, Request $request)
     {
         $this->checkAccess("EDIT", $lesson);
         $chapter = $this->findChapter($lesson, $chapterId);
@@ -462,7 +503,7 @@ class LessonController extends Controller
         $form->handleRequest($this->container->get('request_stack')->getCurrentRequest());
 
         //for ajaxification
-        if ($this->container->get('request_stack')->getCurrentRequest()->isXMLHttpRequest()) {
+        if ($request->isXMLHttpRequest()) {
             return $this->render(
                 'IcapLessonBundle:Lesson:choiceMoveChapterAjaxified.html.twig',
                 array(
@@ -511,7 +552,7 @@ class LessonController extends Controller
             $firstposition = $form->get('firstposition')->getData();
         }else{
             return array(
-                'lesson' => $lesson,
+                '_resource' => $lesson,
                 'chapter' => $chapter,
                 'form' => $form->createView(),
                 'workspace' => $lesson->getResourceNode()->getWorkspace()
