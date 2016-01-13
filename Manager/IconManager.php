@@ -370,8 +370,18 @@ class IconManager
             array('res_exercice.png', 'custom/exercice'),
             array('res_audio.png', 'audio'),
             array('res_video.png', 'video'),
+            //excel
             array('res_msexcel.png', 'application/excel'),
             array('res_msexcel.png', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
+            array('res_msexcel.png', 'application/vnd.ms-excel'),
+            array('res_msexcel.png', 'application/msexcel'),
+            array('res_msexcel.png', 'application/x-msexcel'),
+            array('res_msexcel.png', 'application/x-ms-excel'),
+            array('res_msexcel.png', 'application/x-excel'),
+            array('res_msexcel.png', 'application/xls'),
+            array('res_msexcel.png', 'application/x-xls'),
+            array('res_msexcel.png', 'application/x-dos_ms_excel'),
+            //ppt
             array('res_mspowerpoint.png', 'application/powerpoint'),
             array('res_mspowerpoint.png', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'),
             array('res_msword.png', 'application/msword'),
