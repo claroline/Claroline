@@ -143,36 +143,35 @@
             {{ renderPager(subject.getId(), pager, max) }}
 
             {% if canPost %}
-                <btn id='fast-reply-btn' class='btn btn-primary pull-right'>{{ 'fast_reply'|trans({}, 'forum')}}</btn>
+                <btn id='fast-reply-btn' class='btn btn-primary pull-right {% if has_role('ROLE_ANONYMOUS') %} disabled {% endif %}'>
+                    {{ 'fast_reply'|trans({}, 'forum')}}
+                </btn>
             {% endif %}
         </div>
         {% if canPost %}
-        <div class="fast-reply" style="display: none;">
-            <h4><i class="fa fa-reply"></i> {{ 'new_message' | trans({}, 'forum') }}</h4>
-            <div>
-            {% if not subject.isClosed() %}
-                <textarea class="forum-answer claroline-tiny-mce hide"></textarea>
-                {# something may be wrong here because _token doesn't always exists #}
-                {% if form._token is defined %} {{ form_widget(form._token) }} {% endif %}
+            {% if has_role('ROLE_ANONYMOUS') %}
+                <div class='pull-right alert alert-warning'> {{ 'please_connect_to_answer'|trans({}, 'forum') }}
             {% endif %}
+            <div class="fast-reply" style="display: none;">
+                <h4><i class="fa fa-reply"></i> {{ 'new_message' | trans({}, 'forum') }}</h4>
+                <div>
+                {% if not subject.isClosed() %}
+                    <textarea class="forum-answer claroline-tiny-mce hide"></textarea>
+                    {# something may be wrong here because _token doesn't always exists #}
+                    {% if form._token is defined %} {{ form_widget(form._token) }} {% endif %}
+                {% endif %}
+                </div>
+            </br>
+                <div class="pull-right">
+                    <a class="btn btn-default" href='{{ path('claro_forum_subjects', { 'category': category.getId() }) }}'>
+                   {{ 'back'|trans({}, 'platform') }}
+                    </a>
+                    <a id="submit-message" class="btn btn-primary">
+                        <i class="fa fa-reply"></i> {{ 'send' | trans({}, 'platform') }}
+                    </a>
+                </div>
             </div>
         {% endif %}
-        </div>
-    </div>
-    <div class="panel-footer clearfix">
-        <div class="pull-right">
-	        {% if not subject.isClosed() %}
-	            <a class="btn btn-default" href='{{ path('claro_forum_subjects', { 'category': category.getId() }) }}'>
-	               {{ 'back'|trans({}, 'platform') }}
-	            </a>
-	            {% if canPost %}
-	                <a class="btn btn-primary">
-	                    <i class="fa fa-reply"></i> {{ 'send' | trans({}, 'platform') }}
-	                </a>
-	            {% endif %}
-         {% endif %}
-        </div>
-    </div>
 {% endblock %}
 
 {% block javascripts %}
@@ -192,7 +191,7 @@
         <script>
             (function () {
                 'use strict';
-                $('body').on('click', '.panel-footer .btn-primary', function () {
+                $('body').on('click', '#submit-message', function () {
                     var content = $('textarea.claroline-tiny-mce').val();
                     var token = $('#forum_message_form__token').val();
 
