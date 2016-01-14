@@ -88,10 +88,7 @@
     {% if dropzone.returnreceipt == 1  %}
         <td class="{{ classArray }} centered" id="is-validate-{{ document.id }}">
 
-{{ document.id }}
-{{ dropzone.id }}
-
- {# {% render(controller('InnovaCollecticielBundle:Document:renderReturnReceipt', {'documentId': document.id, 'dropzoneId': dropzone.id})) %}   #}
+{% render(controller('InnovaCollecticielBundle:Document:renderReturnReceipt', {'documentId': document.id, 'dropzoneId': dropzone.id})) %} 
 
   {#        {% include 'InnovaCollecticielBundle:Document:returnReceiptStudent.html.twig' with {'document':document, 'dropzone': dropzone} %} #}
         </td>

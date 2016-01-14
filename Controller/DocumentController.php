@@ -577,9 +577,9 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
     /**
      * @ParamConverter("document", class="InnovaCollecticielBundle:Document", options={"id" = "documentId"})
      * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "dropzoneId"})
-          * @return \Symfony\Component\HttpFoundation\Response
+     * @Template()
      */
-    public function renderReturnReceipt1Action(Document $document, Dropzone $dropzone)
+    public function renderReturnReceiptAction(Document $document, Dropzone $dropzone)
     {
 
         // Récupération de l'accusé de réceptoin
@@ -587,25 +587,15 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
         ->getRepository('InnovaCollecticielBundle:ReturnReceipt')
         ->doneReturnReceiptForADocument($dropzone, $document);
 
-        // Récupération de la valeur de l'accusé de réceptoin
-        $id = $returnReceiptType[0]->getReturnReceiptType()->getId();
+        // Initialisation de la variable car un document peut ne pas avoir d'accusé de réception.
+        $id = 0;
 
-        return new Response(); //return void and not an exeption
-//        return array($id);
+        if (!empty($returnReceiptType)) {
+            // Récupération de la valeur de l'accusé de réceptoin
+            $id = $returnReceiptType[0]->getReturnReceiptType()->getId();
+        }
+
+        return array('value' => $id);
     }
 
-    /**
-     * Render the page of the creator box.
-     *
-     * @Route("/content/creator/", name="claroline_content_creator", defaults={"father" = null})
-     *
-     * @param string $type The type of the content to create.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function renderReturnReceiptAction(Document $document, Dropzone $dropzone)
-    {
-
-        return new Response(); //return void and not an exeption
-    }
 }
