@@ -195,7 +195,6 @@ var myUsername = null;
                 if (RTC) {
                     connection.jingle.pc_constraints = RTC.pc_constraints;
                 }
-                RTCPeerconnection = RTC.peerconnection;
                 
                 $(document).bind('mediaready.jingle', onMediaReady);
                 $(document).bind('mediafailure.jingle', onMediaFailure);
@@ -216,6 +215,18 @@ var myUsername = null;
                 $(document).bind('packetloss.jingle', function (event, sid, loss) {
 //                    console.warn('packetloss', sid, loss);
                 });
+                
+                if (RTC !== null) {
+                    RTCPeerconnection = RTC.peerconnection;
+                    
+                    if (RTC.browser == 'firefox') {
+                        connection.jingle.media_constraints.mandatory.MozDontOfferDataChannel = true;
+                    }
+                    //setStatus('please allow access to microphone and camera');
+                    //getUserMediaWithConstraints();
+                } else {
+                    console.log('webrtc capable browser required');
+                }
             });
             
             $rootScope.$on('myPresenceConfirmationEvent', function () {
@@ -270,15 +281,16 @@ var myUsername = null;
             };
             
             $scope.updateMainVideoSrc = function (videoId) {
-                var element = $('#' + videoId);
-                document.getElementById("main-video").setAttribute('src', element.attr('src'));
+                var element = document.getElementById(videoId);
+                var mainVideo = document.getElementById('main-video');
+                mainVideo.src = element.src;
+                mainVideo.mozSrcObject = element.mozSrcObject;
                 
                 if ($scope.currentVideoId !== null) {
                     $('#' + $scope.currentVideoId).closest('.participant-panel').removeClass('video-selected');
                 }
                 $scope.currentVideoId = videoId;
-                element.closest('.participant-panel').addClass('video-selected');
-                
+                $('#' + videoId).closest('.participant-panel').addClass('video-selected');
             };
         }
     ]);
