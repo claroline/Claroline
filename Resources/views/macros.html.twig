@@ -38,7 +38,11 @@
                             {# #146 : on affiche cette colonne même en tant qu'enseignant, demande de JJQ #}
                             {#  {% if not adminInnova %} #}
                             <th class="centered">
-                                <i class="fa fa-arrow-right" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Commented document'|trans({},'innova_collecticiel') }}"></i>
+                                {% if dropzone.evaluation != 1  %}
+                                    <i class="fa fa-arrow-right" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Comment transmission'|trans({},'innova_collecticiel') }}"></i>
+                                {% else %}
+                                    <i class="fa fa-arrow-right" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Evaluation transmission'|trans({},'innova_collecticiel') }}"></i>
+                                {% endif %}
                             </th>
                             {#  {% endif %} #}
                             <th class="centered">
@@ -47,7 +51,7 @@
                             {# #187 : ajout de la colonne "Accusé de réception", demande de JJQ #}
                             {% if dropzone.returnreceipt == 1  %}
                                 <th class="centered">
-                                    <i class="fa fa-hand-o-right" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'To add a return receipt'|trans({},'innova_collecticiel') }}">
+                                    <i class="fa fa-hand-o-right" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Return receipt'|trans({},'innova_collecticiel') }}">
                                 </th>
                             {% endif %}
                             {% if adminInnova %}

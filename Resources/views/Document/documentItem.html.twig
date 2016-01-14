@@ -66,16 +66,15 @@
     {# {% endif %} #}
 
     <td class="{{ classArray }} centered">
-
         <div class="btn-group ">
            {# Variable qui va compter le nombre de commentaires #}
            {# Affichage d'un bouton si pas de commentaires #}
             {% if document.comments|length == 0 %}
-                <a data-toggle="tooltip" data-placement="top" data-original-title="{{ 'To drop'|trans({},'innova_collecticiel') }}" class="fa fa-commenting-o" href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" type="button" class="btn btn-default btn-sm">
+                <a data-toggle="tooltip" data-placement="top" data-original-title="{{ 'See comments'|trans({},'innova_collecticiel') }}" class="fa fa-commenting-o" href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" type="button" class="btn btn-default btn-sm">
                 </a>
            {# Sinon affichage du compteur et des nouveaux commentaires #}
             {% else %}
-                <a data-toggle="tooltip" data-placement="top" data-original-title="{{ 'To drop'|trans({},'innova_collecticiel') }}" class="fa fa-commenting-o" href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" type="button">
+                <a data-toggle="tooltip" data-placement="top" data-original-title="{{ 'See comments'|trans({},'innova_collecticiel') }}" class="fa fa-commenting-o" href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" type="button">
                     <br />{{ document.comments|length }}
                     {% if document.getUnReadComments( app.user.id ) != 0 %}
                         (+{{ document.getUnReadComments( app.user.id ) }})
@@ -84,6 +83,7 @@
             {% endif %}
         </div>
     </td>
+
     {# #187 : ajout de la colonne "Accusé de réception", demande de JJQ #}
     {% if dropzone.returnreceipt == 1  %}
         <td class="{{ classArray }} centered" id="is-validate-{{ document.id }}">
@@ -91,6 +91,7 @@
             {% render(controller('InnovaCollecticielBundle:Document:renderReturnReceipt', {'documentId': document.id, 'dropzoneId': dropzone.id})) %} 
         </td>
     {% endif %}
+
     {# #146 : changement de gestion des annulations et des suppressions, demande de JJQ #}
     {% if adminInnova %}
         {% if mode == 'complete' %}
