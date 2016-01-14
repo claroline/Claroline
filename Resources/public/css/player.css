@@ -78,7 +78,11 @@ input.form-control {
 .typeColumn {
     width: 70px;
 }
-<<<<<<< HEAD
+
+/* Affichage en rouge d'icone font-awesome. InnovaERV. */
+.icon-fontawesome-red {
+    color : red;
+}
 
 .title-label {
     vertical-align: middle;
@@ -87,5 +91,3 @@ input.form-control {
 #innova_collecticiel_document_file_form_title {
     vertical-align: middle;    
 }
-=======
->>>>>>> AddBackButtonAndDocumentTitleInput
