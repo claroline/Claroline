@@ -167,10 +167,11 @@ var myUsername = null;
                 }
                 // works like charm, unfortunately only in chrome and FF nightly, not FF22 beta
 //                
-//                if (sess.peerconnection.signalingState == 'stable' && sess.peerconnection.iceConnectionState == 'connected') {
+//                if (sess.peerconnection.signalingState === 'stable' && sess.peerconnection.iceConnectionState === 'connected') {
 //                    var el = $("<video autoplay='autoplay' style='display:none'/>").attr('id', 'largevideo_' + sid);
 //                    $(document).trigger('callactive.jingle', [el, sid]);
 //                    RTC.attachMediaStream(el, sess.remoteStream); // moving this before the trigger doesn't work in FF?!
+//                    waitForRemoteVideo($('#participant-video-' + sid), sid);
 //                }
 //                
             }
