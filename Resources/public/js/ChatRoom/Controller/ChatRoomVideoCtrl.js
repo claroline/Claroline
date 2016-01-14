@@ -11,7 +11,7 @@ var RTC = null;
 var ice_config = {
     iceServers: [
 //        {url: 'stun:23.21.150.121'},
-        {url: 'stun:stun.l.google.com:19302'}
+        {urls: 'stun:stun.l.google.com:19302'}
     ]
 };
 var RTCPeerconnection = null;
@@ -220,7 +220,8 @@ var myUsername = null;
                     RTCPeerconnection = RTC.peerconnection;
                     
                     if (RTC.browser == 'firefox') {
-                        connection.jingle.media_constraints.mandatory.MozDontOfferDataChannel = true;
+                        //connection.jingle.media_constraints.mandatory.MozDontOfferDataChannel = true;
+                        connection.jingle.media_constraints = {"offerToReceiveAudio":true,"offerToReceiveVideo":true,"mozDontOfferDataChannel":true}
                     }
                     //setStatus('please allow access to microphone and camera');
                     //getUserMediaWithConstraints();
