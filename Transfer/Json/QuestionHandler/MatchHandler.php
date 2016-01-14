@@ -189,14 +189,15 @@ class MatchHandler implements QuestionHandlerInterface {
 
                 // getAssociatedLabel return an ArrayCollection !!!
                 $associatedLabels = $proposal->getAssociatedLabel();
+                //$solutions = array();
+                $solutionData = new \stdClass();
+                $solutionData->firstId = (string) $proposal->getId();
                 foreach ($associatedLabels as $label) {
-                    $solutionData = new \stdClass();
-                    $solutionData->firstId = (string) $proposal->getId();
                     $solutionData->secondId = (string) $label->getId();
                     $solutionData->score = $label->getScoreRightResponse();
                     if ($label->getFeedback()) {
                         $solutionData->feedback = $label->getFeedback();
-                    }
+                    } 
                 }
                 return $solutionData;
             }, $proposals);

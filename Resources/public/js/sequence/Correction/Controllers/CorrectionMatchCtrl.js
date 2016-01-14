@@ -13,46 +13,60 @@
 
             this.question = {};
             this.paper = {};
-            //this.answerValid = false;
 
             this.studentAnswers = [];
             this.correctAnswers = [];
-            this.studentErrors = []; // array of porposals ids; // array of objects : {label:label, ids:[proposalsids]}
+            this.studentErrors = []; // array of proposals ids;
 
             this.init = function (question, paper) {
                 this.question = question;
                 this.paper = paper;
-                console.log('this.paper');
+                /*console.log('this.paper');
                 console.log(this.paper);
                 console.log('this.question');
-                console.log(this.question);
+                console.log(this.question);*/
                 this.setCorrectAnswers();
                 this.setStudentAnswers();
             };
 
-            
 
+            /**
+             * Checks the validity of proposals associated with one label
+             * @param {type} label
+             * @returns {Boolean}
+             */
             this.checkAnswerValidity = function (label) {
                 var errors = [];
-                // what if order is not the same between student answers and solutions ??
-                for (var i = 0; i < this.studentAnswers.length; i++) {
-                    if (this.studentAnswers[i].label.id === label.id) {
-                        /*if (this.studentAnswers[i].proposals.length !== this.correctAnswers[i].proposals.length)
-                        {
-                            console.log('baf');
-                            return false;
-                        }*/
-                        for(var j = 0; j < this.studentAnswers[i].proposals.length; j++){
-                            if (this.correctAnswers[i].proposals[j] && this.studentAnswers[i].proposals[j].id !== this.correctAnswers[i].proposals[j].id) {
-                                console.log('bof');
-                                errors.push(this.studentAnswers[i].proposals[j].id);
-                                
-                            }
+                var studentProposalsForLabel = this.getStudentAnswers(label);
+                var correctProposalsForLabel = this.getCorrectAnswers(label);                
+                // CASE 1 : no answers but expected ones
+                if(studentProposalsForLabel.length === 0 && correctProposalsForLabel.length > 0){
+                    return false;
+                }                
+                // CASE 2 : answers from student, check that answers are in expected ones
+                // search for corresponding student proposal in solution
+                for (var i = 0; i < studentProposalsForLabel.length; i++) {
+                    var found = false;
+                    var searched = studentProposalsForLabel[i].id;
+                    // answer not in proposals
+                    for (var j = 0; j < correctProposalsForLabel.length; j++) {
+                        if(correctProposalsForLabel[j].id === searched){
+                            found = true;
+                            break;
                         }
-                        
                     }
+                    if(!found){
+                        errors.push(searched);
+                    }                    
                 }
+                // keep wrong assocations for later use (apply line-through style to unexpected element in student answers)
                 this.studentErrors = errors;
+                
+                // CASE 3 : missing answers from student
+                if(studentProposalsForLabel.length < correctProposalsForLabel.length){
+                    return false;
+                }               
+                
                 return errors.length === 0;
             };
 
@@ -141,20 +155,24 @@
                     }
                 }
             };
-            
-            this.checkProposalValidity = function(proposalId){
-                console.log(this.studentErrors);
-                console.log(proposalId);
-                for (var i = 0; i < this.studentErrors.length; i++){
-                    if(this.studentErrors[i] === proposalId){
-                        return true;
+
+            /**
+             * Checks that a proposal is in the studentErrors array
+             * if found we apply line-through style on the label to ease error visualisations.
+             * @param {type} proposalId
+             * @returns {Boolean} true if proposal is valid else false
+             */
+            this.checkProposalValidity = function (proposalId) {
+                for (var i = 0; i < this.studentErrors.length; i++) {
+                    if (this.studentErrors[i] === proposalId) {
+                        return false;
                     }
                 }
-                return false;
+                return true;
             };
-            
+
             /**
-             * While rendering each question label and answers get label feedback if exists
+             * While rendering each question label and answers get feedback if exists
              * @param {type} question
              * @param {type} choice
              * @returns {String} choice feedback

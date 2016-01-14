@@ -163,7 +163,7 @@
                     }
                     return score;
                 },
-               /* getHintPenalty: function (searched, questions) {
+                getHintPenalty: function (searched, questions) {
                     var nbQuestions = questions.length;
                     var penalty = 0.0;
                     for (var i = 0; i < nbQuestions; i++) {
@@ -178,7 +178,7 @@
                         }
                     }
                     return penalty;
-                },*/
+                },
                 getAnswerScore: function (searched, questions) {
                     var nbQuestions = questions.length;
                     var score = 0.0;

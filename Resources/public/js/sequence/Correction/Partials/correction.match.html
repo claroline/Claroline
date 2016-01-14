@@ -23,6 +23,7 @@
                         
                         <ul>
                             <li data-ng-repeat="item in correctionMatchCtrl.getStudentAnswers(label)">
+                                
                                 <span data-ng-class="correctionMatchCtrl.checkProposalValidity(item.id) ? '':'wrong-label'">{{item.data}}</span>
                             </li>
                             <li data-ng-if="item.length == 0" data-ng-repeat="item in correctionMatchCtrl.getStudentAnswers(label)">
