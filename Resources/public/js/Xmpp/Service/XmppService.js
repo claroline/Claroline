@@ -53,7 +53,7 @@
                 ) {
                     xmppHost = server;
                     boshPort = port;
-                    boshService = 'http://' + server + ':' + boshPort + '/http-bind';
+                    boshService = 'https://' + server + ':' + boshPort + '/http-bind';
                     username = usernameParam;
                     password = passwordParam;
                     firstName = firstNameParam;
