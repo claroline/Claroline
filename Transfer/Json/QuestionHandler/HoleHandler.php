@@ -144,6 +144,7 @@ class HoleHandler implements QuestionHandlerInterface
             $holeData = new \stdClass();
             $holeData->id = (string) $hole->getId();
             $holeData->type = 'text/html';
+            $holeData->selector = $hole->getSelector();
             $holeData->position = (string) $hole->getPosition();
             $holeData->wordResponses = array_map(function ($wr) {
                 $wrData = new \stdClass();

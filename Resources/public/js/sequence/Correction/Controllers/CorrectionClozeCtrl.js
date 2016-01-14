@@ -82,12 +82,11 @@
                         var answers = this.paper.questions[i].answer;
                         var elements = document.getElementsByClassName('blank');
                         
-                        /**
-                         * The following loop fills the fields in the "Your answers" column
-                         * with the user's answers
-                         */
                         for (var j=0; j<elements.length; j++) {
                             currElem = elements[j];
+                            // we have to check the grand parent element, as it is
+                            // the only element that can inform us if the current
+                            // element is an answer field or a solution field
                             currElemGParent = elements[j].parentNode.parentNode;
                             
                             /**
@@ -123,6 +122,7 @@
                                         style = "";
                                         higher_score = 0;
                                         higher_scores_word = null;
+                                        // this loop checks which answer is the best
                                         for (var l=0; l<this.question.holes[k].wordResponses.length; l++) {
                                             wordResponse = this.question.holes[k].wordResponses[l];
                                             if (wordResponse.score > higher_score) {
@@ -131,6 +131,8 @@
                                             }
                                         }
                                         
+                                        // this loop adds only the right answers in the fields 
+                                        // and colours them depending on it's the best answer or not
                                         for (var l=0; l<this.question.holes[k].wordResponses.length; l++) {
                                             wordResponse = this.question.holes[k].wordResponses[l];
                                             if (wordResponse.score > 0) {
@@ -138,7 +140,7 @@
                                                     style = "style='color:#2289b5; text-weight: bold;' selected";
                                                 }
                                                 else {
-                                                    style = "style='color:#FFEE00;'";
+                                                    style = "style='color:#30C1FF;'";
                                                 }
                                                 select_options += "<option " + style + " value='" + wordResponse.id + "'>" + wordResponse.response + "</option>";
                                             }
@@ -147,6 +149,40 @@
                                         $('#solution_' + id_question).find('#'+id_answer).css("color", "#2289b5");
                                     }
                                 }
+                            }
+                        }
+                    }
+                }
+                
+                var good_answer;
+                var value_to_compare;
+                for (var i=0; i<this.paper.questions.length; i++) {
+                    if (this.question.id.toString() === this.paper.questions[i].id) {
+                        var answers = this.paper.questions[i].answer;
+                        var holes = this.question.holes;
+                        
+                        for (var j=0; j<holes.length; j++) {
+                            good_answer = false;
+                            Object.keys(answers).map(function(key){
+                                if (holes[j].position === key) {
+                                    for (var k=0; k<holes[j].wordResponses.length; k++) {
+                                        if (holes[j].selector) {
+                                            value_to_compare = holes[j].wordResponses[k].id;
+                                        }
+                                        else {
+                                            value_to_compare = holes[j].wordResponses[k].response;
+                                        }
+                                        if (value_to_compare === answers[key]) {
+                                            good_answer = true;
+                                        }
+                                    }
+                                }
+                            });
+                            if (good_answer) {
+                                $('#answer_' + this.question.id).find('#'+holes[j].position).css("color", "#00A700");
+                            }
+                            else {
+                                $('#answer_' + this.question.id).find('#'+holes[j].position).css("color", "#f30000");
                             }
                         }
                     }
