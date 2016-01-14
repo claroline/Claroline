@@ -3,6 +3,9 @@
 namespace Innova\PathBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+
+use Claroline\TagBundle\Entity\Tag;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 
 /**
@@ -32,6 +35,13 @@ class PathWidgetConfig
 
     /**
      * Tags
+     *
+     * @ORM\ManyToMany(targetEntity="Claroline\TagBundle\Entity\Tag", cascade={"persist", "merge"})
+     * @ORM\JoinTable(
+     *      name               = "innova_path_widget_config_tags",
+     *      joinColumns        = { @ORM\JoinColumn(name="widget_config_id", referencedColumnName="id") },
+     *      inverseJoinColumns = { @ORM\JoinColumn(name="tag_id", referencedColumnName="id") }
+     * )
      */
     protected $tags;
 
@@ -40,6 +50,11 @@ class PathWidgetConfig
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $widgetInstance;
+
+    public function __construct()
+    {
+        $this->tags = new ArrayCollection();
+    }
 
     /**
      * Get ID
@@ -62,10 +77,50 @@ class PathWidgetConfig
     /**
      * Set status
      * @param $status
+     * @return $this
      */
     public function setStatus($status)
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get the list of Tags displayed in the Widget
+     * @return ArrayCollection
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * Add a Tag
+     * @param \Claroline\TagBundle\Entity\Tag $tag
+     * @return $this
+     */
+    public function addTag(Tag $tag)
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags->add($tag);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a Tag
+     * @param \Claroline\TagBundle\Entity\Tag $tag
+     * @return $this
+     */
+    public function removeTag(Tag $tag)
+    {
+        if ($this->tags->contains($tag)) {
+            $this->tags->removeElement($tag);
+        }
+
+        return $this;
     }
 
     public function getWidgetInstance()

@@ -2,6 +2,7 @@ no_path_widget_message: No path found
 innova_path_widget: Paths
 path_author: Author
 innova_path_widget_config_status: Status
+innova_path_widget_config_tags: Displayed tags
 
 draft:     Not published
 published: Published

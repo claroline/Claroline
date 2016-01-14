@@ -30,21 +30,21 @@ class PathRepository extends EntityRepository
             foreach ($statusList as $status) {
                 switch ($status) {
                     case 'draft':
-                        $whereStatus[] = 'published = 0';
+                        $whereStatus[] = 'node.published = 0';
                         break;
 
                     case 'published':
-                        $whereStatus[] = 'published = 1';
+                        $whereStatus[] = '(node.published = 1 AND resource.modified = 0)';
                         break;
 
                     case 'modified':
-                        $whereStatus[] = '(published = 1 AND modified = 1)';
+                        $whereStatus[] = '(node.published = 1 AND resource.modified = 1)';
                         break;
                 }
             }
 
             if (!empty($whereStatus)) {
-                $builder->where('(' . implode($whereStatus, ' OR ') . ')');
+                $builder->addWhereClause(implode($whereStatus, ' OR '));
             }
         }
 

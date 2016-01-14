@@ -2,6 +2,7 @@
 
 namespace Innova\PathBundle\Form\Type;
 
+use Claroline\TagBundle\Form\TagType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -23,6 +24,12 @@ class PathWidgetConfigType extends AbstractType
             ),
             'multiple'  => true,
         ));
+
+        $builder->add(
+            'tags',
+            'text',
+            array('mapped' => false)
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver)

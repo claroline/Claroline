@@ -5,9 +5,12 @@ services:
         arguments:
             om:                   @doctrine.orm.entity_manager
             formFactory:          @form.factory
+            session:              @session
+            translator:           @translator
             authorizationChecker: @security.authorization_checker
             pathManager:          @innova_path.manager.path
             publishingManager:    @innova_path.manager.publishing
+            tagManager:           @claroline.manager.tag_manager
         scope: request
 
     # Path template controller

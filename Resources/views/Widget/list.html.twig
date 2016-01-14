@@ -1,4 +1,5 @@
 <div class="row" style="margin-top: -15px; margin-bottom: -15px;">
+    {% if paths is not empty %}
     <table class="table table-striped" style="margin-bottom: 0;">
         <thead>
             <tr>
@@ -35,7 +36,12 @@
 
                 <td>
                     {% if path.canEdit %}
-                    <a href="{{ path('innova_path_editor_wizard', { id: path.entity.id}) }}" class="btn btn-default btn-xs">
+                    <a href="{{ path('innova_path_publish', { id: path.entity.id, redirect: true }) }}" class="btn btn-default btn-xs">
+                        <span class="fa fa-share-square-o"></span>
+                        {{ 'publish'|trans({}, 'innova_tools') }}
+                    </a>
+
+                    <a href="{{ path('innova_path_editor_wizard', { id: path.entity.id }) }}" class="btn btn-default btn-xs">
                         <span class="fa fa-pencil"></span>
                         {{ 'edit'|trans({}, 'innova_tools') }}
                     </a>
@@ -45,4 +51,7 @@
         {% endfor %}
         </tbody>
     </table>
+    {% else %}
+    <em  style="display: block;margin-top: 15px;" class="text-center">{{ 'no_path'|trans({}, 'innova_tools') }}</em>
+    {% endif %}
 </div>

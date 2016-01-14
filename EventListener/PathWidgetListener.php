@@ -4,6 +4,7 @@ namespace Innova\PathBundle\EventListener;
 
 use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
+use Claroline\TagBundle\Manager\TagManager;
 use Innova\PathBundle\Form\Type\PathWidgetConfigType;
 use Innova\PathBundle\Manager\PathManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
@@ -31,21 +32,26 @@ class PathWidgetListener
      */
     private $pathManager;
 
+    private $tagManager;
+
     /**
      * @DI\InjectParams({
      *     "twig"           = @DI\Inject("templating"),
      *     "formFactory"    = @DI\Inject("form.factory"),
-     *     "pathManager"    = @DI\Inject("innova_path.manager.path")
+     *     "pathManager"    = @DI\Inject("innova_path.manager.path"),
+     *     "tagManager"    = @DI\Inject("claroline.manager.tag_manager")
      * })
      */
     public function __construct(
         TwigEngine           $twig,
         FormFactoryInterface $formFactory,
-        PathManager          $pathManager)
+        PathManager          $pathManager,
+        TagManager           $tagManager)
     {
         $this->twig        = $twig;
         $this->formFactory = $formFactory;
         $this->pathManager = $pathManager;
+        $this->tagManager  = $tagManager;
     }
 
     /**
@@ -86,6 +92,7 @@ class PathWidgetListener
             array(
                 'form'     => $form->createView(),
                 'instance' => $instance,
+                'tags'     => $this->tagManager->getPlatformTags(),
             )
         );
 

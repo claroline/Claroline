@@ -7,8 +7,18 @@
       class="form-horizontal"
         {{ form_enctype(form) }}>
 
+
     <div class="panel-body">
         {{ form_widget(form) }}
+
+        <div>
+            {% for resourceTag in form.vars.value.tags %}
+            <span class="label label-success margin-bottom-sm margin-right-sm">
+                <i class="fa fa-tag"></i>
+                {{ resourceTag.getName() }}
+            </span>
+            {% endfor %}
+        </div>
     </div>
 
     {{ macros.flashBox() }}
@@ -19,3 +29,15 @@
         </a>
     </div>
 </form>
+
+{% block javascripts %}
+    <script type="text/javascript" src='{{ asset('bundles/clarolinetag/js/bootstrap3-typeahead.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/clarolinetag/js/tag-typeahead.js') }}'></script>
+    <script type="text/javascript">
+        var allTags = [{% for tag in tags %}'{{ tag.getName() }}'{% if not loop.last %}, {% endif %}{% endfor %}];
+        new TagTypeAhead({
+            tags: allTags,
+            selector: '#innova_path_widget_config_tags'
+        });
+    </script>
+{% endblock %}
