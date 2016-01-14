@@ -87,10 +87,8 @@
     {# #187 : ajout de la colonne "Accusé de réception", demande de JJQ #}
     {% if dropzone.returnreceipt == 1  %}
         <td class="{{ classArray }} centered" id="is-validate-{{ document.id }}">
-
-{% render(controller('InnovaCollecticielBundle:Document:renderReturnReceipt', {'documentId': document.id, 'dropzoneId': dropzone.id})) %} 
-
-  {#        {% include 'InnovaCollecticielBundle:Document:returnReceiptStudent.html.twig' with {'document':document, 'dropzone': dropzone} %} #}
+            {# Pour affichage de la valeur de l'accusé de réception #}
+            {% render(controller('InnovaCollecticielBundle:Document:renderReturnReceipt', {'documentId': document.id, 'dropzoneId': dropzone.id})) %} 
         </td>
     {% endif %}
     {# #146 : changement de gestion des annulations et des suppressions, demande de JJQ #}
