@@ -18,11 +18,13 @@
             $scope.addMessage = function (sender, message, color) {
                 $scope.messages.push({sender: sender, message: message, color: color, type: 'message'});
                 $scope.$apply();
+                updateScrollBarPosition();
             };
 
             $scope.addPresenceMessage = function (name, status) {
                 $scope.messages.push({name: name, status: status, type: 'presence'});
                 $scope.$apply();
+                updateScrollBarPosition();
             };
 
             $scope.$on('newMessageEvent', function (event, messageDatas) {
@@ -32,6 +34,12 @@
             $scope.$on('newPresenceEvent', function (event, presenceDatas) {
                 $scope.addPresenceMessage(presenceDatas['name'], presenceDatas['status']);
             });
+            
+            function updateScrollBarPosition()
+            {
+                var scrollHeight = $('#chat-messages-panel')[0].scrollHeight;
+                $('#chat-messages-panel').scrollTop(scrollHeight);
+            }
         }
     ]);
 })();

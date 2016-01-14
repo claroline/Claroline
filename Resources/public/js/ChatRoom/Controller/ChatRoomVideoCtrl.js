@@ -160,7 +160,6 @@ var myUsername = null;
                 
                 if (sess.peerconnection.iceConnectionState === 'connected') {
                     var initiator = Strophe.getResourceFromJid(sess['initiator']);
-                    console.log(initiator);
                     $scope.addStream(sid, initiator);
                 } else if (sess.peerconnection.iceConnectionState === 'disconnected') {
                     connection.jingle.sessions[sid].terminate('disconnected');
@@ -168,10 +167,11 @@ var myUsername = null;
                 }
                 // works like charm, unfortunately only in chrome and FF nightly, not FF22 beta
 //                
-//                if (sess.peerconnection.signalingState == 'stable' && sess.peerconnection.iceConnectionState == 'connected') {
+//                if (sess.peerconnection.signalingState === 'stable' && sess.peerconnection.iceConnectionState === 'connected') {
 //                    var el = $("<video autoplay='autoplay' style='display:none'/>").attr('id', 'largevideo_' + sid);
 //                    $(document).trigger('callactive.jingle', [el, sid]);
 //                    RTC.attachMediaStream(el, sess.remoteStream); // moving this before the trigger doesn't work in FF?!
+//                    waitForRemoteVideo($('#participant-video-' + sid), sid);
 //                }
 //                
             }
@@ -190,6 +190,13 @@ var myUsername = null;
 //                connection.jingle.getStunAndTurnCredentials();
                 RTC = setupRTC();
                 getUserMediaWithConstraints(['audio', 'video']);
+                connection.jingle.ice_config = ice_config;
+                
+                if (RTC) {
+                    connection.jingle.pc_constraints = RTC.pc_constraints;
+                }
+                RTCPeerconnection = RTC.peerconnection;
+                
                 $(document).bind('mediaready.jingle', onMediaReady);
                 $(document).bind('mediafailure.jingle', onMediaFailure);
                 $(document).bind('callincoming.jingle', onCallIncoming);
@@ -209,13 +216,6 @@ var myUsername = null;
                 $(document).bind('packetloss.jingle', function (event, sid, loss) {
 //                    console.warn('packetloss', sid, loss);
                 });
-    
-                connection.jingle.ice_config = ice_config;
-                
-                if (RTC) {
-                    connection.jingle.pc_constraints = RTC.pc_constraints;
-                }
-                RTCPeerconnection = RTC.peerconnection;
             });
             
             $rootScope.$on('myPresenceConfirmationEvent', function () {

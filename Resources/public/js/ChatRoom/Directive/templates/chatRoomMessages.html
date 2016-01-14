@@ -1,4 +1,4 @@
-<div id="chat-content" class="well well-sm" ng-controller="ChatRoomMessagesCtrl">
+<div id="chat-messages-panel" class="well well-sm" ng-controller="ChatRoomMessagesCtrl">
     <div ng-repeat="message in messages">
         <div ng-switch="message['type']">
             <div ng-switch-when="message">

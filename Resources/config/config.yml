@@ -8,4 +8,5 @@ plugin:
   resources:
     - class: Claroline\ChatBundle\Entity\ChatRoom
       name: claroline_chat_room
+      icon: IC-Chat.png
   
