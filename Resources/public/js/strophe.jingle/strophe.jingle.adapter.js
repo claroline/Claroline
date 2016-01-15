@@ -10,7 +10,7 @@ function TraceablePeerConnection(ice_config, constraints) {
 
     // override as desired
     this.trace = function(what, info) {
-        //console.warn('WTRACE', what, info);
+        console.warn('WTRACE', what, info);
         self.updateLog.push({
             time: new Date(),
             type: what,
