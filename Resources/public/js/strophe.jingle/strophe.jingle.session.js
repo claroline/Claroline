@@ -207,7 +207,7 @@ JingleSession.prototype.sendIceCandidate = function (candidate) {
 
         if(this.filter_candidates === null || jcand.type === this.filter_candidates) {
             if (this.usetrickle) {
-                console.log('sendIceCandidate using trickle');
+                //console.log('sendIceCandidate using trickle');
                 if (this.usedrip) {
                     if (this.drip_container.length === 0) {
                         // start 20ms callout
@@ -222,7 +222,7 @@ JingleSession.prototype.sendIceCandidate = function (candidate) {
                     this.drip_container.push(event.candidate);
                     return;
                 } else {
-                    console.log('sending single candidate');
+                    //console.log('sending single candidate');
                     self.sendIceCandidates([event.candidate]);
                 }
             }
@@ -277,7 +277,7 @@ JingleSession.prototype.sendIceCandidate = function (candidate) {
 };
 
 JingleSession.prototype.sendIceCandidates = function (candidates) {
-    console.log('sendIceCandidates', candidates);
+    //console.log('sendIceCandidates', candidates);
     var cand = $iq({to: this.peerjid, type: 'set'})
         .c('jingle', {xmlns: 'urn:xmpp:jingle:1',
            action: 'transport-info',

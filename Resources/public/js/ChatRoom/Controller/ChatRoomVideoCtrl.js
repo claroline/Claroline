@@ -92,7 +92,22 @@ var myUsername = null;
                 var initiator = Strophe.getResourceFromJid(sess['initiator']);
                 sess.sendAnswer();
                 sess.accept();
-                $scope.addStream(sid, initiator);
+//                $scope.addStream(sid, initiator);
+                
+                if (!$scope.hasStreamFromUsername(initiator)) {
+                    console.log('**************************');
+                    console.log('No stream from ' + initiator);
+                                                                            
+                    var session = connection.jingle.initiate(
+                        roomjid + '/' + initiator,
+                        roomjid + '/' + myUsername
+                    );
+                    
+                    if (session['sid']) {
+                        $scope.addStream(session['sid'], initiator + '_2');
+                        console.log('Stream with ' + initiator + '_2 : ' + session['sid']);
+                    }
+                }
 
                 // alternatively...
                 //sess.terminate(busy)
@@ -159,21 +174,24 @@ var myUsername = null;
                 console.log('sig state for', sid, sess.peerconnection.signalingState);
                 
                 if (sess.peerconnection.iceConnectionState === 'connected') {
+                    console.log('add new stream');
                     var initiator = Strophe.getResourceFromJid(sess['initiator']);
                     $scope.addStream(sid, initiator);
                 } else if (sess.peerconnection.iceConnectionState === 'disconnected') {
                     connection.jingle.sessions[sid].terminate('disconnected');
+                    console.log('remove stream');
                     $scope.removeStream(sid);
                 }
                 // works like charm, unfortunately only in chrome and FF nightly, not FF22 beta
 //                
-//                if (sess.peerconnection.signalingState === 'stable' && sess.peerconnection.iceConnectionState === 'connected') {
-//                    var el = $("<video autoplay='autoplay' style='display:none'/>").attr('id', 'largevideo_' + sid);
+                if (sess.peerconnection.signalingState === 'stable' && sess.peerconnection.iceConnectionState === 'connected') {
+                    console.log('STABLE & CONNECTED');
+                    //var el = $("<video autoplay='autoplay' style='display:none'/>").attr('id', 'largevideo_' + sid);
+//                    var el = $('<video autoplay="autoplay" class="participant-video"/>').attr('id', 'participant-video-' + sid);
 //                    $(document).trigger('callactive.jingle', [el, sid]);
 //                    RTC.attachMediaStream(el, sess.remoteStream); // moving this before the trigger doesn't work in FF?!
-//                    waitForRemoteVideo($('#participant-video-' + sid), sid);
-//                }
-//                
+                    //waitForRemoteVideo($('#participant-video-' + sid), sid);
+                }              
             }
 
             function noStunCandidates(event) {
@@ -186,6 +204,7 @@ var myUsername = null;
                 connection = XmppService.getConnection();
                 roomjid = XmppMucService.getRoom();
                 myUsername = XmppService.getUsername();
+                console.log('MUC CONNECT');
                 
 //                connection.jingle.getStunAndTurnCredentials();
                 RTC = setupRTC();
@@ -239,6 +258,7 @@ var myUsername = null;
                         var session = connection.jingle.initiate(
                             roomjid + '/' + allUsers[i]['username'],
                             roomjid + '/' + myUsername
+
                         );
                         
                         if (session['sid']) {
@@ -248,6 +268,35 @@ var myUsername = null;
                     }
                 }
             });
+
+            $scope.$on('userDisconnectionEvent', function (event, userDatas) {
+                $scope.removeUserStream(userDatas['username']);
+            });
+
+            $scope.removeUserStream = function (username) {
+                
+                for (var i = $scope.streams.length - 1; i >= 0; i--) {
+                    
+                    if ($scope.streams[i]['username'] === username || $scope.streams[i]['username'] === username + '_2') {
+                        $scope.streams.splice(i, 1);
+                    }
+                }
+                $scope.$apply();
+            };
+
+            $scope.hasStreamFromUsername = function (username) {
+                var isPresent = false;
+
+                for (var i = 0; i < $scope.streams.length; i++) {
+                                                                                
+                    if ($scope.streams[i]['username'] === username) {
+                        isPresent = true;
+                        break;
+                    }
+                }
+
+                return isPresent;
+            };
 
             $scope.addStream = function (sid, username) {
                 var isPresent = false;

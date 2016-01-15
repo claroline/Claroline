@@ -28,7 +28,7 @@
             var vm;
 
             var onRoomMessage = function (message) {
-                console.log(message);
+//                console.log(message);
                 var from = $(message).attr('from');
                 var type = $(message).attr('type');
                 var roomName = Strophe.getBareJidFromJid(from);
@@ -64,19 +64,19 @@
             };
 
             var onRoomPresence = function (presence) {
-                console.log(presence);
+//                console.log(presence);
                 var from = $(presence).attr('from');
                 var roomName = Strophe.getBareJidFromJid(from);
                 var status = $(presence).find('status');
                 var statusCode = status.attr('code');
                 var error = $(presence).find('error');
                 var errorCode = error.attr('code');
-                console.log('##### STATUS = ' + statusCode + ' ####');
-                console.log('##### ERROR = ' + errorCode + ' ####');
+//                console.log('##### STATUS = ' + statusCode + ' ####');
+//                console.log('##### ERROR = ' + errorCode + ' ####');
                 
                 if (roomName.toLowerCase() === room.toLowerCase()) {
                     var username = Strophe.getResourceFromJid(from);
-                    console.log('##### USERNAME = ' + username + ' ####');
+//                    console.log('##### USERNAME = ' + username + ' ####');
                     var type = $(presence).attr('type');
                     var datas = $(presence).find('datas');
                     var firstName = datas.attr('firstName');
@@ -168,11 +168,11 @@
             };
 
             var onIQStanza = function (iq) {
-                console.log(iq);
+//                console.log(iq);
                 var type = $(iq).attr('type');
                 var id = $(iq).attr('id');
-                console.log(type);
-                console.log(id);
+//                console.log(type);
+//                console.log(id);
                 
                 if (type === 'result') {
                     
