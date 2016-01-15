@@ -145,7 +145,7 @@ class MatchHandler implements QuestionHandlerInterface {
         $repo = $this->om->getRepository('UJMExoBundle:InteractionMatching');
         $match = $repo->findOneBy(['question' => $question]);
         $exportData->random = $match->getShuffle();
-        // if needed shuffle choices
+        // shuffle proposals and labels or sort them
         if ($exportData->random && !$forPaperList) {
             $match->shuffleProposals();
             $match->shuffleLabels();
@@ -164,26 +164,18 @@ class MatchHandler implements QuestionHandlerInterface {
             return $firstSetData;
         }, $proposals);
 
-
-        $exportData->secondSet = array();
-        $pushed = array(); // labels ids only used for check
-        foreach ($proposals as $proposal) {
-            $labels = $proposal->getAssociatedLabel();
-            foreach ($labels as $label) {
-                $secondSetData = new \stdClass();
-                $secondSetData->id = (string) $label->getId();
-                $secondSetData->type = 'text/plain';
-                $secondSetData->data = $label->getValue();
-
-                // different proposals can be associated with same label
-                // we need to check that the label is not already in secondSet array
-                if (!in_array((string) $label->getId(), $pushed)) {
-                    array_push($exportData->secondSet, $secondSetData);
-                    array_push($pushed, (string) $label->getId());
-                }
-            }
-        }
-
+        // need to get labels from interaction entity since some of them can exist without associatiated proposals
+        // $proposal->getAssociatedLabel(); gives us only associated ones...
+        $labels = $match->getLabels()->toArray();
+        $exportData->secondSet = array_map(function ($label) {
+            $secondSetData = new \stdClass();
+            $secondSetData->id = (string) $label->getId();
+            $secondSetData->type = 'text/plain';
+            $secondSetData->data = $label->getValue();
+            return $secondSetData;
+        }, $labels);
+        
+        // in solutions we also need to get proposals without labels
         if ($withSolution) {
             $exportData->solutions = array_map(function ($proposal) {
 
@@ -262,14 +254,12 @@ class MatchHandler implements QuestionHandlerInterface {
         $proposalIds = array_map(function ($proposal) {
             return (string) $proposal->getId();
         }, $proposals);
-
-        $labelsIds = array();
-        foreach ($proposals as $proposal) {
-            $labels = $proposal->getAssociatedLabel();
-            foreach ($labels as $label) {
-                array_push($labelsIds, (string) $label->getId());
-            }
-        }
+        
+        
+        $labels = $interaction->getLabels()->toArray();
+        $labelsIds = array_map(function ($label) {
+            return (string) $label->getId();
+        }, $labels);
 
         $sourceIds = array();
         $targetIds = array();
@@ -313,42 +303,34 @@ class MatchHandler implements QuestionHandlerInterface {
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionMatching')
                 ->findOneByQuestion($question);
 
-        $proposals = $interaction->getProposals();
-        foreach ($proposals as $p) {
-            // getAssociatedLabel return an ArrayCollection !!!
-            $associatedLabels = $p->getAssociatedLabel();
-            foreach ($associatedLabels as $label) {
-                if (!$label->getScoreRightResponse()) {
-                    throw new \Exception('Global score not implemented yet');
-                }
+        $labels = $interaction->getLabels();
+        foreach ($labels as $label) {            
+            if (!$label->getScoreRightResponse()) {
+                throw new \Exception('Global score not implemented yet');
             }
-        }
+        }      
 
+        // calculate response score
         $mark = 0;
-
-        $sourceIds = array();
         $targetIds = array();
         foreach ($data as $answer) {
             if ($answer !== '') {
                 $set = explode(',', $answer);
-                array_push($sourceIds, $set[0]);
                 array_push($targetIds, $set[1]);
             }
         }
-
-        foreach ($proposals as $p) {
-            $associatedLabels = $p->getAssociatedLabel();
-            foreach ($associatedLabels as $label) {
-                // check that given answers have a corresponding proposal id and a corresponding label id
-                if (in_array((string) $p->getId(), $sourceIds) && in_array((string) $label->getId(), $targetIds)) {
-                    $mark += $label->getScoreRightResponse();
-                }
+        
+        foreach ($labels as $label) {
+            // if student used the label in his answer
+            if (in_array((string) $label->getId(), $targetIds)) {
+                $mark += $label->getScoreRightResponse();
             }
-        }
+        }    
 
         if ($mark < 0) {
             $mark = 0;
         }
+        // @TODO check if last ';' concatenation is necessary
         $result = count($data) > 0 ? implode(';', $data) . ';' : '';
         $response->setResponse($result);
         $response->setMark($mark);

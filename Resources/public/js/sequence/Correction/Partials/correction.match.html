@@ -20,10 +20,8 @@
                         </h4>
                     </div>
                     <div class="panel-body">
-                        
                         <ul>
-                            <li data-ng-repeat="item in correctionMatchCtrl.getStudentAnswers(label)">
-                                
+                            <li data-ng-repeat="item in correctionMatchCtrl.getStudentAnswers(label)">                                
                                 <span data-ng-class="correctionMatchCtrl.checkProposalValidity(item.id) ? '':'wrong-label'">{{item.data}}</span>
                             </li>
                             <li data-ng-if="item.length == 0" data-ng-repeat="item in correctionMatchCtrl.getStudentAnswers(label)">
@@ -32,9 +30,8 @@
                         </ul>
                     </div>
                 </div>
-
             </td>
-            <!-- awaited answer -->
+            <!-- expected answer -->
             <td class="center-text">
                 <div class="panel panel-default">
                     <div class="panel-heading clearfix">
@@ -55,6 +52,29 @@
             <td class="center-text">
                 <span>{{correctionMatchCtrl.getCurrentItemFeedBack(label)}}</span>
             </td>
+        </tr>
+
+        <!-- Orphan proposals | NO LABELS ASSOCIATED -->
+        <tr data-ng-if="correctionMatchCtrl.orphanAnswers.length > 0">
+            <td></td>
+            <td class="center-text">
+                <div data-ng-repeat="orphan in correctionMatchCtrl.orphanAnswers" class="panel panel-default">
+                    <div class="panel-heading clearfix">
+                        <h4 class="panel-title pull-left">
+                            <span>{{ 'label_no_labels_associated'|trans:{}:'ujm_sequence' }}</span>
+                        </h4>                       
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            <li>
+                                {{orphan.data}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </td>
+            <!-- No feedback on proposals -->
+            <td class="center-text">-</td>
         </tr>
     </tbody>
 </table>

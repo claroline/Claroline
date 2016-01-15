@@ -7,8 +7,7 @@
 
     angular.module('Correction').controller('CorrectionQCMCtrl', [
         'CommonService',
-        'CorrectionService',
-        function (CommonService, CorrectionService) {
+        function (CommonService) {
 
 
             this.question = {};

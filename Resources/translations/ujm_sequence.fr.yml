@@ -16,6 +16,7 @@ link_exercise_docimology: Docimologie
 link_csv_export: Export CSV
 label_exercise_score: Note
 label_exercise_correction: Correction
+label_no_labels_associated: Pas de label(s) associé(s)
 
 # p
 paper_list: Liste des copies

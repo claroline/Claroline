@@ -74,7 +74,7 @@
                 $('.tooltip').each(function () {
                     $(this).hide();
                 });
-
+                
                 // get next step index
                 this.currentStepIndex = this.getNextStepIndex(this.currentStepIndex, action, index);
 
@@ -83,8 +83,13 @@
                 // save the given answer (even if empty !)
                 var submitPromise = ExerciseService.submitAnswer(this.paper.id, studentData);
                 submitPromise.then(function (result) {
+                    // when comming from a MatchQuestion jsPlumb connections might exists and still visible
+                    // force them to detach
+                    jsPlumb.detachEveryConnection();
+                    
                     // then navigate to desired step / end / terminate exercise
                     this.handleStepNavigation(action, studentData.paper);
+                    
                 }.bind(this));
             };
 

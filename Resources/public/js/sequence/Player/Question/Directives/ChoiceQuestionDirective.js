@@ -3,7 +3,8 @@
     'use strict';
 
     angular.module('Question').directive('choiceQuestion', [
-        function () {
+        '$timeout',
+        function ($timeout) {
             return {
                 restrict: 'E',
                 replace: true,
@@ -15,7 +16,11 @@
                     canSeeFeedback: '='
                 },
                 link: function (scope, element, attr, choiceQuestionCtrl) {
-                    choiceQuestionCtrl.init(scope.question, scope.canSeeFeedback);                 
+                    choiceQuestionCtrl.init(scope.question, scope.canSeeFeedback);
+                    // in case of coming from a js plumb question
+                    $timeout(function(){
+                        // jsPlumb.detachEveryConnection();
+                    });
                     
                 }
             };
