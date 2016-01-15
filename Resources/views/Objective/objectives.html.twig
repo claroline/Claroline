@@ -52,7 +52,7 @@
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'competency' }) }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/typeahead/js/bundle.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/typeahead.js/dist/typeahead.bundle.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/tree.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/competencyPicker.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/userPicker.js') }}"></script>
@@ -61,6 +61,6 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/frontend/jquery/plugin/typeahead/css/boostrap.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/frontend/typeahead.js-bootstrap3.less/typeahead.css') }}"/>
 {% endblock %}
 
