@@ -21,11 +21,14 @@
                 <table class="table table-responsive {% if mode == "condensed" %}table-condensed{% endif %} well datatable">
                     <thead>
                         <tr class="text-left">
-                            <th class="centered"></th>
+                            {% if dropzone.picture == 1  %}
+                                <th class="centered"></th>
+                            {% endif %}
                             <th class="nameColumn">{{ 'Name'|trans({}, 'innova_collecticiel') }}</th>
                             <th class="nameColumn">{{ 'First name'|trans({}, 'innova_collecticiel') }}</th>
-                            <th class="usernameColumn">{{ 'Nickname'|trans({}, 'innova_collecticiel') }}</th>
-                           
+                            {% if dropzone.username == 1  %}
+                                <th class="usernameColumn">{{ 'Nickname'|trans({}, 'innova_collecticiel') }}</th>
+                            {% endif %}
                             <th class="centered">
                                 <i class="fa fa-file-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Name of document'|trans({},'innova_collecticiel') }}"></i>
                             </th>

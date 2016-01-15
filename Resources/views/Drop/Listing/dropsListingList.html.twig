@@ -1,26 +1,30 @@
 {# Affichage du tableau de l'onglet "Demandes adressées" #}
 <tr>
     {# Affichage de l'image de profil #}
-    <td>
-        {% if drop.user.getPicture() != '' %}
-
-        <div class="user-panel">
-        <div class="pull-left image">
-            <img src="{{ asset('uploads/pictures/') ~ drop.user.getPicture() }}"
-            class=""
-            alt="{{ drop.user.getLastName() ~ ' ' ~ drop.user.getFirstName() }}">
-        </div>
-        </div>
-        {% else %}
-            <i class="direct-chat-img direct-chat-img-you right fa fa-user" ></i>
-        {% endif %}
-    </td>
+    {% if dropzone.picture == 1  %}
+        <td>
+            {% if drop.user.getPicture() != '' %}
+                <div class="user-panel">
+                    <div class="pull-left image">
+                        <img src="{{ asset('uploads/pictures/') ~ drop.user.getPicture() }}"
+                        class=""
+                        alt="{{ drop.user.getLastName() ~ ' ' ~ drop.user.getFirstName() }}">
+                    </div>
+                </div>
+            {% else %}
+                <i class="direct-chat-img direct-chat-img-you right fa fa-user" ></i>
+            {% endif %}
+        </td>
+    {% endif %}
 
     <td>{{ drop.user.lastName|upper }}</td>
 
     <td>{{ drop.user.firstName|capitalize }}</td>
 
-    <td>{{ drop.user.userName|capitalize }}</td>
+    {% if dropzone.username == 1  %}
+        <td>{{ drop.user.userName|capitalize }}</td>
+    {% endif %}
+
 
     {# En date du #}
     <td>{{ document.documentDate|date('formatDatetime'|trans({}, 'innova_collecticiel')) }}</td>

@@ -12,6 +12,7 @@
 {# InnovaERV : Fin ajout : Affichage ... #}
 <tr id="row_{{ document.id }}">
     {# Affichage de l'image de profil #}
+    {% if dropzone.picture == 1  %}
     <td class="{{ classArray }}">
         {% if document.sender.getPicture() != '' %}
             <div class="user-panel">
@@ -25,15 +26,20 @@
             <i class="direct-chat-img direct-chat-img-you right fa fa-user" ></i>
         {% endif %}
     </td>
+    {% endif %}
     <td class="{{ classArray }}">
         {{ document.sender.lastName }}
     </td>
     <td class={{ classArray }}>
         {{ document.sender.firstName }}
     </td>
-    <td class={{ classArray }}>
-        {{ document.sender.username }}
-    </td>
+
+    {% if dropzone.username == 1  %}
+        <td class={{ classArray }}>
+            {{ document.sender.username }}
+        </td>
+    {% endif %}
+
     <td class={{ classArray }}>
         {% if document.url is not null %}
             <a target="_blank"

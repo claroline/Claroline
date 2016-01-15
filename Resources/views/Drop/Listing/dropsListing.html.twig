@@ -9,10 +9,17 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
 <table class="table table-striped table-hover datatable sharedSpacesTable">
     <thead>
     {# Affichage de l'image de profil #}
-    <th class="nameColumn"></th>
+    {% if dropzone.picture == 1  %}
+        <th class="nameColumn"></th>
+    {% endif %}
+
     <th class="nameColumn">{{ 'Name'|trans({},'innova_collecticiel') }}</th>
     <th class="nameColumn">{{ 'First name'|trans({},'innova_collecticiel') }}</th>
-    <th class="usernameColumn">{{ 'Nickname'|trans({},'innova_collecticiel') }}</th>
+
+    {% if dropzone.username == 1  %}
+        <th class="usernameColumn">{{ 'Nickname'|trans({},'innova_collecticiel') }}</th>
+    {% endif %}
+
     <th class="dateColumn centered">
     <i class="fa fa-calendar-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Dated'|trans({},'innova_collecticiel') }}"></i>
     </th>
