@@ -104,7 +104,7 @@ var myUsername = null;
                     );
                     
                     if (session['sid']) {
-                        $scope.addStream(session['sid'], initiator + '_2');
+                        $scope.addStream(session['sid'], initiator + '_2', initiator);
                         console.log('Stream with ' + initiator + '_2 : ' + session['sid']);
                     }
                 }
@@ -171,16 +171,32 @@ var myUsername = null;
 
             function onIceConnectionStateChanged(event, sid, sess) {
                 console.log('ice state for', sid, sess.peerconnection.iceConnectionState);
-                console.log('sig state for', sid, sess.peerconnection.signalingState);
+//                console.log('sig state for', sid, sess.peerconnection.signalingState);
+                console.log(sess['initiator']);
                 
                 if (sess.peerconnection.iceConnectionState === 'connected') {
                     console.log('add new stream');
                     var initiator = Strophe.getResourceFromJid(sess['initiator']);
-                    $scope.addStream(sid, initiator);
+                    $scope.addStream(sid, initiator, initiator);
                 } else if (sess.peerconnection.iceConnectionState === 'disconnected') {
                     connection.jingle.sessions[sid].terminate('disconnected');
                     console.log('remove stream');
                     $scope.removeStream(sid);
+                } else if (sess.peerconnection.iceConnectionState === 'failed') {
+                    var username = $scope.getUsernameFromSid(sid);
+                    
+                    if (username !== null) {                                                    
+                        var session = connection.jingle.initiate(
+                            roomjid + '/' + username,
+                            roomjid + '/' + myUsername
+                        );
+
+                        if (session['sid']) {
+                            $scope.removeStream(sid);
+                            $scope.addStream(session['sid'], username + '_failed', username);
+                            console.log('Stream with ' + username + '_failed : ' + session['sid']);
+                        }
+                    }
                 }
                 // works like charm, unfortunately only in chrome and FF nightly, not FF22 beta
 //                
@@ -262,7 +278,7 @@ var myUsername = null;
                         );
                         
                         if (session['sid']) {
-                            $scope.addStream(session['sid'], allUsers[i]['username']);
+                            $scope.addStream(session['sid'], allUsers[i]['username'], allUsers[i]['username']);
                             console.log('Stream with ' + allUsers[i]['username'] + ' : ' + session['sid']);
                         }
                     }
@@ -272,12 +288,26 @@ var myUsername = null;
             $scope.$on('userDisconnectionEvent', function (event, userDatas) {
                 $scope.removeUserStream(userDatas['username']);
             });
+            
+            $scope.getUsernameFromSid = function (sid) {
+                var username = null;
+                
+                for (var i = 0; i < $scope.streams.length; i++) {
+                    
+                    if ($scope.streams[i]['sid'] === sid) {
+                        username = $scope.streams[i]['username'];
+                        break;
+                    }
+                }
+                
+                return username;
+            };
 
             $scope.removeUserStream = function (username) {
                 
                 for (var i = $scope.streams.length - 1; i >= 0; i--) {
                     
-                    if ($scope.streams[i]['username'] === username || $scope.streams[i]['username'] === username + '_2') {
+                    if ($scope.streams[i]['username2'] === username || $scope.streams[i]['username2'] === username + '_2') {
                         $scope.streams.splice(i, 1);
                     }
                 }
@@ -298,7 +328,7 @@ var myUsername = null;
                 return isPresent;
             };
 
-            $scope.addStream = function (sid, username) {
+            $scope.addStream = function (sid, username2, username) {
                 var isPresent = false;
                 
                 for (var i = 0; i < $scope.streams.length; i++) {
@@ -310,7 +340,7 @@ var myUsername = null;
                 }
                 
                 if (!isPresent) {
-                    $scope.streams.push({sid: sid, username: username});
+                    $scope.streams.push({sid: sid, username2: username2, username: username});
                     $scope.$apply();
                 }
             };
