@@ -82,9 +82,11 @@
              * @returns {Number}
              */
             this.getQuestionScore = function (question) {
-                var score = 0.0;
+                /*var availableScore = 0.0;
+                var studentScore = 0.0;
+                console.log(question);
                 //score = PapersService.getQuestionScore(question, this.paper);
-                return score;
+                return {total:availableScore, score:studentScore};*/
             };
 
             /**

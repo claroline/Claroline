@@ -372,6 +372,7 @@ class PaperManager
             $links = $linkRepo->findViewedByPaperAndQuestion($paper, $question);
 
             $answer = $response ? $handler->convertAnswerDetails($response) : null;
+            $answerScore = $response ? $response->getMark():0;
             $hints = array_map(function ($link) {
                 return (string) $link->getHint()->getId();
             }, $links);
@@ -380,7 +381,8 @@ class PaperManager
                 $paperQuestions[] = [
                     'id' => (string) $question->getId(),
                     'answer' => $answer,
-                    'hints' => $hints
+                    'hints' => $hints,
+                    'score' => $answerScore
                 ];
             }
         }

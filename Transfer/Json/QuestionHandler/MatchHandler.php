@@ -108,7 +108,6 @@ class MatchHandler implements QuestionHandlerInterface {
             }
 
             $proposal = new Proposal();
-            // label corresponding to proposal
             $proposal->setValue($importData->proposals[$i]->data);
             $proposal->setOrdre($i);
 
@@ -127,8 +126,6 @@ class MatchHandler implements QuestionHandlerInterface {
             $this->om->persist($proposal);
         }
 
-        // to types : To bind / To drag
-        // @todo check importData value(s) for this property
         $subTypeCode = $importData->toBind ? 1 : 2;
         $subType = $this->om->getRepository('UJMExoBundle:TypeMatching')
                 ->findOneByCode($subTypeCode);
@@ -164,32 +161,28 @@ class MatchHandler implements QuestionHandlerInterface {
             return $firstSetData;
         }, $proposals);
 
-        // need to get labels from interaction entity since some of them can exist without associatiated proposals
-        // $proposal->getAssociatedLabel(); gives us only associated ones...
         $labels = $match->getLabels()->toArray();
         $exportData->secondSet = array_map(function ($label) {
             $secondSetData = new \stdClass();
             $secondSetData->id = (string) $label->getId();
             $secondSetData->type = 'text/plain';
-            $secondSetData->data = $label->getValue();
+            $secondSetData->data = $label->getValue();        
             return $secondSetData;
         }, $labels);
-        
-        // in solutions we also need to get proposals without labels
+
         if ($withSolution) {
             $exportData->solutions = array_map(function ($proposal) {
-
-                // getAssociatedLabel return an ArrayCollection !!!
                 $associatedLabels = $proposal->getAssociatedLabel();
-                //$solutions = array();
                 $solutionData = new \stdClass();
                 $solutionData->firstId = (string) $proposal->getId();
+                //$score = 0.0;
                 foreach ($associatedLabels as $label) {
                     $solutionData->secondId = (string) $label->getId();
+                    //$score += $label->getScoreRightResponse();
                     $solutionData->score = $label->getScoreRightResponse();
                     if ($label->getFeedback()) {
                         $solutionData->feedback = $label->getFeedback();
-                    } 
+                    }
                 }
                 return $solutionData;
             }, $proposals);
@@ -204,7 +197,6 @@ class MatchHandler implements QuestionHandlerInterface {
 
         $proposals = $match->getProposals()->toArray();
         $exportData->solutions = array_map(function ($proposal) {
-            // getAssociatedLabel return an ArrayCollection !!!
             $associatedLabels = $proposal->getAssociatedLabel();
             foreach ($associatedLabels as $label) {
                 $solutionData = new \stdClass();
@@ -243,7 +235,7 @@ class MatchHandler implements QuestionHandlerInterface {
 
         $count = 0;
         if (0 === $count = count($data)) {
-            // no need to check any data integrity if no answer
+            // no need to check anything
             return [];
         }
 
@@ -254,8 +246,7 @@ class MatchHandler implements QuestionHandlerInterface {
         $proposalIds = array_map(function ($proposal) {
             return (string) $proposal->getId();
         }, $proposals);
-        
-        
+
         $labels = $interaction->getLabels()->toArray();
         $labelsIds = array_map(function ($label) {
             return (string) $label->getId();
@@ -304,11 +295,11 @@ class MatchHandler implements QuestionHandlerInterface {
                 ->findOneByQuestion($question);
 
         $labels = $interaction->getLabels();
-        foreach ($labels as $label) {            
+        foreach ($labels as $label) {
             if (!$label->getScoreRightResponse()) {
                 throw new \Exception('Global score not implemented yet');
             }
-        }      
+        }
 
         // calculate response score
         $mark = 0;
@@ -319,19 +310,19 @@ class MatchHandler implements QuestionHandlerInterface {
                 array_push($targetIds, $set[1]);
             }
         }
-        
+
         foreach ($labels as $label) {
             // if student used the label in his answer
             if (in_array((string) $label->getId(), $targetIds)) {
                 $mark += $label->getScoreRightResponse();
             }
-        }    
+        }
 
         if ($mark < 0) {
             $mark = 0;
         }
-        // @TODO check if last ';' concatenation is necessary
-        $result = count($data) > 0 ? implode(';', $data) . ';' : '';
+
+        $result = count($data) > 0 ? implode(';', $data) : '';
         $response->setResponse($result);
         $response->setMark($mark);
     }

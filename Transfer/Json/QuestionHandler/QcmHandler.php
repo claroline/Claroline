@@ -279,8 +279,8 @@ class QcmHandler implements QuestionHandlerInterface
         if ($mark < 0) {
             $mark = 0;
         }
-         // @TODO check if last ';' concatenation is necessary
-        $result = count($data) > 0 ? implode(';', $data) . ';' : '';
+
+        $result = count($data) > 0 ? implode(';', $data) : '';
 
         $response->setResponse($result);
         $response->setMark($mark);

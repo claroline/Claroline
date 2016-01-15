@@ -16,12 +16,16 @@
             this.correctAnswers = [];
             this.orphanAnswers = [];
             this.studentErrors = []; // array of proposals ids;
+            this.score = '';
 
             this.init = function (question, paper) {
                 this.question = question;
+                console.log(this.question);
                 this.paper = paper;
+                console.log(this.paper);
                 this.setCorrectAnswers();
                 this.setStudentAnswers();
+                this.getScores();
             };
 
 
@@ -37,7 +41,7 @@
                 var correctProposalsForLabel = this.getCorrectAnswers(label);
                 if (studentProposalsForLabel === undefined && correctProposalsForLabel && correctProposalsForLabel.length > 0) {
                     return correctProposalsForLabel.length === 0;
-                } else if(studentProposalsForLabel !== undefined){
+                } else if (studentProposalsForLabel !== undefined) {
                     // CASE 1 : no answers but expected ones
                     if (studentProposalsForLabel.length === 0 && correctProposalsForLabel.length > 0) {
                         return false;
@@ -136,10 +140,10 @@
                 var results = [];
                 this.orphanAnswers = [];
                 for (var i = 0; i < this.question.solutions.length; i++) {
-                    if (this.question.solutions[i].secondId === label.id ) {
+                    if (this.question.solutions[i].secondId === label.id) {
                         var proposal = this.getProposalFromId(this.question.solutions[i].firstId);
                         results.push(proposal);
-                    } else if (!this.question.solutions[i].secondId){
+                    } else if (!this.question.solutions[i].secondId) {
                         var proposalWithoutLabel = this.getProposalFromId(this.question.solutions[i].firstId);
                         this.orphanAnswers.push(proposalWithoutLabel);
                     }
@@ -196,6 +200,29 @@
                         return this.question.solutions[i].feedback !== '' && this.question.solutions[i].feedback !== undefined ? this.question.solutions[i].feedback : '-';
                     }
                 }
+            };
+
+            this.getScores = function () {
+                var availableScore = 0.0;
+                var studentScore = 0.0;
+                
+                var currentLabelId = '';
+                for(var i = 0; i < this.question.solutions.length; i++){
+                    if(currentLabelId !== this.question.solutions[i].secondId){
+                        availableScore += this.question.solutions[i].score ? this.question.solutions[i].score : 0;
+                    }                   
+                    currentLabelId = this.question.solutions[i].secondId;
+                }
+                for (var j = 0; j < this.paper.questions.length; j++){
+                    if(this.paper.questions[j].id === this.question.id.toString()){
+                        studentScore = this.paper.questions[j].score;
+                    }
+                }
+                
+                this.score = studentScore.toString() + '/' + availableScore.toString();
+
+                //score = PapersService.getQuestionScore(question, this.paper);
+                // return {total: availableScore, score: studentScore};
             };
 
 
