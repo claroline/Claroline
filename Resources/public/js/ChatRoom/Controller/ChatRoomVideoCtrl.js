@@ -46,7 +46,9 @@ var sids = {};
             {
                 updateUsers();
                 checkUsersStatus();
+                checkSids();
                 initiateCalls();
+                cleanSids();
 //                console.log(users);
             }
 
@@ -126,44 +128,54 @@ var sids = {};
                 }
             }
             
+            function checkSids()
+            {
+                for (var sid in sids) {
+                    
+                    if (sids[sid] !== null) {
+                        sids[sid]['iteration']++;
+                    }
+                }
+            }
+            
             function addSid(sid, username)
             {
-                sids[sid] = {username: username, status: 'new'}
-//                var isPresent = false;
-//                
-//                for (var i = 0; i < sids.length; i++) {
-//                    
-//                    if (sids[i]['sid'] === sid) {
-//                        isPresent = true;
-//                        break;
-//                    }
-//                }
-//                
-//                if (!isPresent) {
-//                    sids.push({sid: sid, username: username, status: 'new'});
-//                }
-//                
-//                return !isPresent;
+                sids[sid] = {username: username, iteration: 0}
             }
             
             function removeSid(sid)
             {
                 sids[sid] = null;
-//                for (var i = 0; i < sids.length; i++) {
-//                    
-//                    if (sids[i]['sid'] === sid) {
-//                        sids.splice(i, 1);
-//                        
-//                        return true;
-//                    }
-//                }
-//                
-//                return false;
+            }
+            
+            function cleanSids()
+            {
+                for (var username in users) {
+                    
+                    if (users[username] !== null && 
+                        users[username]['status'] === 'working' &&
+                        users[username]['iteration'] > 10) {
+                        
+                        var workingSid = users[username]['sid'];
+                        
+                        for (var sid in sids) {
+                            
+                            if (sid !== workingSid && 
+                                sids[sid] !== null && 
+                                sids[sid]['username'] === username &&
+                                sids[sid]['iteration'] > 10) {
+                            
+                                connection.jingle.sessions[sid].terminate('unused stream');
+                            }
+                        }
+                    }
+                }
             }
             
             function manageDisconnectedSid(sid)
             {
                 var username = sids[sid]['username'];
+                removeSid(sid);
                 
                 if (users[username] !== undefined && 
                     users[username] !== null && 
@@ -173,11 +185,6 @@ var sids = {};
                     users[username]['status'] = 'waiting';
                     users[username]['iteration'] = 0;
                 }
-            }
-            
-            function checkSidAndAddStream(sid)
-            {
-                
             }
 
             function onMediaReady(event, stream)
