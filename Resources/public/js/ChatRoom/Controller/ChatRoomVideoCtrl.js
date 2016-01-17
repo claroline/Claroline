@@ -24,6 +24,8 @@ var connection = null;
 //var myroomjid = null;
 var roomjid = null;
 var myUsername = null;
+var users = {};
+var sids = {};
 //var videoTracks = null;
 //var list_members = [];
 
@@ -40,7 +42,146 @@ var myUsername = null;
             $scope.streams = [];
             $scope.currentVideoId = null;
 
-            function onMediaReady(event, stream) {
+            function checkStream()
+            {
+                updateUsers();
+                checkUsersStatus();
+                initiateCalls();
+//                console.log(users);
+            }
+
+            function updateUsers()
+            {
+                updatePresentUsers();
+                updateNewUsers('present');
+            }
+            
+            // status = ['toCall', 'waiting', 'present', 'pending', 'working']
+            function updateNewUsers(status)
+            {
+                var allUsers = XmppMucService.getUsers();
+                
+                for (var i = 0; i < allUsers.length; i++) {
+                    var username = allUsers[i]['username'];
+                    
+                    if (username !== myUsername) {
+                        
+                        if (users[username] === undefined || users[username] === null) {
+                            
+                            users[username] = {username: username, sid: null, status: status, iteration: 0};
+                        }
+                    }
+                }
+            }
+            
+            function updatePresentUsers()
+            {
+                for (var username in users) {
+//                    
+                    if (users[username] !== null && !XmppMucService.hasUser(username)) {
+                        users[username] = null;
+                    }
+                }
+            }
+            
+            function checkUsersStatus()
+            {
+                for (var username in users) {
+//                    
+                    if (users[username] !== null) {
+                        
+                        if (users[username]['status'] !== 'toCall' &&
+                            users[username]['sid'] === null && 
+                            users[username]['iteration'] > 5) {
+                        
+                            users[username]['status'] = 'toCall';
+                            users[username]['iteration'] = 0;
+                        } else {
+                            users[username]['iteration']++;
+                        }
+                    }
+                }
+            }
+            
+            function initiateCalls()
+            {
+                for (var username in users) {
+                    
+                    if (users[username] !== null && users[username]['sid'] === null && users[username]['status'] === 'toCall') {
+                        
+                        var session = connection.jingle.initiate(
+                            roomjid + '/' + username,
+                            roomjid + '/' + myUsername
+
+                        );
+                        
+                        if (session['sid']) {
+                            users[username]['sid'] = session['sid'];
+                            users[username]['status'] = 'pending';
+                            users[username]['iteration'] = 0;
+                            addSid(session['sid'], username);
+//                            $scope.addStream(session['sid'], username);
+                        }
+                    }
+                }
+            }
+            
+            function addSid(sid, username)
+            {
+                sids[sid] = {username: username, status: 'new'}
+//                var isPresent = false;
+//                
+//                for (var i = 0; i < sids.length; i++) {
+//                    
+//                    if (sids[i]['sid'] === sid) {
+//                        isPresent = true;
+//                        break;
+//                    }
+//                }
+//                
+//                if (!isPresent) {
+//                    sids.push({sid: sid, username: username, status: 'new'});
+//                }
+//                
+//                return !isPresent;
+            }
+            
+            function removeSid(sid)
+            {
+                sids[sid] = null;
+//                for (var i = 0; i < sids.length; i++) {
+//                    
+//                    if (sids[i]['sid'] === sid) {
+//                        sids.splice(i, 1);
+//                        
+//                        return true;
+//                    }
+//                }
+//                
+//                return false;
+            }
+            
+            function manageDisconnectedSid(sid)
+            {
+                var username = sids[sid]['username'];
+                
+                if (users[username] !== undefined && 
+                    users[username] !== null && 
+                    users[username]['sid'] === sid) {
+                
+                    users[username]['sid'] = null;
+                    users[username]['status'] = 'waiting';
+                    users[username]['iteration'] = 0;
+                }
+            }
+            
+            function checkSidAndAddStream(sid)
+            {
+                
+            }
+
+            function onMediaReady(event, stream)
+            {
                 $scope.localStream = stream;
                 connection.jingle.localStream = stream;
                 for (var i = 0; i < $scope.localStream.getAudioTracks().length; i++) {
@@ -82,46 +223,71 @@ var myUsername = null;
                 }
             }
 
-            function onMediaFailure() {
+            function onMediaFailure()
+            {
                 console.log('Media failure');
             }
 
-            function onCallIncoming(event, sid) {
+            function onCallIncoming(event, sid)
+            {
                 console.log('Incoming call : ' + sid);
                 var sess = connection.jingle.sessions[sid];
                 var initiator = Strophe.getResourceFromJid(sess['initiator']);
                 sess.sendAnswer();
                 sess.accept();
+                addSid(sid, initiator);
 //                $scope.addStream(sid, initiator);
                 
-                if (!$scope.hasStreamFromUsername(initiator)) {
-                    console.log('**************************');
-                    console.log('No stream from ' + initiator);
-                                                                            
-                    var session = connection.jingle.initiate(
-                        roomjid + '/' + initiator,
-                        roomjid + '/' + myUsername
-                    );
-                    
-                    if (session['sid']) {
-                        $scope.addStream(session['sid'], initiator + '_2', initiator);
-                        console.log('Stream with ' + initiator + '_2 : ' + session['sid']);
-                    }
-                }
+//                if (!$scope.hasStreamFromUsername(initiator)) {
+//                    console.log('**************************');
+//                    console.log('No stream from ' + initiator);
+//                                                                            
+//                    var session = connection.jingle.initiate(
+//                        roomjid + '/' + initiator,
+//                        roomjid + '/' + myUsername
+//                    );
+//                    
+//                    if (session['sid']) {
+//                        $scope.addStream(session['sid'], initiator);
+//                        console.log('Stream with ' + initiator + '_2 : ' + session['sid']);
+//                    }
+//                }
 
                 // alternatively...
                 //sess.terminate(busy)
                 //connection.jingle.terminate(sid);
             }
             
-            function onCallActive(event, videoelem, sid) {
+            function onCallActive(event, videoelem, sid)
+            {
                 console.log('+++++++++++ CALL ACTIVE : ' + sid + ' +++++++++++');
-//                videoelem[0].style.display = 'inline-block';
-                $(videoelem).appendTo('#participant-stream-' + sid + ' .participant-video-panel');
-                connection.jingle.sessions[sid].getStats(1000);
+//                var sess = connection.jingle.sessions[sid];
+//                var initiator = Strophe.getResourceFromJid(sess['initiator']);
+                var username = sids[sid]['username'];
+
+                if (users[username] === undefined ||
+                    users[username] === null || 
+                    users[username]['sid'] !== sid || 
+                    users[username]['status'] !== 'working') {
+                
+                    if (users[username] !== undefined &&
+                        users[username] !== null && 
+                        users[username]['sid']) {
+                    
+                        $scope.removeStream(users[username]['sid']);
+                    }
+                    users[username]['sid'] = sid;
+                    users[username]['status'] = 'working';
+                    users[username]['iteration'] = 0;
+                    $scope.addStream(sid, sids[sid]['username']);
+    //                videoelem[0].style.display = 'inline-block';
+                    $(videoelem).appendTo('#participant-stream-' + sid + ' .participant-video-panel');
+                    connection.jingle.sessions[sid].getStats(1000);
+                }
             }
 
-            function onCallTerminated(event, sid, reason) {
+            function onCallTerminated(event, sid, reason)
+            {
                 console.log('Call terminated ' + sid + (reason ? (': ' + reason) : ''));
                 
                 if (Object.keys(connection.jingle.sessions).length === 0) {
@@ -130,7 +296,8 @@ var myUsername = null;
                 $('#participants-video-container #participant-video-' + sid).remove();
             }
             
-            function waitForRemoteVideo(selector, sid) {
+            function waitForRemoteVideo(selector, sid)
+            {
                 var sess = connection.jingle.sessions[sid];
                 var videoTracks = sess.remoteStream.getVideoTracks();
                 if (videoTracks.length === 0 || selector[0].currentTime > 0) {
@@ -142,7 +309,8 @@ var myUsername = null;
                 }
             }
 
-            function onRemoteStreamAdded(event, data, sid) {
+            function onRemoteStreamAdded(event, data, sid)
+            {
                 console.log('Remote stream for session ' + sid + ' added.');
                 
                 if ($('#participant-video-' + sid).length !== 0) {
@@ -165,11 +333,13 @@ var myUsername = null;
                 */
             }
 
-            function onRemoteStreamRemoved(event, data, sid) {
+            function onRemoteStreamRemoved(event, data, sid)
+            {
                 console.log('Remote stream for session ' + sid + ' removed.');
             }
 
-            function onIceConnectionStateChanged(event, sid, sess) {
+            function onIceConnectionStateChanged(event, sid, sess)
+            {
                 console.log('ice state for', sid, sess.peerconnection.iceConnectionState);
 //                console.log('sig state for', sid, sess.peerconnection.signalingState);
                 console.log(sess['initiator']);
@@ -177,40 +347,42 @@ var myUsername = null;
                 if (sess.peerconnection.iceConnectionState === 'connected') {
                     console.log('add new stream');
                     var initiator = Strophe.getResourceFromJid(sess['initiator']);
-                    $scope.addStream(sid, initiator, initiator);
+//                    $scope.addStream(sid, initiator);
                 } else if (sess.peerconnection.iceConnectionState === 'disconnected') {
                     connection.jingle.sessions[sid].terminate('disconnected');
                     console.log('remove stream');
                     $scope.removeStream(sid);
-                } else if (sess.peerconnection.iceConnectionState === 'failed') {
-                    var username = $scope.getUsernameFromSid(sid);
-                    
-                    if (username !== null) {                                                    
-                        var session = connection.jingle.initiate(
-                            roomjid + '/' + username,
-                            roomjid + '/' + myUsername
-                        );
-
-                        if (session['sid']) {
-                            $scope.removeStream(sid);
-                            $scope.addStream(session['sid'], username + '_failed', username);
-                            console.log('Stream with ' + username + '_failed : ' + session['sid']);
-                        }
-                    }
+                    manageDisconnectedSid(sid);
+                } else if (sess.peerconnection.iceConnectionState === 'failed' || sess.peerconnection.iceConnectionState === 'closed') {
+                    $scope.removeStream(sid);
+                    manageDisconnectedSid(sid);
+//                    var username = $scope.getUsernameFromSid(sid);
+//                    
+//                    if (username !== null) {                                                    
+//                        var session = connection.jingle.initiate(
+//                            roomjid + '/' + username,
+//                            roomjid + '/' + myUsername
+//                        );
+//
+//                        if (session['sid']) {
+//                            $scope.removeStream(sid);
+//                            $scope.addStream(session['sid'], username);
+//                            console.log('Stream with ' + username + '_failed : ' + session['sid']);
+//                        }
+//                    }
                 }
+                
                 // works like charm, unfortunately only in chrome and FF nightly, not FF22 beta
 //                
-                if (sess.peerconnection.signalingState === 'stable' && sess.peerconnection.iceConnectionState === 'connected') {
-                    console.log('STABLE & CONNECTED');
-                    //var el = $("<video autoplay='autoplay' style='display:none'/>").attr('id', 'largevideo_' + sid);
+//                if (sess.peerconnection.signalingState === 'stable' && sess.peerconnection.iceConnectionState === 'connected') {
 //                    var el = $('<video autoplay="autoplay" class="participant-video"/>').attr('id', 'participant-video-' + sid);
 //                    $(document).trigger('callactive.jingle', [el, sid]);
 //                    RTC.attachMediaStream(el, sess.remoteStream); // moving this before the trigger doesn't work in FF?!
-                    //waitForRemoteVideo($('#participant-video-' + sid), sid);
-                }              
+//                }              
             }
 
-            function noStunCandidates(event) {
+            function noStunCandidates(event)
+            {
                 console.log('webrtc did not encounter stun candidates, NAT traversal will not work');
                 console.warn('webrtc did not encounter stun candidates, NAT traversal will not work');
             }
@@ -248,7 +420,7 @@ var myUsername = null;
                     console.log('got stanza error for ' + sid, err);
                 });
                 $(document).bind('packetloss.jingle', function (event, sid, loss) {
-//                    console.warn('packetloss', sid, loss);
+                    console.warn('packetloss', sid, loss);
                 });
                 
                 if (RTC !== null) {
@@ -266,23 +438,26 @@ var myUsername = null;
             });
             
             $rootScope.$on('myPresenceConfirmationEvent', function () {
-                var allUsers = XmppMucService.getUsers();
-                
-                for (var i = 0; i < allUsers.length; i++) {
-                    
-                    if (myUsername && allUsers[i]['username'] !== myUsername) {
-                        var session = connection.jingle.initiate(
-                            roomjid + '/' + allUsers[i]['username'],
-                            roomjid + '/' + myUsername
-
-                        );
-                        
-                        if (session['sid']) {
-                            $scope.addStream(session['sid'], allUsers[i]['username'], allUsers[i]['username']);
-                            console.log('Stream with ' + allUsers[i]['username'] + ' : ' + session['sid']);
-                        }
-                    }
-                }
+                updateNewUsers('toCall');
+                initiateCalls();
+                setInterval(checkStream, 5000);
+//                var allUsers = XmppMucService.getUsers();
+//                
+//                for (var i = 0; i < allUsers.length; i++) {
+//                    
+//                    if (myUsername && allUsers[i]['username'] !== myUsername) {
+//                        var session = connection.jingle.initiate(
+//                            roomjid + '/' + allUsers[i]['username'],
+//                            roomjid + '/' + myUsername
+//
+//                        );
+//                        
+//                        if (session['sid']) {
+////                            $scope.addStream(session['sid'], allUsers[i]['username']);
+////                            console.log('Stream with ' + allUsers[i]['username'] + ' : ' + session['sid']);
+//                        }
+//                    }
+//                }
             });
 
             $scope.$on('userDisconnectionEvent', function (event, userDatas) {
@@ -307,7 +482,7 @@ var myUsername = null;
                 
                 for (var i = $scope.streams.length - 1; i >= 0; i--) {
                     
-                    if ($scope.streams[i]['username2'] === username || $scope.streams[i]['username2'] === username + '_2') {
+                    if ($scope.streams[i]['username'] === username) {
                         $scope.streams.splice(i, 1);
                     }
                 }
@@ -328,7 +503,7 @@ var myUsername = null;
                 return isPresent;
             };
 
-            $scope.addStream = function (sid, username2, username) {
+            $scope.addStream = function (sid, username) {
                 var isPresent = false;
                 
                 for (var i = 0; i < $scope.streams.length; i++) {
@@ -340,7 +515,7 @@ var myUsername = null;
                 }
                 
                 if (!isPresent) {
-                    $scope.streams.push({sid: sid, username2: username2, username: username});
+                    $scope.streams.push({sid: sid, username: username});
                     $scope.$apply();
                 }
             };
@@ -352,6 +527,7 @@ var myUsername = null;
                     if ($scope.streams[i]['sid'] === sid) {
                         $scope.streams.splice(i, 1);
                         $scope.$apply();
+                        break;
                     }
                 }
             };

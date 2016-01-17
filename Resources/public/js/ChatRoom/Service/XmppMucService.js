@@ -369,6 +369,7 @@
                 },
                 addUser: function (username, name, color, affiliation, role) {
                     var isPresent = false;
+                    
                     for (var i = 0; i < users.length; i++) {
                         var currentUsername =  users[i]['username'];
 
@@ -410,6 +411,20 @@
                             break;
                         }
                     }
+                },
+                hasUser: function (username) {
+                    var isPresent = false;
+                    
+                    for (var i = 0; i < users.length; i++) {
+                        var currentUsername =  users[i]['username'];
+
+                        if (username === currentUsername) {
+                            isPresent = true;
+                            break;
+                        }
+                    }
+                    
+                    return isPresent;
                 },
                 kickUser: function (username) {
                     var iq = $iq({
