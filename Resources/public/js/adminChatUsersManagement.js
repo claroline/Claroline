@@ -23,7 +23,7 @@
     {
         xmppHost = $('#management-datas-box').data('xmpp-host');
         boshPort = $('#management-datas-box').data('bosh-port');
-        boshService = 'http://' + xmppHost + ':' + boshPort + '/http-bind';
+        boshService = 'https://' + xmppHost + ':' + boshPort + '/http-bind';
         connection = new Strophe.Connection(boshService);
     }
     
