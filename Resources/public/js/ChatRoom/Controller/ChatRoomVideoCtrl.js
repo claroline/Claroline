@@ -92,7 +92,7 @@ var sids = {};
                         
                         if (users[username]['status'] !== 'toCall' &&
                             users[username]['sid'] === null && 
-                            users[username]['iteration'] > 5) {
+                            users[username]['iteration'] > 3) {
                         
                             users[username]['status'] = 'toCall';
                             users[username]['iteration'] = 0;
@@ -264,6 +264,7 @@ var sids = {};
 //                var sess = connection.jingle.sessions[sid];
 //                var initiator = Strophe.getResourceFromJid(sess['initiator']);
                 var username = sids[sid]['username'];
+//                var currentSid = null;
 
                 if (users[username] === undefined ||
                     users[username] === null || 
@@ -273,7 +274,9 @@ var sids = {};
                     if (users[username] !== undefined &&
                         users[username] !== null && 
                         users[username]['sid']) {
-                    
+  
+//                        currentSid = users[username]['sid'];
+//                        connection.jingle.sessions[currentSid].terminate('more recent stream');
                         $scope.removeStream(users[username]['sid']);
                     }
                     users[username]['sid'] = sid;
@@ -283,6 +286,11 @@ var sids = {};
     //                videoelem[0].style.display = 'inline-block';
                     $(videoelem).appendTo('#participant-stream-' + sid + ' .participant-video-panel');
                     connection.jingle.sessions[sid].getStats(1000);
+                
+//                    if (currentSid !== null) {
+//                        connection.jingle.sessions[currentSid].terminate('newer stream');
+//                        console.log('Terminate: ' + currentSid);
+//                    }
                 }
             }
 
@@ -420,7 +428,7 @@ var sids = {};
                     console.log('got stanza error for ' + sid, err);
                 });
                 $(document).bind('packetloss.jingle', function (event, sid, loss) {
-//                    console.warn('packetloss', sid, loss);
+                    console.warn('packetloss', sid, loss);
                 });
                 
                 if (RTC !== null) {
@@ -440,7 +448,7 @@ var sids = {};
             $rootScope.$on('myPresenceConfirmationEvent', function () {
                 updateNewUsers('toCall');
                 initiateCalls();
-                setInterval(checkStream, 5000);
+                setInterval(checkStream, 2000);
 //                var allUsers = XmppMucService.getUsers();
 //                
 //                for (var i = 0; i < allUsers.length; i++) {
