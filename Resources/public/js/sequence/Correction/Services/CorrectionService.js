@@ -11,25 +11,42 @@
         '$q',
         function CorrectionService($window, $http, $filter, $q) {
 
-            return {
-                /**
-                 * NOT IMPLEMENTED YET
-                 * @param {type} question
-                 * @param {type} paper
-                 * @returns {Number}
-                 */
-                getQuestionScore: function (question, paper) {
-                    var solutions = question.solutions;
-                    var hints = question.hints;
-                    var score = 0.0;
-                    for (var i = 0; i < paper.questions.length; i++) {
-                        if (paper.questions[i].id === question.id.toString()) {
-
+            return {                
+                getMatchQuestionScore: function (question, paper) {
+                    var availableScore = 0.0;
+                    var studentScore = 0.0;
+                    var result = '';
+                    // do not add same association score twice
+                    var currentLabelId = '';
+                    for (var i = 0; i < question.solutions.length; i++) {
+                        if (currentLabelId !== question.solutions[i].secondId) {
+                            availableScore += question.solutions[i].score ? question.solutions[i].score : 0;
+                        }
+                        currentLabelId = question.solutions[i].secondId;
+                    }
+                    for (var j = 0; j < paper.questions.length; j++) {
+                        if (paper.questions[j].id === question.id.toString()) {
+                            studentScore = paper.questions[j].score;
                         }
                     }
+                    result = studentScore.toString() + '/' + availableScore.toString();
+                    return result;
 
-                    return score;
-
+                },
+                getChoiceQuestionScore: function (question, paper) {
+                    var availableScore = 0.0;
+                    var studentScore = 0.0;
+                    var result = '';
+                    for (var i = 0; i < question.solutions.length; i++) {
+                        availableScore += question.solutions[i].score ? question.solutions[i].score : 0;
+                    }
+                    for (var j = 0; j < paper.questions.length; j++) {
+                        if (paper.questions[j].id === question.id.toString()) {
+                            studentScore = paper.questions[j].score;
+                        }
+                    }
+                    result = studentScore.toString() + '/' + availableScore.toString();
+                    return result;
                 },
                 /**
                  * Get one paper details

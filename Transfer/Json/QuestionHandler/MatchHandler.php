@@ -296,7 +296,7 @@ class MatchHandler implements QuestionHandlerInterface {
 
         $labels = $interaction->getLabels();
         foreach ($labels as $label) {
-            if (!$label->getScoreRightResponse()) {
+            if ($label->getScoreRightResponse() < 0) {
                 throw new \Exception('Global score not implemented yet');
             }
         }

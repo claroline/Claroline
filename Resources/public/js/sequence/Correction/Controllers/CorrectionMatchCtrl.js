@@ -16,16 +16,16 @@
             this.correctAnswers = [];
             this.orphanAnswers = [];
             this.studentErrors = []; // array of proposals ids;
-            this.score = '';
+            //this.score = '';
 
             this.init = function (question, paper) {
                 this.question = question;
-                console.log(this.question);
+                //console.log(this.question);
                 this.paper = paper;
-                console.log(this.paper);
+                //console.log(this.paper);
                 this.setCorrectAnswers();
                 this.setStudentAnswers();
-                this.getScores();
+                // this.getQuestionScore();
             };
 
 
@@ -202,7 +202,7 @@
                 }
             };
 
-            this.getScores = function () {
+            this.getQuestionScore = function () {
                 var availableScore = 0.0;
                 var studentScore = 0.0;
                 
@@ -219,10 +219,7 @@
                     }
                 }
                 
-                this.score = studentScore.toString() + '/' + availableScore.toString();
-
-                //score = PapersService.getQuestionScore(question, this.paper);
-                // return {total: availableScore, score: studentScore};
+                this.score = Translator.trans('label_exercise_question_score', {}, 'ujm_sequence') + ': ' + studentScore.toString() + '/' + availableScore.toString();
             };
 
 

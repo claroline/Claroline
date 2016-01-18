@@ -15,6 +15,7 @@ link_exercise_play: Answer
 link_exercise_docimology: Docimology
 link_csv_export: CSV export
 label_exercise_score: Global score
+label_exercise_question_score: Score
 label_exercise_correction: Correction
 label_no_labels_associated: No associated label(s)
 

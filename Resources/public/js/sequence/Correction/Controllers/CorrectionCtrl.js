@@ -7,7 +7,8 @@
 
     angular.module('Correction').controller('CorrectionCtrl', [
         'CommonService',
-        function (CommonService) {
+        'CorrectionService',
+        function (CommonService, CorrectionService) {
 
             this.paper = {};
             this.exercise = {};
@@ -35,13 +36,12 @@
 
                 if (angular.element('#question-toggle-' + id).hasClass('fa-chevron-down')) {
                     angular.element('#question-toggle-' + id).removeClass('fa-chevron-down').addClass('fa-chevron-right');
-                }
-                else if (angular.element('#question-toggle-' + id).hasClass('fa-chevron-right')) {
+                } else if (angular.element('#question-toggle-' + id).hasClass('fa-chevron-right')) {
                     angular.element('#question-toggle-' + id).removeClass('fa-chevron-right').addClass('fa-chevron-down');
                 }
             };
 
-            
+
             /**
              * Checks if for a given question student used at least one Hint
              * @param {type} question
@@ -76,20 +76,6 @@
             };
 
             /**
-             * compute the score for each question
-             * NOT IMPLEMENTED
-             * @param {type} question
-             * @returns {Number}
-             */
-            this.getQuestionScore = function (question) {
-                /*var availableScore = 0.0;
-                var studentScore = 0.0;
-                console.log(question);
-                //score = PapersService.getQuestionScore(question, this.paper);
-                return {total:availableScore, score:studentScore};*/
-            };
-
-            /**
              * Checks if current user can replay the exercise
              * Basicaly if user is admin he will always have access to the button
              * @returns {Boolean}
@@ -108,6 +94,25 @@
 
             this.generateUrl = function (witch, _id) {
                 return CommonService.generateUrl(witch, _id);
+            };
+
+            /**
+             * compute the score for each question
+             * @param {Object} question
+             * @returns {String}
+             */
+            this.getQuestionScore = function (question) {
+                for (var i = 0; i < this.questions.length; i++) {
+                    if (this.questions[i].id.toString() === question.id.toString()) {
+                        if (question.type === 'application/x.match+json') {                                                   
+                            return CorrectionService.getMatchQuestionScore(question, this.paper);
+                        } else if(question.type === 'application/x.choice+json'){
+                            return CorrectionService.getChoiceQuestionScore(question, this.paper);
+                        }
+                    }
+                }
+                return 'Not implemented for this type of question';
+
             };
         }
     ]);

@@ -14,7 +14,8 @@ link_exercise_retry: Recommencer
 link_exercise_play: Répondre
 link_exercise_docimology: Docimologie
 link_csv_export: Export CSV
-label_exercise_score: Note
+label_exercise_score: Note globale
+label_exercise_question_score: Note
 label_exercise_correction: Correction
 label_no_labels_associated: Pas de label(s) associé(s)
 
