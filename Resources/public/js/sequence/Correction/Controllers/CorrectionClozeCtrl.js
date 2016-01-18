@@ -124,6 +124,7 @@
                         var holes = this.question.holes;
                         
                         for (var j=0; j<holes.length; j++) {
+                            console.log(holes[j]);
                             good_answer = false;
                             Object.keys(answers).map(function(key){
                                 if (holes[j].position === key) {
@@ -134,7 +135,7 @@
                                         else {
                                             value_to_compare = holes[j].wordResponses[k].response;
                                         }
-                                        if (value_to_compare === answers[key]) {
+                                        if (value_to_compare === answers[key] && holes[j].wordResponses[k].score > 0) {
                                             good_answer = true;
                                         }
                                     }
