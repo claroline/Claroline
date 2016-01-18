@@ -16,27 +16,12 @@
             this.exercise = paperExercise;
             this.user = user;
             this.displayRetryExerciseLink = false;
+            this.displayManualCorrectionMessage = false;
 
             // table data
             this.filtered = this.papers;
             this.query = '';
-            this.showPagination = true;
-            
-           
-
-
-            // initiate paper list
-           /* if ($route.current.params && $route.current.params.eid) {
-                var promise = PapersService.getAll($route.current.params.eid);
-                promise.then(function (result) {
-                    this.papers = result.papers;
-                    this.questions = result.questions;
-                    this.filtered = this.papers;
-                    this.setTableData();
-                    this.showHideRetryLink();
-                }.bind(this));
-            }*/
-
+            this.showPagination = true; 
 
             // table config
             this.config = {
@@ -132,6 +117,16 @@
                 }
                 return nb;
             };
+            
+            this.needManualCorrection = function (){
+                console.log(this.questions);
+                for(var i = 0; i < this.questions.length; i++){
+                    if(this.questions[i].typeOpen && this.questions[i].typeOpen === 'long'){
+                        this.displayManualCorrectionMessage = true;
+                        break;
+                    }
+                }
+            };
 
             /**
              * All data that need to be transformed and used in filter / sort
@@ -162,6 +157,8 @@
             
             this.setTableData();
             this.showHideRetryLink();
+            
+            this.needManualCorrection();
         }
     ]);
 })();

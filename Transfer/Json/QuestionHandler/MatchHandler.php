@@ -295,10 +295,13 @@ class MatchHandler implements QuestionHandlerInterface {
                 ->findOneByQuestion($question);
 
         $labels = $interaction->getLabels();
+        // at least one label must have a score
+        $score = 0;
         foreach ($labels as $label) {
-            if ($label->getScoreRightResponse() < 0) {
-                throw new \Exception('Global score not implemented yet');
-            }
+            $score += $label->getScoreRightResponse();
+        }
+        if($score === 0){            
+            throw new \Exception('Global score not implemented yet');
         }
 
         // calculate response score

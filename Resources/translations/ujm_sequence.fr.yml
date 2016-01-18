@@ -18,6 +18,7 @@ label_exercise_score: Note globale
 label_exercise_question_score: Note
 label_exercise_correction: Correction
 label_no_labels_associated: Pas de label(s) associé(s)
+label_manual_correction_needed: Correction manuelle nécessaire!
 
 # p
 paper_list: Liste des copies
