@@ -1,11 +1,6 @@
 var groupsManager = angular.module('groupsManager', ['genericSearch',  'data-table']);
 var translator = window.Translator;
 
-groupsManager.config(function(clarolineSearchProvider) {
-	clarolineSearchProvider.setSearchRoute('api_get_search_groups');
-	clarolineSearchProvider.setFieldRoute('api_get_group_searchable_fields');
-});
-
 groupsManager.controller('GroupsCtrl', ['$http', 'clarolineSearch', function($http, clarolineSearch) {
 	var translate = function(key) {
 		return translator.trans(key, {}, 'platform');
@@ -45,14 +40,14 @@ groupsManager.controller('GroupsCtrl', ['$http', 'clarolineSearch', function($ht
 
 	this.onSearch = function(searches) {
 		this.savedSearch = searches;
-		clarolineSearch.find(searches, this.dataTableOptions.paging.offset, this.dataTableOptions.paging.size).then(function(d) {
+		clarolineSearch.find('api_get_search_groups', searches, this.dataTableOptions.paging.offset, this.dataTableOptions.paging.size).then(function(d) {
 			this.groups = d.data.groups;
 			this.dataTableOptions.paging.count = d.data.total;
 		}.bind(this));
 	}.bind(this);
 
 	this.paging = function(offset, size) {
-		clarolineSearch.find(this.savedSearch, offset, size).then(function(d) {
+		clarolineSearch.find('api_get_search_groups', this.savedSearch, offset, size).then(function(d) {
 			var groups = d.data.groups;
 
 			//I know it's terrible... but I have no other choice with this table.

@@ -35,16 +35,10 @@ genericSearch.controller('GenericSearchCtrl', ['$log', '$http', 'clarolineSearch
 	clarolineSearch,
 	searchOptionsService
 ) {
-	this.fields   = [];
+	//this.fields   = [];
 	this.$log     = $log;
 	this.selected = [];
 	this.options  = [];
-
-	//init field list
-	$http.get(Routing.generate(clarolineSearch.getFieldRoute())).then(function(d) {
-		this.fields = d.data;
-		this.options = searchOptionsService.generateOptions(this.fields);
-	}.bind(this));
 
 	this.refreshOptions = function($select) {
 		for (var i = 0; i < this.options.length; i++) {
@@ -101,10 +95,7 @@ genericSearch.service('searchOptionsService', function() {
 
 genericSearch.provider("clarolineSearch", function() {
 	this.enablePager = true;
-	this.baseParam = {};
 	this.searchParam = {};
-	this.fieldRoute = '';
-	this.searchRoute = '';
 
 	var mergeObject = function(obj1, obj2) {
 
@@ -115,15 +106,6 @@ genericSearch.provider("clarolineSearch", function() {
 		return obj1;
 	}
 
-	this.setSearchRoute = function(route, searchParam) {
-		this.searchRoute = route;
-		this.searchParam = searchParam || {};
-	}.bind(this);
-
-	this.setFieldRoute = function(route) {
-		this.fieldRoute = route;
-	}.bind(this);
-
 	this.disablePager = function() {
 		this.enablePager = false;
 	}.bind(this);
@@ -132,10 +114,7 @@ genericSearch.provider("clarolineSearch", function() {
 
 	this.$get = function($http) {
 		return {
-			getFieldRoute: function() {
-				return vm.fieldRoute;
-			},
-			find: function(searches, page, limit) {
+			find: function(route, searches, page, limit) {
 				var params = vm.enablePager ? {'page': page, 'limit': limit}: {};
 				var qs = '?';
 
@@ -144,7 +123,7 @@ genericSearch.provider("clarolineSearch", function() {
 				}
 
 				params = mergeObject(params, vm.searchParam);
-				var route = Routing.generate(vm.searchRoute, params) + qs;
+				var route = Routing.generate(route, params) + qs;
 
 				return $http.get(route);
 			}
@@ -155,7 +134,8 @@ genericSearch.provider("clarolineSearch", function() {
 genericSearch.directive('clarolinesearch', [
 	function clarolinesearch() {
 		var bindings = {
-			onSearch: '&'
+			onSearch: '&',
+			fields: '&'
 		};
 
 		return {

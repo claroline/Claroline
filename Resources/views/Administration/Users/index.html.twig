@@ -24,12 +24,8 @@
 {% endblock %}
 {% block section_content %}
     <div id="users-panel" class="panel panel-default" ng-app="usersManager">
-        <div class="panel-body" ng-controller="UsersCtrl">
-            {% include 'ClarolineCoreBundle:Administration:Users\\actionbar.html.twig' %}
-            <h1>{{ 'user_list'|trans({}, 'platform') }}</h1>
-            <user-actions></user-actions>
-            <user-search></user-search>
-            <user-list></user-list>
+        {% include 'ClarolineCoreBundle:Administration:Users\\actionbar.html.twig' %}
+        <div class="panel-body" ng-controller="UsersCtrl"  ng-view>
         </div>
     </div>
 
@@ -57,5 +53,5 @@
     </script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/angular/search/generic/search.app.js') }}></script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/users/users.app.js') }}></script>
-
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/groups/groups.app.js') }}></script>
 {% endblock %}

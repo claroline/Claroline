@@ -1,10 +1,31 @@
-var usersManager = angular.module('usersManager', ['genericSearch', 'data-table', 'ui.bootstrap.tpls', 'clarolineAPI']);
+var usersManager = angular.module('usersManager', [
+	'genericSearch',
+	'data-table',
+	'ui.bootstrap.tpls',
+	'clarolineAPI',
+	'groupsManager',
+	'ngRoute'
+]);
+
 var translator = window.Translator;
 
-usersManager.config(function(clarolineSearchProvider) {
-	clarolineSearchProvider.setSearchRoute('api_get_search_users');
-	clarolineSearchProvider.setFieldRoute('api_get_user_searchable_fields');
-});
+usersManager.config(['$routeProvider',
+	function($routeProvider) {
+		$routeProvider.
+			when('/users/list', {
+				templateUrl: AngularApp.webDir + 'bundles/clarolinecore/js/administration/users/views/user_main.html',
+				controller: 'UsersCtrl',
+				controllerAs: 'uc'
+			}).
+			when('/groups/list', {
+				templateUrl: AngularApp.webDir + 'bundles/clarolinecore/js/administration/groups/views/group_main.html',
+				controller: 'GroupsCtrl',
+				controllerAs: 'uc'
+			}).
+			otherwise({
+				redirectTo: '/users/list'
+			});
+	}]);
 
 usersManager.controller('UsersCtrl', ['$http', 'clarolineSearch', 'clarolineAPI', function(
 	$http,
@@ -42,6 +63,7 @@ usersManager.controller('UsersCtrl', ['$http', 'clarolineSearch', 'clarolineAPI'
 	}
 
 	this.userActions = [];
+
 	$http.get(Routing.generate('api_get_user_admin_actions')).then(function(d) {
 		vm.userActions = d.data;
 	}.bind(this));
@@ -51,6 +73,11 @@ usersManager.controller('UsersCtrl', ['$http', 'clarolineSearch', 'clarolineAPI'
 	this.users = [];
 	this.selected = [];
 	this.alerts = [];
+	this.fields = [];
+
+	$http.get(Routing.generate('api_get_user_searchable_fields')).then(function(d) {
+		vm.fields = d.data;
+	})
 
 	var columns = [
 		{name: translate('username'), prop: "username", isCheckboxColumn: true, headerCheckbox: true},
@@ -95,14 +122,14 @@ usersManager.controller('UsersCtrl', ['$http', 'clarolineSearch', 'clarolineAPI'
 
 	this.onSearch = function(searches) {
 		this.savedSearch = searches;
-		clarolineSearch.find(searches, this.dataTableOptions.paging.offset, this.dataTableOptions.paging.size).then(function(d) {
+		clarolineSearch.find('api_get_search_users', searches, this.dataTableOptions.paging.offset, this.dataTableOptions.paging.size).then(function(d) {
 			this.users = d.data.users;
 			this.dataTableOptions.paging.count = d.data.total;
 		}.bind(this));
 	}.bind(this);
 
 	this.paging = function(offset, size) {
-		clarolineSearch.find(this.savedSearch, offset, size).then(function(d) {
+		clarolineSearch.find('api_get_search_users', this.savedSearch, offset, size).then(function(d) {
 			var users = d.data.users;
 
 			//I know it's terrible... but I have no other choice with this table.
