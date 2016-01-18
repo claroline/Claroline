@@ -7,10 +7,10 @@
             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
         </div>
         {% block daterange_assets %}
-            <link rel="stylesheet" href="{{ asset( 'bundles/frontend/jquery/plugin/daterangepicker/daterangepicker-bs3.css') }}" screen="media" />
-            <script type="text/javascript" src="{{ asset('bundles/frontend/date.js') }}"></script>
-            <script type="text/javascript" src="{{ asset('bundles/frontend/moment.min.js') }}"></script>
-            <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/daterangepicker/daterangepicker.js') }}"></script>
+            <link rel="stylesheet" href="{{ asset( 'bundles/frontend/bootstrap-daterangepicker/daterangepicker.css') }}" screen="media" />
+            <script type="text/javascript" src="{{ asset('bundles/frontend/Datejs/build/date.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('bundles/frontend/moment/min/moment-with-locales.min.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('bundles/frontend/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
         {% endblock %}
         <script type="text/javascript">
 
@@ -113,15 +113,15 @@
                 var key = chosenRangeKeys[i];
                 var range = possibleRanges[key];
                 ranges[range.label] = range.value;
-            };
+            }
 
             $(document).ready(function() {
                 $("#{{ form.vars['id'] }}").daterangepicker({
-                    format: "{{ 'date_range.js_format'|trans({}, 'platform') }}",
                     ranges: ranges,
                     separator: "{{ " " ~ 'date_range.separator'|trans({}, 'platform') ~ " " }}",
                     clearClass: 'btn hide',
                     locale: {
+                        format: "{{ 'date_range.js_format'|trans({}, 'platform') }}",
                         applyLabel: "{{ 'date_range.apply'|trans({}, 'platform') }}",
                         clearLabel: "{{ 'date_range.clear'|trans({}, 'platform') }}",
                         fromLabel: "{{ 'date_range.from'|trans({}, 'platform') }}",

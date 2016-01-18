@@ -8,13 +8,13 @@
     }
 </style>
 <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
+
 {% if filesImported is not defined or filesImported is empty %}
-<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/excanvas.min.js') }}"></script><![endif]-->
-<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/jquery.jqplot.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.pieRenderer.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasTextRenderer.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/jquery.jqplot.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.pieRenderer.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.canvasTextRenderer.js') }}"></script>
 {% else %}
-<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.pieRenderer.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.pieRenderer.js') }}"></script>
 {% endif %}
 
 <div id="analytics-resources-piechart" class="panel panel-default">
@@ -30,62 +30,57 @@
 </div>
 <script type="text/javascript">
     var pieChartData = [];
+
     {% for resource in resourceCount %}
-    pieChartData.push(["{{resource.name|trans({}, 'resource')}}",{{resource.total}}]);
+        pieChartData.push(["{{resource.name|trans({}, 'resource')}}",{{resource.total}}]);
     {% endfor %}
-    var bg_color = "transparent";
-    if (navigator.userAgent.match(/msie/i) && navigator.userAgent.match(/8/)) bg_color = "#fff";
+
+    var bg_color = 'transparent';
     var numberRows = 7;
+
     {% if numberRows is defined and numberRows is not empty %}
-    numberRows = {{ numberRows }};
+        numberRows = {{ numberRows }};
     {% endif %}
+
     $(document).ready(function(){
         if (pieChartData.length>0) {
-            var resourcesPlot = $.jqplot(
-                    'resources-pie-chart',
-                    [pieChartData],
-                    {
-                        title: {show: false},
-                        grid: {
-                            drawBorder: false,
-                            shadow: false,
-                            background: bg_color,
-                            useNegativeColors: false
+            $.jqplot(
+                'resources-pie-chart',
+                [pieChartData],
+                {
+                    grid: {
+                        drawBorder: false,
+                        shadow: false,
+                        background: bg_color,
+                        useNegativeColors: false
+                    },
+                    seriesDefaults: {
+                        show: true,
+                        showMarker: true,
+                        renderer: $.jqplot.PieRenderer,
+                        rendererOptions: {
+                            showDataLabels: true,
+                            dataLabelThreshold: 2,
+                            dataLabels: 'percent',
+                            sliceMargin: 0.3,
+                            dataLabelFormatString: '%.1f%%',
+                            highlightMouseOver: false
                         },
-                        highlighter: {
-                            show: false
+                        shadow: false
+                    },
+                    legend: {
+                        location: 's',
+                        border: 'none',
+                        renderer: $.jqplot.CanvasTextRenderer,
+                        show: true,
+                        showMarker: true,
+                        rendererOptions: {
+                            numberRows: numberRows
                         },
-                        cursor: {
-                            show: false,
-                            zoom: false,
-                            showTooltip: false
-                        },
-                        seriesDefaults: {
-                            showMarker:true,
-                            renderer:$.jqplot.PieRenderer,
-                            rendererOptions:{
-                                showDataLabels: true,
-                                dataLabelThreshold: 2,
-                                dataLabels: 'percent',
-                                sliceMargin:0.3,
-                                dataLabelFormatString: '%.1f%%',
-                                highlightMouseOver:false
-                            },
-                            shadow:false
-                        },
-                        legend:{
-                            location: 's',
-                            border:'none',
-                            renderer: $.jqplot.CavasTextRenderer,
-                            show:true,
-                            showMarker:true,
-                            rendererOptions:{
-                                numberRows:numberRows
-                            },
-                            backgroundColor:bg_color,
-                            placement:'outsideGrid'
-                        }
+                        backgroundColor: bg_color,
+                        placement: 'outsideGrid'
                     }
+                }
             );
         }
     });
