@@ -153,7 +153,7 @@
         </div>
 {% endblock %}
 
-{% set calendarPath = 'bundles/frontend/jquery/plugin/fullcalendar-2.3.1/' %}
+{% set calendarPath = 'bundles/frontend/fullcalendar/dist/' %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -167,26 +167,26 @@
     {% endstylesheets %}
 
     {% if blogOptions.isBannerActivate or (false == blogOptions.isBannerActivate and is_granted('ADMINISTRATE', _resource)) %}
-        <link rel="stylesheet" href="{{ asset('bundles/frontend/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css') }}" screen="media" />
+        <link rel="stylesheet" href="{{ asset('bundles/frontend/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css') }}" screen="media" />
     {% endif %}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     {% javascripts output='js/jquery-ui-spinner.js'
-        '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.core.min.js'
-        '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.widget.min.js'
-        '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.button.min.js'
-        '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.spinner.min.js'
+        '@FrontEndBundle/Resources/public/jquery-ui/ui/minified/core.min.js'
+        '@FrontEndBundle/Resources/public/jquery-ui/ui/minified/widget.min.js'
+        '@FrontEndBundle/Resources/public/jquery-ui/ui/minified/button.min.js'
+        '@FrontEndBundle/Resources/public/jquery-ui/ui/minified/spinner.min.js'
         %}<script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
-    <script type='text/javascript' src='{{ asset('bundles/frontend/moment.min.js') }}' ></script>
+    <script type='text/javascript' src='{{ asset('bundles/frontend/moment/min/moment.min.js') }}' ></script>
     <script type='text/javascript' src='{{ asset(calendarPath ~ 'fullcalendar.min.js') }}' ></script>
-    <script type='text/javascript'src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
+    <script type='text/javascript'src='{{ asset('bundles/frontend/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
     <script type='text/javascript'src='{{ asset('bundles/icapblog/js/jquery-tree.js') }}'></script>
 
     {% if (blogOptions.isBannerActivate or false == blogOptions.isBannerActivate) and is_granted('ADMINISTRATE', _resource) %}
-        <script type="text/javascript" src="{{ asset('bundles/frontend/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/frontend/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js') }}"></script>
         <script type='text/javascript'src='{{ asset('bundles/icapblog/js/banner.js') }}'></script>
     {% endif %}
 

@@ -63,16 +63,16 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/frontend/jquery/plugin/tag-it/css/jquery.tagit.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/frontend/tag-it/css/jquery.tagit.css') }}"/>
 {% endblock %}
 
 {% block javascripts %}
 {{ parent() }}
 {% javascripts output='js/blog.js'
-    '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.position.min.js'
-    '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.menu.min.js'
-    '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.autocomplete.min.js'
-    '@FrontEndBundle/Resources/public/jquery/plugin/tag-it/js/tag-it.min.js'
+    '@FrontEndBundle/Resources/public/jquery-ui/ui/minified/position.min.js'
+    '@FrontEndBundle/Resources/public/jquery-ui/ui/minified/menu.min.js'
+    '@FrontEndBundle/Resources/public/jquery-ui/ui/minified/autocomplete.min.js'
+    '@FrontEndBundle/Resources/public/tag-it/js/tag-it.min.js'
     %}<script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
 <script type="text/javascript">
