@@ -11,6 +11,7 @@
 
 namespace Claroline\ForumBundle\Repository;
 
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Claroline\ForumBundle\Entity\Subject;
@@ -43,7 +44,7 @@ class MessageRepository extends EntityRepository
 
         return $query->getSingleResult();
     }
-    public function findNLastByForum(array $workspaces, array $roles, $n)
+    public function findNLastByForum(array $workspaces, array $roles, $n, User $user = null)
     {
         $dql = "SELECT m FROM Claroline\ForumBundle\Entity\Message m
                 JOIN m.subject s
@@ -54,12 +55,20 @@ class MessageRepository extends EntityRepository
                 JOIN n.rights r
                 JOIN r.role rr
                 WHERE w IN (:workspaces)
-                AND rr.name in (:roles)
-                ORDER BY m.creationDate DESC
-                ";
+                AND rr.name in (:roles)";
+
+        if($user !== null){
+            $dql .= " AND m.creator = :user";
+        }
+
+        $dql .= " ORDER BY m.creationDate DESC";
+
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaces', $workspaces);
         $query->setParameter('roles', $roles);
+        if($user !== null) {
+            $query->setParameter('user', $user);
+        }
         $query->setFirstResult(0)->setMaxResults($n);
 
         $paginator = new Paginator($query, $fetchJoinCollection = true);
