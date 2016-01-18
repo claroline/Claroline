@@ -57,7 +57,7 @@
                             matchQuestionCtrl.addPreviousDroppedItems();
                         }
 
-                    }.bind(this), 200);
+                    }.bind(this));
                 }
             };
         }

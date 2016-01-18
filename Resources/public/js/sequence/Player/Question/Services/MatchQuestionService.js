@@ -14,18 +14,8 @@
 
             return {
                 initBindMatchQuestion: function () {
+                    
                     jsPlumb.setContainer($("body"));
-
-                    // defaults parameters for all connections
-                    jsPlumb.importDefaults({
-                        Anchors: ["RightMiddle", "LeftMiddle"],
-                        ConnectionsDetachable: false,
-                        Connector: "Straight",
-                        DropOptions: {tolerance: "touch"},
-                        HoverPaintStyle: {strokeStyle: "red"},
-                        LogEnabled: true,
-                        PaintStyle: {strokeStyle: "#777", lineWidth: 4}
-                    });
                     // source elements
                     $(".origin").each(function () {
                         jsPlumb.addEndpoint(this, {
@@ -46,7 +36,19 @@
                         });
                     });
 
+                    // defaults parameters for all connections
+                    jsPlumb.importDefaults({
+                        Anchors: ["RightMiddle", "LeftMiddle"],
+                        ConnectionsDetachable: false,
+                        Connector: "Straight",
+                        DropOptions: {tolerance: "touch"},
+                        HoverPaintStyle: {strokeStyle: "red"},
+                        LogEnabled: true,
+                        PaintStyle: {strokeStyle: "#777", lineWidth: 4}
+                    });
+
                     jsPlumb.detachEveryConnection();
+
                 },
                 initDragMatchQuestion: function () {
                     jsPlumb.detachEveryConnection();
@@ -104,9 +106,9 @@
                                 idDrag = "#" + idDrag;
                                 // discolor the text
                                 $(idDrag).fadeTo(100, 0.3);
-                                
+
                                 //@TODO check if this is necessary...
-                                
+
                                 /*var droppable = balisesLiDropped[idNumber].parent().parent();
                                  // option for draggable
                                  activeDraggable($(this).children().children());

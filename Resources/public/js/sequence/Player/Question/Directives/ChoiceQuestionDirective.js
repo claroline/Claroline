@@ -19,7 +19,11 @@
                     choiceQuestionCtrl.init(scope.question, scope.canSeeFeedback);
                     // in case of coming from a js plumb question
                     $timeout(function(){
-                        // jsPlumb.detachEveryConnection();
+                       // in case we come from a match question, 
+                       // we need to remove previous connections & endpoints on jsplumb objects
+                       // this has to be present on every QuestionDirectives except for MatchQuestionDirective
+                       jsPlumb.detachEveryConnection();
+                       jsPlumb.deleteEveryEndpoint();
                     });
                     
                 }
