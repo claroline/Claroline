@@ -5,15 +5,22 @@
 {% block title %}{{ _resource.resourceNode.name }}{% endblock %}
 
 {% block wiki_buttons %}
-    {% if user is not empty and (isAdmin or _resource.mode is not sameas(2)) %}
-    <div class="wiki-header-buttons">        
-        <a href="{{ path('icap_wiki_new_section', { 'wikiId': _resource.id, 'parentSectionId' : tree[0].id }) }}" class="new-section btn btn-primary" data-section="{{tree[0].id}}" >
-            <i class="fa fa-plus"></i> {{ 'create_new_section'|trans({}, 'icap_wiki') }}
-        </a>
-        {% if isAdmin %}
-        <a href="{{ path('icap_wiki_configure', { 'wikiId': _resource.id }) }}" class="btn btn-default"><i class="fa fa-wrench"></i> {{'options'|trans({},'icap_wiki')}}</a>
+    {% if user is not empty or config.getParameter('is_pdf_export_active') == true %}
+    <div class="wiki-header-buttons">
+        {% if user is not empty %}
+            {% if isAdmin or _resource.mode is not sameas(2)%}
+            <a href="{{ path('icap_wiki_new_section', { 'wikiId': _resource.id, 'parentSectionId' : tree[0].id }) }}" class="new-section btn btn-primary" data-section="{{tree[0].id}}" >
+                <i class="fa fa-plus"></i> {{ 'create_new_section'|trans({}, 'icap_wiki') }}
+            </a>
+            {% endif %}
+            {% if isAdmin %}
+            <a href="{{ path('icap_wiki_configure', { 'wikiId': _resource.id }) }}" class="btn btn-default"><i class="fa fa-wrench"></i> {{'options'|trans({},'icap_wiki')}}</a>
+            {% endif %}
+            {% render controller('IcapNotificationBundle:FollowerResource:renderForm', {'resourceId': _resource.resourceNode.id, 'resourceClass': _resource.resourceNode.class}) %}
         {% endif %}
-        {% render controller('IcapNotificationBundle:FollowerResource:renderForm', {'resourceId': _resource.resourceNode.id, 'resourceClass': _resource.resourceNode.class}) %}
+        {% if config.getParameter('is_pdf_export_active') == true %}
+            <a href="{{ path('icap_wiki_view', {'wikiId':_resource.id, '_format':'pdf' }) }}" target="_blank" class="btn btn-default"><i class="fa fa-file-pdf-o text-danger"></i> {{ 'pdf_export'|trans({}, 'platform') }}</a>
+        {% endif %}
     </div>
     {% endif %}
 {% endblock %}
