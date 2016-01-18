@@ -77,19 +77,20 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-    <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/excanvas.min.js') }}"></script><![endif]-->
-    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/jquery.jqplot.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.highlighter.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.cursor.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasTextRenderer.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.dateAxisRenderer.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasAxisLabelRenderer.min.js') }}"></script>
+
+    {# TODO: the following scripts should be packed and minified #}
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/jquery.jqplot.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.highlighter.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.cursor.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.canvasTextRenderer.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.dateAxisRenderer.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.canvasAxisTickRenderer.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.canvasAxisLabelRenderer.js') }}"></script>
 
     <script type="text/javascript">
         var chartData = {{ connections|json_encode|raw }};
         var bg_color = "transparent";
-        if (navigator.userAgent.match(/msie/i) && navigator.userAgent.match(/8/)) bg_color = "#fff";
+
         $(document).ready(function(){
             if (chartData.length>0) {
                 var actionsPlot = $.jqplot(

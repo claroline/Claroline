@@ -1218,3 +1218,5 @@ client_list: Client list
 allow_authentication: Allow authentication
 user_subscription_notification_for_admin: subscribed to the workspace %workspace%
 loading: Loading
+register_to_workspace_account_exists: Already have an account ? click %link% to subscribe.
+here: here

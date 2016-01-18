@@ -535,7 +535,7 @@ class ResourceQueryBuilder
      *
      * @param string $clause
      */
-    private function addWhereClause($clause)
+    public function addWhereClause($clause)
     {
         if (null === $this->whereClause) {
             $this->whereClause = "WHERE {$clause}" . PHP_EOL;
