@@ -64,13 +64,16 @@
     %}<script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
 
+{# TODO: remove this when custom js builds are available #}
 {% javascripts debug=false filter='jsmin' output='vendor/jquery/ui/jqueryui.js'
-    'bundles/frontend/jquery-ui-old/ui/minified/jquery.ui.core.min.js'
-    'bundles/frontend/jquery-ui-old/ui/minified/jquery.ui.widget.min.js'
-    'bundles/frontend/jquery-ui-old/ui/minified/jquery.ui.mouse.min.js'
-    'bundles/frontend/jquery-ui-old/ui/minified/jquery.ui.sortable.min.js'
-    %}<script type="text/javascript" src="{{ asset_url }}"></script>
+    'bundles/frontend/jquery-ui/ui/core.js'
+    'bundles/frontend/jquery-ui/ui/widget.js'
+    'bundles/frontend/jquery-ui/ui/mouse.js'
+    'bundles/frontend/jquery-ui/ui/sortable.js'
+%}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
+
 
 {% javascripts debug=false
     'bundles/bazingajstranslation/js/translator.min.js'

@@ -11,7 +11,7 @@
 
 {% block javascripts_header %}
     {{ parent() }}
-    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-1.7.1.min.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/dist/jquery.min.js') }}'></script>
 {% endblock %}
 
 {% block favicon %}
@@ -61,13 +61,13 @@
                                 {% block message %}
                                 {% endblock %}
                             </div>
-                            
+
                             {% if app.user %}
                                 <div class="text-center">
-                                    {% 
+                                    {%
                                         set menu = knp_menu_get(
-                                            'ClarolineCoreBundle:Builder:exceptionActionsMenu', 
-                                            [], 
+                                            'ClarolineCoreBundle:Builder:exceptionActionsMenu',
+                                            [],
                                             {
                                                 'user': app.user,
                                                 'message': exception.getMessage(),
@@ -77,7 +77,7 @@
                                                 'url': app.request.uri,
                                                 'referer': app.request.headers.get('referer')
                                             }
-                                        ) 
+                                        )
                                     %}
                                     {{ knp_menu_render(menu, {}, 'exception_actions') }}
                                 </div>
@@ -105,14 +105,14 @@
         $('.exception-action-btn').on('click', function () {
             var url = $(this).data('url');
             var displayMode = $(this).data('display-mode');
-            
+
             if (displayMode === 'modal_form') {
                 window.Claroline.Modal.displayForm(
                     url,
                     function () {},
                     function() {}
                 );
-                
+
             } else {
                 window.location = url;
             }
