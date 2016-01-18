@@ -49,16 +49,15 @@ var sids = {};
                 checkSids();
                 initiateCalls();
                 cleanSids();
-//                console.log(users);
             }
 
             function updateUsers()
             {
                 updatePresentUsers();
-                updateNewUsers('present');
+                updateNewUsers('waiting');
             }
             
-            // status = ['toCall', 'waiting', 'present', 'pending', 'working']
+            // status = ['toCall', 'waiting', 'pending', 'working']
             function updateNewUsers(status)
             {
                 var allUsers = XmppMucService.getUsers();
@@ -79,7 +78,7 @@ var sids = {};
             function updatePresentUsers()
             {
                 for (var username in users) {
-//                    
+                    
                     if (users[username] !== null && !XmppMucService.hasUser(username)) {
                         users[username] = null;
                     }
@@ -89,7 +88,7 @@ var sids = {};
             function checkUsersStatus()
             {
                 for (var username in users) {
-//                    
+                   
                     if (users[username] !== null) {
                         
                         if (users[username]['status'] !== 'toCall' &&
@@ -122,7 +121,6 @@ var sids = {};
                             users[username]['status'] = 'pending';
                             users[username]['iteration'] = 0;
                             addSid(session['sid'], username);
-//                            $scope.addStream(session['sid'], username);
                         }
                     }
                 }
@@ -165,7 +163,10 @@ var sids = {};
                                 sids[sid]['username'] === username &&
                                 sids[sid]['iteration'] > 10) {
                             
-                                connection.jingle.sessions[sid].terminate('unused stream');
+                                if (connection.jingle.sessions[sid]) {
+                                    connection.jingle.sessions[sid].terminate('unused stream');
+                                }
+                                removeSid(sid);
                             }
                         }
                     }
@@ -243,22 +244,6 @@ var sids = {};
                 sess.sendAnswer();
                 sess.accept();
                 addSid(sid, initiator);
-//                $scope.addStream(sid, initiator);
-                
-//                if (!$scope.hasStreamFromUsername(initiator)) {
-//                    console.log('**************************');
-//                    console.log('No stream from ' + initiator);
-//                                                                            
-//                    var session = connection.jingle.initiate(
-//                        roomjid + '/' + initiator,
-//                        roomjid + '/' + myUsername
-//                    );
-//                    
-//                    if (session['sid']) {
-//                        $scope.addStream(session['sid'], initiator);
-//                        console.log('Stream with ' + initiator + '_2 : ' + session['sid']);
-//                    }
-//                }
 
                 // alternatively...
                 //sess.terminate(busy)
@@ -268,10 +253,7 @@ var sids = {};
             function onCallActive(event, videoelem, sid)
             {
                 console.log('+++++++++++ CALL ACTIVE : ' + sid + ' +++++++++++');
-//                var sess = connection.jingle.sessions[sid];
-//                var initiator = Strophe.getResourceFromJid(sess['initiator']);
                 var username = sids[sid]['username'];
-//                var currentSid = null;
 
                 if (users[username] === undefined ||
                     users[username] === null || 
@@ -282,8 +264,6 @@ var sids = {};
                         users[username] !== null && 
                         users[username]['sid']) {
   
-//                        currentSid = users[username]['sid'];
-//                        connection.jingle.sessions[currentSid].terminate('more recent stream');
                         $scope.removeStream(users[username]['sid']);
                     }
                     users[username]['sid'] = sid;
@@ -293,11 +273,6 @@ var sids = {};
     //                videoelem[0].style.display = 'inline-block';
                     $(videoelem).appendTo('#participant-stream-' + sid + ' .participant-video-panel');
                     connection.jingle.sessions[sid].getStats(1000);
-                
-//                    if (currentSid !== null) {
-//                        connection.jingle.sessions[currentSid].terminate('newer stream');
-//                        console.log('Terminate: ' + currentSid);
-//                    }
                 }
             }
 
@@ -361,30 +336,16 @@ var sids = {};
                 
                 if (sess.peerconnection.iceConnectionState === 'connected') {
                     console.log('add new stream');
-                    var initiator = Strophe.getResourceFromJid(sess['initiator']);
-//                    $scope.addStream(sid, initiator);
                 } else if (sess.peerconnection.iceConnectionState === 'disconnected') {
                     connection.jingle.sessions[sid].terminate('disconnected');
                     console.log('remove stream');
                     $scope.removeStream(sid);
                     manageDisconnectedSid(sid);
-                } else if (sess.peerconnection.iceConnectionState === 'failed' || sess.peerconnection.iceConnectionState === 'closed') {
+                } else if (sess.peerconnection.iceConnectionState === 'failed' || 
+                    sess.peerconnection.iceConnectionState === 'closed') {
+                
                     $scope.removeStream(sid);
                     manageDisconnectedSid(sid);
-//                    var username = $scope.getUsernameFromSid(sid);
-//                    
-//                    if (username !== null) {                                                    
-//                        var session = connection.jingle.initiate(
-//                            roomjid + '/' + username,
-//                            roomjid + '/' + myUsername
-//                        );
-//
-//                        if (session['sid']) {
-//                            $scope.removeStream(sid);
-//                            $scope.addStream(session['sid'], username);
-//                            console.log('Stream with ' + username + '_failed : ' + session['sid']);
-//                        }
-//                    }
                 }
                 
                 // works like charm, unfortunately only in chrome and FF nightly, not FF22 beta
@@ -409,7 +370,6 @@ var sids = {};
                 myUsername = XmppService.getUsername();
                 console.log('MUC CONNECT');
                 
-//                connection.jingle.getStunAndTurnCredentials();
                 RTC = setupRTC();
                 getUserMediaWithConstraints(['audio', 'video']);
                 connection.jingle.ice_config = ice_config;
@@ -435,7 +395,7 @@ var sids = {};
                     console.log('got stanza error for ' + sid, err);
                 });
                 $(document).bind('packetloss.jingle', function (event, sid, loss) {
-                    console.warn('packetloss', sid, loss);
+//                    console.warn('packetloss', sid, loss);
                 });
                 
                 if (RTC !== null) {
@@ -443,7 +403,11 @@ var sids = {};
                     
                     if (RTC.browser == 'firefox') {
                         //connection.jingle.media_constraints.mandatory.MozDontOfferDataChannel = true;
-                        connection.jingle.media_constraints = {"offerToReceiveAudio":true,"offerToReceiveVideo":true,"mozDontOfferDataChannel":true}
+                        connection.jingle.media_constraints = {
+                            offerToReceiveAudio: true,
+                            offerToReceiveVideo: true,
+                            mozDontOfferDataChannel: true
+                        };
                     }
                     //setStatus('please allow access to microphone and camera');
                     //getUserMediaWithConstraints();
@@ -456,23 +420,6 @@ var sids = {};
                 updateNewUsers('toCall');
                 initiateCalls();
                 setInterval(checkStream, 2000);
-//                var allUsers = XmppMucService.getUsers();
-//                
-//                for (var i = 0; i < allUsers.length; i++) {
-//                    
-//                    if (myUsername && allUsers[i]['username'] !== myUsername) {
-//                        var session = connection.jingle.initiate(
-//                            roomjid + '/' + allUsers[i]['username'],
-//                            roomjid + '/' + myUsername
-//
-//                        );
-//                        
-//                        if (session['sid']) {
-////                            $scope.addStream(session['sid'], allUsers[i]['username']);
-////                            console.log('Stream with ' + allUsers[i]['username'] + ' : ' + session['sid']);
-//                        }
-//                    }
-//                }
             });
 
             $scope.$on('userDisconnectionEvent', function (event, userDatas) {
