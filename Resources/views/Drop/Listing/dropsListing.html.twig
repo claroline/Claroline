@@ -81,8 +81,10 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
                 data-toggle="modal" data-target="#validate-modal-return-receipt" data-dropzone_id="{{ dropzone.id }}">
                     {{ 'Return receipt'|trans({}, 'innova_collecticiel') }}
                 </button>
-            </div><br />
-            <input id="document_id_0" data-dropzone-select_id={{ dropzone.id }} type="checkbox" name="documentId" data-document_id="0" class="btn btn-danger btn-sm" />
+            </div>
+            <div class="short-div">
+                <input id="document_id_0" data-dropzone-select_id={{ dropzone.id }} type="checkbox" name="documentId" data-document_id="0" class="btn btn-danger btn-sm" />
+            </div>
         </th>
     {% endif %}
  

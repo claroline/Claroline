@@ -59,10 +59,12 @@
            {# Sinon affichage du compteur et des nouveaux commentaires #}
             {% else %}
                 <a data-toggle="tooltip" data-placement="top" data-original-title="{{ 'To drop'|trans({},'innova_collecticiel') }}" class="fa fa-commenting-o" href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" type="button">
-                    <br />{{ document.comments|length }}
-                    {% if document.getUnReadComments( app.user.id ) != 0 %}
-                        (+{{ document.getUnReadComments( app.user.id ) }})
-                    {% endif %}
+                    <div class="short-div">
+                        {{ document.comments|length }} 
+                       {% if document.getUnReadComments( app.user.id ) != 0 %}
+                            (+{{ document.getUnReadComments( app.user.id ) }})
+                        {% endif %}
+                    </div>
                 </a>
             {% endif %}
         </div>
