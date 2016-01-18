@@ -221,10 +221,6 @@ class HoleHandler implements QuestionHandlerInterface
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionHole')
             ->findOneByQuestion($question);
 
-    /*    if (!$interaction->getWeightResponse()) {
-            throw new \Exception('Global score not implemented yet');
-        }*/
-
         $mark = 0;
 
         foreach ($interaction->getHoles() as $hole) {
@@ -236,17 +232,17 @@ class HoleHandler implements QuestionHandlerInterface
         }
         
         $answers = [];
-        foreach ($data as $answer) {
-            $k = $answer["id"];
-            $value = $answer["answer"];
-            $answers[$k] = $value;
+        $i=0;
+        foreach ($data as $answer) {if ($answer || $answer !== null) {
+                $answers[$i] = $answer;
+            }
+            $i++;
         }
 
         if ($mark < 0) {
             $mark = 0;
         }
         
-    //    $response->setResponse(json_encode($answers));
         $json = json_encode($answers);
         $response->setResponse($json);
         $response->setMark($mark);
