@@ -26,4 +26,17 @@ class ResourceIconRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function findBaseIcons()
+    {
+        $dql = 'SELECT i FROM Claroline\CoreBundle\Entity\Resource\ResourceIcon i
+            WHERE i.mimeType != :search
+            AND i.isShortcut = false
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('search', "custom");
+
+        return $query->getResult();
+    }
 }
