@@ -55,8 +55,6 @@
         "claroline/installation-bundle": "~6.0",
         "claroline/front-end-bundle": "~6.1",
         "claroline/migration-bundle": "~6.0",
-    	"claroline/angular-ui-selectize-bundle": "dev-master",
-    	"claroline/angular-data-table-bundle": "dev-master",
         "johngrogg/ics-parser": "dev-master",
         "gregwar/captcha-bundle": "1.0.12",
         "knplabs/knp-menu-bundle": "2.0.0",
