@@ -78,12 +78,12 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/sortable/css/jquery.sortable.css') }}'/>
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/icapwiki/css/jquery.sortable.css') }}'/>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    <script type='text/javascript'src='{{ asset('bundles/frontend/jquery/plugin/sortable/js/jquery-sortable-min.js') }}'></script>
+    <script type='text/javascript'src='{{ asset('bundles/frontend/jquery-sortable/source/js/jquery-sortable-min.js') }}'></script>
     <script type='text/javascript'>
         var moveSectionRoute = "{{ path('icap_wiki_move_section', { 
             'wikiId' : _resource.id, 
