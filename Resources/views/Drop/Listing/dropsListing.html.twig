@@ -44,18 +44,20 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
         {# Demande JJQ. InnovaERV #}
         {% if dropzone.returnReceipt == 1  %}
             <th class="centered">
-            <i class="fa fa-exclamation-circle" data-toggle="tooltip" data-placement="top"
-            {# Ajout d'une alerte avec le nombre d'éléments non traités. InnovaERV, demande JJQ #}
-            {% if alertNbDocumentWithoutReturnReceipt > 1  %}
-                <i class="fa fa-exclamation-circle" data-toggle="tooltip" data-placement="top"
-                data-original-title="{{ alertNbDocumentWithoutReturnReceipt }} {{ 'Deals Pending'|trans({},'innova_collecticiel') }}">
-            {% endif %}
-            {% if alertNbDocumentWithoutReturnReceipt == 1  %}
-                <i class="fa fa-exclamation-circle" data-toggle="tooltip" data-placement="top"
-                data-original-title="{{ alertNbDocumentWithoutReturnReceipt }} {{ 'Deal Pending'|trans({},'innova_collecticiel') }}">
-            {% endif %}
-            </i>
-            <i class="fa fa-hand-o-right">
+                <div class="short-div">
+                    <i class="fa fa-exclamation-circle" data-toggle="tooltip" data-placement="top"
+                        {# Ajout d'une alerte avec le nombre d'éléments non traités. InnovaERV, demande JJQ #}
+                        {% if alertNbDocumentWithoutReturnReceipt > 1  %}
+                            <i class="fa fa-exclamation-circle" data-toggle="tooltip" data-placement="top"
+                            data-original-title="{{ alertNbDocumentWithoutReturnReceipt }} {{ 'Deals Pending'|trans({},'innova_collecticiel') }}">
+                        {% endif %}
+                        {% if alertNbDocumentWithoutReturnReceipt == 1  %}
+                            <i class="fa fa-exclamation-circle" data-toggle="tooltip" data-placement="top"
+                            data-original-title="{{ alertNbDocumentWithoutReturnReceipt }} {{ 'Deal Pending'|trans({},'innova_collecticiel') }}">
+                        {% endif %}
+                    </i>
+                </div>
+                <i class="fa fa-hand-o-right">
             </th>
         {% endif %}
 
@@ -73,6 +75,27 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
             {{ 'Selection'|trans({}, 'innova_collecticiel') }}
         #}
             <div class="btn-group-vertical">
+                <div class="btn-group-vertical">
+                    <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+                        {{ 'Action'|trans({}, 'innova_collecticiel') }} 
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <button type="submit" class="btn btn-primary btn-xs comment_validate"
+                            id="dropzone_id_{{dropzone.id}}" name="dropzoneId" data-dropzone_id="{{ dropzone.id }}">
+                            {{ 'Comment Auto'|trans({}, 'innova_collecticiel') }}
+                            </button>
+                        </li>
+                        <li>
+                            <button type="submit" class="btn btn-primary btn-xs"
+                            data-toggle="modal" data-target="#validate-modal-return-receipt" data-dropzone_id="{{ dropzone.id }}">
+                                {{ 'Return receipt'|trans({}, 'innova_collecticiel') }}
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
                 <button type="submit" class="btn btn-primary btn-xs comment_validate"
                 id="dropzone_id_{{dropzone.id}}" name="dropzoneId" data-dropzone_id="{{ dropzone.id }}">
                     {{ 'Comment Auto'|trans({}, 'innova_collecticiel') }}
@@ -82,8 +105,8 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
                     {{ 'Return receipt'|trans({}, 'innova_collecticiel') }}
                 </button>
             </div>
-            <div class="short-div">
-                <input id="document_id_0" data-dropzone-select_id={{ dropzone.id }} type="checkbox" name="documentId" data-document_id="0" class="btn btn-danger btn-sm" />
+            <div>
+                <input align="center" id="document_id_0" data-dropzone-select_id={{ dropzone.id }} type="checkbox" name="documentId" data-document_id="0" class="btn btn-danger btn-sm" />
             </div>
         </th>
     {% endif %}
