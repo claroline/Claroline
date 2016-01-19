@@ -243,6 +243,33 @@ class ChatController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/chat/room/{chatRoom}/user/{username}/full/{fullName}/presence/status/{status}",
+     *     name="claro_chat_room_presence_register",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function chatRoomStatusRegisterAction(
+        ChatRoom $chatRoom,
+        $username,
+        $fullName,
+        $status
+    )
+    {
+        $this->checkChatRoomRight($chatRoom, 'EDIT');
+        $this->chatManager->saveChatRoomMessage(
+            $chatRoom,
+            $username,
+            $fullName,
+            $status,
+            ChatRoomMessage::STATUS
+        );
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
      *     "/chat/room/{chatRoom}/configure/form",
      *     name="claro_chat_room_configure_form",
      *     options={"expose"=true}
@@ -287,7 +314,7 @@ class ChatController extends Controller
         if ($form->isValid()) {
             $this->chatManager->persistChatRoom($chatRoom);
 
-            return new JsonResponse('success', 200);
+            return new JsonResponse($chatRoom->getRoomStatus(), 200);
         } else {
             $xmppMucHost = $this->platformConfigHandler->getParameter('chat_xmpp_muc_host');
 

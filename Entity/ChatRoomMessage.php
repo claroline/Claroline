@@ -21,6 +21,7 @@ class ChatRoomMessage
 {
     const MESSAGE = 0;
     const PRESENCE = 1;
+    const STATUS = 2;
 
     /**
      * @ORM\Id

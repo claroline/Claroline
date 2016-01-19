@@ -12,6 +12,7 @@ chat_configuration: Configuration du Chat
 chat_room_closed_msg: La Chat room est fermée
 chat_room_configuration: Configuration de la Chat room
 chat_room_id: Identifiant de la Chat room
+chat_room_open_msg: La Chat room est ouverte
 chat_room_uninitialized_msg: La Chat room n'est pas encore accessible
 chat_room_unknown_status_msg: Le statut de la Chat room est inconnu
 chat_username: Identifiant pour le Chat
@@ -25,6 +26,7 @@ has_left_the_chat_room: a quitté la Chat room
 host: Hôte
 init_room: Initialiser la Chat room
 kicked_msg: Vous avez été éjecté de la Chat room.
+me: Moi
 muc_host: Serveur MUC
 mute: Muet
 my_video: Ma video

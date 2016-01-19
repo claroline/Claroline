@@ -175,16 +175,18 @@ var sids = {};
             
             function manageDisconnectedSid(sid)
             {
-                var username = sids[sid]['username'];
-                removeSid(sid);
-                
-                if (users[username] !== undefined && 
-                    users[username] !== null && 
-                    users[username]['sid'] === sid) {
-                
-                    users[username]['sid'] = null;
-                    users[username]['status'] = 'waiting';
-                    users[username]['iteration'] = 0;
+                if (sids[sid] !== undefined && sids[sid] !== null) {
+                    var username = sids[sid]['username'];
+                    removeSid(sid);
+
+                    if (users[username] !== undefined && 
+                        users[username] !== null && 
+                        users[username]['sid'] === sid) {
+
+                        users[username]['sid'] = null;
+                        users[username]['status'] = 'waiting';
+                        users[username]['iteration'] = 0;
+                    }
                 }
             }
 
@@ -496,6 +498,14 @@ var sids = {};
             
             $scope.disconnect = function () {
                 XmppMucService.disconnect();
+            };
+            
+            $scope.closeRoom = function () {
+                XmppMucService.closeRoom();
+            };
+            
+            $scope.openRoom = function () {
+                XmppMucService.openRoom();
             };
             
             $scope.updateMainVideoSrc = function (videoId) {

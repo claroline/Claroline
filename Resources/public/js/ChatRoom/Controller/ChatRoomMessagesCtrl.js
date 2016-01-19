@@ -27,12 +27,22 @@
                 updateScrollBarPosition();
             };
 
+            $scope.addRawMessage = function (message) {
+                $scope.messages.push({message: message, type: 'raw'});
+                $scope.$apply();
+                updateScrollBarPosition();
+            };
+
             $scope.$on('newMessageEvent', function (event, messageDatas) {
                 $scope.addMessage(messageDatas['sender'], messageDatas['message'], messageDatas['color']);
             });
 
             $scope.$on('newPresenceEvent', function (event, presenceDatas) {
                 $scope.addPresenceMessage(presenceDatas['name'], presenceDatas['status']);
+            });
+
+            $scope.$on('rawRoomMessageEvent', function (event, datas) {
+                $scope.addRawMessage(datas['message']);
             });
             
             function updateScrollBarPosition()
