@@ -19,6 +19,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Claroline\CoreBundle\Entity\User;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
+use Claroline\CoreBundle\Entity\Calendar\TimeSlot;
+use Claroline\CoreBundle\Entity\Calendar\Year;
 
 /**
  * @ORM\Entity()
@@ -124,6 +126,24 @@ class Organization
      * @Groups({"api"})
      */
     protected $administrators;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Calendar\TimeSlot",
+     *     mappedBy="organization",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $timeSlots;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Calendar\Year",
+     *     mappedBy="organization",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $years;
     
     public function __construct()
     {
@@ -131,6 +151,8 @@ class Organization
         $this->departments    = new ArrayCollection();
         $this->users          = new ArrayCollection();
         $this->administrators = new ArrayCollection();
+        $this->timeSlots      = new ArrayCollection();
+        $this->years          = new ArrayCollection();
     }
 
     public function getId()
@@ -212,5 +234,45 @@ class Organization
     public function setAdministrators(ArrayCollection $users)
     {
         $this->administrators = $users;
+    }
+
+    public function getTimeSlots()
+    {
+        return $this->timeSlots;
+    }
+
+    public function addTimeSlot(TimeSlot $timeSlot)
+    {
+        if (!$this->timeSlots->contains($timeSlot)) $this->timeSlots->add($timeSlot);
+    }
+
+    public function removeTimeSlot(TimeSlot $timeSlot)
+    {
+        if ($this->timeSlots->contains($timeSlot)) $this->timeSlots->removeElement($timeSlot);
+    }
+
+    public function setTimeSlots(ArrayCollection $timeSlots)
+    {
+        $this->timeSlots = $timeSlots;
+    }
+
+    public function getYears()
+    {
+        return $this->years;
+    }
+
+    public function addYear(Year $year)
+    {
+        if (!$this->years->contains($year)) $this->years->add($year);
+    }
+
+    public function removeYear(Year $year)
+    {
+        if ($this->years->contains($year)) $this->years->removeElement($year);
+    }
+
+    public function setYears(ArrayCollection $years)
+    {
+        $this->years = $years;
     }
 }

@@ -390,6 +390,15 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     protected $organizations;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Calendar\TimeSlot",
+     *     mappedBy="user",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $timeSlots;
+
     public function __construct()
     {
         parent::__construct();
@@ -401,6 +410,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $this->fieldsFacetValue  = new ArrayCollection();
         $this->models            = new ArrayCollection();
         $this->organizations     = new ArrayCollection();
+        $this->timeSlots         = new ArrayCollection();
     }
 
     /**
