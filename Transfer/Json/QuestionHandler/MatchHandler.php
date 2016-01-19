@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Transfer\Json\QuestionHandler;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Proposal;
+use UJM\ExoBundle\Entity\Label;
 use UJM\ExoBundle\Entity\InteractionMatching;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
@@ -60,16 +61,28 @@ class MatchHandler implements QuestionHandlerInterface {
             return $errors;
         }
 
+        //print_r($questionData);die;
         // check solution ids are consistent with proposals ids
         $proposalsIds = array_map(function ($proposal) {
             return $proposal->id;
-        }, $questionData->proposals);
+        }, $questionData->firstSet);
+
+        $labelsIds = array_map(function ($label) {
+            return $label->id;
+        }, $questionData->secondSet);
 
         foreach ($questionData->solutions as $index => $solution) {
-            if (!in_array($solution->id, $proposalsIds)) {
+            if (!in_array($solution->firstId, $proposalsIds)) {
                 $errors[] = [
                     'path' => "solutions[{$index}]",
-                    'message' => "id {$solution->id} doesn't match any proposal id"
+                    'message' => "id {$solution->firstId} doesn't match any proposal id"
+                ];
+            }
+
+            if (!in_array($solution->secondId, $labelsIds)) {
+                $errors[] = [
+                    'path' => "solutions[{$index}]",
+                    'message' => "id {$solution->secondId} doesn't match any label id"
                 ];
             }
         }
@@ -99,31 +112,49 @@ class MatchHandler implements QuestionHandlerInterface {
     public function persistInteractionDetails(Question $question, \stdClass $importData) {
         $interaction = new InteractionMatching();
 
-        for ($i = 0, $max = count($importData->proposals); $i < $max; ++$i) {
+        // handle proposals
+        for ($i = 0, $max = count($importData->firstSet); $i < $max; ++$i) {
             // temporary limitation
-            if ($importData->proposals[$i]->type !== 'text/plain') {
+            if ($importData->firstSet[$i]->type !== 'text/plain') {
                 throw new \Exception(
-                "Import not implemented for MIME type {$importData->proposals[$i]->type}"
+                "Import not implemented for MIME type {$importData->firstSet[$i]->type}"
                 );
             }
 
             $proposal = new Proposal();
-            $proposal->setValue($importData->proposals[$i]->data);
+            $proposal->setValue($importData->firstSet[$i]->data);
             $proposal->setOrdre($i);
+            $proposal->setInteractionMatching($interaction);
+            $interaction->addProposal($proposal);
+            $this->om->persist($proposal);
+        }
+
+        // handle labels
+        for ($i = 0, $max = count($importData->secondSet); $i < $max; ++$i) {
+            // temporary limitation
+            if ($importData->secondSet[$i]->type !== 'text/plain') {
+                throw new \Exception(
+                "Import not implemented for MIME type {$importData->secondSet[$i]->type}"
+                );
+            }
+
+            $label = new Label();
+            $label->setValue($importData->secondSet[$i]->data);
+            $label->setOrdre($i);
 
             foreach ($importData->solutions as $solution) {
-                if ($solution->id === $importData->proposals[$i]->id) {
-                    $proposal->setWeight($solution->score);
+                if ($solution->secondId === $importData->secondSet[$i]->id) {
+                    $label->setScoreRightResponse($solution->score);
 
                     if (isset($solution->feedback)) {
-                        $proposal->setFeedback($solution->feedback);
+                        $label->setFeedback($solution->feedback);
                     }
                 }
             }
 
-            $proposal->setInteractionMatching($interaction);
-            $interaction->addProposal($proposal);
-            $this->om->persist($proposal);
+            $label->setInteractionMatching($interaction);
+            $interaction->addLabel($label);
+            $this->om->persist($label);
         }
 
         $subTypeCode = $importData->toBind ? 1 : 2;
@@ -152,7 +183,7 @@ class MatchHandler implements QuestionHandlerInterface {
         }
 
         $proposals = $match->getProposals()->toArray();
-        $exportData->subType = $match->getTypeMatching()->getCode() === 1 ? 'toBind' : 'toDrag';
+        $exportData->toBind = $match->getTypeMatching()->getCode() === 1 ? true : false;
         $exportData->firstSet = array_map(function ($proposal) {
             $firstSetData = new \stdClass();
             $firstSetData->id = (string) $proposal->getId();
@@ -166,26 +197,45 @@ class MatchHandler implements QuestionHandlerInterface {
             $secondSetData = new \stdClass();
             $secondSetData->id = (string) $label->getId();
             $secondSetData->type = 'text/plain';
-            $secondSetData->data = $label->getValue();        
+            $secondSetData->data = $label->getValue();
             return $secondSetData;
         }, $labels);
 
         if ($withSolution) {
-            $exportData->solutions = array_map(function ($proposal) {
+            
+            foreach($proposals as $proposal){
+                // can be a proposal without label
                 $associatedLabels = $proposal->getAssociatedLabel();
-                $solutionData = new \stdClass();
-                $solutionData->firstId = (string) $proposal->getId();
-                //$score = 0.0;
-                foreach ($associatedLabels as $label) {
-                    $solutionData->secondId = (string) $label->getId();
-                    //$score += $label->getScoreRightResponse();
-                    $solutionData->score = $label->getScoreRightResponse();
-                    if ($label->getFeedback()) {
-                        $solutionData->feedback = $label->getFeedback();
+                if ($associatedLabels) {
+                    $solutionData = new \stdClass();
+                    $solutionData->firstId = (string) $proposal->getId();
+                    foreach ($associatedLabels as $label) {
+                        $solutionData->secondId = (string) $label->getId();
+                        $solutionData->score = $label->getScoreRightResponse();
+                        if ($label->getFeedback()) {
+                            $solutionData->feedback = $label->getFeedback();
+                        }
                     }
+                    array_push($exportData->solutions, $solutionData);
                 }
-                return $solutionData;
-            }, $proposals);
+            }
+
+            /*$exportData->solutions = array_map(function ($proposal) {
+                // can be a proposal without label
+                $associatedLabels = $proposal->getAssociatedLabel();
+                if ($associatedLabels) {
+                    $solutionData = new \stdClass();
+                    $solutionData->firstId = (string) $proposal->getId();
+                    foreach ($associatedLabels as $label) {
+                        $solutionData->secondId = (string) $label->getId();
+                        $solutionData->score = $label->getScoreRightResponse();
+                        if ($label->getFeedback()) {
+                            $solutionData->feedback = $label->getFeedback();
+                        }
+                    }
+                    return $solutionData;
+                }
+            }, $proposals);*/
         }
 
         return $exportData;
@@ -300,7 +350,7 @@ class MatchHandler implements QuestionHandlerInterface {
         foreach ($labels as $label) {
             $score += $label->getScoreRightResponse();
         }
-        if($score === 0){            
+        if ($score === 0) {
             throw new \Exception('Global score not implemented yet');
         }
 

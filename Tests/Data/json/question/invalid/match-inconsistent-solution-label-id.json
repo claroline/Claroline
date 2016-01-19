@@ -1,0 +1,41 @@
+{
+  "id": "1",
+  "type": "application/x.match+json",
+  "title": "Question ?",
+  "firstSet": [
+    {
+      "id": "2",
+      "type": "text/plain",
+      "data": "Item A"
+    },
+    {
+      "id": "3",
+      "type": "text/plain",
+      "data": "Item B"
+    }
+  ],
+  "secondSet": [
+    {
+      "id": "4",
+      "type": "text/plain",
+      "data": "Item C"
+    },
+    {
+      "id": "5",
+      "type": "text/plain",
+      "data": "Item D"
+    }
+  ],
+  "solutions": [
+    {
+      "firstId": "2",
+      "secondId": "5",
+      "score": 2
+    },
+    {
+      "firstId": "3",
+      "secondId": "12",
+      "score": 0.5
+    }
+  ]
+}
