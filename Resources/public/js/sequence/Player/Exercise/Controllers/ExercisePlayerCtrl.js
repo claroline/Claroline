@@ -119,11 +119,12 @@
                 } else if (action && action === 'end') {
                     var endPromise = ExerciseService.endSequence(paper);
                     endPromise.then(function (result) {
-                        if (this.checkCorrectionAvailability()) {
+                        if (this.checkCorrectionAvailability()) {                      
                             // go to paper correction view
                             var url = CommonService.generateUrl('paper-list', this.exercise.id) + '#/' + this.exercise.id + '/' + paper.id;
                             $window.location = url;
-                        } else {
+                        }
+                        else {
                             // go to exercise home page
                             var url = CommonService.generateUrl('exercise-home', this.exercise.id);
                             $window.location = url;

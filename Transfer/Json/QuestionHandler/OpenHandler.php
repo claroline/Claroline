@@ -176,7 +176,7 @@ class OpenHandler implements QuestionHandlerInterface
         }*/
         
         if (!is_string($data)) {
-            return ['Answer data must be an string, ' . gettype($data) . ' given'];
+            return ['Answer data must be a string, ' . gettype($data) . ' given'];
         }
         
         $count = 0;
