@@ -20,6 +20,8 @@
                 clozeQuestionCtrl.setQuestion(scope.question);
                 clozeQuestionCtrl.setQuestionText(scope.question.text);
                     $timeout(function(){
+                        jsPlumb.detachEveryConnection();
+                        jsPlumb.deleteEveryEndpoint();
                         clozeQuestionCtrl.init(scope.question);
                     });
                 }

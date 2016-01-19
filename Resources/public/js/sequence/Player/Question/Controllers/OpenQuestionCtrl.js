@@ -35,6 +35,12 @@
                     }
                 }
                 
+                if (typeof this.currentQuestionPaperData.answer !== "string" && this.currentQuestionPaperData.answer.length === 0) {
+                    this.answer = "";
+                    this.currentQuestionPaperData.answer = this.answer;
+                    PlayerDataSharing.setStudentData(question, this.currentQuestionPaperData);
+                }
+                
                 this.answer = this.currentQuestionPaperData.answer;
             };
 

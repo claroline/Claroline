@@ -15,6 +15,8 @@
                     canSeeFeedback: '='
                 },
                 link: function (scope, element, attr, openQuestionCtrl) {
+                    jsPlumb.detachEveryConnection();
+                    jsPlumb.deleteEveryEndpoint();
                     openQuestionCtrl.init(scope.question, scope.canSeeFeedback);                 
                     
                 }

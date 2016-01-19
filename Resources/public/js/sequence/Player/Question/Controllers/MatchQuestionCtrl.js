@@ -283,7 +283,7 @@
             this.removeConnection = function (data) {
                 var sourceId = data.sourceId.replace('draggable_', '');
                 var targetId = data.targetId.replace('droppable_', '');
-                jsPlumb.detach(data);
+            //    jsPlumb.detach(data);
                 for (var i = 0; i < this.connections.length; i++) {
                     if (this.connections[i].source === sourceId && this.connections[i].target === targetId) {
                         this.connections.splice(i, 1);
