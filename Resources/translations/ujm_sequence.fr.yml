@@ -31,7 +31,7 @@ label_no_labels_associated: Pas de label(s) associé(s)
 label_manual_correction_needed: Correction manuelle nécessaire!
 
 # n
-need_correction: Cette réponse nécessite une correction
+need_correction: Cette réponse nécessite une correction manuelle
 
 # p
 paper_list: Liste des copies
