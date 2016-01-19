@@ -393,6 +393,20 @@
                     
                     return isPresent;
                 },
+                getUserFullName: function (username) {
+                    var name = username;
+                    
+                    for (var i = 0; i < users.length; i++) {
+                        var currentUsername =  users[i]['username'];
+
+                        if (username === currentUsername) {
+                            name = users[i]['name'];
+                            break;
+                        }
+                    }
+                    
+                    return name;
+                },
                 kickUser: function (username) {
                     var iq = $iq({
                         id: 'kick-' + username,

@@ -271,7 +271,8 @@ var sids = {};
                     users[username]['sid'] = sid;
                     users[username]['status'] = 'working';
                     users[username]['iteration'] = 0;
-                    $scope.addStream(sid, sids[sid]['username']);
+                    var name = XmppMucService.getUserFullName(username);
+                    $scope.addStream(sid, sids[sid]['username'], name);
     //                videoelem[0].style.display = 'inline-block';
                     $(videoelem).appendTo('#participant-stream-' + sid + ' .participant-video-panel');
                     connection.jingle.sessions[sid].getStats(1000);
@@ -467,7 +468,7 @@ var sids = {};
                 return isPresent;
             };
 
-            $scope.addStream = function (sid, username) {
+            $scope.addStream = function (sid, username, name) {
                 var isPresent = false;
                 
                 for (var i = 0; i < $scope.streams.length; i++) {
@@ -479,7 +480,7 @@ var sids = {};
                 }
                 
                 if (!isPresent) {
-                    $scope.streams.push({sid: sid, username: username});
+                    $scope.streams.push({sid: sid, username: username, name: name});
                     $scope.$apply();
                 }
             };
