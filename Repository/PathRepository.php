@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\ResourceQueryBuilder;
 use Doctrine\ORM\QueryBuilder;
 use Innova\PathBundle\Entity\PathWidgetConfig;
+use Doctrine\ORM\Query\Expr;
 
 class PathRepository extends EntityRepository
 {
@@ -23,28 +24,45 @@ class PathRepository extends EntityRepository
         $builder->whereTypeIn(array('innova_path'));
         $builder->whereRoleIn($userRoles);
 
-        // Add widget filters
-        $statusList = $config->getStatus();
-        if (!empty($statusList)) {
-            $whereStatus = array ();
-            foreach ($statusList as $status) {
-                switch ($status) {
-                    case 'draft':
-                        $whereStatus[] = 'node.published = 0';
-                        break;
+        // Add filters if defined
+        if ($config) {
+            // Add widget STATUS filters
+            $statusList = $config->getStatus();
+            if (!empty($statusList)) {
+                $whereStatus = array ();
+                foreach ($statusList as $status) {
+                    switch ($status) {
+                        case 'draft':
+                            $whereStatus[] = 'node.published = 0';
+                            break;
 
-                    case 'published':
-                        $whereStatus[] = '(node.published = 1 AND resource.modified = 0)';
-                        break;
+                        case 'published':
+                            $whereStatus[] = '(node.published = 1 AND resource.modified = 0)';
+                            break;
 
-                    case 'modified':
-                        $whereStatus[] = '(node.published = 1 AND resource.modified = 1)';
-                        break;
+                        case 'modified':
+                            $whereStatus[] = '(node.published = 1 AND resource.modified = 1)';
+                            break;
+                    }
+                }
+
+                if (!empty($whereStatus)) {
+                    $builder->addWhereClause(implode($whereStatus, ' OR '));
                 }
             }
 
-            if (!empty($whereStatus)) {
-                $builder->addWhereClause(implode($whereStatus, ' OR '));
+            // Add widget TAG filters
+            $tagList = $config->getTags();
+            if (0 < count($tagList)) {
+                $tags = array ();
+                foreach ($tagList as $tag) {
+                    $tags[] = $tag->getId();
+                }
+
+                // Join with the corresponding TaggedObject entities
+                $builder->addJoinClause('LEFT JOIN ClarolineTagBundle:TaggedObject AS t WITH t.objectId = node.id');
+                $builder->addWhereClause('t.id IS NOT NULL');
+                $builder->addWhereClause('t.tag IN (' . implode($tags, ', ') . ')');
             }
         }
 

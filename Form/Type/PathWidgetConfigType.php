@@ -5,6 +5,8 @@ namespace Innova\PathBundle\Form\Type;
 use Claroline\TagBundle\Form\TagType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PathWidgetConfigType extends AbstractType
@@ -23,13 +25,18 @@ class PathWidgetConfigType extends AbstractType
                 'modified'  => 'modified',
             ),
             'multiple'  => true,
+            'required' => false,
         ));
 
-        $builder->add(
-            'tags',
-            'text',
-            array('mapped' => false)
-        );
+        $builder->add('removeTags', 'hidden', array(
+            'mapped'   => false,
+            'required' => false,
+        ));
+
+        $builder->add('tags', 'text', array(
+            'mapped'   => false,
+            'required' => false,
+        ));
     }
 
     public function configureOptions(OptionsResolver $resolver)

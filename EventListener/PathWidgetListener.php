@@ -5,7 +5,6 @@ namespace Innova\PathBundle\EventListener;
 use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\TagBundle\Manager\TagManager;
-use Innova\PathBundle\Form\Type\PathWidgetConfigType;
 use Innova\PathBundle\Manager\PathManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -86,7 +85,7 @@ class PathWidgetListener
         $instance = $event->getInstance();
         $config = $this->pathManager->getWidgetConfig($instance);
 
-        $form    = $this->formFactory->create(new PathWidgetConfigType(), $config);
+        $form    = $this->formFactory->create('innova_path_widget_config', $config);
         $content = $this->twig->render(
             'InnovaPathBundle:Widget:config.html.twig',
             array(

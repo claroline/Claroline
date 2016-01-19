@@ -6,7 +6,6 @@ use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\TagBundle\Manager\TagManager;
 use Doctrine\Common\Persistence\ObjectManager;
 use Innova\PathBundle\Entity\PathWidgetConfig;
-use Innova\PathBundle\Form\Type\PathWidgetConfigType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -192,13 +191,28 @@ class PathController
             $config->setWidgetInstance($widgetInstance);
         }
 
-        $form = $this->formFactory->create(new PathWidgetConfigType(), $config);
+        $form = $this->formFactory->create('innova_path_widget_config', $config);
 
         $form->bind($request);
         if ($form->isValid()) {
-            // Manage tags
+            // Remove tags
+            $tagsToRemove = $form->get('removeTags')->getData();
+            if (!empty($tagsToRemove)) {
+                // Search the Tag by ID
+                $existingTags = $config->getTags()->toArray();
+                $toRemoveArray = array_filter($existingTags, function($entry) use ($tagsToRemove) {
+                    return in_array($entry->getId(), $tagsToRemove);
+                });
+
+                foreach ($toRemoveArray as $toRemove) {
+                    $config->removeTag($toRemove);
+                }
+            }
+
+            // Add tags
             $tags = $form->get('tags')->getData();
             if (!empty($tags)) {
+                // Ge the list of Tags from data String
                 $tags = explode(',', $tags);
                 $uniqueTags = array ();
                 foreach ($tags as $tag) {
