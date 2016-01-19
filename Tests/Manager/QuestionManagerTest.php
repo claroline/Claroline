@@ -24,7 +24,7 @@ class ApiManagerTest extends TransactionalTestCase
     }
 
     /**
-     * for choice question
+     * Choice question
      * @expectedException \UJM\ExoBundle\Transfer\Json\ValidationException
      */
     public function testImportQuestionThrowsOnValidationError()
@@ -148,9 +148,11 @@ class ApiManagerTest extends TransactionalTestCase
         // shortcut for deep copies (clone will keep nested references)
         $expectedCopy = json_decode(json_encode($expected));
         $actualCopy = json_decode(json_encode($actual));
-        
+        echo 'expected';
         print_r($expectedCopy);
-        print_r($actualCopy);
+        echo 'actual';
+        print_r($actualCopy);//die;
+        
 
         $removeIds = function (\stdClass $object) use (&$removeIds) {
             foreach (get_object_vars($object) as $property => $value) {
@@ -168,8 +170,10 @@ class ApiManagerTest extends TransactionalTestCase
 
         $removeIds($expectedCopy);
         $removeIds($actualCopy);
-        
-        
+        /*echo 'expected';
+        print_r($expectedCopy);
+        echo 'actual';
+        print_r($actualCopy);*/
 
         $this->assertEquals($expectedCopy, $actualCopy, $msg);
     }

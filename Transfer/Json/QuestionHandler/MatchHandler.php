@@ -113,6 +113,7 @@ class MatchHandler implements QuestionHandlerInterface {
         $interaction = new InteractionMatching();
 
         // handle proposals
+        $labelsAddedIds = array(); // do not add twice the same label
         for ($i = 0, $max = count($importData->firstSet); $i < $max; ++$i) {
             // temporary limitation
             if ($importData->firstSet[$i]->type !== 'text/plain') {
@@ -120,41 +121,54 @@ class MatchHandler implements QuestionHandlerInterface {
                 "Import not implemented for MIME type {$importData->firstSet[$i]->type}"
                 );
             }
+            
+            //print_r($importData);die;
 
             $proposal = new Proposal();
             $proposal->setValue($importData->firstSet[$i]->data);
             $proposal->setOrdre($i);
             $proposal->setInteractionMatching($interaction);
-            $interaction->addProposal($proposal);
-            $this->om->persist($proposal);
-        }
+            
+            // HANDLE LABELS
+            // here we need to add associated labels to current proposal 
+            // (but proposal has no id since we do not call flush)
+            // so we need to do it inside the proposals loop
+            for ($j = 0, $max = count($importData->secondSet); $j < $max; ++$j) {
+                if ($importData->secondSet[$j]->type !== 'text/plain') {
+                    throw new \Exception(
+                    "Import not implemented for MIME type {$importData->secondSet[$j]->type}"
+                    );
+                }
+                
+                if (!in_array($importData->secondSet[$j]->id, $labelsAddedIds)) {
+                    $label = new Label();
+                    $label->setValue($importData->secondSet[$j]->data);
+                    $label->setOrdre($j);
+                    // test if current label is in the solution
+                    foreach ($importData->solutions as $solution) {
+                        if ($solution->secondId === $importData->secondSet[$j]->id) {
+                            $label->setScoreRightResponse($solution->score);
 
-        // handle labels
-        for ($i = 0, $max = count($importData->secondSet); $i < $max; ++$i) {
-            // temporary limitation
-            if ($importData->secondSet[$i]->type !== 'text/plain') {
-                throw new \Exception(
-                "Import not implemented for MIME type {$importData->secondSet[$i]->type}"
-                );
-            }
+                            if (isset($solution->feedback)) {
+                                $label->setFeedback($solution->feedback);
+                            }
 
-            $label = new Label();
-            $label->setValue($importData->secondSet[$i]->data);
-            $label->setOrdre($i);
-
-            foreach ($importData->solutions as $solution) {
-                if ($solution->secondId === $importData->secondSet[$i]->id) {
-                    $label->setScoreRightResponse($solution->score);
-
-                    if (isset($solution->feedback)) {
-                        $label->setFeedback($solution->feedback);
+                            //if $solution->firstId == current proposal.id then we must associate label to proposal
+                            if ($solution->firstId === $importData->firstSet[$i]->id) {
+                                echo 'yep';
+                                $proposal->addAssociatedLabel($label);
+                            }
+                        }
                     }
+
+                    $label->setInteractionMatching($interaction);
+                    $interaction->addLabel($label);
+                    $this->om->persist($label);
+                    array_push($labelsAddedIds, $importData->secondSet[$j]->id);
                 }
             }
-
-            $label->setInteractionMatching($interaction);
-            $interaction->addLabel($label);
-            $this->om->persist($label);
+            $interaction->addProposal($proposal);
+            $this->om->persist($proposal);
         }
 
         $subTypeCode = $importData->toBind ? 1 : 2;
@@ -200,15 +214,16 @@ class MatchHandler implements QuestionHandlerInterface {
             $secondSetData->data = $label->getValue();
             return $secondSetData;
         }, $labels);
+        
+       
+        if ($withSolution) {         
 
-        if ($withSolution) {
-            
-            foreach($proposals as $proposal){
+            $exportData->solutions = array_map(function ($proposal) {
                 // can be a proposal without label
                 $associatedLabels = $proposal->getAssociatedLabel();
+                $solutionData = new \stdClass();
+                $solutionData->firstId = (string) $proposal->getId();
                 if ($associatedLabels) {
-                    $solutionData = new \stdClass();
-                    $solutionData->firstId = (string) $proposal->getId();
                     foreach ($associatedLabels as $label) {
                         $solutionData->secondId = (string) $label->getId();
                         $solutionData->score = $label->getScoreRightResponse();
@@ -216,26 +231,9 @@ class MatchHandler implements QuestionHandlerInterface {
                             $solutionData->feedback = $label->getFeedback();
                         }
                     }
-                    array_push($exportData->solutions, $solutionData);
                 }
-            }
-
-            /*$exportData->solutions = array_map(function ($proposal) {
-                // can be a proposal without label
-                $associatedLabels = $proposal->getAssociatedLabel();
-                if ($associatedLabels) {
-                    $solutionData = new \stdClass();
-                    $solutionData->firstId = (string) $proposal->getId();
-                    foreach ($associatedLabels as $label) {
-                        $solutionData->secondId = (string) $label->getId();
-                        $solutionData->score = $label->getScoreRightResponse();
-                        if ($label->getFeedback()) {
-                            $solutionData->feedback = $label->getFeedback();
-                        }
-                    }
-                    return $solutionData;
-                }
-            }, $proposals);*/
+                return $solutionData;
+            }, $proposals);
         }
 
         return $exportData;
