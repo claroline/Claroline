@@ -111,7 +111,9 @@ class MatchHandler implements QuestionHandlerInterface {
     public function persistInteractionDetails(Question $question, \stdClass $importData) {
         $interaction = new InteractionMatching();
 
-        // handle proposals        
+        // handle proposals   
+        $persistedProposals = array(); // do not add twice the same label!!
+        // for each firstSet in data (= proposal)
         for ($i = 0, $max = count($importData->firstSet); $i < $max; ++$i) {
             // temporary limitation
             if ($importData->firstSet[$i]->type !== 'text/plain') {
@@ -119,54 +121,59 @@ class MatchHandler implements QuestionHandlerInterface {
                 "Import not implemented for MIME type {$importData->firstSet[$i]->type}"
                 );
             }
-
+            // create a Proposal
             $proposal = new Proposal();
             $proposal->setValue($importData->firstSet[$i]->data);
             $proposal->setOrdre($i);
-            $proposal->setInteractionMatching($interaction);            
-            
-            // HANDLE LABELS
-            // here we need to add associated labels to current proposal 
-            // (but proposal has no id since we do not call flush)
-            // so we need to do it inside the proposals loop
-            $labelsAddedIds = array(); // do not add twice the same label!!
-            for ($j = 0, $max = count($importData->secondSet); $j < $max; ++$j) {
-                if ($importData->secondSet[$j]->type !== 'text/plain') {
-                    throw new \Exception(
-                    "Import not implemented for MIME type {$importData->secondSet[$j]->type}"
-                    );
-                }
-                
-                if (!in_array($importData->secondSet[$j]->id, $labelsAddedIds)) {
-                    // create interraction label in any case
-                    $label = new Label();
-                    $label->setValue($importData->secondSet[$j]->data);
-                    $label->setOrdre($j);
-                    // test if current label is in the solution                    
-                    foreach ($importData->solutions as $solution) {
-                        if ($solution->secondId === $importData->secondSet[$j]->id && $solution->firstId === $importData->firstSet[$i]->id) {
-                            $label->setScoreRightResponse($solution->score);
+            $proposal->setInteractionMatching($interaction);
+            $interaction->addProposal($proposal);
+            $this->om->persist($proposal);
+            array_push($persistedProposals, $proposal);
+        }
 
-                            if (isset($solution->feedback)) {
-                                $label->setFeedback($solution->feedback);
+        for ($j = 0, $max = count($importData->secondSet); $j < $max; ++$j) {
+            if ($importData->secondSet[$j]->type !== 'text/plain') {
+                throw new \Exception(
+                "Import not implemented for MIME type {$importData->secondSet[$j]->type}"
+                );
+            }
+            // create interraction label in any case
+            $label = new Label();
+            $label->setValue($importData->secondSet[$j]->data);
+            $label->setOrdre($j);
+            // check if current label is in the solution                    
+            foreach ($importData->solutions as $solution) {
+                // label is in solution get score from solution
+                if ($solution->secondId === $importData->secondSet[$j]->id) {
+                    $label->setScoreRightResponse($solution->score);                  
+                    
+                    // here we should add proposal to label $proposal->addAssociatedLabel($label);
+                    // but how to retrieve the correct proposal (no flush = no id) ??
+                    // find this solution a bit overkill
+                    // @TODO find a better way to do that!!!!
+                    for ($k = 0, $max = count($importData->firstSet); $k < $max; ++$k) {
+                        if($solution->firstId === $importData->firstSet[$k]->id){
+                            $value = $importData->firstSet[$k]->data;
+                            for($l = 0, $max = count($persistedProposals); $l < $max; ++$l){
+                                if($persistedProposals[$l]->getValue() == $value){
+                                    $persistedProposals[$l]->addAssociatedLabel($label);
+                                    $this->om->persist($persistedProposals[$l]);
+                                    break;
+                                }
                             }
-                            //echo('ID second set : '.$importData->secondSet[$j]->id . ' Solution first ID ' . $solution->firstId . ' Current proposal ID ' . $importData->firstSet[$i]->id . ' || ');
-     
-                            if ($solution->firstId === $importData->firstSet[$i]->id) {
-                                $proposal->addAssociatedLabel($label);
-                            }
-                        }  
+                        }
                     }
+                }
 
-                    $label->setInteractionMatching($interaction);
-                    $interaction->addLabel($label);
-                    $this->om->persist($label);
-                    array_push($labelsAddedIds, $importData->secondSet[$j]->id);
+                // get feedback from solution
+                if (isset($solution->feedback)) {
+                    $label->setFeedback($solution->feedback);
                 }
             }
 
-            $interaction->addProposal($proposal);
-            $this->om->persist($proposal);
+            $label->setInteractionMatching($interaction);
+            $interaction->addLabel($label);
+            $this->om->persist($label);
         }
 
         $subTypeCode = $importData->toBind ? 1 : 2;
@@ -212,15 +219,16 @@ class MatchHandler implements QuestionHandlerInterface {
             $secondSetData->data = $label->getValue();
             return $secondSetData;
         }, $labels);
-        
-       
-        if ($withSolution) {         
+
+
+        if ($withSolution) {
 
             $exportData->solutions = array_map(function ($proposal) {
                 // can be a proposal without label
                 $associatedLabels = $proposal->getAssociatedLabel();
                 $solutionData = new \stdClass();
                 $solutionData->firstId = (string) $proposal->getId();
+                // PBM HERE
                 if ($associatedLabels) {
                     foreach ($associatedLabels as $label) {
                         $solutionData->secondId = (string) $label->getId();
