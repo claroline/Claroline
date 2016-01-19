@@ -48,6 +48,47 @@
                     result = studentScore.toString() + '/' + availableScore.toString();
                     return result;
                 },
+                getClozeQuestionScore: function (question, paper) {
+                    var availableScore = 0.0;
+                    var studentScore = 0.0;
+                    var result = '';
+                    for (var i = 0; i < question.holes.length; i++) {
+                        var higher_score = 0;
+                        for (var j=0; j<question.holes[i].wordResponses.length; j++) {
+                            if (question.holes[i].wordResponses[j].score > higher_score) {
+                                higher_score = question.holes[i].wordResponses[j].score;
+                            }
+                        }
+                        availableScore += higher_score;
+                    }
+                    for (var j = 0; j < paper.questions.length; j++) {
+                        if (paper.questions[j].id === question.id.toString()) {
+                            studentScore = paper.questions[j].score;
+                        }
+                    }
+                    result = studentScore.toString() + '/' + availableScore.toString();
+                    return result;
+                },
+                getShortQuestionScore: function (question, paper) {
+                    if (question.typeOpen === "long") {
+                        return "Cette réponse nécessite une correction";
+                    }
+                    else {
+                        var availableScore = 0.0;
+                        var studentScore = 0.0;
+                        var result = '';
+                        for (var i = 0; i < question.solutions.length; i++) {
+                            availableScore += question.solutions[i].score ? question.solutions[i].score : 0;
+                        }
+                        for (var j = 0; j < paper.questions.length; j++) {
+                            if (paper.questions[j].id === question.id.toString()) {
+                                studentScore = paper.questions[j].score;
+                            }
+                        }
+                        result = studentScore.toString() + '/' + availableScore.toString();
+                        return result;
+                    }
+                },
                 /**
                  * Get one paper details
                  * @param {type} exoId

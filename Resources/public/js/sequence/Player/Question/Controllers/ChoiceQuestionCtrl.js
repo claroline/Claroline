@@ -167,7 +167,7 @@
                         }
                     }
                 }
-                // send the data to common service so that other directives can get them
+                // send the data to commen service so that other directives can get them
                 this.updateStudentData();
             };
 

@@ -1,7 +1,5 @@
 <?php
-
 namespace UJM\ExoBundle\Controller\Sequence;
-
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -33,7 +31,6 @@ class SequenceController extends Controller
         
         // get user
         $user = $this->container->get('security.token_storage')->getToken()->getUser();   
-
         $paperManager = $this->get('ujm.exo.paper_manager');
         $apiData = $paperManager->openPaper($exercise, $user, false);
         $exo = json_encode($apiData['exercise']);

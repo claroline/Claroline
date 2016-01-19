@@ -108,6 +108,10 @@
                             return CorrectionService.getMatchQuestionScore(question, this.paper);
                         } else if(question.type === 'application/x.choice+json'){
                             return CorrectionService.getChoiceQuestionScore(question, this.paper);
+                        } else if(question.type === 'application/x.cloze+json'){
+                            return CorrectionService.getClozeQuestionScore(question, this.paper);
+                        } else if(question.type === 'application/x.short+json'){
+                            return CorrectionService.getShortQuestionScore(question, this.paper);
                         }
                     }
                 }

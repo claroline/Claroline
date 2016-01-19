@@ -1,12 +1,22 @@
+# a
+answer_zone: Zone de réponse
+
 # b
-btn_end_sequence_label: Terminer l'execice
+btn_end_sequence_label: Terminer l'exercice
 btn_interrupt_sequence_label: Interrompre
 btn_prev_step_label: Aller à l'étape précédente
 btn_next_step_label: Aller à l'étape suivante
 btn_validate_step: Validate step
 
+# c
+case_sensitive: Respecter la casse
+comment: Commentaire
+
 # d
 dropdown_step_navigate_choice_label: Etape n°%1% / %2%
+
+# k
+keys_words: Mots clés
 
 # l
 link_exercice_home: Accueil de l'exercise
@@ -19,6 +29,9 @@ label_exercise_question_score: Note
 label_exercise_correction: Correction
 label_no_labels_associated: Pas de label(s) associé(s)
 label_manual_correction_needed: Correction manuelle nécessaire!
+
+# n
+need_correction: Cette réponse nécessite une correction
 
 # p
 paper_list: Liste des copies
@@ -45,6 +58,10 @@ paper_details_table_comment: Commentaire
 paper_details_paper_score: Score global
 paper_details_question_score: Score de la question
 paper_details_correction_label: Correction
+paper_details_your_answers: Vos réponses
+paper_details_right_answers: Bonnes réponses
+
+points: Points
 
 # q
 question_hints: Indices

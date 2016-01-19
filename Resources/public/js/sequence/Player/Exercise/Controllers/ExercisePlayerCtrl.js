@@ -70,6 +70,7 @@
              * @param {Number} index (nullable) the step index when using direct access
              */
             this.validateStep = function (action, index) {
+                
                 // manualy disable tooltips...
                 $('.tooltip').each(function () {
                     $(this).hide();
@@ -116,13 +117,14 @@
                 if (action && (action === 'forward' || action === 'backward' || action === 'goto')) {
                     this.setCurrentStep(this.currentStepIndex);
                 } else if (action && action === 'end') {
-                    var endPromise = ExerciseService.endSequence(paper)
+                    var endPromise = ExerciseService.endSequence(paper);
                     endPromise.then(function (result) {
-                        if (this.checkCorrectionAvailability()) {
+                        if (this.checkCorrectionAvailability()) {                      
                             // go to paper correction view
                             var url = CommonService.generateUrl('paper-list', this.exercise.id) + '#/' + this.exercise.id + '/' + paper.id;
                             $window.location = url;
-                        } else {
+                        }
+                        else {
                             // go to exercise home page
                             var url = CommonService.generateUrl('exercise-home', this.exercise.id);
                             $window.location = url;
@@ -170,7 +172,6 @@
 
             this.showFeedback = function () {
                 this.feedbackIsShown = true;
-                console.log('show feedback fired');
                 $scope.$broadcast('show-feedback');
             };
 
