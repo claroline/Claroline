@@ -18,9 +18,9 @@
             this.isFirstStep = true;
             this.feedbackIsShown = false;
             this.currentStepIndex = 0;
-            
+
             // init directive with appropriate data
-            this.init = function (paper, exercise, user, currentStepIndex){
+            this.init = function (paper, exercise, user, currentStepIndex) {
                 this.exercise = PlayerDataSharing.setExercise(exercise);
                 this.paper = PlayerDataSharing.setPaper(paper);
                 this.user = PlayerDataSharing.setUser(user);
@@ -85,24 +85,19 @@
                 $('.tooltip').each(function () {
                     $(this).hide();
                 });
-
+                
                 // get next step index
                 this.currentStepIndex = this.getNextStepIndex(this.currentStepIndex, action, index);
 
                 // data set by question directive
                 var studentData = PlayerDataSharing.getStudentData();
-                // If anwsers exist we need to save them
-                if (studentData.answers && studentData.answers.length > 0) {
-                    // save anwsers
-                    var submitPromise = ExerciseService.submitAnswer(this.paper.id, studentData);
-                    submitPromise.then(function (result) {
-                        // then navigate to desired step / end / terminate exercise
-                        this.handleStepNavigation(action, studentData.paper);
-                    }.bind(this));
-                } else {
-                    // navigate to desired step / end / terminate exercise
+                // save the given answer (even if empty !)
+                var submitPromise = ExerciseService.submitAnswer(this.paper.id, studentData);
+                submitPromise.then(function (result) {                    
+                    // then navigate to desired step / end / terminate exercise
                     this.handleStepNavigation(action, studentData.paper);
-                }
+                    
+                }.bind(this));
             };
 
             /**
@@ -134,12 +129,11 @@
                 } else if (action && action === 'end') {
                     var endPromise = ExerciseService.endSequence(paper);
                     endPromise.then(function (result) {
-                        if (this.checkCorrectionAvailability()) {                      
+                        if (this.checkCorrectionAvailability()) {
                             // go to paper correction view
                             var url = CommonService.generateUrl('paper-list', this.exercise.id) + '#/' + this.exercise.id + '/' + paper.id;
                             $window.location = url;
-                        }
-                        else {
+                        } else {
                             // go to exercise home page
                             var url = CommonService.generateUrl('exercise-home', this.exercise.id);
                             $window.location = url;
@@ -184,10 +178,10 @@
                 }
 
             };
-            
-            this.showFeedback = function (){
+
+            this.showFeedback = function () {
                 this.feedbackIsShown = true;
-                console.log('fired');
+                console.log('show feedback fired');
                 $scope.$broadcast('show-feedback');
             };
 

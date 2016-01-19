@@ -48,12 +48,14 @@
                  * @returns {object}
                  */
                 setCurrentQuestionPaperData: function (question) {
+                    //console.log('player data sharing setCurrentQuestionPaperData see paper value');
+                    //console.log(this.paper);
                     // search for an existing answer to the question or used hints in existing paper
                     for (var i = 0; i < this.paper.questions.length; i++) {
                         if (this.paper.questions[i].id === question.id.toString()) {
                             this.currentQuestionPaperData = {
                                 id:this.paper.questions[i].id,
-                                answer:this.paper.questions[i].answer ? this.paper.questions[i].answer : [],
+                                answer:this.paper.questions[i].answer && this.paper.questions[i].answer !== '' ? this.paper.questions[i].answer : [],
                                 hints:this.paper.questions[i].hints ? this.paper.questions[i].hints : [],
                             };
                             return this.currentQuestionPaperData;
@@ -71,9 +73,17 @@
                 // set / update the student data
                 setStudentData: function (question, currentQuestionPaperData) {
                     this.currentQuestion = question;
-                    // this will automatically update the paper object
+                    // this will automatically update the paper object... Or not was working with choices question
+                    // but not with match questions...
                     if (currentQuestionPaperData) {
                         this.currentQuestionPaperData = currentQuestionPaperData;
+                        // specificly refresh question answers...
+                        for (var i = 0; i < this.paper.questions.length; i++){
+                            if(this.paper.questions[i].id === question.id.toString()){
+                                this.paper.questions[i].answer = currentQuestionPaperData.answer;
+                            }
+                        }
+                        // see if we'll need to do the same with hints...
                     }
                 },
                 getStudentData: function () {

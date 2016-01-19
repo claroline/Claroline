@@ -19,11 +19,11 @@
                     <div data-ng-switch="item.type">
                         <div data-ng-switch-when="application/x.choice+json">
                             <choice-question data-can-see-feedback="exercisePlayerCtrl.checkIfFeedbackIsAvailable()" data-question="item"></choice-question>                           
-                        </div>
-                        <!--
+                        </div>                       
                         <div data-ng-switch-when="application/x.match+json">
-                            <match-question data-step="stepShowCtrl.currentStep" data-question="item"></match-question>
-                        </div>
+                            <match-question data-can-see-feedback="exercisePlayerCtrl.checkIfFeedbackIsAvailable()" data-question="item"></match-question>
+                        </div> 
+                        <!--
                         <div data-ng-switch-when="application/x.sort+json">
                             <sort-question data-step="stepShowCtrl.currentStep" data-question="item"></sort-question>
                         </div>-->

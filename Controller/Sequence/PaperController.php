@@ -22,11 +22,9 @@ class PaperController extends Controller
      */
     public function exercisePapersAction(Exercise $exercise)
     {
-       
-
-        return $this->render('UJMExoBundle:Sequence:papers.html.twig', array(
+            return $this->render('UJMExoBundle:Sequence:papers.html.twig', array(
                     '_resource' => $exercise
-                        )
+            )
         );
     }
     
@@ -36,7 +34,9 @@ class PaperController extends Controller
     public function getCurrentUser(Exercise $exercise){        
          // get user
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
-        
+        //$id = $user->getId();
+        $seted = isset($user);
+        die($seted);
          
         $u = array(
             'id' => $user->getId(),

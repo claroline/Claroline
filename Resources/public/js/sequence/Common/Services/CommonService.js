@@ -44,8 +44,12 @@
                     return object.meta.licence || object.meta.created || object.meta.modified || (object.meta.description && object.meta.description !== '');
                 },
                 // set / update the student data
+<<<<<<< HEAD
                 setStudentData: function (question, currentQuestionPaperData) {
                     console.log("cs set student data");
+=======
+                /*setStudentData: function (question, currentQuestionPaperData) {
+>>>>>>> 906c4174a85ce40450de43dedd428fad4f6eb51d
                     this.currentQuestion = question;
                     // this will automatically update the paper object
                     if (currentQuestionPaperData) {
@@ -59,7 +63,7 @@
                         paper: this.paper,
                         answers: this.currentQuestionPaperData.answer
                     };
-                },
+                },*/
                 setPaper: function (paper) {
                     this.paper = paper;
                     return this.paper;
@@ -79,7 +83,7 @@
                  * @param {object} question
                  * @returns {object}
                  */
-                setCurrentQuestionPaperData: function (question) {
+                /*setCurrentQuestionPaperData: function (question) {
                     // search for an existing answer to the question in paper
                     for (var i = 0; i < this.paper.questions.length; i++) {
                         if (this.paper.questions[i].id === question.id.toString()) {
@@ -95,7 +99,7 @@
                     };
                     this.paper.questions.push(this.currentQuestionPaperData);
                     return this.currentQuestionPaperData;
-                },
+                },*/
                 countFinishedPaper:function(id){
                     var deferred = $q.defer();
                     $http
@@ -268,7 +272,7 @@
                  * @param {array} the given array
                  * @returns {array} the shuffled array
                  */
-                shuffleArray: function (array) {
+                /*shuffleArray: function (array) {
                     var currentIndex = array.length, temporaryValue, randomIndex;
                     // While there remain elements to shuffle...
                     while (0 !== currentIndex) {
@@ -282,7 +286,7 @@
                         array[randomIndex] = temporaryValue;
                     }
                     return array;
-                },
+                },*/
                 generateUrl: function (witch, _id) {
                     switch (witch) {
                         case 'exercise-home':
