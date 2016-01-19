@@ -1,0 +1,43 @@
+{
+  "id": "1",
+  "type": "application/x.match+json",
+  "title": "Question ?",
+  "description": null,
+  "invite":"Question ?",
+  "random": false,
+  "toBind": false,
+  "firstSet": [
+    {
+      "id": "2",
+      "type": "text/plain",
+      "data": "Item A"
+    },
+    {
+      "id": "3",
+      "type": "text/plain",
+      "data": "Item B"
+    }
+  ],
+  "secondSet": [
+    {
+      "id": "4",
+      "type": "text/plain",
+      "data": "Item C"
+    },
+    {
+      "id": "5",
+      "type": "text/plain",
+      "data": "Item D"
+    }
+  ],
+  "hints": [
+    {
+      "id": "1",
+      "penalty": 0.5
+    },
+    {
+      "id": "2",
+      "penalty": 1.5
+    }
+  ]
+}

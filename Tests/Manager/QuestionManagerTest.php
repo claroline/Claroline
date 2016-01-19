@@ -101,12 +101,9 @@ class ApiManagerTest extends TransactionalTestCase
         $exportedEvalData = $this->manager->exportQuestion($questions[0], false);
 
         $this->assertEqualsWithoutIds($originalCompData, $exportedCompData);
-        //die;
-        //$this->assertEqualsWithoutIds($originalEvalData, $exportedEvalData);
-        //$this->assertQuestionIdConsistency($exportedCompData);
-        //$this->assertQuestionIdConsistency($exportedEvalData);
-        //$this->assertQcmIdConsistency($exportedCompData);
-        //$this->assertQcmIdConsistency($exportedEvalData);
+        $this->assertEqualsWithoutIds($originalEvalData, $exportedEvalData);
+        $this->assertQuestionIdConsistency($exportedCompData);
+        $this->assertQuestionIdConsistency($exportedEvalData);
     }
 
     
@@ -114,10 +111,8 @@ class ApiManagerTest extends TransactionalTestCase
     {
         return [
           ['match-1'],
-          //['qcm-2'],
-          //['qcm-3'],
-          //['qcm-4'],
-          //['qcm-5']
+          ['match-2'],
+          ['match-3']
         ];
     }
 
@@ -152,9 +147,9 @@ class ApiManagerTest extends TransactionalTestCase
             foreach (get_object_vars($object) as $property => $value) {
                 if ($property === 'id') {
                     unset($object->id);
-                } elseif ($property === 'firstId'){
+                } elseif ($property === 'firstId'){ // for match questions
                     unset($object->firstId);
-                } elseif ($property === 'secondId'){
+                } elseif ($property === 'secondId'){ // for match questions
                     unset($object->secondId);
                 } elseif (is_object($value)) {
                     $removeIds($value);
