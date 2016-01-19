@@ -33,19 +33,19 @@ class CalendarEventManager
 
     public function create(Event $event)
     {
-        $this->om->persist($event)
+        $this->om->persist($event);
         $this->om->flush();
     }
 
     public function delete(Event $event)
     {
-        $this->om->remove($event)
+        $this->om->remove($event);
         $this->om->flush();
     }
 
     public function edit(Event $event)
     {
-        $this->om->persist($event)
+        $this->om->persist($event);
         $this->om->flush();
     }
 }

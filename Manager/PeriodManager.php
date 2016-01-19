@@ -33,19 +33,19 @@ class PeriodManager
 
     public function create(Period $period)
     {
-        $this->om->persist($period)
+        $this->om->persist($period);
         $this->om->flush();
     }
 
     public function delete(Period $period)
     {
-        $this->om->remove($period)
+        $this->om->remove($period);
         $this->om->flush();
     }
 
     public function edit(Period $period)
     {
-        $this->om->persist($period)
+        $this->om->persist($period);
         $this->om->flush();
     }
 }

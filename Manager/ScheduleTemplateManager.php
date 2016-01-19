@@ -33,19 +33,19 @@ class ScheduleTemplateManager
 
     public function create(ScheduleTemplate $schedule)
     {
-        $this->om->persist($schedule)
+        $this->om->persist($schedule);
         $this->om->flush();
     }
 
     public function delete(ScheduleTemplate $schedule)
     {
-        $this->om->remove($schedule)
+        $this->om->remove($schedule);
         $this->om->flush();
     }
 
     public function edit(ScheduleTemplate $schedule)
     {
-        $this->om->persist($schedule)
+        $this->om->persist($schedule);
         $this->om->flush();
     }
 }

@@ -33,19 +33,19 @@ class TimeSlotManager
 
     public function create(TimeSlot $timeSlot)
     {
-        $this->om->persist($timeSlot)
+        $this->om->persist($timeSlot);
         $this->om->flush();
     }
 
     public function delete(TimeSlot $timeSlot)
     {
-        $this->om->remove($timeSlot)
+        $this->om->remove($timeSlot);
         $this->om->flush();
     }
 
     public function edit(TimeSlot $timeSlot)
     {
-        $this->om->persist($timeSlot)
+        $this->om->persist($timeSlot);
         $this->om->flush();
     }
 }

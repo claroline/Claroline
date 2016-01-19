@@ -33,19 +33,19 @@ class YearManager
 
     public function create(Year $year)
     {
-        $this->om->persist($year)
+        $this->om->persist($year);
         $this->om->flush();
     }
 
     public function delete(Year $year)
     {
-        $this->om->remove($year)
+        $this->om->remove($year);
         $this->om->flush();
     }
 
     public function edit(Year $year)
     {
-        $this->om->persist($year)
+        $this->om->persist($year);
         $this->om->flush();
     }
 }

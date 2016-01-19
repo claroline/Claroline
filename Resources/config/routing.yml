@@ -343,6 +343,54 @@ claro_packages_api:
     options:
         expose: true
 
+claro_year_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Admin/YearController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_leave_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Admin/LeaveController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_period_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Admin/PeriodController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_schedule_template_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Admin/ScheduleTemplateController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_time_slot_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Admin/TimeSlotController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_event_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Admin/EventController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
 claro_contact:
     resource: "@ClarolineCoreBundle/Controller/ContactController.php"
     prefix: contact

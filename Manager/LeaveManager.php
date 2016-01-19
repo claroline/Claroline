@@ -33,19 +33,19 @@ class LeaveManager
 
     public function create(Leave $leave)
     {
-        $this->om->persist($leave)
+        $this->om->persist($leave);
         $this->om->flush();
     }
 
     public function delete(Leave $leave)
     {
-        $this->om->remove($leave)
+        $this->om->remove($leave);
         $this->om->flush();
     }
 
     public function edit(Leave $leave)
     {
-        $this->om->persist($leave)
+        $this->om->persist($leave);
         $this->om->flush();
     }
 }
