@@ -1,5 +1,7 @@
 {# find which theme will be used and load it #}
-{% if config.getParameter('theme') is defined and asset_exists(asset('') ~ 'themes/' ~ config.getParameter('theme') ~ '/bootstrap.css') %}
+
+
+{% if config.getParameter('theme') is defined and asset_exists('themes/' ~ config.getParameter('theme') ~ '/bootstrap.css') %}
     {# from theme #}
     {# please use asset_exists to be sure the theme is here #}
     {% set themeCSS = asset('') ~ 'themes/' ~ config.getParameter('theme') ~ '/bootstrap.css' %}
@@ -7,14 +9,21 @@
     {# default #}
     {% set themeCSS = asset('') ~ 'themes/' ~ 'claroline' ~ '/bootstrap.css' %}
 {% endif %}
-<link rel="stylesheet" href="{{ themeCSS }}" screen="media" />
+{#<link rel="stylesheet" href="{{ themeCSS }}" screen="media" />#}
+{#<link rel="stylesheet" href="{{ asset('style.css') }}"/>#}
+<link rel="stylesheet" href="{{ asset('style.css') }}"/>
+{#<link rel="stylesheet" href="{{ asset('add.css') }}"/>#}
+
+
+{#<link rel="stylesheet" href="{{ asset('override.css') }}"/>#}
+
+
 
 {% stylesheets debug=false filter='lessphp, cssmin'  output='vendor/fortawesome/font-awesome/css/font-awesome.css'
 '../vendor/fortawesome/font-awesome/less/font-awesome.less'
 %}
     <link rel="stylesheet" href="{{ asset_url }}" />
 {% endstylesheets %}
-
 
 
 {% image debug=false output='vendor/fortawesome/font-awesome/fonts/FontAwesome.otf'

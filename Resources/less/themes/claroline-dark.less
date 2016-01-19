@@ -1,3 +1,5 @@
+@import "../layout";
+
 @claroline-background: #222;
 @claroline-topbar-background: #222;
 @claroline-topbar-border: #00cbff;
@@ -330,3 +332,18 @@
 @container-tablet: ((720px + @grid-gutter-width));
 @container-desktop: ((940px + @grid-gutter-width));
 @container-lg-desktop: ((1140px + @grid-gutter-width));
+
+body {
+    background:@claroline-background;
+}
+
+.navbar.navbar-inverse.navbar-fixed-top {
+    background: @claroline-topbar-background;
+    border-bottom: 3px solid @claroline-topbar-border;
+    .box-shadow(0 1px 3px rgba(0,0,0,.25));
+}
+
+#footer {
+    background: @claroline-footer-background;
+    color: @claroline-footer-color;
+}
