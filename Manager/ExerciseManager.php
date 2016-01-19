@@ -39,6 +39,7 @@ class ExerciseManager
      * Publishes an exercise.
      *
      * @param Exercise $exercise
+     *
      * @throws \LogicException if the exercise is already published
      */
     public function publish(Exercise $exercise)
@@ -60,6 +61,7 @@ class ExerciseManager
      * Unpublishes an exercise.
      *
      * @param Exercise $exercise
+     *
      * @throws \LogicException if the exercise is already unpublished
      */
     public function unpublish(Exercise $exercise)
@@ -77,7 +79,10 @@ class ExerciseManager
      *
      * Deletes all the papers associated with an exercise.
      *
+     * @todo optimize request number using repository method(s)
+     *
      * @param Exercise $exercise
+     *
      * @throws \Exception if the exercise has been published at least once
      */
     public function deletePapers(Exercise $exercise)
@@ -125,13 +130,13 @@ class ExerciseManager
         $originalQuestions = $questions = $this->om
             ->getRepository('UJMExoBundle:Question')
             ->findByExercise($exercise);
-        $questionCount = count($questions);
+        $questionCount = count($questions); 
 
         if ($exercise->getShuffle() && $questionCount > 1) {
             while ($questions === $originalQuestions) {
                 shuffle($questions); // shuffle until we have a new order
             }
-        }
+        }       
 
         if (($questionToPick = $exercise->getNbQuestion()) > 0) {
             while ($questionToPick > 0) {
@@ -141,7 +146,7 @@ class ExerciseManager
                 $questionToPick--;
             }
         }
-
+        
         return $questions;
     }
 
@@ -179,6 +184,21 @@ class ExerciseManager
             'steps' => $this->exportSteps($exercise, $withSolutions),
         ];
     }
+    
+    /**
+     * Exports an exercise in a JSON-encodable format.
+     *
+     * @param Exercise  $exercise
+     * @param bool      $withSolutions
+     * @return array
+     */
+    public function exportExerciseMinimal(Exercise $exercise)
+    {
+        return [
+            'id' => $exercise->getId(),
+            'meta' => $this->exportMetadata($exercise)
+        ];
+    }
 
     /**
      * @todo duration
@@ -200,6 +220,10 @@ class ExerciseManager
             'pick' => $exercise->getNbQuestion(),
             'random' => $exercise->getShuffle(),
             'maxAttempts' => $exercise->getMaxAttempts(),
+            'dispButtonInterrupt' => $exercise->getDispButtonInterrupt(),
+            'markMode' => $exercise->getMarkMode(),
+            'correctionMode' => $exercise->getCorrectionMode(),
+            'correctionDate' => $exercise->getDateCorrection()->format('Y-m-d H:i:s')
         ];
     }
 
@@ -212,7 +236,7 @@ class ExerciseManager
      */
     private function exportSteps(Exercise $exercise, $withSolutions = true)
     {
-        $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
+        $questionRepo = $this->om->getRepository('UJMExoBundle:Question'); 
 
         return array_map(function ($question) use ($withSolutions) {
             return [

@@ -219,7 +219,7 @@ class ExerciseController extends Controller
         $allowEdit = array();
         $em = $this->getDoctrine()->getManager();
         $this->checkAccess($exercise);
-        
+
         $workspace = $exercise->getResourceNode()->getWorkspace();
 
         $exoAdmin = $this->container->get('ujm.exo_exercise')->isExerciseAdmin($exercise);
@@ -417,6 +417,7 @@ class ExerciseController extends Controller
 
                 $pageGoNow=$paginationSer->getPageGoNow($nbItem,$maxPage,$pageToGo,$pageGoNow);
             }
+
             $listExo = $this->getDoctrine()
                         ->getManager()
                         ->getRepository('UJMExoBundle:Exercise')
@@ -801,7 +802,7 @@ class ExerciseController extends Controller
     /**
      * To display the docimology's histogramms.
      *
-     * @EXT\Route("/docimology/{id}/{nbPapers}", name="ujm_exercise_docimology")
+     * @EXT\Route("/docimology/{id}/{nbPapers}", name="ujm_exercise_docimology", options={"expose"=true})
      * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      * 
      * @param int $nbPapers   number of papers to this exercise

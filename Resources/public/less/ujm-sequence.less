@@ -64,12 +64,46 @@
                 }
             }
             .bordered{
-                    border-bottom: 1px solid #F89406;
-                    /*padding-bottom: 20px;  */
+                border-bottom: 1px solid #F89406;
+                /*padding-bottom: 20px;  */
+            }
+            .choice-question-choice-table{
+                tbody{
+                    td.choice{
+                        max-width:10%;
+                        min-width:10%;
+                    }
+                    td.choice-content{
+                        max-width:80%;
+                        min-width:80%;
+                    }
+                    td.choice-feedback{
+                        max-width:10%;
+                        min-width:10%;
+                    }
                 }
+            }
         }
         .question-row.row-bordered{
             border-bottom: 1px solid #eee;
         }
+    }
+}
+
+.ujm-papers-container{
+    .table-centered td, .table-centered th  {
+        text-align: center;   
+    }
+
+    .image{
+        width: 150px;
+    }
+    
+    ul {
+        list-style: none;
+    }
+    
+    .wrong-label{
+        text-decoration: line-through;
     }
 }

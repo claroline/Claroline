@@ -143,6 +143,15 @@ class InteractionQCM extends AbstractInteraction
     {
         return $this->weightResponse;
     }
+    
+    /**
+     * @return ArrayCollection
+     */
+    public function setChoices(ArrayCollection $choices)
+    {
+        $this->choices = $choices;
+        return $this->choices;
+    }
 
     /**
      * @return ArrayCollection

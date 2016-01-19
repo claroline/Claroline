@@ -163,4 +163,29 @@ class PaperRepository extends EntityRepository
 
         return $nbPapers;
     }
+    
+    /**
+     * Count the number of finished paper for a user and an exercise
+     *
+     * @param User
+     * @param Exercise
+     *
+     * @return int the number of finished papers
+     */
+    public function countUserFinishedPapers(Exercise $exercise, User $user)
+    {
+        $qb = $this->createQueryBuilder('p');
+
+        $nb = $qb   ->select('COUNT(p)')
+                    ->join('p.exercise', 'e')
+                    ->join('p.user', 'u')
+                    ->where('u = :user')
+                    ->andWhere('e = :exercise')
+                    ->andWhere('p.end IS NOT NULL')
+                    ->setParameters(['user' => $user, 'exercise' => $exercise])
+                    ->getQuery()
+                    ->getSingleScalarResult();
+        
+        return $nb;
+    }
 }

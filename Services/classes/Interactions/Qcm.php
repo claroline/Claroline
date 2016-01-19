@@ -222,7 +222,7 @@ class Qcm extends Interaction
         foreach ($allChoices as $choice) {
             $markByChoice[(string)$choice->getId()] = $choice->getWeight();
         }
-        if ($response[0] != null) {
+        if (isset($response[0]) && $response[0] != null) {
             foreach ($response as $res) {
                 $score += $markByChoice[$res];
             }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<auxiliary-configuration xmlns="http://www.netbeans.org/ns/auxiliary-configuration/1">
+    <preferences xmlns="http://www.netbeans.org/ns/auxiliary-configuration-preferences/1">
+        <module name="org-netbeans-modules-css-prep">
+            <property name="less.mappings" value="/less:/css"/>
+            <property name="less.enabled" value="true"/>
+            <property name="less.configured" value="true"/>
+        </module>
+        <module name="org-netbeans-modules-javascript2-requirejs"/>
+        <module name="org-netbeans-modules-html-editor-lib"/>
+        <module name="org-netbeans-modules-editor-indent">
+            <node name="CodeStyle"/>
+        </module>
+    </preferences>
+</auxiliary-configuration>
