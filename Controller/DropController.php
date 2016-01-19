@@ -523,7 +523,7 @@ class DropController extends DropzoneBaseController
         $countUnterminatedDrops = $dropRepo->countUnterminatedDropsByDropzone($dropzone->getId());
 
         // Déclaration du compteur de documents sans accusé de réception
-        $alertNbDocumentWithoutReturnReceipt = 10;
+        $alertNbDocumentWithoutReturnReceipt = 0;
 
         // Déclarations des nouveaux tableaux, qui seront passés à la vue
         $userToCommentCount = array();
