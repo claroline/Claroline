@@ -129,7 +129,7 @@ class HoleHandler implements QuestionHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true)
+    public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true, $forPaperList = false)
     {
         $repo = $this->om->getRepository('UJMExoBundle:InteractionHole');
         $holeQuestion = $repo->findOneBy(['question' => $question]);
@@ -139,16 +139,20 @@ class HoleHandler implements QuestionHandlerInterface
         $exportData->text = $text;
         if ($withSolution) {
             $exportData->solution = $holeQuestion->getHtml();
+            $exportData->solutions = $holeQuestion->getHtml();
         }
         $exportData->holes = array_map(function ($hole) {
             $holeData = new \stdClass();
             $holeData->id = (string) $hole->getId();
             $holeData->type = 'text/html';
+            $holeData->selector = $hole->getSelector();
+            $holeData->position = (string) $hole->getPosition();
             $holeData->wordResponses = array_map(function ($wr) {
                 $wrData = new \stdClass();
                 $wrData->id = (string) $wr->getId();
                 $wrData->response = (string) $wr->getResponse();
                 $wrData->score = $wr->getScore();
+                $wrData->feedback = $wr->getFeedback();
                 return $wrData;
             }, $hole->getWordResponses()->toArray());
 
@@ -163,9 +167,15 @@ class HoleHandler implements QuestionHandlerInterface
      */
     public function convertAnswerDetails(Response $response)
     {
-        $parts = explode(';', $response->getResponse());
+        $parts = json_decode($response->getResponse());
+        
+        foreach ($parts as $key=>$value) {
+            $array[$key] = $value;
+        }
+        
+    //    $parts = explode(';', $response->getResponse());
 
-        return array_filter($parts, function ($part) {
+        return array_filter($array, function ($part) {
             return $part !== '';
         });
     }
@@ -213,36 +223,31 @@ class HoleHandler implements QuestionHandlerInterface
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionHole')
             ->findOneByQuestion($question);
 
-    /*    if (!$interaction->getWeightResponse()) {
-            throw new \Exception('Global score not implemented yet');
-        }*/
-
         $mark = 0;
 
-        foreach ($interaction->getHoles() as $hole) {
-            foreach ($hole->getWordResponses() as $wd) {
-                if (in_array((string) $wd->getResponse(), $data)) {
-                    $mark += $wd->getScore();
+        foreach ($data as $answer) {
+            foreach ($interaction->getHoles() as $hole) {
+                foreach ($hole->getWordResponses() as $wd) {
+                    if ($hole->getSelector() === true) {
+                        if ((string)$wd->getId() === (string)$answer) {
+                            $mark += $wd->getScore();
+                        }
+                    }
+                    else {
+                        if ($wd->getResponse() === $answer) {
+                            $mark += $wd->getScore();
+                        }
+                    }
                 }
             }
         }
         
-        $answers = "[";
-        $i=1;
-        $length = count($data);
-        foreach ($data as $answer) {/*
-            $answer = [ "id" => $answer["id"], "answer" => $answer["answer"]];
-            array_push($answers, $answer);
-            */
-            $answers .= "{\"id\":\"" . $answer["id"] . "\",\"answer\":\"" . $answer["answer"] . "\"}";
-            
-            if ($i === $length) {
-                $answers .= "]";
+        $answers = [];
+        $i=0;
+        foreach ($data as $answer) {
+            if ($answer || $answer !== null) {
+                $answers[$i] = $answer;
             }
-            else {
-                $answers .= ",";
-            }
-            
             $i++;
         }
 
@@ -250,8 +255,8 @@ class HoleHandler implements QuestionHandlerInterface
             $mark = 0;
         }
         
-    //    $response->setResponse(json_encode($answers));
-        $response->setResponse($answers);
+        $json = json_encode($answers);
+        $response->setResponse($json);
         $response->setMark($mark);
     }
 }

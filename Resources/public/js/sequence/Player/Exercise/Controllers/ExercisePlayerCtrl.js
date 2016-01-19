@@ -71,16 +71,6 @@
              */
             this.validateStep = function (action, index) {
                 
-                if (this.exercise.steps[this.currentStepIndex].items[0].type === "application/x.cloze+json") {
-                    var inputs = document.getElementsByClassName('blank');
-                    var answers = new Array();
-                    
-                    for (var i=0; i<inputs.length; i++) {
-                        answers.push({"id" : inputs[i].id, "answer" : inputs[i].value});
-                    }
-                    this.paper.questions[this.currentStepIndex].answer = answers;
-                }
-                
                 // manualy disable tooltips...
                 $('.tooltip').each(function () {
                     $(this).hide();
@@ -129,11 +119,12 @@
                 } else if (action && action === 'end') {
                     var endPromise = ExerciseService.endSequence(paper);
                     endPromise.then(function (result) {
-                        if (this.checkCorrectionAvailability()) {
+                        if (this.checkCorrectionAvailability()) {                      
                             // go to paper correction view
                             var url = CommonService.generateUrl('paper-list', this.exercise.id) + '#/' + this.exercise.id + '/' + paper.id;
                             $window.location = url;
-                        } else {
+                        }
+                        else {
                             // go to exercise home page
                             var url = CommonService.generateUrl('exercise-home', this.exercise.id);
                             $window.location = url;
@@ -181,7 +172,6 @@
 
             this.showFeedback = function () {
                 this.feedbackIsShown = true;
-                console.log('show feedback fired');
                 $scope.$broadcast('show-feedback');
             };
 

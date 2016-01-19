@@ -128,7 +128,7 @@ class OpenHandler implements QuestionHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true)
+    public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true, $forPaperList = false)
     {
         $repo = $this->om->getRepository('UJMExoBundle:InteractionOpen');
         $openQuestion = $repo->findOneBy(['question' => $question]);
@@ -176,7 +176,7 @@ class OpenHandler implements QuestionHandlerInterface
         }*/
         
         if (!is_string($data)) {
-            return ['Answer data must be an string, ' . gettype($data) . ' given'];
+            return ['Answer data must be a string, ' . gettype($data) . ' given'];
         }
         
         $count = 0;
@@ -206,7 +206,7 @@ class OpenHandler implements QuestionHandlerInterface
         echo $answer;
         
         foreach ($interaction->getWordResponses() as $wd) {
-            if (strpos($answer,$wd->getResponse())) {
+            if (strpos($answer,$wd->getResponse()) !== false) {
                 $mark += $wd->getScore();
             }
         }

@@ -8,50 +8,11 @@
     angular.module('Correction').controller('CorrectionClozeCtrl', [
         'CommonService',
         'CorrectionService',
-        '$timeout',
-        function (CommonService, CorrectionService, $timeout) {
+        function (CommonService, CorrectionService) {
 
             this.question = {};
             this.paper = {};
             this.answer = "";
-                    
-            $timeout(function () {
-                var inputs = document.getElementsByClassName('blank');
-                for (var i=0; i<inputs.length; i++) {
-                    inputs[i].setAttribute("disabled", true);
-                }
-                
-                var answers_fields = document.getElementsByName('users_answer');
-                var solutions_fields = document.getElementsByName('teachers_solution');
-                
-                for (var i=0; i<answers_fields.length; i++) {
-                    var answers_inputs = answers_fields[i].getElementsByTagName('input');
-                    var solutions_inputs = solutions_fields[i].getElementsByTagName('input');
-                    
-                    var answers_select = answers_fields[i].getElementsByTagName('select');
-                    var solutions_select = solutions_fields[i].getElementsByTagName('select');
-                    
-                    for (var j=0; j<answers_select.length; j++) {
-                        if (answers_select[j].options[answers_select[j].selectedIndex].innerHTML === solutions_select[j].options[solutions_select[j].selectedIndex].value) {
-                            answers_select[j].style.color = "#2289b5";
-                        }
-                        else {
-                            answers_select[j].style.color = "#FC0204";
-                        }
-                        solutions_select[j].style.color = "black";
-                    }
-                    
-                    for (var j=0; j<answers_inputs.length; j++) {
-                        if (answers_inputs[j].value === solutions_inputs[j].value) {
-                            answers_inputs[j].style.color = "#2289b5";
-                        }
-                        else {
-                            answers_inputs[j].style.color = "#FC0204";
-                        }
-                        solutions_inputs[j].style.color = "black";
-                    }
-                }
-            });
 
             this.init = function (question, paper) {
                 this.question = question;
@@ -59,74 +20,133 @@
                 
                 this.setAnswer(this.question.text);
                 
-                var type_answer = "";
+                this.fillInFields();
+                this.colourUsersAnswers();
+            };
+            
+            this.fillInFields = function () {
+                var id_question;
+                var id_answer;
+                var currElem;
+                var currElemGParent;
+                var select_options;
+                var wordResponse;
+                var users_answer;
+                var new_select;
+                var higher_score;
+                var higher_scores_word;
+                var style;
                 
                 for (var i=0; i<this.paper.questions.length; i++) {
-                    if (question.id.toString() === this.paper.questions[i].id) {
-                        var answers = $.parseJSON(this.paper.questions[i].answer);
+                    if (this.question.id.toString() === this.paper.questions[i].id) {
+                        var answers = this.paper.questions[i].answer;
+                        var elements = document.getElementsByClassName('blank');
                         
-                        // loop to update the value in the string, since we don't have access to the HTML object
-                        var l=0;
-                        var k=0;
-                        var m=0;
-                        while (k<this.answer.length) {
-                            if (this.answer.substr(k,7) === "<select") {
-                                type_answer = "select";
-                            }
-                            else if (this.answer.substr(k,6) === "<input") {
-                                type_answer = "input";
+                        for (var j=0; j<elements.length; j++) {
+                            currElem = elements[j];
+                            // we have to check the grand parent element, as it is
+                            // the only element that can inform us if the current
+                            // element is an answer field or a solution field
+                            currElemGParent = elements[j].parentNode.parentNode;
+                            
+                            /**
+                             * Here, we fill the answers fields with the user's answers
+                             */
+                            if (currElemGParent.getAttribute('id') === "answer_" + this.question.id) {
+                                id_answer = elements[j].getAttribute("id");
+                                id_question = this.question.id;
+                                Object.keys(answers).map(function(key){
+                                    if (key === id_answer) {
+                                        $('#answer_' + id_question).find('#'+id_answer).val(answers[key]);
+                                        $('#answer_' + id_question).find('#'+id_answer).prop('disabled', true);
+                                    }
+                                });
                             }
                             
-                            if (this.answer.substr(k,4) === "id=\"" && type_answer === "input") {
-                                k = k+4;
-                                l=k;
-                                while (this.answer.substr(k,1) !== "\"") {
-                                    k++;
-                                }
-                                
-                                for (var j=0; j<answers.length; j++) {
-                                    if (answers[j].id === this.answer.substr(l,k-l)) {
-                                        while (this.answer.substr(k,7) !== "value=\"") {
-                                            k++;
+                            /**
+                             * Here, we fill the solutions fields with the right answers
+                             */
+                            if (currElemGParent.getAttribute('id') === "solution_" + this.question.id) {
+                                id_answer = elements[j].getAttribute('id');
+                                id_question = this.question.id;
+                                users_answer = $('#answer_' + id_question).find('#'+id_answer).val();
+                                for (var k=0; k<this.question.holes.length; k++) {
+                                    if (this.question.holes[k].position === id_answer) {
+                                        // If it was a text field, we replace it with a select field
+                                        if (currElem.tagName === "INPUT") {
+                                            new_select = "<select id='" + id_answer + "' class='blank' name='blank_" + id_answer + "'></select>";
+                                            $('#solution_' + id_question).find('#'+id_answer).replaceWith(new_select);
                                         }
                                         
-                                        this.answer = this.answer.substr(0,k+7) + answers[j].answer + this.answer.substr(k+7,this.answer.length);
+                                        select_options = "";
+                                        style = "";
+                                        higher_score = 0;
+                                        higher_scores_word = null;
+                                        // this loop checks which answer is the best
+                                        for (var l=0; l<this.question.holes[k].wordResponses.length; l++) {
+                                            wordResponse = this.question.holes[k].wordResponses[l];
+                                            if (wordResponse.score > higher_score) {
+                                                higher_score = wordResponse.score;
+                                                higher_scores_word = wordResponse;
+                                            }
+                                        }
+                                        
+                                        // this loop adds only the right answers in the fields 
+                                        // and colours them depending on it's the best answer or not
+                                        for (var l=0; l<this.question.holes[k].wordResponses.length; l++) {
+                                            wordResponse = this.question.holes[k].wordResponses[l];
+                                            if (wordResponse.score > 0) {
+                                                if (wordResponse.id === higher_scores_word.id) {
+                                                    style = "style='color:#2289b5; text-weight: bold;' selected";
+                                                }
+                                                else {
+                                                    style = "style='color:#30C1FF;'";
+                                                }
+                                                select_options += "<option " + style + " value='" + wordResponse.id + "'>" + wordResponse.response + "</option>";
+                                            }
+                                        }
+                                        $('#solution_' + id_question).find('#'+id_answer).html(select_options);
+                                        $('#solution_' + id_question).find('#'+id_answer).css("color", "#2289b5");
                                     }
                                 }
                             }
-                            else if (type_answer === "select" && this.answer.substr(k,4) === "id=\"") {
-                                k = k+4;
-                                l=k;
-                                while (this.answer.substr(k,1) !== "\"") {
-                                    k++;
-                                }
-                                
-                                //k-l = id answer
-                                
-                                for (var j=0; j<answers.length; j++) {
-                                    if (answers[j].id === this.answer.substr(l,k-l)) {
-                                        
-                                        var good_value = false;
-                                        while (!good_value) {
-                                            while (this.answer.substr(k,7) !== "value=\"") {
-                                                k++;
-                                            }
-                                            k=k+7;
-                                            m=k;
-                                            while (this.answer.substr(k,1) !== "\"") {
-                                                k++;
-                                            }
-                                            if (answers[j].answer === this.answer.substr(m,k-m)) {
-                                                this.answer = this.answer.substr(0,k+1) + " selected=\"selected\" " + this.answer.substr(k+1,this.answer.length);
-                                                good_value = true;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            k++;
                         }
-                
+                    }
+                }
+            };
+            
+            this.colourUsersAnswers = function () {
+                var good_answer;
+                var value_to_compare;
+                for (var i=0; i<this.paper.questions.length; i++) {
+                    if (this.question.id.toString() === this.paper.questions[i].id) {
+                        var answers = this.paper.questions[i].answer;
+                        var holes = this.question.holes;
+                        
+                        for (var j=0; j<holes.length; j++) {
+                            good_answer = false;
+                            Object.keys(answers).map(function(key){
+                                if (holes[j].position === key) {
+                                    for (var k=0; k<holes[j].wordResponses.length; k++) {
+                                        if (holes[j].selector) {
+                                            value_to_compare = holes[j].wordResponses[k].id;
+                                        }
+                                        else {
+                                            value_to_compare = holes[j].wordResponses[k].response;
+                                        }
+                                        if (value_to_compare === answers[key] && holes[j].wordResponses[k].score > 0) {
+                                            good_answer = true;
+                                        }
+                                    }
+                                }
+                            });
+                            if (good_answer) {
+                                $('#answer_' + this.question.id).find('#'+holes[j].position).css("color", "#00A700");
+                            }
+                            else {
+                                $('#answer_' + this.question.id).find('#'+holes[j].position).css("color", "#f30000");
+                            }
+                        }
                     }
                 }
             };

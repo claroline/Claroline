@@ -6,7 +6,8 @@
         'CommonService',
         'PlayerDataSharing',
         'QuestionService',
-        function ($ngBootbox, CommonService, PlayerDataSharing, QuestionService) {
+        '$timeout',
+        function ($ngBootbox, CommonService, PlayerDataSharing, QuestionService, $timeout) {
 
             this.question = {};
             this.formatedClozeText = '';
@@ -17,7 +18,6 @@
             this.init = function (question) {
                 // those data are updated by view and sent to common service as soon as they change
                 this.currentQuestionPaperData = PlayerDataSharing.setCurrentQuestionPaperData(question);
-                this.question = question;
                 // init student data question object
                 PlayerDataSharing.setStudentData(question);
 
@@ -26,6 +26,64 @@
                     for (var i = 0; i < this.currentQuestionPaperData.hints.length; i++) {
                         this.getHintData(this.currentQuestionPaperData.hints[i]);
                     }
+                }
+                if (this.currentQuestionPaperData.answer) {
+                    // init previously given answer
+                    this.setPreviousAnswers();
+                    this.setOnChange();
+                    this.setFirstCurrentQuestionPaperData();
+                }
+            };
+            
+            /**
+             * set answers already given if any
+             * @param {type} id
+             * @returns {Boolean}
+             */
+            this.setPreviousAnswers = function () {
+                var answers = this.currentQuestionPaperData.answer;
+                var array_answers = new Array();
+                Object.keys(answers).map(function(key){
+                    $("#"+key).val(answers[key]);
+                    array_answers[key] = answers[key];
+                });
+                this.currentQuestionPaperData.answer = array_answers;
+                PlayerDataSharing.setStudentData(this.question, this.currentQuestionPaperData);
+            };
+            
+            /**
+             * set event on change of inputs values
+             * @param {type} id
+             * @returns {Boolean}
+             */
+            this.setOnChange = function () {
+                var elements = document.getElementsByClassName("blank");
+                for (var i=0; i<elements.length; i++) {
+                    var cqpd = this.currentQuestionPaperData;
+                    var question = this.question;
+                    document.getElementById(elements[i].id).onchange = function () {
+                        var id = this.id;
+                        var value = this.value;
+                        cqpd.answer[id] = value;
+                        PlayerDataSharing.setStudentData(question, cqpd);
+                    };
+                }
+            };
+            
+            /**
+             * set first currentquestionpaperdata
+             * @param {type} id
+             * @returns {Boolean}
+             */
+            this.setFirstCurrentQuestionPaperData = function () {
+                var elements = document.getElementsByClassName("blank");
+                for (var i=0; i<elements.length; i++) {
+                    var cqpd = this.currentQuestionPaperData;
+                    var question = this.question;
+                    var id = elements[i].id;
+                    var value = elements[i].value;
+                    cqpd.answer[id] = value;
+                    PlayerDataSharing.setStudentData(question, cqpd);
                 }
             };
 
@@ -151,7 +209,7 @@
                 return this.question.meta.licence || this.question.meta.created || this.question.meta.modified || this.question.meta.description;
             };
             
-            this.updateStudentData = function (choiceId) {
+            this.updateStudentData = function () {
                 CommonService.setStudentData(this.question, this.currentQuestionPaperData);
             };
         }

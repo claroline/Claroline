@@ -62,6 +62,10 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div data-ng-switch="question.type">
+                                        <!-- for match question only we use a directive -->
+                                        <div data-ng-switch-when="application/x.match+json">
+                                            <correction-match data-question="question" data-paper="correctionCtrl.paper"></correction-match>                                         
+                                        </div>
                                          <!-- for choice question only we use a directive -->
                                         <div data-ng-switch-when="application/x.choice+json">
                                             <correction-qcm data-question="question" data-paper="correctionCtrl.paper"></correction-qcm>                                         
