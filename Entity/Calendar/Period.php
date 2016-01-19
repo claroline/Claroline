@@ -67,6 +67,20 @@ class Period
      */
     protected $name;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Calendar\TimeSlot",
+     *     mappedBy="period",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $timeSlots;
+
+    public function __construct()
+    {
+        $this->timeSlots = new ArrayCollection();
+    }
+
     public function getId()
     {
         return $this->id;
@@ -120,5 +134,10 @@ class Period
     public function getDescription()
     {
         return $this->description;
+    }
+
+    public function getTimeSlots()
+    {
+        return $this->timeSlots;
     }
 }

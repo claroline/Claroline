@@ -84,4 +84,6 @@ class TimeSlotController extends FOSRestController
     {
         return $this->timeSlotManager->getAll();
     }
+
+    
 }

@@ -52,6 +52,13 @@ class YearManager
         $this->om->flush();
     }
 
+    public function resize($begin, $end)
+    {
+        //do not forget to trim / add the last/first period or stuff like this
+    }
+
+    //repositories method
+
     public function getAll()
     {
         return $this->repo->findAll();

@@ -48,9 +48,12 @@ class ScheduleTemplateManager
 
     public function edit(ScheduleTemplate $schedule)
     {
+        //be carreful if you rename a template because it's kind of its id and it won't change timeslots whose reference that propery.
         $this->om->persist($schedule);
         $this->om->flush();
     }
+
+    //repositories method
 
     public function getAll()
     {

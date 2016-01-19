@@ -63,6 +63,22 @@ class TimeSlot
      */
     protected $organization;
 
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Calendar\Period",
+     *     cascade={"persist"},
+     *     inversedBy="timeSlots"
+     * )
+     * @ORM\JoinColumn(name="period_id", onDelete="CASCADE", nullable=false)
+     */
+    protected $period;
+
+    /**
+     * @ORM\Column()
+     * @Groups({"api"})    
+     */
+    protected $baseTemplateName;
+
     public function getId()
     {
         return $this->id;
@@ -106,5 +122,25 @@ class TimeSlot
     public function getOrganization()
     {
         return $this->organization;
+    }
+
+    public function setBaseTemplateName($name)
+    {
+        $this->baseTemplateName = $name;
+    }
+
+    public function getBaseTemplateName()
+    {
+        return $this->name;
+    }
+
+    public function setPeriod(Period $period)
+    {
+        $this->period = $period;
+    }
+
+    public function getPeriod()
+    {
+        return $this->period;
     }
 }

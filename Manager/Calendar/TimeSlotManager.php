@@ -14,6 +14,8 @@ namespace Claroline\CoreBundle\Manager\Calendar;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Calendar\TimeSlot;
+use Claroline\CoreBundle\Entity\Calendar\Year;
+use Claroline\CoreBundle\Entity\Calendar\Period;
 
 /**
  * @DI\Service("claroline.manager.calendar.time_slot_manager")
@@ -52,8 +54,25 @@ class TimeSlotManager
         $this->om->flush();
     }
 
+    //repositories method
+
     public function getAll()
     {
         return $this->repo->findAll();
+    }
+
+    public function getByYear(Year $year)
+    {
+        //get the years period and go for a getByPeriods !!!
+    }
+
+    public function getByPeriod(Period $period)
+    {
+        return $this->repo->findByPeriod($period);
+    }
+
+    public function buildFromTemplate($templateName)
+    {
+        //do complicated stuff here
     }
 }

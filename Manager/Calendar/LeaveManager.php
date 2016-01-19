@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Manager\Calendar;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Calendar\Leave;
+use Claroline\CoreBundle\Entity\Calendar\Year;
 
 /**
  * @DI\Service("claroline.manager.calendar.leave_manager")
@@ -52,8 +53,15 @@ class LeaveManager
         $this->om->flush();
     }
 
+    //repositories method
+
     public function getAll()
     {
         return $this->repo->findAll();
+    }
+
+    public function import(Year $year)
+    {
+        //a file should be able to be imported with the leaves list because it's more practical !
     }
 }

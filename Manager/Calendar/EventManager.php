@@ -52,6 +52,8 @@ class EventManager
         $this->om->flush();
     }
 
+    //repositories method
+    
     public function getAll()
     {
         return $this->repo->findAll();

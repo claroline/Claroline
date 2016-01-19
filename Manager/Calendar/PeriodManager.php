@@ -52,6 +52,15 @@ class PeriodManager
         $this->om->flush();
     }
 
+    public function resize($begin, $end)
+    {
+        //you may want to trim timeslots if you reduce it
+        //so let's do stuff here
+    }
+
+
+    //repositories method
+
     public function getAll()
     {
         return $this->repo->findAll();
