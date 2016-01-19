@@ -61,7 +61,6 @@ class MatchHandler implements QuestionHandlerInterface {
             return $errors;
         }
 
-        //print_r($questionData);die;
         // check solution ids are consistent with proposals ids
         $proposalsIds = array_map(function ($proposal) {
             return $proposal->id;
@@ -112,8 +111,7 @@ class MatchHandler implements QuestionHandlerInterface {
     public function persistInteractionDetails(Question $question, \stdClass $importData) {
         $interaction = new InteractionMatching();
 
-        // handle proposals
-        $labelsAddedIds = array(); // do not add twice the same label
+        // handle proposals        
         for ($i = 0, $max = count($importData->firstSet); $i < $max; ++$i) {
             // temporary limitation
             if ($importData->firstSet[$i]->type !== 'text/plain') {
@@ -121,18 +119,17 @@ class MatchHandler implements QuestionHandlerInterface {
                 "Import not implemented for MIME type {$importData->firstSet[$i]->type}"
                 );
             }
-            
-            //print_r($importData);die;
 
             $proposal = new Proposal();
             $proposal->setValue($importData->firstSet[$i]->data);
             $proposal->setOrdre($i);
-            $proposal->setInteractionMatching($interaction);
+            $proposal->setInteractionMatching($interaction);            
             
             // HANDLE LABELS
             // here we need to add associated labels to current proposal 
             // (but proposal has no id since we do not call flush)
             // so we need to do it inside the proposals loop
+            $labelsAddedIds = array(); // do not add twice the same label!!
             for ($j = 0, $max = count($importData->secondSet); $j < $max; ++$j) {
                 if ($importData->secondSet[$j]->type !== 'text/plain') {
                     throw new \Exception(
@@ -141,24 +138,24 @@ class MatchHandler implements QuestionHandlerInterface {
                 }
                 
                 if (!in_array($importData->secondSet[$j]->id, $labelsAddedIds)) {
+                    // create interraction label in any case
                     $label = new Label();
                     $label->setValue($importData->secondSet[$j]->data);
                     $label->setOrdre($j);
-                    // test if current label is in the solution
+                    // test if current label is in the solution                    
                     foreach ($importData->solutions as $solution) {
-                        if ($solution->secondId === $importData->secondSet[$j]->id) {
+                        if ($solution->secondId === $importData->secondSet[$j]->id && $solution->firstId === $importData->firstSet[$i]->id) {
                             $label->setScoreRightResponse($solution->score);
 
                             if (isset($solution->feedback)) {
                                 $label->setFeedback($solution->feedback);
                             }
-
-                            //if $solution->firstId == current proposal.id then we must associate label to proposal
+                            //echo('ID second set : '.$importData->secondSet[$j]->id . ' Solution first ID ' . $solution->firstId . ' Current proposal ID ' . $importData->firstSet[$i]->id . ' || ');
+     
                             if ($solution->firstId === $importData->firstSet[$i]->id) {
-                                echo 'yep';
                                 $proposal->addAssociatedLabel($label);
                             }
-                        }
+                        }  
                     }
 
                     $label->setInteractionMatching($interaction);
@@ -167,6 +164,7 @@ class MatchHandler implements QuestionHandlerInterface {
                     array_push($labelsAddedIds, $importData->secondSet[$j]->id);
                 }
             }
+
             $interaction->addProposal($proposal);
             $this->om->persist($proposal);
         }
