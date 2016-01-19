@@ -172,7 +172,6 @@
 
             this.showFeedback = function () {
                 this.feedbackIsShown = true;
-                console.log('show feedback fired');
                 $scope.$broadcast('show-feedback');
             };
 

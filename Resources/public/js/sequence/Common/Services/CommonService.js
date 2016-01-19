@@ -44,12 +44,7 @@
                     return object.meta.licence || object.meta.created || object.meta.modified || (object.meta.description && object.meta.description !== '');
                 },
                 // set / update the student data
-<<<<<<< HEAD
-                setStudentData: function (question, currentQuestionPaperData) {
-                    console.log("cs set student data");
-=======
                 /*setStudentData: function (question, currentQuestionPaperData) {
->>>>>>> 906c4174a85ce40450de43dedd428fad4f6eb51d
                     this.currentQuestion = question;
                     // this will automatically update the paper object
                     if (currentQuestionPaperData) {
@@ -57,7 +52,6 @@
                     }
                 },
                 getStudentData: function () {
-                    console.log("cs get student data");
                     return{
                         question: this.currentQuestion,
                         paper: this.paper,
@@ -128,19 +122,14 @@
                     var score = 0.0; // final score
                     var totalPoints = this.getExerciseTotalScore(questions);
                     var studentPoints = 0.0; // good answers
-                    /*
-                     * Calcul des points mis en commentaire pour le moment, sera implémenté avec l'API
-                     * 
+
                     for (var i = 0; i < paper.questions.length; i++) {
                         // paper question item contains student answer, used hints
-                        console.log(paper);
                         var currentPaperQuestion = paper.questions[i];
 
                         // for each given answer
                         if (currentPaperQuestion.answer) {
-                            console.log(currentPaperQuestion);
                             for (var j = 0; j < currentPaperQuestion.answer.length; j++) {
-                                console.log("answer : " + currentPaperQuestion.answer[j]);
                                 var id = currentPaperQuestion.answer[j];
                                 studentPoints += this.getAnswerScore(id, questions);
                             }
@@ -153,7 +142,7 @@
                             }
                         }
                     }
-                    score = studentPoints * 20 / totalPoints;*/
+                    score = studentPoints * 20 / totalPoints;
                     return score > 0 ? (Math.round(score / 0.5) * 0.5) : 0;
                 },
                 /**
@@ -166,19 +155,10 @@
                     var score = 0.0;
                     for (var i = 0; i < nbQuestions; i++) {
                         var currentQuestion = questions[i];
-                        if (currentQuestion.type === "application/x.choice+json") {
-                            // update exercise total points
-                            for (var j = 0; j < currentQuestion.solutions.length; j++) {
-                                // update total points for the sequence
-                                score += currentQuestion.solutions[j].score;
-                            }
-                        }
-                        else if (currentQuestion.type === "application/x.cloze+json") {
-                            for (var j = 0; j < currentQuestion.holes.length; j++) {
-                                for (var k = 0; k < currentQuestion.holes[j].wordResponses.length; k++) {
-                                    score =+ currentQuestion.holes[j].wordResponses[k].score;
-                                }
-                            }
+                        // update exercise total points
+                        for (var j = 0; j < currentQuestion.solutions.length; j++) {
+                            // update total points for the sequence
+                            score += currentQuestion.solutions[j].score;
                         }
                     }
                     return score;
@@ -204,7 +184,6 @@
                     var score = 0.0;
                     for (var i = 0; i < nbQuestions; i++) {
                         var currentQuestion = questions[i];
-                        console.log(currentQuestion);
                         // update exercise total points
                         for (var j = 0; j < currentQuestion.solutions.length; j++) {
                             if (currentQuestion.solutions[j].id === searched) {

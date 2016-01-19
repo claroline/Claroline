@@ -129,7 +129,7 @@ class HoleHandler implements QuestionHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true)
+    public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true, $forPaperList = false)
     {
         $repo = $this->om->getRepository('UJMExoBundle:InteractionHole');
         $holeQuestion = $repo->findOneBy(['question' => $question]);
@@ -139,6 +139,7 @@ class HoleHandler implements QuestionHandlerInterface
         $exportData->text = $text;
         if ($withSolution) {
             $exportData->solution = $holeQuestion->getHtml();
+            $exportData->solutions = $holeQuestion->getHtml();
         }
         $exportData->holes = array_map(function ($hole) {
             $holeData = new \stdClass();
@@ -224,10 +225,19 @@ class HoleHandler implements QuestionHandlerInterface
 
         $mark = 0;
 
-        foreach ($interaction->getHoles() as $hole) {
-            foreach ($hole->getWordResponses() as $wd) {
-                if (in_array((string) $wd->getResponse(), $data)) {
-                    $mark += $wd->getScore();
+        foreach ($data as $answer) {
+            foreach ($interaction->getHoles() as $hole) {
+                foreach ($hole->getWordResponses() as $wd) {
+                    if ($hole->getSelector() === true) {
+                        if ((string)$wd->getId() === (string)$answer) {
+                            $mark += $wd->getScore();
+                        }
+                    }
+                    else {
+                        if ($wd->getResponse() === $answer) {
+                            $mark += $wd->getScore();
+                        }
+                    }
                 }
             }
         }
