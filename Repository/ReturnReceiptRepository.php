@@ -24,7 +24,7 @@ class ReturnReceiptRepository extends EntityRepository
     */
 
     /**
-     *  Pour savoir le type d'accusé de réception pour l'utilisateur indiqué et le dropzone indiqué
+     *  Pour avoir le type d'accusé de réception pour l'utilisateur indiqué et le dropzone indiqué
      * @param $userId
      * @param $dropzoneId
     */
@@ -43,6 +43,30 @@ class ReturnReceiptRepository extends EntityRepository
         $returnReceipt = $qb->getQuery()->getResult();
 
         return $returnReceipt;
+
+    }
+
+    /**
+     *  Pour avoir le type d'accusé de réception pour l'utilisateur indiqué et le dropzone indiqué
+     * @param $userId
+     * @param $dropzoneId
+    */
+    public function countTextToRead(User $user, Dropzone $dropzone)
+    {
+
+        /* requête avec CreateQuery : */
+        $qb = $this->createQueryBuilder('returnreceipt')
+            ->select('returnreceipt')
+            ->andWhere('returnreceipt.user = :user')
+            ->andWhere('returnreceipt.dropzone = :dropzone')
+            ->setParameter('user', $user)
+            ->setParameter('dropzone', $dropzone);
+            ;
+
+        $numberDocuments = count($qb->getQuery()->getResult());
+
+        return $numberDocuments;
+
 
     }
 

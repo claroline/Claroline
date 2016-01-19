@@ -518,10 +518,12 @@ class DropController extends DropzoneBaseController
         // dropsQuery : finished à TRUE et unlocked_drop à FALSE
         $dropsQuery = $dropRepo->getDropsAwaitingCorrectionQuery($dropzone, 1);
 
+//var_dump($dropsQuery);
+        //die();
         $countUnterminatedDrops = $dropRepo->countUnterminatedDropsByDropzone($dropzone->getId());
 
         // Déclaration du compteur de documents sans accusé de réception
-        $alertNbDocumentWithoutReturnReceipt = 0;
+        $alertNbDocumentWithoutReturnReceipt = 10;
 
         // Déclarations des nouveaux tableaux, qui seront passés à la vue
         $userToCommentCount = array();
@@ -530,40 +532,43 @@ class DropController extends DropzoneBaseController
 
         foreach ($dropzone->getDrops() as $drop) {
 
-            $countDocument = count($drop->getDocuments());
+            // Calcul du compteur de documents sans accusé de réception
 
             /** InnovaERV : ajout pour calculer les 2 zones **/
-            // Nombre de commentaires non lus/ Repo : Comment
+            // Nombre de commentaires non lus / Repo : Comment
             $nbCommentsPerUser = $this->getDoctrine()
                                 ->getRepository('InnovaCollecticielBundle:Comment')
                                 ->countCommentNotRead($drop->getUser());
 
-            // Nombre de demandes adressées/ Repo : Document
+            // Nombre de demandes adressées / Repo : Document
             $nbTextToRead = $this->getDoctrine()
                                 ->getRepository('InnovaCollecticielBundle:Document')
                                 ->countTextToRead($drop->getUser(), $drop->getDropZone());
 
-            // Nombre de demandes adressées/ Repo : Document
+            // Nombre d'AR pour cet utilisateur et pour ce dropzone / Repo : ReturnReceiputtwment
             $haveReturnReceiptOrNot = $this->getDoctrine()
                                 ->getRepository('InnovaCollecticielBundle:ReturnReceipt')
                                 ->haveReturnReceiptOrNot(
                                     $this->get('security.token_storage')->getToken()->getUser(),
                                     $drop->getDropZone());
 
-            // Parcours du tableau
-            $arrayCount = count($haveReturnReceiptOrNot)-1;
+            // Nombre d'AR pour cet utilisateur et pour ce dropzone / Repo : ReturnReceiputtwment
+            $countReturnReceiptForUserAndDropzone = $this->getDoctrine()
+                                ->getRepository('InnovaCollecticielBundle:ReturnReceipt')
+                                ->countTextToRead($this->get('security.token_storage')->getToken()->getUser(), $drop->getDropZone());
 
-            // Calcul du compteur de documents sans accusé de réception
-            if ($arrayCount < 0) {
-                $alertNbDocumentWithoutReturnReceipt = $countDocument;
+            $countReturnReceiptForUserAndDropzone = $countReturnReceiptForUserAndDropzone -1;
+
+            if ($countReturnReceiptForUserAndDropzone < 0) {
+                $alertNbDocumentWithoutReturnReceipt = $nbTextToRead;
             }
             else
             {
-                $alertNbDocumentWithoutReturnReceipt = $countDocument - $arrayCount - 1;
+                $alertNbDocumentWithoutReturnReceipt = $nbTextToRead - $countReturnReceiptForUserAndDropzone - 1;
             }
 
             // Traitement du tableau
-            for ($indice = 0; $indice<=$arrayCount; $indice++)
+            for ($indice = 0; $indice<=$countReturnReceiptForUserAndDropzone; $indice++)
             {
                 $documentId = $haveReturnReceiptOrNot[$indice]->getDocument()->getId();
                 $returnReceiptTypeId = $haveReturnReceiptOrNot[$indice]->getReturnReceiptType()->getId();
@@ -573,6 +578,7 @@ class DropController extends DropzoneBaseController
             // Affectations des résultats dans les tableaux
             $userToCommentCount[$drop->getUser()->getId()] = $nbCommentsPerUser;
             $userNbTextToRead[$drop->getUser()->getId()] = $nbTextToRead;
+
         }
 
         $adapter = new DoctrineORMAdapter($dropsQuery);

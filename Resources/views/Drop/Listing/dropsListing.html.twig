@@ -45,17 +45,20 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
         {% if dropzone.returnReceipt == 1  %}
             <th class="centered">
                 <div class="short-div">
-                    <i class="fa fa-exclamation-circle" data-toggle="tooltip" data-placement="top"
-                        {# Ajout d'une alerte avec le nombre d'éléments non traités. InnovaERV, demande JJQ #}
-                        {% if alertNbDocumentWithoutReturnReceipt > 1  %}
-                            <i class="fa fa-exclamation-circle" data-toggle="tooltip" data-placement="top"
-                            data-original-title="{{ alertNbDocumentWithoutReturnReceipt }} {{ 'Deals Pending'|trans({},'innova_collecticiel') }}">
-                        {% endif %}
-                        {% if alertNbDocumentWithoutReturnReceipt == 1  %}
-                            <i class="fa fa-exclamation-circle" data-toggle="tooltip" data-placement="top"
-                            data-original-title="{{ alertNbDocumentWithoutReturnReceipt }} {{ 'Deal Pending'|trans({},'innova_collecticiel') }}">
-                        {% endif %}
-                    </i>
+                    {# Ajout d'une alerte avec le nombre d'éléments non traités. InnovaERV, demande JJQ #}
+                    {% if alertNbDocumentWithoutReturnReceipt > 1  %}
+                        <i class="fa fa-exclamation-circle" data-toggle="tooltip" data-placement="top"
+                        <i class="fa fa-exclamation-circle" data-toggle="tooltip" data-placement="top"
+                        data-original-title="{{ alertNbDocumentWithoutReturnReceipt }} {{ 'Deals Pending'|trans({},'innova_collecticiel') }}">
+                        </i>
+                    {% endif %}
+                    {% if alertNbDocumentWithoutReturnReceipt == 1  %}
+                        <i class="fa fa-exclamation-circle" data-toggle="tooltip" data-placement="top"
+                        <i class="fa fa-exclamation-circle" data-toggle="tooltip" data-placement="top"
+                        data-original-title="{{ alertNbDocumentWithoutReturnReceipt }} {{ 'Deal Pending'|trans({},'innova_collecticiel') }}">
+                        </i>
+                    {% endif %}
+                </i>
                 </div>
                 <i class="fa fa-hand-o-right">
             </th>
