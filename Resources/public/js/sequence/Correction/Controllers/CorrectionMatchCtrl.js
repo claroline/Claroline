@@ -15,17 +15,13 @@
             this.studentAnswers = [];
             this.correctAnswers = [];
             this.orphanAnswers = [];
-            this.studentErrors = []; // array of proposals ids;
-            //this.score = '';
+            this.studentErrors = [];
 
             this.init = function (question, paper) {
                 this.question = question;
-                //console.log(this.question);
                 this.paper = paper;
-                //console.log(this.paper);
                 this.setCorrectAnswers();
                 this.setStudentAnswers();
-                // this.getQuestionScore();
             };
 
 

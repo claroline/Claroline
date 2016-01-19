@@ -31,12 +31,10 @@
                             })
                             .error(function (data, status) {
                                 deferred.reject([]);
-                        console.log(data);
-                        console.log(status);
                                 var msg = data && data.error && data.error.message ? data.error.message : 'Papers get all error';
                                 var code = data && data.error && data.error.code ? data.error.code : 403;
                                 var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});
-                                // $window.location = url;
+                                $window.location = url;
                             });
 
                     return deferred.promise;
@@ -60,7 +58,7 @@
                                 var msg = data && data.error && data.error.message ? data.error.message : 'Papers get sequence error';
                                 var code = data && data.error && data.error.code ? data.error.code : 403;
                                 var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});
-                                // $window.location = url;
+                                $window.location = url;
                             });
 
                     return deferred.promise;
@@ -79,7 +77,7 @@
                                 var msg = data && data.error && data.error.message ? data.error.message : 'Papers get user error';
                                 var code = data && data.error && data.error.code ? data.error.code : 403;
                                 var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});
-                               // $window.location = url;
+                                $window.location = url;
                             });
 
                     return deferred.promise;
@@ -98,7 +96,7 @@
                                 var msg = data && data.error && data.error.message ? data.error.message : 'Papers count papers error';
                                 var code = data && data.error && data.error.code ? data.error.code : 403;
                                 var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});                                
-                                // $window.location = url;
+                                $window.location = url;
                             });
                     return deferred.promise;
                 },

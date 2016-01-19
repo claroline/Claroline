@@ -22,8 +22,6 @@
             this.solutions = {};
             this.questionFeedback = '';
 
-            // @todo check if already given answers and prebind elements if true
-            // @todo handle toDrag MatchQuestion type
             this.init = function (question, canSeeFeedback) {
                 // get used hints infos (id + content) + checked answer(s) for the current step / question
                 // those data are updated by view and sent to common service as soon as they change
@@ -202,8 +200,6 @@
              * problem when updating a previously given answer
              */
             this.addPreviousConnections = function () {
-                //console.log('addPreviousConnections see previous answers');
-                //console.log(this.currentQuestionPaperData.answer);
                 if (this.currentQuestionPaperData.answer && this.currentQuestionPaperData.answer.length > 0) {
                     // init previously given answer
                     var sets = this.currentQuestionPaperData.answer;
@@ -283,7 +279,10 @@
             this.removeConnection = function (data) {
                 var sourceId = data.sourceId.replace('draggable_', '');
                 var targetId = data.targetId.replace('droppable_', '');
-            //    jsPlumb.detach(data);
+                // connection is removed from dom even with this commented... 
+                // If not commented, code stops at this methods...
+                // jsPlumb.detach(data); 
+                
                 for (var i = 0; i < this.connections.length; i++) {
                     if (this.connections[i].source === sourceId && this.connections[i].target === targetId) {
                         this.connections.splice(i, 1);
@@ -338,8 +337,6 @@
                         this.dropped.splice(i, 1);
                     }
                 }
-                // remove element from drop container -> since we use angular no use to do that ?
-                // $('#dropped_' + sourceId).remove();
                 // reactivate source draggable element
                 $('#draggable_' + sourceId).draggable("enable");
                 // visual changes for reactivated draggable element 

@@ -63,7 +63,6 @@
                     }
                     for (var j = 0; j < paper.questions.length; j++) {
                         if (paper.questions[j].id === question.id.toString()) {
-                            console.log(paper.questions[j]);
                             studentScore = paper.questions[j].score;
                         }
                     }
