@@ -21,7 +21,7 @@ use JMS\Serializer\Annotation\SerializedName;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Calendar\YearRepository")
  * @ORM\Table(name="claro__year")
  */
 class Year

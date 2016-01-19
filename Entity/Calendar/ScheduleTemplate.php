@@ -20,7 +20,7 @@ use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Calendar\ScheduleTemplateRepository")
  * @ORM\Table(name="claro__schedule_template")
  */
 class ScheduleTemplate

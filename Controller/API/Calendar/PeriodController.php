@@ -58,7 +58,7 @@ class PeriodController extends FOSRestController
      * @View(serializerGroups={"api"})
      * @ApiDoc(
      *     description="Returns the period creation form",
-     *     views = {"api"}
+     *     views = {"period"}
      * )
      */
     public function getCreatePeriodFormAction()
@@ -71,5 +71,17 @@ class PeriodController extends FOSRestController
             'ClarolineCoreBundle:API:Calendar\createPeriodForm.html.twig', 
             $form
         );
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Returns the period list",
+     *     views = {"period"}
+     * )
+     */
+    public function getPeriodsAction()
+    {
+        return $this->periodManager->getAll();
     }
 }

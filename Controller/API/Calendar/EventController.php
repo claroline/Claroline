@@ -58,7 +58,7 @@ class EventController extends FOSRestController
      * @View(serializerGroups={"api"})
      * @ApiDoc(
      *     description="Returns the event creation form",
-     *     views = {"api"}
+     *     views = {"event"}
      * )
      */
     public function getCreateEventFormAction()
@@ -71,5 +71,17 @@ class EventController extends FOSRestController
             'ClarolineCoreBundle:API:Calendar\createEventForm.html.twig', 
             $form
         );
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Returns the event list",
+     *     views = {"event"}
+     * )
+     */
+    public function getEventsAction()
+    {
+        return $this->eventManager->getAll();
     }
 }

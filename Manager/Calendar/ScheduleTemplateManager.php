@@ -20,6 +20,8 @@ use Claroline\CoreBundle\Entity\Calendar\ScheduleTemplate;
  */
 class ScheduleTemplateManager 
 {
+    private $om;
+    private $repo;
 
     /**
      * @DI\InjectParams({
@@ -29,6 +31,7 @@ class ScheduleTemplateManager
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
+        $this->repo = $this->om->getRepository('ClarolineCoreBundle:Calendar\ScheduleTemplate');
     }
 
     public function create(ScheduleTemplate $schedule)
@@ -47,5 +50,10 @@ class ScheduleTemplateManager
     {
         $this->om->persist($schedule);
         $this->om->flush();
+    }
+
+    public function getAll()
+    {
+        return $this->repo->findAll();
     }
 }

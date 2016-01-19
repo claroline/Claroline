@@ -58,7 +58,7 @@ class YearController extends FOSRestController
      * @View(serializerGroups={"api"})
      * @ApiDoc(
      *     description="Returns the year creation form",
-     *     views = {"api"}
+     *     views = {"year"}
      * )
      */
     public function getCreateYearFormAction()
@@ -71,5 +71,17 @@ class YearController extends FOSRestController
             'ClarolineCoreBundle:API:Calendar\createYearForm.html.twig', 
             $form
         );
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Returns the year list",
+     *     views = {"year"}
+     * )
+     */
+    public function getYearsAction()
+    {
+        return $this->yearManager->getAll();
     }
 }

@@ -20,6 +20,8 @@ use Claroline\CoreBundle\Entity\Calendar\Event;
  */
 class EventManager 
 {
+    private $om;
+    private $repo;
 
     /**
      * @DI\InjectParams({
@@ -29,6 +31,7 @@ class EventManager
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
+        $this->repo = $this->om->getRepository('ClarolineCoreBundle:Calendar\Event');
     }
 
     public function create(Event $event)
@@ -47,5 +50,10 @@ class EventManager
     {
         $this->om->persist($event);
         $this->om->flush();
+    }
+
+    public function getAll()
+    {
+        return $this->repo->findAll();
     }
 }

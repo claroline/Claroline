@@ -20,6 +20,8 @@ use Claroline\CoreBundle\Entity\Calendar\TimeSlot;
  */
 class TimeSlotManager 
 {
+    private $om;
+    private $repo;
 
     /**
      * @DI\InjectParams({
@@ -29,6 +31,7 @@ class TimeSlotManager
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
+        $this->repo = $this->om->getRepository('ClarolineCoreBundle:Calendar\TimeSlot');
     }
 
     public function create(TimeSlot $timeSlot)
@@ -47,5 +50,10 @@ class TimeSlotManager
     {
         $this->om->persist($timeSlot);
         $this->om->flush();
+    }
+
+    public function getAll()
+    {
+        return $this->repo->findAll();
     }
 }

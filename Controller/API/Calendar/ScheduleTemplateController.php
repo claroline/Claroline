@@ -58,7 +58,7 @@ class ScheduleTemplateController extends FOSRestController
      * @View(serializerGroups={"api"})
      * @ApiDoc(
      *     description="Returns the schduletemplate creation form",
-     *     views = {"api"}
+     *     views = {"schedule_template"}
      * )
      */
     public function getCreateScheduleTemplateFormAction()
@@ -71,5 +71,17 @@ class ScheduleTemplateController extends FOSRestController
             'ClarolineCoreBundle:API:Calendar\createScheduleTemplateForm.html.twig', 
             $form
         );
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Returns the schedule template list",
+     *     views = {"schedule_template"}
+     * )
+     */
+    public function getScheduleTemplatesAction()
+    {
+        return $this->scheduleTemplateManager->getAll();
     }
 }

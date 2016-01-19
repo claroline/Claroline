@@ -58,7 +58,7 @@ class LeaveController extends FOSRestController
      * @View(serializerGroups={"api"})
      * @ApiDoc(
      *     description="Returns the leave creation form",
-     *     views = {"api"}
+     *     views = {"leave"}
      * )
      */
     public function getCreateLeaveFormAction()
@@ -71,5 +71,17 @@ class LeaveController extends FOSRestController
             'ClarolineCoreBundle:API:Calendar\createLeaveForm.html.twig', 
             $form
         );
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Returns the leave list",
+     *     views = {"leave"}
+     * )
+     */
+    public function getLeavesAction()
+    {
+        return $this->leaveManager->getAll();
     }
 }

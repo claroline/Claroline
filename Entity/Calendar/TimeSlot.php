@@ -21,7 +21,7 @@ use JMS\Serializer\Annotation\SerializedName;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Calendar\TimeSlotRepository")
  * @ORM\Table(name="claro__time_slot")
  */
 class TimeSlot

@@ -58,7 +58,7 @@ class TimeSlotController extends FOSRestController
      * @View(serializerGroups={"api"})
      * @ApiDoc(
      *     description="Returns the timeslot creation form",
-     *     views = {"api"}
+     *     views = {"time_slot"}
      * )
      */
     public function getCreateTimeSlotFormAction()
@@ -71,5 +71,17 @@ class TimeSlotController extends FOSRestController
             'ClarolineCoreBundle:API:Calendar\createTimeSlotForm.html.twig', 
             $form
         );
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Returns the time slot list",
+     *     views = {"time_slot"}
+     * )
+     */
+    public function getTimeSlotsAction()
+    {
+        return $this->timeSlotManager->getAll();
     }
 }

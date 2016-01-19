@@ -20,6 +20,8 @@ use Claroline\CoreBundle\Entity\Calendar\Year;
  */
 class YearManager 
 {
+    private $om;
+    private $repo;
 
     /**
      * @DI\InjectParams({
@@ -29,6 +31,7 @@ class YearManager
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
+        $this->repo = $this->om->getRepository('ClarolineCoreBundle:Calendar\Year');
     }
 
     public function create(Year $year)
@@ -47,5 +50,10 @@ class YearManager
     {
         $this->om->persist($year);
         $this->om->flush();
+    }
+
+    public function getAll()
+    {
+        return $this->repo->findAll();
     }
 }

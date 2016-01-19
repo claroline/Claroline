@@ -20,7 +20,7 @@ use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Calendar\LeaveRepository")
  * @ORM\Table(name="claro__leave")
  */
 class Leave

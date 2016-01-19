@@ -20,6 +20,8 @@ use Claroline\CoreBundle\Entity\Calendar\Period;
  */
 class PeriodManager 
 {
+    private $om;
+    private $repo;
 
     /**
      * @DI\InjectParams({
@@ -29,6 +31,7 @@ class PeriodManager
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
+        $this->repo = $this->om->getRepository('ClarolineCoreBundle:Calendar\Period');
     }
 
     public function create(Period $period)
@@ -47,5 +50,10 @@ class PeriodManager
     {
         $this->om->persist($period);
         $this->om->flush();
+    }
+
+    public function getAll()
+    {
+        return $this->repo->findAll();
     }
 }

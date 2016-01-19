@@ -20,6 +20,8 @@ use Claroline\CoreBundle\Entity\Calendar\Leave;
  */
 class LeaveManager 
 {
+    private $om;
+    private $repo;
 
     /**
      * @DI\InjectParams({
@@ -29,6 +31,7 @@ class LeaveManager
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
+        $this->repo = $this->om->getRepository('ClarolineCoreBundle:Calendar\Leave');
     }
 
     public function create(Leave $leave)
@@ -47,5 +50,10 @@ class LeaveManager
     {
         $this->om->persist($leave);
         $this->om->flush();
+    }
+
+    public function getAll()
+    {
+        return $this->repo->findAll();
     }
 }

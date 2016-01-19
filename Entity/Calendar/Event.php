@@ -22,7 +22,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Calendar\EventRepository")
  * @ORM\Table(name="claro__event")
  */
 class Event
