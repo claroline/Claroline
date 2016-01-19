@@ -14,6 +14,7 @@
         <p><span>{{ parameters.totalBadgeNotAwarded }}</span> {{ 'total_not_awarded_badge'|transchoice(parameters.totalBadgeNotAwarded) }}</p>
     </li>
 </ul>
+{% if parameters.totalBadges > 0 and parameters.badges_per_user is not empty %}
 <div class="container row">
     <div class="col-md-4">
         <div class="panel panel-default">
@@ -45,5 +46,5 @@
         </div>
     </div>
 </div>
-
+{% endif %}
 
