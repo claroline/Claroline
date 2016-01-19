@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Controller\API\Admin;
+namespace Claroline\CoreBundle\Controller\API\Organization;
 
 use Claroline\CoreBundle\Manager\ApiManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use FOS\RestBundle\Controller\FOSRestController;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Manager\OrganizationManager;
+use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations\View;
@@ -23,9 +23,9 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Entity\Organization\Organization;
-use Claroline\CoreBundle\Form\OrganizationType;
-use Claroline\CoreBundle\Form\OrganizationParametersType;
-use Claroline\CoreBundle\Form\OrganizationNameType;
+use Claroline\CoreBundle\Form\Organization\OrganizationType;
+use Claroline\CoreBundle\Form\Organization\OrganizationParametersType;
+use Claroline\CoreBundle\Form\Organization\OrganizationNameType;
 
 /**
  * @NamePrefix("api_")
@@ -35,7 +35,7 @@ class OrganizationController extends FOSRestController
     /**
      * @DI\InjectParams({
      *     "formFactory"         = @DI\Inject("form.factory"),
-     *     "organizationManager" = @DI\Inject("claroline.manager.organization_manager"),
+     *     "organizationManager" = @DI\Inject("claroline.manager.organization.organization_manager"),
      *     "request"             = @DI\Inject("request"),
      *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
      *     "apiManager"          = @DI\Inject("claroline.manager.api_manager")
@@ -148,7 +148,7 @@ class OrganizationController extends FOSRestController
         $formType->enableApi();
         $form = $this->createForm($formType, $organization);
 
-        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Admin\Organization\editOrganizationForm.html.twig', $form);
+        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Organization\editOrganizationForm.html.twig', $form);
     }
 
     /**
@@ -178,6 +178,6 @@ class OrganizationController extends FOSRestController
             'extra_parameters' => $organization
         );
 
-        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Admin\Location\editLocationForm.html.twig', $form, $options);
+        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Organization\editLocationForm.html.twig', $form, $options);
     }
 }

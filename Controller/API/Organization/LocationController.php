@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Controller\API\Admin;
+namespace Claroline\CoreBundle\Controller\API\Organization;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use FOS\RestBundle\Controller\FOSRestController;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Manager\LocationManager;
+use Claroline\CoreBundle\Manager\Organization\LocationManager;
 use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\CoreBundle\Entity\Organization\Location;
 use Symfony\Component\Form\FormFactory;
@@ -23,7 +23,7 @@ use FOS\RestBundle\Controller\Annotations\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Claroline\CoreBundle\Form\LocationType;
+use Claroline\CoreBundle\Form\Organization\LocationType;
 
 /**
  * @NamePrefix("api_")
@@ -33,7 +33,7 @@ class LocationController extends FOSRestController
     /**
      * @DI\InjectParams({
      *     "formFactory"     = @DI\Inject("form.factory"),
-     *     "locationManager" = @DI\Inject("claroline.manager.location_manager"),
+     *     "locationManager" = @DI\Inject("claroline.manager.organization.location_manager"),
      *     "apiManager"      = @DI\Inject("claroline.manager.api_manager"),
      *     "request"         = @DI\Inject("request"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager")
@@ -80,7 +80,7 @@ class LocationController extends FOSRestController
         $formType->enableApi();
         $form = $this->createForm($formType);
 
-        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Admin\Location\createLocationForm.html.twig', $form);
+        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Organization\createLocationForm.html.twig', $form);
     }
 
 
@@ -97,7 +97,7 @@ class LocationController extends FOSRestController
         $formType->enableApi();
         $form = $this->createForm($formType, $location);
 
-        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Admin\Location\editLocationForm.html.twig', $form);
+        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Organization\editLocationForm.html.twig', $form);
     }
 
     /**
@@ -158,7 +158,7 @@ class LocationController extends FOSRestController
             'extra_parameters' => $location
         );
 
-        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Admin\Location\editLocationForm.html.twig', $form, $options);
+        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Organization\editLocationForm.html.twig', $form, $options);
     }
 
     /**

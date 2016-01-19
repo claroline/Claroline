@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Manager;
+namespace Claroline\CoreBundle\Manager\Organization;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 
 /**
- * @DI\Service("claroline.manager.organization_manager")
+ * @DI\Service("claroline.manager.organization.organization_manager")
  */
 class OrganizationManager
 {

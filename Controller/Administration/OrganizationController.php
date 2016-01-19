@@ -15,7 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Claroline\CoreBundle\Manager\LocationManager;
+use Claroline\CoreBundle\Manager\Organization\LocationManager;
 use Claroline\CoreBundle\Entity\Organization\Location;
 use Claroline\CoreBundle\Form\LocationType;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +30,7 @@ class OrganizationController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "locationManager" = @DI\Inject("claroline.manager.location_manager"),
+     *     "locationManager" = @DI\Inject("claroline.manager.organization.location_manager"),
      *     "request"         = @DI\Inject("request")
      * })
      */

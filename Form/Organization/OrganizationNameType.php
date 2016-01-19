@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Form;
+namespace Claroline\CoreBundle\Form\Organization;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class OrganizationType extends AbstractType
+class OrganizationNameType extends AbstractType
 {
     public function __construct()
     {
@@ -29,17 +29,6 @@ class OrganizationType extends AbstractType
                     'required' => true
                 )
             );
-
-        $builder
-            ->add('parent', 'entity', array(
-                    'class' => 'ClarolineCoreBundle:Organization\Organization',
-                    'property' => 'name',
-                    'multiple' => false,
-                    'expanded' => false,
-                    'required' => false
-                )
-            );
-
     }
 
     public function getName()

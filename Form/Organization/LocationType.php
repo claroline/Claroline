@@ -9,14 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Form;
+namespace Claroline\CoreBundle\Form\Organization;
 
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Claroline\CoreBundle\Form\Angular\AngularType;
 
-class OrganizationParametersType extends AngularType
+class LocationType extends AngularType
 {
     public function __construct()
     {
@@ -26,31 +25,19 @@ class OrganizationParametersType extends AngularType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', 'text', array('required' => true))
-            ->add('email', 'email', array('required' => false, 'label' => 'email'))
-            ->add(
-                'locations',
-                'entity',
-                array(
-                    'label' => 'locations',
-                    'class' => 'Claroline\CoreBundle\Entity\Organization\Location',
-                    'expanded' => true,
-                    'multiple' => true,
-                    'property' => 'name'
-                )
-            )
-            ->add(
-                'administrators',
-                'userpicker',
-                array(
-                    'multiple' => true
-                )
-            );
+            ->add('name', 'text', array('label' => 'name', 'required' => true))
+            ->add('boxNumber', 'text', array('label' => 'box_number', 'required' => false))
+            ->add('streetNumber', 'text', array('label' => 'street_number', 'required' => true))
+            ->add('street', 'text', array('label' => 'street', 'required' => true))
+            ->add('pc', 'text', array('label' => 'postal_code', 'required' => true))
+            ->add('town', 'text', array('label' => 'town', 'required' => true))
+            ->add('country', 'text', array('label' => 'country', 'required' => true))
+            ->add('phone', 'text', array('label' => 'phone', 'required' => false));
     }
 
     public function getName()
     {
-        return 'organization_form';
+        return 'location_form';
     }
 
     public function enableApi()
@@ -62,7 +49,7 @@ class OrganizationParametersType extends AngularType
     {
         $default = array('translation_domain' => 'platform');
         if ($this->forApi) $default['csrf_protection'] = false;
-        $default['ng-model'] = 'organization';
+        $default['ng-model'] = 'location';
 
         $resolver->setDefaults($default);
     }

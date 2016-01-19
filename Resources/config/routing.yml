@@ -312,7 +312,7 @@ claro_group_api:
         expose: true
 
 claro_organization_api:
-    resource: "@ClarolineCoreBundle/Controller/API/Admin/OrganizationController.php"
+    resource: "@ClarolineCoreBundle/Controller/API/Organization/OrganizationController.php"
     type: rest
     prefix: api
     defaults: {_format: json}
@@ -320,7 +320,7 @@ claro_organization_api:
         expose: true
 
 claro_location_api:
-    resource: "@ClarolineCoreBundle/Controller/API/Admin/LocationController.php"
+    resource: "@ClarolineCoreBundle/Controller/API/Organization/LocationController.php"
     type: rest
     prefix: api
     defaults: {_format: json}

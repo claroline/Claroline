@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Form;
+namespace Claroline\CoreBundle\Form\Organization;
 
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Claroline\CoreBundle\Form\Angular\AngularType;
 
-class LocationType extends AngularType
+class OrganizationType extends AbstractType
 {
     public function __construct()
     {
@@ -25,19 +25,26 @@ class LocationType extends AngularType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', 'text', array('label' => 'name', 'required' => true))
-            ->add('boxNumber', 'text', array('label' => 'box_number', 'required' => false))
-            ->add('streetNumber', 'text', array('label' => 'street_number', 'required' => true))
-            ->add('street', 'text', array('label' => 'street', 'required' => true))
-            ->add('pc', 'text', array('label' => 'postal_code', 'required' => true))
-            ->add('town', 'text', array('label' => 'town', 'required' => true))
-            ->add('country', 'text', array('label' => 'country', 'required' => true))
-            ->add('phone', 'text', array('label' => 'phone', 'required' => false));
+            ->add('name', 'text', array(
+                    'required' => true
+                )
+            );
+
+        $builder
+            ->add('parent', 'entity', array(
+                    'class' => 'ClarolineCoreBundle:Organization\Organization',
+                    'property' => 'name',
+                    'multiple' => false,
+                    'expanded' => false,
+                    'required' => false
+                )
+            );
+
     }
 
     public function getName()
     {
-        return 'location_form';
+        return 'organization_form';
     }
 
     public function enableApi()
@@ -49,7 +56,6 @@ class LocationType extends AngularType
     {
         $default = array('translation_domain' => 'platform');
         if ($this->forApi) $default['csrf_protection'] = false;
-        $default['ng-model'] = 'location';
 
         $resolver->setDefaults($default);
     }
