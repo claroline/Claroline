@@ -203,6 +203,8 @@ var sids = {};
                 // mute video on firefox and recent canary
                 $('#my-video')[0].muted = true;
                 $('#my-video')[0].volume = 0;
+                document.getElementById('my-video').muted = true;
+                document.getElementById('main-video').muted = true;
 
                 RTC.attachMediaStream($('#my-video'), $scope.localStream);
                 $scope.updateMainVideoSrc('my-video');
@@ -212,11 +214,11 @@ var sids = {};
                     var speechEvents = hark(stream, options);
 
                     speechEvents.on('speaking', function () {
-                        console.log('speaking');
+//                        console.log('speaking');
                     });
 
                     speechEvents.on('stopped_speaking', function () {
-                        console.log('stopped_speaking');
+//                        console.log('stopped_speaking');
                     });
                     speechEvents.on('volume_change', function (volume, treshold) {
                       //console.log('volume', volume, treshold);
@@ -255,27 +257,30 @@ var sids = {};
             function onCallActive(event, videoelem, sid)
             {
                 console.log('+++++++++++ CALL ACTIVE : ' + sid + ' +++++++++++');
-                var username = sids[sid]['username'];
-
-                if (users[username] === undefined ||
-                    users[username] === null || 
-                    users[username]['sid'] !== sid || 
-                    users[username]['status'] !== 'working') {
                 
-                    if (users[username] !== undefined &&
-                        users[username] !== null && 
-                        users[username]['sid']) {
-  
-                        $scope.removeStream(users[username]['sid']);
+                if (sids[sid] !== undefined && sids[sid] !== null) {
+                    var username = sids[sid]['username'];
+
+                    if (users[username] === undefined ||
+                        users[username] === null || 
+                        users[username]['sid'] !== sid || 
+                        users[username]['status'] !== 'working') {
+
+                        if (users[username] !== undefined &&
+                            users[username] !== null && 
+                            users[username]['sid']) {
+
+                            $scope.removeStream(users[username]['sid']);
+                        }
+                        users[username]['sid'] = sid;
+                        users[username]['status'] = 'working';
+                        users[username]['iteration'] = 0;
+                        var name = XmppMucService.getUserFullName(username);
+                        $scope.addStream(sid, sids[sid]['username'], name);
+        //                videoelem[0].style.display = 'inline-block';
+                        $(videoelem).appendTo('#participant-stream-' + sid + ' .participant-video-panel');
+                        connection.jingle.sessions[sid].getStats(1000);
                     }
-                    users[username]['sid'] = sid;
-                    users[username]['status'] = 'working';
-                    users[username]['iteration'] = 0;
-                    var name = XmppMucService.getUserFullName(username);
-                    $scope.addStream(sid, sids[sid]['username'], name);
-    //                videoelem[0].style.display = 'inline-block';
-                    $(videoelem).appendTo('#participant-stream-' + sid + ' .participant-video-panel');
-                    connection.jingle.sessions[sid].getStats(1000);
                 }
             }
 
@@ -520,6 +525,19 @@ var sids = {};
                 }
                 $scope.currentVideoId = videoId;
                 $('#' + videoId).closest('.participant-panel').addClass('video-selected');
+            };
+            
+            $scope.manageMicrophone = function (sid) {
+                console.log('*************** Microphone management ***************');
+                console.log(sid);
+//                console.log(connection.jingle.sessions);
+                var session = connection.jingle.sessions[sid];
+                var audioTracks = session.remoteStream.getAudioTracks();
+                var videoTracks = session.remoteStream.getVideoTracks();
+                
+                for (var i = 0; i < audioTracks.length; i++) {
+                    audioTracks[i].enabled = !audioTracks[i].enabled;
+                }
             };
         }
     ]);
