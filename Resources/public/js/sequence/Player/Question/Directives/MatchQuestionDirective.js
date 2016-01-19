@@ -12,6 +12,7 @@
                 controllerAs: 'matchQuestionCtrl',
                 templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Player/Question/Partials/match.question.html',
                 scope: {
+                    step: '=',
                     question: '=',
                     canSeeFeedback: '='
                 },

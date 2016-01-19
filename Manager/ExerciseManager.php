@@ -39,6 +39,7 @@ class ExerciseManager
      * Publishes an exercise.
      *
      * @param Exercise $exercise
+     *
      * @throws \LogicException if the exercise is already published
      */
     public function publish(Exercise $exercise)
@@ -60,6 +61,7 @@ class ExerciseManager
      * Unpublishes an exercise.
      *
      * @param Exercise $exercise
+     *
      * @throws \LogicException if the exercise is already unpublished
      */
     public function unpublish(Exercise $exercise)
@@ -77,7 +79,10 @@ class ExerciseManager
      *
      * Deletes all the papers associated with an exercise.
      *
+     * @todo optimize request number using repository method(s)
+     *
      * @param Exercise $exercise
+     *
      * @throws \Exception if the exercise has been published at least once
      */
     public function deletePapers(Exercise $exercise)

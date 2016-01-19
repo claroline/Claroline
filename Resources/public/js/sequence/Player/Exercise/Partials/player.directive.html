@@ -26,11 +26,13 @@
                         <!--
                         <div data-ng-switch-when="application/x.sort+json">
                             <sort-question data-step="stepShowCtrl.currentStep" data-question="item"></sort-question>
-                        </div>
+                        </div>-->
                         <div data-ng-switch-when="application/x.cloze+json">
                             <cloze-question data-step="stepShowCtrl.currentStep" data-question="item"></cloze-question>
                         </div> 
-                        -->
+                        <div data-ng-switch-when="application/x.short+json">
+                            <open-question data-step="stepShowCtrl.currentStep" data-question="item"></open-question>
+                        </div>
                     </div>
                 </div>
             </div>

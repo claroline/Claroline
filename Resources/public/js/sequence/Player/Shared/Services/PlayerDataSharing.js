@@ -48,8 +48,6 @@
                  * @returns {object}
                  */
                 setCurrentQuestionPaperData: function (question) {
-                    //console.log('player data sharing setCurrentQuestionPaperData see paper value');
-                    //console.log(this.paper);
                     // search for an existing answer to the question or used hints in existing paper
                     for (var i = 0; i < this.paper.questions.length; i++) {
                         if (this.paper.questions[i].id === question.id.toString()) {

@@ -2,8 +2,9 @@
 (function () {
     'use strict';
 
-    angular.module('Question').directive('clozeQuestion', [        
-        function () {
+    angular.module('Question').directive('clozeQuestion', [  
+        '$timeout',      
+        function ($timeout) {
             return {
                 restrict: 'E',
                 replace: true,
@@ -16,9 +17,13 @@
                     selfRemove:"&"
                 },
                 link: function (scope, element, attr, clozeQuestionCtrl) {
-                    console.log('clozeQuestion directive link method called');
-                    clozeQuestionCtrl.setQuestion(scope.question);
-                    clozeQuestionCtrl.setQuestionText(scope.question.text);
+                clozeQuestionCtrl.setQuestion(scope.question);
+                clozeQuestionCtrl.setQuestionText(scope.question.text);
+                    $timeout(function(){
+                        jsPlumb.detachEveryConnection();
+                        jsPlumb.deleteEveryEndpoint();
+                        clozeQuestionCtrl.init(scope.question);
+                    });
                 }
             };
         }
