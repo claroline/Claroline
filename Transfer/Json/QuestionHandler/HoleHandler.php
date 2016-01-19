@@ -233,7 +233,8 @@ class HoleHandler implements QuestionHandlerInterface
         
         $answers = [];
         $i=0;
-        foreach ($data as $answer) {if ($answer || $answer !== null) {
+        foreach ($data as $answer) {
+            if ($answer || $answer !== null) {
                 $answers[$i] = $answer;
             }
             $i++;

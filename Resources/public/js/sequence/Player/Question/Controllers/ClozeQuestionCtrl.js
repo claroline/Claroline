@@ -42,9 +42,13 @@
              */
             this.setPreviousAnswers = function () {
                 var answers = this.currentQuestionPaperData.answer;
+                var array_answers = new Array();
                 Object.keys(answers).map(function(key){
                     $("#"+key).val(answers[key]);
+                    array_answers[key] = answers[key];
                 });
+                this.currentQuestionPaperData.answer = array_answers;
+                PlayerDataSharing.setStudentData(this.question, this.currentQuestionPaperData);
             };
             
             /**
@@ -58,10 +62,12 @@
                     var cqpd = this.currentQuestionPaperData;
                     var question = this.question;
                     document.getElementById(elements[i].id).onchange = function () {
+                        console.log("--onChange--");
                         var id = this.id;
                         var value = this.value;
                         cqpd.answer[id] = value;
                         PlayerDataSharing.setStudentData(question, cqpd);
+                        console.log(PlayerDataSharing.getStudentData());
                     };
                 }
             };
