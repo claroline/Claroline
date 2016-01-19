@@ -151,6 +151,7 @@ class HoleHandler implements QuestionHandlerInterface
                 $wrData->id = (string) $wr->getId();
                 $wrData->response = (string) $wr->getResponse();
                 $wrData->score = $wr->getScore();
+                $wrData->feedback = $wr->getFeedback();
                 return $wrData;
             }, $hole->getWordResponses()->toArray());
 

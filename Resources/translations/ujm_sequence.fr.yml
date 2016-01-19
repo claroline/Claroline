@@ -1,5 +1,8 @@
+# a
+answer_zone: Zone de réponse
+
 # b
-btn_end_sequence_label: Terminer l'execice
+btn_end_sequence_label: Terminer l'exercice
 btn_interrupt_sequence_label: Interrompre
 btn_prev_step_label: Aller à l'étape précédente
 btn_next_step_label: Aller à l'étape suivante
