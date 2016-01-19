@@ -30,15 +30,19 @@
     <td>{{ document.documentDate|date('formatDatetime'|trans({}, 'innova_collecticiel')) }}</td>
 
     <td>
-        <a target="_blank" href="{{ path('innova_collecticiel_open_resource', {'resourceId': dropzone.id, 'documentId': document.id}) }}">
-            {# fix68 : Problème d'affichage du nom du document #}
-            {% if document.resourceNode is not null %}
-                {{ document.resourceNode.name }}</a>
+
+        {% if document.url is not null %}
+            <a target="_blank"
+               href="{{ document.url }}">{{ document.url | length > 40 ? document.url | slice(0, 40) ~ '...' :document.url }}</a>
+        {% else %}
+            {% if document.title is not null %}
+                <a target="_blank"
+                   href="{{ path('innova_collecticiel_open_resource', {'resourceId': dropzone.id, 'documentId': document.id}) }}">{{ document.title }}</a>
             {% else %}
-                {{ document.url }}</a>
+                <a target="_blank"
+                   href="{{ path('innova_collecticiel_open_resource', {'resourceId': dropzone.id, 'documentId': document.id}) }}">{{ document.resourceNode.name }}</a>
             {% endif %}
-        {#  Afficher ici la valeur "Commentaires non lus"
-        {% include 'InnovaCollecticielBundle:Drop:dropsNbComments.html.twig' %}  #}
+        {% endif %}
     </td>
 
     {% if dropzone.evaluation != 1  %}
