@@ -243,8 +243,8 @@ class ChatController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/chat/room/{chatRoom}/user/{username}/full/{fullName}/presence/status/{status}",
-     *     name="claro_chat_room_presence_register",
+     *     "/chat/room/{chatRoom}/user/{username}/full/{fullName}/status/status/{status}",
+     *     name="claro_chat_room_status_register",
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})

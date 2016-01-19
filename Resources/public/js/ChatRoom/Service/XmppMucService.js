@@ -548,7 +548,7 @@
                     );
 
                     var route = Routing.generate(
-                        'claro_chat_room_presence_register',
+                        'claro_chat_room_status_register',
                         {
                             chatRoom: roomId, 
                             username: XmppService.getUsername(),
@@ -620,7 +620,7 @@
                     );
 
                     var route = Routing.generate(
-                        'claro_chat_room_presence_register',
+                        'claro_chat_room_status_register',
                         {
                             chatRoom: roomId, 
                             username: XmppService.getUsername(),
