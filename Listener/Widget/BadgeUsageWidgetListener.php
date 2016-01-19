@@ -75,8 +75,6 @@ class BadgeUsageWidgetListener
     {
         $widgetInstance     = $event->getInstance();
         $badgeWidgetConfig  = $this->badgeWidgetManager->getBadgeUsageConfigForInstance($widgetInstance);
-        var_dump("entered");
-        die();
         $lastAwardedBadges  = $this->badgeManager->getWorkspaceLastAwardedBadgesToLoggedUser($widgetInstance->getWorkspace(), $badgeWidgetConfig->getNumberLastAwardedBadge());
         $mostAwardedBadges  = $this->badgeManager->getWorkspaceMostAwardedBadges($widgetInstance->getWorkspace(), $badgeWidgetConfig->getNumberMostAwardedBadge());
         $simple_view_widget = $badgeWidgetConfig->isSimpleView();
