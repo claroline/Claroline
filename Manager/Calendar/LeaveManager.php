@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Manager;
+namespace Claroline\CoreBundle\Manager\Calendar;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Calendar\Leave;
 
 /**
- * @DI\Service("claroline.manager.leave_manager")
+ * @DI\Service("claroline.manager.calendar.leave_manager")
  */
 class LeaveManager 
 {

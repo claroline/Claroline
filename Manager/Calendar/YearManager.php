@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Manager;
+namespace Claroline\CoreBundle\Manager\Calendar;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Calendar\TimeSlot;
+use Claroline\CoreBundle\Entity\Calendar\Year;
 
 /**
- * @DI\Service("claroline.manager.time_slot_manager")
+ * @DI\Service("claroline.manager.calendar.year_manager")
  */
-class TimeSlotManager 
+class YearManager 
 {
 
     /**
@@ -31,21 +31,21 @@ class TimeSlotManager
         $this->om = $om;
     }
 
-    public function create(TimeSlot $timeSlot)
+    public function create(Year $year)
     {
-        $this->om->persist($timeSlot);
+        $this->om->persist($year);
         $this->om->flush();
     }
 
-    public function delete(TimeSlot $timeSlot)
+    public function delete(Year $year)
     {
-        $this->om->remove($timeSlot);
+        $this->om->remove($year);
         $this->om->flush();
     }
 
-    public function edit(TimeSlot $timeSlot)
+    public function edit(Year $year)
     {
-        $this->om->persist($timeSlot);
+        $this->om->persist($year);
         $this->om->flush();
     }
 }

@@ -25,8 +25,8 @@ class EventType extends AngularType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', 'string', array('label' => 'name', 'required' => true))
-            ->add('description', 'text', array('label' => 'description', 'required' => true))
+            ->add('name', 'text', array('label' => 'name', 'required' => true))
+            ->add('description', 'text', array('label' => 'description', 'required' => true));
     }
 
     public function getName()

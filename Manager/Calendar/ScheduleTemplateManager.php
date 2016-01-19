@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Manager;
+namespace Claroline\CoreBundle\Manager\Calendar;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Calendar\Year;
+use Claroline\CoreBundle\Entity\Calendar\ScheduleTemplate;
 
 /**
- * @DI\Service("claroline.manager.year_manager")
+ * @DI\Service("claroline.manager.calendar.schedule_template_manager")
  */
-class YearManager 
+class ScheduleTemplateManager 
 {
 
     /**
@@ -31,21 +31,21 @@ class YearManager
         $this->om = $om;
     }
 
-    public function create(Year $year)
+    public function create(ScheduleTemplate $schedule)
     {
-        $this->om->persist($year);
+        $this->om->persist($schedule);
         $this->om->flush();
     }
 
-    public function delete(Year $year)
+    public function delete(ScheduleTemplate $schedule)
     {
-        $this->om->remove($year);
+        $this->om->remove($schedule);
         $this->om->flush();
     }
 
-    public function edit(Year $year)
+    public function edit(ScheduleTemplate $schedule)
     {
-        $this->om->persist($year);
+        $this->om->persist($schedule);
         $this->om->flush();
     }
 }

@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Manager;
+namespace Claroline\CoreBundle\Manager\Calendar;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Calendar\Period;
+use Claroline\CoreBundle\Entity\Calendar\Event;
 
 /**
- * @DI\Service("claroline.manager.period_manager")
+ * @DI\Service("claroline.manager.calendar.event_manager")
  */
-class PeriodManager 
+class EventManager 
 {
 
     /**
@@ -31,21 +31,21 @@ class PeriodManager
         $this->om = $om;
     }
 
-    public function create(Period $period)
+    public function create(Event $event)
     {
-        $this->om->persist($period);
+        $this->om->persist($event);
         $this->om->flush();
     }
 
-    public function delete(Period $period)
+    public function delete(Event $event)
     {
-        $this->om->remove($period);
+        $this->om->remove($event);
         $this->om->flush();
     }
 
-    public function edit(Period $period)
+    public function edit(Event $event)
     {
-        $this->om->persist($period);
+        $this->om->persist($event);
         $this->om->flush();
     }
 }

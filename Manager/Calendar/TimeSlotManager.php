@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Manager;
+namespace Claroline\CoreBundle\Manager\Calendar;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Calendar\Event;
+use Claroline\CoreBundle\Entity\Calendar\TimeSlot;
 
 /**
- * @DI\Service("claroline.manager.calendar_event_manager")
+ * @DI\Service("claroline.manager.calendar.time_slot_manager")
  */
-class CalendarEventManager 
+class TimeSlotManager 
 {
 
     /**
@@ -31,21 +31,21 @@ class CalendarEventManager
         $this->om = $om;
     }
 
-    public function create(Event $event)
+    public function create(TimeSlot $timeSlot)
     {
-        $this->om->persist($event);
+        $this->om->persist($timeSlot);
         $this->om->flush();
     }
 
-    public function delete(Event $event)
+    public function delete(TimeSlot $timeSlot)
     {
-        $this->om->remove($event);
+        $this->om->remove($timeSlot);
         $this->om->flush();
     }
 
-    public function edit(Event $event)
+    public function edit(TimeSlot $timeSlot)
     {
-        $this->om->persist($event);
+        $this->om->persist($timeSlot);
         $this->om->flush();
     }
 }

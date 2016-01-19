@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Controller\API\Admin;
+namespace Claroline\CoreBundle\Controller\API\Calendar;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +18,12 @@ use FOS\RestBundle\Controller\Annotations\View;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
-use Claroline\CoreBundle\Manager\YearManager;
+use Claroline\CoreBundle\Manager\Calendar\YearManager;
+use Claroline\CoreBundle\Manager\ApiManager;
+use Claroline\CoreBundle\Form\Calendar\YearType;
+use Claroline\CoreBundle\Entity\Calendar\Year;
+use Symfony\Component\Form\FormFactory;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 
 /**
  * @NamePrefix("api_")
@@ -28,14 +33,16 @@ class YearController extends FOSRestController
     /**
      * @DI\InjectParams({
      *     "formFactory"   = @DI\Inject("form.factory"),
-     *     "periodManager" = @DI\Inject("claroline.manager.year_manager"),
+     *     "yearManager"   = @DI\Inject("claroline.manager.calendar.year_manager"),
      *     "request"       = @DI\Inject("request"),
+     *     "apiManager"    = @DI\Inject("claroline.manager.api_manager"),
      *     "om"            = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
         FormFactory          $formFactory,
-        YearManager          $periodManager,
+        YearManager          $yearManager,
+        ApiManager           $apiManager,
         ObjectManager        $om,
         Request              $request
     )
@@ -44,5 +51,25 @@ class YearController extends FOSRestController
         $this->yearManager     = $yearManager;
         $this->om              = $om;
         $this->request         = $request;
+        $this->apiManager      = $apiManager;
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Returns the year creation form",
+     *     views = {"api"}
+     * )
+     */
+    public function getCreateYearFormAction()
+    {
+        $formType = new YearType();
+        $formType->enableApi();
+        $form = $this->createForm($formType);
+
+        return $this->apiManager->handleFormView(
+            'ClarolineCoreBundle:API:Calendar\createYearForm.html.twig', 
+            $form
+        );
     }
 }
