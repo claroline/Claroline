@@ -39,7 +39,7 @@
         "white-october/pagerfanta-bundle": "1.0.2",
         "idci/exporter-bundle": "1.0.0",
         "leafo/lessphp": "0.4.0",
-        "twbs/bootstrap": "3.0.0",
+        "twitter/bootstrap": "3.0.0",
         "fortawesome/font-awesome": "4.3.0",
         "zenstruck/form-bundle": "1.5.1",
         "zendframework/zend-crypt": "~2.3",
