@@ -22,8 +22,7 @@
                     // init jsPlumb dom elements
                     $timeout(function () {
                         // MatchQuestion sub type is ToBind
-                        if (scope.question.subType === 'toBind') {
-
+                        if (scope.question.toBind) {
                             matchQuestionCtrl.initMatchQuestionJsPlumb('bind');
                             $("#resetAll").click(function () {
                                 matchQuestionCtrl.reset('bind');
@@ -40,7 +39,7 @@
 
                             matchQuestionCtrl.addPreviousConnections();
 
-                        } else if (scope.question.subType === 'toDrag') {
+                        } else {
 
                             matchQuestionCtrl.initMatchQuestionJsPlumb('drag');
 

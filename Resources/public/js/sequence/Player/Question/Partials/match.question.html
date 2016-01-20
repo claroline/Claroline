@@ -27,7 +27,7 @@
             </div>
         </div>        
         <!-- TO BIND PROPOSALS & ASSOCIATED LABELS -->
-        <div data-ng-if="matchQuestionCtrl.question.subType == 'toBind'" class="row center-text">
+        <div data-ng-if="matchQuestionCtrl.question.toBind" class="row center-text">
             <!-- PROPOSALS -->
             <div class="col-md-4">
                 <div data-ng-repeat="proposal in matchQuestionCtrl.question.firstSet" class="row origin draggable" id="draggable_{{proposal.id}}">
@@ -50,7 +50,7 @@
             </div>
         </div>
         <!-- TO DRAG SUB TYPE  -->
-        <div data-ng-if="matchQuestionCtrl.question.subType == 'toDrag'" class="row center-text">
+        <div data-ng-if="!matchQuestionCtrl.question.toBind" class="row center-text">
             <!-- PROPOSALS -->
             <div class="col-md-4">
                 <div data-ng-repeat="proposal in matchQuestionCtrl.question.firstSet" class="row origin" id="div_{{proposal.id}}">

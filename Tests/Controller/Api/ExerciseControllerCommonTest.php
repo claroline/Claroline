@@ -11,7 +11,10 @@ use UJM\ExoBundle\Entity\Hint;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Testing\Persister;
 
-class ExerciseControllerTest extends TransactionalTestCase
+/**
+ * Tests that are common to all exercise / question types
+ */
+class ExerciseControllerCommonTest extends TransactionalTestCase
 {
     /** @var ObjectManager */
     private $om;
@@ -199,36 +202,6 @@ class ExerciseControllerTest extends TransactionalTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testSubmitAnswerInInvalidFormat()
-    {
-        $pa1 = $this->persist->paper($this->john, $this->ex1);
-        $this->om->flush();
-
-        $this->request(
-            'PUT',
-            "/exercise/api/papers/{$pa1->getId()}/questions/{$this->qu1->getId()}",
-            $this->john,
-            ['data' => ['not a choice id']]
-        );
-        $this->assertEquals(422, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testSubmitAnswer()
-    {
-        $pa1 = $this->persist->paper($this->john, $this->ex1);
-        $this->om->flush();
-        
-        $id = (string) $this->ch1->getId();
-
-        $this->request(
-            'PUT',
-            "/exercise/api/papers/{$pa1->getId()}/questions/{$this->qu1->getId()}",
-            $this->john,
-            ['data' => [$id]]
-        );
-        $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
-    }
-
     public function testAnonymousHint()
     {
         $pa1 = $this->persist->paper($this->john, $this->ex1);
@@ -306,7 +279,6 @@ class ExerciseControllerTest extends TransactionalTestCase
         // count john's finished papers
         $this->request('GET', "/exercise/api/exercises/{$this->ex1->getId()}/papers/count", $this->john);
         $content = json_decode($this->client->getResponse()->getContent());
-        //fwrite(STDERR, print_r($content, true));
         $this->assertTrue((int)$content === 1);        
     }
 

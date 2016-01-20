@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Transfer\Json\QuestionHandler;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Proposal;
+use UJM\ExoBundle\Entity\Label;
 use UJM\ExoBundle\Entity\InteractionMatching;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
@@ -63,13 +64,24 @@ class MatchHandler implements QuestionHandlerInterface {
         // check solution ids are consistent with proposals ids
         $proposalsIds = array_map(function ($proposal) {
             return $proposal->id;
-        }, $questionData->proposals);
+        }, $questionData->firstSet);
+
+        $labelsIds = array_map(function ($label) {
+            return $label->id;
+        }, $questionData->secondSet);
 
         foreach ($questionData->solutions as $index => $solution) {
-            if (!in_array($solution->id, $proposalsIds)) {
+            if (!in_array($solution->firstId, $proposalsIds)) {
                 $errors[] = [
                     'path' => "solutions[{$index}]",
-                    'message' => "id {$solution->id} doesn't match any proposal id"
+                    'message' => "id {$solution->firstId} doesn't match any proposal id"
+                ];
+            }
+
+            if (!in_array($solution->secondId, $labelsIds)) {
+                $errors[] = [
+                    'path' => "solutions[{$index}]",
+                    'message' => "id {$solution->secondId} doesn't match any label id"
                 ];
             }
         }
@@ -99,31 +111,69 @@ class MatchHandler implements QuestionHandlerInterface {
     public function persistInteractionDetails(Question $question, \stdClass $importData) {
         $interaction = new InteractionMatching();
 
-        for ($i = 0, $max = count($importData->proposals); $i < $max; ++$i) {
+        // handle proposals   
+        $persistedProposals = array(); // do not add twice the same label!!
+        // for each firstSet in data (= proposal)
+        for ($i = 0, $max = count($importData->firstSet); $i < $max; ++$i) {
             // temporary limitation
-            if ($importData->proposals[$i]->type !== 'text/plain') {
+            if ($importData->firstSet[$i]->type !== 'text/plain') {
                 throw new \Exception(
-                "Import not implemented for MIME type {$importData->proposals[$i]->type}"
+                "Import not implemented for MIME type {$importData->firstSet[$i]->type}"
                 );
             }
-
+            // create a Proposal
             $proposal = new Proposal();
-            $proposal->setValue($importData->proposals[$i]->data);
+            $proposal->setValue($importData->firstSet[$i]->data);
             $proposal->setOrdre($i);
-
-            foreach ($importData->solutions as $solution) {
-                if ($solution->id === $importData->proposals[$i]->id) {
-                    $proposal->setWeight($solution->score);
-
-                    if (isset($solution->feedback)) {
-                        $proposal->setFeedback($solution->feedback);
-                    }
-                }
-            }
-
             $proposal->setInteractionMatching($interaction);
             $interaction->addProposal($proposal);
             $this->om->persist($proposal);
+            array_push($persistedProposals, $proposal);
+        }
+
+        for ($j = 0, $max = count($importData->secondSet); $j < $max; ++$j) {
+            if ($importData->secondSet[$j]->type !== 'text/plain') {
+                throw new \Exception(
+                "Import not implemented for MIME type {$importData->secondSet[$j]->type}"
+                );
+            }
+            // create interraction label in any case
+            $label = new Label();
+            $label->setValue($importData->secondSet[$j]->data);
+            $label->setOrdre($j);
+            // check if current label is in the solution                    
+            foreach ($importData->solutions as $solution) {
+                // label is in solution get score from solution
+                if ($solution->secondId === $importData->secondSet[$j]->id) {
+                    $label->setScoreRightResponse($solution->score);                  
+                    
+                    // here we should add proposal to label $proposal->addAssociatedLabel($label);
+                    // but how to retrieve the correct proposal (no flush = no id) ??
+                    // find this solution a bit overkill
+                    // @TODO find a better way to do that!!!!
+                    for ($k = 0, $max = count($importData->firstSet); $k < $max; ++$k) {
+                        if($solution->firstId === $importData->firstSet[$k]->id){
+                            $value = $importData->firstSet[$k]->data;
+                            for($l = 0, $max = count($persistedProposals); $l < $max; ++$l){
+                                if($persistedProposals[$l]->getValue() == $value){
+                                    $persistedProposals[$l]->addAssociatedLabel($label);
+                                    $this->om->persist($persistedProposals[$l]);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // get feedback from solution
+                if (isset($solution->feedback)) {
+                    $label->setFeedback($solution->feedback);
+                }
+            }
+
+            $label->setInteractionMatching($interaction);
+            $interaction->addLabel($label);
+            $this->om->persist($label);
         }
 
         $subTypeCode = $importData->toBind ? 1 : 2;
@@ -152,7 +202,7 @@ class MatchHandler implements QuestionHandlerInterface {
         }
 
         $proposals = $match->getProposals()->toArray();
-        $exportData->subType = $match->getTypeMatching()->getCode() === 1 ? 'toBind' : 'toDrag';
+        $exportData->toBind = $match->getTypeMatching()->getCode() === 1 ? true : false;
         $exportData->firstSet = array_map(function ($proposal) {
             $firstSetData = new \stdClass();
             $firstSetData->id = (string) $proposal->getId();
@@ -166,22 +216,26 @@ class MatchHandler implements QuestionHandlerInterface {
             $secondSetData = new \stdClass();
             $secondSetData->id = (string) $label->getId();
             $secondSetData->type = 'text/plain';
-            $secondSetData->data = $label->getValue();        
+            $secondSetData->data = $label->getValue();
             return $secondSetData;
         }, $labels);
 
+
         if ($withSolution) {
+
             $exportData->solutions = array_map(function ($proposal) {
+                // can be a proposal without label
                 $associatedLabels = $proposal->getAssociatedLabel();
                 $solutionData = new \stdClass();
                 $solutionData->firstId = (string) $proposal->getId();
-                //$score = 0.0;
-                foreach ($associatedLabels as $label) {
-                    $solutionData->secondId = (string) $label->getId();
-                    //$score += $label->getScoreRightResponse();
-                    $solutionData->score = $label->getScoreRightResponse();
-                    if ($label->getFeedback()) {
-                        $solutionData->feedback = $label->getFeedback();
+                // PBM HERE
+                if ($associatedLabels) {
+                    foreach ($associatedLabels as $label) {
+                        $solutionData->secondId = (string) $label->getId();
+                        $solutionData->score = $label->getScoreRightResponse();
+                        if ($label->getFeedback()) {
+                            $solutionData->feedback = $label->getFeedback();
+                        }
                     }
                 }
                 return $solutionData;
@@ -300,7 +354,7 @@ class MatchHandler implements QuestionHandlerInterface {
         foreach ($labels as $label) {
             $score += $label->getScoreRightResponse();
         }
-        if($score === 0){            
+        if ($score === 0) {
             throw new \Exception('Global score not implemented yet');
         }
 

@@ -24,11 +24,22 @@ class ApiManagerTest extends TransactionalTestCase
     }
 
     /**
+     * Choice question
      * @expectedException \UJM\ExoBundle\Transfer\Json\ValidationException
      */
     public function testImportQuestionThrowsOnValidationError()
     {
         $data = file_get_contents("{$this->formatDir}/question/choice/examples/invalid/no-solution-score.json");
+        $this->manager->importQuestion(json_decode($data));
+    }
+    
+     /**
+     * Match question
+     * @expectedException \UJM\ExoBundle\Transfer\Json\ValidationException
+     */
+    public function testImportMatchQuestionWithoutSolutionScoreThrowsOnValidationError()
+    {
+        $data = file_get_contents("{$this->formatDir}/question/match/examples/invalid/no-solution-score.json");
         $this->manager->importQuestion(json_decode($data));
     }
 
@@ -69,6 +80,41 @@ class ApiManagerTest extends TransactionalTestCase
           ['qcm-5']
         ];
     }
+    
+     /**
+     * @dataProvider validMatchQuestionProvider
+     * @param string $dataFilename
+     */
+    public function testMatchQuestionRoundTrip($dataFilename)
+    {
+        $this->loadQuestionTypeFixture();
+
+        $originalCompData = $this->loadData("question/valid/complete/{$dataFilename}");
+        $originalEvalData = $this->loadData("question/valid/evaluation/{$dataFilename}");
+
+        $this->manager->importQuestion($originalCompData);
+
+        $questions = $this->om->getRepository('UJMExoBundle:Question')->findAll();
+        $this->assertEquals(1, count($questions), 'Expected one (and only one) question to be created');
+
+        $exportedCompData = $this->manager->exportQuestion($questions[0], true);
+        $exportedEvalData = $this->manager->exportQuestion($questions[0], false);
+
+        $this->assertEqualsWithoutIds($originalCompData, $exportedCompData);
+        $this->assertEqualsWithoutIds($originalEvalData, $exportedEvalData);
+        $this->assertQuestionIdConsistency($exportedCompData);
+        $this->assertQuestionIdConsistency($exportedEvalData);
+    }
+
+    
+    public function validMatchQuestionProvider()
+    {
+        return [
+          ['match-1'],
+          ['match-2'],
+          ['match-3']
+        ];
+    }
 
     private function loadQuestionTypeFixture()
     {
@@ -96,11 +142,15 @@ class ApiManagerTest extends TransactionalTestCase
         // shortcut for deep copies (clone will keep nested references)
         $expectedCopy = json_decode(json_encode($expected));
         $actualCopy = json_decode(json_encode($actual));
-
+       
         $removeIds = function (\stdClass $object) use (&$removeIds) {
             foreach (get_object_vars($object) as $property => $value) {
                 if ($property === 'id') {
                     unset($object->id);
+                } elseif ($property === 'firstId'){ // for match questions
+                    unset($object->firstId);
+                } elseif ($property === 'secondId'){ // for match questions
+                    unset($object->secondId);
                 } elseif (is_object($value)) {
                     $removeIds($value);
                 } elseif (is_array($value)) {
@@ -112,7 +162,7 @@ class ApiManagerTest extends TransactionalTestCase
         };
 
         $removeIds($expectedCopy);
-        $removeIds($actualCopy);
+        $removeIds($actualCopy);  
 
         $this->assertEquals($expectedCopy, $actualCopy, $msg);
     }
