@@ -72,7 +72,8 @@ var sids = {};
                         
                         if (users[username] === undefined || users[username] === null) {
                             
-                            users[username] = {username: username, sid: null, status: status, iteration: 0};
+                            users[username] = {username: username, sid: null, status: status, iteration: 0, micro: true, camera: true};
+                            requestUserStatus(username);
                         }
                     }
                 }
@@ -202,19 +203,9 @@ var sids = {};
                 if (username === myUsername) {
                     $scope.myMicroEnabled = isEnabled;
                     $scope.$apply();
-                } else {
-                    var sid = users[username]['sid'];
-                    
-                    if (sid && connection.jingle.sessions[sid]) {
-                        var session = connection.jingle.sessions[sid];
-                        var audioTracks = session.remoteStream.getAudioTracks();
-
-                        for (var i = 0; i < audioTracks.length; i++) {
-                            audioTracks[i].enabled = isEnabled;
-                        }
-                        $scope.setStreamMicro(username, isEnabled);
-                        $scope.$apply();
-                    }
+                } else if (users[username] !== undefined && users[username] !== null) {
+                    users[username]['micro'] = isEnabled;
+                    updateMicro(username);
                 }
             }
             
@@ -225,20 +216,108 @@ var sids = {};
                 if (username === myUsername) {
                     $scope.myCameraEnabled = isEnabled;
                     $scope.$apply();
-                } else {
+                } else if (users[username] !== undefined && users[username] !== null) {
+                    users[username]['camera'] = isEnabled;
+                    updateCamera(username);
+                }
+            }
+            
+            function updateMicro(username)
+            {
+                if (users[username] !== undefined && users[username] !== null) {
+                    var isEnabled = users[username]['micro'];
                     var sid = users[username]['sid'];
-                    
-                    if (sid && connection.jingle.sessions[sid]) {
+
+                    if (sid && connection.jingle.sessions[sid] && connection.jingle.sessions[sid].remoteStream) {
+                        var session = connection.jingle.sessions[sid];
+                        var audioTracks = session.remoteStream.getAudioTracks();
+
+                        for (var i = 0; i < audioTracks.length; i++) {
+                            audioTracks[i].enabled = isEnabled;
+                        }
+                    }
+                    $scope.setStreamMicro(username, isEnabled);
+                    $scope.$apply();
+                }
+            }
+            
+            function updateCamera(username)
+            {
+                if (users[username] !== undefined && users[username] !== null) {
+                    var isEnabled = users[username]['camera'];
+                    var sid = users[username]['sid'];
+
+                    if (sid && connection.jingle.sessions[sid] && connection.jingle.sessions[sid].remoteStream) {
                         var session = connection.jingle.sessions[sid];
                         var videoTracks = session.remoteStream.getVideoTracks();
 
                         for (var i = 0; i < videoTracks.length; i++) {
                             videoTracks[i].enabled = isEnabled;
                         }
-                        $scope.setStreamCamera(username, isEnabled);
-                        $scope.$apply();
                     }
+                    $scope.setStreamCamera(username, isEnabled);
+                    $scope.$apply();
                 }
+            }
+            
+            function sendMicroStatus(username, enabled)
+            {
+                XmppService.getConnection().send(
+                    $msg({
+                        to: XmppMucService.getRoom(),
+                        type: "groupchat"
+                    }).c('body').t('')
+                    .up()
+                    .c(
+                        'datas',
+                        {
+                            status: 'management',
+                            username: username,
+                            type: 'video-micro',
+                            value: enabled
+                        }
+                    )
+                );
+            }
+            
+            function sendCameraStatus(enabled)
+            {
+                XmppService.getConnection().send(
+                    $msg({
+                        to: XmppMucService.getRoom(),
+                        type: "groupchat"
+                    }).c('body').t('')
+                    .up()
+                    .c(
+                        'datas',
+                        {
+                            status: 'management',
+                            username: myUsername,
+                            type: 'video-camera',
+                            value: enabled
+                        }
+                    )
+                );
+            }
+            
+            function requestUserStatus(username)
+            {
+                XmppService.getConnection().send(
+                    $msg({
+                        to: XmppMucService.getRoom(),
+                        type: "groupchat"
+                    }).c('body').t('')
+                    .up()
+                    .c(
+                        'datas',
+                        {
+                            status: 'management',
+                            username: username,
+                            type: 'video-status-resend',
+                            value: null
+                        }
+                    )
+                );
             }
 
             function onMediaReady(event, stream)
@@ -332,6 +411,8 @@ var sids = {};
                         users[username]['status'] = 'working';
                         users[username]['iteration'] = 0;
                         var name = XmppMucService.getUserFullName(username);
+                        updateMicro(username);
+                        updateCamera(username);
                         $scope.addStream(sid, sids[sid]['username'], name);
         //                videoelem[0].style.display = 'inline-block';
                         $(videoelem).appendTo('#participant-stream-' + sid + ' .participant-video-panel');
@@ -500,6 +581,12 @@ var sids = {};
                     enableMicro(username, value);
                 } else if (type === 'video-camera') {
                     enableCamera(username, value);
+                } else if (type === 'video-status-resend') {
+                    
+                    if (username === myUsername) {
+                        sendMicroStatus(myUsername, $scope.myMicroEnabled);
+                        sendCameraStatus($scope.myCameraEnabled);
+                    }
                 }
             });
             
@@ -590,7 +677,12 @@ var sids = {};
                 }
                 
                 if (!isPresent) {
-                    $scope.streams.push({sid: sid, username: username, name: name, micro: true, camera: true});
+                    var microEnabled = true;
+                    
+                    if (users[username]) {
+                        microEnabled = users[username]['micro'];
+                    }
+                    $scope.streams.push({sid: sid, username: username, name: name, micro: microEnabled});
                     $scope.$apply();
                 }
             };
@@ -645,43 +737,12 @@ var sids = {};
                     }
                 }
                 microEnabled = !microEnabled;
-
-                XmppService.getConnection().send(
-                    $msg({
-                        to: XmppMucService.getRoom(),
-                        type: "groupchat"
-                    }).c('body').t('')
-                    .up()
-                    .c(
-                        'datas',
-                        {
-                            status: 'management',
-                            username: username,
-                            type: 'video-micro',
-                            value: microEnabled
-                        }
-                    )
-                );
+                sendMicroStatus(username, microEnabled);
             };
             
             $scope.manageCamera = function () {
                 var cameraEnabled = !$scope.myCameraEnabled;
-                XmppService.getConnection().send(
-                    $msg({
-                        to: XmppMucService.getRoom(),
-                        type: "groupchat"
-                    }).c('body').t('')
-                    .up()
-                    .c(
-                        'datas',
-                        {
-                            status: 'management',
-                            username: myUsername,
-                            type: 'video-camera',
-                            value: cameraEnabled
-                        }
-                    )
-                );
+                sendCameraStatus(cameraEnabled);
             };
         }
     ]);
