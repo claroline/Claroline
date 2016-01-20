@@ -9,15 +9,21 @@ groupsManager.controller('GroupsCtrl', ['$http', 'clarolineSearch', function($ht
 	this.search = '';
 	this.savedSearch = [];
 	this.groups = [];
+	this.fields = [];
+
+	var vm = this;
+
+	$http.get(Routing.generate('api_get_group_searchable_fields')).then(function(d) {
+		console.log(d.data);
+		vm.fields = d.data;
+	});
 
 	var columns = [
 		{name: translate('name'), prop: "name", isCheckboxColumn: true, headerCheckbox: true},
 		{
 			name: translate('actions'),
 			cellRenderer: function(scope) {
-
 				var actions = 'delete';
-
 				return actions;
 			}
 		}

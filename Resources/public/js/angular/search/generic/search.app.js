@@ -29,18 +29,20 @@ genericSearch.config(function ($httpProvider) {
 	});
 });
 
-genericSearch.controller('GenericSearchCtrl', ['$log', '$http', 'clarolineSearch', 'searchOptionsService', function(
-	$log,
-	$http,
-	clarolineSearch,
-	searchOptionsService
-) {
-	//this.fields   = [];
+genericSearch.controller(
+	'GenericSearchCtrl',
+	['$log', '$http', 'clarolineSearch', 'searchOptionsService',
+	function($log, $http, clarolineSearch, searchOptionsService)
+{
 	this.$log     = $log;
 	this.selected = [];
 	this.options  = [];
 
 	this.refreshOptions = function($select) {
+		console.log(this.fields);
+		//I should not be doing this here. Probably in a directive would be better.
+		this.options = searchOptionsService.generateOptions(this.fields);
+
 		for (var i = 0; i < this.options.length; i++) {
 			this.options[i].name = searchOptionsService.getOptionValue(this.options[i].field, $select.search);
 			this.options[i].value = $select.search;
@@ -76,6 +78,7 @@ genericSearch.service('searchOptionsService', function() {
 	}
 
 	this.generateOptions = function(fields) {
+		if (fields == undefined) return [];
 		var options = [];
 
 		for (var i = 0; i < fields.length; i++) {
@@ -135,7 +138,7 @@ genericSearch.directive('clarolinesearch', [
 	function clarolinesearch() {
 		var bindings = {
 			onSearch: '&',
-			fields: '&'
+			fields: '='
 		};
 
 		return {
