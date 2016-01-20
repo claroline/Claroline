@@ -63,60 +63,59 @@ locationManager.controller('EditModalController', function(locationAPI, $scope, 
     }
 });
 
-locationManager.controller('LocationController', function(
-    $scope,
+locationManager.controller('LocationController', ['$http', 'locationAPI', '$uibModalStack', '$uibModal', function(
     $http,
-    $uibModal,
+    locationAPI,
     $uibModalStack,
-    locationAPI
-    ) {
-
-    $scope.locations = undefined;
+    $uibModal
+) {
+    this.locations = undefined;
 
     var removeLocation = function(location) {
-        var index = $scope.locations.indexOf(location);
-        if (index > -1 ) $scope.locations.splice(index, 1);
-    }
+        var index = this.locations.indexOf(location);
+        if (index > -1 ) this.locations.splice(index, 1);
+    }.bind(this)
 
-    $scope.createForm = function() {
+    this.createForm = function() {
+        console.log('clickclick');
         $uibModal.open({
             templateUrl: Routing.generate('api_get_create_location_form', {'_format': 'html'}),
             controller: 'CreateModalController',
             resolve: {
                 locations: function() {
-                    return $scope.locations;
+                    return this.locations;
                 }
             }
         });
-    };
+    }.bind(this);
 
-    $scope.editLocation = function(location) {
+    this.editLocation = function(location) {
         $uibModal.open({
             //bust = no cache
             templateUrl: Routing.generate('api_get_edit_location_form', {'_format': 'html', 'location': location.id}) + '?bust=' + Math.random().toString(36).slice(2),
             controller: 'EditModalController',
             resolve: {
                 locations: function() {
-                    return $scope.locations;
+                    return this.locations;
                 },
                 location: function() {
                     return location;
                 }
             }
         });
-    }
+    }.bind(this)
 
-    $scope.removeLocation = function(location) {
+    this.removeLocation = function(location) {
         locationAPI.delete(location.id).then(function(d) {
             removeLocation(location);
         });
     }
 
     locationAPI.findAll().then(function(d) {
-        $scope.locations = d.data;
-    });
+        this.locations = d.data;
+    }.bind(this));
 
-    $scope.columns = [
+    this.columns = [
         {
             name: translate('name'),
             prop: 'name',
@@ -131,7 +130,7 @@ locationManager.controller('LocationController', function(
         {
             name: translate('actions'),
             cellRenderer: function() {
-                return '<button class="btn-primary btn-xs" ng-click="editLocation($row)" style="margin-right: 8px;"><i class="fa fa-pencil-square-o"></i></button><button class="btn-danger btn-xs" ng-click="removeLocation($row)"><i class="fa fa-trash"></i></button>';
+                return '<button class="btn-primary btn-xs" ng-click="lc.editLocation($row)" style="margin-right: 8px;"><i class="fa fa-pencil-square-o"></i></button><button class="btn-danger btn-xs" ng-click="lc.removeLocation($row)"><i class="fa fa-trash"></i></button>';
             }
         },
         {
@@ -142,21 +141,23 @@ locationManager.controller('LocationController', function(
         }
     ];
 
-    $scope.dataTableOptions = {
+    this.dataTableOptions = {
         scrollbarV: true,
         columnMode: 'force',
         headerHeight: 50,
         footerHeight: 50,
-        columns: $scope.columns
+        columns: this.columns
     };
-});
+}]);
 
 locationManager.directive('locationsmanager', [
     function locationsmanager() {
         return {
             restrict: 'E',
             templateUrl: AngularApp.webDir + 'bundles/clarolinecore/js/administration/location/views/locationsmanager.html',
-            replace: true
+            replace: true,
+            controller: 'LocationController',
+            controllerAs: 'lc'
         }
     }
 ]);
