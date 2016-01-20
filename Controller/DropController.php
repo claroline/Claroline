@@ -36,6 +36,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class DropController extends DropzoneBaseController
 {
@@ -1155,8 +1156,7 @@ class DropController extends DropzoneBaseController
      */
     public function returnReceiptAction()
     {
-        
-
+       
         // Récupération de l'ID de l'accusé de réception choisi
         $returnReceiptId = $this->get('request')->query->get('returnReceiptId');
         $returnReceiptType = 
@@ -1228,14 +1228,21 @@ class DropController extends DropzoneBaseController
       
         $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
 
-        return $this->redirect(
-            $this->generateUrl(
-                'innova_collecticiel_drops_awaiting',
-                array(
+        $redirectRoot = $this->generateUrl(
+            'innova_collecticiel_drops_awaiting',
+            array(
                     'resourceId' => $dropzone->getId(),
                 )
+            );
+
+        return new JsonResponse(
+            array(
+                'link' => $redirectRoot
             )
         );
+
+
+
     }
 
 }

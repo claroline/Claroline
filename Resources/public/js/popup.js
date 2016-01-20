@@ -56,7 +56,7 @@ $(document).ready(function () {
                 arrayDropsId: arrayDropsId
             },
             complete : function(data) {
-                    var data_link = $.parseJSON(data.responseText)
+                var data_link = $.parseJSON(data.responseText)
 //                    var resource = data[0];
 
                 if (data_link !== 'false') {
@@ -192,6 +192,12 @@ $(document).ready(function () {
                 arrayDocsId: arrayDocsId
             },
             complete : function(data) {
+                var data_link = $.parseJSON(data.responseText)
+
+                if (data_link !== 'false') {
+                    document.location.href=data_link.link;
+                }
+
             }
         });
 
