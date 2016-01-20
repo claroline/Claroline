@@ -36,6 +36,7 @@ organizationManager.controller('EditModalController', function(organizationAPI, 
         console.log($scope.organization);
         organizationAPI.update(organization.id, $scope.organization).then(
             function successHandler (d) {
+                console.log(organizations);
                 $uibModalStack.dismissAll();
                 clarolineAPI.replaceById(d.data, organizations);
             },
@@ -109,7 +110,7 @@ organizationManager.controller('OrganizationController', ['$http', 'organization
             resolve: {
                 organizations: function() {
                     return this.organizations;
-                },
+                }.bind(this),
                 organization: function() {
                     return organization;
                 }
