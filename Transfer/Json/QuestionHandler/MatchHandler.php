@@ -109,6 +109,8 @@ class MatchHandler implements QuestionHandlerInterface {
      * {@inheritdoc}
      */
     public function persistInteractionDetails(Question $question, \stdClass $importData) {
+        // used by QuestionManager->importQuestion
+        // this importQuestion method seems to be used only in test context...
         $interaction = new InteractionMatching();
 
         // handle proposals   
@@ -145,17 +147,18 @@ class MatchHandler implements QuestionHandlerInterface {
             foreach ($importData->solutions as $solution) {
                 // label is in solution get score from solution
                 if ($solution->secondId === $importData->secondSet[$j]->id) {
-                    $label->setScoreRightResponse($solution->score);                  
-                    
+                    $label->setScoreRightResponse($solution->score);
+
                     // here we should add proposal to label $proposal->addAssociatedLabel($label);
                     // but how to retrieve the correct proposal (no flush = no id) ??
                     // find this solution a bit overkill
                     // @TODO find a better way to do that!!!!
                     for ($k = 0, $max = count($importData->firstSet); $k < $max; ++$k) {
-                        if($solution->firstId === $importData->firstSet[$k]->id){
+                        if ($solution->firstId === $importData->firstSet[$k]->id) {
                             $value = $importData->firstSet[$k]->data;
-                            for($l = 0, $max = count($persistedProposals); $l < $max; ++$l){
-                                if($persistedProposals[$l]->getValue() == $value){
+                            for ($l = 0, $max = count($persistedProposals); $l < $max; ++$l) {
+                                // find proposal by label... Unicity is not ensured!!!!
+                                if ($persistedProposals[$l]->getValue() == $value) {
                                     $persistedProposals[$l]->addAssociatedLabel($label);
                                     $this->om->persist($persistedProposals[$l]);
                                     break;
@@ -224,18 +227,14 @@ class MatchHandler implements QuestionHandlerInterface {
         if ($withSolution) {
 
             $exportData->solutions = array_map(function ($proposal) {
-                // can be a proposal without label
                 $associatedLabels = $proposal->getAssociatedLabel();
                 $solutionData = new \stdClass();
                 $solutionData->firstId = (string) $proposal->getId();
-                // PBM HERE
-                if ($associatedLabels) {
-                    foreach ($associatedLabels as $label) {
-                        $solutionData->secondId = (string) $label->getId();
-                        $solutionData->score = $label->getScoreRightResponse();
-                        if ($label->getFeedback()) {
-                            $solutionData->feedback = $label->getFeedback();
-                        }
+                foreach ($associatedLabels as $label) {
+                    $solutionData->secondId = (string) $label->getId();
+                    $solutionData->score = $label->getScoreRightResponse();
+                    if ($label->getFeedback()) {
+                        $solutionData->feedback = $label->getFeedback();
                     }
                 }
                 return $solutionData;
