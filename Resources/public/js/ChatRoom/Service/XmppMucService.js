@@ -70,8 +70,6 @@
                                 );
                             }
                         }
-                    } else {
-                        console.log('delay');
                     }
                 }
 

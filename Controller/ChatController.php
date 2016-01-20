@@ -179,10 +179,35 @@ class ChatController extends Controller
         return array(
             'chatRoom' => $chatRoom,
             'canEdit' => $canEdit,
-//            'messages' => $messages,
             'messagesDatas' => $messagesDatas,
             'users' => $users
         );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/chat/room/{chatRoom}/archives/retrieve",
+     *     name="claro_chat_room_archives_retrieve",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template()
+     */
+    public function chatRoomArchivesRetrieveAction(ChatRoom $chatRoom)
+    {
+        $this->checkChatRoomRight($chatRoom, 'OPEN');
+        $messages = $chatRoom->getMessages();
+        $messagesDatas = array();
+
+        foreach ($messages as $message) {
+            $messagesDatas[] = array(
+                'username' => $message->getUsername(),
+                'userFullName' => $message->getUserFullName(),
+                'content' => $message->getContent(),
+                'type' => $message->getType()
+            );
+        }
+
+        return new JsonResponse($messagesDatas, 200);
     }
 
     /**
