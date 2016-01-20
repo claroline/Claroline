@@ -60,17 +60,14 @@ organizationManager.controller('EditModalController', function(organizationAPI, 
     }
 });
 
-organizationManager.controller('OrganizationController', function(
-    $scope,
-    $log,
+organizationManager.controller('OrganizationController', ['$http', 'organizationAPI', 'clarolineAPI', '$uibModalStack', '$uibModal', function(
     $http,
     organizationAPI,
     clarolineAPI,
     $uibModalStack,
     $uibModal
-    ) {
-
-    $scope.organizations = [];
+) {
+    this.organizations = [];
 
     var removeOrganization = function(organizations, organizationId) {
         for (var i = 0; i < organizations.length; i++) {
@@ -83,59 +80,61 @@ organizationManager.controller('OrganizationController', function(
     }
 
     organizationAPI.findAll().then(function(d) {
-        $scope.organizations = d.data;
-    });
+        this.organizations = d.data;
+    }.bind(this));
 
-    $scope.addRootOrganization = function() {
+    this.addRootOrganization = function() {
         organizationAPI.create('Organization' + Math.random(), '').then(function(d) {
-            $scope.organizations.push(d.data);
-        });
-    }
+            this.organizations.push(d.data);
+        }.bind(this));
+    }.bind(this);
 
-    $scope.deleteOrganization = function(organization) {
+    this.deleteOrganization = function(organization) {
         organizationAPI.delete(organization.id).then(function(d) {
-            removeOrganization($scope.organizations, organization.id);
-        });
-    }
+            removeOrganization(this.organizations, organization.id);
+        }.bind(this));
+    }.bind(this);
 
-    $scope.addDepartment = function(organization) {
+    this.addDepartment = function(organization) {
         organizationAPI.create('Organization' + Math.random(), organization.id).then(function(d) {
             if (organization.children === undefined) organization.children = [];
             organization.children.push(d.data);
         });
     }
 
-    $scope.parametersOrganization = function(organization) {
+    this.parametersOrganization = function(organization) {
         $uibModal.open({
             templateUrl: Routing.generate('api_get_edit_organization_form', {'organization': organization.id, '_format': 'html'}) + '?bust=' + Math.random().toString(36).slice(2),
             controller: 'EditModalController',
             resolve: {
                 organizations: function() {
-                    return $scope.organizations;
+                    return this.organizations;
                 },
                 organization: function() {
                     return organization;
                 }
             }
         });
-    }
+    }.bind(this);
 
-    $scope.editOrganization = function(organization) {
+    this.editOrganization = function(organization) {
         organizationAPI.editName(organization);
     }
 
-    $scope.treeOptions = {
+    this.treeOptions = {
 
     };
 
-});
+}]);
 
 organizationManager.directive('organizationslist', [
     function organizationsmanager() {
         return {
             restrict: 'E',
             templateUrl: AngularApp.webDir + 'bundles/clarolinecore/js/administration/organization/views/organizationmanager.html',
-            replace: true
+            replace: true,
+            controller: 'OrganizationController',
+            controllerAs: 'oc'
         }
     }
 ]);

@@ -19,16 +19,16 @@
 				    > 
 				    </input>
 			    </div>
-			    <a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="deleteOrganization(organization)"><span
+			    <a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="oc.deleteOrganization(organization)"><span
 			        class="fa fa-trash-o"></span>
 		        </a>
-			    <a class="pull-right btn btn-success btn-xs" data-nodrag ng-click="editOrganization(organization)"><span
+			    <a class="pull-right btn btn-success btn-xs" data-nodrag ng-click="oc.editOrganization(organization)"><span
 			        class="fa fa-edit"></span>
 		       </a>
-				<a class="pull-right btn btn-success btn-xs" data-nodrag ng-click="parametersOrganization(organization)"><span
+				<a class="pull-right btn btn-success btn-xs" data-nodrag ng-click="oc.parametersOrganization(organization)"><span
 						class="fa fa-cogs"></span>
 				</a>
-			    <a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="addDepartment(organization)" style="margin-right: 8px;"><span
+			    <a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="oc.addDepartment(organization)" style="margin-right: 8px;"><span
 			        class="fa fa-plus"></span>
 		        </a>
 		    </div>
@@ -40,8 +40,8 @@
 	</script>
 
     <div ui-tree id="tree-root">
-      <ol ui-tree-nodes ng-model="organizations">
-        <li ng-repeat="organization in organizations" ui-tree-node ng-include="'nodes_renderer.html'"></li>
+      <ol ui-tree-nodes ng-model="oc.organizations">
+        <li ng-repeat="organization in oc.organizations" ui-tree-node ng-include="'nodes_renderer.html'"></li>
       </ol>
     </div>
 </div>
