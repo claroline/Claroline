@@ -11,7 +11,7 @@ var RTC = null;
 var ice_config = {
     iceServers: [
 //        {url: 'stun:23.21.150.121'},
-        {urls: 'stun:stun.l.google.com:19302'}
+        {urls: ['stun:stun.stunprotocol.org:3478', 'stun:stun.l.google.com:19302']}
     ]
 };
 var RTCPeerconnection = null;
@@ -41,6 +41,9 @@ var sids = {};
             $scope.localStream = null;
             $scope.streams = [];
             $scope.currentVideoId = null;
+            $scope.myUsername = null;
+            $scope.myMicroEnabled = true;
+            $scope.myCameraEnabled = true;
 
             function checkStream()
             {
@@ -108,7 +111,8 @@ var sids = {};
             {
                 for (var username in users) {
                     
-                    if (users[username] !== null && users[username]['sid'] === null && users[username]['status'] === 'toCall') {
+                    if (users[username] !== null && users[username]['sid'] === null && 
+                        users[username]['status'] === 'toCall') {
                         
                         var session = connection.jingle.initiate(
                             roomjid + '/' + username,
@@ -165,6 +169,7 @@ var sids = {};
                             
                                 if (connection.jingle.sessions[sid]) {
                                     connection.jingle.sessions[sid].terminate('unused stream');
+                                    console.log('Manually terminate : ' + sid);
                                 }
                                 removeSid(sid);
                             }
@@ -189,6 +194,52 @@ var sids = {};
                     }
                 }
             }
+            
+            function enableMicro(username, enabled)
+            {
+                var isEnabled = (enabled === 'true');
+                
+                if (username === myUsername) {
+                    $scope.myMicroEnabled = isEnabled;
+                    $scope.$apply();
+                } else {
+                    var sid = users[username]['sid'];
+                    
+                    if (sid && connection.jingle.sessions[sid]) {
+                        var session = connection.jingle.sessions[sid];
+                        var audioTracks = session.remoteStream.getAudioTracks();
+
+                        for (var i = 0; i < audioTracks.length; i++) {
+                            audioTracks[i].enabled = isEnabled;
+                        }
+                        $scope.setStreamMicro(username, isEnabled);
+                        $scope.$apply();
+                    }
+                }
+            }
+            
+            function enableCamera(username, enabled)
+            {   
+                var isEnabled = (enabled === 'true');
+                
+                if (username === myUsername) {
+                    $scope.myCameraEnabled = isEnabled;
+                    $scope.$apply();
+                } else {
+                    var sid = users[username]['sid'];
+                    
+                    if (sid && connection.jingle.sessions[sid]) {
+                        var session = connection.jingle.sessions[sid];
+                        var videoTracks = session.remoteStream.getVideoTracks();
+
+                        for (var i = 0; i < videoTracks.length; i++) {
+                            videoTracks[i].enabled = isEnabled;
+                        }
+                        $scope.setStreamCamera(username, isEnabled);
+                        $scope.$apply();
+                    }
+                }
+            }
 
             function onMediaReady(event, stream)
             {
@@ -201,10 +252,14 @@ var sids = {};
                     console.log('using video device "' + $scope.localStream.getVideoTracks()[i].label + '"');
                 }
                 // mute video on firefox and recent canary
-                $('#my-video')[0].muted = true;
-                $('#my-video')[0].volume = 0;
-                document.getElementById('my-video').muted = true;
-                document.getElementById('main-video').muted = true;
+                
+                if (RTC.browser === 'firefox') {
+                    $('#my-video')[0].muted = true;
+                    $('#my-video')[0].volume = 0;
+                } else {
+                    document.getElementById('my-video').muted = true;
+                    document.getElementById('main-video').muted = true;
+                }
 
                 RTC.attachMediaStream($('#my-video'), $scope.localStream);
                 $scope.updateMainVideoSrc('my-video');
@@ -270,6 +325,7 @@ var sids = {};
                             users[username] !== null && 
                             users[username]['sid']) {
 
+                            console.log('Closing because of newer stream : ' + users[username]['sid']);
                             $scope.removeStream(users[username]['sid']);
                         }
                         users[username]['sid'] = sid;
@@ -376,6 +432,7 @@ var sids = {};
                 connection = XmppService.getConnection();
                 roomjid = XmppMucService.getRoom();
                 myUsername = XmppService.getUsername();
+                $scope.myUsername = myUsername;
                 console.log('MUC CONNECT');
                 
                 RTC = setupRTC();
@@ -409,7 +466,7 @@ var sids = {};
                 if (RTC !== null) {
                     RTCPeerconnection = RTC.peerconnection;
                     
-                    if (RTC.browser == 'firefox') {
+                    if (RTC.browser === 'firefox') {
                         //connection.jingle.media_constraints.mandatory.MozDontOfferDataChannel = true;
                         connection.jingle.media_constraints = {
                             offerToReceiveAudio: true,
@@ -427,11 +484,23 @@ var sids = {};
             $rootScope.$on('myPresenceConfirmationEvent', function () {
                 updateNewUsers('toCall');
                 initiateCalls();
-                setInterval(checkStream, 2000);
+                setInterval(checkStream, 3000);
             });
 
             $scope.$on('userDisconnectionEvent', function (event, userDatas) {
                 $scope.removeUserStream(userDatas['username']);
+            });
+
+            $rootScope.$on('managementEvent', function (event, datas) {
+                var type = datas['type'];
+                var username = datas['username'];
+                var value = datas['value'];
+                
+                if (type === 'video-micro') {
+                    enableMicro(username, value);
+                } else if (type === 'video-camera') {
+                    enableCamera(username, value);
+                }
             });
             
             $scope.getUsernameFromSid = function (sid) {
@@ -473,6 +542,42 @@ var sids = {};
                 return isPresent;
             };
 
+            $scope.getStreamFromUsername = function (username) {
+                var stream = null;
+
+                for (var i = 0; i < $scope.streams.length; i++) {
+                                                                                
+                    if ($scope.streams[i]['username'] === username) {
+                        stream = $scope.streams[i];
+                        break;
+                    }
+                }
+
+                return stream;
+            };
+
+            $scope.setStreamMicro = function (username, microEnabled) {
+
+                for (var i = 0; i < $scope.streams.length; i++) {
+                                                                                
+                    if ($scope.streams[i]['username'] === username) {
+                        $scope.streams[i]['micro'] = microEnabled;
+                        break;
+                    }
+                }
+            };
+
+            $scope.setStreamCamera = function (username, cameraEnabled) {
+
+                for (var i = 0; i < $scope.streams.length; i++) {
+                                                                                
+                    if ($scope.streams[i]['username'] === username) {
+                        $scope.streams[i]['camera'] = cameraEnabled;
+                        break;
+                    }
+                }
+            };
+
             $scope.addStream = function (sid, username, name) {
                 var isPresent = false;
                 
@@ -485,7 +590,7 @@ var sids = {};
                 }
                 
                 if (!isPresent) {
-                    $scope.streams.push({sid: sid, username: username, name: name});
+                    $scope.streams.push({sid: sid, username: username, name: name, micro: true, camera: true});
                     $scope.$apply();
                 }
             };
@@ -527,17 +632,56 @@ var sids = {};
                 $('#' + videoId).closest('.participant-panel').addClass('video-selected');
             };
             
-            $scope.manageMicrophone = function (sid) {
-                console.log('*************** Microphone management ***************');
-                console.log(sid);
-//                console.log(connection.jingle.sessions);
-                var session = connection.jingle.sessions[sid];
-                var audioTracks = session.remoteStream.getAudioTracks();
-                var videoTracks = session.remoteStream.getVideoTracks();
+            $scope.manageMicrophone = function (username) {
+                var microEnabled = true;
                 
-                for (var i = 0; i < audioTracks.length; i++) {
-                    audioTracks[i].enabled = !audioTracks[i].enabled;
+                if (username === myUsername) {
+                    microEnabled = $scope.myMicroEnabled;
+                } else {
+                    var stream = $scope.getStreamFromUsername(username);
+                    
+                    if (stream !== null) {
+                        microEnabled = stream['micro'];
+                    }
                 }
+                microEnabled = !microEnabled;
+
+                XmppService.getConnection().send(
+                    $msg({
+                        to: XmppMucService.getRoom(),
+                        type: "groupchat"
+                    }).c('body').t('')
+                    .up()
+                    .c(
+                        'datas',
+                        {
+                            status: 'management',
+                            username: username,
+                            type: 'video-micro',
+                            value: microEnabled
+                        }
+                    )
+                );
+            };
+            
+            $scope.manageCamera = function () {
+                var cameraEnabled = !$scope.myCameraEnabled;
+                XmppService.getConnection().send(
+                    $msg({
+                        to: XmppMucService.getRoom(),
+                        type: "groupchat"
+                    }).c('body').t('')
+                    .up()
+                    .c(
+                        'datas',
+                        {
+                            status: 'management',
+                            username: myUsername,
+                            type: 'video-camera',
+                            value: cameraEnabled
+                        }
+                    )
+                );
             };
         }
     ]);

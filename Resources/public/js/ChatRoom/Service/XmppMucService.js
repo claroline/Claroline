@@ -34,33 +34,44 @@
                 var roomName = Strophe.getBareJidFromJid(from);
 
                 if (type === 'groupchat' && roomName.toLowerCase() === room.toLowerCase()) {
-                    var body = $(message).find('html > body').html();
-                    var statusElement  = $(message).find('status');
+                    var delayElement = $(message).find('delay');
+                    
+                    if (delayElement === undefined || delayElement[0] === undefined) {
+                        var body = $(message).find('html > body').html();
+                        var statusElement  = $(message).find('status');
 
-                    if (statusElement === undefined || statusElement.attr('code') !== '104') {
-                        
-                        if (body === undefined) {
-                            body = $(message).find('body').text();
+                        if (statusElement === undefined || statusElement.attr('code') !== '104') {
+
+                            if (body === undefined) {
+                                body = $(message).find('body').text();
+                            }
+                            var datas = $(message).find('datas');
+                            var status = datas.attr('status');
+
+                            if (status === 'raw') {
+                                $rootScope.$broadcast('rawRoomMessageEvent', {message: body});
+                            } else if (status === 'management') {
+                                var type =  datas.attr('type');
+                                var username = datas.attr('username');
+                                var value =  datas.attr('value');
+                                $rootScope.$broadcast('managementEvent', {type: type, username: username, value: value});
+                            } else {
+                                var firstName = datas.attr('firstName');
+                                var lastName = datas.attr('lastName');
+                                var color = datas.attr('color');
+                                color = (color === undefined) ? null : color;
+
+                                var sender = (firstName !== undefined && lastName !== undefined) ?
+                                    firstName + ' ' + lastName :
+                                    Strophe.getResourceFromJid(from);
+                                $rootScope.$broadcast(
+                                    'newMessageEvent', 
+                                    {sender: sender, message: body, color: color}
+                                );
+                            }
                         }
-                        var datas = $(message).find('datas');
-                        var status = datas.attr('status');
-
-                        if (status === 'raw') {
-                            $rootScope.$broadcast('rawRoomMessageEvent', {message: body});
-                        } else {
-                            var firstName = datas.attr('firstName');
-                            var lastName = datas.attr('lastName');
-                            var color = datas.attr('color');
-                            color = (color === undefined) ? null : color;
-
-                            var sender = (firstName !== undefined && lastName !== undefined) ?
-                                firstName + ' ' + lastName :
-                                Strophe.getResourceFromJid(from);
-                            $rootScope.$broadcast(
-                                'newMessageEvent', 
-                                {sender: sender, message: body, color: color}
-                            );
-                        }
+                    } else {
+                        console.log('delay');
                     }
                 }
 
