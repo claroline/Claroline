@@ -17,7 +17,7 @@
         <!-- global Score row -->
         <div class="row">
             <div class="col-md-12">
-                <div class="btn btn-default pull-right center-text"><strong>{{ 'paper_details_paper_score'|trans:{}:'ujm_sequence' }} : {{correctionCtrl.globalNote}} / 20 </strong></div>
+                <div class="div-score pull-right center-text"><strong>{{ 'paper_details_paper_score'|trans:{}:'ujm_sequence' }} : {{correctionCtrl.globalNote}} / 20 </strong></div>
             </div>
         </div>
         <hr/>
@@ -25,7 +25,7 @@
         <div class="row">
             <div class="col-md-12 center-text">
                 <div class="">
-                    <button class="btn btn-default pull-right center-text" data-ng-click="correctionCtrl.toggleAllDetails()">Toggle all panels</button>
+                    <button class="btn btn-default pull-right center-text" data-ng-click="correctionCtrl.toggleAllDetails()">{{ 'btn_toggle_all_paper_question_panels'|trans:{}:'ujm_sequence' }}</button>
                 </div>
             </div>
         </div>

@@ -38,7 +38,7 @@
             this.toggleAllDetails = function () {
                 // hide all panels
                 if (this.questionPanelsState === 'opened') {
-                    $('.question-panel').each(function () {                        
+                    $('.question-panel').each(function () {
                         var id = $(this).data('my-id');
                         $('#question-body-' + id).hide();
                         if (angular.element('#question-toggle-' + id).hasClass('fa-chevron-down')) {
@@ -50,8 +50,8 @@
                     $('.question-panel').each(function () {
                         var id = $(this).data('my-id');
                         $('#question-body-' + id).show();
-                        if (angular.element('#question-toggle-' + id).hasClass('fa-chevron-right')) {
-                            angular.element('#question-toggle-' + id).removeClass('fa-chevron-right').addClass('fa-chevron-down');
+                        if ($('#question-toggle-' + id).hasClass('fa-chevron-right')) {
+                            $('#question-toggle-' + id).removeClass('fa-chevron-right').addClass('fa-chevron-down');
                         }
                     });
                     this.questionPanelsState = 'opened';
@@ -65,6 +65,15 @@
                 } else if (angular.element('#question-toggle-' + id).hasClass('fa-chevron-right')) {
                     angular.element('#question-toggle-' + id).removeClass('fa-chevron-right').addClass('fa-chevron-down');
                 }
+                // check if all panels are in the same state to correctly handle show / hide all panels
+                var countOpend = 0;
+                $('.question-panel').each(function () {
+                    if ($('#question-toggle-' + id).hasClass('fa-chevron-down')) {
+                        countOpend++;
+                    }
+                });
+                // if one or more panels are open then the show/hide all panel button should close all panels
+                this.questionPanelsState = countOpend > 0 ? 'opened':'closed';
             };
 
 

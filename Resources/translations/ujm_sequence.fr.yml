@@ -6,7 +6,8 @@ btn_end_sequence_label: Terminer l'exercice
 btn_interrupt_sequence_label: Interrompre
 btn_prev_step_label: Aller à l'étape précédente
 btn_next_step_label: Aller à l'étape suivante
-btn_validate_step: Validate step
+btn_validate_step: Valider l'étape
+btn_toggle_all_paper_question_panels: Montrer / cacher les questions
 
 # c
 case_sensitive: Respecter la casse
