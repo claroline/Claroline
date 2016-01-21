@@ -56,7 +56,9 @@ class OpenOneWordImport extends OpenImport
             $keyWord = new WordResponse();
             $feedback = $me->getElementsByTagName("feedbackInline");
             if ($feedback->item(0)) {
-                $keyWord->setFeedback($feedback->item(0)->nodeValue);
+                $feedbackVal = $this->domElementToString($feedback->item(0));
+                $feedbackVal = html_entity_decode($feedbackVal);
+                $keyWord->setFeedback($feedbackVal);
                 $me->removeChild($feedback->item(0));
             }
             $keyWord->setResponse($me->getAttribute('mapKey'));

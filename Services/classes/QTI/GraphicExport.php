@@ -117,8 +117,7 @@ class GraphicExport extends QtiExport
                 $feedbackInline->setAttribute("outcomeIdentifier", "FEEDBACK");
                 $feedbackInline->setAttribute("identifier", "Choice" . $c->getId());
                 $feedbackInline->setAttribute("showHide", "show");
-                $feedbackInlinetxt = $this->document->CreateTextNode($c->getFeedback());
-                $feedbackInline->appendChild($feedbackInlinetxt);
+                $this->getDomEl($feedbackInline, $c->getFeedback());
                 $areaMapEntry->appendChild($feedbackInline);
             }
         }
@@ -159,8 +158,13 @@ class GraphicExport extends QtiExport
     protected function promptTag()
     {
         $prompt = $this->document->CreateElement('prompt');
-        $prompttxt = $this->document->CreateTextNode($this->interactiongraph->getQuestion()->getInvite());
-        $prompt->appendChild($prompttxt);
+        $invite = $this->interactiongraph->getQuestion()->getInvite();
+        //Managing the resource export
+        $body = $this->qtiExportObject($invite);
+        foreach ($body->childNodes as $child) {
+            $inviteNew = $this->document->importNode($child, true);
+            $prompt->appendChild($inviteNew);
+        }
         $this->selectPointInteraction->appendChild($prompt);
     }
 
