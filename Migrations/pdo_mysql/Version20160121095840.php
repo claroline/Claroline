@@ -8,17 +8,25 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/09/23 02:05:42
+ * Generation date: 2016/01/21 09:58:42
  */
-class Version20150923140541 extends AbstractMigration
+class Version20160121095840 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             ALTER TABLE ujm_question 
+            DROP FOREIGN KEY FK_2F6069779D5B92F9
+        ");
+        $this->addSql("
+            DROP INDEX IDX_2F6069779D5B92F9 ON ujm_question
+        ");
+        $this->addSql("
+            ALTER TABLE ujm_question 
             ADD type VARCHAR(255) NOT NULL, 
             ADD invite LONGTEXT NOT NULL, 
             ADD feedback LONGTEXT DEFAULT NULL, 
+            DROP expertise_id, 
             CHANGE title title VARCHAR(255) NOT NULL, 
             CHANGE locked locked TINYINT(1) NOT NULL, 
             CHANGE model model TINYINT(1) NOT NULL
@@ -60,6 +68,14 @@ class Version20150923140541 extends AbstractMigration
         ");
         $this->addSql("
             CREATE INDEX IDX_A7EC2BC21E27F6BF ON ujm_response (question_id)
+        ");
+        $this->addSql("
+            ALTER TABLE ujm_exercise 
+            DROP date_create, 
+            DROP nb_question_page, 
+            DROP start_date, 
+            DROP use_date_end, 
+            DROP end_date
         ");
         $this->addSql("
             ALTER TABLE ujm_interaction_qcm 
@@ -161,6 +177,14 @@ class Version20150923140541 extends AbstractMigration
 
     public function down(Schema $schema)
     {
+        $this->addSql("
+            ALTER TABLE ujm_exercise 
+            ADD date_create DATETIME NOT NULL, 
+            ADD nb_question_page INT NOT NULL, 
+            ADD start_date DATETIME NOT NULL, 
+            ADD use_date_end TINYINT(1) DEFAULT NULL, 
+            ADD end_date DATETIME DEFAULT NULL
+        ");
         $this->addSql("
             ALTER TABLE ujm_hint 
             DROP FOREIGN KEY FK_B5FFCBE71E27F6BF
@@ -274,12 +298,21 @@ class Version20150923140541 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE ujm_question 
+            ADD expertise_id INT DEFAULT NULL, 
             DROP type, 
             DROP invite, 
             DROP feedback, 
             CHANGE title title VARCHAR(255) DEFAULT NULL COLLATE utf8_unicode_ci, 
             CHANGE locked locked TINYINT(1) DEFAULT NULL, 
             CHANGE model model TINYINT(1) DEFAULT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE ujm_question 
+            ADD CONSTRAINT FK_2F6069779D5B92F9 FOREIGN KEY (expertise_id) 
+            REFERENCES ujm_expertise (id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_2F6069779D5B92F9 ON ujm_question (expertise_id)
         ");
         $this->addSql("
             ALTER TABLE ujm_response 
