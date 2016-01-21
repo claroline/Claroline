@@ -1,60 +1,76 @@
-# b
-btn_end_step_label: End step
-btn_end_sequence_label: End sequence
+# a
+answer_zone: Answer zone
 
-# m
-meta_authors: Author(s)
-meta_others: Others
-meta_author_name: Name
-meta_author_status: Status
-meta_author_mail: Email
-meta_created: Created
-meta_updated: Modified
-meta_licence: Licence
-meta_description: Description
-meta_max_attempts: Maximum attempts
+# b
+btn_end_sequence_label: End exercise
+btn_interrupt_sequence_label: Interrupt
+btn_prev_step_label: Go to previous step
+btn_next_step_label: Go to next step
+btn_validate_step: Valider l'étape
+
+# c
+case_sensitive: Case sensitive
+comment: Comment
+
+# d
+dropdown_step_navigate_choice_label: Step N°%1% / %2%
+
+# k
+keys_words: Keys words
+
+# l
+link_exercice_home: Exercise home
+link_exercise_retry: Retry
+link_exercise_play: Answer
+link_exercise_docimology: Docimology
+link_csv_export: CSV export
+label_exercise_score: Global score
+label_exercise_question_score: Score
+label_exercise_correction: Correction
+label_no_labels_associated: No associated label(s)
+label_manual_correction_needed: Manual correction needed!
+
+# n
+need_correction: This answer needs a manual correction
+
+# p
+paper_list: Paper list
+paper_list_no_paper: Currently no paper
+paper_search: Search a paper
+paper_list_table_user: User
+paper_list_table_paper_number: Paper number
+paper_list_table_start_date: Start date
+paper_list_table_end_date: End date
+paper_list_table_interrupted: Interrupted
+paper_list_table_interrupted_yes: Yes
+paper_list_table_interrupted_no: No
+paper_list_table_action: Correction
+paper_list_table_action_not_available: Not available yet
+paper_list_table_score: Score
+paper_list_table_first_page_label: First
+paper_list_table_last_page_label: Last
+paper_list_table_toggle_pagination: Paginated / Unpaginated results
+
+paper_details_table_choice: Choix
+paper_details_table_expected_answer: Expected answer
+paper_details_table_your_answer: Your answer
+paper_details_table_comment: Comment
+paper_details_paper_score: Global score
+paper_details_question_score: Question score
+paper_details_correction_label: Correction
+
+points: Points
 
 # q
 question_hints: Hints
-question_objects: Objects
-question_global_feedback: Global feedback
-question_resources: Resources
-question_choices: Choices
-question_choice_score: Score
-question_allow_multiple_choice: Allow multiple choice
-question_randomize_choices: Shuffle choices order
-question_panel_hide: Hide / Show question details
-question_remove: Remove question
-question_cloze_text: Cloze text
-question_solutions: Solutions
-question_solution_answers: Answer(s)
-question_solution_score: Score
+question_hint_label: Hint
+question_hint_show_title: Show hint
 question_show_hint_confirm: Are you sure you want to see this hint ? <br/> This will give you a penalty of %1% points.
 
 # s
-sequence_panel_title: Sequence
-sequence_panel_hide: Hide / Show sequence informations
-sequence_type_name : Sequence name
-sequence_type_description : Sequence description
-sequence_start_date: Start date
-sequence_end_date: End date
-sequence_name : Name
-sequence_description : Description
-sequence_step_description: Description
-sequence_step_previous: Previous step
-sequence_step_next: Next step
-sequence_step_view: View step
-sequence_steps_save: Save steps
-sequence_step_add: Add step
-sequence_step_content_add: Add content step
-sequence_step_question_add: Add question step
-sequence_step_remove: Remove step
-sequence_save: Save sequence
-sequence_step_panel_title: Steps
-sequence_select_available_question: Select a question
-sequence_step_add_question: Add question
-sequence_attempts_infos: You have %1% attempt(s) - Attempt N° %2% / %1%
-sequence_next_step_confirm: Are you sure you want to go to the next step ? <br/> Yon won't be able to go back.
-sequence_end_sequence_confirm: Are you sure you want to go to finish the sequence ? <br/> Yon won't be able to edit your answers.
-step_question_shuffle: Shuffle question order for this step
-
+sequence_step: Step
+sequence_attempts_infos: You have %1% attempt(s)
+sequence_nb_attempts: Attempt N° %1%
+sequence_interrupt_sequence_confirm: Are you sure you want to go to interrupt the exercise ?
+sequence_end_sequence_confirm: Are you sure you want to go to finish the exercise ? <br/> Yon won't be able to edit your answers.
+sequence_play_leave_confirm: Are you sure you want to leave the application ?

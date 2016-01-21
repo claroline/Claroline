@@ -84,10 +84,11 @@ class QuestionManager
      *
      * @param Question  $question
      * @param bool      $withSolution
+     * @param bool      $forPaperList
      * @return \stdClass
      * @throws \Exception if the question type export is not implemented
      */
-    public function exportQuestion(Question $question, $withSolution = true)
+    public function exportQuestion(Question $question, $withSolution = true, $forPaperList = false)
     {
         $handler = $this->handlerCollector->getHandlerForInteractionType($question->getType());
 
@@ -95,6 +96,8 @@ class QuestionManager
         $data->id = $question->getId();
         $data->type = $handler->getQuestionMimeType();
         $data->title = $question->getTitle();
+        $data->description = $question->getDescription();
+        $data->invite = $question->getInvite();
 
         if (count($question->getHints()) > 0) {
             $data->hints = array_map(function ($hint) use ($withSolution) {
@@ -114,7 +117,19 @@ class QuestionManager
             $data->feedback = $question->getFeedback();
         }
 
-        $handler->convertInteractionDetails($question, $data, $withSolution);
+        $handler->convertInteractionDetails($question, $data, $withSolution, $forPaperList);
+
+        return $data;
+    }
+    
+    public function exportQuestionAnswers(Question $question){
+        $handler = $this->handlerCollector->getHandlerForInteractionType($question->getType());
+        // question infos
+        $data = new \stdClass();
+        $data->id = $question->getId();
+        $data->feedback = $question->getFeedback() ? $question->getFeedback():'';
+
+        $handler->convertQuestionAnswers($question, $data);
 
         return $data;
     }

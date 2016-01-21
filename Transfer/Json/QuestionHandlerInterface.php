@@ -62,12 +62,15 @@ interface QuestionHandlerInterface
      *
      * If the third parameter is set to true, the conversion process will
      * include any data related to the solution of the question.
+     * 
+     * If the fourth parameter is set to true shuffle property will never be done (typically for paper detail view)
+     * Default value set to false
      *
      * @param Question  $question
      * @param \stdClass $exportData
      * @param bool      $withSolution
      */
-    public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true);
+    public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true, $forPaperList = false);
 
     /**
      * Converts the details of an answer to a representation ready to
