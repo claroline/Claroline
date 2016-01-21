@@ -14,17 +14,17 @@
     {# Affichage de l'image de profil #}
     {% if dropzone.picture == 1  %}
     <td class="{{ classArray }}">
-        {% if document.sender.getPicture() != '' %}
-            <div class="user-panel">
-                <div class="pull-left image">
+        <div class="user-panel">
+             <div class="pull-left image">
+                {% if document.sender.getPicture() != '' %}
                     <img src="{{ asset('uploads/pictures/') ~ document.sender.getPicture() }}"
                     class=""
                     alt="{{ document.sender.getLastName() ~ ' ' ~ document.sender.getFirstName() }}">
-                </div>
-                </div>
-        {% else %}
-            <i class="centered direct-chat-img direct-chat-img-you right fa fa-user" ></i>
-        {% endif %}
+                {% else %}
+                        <img class="pull-left image img-polaroid img-responsive" src="{{ asset('bundles/icapnotification/images/default-avatar.png') }}">
+                {% endif %}
+            </div>
+        </div>
     </td>
     {% endif %}
     <td class="{{ classArray }}">
