@@ -35,7 +35,7 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
     {% endif %}
 
     <!-- Colonne ajoutée "Voir" modifiée en "Commentaire  - Evaluation"  -->
-    <th class="centered no-sort">
+    <th class="centered">
         <i class="fa fa-commenting-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Comment evaluation'|trans({},'innova_collecticiel') }}"></i>
     </th>
 
@@ -73,7 +73,7 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
             <th class="centered"><i class="fa fa-mail-forward"></th>
         {% endif %}
 
-        <th class="centered">
+        <th class="centered no-sort">
         {# Demande JJQ. InnovaERV
             {{ 'Selection'|trans({}, 'innova_collecticiel') }}
         #}
