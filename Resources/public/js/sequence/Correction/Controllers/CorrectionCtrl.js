@@ -17,7 +17,7 @@
 
             this.context = '';
 
-            this.isCollapsed = false;
+            this.questionPanelsState = 'opened'; // all panels are open
             this.globalNote = 0.0;
             this.displayRetryExerciseLink = false;
 
@@ -27,13 +27,39 @@
                 this.user = user;
 
                 this.questions = questions;
+                console.log(questions);
                 this.globalNote = 0;//CommonService.getPaperScore(this.paper, this.questions);
                 this.showHideRetryLink();
             };
 
+            /**
+             * Hide / Show all question panels
+             */
+            this.toggleAllDetails = function () {
+                // hide all panels
+                if (this.questionPanelsState === 'opened') {
+                    $('.question-panel').each(function () {                        
+                        var id = $(this).data('my-id');
+                        $('#question-body-' + id).hide();
+                        if (angular.element('#question-toggle-' + id).hasClass('fa-chevron-down')) {
+                            angular.element('#question-toggle-' + id).removeClass('fa-chevron-down').addClass('fa-chevron-right');
+                        }
+                    });
+                    this.questionPanelsState = 'closed';
+                } else { // show all panels
+                    $('.question-panel').each(function () {
+                        var id = $(this).data('my-id');
+                        $('#question-body-' + id).show();
+                        if (angular.element('#question-toggle-' + id).hasClass('fa-chevron-right')) {
+                            angular.element('#question-toggle-' + id).removeClass('fa-chevron-right').addClass('fa-chevron-down');
+                        }
+                    });
+                    this.questionPanelsState = 'opened';
+                }
+            };
+
             this.toggleDetails = function (id) {
                 $('#question-body-' + id).toggle();
-
                 if (angular.element('#question-toggle-' + id).hasClass('fa-chevron-down')) {
                     angular.element('#question-toggle-' + id).removeClass('fa-chevron-down').addClass('fa-chevron-right');
                 } else if (angular.element('#question-toggle-' + id).hasClass('fa-chevron-right')) {
@@ -104,13 +130,13 @@
             this.getQuestionScore = function (question) {
                 for (var i = 0; i < this.questions.length; i++) {
                     if (this.questions[i].id.toString() === question.id.toString()) {
-                        if (question.type === 'application/x.match+json') {                                                   
+                        if (question.type === 'application/x.match+json') {
                             return CorrectionService.getMatchQuestionScore(question, this.paper);
-                        } else if(question.type === 'application/x.choice+json'){
+                        } else if (question.type === 'application/x.choice+json') {
                             return CorrectionService.getChoiceQuestionScore(question, this.paper);
-                        } else if(question.type === 'application/x.cloze+json'){
+                        } else if (question.type === 'application/x.cloze+json') {
                             return CorrectionService.getClozeQuestionScore(question, this.paper);
-                        } else if(question.type === 'application/x.short+json'){
+                        } else if (question.type === 'application/x.short+json') {
                             return CorrectionService.getShortQuestionScore(question, this.paper);
                         }
                     }
