@@ -327,6 +327,12 @@ var sids = {};
                 $scope.selectedUser = ($scope.selectedUser === username) ? null : username;
             }
             
+            function updateVideoSpeaking(username)
+            {
+                $scope.speakingUser = username;
+                $scope.$apply();
+            }
+            
             function updateMainVideoDisplay()
             {
                 var mainVideo = document.getElementById('main-video');
@@ -345,11 +351,33 @@ var sids = {};
                 }
                 var element = document.getElementById(videoId);
                 
-                if (RTC.browser === 'firefox') {
-                    mainVideo.mozSrcObject = element.mozSrcObject;
-                } else {
-                    mainVideo.src = element.src;
+                if (element) {
+                    if (RTC.browser === 'firefox') {
+                        mainVideo.mozSrcObject = element.mozSrcObject;
+                    } else {
+                        mainVideo.src = element.src;
+                    }
                 }
+            }
+            
+            function sendSpeakingNotification()
+            {
+                XmppService.getConnection().send(
+                    $msg({
+                        to: XmppMucService.getRoom(),
+                        type: "groupchat"
+                    }).c('body').t('')
+                    .up()
+                    .c(
+                        'datas',
+                        {
+                            status: 'management',
+                            username: myUsername,
+                            type: 'speaking',
+                            value: 1
+                        }
+                    )
+                );
             }
 
             function onMediaReady(event, stream)
@@ -380,21 +408,28 @@ var sids = {};
                     var speechEvents = hark(stream, options);
 
                     speechEvents.on('speaking', function () {
-//                        console.log('speaking');
+                        
+                        if ($scope.myMicroEnabled) {
+                            sendSpeakingNotification();
+                        }
                     });
 
                     speechEvents.on('stopped_speaking', function () {
-//                        console.log('stopped_speaking');
+//                        console.log('Stopped speaking.');
                     });
                     speechEvents.on('volume_change', function (volume, treshold) {
-                      //console.log('volume', volume, treshold);
-                        if (volume < -60) { // vary between -60 and -35
-                            $('#ownvolume').css('width', 0);
-                        } else if (volume > -35) {
-                            $('#ownvolume').css('width', '100%');
-                        } else {
-                            $('#ownvolume').css('width', (volume + 100) * 100 / 25 - 160 + '%');
+                        
+                        if ($scope.myMicroEnabled && $scope.speakingUser !== myUsername && volume > -60) {
+                            sendSpeakingNotification();
                         }
+                      //console.log('volume', volume, treshold);
+//                        if (volume < -60) { // vary between -60 and -35
+//                            $('#ownvolume').css('width', 0);
+//                        } else if (volume > -35) {
+//                            $('#ownvolume').css('width', '100%');
+//                        } else {
+//                            $('#ownvolume').css('width', (volume + 100) * 100 / 25 - 160 + '%');
+//                        }
                     });
                 } else {
                     console.warn('without hark, you are missing quite a nice feature');
@@ -619,6 +654,16 @@ var sids = {};
                         sendMicroStatus(myUsername, $scope.myMicroEnabled);
                         sendCameraStatus($scope.myCameraEnabled);
                     }
+                } else if (type === 'speaking') {
+                    
+                    if ($scope.speakingUser !== username) {
+                        updateVideoSpeaking(username);
+                        
+                        if ($scope.selectedUser === null) {
+                            updateMainVideoDisplay();
+                        }
+                    }
+                    
                 }
             });
             
