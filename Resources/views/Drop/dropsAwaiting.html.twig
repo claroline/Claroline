@@ -29,15 +29,9 @@
 
     <!-- InnovaERV : ici, appel à la vue qui traite l'affichage de la liste -->
     {% set AwaitingMode = true %}
-    {% include 'InnovaCollecticielBundle:Drop:Listing/dropsListing.html.twig' %}
 
-    {% if pager.nbResults == 0 %}
-        <div class="row">
-            <div class="col-md-12 col-md-offset-1">
-                {{ 'No copy waiting for correction'|trans({}, 'innova_collecticiel') }}
-            </div>
-        </div>
-        <br>
+    {% if pager.nbResults != 0 %}
+        {% include 'InnovaCollecticielBundle:Drop:Listing/dropsListing.html.twig' %}
     {% endif %}
 
     <div class="container row">

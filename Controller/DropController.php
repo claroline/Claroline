@@ -508,6 +508,7 @@ class DropController extends DropzoneBaseController
     public function dropsAwaitingAction($dropzone, $page)
     {
 
+        $translator = $this->get('translator');
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
         $dropzoneManager = $this->get('innova.manager.dropzone_manager');
@@ -607,6 +608,10 @@ class DropController extends DropzoneBaseController
     /*    if ($this->get('security.context')->isGranted('ROLE_ADMIN' === true)) {
             $adminInnova = true;
         }*/
+
+        if (count($pager) == 0) {
+            $this->getRequest()->getSession()->getFlashBag()->add('success', $translator->trans('No copy waiting for correction', array(), 'innova_collecticiel'));
+        }
 
         $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
 
