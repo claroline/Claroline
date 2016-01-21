@@ -54,6 +54,10 @@ last proposal element and first label element
     list-style-type:none;
 }
 
+.dropped-item-row{
+    padding: 5px;
+}
+
 .state-highlight {
     border: 1px solid #fcefa1;
     background: #fbf9ee 50% 50% repeat-x;

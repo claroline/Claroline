@@ -78,9 +78,10 @@
                                  <div data-ng-bind-html="proposal.data | unsafe"></div>
                             </li>
                         </ul>
+                        <hr/>
                         <ul class="dragDropped">
                             <li data-ng-repeat="item in matchQuestionCtrl.dropped" id="dropped_{{item.source}}" data-ng-if="item.target === proposal.id">
-                                <div class="row">
+                                <div class="row dropped-item-row">
                                     <div class="col-sm-10" data-ng-bind-html="item.label | unsafe">
                                         
                                     </div>
