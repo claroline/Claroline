@@ -1,3 +1,5 @@
+{% extends "ClarolineForumBundle::layout.html.twig" %}
+
 {% macro renderPager(subjectId, pager, max) %}
     {{
         pagerfanta(
@@ -20,14 +22,6 @@
 
 {% from _self import renderPager %}
 {% from _self import renderOptions %}
-
-{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
-
-{% if isDesktop() %}
-    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
-{% endif %}
-
-{% extends layout %}
 
 {% block stylesheets %}
     {{ parent() }}

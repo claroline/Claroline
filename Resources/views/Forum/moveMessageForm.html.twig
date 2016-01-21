@@ -1,3 +1,5 @@
+{% extends "ClarolineForumBundle::layout.html.twig" %}
+
 {% macro renderPager(categoryId, pager) %}
     {{
         pagerfanta(
@@ -13,14 +15,6 @@
 {% endmacro %}
 
 {% from _self import renderPager %}
-
-{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
-
-{% if isDesktop() %}
-    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
-{% endif %}
-
-{% extends layout %}
 
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('claro_forum_categories', { 'forum': category.getForum().getId() }) }}">{{ _resource.getResourceNode().getName() }}</a></li>

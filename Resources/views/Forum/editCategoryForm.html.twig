@@ -1,10 +1,4 @@
-{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
-
-{% if isDesktop() %}
-    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
-{% endif %}
-
-{% extends layout %}
+{% extends "ClarolineForumBundle::layout.html.twig" %}
 
 {% block title %}{{ 'forum_category_edit'|trans({}, 'forum') ~ ' (' ~ _resource.getResourceNode().getName() ~ ')' ~ ' - ' ~ parent() | striptags | raw  }}{% endblock %}
 
