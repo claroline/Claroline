@@ -193,22 +193,24 @@ class HoleHandler implements QuestionHandlerInterface
         if (0 === $count = count($data)) {
             return ['Answer data cannot be empty'];
         }
-/*
+
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionHole')
             ->findOneByQuestion($question);
-        $holeIds = array_map(function ($hole) {
+    /*    $holeIds = array_map(function ($hole) {
             return (string) $hole->getId();
-        }, $interaction->getHoles()->toArray());
+        }, $interaction->getHoles()->toArray());*/
 
-        foreach ($data as $id) {
-            if (!is_string($id)) {
-                return ['Answer array must contain only string identifiers'];
+        foreach ($data as $answer) {
+            if ($answer || $answer !== null) {
+                if (!is_string($answer) && !is_numeric($answer)) {
+                    return ['Answer array must contain only strings or numeric identifiers, ' . gettype($answer) . ' given.'];
+                }
             }
 
-            if (!in_array($id, $holeIds)) {
+        /*    if (!in_array($id, $holeIds)) {
                 return ['Answer array identifiers must reference question choices'];
-            }
-        }*/
+            }*/
+        }
 
         return [];
     }
