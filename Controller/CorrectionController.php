@@ -2143,33 +2143,36 @@ class CorrectionController extends DropzoneBaseController
         $arrayDropsToView = array();
 
         $cpt = 0;
+
         // Parcours des documents sélectionnés et insertion en base de données
-        foreach($arrayDocsId as $documentId)
-        {
-            // Par le JS, le document est transmis sous la forme "document_id_XX"
-            $docIdS = explode("_", $documentId);
-            $docId = $docIdS[2];
+        if (!empty($arrayDocsToView)) {
+            foreach($arrayDocsId as $documentId)
+            {
+                // Par le JS, le document est transmis sous la forme "document_id_XX"
+                $docIdS = explode("_", $documentId);
+                $docId = $docIdS[2];
 
-            if ($docId > 0) {
-                $arrayDocsToView[] = $docId;
+                if ($docId > 0) {
+                    $arrayDocsToView[] = $docId;
 
-                $dropId = $arrayDropsId[$cpt];
-                $drop = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Drop')->find($dropId);
-                $arrayDropsToView[] = $dropId;
+                    $dropId = $arrayDropsId[$cpt];
+                    $drop = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Drop')->find($dropId);
+                    $arrayDropsToView[] = $dropId;
 
-                $correction = new Correction();
-                $correction->setUser($user);
-                $correction->setDropzone($dropzone);
-                $correction->setDrop($drop);
-                //Allow admins to edit this correction
-                $correction->setEditable(true);;
-                $em->persist($correction);
-                $em->flush();
+                    $correction = new Correction();
+                    $correction->setUser($user);
+                    $correction->setDropzone($dropzone);
+                    $correction->setDrop($drop);
+                    //Allow admins to edit this correction
+                    $correction->setEditable(true);;
+                    $em->persist($correction);
+                    $em->flush();
 
-                $event = new LogCorrectionStartEvent($dropzone, $drop, $correction);
-                $this->dispatch($event);
+                    $event = new LogCorrectionStartEvent($dropzone, $drop, $correction);
+                    $this->dispatch($event);
+                }
+                $cpt++;
             }
-            $cpt++;
         }
 
         $edit = 'edit';
@@ -2256,20 +2259,22 @@ class CorrectionController extends DropzoneBaseController
 
         $cpt=0;
         $stringDocsId="";
-        foreach($arrayDocsId as $documentId)
-        {
-            // Par le JS, le document est transmis sous la forme "document_id_XX"
-            $docIdS = explode("_", $documentId);
-            $docId = $docIdS[2];
-            $stringDocsId=$stringDocsId . $docId . "|";
+        if (!empty($arrayDocsToView)) {
+            foreach($arrayDocsId as $documentId)
+            {
+                // Par le JS, le document est transmis sous la forme "document_id_XX"
+                $docIdS = explode("_", $documentId);
+                $docId = $docIdS[2];
+                $stringDocsId=$stringDocsId . $docId . "|";
 
-            $document = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Document')->find($docId);
-            $arrayDocsToView[] = $document;
+                $document = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Document')->find($docId);
+                $arrayDocsToView[] = $document;
 
-            $dropId = $arrayDropsId[$cpt];
-            $drop = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Drop')->find($dropId);
-            $arrayDropsToView[] = $drop;
-            $cpt++;
+                $dropId = $arrayDropsId[$cpt];
+                $drop = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Drop')->find($dropId);
+                $arrayDropsToView[] = $drop;
+                $cpt++;
+            }
         }
 
         $edit = 'edit';
