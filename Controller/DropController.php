@@ -562,11 +562,11 @@ class DropController extends DropzoneBaseController
             $countReturnReceiptForUserAndDropzone = $countReturnReceiptForUserAndDropzone -1;
 
             if ($countReturnReceiptForUserAndDropzone < 0) {
-                $alertNbDocumentWithoutReturnReceipt = $nbTextToRead;
+                $alertNbDocumentWithoutReturnReceipt = $alertNbDocumentWithoutReturnReceipt+ $nbTextToRead;
             }
             else
             {
-                $alertNbDocumentWithoutReturnReceipt = $nbTextToRead - $countReturnReceiptForUserAndDropzone - 1;
+                $alertNbDocumentWithoutReturnReceipt = $alertNbDocumentWithoutReturnReceipt + $nbTextToRead - $countReturnReceiptForUserAndDropzone - 1;
             }
 
             // Traitement du tableau
