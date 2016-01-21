@@ -44,6 +44,8 @@ var sids = {};
             $scope.myUsername = null;
             $scope.myMicroEnabled = true;
             $scope.myCameraEnabled = true;
+            $scope.speakingUser = null;
+            $scope.selectedUser = null;
 
             function checkStream()
             {
@@ -319,6 +321,36 @@ var sids = {};
                     )
                 );
             }
+            
+            function updateVideoSelection(username)
+            {
+                $scope.selectedUser = ($scope.selectedUser === username) ? null : username;
+            }
+            
+            function updateMainVideoDisplay()
+            {
+                var mainVideo = document.getElementById('main-video');
+                var userToDisplay = myUsername;
+                var videoId = 'my-video';
+                
+                if ($scope.selectedUser) {
+                    userToDisplay = $scope.selectedUser;
+                } else if ($scope.speakingUser) {
+                    userToDisplay = $scope.speakingUser;
+                }
+                
+                if (userToDisplay !== myUsername && users[userToDisplay]) {
+                    var sid = users[userToDisplay]['sid'];
+                    videoId = 'participant-video-' + sid;
+                }
+                var element = document.getElementById(videoId);
+                
+                if (RTC.browser === 'firefox') {
+                    mainVideo.mozSrcObject = element.mozSrcObject;
+                } else {
+                    mainVideo.src = element.src;
+                }
+            }
 
             function onMediaReady(event, stream)
             {
@@ -341,7 +373,7 @@ var sids = {};
                 }
 
                 RTC.attachMediaStream($('#my-video'), $scope.localStream);
-                $scope.updateMainVideoSrc('my-video');
+                updateMainVideoDisplay();
 
                 if (typeof hark === "function") {
                     var options = { interval: 400 };
@@ -711,17 +743,9 @@ var sids = {};
                 XmppMucService.openRoom();
             };
             
-            $scope.updateMainVideoSrc = function (videoId) {
-                var element = document.getElementById(videoId);
-                var mainVideo = document.getElementById('main-video');
-                mainVideo.src = element.src;
-                mainVideo.mozSrcObject = element.mozSrcObject;
-                
-                if ($scope.currentVideoId !== null) {
-                    $('#' + $scope.currentVideoId).closest('.participant-panel').removeClass('video-selected');
-                }
-                $scope.currentVideoId = videoId;
-                $('#' + videoId).closest('.participant-panel').addClass('video-selected');
+            $scope.updateMainVideoSrc = function (username) {
+                updateVideoSelection(username);
+                updateMainVideoDisplay();
             };
             
             $scope.manageMicrophone = function (username) {
@@ -743,6 +767,20 @@ var sids = {};
             $scope.manageCamera = function () {
                 var cameraEnabled = !$scope.myCameraEnabled;
                 sendCameraStatus(cameraEnabled);
+            };
+            
+            $scope.streamClassName = function (username) {
+                var streamClass = 'panel panel-default participant-panel';
+                
+                if ($scope.selectedUser === username) {
+                    streamClass += ' video-selected';
+                }
+                
+                if ($scope.speakingUser === username) {
+                    streamClass += ' video-speaking';
+                }
+                
+                return streamClass;
             };
         }
     ]);

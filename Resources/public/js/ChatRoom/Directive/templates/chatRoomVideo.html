@@ -14,7 +14,7 @@
     <div class="row">
         <div id='participants-video-container'>
             <div id='my-video-container' class="participant-stream">
-                <div class="panel panel-default participant-panel">
+                <div ng-class="streamClassName(myUsername)">
                     <div class="panel-heading">
                         <h3 class="panel-title">
                             {{ 'me'|trans:{}:'chat' }}
@@ -26,14 +26,15 @@
                             </span>
                         </h3>
                     </div>
-                    <div class="panel-body participant-video-panel" ng-click="updateMainVideoSrc('my-video')">
+                    <div class="panel-body participant-video-panel" ng-click="updateMainVideoSrc(myUsername)">
                         <video id="my-video" autoplay="autoplay" class="participant-video"></video>
                         <div id="ownvolume"></div>
                     </div>
                 </div>
             </div>
             <div ng-repeat="stream in streams" id="participant-stream-{{ stream['sid'] }}" class="participant-stream">
-                <div class="panel panel-default participant-panel">
+                <!--<div class="panel panel-default participant-panel">-->
+                <div ng-class="streamClassName(stream['username'])">
                     <div class="panel-heading">
                         <h3 class="panel-title">
                             {{ stream['name'] }}
@@ -43,7 +44,7 @@
                             </span>
                         </h3>
                     </div>
-                    <div class="panel-body participant-video-panel" ng-click="updateMainVideoSrc('participant-video-' + stream['sid'])">
+                    <div class="panel-body participant-video-panel" ng-click="updateMainVideoSrc(stream['username'])">
                     </div>
                 </div>
             </div>
