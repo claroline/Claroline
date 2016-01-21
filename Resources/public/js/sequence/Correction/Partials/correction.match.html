@@ -13,13 +13,17 @@
                 <div class="panel" data-ng-class="correctionMatchCtrl.checkAnswerValidity(label) ? 'panel-success':'panel-danger'">
                     <div class="panel-heading clearfix">
                         <h4 class="panel-title pull-left">
-                            <span>{{label.data}}</span>
+                             <div data-ng-bind-html="label.data | unsafe"></div>
                         </h4>
                     </div>
                     <div class="panel-body">
                         <ul>
-                            <li data-ng-repeat="item in correctionMatchCtrl.getStudentAnswers(label)">                                
+                            <li data-ng-repeat="item in correctionMatchCtrl.getStudentAnswers(label)">
+                                <div data-ng-bind-html="item.data | unsafe"></div>
+                                 <!--
+                                 KEEP THIS FOR THE TIME WHEN WE WOULD BE ABLE TO KNOW PROPOSAL / LABEL TYPE (ie HTML vs Text)
                                 <span data-ng-class="correctionMatchCtrl.checkProposalValidity(item.id) ? '':'wrong-label'">{{item.data}}</span>
+                                 -->
                             </li>
                             <li data-ng-if="item.length == 0" data-ng-repeat="item in correctionMatchCtrl.getStudentAnswers(label)">
                                 -
@@ -33,13 +37,14 @@
                 <div class="panel panel-default">
                     <div class="panel-heading clearfix">
                         <h4 class="panel-title pull-left">
-                            <span>{{label.data}}</span>
+                           <div data-ng-bind-html="label.data | unsafe"></div>
                         </h4>                       
                     </div>
                     <div class="panel-body">
                         <ul>
                             <li data-ng-repeat="item in correctionMatchCtrl.getCorrectAnswers(label)">
-                                {{item.data}}
+                               
+                                <div data-ng-bind-html="item.data | unsafe"></div>
                             </li>
                         </ul>
                     </div>

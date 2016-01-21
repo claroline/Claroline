@@ -14,16 +14,27 @@
     background-color: #f9f9f9;
     margin: 10px;
     min-height: 50px;
-    max-width: 400px;
+    /*max-width: 400px;*/
     min-width: 200px;
     padding: 10px;
 }
 
+/*
+limit video height
+*/
+video{
+    /*max-height:100px;*/
+}
+
+/*
+set min-height to limit painfull binding between
+last proposal element and first label element
+*/
 .droppable {
     background-color: #f9f9f9;
     margin: 10px;
-    max-width: 400px;
-    min-height: 50px;
+    /*max-width: 400px;*/
+   /*min-height: 150px;*/
     min-width: 200px;
     padding: 10px;
 }
@@ -63,16 +74,7 @@
     color: #212121;
 }
 
-.fa-trash {
-    text-decoration: red;
-    color: red;
-}
 
-.fa-trash:hover {
-    text-decoration: red;
-    color: red;
-    cursor:pointer;
-}
 
 .dragDropped li {
     list-style-type:none;
