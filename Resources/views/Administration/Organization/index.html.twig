@@ -20,15 +20,8 @@
 {% endblock %}
 
 {% block section_content %}
-    <div id="organization-panel" class="panel panel-default" ng-app="organizationManager">
-        <div class="panel-body" ng-controller="OrganizationController">
-            <div class="col-md-8">
-                <organizationslist></organizationslist>
-            </div>
-            <div class="col-md-4">
-                <a class="btn btn-primary" href="{{ path('claro_admin_department_locations') }}">{{ 'locations'|trans({}, 'platform') }} </a>
-            </div>
-        </div>
+    <div id="organization-panel" class="panel panel-default" ng-app="OrganizationManager">
+        <div class="panel-body" ng-controller="OrganizationController" ng-view></div>
     </div>
 
 {% endblock %}
@@ -53,6 +46,19 @@
     </script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/angular/services/api.services.js') }}></script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/angular/search/generic/search.app.js') }}></script>
-    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/organization/organization.app.js') }}></script>
 
+    {# organizations #}
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/organization/module.js') }}></script>
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/organization/Controller/EditModalController.js') }}></script>
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/organization/Controller/OrganizationController.js') }}></script>
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/organization/Directive/OrganizationListDirective.js') }}></script>
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/organization/Service/OrganizationAPIService.js') }}></script>
+
+    {# locations #}
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/location/module.js') }}></script>
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/location/Controller/CreateModalController.js') }}></script>
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/location/Controller/EditModalController.js') }}></script>
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/location/Controller/LocationsController.js') }}></script>
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/location/Service/LocationAPIService.js') }}></script>
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/location/Directive/LocationManagerDirective.js') }}></script>
 {% endblock %}

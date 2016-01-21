@@ -27,22 +27,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class OrganizationController extends Controller
 {
-
-    /**
-     * @DI\InjectParams({
-     *     "locationManager" = @DI\Inject("claroline.manager.organization.location_manager"),
-     *     "request"         = @DI\Inject("request")
-     * })
-     */
-    public function __construct(
-        LocationManager $locationManager,
-        Request $request
-    )
-    {
-        $this->locationManager = $locationManager;
-        $this->request = $request;
-    }
-
     /**
      * @EXT\Route(
      *     "/index",
@@ -53,56 +37,4 @@ class OrganizationController extends Controller
 	{
 		return array();
 	}
-
-    /**
-     * @EXT\Route(
-     *     "/department/locations/list",
-     *     name="claro_admin_department_locations"
-     * )
-     */
-    public function locationsAction()
-    {
-        $locations = $this->locationManager->getByType(Location::TYPE_DEPARTMENT);
-
-        return array('locations' => $locations);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/department/location/create/form",
-     *     name="claro_admin_location_create_form",
-     *     options = {"expose"=true},
-     * )
-     * @EXT\Template()
-     */
-    public function locationFormCreateAction()
-    {
-        $form = $this->createForm(new LocationType());
-
-        return array('form' => $form);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/department/location/submit/form",
-     *     name="claro_admin_location_submit_form",
-     *     options = {"expose"=true},
-     * )
-     * @EXT\Template()
-     */
-    public function locationFormSubmitAction()
-    {
-        $form = $this->createForm(new LocationType(), new Location());
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-             $location = $form->getData();
-             $this->locationManager->create($location);
-
-             //serialize and return as json
-             return new JsonResponse('success');
-        }
-
-        return array('form' => $form);
-    }
 }
