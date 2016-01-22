@@ -75,6 +75,7 @@ class ValidatorTest extends TransactionalTestCase
     {
         $data = file_get_contents("{$this->formatDir}/question/$dataFilename");
         $question = json_decode($data);
+        $errors = $this->validator->validateQuestion($question);
         $this->assertEquals(0, count($this->validator->validateQuestion($question)));
     }
 
@@ -93,8 +94,9 @@ class ValidatorTest extends TransactionalTestCase
     {
         return [
             ['choice/examples/valid/solutions.json'],
+            ['match/examples/valid/solutions.json'],
 //            ['cloze/examples/valid/simple-input.json'],
-//            ['match/examples/valid/basic.json'],
+//            
 //            ['sort/examples/valid/basic.json'],
         ];
     }

@@ -63,7 +63,6 @@
                     }
                     for (var j = 0; j < paper.questions.length; j++) {
                         if (paper.questions[j].id === question.id.toString()) {
-                            console.log(paper.questions[j]);
                             studentScore = paper.questions[j].score;
                         }
                     }
@@ -72,7 +71,7 @@
                 },
                 getShortQuestionScore: function (question, paper) {
                     if (question.typeOpen === "long") {
-                        return "Cette réponse nécessite une correction";
+                        return Translator.trans('need_correction', {}, 'ujm_sequence');
                     }
                     else {
                         var availableScore = 0.0;

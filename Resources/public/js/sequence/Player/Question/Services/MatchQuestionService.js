@@ -59,7 +59,9 @@
                         $(this).draggable({
                             cursor: 'move',
                             revert: 'invalid',
-                            helper: 'clone'
+                            helper: 'clone',
+                            zIndex: 10000,
+                            cursorAt: {top:5, left:5}
                         });
                     });
 
@@ -95,7 +97,7 @@
                             // for exercice, if go on previous question
                             if ($(this).children().children().length === 0) {
                                 var id = $(this).attr('id');
-                                var idNumber = id.replace('div_', '');
+                                // var idNumber = id.replace('div_', '');
 
                                 // make the right apprearence for colunmm of label and proposal
                                 //$(this).children().append(balisesLiDropped[idNumber].clone());

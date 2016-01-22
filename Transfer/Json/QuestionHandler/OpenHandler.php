@@ -13,8 +13,8 @@ use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
  * @DI\Service("ujm.exo.open_handler")
  * @DI\Tag("ujm.exo.question_handler")
  */
-class OpenHandler implements QuestionHandlerInterface
-{
+class OpenHandler implements QuestionHandlerInterface {
+
     private $om;
 
     /**
@@ -24,40 +24,35 @@ class OpenHandler implements QuestionHandlerInterface
      *
      * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $om)
-    {
+    public function __construct(ObjectManager $om) {
         $this->om = $om;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getQuestionMimeType()
-    {
+    public function getQuestionMimeType() {
         return 'application/x.short+json';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getInteractionType()
-    {
+    public function getInteractionType() {
         return InteractionOpen::TYPE;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getJsonSchemaUri()
-    {
+    public function getJsonSchemaUri() {
         return 'http://json-quiz.github.io/json-quiz/schemas/question/short/schema.json';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function validateAfterSchema(\stdClass $questionData)
-    {
+    public function validateAfterSchema(\stdClass $questionData) {
         $errors = [];
 
         if (!isset($questionData->solutions)) {
@@ -100,20 +95,18 @@ class OpenHandler implements QuestionHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function persistInteractionDetails(Question $question, \stdClass $importData)
-    {
+    public function persistInteractionDetails(Question $question, \stdClass $importData) {
         $interaction = new InteractionOpen();
 
         for ($i = 0, $max = count($importData->holes); $i < $max; ++$i) {
             // temporary limitation
             if ($importData->holes[$i]->type !== 'text/html') {
                 throw new \Exception(
-                    "Import not implemented for MIME type {$importData->holes[$i]->type}"
+                "Import not implemented for MIME type {$importData->holes[$i]->type}"
                 );
             }
 
             $hole = new Hole();
-        //    $hole->setLabel($importData->holes[$i]->data);
             $hole->setOrdre($i);
 
             $hole->setInteractionHole($interaction);
@@ -128,14 +121,13 @@ class OpenHandler implements QuestionHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true, $forPaperList = false)
-    {
+    public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true, $forPaperList = false) {
         $repo = $this->om->getRepository('UJMExoBundle:InteractionOpen');
         $openQuestion = $repo->findOneBy(['question' => $question]);
 
         if ($withSolution) {
             $responses = $openQuestion->getWordResponses();
-            
+
             $exportData->solutions = array_map(function ($wr) {
                 $responseData = new \stdClass();
                 $responseData->id = (string) $wr->getId();
@@ -146,39 +138,28 @@ class OpenHandler implements QuestionHandlerInterface
                 return $responseData;
             }, $responses->toArray());
         }
-        
+
         $exportData->typeOpen = $openQuestion->getTypeOpenQuestion()->getValue();
-        
+
         return $exportData;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function convertAnswerDetails(Response $response)
-    {
-    /*    $parts = explode(';', $response->getResponse());
-
-        return array_filter($parts, function ($part) {
-            return $part !== '';
-        });
-        */
+    public function convertAnswerDetails(Response $response) {
         return $response->getResponse();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function validateAnswerFormat(Question $question, $data)
-    {
-        /*if (!is_array($data)) {
-            return ['Answer data must be an array, ' . gettype($data) . ' given'];
-        }*/
-        
+    public function validateAnswerFormat(Question $question, $data) {
+
         if (!is_string($data)) {
             return ['Answer data must be a string, ' . gettype($data) . ' given'];
         }
-        
+
         $count = 0;
 
         if (0 === $count = count($data)) {
@@ -193,25 +174,31 @@ class OpenHandler implements QuestionHandlerInterface
      *
      * {@inheritdoc}
      */
-    public function storeAnswerAndMark(Question $question, Response $response, $data)
-    {
-        
+    public function storeAnswerAndMark(Question $question, Response $response, $data) {
+
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionOpen')
-            ->findOneByQuestion($question);
+                ->findOneByQuestion($question);
 
         $mark = 0;
-        
+
         $answer = $data;
-        
+
         echo $answer;
-        
+
         foreach ($interaction->getWordResponses() as $wd) {
-            if (strpos($answer,$wd->getResponse()) !== false) {
-                $mark += $wd->getScore();
+            if (!$wd->getCaseSensitive()) {
+                if (strpos(strtolower($answer), strtolower($wd->getResponse())) !== false) {
+                    $mark += $wd->getScore();
+                }
+            } else {
+                if (strpos($answer, $wd->getResponse()) !== false) {
+                    $mark += $wd->getScore();
+                }
             }
         }
-        
+
         $response->setResponse($answer);
         $response->setMark($mark);
     }
+
 }

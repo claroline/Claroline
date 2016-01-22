@@ -80,7 +80,6 @@
             this.getHintData = function (id) {
                 var promise = QuestionService.getHint(id);
                 promise.then(function (result) {
-                    //console.log(result);
                     this.usedHints.push(result);
 
                 }.bind(this));
@@ -91,8 +90,7 @@
              * We need to share those informations with parent controllers
              * For that purpose we use a shared service
              */
-            this.updateStudentData = function () {
-                
+            this.updateStudentData = function () {                
                 // save the answer in currentQuestionPaperData, tu be able to reuse it during the sequence
                 this.currentQuestionPaperData.answer = this.answer;
                 PlayerDataSharing.setStudentData(this.question, this.currentQuestionPaperData);

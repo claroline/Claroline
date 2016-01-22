@@ -6,7 +6,8 @@ btn_end_sequence_label: Terminer l'exercice
 btn_interrupt_sequence_label: Interrompre
 btn_prev_step_label: Aller à l'étape précédente
 btn_next_step_label: Aller à l'étape suivante
-btn_validate_step: Validate step
+btn_validate_step: Valider l'étape
+btn_toggle_all_paper_question_panels: Montrer / cacher les questions
 
 # c
 case_sensitive: Respecter la casse
@@ -31,12 +32,13 @@ label_no_labels_associated: Pas de label(s) associé(s)
 label_manual_correction_needed: Correction manuelle nécessaire!
 
 # n
-need_correction: Cette réponse nécessite une correction
+need_correction: Cette réponse nécessite une correction manuelle
 
 # p
 paper_list: Liste des copies
 paper_list_no_paper: Aucune copie actuellement
 paper_search: Rechercher une copie
+paper_list_manual_correction_needed: Correction manuelle nécessaire
 paper_list_table_user: Utilisateur
 paper_list_table_paper_number: Numéro de copie
 paper_list_table_start_date: Date de début

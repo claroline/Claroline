@@ -257,7 +257,7 @@ class HoleImport extends QtiImport
         foreach ($ib->getElementsByTagName('inlineChoiceInteraction') as $ici) {
             if ($ici->getAttribute('responseIdentifier') == $qtiId) {
                 foreach ($ici->getElementsByTagName('inlineChoice') as $ic) {
-                    $keyWord = new WordResponse();   
+                    $keyWord = new WordResponse();
                     $score = 0;
                     $matchScore = false;
                     $keyWord->setResponse($ic->nodeValue);
@@ -289,12 +289,15 @@ class HoleImport extends QtiImport
             }
         }
     }
-    protected function addFeedbackInLine($mapEntry,$keyWord){
-         $feedback = $mapEntry->getElementsByTagName("feedbackInline"); 
-                        if ($feedback->item(0)) {
-                             $keyWord->setFeedback($feedback->item(0)->nodeValue);     
-                                $mapEntry->removeChild($feedback->item(0));
-                        }
+    protected function addFeedbackInLine($mapEntry,$keyWord)
+    {
+        $feedback = $mapEntry->getElementsByTagName("feedbackInline");
+        if ($feedback->item(0)) {
+            $feedbackVal = $this->domElementToString($feedback->item(0));
+            $feedbackVal = html_entity_decode($feedbackVal);
+            $keyWord->setFeedback($feedbackVal);
+            $mapEntry->removeChild($feedback->item(0));
+        }
     }
 
     /**
