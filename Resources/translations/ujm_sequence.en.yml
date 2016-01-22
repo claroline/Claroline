@@ -33,6 +33,7 @@ label_manual_correction_needed: Manual correction needed!
 
 # n
 need_correction: This answer needs a manual correction
+note_question: Note this question
 
 # p
 paper_list: Paper list
@@ -76,3 +77,6 @@ sequence_nb_attempts: Attempt N° %1%
 sequence_interrupt_sequence_confirm: Are you sure you want to go to interrupt the exercise ?
 sequence_end_sequence_confirm: Are you sure you want to go to finish the exercise ? <br/> Yon won't be able to edit your answers.
 sequence_play_leave_confirm: Are you sure you want to leave the application ?
+
+# v
+validate: Validate

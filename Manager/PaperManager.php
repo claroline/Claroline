@@ -159,6 +159,22 @@ class PaperManager
         $this->om->persist($response);
         $this->om->flush();
     }
+    
+    /**
+     * 
+     * @param Question $question
+     * @param Paper $paper
+     * @param int $score
+     */
+    public function recordOpenScore(Question $question, Paper $paper, $score) {
+        $response = $this->om->getRepository('UJMExoBundle:Response')
+            ->findOneBy(['paper' => $paper, 'question' => $question]);
+        
+        $response->setMark($score);
+        
+        $this->om->persist($response);
+        $this->om->flush();
+    }
 
 
     /**

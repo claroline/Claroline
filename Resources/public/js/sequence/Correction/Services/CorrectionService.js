@@ -71,7 +71,17 @@
                 },
                 getShortQuestionScore: function (question, paper) {
                     if (question.typeOpen === "long") {
-                        return Translator.trans('need_correction', {}, 'ujm_sequence');
+                        for (var j = 0; j < paper.questions.length; j++) {
+                            if (paper.questions[j].id === question.id.toString()) {
+                                if (paper.questions[j].score !== -1) {
+                                    result = paper.questions[j].score.toString() + '/' + question.scoreMaxLongResp.toString();
+                                    return result;
+                                }
+                                else {
+                                    return Translator.trans('need_correction', {}, 'ujm_sequence');
+                                }
+                            }
+                        }
                     }
                     else {
                         var availableScore = 0.0;
@@ -112,6 +122,32 @@
                                 $window.location = url;
                             });
 
+                    return deferred.promise;
+                },
+                /**
+                 * Save a long answer's score
+                 * @param {type} exoId
+                 * @param {type} paperId
+                 * @param {type} score
+                 * @returns {$q@call;defer.promise}
+                 */
+                saveScore: function (questionId, paperId, score) {
+                    var deferred = $q.defer();
+                    $http
+                            .put(
+                                //finish_paper    
+                                Routing.generate('exercise_save_open_score', {questionId: questionId, paperId: paperId, score: score})
+                            )
+                            .success(function (response) {
+                                deferred.resolve(response);
+                            })
+                            .error(function (data, status) {
+                                deferred.reject([]);
+                                var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService end sequence error';
+                                var code = data && data.error && data.error.code ? data.error.code : 403;
+                                var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});
+                                $window.location = url;
+                            });
                     return deferred.promise;
                 }
             };
