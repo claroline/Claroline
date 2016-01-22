@@ -150,6 +150,25 @@ class ExerciseController
 
         return new JsonResponse('', 204);
     }
+    
+    /**
+     * Saves the score of an open long answer.
+     * 
+     * @EXT\Route("/papers/{paperId}/question/{questionId}/score/{score}", name="exercise_save_open_score")
+     * @EXT\Method("PUT")
+     * @EXT\ParamConverter("paper", class="UJMExoBundle:Paper", options={"mapping": {"paperId": "id"}})
+     * @EXT\ParamConverter("question", class="UJMExoBundle:Question", options={"mapping": {"questionId": "id"}})
+     * 
+     * @param Question $question
+     * @param Paper $paper
+     * @param int $score
+     */
+    public function saveOpenLongScore(Question $question, Paper $paper, $score)
+    {
+        $this->paperManager->recordOpenScore($question, $paper, $score);
+        
+        return new JsonResponse('', 204);
+    }
 
     /**
      * Returns the value of a question hint, and records the fact that it has

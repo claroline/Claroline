@@ -196,9 +196,6 @@ class HoleHandler implements QuestionHandlerInterface
 
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionHole')
             ->findOneByQuestion($question);
-    /*    $holeIds = array_map(function ($hole) {
-            return (string) $hole->getId();
-        }, $interaction->getHoles()->toArray());*/
 
         foreach ($data as $answer) {
             if ($answer || $answer !== null) {
@@ -206,10 +203,6 @@ class HoleHandler implements QuestionHandlerInterface
                     return ['Answer array must contain only strings or numeric identifiers, ' . gettype($answer) . ' given.'];
                 }
             }
-
-        /*    if (!in_array($id, $holeIds)) {
-                return ['Answer array identifiers must reference question choices'];
-            }*/
         }
 
         return [];
