@@ -4,7 +4,7 @@
   "homepage": "http://www.claroline.net",
   "type": "claroline-plugin",
   "require": {
-    "php": ">=5.4.1",
+    "php": ">=5.5",
     "claroline/core-bundle": "~6.2",
     "guzzle/http": "~3.1"
   },
@@ -13,7 +13,7 @@
   },
   "autoload": {
     "psr-4": {
-      "HeVinci\\UrlBundle": ""
+      "HeVinci\\UrlBundle\\": ""
     }
   }
 }
