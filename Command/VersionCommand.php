@@ -36,12 +36,16 @@ EOT
     {
         $status = $this->getManager($output)->getBundleStatus($this->getTargetBundle($input));
 
-        foreach ($status[Migrator::STATUS_AVAILABLE] as $version) {
-            $output->writeln(
-                $version === $status[Migrator::STATUS_CURRENT] ?
-                    "  * {$version} (current)" :
-                    "    {$version}"
-            );
+        if (count($status[Migrator::STATUS_AVAILABLE]) > 0) {
+            foreach ($status[Migrator::STATUS_AVAILABLE] as $version) {
+                $output->writeln(
+                    $version === $status[Migrator::STATUS_CURRENT] ?
+                        "  * {$version} (current)" :
+                        "    {$version}"
+                );
+            }
+        } else {
+            $output->writeln('No migration is available for this bundle.');
         }
     }
 }

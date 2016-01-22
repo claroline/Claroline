@@ -65,11 +65,18 @@ class Migrator
     public function getMigrationStatus(Bundle $bundle)
     {
         $config = $this->getConfiguration($bundle);
-        $availableVersions = $config->getAvailableVersions();
-        array_unshift($availableVersions, '0');
+
+        if (is_dir($config->getMigrationsDirectory())) {
+            $currentVersion = $config->getCurrentVersion();
+            $availableVersions = $config->getAvailableVersions();
+            array_unshift($availableVersions, '0');
+        } else {
+            $currentVersion = '0';
+            $availableVersions = [];
+        }
 
         return array(
-            self::STATUS_CURRENT => $config->getCurrentVersion(),
+            self::STATUS_CURRENT => $currentVersion,
             self::STATUS_AVAILABLE => $availableVersions
         );
     }
