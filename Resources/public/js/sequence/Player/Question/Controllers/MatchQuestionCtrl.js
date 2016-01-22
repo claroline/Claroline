@@ -28,7 +28,6 @@
                 this.currentQuestionPaperData = PlayerDataSharing.setCurrentQuestionPaperData(question);
                 this.question = question;
                 this.canSeeFeedback = canSeeFeedback;
-
                 PlayerDataSharing.setStudentData(question);
 
                 if (this.currentQuestionPaperData.hints.length > 0) {
@@ -64,7 +63,7 @@
             this.updateStudentData = function () {
                 // build answers
                 this.currentQuestionPaperData.answer = [];
-                if (this.question.subType === 'toBind') {
+                if (this.question.toBind) {
                     for (var i = 0; i < this.connections.length; i++) {
                         if (this.connections[i] !== '' && this.connections[i].source && this.connections[i].target) {
                             var answer = this.connections[i].source + ',' + this.connections[i].target;
@@ -72,7 +71,7 @@
                         }
                     }
 
-                } else if (this.question.subType === 'toDrag') {
+                } else { // toDrag
                     for (var i = 0; i < this.dropped.length; i++) {
                         if (this.dropped[i] !== '' && this.dropped[i].source && this.dropped[i].target) {
                             var answer = this.dropped[i].source + ',' + this.dropped[i].target;

@@ -27,57 +27,68 @@
             </div>
         </div>        
         <!-- TO BIND PROPOSALS & ASSOCIATED LABELS -->
-        <div data-ng-if="matchQuestionCtrl.question.subType == 'toBind'" class="row center-text">
+        <div data-ng-if="matchQuestionCtrl.question.toBind" class="row center-text">
             <!-- PROPOSALS -->
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div data-ng-repeat="proposal in matchQuestionCtrl.question.firstSet" class="row origin draggable" id="draggable_{{proposal.id}}">
                     <div class="col-md-12 setLabel">    
-                        {{ proposal.data}}
+                        <div data-ng-bind-html="proposal.data | unsafe"></div>
                     </div>
                 </div>
             </div>
             <!-- EMPTY -->
-            <div class="col-md-4">
+            <div class="col-md-2">
 
             </div>
             <!-- LABELS -->
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div data-ng-repeat="proposal in matchQuestionCtrl.question.secondSet" class="row droppable" id="droppable_{{proposal.id}}">
-                    <div class="col-md-12 setLabel">    
-                        {{ proposal.data}}
+                    <div class="col-md-12 setLabel">                        
+                         <div data-ng-bind-html="proposal.data | unsafe"></div>
                     </div>
                 </div>
             </div>
         </div>
         <!-- TO DRAG SUB TYPE  -->
-        <div data-ng-if="matchQuestionCtrl.question.subType == 'toDrag'" class="row center-text">
+        <div data-ng-if="!matchQuestionCtrl.question.toBind" class="row center-text">
             <!-- PROPOSALS -->
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div data-ng-repeat="proposal in matchQuestionCtrl.question.firstSet" class="row origin" id="div_{{proposal.id}}">
                     <div class="col-md-12 setLabel">                        
                         <ul>
                             <li id="draggable_{{proposal.id}}" class="draggable">
-                                {{ proposal.data}}
+                                <div data-ng-bind-html="proposal.data | unsafe"></div>
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
             <!-- EMPTY -->
-            <div class="col-md-4">
+            <!--
+            <div class="col-md-2">
 
             </div>
+            -->
             <!-- LABELS -->
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div data-ng-repeat="proposal in matchQuestionCtrl.question.secondSet" class="row droppable" id="droppable_{{proposal.id}}">
                     <div class="col-md-12 setLabel">
                         <ul>
-                            <li class="lidroppable">{{proposal.data}}</li>
+                            <li class="lidroppable">
+                                 <div data-ng-bind-html="proposal.data | unsafe"></div>
+                            </li>
                         </ul>
+                        <hr/>
                         <ul class="dragDropped">
                             <li data-ng-repeat="item in matchQuestionCtrl.dropped" id="dropped_{{item.source}}" data-ng-if="item.target === proposal.id">
-                                {{item.label}}
-                                <span class="fa fa-trash" data-ng-click="matchQuestionCtrl.removeDropped(item.source, proposal.id)"></span>
+                                <div class="row dropped-item-row">
+                                    <div class="col-sm-10" data-ng-bind-html="item.label | unsafe">
+                                        
+                                    </div>
+                                    <div class="col-sm-2">
+                                         <button class="btn btn-danger fa fa-trash" data-ng-click="matchQuestionCtrl.removeDropped(item.source, proposal.id)"></button>
+                                    </div>
+                                </div>                               
                             </li>
                         </ul>
                     </div>

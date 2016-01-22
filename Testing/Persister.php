@@ -11,22 +11,26 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use UJM\ExoBundle\Entity\Category;
 use UJM\ExoBundle\Entity\Choice;
+use UJM\ExoBundle\Entity\Proposal;
+use UJM\ExoBundle\Entity\Label;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\ExerciseQuestion;
 use UJM\ExoBundle\Entity\Hint;
 use UJM\ExoBundle\Entity\InteractionOpen;
 use UJM\ExoBundle\Entity\InteractionQCM;
+use UJM\ExoBundle\Entity\InteractionMatching;
 use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\TypeQCM;
+use UJM\ExoBundle\Entity\TypeMatching;
 use UJM\ExoBundle\Manager\PaperManager;
 
 /**
  * Simple testing utility allowing to create and persist
  * various exercise-related entities with minimal effort.
  */
-class Persister
-{
+class Persister {
+
     /**
      * @var ObjectManager
      */
@@ -48,12 +52,16 @@ class Persister
     private $multipleChoiceType;
 
     /**
+     * @var TypeMatch
+     */
+    private $matchType;
+
+    /**
      * @var PaperManager
      */
     private $paperManager;
 
-    public function __construct(ObjectManager $om, PaperManager $paperManager)
-    {
+    public function __construct(ObjectManager $om, PaperManager $paperManager) {
         $this->om = $om;
         $this->paperManager = $paperManager;
     }
@@ -63,8 +71,7 @@ class Persister
      * @param float     $score
      * @return Choice
      */
-    public function qcmChoice($text, $score)
-    {
+    public function qcmChoice($text, $score) {
         $choice = new Choice();
         $choice->setLabel($text);
         $choice->setWeight($score);
@@ -79,8 +86,7 @@ class Persister
      * @param string    $description
      * @return Question
      */
-    public function qcmQuestion($title, array $choices = [], $description = '')
-    {
+    public function qcmQuestion($title, array $choices = [], $description = '') {
         $question = new Question();
         $question->setTitle($title);
         $question->setInvite('Invite...');
@@ -113,8 +119,7 @@ class Persister
      * @param string $title
      * @return Question
      */
-    public function openQuestion($title)
-    {
+    public function openQuestion($title) {
         $question = new Question();
         $question->setTitle($title);
         $question->setInvite('Invite...');
@@ -128,14 +133,64 @@ class Persister
         return $question;
     }
 
+    public function matchLabel($text, $score = 0) {
+        $label = new Label();
+        $label->setFeedback('feedback...');
+        $label->setValue($text);
+        $label->setScoreRightResponse($score);
+        $this->om->persist($label);
+        return $label;
+    }
+
+    public function matchProposal($text, Label $label = null) {
+        $proposal = new Proposal();
+        $proposal->setValue($text);
+        if ($label !== null) {
+            $proposal->addAssociatedLabel($label);
+        }  
+        $this->om->persist($proposal);
+        return $proposal;
+    }
+
+    public function matchQuestion($title, $labels = [], $proposals = []) {
+        $question = new Question();
+        $question->setTitle($title);
+        $question->setInvite('Invite...');
+
+        if (!$this->matchType) {
+            $this->matchType = new TypeMatching();
+            $this->matchType->setCode(1);
+            $this->matchType->setValue('To Bind');
+            $this->om->persist($this->matchType);
+        }
+
+        $interactionMatching = new InteractionMatching();
+        $interactionMatching->setQuestion($question);
+        $interactionMatching->setShuffle(false);
+        $interactionMatching->setTypeMatching($this->matchType);
+        
+        for ($i = 0, $max = count($labels); $i < $max; ++$i) {
+            $labels[$i]->setOrdre($i);
+            $interactionMatching->addLabel($labels[$i]);
+        }
+        
+        for ($i = 0, $max = count($proposals); $i < $max; ++$i) {
+            $proposals[$i]->setOrdre($i + 1);
+            $interactionMatching->addProposal($proposals[$i]);
+        }
+
+        $this->om->persist($interactionMatching);
+        $this->om->persist($question);
+        return $question;
+    }
+
     /**
      * @param string        $title
      * @param Question[]    $questions
      * @param User          $user
      * @return Exercise
      */
-    public function exercise($title, array $questions = [], User $user = null)
-    {
+    public function exercise($title, array $questions = [], User $user = null) {
         $exercise = new Exercise();
         $exercise->setTitle($title);
 
@@ -173,13 +228,11 @@ class Persister
      * @param Exercise  $exercise
      * @return Paper
      */
-    public function paper(User $user, Exercise $exercise)
-    {
+    public function paper(User $user, Exercise $exercise) {
         return $this->paperManager->createPaper($user, $exercise);
     }
-    
-    public function finishpaper(Paper $paper)
-    {
+
+    public function finishpaper(Paper $paper) {
         return $this->paperManager->finishPaper($paper);
     }
 
@@ -187,8 +240,7 @@ class Persister
      * @param string $username
      * @return User
      */
-    public function user($username)
-    {
+    public function user($username) {
         $user = new User();
         $user->setFirstName($username);
         $user->setLastName($username);
@@ -221,8 +273,7 @@ class Persister
      * @param string $name
      * @return Category
      */
-    public function category($name)
-    {
+    public function category($name) {
         $category = new Category();
         $category->setValue($name);
         $this->om->persist($category);
@@ -234,8 +285,7 @@ class Persister
      * @param string $name
      * @return Role
      */
-    public function role($name)
-    {
+    public function role($name) {
         $role = new Role();
         $role->setName($name);
         $role->setTranslationKey($name);
@@ -243,20 +293,18 @@ class Persister
 
         return $role;
     }
-    
-    public function maskDecoder(ResourceType $type, $permission, $value)
-    {
-      $decoder = new MaskDecoder();
-      $decoder->setResourceType($type);
-      $decoder->setName($permission);
-      $decoder->setValue($value);
-      $this->om->persist($decoder);
 
-      return $decoder;
+    public function maskDecoder(ResourceType $type, $permission, $value) {
+        $decoder = new MaskDecoder();
+        $decoder->setResourceType($type);
+        $decoder->setName($permission);
+        $decoder->setValue($value);
+        $this->om->persist($decoder);
+
+        return $decoder;
     }
 
-    public function hint(Question $question, $text, $penalty = 1)
-    {
+    public function hint(Question $question, $text, $penalty = 1) {
         $hint = new Hint();
         $hint->setValue($text);
         $hint->setPenalty($penalty);
@@ -265,4 +313,5 @@ class Persister
 
         return $hint;
     }
+
 }
