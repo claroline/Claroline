@@ -51,7 +51,6 @@
                             if (status === 'raw') {
                                 $rootScope.$broadcast('rawRoomMessageEvent', {message: body});
                             } else if (status === 'management') {
-                                console.log(message);
                                 var type =  datas.attr('type');
                                 var username = datas.attr('username');
                                 var value =  datas.attr('value');

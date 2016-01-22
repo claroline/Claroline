@@ -10,24 +10,18 @@
 var RTC = null;
 var ice_config = {
     iceServers: [
-//        {url: 'stun:23.21.150.121'},
         {urls: ['stun:stun.l.google.com:19302']}
     ]
 };
 var RTCPeerconnection = null;
 var AUTOACCEPT = true;
 var PRANSWER = false; // use either pranswer or autoaccept
-//var RAWLOGGING = true;
-//var MULTIPARTY = true;
-//var localStream = null;
 var connection = null;
-//var myroomjid = null;
 var roomjid = null;
 var myUsername = null;
 var users = {};
 var sids = {};
-//var videoTracks = null;
-//var list_members = [];
+var lastSpeakingUser = null;
 
 (function () {
     'use strict';
@@ -352,6 +346,7 @@ var sids = {};
                 } else if ($scope.speakingUser) {
                     userToDisplay = $scope.speakingUser;
                 }
+                lastSpeakingUser = userToDisplay;
                 
                 if (userToDisplay !== myUsername && users[userToDisplay]) {
                     var sid = users[userToDisplay]['sid'];
@@ -365,6 +360,13 @@ var sids = {};
                     } else {
                         mainVideo.src = element.src;
                     }
+                }
+            }
+            
+            function checkMainVideoDisplay()
+            {
+                if ($scope.selectedUser === null && $scope.speakingUser !== lastSpeakingUser) {
+                    updateMainVideoDisplay();
                 }
             }
             
@@ -427,7 +429,7 @@ var sids = {};
                     });
                     speechEvents.on('volume_change', function (volume, treshold) {
                         
-                        if ($scope.myMicroEnabled && $scope.speakingUser !== myUsername && volume > -60) {
+                        if ($scope.myMicroEnabled && $scope.speakingUser !== myUsername && volume > -50) {
                             sendSpeakingNotification();
                         }
                       //console.log('volume', volume, treshold);
@@ -588,7 +590,9 @@ var sids = {};
                 connection = XmppService.getConnection();
                 roomjid = XmppMucService.getRoom();
                 myUsername = XmppService.getUsername();
+                lastSpeakingUser = myUsername;
                 $scope.myUsername = myUsername;
+                $scope.speakingUser = myUsername;
                 console.log('MUC CONNECT');
                 
                 RTC = setupRTC();
@@ -630,8 +634,6 @@ var sids = {};
                             mozDontOfferDataChannel: true
                         };
                     }
-                    //setStatus('please allow access to microphone and camera');
-                    //getUserMediaWithConstraints();
                 } else {
                     console.log('webrtc capable browser required');
                 }
@@ -641,6 +643,7 @@ var sids = {};
                 updateNewUsers('toCall');
                 initiateCalls();
                 setInterval(checkStream, 3000);
+                setInterval(checkMainVideoDisplay, 1000);
             });
 
             $scope.$on('userDisconnectionEvent', function (event, userDatas) {
@@ -667,9 +670,9 @@ var sids = {};
                     if ($scope.speakingUser !== username) {
                         updateVideoSpeaking(username);
                         
-                        if ($scope.selectedUser === null) {
-                            updateMainVideoDisplay();
-                        }
+//                        if ($scope.selectedUser === null) {
+//                            updateMainVideoDisplay();
+//                        }
                     }
                     
                 }
