@@ -22,6 +22,8 @@ before_script:
   - BUNDLE_DIR=`cat bundle_dir.txt`
   - cd $BUNDLE_DIR
   - echo "memory_limit=3072M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  - phpenv config-rm xdebug.ini
+  - composer self-update
   - COMPOSER=composer_travis.json composer update --prefer-source
   - cd $ROOT_DIR
   - cp -R vendor/claroline/dev-bundle/Claroline/DevBundle/Resources/travis/app/* app
