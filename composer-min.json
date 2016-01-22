@@ -1,38 +1,12 @@
 {
     "name": "claroline/claroline",
     "description": "Claroline Connect",
-    "autoload": {
-        "psr-0": { "": "src/" }
-    },
     "require": {
-        "php": ">=5.4.1",
+        "php": ">=5.5",
         "sensio/distribution-bundle": "~2.3.4",
         "claroline/bundle-recorder": "~5.0",
         "claroline/core-bundle": "~5.0",
         "claroline/web-installer": "~5.0",
-        "claroline/message-bundle": "~5.0",
-        "claroline/agenda-bundle": "~5.0",
-        "claroline/forum-bundle": "~5.0",
-        "claroline/announcement-bundle": "~5.0",
-        "claroline/team-bundle": "~5.0",
-        "claroline/activity-tool-bundle": "~5.0",
-        "claroline/scorm-bundle": "~5.0",
-        "claroline/image-player-bundle": "~5.0",
-        "claroline/pdf-player-bundle": "~5.0",
-        "claroline/video-player-bundle": "~5.0",
-        "claroline/survey-bundle": "~5.0",
-        "claroline/rss-reader-bundle": "~5.0",
-        "claroline/web-resource-bundle": "~5.0",
-        "claroline/cursus-bundle": "~5.0",
-        "icap/blog-bundle": "~5.0",
-        "icap/wiki-bundle": "~5.0",
-        "icap/lesson-bundle": "~5.0",
-        "icap/portfolio-bundle": "~5.0",
-        "icap/website-bundle": "~5.0",
-        "icap/dropzone-bundle": "~5.0",
-        "icap/badge-bundle": "~5.0",
-        "icap/socialmedia-bundle": "~5.0",
-        "ujm/exo-bundle": "~5.0",
         "innova/angular-js-bundle" : "~5.0",
         "innova/angular-ui-bootstrap-bundle" : "~5.0",
         "innova/angular-ui-tinymce-bundle" : "~5.0",
@@ -40,11 +14,8 @@
         "innova/angular-ui-tree-bundle" : "~5.0",
         "innova/angular-ui-translation-bundle" : "~5.0",
         "innova/angular-ui-resource-picker-bundle" : "~6.0",
-        "innova/path-bundle" : "~5.0",
         "hwi/oauth-bundle": "0.4.*@dev",
-        "hevinci/competency-bundle": "~5.0",
-        "hevinci/url-bundle": "~2.0",
-        "hevinci/favourite-bundle": "~2.0"
+        "icap/html-diff": "1.0.1"
     },
     "scripts": {
         "pre-install-cmd": [
