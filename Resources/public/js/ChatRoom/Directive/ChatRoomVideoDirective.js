@@ -21,6 +21,7 @@
                     var server = attrs['chatRoomXmppHost'];
                     var mucServer = attrs['chatRoomXmppMucHost'];
                     var boshPort = attrs['chatRoomBoshPort'];
+                    var iceServers = attrs['chatRoomIceServers'];
                     var roomId = attrs['chatRoomId'];
                     var roomName = attrs['chatRoomName'];
                     var username = attrs['chatRoomUserUsername'];
@@ -28,10 +29,14 @@
                     var firstName = attrs['chatRoomUserFirstName'];
                     var lastName = attrs['chatRoomUserLastName'];
                     var color = attrs['chatRoomUserColor'];
+                    XmppMucService.broadcastCustomEvent(
+                        'IceServersSetupEvent', 
+                        {iceServers: iceServers}
+                    );
                     XmppMucService.connect(
                         server,
                         mucServer, 
-                        boshPort, 
+                        boshPort,
                         roomId, 
                         roomName, 
                         username, 

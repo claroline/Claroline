@@ -124,6 +124,7 @@ class ChatController extends Controller
         $xmppHost = $this->platformConfigHandler->getParameter('chat_xmpp_host');
         $xmppMucHost = $this->platformConfigHandler->getParameter('chat_xmpp_muc_host');
         $boshPort = $this->platformConfigHandler->getParameter('chat_bosh_port');
+        $iceServers = $this->platformConfigHandler->getParameter('chat_ice_servers');
         $chatUser = $this->chatManager->getChatUserByUser($user);
         $canChat = !is_null($chatUser);
         $canEdit = $this->hasChatRoomRight($chatRoom, 'EDIT');
@@ -146,6 +147,7 @@ class ChatController extends Controller
             'xmppHost' => $xmppHost,
             'xmppMucHost' => $xmppMucHost,
             'boshPort' => $boshPort,
+            'iceServers' => $iceServers,
             'color' => $color
         );
     }

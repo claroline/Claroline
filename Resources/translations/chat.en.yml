@@ -24,6 +24,7 @@ has_been_kicked_from_the_chat_room: has been kicked from the Chat room
 has_joined_the_chat_room: has joined the Chat room
 has_left_the_chat_room: has left the Chat room
 host: Host
+ice_servers: ICE servers
 init_room: Initialize Chat room
 kicked_msg: You have been kicked from the Chat room.
 me: Me

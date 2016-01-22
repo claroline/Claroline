@@ -31,6 +31,10 @@ class ChatConfigurationType extends AbstractType
         $xmppMucHost = $this->configHandler->getParameter('chat_xmpp_muc_host');
         $configPort = $this->configHandler->getParameter('chat_bosh_port');
         $boshPort = empty($configPort) ? 5280 : $configPort;
+        $configIceServers = $this->configHandler->getParameter('chat_ice_servers');
+        $iceServers = empty($configIceServers) ?
+            'stun:stun.l.google.com:19302' :
+            $configIceServers;
 
         $builder->add(
             'host',
@@ -60,6 +64,16 @@ class ChatConfigurationType extends AbstractType
                 'data' => $boshPort,
                 'mapped' => false,
                 'label' => 'bosh_server_port'
+            )
+        );
+        $builder->add(
+            'iceServers',
+            'text',
+            array(
+                'required' => false,
+                'data' => $iceServers,
+                'mapped' => false,
+                'label' => 'ice_servers'
             )
         );
     }

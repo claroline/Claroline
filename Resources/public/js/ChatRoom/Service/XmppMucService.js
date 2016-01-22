@@ -665,6 +665,9 @@
                 canParticipate: function () {
                     
                     return myRole !== 'none' && myRole !== 'visitor';
+                },
+                broadcastCustomEvent: function (eventName, datas) {
+                    $rootScope.$broadcast(eventName, datas);
                 }
             };
         }

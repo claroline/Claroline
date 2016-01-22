@@ -11,7 +11,7 @@ var RTC = null;
 var ice_config = {
     iceServers: [
 //        {url: 'stun:23.21.150.121'},
-        {urls: ['stun:stun.stunprotocol.org:3478', 'stun:stun.l.google.com:19302']}
+        {urls: ['stun:stun.l.google.com:19302']}
     ]
 };
 var RTCPeerconnection = null;
@@ -46,6 +46,14 @@ var sids = {};
             $scope.myCameraEnabled = true;
             $scope.speakingUser = null;
             $scope.selectedUser = null;
+
+            function configureIceServers(servers)
+            {
+                if (servers) {
+                    var serversArray = servers.split(',');
+                    ice_config['iceServers'][0]['urls'] = serversArray;
+                }
+            }
 
             function checkStream()
             {
@@ -665,6 +673,10 @@ var sids = {};
                     }
                     
                 }
+            });
+
+            $scope.$on('IceServersSetupEvent', function (event, datas) {
+                configureIceServers(datas['iceServers']);
             });
             
             $scope.getUsernameFromSid = function (sid) {

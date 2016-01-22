@@ -118,11 +118,13 @@ class AdminChatController extends Controller
         $host = $formData['host'];
         $mucHost = $formData['mucHost'];
         $port = $formData['port'];
+        $iceServers = $formData['iceServers'];
         $this->platformConfigHandler->setParameters(
             array(
                 'chat_xmpp_host' => $host,
                 'chat_xmpp_muc_host' => $mucHost,
-                'chat_bosh_port' => $port
+                'chat_bosh_port' => $port,
+                'chat_ice_servers' => $iceServers
             )
         );
 
