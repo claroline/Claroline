@@ -12,9 +12,8 @@
     "claroline/dev-bundle": "dev-master"
   },
   "autoload": {
-    "psr-0": { "HeVinci\\UrlBundle": "" }
-  },
-  "target-dir": "HeVinci/UrlBundle",
-  "minimum-stability": "dev",
-  "prefer-stable": true
+    "psr-4": {
+      "HeVinci\\UrlBundle": ""
+    }
+  }
 }
