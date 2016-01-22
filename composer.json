@@ -10,7 +10,8 @@
     "claroline/dev-bundle": "dev-master"
   },
   "autoload": {
-    "psr-0": { "HeVinci\\FavouriteBundle": "" }
-  },
-  "target-dir": "HeVinci/FavouriteBundle"
+    "psr-4": {
+      "HeVinci\\FavouriteBundle\\": ""
+    }
+  }
 }
