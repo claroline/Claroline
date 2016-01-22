@@ -19,6 +19,8 @@ chat_username: Chat username
 closed: Closed
 connecting: Connecting...
 create_chat_accounts: Create Chat accounts
+disable_chat_room_audio: Disable audio Chat room
+disable_chat_room_video: Disable video Chat room
 has_been_banned_from_the_chat_room: has been banned from the Chat room
 has_been_kicked_from_the_chat_room: has been kicked from the Chat room
 has_joined_the_chat_room: has joined the Chat room

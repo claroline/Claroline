@@ -35,6 +35,10 @@ class ChatConfigurationType extends AbstractType
         $iceServers = empty($configIceServers) ?
             'stun:stun.l.google.com:19302' :
             $configIceServers;
+        $chatRoomAudio = $this->configHandler->getParameter('chat_room_audio_disable');
+        $chatRoomVideo = $this->configHandler->getParameter('chat_room_video_disable');
+        $disableAudio = is_null($chatRoomAudio) ? false : $chatRoomAudio;
+        $disableVideo = is_null($chatRoomAudio) ? false : $chatRoomVideo;
 
         $builder->add(
             'host',
@@ -74,6 +78,26 @@ class ChatConfigurationType extends AbstractType
                 'data' => $iceServers,
                 'mapped' => false,
                 'label' => 'ice_servers'
+            )
+        );
+        $builder->add(
+            'disableChatRoomAudio',
+            'checkbox',
+            array(
+                'required' => false,
+                'data' => $disableAudio,
+                'mapped' => false,
+                'label' => 'disable_chat_room_audio'
+            )
+        );
+        $builder->add(
+            'disableChatRoomVideo',
+            'checkbox',
+            array(
+                'required' => false,
+                'data' => $disableVideo,
+                'mapped' => false,
+                'label' => 'disable_chat_room_video'
             )
         );
     }

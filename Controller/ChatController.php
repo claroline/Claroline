@@ -308,7 +308,7 @@ class ChatController extends Controller
     {
         $this->checkChatRoomRight($chatRoom, 'EDIT');
         $form = $this->formFactory->create(
-            new ChatRoomConfigurationType(),
+            new ChatRoomConfigurationType($this->platformConfigHandler),
             $chatRoom
         );
         $xmppMucHost = $this->platformConfigHandler->getParameter('chat_xmpp_muc_host');
@@ -333,7 +333,7 @@ class ChatController extends Controller
     {
         $this->checkChatRoomRight($chatRoom, 'EDIT');
         $form = $this->formFactory->create(
-            new ChatRoomConfigurationType(),
+            new ChatRoomConfigurationType($this->platformConfigHandler),
             $chatRoom
         );
         $form->handleRequest($this->request);
