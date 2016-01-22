@@ -3,7 +3,7 @@
   "description": "Favorite Plugin for Claroline Connect",
   "type": "claroline-plugin",
   "require": {
-    "php": ">=5.4.1",
+    "php": ">=5.5",
     "claroline/core-bundle": "~6.2"
   },
   "require-dev": {
