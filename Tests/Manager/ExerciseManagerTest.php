@@ -3,19 +3,28 @@
 namespace UJM\ExoBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use HeVinci\CompetencyBundle\Transfer\Validator;
 use UJM\ExoBundle\Entity\Exercise;
 
 class ExerciseManagerTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var ObjectManager */
     private $om;
+    /** @var Validator */
+    private $validator;
+    /** @var ExerciseManager */
     private $manager;
+    /** @var string */
+    private $formatDir;
 
     protected function setUp()
     {
-        $this->om = $this->getMockBuilder('Claroline\CoreBundle\Persistence\ObjectManager')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->manager = new ExerciseManager($this->om);
+        $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->validator = $this->mock('UJM\ExoBundle\Transfer\Json\Validator');
+        $questionManager = $this->mock('UJM\ExoBundle\Manager\QuestionManager');
+        $this->manager = new ExerciseManager($this->om, $this->validator, $questionManager);
+        $this->formatDir = realpath(__DIR__ . '/../../../../../../json-quiz/json-quiz/format');
     }
 
     /**
@@ -48,7 +57,7 @@ class ExerciseManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testPublishNeverPublishedExerciseDeleteItsPapers()
     {
-        $this->markTestSkipped('Not implemented yet');
+        $this->markTestIncomplete('Not implemented yet');
     }
 
     /**
@@ -116,16 +125,50 @@ class ExerciseManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertContains($questions[1], [1, 2, 3, 4]);
     }
 
-    private function mockRepository($entityFqcn)
+    /**
+     * @expectedException \UJM\ExoBundle\Transfer\Json\ValidationException
+     */
+    public function testImportExerciseThrowsOnValidationError()
     {
-        $repo = $this->getMockBuilder($entityFqcn)
+        $this->validator->expects($this->once())
+            ->method('validateExercise')
+            ->willReturn([['path' => '', 'message' => 'some error']]);
+        $this->manager->importExercise('{}');
+    }
+
+    /**
+     * @dataProvider validQuizProvider
+     * @param string $dataFilename
+     */
+    public function testSchemaRoundTrip($dataFilename)
+    {
+        $this->markTestIncomplete('Should not use a mock for this one');
+        $data = file_get_contents("{$this->formatDir}/quiz/examples/valid/{$dataFilename}");
+        $this->manager->importExercise($data);
+    }
+
+    private function mock($class)
+    {
+        return $this->getMockBuilder($class)
             ->disableOriginalConstructor()
             ->getMock();
+    }
+
+    private function mockRepository($entityFqcn)
+    {
+        $repo = $this->mock($entityFqcn);
         $this->om->expects($this->once())
             ->method('getRepository')
             ->with('UJMExoBundle:Question')
             ->willReturn($repo);
 
         return $repo;
+    }
+
+    public function validQuizProvider()
+    {
+        return [
+            ['quiz-metadata.json']
+        ];
     }
 }

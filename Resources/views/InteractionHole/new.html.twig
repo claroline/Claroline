@@ -5,7 +5,7 @@
         <h3 class="panel-title">{{ 'hole_creation' | trans({}, 'ujm_exo') }}</h3>
     </div>
 
-    <form onsubmit="return check_form('{{ 'nb_hole' | trans({}, 'ujm_exo') }}')" action="{{ path('ujm_interactionhole_create') }}" method="post" {{ form_enctype(form) }}>
+    <form onsubmit="return check_form('{{ 'nb_hole' | trans({}, 'ujm_exo') }}');" action="{{ path('ujm_interactionhole_create') }}" method="post" {{ form_enctype(form) }}>
         <div class="panel-body">
             {% include "UJMExoBundle:Partial:question.html.twig" %}
             {% include "UJMExoBundle:Partial:interactions/hole.html.twig" %}
@@ -33,16 +33,16 @@
     <script type="text/javascript">
         addFormHoleEdit("{{ 'response' | trans({}, 'ujm_exo') }}", "{{ 'size' | trans({}, 'ujm_exo') }}",
         "{{ 'orthography' | trans({}, 'ujm_exo') }}", "{{ 'delete' | trans({}, 'ujm_exo') }}",
-        "{{ 'hole_selector' | trans({}, 'ujm_exo') }}", "{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}",
-        "{{ 'key_word' | trans({}, 'ujm_exo') }}", "{{ 'points' | trans({}, 'ujm_exo')  }}");
+        "{{ 'hole_selector' | trans({}, 'ujm_exo') }}","{{ 'key_word' | trans({}, 'ujm_exo') }}","{{ 'points' | trans({}, 'ujm_exo')  }}",
+        "{{ 'comment' | trans({}, 'ujm_exo') }}","{{ 'advanced_edition' | trans({}, 'ujm_exo') }}");
         newHintEdit("{{ 'hint' | trans({}, 'ujm_exo') }}", "{{ 'penalty' | trans({}, 'ujm_exo') }}", "{{ 'hint' | trans({}, 'ujm_exo') }}", "{{ 'delete' | trans({}, 'ujm_exo') }}");
     </script>
 {% else %}
     <script type="text/javascript">
         addFormHole("{{ 'response' | trans({}, 'ujm_exo') }}", "{{ 'size'| trans({}, 'ujm_exo') }}",
         "{{ 'orthography' | trans({}, 'ujm_exo') }}", "{{ 'delete' | trans({}, 'ujm_exo') }}",
-        "{{ 'hole_selector' | trans({}, 'ujm_exo') }}", "{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}",
-        "{{ 'key_word' | trans({}, 'ujm_exo')  }}", "{{ 'points' | trans({}, 'ujm_exo')  }}");
+        "{{ 'hole_selector' | trans({}, 'ujm_exo') }}","{{ 'key_word' | trans({}, 'ujm_exo') }}","{{ 'points' | trans({}, 'ujm_exo')  }}",
+        "{{ 'comment' | trans({}, 'ujm_exo') }}","{{ 'advanced_edition' | trans({}, 'ujm_exo') }}");
 
     newHint("{{ 'hint' | trans({}, 'ujm_exo') }}", "{{ 'penalty' | trans({}, 'ujm_exo') }}", "{{ 'hint' | trans({}, 'ujm_exo') }}", "{{ 'delete' | trans({}, 'ujm_exo') }}");
     </script>

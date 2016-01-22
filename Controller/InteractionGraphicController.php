@@ -75,7 +75,7 @@ class InteractionGraphicController extends Controller
         $exoID = $this->container->get('request')->request->get('exercise');
 
         //Get the lock category
-       $catSer = $this->container->get('ujm.exo_category');
+        $catSer = $this->container->get('ujm.exo_category');
 
         $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
         $formHandler = new InteractionGraphicHandler(
@@ -267,7 +267,11 @@ class InteractionGraphicController extends Controller
         $em = $this->getDoctrine()->getManager();
         $interactionGraphic = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($id);
         $coords = $em->getRepository('UJMExoBundle:Coords')->findBy(array('interactionGraphic' => $id));
-
+        //Deleting of relations, if there the question is shared
+        $sharesQuestion = $em->getRepository('UJMExoBundle:Share')->findBy(array('question' => $interactionGraphic->getQuestion()->getId()));       
+        foreach ($sharesQuestion as $share){
+            $em->remove($share);
+        }
         if (!$interactionGraphic) {
             throw $this->createNotFoundException('Unable to find InteractionGraphic entity.');
         }

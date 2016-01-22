@@ -123,7 +123,9 @@ class QcmImport extends QtiImport
             }
             $feedback = $simpleChoice->getElementsByTagName('feedbackInline');
             if ($feedback->item(0)) {
-                $choice->setFeedback($feedback->item(0)->nodeValue);
+                $feedbackVal = $this->domElementToString($feedback->item(0));
+                $feedbackVal = html_entity_decode($feedbackVal);
+                $choice->setFeedback($feedbackVal);
                 $simpleChoice->removeChild($feedback->item(0));
             }
             $choice->setLabel($this->choiceValue($simpleChoice));

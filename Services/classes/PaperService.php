@@ -350,7 +350,7 @@ class PaperService
     /**
      * To interupt an assessment.
      *
-     * 
+     *
      * @param SessionInterface session
      *
      * @return \UJM\ExoBundle\Entity\Paper
@@ -359,7 +359,7 @@ class PaperService
     {
         $em = $this->doctrine->getManager();
         $paper = $em->getRepository('UJMExoBundle:Paper')->find($session->get('paper'));
-        $em->setInterupt(1);
+        $paper->setInterupt(1);
         $em->persist($paper);
         $em->flush();
 

@@ -96,13 +96,14 @@ class MatchingExport extends QtiExport
     protected function promptTag()
     {
         $prompt = $this->document->CreateElement('prompt');
+        $invite = $this->interactionmatching->getQuestion()->getInvite();
+        // Managing the resource export
+        $body=$this->qtiExportObject($invite);
+        foreach ($body->childNodes as $child) {
+            $inviteNew = $this->document->importNode($child, true);
+            $prompt->appendChild($inviteNew);
+        }
         $this->matchInteraction->appendChild($prompt);
-
-        $prompttxt = $this->document
-                ->CreateTextNode(
-                        $this->interactionmatching->getQuestion()->getDescription()
-                        );
-        $prompt->appendChild($prompttxt);
         $this->qtiProposal();
         $this->qtiLabel();
         $this->notation();
@@ -157,9 +158,7 @@ class MatchingExport extends QtiExport
         $simpleProposal->setAttribute('matchMax', $maxAssociation);
 
         $this->matchInteraction->appendChild($simpleProposal);
-        $simpleProposaltxt = $this->document->CreateTextNode($proposal->getValue());
-
-        $simpleProposal->appendChild($simpleProposaltxt);
+        $this->getDomEl($simpleProposal, $proposal->getValue());
         $elementProposal->appendChild($simpleProposal);
     }
 
@@ -186,8 +185,7 @@ class MatchingExport extends QtiExport
      * @param type $numberLabel
      * @param type $elementLabel
      */
-    protected function simpleMatchSetTagLabel($label, $numberLabel, $elementLabel)
-    {
+    protected function simpleMatchSetTagLabel($label, $numberLabel, $elementLabel){
         if ($this->cardinality == 'multiple') {
             $w = 0;
             foreach ($this->interactionmatching->getProposals() as $pr) {
@@ -206,15 +204,22 @@ class MatchingExport extends QtiExport
 
         $simpleLabel = $this->document->CreateElement('simpleAssociableChoice');
 
-        $simpleLabel->setAttribute('identifier', 'right'.$numberLabel);
-        $simpleLabel->setAttribute('fixed', $positionForced);
-        $simpleLabel->setAttribute('matchMax', $maxAssociation);
+        $simpleLabel->setAttribute("identifier", "right".$numberLabel);
+        $simpleLabel->setAttribute("fixed", $positionForced);
+        $simpleLabel->setAttribute("matchMax", $maxAssociation);
 
         $this->matchInteraction->appendChild($simpleLabel);
-        $simpleLabeltxt = $this->document->CreateTextNode($label->getValue());
-
-        $simpleLabel->appendChild($simpleLabeltxt);
+        $this->getDomEl($simpleLabel, $label->getValue());
         $elementLabel->appendChild($simpleLabel);
+
+        if(($label->getFeedback()!=Null) && ($label->getFeedback()!="")){
+            $feedbackInline = $this->document->CreateElement('feedbackInline');
+            $feedbackInline->setAttribute("outcomeIdentifier", "FEEDBACK");
+            $feedbackInline->setAttribute("identifier","Choice".$numberLabel);
+            $feedbackInline->setAttribute("showHide","show");
+            $this->getDomEl($feedbackInline, $label->getFeedback());
+            $simpleLabel->appendChild($feedbackInline);
+        }
     }
 
     /**

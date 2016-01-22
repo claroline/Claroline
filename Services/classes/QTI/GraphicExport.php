@@ -99,8 +99,7 @@ class GraphicExport extends QtiExport
     /**
      * add the tag areaMapping in responseDeclaration.
      */
-    private function areaMappingTag()
-    {
+    private function areaMappingTag() {
         $areaMapping = $this->document->createElement('areaMapping');
         $areaMapping->setAttribute('defaultValue', '0');
         $this->responseDeclaration[0]->appendChild($areaMapping);
@@ -109,9 +108,18 @@ class GraphicExport extends QtiExport
             $xy = $this->qtiCoord($c);
             $areaMapEntry = $this->document->createElement('areaMapEntry');
             $areaMapEntry->setAttribute('shape', $c->getShape());
-            $areaMapEntry->setAttribute('coords', $xy[0].','.$xy[1].','.$xy[2]);
+            $areaMapEntry->setAttribute('coords', $xy[0] . ',' . $xy[1] . ',' . $xy[2]);
             $areaMapEntry->setAttribute('mappedValue', $c->getScoreCoords());
+            $areaMapEntry->setAttribute('color', $c->getColor());
             $areaMapping->appendChild($areaMapEntry);
+            if (($c->getFeedback() != Null) && ($c->getFeedback() != "")) {
+                $feedbackInline = $this->document->CreateElement('feedbackInline');
+                $feedbackInline->setAttribute("outcomeIdentifier", "FEEDBACK");
+                $feedbackInline->setAttribute("identifier", "Choice" . $c->getId());
+                $feedbackInline->setAttribute("showHide", "show");
+                $this->getDomEl($feedbackInline, $c->getFeedback());
+                $areaMapEntry->appendChild($feedbackInline);
+            }
         }
     }
 
@@ -150,8 +158,13 @@ class GraphicExport extends QtiExport
     protected function promptTag()
     {
         $prompt = $this->document->CreateElement('prompt');
-        $prompttxt = $this->document->CreateTextNode($this->interactiongraph->getQuestion()->getDescription());
-        $prompt->appendChild($prompttxt);
+        $invite = $this->interactiongraph->getQuestion()->getInvite();
+        //Managing the resource export
+        $body = $this->qtiExportObject($invite);
+        foreach ($body->childNodes as $child) {
+            $inviteNew = $this->document->importNode($child, true);
+            $prompt->appendChild($inviteNew);
+        }
         $this->selectPointInteraction->appendChild($prompt);
     }
 

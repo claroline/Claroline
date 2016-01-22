@@ -48,10 +48,14 @@ class OpenExport extends QtiExport
     {
         $arg_list = func_get_args();
         $node = $arg_list[0];
-
+        $invite =$this->interactionopen->getQuestion()->getInvite();
         $prompt = $this->document->CreateElement('prompt');
-        $prompttxt = $this->document->CreateTextNode($this->interactionopen->getQuestion()->getDescription());
-        $prompt->appendChild($prompttxt);
+        //Managing the resource export
+        $body=$this->qtiExportObject($invite);
+        foreach ($body->childNodes as $child) {
+            $inviteNew = $this->document->importNode($child, true);
+            $prompt->appendChild($inviteNew);
+        }
         $node->appendChild($prompt);
     }
 

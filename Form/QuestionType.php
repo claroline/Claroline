@@ -37,7 +37,6 @@ class QuestionType extends AbstractType
                     'label' => 'Category.value',
                     'required' => false,
                     'empty_value' => 'choose_category',
-
                     'query_builder' => function (CategoryRepository $cr) use ($uid) {
                         if ($this->catID === -1) {
                             return $cr->getUserCategory($uid);
@@ -51,10 +50,20 @@ class QuestionType extends AbstractType
             )
             ->add('description', 'textarea', array(
                     'label' => 'question_description',
-                    'attr' => array('placeholder' => 'question_description',
-                                      'class' => 'form-control',
-                                      'data-new-tab' => 'yes',
-                                    ),
+                    'required' => false,
+                    'attr'  => array(
+                        'placeholder' => 'question_description',
+                        'class'=> 'form-control',
+                        'data-new-tab' => 'yes'
+                    )
+                )
+            )
+            ->add('invite', 'tinymce', array(
+                    'label' => 'question',
+                    'attr' => array(
+                        'placeholder' => 'question',
+                        'data-new-tab' => 'yes',
+                    ),
                 )
             )
             ->add(
@@ -64,16 +73,14 @@ class QuestionType extends AbstractType
                     'translation_domain' => 'ujm_exo',
                 )
             )
-            ->add('description', 'tinymce', array(
-                    'label' => 'question',
-                    'attr'  => array('data-new-tab' => 'yes', 'placeholder' => 'question'),
-                    'required' => false
-                )
-            )
             ->add('feedBack', 'tinymce', array(
                     //for automatically open documents in a new tab for all tinymce field
-                    'attr' => array('data-new-tab' => 'yes', 'placeholder' => 'interaction_feedback'),
-                    'label' => 'interaction_feedback', 'required' => false
+                    'attr' => array(
+                        'data-new-tab' => 'yes',
+                        'placeholder' => 'interaction_feedback'
+                    ),
+                    'label' => 'interaction_feedback',
+                    'required' => false
                 )
             )
             ->add(

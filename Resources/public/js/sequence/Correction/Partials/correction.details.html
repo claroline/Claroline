@@ -1,0 +1,108 @@
+<div class="row">
+    <div class="col-md-12">
+        <!-- specific navigation row -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="btn-group" role="group">
+                    <a class="btn btn-default" data-ng-href="{{correctionCtrl.generateUrl('exercise-home', correctionCtrl.exercise.id)}}">{{ 'link_exercice_home'|trans:{}:'ujm_sequence' }}</a>
+                    <!-- paper-list -->
+                    <a class="btn btn-default" data-ng-href="{{correctionCtrl.generateUrl('paper-list', correctionCtrl.exercise.id)}}#/{{correctionCtrl.exercise.id}}">{{ 'paper_list'|trans:{}:'ujm_sequence' }}</a>
+                </div>                
+                <a data-ng-if="correctionCtrl.displayRetryExerciseLink" class="btn btn-default pull-right" data-ng-href="{{correctionCtrl.generateUrl('exercise-play', correctionCtrl.exercise.id)}}#/{{correctionCtrl.exercise.id}}">
+                    <i class="fa fa-check-square-o"> {{ 'link_exercise_retry'|trans:{}:'ujm_sequence' }}</i>
+                </a>
+            </div>
+        </div>
+        <hr/>
+        <!-- global Score row -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="div-score pull-right center-text"><strong>{{ 'paper_details_paper_score'|trans:{}:'ujm_sequence' }} : {{correctionCtrl.globalNote}} / 20 </strong></div>
+            </div>
+        </div>
+        <hr/>
+        <!-- toggle all question panels -->
+        <div class="row">
+            <div class="col-md-12 center-text">
+                <div class="">
+                    <button class="btn btn-default pull-right center-text" data-ng-click="correctionCtrl.toggleAllDetails()">{{ 'btn_toggle_all_paper_question_panels'|trans:{}:'ujm_sequence' }}</button>
+                </div>
+            </div>
+        </div>
+        <hr/>
+        <!-- question list row -->
+        <div class="row question-list-row">
+            <div class="col-md-12">
+                <!-- One question -->
+                <div data-ng-repeat="question in correctionCtrl.questions" data-my-id="{{question.id}}" id="question-{{question.id}}" class="panel panel-default question-panel">
+                    <div class="panel-heading clearfix">                        
+                        <h4 class="panel-title pull-left">
+                            <span>{{question.title}}</span> - <span> {{ 'label_exercise_question_score'|trans:{}:'ujm_sequence' }}: {{correctionCtrl.getQuestionScore(question)}}</span>
+                        </h4>
+                        <a class="btn btn-default pull-right fa fa-chevron-down" id="question-toggle-{{question.id}}" data-ng-click="correctionCtrl.toggleDetails(question.id)"></a>
+                    </div>
+                    <div id="question-body-{{question.id}}" class="question-panel-body">
+                        <div class="panel-body">                             
+                            <!-- description -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div data-ng-bind-html="question.description | unsafe"></div>
+                                </div>
+                                <hr/>
+                            </div>  
+                            <!-- invite -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h5 data-ng-bind-html="question.invite | unsafe"></h5>
+                                </div>
+                                <hr/>
+                            </div>                         
+                            <!-- used hints -->
+                            <div data-ng-if="question.hints.length > 0 && correctionCtrl.oneOrMoreHintsAreUsed(question)" class="row">
+                                <div class="col-md-12">
+                                    <div data-ng-repeat="hint in question.hints">
+                                        <h5 data-ng-if="correctionCtrl.hintIsUsed(question, hint)">{{hint.text}} - {{hint.penalty}}</h5>                                        
+                                    </div>
+                                </div>
+                                <hr/>
+                            </div>
+                          
+                            <!-- QUESTION SOLUTIONs / FEEDBACKs ROW -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div data-ng-switch="question.type">
+                                        <!-- for match question only we use a directive -->
+                                        <div data-ng-switch-when="application/x.match+json">
+                                            <correction-match data-question="question" data-paper="correctionCtrl.paper"></correction-match>                                         
+                                        </div>
+                                         <!-- for choice question only we use a directive -->
+                                        <div data-ng-switch-when="application/x.choice+json">
+                                            <correction-qcm data-question="question" data-paper="correctionCtrl.paper"></correction-qcm>                                         
+                                        </div>
+                                         <!-- for cloze question only we use a directive -->
+                                        <div data-ng-switch-when="application/x.cloze+json">
+                                            <correction-cloze data-question="question" data-paper="correctionCtrl.paper"></correction-cloze>                                         
+                                        </div>
+                                         <!-- for open question only we use a directive -->
+                                        <div data-ng-switch-when="application/x.short+json">
+                                            <correction-short data-question="question" data-paper="correctionCtrl.paper"></correction-short>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- global feedback -->
+                            <div data-ng-if="question.feedback !== '' && question.feedback !== undefined" class="row">                                
+                                <hr/>
+                                <div class="col-md-12">
+                                    <h5 data-ng-bind-html="question.feedback | unsafe"></h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

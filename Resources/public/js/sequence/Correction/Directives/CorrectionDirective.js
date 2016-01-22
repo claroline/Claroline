@@ -2,21 +2,22 @@
 (function () {
     'use strict';
 
-    angular.module('Correction').directive('correctionShow', [
+    angular.module('Correction').directive('correctionDetails', [
         function () {
             return {
                 restrict: 'E',
                 replace: true,
                 controller: 'CorrectionCtrl',
                 controllerAs: 'correctionCtrl',
-                templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Correction/Partials/correction.show.html',
+                templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Correction/Partials/correction.details.html',
                 scope: {
-                    sequence: '=',
-                    answers: '='
+                    paper: '=',
+                    questions: '=',
+                    exercise: '=',
+                    user: '='
                 },
                 link: function (scope, element, attr, correctionCtrl) {
-                    console.log('correctionShow directive link method called');
-                    correctionCtrl.init(scope.sequence, scope.answers);
+                    correctionCtrl.init(scope.paper, scope.questions, scope.exercise, scope.user);
                 }
             };
         }

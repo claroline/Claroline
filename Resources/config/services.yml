@@ -73,6 +73,10 @@ services:
     ujm.exo_pagination:
         class: UJM\ExoBundle\Services\classes\PaginationService
         arguments: [@doctrine, @service_container]
+        
+    ujm.exo_search_question:
+        class: UJM\ExoBundle\Services\classes\SearchQuestionService
+        arguments: [@doctrine, @service_container,@security.token_storage]
 
     ujm.exo_qti_export_InteractionQCM:
         class: UJM\ExoBundle\Services\classes\QTI\QcmExport
@@ -169,16 +173,3 @@ services:
         tags:
             - { name: validator.constraint_validator, alias: ujm.exercise_isvalidqcmmark }
             
-    
-            
-    ujm_exo_bundle.manager.sequence:
-        class: UJM\ExoBundle\Manager\Sequence\SequenceManager 
-        arguments:
-            entityManager:  @doctrine.orm.entity_manager
-            translator:     @translator
-            
-    ujm_exo_bundle.manager.steps:
-        class: UJM\ExoBundle\Manager\Sequence\StepManager 
-        arguments:
-            entityManager:  @doctrine.orm.entity_manager
-            translator:     @translator

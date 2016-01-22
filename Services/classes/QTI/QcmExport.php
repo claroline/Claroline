@@ -73,7 +73,7 @@ class QcmExport extends QtiExport
         $mapping = $this->document->CreateElement('mapping');
         $i = -1;
         foreach ($this->interactionqcm->getChoices() as $ch) {
-            ++$i;
+            $i++;
             if ($ch->getRightResponse() ==  true) {
                 $this->valueCorrectResponseTag($i);
             }
@@ -136,13 +136,14 @@ class QcmExport extends QtiExport
     protected function promptTag()
     {
         $prompt = $this->document->CreateElement('prompt');
+        $invite = $this->interactionqcm->getQuestion()->getInvite();
+        // Managing the resource export
+        $body=$this->qtiExportObject($invite);
+        foreach ($body->childNodes as $child) {
+            $inviteNew = $this->document->importNode($child, true);
+            $prompt->appendChild($inviteNew);
+        }
         $this->choiceInteraction->appendChild($prompt);
-
-        $prompttxt = $this->document
-            ->CreateTextNode(
-                $this->interactionqcm->getQuestion()->getDescription()
-            );
-        $prompt->appendChild($prompttxt);
         $this->qtiChoicesQCM($this->correctResponse);
     }
 
@@ -158,14 +159,13 @@ class QcmExport extends QtiExport
         $simpleChoice = $this->document->CreateElement('simpleChoice');
         $simpleChoice->setAttribute('identifier', 'Choice'.$choiceNumber);
         $this->choiceInteraction->appendChild($simpleChoice);
-        $simpleChoicetxt = $this->document->CreateTextNode($choice->getLabel());
         if ($choice->getPositionForce() == 1) {
             $positionForced = 'true';
         } else {
             $positionForced = 'false';
         }
         $simpleChoice->setAttribute('fixed', $positionForced);
-        $simpleChoice->appendChild($simpleChoicetxt);
+        $this->getDomEl($simpleChoice, $choice->getLabel());
 
         //comment per line for each choice
         if (($choice->getFeedback() != null) && ($choice->getFeedback() != '')) {
@@ -173,8 +173,7 @@ class QcmExport extends QtiExport
             $feedbackInline->setAttribute('outcomeIdentifier', 'FEEDBACK');
             $feedbackInline->setAttribute('identifier', 'Choice'.$choiceNumber);
             $feedbackInline->setAttribute('showHide', 'show');
-            $feedbackInlinetxt = $this->document->CreateTextNode($choice->getFeedback());
-            $feedbackInline->appendChild($feedbackInlinetxt);
+            $this->getDomEl($feedbackInline, $choice->getFeedback());
             $simpleChoice->appendChild($feedbackInline);
         }
     }

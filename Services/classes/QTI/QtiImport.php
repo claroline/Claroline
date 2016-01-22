@@ -52,9 +52,10 @@ abstract class QtiImport
         $this->question->setDateCreate(new \Datetime());
         $this->question->setUser($this->user);
         $this->question->setCategory($this->qtiCat);
-        $this->question->setDescription($this->getPrompt());
+     //   $this->question->setDescription($this->getPrompt());
+        $this->getDescription();
+        $this->question->setInvite($this->getPrompt());
         $this->question->setType($type);
-
         if ($feedback = $this->getFeedback()) {
             $this->question->setFeedBack($feedback);
         }
@@ -122,7 +123,8 @@ abstract class QtiImport
         $feedback = null;
         $md = $this->assessmentItem->getElementsByTagName('modalFeedback')->item(0);
         if (isset($md)) {
-            $feedback = $md->nodeValue;
+            $feedback = $this->domElementToString($md);
+            $feedback = html_entity_decode($feedback);
         }
 
         return $feedback;
@@ -141,6 +143,20 @@ abstract class QtiImport
             } elseif ($child->nodeName == 'a' || $child->nodeName == 'img') {
                 $desc .= $this->domElementToString($child);
                 $ib->removeChild($child);
+            }
+        }
+        foreach ($ib->getElementsByTagName("img") as $img) {
+            $node = $img->parentNode;
+            $i = 0;
+            while ($i == 0) {
+                if ( ($node->nodeName == 'itemBody') || ($node->nodeName == 'prompt') || ($node->nodeName == 'simpleChoice') || ($node->nodeName == 'simpleAssociableChoice') ) {
+                    $i++;
+                } else {
+                    $node = $node->parentNode;
+                }
+            }
+            if ($node->nodeName == 'itemBody') {
+                $desc .= $this->domElementToString($img);
             }
         }
         $this->question->setDescription($desc);

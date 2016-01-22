@@ -34,7 +34,7 @@
             </a>
         {% endif %}
         {% if isAdmin %}
-            <a href="{{ path('ujm_exercise_docimology', { 'exerciseId': exoID, 'nbPapers': pager.getNbResults }) }}"
+            <a href="{{ path('ujm_exercise_docimology', { 'id': exoID, 'nbPapers': pager.getNbResults }) }}"
                class="btn btn-primary">
                 {{ 'docimology' | trans({}, 'ujm_exo') }}
             </a>

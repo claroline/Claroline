@@ -25,19 +25,17 @@ class LinkHintPaper
     private $paper;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(name="view", type="boolean")
+     * @ORM\Column(type="boolean")
      */
-    private $view;
+    private $view = true;
 
-    public function __construct(\UJM\ExoBundle\Entity\Hint $hint, \UJM\ExoBundle\Entity\Paper $paper)
+    public function __construct(Hint $hint, Paper $paper)
     {
         $this->hint = $hint;
         $this->paper = $paper;
     }
 
-    public function setHint(\UJM\ExoBundle\Entity\Hint $hint)
+    public function setHint(Hint $hint)
     {
         $this->hint = $hint;
     }
@@ -47,7 +45,7 @@ class LinkHintPaper
         return $this->hint;
     }
 
-    public function setPaper(\UJM\ExoBundle\Entity\Paper $paper)
+    public function setPaper(Paper $paper)
     {
         $this->paper = $paper;
     }
@@ -58,8 +56,6 @@ class LinkHintPaper
     }
 
     /**
-     * Set view.
-     *
      * @param bool $view
      */
     public function setView($view)
@@ -68,7 +64,7 @@ class LinkHintPaper
     }
 
     /**
-     * Get view.
+     * @return bool
      */
     public function getView()
     {

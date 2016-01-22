@@ -54,6 +54,13 @@ class OpenOneWordImport extends OpenImport
         $mapping = $rp->getElementsByTagName('mapping')->item(0);
         foreach ($mapping->getElementsByTagName('mapEntry') as $me) {
             $keyWord = new WordResponse();
+            $feedback = $me->getElementsByTagName("feedbackInline");
+            if ($feedback->item(0)) {
+                $feedbackVal = $this->domElementToString($feedback->item(0));
+                $feedbackVal = html_entity_decode($feedbackVal);
+                $keyWord->setFeedback($feedbackVal);
+                $me->removeChild($feedback->item(0));
+            }
             $keyWord->setResponse($me->getAttribute('mapKey'));
             $keyWord->setScore($me->getAttribute('mappedValue'));
             $keyWord->setInteractionOpen($this->interactionOpen);
