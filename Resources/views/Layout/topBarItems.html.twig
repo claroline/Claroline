@@ -55,6 +55,7 @@
     {% endblock logged %}
 
     {% block dropdownAdministration %}
+        {% import _self as topbar %}
         <ul class="dropdown-menu" role="menu">
             {% for tool in adminTools %}
                 {{
