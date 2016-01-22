@@ -24,6 +24,19 @@ $(document).ready(function () {
         ;
     });
 
+    $('.td_action').each(function(){
+        alert("rere");
+        var documentId = $(this).find('input[name="document_id"]').val();
+        var isValidate = document.getElementById('document_validate_' + documentId).value == '1' ? true:false;
+        var commentLength = document.getElementById('document_comments_length_' + documentId).value;
+        var senderId = document.getElementById('document_sender_' + documentId).value;
+        var docDropUserId = document.getElementById('document_drop_user_' + documentId).value;
+
+        //
+        // Afficher les tests ici qui permettront de rafraîchir les données.
+        //
+    });
+
 
     // InnovaERV
     // Ajout pour le traitement de la case Ã  cocher pour la crÃ©ation de commentaire Ã  la volÃ©e
@@ -93,12 +106,25 @@ $(document).ready(function () {
         $(selector).prop('checked', true); // Cocher la case "Valider"
         $(selector).prop('disabled', true); // Ne pas pouvoir modifier cette ligne
 
-        // RÃ©cupÃ©ration de l'id du document
+        // Récupération de l'id du document
         var docId = $(this).attr("data-document_id");
 
         // Ajax : appel de la route qui va mettre Ã  jour la base de donnÃ©es
         // Ajax : route "innova_collecticiel_validate_document" dans DocumentController
         var req = "#request_id_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
+
+        var isValidate = document.getElementById('document_validate').value == '1' ? true:false;
+        var commentLength = document.getElementById('document_comments_length').value;
+        var senderId = document.getElementById('document_sender').value;
+        var docDropUserId = document.getElementById('document_drop_user').value;
+
+//        var linkDelete = document.getElementById("delete_" + documentId);
+//        if($(linkDelete).hasClass(''))
+
+        //
+        // Afficher les tests ici qui permettront de rafraîchir les données.
+        //
+
 
         // Ajout : vu avec Arnaud.
         // Ajout de "complete" afin de mettre Ã  jour la partie "HTML" qui va actualiser et afficher "Demande transmise"
