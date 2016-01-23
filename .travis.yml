@@ -22,7 +22,7 @@ before_script:
   - cd $BUNDLE_DIR
   - echo "memory_limit=3072M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - composer self-update
-  - COMPOSER=composer_travis.json composer update --prefer-source
+  - COMPOSER=composer_travis.json travis_retry composer update --prefer-source
   - cd $ROOT_DIR
   - cp -R vendor/claroline/dev-bundle/Claroline/DevBundle/Resources/travis/app/* app
   - php app/register-bundle.php `cat package_dir.txt`
