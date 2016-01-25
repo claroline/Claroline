@@ -1,3 +1,6 @@
+//extension avec des plugins ?
+//ça me semble compliqué pour une SPA.
+
 var controller = function($http, organizationAPI, clarolineAPI, $uibModalStack, $uibModal) {
     this.organizations = [];
 

@@ -1,5 +1,5 @@
 
-{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+{% extends "ClarolineCoreBundle::layout_angular.html.twig" %}
 
 {% block title %}{{ parent() ~ ' - ' ~ 'organizations' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
@@ -19,12 +19,12 @@
     }}
 {% endblock %}
 
-{% block section_content %}
+{% block content %}
     <div id="organization-panel" class="panel panel-default" ng-app="OrganizationManager">
         <div class="panel-body" ng-controller="OrganizationController" ng-view></div>
     </div>
-
 {% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet"  href="{{ asset('vendor/angular-ui.css') }}" />
@@ -61,4 +61,9 @@
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/location/Controller/LocationsController.js') }}></script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/location/Service/LocationAPIService.js') }}></script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/location/Directive/LocationManagerDirective.js') }}></script>
+
+    {# breadcrumbs #}
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/angular/breadcrumbs/module.js') }}></script>
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/angular/breadcrumbs/Controller/BreadcrumbsController.js') }}></script>
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/angular/breadcrumbs/Directive/BreadcrumbsDirective.js') }}></script>
 {% endblock %}
