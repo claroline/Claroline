@@ -10,12 +10,15 @@ use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Hint;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Testing\Persister;
+use UJM\ExoBundle\Testing\RequestTrait;
 
 /**
  * Tests that are specific to MatchQuestionType
  */
 class ExerciseControllerMatchTest extends TransactionalTestCase
 {
+    use RequestTrait;
+
     /** @var ObjectManager */
     private $om;
     /** @var Persister */
@@ -40,7 +43,7 @@ class ExerciseControllerMatchTest extends TransactionalTestCase
     private $qu1;
     /** @var Exercise */
     private $ex1;
-   
+
 
     protected function setUp()
     {
@@ -50,25 +53,25 @@ class ExerciseControllerMatchTest extends TransactionalTestCase
         $this->persist = new Persister($this->om, $manager);
         $this->john = $this->persist->user('john');
         $this->bob = $this->persist->user('bob');
-        
+
         $this->persist->role('ROLE_ADMIN');
         $this->admin = $this->persist->user('admin');
-        
+
         // real label that will be associated with proposals
         $this->lab1 = $this->persist->matchLabel('fruit', 2);
         // orphan label that will have 0 associated proposal
         $this->lab2 = $this->persist->matchLabel('vegetable');
-        
+
         $this->prop1 = $this->persist->matchProposal('peach', $this->lab1);
         $this->prop2 = $this->persist->matchProposal('apple', $this->lab1);
         // proposal without any associated label
         $this->prop3 = $this->persist->matchProposal('duck');
 
-        $this->qu1 = $this->persist->matchQuestion('match1', [$this->lab1, $this->lab2], [$this->prop1, $this->prop2, $this->prop3]);       
+        $this->qu1 = $this->persist->matchQuestion('match1', [$this->lab1, $this->lab2], [$this->prop1, $this->prop2, $this->prop3]);
         $this->ex1 = $this->persist->exercise('ex1', [$this->qu1], $this->john);
         $this->om->flush();
-    }   
-    
+    }
+
     public function testSubmitAnswerInInvalidFormat()
     {
         $pa1 = $this->persist->paper($this->john, $this->ex1);
@@ -87,11 +90,11 @@ class ExerciseControllerMatchTest extends TransactionalTestCase
     {
         $pa1 = $this->persist->paper($this->john, $this->ex1);
         $this->om->flush();
-        
+
         $propId1 = (string) $this->prop1->getId();
         $propId2 = (string) $this->prop2->getId();
-        $labelId = (string) $this->lab1->getId();          
-                
+        $labelId = (string) $this->lab1->getId();
+
         $this->request(
             'PUT',
             "/exercise/api/papers/{$pa1->getId()}/questions/{$this->qu1->getId()}",
@@ -99,17 +102,5 @@ class ExerciseControllerMatchTest extends TransactionalTestCase
             ['data' => [$propId1.','.$labelId, $propId2.','.$labelId]]
         );
         $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
-    }
-
-    private function request($method, $uri, User $user = null, array $parameters = [])
-    {
-        $server = $user ?
-            [
-                'PHP_AUTH_USER' => $user->getUsername(),
-                'PHP_AUTH_PW' => $this->john->getPlainPassword()
-            ] :
-            [];
-
-        return $this->client->request($method, $uri, $parameters, [], $server);
     }
 }
