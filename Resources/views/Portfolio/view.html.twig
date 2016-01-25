@@ -296,8 +296,8 @@
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
     {% else %}
-        {% javascripts debug=true output='js/portfolio/portfolio/vendor_view.js'
-            '@InnovaAngularJSBundle/Resources/public/js/angular.min.js'
+        {% javascripts debug=false output='js/portfolio/portfolio/vendor_view.js'
+            '@FrontEndBundle/Resources/public/angular/angular.min.js'
             '@InnovaAngularJSBundle/Resources/public/js/angular-sanitize.min.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular-gridster/angular-gridster.js'
         %}
