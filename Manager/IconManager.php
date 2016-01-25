@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Buzz\Message\Response;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
@@ -163,25 +164,8 @@ class IconManager
     {
         $this->om->startFlushSuite();
 
-        $ds = DIRECTORY_SEPARATOR;
-
-        try {
-            $originalIconLocation = "{$this->rootDir}{$ds}..{$ds}web{$ds}{$icon->getRelativeUrl()}";
-            $shortcutLocation = $this->creator->shortcutThumbnail($originalIconLocation, $workspace);
-        } catch (\Exception $e) {
-            $shortcutLocation = "{$this->rootDir}{$ds}.."
-            . "{$ds}web{$ds}bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}shortcut-default.png";
-        }
-
-        $shortcutIcon = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
-
-        if (strstr($shortcutLocation, "bundles")) {
-            $tmpRelativeUrl = strstr($shortcutLocation, "bundles");
-        } else {
-            $tmpRelativeUrl = strstr($shortcutLocation, $this->basepath);
-        }
-
-        $relativeUrl = str_replace('\\', '/', $tmpRelativeUrl);
+        $relativeUrl = $this->createShortcutFromRelativeUrl($icon->getRelativeUrl(), $workspace);
+        $shortcutIcon = new ResourceIcon();
         $shortcutIcon->setRelativeUrl($relativeUrl);
         $shortcutIcon->setMimeType($icon->getMimeType());
         $shortcutIcon->setShortcut(true);
@@ -357,6 +341,15 @@ class IconManager
         }
     }
 
+    public function refresh(ResourceIcon $icon)
+    {
+        $shortcut = $icon->getShortcutIcon();
+        $newUrl = $this->createShortcutFromRelativeUrl($icon->getRelativeUrl());
+        $shortcut->setRelativeUrl($newUrl);
+        $this->om->persist($shortcut);
+        $this->om->flush();
+    }
+
     public function getDefaultIconMap()
     {
         return array(
@@ -370,8 +363,18 @@ class IconManager
             array('res_exercice.png', 'custom/exercice'),
             array('res_audio.png', 'audio'),
             array('res_video.png', 'video'),
+            //excel
             array('res_msexcel.png', 'application/excel'),
             array('res_msexcel.png', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
+            array('res_msexcel.png', 'application/vnd.ms-excel'),
+            array('res_msexcel.png', 'application/msexcel'),
+            array('res_msexcel.png', 'application/x-msexcel'),
+            array('res_msexcel.png', 'application/x-ms-excel'),
+            array('res_msexcel.png', 'application/x-excel'),
+            array('res_msexcel.png', 'application/xls'),
+            array('res_msexcel.png', 'application/x-xls'),
+            array('res_msexcel.png', 'application/x-dos_ms_excel'),
+            //ppt
             array('res_mspowerpoint.png', 'application/powerpoint'),
             array('res_mspowerpoint.png', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'),
             array('res_msword.png', 'application/msword'),
@@ -408,5 +411,26 @@ class IconManager
         }
 
         return count($files) === 0;
+    }
+
+    private function createShortcutFromRelativeUrl($url, $workspace = null)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+
+        try {
+            $originalIconLocation = "{$this->rootDir}{$ds}..{$ds}web{$ds}{$url}";
+            $shortcutLocation = $this->creator->shortcutThumbnail($originalIconLocation, $workspace);
+        } catch (\Exception $e) {
+            $shortcutLocation = "{$this->rootDir}{$ds}.."
+                . "{$ds}web{$ds}bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}shortcut-default.png";
+        }
+
+        if (strstr($shortcutLocation, "bundles")) {
+            $tmpRelativeUrl = strstr($shortcutLocation, "bundles");
+        } else {
+            $tmpRelativeUrl = strstr($shortcutLocation, $this->basepath);
+        }
+
+        return str_replace('\\', '/', $tmpRelativeUrl);
     }
 }
