@@ -104,24 +104,24 @@
     {% if adminInnova %}
         {% if mode == 'complete' %}
             <td id="delete_button_td" class="td_action">
+            {# Cas 1 #}
             {# Si le document a été validé alors je ne peux pas le supprimer #}
-            <!-- default state -->
-            <a href="{{ path('innova_collecticiel_delete_document', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}"
-                   class="btn btn-danger btn-sm launch-modal del_btn_td"
-                   id="delete_{{ document.id }}" style="display:none;" >
-                        {# Ajout de l'icône "supprimer" #}
-                        <i class="fa fa-trash" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Delete'|trans({},'innova_collecticiel') }}"></i>
+            <a href="{{ path('innova_collecticiel_delete_document', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" class="btn btn-danger btn-sm launch-modal del_btn_td" id="delete_{{ document.id }}" style="display:none;" >
+                {# Ajout de l'icône "supprimer" #}
+                <i class="fa fa-trash" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Delete'|trans({},'innova_collecticiel') }}"></i>
             </a>
+            {# Cas 2 #}
             <a href="" class="btn btn-default cancel_button" style="display:none;" id="cancel_{{ document.id }}" data-document_id="{{ document.id }}" >
-                    {# Ajout de l'icône "annuler" #}
-                    <i class="fa fa-undo" data-toggle="tooltip"  data-placement="top" data-original-title="{{ 'Cancel'|trans({},'innova_collecticiel') }}"></i>
+                {# Ajout de l'icône "annuler" #}
+                <i class="fa fa-undo" data-toggle="tooltip"  data-placement="top" data-original-title="{{ 'Cancel'|trans({},'innova_collecticiel') }}"></i>
             </a>
-
+            {# Cas 3 #}
             {# Ajout de l'icône "lock" #}
-                <i class="fa fa-lock" style="display:none;"  data-toggle="tooltip" data-placement="top" data-original-title="{{ 'No action allowed'|trans({},'innova_collecticiel') }}"></i>
+            <i class="fa fa-lock" style="display:none;"  id="lock_{{ document.id }}"  data-toggle="tooltip" data-placement="top" data-original-title="{{ 'No action allowed'|trans({},'innova_collecticiel') }}"></i>
 
+            {# Pour passer les données au JS #}
             <input type="hidden" value="{{document.id}}" name="document_id">
-            <input type="hidden" value="{{document.validate ? '0':'1'}}" id="document_validate_{{document.id}}">
+            <input type="hidden" value="{{document.validate ? '1':'0'}}" id="document_validate_{{document.id}}">
             <input type="hidden" value="{{document.comments | length }}" id="document_comments_length_{{document.id}}">
             <input type="hidden" value="{{document.sender.id}}" id="document_sender_{{document.id}}">
             <input type="hidden" value="{{document.drop.user.id}}" id="document_drop_user_{{document.id}}">

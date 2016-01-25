@@ -8,8 +8,12 @@
 	{# Si le collecticiel est ouvert ... #}
     {% if collecticielOpenOrNot %}
 		{# flèche bleue : arrow right #}
-		{% if dropzone.evaluation != 1  %}
-			<a href="#validate-modal" data-toggle="modal" data-dropzone_id="{{ dropzone.id }}" data-document_id="{{ document.id }}" id="document_id_{{ document.id }}" name="document_id_{{ document.id }}" class="document_validate" >
+		{% if dropzone.evaluation != 1  %}aaa
+			<a href="#validate-modal" data-toggle="modal" 
+			data-document_comment_length="{{ document.comments|length }}" 
+			data-document_sender_id="{{ document.sender.id }}" 
+			data-document_dropuser_id="{{ document.drop.user.id }}" 
+			data-dropzone_id="{{ dropzone.id }}" data-document_id="{{ document.id }}" id="document_id_{{ document.id }}" name="document_id_{{ document.id }}" class="document_validate" >
 			<span data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Comment transmission'|trans({},'innova_collecticiel') }}" class="fa fa-arrow-right">
 			</span>
 			</a>
