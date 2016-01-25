@@ -24,7 +24,7 @@ before_script:
   - composer self-update
   - COMPOSER=composer_travis.json travis_retry composer update --prefer-source
   - cd $ROOT_DIR
-  - cp -R vendor/claroline/dev-bundle/Claroline/DevBundle/Resources/travis/app/* app
+  - cp -R vendor/claroline/dev-bundle/Resources/travis/app/* app
   - php app/register-bundle.php `cat package_dir.txt`
   - rm -rf app/cache/*
   - mysql -e 'create database claroline_test_travis;'
