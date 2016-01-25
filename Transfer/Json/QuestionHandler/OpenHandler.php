@@ -138,7 +138,10 @@ class OpenHandler implements QuestionHandlerInterface {
                 return $responseData;
             }, $responses->toArray());
         }
-
+        if ($openQuestion->getTypeOpenQuestion()->getValue() === "long") {
+            $exportData->scoreMaxLongResp = $openQuestion->getScoreMaxLongResp();
+        }
+        
         $exportData->typeOpen = $openQuestion->getTypeOpenQuestion()->getValue();
 
         return $exportData;
@@ -182,23 +185,19 @@ class OpenHandler implements QuestionHandlerInterface {
         $mark = 0;
 
         $answer = $data;
-
-        echo $answer;
-
-        foreach ($interaction->getWordResponses() as $wd) {
-            if (!$wd->getCaseSensitive()) {
-                if (strpos(strtolower($answer), strtolower($wd->getResponse())) !== false) {
-                    $mark += $wd->getScore();
-                }
-            } else {
-                if (strpos($answer, $wd->getResponse()) !== false) {
+        
+        if ($interaction->getTypeOpenQuestion()->getValue() === "long") {
+            $mark = -1;
+        }
+        else {
+            foreach ($interaction->getWordResponses() as $wd) {
+                if (strpos($answer,$wd->getResponse()) !== false) {
                     $mark += $wd->getScore();
                 }
             }
         }
-
+        
         $response->setResponse($answer);
         $response->setMark($mark);
     }
-
 }

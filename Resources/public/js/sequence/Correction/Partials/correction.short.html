@@ -26,5 +26,20 @@
 </div>
 <div data-ng-if="correctionShortCtrl.question.typeOpen === 'long'">
     <h3 class="panel-title">{{ 'label_exercise_correction'|trans:{}:'ujm_sequence' }}</h3>
-    <p>{{ 'need_correction'|trans:{}:'ujm_sequence' }}</p>
+    <div data-ng-if="correctionShortCtrl.score === -1">
+        <span>{{ 'need_correction'|trans:{}:'ujm_sequence' }}</span><br/>
+        <a data-ng-click="correctionShortCtrl.showNotationInput()" id="note_question" class="btn btn-default">
+            {{ 'note_question'|trans:{}:'ujm_sequence' }}
+        </a>
+        <p style="display: none;" id="score_p">
+            <input type="number" id="score_given" style="width: 50px;" min="0" max="{{ correctionShortCtrl.question.scoreMaxLongResp }}" />
+            /{{ correctionShortCtrl.question.scoreMaxLongResp }}<br/>
+            <a data-ng-click="correctionShortCtrl.saveNote()" class="btn btn-primary">{{ 'validate'|trans:{}:'ujm_sequence' }}</a>
+        </p>
+    </div>
+    <div data-ng-if="correctionShortCtrl.score !== -1">
+        <p>
+            {{ correctionShortCtrl.score }}/{{correctionShortCtrl.question.scoreMaxLongResp}}
+        </p>
+    </div>
 </div>

@@ -6,7 +6,8 @@ btn_end_sequence_label: End exercise
 btn_interrupt_sequence_label: Interrupt
 btn_prev_step_label: Go to previous step
 btn_next_step_label: Go to next step
-btn_validate_step: Valider l'étape
+btn_validate_step: Validate step
+btn_toggle_all_paper_question_panels: Show / Hide all questions
 
 # c
 case_sensitive: Case sensitive
@@ -32,11 +33,13 @@ label_manual_correction_needed: Manual correction needed!
 
 # n
 need_correction: This answer needs a manual correction
+note_question: Note this question
 
 # p
 paper_list: Paper list
 paper_list_no_paper: Currently no paper
 paper_search: Search a paper
+paper_list_manual_correction_needed: Manual correction needed
 paper_list_table_user: User
 paper_list_table_paper_number: Paper number
 paper_list_table_start_date: Start date
@@ -51,7 +54,7 @@ paper_list_table_first_page_label: First
 paper_list_table_last_page_label: Last
 paper_list_table_toggle_pagination: Paginated / Unpaginated results
 
-paper_details_table_choice: Choix
+paper_details_table_choice: Choice
 paper_details_table_expected_answer: Expected answer
 paper_details_table_your_answer: Your answer
 paper_details_table_comment: Comment
@@ -74,3 +77,6 @@ sequence_nb_attempts: Attempt N° %1%
 sequence_interrupt_sequence_confirm: Are you sure you want to go to interrupt the exercise ?
 sequence_end_sequence_confirm: Are you sure you want to go to finish the exercise ? <br/> Yon won't be able to edit your answers.
 sequence_play_leave_confirm: Are you sure you want to leave the application ?
+
+# v
+validate: Validate

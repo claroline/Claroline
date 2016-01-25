@@ -103,11 +103,10 @@ class HoleExport extends QtiExport
                 $feedbackInline->setAttribute("outcomeIdentifier", "FEEDBACK");
                 $feedbackInline->setAttribute("identifier","choice_".$resp->getId());
                 $feedbackInline->setAttribute("showHide","show");
-                $feedbackInlinetxt = $this->document->CreateTextNode($resp->getFeedback());
-                $feedbackInline->appendChild($feedbackInlinetxt);
+                $this->getDomEl($feedbackInline, $resp->getFeedback());
                 $mapEntry->appendChild($feedbackInline);
             }
-            ++$i;
+            $i++;
         }
         $Tagvalue = $this->document->CreateElement('value');
         if (!$hole->getSelector()) {
@@ -129,8 +128,13 @@ class HoleExport extends QtiExport
     protected function promptTag()
     {
         $prompt = $this->document->CreateElement('prompt');
-        $prompttxt = $this->document->CreateTextNode($this->interactionhole->getQuestion()->getInvite());
-        $prompt->appendChild($prompttxt);
+        $invite = $this->interactionhole->getQuestion()->getInvite();
+        // Managing the resource export
+        $body=$this->qtiExportObject($invite);
+        foreach ($body->childNodes as $child) {
+            $inviteNew = $this->document->importNode($child, true);
+            $prompt->appendChild($inviteNew);
+        }
         $this->itemBody->appendChild($prompt);
     }
 
@@ -191,5 +195,7 @@ class HoleExport extends QtiExport
         $fragment = $this->document->createDocumentFragment();
         $fragment->appendXML($html);
         $this->itemBody->appendChild($fragment);
+        $this->imgToObject($this->document);
+        $this->aToObject($this->document);
     }
 }
