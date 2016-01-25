@@ -525,6 +525,11 @@ class SurveyManager
         );
     }
 
+    public function getSurveyAnswersBySurvey(Survey $survey, $executeQuery = true)
+    {
+        return $this->surveyAnswerRepo->findSurveyAnswersBySurvey($survey, $executeQuery);
+    }
+
 
     /**********************************************
      * Access to QuestionAnswerRepository methods *
@@ -682,7 +687,6 @@ class SurveyManager
             $choice,
             $executeQuery
         );
-
     }
 
     public function getMultipleChoiceAnswersByChoice(
@@ -700,6 +704,17 @@ class SurveyManager
         return $executeQuery ?
             $this->pagerFactory->createPagerFromArray($answers, $page, $max) :
             $this->pagerFactory->createPager($answers, $page, $max);
+    }
+
+    public function getMultipleChoiceAnswersByQuestionAnswer(
+        QuestionAnswer $questionAnswer,
+        $executeQuery = true
+    )
+    {
+        return $this->multipleChoiceQuestionAnswerRepo->findMultipleChoiceAnswersByQuestionAnswer(
+            $questionAnswer,
+            $executeQuery
+        );
     }
 
 
