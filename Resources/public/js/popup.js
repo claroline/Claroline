@@ -24,29 +24,30 @@ $(document).ready(function () {
         ;
     });
 
+    //
+    // Appel de cette fonction quand on affiche la liste des documents d'UN collecticiel
+    // Appel pour le traitement en Ajax des états du document
+    //
     $('.td_action').each(function(){
+        //
+        // Récupération des données, voir documentItem.html.twig.
+        //
         var documentId = $(this).find('input[name="document_id"]').val();
         var isValidate = document.getElementById('document_validate_' + documentId).value;
         var commentLength = document.getElementById('document_comments_length_' + documentId).value;
         var senderId = document.getElementById('document_sender_' + documentId).value;
         var docDropUserId = document.getElementById('document_drop_user_' + documentId).value;
 
-//alert(isValidate);
-//alert(commentLength);
-//alert(senderId + " " + docDropUserId);
         //
         // Afficher les tests ici qui permettront de rafraîchir les données.
         //
         if (isValidate == false || senderId != docDropUserId) {
-//            alert("cas 1");
             var selector = "#delete_" + documentId;
         }
         else if (isValidate == true && commentLength == 0 && senderId == docDropUserId) {
-//            alert("cas 2");
             var selector = "#cancel_" + documentId;
         }
         else {
-//            alert("cas 3");
             var selector = "#lock_" + documentId;
         }
         $(selector).css({'display': 'inline'});
@@ -100,7 +101,6 @@ $(document).ready(function () {
     // Ajout pour le traitement de la case Ã  cocher lors de la soumission de documents
     $('#validate-modal').on('show.bs.modal', function (event) {
 
-        alert("validate-modal");
         var button = $(event.relatedTarget); // Button that triggered the modal
         var documentId = button.data('document_id'); // Extract info from data-* attributes
 
@@ -111,7 +111,6 @@ $(document).ready(function () {
         // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
         // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
         var modal = $(this);
-        alert(senderId);
         modal.find('#modal_confirm').attr("data-document_id", documentId); //TODO change this to use data() instead of attr()
         modal.find('#modal_confirm').attr("data-document_sender_id", senderId); //TODO change this to use data() instead of attr()
         modal.find('#modal_confirm').attr("data-document_comment_length", commentLength); //TODO change this to use data() instead of attr()
@@ -123,7 +122,6 @@ $(document).ready(function () {
     // InnovaERV
     // Ajout pour le traitement du clic sur le bouton "Oui, valider"
     $('#modal_confirm').on('click', function(event) {
-        alert("modal_confirm");
         var selector = "#document_id_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
         var row = "row_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
         var documentId = $(this).attr("data-document_id");
@@ -140,37 +138,23 @@ $(document).ready(function () {
         var commentLength = $(this).attr("data-document_comment_length");
         var docDropUserId = $(this).attr("data-document_docDropUser_id"); // Extract info from data-* attributes
 
-alert(docId);
-alert(senderId);
-alert(commentLength);
-alert(docDropUserId);
-die();
         // Ajax : appel de la route qui va mettre Ã  jour la base de donnÃ©es
         // Ajax : route "innova_collecticiel_validate_document" dans DocumentController
         var req = "#request_id_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
 
-//        var commentLength = document.getElementById('document_comments_length_' + documentId).value;
-//        var senderId = document.getElementById('document_sender_' + documentId).value;
-//        var docDropUserId = document.getElementById('document_drop_user_' + documentId).value;
-
-
-        var selectorCommentLength = $(this).attr("data-document_commentLength");
-        var selectorSenderId = $(this).attr("data-document_senderId");
-        var selectorDocDropUserId = $(this).attr("data-document_docDropUserId");
-
-alert(selectorCommentLength);
-alert(selectorSenderId);
-alert(selectorDocDropUserId);
-//        var linkDelete = document.getElementById("delete_" + documentId);
-//        if($(linkDelete).hasClass(''))
-
         //
         // Afficher les tests ici qui permettront de rafraîchir les données.
         //
-        var selector = "#lock_" + documentId;
+        if (senderId != docDropUserId) {
+            var selector = "#delete_" + documentId;
+        }
+        else if (commentLength == 0 && senderId == docDropUserId) {
+            var selector = "#cancel_" + documentId;
+        }
+        else {
+            var selector = "#lock_" + documentId;
+        }
         $(selector).css({'display': 'inline'});
-
-        alert("ici5");
 
         // Ajout : vu avec Arnaud.
         // Ajout de "complete" afin de mettre Ã  jour la partie "HTML" qui va actualiser et afficher "Demande transmise"
@@ -284,9 +268,20 @@ alert(selectorDocDropUserId);
     $('.document_validate').on('click', function(event) {
     });
     
+    // InnovaERV
+    // Appel lors de la suppression d'un document
     $('a.cancel_button').on('click', function(event) {
+
         event.preventDefault();
         var docId = $(this).attr("data-document_id");
+
+        // Affichage du nouveau sélecteur
+        var selector = "#delete_" + docId;
+        $(selector).css({'display': 'inline'});
+
+        // Je n'affiche plus l'ancien sélecteur
+        var selector = "#cancel_" + docId;
+        $(selector).css({'display': 'none'});
 
         $.ajax(
             {
@@ -299,7 +294,7 @@ alert(selectorDocDropUserId);
         );
     });
 
-    // InnovaERV : sÃ©lection et dÃ©selection dans la liste des demandes adressÃ©es.
+    // InnovaERV : sélection et déselection dans la liste des demandes adressées.
     $('#document_id_0').on('click', function(event) {
         if($(this).is(':checked')){
             $('input[type=checkbox]').each(function(i,k){
