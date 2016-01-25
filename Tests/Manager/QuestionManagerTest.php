@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use UJM\ExoBundle\DataFixtures\LoadOptionsData;
 
-class ApiManagerTest extends TransactionalTestCase
+class QuestionManagerTest extends TransactionalTestCase
 {
     /** @var ObjectManager */
     private $om;
@@ -20,7 +20,8 @@ class ApiManagerTest extends TransactionalTestCase
         parent::setUp();
         $this->om = $this->client->getContainer()->get('claroline.persistence.object_manager');
         $this->manager = $this->client->getContainer()->get('ujm.exo.question_manager');
-        $this->formatDir = realpath(__DIR__ . '/../../../../../../json-quiz/json-quiz/format');
+        $vendorDir = realpath("{$this->client->getKernel()->getRootDir()}/../vendor");
+        $this->formatDir = "{$vendorDir}/json-quiz/json-quiz/format";
     }
 
     /**
@@ -32,7 +33,7 @@ class ApiManagerTest extends TransactionalTestCase
         $data = file_get_contents("{$this->formatDir}/question/choice/examples/invalid/no-solution-score.json");
         $this->manager->importQuestion(json_decode($data));
     }
-    
+
      /**
      * Match question
      * @expectedException \UJM\ExoBundle\Transfer\Json\ValidationException
@@ -80,7 +81,7 @@ class ApiManagerTest extends TransactionalTestCase
           ['qcm-5']
         ];
     }
-    
+
      /**
      * @dataProvider validMatchQuestionProvider
      * @param string $dataFilename
@@ -106,7 +107,7 @@ class ApiManagerTest extends TransactionalTestCase
         $this->assertQuestionIdConsistency($exportedEvalData);
     }
 
-    
+
     public function validMatchQuestionProvider()
     {
         return [
@@ -142,7 +143,7 @@ class ApiManagerTest extends TransactionalTestCase
         // shortcut for deep copies (clone will keep nested references)
         $expectedCopy = json_decode(json_encode($expected));
         $actualCopy = json_decode(json_encode($actual));
-       
+
         $removeIds = function (\stdClass $object) use (&$removeIds) {
             foreach (get_object_vars($object) as $property => $value) {
                 if ($property === 'id') {
@@ -162,7 +163,7 @@ class ApiManagerTest extends TransactionalTestCase
         };
 
         $removeIds($expectedCopy);
-        $removeIds($actualCopy);  
+        $removeIds($actualCopy);
 
         $this->assertEquals($expectedCopy, $actualCopy, $msg);
     }
