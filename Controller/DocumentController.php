@@ -507,7 +507,13 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
         $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzones[0]);
 
         // Envoi notification. InnovaERV
-        $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzones[0]);
+        $usersIds = array();
+
+        // Ici, on récupère le créateur du collecticiel = l'admin
+        $userCreator = $document->getResourceNode()->getCreator()->getId();
+ 
+        // Ici avertir celui a qui créé le collecticiel
+        $usersIds[] = $userCreator;
 
         $event = new LogDropzoneValidateDocumentEvent($document, $dropzones[0], $usersIds);
         $this->get('event_dispatcher')->dispatch('log', $event);
