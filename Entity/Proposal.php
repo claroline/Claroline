@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -41,6 +42,11 @@ class Proposal
      * @ORM\Column(name="ordre", type="integer")
      */
     private $ordre;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     */
+    private $resourceNode;
 
     /**
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\InteractionMatching", inversedBy="proposals")
@@ -165,5 +171,21 @@ class Proposal
     public function getOrdre()
     {
         return $this->ordre;
+    }
+
+    /**
+     * @return ResourceNode
+     */
+    public function getResourceNode()
+    {
+        return $this->resourceNode;
+    }
+
+    /**
+     * @param ResourceNode $resourceNode
+     */
+    public function setResourceNode(ResourceNode $resourceNode)
+    {
+        $this->resourceNode = $resourceNode;
     }
 }

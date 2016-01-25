@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -46,6 +47,11 @@ class Choice
      * @ORM\Column(name="position_force", type="boolean", nullable=true)
      */
     private $positionForce;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     */
+    private $resourceNode;
 
     /**
      * @ORM\ManyToOne(targetEntity="InteractionQCM", inversedBy="choices")
@@ -171,5 +177,21 @@ class Choice
     public function getPositionForce()
     {
         return $this->positionForce;
+    }
+
+    /**
+     * @return ResourceNode
+     */
+    public function getResourceNode()
+    {
+        return $this->resourceNode;
+    }
+
+    /**
+     * @param ResourceNode $resourceNode
+     */
+    public function setResourceNode(ResourceNode $resourceNode)
+    {
+        $this->resourceNode = $resourceNode;
     }
 }

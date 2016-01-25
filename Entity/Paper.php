@@ -54,6 +54,11 @@ class Paper
     private $interupt = true;
 
     /**
+     * @ORM\Column(type="float")
+     */
+    private $score;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      */
     private $user;
@@ -218,5 +223,21 @@ class Paper
     public function setExercise(Exercise $exercise)
     {
         $this->exercise = $exercise;
+    }
+
+    /**
+     * @param float $score
+     */
+    public function setScore($score)
+    {
+        $this->score = $score;
+    }
+
+    /**
+     * @return float
+     */
+    public function getScore()
+    {
+        return $this->score;
     }
 }

@@ -67,14 +67,19 @@ class Question
     private $model = false;
 
      /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $supplementary;
+
+     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $specification;
+
+     /**
      * @ORM\ManyToOne(targetEntity="Category")
      */
     private $category;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     */
-    private $user;
 
     /**
      * @ORM\OneToMany(
@@ -85,17 +90,9 @@ class Question
      */
     private $hints;
 
-    /**
-     * Note: used for joins only.
-     *
-     * @ORM\OneToMany(targetEntity="ExerciseQuestion", mappedBy="question")
-     */
-    private $exerciseQuestions;
-
     public function __construct()
     {
         $this->hints = new ArrayCollection();
-        $this->exerciseQuestions = new ArrayCollection();
         $this->dateCreate = new \DateTime();
     }
 
@@ -311,4 +308,37 @@ class Question
             $this->addHint($hint);
         }
     }
+
+    /**
+     * @param string $supplementary
+     */
+    public function setSupplementary($supplementary)
+    {
+        $this->supplementary = $supplementary;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSupplementary()
+    {
+        return $this->supplementary;
+    }
+
+    /**
+     * @param string $specification
+     */
+    public function setSpecification($specification)
+    {
+        $this->specification = $specification;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSpecification()
+    {
+        return $this->specification;
+    }
+
 }

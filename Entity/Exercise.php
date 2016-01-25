@@ -89,6 +89,12 @@ class Exercise extends AbstractResource
      */
     private $wasPublishedOnce = false;
 
+    /**
+     * @ORM\Column(name="type", type="string", length=255)
+     * sommatif, formatif, certificatif
+     */
+    private $type = 'sommatif';
+
     public function __construct()
     {
         $this->dateCorrection = new \DateTime();
@@ -373,5 +379,22 @@ class Exercise extends AbstractResource
     public function setPublishedOnce($wasPublishedOnce)
     {
         $this->wasPublishedOnce = $wasPublishedOnce;
+    }
+
+    /**
+     *
+     * @param string $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 }
