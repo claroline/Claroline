@@ -31,11 +31,9 @@
                         {{ form_errors(analyticsViewsForm.range) }}
                         {{ form_label(analyticsViewsForm.range) }}
                         <div class="col-md-10">
-
                             {{ form_widget(analyticsViewsForm.range, {'attr': {
                                 'class': 'date-picker', 'data-ng-model': 'period.date', 'date-range-picker': '',
-                                'options': '{format: \'' ~ 'date_range.js_format'|trans({}, 'platform') ~ '\',
-                                eventHandlers: {\'apply.daterangepicker\': fetchVisitData}}'
+                                'options': 'daterangepickerOptions'
                             }}) }}
                         </div>
                     </div>

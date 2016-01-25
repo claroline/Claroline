@@ -9,10 +9,12 @@
         <div class="col-md-offset-2 col-md-10">
             <p class="input-daterange input-group" data-b-datepicker="{{ 'datepicker_date_format'|trans({}, 'icap_portfolio') }}" id="datepicker">
                 <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
-                <input type="text" data-date-time-input="{{ 'date_field_format'|trans({}, 'icap_portfolio') }}"
+                <input type="text" data-datetime="{{ 'date_field_format'|trans({}, 'icap_portfolio') }}"
+                       data-datetime-model="yyyy/MM/dd"
                        class="input-sm form-control" name="startDate" data-ng-model="widget.startDate" required="required" />
                 <span class="input-group-addon">{{ 'date_range_to'|trans({}, 'icap_portfolio') }}</span>
-                <input type="text" data-date-time-input="{{ 'date_field_format'|trans({}, 'icap_portfolio') }}"
+                <input type="text" data-datetime="{{ 'date_field_format'|trans({}, 'icap_portfolio') }}"
+                       data-datetime-model="yyyy/MM/dd"
                        class="input-sm form-control" name="endDate" data-ng-model="widget.endDate" />
             </p>
         </div>
