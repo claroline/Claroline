@@ -39,19 +39,10 @@ class Detector
                     continue;
                 }
 
-                $fqcnParts = array($matches[1]);
-                $pathParts = array_reverse(explode(DIRECTORY_SEPARATOR, $item->getPath()));
-
-                foreach ($pathParts as $part) {
-                    if (ctype_upper($part[0])) {
-                        array_unshift($fqcnParts, $part);
-                        continue;
-                    }
-
-                    break;
-                }
-
-                $bundles[] = implode('\\', $fqcnParts);
+                $classes = get_declared_classes();
+                require_once $item->getPathname();
+                $newClasses = array_diff(get_declared_classes(), $classes);
+                $bundles[] = end($newClasses);
             }
         }
 
