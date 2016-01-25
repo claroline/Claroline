@@ -209,7 +209,7 @@
     {% stylesheets debug=false filter='lessphp, cssmin'  output='css/icapportfolio/style_view.css'
       "@IcapPortfolioBundle/Resources/views/less/style.less"
       "@IcapPortfolioBundle/Resources/views/less/interface.less"
-      "bundles/frontend/jquery/plugin/datepicker/css/datepicker.css"
+      "bundles/frontend/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css"
       "bundles/icapportfolio/css/angular-motion/angular-motion.min.css"
       "bundles/icapportfolio/css/angular-gridster/angular-gridster.less"
     %}
@@ -239,23 +239,22 @@
         <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_portfolio' }) }}"></script>
 
         {% if 'en' != app.request.locale %}
-            <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/locales/bootstrap-datepicker.' ~ app.request.locale ~ '.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('bundles/frontend/bootstrap-datepicker/dist/locales/bootstrap-datepicker.' ~ app.request.locale ~ '.min.js') }}"></script>
         {% endif %}
 
-        {% javascripts debug=true output='js/portfolio/portfolio/vendor.js'
+        {% javascripts debug=false output='js/portfolio/portfolio/vendor.js'
             '@StfalconTinymceBundle/Resources/public/vendor/tinymce/tinymce.jquery.min.js'
             '@StfalconTinymceBundle/Resources/public/vendor/tinymce/jquery.tinymce.min.js'
             '@ClarolineCoreBundle/Resources/public/js/tinymce/tinymce.js'
             '@IcapBadgeBundle/Resources/public/js/badge_picker.js'
-            '@FrontEndBundle/Resources/public/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js'
-            '@FrontEndBundle/Resources/public/jquery/plugin/datepicker/js/bootstrap-datepicker.js'
-            '@InnovaAngularJSBundle/Resources/public/js/angular.min.js'
+            '@FrontEndBundle/Resources/public/confirm-bootstrap/confirm-bootstrap.js'
+            '@FrontEndBundle/Resources/public/bootstrap-datepicker/dist/js/bootstrap-datepicker.js'
+            '@FrontEndBundle/Resources/public/angular/angular.min.js'
             '@InnovaAngularJSBundle/Resources/public/js/angular-resource.min.js'
             '@InnovaAngularJSBundle/Resources/public/js/angular-sanitize.min.js'
             '@InnovaAngularJSBundle/Resources/public/js/angular-animate.min.js'
             '@InnovaAngularUITinyMCEBundle/Resources/public/js/angular-tinymce-directive.js'
-            '@IcapPortfolioBundle/Resources/public/js/vendor/moment.min.js'
-            '@IcapPortfolioBundle/Resources/public/js/vendor/dateTimeInput.js'
+            '@FrontEndBundle/Resources/public/moment/min/moment.min.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/dimensions.min.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/tooltip.min.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/tooltip.tpl.min.js'
@@ -269,7 +268,7 @@
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
 
-        {% javascripts debug=true filter='jsmin' output='js/portfolio/portfolio/script.js'
+        {% javascripts debug=false filter='jsmin' output='js/portfolio/portfolio/script.js'
             '@IcapPortfolioBundle/Resources/public/js/utils/Array.js'
             '@IcapPortfolioBundle/Resources/public/js/portfolio/portfolioApp.js'
             '@IcapPortfolioBundle/Resources/public/js/portfolio/controllers/portfolioController.js'

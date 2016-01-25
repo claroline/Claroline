@@ -107,17 +107,17 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('bundles/frontend/jquery/plugin/select2/select2.css') }}" screen="media" />
+    <link rel="stylesheet" href="{{ asset('bundles/frontend/select2/select2.css') }}" screen="media" />
 {% endblock %}
 
 {% block javascripts %}
 {{ parent() }}
-<script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.effect.min.js') }}'></script>
-<script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.effect-highlight.min.js') }}'></script>
+<script type="text/javascript" src='{{ asset('bundles/frontend/jquery-ui/ui/minified/effect.min.js') }}'></script>
+<script type="text/javascript" src='{{ asset('bundles/frontend/jquery-ui/ui/minified/effect-highlight.min.js') }}'></script>
 <script type="text/javascript" src="{{ asset('bundles/zenstruckform/js/helper.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/select2/select2.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/select2/select2.min.js') }}"></script>
 {% if 'en' != app.request.locale %}
-<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/select2/select2_locale_' ~ app.request.locale ~ '.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/select2/select2_locale_' ~ app.request.locale ~ '.js') }}"></script>
 {% endif %}
 <script type="text/javascript" src='{{ asset('bundles/icapportfolio/js/guides.js') }}'></script>
 {% endblock %}

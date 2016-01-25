@@ -1,12 +1,12 @@
 <div class="form-group">
     <label for="birthDate" class="required col-md-2 control-label">{{ 'user_information_form_birth_date'|trans({}, 'icap_portfolio') }}</label>
     <div class="col-md-10">
-        <div class="input-group">
+        <div class="input-group date" data-b-datepicker="{{ 'datepicker_date_format'|trans({}, 'icap_portfolio') }}" data-single-date="true">
             <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
-            <input type="text" data-date-time-input="{{ 'date_field_format'|trans({}, 'icap_portfolio') }}"
+            <input type="text" data-datetime="{{ 'date_field_format'|trans({}, 'icap_portfolio') }}"
+                   data-datetime-model="yyyy/MM/dd"
                    class="input-sm form-control" name="userInformation[birthDate]"
-                   data-b-datepicker="{{ 'datepicker_date_format'|trans({}, 'icap_portfolio') }}"
-                   data-ng-model="widget.birthDate" />
+                   data-ng-model="widget.birthDate"/>
         </div>
     </div>
 </div>

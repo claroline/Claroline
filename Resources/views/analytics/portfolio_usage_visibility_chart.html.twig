@@ -9,12 +9,12 @@
 </style>
 <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
 {% if filesImported is not defined or filesImported is empty %}
-<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/excanvas.min.js') }}"></script><![endif]-->
-<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/jquery.jqplot.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.pieRenderer.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasTextRenderer.min.js') }}"></script>
+<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/excanvas.js') }}"></script><![endif]-->
+<script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/jquery.jqplot.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.pieRenderer.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.canvasTextRenderer.js') }}"></script>
 {% else %}
-<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.pieRenderer.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.pieRenderer.js') }}"></script>
 {% endif %}
 
 <div id="analytics-resources-piechart" class="panel panel-default">
