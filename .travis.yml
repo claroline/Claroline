@@ -22,7 +22,7 @@ before_script:
   - echo "memory_limit=3072M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - COMPOSER=composer_travis.json composer update --prefer-source
   - cd $ROOT_DIR
-  - cp -R vendor/claroline/dev-bundle/Claroline/DevBundle/Resources/travis/app/* app
+  - cp -R vendor/claroline/dev-bundle/Resources/travis/app/* app
   - php app/register-bundle.php `cat package_dir.txt`
   - rm -rf app/cache/*
   - mysql -e 'create database claroline_test_travis;'
