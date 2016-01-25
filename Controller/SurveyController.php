@@ -11,7 +11,6 @@
 
 namespace Claroline\SurveyBundle\Controller;
 
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\SurveyBundle\Entity\Answer\MultipleChoiceQuestionAnswer;
 use Claroline\SurveyBundle\Entity\Answer\OpenEndedQuestionAnswer;
@@ -1726,6 +1725,120 @@ class SurveyController extends Controller
         $response->headers->set('Content-Type', 'application/force-download');
         $response->headers->set('Content-Disposition', 'attachment; filename=' . $fileName . '.xls');
         $response->headers->set('Content-Type', 'application/vnd.ms-excel; charset=utf-8');
+
+        return $response;
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/survey/{survey}/answers/export",
+     *     name="claro_survey_answers_export"
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function surveyAnswersExportAction(Survey $survey)
+    {
+        $this->checkSurveyRight($survey, 'EDIT');
+        $questionRelations = $this->surveyManager->getQuestionRelationsBySurvey($survey);
+        $surveyAnswers = $this->surveyManager->getSurveyAnswersBySurvey($survey);
+        $mapping = array();
+        $index = 0;
+        $exportingArray = array();
+        $line = array();
+
+        foreach ($questionRelations as $relation) {
+            $question = $relation->getQuestion();
+            $questionId = $question->getId();
+            
+            // Create mapping between question id and position in the exported line
+            $mapping[$questionId] = $index;
+            $index ++;
+            $line[] = $question->getQuestion();
+
+            if ($question->isCommentAllowed()) {
+                $commentLabel = $question->getCommentLabel();
+                $label = empty($commentLabel) ?
+                    $this->translator->trans('comment', array(), 'survey')
+                    : $commentLabel;
+                $line[] = $label;
+                $index++;
+            }
+        }
+        $exportingArray[] = $line;
+
+        foreach ($surveyAnswers as $surveyAnswer) {
+            $line = array();
+
+            for ($i = 0; $i < $index; $i++) {
+                $line[] = '';
+            }
+            $answers = $surveyAnswer->getQuestionsAnswers();
+
+            foreach ($answers as $answer) {
+                $question = $answer->getQuestion();
+                $questionId = $question->getId();
+                $questionType = $question->getType();
+                $position = isset($mapping[$questionId]) ? $mapping[$questionId] : null;
+
+                if (!is_null($position)) {
+
+                    switch ($questionType) {
+                        case 'open_ended':
+                            $openEndedQuestion = $this->surveyManager
+                                ->getOpenEndedAnswerByQuestionAnswer($answer);
+                            $line[$position] = $openEndedQuestion->getContent();
+                            break;
+                        case 'multiple_choice_single':
+                        case 'multiple_choice_multiple':
+                            $choicesAnswers = $this->surveyManager
+                                ->getMultipleChoiceAnswersByQuestionAnswer($answer);
+                            $choicesArray = array();
+
+                            foreach ($choicesAnswers as $choiceAnswer) {
+                                $choice = $choiceAnswer->getChoice();
+
+                                if (!is_null($choice)) {
+                                    $choicesArray[] = $choice->getContent();
+                                }
+                            }
+                            $choicesText = implode('[,]', $choicesArray);
+                            $line[$position] = $choicesText;
+                            break;
+                        default:
+                            break;
+                    }
+
+                    if ($question->isCommentAllowed()) {
+                        $comment = $answer->getComment();
+
+                        if (!empty($comment)) {
+                            $line[$position + 1] = $comment;
+                        }
+                    }
+                }
+            }
+            $exportingArray[] = $line;
+        }
+        $response = new Response();
+        $content = '';
+
+        foreach ($exportingArray as $exportingLine) {
+            $rawTxt = implode('[;]', $exportingLine);
+            $cleanerTxt = html_entity_decode($rawTxt);
+            $txt = strip_tags($cleanerTxt);
+            $content .= $txt . PHP_EOL;
+        }
+
+        $filename = $this->translator->trans('answers', array(), 'survey') . '.txt';
+
+        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename=' . $filename);
+        $response->headers->set('Content-Type', 'text/plain; charset=utf-8');
+        $response->headers->set('Connection', 'close');
+        $response->setContent($content);
 
         return $response;
     }

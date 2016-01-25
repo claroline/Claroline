@@ -59,6 +59,14 @@
                                     {{ 'view_survey_results'|trans({}, 'survey') }}
                                 </a>
                             </li>
+                            <li role="presentation">
+                                <a role="menuitem" tabindex="-1"
+                                   href="{{ path('claro_survey_answers_export', {'survey': surveyId}) }}"
+                                >
+                                    <i class="fa fa-sign-out"></i>
+                                    {{ 'export_survey_answers'|trans({}, 'survey') }}
+                                </a>
+                            </li>
                         {% endif %}
                     {% endif %}
                 </ul>

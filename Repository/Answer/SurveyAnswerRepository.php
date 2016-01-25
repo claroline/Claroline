@@ -35,4 +35,17 @@ class SurveyAnswerRepository extends EntityRepository
 
         return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
+
+    public function findSurveyAnswersBySurvey(Survey $survey, $executeQuery = true)
+    {
+        $dql = "
+            SELECT sa
+            FROM Claroline\SurveyBundle\Entity\Answer\SurveyAnswer sa
+            WHERE sa.survey = :survey
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('survey', $survey);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
 }
