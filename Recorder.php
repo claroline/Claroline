@@ -113,20 +113,8 @@ class Recorder
             $package = $operation->getPackage();
             $prettyName = $package->getPrettyName();
             $bundles = $this->detector->detectBundles($prettyName);
-            $autoload = $package->getAutoload();
 
             if (count($bundles) > 0) {
-                if (isset($autoload['psr-4'])) {
-                //This condition was added for sf2.7 (they decided to use psr-4 and for some reason, it broke everything).
-                    if (count($autoload['psr-4']) === 1) {
-                        foreach ($bundles as $index => $bundle) {
-                            // psr-4 prefix must be prepended to bundle class
-                            $prefixes = array_keys($autoload['psr-4']);
-                            $bundles[$index] = array_shift($prefixes) . $bundle;
-                        }
-                    }
-                }
-
                 $orderedBundles = array_merge($orderedBundles, $bundles);
             }
         }
@@ -155,6 +143,8 @@ class Recorder
                 return $this->isClarolinePackage($package);
             }
         }
+
+        return false;
     }
 
     private function getOperationBundleType(PackageInterface $package)
@@ -164,7 +154,7 @@ class Recorder
             Operation::BUNDLE_PLUGIN;
     }
 
-    public function getOperations()
+    private function getOperations()
     {
         $installedFile = new JsonFile($this->vendorDir . '/composer/installed.json');
         $this->fromRepo = new InstalledFilesystemRepository($installedFile);
@@ -181,26 +171,5 @@ class Recorder
         $solver = new Solver(new DefaultPolicy(), $pool, $toRepo);
 
         return $solver->solve($request);
-    }
-
-    private function getNameSpace($prettyName)
-    {
-        $operations = $this->getOperations();
-
-        foreach ($operations as $operation) {
-            $package = $operation->getPackage();
-
-            if ($prettyName === $package->getPrettyName()) {
-                $autoload = $package->getAutoload();
-                if (isset($autoload['psr-0'])) {
-                    $key = array_keys($autoload['psr-0']);
-                    $prefixe = array_shift($key);
-
-                    return $prefixe . '\\' . str_replace('\\', '', $prefixe);
-                } else {
-                    return $prettyName;
-                }
-            }
-        }
     }
 }

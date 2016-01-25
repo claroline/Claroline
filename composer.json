@@ -12,12 +12,11 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=5.5",
         "composer/composer": "*",
         "psr/log": "1.0.*@dev"
     },
     "autoload": {
-        "psr-0": { "Claroline\\BundleRecorder": "" }
-    },
-    "target-dir": "Claroline/BundleRecorder"
+        "psr-4": { "Claroline\\BundleRecorder\\": "" }
+    }
 }
