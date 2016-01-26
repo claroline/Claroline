@@ -92,5 +92,8 @@
         "symfony-app-dir": "app",
         "symfony-web-dir": "web",
         "symfony-assets-install": "symlink"
+    },
+    "require-dev": {
+        "symfony/phpunit-bridge": "^3.1@dev"
     }
 }
