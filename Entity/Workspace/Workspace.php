@@ -222,18 +222,18 @@ class Workspace
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Calendar\TimeSlot",
+     *     targetEntity="Claroline\CoreBundle\Entity\Calendar\Event",
      *     mappedBy="workspace",
      *     cascade={"persist"}
      * )
      */
-    protected $timeSlots;
+    protected $events;
 
     public function __construct()
     {
         $this->roles        = new ArrayCollection();
         $this->orderedTools = new ArrayCollection();
-        $this->timeSlots    = new ArrayCollection();
+        $this->events       = new ArrayCollection();
     }
 
     public function getId()

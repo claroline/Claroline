@@ -62,7 +62,8 @@ class Organization
     /**
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Organization\Location",
-     *     cascade={"persist"}
+     *     cascade={"persist"},
+     *     mappedBy="organizations"
      * )
      * @Groups({"api"})
      */
