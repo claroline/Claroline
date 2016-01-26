@@ -1227,27 +1227,14 @@ class DropController extends DropzoneBaseController
                 $userDropDocument = $document->getDrop()->getUser()->getId();
                 $userSenderDocument = $document->getSender()->getId();
             
-                if ($userCreator == $userSenderDocument) {
-                    // Ici avertir l'étudiant qui a travaillé sur ce collecticiel
-                    $usersIds[] = $userDropDocument;
-                }
-                else {
-                    // Ici avertir celui a qui créé le collecticiel
-                    $usersIds[] = $userCreator;
-                }
-//                var_dump("LogDropzoneReturnReceiptEvent");
-//                var_dump($document);
-//                var_dump($dropzone);
-//                var_dump($usersIds);
-//                die();
-//                $event = new LogDropzoneReturnReceiptEvent($document, $dropzone, $usersIds);
+                // Ici avertir l'étudiant qui a travaillé sur ce collecticiel
+                $usersIds[] = $userDropDocument;
 
                 //$event = new LogDropzoneValidateDocumentEvent($document, $dropzone, $usersIds);
                 $event = new LogDropzoneReturnReceiptEvent($document, $dropzone, $usersIds);
 
                 $this->get('event_dispatcher')->dispatch('log', $event);
                 // Fin de l'ajout de la notification
-
 
             }
         }

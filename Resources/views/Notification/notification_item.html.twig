@@ -25,23 +25,23 @@
         {% include 'InnovaCollecticielBundle:Notification:notification_dropzone_manual_state_changed.html.twig' %}
 
     {% elseif constant('Innova\\CollecticielBundle\\Event\\Log\\LogDropzoneAddCommentEvent::ACTION') == notification.actionKey %}
-        {#    ADD COMMENT  #}
+        {# ADD COMMENT #}
         {% include 'InnovaCollecticielBundle:Notification:notification_dropzone_add_comment.html.twig' %}
 
     {% elseif constant('Innova\\CollecticielBundle\\Event\\Log\\LogDropzoneValidateDocumentEvent::ACTION') == notification.actionKey %}
-        {#    VALIDATE DOCUMENT  #}
+        {# VALIDATE DOCUMENT  #}
         {% include 'InnovaCollecticielBundle:Notification:notification_dropzone_validate_document.html.twig' %}
 
     {% elseif constant('Innova\\CollecticielBundle\\Event\\Log\\LogDropzoneAddDocumentEvent::ACTION') == notification.actionKey %}
-        {#    VALIDATE DOCUMENT  #}
+        {# AJOUT D'UN DOCUMENT #}
         {% include 'InnovaCollecticielBundle:Notification:notification_dropzone_add_document.html.twig' %}
 
     {% elseif constant('Innova\\CollecticielBundle\\Event\\Log\\LogDropzoneReturnReceiptEvent::ACTION') == notification.actionKey %}
-        {#    VALIDATE DOCUMENT  #}
+        {# ACCUSE DE RECEPTION #}
         {% include 'InnovaCollecticielBundle:Notification:notification_dropzone_return_receipt.html.twig' %}
 
     {% elseif constant('Innova\\CollecticielBundle\\Event\\Log\\LogDropEndEvent::ACTION') == notification.actionKey %}
-        {#    DROP END  #}
+        {# DROP END #}
         {% include 'InnovaCollecticielBundle:Notification:notification_drop_end.html.twig' %}
     {% endif %}
 {% endblock %}

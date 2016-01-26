@@ -46,6 +46,7 @@
     {% elseif constant('Innova\\CollecticielBundle\\Event\\Log\\LogDropzoneAddDocumentEvent::ACTION') == log.action %}
         {% include  'InnovaCollecticielBundle:Log:log_details_dropzone_addDocument.html.twig' %}
 
+    {# ACCUSE DE RECEPTION #}
     {% elseif constant('Innova\\CollecticielBundle\\Event\\Log\\LogDropzoneReturnReceiptEvent::ACTION') == log.action %}
         {% include  'InnovaCollecticielBundle:Log:log_details_dropzone_returnReceipt.html.twig' %}
 

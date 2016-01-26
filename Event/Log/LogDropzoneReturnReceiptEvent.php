@@ -25,20 +25,21 @@ class LogDropzoneReturnReceiptEvent extends AbstractLogResourceEvent implements 
     public function __construct(Document $document, Dropzone $dropzone, $userIds)
     {
 
-
-//        $this->resourceNodeId = $dropzone->getDrops()[0]->getUser()->getId();
-
-//        $dropId = $document->getDrop()->getId(); //->getDropzone()->getId();
-
-//var_dump($dp);
-//var_dump($document);die();
         $this->document = $document;
-        $this->type = $dropzone->getResourceNode()->getName();
+
+        // Traitement du paramètre "type" : gestion du cas spécifique du type URL.
+        if ($document->getType() == 'url') {
+            $this->type = $document->getUrl();
+        }
+        elseif (strlen($document->getTitle())>0)
+        {
+            $this->type = $document->getTitle();
+        }
+        else
+        {
+            $this->type = $document->getResourceNode()->getName();
+        }
         $this->userIds = $userIds;
-//echo "<pre>";
-//var_dump($this->userIds);
-//echo "</pre>";
-//die();
 
         $this->details = array(
 //            'newState'=> $this->newState
@@ -47,11 +48,6 @@ class LogDropzoneReturnReceiptEvent extends AbstractLogResourceEvent implements 
         // Récupération du nom et du prénom
         $this->firstName = $document->getSender()->getFirstName();
         $this->lastName = $document->getSender()->getLastName();
-
-//var_dump($this->firstName);
-//var_dump($this->lastName);
-//var_dump($this->type);
-//die();
 
         parent::__construct($dropzone->getResourceNode(), $this->details);
     }

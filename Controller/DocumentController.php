@@ -511,7 +511,6 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
         $usersIds = array();
 
         // Ici, on récupère le créateur du collecticiel = l'admin
-        var_dump($document->getId());
         if ($document->getType() == 'url') {
             $userCreator = $document->getDrop()->getUser()->getId();
         }
@@ -533,10 +532,7 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
             $usersIds[] = $userCreator;
         }
 
-//        die("ici validate document");
-
-        $event = new LogDropzoneReturnReceiptEvent($document, $dropzones[0], $usersIds);
-//        $event = new LogDropzoneValidateDocumentEvent($document, $dropzones[0], $usersIds);
+        $event = new LogDropzoneValidateDocumentEvent($document, $dropzones[0], $usersIds);
 
         $this->get('event_dispatcher')->dispatch('log', $event);
 
