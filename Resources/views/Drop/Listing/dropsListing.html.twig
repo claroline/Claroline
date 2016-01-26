@@ -174,8 +174,8 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
                 </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-            <button data-dropzone_id="{{dropzone.id}}" id="modal_confirm_return_receipt" data-method="VALIDATE" type="button" class="btn btn-primary rest" href="#">Ok</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</button>
+            <button data-dropzone_id="{{dropzone.id}}" id="modal_confirm_return_receipt" data-method="VALIDATE" type="button" class="btn btn-primary rest" href="#">{{ 'Ok'|trans({}, 'innova_collecticiel') }}</button>
         </div>
         </div>
     </div>
