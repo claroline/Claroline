@@ -3,7 +3,7 @@
 portfolioApp
     .controller(
     "portfolioController", ["$scope", "portfolioManager", "widgetsManager", "commentsManager", "$attrs", "widgetsConfig",
-        "assetPath", "$modal", "$timeout",
+        "assetPath", "$uibModal", "$timeout",
     function($scope, portfolioManager, widgetsManager, commentsManager, $attrs, widgetsConfig, assetPath, $modal, $timeout) {
         $scope.portfolio = portfolioManager.getPortfolio($attrs['portfolioContainer']);
         $scope.portfolio.$promise.then(function () {

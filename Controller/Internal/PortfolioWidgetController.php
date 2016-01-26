@@ -32,7 +32,6 @@ class PortfolioWidgetController extends BaseController
 
         /** @var \Icap\PortfolioBundle\Entity\PortfolioWidget[] $portfolioWidgets */
         $portfolioWidgets = $this->getWidgetsManager()->getPortfolioWidgetsForWidgetPicker($portfolio, $loggedUser, $type);
-
         foreach ($portfolioWidgets as $widget) {
             $data[] = $this->getWidgetsManager()->getPortfolioWidgetData($widget);
         }

@@ -116,7 +116,7 @@
                                         </span>
                                     </h4>
                                 </div>
-                                <div class="panel-collapse" role="tabpanel" collapse="portfolioWidget.isCollapsed">
+                                <div class="panel-collapse" role="tabpanel" uib-collapse="portfolioWidget.isCollapsed">
                                     <div class="panel-body" data-ng-bind-html="portfolioWidget.widget.views.view">
                                     </div>
                                 </div>
@@ -242,7 +242,7 @@
             <script type="text/javascript" src="{{ asset('bundles/frontend/bootstrap-datepicker/dist/locales/bootstrap-datepicker.' ~ app.request.locale ~ '.min.js') }}"></script>
         {% endif %}
 
-        {% javascripts debug=false output='js/portfolio/portfolio/vendor.js'
+        {% javascripts debug=true output='js/portfolio/portfolio/vendor.js'
             '@StfalconTinymceBundle/Resources/public/vendor/tinymce/tinymce.jquery.min.js'
             '@StfalconTinymceBundle/Resources/public/vendor/tinymce/jquery.tinymce.min.js'
             '@ClarolineCoreBundle/Resources/public/js/tinymce/tinymce.js'
@@ -260,15 +260,15 @@
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/tooltip.tpl.min.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/popover.min.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/popover.tpl.min.js'
-            '@IcapPortfolioBundle/Resources/public/js/vendor/angular-ui/ui-bootstrap-custom-0.13.0.js'
-            '@IcapPortfolioBundle/Resources/public/js/vendor/angular-ui/ui-bootstrap-custom-tpls-0.13.0.js'
+            '@FrontEndBundle/Resources/public/angular-bootstrap/ui-bootstrap.js'
+            '@FrontEndBundle/Resources/public/angular-bootstrap/ui-bootstrap-tpls.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/javascript-detect-element-resize/jquery.resize.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular-gridster/angular-gridster.js'
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
 
-        {% javascripts debug=false filter='jsmin' output='js/portfolio/portfolio/script.js'
+        {% javascripts debug=true filter='jsmin' output='js/portfolio/portfolio/script.js'
             '@IcapPortfolioBundle/Resources/public/js/utils/Array.js'
             '@IcapPortfolioBundle/Resources/public/js/portfolio/portfolioApp.js'
             '@IcapPortfolioBundle/Resources/public/js/portfolio/controllers/portfolioController.js'

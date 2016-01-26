@@ -18,14 +18,14 @@ class AbstractWidgetRepository extends EntityRepository
      */
     public function findOneByTypeAndPortfolio($type, Portfolio $portfolio, $executeQuery = true)
     {
-        $query = $this->createQueryBuilder('w')
+        $queryBuilder = $this->createQueryBuilder('w')
             ->select('w')
             ->andWhere('w.portfolio = :portfolio')
-            ->andWhere('w INSTANCE OF ' . sprintf("IcapPortfolioBundle:Widget\%sWidget", ucfirst($type)))
+            ->andWhere($this->getWigetInstanceString($type))
             ->setParameter('portfolio', $portfolio)
         ;
 
-        return $executeQuery ? $query->getQuery()->getOneOrNullResult(): $query->getQuery();
+        return $executeQuery ? $queryBuilder->getQuery()->getOneOrNullResult(): $queryBuilder->getQuery();
     }
     /**
      * @param Portfolio $portfolio
@@ -36,7 +36,7 @@ class AbstractWidgetRepository extends EntityRepository
      */
     public function findMaxRow(Portfolio $portfolio, $col, $executeQuery = true)
     {
-        $query = $this->createQueryBuilder('w')
+        $queryBuilder = $this->createQueryBuilder('w')
             ->select('MAX(w.row) as maxRow')
             ->andWhere('w.portfolio = :portfolio')
             ->andWhere('w.col = :col')
@@ -44,7 +44,7 @@ class AbstractWidgetRepository extends EntityRepository
             ->setParameter('col', $col)
         ;
 
-        return $executeQuery ? $query->getQuery()->getOneOrNullResult(): $query->getQuery();
+        return $executeQuery ? $queryBuilder->getQuery()->getOneOrNullResult(): $queryBuilder->getQuery();
     }
 
     /**
@@ -55,11 +55,11 @@ class AbstractWidgetRepository extends EntityRepository
      */
     public function findByType($type, $executeQuery = true)
     {
-        $query = $this->createQueryBuilder('w')
-            ->andWhere('w INSTANCE OF ' . sprintf("IcapPortfolioBundle:Widget\%sWidget", ucfirst($type)))
+        $queryBuilder = $this->createQueryBuilder('w')
+            ->andWhere($this->getWigetInstanceString($type))
         ;
 
-        return $executeQuery ? $query->getQuery()->getResult(): $query->getQuery();
+        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
     }
 
     /**
@@ -74,8 +74,8 @@ class AbstractWidgetRepository extends EntityRepository
      */
     public function findOneByWidgetType($type, $id, User $user, $executeQuery = true)
     {
-        $query = $this->createQueryBuilder('w')
-            ->andWhere('w INSTANCE OF ' . sprintf("IcapPortfolioBundle:Widget\%sWidget", ucfirst($type)))
+        $queryBuilder = $this->createQueryBuilder('w')
+            ->andWhere($this->getWigetInstanceString($type))
             ->andWhere('w.id = :id')
             ->andWhere('w.user = :user')
             ->setParameters([
@@ -84,7 +84,7 @@ class AbstractWidgetRepository extends EntityRepository
             ])
         ;
 
-        return $executeQuery ? $query->getQuery()->getSingleResult(): $query->getQuery();
+        return $executeQuery ? $queryBuilder->getQuery()->getSingleResult(): $queryBuilder->getQuery();
     }
 
     /**
@@ -96,12 +96,24 @@ class AbstractWidgetRepository extends EntityRepository
      */
     public function findByWidgetTypeAndUser($type, User $user, $executeQuery = true)
     {
-        $query = $this->createQueryBuilder('w')
-            ->andWhere('w INSTANCE OF ' . sprintf("IcapPortfolioBundle:Widget\%sWidget", ucfirst($type)))
+        $queryBuilder = $this->createQueryBuilder('w')
+            ->andWhere($this->getWigetInstanceString($type))
             ->andWhere('w.user = :user')
             ->setParameter('user', $user)
         ;
 
-        return $executeQuery ? $query->getQuery()->getResult(): $query->getQuery();
+        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
+    }
+
+    private function getWigetInstanceString($widgetType)
+    {
+        $instanceOf = 'w INSTANCE OF ';
+        if (strtoupper($widgetType) == 'BADGES') {
+            $instanceOf .= 'IcapBadgeBundle:Portfolio\BadgesWidget';
+        } else {
+            $instanceOf .= sprintf("IcapPortfolioBundle:Widget\%sWidget", ucfirst($widgetType));
+        }
+
+        return $instanceOf;
     }
 }

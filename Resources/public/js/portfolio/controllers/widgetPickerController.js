@@ -1,5 +1,5 @@
 portfolioApp
-    .controller('widgetPickerController', ["$scope", "$modalInstance", "portfolioWidgets", "selectedPortfolioWidget", "$filter",
+    .controller('widgetPickerController', ["$scope", "$uibModalInstance", "portfolioWidgets", "selectedPortfolioWidget", "$filter",
     function ($scope, $modalInstance, portfolioWidgets, selectedPortfolioWidget, $filter) {
         $scope.portfolioWidgets = portfolioWidgets;
         $scope.portfolioWidgets.map(function(portfolioWidget) {

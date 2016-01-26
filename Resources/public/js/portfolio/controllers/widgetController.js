@@ -1,7 +1,7 @@
 'use strict';
 
 portfolioApp
-    .controller("widgetController", ["$scope", "widgetsManager", "$modal", "$timeout", function($scope, widgetsManager, $modal, $timeout) {
+    .controller("widgetController", ["$scope", "widgetsManager", "$uibModal", "$timeout", function($scope, widgetsManager, $modal, $timeout) {
         $scope.edit = function() {
             widgetsManager.edit($scope.portfolioWidget);
             $scope.editWidget();
