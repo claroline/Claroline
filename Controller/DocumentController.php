@@ -512,7 +512,7 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
 
         // Ici, on récupère le créateur du collecticiel = l'admin
         if ($document->getType() == 'url') {
-            $userCreator = $document->getDrop()->getUser()->getId();
+            $userCreator = $document->getDrop()->getDropzone()->getResourceNode()->getCreator()->getId();
         }
         else {
             $userCreator = $document->getResourceNode()->getCreator()->getId();
