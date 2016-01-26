@@ -4,7 +4,8 @@ var usersManager = angular.module('usersManager', [
 	'ui.bootstrap.tpls',
 	'clarolineAPI',
 	'groupsManager',
-	'ngRoute'
+	'ngRoute',
+	'ui.translation'
 ]);
 
 var translator = window.Translator;

@@ -1223,3 +1223,19 @@ user_list: User list
 loading: Loading
 register_to_workspace_account_exists: Already have an account ? click %link% to subscribe.
 here: here
+group_list: Group list
+list: List
+box_number : Bow number
+street_number: Street number
+street: Street
+postal_code: Postal code
+town: City
+country: Country
+create_location: Create locations
+locations: Locations
+location: Location
+add: Add
+administrators: Administrators
+edit_organization: Edit organization
+coordinates: Coordinates
+address: Address

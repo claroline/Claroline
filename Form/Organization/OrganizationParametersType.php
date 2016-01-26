@@ -26,7 +26,7 @@ class OrganizationParametersType extends AngularType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', 'text', array('required' => true))
+            ->add('name', 'text', array('required' => true, 'label' => 'name'))
             ->add('email', 'email', array('required' => false, 'label' => 'email'))
             ->add(
                 'locations',
@@ -43,7 +43,8 @@ class OrganizationParametersType extends AngularType
                 'administrators',
                 'userpicker',
                 array(
-                    'multiple' => true
+                    'multiple' => true,
+                    'label' => 'administrators'
                 )
             );
     }

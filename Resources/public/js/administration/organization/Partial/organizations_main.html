@@ -1,7 +1,7 @@
 <div>
     <breadcrumbs breadcrumbs="oc.breadcrumbs"></breadcrumbs>
     <div class="col-md-8">
-        <button ng-click="oc.addRootOrganization()"> add </button>
+        <button ng-click="oc.addRootOrganization()"> {{ 'add'|trans:{}:'platform' }} </button>
         <!-- Nested node template -->
         <script type="text/ng-template" id="nodes_renderer.html">
             <div ui-tree-handle class="tree-node tree-node-content">
@@ -37,6 +37,6 @@
         </div>
     </div>
     <div class="col-md-4">
-        <a class="btn btn-primary" href="#/locations"> locations </a>
+        <a class="btn btn-primary" href="#/locations"> {{ 'locations'|trans:{}:'platform' }} </a>
     </div>
 </div>

@@ -21,3 +21,4 @@ user_management: 'Gestion des utilisateurs'
 users: Utilisateurs
 widgets_management: 'Gestion des widgets'
 workspace_management: 'Gestion des espaces d''activités'
+organization_management: 'Gestion des organisations'

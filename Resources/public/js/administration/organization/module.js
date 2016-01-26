@@ -8,7 +8,8 @@
         'ui.bootstrap.tpls',
         'ngRoute',
         'LocationManager',
-        'ClarolineBreadcrumbs'
+        'ClarolineBreadcrumbs',
+        'ui.translation'
     ]);
 
     module.config(['$routeProvider',

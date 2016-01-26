@@ -1224,3 +1224,18 @@ group_list: Liste des groupes
 loading: Chargement
 register_to_workspace_account_exists: Vous avez déjà un compte? Identifiez vous %link% pour vous inscrire.
 here: ici
+group_list: Liste des groupes
+box_number : Numéro de boite
+street_number: Numéro de rue
+street: Rue
+postal_code: Code postal
+town: Ville
+country: Pays
+create_location: Créer une localisation
+locations: Localisations
+location: Localisation
+add: Ajouter
+administrators: Administrateurs
+edit_organization: Modifier une organisation
+coordinates: Coordonnées
+address: Adresse
