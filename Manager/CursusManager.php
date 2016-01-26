@@ -64,7 +64,7 @@ class CursusManager
     private $translator;
     private $ut;
     private $workspaceManager;
-
+    private $clarolineDispatcher;
     private $courseRepo;
     private $courseQueueRepo;
     private $courseSessionRepo;
@@ -82,6 +82,7 @@ class CursusManager
      *     "container"        = @DI\Inject("service_container"),
      *     "contentManager"   = @DI\Inject("claroline.manager.content_manager"),
      *     "eventDispatcher"  = @DI\Inject("event_dispatcher"),
+     *     "clarolineDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
      *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
      *     "pagerFactory"     = @DI\Inject("claroline.pager.pager_factory"),
      *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
@@ -92,6 +93,7 @@ class CursusManager
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
+    // why no claroline dispatcher ?
     public function __construct(
         ContainerInterface $container,
         ContentManager $contentManager,
@@ -103,15 +105,15 @@ class CursusManager
         $templateDir,
         TranslatorInterface $translator,
         ClaroUtilities $ut,
-        WorkspaceManager $workspaceManager
+        WorkspaceManager $workspaceManager,
+        $clarolineDispatcher
     )
     {
         $this->archiveDir = $container->getParameter('claroline.param.platform_generated_archive_path');
         $this->container = $container;
         $this->contentManager = $contentManager;
         $this->eventDispatcher = $eventDispatcher;
-        $this->iconsDirectory = $this->container->getParameter('claroline.param.web_directory') .
-            '/files/cursusbundle/icons/';
+        $this->iconsDirectory = $this->container->getParameter('claroline.param.thumbnails_directory') . '/';
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
         $this->roleManager = $roleManager;
@@ -119,7 +121,8 @@ class CursusManager
         $this->templateDir = $templateDir;
         $this->translator = $translator;
         $this->ut = $ut;
-        $this->workspaceManager = $workspaceManager;
+        $this->workspaceManager = $workspaceManager; 
+        $this->clarolineDispatcher = $clarolineDispatcher;
 
         $this->courseRepo =
             $om->getRepository('ClarolineCursusBundle:Course');
@@ -589,6 +592,19 @@ class CursusManager
         $this->om->endFlushSuite();
     }
 
+    public function unregisterGroupsFromCursus(array $cursusGroups)
+    {
+        $this->om->startFlushSuite();
+
+        foreach ($cursusGroups as $cursusGroup) {
+            $this->unregisterGroupFromCursus(
+                $cursusGroup->getCursus(),
+                $cursusGroup->getGroup()
+            );
+        }
+        $this->om->endFlushSuite();
+    }
+
     public function updateCursusParentAndOrder(
         Cursus $cursus,
         Cursus $parent = null,
@@ -997,15 +1013,21 @@ class CursusManager
             $registrationDate = new \DateTime();
         }
         $session = new CourseSession();
-        $session->setName($sessionName);
-        $session->setCourse($course);
-        $session->addCursu($cursus);
+        if ($sessionName) $session->setName($sessionName);
+        if ($cursus) $session->addCursus($cursus);
         $session->setCreationDate($registrationDate);
         $session->setPublicRegistration($course->getPublicRegistration());
         $session->setPublicUnregistration($course->getPublicUnregistration());
         $session->setRegistrationValidation($course->getRegistrationValidation());
-        $session->setStartDate($startDate);
-        $session->setEndDate($endDate);
+        if ($startDate) $session->setStartDate($startDate);
+        if ($endDate) $session->setEndDate($endDate);
+        $this->createCourseSessionFromSession($session, $course, $user);
+
+        return $session;
+    }
+
+    public function createCourseSessionFromSession(CourseSession $session, Course $course, User $user) {
+        $session->setCourse($course);
 
         $workspace = $this->generateWorkspace(
             $course,
@@ -1027,7 +1049,8 @@ class CursusManager
         $session->setTutorRole($tutorRole);
         $this->persistCourseSession($session);
 
-        return $session;
+        //the event will be listened by FormaLibreBulletinBundle (it adds some MatiereOptions)
+        $this->clarolineDispatcher->dispatch('create_course_session', 'Claroline\CursusBundle\Event\CreateCourseSessionEvent', array($session));
     }
 
     public function deleteCourseSessionUsers(array $sessionUsers)
@@ -1679,6 +1702,30 @@ class CursusManager
 
             }
         }
+    }
+
+    public function getSessionsDatas($search = '', $withPager = true, $page = 1, $max = 50)
+    {
+        $sessionsDatas = array();
+        $sessions = empty($search) ?
+            $this->courseSessionRepo->findAllUnclosedSessions() :
+            $this->courseSessionRepo->findSearchedlUnclosedSessions($search);
+
+        foreach ($sessions as $session) {
+            $course = $session->getCourse();
+            $courseCode = $course->getCode();
+
+            if (!isset($sessionsDatas[$courseCode])) {
+                $sessionsDatas[$courseCode] = array();
+                $sessionsDatas[$courseCode]['course'] = $course;
+                $sessionsDatas[$courseCode]['sessions'] = array();
+            }
+            $sessionsDatas[$courseCode]['sessions'][] = $session;
+        }
+
+        return $withPager ?
+            $this->pagerFactory->createPagerFromArray($sessionsDatas, $page, $max) :
+            $sessionsDatas;
     }
 
 
@@ -2455,6 +2502,37 @@ class CursusManager
         );
     }
 
+    public function getUnregisteredGroupsBySession(
+        CourseSession $session,
+        $groupType,
+        $search = '',
+        $orderedBy = 'name',
+        $order = 'ASC',
+        $withPager = true,
+        $page = 1,
+        $max = 50
+    )
+    {
+        $groups = empty($search) ?
+            $this->sessionGroupRepo->findUnregisteredGroupsBySession(
+                $session,
+                $groupType,
+                $orderedBy,
+                $order
+            ) :
+            $this->sessionGroupRepo->findSearchedUnregisteredGroupsBySession(
+                $session,
+                $groupType,
+                $search,
+                $orderedBy,
+                $order
+            );
+
+        return $withPager ?
+            $this->pagerFactory->createPagerFromArray($groups, $page, $max) :
+            $groups;
+    }
+
 
     /**************************************************************
      * Access to CourseSessionRegistrationQueueRepository methods *
@@ -2529,5 +2607,42 @@ class CursusManager
             $user,
             $executeQuery
         );
+    }
+
+
+    /******************
+     * Others methods *
+     ******************/
+
+    public function getSessionsByUserAndType(User $user, $userType = 0)
+    {
+        $sessions = array();
+        $sessionUsers = $this->getSessionUsersByUser($user);
+
+        foreach ($sessionUsers as $sessionUser) {
+            $type = $sessionUser->getUserType();
+
+            if ($type === $userType) {
+                $sessions[] = $sessionUser->getSession();
+            }
+        }
+
+        return $sessions;
+    }
+
+    public function getUsersBySessionAndType(CourseSession $session, $userType = 0)
+    {
+        $users = array();
+        $sessionUsers = $this->getSessionUsersBySession($session);
+
+        foreach ($sessionUsers as $sessionUser) {
+            $type = $sessionUser->getUserType();
+
+            if ($type === $userType) {
+                $users[] = $sessionUser->getUser();
+            }
+        }
+
+        return $users;
     }
 }

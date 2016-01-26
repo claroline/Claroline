@@ -12,6 +12,7 @@
 namespace Claroline\CursusBundle\Repository;
 
 use Claroline\CursusBundle\Entity\Course;
+use Claroline\CursusBundle\Entity\CourseSession;
 use Claroline\CursusBundle\Entity\Cursus;
 use Doctrine\ORM\EntityRepository;
 
@@ -137,6 +138,43 @@ class CourseSessionRepository extends EntityRepository
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('course', $course);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findAllUnclosedSessions($executeQuery = true)
+    {
+        $dql = '
+            SELECT cs
+            FROM Claroline\CursusBundle\Entity\CourseSession cs
+            JOIN cs.course c
+            WHERE cs.sessionStatus != :sessionClosed
+            ORDER BY c.title ASC
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('sessionClosed', CourseSession::SESSION_CLOSED);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findSearchedlUnclosedSessions($search = '', $executeQuery = true)
+    {
+        $dql = '
+            SELECT cs
+            FROM Claroline\CursusBundle\Entity\CourseSession cs
+            JOIN cs.course c
+            WHERE cs.sessionStatus != :sessionClosed
+            AND (
+                UPPER(cs.name) LIKE :search
+                OR UPPER(c.title) LIKE :search
+                OR UPPER(c.code) LIKE :search
+            )
+            ORDER BY c.title ASC
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('sessionClosed', CourseSession::SESSION_CLOSED);
+        $upperSearch = strtoupper($search);
+        $query->setParameter('search', "%{$upperSearch}%");
 
         return $executeQuery ? $query->getResult() : $query;
     }

@@ -35,14 +35,14 @@ class CourseSession
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api"})
+     * @Groups({"api", "bulletin"})
      */
     protected $id;
 
     /**
      * @ORM\Column(name="session_name")
      * @Assert\NotBlank()
-     * @Groups({"api"})
+     * @Groups({"api", "bulletin"})
      * @SerializedName("name")
      */
     protected $name;
@@ -53,6 +53,7 @@ class CourseSession
      *     inversedBy="sessions"
      * )
      * @ORM\JoinColumn(name="course_id", nullable=false, onDelete="CASCADE")
+     * @Groups({"bulletin"})
      */
     protected $course;
 
@@ -91,7 +92,7 @@ class CourseSession
     /**
      * @ORM\Column(name="session_status", type="integer")
      */
-    protected $sessionStatus = 0;
+    protected $sessionStatus = self::SESSION_NOT_STARTED;
 
     /**
      * @ORM\Column(name="default_session", type="boolean")
@@ -143,6 +144,12 @@ class CourseSession
      * )
      */
     protected $sessionGroups;
+   
+    /**
+     * @Groups({"bulletin"})
+     * @SerializedName("extra")
+     */
+    protected $extra = array();
 
     public function __construct()
     {
@@ -196,7 +203,17 @@ class CourseSession
         return $this->cursus->toArray();
     }
 
+    //wtf... so lazy...
     public function addCursu(Cursus $cursus)
+    {
+        if (!$this->cursus->contains($cursus)) {
+            $this->cursus->add($cursus);
+        }
+
+        return $this;
+    }
+
+    public function addCursus(Cursus $cursus)
     {
         if (!$this->cursus->contains($cursus)) {
             $this->cursus->add($cursus);
@@ -322,5 +339,48 @@ class CourseSession
     public function getSessionGroups()
     {
         return $this->sessionGroups->toArray();
+    }
+
+    public function getCourseTitle()
+    {
+        return $this->getCourse()->getTitle();
+    }
+
+    public function getFullNameWithCourse()
+    {
+        return $this->getCourseTitle() .
+            ' [' .
+            $this->getCourse()->getCode() .
+            ']' .
+            ' - ' .
+            $this->getName();
+    }
+
+    public function getShortNameWithCourse($courseLength = 25)
+    {
+        $courseTitle = $this->getCourseTitle();
+        $length = strlen($courseTitle);
+        $shortTitle = ($length > $courseLength) ?
+            substr($courseTitle, 0, $courseLength) . '...' :
+            $courseTitle;
+
+
+
+        return $shortTitle . ' - ' . $this->getName();
+    }
+
+    public function __toString()
+    {
+        return $this->getName();
+    }
+    
+    public function setExtra(array $extra)
+    {
+        $this->extra = $extra;
+    }
+    
+    public function getExtra()
+    {
+        return $this->extra;
     }
 }
