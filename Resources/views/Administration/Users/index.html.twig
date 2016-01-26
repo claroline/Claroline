@@ -25,7 +25,7 @@
 {% block section_content %}
     <div id="users-panel" class="panel panel-default" ng-app="usersManager">
         {% include 'ClarolineCoreBundle:Administration:Users\\actionbar.html.twig' %}
-        <div class="panel-body" ng-controller="UsersCtrl"  ng-view>
+        <div class="panel-body" ng-view>
         </div>
     </div>
 
@@ -41,7 +41,6 @@
     <script type="text/javascript" src="{{ asset('vendor/angular.js')}}"> </script>
     <script type="text/javascript" src="{{ asset('vendor/angular-ui.js')}}"> </script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/angular/services/api.services.js') }}></script>
-    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/angular/services/menu.services.js') }}></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/angular-bootstrap/ui-bootstrap-tpls.js') }}"> </script>
 
     {# Set some vars needed by Angular parts #}
