@@ -57,6 +57,15 @@
                                 {% endif %}
                             </b>
                             <br>
+                        {% elseif type == constant('Claroline\\ChatBundle\\Entity\\ChatRoomMessage::STATUS') %}
+                            <b>
+                                {% if content == 'open' %}
+                                    {{ 'chat_room_open_msg'|trans({}, 'chat') }}
+                                {% elseif content == 'closed' %}
+                                    {{ 'chat_room_closed_msg'|trans({}, 'chat') }}
+                                {% endif %}
+                            </b>
+                            <br>
                         {% endif %}
                     {% endfor %}
                 {% endfor %}

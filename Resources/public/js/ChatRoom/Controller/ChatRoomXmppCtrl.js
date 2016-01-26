@@ -64,6 +64,14 @@
                 $scope.message = message;
             };
             
+            $scope.closeRoom = function () {
+                XmppMucService.closeRoom();
+            };
+            
+            $scope.openRoom = function () {
+                XmppMucService.openRoom();
+            };
+            
             $rootScope.$on('xmppMucConnectedEvent', function () {
                 $scope.connected = true;
                 $scope.$apply();

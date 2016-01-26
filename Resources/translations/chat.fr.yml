@@ -12,19 +12,24 @@ chat_configuration: Configuration du Chat
 chat_room_closed_msg: La Chat room est fermée
 chat_room_configuration: Configuration de la Chat room
 chat_room_id: Identifiant de la Chat room
+chat_room_open_msg: La Chat room est ouverte
 chat_room_uninitialized_msg: La Chat room n'est pas encore accessible
 chat_room_unknown_status_msg: Le statut de la Chat room est inconnu
 chat_username: Identifiant pour le Chat
 closed: Fermé
 connecting: Connexion en cours...
 create_chat_accounts: Créer des comptes pour le Chat
+disable_chat_room_audio: Désactiver les Chat rooms audio
+disable_chat_room_video: Désactiver les Chat rooms video
 has_been_banned_from_the_chat_room: a été banni de la Chat room
 has_been_kicked_from_the_chat_room: a été éjecté de la Chat room
 has_joined_the_chat_room: a rejoint la Chat room
 has_left_the_chat_room: a quitté la Chat room
 host: Hôte
+ice_servers: Serveurs ICE
 init_room: Initialiser la Chat room
 kicked_msg: Vous avez été éjecté de la Chat room.
+me: Moi
 muc_host: Serveur MUC
 mute: Muet
 my_video: Ma video

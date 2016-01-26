@@ -46,10 +46,6 @@
             };
             
             $rootScope.$on('xmppMucConnectedEvent', function () {
-                XmppMucService.getRoomConfiguration();
-            });
-            
-            $rootScope.$on('xmppMucConfigurationSuccessEvent', function () {
                 var route = Routing.generate(
                     'claro_chat_room_status_edit', 
                     {chatRoom: XmppMucService.getRoomId(), roomStatus: 1}
@@ -57,6 +53,7 @@
                 $http.post(route).then(function (datas) {
                     
                     if (datas['status'] === 200) {
+                        XmppMucService.openRoom();
                         $scope.init = true;
                         window.location.reload();
                     }

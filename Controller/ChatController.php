@@ -124,6 +124,7 @@ class ChatController extends Controller
         $xmppHost = $this->platformConfigHandler->getParameter('chat_xmpp_host');
         $xmppMucHost = $this->platformConfigHandler->getParameter('chat_xmpp_muc_host');
         $boshPort = $this->platformConfigHandler->getParameter('chat_bosh_port');
+        $iceServers = $this->platformConfigHandler->getParameter('chat_ice_servers');
         $chatUser = $this->chatManager->getChatUserByUser($user);
         $canChat = !is_null($chatUser);
         $canEdit = $this->hasChatRoomRight($chatRoom, 'EDIT');
@@ -146,6 +147,7 @@ class ChatController extends Controller
             'xmppHost' => $xmppHost,
             'xmppMucHost' => $xmppMucHost,
             'boshPort' => $boshPort,
+            'iceServers' => $iceServers,
             'color' => $color
         );
     }
@@ -179,10 +181,35 @@ class ChatController extends Controller
         return array(
             'chatRoom' => $chatRoom,
             'canEdit' => $canEdit,
-//            'messages' => $messages,
             'messagesDatas' => $messagesDatas,
             'users' => $users
         );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/chat/room/{chatRoom}/archives/retrieve",
+     *     name="claro_chat_room_archives_retrieve",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template()
+     */
+    public function chatRoomArchivesRetrieveAction(ChatRoom $chatRoom)
+    {
+        $this->checkChatRoomRight($chatRoom, 'OPEN');
+        $messages = $chatRoom->getMessages();
+        $messagesDatas = array();
+
+        foreach ($messages as $message) {
+            $messagesDatas[] = array(
+                'username' => $message->getUsername(),
+                'userFullName' => $message->getUserFullName(),
+                'content' => $message->getContent(),
+                'type' => $message->getType()
+            );
+        }
+
+        return new JsonResponse($messagesDatas, 200);
     }
 
     /**
@@ -243,6 +270,33 @@ class ChatController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/chat/room/{chatRoom}/user/{username}/full/{fullName}/status/status/{status}",
+     *     name="claro_chat_room_status_register",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function chatRoomStatusRegisterAction(
+        ChatRoom $chatRoom,
+        $username,
+        $fullName,
+        $status
+    )
+    {
+        $this->checkChatRoomRight($chatRoom, 'EDIT');
+        $this->chatManager->saveChatRoomMessage(
+            $chatRoom,
+            $username,
+            $fullName,
+            $status,
+            ChatRoomMessage::STATUS
+        );
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
      *     "/chat/room/{chatRoom}/configure/form",
      *     name="claro_chat_room_configure_form",
      *     options={"expose"=true}
@@ -254,7 +308,7 @@ class ChatController extends Controller
     {
         $this->checkChatRoomRight($chatRoom, 'EDIT');
         $form = $this->formFactory->create(
-            new ChatRoomConfigurationType(),
+            new ChatRoomConfigurationType($this->platformConfigHandler),
             $chatRoom
         );
         $xmppMucHost = $this->platformConfigHandler->getParameter('chat_xmpp_muc_host');
@@ -279,7 +333,7 @@ class ChatController extends Controller
     {
         $this->checkChatRoomRight($chatRoom, 'EDIT');
         $form = $this->formFactory->create(
-            new ChatRoomConfigurationType(),
+            new ChatRoomConfigurationType($this->platformConfigHandler),
             $chatRoom
         );
         $form->handleRequest($this->request);
@@ -287,7 +341,7 @@ class ChatController extends Controller
         if ($form->isValid()) {
             $this->chatManager->persistChatRoom($chatRoom);
 
-            return new JsonResponse('success', 200);
+            return new JsonResponse($chatRoom->getRoomStatus(), 200);
         } else {
             $xmppMucHost = $this->platformConfigHandler->getParameter('chat_xmpp_muc_host');
 

@@ -118,11 +118,17 @@ class AdminChatController extends Controller
         $host = $formData['host'];
         $mucHost = $formData['mucHost'];
         $port = $formData['port'];
+        $iceServers = $formData['iceServers'];
+        $disableChatRoomAudio = isset($formData['disableChatRoomAudio']) ? true : false;
+        $disableChatRoomVideo = isset($formData['disableChatRoomVideo']) ? true : false;
         $this->platformConfigHandler->setParameters(
             array(
                 'chat_xmpp_host' => $host,
                 'chat_xmpp_muc_host' => $mucHost,
-                'chat_bosh_port' => $port
+                'chat_bosh_port' => $port,
+                'chat_ice_servers' => $iceServers,
+                'chat_room_audio_disable' => $disableChatRoomAudio,
+                'chat_room_video_disable' => $disableChatRoomVideo
             )
         );
 

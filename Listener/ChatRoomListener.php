@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
@@ -36,17 +37,19 @@ class ChatRoomListener
     private $formFactory;
     private $httpKernel;
     private $om;
+    private $platformConfigHandler;
     private $request;
     private $templating;
 
     /**
      * @DI\InjectParams({
-     *     "chatManager"        = @DI\Inject("claroline.manager.chat_manager"),
-     *     "formFactory"        = @DI\Inject("form.factory"),
-     *     "httpKernel"         = @DI\Inject("http_kernel"),
-     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "requestStack"       = @DI\Inject("request_stack"),
-     *     "templating"         = @DI\Inject("templating")
+     *     "chatManager"           = @DI\Inject("claroline.manager.chat_manager"),
+     *     "formFactory"           = @DI\Inject("form.factory"),
+     *     "httpKernel"            = @DI\Inject("http_kernel"),
+     *     "om"                    = @DI\Inject("claroline.persistence.object_manager"),
+     *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "requestStack"          = @DI\Inject("request_stack"),
+     *     "templating"            = @DI\Inject("templating")
      * })
      */
     public function __construct(
@@ -54,6 +57,7 @@ class ChatRoomListener
         FormFactory $formFactory,
         HttpKernelInterface $httpKernel,
         ObjectManager $om,
+        PlatformConfigurationHandler $platformConfigHandler,
         RequestStack $requestStack,
         TwigEngine $templating
     )
@@ -62,6 +66,7 @@ class ChatRoomListener
         $this->formFactory = $formFactory;
         $this->httpKernel = $httpKernel;
         $this->om = $om;
+        $this->platformConfigHandler = $platformConfigHandler;
         $this->request = $requestStack->getCurrentRequest();
         $this->templating = $templating;
     }
@@ -73,7 +78,9 @@ class ChatRoomListener
      */
     public function onCreationForm(CreateFormResourceEvent $event)
     {
-        $form = $this->formFactory->create(new ChatRoomType(), new ChatRoom());
+        $form = $this->formFactory->create(
+            new ChatRoomType($this->platformConfigHandler), new ChatRoom()
+        );
         $content = $this->templating->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
@@ -92,7 +99,9 @@ class ChatRoomListener
      */
     public function onCreate(CreateResourceEvent $event)
     {
-        $form = $this->formFactory->create(new ChatRoomType(), new ChatRoom());
+        $form = $this->formFactory->create(
+            new ChatRoomType($this->platformConfigHandler), new ChatRoom()
+        );
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {

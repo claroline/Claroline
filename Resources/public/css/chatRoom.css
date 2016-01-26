@@ -51,6 +51,10 @@
     border-color: #5792DB;
 }
 
+.video-speaking {
+    background-color: #A6E0AB;
+}
+
 #main-video-container {
     height: 60vh;
 }

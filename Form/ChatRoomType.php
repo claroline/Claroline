@@ -12,6 +12,7 @@
 namespace Claroline\ChatBundle\Form;
 
 use Claroline\ChatBundle\Entity\ChatRoom;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -19,13 +20,28 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ChatRoomType extends AbstractType
 {
+    private $configHandler;
+
+    public function __construct(PlatformConfigurationHandler $configHandler)
+    {
+        $this->configHandler = $configHandler;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $typesList = array(
             ChatRoom::TEXT => 'text_only',
-            ChatRoom::AUDIO => 'audio_only',
-            ChatRoom::VIDEO => 'audio_video'
         );
+        $disableAudio = $this->configHandler->getParameter('chat_room_audio_disable');
+        $disableVideo = $this->configHandler->getParameter('chat_room_video_disable');
+
+        if (!$disableAudio) {
+            $typesList[ChatRoom::AUDIO] = 'audio_only';
+        }
+
+        if (!$disableVideo) {
+            $typesList[ChatRoom::VIDEO] = 'audio_video';
+        }
 
         $builder->add(
             'name',
