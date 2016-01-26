@@ -21,6 +21,7 @@ use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
+use Claroline\InstallationBundle\Bundle\InstallableBundle;;
 
 class InitTestSchemaCommand extends ContainerAwareCommand
 {
@@ -77,8 +78,10 @@ class InitTestSchemaCommand extends ContainerAwareCommand
         $migrator->setLogger($consoleLogger);
 
         foreach ($this->getContainer()->get('kernel')->getBundles() as $bundle) {
-            if (count($migrator->getBundleStatus($bundle)[Migrator::STATUS_AVAILABLE]) > 1) {
-                $migrator->upgradeBundle($bundle, Migrator::VERSION_FARTHEST);
+            if ($bundle instanceof InstallableBundle && $bundle->hasMigrations()) {
+                if (count($migrator->getBundleStatus($bundle)[Migrator::STATUS_AVAILABLE]) > 1) {
+                    $migrator->upgradeBundle($bundle, Migrator::VERSION_FARTHEST);
+                }
             }
         }
     }

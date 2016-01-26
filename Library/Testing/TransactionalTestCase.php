@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Library\Testing;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Claroline\CoreBundle\Entity\User;
 
 abstract class TransactionalTestCase extends WebTestCase
 {
@@ -29,5 +30,10 @@ abstract class TransactionalTestCase extends WebTestCase
     {
         $this->client->shutdown();
         parent::tearDown();
+    }
+
+    protected function logIn(User $user, $firewall = 'main')
+    {
+        $this->client = $this->logClient($user, $this->client, $firewall);
     }
 }

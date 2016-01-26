@@ -1,0 +1,13 @@
+{% extends 'ClarolineCoreBundle::layout_base.html.twig' %}
+
+{% block content_container %}
+    <div class="container">
+        <div class="row content">
+            <div class="col-md-12">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+    <div id="push"></div>
+{% endblock %}
+

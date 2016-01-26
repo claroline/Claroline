@@ -1,0 +1,116 @@
+{% extends 'ClarolineCoreBundle::base.html.twig' %}
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+
+{% block meta %}
+    {{ parent() }}
+    {% if config.getParameter('google_meta_tag') != '' %}
+        {{ config.getParameter('google_meta_tag') | raw }}
+    {% endif %}
+{% endblock %}
+
+{% block stylesheets %}
+    {% include 'ClarolineCoreBundle:Layout:stylesheets.html.twig' %}
+{% endblock %}
+
+{% block javascripts_header %}
+    {{ parent() }}
+    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/dist/jquery.min.js') }}'></script>
+{% endblock %}
+
+{% block favicon %}
+    {{ parent() }}
+    {% include 'ClarolineCoreBundle:Layout:favicon.html.twig' %}
+{% endblock %}
+
+{% block layout %}
+    <div id="sf-environement" data-env="{{ app.environment }}" class="hide"></div>
+    <div id="homePath" class="hide">{{ path("claro_index") }}</div>
+    <div id="homeAsset" class="hide">{{ app.request.getSchemeAndHttpHost() ~ asset("") }}</div>
+    <div id="homeLocale" class="hide">{% spaceless %}
+            {% if asset_exists("bundles/stfalcontinymce/vendor/tinymce/langs/" ~ app.request.locale ~ ".js") %}
+                {{ app.request.locale }}
+            {% elseif asset_exists("bundles/stfalcontinymce/vendor/tinymce/langs/" ~ app.request.locale ~ "_" ~ app.request.locale | upper ~ ".js") %}
+                {{ app.request.locale ~ '_' ~ app.request.locale | upper }}
+            {% else %}
+                en
+            {% endif %}
+        {% endspaceless %}
+    </div>
+    <div id="wrap">
+        <div class="please-wait">
+            <h4><span class="label label-warning"> {{ 'please_wait'|trans({}, 'platform') }} </span></h4>
+        </div>
+        {% if is_maintenance_enabled() %}
+            <div class="alert-update-mode">
+                <h4 class="label label-danger">
+                    {{ 'maintenance_mode_enabled'|trans({}, 'platform') }}
+                    <i
+                            class="fa fa-question-circle pointer-hand maintenance-popover"
+                            data-container=".alert-update-mode"
+                            data-toggle="popover"
+                            data-placement="bottom"
+                            data-content="{{ 'maintenance_mode_message'|trans({}, 'platform') }}"
+                            >
+                    </i>
+                </h4>
+            </div>
+        {% endif %}
+        {% if app.user != null and app.user.isMailValidated == false and app.user.hideMailWarning == false and is_mailer_available() %}
+            <div class="alert-email-confirm">
+                <h4 class="label label-warning">
+                    {{ 'email_not_activated_part_1'|trans({'%email%': app.user.mail}, 'platform') }}
+                    <a href="{{ path('claro_security_validate_email_send', {'hash': app.user.emailValidationHash}) }}" class="confirm-email"> {{ 'email_not_activated_part_2'|trans({}, 'platform') }}</a>
+                    {{ 'email_not_activated_part_3'|trans({}, 'platform') }}
+                    <i
+                            class="fa fa-question-circle pointer-hand maintenance-popover"
+                            data-container=".alert-email-confirm"
+                            data-toggle="popover"
+                            data-placement="bottom"
+                            data-content="{{ 'email_confirmation_message'|trans({}, 'platform') }}"
+                            >
+                    </i>
+                    &nbsp&nbsp&nbsp&nbsp&nbsp
+                    <i class="fa fa-close pointer-hand" id="hide-email-confirmation">
+
+                    </i>
+                </h4>
+            </div>
+        {% endif %}
+        <div class="hidden-xs">
+            <div class="hide">
+                <div id="left-bar" class="sidebar">
+                    {% block leftbar %}{% endblock %}
+                </div>
+            </div>
+            <div class="hide">
+                <div id="right-bar" class="sidebar">
+                    {% block rightbar %}{% endblock %}
+                </div>
+            </div>
+        </div>
+
+        {% if not has_role('ROLE_USURPATE_WORKSPACE_ROLE') %}
+            {% block topBarRender %}
+                {% if workspace is defined %}
+                    {% render(controller('ClarolineCoreBundle:Layout:topBar', {'workspaceId': workspace.id})) %}
+                {% else %}
+                    {% render(controller('ClarolineCoreBundle:Layout:topBar')) %}
+                {% endif %}
+            {% endblock %}
+        {% endif %}
+
+        {% block impersonation %}
+            {% if has_role('ROLE_USURPATE_WORKSPACE_ROLE') or is_impersonated() %}
+                {% render(controller('ClarolineCoreBundle:Layout:renderWarningImpersonation')) %}
+            {% endif %}
+        {% endblock %}
+        {% block content_container %}{% endblock %}
+    </div>
+    {% block footer %}
+        {% render(controller('ClarolineCoreBundle:Layout:footer')) %}
+    {% endblock%}
+{% endblock %}
+
+{% block javascripts %}
+    {% include 'ClarolineCoreBundle:Layout:javascripts.html.twig' %}
+{% endblock %}

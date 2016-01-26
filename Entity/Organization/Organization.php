@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Entity\User;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use Claroline\CoreBundle\Entity\Calendar\TimeSlot;
+
 use Claroline\CoreBundle\Entity\Calendar\Year;
 
 /**

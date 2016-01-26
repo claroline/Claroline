@@ -112,6 +112,7 @@ class ClarolineApiListener implements ListenerInterface
 
     public function handleCookie(GetResponseEvent $event)
     {
+
         $request = $event->getRequest();
         $session = $request->hasPreviousSession() ? $request->getSession() : null;
 
