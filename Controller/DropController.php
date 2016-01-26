@@ -37,6 +37,9 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Innova\CollecticielBundle\Event\Log\LogDropzoneReturnReceiptEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropzoneAddDocumentEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropzoneValidateDocumentEvent;
 
 class DropController extends DropzoneBaseController
 {
@@ -1213,6 +1216,39 @@ class DropController extends DropzoneBaseController
                 $returnReceipt->setReturnReceiptType($returnReceiptType);
 
                 $em->persist($returnReceipt);
+
+                // Envoi notification. InnovaERV
+                $usersIds = array();
+
+                // Ici, on récupère le créateur du collecticiel = l'admin
+                $userCreator = $dropzone->getResourceNode()->getCreator()->getId();
+                // Ici, on récupère celui qui vient de déposer le nouveau document
+                //$userAddDocument = $this->get('security.context')->getToken()->getUser()->getId(); 
+                $userDropDocument = $document->getDrop()->getUser()->getId();
+                $userSenderDocument = $document->getSender()->getId();
+            
+                if ($userCreator == $userSenderDocument) {
+                    // Ici avertir l'étudiant qui a travaillé sur ce collecticiel
+                    $usersIds[] = $userDropDocument;
+                }
+                else {
+                    // Ici avertir celui a qui créé le collecticiel
+                    $usersIds[] = $userCreator;
+                }
+//                var_dump("LogDropzoneReturnReceiptEvent");
+//                var_dump($document);
+//                var_dump($dropzone);
+//                var_dump($usersIds);
+//                die();
+//                $event = new LogDropzoneReturnReceiptEvent($document, $dropzone, $usersIds);
+
+                //$event = new LogDropzoneValidateDocumentEvent($document, $dropzone, $usersIds);
+                $event = new LogDropzoneReturnReceiptEvent($document, $dropzone, $usersIds);
+
+                $this->get('event_dispatcher')->dispatch('log', $event);
+                // Fin de l'ajout de la notification
+
+
             }
         }
 

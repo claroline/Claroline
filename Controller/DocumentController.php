@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Innova\CollecticielBundle\Event\Log\LogDropzoneValidateDocumentEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropzoneAddDocumentEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Innova\CollecticielBundle\Event\Log\LogDropzoneReturnReceiptEvent;
 
 class DocumentController extends DropzoneBaseController
 {
@@ -510,12 +511,33 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
         $usersIds = array();
 
         // Ici, on récupère le créateur du collecticiel = l'admin
-        $userCreator = $document->getResourceNode()->getCreator()->getId();
+        var_dump($document->getId());
+        if ($document->getType() == 'url') {
+            $userCreator = $document->getDrop()->getUser()->getId();
+        }
+        else {
+            $userCreator = $document->getResourceNode()->getCreator()->getId();
+        }
  
-        // Ici avertir celui a qui créé le collecticiel
-        $usersIds[] = $userCreator;
+        // Ici, on récupère celui qui vient de déposer le nouveau document
+        //$userAddDocument = $this->get('security.context')->getToken()->getUser()->getId(); 
+        $userDropDocument = $document->getDrop()->getUser()->getId();
+        $userSenderDocument = $document->getSender()->getId();
+    
+        if ($userCreator == $userSenderDocument) {
+            // Ici avertir l'étudiant qui a travaillé sur ce collecticiel
+            $usersIds[] = $userDropDocument;
+        }
+        else {
+            // Ici avertir celui a qui créé le collecticiel
+            $usersIds[] = $userCreator;
+        }
 
-        $event = new LogDropzoneValidateDocumentEvent($document, $dropzones[0], $usersIds);
+//        die("ici validate document");
+
+        $event = new LogDropzoneReturnReceiptEvent($document, $dropzones[0], $usersIds);
+//        $event = new LogDropzoneValidateDocumentEvent($document, $dropzones[0], $usersIds);
+
         $this->get('event_dispatcher')->dispatch('log', $event);
 
         // Ajout afin d'afficher la partie du code avec "Demande transmise"

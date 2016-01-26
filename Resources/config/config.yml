@@ -20,3 +20,4 @@ plugin:
             - action: resource-innova_collecticiel-dropzone_add_comment
             - action: resource-innova_collecticiel-dropzone_validate_document
             - action: resource-innova_collecticiel-dropzone_add_document
+            - action: resource-innova_collecticiel-dropzone_return_receipt
