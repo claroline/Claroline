@@ -27,7 +27,15 @@ abstract class TransactionalTestCase extends WebTestCase
 
     protected function tearDown()
     {
-        $this->client->shutdown();
+        // we can't simply do "$client->shutdown()" because sometimes
+        // when an integration test fails (e.g. due to an error in the
+        // container configuration) the $client property is set to null
+        // (by PHPUnit?) and the original error is hidden behind a fatal
+        // "Call to a member function shutdown() on a non-object"...
+        if ($this->client instanceof TransactionalTestClient) {
+            $this->client->shutdown();
+        }
+
         parent::tearDown();
     }
 }
