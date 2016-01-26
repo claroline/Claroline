@@ -36,4 +36,21 @@ abstract class TransactionalTestCase extends WebTestCase
     {
         $this->client = $this->logClient($user, $this->client, $firewall);
     }
+
+    private function logClient(User $user, Client $client, $firewall = 'main')
+    {
+        $tokenStorage = $client->getContainer()->get('security.token_storage');
+        $token = new UsernamePasswordToken($user, $user->getPlainPassword(), $firewall , $user->getRoles());
+        $tokenStorage->setToken($token);
+
+        //now we generate the cookie !
+        //@see http://symfony.com/doc/current/cookbook/testing/simulating_authentication.html
+        $session = $client->getContainer()->get('session');
+        $session->set('_security_' . $firewall, serialize($token));
+        $session->save();
+        $cookie = new Cookie($session->getName(), $session->getId());
+        $client->getCookieJar()->set($cookie);
+
+        return $client;
+    }
 }
