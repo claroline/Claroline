@@ -150,7 +150,18 @@ class GraphicHandler implements QuestionHandlerInterface {
         $repo = $this->om->getRepository('UJMExoBundle:InteractionGraphic');
         $graphic = $repo->findOneBy(['question' => $question]);
         $coords = $graphic->getCoords()->toArray();
-
+        
+        $exportData->width = $graphic->getWidth();
+        $exportData->height = $graphic->getHeight();
+        
+        
+        $interDocument = $graphic->getDocument();
+        $document = new \stdClass();        
+        $document->id = $interDocument->getId();
+        $document->label = $interDocument->getLabel();
+        $document->url = $interDocument->getUrl();        
+        $exportData->document = $document;
+                
         $exportData->coords = array_map(function ($coord) {
             $coordData = new \stdClass();
             $coordData->id = (string) $coord->getId();
@@ -165,7 +176,7 @@ class GraphicHandler implements QuestionHandlerInterface {
                 $solutionData->shape = $coord->getShape();
                 $solutionData->color = $coord->getColor();
                 $solutionData->size = $coord->getSize();
-                $solutionData->score = $coord->getScore();
+                $solutionData->score = $coord->getScoreCoords();
                 if ($coord->getFeedback()) {
                     $solutionData->feedback = $coord->getFeedback();
                 }
@@ -229,7 +240,6 @@ class GraphicHandler implements QuestionHandlerInterface {
         // a response is recorded like this : 471 - 335.9999694824219;583 - 125;
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionGraphic')
                 ->findOneByQuestion($question);
-        $document = $interaction->getDocument();
         $coords = $interaction->getCoords();
         $score = 0;
         foreach ($coords as $coord) {
@@ -260,11 +270,6 @@ class GraphicHandler implements QuestionHandlerInterface {
         $done = array();
         $mark = 0;
         foreach ($coords as $coord) {
-            // no id in graphic responses
-            if (in_array((string) $choice->getId(), $data)) {
-                $mark += $choice->getWeight();
-            }
-
             $values = $coord->getValue();
 
             $valueX = floatval($values[0]);
