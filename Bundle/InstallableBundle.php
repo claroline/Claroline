@@ -46,11 +46,9 @@ abstract class InstallableBundle extends Bundle implements InstallableInterface
 
     public function getClarolineName()
     {
-        $data = $this->getComposer();
-        $prop = 'target-dir';
-        $parts = explode('/', $data->$prop);
+        $parts = explode('\\', get_class($this));
 
-        return end($parts);
+        return isset($parts[1]) ? $parts[1] : end($parts);
     }
 
     public function getType()
@@ -87,9 +85,12 @@ abstract class InstallableBundle extends Bundle implements InstallableInterface
     public function getTargetDir()
     {
         $data = $this->getComposer();
-        $prop = 'target-dir';
 
-        return $data->$prop;
+        if (property_exists($data, 'target-dir')) {
+            return $data->{'target-dir'};
+        }
+
+        return '';
     }
 
     public function getBasePath()
