@@ -25,6 +25,7 @@ class UserProgression implements \JsonSerializable
      * @var array
      */
     protected static $statusAvailable = array (
+        'unseen',
         'seen',
         'to_do',
         'done',
@@ -66,6 +67,14 @@ class UserProgression implements \JsonSerializable
      * @ORM\Column(name="progression_status", type="string")
      */
     protected $status;
+
+    /**
+     * Can the user access the step
+     * @var boolean
+     *
+     * @ORM\Column(name="authorized_access", type="boolean")
+     */
+    protected $authorized;
 
     /**
      * CLass constructor
@@ -173,6 +182,31 @@ class UserProgression implements \JsonSerializable
             'userId' => $this->user->getId(),
             'stepId' => $this->step->getId(),
             'status' => $this->status,
+            'authorized' => $this->authorized,
         );
+    }
+
+    /**
+     * Set authorized
+     *
+     * @param boolean $authorized
+     *
+     * @return UserProgression
+     */
+    public function setAuthorized($authorized)
+    {
+        $this->authorized = $authorized;
+
+        return $this;
+    }
+
+    /**
+     * Get authorized
+     *
+     * @return boolean
+     */
+    public function getAuthorized()
+    {
+        return $this->authorized;
     }
 }

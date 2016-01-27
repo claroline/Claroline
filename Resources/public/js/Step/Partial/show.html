@@ -6,8 +6,20 @@
         </div>
     </div>
 
+    <!-- User is not authorized to access this step -->
+    <div data-ng-if="!stepShowCtrl.authorization.granted" class="col-md-12">
+        <div class="alert alert-info text-center" data-ng-bind-html="stepShowCtrl.authorization.message"></div>
+    </div>
+
+    <!-- Current step is not accessible for now -->
+    <div data-ng-if="stepShowCtrl.authorization.granted && null != stepShowCtrl.step && !stepShowCtrl.isAccessible()" class="col-md-12">
+        <div class="alert alert-info text-center">
+            {{ 'step_not_accessible'|trans:{}:'path_wizards' }}
+        </div>
+    </div>
+
     <!-- Current step -->
-    <div data-ng-if="null != stepShowCtrl.step" class="panel-step col-md-12">
+    <div data-ng-if="stepShowCtrl.authorization.granted && null != stepShowCtrl.step && stepShowCtrl.isAccessible()" class="panel-step col-md-12">
         <resources-secondary-show data-resources="stepShowCtrl.step.resources" data-inherited="stepShowCtrl.inheritedResources" data-excluded="stepShowCtrl.step.excludedResources"></resources-secondary-show>
 
         <div class="panel panel-default">

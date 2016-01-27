@@ -1,3 +1,9 @@
 no_path_widget_message: Aucun parcours trouvé
 innova_path_widget: Parcours
 path_author: Auteur
+innova_path_widget_config_status: Statut
+innova_path_widget_config_tags: Tags affichés
+
+draft:     Non publié
+published: Publié
+modified:  Publié avec des modifications en attente

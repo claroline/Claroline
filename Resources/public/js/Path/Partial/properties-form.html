@@ -1,0 +1,119 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="panel panel-default">
+            <!--<div class="panel-heading">
+                <h3 class="panel-title">{{ pathEditCtrl.path.name }}</h3>
+            </div>-->
+
+            <nav class="navbar navbar-default navbar-static-top" role="navigation">
+                <ul class="nav navbar-nav navbar-left">
+                    <!-- Undo from history button -->
+                    <li data-ng-class="{ 'disabled': pathEditCtrl.historyDisabled.undo }">
+                        <a href="" data-ng-click="pathEditCtrl.undo()" data-placement="bottom" data-toggle="tooltip" data-original-title="{{ 'undo'|trans:{}:'path_wizards' }}">
+                            <span class="fa fa-reply"></span>
+                            <span class="sr-only"> {{ 'undo'|trans:{}:'path_wizards' }}</span>
+                        </a>
+                    </li>
+
+                    <!-- Redo from history button -->
+                    <li data-ng-class="{ 'disabled': pathEditCtrl.historyDisabled.redo }">
+                        <a href="" data-ng-click="pathEditCtrl.redo()" data-placement="bottom" data-toggle="tooltip" data-original-title="{{ 'redo'|trans:{}:'path_wizards' }}">
+                            <span class="fa fa-share"></span>
+                            <span class="sr-only">{{ 'redo'|trans:{}:'path_wizards' }}</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <!-- Save button -->
+                    <li data-ng-class="{ 'disabled': !pathEditCtrl.unsaved }">
+                        <a href="" data-ng-click="pathEditCtrl.save()">
+                            <span class="fa fa-floppy-o"></span> {{ 'save'|trans:{}:'path_wizards' }}
+                        </a>
+                    </li>
+
+                    <!-- Publish button -->
+                    <li data-ng-class="{ 'disabled': pathEditCtrl.published && !pathEditCtrl.modified }">
+                        <a href="" data-ng-click="pathEditCtrl.publish()">
+                            <span class="fa fa-share-square-o"></span> {{ 'publish'|trans:{}:'path_wizards' }}
+                        </a>
+                    </li>
+
+                    <!-- Preview button -->
+                    <li data-ng-class="{ 'disabled': !pathEditCtrl.published }">
+                        <a href="" data-ng-click="pathEditCtrl.preview()">
+                            <span class="fa fa-eye"></span> {{ 'preview'|trans:{}:'path_wizards' }}
+                        </a>
+                    </li>
+                </ul>
+
+                <p class="navbar-text navbar-right">
+                    <!-- User messages -->
+                    <alert-box></alert-box>
+                </p>
+            </nav>
+
+            <div class="panel-body" data-ng-if="!hidePath">
+                <!-- Name of the path -->
+                <div class="row form-group">
+                    <label class="control-label col-md-3 required" for="innova_path_name">{{ 'path_name'|trans:{}:'path_wizards' }}</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" id="innova_path_name" name="innova_path[name]" placeholder="{{ 'name_help'|trans:{}:'path_wizards' }}" data-ng-model="pathEditCtrl.path.name" />
+                    </div>
+                </div>
+
+                <!-- Description of the path -->
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="innova_path_description">{{ 'path_description'|trans:{}:'path_wizards' }}</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" id="innova_path_description" name="innova_path[description]" placeholder="{{ 'description_help'|trans:{}:'path_wizards' }}" data-ng-model="pathEditCtrl.path.description" />
+                    </div>
+                </div>
+
+                <!-- Does the path have a breadcrumbs ?-->
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="innova_path_breadcrumbs">{{ 'path_breadcrumbs'|trans:{}:'path_wizards' }}</label>
+                    <div class="col-md-9">
+                        <div class="checkbox">
+                            <input type="checkbox" id="innova_path_breadcrumbs" name="innova_path[breadcrumbs]" data-ng-model="pathEditCtrl.path.breadcrumbs" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Is Summary opened by default ? -->
+                <div class="row form-group">
+                    <label class="control-label col-md-3" for="innova_path_summaryDisplayed">{{ 'path_summary_displayed'|trans:{}:'path_wizards' }}</label>
+                    <div class="col-md-9">
+                        <div class="checkbox">
+                            <input type="checkbox" id="innova_path_summaryDisplayed" name="innova_path[summaryDisplayed]" data-ng-model="pathEditCtrl.path.summaryDisplayed" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row form-group form-last">
+                    <label class="control-label col-md-3">{{ 'path_status'|trans:{}:'path_wizards' }}</label>
+                    <div class="col-md-9">
+                        <!-- Path not saved -->
+                        <p data-ng-if="pathEditCtrl.unsaved" class="form-control-static text-danger">{{ 'unsaved'|trans:{}:'path_wizards' }}</p>
+
+                        <!-- Path not published -->
+                        <p data-ng-if="!pathEditCtrl.published && !pathEditCtrl.unsaved" class="form-control-static text-danger">{{ 'draft'|trans:{}:'path_wizards' }}</p>
+
+                        <!-- Path published without modifications -->
+                        <p data-ng-if="pathEditCtrl.published && !pathEditCtrl.modified && !pathEditCtrl.unsaved" class="form-control-static text-success">{{ 'published'|trans:{}:'path_wizards' }}</p>
+
+                        <!-- Path published with modifications -->
+                        <p data-ng-if="pathEditCtrl.published && pathEditCtrl.modified && !pathEditCtrl.unsaved" class="form-control-static text-warning">{{ 'published'|trans:{}:'path_wizards' }} {{ 'modified'|trans:{}:'path_wizards' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-footer text-center toggle-path-info" data-ng-click="hidePath = !hidePath">
+                <span class="fa fa-fw" data-ng-class="{ 'fa-angle-double-down': hidePath, 'fa-angle-double-up': !hidePath }"></span>
+                <span data-ng-if="!hidePath">{{ 'hide_path_info'|trans:{}:'path_wizards' }}</span>
+                <span data-ng-if="hidePath">{{ 'show_path_info'|trans:{}:'path_wizards' }}</span>
+                <span class="fa fa-fw" data-ng-class="{ 'fa-angle-double-down': hidePath, 'fa-angle-double-up': !hidePath }"></span>
+            </div>
+        </div>
+    </div>
+</div>

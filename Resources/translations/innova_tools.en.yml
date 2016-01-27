@@ -66,6 +66,7 @@ paths_list: Paths list
 progression: Progression
 path_open_not_published_error: The path you wanted to open has not been published yet by its owner.
 paths_template_list: Template paths list
+publish: Publish
 
 # R
 resources: Resources
@@ -85,3 +86,5 @@ with_tutor: With a tutor
 without_tutor: Without a tutor
 
 back_to_home: Back to Workspace home
+
+no_path: There is no Path to display.

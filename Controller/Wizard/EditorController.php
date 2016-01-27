@@ -99,6 +99,7 @@ class EditorController
 
         return array (
             '_resource'     => $path,
+            'workspace'     => $path->getWorkspace(),
             'resourceIcons' => $resourceIcons,
         );
     }
@@ -205,10 +206,11 @@ class EditorController
                     }
 
                     // Global Parameters
-                    $activity['withTutor'] = $parameters->isWithTutor();
-                    $activity['who']       = $parameters->getWho();
-                    $activity['where']     = $parameters->getWhere();
-                    $activity['duration']  = $parameters->getMaxDuration(); // Duration in seconds
+                    $activity['withTutor']      = $parameters->isWithTutor();
+                    $activity['who']            = $parameters->getWho();
+                    $activity['where']          = $parameters->getWhere();
+                    $activity['duration']       = $parameters->getMaxDuration(); // Duration in seconds
+                    $activity['evaluationType'] = $parameters->getEvaluationType(); //manual/automatic
                 }
             }
         }

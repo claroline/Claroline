@@ -16,6 +16,9 @@ var StepBaseCtrl = function StepBaseCtrl(step, inheritedResources, PathService) 
     return this;
 };
 
+// Dependency Injection
+StepBaseCtrl.$inject = [ 'step', 'inheritedResources', 'PathService' ];
+
 /**
  * Current step
  * @type {object}

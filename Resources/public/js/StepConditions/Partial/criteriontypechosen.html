@@ -1,0 +1,45 @@
+<!-- if userteam is chosen -->
+<div data-ng-switch-when="userteam">
+    <label class="control-label col-md-4 required">{{ 'condition_criterion_userteam'|trans:{}:'path_wizards' }} :</label>
+    <div class="col-md-8 criterion-userteam">
+        <select class="form-control" name="criterion-userteam" id="criterion-userteam-{{group.lvl}}-{{critIndex}}"
+                data-ng-class="criterion-userteam" data-ng-model="criterion.data"
+                data-ng-options="k as v for (k, v) in stepConditionsEditCtrl.criterionUserteam">
+            <option value="">{{'condition_criterion_choice'|trans:{}:'path_wizards' }}</option>
+        </select>
+    </div>
+</div>
+
+<!-- if usergroup is chosen -->
+<div data-ng-switch-when="usergroup">
+    <label class="control-label col-md-4 required">{{ 'condition_criterion_usergroup'|trans:{}:'path_wizards' }} :</label>
+    <div class="col-md-8 criterion-usergroup">
+        <select class="form-control" name="criterion-usergroup" id="criterion-usergroup-{{group.lvl}}-{{critIndex}}"
+                data-ng-class="criterion-usergroup" data-ng-model="criterion.data"
+                data-ng-options="k as v for (k, v) in stepConditionsEditCtrl.criterionUsergroup">
+            <option value="">{{'condition_criterion_choice'|trans:{}:'path_wizards' }}</option>
+        </select>
+    </div>
+</div>
+
+<!-- if activitystatus is chosen -->
+<div data-ng-switch-when="activitystatus">
+    <label class="control-label col-md-4 required">{{ 'condition_criterion_activitystatus'|trans:{}:'path_wizards' }} :</label>
+    <div class="col-md-8 criterion-activitystatus">
+        <select class="form-control" name="criterion-activitystatus" id="criterion-activitystatus-{{group.lvl}}-{{critIndex}}"
+                data-ng-class="criterion-activitystatus" data-ng-model="criterion.data"
+                data-ng-options="v for (k, v) in stepConditionsEditCtrl.criterionActivitystatuses" required>
+            <option value="">{{'condition_criterion_choice'|trans:{}:'path_wizards' }}</option>
+        </select>
+    </div>
+</div>
+
+<!-- if activityrepetition is chosen -->
+<div data-ng-switch-when="activityrepetition">
+    <label class="control-label col-md-4 required">{{ 'condition_criterion_activityrepetition'|trans:{}:'path_wizards' }} :</label>
+    <div class="col-md-8 criterion-activityrepetition">
+        <input class="form-control" name="criterion-activityrepetition" id="criterion-activityrepetition-{{group.lvl}}-{{critIndex}}"
+               data-ng-class="criterion-activityrepetition" data-ng-model="criterion.data"
+               type="text" required field-validation />
+    </div>
+</div>

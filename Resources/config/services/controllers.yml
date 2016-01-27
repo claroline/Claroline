@@ -3,8 +3,14 @@ services:
     innova_path.controller.path:
         class: %innova_path.controller.path.class%
         arguments:
-            pathManager:       @innova_path.manager.path
-            publishingManager: @innova_path.manager.publishing
+            om:                   @doctrine.orm.entity_manager
+            formFactory:          @form.factory
+            session:              @session
+            translator:           @translator
+            authorizationChecker: @security.authorization_checker
+            pathManager:          @innova_path.manager.path
+            publishingManager:    @innova_path.manager.publishing
+            tagManager:           @claroline.manager.tag_manager
         scope: request
 
     # Path template controller
@@ -40,4 +46,14 @@ services:
         class: %innova_path.controller.user_progression.class%
         arguments:
             userProgressionManager: @innova_path.manager.user_progression
+        scope: request
+
+    # Step Conditions controller
+    innova_path.controller.step_conditions:
+        class: %innova_path.controller.step_conditions.class%
+        arguments:
+            objectManager:  @claroline.persistence.object_manager
+            groupManager:   @claroline.manager.group_manager
+            securityToken:  @security.token_storage
+            teamManager:    @claroline.manager.team_manager
         scope: request

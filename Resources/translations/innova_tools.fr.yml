@@ -62,6 +62,7 @@ path_delete_success: Le parcours a été supprimé
 path_delete_error: Le parcours n'a pas pu être supprimé. Veuillez réessayer
 path_open_not_published_error: Le parcours que vous vouliez ouvrir n'a pas encore été publié par son propriétaire. 
 paths_template_list: Liste des modèles de parcours
+publish: Publier
 
 # R
 resources: Ressources
@@ -81,3 +82,5 @@ with_tutor: Avec un tuteur
 without_tutor: Sans tuteur
 
 back_to_home: Retour à l'accueil de l'Espace d'activités
+
+no_path: Il n'y a aucun Parcours à afficher.

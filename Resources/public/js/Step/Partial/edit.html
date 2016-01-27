@@ -33,7 +33,7 @@
                             <input type="text" class="form-control text-center" name="step-name" id="step-name" data-ng-model="stepEditCtrl.step.name" />
                             <div class="input-group-btn">
                                 <button data-ng-click="stepEditCtrl.showActivity()" class="btn btn-default" type="button" data-ng-if="stepEditCtrl.step.activityId" data-toggle="tooltip" data-container="body" title="{{ 'see_activity'|trans:{}:'path_wizards' }}">
-                                    <span class="fa fa-eye"></span>
+                                    <span class="fa fa-sign-out"></span>
                                     <span class="sr-only">{{ 'see_activity'|trans:{}:'path_wizards' }}</span>
                                 </button>
 
@@ -130,9 +130,23 @@
                                 <duration-field class="row" data-model="stepEditCtrl.step.duration"></duration-field>
                             </div>
                         </div>
+
+                        <!-- Evaluation Type -->
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="evaluation-type">{{ 'step_evaluation_type'|trans:{}:'path_wizards' }}</label>
+                            <div class="col-md-8">
+                                <select class="form-control" id="evaluation-type" name="evaluation-type" data-ng-model="stepEditCtrl.step.evaluationType">
+                                    <option value="manual">{{ 'manual'|trans:{}:'platform' }}</option>
+                                    <option value="automatic">{{ 'automatic'|trans:{}:'platform' }}</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Conditions for the Next step -->
+        <step-conditions-edit data-next="stepEditCtrl.nextstep" data-ng-if="stepEditCtrl.nextstep"></step-conditions-edit>
     </div>
 </div>

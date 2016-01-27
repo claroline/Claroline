@@ -37,8 +37,88 @@
             var summary = {
                 opened: true
             };
+            /**
+             * list af all steps following the current step
+             * @type {Array}
+             */
+            var arrnextall = [];
+            var evaluations = [];
 
+            var usergrouplist=[];
+            var userteamlist=[];
+            var evaluationstatuses=[];
+            var useringroup=[];
+            var userinteam=[];
+            var deferred = $q.defer();
+
+            //expose the promises
+            var usergrouppromise = $http.get(Routing.generate('innova_path_criteria_usergroup',{}))
+                .success(function(response){
+                    usergrouplist = response;
+                    deferred.resolve(response);
+                });
+            var evaluationstatusespromise = $http.get(Routing.generate('innova_path_criteria_activitystatuses', {}))
+                .success(function (response) {
+                    evaluationstatuses = response;
+                    deferred.resolve(response);
+                });
+            var useringrouppromise = $http.get(Routing.generate('innova_path_criteria_groupsforuser', {}))
+                .success(function (response) {
+                    useringroup = response;
+                    deferred.resolve(response);
+                });
+            var userinteampromise = $http.get(Routing.generate('innova_path_criteria_teamsforuser', {}))
+                .success(function (response) {
+                    userinteam = response;
+                    deferred.resolve(response);
+                });
+            //userteampromise : different from above, because needs to pass the pathe_id parameter, not available here
+            var userteampromise;
             return {
+                usergrouppromise:usergrouppromise,
+                evaluationstatusespromise:evaluationstatusespromise,
+                useringrouppromise:useringrouppromise,
+                userteampromise:function userteampromise(pathid) {
+                    var deferred = $q.defer();
+                    var params = {'id':id};
+                    $http
+                        .get(Routing.generate('innova_path_criteria_teamsforws', params))
+                        .success(function (response) {
+                            userteamlist = response;
+                            deferred.resolve(response);
+                        }.bind(this))
+                        .error(function (response) {
+                            deferred.reject(response);
+                        });
+                    return deferred.promise;
+                },
+                //create a get method for the variable to retrieve
+                getUsergroupData:function getUsergroupData(){
+                    return usergrouplist;
+                },
+                getEvaluationStatusesData:function getEvaluationStatusesData(){
+                    return evaluationstatuses;
+                },
+                getUseringroupData:function getUseringroupData(){
+                    return useringroup;
+                },
+                getUserteamData:function getUserteamData(){
+                    return userteamlist;
+                },
+                getUserinteamData:function getUserinteamData(){
+                    return userinteam;
+                },
+                /**
+                 * get list of all child steps of a step
+                 * @returns {array}
+                 */
+                getArrNextAll: function getArrNextAll(step) {
+                    //flush the array from previous call
+                    this.arrnextall = [];
+                    //call the recursive function
+                    this.getNextAll(step);
+                    return this.arrnextall;
+                },
                 /**
                  * Get ID of the current Path
                  * @returns {Number}
@@ -46,7 +126,6 @@
                 getId: function getId() {
                     return id;
                 },
-
                 /**
                  * Set ID of the current Path
                  * @param {Number} value
@@ -121,7 +200,9 @@
                 initializeFromTemplate: function initializeFromTemplate() {
 
                 },
-
+                conditionValidityCheck: function conditionValidityCheck() {
+                    return true;
+                },
                 /**
                  * Save modification to DB
                  */
@@ -209,15 +290,18 @@
                  * Display the step
                  * @param step
                  */
-                goTo: function goTo(step) {
-                    // Ugly as fuck, but can't make it work without timeout
-                    $timeout(function(){
-                        if (angular.isObject(step)) {
-                            $location.path('/' + step.id);
-                        } else {
-                            $location.path('/');
-                        }
-                    }, 1);
+                goTo: function goTo(step, checkAccess) {
+                    if (!checkAccess || AuthorizationCheckerService.isAuthorized(step)) {
+                        // Ugly as fuck, but can't make it work without timeout
+                        $timeout(function(){
+                            if (angular.isObject(step)) {
+                                $location.path('/' + step.id);
+                            } else {
+                                // User must be able to navigate to root step, so does not check authorization
+                                $location.path('/');
+                            }
+                        }, 1);
+                    }
                 },
 
                 /**
@@ -298,6 +382,60 @@
                     }
 
                     return next;
+                },
+                /**
+                 * Get all the steps following a step
+                 * meaning : all children and parents next siblings
+                 * @param step
+                 */
+                getNextAll: function getNextAll(step) {
+                    if (angular.isDefined(step) && angular.isObject(step)) {
+                        //If this is not final step
+                        if (this.getNext(step)) {
+                            this.arrnextall.push(this.getNext(step));
+                            this.getNextAll(this.getNext(step));
+                        } else {
+                            this.arrnextall.push(step);
+                        }
+                    }
+                    return true;
+                },
+                getAllEvaluationForSteps: function getAllEvaluationForSteps(path){
+                    var steps = [];
+                    var evaluations = [];
+                    var activity = null;
+                    var root = this.getRoot() ;
+                    steps = this.getNextAll(root);
+                    if (steps.length>0){
+                        for(var i=0;i<steps.length;i++){
+                            activity = steps[i].activityId;
+                            evaluations.push({"step":steps[i].id,"eval":this.stepConditionsService.getActivityEvaluation(activity)});
+                        }
+                    }
+                    return evaluations;
+                },
+
+                /**
+                 * Retrieve all evaluation for a path
+                 *
+                 * @param path
+                 */
+                getAllEvaluationsForPath: function getAllEvaluationsForPath(path) {
+                    var deferred = $q.defer();
+                    var params = {'path':path};
+                    $http
+                        .get(Routing.generate('innova_path_evaluation', params))
+                        .success(function (response) {
+                            this.setEvaluation(response);
+                            deferred.resolve(response);
+                        }.bind(this))
+                        .error(function (response) {
+                            deferred.reject(response);
+                        });
+                    return deferred.promise;
+                },
+                setEvaluation: function setEvaluation(data){
+                  this.evaluations = data;
                 },
 
                 /**
@@ -409,13 +547,13 @@
                                 terminated = recursiveLoop(currentStep, currentStep.children[i]);
                             }
                         }
-
                         return terminated;
                     }
 
                     if (typeof steps !== 'undefined' && steps.length !== 0) {
                         for (var j = 0; j < steps.length; j++) {
                             var terminated = recursiveLoop(null, steps[j]);
+
                             if (terminated) {
                                 break;
                             }
@@ -475,7 +613,6 @@
                                 }
                             }
                         }
-
                         return deleted;
                     });
                 },

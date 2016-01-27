@@ -1,0 +1,46 @@
+<div class="step-conditions panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <span class="fa" data-ng-class="{ 'fa-lock': stepConditionsEditCtrl.conditionstructure.length !== 0, 'fa-unlock-alt': stepConditionsEditCtrl.conditionstructure.length === 0 }"></span>
+            {{ 'condition_access'|trans:{}:'path_wizards' }} <b>{{ stepConditionsEditCtrl.next.name }}</b>
+        </h4>
+
+        <div class="btns">
+            <!-- Initialize conditions button -->
+            <button type="button" role="button" class="btn btn-sm btn-primary" data-ng-click="stepConditionsEditCtrl.createCondition(stepConditionsEditCtrl.current.stepId)" data-ng-if="stepConditionsEditCtrl.conditionstructure.length === 0">
+                <span class="fa fa-fw fa-pencil"></span>
+                {{ 'condition_init_conditionstructure'|trans:{}:'path_wizards' }}
+            </button>
+
+            <!-- Remove conditions button -->
+            <button type="button" class="btn btn-sm btn-danger" data-ng-click="stepConditionsEditCtrl.deleteCondition(stepConditionsEditCtrl.current.stepId)" data-ng-if="stepConditionsEditCtrl.conditionstructure.length !== 0">
+                <span class="fa fa-trash"></span>
+                <span>{{ 'condition_condition_delete'|trans:{}:'path_wizards' }}</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="panel-body" data-ng-if="stepConditionsEditCtrl.conditionstructure.length !== 0">
+        <div class="alert alert-warning" data-ng-if="stepConditionsEditCtrl.step.primaryResource.length === 0">
+            <span class="fa fa-warning"></span>
+            {{ 'condition_step_no_activity'|trans:{}:'path_wizards' }}
+        </div>
+
+        <div class="alert alert-warning" data-ng-if="stepConditionsEditCtrl.step.evaluationType !== 'automatic'">
+            <span class="fa fa-warning"></span>
+            {{ 'condition_step_activity_notmanageable'|trans:{}:'path_wizards' }}
+        </div>
+
+        <div class="step-conditions">
+            <!-- Block to display when a condition structure is set -->
+            <div class="condition-container" data-ng-if="stepConditionsEditCtrl.conditionstructure.length !== 0">
+                <!-- criteriagroup block, recursive generation -->
+                <ul class="criteriagroup">
+                    <li class="criteriagroup-li" data-ng-repeat="group in stepConditionsEditCtrl.conditionstructure[0].criteriagroups"
+                        data-ng-include="stepConditionsEditCtrl.webDir + 'bundles/innovapath/js/StepConditions/Partial/criteriagroup.html'">
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
