@@ -2081,7 +2081,7 @@ class CorrectionController extends DropzoneBaseController
                 $usersIds = array();
                 $usersIds[] = $dropzone->getResourceNode()->getCreator()->getId();
                 $usersIds[] = $document->getSender()->getId();
-                $event = new LogDropzoneAddCommentEvent($dropzone, $dropzone->getManualState(), $usersIds);
+                $event = new LogDropzoneAddCommentEvent($dropzone, $dropzone->getManualState(), $usersIds, $comment);
                 $this->get('event_dispatcher')->dispatch('log', $event);
             }
         }
@@ -2259,7 +2259,7 @@ class CorrectionController extends DropzoneBaseController
 
         $cpt=0;
         $stringDocsId="";
-        if (!empty($arrayDocsToView)) {
+        if (!empty($arrayDocsId)) {
             foreach($arrayDocsId as $documentId)
             {
                 // Par le JS, le document est transmis sous la forme "document_id_XX"
@@ -2376,7 +2376,7 @@ class CorrectionController extends DropzoneBaseController
                 $usersIds = array();
                 $usersIds[] = $dropzone->getResourceNode()->getCreator()->getId();
                 $usersIds[] = $document->getSender()->getId();
-                $event = new LogDropzoneAddCommentEvent($dropzone, $dropzone->getManualState(), $usersIds);
+                $event = new LogDropzoneAddCommentEvent($dropzone, $dropzone->getManualState(), $usersIds, $comment);
                 $this->get('event_dispatcher')->dispatch('log', $event);
             }
         }
@@ -2420,6 +2420,9 @@ class CorrectionController extends DropzoneBaseController
      */
     public function AddCommentForDocsInnovaAction(User $user, Dropzone $dropzone)
     {
+        //
+        // Saisie des commentaires à la volée.
+        //
 
         // Récupération de l'USER
         $user = $this->get('security.context')->getToken()->getUser();
@@ -2464,17 +2467,40 @@ class CorrectionController extends DropzoneBaseController
 //                        var_dump($documentId);
                         // Insertion en base du commentaire
                         $em->persist($comment);
+
+                        // Envoi notification. InnovaERV
+                        $usersIds = array();
+
+                        // Ici, on récupère le créateur du collecticiel = l'admin
+                        if ($document->getType() == 'url') {
+                            $userCreator = $document->getDrop()->getDropzone()->getResourceNode()->getCreator()->getId();
+                        }
+                        else {
+                            $userCreator = $document->getResourceNode()->getCreator()->getId();
+                        }
+                 
+                        // Ici, on récupère celui qui vient de déposer le nouveau document
+                        //$userAddDocument = $this->get('security.context')->getToken()->getUser()->getId(); 
+                        $userDropDocument = $document->getDrop()->getUser()->getId();
+                        $userSenderDocument = $document->getSender()->getId();
+                    
+                        if ($userCreator == $userSenderDocument) {
+                            // Ici avertir l'étudiant qui a travaillé sur ce collecticiel
+                            $usersIds[] = $userDropDocument;
+                        }
+                        else {
+                            // Ici avertir celui a qui créé le collecticiel
+                            $usersIds[] = $userCreator;
+                        }
+
+                        $event = new LogDropzoneAddCommentEvent($dropzone, $dropzone->getManualState(), $usersIds, $comment);
+                        $this->get('event_dispatcher')->dispatch('log', $event);
+
                     }
                 }
 
                 $em->flush();
-                // Envoi notification. InnovaERV
-                $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
-                $usersIds = array();
-                $usersIds[] = $dropzone->getResourceNode()->getCreator()->getId();
-                $usersIds[] = $document->getSender()->getId();
-                $event = new LogDropzoneAddCommentEvent($dropzone, $dropzone->getManualState(), $usersIds);
-                $this->get('event_dispatcher')->dispatch('log', $event);
+
             }
         }
 

@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Innova\CollecticielBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Entity\Comment;
 
 class LogDropzoneAddCommentEvent extends AbstractLogResourceEvent implements NotifiableInterface {
 
@@ -21,12 +22,13 @@ class LogDropzoneAddCommentEvent extends AbstractLogResourceEvent implements Not
      * @param Section $section
      * @param Contribution $contribution
     */
-    public function __construct(Dropzone $dropzone, $newstate, $userIds)
+    public function __construct(Dropzone $dropzone, $newstate, $userIds, Comment $comment)
     {
 
         $this->dropzone = $dropzone;
+        $this->comment  = $comment;
         $this->newState = $dropzone->getResourceNode()->getName();
-        $this->userIds = $userIds;
+        $this->userIds  = $userIds;
 
         $this->details = array(
 //            'newState'=> $this->newState
@@ -117,7 +119,8 @@ class LogDropzoneAddCommentEvent extends AbstractLogResourceEvent implements Not
         $notificationDetails['resource'] = array(
             'id' => $this->dropzone->getId(),
             'name' => $this->firstName . " " . $this->lastName, // $this->resource->getName(),
-            'type' => $this->dropzone->getResourceNode()->getName()
+            'type' => $this->dropzone->getResourceNode()->getName() .
+            " : " . substr(strip_tags($this->comment->getCommentText()), 0, 10)
         );
 
         return $notificationDetails;
