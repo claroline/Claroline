@@ -13,19 +13,19 @@
 <tr id="row_{{ document.id }}">
     {# Affichage de l'image de profil #}
     {% if dropzone.picture == 1  %}
-    <td class="{{ classArray }}">
-        <div class="user-panel">
-             <div class="pull-left image">
-                {% if document.sender.getPicture() != '' %}
-                    <img src="{{ asset('uploads/pictures/') ~ document.sender.getPicture() }}"
-                    class=""
-                    alt="{{ document.sender.getLastName() ~ ' ' ~ document.sender.getFirstName() }}">
-                {% else %}
-                    <img class="img-polaroid img-responsive" src="{{ asset('bundles/icapnotification/images/default-avatar.png') }}">
-                {% endif %}
+        <td class="{{ classArray }}">
+            <div class="user-panel">
+                 <div class="pull-left image">
+                    {% if document.sender.getPicture() != '' %}
+                        <img src="{{ asset('uploads/pictures/') ~ document.sender.getPicture() }}"
+                        class=""
+                        alt="{{ document.sender.getLastName() ~ ' ' ~ document.sender.getFirstName() }}">
+                    {% else %}
+                        <img class="img-polaroid img-responsive" src="{{ asset('bundles/icapnotification/images/default-avatar.png') }}">
+                    {% endif %}
+                </div>
             </div>
-        </div>
-    </td>
+        </td>
     {% endif %}
     <td class="{{ classArray }}">
         {{ document.sender.lastName }}
