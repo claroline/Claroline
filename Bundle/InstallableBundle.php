@@ -53,59 +53,55 @@ abstract class InstallableBundle extends Bundle implements InstallableInterface
 
     public function getType()
     {
-        $data = $this->getComposer();
-
-        return $data->type;
+        return $this->getComposerParameter('type', 'symfony-bundle');
     }
 
     public function getAuthors()
     {
-        $data = $this->getComposer();
-        if (property_exists($data, 'authors')) return $data->authors;
-
-        return array();
+        return $this->getComposerParameter('authors', []);
     }
 
     public function getDescription()
     {
-        $data = $this->getComposer();
-        if (property_exists($data, 'description')) return $data->description;
-
-        return null;
+        return $this->getComposerParameter('description');
     }
 
     public function getLicense()
     {
-        $data = $this->getComposer();
-        if (property_exists($data, 'license')) return $data->license;
-
-        return array();
+        return $this->getComposerParameter('license', '');
     }
 
     public function getTargetDir()
     {
-        $data = $this->getComposer();
-
-        if (property_exists($data, 'target-dir')) {
-            return $data->{'target-dir'};
-        }
-
-        return '';
+        return $this->getComposerParameter('target-dir', '');
     }
 
     public function getBasePath()
     {
-        $data = $this->getComposer();
-
-        return $data->name;
+        return $this->getComposerParameter('name', $this->getName());
     }
 
     public function getComposer()
     {
-        $ds = DIRECTORY_SEPARATOR;
-        $path = realpath($this->getPath() . $ds . 'composer.json');
-        $data = json_decode(file_get_contents($path));
+        static $data;
+
+        if (!$data) {
+            $ds = DIRECTORY_SEPARATOR;
+            $path = realpath($this->getPath() . $ds . 'composer.json');
+            $data = json_decode(file_get_contents($path));
+        }
 
         return $data;
+    }
+
+    private function getComposerParameter($parameter, $default = null)
+    {
+        $data = $this->getComposer();
+
+        if ($data && property_exists($data, $parameter)) {
+            return $data->{$parameter};
+        }
+
+        return $default;
     }
 }
