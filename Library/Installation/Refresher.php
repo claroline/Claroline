@@ -50,7 +50,6 @@ class Refresher
     {
         $this->installAssets();
         $this->dumpAssets($environment);
-        $this->compileGeneratedThemes();
 
         if ($clearCache) {
             $this->clearCache($environment);
@@ -94,23 +93,6 @@ class Refresher
         $baseCacheDir = "{$this->container->get('kernel')->getRootDir()}/cache";
         $cacheDir = $environment === null ? $baseCacheDir : "{$baseCacheDir}/{$environment}";
         static::removeContentFrom($cacheDir);
-    }
-
-    public function compileGeneratedThemes()
-    {
-        if ($this->output) {
-            $this->output->writeln('Re-compiling generated themes...');
-        }
-
-        $themeService = $this->container->get('claroline.common.theme_service');
-
-        foreach ($themeService->getThemes('less-generated') as $theme) {
-            if ($this->output) {
-                $this->output->writeln("    Compiling '{$theme->getName()}' theme...");
-            }
-
-            $themeService->compileRaw(array($theme->getName()));
-        }
     }
 
     public static function deleteCache(CommandEvent $event)

@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
+use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Claroline\CoreBundle\Library\PluginBundle;
@@ -27,9 +28,9 @@ class Configuration implements ConfigurationInterface
 
     public function __construct(PluginBundle $plugin, array $resourceNames, array $listTools, array $listResourceActions, array $listWidgets)
     {
-        $this->plugin     = $plugin;
-        $this->listNames  = $resourceNames;
-        $this->listTools  = $listTools;
+        $this->plugin = $plugin;
+        $this->listNames = $resourceNames;
+        $this->listTools = $listTools;
         $this->listResourceActions = $listResourceActions;
         $this->listWidgets = $listWidgets;
         $this->updateMode = false;
@@ -37,8 +38,8 @@ class Configuration implements ConfigurationInterface
 
     public function getConfigTreeBuilder()
     {
-        $treeBuilder   = new TreeBuilder();
-        $rootNode      = $treeBuilder->root('config');
+        $treeBuilder = new TreeBuilder();
+        $rootNode = $treeBuilder->root('config');
         $pluginSection = $rootNode->children('plugin');
         $this->addGeneralSection($pluginSection);
         $this->addWidgetSection($pluginSection);
@@ -51,15 +52,17 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    private function addGeneralSection($pluginSection)
+    private function addGeneralSection(NodeBuilder $pluginSection)
     {
-        $plugin     = $this->plugin;
+        $plugin = $this->plugin;
         $pluginFqcn = get_class($plugin);
-        $imgFolder  = $plugin->getImgFolder();
-        $ds         = DIRECTORY_SEPARATOR;
+        $imgFolder = $plugin->getImgFolder();
+        $ds = DIRECTORY_SEPARATOR;
 
         $pluginSection
-            ->booleanNode('has_options')->end()
+            ->booleanNode('has_options')
+                ->defaultFalse()
+            ->end()
             ->scalarNode('icon')
                 ->validate()
                     ->ifTrue(
@@ -76,14 +79,14 @@ class Configuration implements ConfigurationInterface
         ->end();
     }
 
-    private function addResourceSection($pluginSection)
+    private function addResourceSection(NodeBuilder $pluginSection)
     {
-        $plugin       = $this->plugin;
-        $pluginFqcn   = get_class($plugin);
+        $plugin = $this->plugin;
+        $pluginFqcn = get_class($plugin);
         $resourceFile = $plugin->getConfigFile();
-        $imgFolder    = $plugin->getImgFolder();
-        $listNames    = $this->listNames;
-        $updateMode   = $this->isInUpdateMode();
+        $imgFolder = $plugin->getImgFolder();
+        $listNames = $this->listNames;
+        $updateMode = $this->isInUpdateMode();
 
         $pluginSection
             ->arrayNode('resources')
@@ -177,12 +180,12 @@ class Configuration implements ConfigurationInterface
         ->end()->end();
     }
 
-    public function addResourceActionSection($pluginSection)
+    public function addResourceActionSection(NodeBuilder $pluginSection)
     {
         $plugin = $this->plugin;
         $pluginFqcn = get_class($plugin);
         $listResourceActions = $this->listResourceActions;
-        $updateMode   = $this->isInUpdateMode();
+        $updateMode = $this->isInUpdateMode();
 
         $pluginSection
             ->arrayNode('resource_actions')
@@ -207,13 +210,13 @@ class Configuration implements ConfigurationInterface
         ->end()->end();
     }
 
-    private function addWidgetSection($pluginSection)
+    private function addWidgetSection(NodeBuilder $pluginSection)
     {
-        $widgets    = $this->listWidgets;
-        $plugin     = $this->plugin;
+        $widgets = $this->listWidgets;
+        $plugin = $this->plugin;
         $pluginFqcn = get_class($plugin);
-        $imgFolder  = $plugin->getImgFolder();
-        $ds         = DIRECTORY_SEPARATOR;
+        $imgFolder = $plugin->getImgFolder();
+        $ds = DIRECTORY_SEPARATOR;
         $updateMode = $this->isInUpdateMode();
 
         $pluginSection
@@ -259,10 +262,10 @@ class Configuration implements ConfigurationInterface
         ->end()->end();
     }
 
-    private function addToolSection($pluginSection)
+    private function addToolSection(NodeBuilder $pluginSection)
     {
-        $tools      = $this->listTools;
-        $plugin     = $this->plugin;
+        $tools = $this->listTools;
+        $plugin = $this->plugin;
         $pluginFqcn = get_class($plugin);
         $updateMode = $this->isInUpdateMode();
         $pluginSection
@@ -308,21 +311,20 @@ class Configuration implements ConfigurationInterface
         ->end()->end();
     }
 
-    private function addThemeSection($pluginSection)
+    private function addThemeSection(NodeBuilder $pluginSection)
     {
         $pluginSection
             ->arrayNode('themes')
                 ->prototype('array')
                     ->children()
                       ->scalarNode('name')->isRequired()->end()
-                      ->scalarNode('path')->defaultValue(null)->end()
                     ->end()
                 ->end()
             ->end()
         ->end()->end();
     }
 
-    private function addAdminToolSection($pluginSection)
+    private function addAdminToolSection(NodeBuilder $pluginSection)
     {
         $pluginSection
             ->arrayNode('admin_tools')
@@ -360,8 +362,8 @@ class Configuration implements ConfigurationInterface
 
     public static function isResourceIconValid($v, $plugin)
     {
-        $ds                  = DIRECTORY_SEPARATOR;
-        $imgFolder           = $plugin->getImgFolder();
+        $ds = DIRECTORY_SEPARATOR;
+        $imgFolder = $plugin->getImgFolder();
         $expectedImgLocation = $imgFolder . $ds . $ds . $v;
 
         return file_exists($expectedImgLocation);
@@ -369,8 +371,8 @@ class Configuration implements ConfigurationInterface
 
     public static function isSmallIconValid($v, $plugin)
     {
-        $ds                  = DIRECTORY_SEPARATOR;
-        $imgFolder           = $plugin->getImgFolder();
+        $ds = DIRECTORY_SEPARATOR;
+        $imgFolder = $plugin->getImgFolder();
         $expectedImgLocation = $imgFolder . $ds . 'small' . $ds . $v;
 
         return file_exists($expectedImgLocation);
@@ -378,8 +380,8 @@ class Configuration implements ConfigurationInterface
 
     public static function isIconValid($v, $plugin)
     {
-        $ds                  = DIRECTORY_SEPARATOR;
-        $imgFolder           = $plugin->getImgFolder();
+        $ds = DIRECTORY_SEPARATOR;
+        $imgFolder = $plugin->getImgFolder();
         $expectedImgLocation = $imgFolder.$ds.$v;
 
         return file_exists($expectedImgLocation);

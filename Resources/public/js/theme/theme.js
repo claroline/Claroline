@@ -52,17 +52,12 @@
 
     function deleteTheme(id)
     {
-        $.ajax(home.path + 'admin/theme/delete/' + id)
-        .done(function (data) {
-            if (data === 'true') {
-                window.location = home.path + 'admin/theme/list';
-            } else {
-                modal.fromRoute('claro_theme_error');
-            }
-        })
-        .error(function () {
-            modal.fromRoute('claro_theme_error');
-        });
+        var url = Routing.generate('claro_admin_theme_delete', { id: id });
+
+        $.ajax(url, { type: 'DELETE' })
+            .done(function () {
+                window.location = Routing.generate('claro_admin_theme_list');
+            });
     }
 
     $('body').on('click', '.theme-generator .btn.dele', function () {

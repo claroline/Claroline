@@ -49,7 +49,7 @@ class Plugin
     /**
      * @ORM\Column(name="has_options", type="boolean")
      */
-    protected $hasOptions;
+    protected $hasOptions = false;
 
     public function getId()
     {

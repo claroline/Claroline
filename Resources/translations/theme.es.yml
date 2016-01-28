@@ -1,12 +1,3 @@
-bootstrap_designed: 'Nuestros temas fueron creados con Bootstrap'
 create_new_theme: 'Crear un nuevo tema'
 delete_theme_confirm: 'Esta seguro que desea borrar este tema?'
-edit_theme: 'Editar tema'
-if_doubt_on_gui_message: 'si tiene una duda sobre el nombre de un elemento de la interfaz gráfica de usuario'
-more_options: 'Mas opciones'
-new_theme: 'Nuevo tema'
-read_boostrap_doc: 'Por favor lea la documentación de Bootstrap 3'
-theme_folder_permissions_warning: 'Puede que no tenga permiso para escribir en la carpeta del tema'
-theme_generator: 'Generador de temas'
-theme_name: 'Nombre del tema'
-theme_parameters: 'Parámetros del tema'
+theme_management: Theme management

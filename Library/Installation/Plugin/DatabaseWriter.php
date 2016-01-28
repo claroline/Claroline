@@ -695,16 +695,6 @@ class DatabaseWriter
     private function persistTheme($themeConfiguration, Plugin $plugin, Theme $theme)
     {
         $theme->setName($themeConfiguration['name']);
-        $theme->setPath('ClarolineCoreBundle:less:claroline/theme.html.twig');
-
-        if ($themeConfiguration['path']) {
-            $theme->setPath(
-                $plugin->getVendorName().
-                $plugin->getBundleName().":".
-                substr_replace($themeConfiguration['path'], ":", strpos($themeConfiguration['path'], "/"), 1)
-            );
-        }
-
         $theme->setPlugin($plugin);
         $this->em->persist($theme);
     }

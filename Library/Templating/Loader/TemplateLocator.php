@@ -11,12 +11,11 @@
 
 namespace Claroline\CoreBundle\Library\Templating\Loader;
 
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Themes\ThemeService;
+use Claroline\CoreBundle\Entity\Theme\Theme;
+use Claroline\CoreBundle\Manager\ThemeManager;
+use Symfony\Bundle\FrameworkBundle\Templating\Loader\TemplateLocator as BaseTemplateLocator;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Templating\TemplateReferenceInterface;
-use Symfony\Bundle\FrameworkBundle\Templating\Loader\TemplateLocator as BaseTemplateLocator;
-use Claroline\CoreBundle\Entity\Theme\Theme;
 
 /**
  * {@inheritDoc}
@@ -25,30 +24,23 @@ class TemplateLocator extends BaseTemplateLocator
 {
     protected $locator;
     protected $cache;
-    protected $configHandler;
-    protected $themeService;
+    private $themeManager;
 
     /**
      * Constructor.
      *
-     * @param FileLocatorInterface         $locator       A FileLocatorInterface instance
-     * @param PlatformConfigurationHandler $configHandler Claroline platform configuration handler service
-     * @param ThemeService                 $themeService  Claroline theme service
-     * @param string                       $cacheDir      The cache path
+     * @param FileLocatorInterface  $locator
+     * @param ThemeManager          $themeManager
+     * @param string                $cacheDir
      */
     public function __construct(
         FileLocatorInterface $locator,
-        PlatformConfigurationHandler $configHandler,
-        ThemeService $themeService, $cacheDir = null
+        ThemeManager $themeManager,
+        $cacheDir = null
     )
     {
-        if (null !== $cacheDir && is_file($cache = $cacheDir.'/templates.php')) {
-            $this->cache = require $cache;
-        }
-
-        $this->locator = $locator;
-        $this->configHandler = $configHandler;
-        $this->themeService = $themeService;
+        parent::__construct($locator, $cacheDir);
+        $this->themeManager = $themeManager;
     }
 
     /**
@@ -60,8 +52,7 @@ class TemplateLocator extends BaseTemplateLocator
             throw new \InvalidArgumentException('The template must be an instance of TemplateReferenceInterface.');
         }
 
-        $name = ucwords(str_replace('-', ' ', $this->configHandler->getParameter('theme')));
-        $theme = $this->themeService->getThemeBy(array('name' => $name));
+        $theme = $this->themeManager->getCurrentTheme();
 
         if (!$theme) {
             // no custom localization if no theme (e.g. in test environment)
@@ -99,18 +90,25 @@ class TemplateLocator extends BaseTemplateLocator
         $controller  = $template->get('controller');
 
         if (null !== $theme) {
-            $controller = sprintf(
-                'theme/%s/%s',
-                $template->get('bundle'),
-                $template->get('controller')
-            );
+            if ($controller) {
+                $controller = sprintf(
+                    'theme/%s/%s',
+                    $template->get('bundle'),
+                    $template->get('controller')
+                );
+            } else {
+                $controller = sprintf(
+                    'theme/%s',
+                    $template->get('bundle')
+                );
+            }
         }
 
         $newTemplate->set('bundle', $bundle)->set('controller', $controller);
 
         try {
             $this->locator->locate($newTemplate->getPath(), $currentPath);
-        } catch (\Exception $e) {
+        } catch (\Exception $ex) {
             $newTemplate = $template;
         }
 

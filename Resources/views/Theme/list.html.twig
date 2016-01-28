@@ -1,6 +1,6 @@
 {% extends 'ClarolineCoreBundle:Administration:layout.html.twig' %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'theme_generator' | trans({}, "theme") | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'theme_management'|trans({}, 'theme') | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -19,36 +19,33 @@
                 'href': path('claro_admin_parameters_appearance')
             },
             {
-                'name': 'theme_generator'|trans({}, 'theme'),
-                'href': ''
+                'name': 'theme_management'|trans({}, 'theme')
             }
         ])
     }}
 {% endblock %}
 
 {% block section_content %}
-    <div id="homePath" class="hide">{{ path("claro_index") }}</div>
+    <div id="homePath" class="hide">{{ path('claro_index') }}</div>
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'theme_generator' | trans({}, "theme") }}</h3>
+        <h3 class="panel-title">{{ 'theme_management'|trans({}, 'theme') }}</h3>
     </div>
     <div class="theme-generator panel-body">
         {% for theme in themes %}
             <div class="col-md-6">
                 <div class="alert alert-success">
-                    <button type="button" class="close" data-id="{{ theme.id }}" aria-hidden="true">&times;</button>
-                    <strong>
-                        <a class="alert-link" href="{{ path("claroline_admin_theme_edit", {"id": theme.id }) }}">
-                            <i class="fa fa-pencil-square-o"></i> {{ theme.name }}
-                        </a>
-                    </strong>
+                    {% if theme.isCustom() %}
+                        <button type="button" class="close" data-id="{{ theme.getId() }}" aria-hidden="true">&times;</button>
+                    {% endif %}
+                    <strong>{{  theme.name }} </strong>
                 </div>
             </div>
         {% endfor %}
         <div class="col-md-6">
             <div class="alert alert-info">
                 <strong>
-                    <a class="alert-link" href="{{ path("claroline_admin_theme_edit") }}">
-                        <i class="fa fa-plus-circle"></i> {{ "create_new_theme" | trans({}, "theme") }}
+                    <a class="alert-link" href="{{ path('claro_admin_theme_create') }}">
+                        <i class="fa fa-plus-circle"></i> {{ 'create_new_theme'|trans({}, 'theme') }}
                     </a>
                 </strong>
             </div>
