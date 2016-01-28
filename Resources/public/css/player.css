@@ -91,3 +91,12 @@ input.form-control {
 #innova_collecticiel_document_file_form_title {
     vertical-align: middle;    
 }
+
+.dropdown-menu-right {
+  right: 0;
+  left: auto;
+}
+.dropdown-menu-left {
+  right: auto;
+  left: 0;
+}

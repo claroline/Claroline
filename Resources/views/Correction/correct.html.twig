@@ -142,13 +142,13 @@
             {% set documentListText = 'Comments on'|trans({}, 'innova_collecticiel') %}
             {# {{ dropzoneMacros.displayDocumentsList(correction.drop, dropzone, 6, "condensed", documentListText) }} #}
             {#  Ajout de l'appel aux macros Collecticiel InnovaERV #}
-            {{ collecticielDocumentMacros.innovaDocumentDisplay(correction.drop, dropzone, 9, "condensed", documentListText, document)
+            {{ collecticielDocumentMacros.innovaDocumentDisplay(correction.drop, dropzone, 12, "condensed", documentListText, document)
             }}
 
             {# Bloc Apprenants #}
             <div class="row">
-                <h4 class="text-muted col-md-4">{{ 'Author'|trans({}, 'innova_collecticiel') }}</h4>
-                <div class="col-md-8">{{ correction.drop.user.firstName }} {{ correction.drop.user.lastName }}</div>
+                <h4 class="text-muted col-md-2">{{ 'Author'|trans({}, 'innova_collecticiel') }}</h4>
+                <div class="col-md-3">{{ correction.drop.user.firstName }} {{ correction.drop.user.lastName }}</div>
             </div>
 
             <br/>

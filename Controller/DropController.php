@@ -523,12 +523,19 @@ class DropController extends DropzoneBaseController
         // dropsQuery : finished à TRUE et unlocked_drop à FALSE
         $dropsQuery = $dropRepo->getDropsAwaitingCorrectionQuery($dropzone, 1);
 
-//var_dump($dropsQuery);
-        //die();
+        // Nombre d'AR pour CE dropzone / Repo : ReturnReceipt
+        $countReturnReceiptForDropzone = $this->getDoctrine()
+                            ->getRepository('InnovaCollecticielBundle:ReturnReceipt')
+                            ->countTextToRead($this->get('security.token_storage')->getToken()->getUser(),
+                                              $dropzone
+                            );
+
         $countUnterminatedDrops = $dropRepo->countUnterminatedDropsByDropzone($dropzone->getId());
 
         // Déclaration du compteur de documents sans accusé de réception
         $alertNbDocumentWithoutReturnReceipt = 0;
+        $totalValideAndNotAdminDocs = 0;
+        $countReturnReceiptForUserAndDropzone = 0;
 
         // Déclarations des nouveaux tableaux, qui seront passés à la vue
         $userToCommentCount = array();
@@ -550,6 +557,13 @@ class DropController extends DropzoneBaseController
                                 ->getRepository('InnovaCollecticielBundle:Document')
                                 ->countTextToRead($drop->getUser(), $drop->getDropZone());
 
+
+            // Nombre de demandes adressées / Repo : Document
+            $countValideAndNotAdminDocs = $this->getDoctrine()
+                                ->getRepository('InnovaCollecticielBundle:Document')
+                                ->countValideAndNotAdminDocs($this->get('security.token_storage')->getToken()->getUser(),
+                                $drop);
+
             // Nombre d'AR pour cet utilisateur et pour ce dropzone / Repo : ReturnReceiputtwment
             $haveReturnReceiptOrNot = $this->getDoctrine()
                                 ->getRepository('InnovaCollecticielBundle:ReturnReceipt')
@@ -557,20 +571,15 @@ class DropController extends DropzoneBaseController
                                     $this->get('security.token_storage')->getToken()->getUser(),
                                     $drop->getDropZone());
 
+            $totalValideAndNotAdminDocs = $totalValideAndNotAdminDocs + $countValideAndNotAdminDocs;
+
+
             // Nombre d'AR pour cet utilisateur et pour ce dropzone / Repo : ReturnReceiputtwment
             $countReturnReceiptForUserAndDropzone = $this->getDoctrine()
                                 ->getRepository('InnovaCollecticielBundle:ReturnReceipt')
                                 ->countTextToRead($this->get('security.token_storage')->getToken()->getUser(), $drop->getDropZone());
 
             $countReturnReceiptForUserAndDropzone = $countReturnReceiptForUserAndDropzone -1;
-
-            if ($countReturnReceiptForUserAndDropzone < 0) {
-                $alertNbDocumentWithoutReturnReceipt = $alertNbDocumentWithoutReturnReceipt+ $nbTextToRead;
-            }
-            else
-            {
-                $alertNbDocumentWithoutReturnReceipt = $alertNbDocumentWithoutReturnReceipt + $nbTextToRead - $countReturnReceiptForUserAndDropzone - 1;
-            }
 
             // Traitement du tableau
             for ($indice = 0; $indice<=$countReturnReceiptForUserAndDropzone; $indice++)
@@ -585,6 +594,8 @@ class DropController extends DropzoneBaseController
             $userNbTextToRead[$drop->getUser()->getId()] = $nbTextToRead;
 
         }
+
+        $alertNbDocumentWithoutReturnReceipt = $totalValideAndNotAdminDocs - $countReturnReceiptForDropzone;
 
         $adapter = new DoctrineORMAdapter($dropsQuery);
         $pager = new Pagerfanta($adapter);
@@ -1131,7 +1142,6 @@ class DropController extends DropzoneBaseController
 
         $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
 
-
         /*
         if ($this->get('security.context')->isGranted('ROLE_ADMIN' === true)) {
             $adminInnova = true;
@@ -1268,8 +1278,6 @@ class DropController extends DropzoneBaseController
                 'link' => $redirectRoot
             )
         );
-
-
 
     }
 
