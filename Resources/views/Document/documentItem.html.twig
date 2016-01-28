@@ -113,7 +113,7 @@
                 </a>
                 {# Cas 2 #}
                 <a href="" class="btn btn-default cancel_button" style="display:none;" id="cancel_{{ document.id }}"
-                data-document_id="{{ document.id }}" >
+                data-document_id="{{ document.id }}" data-document_adminInnova="1">
                     {# Ajout de l'icône "annuler" #}
                     <i class="fa fa-undo" data-toggle="tooltip"  data-placement="top" data-original-title="{{ 'Cancel'|trans({},'innova_collecticiel') }}"></i>
                 </a>
@@ -128,6 +128,7 @@
                 <input type="hidden" value="{{document.comments | length }}" id="document_comments_length_{{document.id}}">
                 <input type="hidden" value="{{document.sender.id}}" id="document_sender_{{document.id}}">
                 <input type="hidden" value="{{document.drop.user.id}}" id="document_drop_user_{{document.id}}">
+                <input type="hidden" value="1" id="adminInnova_{{document.id}}">
             </td>
         {% endif %}
     {% else %}
@@ -143,7 +144,7 @@
                 </a>
                 {# Cas 2 #}
                 <a href="" class="btn btn-default cancel_button" style="display:none;" id="cancel_{{ document.id }}"
-                data-document_id="{{ document.id }}" >
+                data-document_id="{{ document.id }}" data-document_adminInnova="0">
                     {# Ajout de l'icône "annuler" #}
                     <i class="fa fa-undo" data-toggle="tooltip"  data-placement="top" data-original-title="{{ 'Cancel'|trans({},'innova_collecticiel') }}"></i>
                 </a>
@@ -158,6 +159,7 @@
                 <input type="hidden" value="{{document.comments | length }}" id="document_comments_length_{{document.id}}">
                 <input type="hidden" value="{{document.sender.id}}" id="document_sender_{{document.id}}">
                 <input type="hidden" value="{{document.drop.user.id}}" id="document_drop_user_{{document.id}}">
+                <input type="hidden" value="0" id="adminInnova_{{document.id}}">
                 </td>
             {% endif %}
         {% endif %}

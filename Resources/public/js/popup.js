@@ -37,18 +37,34 @@ $(document).ready(function () {
         var commentLength = document.getElementById('document_comments_length_' + documentId).value;
         var senderId = document.getElementById('document_sender_' + documentId).value;
         var docDropUserId = document.getElementById('document_drop_user_' + documentId).value;
+        var adminInnova = document.getElementById('adminInnova_' + documentId).value;
 
         //
         // Afficher les tests ici qui permettront de rafraîchir les données.
         //
-        if (isValidate == false || senderId != docDropUserId) {
-            var selector = "#delete_" + documentId;
+        // Reprise ici dans tests déclarés avant dans le fichier documentItem.
+        //
+        if (adminInnova == true) {
+            if (isValidate == false || senderId != docDropUserId) {
+                var selector = "#delete_" + documentId;
+            }
+            else if (isValidate == true && commentLength == 0 && senderId == docDropUserId) {
+                var selector = "#cancel_" + documentId;
+            }
+            else {
+                var selector = "#lock_" + documentId;
+            }
         }
-        else if (isValidate == true && commentLength == 0 && senderId == docDropUserId) {
-            var selector = "#cancel_" + documentId;
-        }
-        else {
-            var selector = "#lock_" + documentId;
+        if (adminInnova == false) {
+            if (isValidate == false || (adminInnova == true && senderId != docDropUserId)) {
+                var selector = "#delete_" + documentId;
+            }
+            else if (isValidate == true && adminInnova == false && commentLength == 0 && senderId == docDropUserId) {
+                var selector = "#cancel_" + documentId;
+            }
+            else {
+                var selector = "#lock_" + documentId;
+            }
         }
         $(selector).css({'display': 'inline'});
 
@@ -98,15 +114,16 @@ $(document).ready(function () {
     });
 
     // InnovaERV
-    // Ajout pour le traitement de la case Ã  cocher lors de la soumission de documents
+    // Ajout pour le traitement de la case à cocher lors de la soumission de documents
     $('#validate-modal').on('show.bs.modal', function (event) {
 
-        var button = $(event.relatedTarget); // Button that triggered the modal
+        var button     = $(event.relatedTarget); // Button that triggered the modal
         var documentId = button.data('document_id'); // Extract info from data-* attributes
 
-        var senderId = button.data('document_sender_id'); // Extract info from data-* attributes
+        var senderId      = button.data('document_sender_id'); // Extract info from data-* attributes
         var commentLength = button.data('document_comment_length');
-        var docDropUserId = button.data('document_dropuser_id'); // Extract info from data-* attributes
+        var docDropUserId = button.data('document_dropuser_id');
+        var adminInnova   = button.data('data-document_adminInnova');
 
         // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
         // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
@@ -115,6 +132,7 @@ $(document).ready(function () {
         modal.find('#modal_confirm').attr("data-document_sender_id", senderId); //TODO change this to use data() instead of attr()
         modal.find('#modal_confirm').attr("data-document_comment_length", commentLength); //TODO change this to use data() instead of attr()
         modal.find('#modal_confirm').attr("data-document_docDropUser_id", docDropUserId); //TODO change this to use data() instead of attr()
+        modal.find('#modal_confirm').attr("data-document_adminInnova", adminInnova); //TODO change this to use data() instead of attr()
         //documentId
         //
     });
@@ -137,6 +155,11 @@ $(document).ready(function () {
         var senderId = $(this).attr("data-document_sender_id");
         var commentLength = $(this).attr("data-document_comment_length");
         var docDropUserId = $(this).attr("data-document_docDropUser_id"); // Extract info from data-* attributes
+        var adminInnova = $(this).attr("data-document_adminInnova");
+
+alert("adminInnova = ");
+alert(adminInnova);
+
 
         // Ajax : appel de la route qui va mettre Ã  jour la base de donnÃ©es
         // Ajax : route "innova_collecticiel_validate_document" dans DocumentController
@@ -274,6 +297,10 @@ $(document).ready(function () {
 
         event.preventDefault();
         var docId = $(this).attr("data-document_id");
+
+        var adminInnova = $(this).attr("data-document_adminInnova");
+alert("adminInnovaUnvalidate = ");
+alert(adminInnova);
 
         // Affichage du nouveau sélecteur
         var selector = "#delete_" + docId;
