@@ -35,14 +35,9 @@ class Detector
 
         foreach ($items as $item) {
             if (preg_match('#^(.+Bundle)\.php$#', $item->getBasename(), $matches)) {
-                if (false !== strpos(file_get_contents($item->getPathname()), 'abstract class')) {
-                    continue;
+                if ($bundle = $this->findBundleClass($item->getPathname())) {
+                    $bundles[] = $bundle;
                 }
-
-                $classes = get_declared_classes();
-                require_once $item->getPathname();
-                $newClasses = array_diff(get_declared_classes(), $classes);
-                $bundles[] = end($newClasses);
             }
         }
 
@@ -61,5 +56,50 @@ class Detector
         }
 
         return $bundles[0];
+    }
+
+    private function findBundleClass($file)
+    {
+        $content = file_get_contents($file);
+
+        // exclude abstract base classes
+        if (preg_match('#abstract\s+class#i', $content)) {
+            return null;
+        }
+
+        // extract the class name with namespace using tokenization
+        // (see http://stackoverflow.com/a/7153391)
+
+        $tokens = token_get_all($content);
+        $namespaceSegments = [];
+        $class = null;
+
+        foreach ($tokens as $i => $token) {
+            if ($tokens[$i][0] === T_NAMESPACE) {
+                for ($j = $i + 1; $j < count($tokens); $j++) {
+                    if ($tokens[$j][0] === T_STRING) {
+                        $namespaceSegments[] = $tokens[$j][1];
+                    } elseif ($tokens[$j] === '{' || $tokens[$j] === ';') {
+                         break;
+                    }
+                }
+            }
+
+            if ($tokens[$i][0] === T_CLASS) {
+                for ($j = $i + 1; $j < count($tokens); $j++) {
+                    if ($tokens[$j] === '{') {
+                        $class = $tokens[$i + 2][1];
+                    }
+                }
+            }
+        }
+
+        if ($class) {
+            $namespaceSegments[] = $class;
+
+            return implode('\\', $namespaceSegments);
+        }
+
+        return $class;
     }
 }
