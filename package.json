@@ -1,0 +1,15 @@
+{
+  "name": "claroline",
+  "version": "6.0.0",
+  "description": "Learning management system",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/claroline/Claroline.git"
+  },
+  "license": "GPL-3.0+",
+  "homepage": "https://github.com/claroline/Claroline#readme",
+  "devDependencies": {
+    "less": "^2.5.3",
+    "shelljs": "^0.5.3"
+  }
+}

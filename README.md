@@ -19,7 +19,6 @@ is a (non-exhaustive) list of their dedicated repositories:
 - [RssReaderBundle][rssreader]
 - ...
 
-
 Project setup
 -------------
 
@@ -28,41 +27,27 @@ Project setup
 - PHP >= 5.5
 - PHP extensions:
     - fileinfo (for mime type detection)
-    - curl
-    - mcrypt
-    - gd
-    - intl
-- MySQL >=5.0 (MariaDB should work as well)
-- A web server like Apache or Nginx
-- A global installation of [composer](3) (for dependency management)
-
-##### Configuration of php.ini
-
-- The *memory_limit* must be >= 256Mb (also in cli).
-- PHP timezone should be correctly configured ([supported timezones](5)).
-
-### Recommended requirements
-
- - A *nix OS (the dev is done on debian)
- - PHP >= 5.5
- - PHP extensions:
-    - fileinfo (for mime type detection)
     - curl (for facebook authentication)
     - mcrypt
-    - [gd](1) (for simple icon creation)
-    - [ffmpeg](2) (for video thumbnail creation)
-    - php5-json
-    - php5-intl
-- MySQL >=5.0 (MariaDB should work aswell)
+    - [gd][gd] (for simple icon creation)
+    - intl
+- PHP configuration (*php.ini*):
+    - `memory_limit` should be >= 256Mb (web server *and* CLI)
+    - `date.timezone` should be correctly configured ([supported timezones][timezones])
+- MySQL >=5.0 (MariaDB should work as well)
 - A web server like Apache or Nginx
-- A global installation of [composer](3) (for dependency management)
-- A cache system like Varnish
+- A global installation of [composer][composer] (for dependency management)
+- A global installation of [Node.js][node] (for frontend build tools)
 
-##### Configuration of php.ini
+### Additional (recommended) requirements
 
-- The web server *memory_limit* should be >= 512Mb
-- The CLI *memory_limit* should be >= 4096Mb (composer updates consume a lot of RAM)
-- PHP timezone should be correctly configured ([supported timezones](5)).
+- A *nix OS (development is done on Debian)
+- PHP extensions:
+    - [ffmpeg][ffmpeg] (for video thumbnail creation)
+- PHP configuration (*php.ini*):
+    - web server `memory_limit` should be >= 512Mb
+    - CLI `memory_limit` should be >= 3072Mb (composer updates consume a lot of RAM)
+- A cache system like [Varnish][varnish]
 
 ### Development installation
 
@@ -82,7 +67,7 @@ php app/console claroline:install
   but if it exists, it must be empty)
 - Make the following directories (and their children) writable from the command
   line and the web server (for further explanation on common permissions issues
-  and solutions with Symfony2, read [this](4)):
+  and solutions with Symfony2, read [this][symfo-config]):
     - *app/sessions*
     - *app/cache*
     - *app/logs*
@@ -94,15 +79,14 @@ php app/console claroline:install
     - *composer-max.json* (complete installation, with plugins)
     - *composer-v6.json* (complete installation based on the v6/dev version)
 - Run the following commands:
-    - `composer update --prefer-source` <sub>(1)</sub>
+    - `composer update --prefer-source` *(\*)*
+    - `npm install` 
     - `php app/console claroline:install`
     - `rm app/config/operations.xml`
 
-<sub> (1) At this point, you can ignore the following error: *Class
+*(\*)* At this point, you can ignore the following error(s): *Class
     Claroline\BundleRecorder\ScriptHandler is not autoloadable, can not call
     post-package-install script*
-</sub>
-
 
 The application should now be accessible in your browser at the following URI's:
 
@@ -150,7 +134,7 @@ Documentation
 -------------
 
 For development documentation, see
-[Claroline/CoreBundle/Resources/doc/index.md][6].
+[Claroline/CoreBundle/Resources/doc/index.md][core-doc].
 
 
 [core]:         https://github.com/claroline/CoreBundle
@@ -161,10 +145,11 @@ For development documentation, see
 [announcement]: https://github.com/claroline/AnnouncementBundle
 [rssreader]:    https://github.com/claroline/RssReaderBundle
 
-
-[1]: http://www.php.net/manual/en/book.image.php
-[2]: http://ffmpeg-php.sourceforge.net/
-[3]: http://getcomposer.org/doc/00-intro.md
-[4]: http://symfony.com/doc/current/book/installation.html#checking-symfony-application-configuration-and-setup
-[5]: http://www.php.net/manual/en/timezones.php
-[6]: https://github.com/claroline/CoreBundle/blob/master/Resources/doc/index.md
+[composer]:     https://getcomposer.org
+[node]:         https://nodejs.org
+[timezones]:    http://www.php.net/manual/en/timezones.php
+[varnish]:      https://www.varnish-cache.org
+[gd]:           http://www.php.net/manual/en/book.image.php
+[ffmpeg]:       http://ffmpeg-php.sourceforge.net
+[symfo-config]: http://symfony.com/doc/2.7/book/installation.html#checking-symfony-application-configuration-and-setup
+[core-doc]:     https://github.com/claroline/CoreBundle/blob/master/Resources/doc/index.md
