@@ -12,11 +12,16 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Theme\Theme;
+use Claroline\CoreBundle\Form\ThemeType;
 use Claroline\CoreBundle\Manager\ThemeManager;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -27,15 +32,25 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class ThemeController
 {
     private $manager;
+    private $formFactory;
+    private $router;
 
     /**
      * @DI\InjectParams({
-     *     "manager" = @DI\Inject("claroline.manager.theme_manager")
+     *     "manager" = @DI\Inject("claroline.manager.theme_manager"),
+     *     "factory" = @DI\Inject("form.factory"),
+     *     "router"  = @DI\Inject("router")
      * })
      */
-    public function __construct(ThemeManager $manager)
+    public function __construct(
+        ThemeManager $manager,
+        FormFactoryInterface $factory,
+        RouterInterface $router
+    )
     {
         $this->manager = $manager;
+        $this->formFactory = $factory;
+        $this->router = $router;
     }
 
     /**
@@ -44,7 +59,10 @@ class ThemeController
      */
     public function listAction()
     {
-        return ['themes' => $this->manager->listThemes()];
+        return [
+            'isReadOnly' => !$this->manager->isThemeDirWritable(),
+            'themes' => $this->manager->listThemes()
+        ];
     }
 
     /**
@@ -59,11 +77,36 @@ class ThemeController
     }
 
     /**
-     * @EXT\Route("/new", name="claro_admin_theme_create")
+     * @EXT\Route("/new", name="claro_admin_new_theme")
      * @EXT\Template()
      */
     public function formAction()
     {
+        return ['form' => $this->formFactory->create(new ThemeType())];
+    }
 
+    /**
+     * @EXT\Route("/", name="claro_admin_create_theme")
+     * @EXT\Method("POST")
+     * @EXT\Template("ClarolineCoreBundle:Theme:form.html.twig")
+     *
+     * @param Request $request
+     * @return RedirectResponse|array
+     */
+    public function createThemeAction(Request $request)
+    {
+        $form = $this->formFactory->create(new ThemeType());
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $this->manager->createCustomTheme(
+                $form['name']->getData(),
+                $form['stylesheet']->getData()
+            );
+
+            return new RedirectResponse($this->router->generate('claro_admin_theme_list'));
+        }
+
+        return ['form' => $form];
     }
 }

@@ -30,26 +30,43 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'theme_management'|trans({}, 'theme') }}</h3>
     </div>
-    <div class="theme-generator panel-body">
+    <div class="theme-list panel-body">
+        {% if isReadOnly %}
+            <div class="col-md-12">
+                <div class="alert alert-danger">
+                    <i class="fa fa-warning"></i>
+                    {{ 'theme_dir_not_writable'|trans({}, 'theme') }}
+                </div>
+            </div>
+        {% endif %}
+
         {% for theme in themes %}
             <div class="col-md-6">
                 <div class="alert alert-success">
-                    {% if theme.isCustom() %}
+                    <a href="{{ asset('themes/' ~ theme.getNormalizedName() ~ '/bootstrap.css') }}"
+                       target="_blank"
+                       download>
+                        <i class="fa fa-download"></i>
+                    </a>
+                    {% if theme.isCustom() and not isReadOnly %}
                         <button type="button" class="close" data-id="{{ theme.getId() }}" aria-hidden="true">&times;</button>
                     {% endif %}
                     <strong>{{  theme.name }} </strong>
                 </div>
             </div>
         {% endfor %}
-        <div class="col-md-6">
-            <div class="alert alert-info">
-                <strong>
-                    <a class="alert-link" href="{{ path('claro_admin_theme_create') }}">
-                        <i class="fa fa-plus-circle"></i> {{ 'create_new_theme'|trans({}, 'theme') }}
-                    </a>
-                </strong>
+
+        {% if not isReadOnly %}
+            <div class="col-md-6">
+                <div class="alert alert-info">
+                    <strong>
+                        <a class="alert-link" href="{{ path('claro_admin_new_theme') }}">
+                            <i class="fa fa-plus-circle"></i> {{ 'create_new_theme'|trans({}, 'theme') }}
+                        </a>
+                    </strong>
+                </div>
             </div>
-        </div>
+        {% endif %}
     </div>
 {% endblock %}
 

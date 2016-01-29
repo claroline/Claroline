@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * @DI\Service("claroline.manager.theme_manager")
@@ -99,6 +100,16 @@ class ThemeManager
     }
 
     /**
+     * Returns whether the theme directory is writable.
+     *
+     * @return bool
+     */
+    public function isThemeDirWritable()
+    {
+        return is_writable($this->themeDir);
+    }
+
+    /**
      * Deletes a theme, including its css directory.
      *
      * @param Theme $theme
@@ -118,7 +129,8 @@ class ThemeManager
     }
 
     /**
-     * Returns the current platform theme.
+     * Returns the current
+     * platform theme.
      *
      * @return Theme
      */
@@ -128,5 +140,26 @@ class ThemeManager
 
         return $this->om->getRepository('ClarolineCoreBundle:Theme\Theme')
             ->findOneBy(['name' => $name]);
+    }
+
+    /**
+     * Creates a custom theme based on a css file.
+     *
+     * @param string    $name
+     * @param File      $file
+     */
+    public function createCustomTheme($name, File $file)
+    {
+        $theme = new Theme();
+        $theme->setName($name);
+        $themeDir = "{$this->themeDir}/{$theme->getNormalizedName()}";
+
+        $fs = new Filesystem();
+        $fs->mkdir($themeDir);
+
+        $file->move($themeDir, 'bootstrap.css');
+
+        $this->om->persist($theme);
+        $this->om->flush();
     }
 }
