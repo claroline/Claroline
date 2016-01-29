@@ -34,7 +34,6 @@ hr {
 .mce-pagebreak {
 	cursor: default;
 	display: block;
-	border: 0;
 	width: 100%;
 	height: 5px;
 	border: 1px dashed #666;
