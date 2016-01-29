@@ -395,6 +395,7 @@ class ResourceQueryBuilder
     /**
      * Filters nodes that are published.
      *
+     * @param  $user (not typing because we don't want anon. to crash everything)
      * @return ResourceQueryBuilder
      */
     public function whereIsAccessible($user)
