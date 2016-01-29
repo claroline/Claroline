@@ -2,7 +2,6 @@
 
 namespace UJM\ExoBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -75,18 +74,6 @@ class Step {
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $exercise;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Question")
-     * @ORM\JoinColumn(name="question_id", referencedColumnName="id")
-     * @ORM\JoinTable(name="ujm_step_question")
-     */
-    private $questions;
-
-    public function __construct()
-    {
-        $this->questions = new ArrayCollection();
-    }
 
     /**
      * @return int
@@ -248,20 +235,4 @@ class Step {
         return $this->exercise;
     }
 
-    /**
-     * @return ArrayCollection
-     */
-    public function setQuestions(ArrayCollection $questions)
-    {
-        $this->questions = $questions;
-        return $this->questions;
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getQuestions()
-    {
-        return $this->questions;
-    }
 }

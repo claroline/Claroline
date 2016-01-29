@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2016/01/29 01:59:40
+ * Generation date: 2016/01/29 03:34:55
  */
-class Version20160129135937 extends AbstractMigration
+class Version20160129153451 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -27,6 +27,16 @@ class Version20160129135937 extends AbstractMigration
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
+            CREATE TABLE ujm_step_question (
+                step_id INT NOT NULL, 
+                question_id INT NOT NULL, 
+                ordre INT NOT NULL, 
+                INDEX IDX_D22EA1CE73B21E9C (step_id), 
+                INDEX IDX_D22EA1CE1E27F6BF (question_id), 
+                PRIMARY KEY(step_id, question_id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+        ");
+        $this->addSql("
             CREATE TABLE ujm_step (
                 id INT AUTO_INCREMENT NOT NULL, 
                 exercise_id INT DEFAULT NULL, 
@@ -39,15 +49,6 @@ class Version20160129135937 extends AbstractMigration
                 ordre INT NOT NULL, 
                 INDEX IDX_C2803688E934951A (exercise_id), 
                 PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ");
-        $this->addSql("
-            CREATE TABLE ujm_step_question (
-                step_id INT NOT NULL, 
-                question_id INT NOT NULL, 
-                INDEX IDX_D22EA1CE73B21E9C (step_id), 
-                INDEX IDX_D22EA1CE1E27F6BF (question_id), 
-                PRIMARY KEY(step_id, question_id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
@@ -76,12 +77,6 @@ class Version20160129135937 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
-            ALTER TABLE ujm_step 
-            ADD CONSTRAINT FK_C2803688E934951A FOREIGN KEY (exercise_id) 
-            REFERENCES ujm_exercise (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
             ALTER TABLE ujm_step_question 
             ADD CONSTRAINT FK_D22EA1CE73B21E9C FOREIGN KEY (step_id) 
             REFERENCES ujm_step (id) 
@@ -91,6 +86,12 @@ class Version20160129135937 extends AbstractMigration
             ALTER TABLE ujm_step_question 
             ADD CONSTRAINT FK_D22EA1CE1E27F6BF FOREIGN KEY (question_id) 
             REFERENCES ujm_question (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE ujm_step 
+            ADD CONSTRAINT FK_C2803688E934951A FOREIGN KEY (exercise_id) 
+            REFERENCES ujm_exercise (id) 
             ON DELETE CASCADE
         ");
         $this->addSql("
@@ -184,10 +185,10 @@ class Version20160129135937 extends AbstractMigration
             DROP TABLE ujm_object_question
         ");
         $this->addSql("
-            DROP TABLE ujm_step
+            DROP TABLE ujm_step_question
         ");
         $this->addSql("
-            DROP TABLE ujm_step_question
+            DROP TABLE ujm_step
         ");
         $this->addSql("
             DROP TABLE ujm_Picture
