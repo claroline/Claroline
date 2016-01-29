@@ -13,10 +13,10 @@ namespace Claroline\CoreBundle\Repository;
 
 use Symfony\Component\Security\Core\Role\RoleInterface;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\Exception\MissingSelectClauseException;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Builder for DQL queries on AbstractResource entities.
@@ -31,6 +31,7 @@ class ResourceQueryBuilder
     private $whereClause;
     private $orderClause;
     private $groupByClause;
+    private $joinClause = '';
     private $parameters = array();
     private $fromClause;
     private $joinRelativesClause;
@@ -50,7 +51,8 @@ class ResourceQueryBuilder
     /**
      * Selects nodes as entities.
      *
-     * @param boolean $joinSingleRelatives Whether the creator, type and icon must be joined to the query
+     * @param  boolean $joinSingleRelatives Whether the creator, type and icon must be joined to the query
+     * @param  string  $class
      *
      * @return ResourceQueryBuilder
      */
@@ -74,6 +76,7 @@ class ResourceQueryBuilder
      * Selects nodes as arrays. Resource type, creator and icon are always added to the query.
      *
      * @param boolean $withMaxPermissions Whether maximum permissions must be calculated and added to the result
+     * @param boolean $withLastOpenDate
      *
      * @return ResourceQueryBuilder
      */
@@ -118,7 +121,7 @@ class ResourceQueryBuilder
     /**
      * Filters nodes belonging to a given workspace.
      *
-     * @param Workspace $workspace
+     * @param  Workspace $workspace
      *
      * @return ResourceQueryBuilder
      */
@@ -142,7 +145,7 @@ class ResourceQueryBuilder
     /**
      * Filters nodes that are the immediate children of a given node.
      *
-     * @param AbstractResource $parent
+     * @param  ResourceNode $parent
      *
      * @return ResourceQueryBuilder
      */
@@ -376,7 +379,7 @@ class ResourceQueryBuilder
     /**
      * Filters the nodes that don't have a parent (roots).
      *
-     * @return Claroline\CoreBundle\Repository\ResourceQueryBuilder
+     * @return ResourceQueryBuilder
      */
     public function whereParentIsNull()
     {
@@ -396,9 +399,10 @@ class ResourceQueryBuilder
     /**
      * Filters nodes that are published.
      *
+     * @param  $user
      * @return ResourceQueryBuilder
      */
-    public function whereIsAccessible($user)
+    public function whereIsAccessible(UserInterface $user)
     {
         $currentDate = new \DateTime();
         $clause = '(
@@ -419,7 +423,7 @@ class ResourceQueryBuilder
     /**
      * Orders nodes by path.
      *
-     * @return Claroline\CoreBundle\Repository\ResourceQueryBuilder
+     * @return ResourceQueryBuilder
      */
     public function orderByPath()
     {
@@ -431,7 +435,7 @@ class ResourceQueryBuilder
     /**
      * Orders nodes by name.
      *
-     * @return Claroline\CoreBundle\Repository\ResourceQueryBuilder
+     * @return ResourceQueryBuilder
      */
     public function orderByName()
     {
@@ -443,7 +447,7 @@ class ResourceQueryBuilder
     /**
      * Orders nodes by index.
      *
-     * @return Claroline\CoreBundle\Repository\ResourceQueryBuilder
+     * @return ResourceQueryBuilder
      */
     public function orderByIndex()
     {
@@ -513,6 +517,7 @@ class ResourceQueryBuilder
             $joinRoles .
             $joinRights .
             $joinLogs .
+            $this->joinClause .
             $this->whereClause .
             $this->groupByClause .
             $this->orderClause;
@@ -545,6 +550,16 @@ class ResourceQueryBuilder
     }
 
     /**
+     * Adds a statement to the query "JOIN" clause.
+     *
+     * @param string $clause
+     */
+    public function addJoinClause($clause)
+    {
+        $this->joinClause = $clause . PHP_EOL;
+    }
+
+    /**
      * Filters nodes that are bound to any of the given roles.
      *
      * @param array[string|RoleInterface] $roles
@@ -567,7 +582,6 @@ class ResourceQueryBuilder
         }
 
         $eol = PHP_EOL;
-        $currentDate = new \DateTime();
 
         if (count($otherRoles) > 0 && count($managerRoles) === 0) {
             $this->leftJoinRights = true;
