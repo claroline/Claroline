@@ -3,28 +3,11 @@
 
 {% block title %}{{ parent() ~ ' - ' ~ 'users' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
-{% block breadcrumb %}
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'fa fa-cog',
-                'name': 'administration'|trans({}, 'platform'),
-                'href': path('claro_admin_index')
-            },
-            {
-                'name': 'users_management'|trans({}, 'platform'),
-                'href': ''
-            },
-            {
-                'name': 'user_list'|trans({}, 'platform'),
-                'href': ''
-            }
-        ])
-    }}
-{% endblock %}
 {% block section_content %}
     <div id="users-panel" class="panel panel-default" ng-app="UsersManager">
-        <user-manager></user-manager>
+        <user-manager>
+
+        </user-manager>
     </div>
 
 {% endblock %}
@@ -38,6 +21,7 @@
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('vendor/angular.js')}}"> </script>
     <script type="text/javascript" src="{{ asset('vendor/angular-ui.js')}}"> </script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/angular-ui-router/release/angular-ui-router.min.js') }}"> </script>
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/angular/services/api.services.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/angular-ui-translation/angular-translation.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/angular-bootstrap/ui-bootstrap-tpls.js') }}"> </script>

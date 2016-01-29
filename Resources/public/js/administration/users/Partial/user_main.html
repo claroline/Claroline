@@ -1,6 +1,16 @@
 <div>
-    <h1> {{ 'user_list'|trans:{}:'platform' }} </h1>
-    <user-actions></user-actions>
-    <user-search></user-search>
-    <user-list></user-list>
+    <h1>
+        {{ uc.pageTitle|trans:{}:'platform' }}
+    </h1>
+    <div>
+        <a ui-sref="admin.users.list"> users </a>
+        <a ui-sref="admin.groups.list"> groups </a>
+    </div>
+    <div class="panel panel-body">
+        <div ui-vew>
+            <user-actions></user-actions>
+            <user-search></user-search>
+            <user-list></user-list>
+        </div>
+    </div>
 </div>

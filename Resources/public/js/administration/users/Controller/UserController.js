@@ -10,7 +10,7 @@ var controller = function(
         return translator.trans(key, {}, 'platform');
     }
 
-    this.title = translate('user_list');
+    this.pageTitle = translate('user_list');
 
     var generateQsForSelected = function() {
         var qs = '';
