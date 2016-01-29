@@ -13,7 +13,7 @@
 </div>
 <div style="margin-left: 30px;">
     <div id="Answer" style="position: relative;">
-        <img class="AnswerImage" src="{{asset (inter.document.url)}}" width="{{ inter.width }}" height="{{ inter.height }}"
+        <img class="AnswerImage" src="{{asset (inter.picture.url)}}" width="{{ inter.width }}" height="{{ inter.height }}"
              alt="AnswerImage" id="AnswerImage{{ inter.question.id }}"/>
 
         {% set repco = responses[p].response|split(';') %}

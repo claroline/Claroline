@@ -5,7 +5,7 @@
 <div class="form-group row" style="margin-bottom:20px;">
     <label class="control-label col-md-2">{{ 'choose_image' | trans({}, 'ujm_exo') }}</label>
     <div class="input-group col-md-6">
-        {{ form_widget(form.document) }}
+        {{ form_widget(form.picture) }}
         <span class="input-group-btn">
             <a class="btn btn-primary" id="LoadImg" onclick="LoadPic('{{ path('ujm_interactiongraphic_DisplayPic') }}', '{{ asset('uploads') }}', '{{ form.document.vars.id }}','{{'no_img' | trans({}, 'ujm_exo') }}');" class="btn btn-primary">
                 {{ 'select' | trans({}, 'ujm_exo') }}
@@ -30,7 +30,7 @@
 </div>
 <div id="Answer" class="form-group" style="position: relative;">
     {% if src == 'edit' %}
-        <img src="{{ asset(entity.document.url) }}" width="{{entity.width}}" height="{{entity.height}}" id="AnswerImage"/>
+        <img src="{{ asset(entity.picture.url) }}" width="{{entity.width}}" height="{{entity.height}}" id="AnswerImage"/>
 
         {% set i = 0 %}
         {% set allInfo = '' %}

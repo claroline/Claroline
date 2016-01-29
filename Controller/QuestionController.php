@@ -15,7 +15,7 @@ class QuestionController extends Controller {
     /**
      * Lists the User's Question entities.
      *
-     * @EXT\Route("/index/{pageNow}/{pageNowShared}/{categoryToFind}/{titleToFind}/{resourceId}/{displayAll}", 
+     * @EXT\Route("/index/{pageNow}/{pageNowShared}/{categoryToFind}/{titleToFind}/{resourceId}/{displayAll}",
      *              name="ujm_question_index",
      *              defaults={"pageNow" = 0,"pageNowShared" = 0,"categoryToFind"= "z", "titleToFind"= "z","resourceId"= -1, "displayAll"= 0 })
      *
@@ -159,7 +159,7 @@ class QuestionController extends Controller {
      * To filter question by exercise.
      *
      * @EXT\Route("/bank/filter/{idExo}", name="ujm_question_bank_filter",defaults={"idExo"= -1})
-     *     
+     *
      * @param int $idExo id of exercise selected in the list to filter questions
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -224,7 +224,7 @@ class QuestionController extends Controller {
      * Finds and displays a Question entity.
      *
      * @EXT\Route("/show/{id}/{exoID}", name="ujm_question_show", defaults={"exoID"= -1})
-     * 
+     *
      * @param int $id    id Question
      * @param int $exoID id Exercise if the user is in an exercise, -1 if the user is in the question bank
      *
@@ -266,9 +266,9 @@ class QuestionController extends Controller {
     /**
      * Displays a form to create a new Question entity with interaction.
      *
-     * @EXT\Route("/new/{exoID}/{pageToGo}/{maxPage}/{nbItem}", name="ujm_question_new", 
+     * @EXT\Route("/new/{exoID}/{pageToGo}/{maxPage}/{nbItem}", name="ujm_question_new",
      *              defaults={"exoID"= -1, "pageToGo"= 1, "maxPage"= 10, "nbItem"= 1})
-     * 
+     *
      * @param int $exoID id Exercise if the user is in an exercise, -1 if the user is in the question bank
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -329,7 +329,7 @@ class QuestionController extends Controller {
      * Displays a form to edit an existing Question entity.
      *
      * @EXT\Route("/{id}/edit/{exoID}", name="ujm_question_edit", defaults={"exoID"= -1})
-     *  
+     *
      * @param int $id    id Question
      * @param int $exoID id Exercise if the user is in an exercise, -1 if the user is in the question bank
      *
@@ -364,9 +364,9 @@ class QuestionController extends Controller {
     /**
      * Deletes a Question entity.
      *
-     * @EXT\Route("/{id}/delete/{pageNow}/{maxPage}/{nbItem}/{lastPage}", name="ujm_question_delete", 
+     * @EXT\Route("/{id}/delete/{pageNow}/{maxPage}/{nbItem}/{lastPage}", name="ujm_question_delete",
      *              defaults={"pageNow"= 1, "maxPage"= 10, "nbItem"= 1, "lastPage"= 1})
-     * 
+     *
      * @param int $id       id Question
      * @param int $pageNow  actual page for the pagination
      * @param int $maxpage  number max questions per page
@@ -412,7 +412,7 @@ class QuestionController extends Controller {
      *
      * @EXT\Route("/formNew", name="ujm_question_display_form_type")
      * @EXT\Method("POST")
-     * 
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function formNewAction() {
@@ -432,7 +432,7 @@ class QuestionController extends Controller {
      * To share Question.
      *
      * @EXT\Route("/share/{questionID}", name="ujm_question_share")
-     * 
+     *
      * @param int $questionID id of question
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -521,7 +521,7 @@ class QuestionController extends Controller {
 
         $repository = $this->getDoctrine()
                 ->getManager()
-                ->getRepository('UJMExoBundle:Document');
+                ->getRepository('UJMExoBundle:Picture');
 
         $listDoc = $repository->findBy(array('user' => $user->getId()));
 
@@ -529,7 +529,7 @@ class QuestionController extends Controller {
             $interGraph = $this->getDoctrine()
                     ->getManager()
                     ->getRepository('UJMExoBundle:InteractionGraphic')
-                    ->findOneBy(array('document' => $doc->getId()));
+                    ->findOneBy(array('Picture' => $doc->getId()));
             if ($interGraph) {
                 $allowToDel[$doc->getId()] = false;
             } else {
@@ -537,7 +537,7 @@ class QuestionController extends Controller {
             }
         }
 
-        // Pagination of the documents
+        // Pagination of the Pictures
         $max = 10; // Max questions displayed per page
 
         $page = $request->query->get('page', 1); // Which page
@@ -557,39 +557,39 @@ class QuestionController extends Controller {
     }
 
     /**
-     * To delete a User's document.
+     * To delete a User's Picture.
      *
-     * @EXT\Route("/deleteDoc/{idDoc}", name="ujm_document_del")
-     * 
-     * @param int $idDoc id Document
+     * @EXT\Route("/deleteDoc/{idDoc}", name="ujm_Picture_del")
+     *
+     * @param int $idDoc id Picture
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteDocAction($idDoc) {
         $repositoryDoc = $this->getDoctrine()
                 ->getManager()
-                ->getRepository('UJMExoBundle:Document');
+                ->getRepository('UJMExoBundle:Picture');
 
         $doc = $repositoryDoc->find($idDoc);
 
         $em = $this->getDoctrine()->getManager();
 
-        $interGraph = $em->getRepository('UJMExoBundle:InteractionGraphic')->findBy(array('document' => $doc));
+        $interGraph = $em->getRepository('UJMExoBundle:InteractionGraphic')->findBy(array('picture' => $doc));
 
         if (count($interGraph) == 0) {
             $em->remove($doc);
             $em->flush();
         }
 
-        return new \Symfony\Component\HttpFoundation\Response('Document delete');
+        return new \Symfony\Component\HttpFoundation\Response('Picture delete');
     }
 
     /**
-     * To delete a User's document linked to questions but not to paper.
-     * 
-     * @EXT\Route("/deletelinkedDoc/{label}", name="ujm_document_del_linked")
+     * To delete a User's picture linked to questions but not to paper.
      *
-     * @param string $label label of document
+     * @EXT\Route("/deletelinkedDoc/{label}", name="ujm_picture_del_linked")
+     *
+     * @param string $label label of picture
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -598,13 +598,13 @@ class QuestionController extends Controller {
 
         $repositoryDoc = $this->getDoctrine()
                 ->getManager()
-                ->getRepository('UJMExoBundle:Document');
+                ->getRepository('UJMExoBundle:Picture');
 
         $listDoc = $repositoryDoc->findByLabel($label, $userId, 0);
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->findBy(array('document' => $listDoc));
+        $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->findBy(array('picture' => $listDoc));
 
         $end = count($entity);
 
@@ -630,28 +630,28 @@ class QuestionController extends Controller {
     }
 
     /**
-     * To display the modal which allow to change the label of a document.
+     * To display the modal which allow to change the label of a picture.
      *
-     * @EXT\Route("/change/document/name", name="ujm_document_change_name")
-     * 
+     * @EXT\Route("/change/picture/name", name="ujm_picture_change_name")
+     *
      * @param int $id id of exercise
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function changeDocumentNameAction() {
+    public function changePictureNameAction() {
         $request = $this->get('request'); // Get the request which contains the following parameters :
         $oldDocLabel = $request->request->get('oldDocLabel');
         $i = $request->request->get('i');
 
-        return $this->render('UJMExoBundle:Document:changeName.html.twig', array('oldDocLabel' => $oldDocLabel, 'i' => $i));
+        return $this->render('UJMExoBundle:Picture:changeName.html.twig', array('oldDocLabel' => $oldDocLabel, 'i' => $i));
     }
 
     /**
-     * To change the label of a document.
+     * To change the label of a picture.
      *
      * @EXT\Route("/update/name", name="ujm_question_name_update")
      * @EXT\Method("POST")
-     * 
+     *
      * @param int $id id of exercise
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -662,8 +662,8 @@ class QuestionController extends Controller {
         $oldlabel = $request->get('oldName');
         $em = $this->getDoctrine()->getManager();
 
-        $alterDoc = $em->getRepository('UJMExoBundle:Document')->findOneBy(array('label' => $oldlabel));
-       
+        $alterDoc = $em->getRepository('UJMExoBundle:Picture')->findOneBy(array('label' => $oldlabel));
+
         $alterDoc->setLabel($newlabel);
 
         $em->persist($alterDoc);
@@ -673,15 +673,15 @@ class QuestionController extends Controller {
     }
 
     /**
-     * To sort document by type.
+     * To sort picture by type.
      *
-     * @EXT\Route("/sort", name="ujm_question_sortDocuments")
-     * 
+     * @EXT\Route("/sort", name="ujm_question_sortPictures")
+     *
      * @param int $id id of exercise
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function sortDocumentsAction() {
+    public function sortPicturesAction() {
         $request = $this->container->get('request');
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $paginationSer = $this->container->get('ujm.exo_pagination');
@@ -695,7 +695,7 @@ class QuestionController extends Controller {
         if ($type && isset($searchLabel)) {
             $repository = $this->getDoctrine()
                     ->getManager()
-                    ->getRepository('UJMExoBundle:Document');
+                    ->getRepository('UJMExoBundle:Picture');
 
             $listDocSort = $repository->findByType($type, $user->getId(), $searchLabel);
 
@@ -706,7 +706,7 @@ class QuestionController extends Controller {
 
             // Put the result in a twig
             $divResultSearch = $this->render(
-                    'UJMExoBundle:Document:sortDoc.html.twig', array(
+                    'UJMExoBundle:Picture:sortDoc.html.twig', array(
                 'listFindDoc' => $listDocSortPager,
                 'pagerFindDoc' => $pagerSortDoc,
                 'labelToFind' => $searchLabel,
@@ -724,14 +724,14 @@ class QuestionController extends Controller {
 
                 // Send the form to search and the result
                 return $this->render(
-                                'UJMExoBundle:Document:manageImg.html.twig', array(
+                                'UJMExoBundle:Picture:manageImg.html.twig', array(
                             'divResultSearch' => $divResultSearch,
                                 )
                 );
             }
         } else {
             return $this->render(
-                            'UJMExoBundle:Document:sortDoc.html.twig', array(
+                            'UJMExoBundle:Picture:sortDoc.html.twig', array(
                         'listFindDoc' => '',
                         'whichAction' => 'sort',
                             )
@@ -740,11 +740,11 @@ class QuestionController extends Controller {
     }
 
     /**
-     * To search document with a defined label.
+     * To search picture with a defined label.
      *
-     * @EXT\Route("/search", name="ujm_question_searchDocuments")
+     * @EXT\Route("/search", name="ujm_question_searchPictures")
      *
-     * @param int $id id of exercise 
+     * @param int $id id of exercise
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -760,7 +760,7 @@ class QuestionController extends Controller {
 
         if ($labelToFind) {
             $em = $this->getDoctrine()->getManager();
-            $listFindDoc = $em->getRepository('UJMExoBundle:Document')->findByLabel($labelToFind, $userId, 1);
+            $listFindDoc = $em->getRepository('UJMExoBundle:Picture')->findByLabel($labelToFind, $userId, 1);
 
             $pagination = $paginationSer->pagination($listFindDoc, $max, $page);
 
@@ -769,7 +769,7 @@ class QuestionController extends Controller {
 
             // Put the result in a twig
             $divResultSearch = $this->render(
-                    'UJMExoBundle:Document:sortDoc.html.twig', array(
+                    'UJMExoBundle:Picture:sortDoc.html.twig', array(
                 'listFindDoc' => $listFindDocPager,
                 'pagerFindDoc' => $pagerFindDoc,
                 'labelToFind' => $labelToFind,
@@ -786,14 +786,14 @@ class QuestionController extends Controller {
 
                 // Send the form to search and the result
                 return $this->render(
-                                'UJMExoBundle:Document:manageImg.html.twig', array(
+                                'UJMExoBundle:Picture:manageImg.html.twig', array(
                             'divResultSearch' => $divResultSearch,
                                 )
                 );
             }
         } else {
             return $this->render(
-                            'UJMExoBundle:Document:sortDoc.html.twig', array(
+                            'UJMExoBundle:Picture:sortDoc.html.twig', array(
                         'listFindDoc' => '',
                         'whichAction' => 'search',
                             )
@@ -874,7 +874,7 @@ class QuestionController extends Controller {
      * Display form to search questions.
      *
      * @EXT\Route("/SearchQuestion/{exoID}", name="ujm_question_search_question", defaults={"exoID"= -1})
-     * 
+     *
      * @param int $exoID id of exercise
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -912,7 +912,7 @@ class QuestionController extends Controller {
             // User's database
             if ($where == 'my') {
                 $listQuestions = $searchSer->choiceTypeQuestion('Question');
-                // For all the matching questions search if ...              
+                // For all the matching questions search if ...
                 $questionWithResponse = $searchSer->searchEntityResponse($listQuestions, 'Response'); //question With Response
                 $alreadyShared = $searchSer->searchEntityResponse($listQuestions, 'Share'); //already Shared
                 // Shared with user's database
@@ -920,7 +920,7 @@ class QuestionController extends Controller {
                 $listeSharedQuestion = $searchSer->choiceTypeQuestion('Share');
                 $listQuestions = $searchSer->listQuestion($listeSharedQuestion);
                 $pagination = $paginationSer->paginationSearchQuestion($listQuestions);
-                
+
             } elseif ($where == 'all') {
                 $listeSharedQuestion = $searchSer->choiceTypeQuestion('Share');
                 $listQuestionsShare= $searchSer->listQuestion($listeSharedQuestion);
@@ -928,7 +928,7 @@ class QuestionController extends Controller {
                 $listQuestions = array_merge($listQuestionsShare, $listQuestionsMy);
                 // For all the matching interactions search if ...
                 $questionWithResponse = $searchSer->searchEntityResponse($listQuestions, 'Response'); //question With Response
-                $alreadyShared = $searchSer->searchEntityResponse($listQuestions, 'Share'); //already Shared               
+                $alreadyShared = $searchSer->searchEntityResponse($listQuestions, 'Share'); //already Shared
             }
              $pagination = $paginationSer->paginationSearchQuestion($listQuestions);
 
@@ -977,7 +977,7 @@ class QuestionController extends Controller {
      *
      * @EXT\Route("/{qid}/{uid}/delete/{pageNow}/{maxPage}/{nbItem}/{lastPage}", name="ujm_delete_shared_question",
      *              defaults={"pageNow"= 1, "maxPage"= 10, "nbItem"= 1, "lastPage"= 1})
-     * 
+     *
      * @param int $qid      id Question
      * @param int $uid      id User, user connected
      * @param int $pageNow  actual page for the pagination
@@ -1012,7 +1012,7 @@ class QuestionController extends Controller {
      * To see with which person the user has shared his question.
      *
      * @EXT\Route("/seeShared/{id}", name="ujm_see_shared")
-     * 
+     *
      * @param int $id id of question
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -1039,7 +1039,7 @@ class QuestionController extends Controller {
      * To search questions brief in the question bank.
      *
      * @EXT\Route("/search/brief", name="ujm_question_briefSearch")
-     * 
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function briefSearchAction() {
@@ -1109,7 +1109,7 @@ class QuestionController extends Controller {
      * To duplicate a question.
      *
      * @EXT\Route("/duplicate/{questionId}/{exoID}", name="ujm_question_duplicate", defaults={"exoID"= -1})
-     * 
+     *
      * @param int $questionId   id Question
      * @param int $exoID        id Exercise if the user is in an exercise, -1 if the user is in the question bank
      *

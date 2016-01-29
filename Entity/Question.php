@@ -82,6 +82,11 @@ class Question
     private $category;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     */
+    private $user;
+
+    /**
      * @ORM\OneToMany(
      *     targetEntity="Hint",
      *     mappedBy="question",

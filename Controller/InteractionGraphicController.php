@@ -160,7 +160,7 @@ class InteractionGraphicController extends Controller
         );
 
         if ($attr->get('user')->getId() != $interactionGraph->getQuestion()->getUser()->getId()) {
-            $docID = $interactionGraph->getDocument()->getId();
+            $docID = $interactionGraph->getPicture()->getId();
         }
 
         $editForm = $this->createForm(
@@ -211,7 +211,7 @@ class InteractionGraphicController extends Controller
 
         if ($user->getId() != $entity->getQuestion()->getUser()->getId()) {
             $catID = $entity->getQuestion()->getCategory()->getId();
-            $docID = $entity->getDocument()->getId();
+            $docID = $entity->getPicture()->getId();
         }
 
         $editForm = $this->createForm(
@@ -268,7 +268,7 @@ class InteractionGraphicController extends Controller
         $interactionGraphic = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($id);
         $coords = $em->getRepository('UJMExoBundle:Coords')->findBy(array('interactionGraphic' => $id));
         //Deleting of relations, if there the question is shared
-        $sharesQuestion = $em->getRepository('UJMExoBundle:Share')->findBy(array('question' => $interactionGraphic->getQuestion()->getId()));       
+        $sharesQuestion = $em->getRepository('UJMExoBundle:Share')->findBy(array('question' => $interactionGraphic->getQuestion()->getId()));
         foreach ($sharesQuestion as $share){
             $em->remove($share);
         }
@@ -292,7 +292,7 @@ class InteractionGraphicController extends Controller
     }
 
     /**
-     * Display the twig view to add a new picture to the user's document.
+     * Display the twig view to add a new picture to the user's Picture.
      *
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -320,7 +320,7 @@ class InteractionGraphicController extends Controller
             if ($label) {
                 $repository = $this->getDoctrine()
                     ->getManager()
-                    ->getRepository('UJMExoBundle:Document');
+                    ->getRepository('UJMExoBundle:Picture');
 
                 $pic = $repository->findOneBy(array('label' => $label));
                 $suffix = substr($pic->getUrl(), 9); // Get the end of the src of the picture

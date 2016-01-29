@@ -29,11 +29,11 @@ class InteractionGraphicType extends AbstractType
                 'question', new QuestionType($this->user, $this->catID)
             )
             ->add(
-                'document', 'entity', array(
-                    'class' => 'UJMExoBundle:Document',
+                'picture', 'entity', array(
+                    'class' => 'UJMExoBundle:Picture',
                     'property' => 'label',
                   // Request to get the pictures matching to the user_id
-                    'query_builder' => function (\UJM\ExoBundle\Repository\DocumentRepository $repository) use ($id) {
+                    'query_builder' => function (\UJM\ExoBundle\Repository\PictureRepository $repository) use ($id) {
                         if ($this->docID == -1) {
                             return $repository->createQueryBuilder('d')
                                 ->where('d.user = ?1')

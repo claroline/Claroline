@@ -10,7 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\ObjectQuestionRepository")
  * @ORM\Table(name="ujm_object_question")
  */
-class ObjectQuestion {
+class ObjectQuestion
+{
 
     /**
      * @ORM\Id

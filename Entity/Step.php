@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -32,7 +33,7 @@ class Step {
     /**
      * @var int
      *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(name="nbQuestion", type="integer")
      */
     private $nbQuestion = 0;
 
