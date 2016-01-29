@@ -15,6 +15,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Role\SwitchUserRole;
 
 /**
  * @DI\Service("claroline.security.token_updater")
@@ -64,6 +65,24 @@ class TokenUpdater
     private function updateUsurpator($token)
     {
         //no implementation yet
+    }
+
+    public function cancelUserUsurpation($token)
+    {
+        $roles = $token->getRoles();
+
+        foreach ($roles as $role) {
+            if ($role instanceof SwitchUserRole) {
+                $user = $role->getSource()->getUser();
+                //$this->om->refresh($user);
+                $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+                $this->tokenStorage->setToken($token);
+
+                return;
+            }
+        }
+
+
     }
 
     public function cancelUsurpation($token)
