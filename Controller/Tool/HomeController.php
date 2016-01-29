@@ -766,7 +766,6 @@ class HomeController extends Controller
                 200
             );
         } else {
-
             return array(
                 'workspace' => $workspace,
                 'instanceForm' => $instanceForm->createView(),
