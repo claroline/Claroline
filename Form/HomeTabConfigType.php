@@ -26,8 +26,17 @@ class HomeTabConfigType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('visible', 'checkbox', array('label' => 'visible'));
-
+        $builder->add('visible', 'choice', array(
+            'choices' => array(
+                'yes' => true,
+                'no'  => false
+            ),
+            'label' => 'visible',
+            'required' => 'false',
+            // *this line is important*
+            'choices_as_values' => true
+        ));
+        
         if ($this->withLock) {
             $builder->add('locked', 'checkbox', array('label' => 'locked'));
         }
