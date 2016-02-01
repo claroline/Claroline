@@ -11,7 +11,8 @@
         function ($ngBootbox, $scope, CommonService, QuestionService, PlayerDataSharing, ExerciseService) {
             this.question = {};
             // keep coord(s)
-            this.coords = [];
+            this.coords = []; // student answers
+            this.original = []; // original position of crosshairs images
             this.currentQuestionPaperData = {};
             this.usedHints = [];
 
@@ -25,10 +26,6 @@
                 this.currentQuestionPaperData = PlayerDataSharing.setCurrentQuestionPaperData(question);
                 this.question = question;
                 this.canSeeFeedback = canSeeFeedback;
-                console.log('this.question');
-                console.log(this.question);
-                console.log('this.currentQuestionPaperData');
-                console.log(this.currentQuestionPaperData);
                 // init student data question object
                 PlayerDataSharing.setStudentData(question);
 
@@ -38,18 +35,52 @@
                         this.getHintData(this.currentQuestionPaperData.hints[i]);
                     }
                 }
-                // init draggable elements if exists
+                // init coords answer array in any case
+                // id order is totally arbitrary
+                for (var i = 0; i < this.question.coords.length; i++) {
+                    var coord = {
+                        id: this.question.coords[i].id,
+                        x: 'a', // to ensure ujm compatibility
+                        y: 'a'
+                    };
+                    this.coords.push(coord);
+                }
+                // init draggable elements with answers if any
                 if (this.currentQuestionPaperData.answer && this.currentQuestionPaperData.answer.length > 0) {
-                    // init previously given answer
-                    // this.checkChoices(this.question.multiple);
-                } else {
-                    for (var i = 0; i < this.question.coords.length; i++) {
-                        var coord = {
-                            id: this.question.coords[i].id,
-                            x:0,
-                            y:0
-                        };
-                        this.coords.push(coord);
+                    for (var i = 0; i < this.currentQuestionPaperData.answer.length; i++) {
+                        var answserArray = this.currentQuestionPaperData.answer[i].split('-');
+                        if (answserArray[0] !== 'a' || answserArray[1] !== 'a') {
+                            var coord = this.coords[i];
+                            coord.x = answserArray[0] !== 'a' ? parseFloat(answserArray[0]):0;
+                            coord.y = answserArray[1] !== 'a' ? parseFloat(answserArray[1]):0;
+                        }
+
+                    }
+                }
+            };
+
+            this.initPreviousAnswers = function () {
+                for (var i = 0; i < this.coords.length; i++) {
+                   // console.log('yep');
+                    // ensure that we are not in default values
+                    if (this.coords[i].x !== 'a' && this.coords[i].y !== 'a') {
+                        // crosshair
+                        var $crosshair = $('#crosshair_' + this.coords[i].id);
+                        /*
+                         * compute crosshair coords
+                         * the method is a bit complex and I'm not sure it's the better one...
+                         * when we record the student answer in database we have to values that are relative to the document image container
+                         * The point coordinates are the top left corner so we need to center the crosshair with $crosshair[0].width / 2
+                         * assuming corosshair image is a square
+                         * 
+                         * if we user center-text class on col elements this does not work anymore...
+                         */
+                        var coordX = $('#document-img').offset().left + this.coords[i].x - $crosshair.offset().left + ($crosshair[0].width / 2);
+                        var coordY = $('#document-img').offset().top + this.coords[i].y - $crosshair.offset().top + ($crosshair[0].width / 2);
+                        $('#crosshair_' + this.coords[i].id).css('top', coordY);
+                        $('#crosshair_' + this.coords[i].id).css('position', 'relative');
+                        $('#crosshair_' + this.coords[i].id).css('left', coordX);
+                        $('#crosshair_' + this.coords[i].id).css('z-index', i + 1);
                     }
                 }
             };
@@ -72,22 +103,46 @@
                     // drop only in container
                     containment: '.droppable-container',
                     stop: function (event, ui) {
-                        console.log('droppped');
-                        var draggedId = $(this).attr('id');                       
+                        // get dragged element id
+                        var draggedId = $(this).attr('id').replace('crosshair_', '');
                         // get dragged coordonates with offset instead of position
-                        var coordX = $(this).offset().left - $('.droppable-container').offset().left;
-                        var coordY = $(this).offset().top - $('.droppable-container').offset().top;
+                       var coordX = $(this).offset().left - $('#document-img').offset().left;
+                       var coordY = $(this).offset().top - $('#document-img').offset().top;
+                       // var coordX = $(this).offset().left - $('#document-img').offset().left;
+                       // var coordY = $(this).offset().top - $('#document-img').offset().top;
+                        
                         // update this.coords
-                        for(var i=0; i < self.coords.length; i++){
-                            if(self.coords[i].id === draggedId){
+                        for (var i = 0; i < self.coords.length; i++) {
+                            if (self.coords[i].id === draggedId) {
                                 self.coords[i].x = coordX;
                                 self.coords[i].y = coordY;
                             }
                         }
-                        console.log(self.coords);
+                        // update student data in shared service
                         self.updateStudentData();
                     }
                 });
+            };
+
+            this.resetAnswers = function () {
+                for (var i = 0; i < this.coords.length; i++) {
+                    $('#crosshair_' + this.coords[i].id).css('top', 0);
+                    $('#crosshair_' + this.coords[i].id).css('bottom', 'auto');
+                    $('#crosshair_' + this.coords[i].id).css('right', 'auto');
+                    $('#crosshair_' + this.coords[i].id).css('left', 0);
+                    $('#crosshair_' + this.coords[i].id).css('position', 'relative');
+                }
+
+                this.coords = [];
+                for (var i = 0; i < this.question.coords.length; i++) {
+                    var coord = {
+                        id: this.question.coords[i].id,
+                        x: 0,
+                        y: 0
+                    };
+                    this.coords.push(coord);
+                }
+                this.updateStudentData();
             };
 
 
@@ -152,22 +207,18 @@
              * For that purpose we use a shared service
              */
             this.updateStudentData = function () {
-                
+
                 //array(
-        //  "471-335.9999694824219",
-        //  "583-125"
-        // )
+                //  "471-335.9999694824219",
+                //  "583-125"
+                // )
                 var answers = [];
-                for(var i = 0 ; i < this.coords.length; i++){
+                for (var i = 0; i < this.coords.length; i++) {
                     var answerString = this.coords[i].x.toString() + '-' + this.coords[i].y.toString();
                     answers.push(answerString);
-                }                
+                }
                 this.currentQuestionPaperData.answer = answers;
                 PlayerDataSharing.setStudentData(this.question, this.currentQuestionPaperData);
-                
-                var test = PlayerDataSharing.getStudentData();
-                console.log('student data updated ?');
-                console.log(test);
             };
 
             /**

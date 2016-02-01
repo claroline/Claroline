@@ -19,27 +19,40 @@
                 {{graphicQuestionCtrl.question.description}}   
             </div>
         </div>
+        <hr/>        
+        <!-- setpoint row -->
+        <div class="row">
+            <div class="col-md-12"> 
+                <div class="alert alert-info">
+                    <ul>
+                        <li>{{ 'graphic_setpoint_first'|trans:{}:'ujm_sequence' }}</li>
+                        <li>{{ 'graphic_setpoint_second'|trans:{}:'ujm_sequence' }}</li>
+                        <li>{{ 'graphic_setpoint_third'|trans:{}:'ujm_sequence' }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
         <hr/>
         <!-- draggable objects row -->
         <div class="row">
-            <div class="col-md-12 center-text">
+            <div class="col-md-12">
                 <ul class="list-inline">
                     <li data-ng-repeat="coord in graphicQuestionCtrl.question.coords">
-                        <img class="crosshair draggable" id="{{coord.id}}" widh="50" height="50" src="{{graphicQuestionCtrl.getAssetsDir()}}/bundles/ujmexo/images/graphic/crosshair/sniper_02.png" />
+                        <img class="crosshair draggable" id="crosshair_{{coord.id}}" src="{{graphicQuestionCtrl.getAssetsDir()}}/bundles/ujmexo/images/graphic/answer.png" />
                     </li>
+                    <li><button data-ng-click="graphicQuestionCtrl.resetAnswers()" class="btn btn-default fa fa-refresh" title="{{ 'graphic_reset_answers'|trans:{}:'ujm_sequence' }}"></button></li>
                 </ul>
             </div>
         </div>
         <!-- document row -->
         <div class="row">
-            <div class="col-md-12 center-text">
+            <div class="col-md-12">
                 <div class="droppable-container">
                     <img id="document-img" alt="{{graphicQuestionCtrl.question.document.label}}" width="{{graphicQuestionCtrl.question.width}}" height="{{graphicQuestionCtrl.question.height}}" src="{{graphicQuestionCtrl.getAssetsDir()}}{{graphicQuestionCtrl.question.document.url}}" />  
                 </div>
-
             </div>
         </div>
-        
+
         <div data-ng-if="graphicQuestionCtrl.question.hints">
             <hr/>
             <!-- Question hints row -->

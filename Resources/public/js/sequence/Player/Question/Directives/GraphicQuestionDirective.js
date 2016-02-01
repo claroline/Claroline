@@ -25,6 +25,7 @@
                        jsPlumb.detachEveryConnection();
                        jsPlumb.deleteEveryEndpoint();
                        
+                       graphicQuestionCtrl.initPreviousAnswers();                       
                        graphicQuestionCtrl.initDragAndDrop();
                     });
                     
