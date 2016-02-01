@@ -49,6 +49,14 @@ class Step implements \JsonSerializable
     protected $parameters;
 
     /**
+     * Min height of Activity
+     * @var integer
+     *
+     * @ORM\Column(name="activity_height", type="integer")
+     */
+    protected $activityHeight;
+
+    /**
      * Depth of the step in the Path
      * @var integer
      *
@@ -373,6 +381,27 @@ class Step implements \JsonSerializable
     }
 
     /**
+     * Get min height for activity display
+     * @return int
+     */
+    public function getActivityHeight()
+    {
+        return $this->activityHeight;
+    }
+
+    /**
+     * Set min height for activity display
+     * @param  int $activityHeight
+     * @return $this
+     */
+    public function setActivityHeight($activityHeight)
+    {
+        $this->activityHeight = $activityHeight;
+
+        return $this;
+    }
+
+    /**
      * Get inherited resources
      * @return ArrayCollection
      */
@@ -538,6 +567,7 @@ class Step implements \JsonSerializable
             'id'                => $this->id,               // A local ID for the step in the path (reuse step ID)
             'resourceId'        => $this->id,               // The real ID of the Step into the DB
             'activityId'        => null,
+            'activityHeight'    => $this->activityHeight,
             'lvl'               => $this->lvl,              // The depth of the step in the path structure
             'name'              => $this->getName(),        // The name of the linked Activity (used as Step name)
             'description'       => $this->getDescription(), // The description of the linked Activity (used as Step description)

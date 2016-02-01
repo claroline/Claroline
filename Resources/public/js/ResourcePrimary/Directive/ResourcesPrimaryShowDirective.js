@@ -13,7 +13,8 @@
                 controllerAs: 'resourcesPrimaryShowCtrl',
                 templateUrl: AngularApp.webDir + 'bundles/innovapath/js/ResourcePrimary/Partial/show.html',
                 scope: {
-                    resources : '=' // Resources of the Step
+                    resources : '=', // Resources of the Step
+                    height    : '='  // Min height for Resource display
                 },
                 bindToController: true,
                 link: function (scope, element, attrs) {

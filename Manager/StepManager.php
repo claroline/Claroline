@@ -103,6 +103,9 @@ class StepManager
         $step->setLvl($level);
         $step->setOrder($order);
 
+        $height = $stepStructure->activityHeight ? $stepStructure->activityHeight : 0;
+        $step->setActivityHeight($height);
+
         $this->updateParameters($step, $stepStructure);
         $this->updateActivity($step, $stepStructure);
 

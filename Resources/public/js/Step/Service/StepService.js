@@ -32,6 +32,7 @@
                 this.children          = [];
                 this.activityId        = null;
                 this.resourceId        = null;
+                this.activityHeight    = null;
                 this.primaryResource   = [];
                 this.resources         = [];
                 this.excludedResources = [];
