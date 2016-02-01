@@ -36,9 +36,10 @@
         "claroline/tag-bundle": "~6.0"
     },
     "autoload" : {
-        "psr-0" : {
-            "Innova\\PathBundle" : "."
+        "psr-4": {
+            "Innova\\PathBundle\\": ""
         }
     },
+
     "target-dir" : "Innova/PathBundle"
 }
