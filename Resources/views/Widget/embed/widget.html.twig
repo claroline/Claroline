@@ -1,36 +1,12 @@
 {% extends 'ClarolineCoreBundle::base.html.twig' %}
 
 {% block stylesheets %}
-
     {% if config.getParameter('theme') != '' %}
         <link rel="stylesheet" href="{{ asset('') ~ 'themes/' ~ config.getParameter('theme') ~ '/bootstrap.css' }}" screen="media" />
     {% endif %}
 
-    {% stylesheets debug=false filter='lessphp, cssmin'  output='vendor/fortawesome/font-awesome/css/font-awesome.css'
-    '../vendor/fortawesome/font-awesome/less/font-awesome.less'
-    %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/font-awesome/css/font-awesome.min.css') }}'/>
 
-    {% image debug=false output='vendor/fortawesome/font-awesome/fonts/FontAwesome.otf'
-    '../vendor/fortawesome/font-awesome/fonts/FontAwesome.otf' %}
-    {% endimage %}
-
-    {% image debug=false output='vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.eot'
-    '../vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.eot' %}
-    {% endimage %}
-
-    {% image debug=false output='vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.svg'
-    '../vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.svg' %}
-    {% endimage %}
-
-    {% image debug=false output='vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.ttf'
-    '../vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.ttf' %}
-    {% endimage %}
-
-    {% image debug=false output='vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.woff'
-    '../vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.woff' %}
-    {% endimage %}
     <style>
         body{
             background: none;
