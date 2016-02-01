@@ -15,7 +15,7 @@ use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Manager\EventManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -43,12 +43,13 @@ class LogWorkspaceWidgetConfigType extends AbstractType
         $builder
             ->add(
                 'restrictions',
-                'choice',
+                'select2',
                 array(
-                    'choices'   => $actionChoices,
-                    'required'  => false,
-                    'multiple'  => true,
-                    'expanded'  => true
+                    'choices'               => $actionChoices,
+                    'required'              => false,
+                    'multiple'              => true,
+                    'expanded'              => false,
+                    'translation_domain'    => 'log'
                 )
             )
             ->add(
@@ -56,11 +57,11 @@ class LogWorkspaceWidgetConfigType extends AbstractType
                 'choice',
                 array(
                     'choices' => array(
-                        '1' => '1',
-                        '5' => '5',
-                        '10' => '10',
-                        '15' => '15',
-                        '20' => '20'
+                        '1'     => '1',
+                        '5'     => '5',
+                        '10'    => '10',
+                        '15'    => '15',
+                        '20'    => '20'
                     ),
                     'required' => true
                 )
@@ -72,8 +73,12 @@ class LogWorkspaceWidgetConfigType extends AbstractType
         return 'log_widget_config';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'log'));
+        $resolver->setDefaults(array(
+            'translation_domain'    => 'log',
+            'csrf_protection'       => true,
+            'csrf_field_name'       => '_token'
+        ));
     }
 }
