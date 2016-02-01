@@ -82,6 +82,7 @@ php app/console claroline:install
     - `composer update --prefer-source` *(\*)*
     - `npm install` 
     - `php app/console claroline:install`
+    - `npm run build`
     - `rm app/config/operations.xml`
 
 *(\*)* At this point, you can ignore the following error(s): *Class
