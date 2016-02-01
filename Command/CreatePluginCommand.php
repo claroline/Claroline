@@ -165,7 +165,7 @@ class CreatePluginCommand extends ContainerAwareCommand
         if ($tType) $this->addTool($rootDir, $ivendor, $ibundle, $tType, $config);
         if ($wType) $this->addWidget($rootDir, $ivendor, $ibundle, $wType, $config);
         if ($eAuth) $this->addAuthentication($rootDir, $ivendor, $ibundle, $eAuth, $config);
-        if ($theme) $this->addTheme($rootDir, $ivendor, $ibundle, $theme, $config);
+        if ($theme) $this->addTheme($theme, $config);
         if ($aTool) $this->addAdminTool($rootDir, $ivendor, $ibundle, $aTool, $config);
         if ($fmime) $this->addPlayer($rootDir, $ivendor, $ibundle, $fmime, $config);
 
@@ -447,31 +447,11 @@ class CreatePluginCommand extends ContainerAwareCommand
         $this->addAuthenticationManager($rootDir, $vendor, $bundle, $eAuth);
     }
 
-    public function addTheme($rootDir, $vendor, $bundle, $theme, &$config)
-    {
-        $this->addThemeConfig($theme, $config);
-        $this->addCssFile($rootDir, $theme);
-    }
-
-    public function addThemeConfig($theme, &$config)
+    public function addTheme($theme, &$config)
     {
         $config['plugin']['themes'][] = array(
-            'name' => $theme . ' theme',
-            'path' => 'less/theme/theme.html.twig'
+            'name' => $theme . ' theme'
         );
-    }
-
-    public function addCssFile($rootDir, $theme)
-    {
-        $fs = new FileSystem();
-        $themedir = $rootDir . '/Resources/views/less/theme';
-        $fs->mkdir($themedir);
-        $tempthemedir = $this->getContainer()->getParameter('claroline.param.plugin_template_theme_directory');
-        $fileList = array('common.less', 'theme.html.twig', 'theme.less', 'variables.less');
-
-        foreach ($fileList as $file) {
-            copy($tempthemedir . '/' . $file, $themedir . '/' . $file);
-        }
     }
 
     public function addPlayer($rootDir, $ivendor, $ibundle, $fmime, &$config)
