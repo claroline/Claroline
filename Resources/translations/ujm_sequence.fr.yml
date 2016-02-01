@@ -33,6 +33,7 @@ label_manual_correction_needed: Correction manuelle nécessaire!
 
 # n
 need_correction: Cette réponse nécessite une correction manuelle
+note_question: Noter cette question
 
 # p
 paper_list: Liste des copies
@@ -78,3 +79,6 @@ sequence_nb_attempts: Essais N° %1%
 sequence_interrupt_sequence_confirm: Êtes vous sur de vouloir interrompre l'exercice ?
 sequence_end_sequence_confirm: Êtes vous sur de vouloir terminer l'exercice ? <br/> Vous ne pourrez plus modifier vos réponses.
 sequence_play_leave_confirm: Êtes vous sur de vouloir quitter l'application ?
+
+# v
+validate: Valider
