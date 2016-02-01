@@ -39,7 +39,5 @@
         "psr-4": {
             "Innova\\PathBundle\\": ""
         }
-    },
-
-    "target-dir" : "Innova/PathBundle"
+    }
 }
