@@ -27,6 +27,7 @@ class Updater600200 {
         $this->migrateExerciseQuestionData();
         $this->migratePicture();
         $this->upTypeExercise();
+        $this->insertScorePaper();
         $this->dropUnusedTables();
     }
 
@@ -131,13 +132,18 @@ class Updater600200 {
      */
     private function migratePicture()
     {
+        $this->log('UPDATE Picture ...');
+
         $documents = $this->checkDocument();
 
         foreach ($documents as $doc) {
             $this->connection->exec("
                 INSERT INTO ujm_picture
-                ({$doc['id']}, {$doc['label']}, {$doc['url']}, {$doc['type']}, $this->widthHeightPic[$doc['id']][0] , $this->widthHeightPic[$doc['id']][1])
-            ");
+                ({$doc['id']}, {$doc['label']}, {$doc['url']}, {$doc['type']}, "
+                . $this->widthHeightPic[$doc['id']][0]
+                . ", "
+                . $this->widthHeightPic[$doc['id']][1])
+                . ")";
         }
     }
 
@@ -148,6 +154,8 @@ class Updater600200 {
      */
     private function newStep($exoId)
     {
+        $this->log('UPDATE Step ...');
+
         $this->connection->exec("
             INSERT INTO ujm_step
             ('exercise_id', 'value', 'nbQuestion', 'keepSameQuestion', 'shuffle', 'duration', 'max_attempts', 'ordre')
@@ -169,14 +177,57 @@ class Updater600200 {
      */
     private function addQuestionStep($stepId, $qid, $order)
     {
+        $this->log('UPDATE StepQuestion ...');
+
         $this->connection->exec("
             INSERT INTO ujm_step_question
             ({$stepId}, {$qid}, {$order})
         ");
     }
 
+    /*
+     * add the score value in the paper entity
+     */
+    private function insertScorePaper()
+    {
+        $query = 'SELECT * FROM ujm_paper';
+        $papers = $this->connection->query($query)->fetchAll();
+        foreach ($papers as $paper) {
+            $this->calculateScore($paper['id']);
+        }
+    }
+
+    /*
+     * @param Integer $idPaper
+     * Calculate the score of a paper
+     */
+    private function calculateScore($idPaper)
+    {
+        $query = 'SELECT sum(mark) as score '
+                . 'FROM ujm_response '
+                . 'WHERE paper_id=' . $idPaper;
+        $result = $this->connection->query($query)->fetch();
+
+        $this->updatePaper($result['score']);
+    }
+
+    /*
+     * @param Integer $score
+     * @param Interger $idPaper
+     * insert the score in Paper
+     */
+    private function updatePaper($score, $idPaper)
+    {
+        $this->log('UPDATE Paper ...');
+        $query ='UPDATE ujm_paper SET score=' . $score
+                . ' WHERE id=' . $idPaper;
+        $this->connection->exec($query);
+    }
+
+
     private function dropTables(array $tables)
     {
+        $this->log('Drop tables ...');
         $schema = $this->connection->getSchemaManager();
         $tableNames = $schema->listTableNames();
 
