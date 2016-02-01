@@ -6,7 +6,7 @@
 
 Install with composer :
 
-    $ composer require "innova/path-bundle" "2.*" 
+    $ composer require "innova/path-bundle" "6.*"
     $ php app/console claroline:plugin:install InnovaPathBundle
 
 ## Uninstall 
