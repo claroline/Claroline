@@ -33,7 +33,8 @@
         "innova/angular-ui-tree-bundle" : "~5.0",
         "innova/angular-ui-translation-bundle" : "~5.0",
         "innova/angular-ui-resource-picker-bundle" : "~6.0",
-        "claroline/tag-bundle": "~6.0"
+        "claroline/tag-bundle": "~6.0",
+        "claroline/team-bundle": "~6.0"
     },
     "autoload" : {
         "psr-4": {
