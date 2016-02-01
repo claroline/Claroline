@@ -3,6 +3,7 @@ var controller = function(
     clarolineSearch,
     clarolineAPI
 ) {
+    console.log('Kawabunga users !!!');
     var vm = this;
     var translator = window.Translator;
 
@@ -147,9 +148,8 @@ var controller = function(
     }.bind(this);
 };
 
-angular.module('UsersManager').controller('UsersCtrl', [
+angular.module('UsersManager').controller('UserController', [
     '$http',
     'clarolineSearch',
-    'clarolineAPI',
-    controller
+    'clarolineAPI', controller
 ]);

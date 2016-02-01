@@ -6,46 +6,39 @@
         'data-table',
         'ui.bootstrap.tpls',
         'clarolineAPI',
-        'groupsManager',
+        'GroupsManager',
         'ui.translation',
         'ui.router'
     ]);
 
     UsersManager.config(function($stateProvider, $urlRouterProvider) {
-
-        $urlRouterProvider.otherwise("/admin/users/list");
-
+        console.log($stateProvider);
         $stateProvider
-            .state('admin.users.list', {
-                url: "/admin/users/list",
-                templateUrl: AngularApp.webDir + 'bundles/clarolinecore/js/administration/users/views/user_main.html',
-                controller: 'UsersCtrl',
-                controllerAs: 'uc'
-            })
-            .state('admin.groups.list', {
-                url: "/list",
-                templateUrl: AngularApp.webDir + 'bundles/clarolinecore/js/administration/groups/views/group_main.html',
-                controller: 'GroupsCtrl',
-                controllerAs: 'uc'
-            });
-    });
+            .state(
+                'users',
+                {
+                    url: "/users",
+                    templateUrl: function($stateParam) {
+                        return AngularApp.webDir +
+                            'bundles/clarolinecore/js/administration/users/Partial/user_content.html';
+                    }
 
-    /*
-    UsersManager.config(['$routeProvider',
-        function($routeProvider) {
-            $routeProvider.
-                when('/users/list', {
-                    templateUrl: AngularApp.webDir + 'bundles/clarolinecore/js/administration/users/views/user_main.html',
-                    controller: 'UsersCtrl',
-                    controllerAs: 'uc'
-                }).
-                when('/groups/list', {
-                    templateUrl: AngularApp.webDir + 'bundles/clarolinecore/js/administration/groups/views/group_main.html',
-                    controller: 'GroupsCtrl',
-                    controllerAs: 'uc'
-                }).
-                otherwise({
-                    redirectTo: '/users/list'
-                });
-        }]);*/
+                }
+            )
+            .state(
+                'groups',
+                {
+                    url: "/groups",
+                    templateUrl: function($stateParam) {
+                        return AngularApp.webDir + 'bundles/clarolinecore/js/administration/groups/Partial/group_manager.html';
+
+                    },
+                    controller: 'GroupController',
+                    controllerAs: 'gc'
+                }
+            )
+        ;
+
+        $urlRouterProvider.otherwise("/users");
+    });
 })();
