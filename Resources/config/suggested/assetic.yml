@@ -3,11 +3,12 @@ assetic:
     use_controller: false
     variables:
         locale: [en, fr, es]
+    node_paths: ['%kernel.root_dir%/../node_modules']
     filters:
         cssrewrite: ~
+        less: ~
         lessphp:
             file: '%kernel.root_dir%/../vendor/leafo/lessphp/lessc.inc.php'
-            apply_to: '\.less$'
         cssmin:
             file: '%kernel.root_dir%/../vendor/natxet/CssMin/src/CssMin.php'
             apply_to: '\.css$|\.less$'
