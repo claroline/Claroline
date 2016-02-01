@@ -5,19 +5,26 @@
     <div class="path-header">
         <h1 class="h2" style="margin-top: 0;">
             <!-- Toggle summary button -->
-            <button type="button" role="button" style="margin-right: 5px;" class="btn btn-sm btn-default" data-ng-click="pathShowCtrl.toggleSummary()" data-placement="top" data-toggle="tooltip" data-original-title="{{ 'toggle_summary'|trans:{}:'path_wizards' }}" data-ng-class="{ 'active': pathShowCtrl.summaryState.opened }">
+            <button type="button" role="button" class="btn btn-sm btn-default" data-ng-click="pathShowCtrl.toggleSummary()" data-placement="top" data-toggle="tooltip" data-original-title="{{ 'toggle_summary'|trans:{}:'path_wizards' }}" data-ng-class="{ 'active': pathShowCtrl.summaryState.opened }">
                 <span class="fa fa-sitemap"></span>
                 <span class="sr-only">{{ 'toggle_summary'|trans:{}:'path_wizards' }}</span>
             </button>
 
+            <button type="button" role="button" style="margin-right: 5px;" class="btn btn-sm btn-primary btn-path-edit" data-ng-if="pathShowCtrl.path.steps.length !== 0 && pathShowCtrl.editEnabled" data-ng-click="pathShowCtrl.edit()" data-placement="top" data-toggle="tooltip" data-original-title="{{ 'edit'|trans:{}:'path_wizards' }}">
+                <span class="fa fa-fw fa-pencil"></span>
+                <span class="sr-only">{{ 'edit'|trans:{}:'path_wizards' }}</span>
+            </button>
+
             {{ pathShowCtrl.path.name }}
 
-            <div class="pull-right">
+            <small>{{ pathShowCtrl.path.description }}</small>
+
+            <!--<div class="pull-right">
                 <button type="button" role="button" class="btn btn-sm btn-primary btn-path-edit" data-ng-if="pathShowCtrl.path.steps.length !== 0 && pathShowCtrl.editEnabled" data-ng-click="pathShowCtrl.edit()">
                     <span class="fa fa-fw fa-pencil"></span>
-                    {{ 'edit'|trans:{}:'path_wizards' }}
+                    <span class="sr-only">{{ 'edit'|trans:{}:'path_wizards' }}</span>
                 </button>
-            </div>
+            </div>-->
         </h1>
 
         <!-- Breadcrumbs -->
