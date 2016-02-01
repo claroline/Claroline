@@ -34,7 +34,6 @@ class InnovaPathExtension extends Extension
         $loader->load('form_types.yml');
         $loader->load('form_handlers.yml');
         $loader->load('importers.yml');
-        $loader->load('commands.yml');
 
         return $this;
     }

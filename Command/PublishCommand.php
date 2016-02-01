@@ -32,7 +32,7 @@ class PublishCommand extends AbstractPublishCommand
 
         if ($pathId = $input->getOption('path')) {
             // Need to publish a specific Path
-            $path = $this->objectManager->getRepository('InnovaPathBundle:Path\Path')->find($pathId);
+            $path = $this->getContainer()->get('doctrine.orm.entity_manager')->getRepository('InnovaPathBundle:Path\Path')->find($pathId);
             if (!empty($path)) {
                 // Path found => publish it
                 if (!$path->isPublished() || $path->isModified() || $force) {
@@ -52,17 +52,17 @@ class PublishCommand extends AbstractPublishCommand
 
             if ($workspaceId = $input->getOption('workspace')) {
                 // Need to publish Paths for a specific Workspace
-                $workspace = $this->objectManager->getRepository('ClarolineCoreBundle:Workspace\Workspace')->find($workspaceId);
+                $workspace = $this->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Workspace\Workspace')->find($workspaceId);
                 if (!empty($workspace)) {
                     // Workspace found => retrieve Paths
-                    $paths = $this->objectManager->getRepository('InnovaPathBundle:Path\Path')->findWorkspacePaths($workspace, !$force);
+                    $paths = $this->getContainer()->get('doctrine.orm.entity_manager')->getRepository('InnovaPathBundle:Path\Path')->findWorkspacePaths($workspace, !$force);
                 } else {
                     // Workspace not found
                     $output->writeln('<error>Unable to find Workspace referenced by ID : '.$workspaceId.'</error>');
                 }
             } else {
                 // Need to publish all Paths
-                $paths = $this->objectManager->getRepository('InnovaPathBundle:Path\Path')->findPlatformPaths(!$force);
+                $paths = $this->getContainer()->get('doctrine.orm.entity_manager')->getRepository('InnovaPathBundle:Path\Path')->findPlatformPaths(!$force);
             }
 
             // Publish selected path

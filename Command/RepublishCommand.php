@@ -26,7 +26,7 @@ class RepublishCommand extends AbstractPublishCommand
 
         $output->writeln('Republishing Paths');
 
-        $paths = $this->objectManager->getRepository('InnovaPathBundle:Path\Path')->findPublishedPath($all);
+        $paths = $this->getContainer()->get('doctrine.orm.entity_manager')->getRepository('InnovaPathBundle:Path\Path')->findPublishedPath($all);
 
         // Publish selected path
         $this->publish($paths, $output);
