@@ -157,10 +157,6 @@ $(document).ready(function () {
         var docDropUserId = $(this).attr("data-document_docDropUser_id"); // Extract info from data-* attributes
         var adminInnova = $(this).attr("data-document_adminInnova");
 
-alert("adminInnova = ");
-alert(adminInnova);
-
-
         // Ajax : appel de la route qui va mettre Ã  jour la base de donnÃ©es
         // Ajax : route "innova_collecticiel_validate_document" dans DocumentController
         var req = "#request_id_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
@@ -299,8 +295,6 @@ alert(adminInnova);
         var docId = $(this).attr("data-document_id");
 
         var adminInnova = $(this).attr("data-document_adminInnova");
-alert("adminInnovaUnvalidate = ");
-alert(adminInnova);
 
         // Affichage du nouveau sélecteur
         var selector = "#delete_" + docId;
@@ -314,6 +308,10 @@ alert(adminInnova);
             {
                 url: Routing.generate('innova_collecticiel_unvalidate_document', {documentId: docId}),
                 method: "POST",
+                data:
+                {
+                    adminInnova: adminInnova
+                },
                 complete: function(data) {
                     $("#is-validate-" + docId).html(data.responseText);
                 }

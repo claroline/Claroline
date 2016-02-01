@@ -586,11 +586,15 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
         $dropzoneManager = $this->get('innova.manager.dropzone_manager');
         $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzones[0]);
 
+        // Récupération des documents sélectionnés
+        $adminInnova = $this->get('request')->query->get('adminInnova');
+
         // Ajout afin d'afficher la partie du code avec "Demande transmise"
         $template = $this->get("templating")->
         render('InnovaCollecticielBundle:Document:documentIsValidate.html.twig',
                 array('document' => $document,
                       'collecticielOpenOrNot' => $collecticielOpenOrNot,
+                      'adminInnova' => $adminInnova,
                       'dropzone' => $dropzones[0])
                );
 
