@@ -10,6 +10,7 @@ namespace Innova\CollecticielBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\User;
 use Innova\CollecticielBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Entity\Drop;
 
 class DocumentRepository extends EntityRepository {
 
@@ -72,5 +73,30 @@ class DocumentRepository extends EntityRepository {
         return $numberDocuments;
 
     }
+
+    /**
+     *  Pour compter les documents validés pour l'utilisateur indiqué et pour une drop indiqué
+    */
+    public function countValideAndNotAdminDocs(User $user, Drop $drop)
+    {
+
+        /* requête avec CreateQuery : */
+        $qb = $this->createQueryBuilder('document')
+            ->select('document')
+            ->andWhere('document.validate = true')
+            ->andWhere('document.sender != :user')
+            ->andWhere('document.validate = 1')
+            /* InnovaERV : ajout de cette condition car on ne compte pas les documents déposés par l'enseignant */
+            ->andWhere('document.drop = :drop')
+            ->setParameter('user', $user)
+            ->setParameter('drop', $drop);
+            ;
+
+        $countValideAndNotAdminDocs = count($qb->getQuery()->getResult());
+
+        return $countValideAndNotAdminDocs;
+
+    }
+
 
 }

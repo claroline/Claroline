@@ -334,8 +334,10 @@ a:hover, a:active, a:focus {
     clear: both;
 }
 .user-panel > .image > img {
-    height: 45px;
-    width: 45px;
+    width: 100%;
+    max-width: 45px;
+    height: auto;
+
 }
 .user-panel > .info {
     font-size: 14px;
@@ -1591,18 +1593,6 @@ a:hover, a:active, a:focus {
     color: #FFFFFF;
     text-decoration: underline;
 }
-.alert-success {
-    border-color: #008D4C;
-}
-.alert-danger, .alert-error {
-    border-color: #D73925;
-}
-.alert-warning {
-    border-color: #E08E0B;
-}
-.alert-info {
-    border-color: #00ACD6;
-}
 .nav-pills > li > a {
     border-radius: 0;
     border-top: 3px solid rgba(0, 0, 0, 0);
@@ -2792,7 +2782,7 @@ table.text-center, table.text-center td, table.text-center th {
 .description-block > .description-text {
     text-transform: uppercase;
 }
-.bg-red, .bg-yellow, .bg-aqua, .bg-blue, .bg-light-blue, .bg-green, .bg-navy, .bg-teal, .bg-olive, .bg-lime, .bg-orange, .bg-fuchsia, .bg-purple, .bg-maroon, .bg-black, .bg-red-active, .bg-yellow-active, .bg-aqua-active, .bg-blue-active, .bg-light-blue-active, .bg-green-active, .bg-navy-active, .bg-teal-active, .bg-olive-active, .bg-lime-active, .bg-orange-active, .bg-fuchsia-active, .bg-purple-active, .bg-maroon-active, .bg-black-active, .callout.callout-danger, .callout.callout-warning, .callout.callout-info, .callout.callout-success, .alert-success, .alert-danger, .alert-error, .alert-warning, .alert-info, .label-danger, .label-info, .label-waring, .label-primary, .label-success, .modal-primary .modal-body, .modal-primary .modal-header, .modal-primary .modal-footer, .modal-warning .modal-body, .modal-warning .modal-header, .modal-warning .modal-footer, .modal-info .modal-body, .modal-info .modal-header, .modal-info .modal-footer, .modal-success .modal-body, .modal-success .modal-header, .modal-success .modal-footer, .modal-danger .modal-body, .modal-danger .modal-header, .modal-danger .modal-footer {
+.bg-red, .bg-yellow, .bg-aqua, .bg-blue, .bg-light-blue, .bg-green, .bg-navy, .bg-teal, .bg-olive, .bg-lime, .bg-orange, .bg-fuchsia, .bg-purple, .bg-maroon, .bg-black, .bg-red-active, .bg-yellow-active, .bg-aqua-active, .bg-blue-active, .bg-light-blue-active, .bg-green-active, .bg-navy-active, .bg-teal-active, .bg-olive-active, .bg-lime-active, .bg-orange-active, .bg-fuchsia-active, .bg-purple-active, .bg-maroon-active, .bg-black-active, .callout.callout-danger, .callout.callout-warning, .callout.callout-info, .callout.callout-success, .label-danger, .label-info, .label-waring, .label-primary, .label-success, .modal-primary .modal-body, .modal-primary .modal-header, .modal-primary .modal-footer, .modal-warning .modal-body, .modal-warning .modal-header, .modal-warning .modal-footer, .modal-info .modal-body, .modal-info .modal-header, .modal-info .modal-footer, .modal-success .modal-body, .modal-success .modal-header, .modal-success .modal-footer, .modal-danger .modal-body, .modal-danger .modal-header, .modal-danger .modal-footer {
     color: #FFFFFF !important;
 }
 .bg-gray {
@@ -2805,7 +2795,7 @@ table.text-center, table.text-center td, table.text-center th {
 .bg-red, .callout.callout-danger, .alert-danger, .alert-error, .label-danger, .modal-danger .modal-body {
     background-color: #DD4B39 !important;
 }
-.bg-yellow, .callout.callout-warning, .alert-warning, .label-waring, .modal-warning .modal-body {
+.bg-yellow, .callout.callout-warning, .label-waring, .modal-warning .modal-body {
     background-color: #F39C12 !important;
 }
 .bg-aqua, .callout.callout-info, .alert-info, .label-info, .modal-info .modal-body {
@@ -2817,7 +2807,7 @@ table.text-center, table.text-center td, table.text-center th {
 .bg-light-blue, .label-primary, .modal-primary .modal-body {
     background-color: #3C8DBC !important;
 }
-.bg-green, .callout.callout-success, .alert-success, .label-success, .modal-success .modal-body {
+.bg-green, .callout.callout-success, .modal-success .modal-body {
     background-color: #00A65A !important;
 }
 .bg-navy {
@@ -3064,6 +3054,7 @@ table.text-center, table.text-center td, table.text-center th {
 .table-responsive {
     overflow: auto;
 }
+
 .table-responsive > .table tr th, .table-responsive > .table tr td {
     white-space: normal !important;
 }

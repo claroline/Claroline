@@ -30,6 +30,7 @@ use Innova\CollecticielBundle\Event\Log\LogDropStartEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropzoneConfigureEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropzoneManualStateChangedEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropzoneManualRequestSentEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropzoneReturnReceiptEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class DropzoneBaseController extends Controller
@@ -64,7 +65,8 @@ class DropzoneBaseController extends Controller
             $event instanceof LogCorrectionValidationChangeEvent or
             $event instanceof LogDropEvaluateEvent or
             $event instanceof LogDropReportEvent or
-            $event instanceof LogDropzoneManualStateChangedEvent
+            $event instanceof LogDropzoneManualStateChangedEvent or
+            $event instanceof LogDropzoneReturnReceiptEvent
         ) {
 
             // Other logs are WIP.

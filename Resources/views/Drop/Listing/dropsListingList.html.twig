@@ -1,37 +1,46 @@
 {# Affichage du tableau de l'onglet "Demandes adressées" #}
 <tr>
     {# Affichage de l'image de profil #}
-    <td>
-        {% if drop.user.getPicture() != '' %}
-            <i class="direct-chat-img direct-chat-img-you right" >
-            <img src="{{ asset('uploads/pictures/') ~  drop.user.getPicture() }}"
-            class="profile_picture img-responsive"
-            alt="{{ drop.user.getLastName() ~ ' ' ~ drop.user.getFirstName() }}">
-            </i>
-        {% else %}
-            <i class="direct-chat-img direct-chat-img-you right fa fa-user" ></i>
-        {% endif %}
-    </td>
+    {% if dropzone.picture == 1  %}
+        <td>
+            <div class="user-panel">
+                <div class="pull-left image">
+                    {% if drop.user.getPicture() != '' %}
+                        <img src="{{ asset('uploads/pictures/') ~ drop.user.getPicture() }}"
+                        class=""
+                        alt="{{ drop.user.getLastName() ~ ' ' ~ drop.user.getFirstName() }}">
+                    {% else %}
+                        <img class="img-polaroid img-responsive" src="{{ asset('bundles/icapnotification/images/default-avatar.png') }}">
+                    {% endif %}
+                </div>
+            </div>
+        </td>
+    {% endif %}
 
     <td>{{ drop.user.lastName|upper }}</td>
 
     <td>{{ drop.user.firstName|capitalize }}</td>
 
-    <td>{{ drop.user.userName|capitalize }}</td>
+    {% if dropzone.username == 1  %}
+        <td>{{ drop.user.userName|capitalize }}</td>
+    {% endif %}
 
     {# En date du #}
     <td>{{ document.documentDate|date('formatDatetime'|trans({}, 'innova_collecticiel')) }}</td>
 
     <td>
-        <a target="_blank" href="{{ path('innova_collecticiel_open_resource', {'resourceId': dropzone.id, 'documentId': document.id}) }}">
-            {# fix68 : Problème d'affichage du nom du document #}
-            {% if document.resourceNode is not null %}
-                {{ document.resourceNode.name }}</a>
+        {% if document.url is not null %}
+            <a target="_blank"
+               href="{{ document.url }}">{{ document.url | length > 40 ? document.url | slice(0, 40) ~ '...' :document.url }}</a>
+        {% else %}
+            {% if document.title is not null %}
+                <a target="_blank"
+                   href="{{ path('innova_collecticiel_open_resource', {'resourceId': dropzone.id, 'documentId': document.id}) }}">{{ document.title }}</a>
             {% else %}
-                {{ document.url }}</a>
+                <a target="_blank"
+                   href="{{ path('innova_collecticiel_open_resource', {'resourceId': dropzone.id, 'documentId': document.id}) }}">{{ document.resourceNode.name }}</a>
             {% endif %}
-        {#  Afficher ici la valeur "Commentaires non lus"
-        {% include 'InnovaCollecticielBundle:Drop:dropsNbComments.html.twig' %}  #}
+        {% endif %}
     </td>
 
     {% if dropzone.evaluation != 1  %}
@@ -52,10 +61,12 @@
            {# Sinon affichage du compteur et des nouveaux commentaires #}
             {% else %}
                 <a data-toggle="tooltip" data-placement="top" data-original-title="{{ 'To drop'|trans({},'innova_collecticiel') }}" class="fa fa-commenting-o" href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" type="button">
-                    <br />{{ document.comments|length }}
-                    {% if document.getUnReadComments( app.user.id ) != 0 %}
-                        (+{{ document.getUnReadComments( app.user.id ) }})
-                    {% endif %}
+                    <div class="short-div">
+                        {{ document.comments|length }} 
+                       {% if document.getUnReadComments( app.user.id ) != 0 %}
+                            (+{{ document.getUnReadComments( app.user.id ) }})
+                        {% endif %}
+                    </div>
                 </a>
             {% endif %}
         </div>
@@ -72,8 +83,8 @@
 
         {# On affiche cette colonne si le créateur du collecticiel veut gérer les évaluations. Demande JJQ. InnovaERV #}
         {% if dropzone.evaluation == 1  %}
-            <td class="centered">&</td>
-            <td class="centered">&</td>
+            <td class="centered"></td>
+            <td class="centered"></td>
         {% endif %}
     {% endif %}
 

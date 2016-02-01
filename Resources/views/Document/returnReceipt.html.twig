@@ -1,7 +1,16 @@
 {% set found = false %}
+
 {% for key, value in haveReturnReceiptOrNotArray %}
 	{% if key == document.id %}
+
 		{% set found = true %}
+		{# 0 : pas d'accusé de réception #}
+		{% if value == 0 %}
+			<a href="#validate-modal-return-receipt" data-toggle="modal" data-dropzone_id="{{ dropzone.id }}" data-document_id="{{ document.id }}" id="document_id_{{ document.id }}" name="document_id_{{ document.id }}" class="document_validate" >
+		        <span data-toggle="tooltip" data-placement="top" data-original-title="{{ 'To add a return receipt'|trans({},'innova_collecticiel') }}" class="fa fa-hand-o-right">
+		        </span>
+			</a>
+		{% endif %}
 		{# 1 : doublon #}
 		{% if value == 1 %}
 	        <span class="fa fa-hand-paper-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Doubloon'|trans({}, 'innova_collecticiel') }}"> </span>
@@ -27,10 +36,8 @@
 
 {# 0 : pas d'accusé de réception #}
 {% if found == false %}
-	<a href="#validate-modal" data-toggle="modal" data-dropzone_id="{{ dropzone.id }}">
-			        <span class="fa fa-hand-paper-o"  data-toggle="tooltip" data-placement="top" data-original-title="{{ 'No return recept'|trans({},'innova_collecticiel') }}" class="fa fa-hand-o-right"> </span>
-
-
-		
+	<a href="#validate-modal-return-receipt" data-toggle="modal" data-dropzone_id="{{ dropzone.id }}" data-document_id="{{ document.id }}" id="document_id_{{ document.id }}" name="document_id_{{ document.id }}" class="document_validate" >
+        <span data-toggle="tooltip" data-placement="top" data-original-title="{{ 'To add a return receipt'|trans({},'innova_collecticiel') }}" class="fa fa-hand-o-right">
+        </span>
 	</a>
 {% endif %}

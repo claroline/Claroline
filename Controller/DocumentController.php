@@ -24,6 +24,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Innova\CollecticielBundle\Event\Log\LogDropzoneValidateDocumentEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropzoneAddDocumentEvent;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Innova\CollecticielBundle\Event\Log\LogDropzoneReturnReceiptEvent;
 
 class DocumentController extends DropzoneBaseController
 {
@@ -506,9 +508,32 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
         $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzones[0]);
 
         // Envoi notification. InnovaERV
-        $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzones[0]);
+        $usersIds = array();
+
+        // Ici, on récupère le créateur du collecticiel = l'admin
+        if ($document->getType() == 'url') {
+            $userCreator = $document->getDrop()->getDropzone()->getResourceNode()->getCreator()->getId();
+        }
+        else {
+            $userCreator = $document->getResourceNode()->getCreator()->getId();
+        }
+ 
+        // Ici, on récupère celui qui vient de déposer le nouveau document
+        //$userAddDocument = $this->get('security.context')->getToken()->getUser()->getId(); 
+        $userDropDocument = $document->getDrop()->getUser()->getId();
+        $userSenderDocument = $document->getSender()->getId();
+    
+        if ($userCreator == $userSenderDocument) {
+            // Ici avertir l'étudiant qui a travaillé sur ce collecticiel
+            $usersIds[] = $userDropDocument;
+        }
+        else {
+            // Ici avertir celui a qui créé le collecticiel
+            $usersIds[] = $userCreator;
+        }
 
         $event = new LogDropzoneValidateDocumentEvent($document, $dropzones[0], $usersIds);
+
         $this->get('event_dispatcher')->dispatch('log', $event);
 
         // Ajout afin d'afficher la partie du code avec "Demande transmise"
@@ -561,15 +586,44 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
         $dropzoneManager = $this->get('innova.manager.dropzone_manager');
         $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzones[0]);
 
+        // Récupération des documents sélectionnés
+        $adminInnova = $this->get('request')->query->get('adminInnova');
+
         // Ajout afin d'afficher la partie du code avec "Demande transmise"
         $template = $this->get("templating")->
         render('InnovaCollecticielBundle:Document:documentIsValidate.html.twig',
                 array('document' => $document,
                       'collecticielOpenOrNot' => $collecticielOpenOrNot,
+                      'adminInnova' => $adminInnova,
                       'dropzone' => $dropzones[0])
                );
 
         // Retour du template actualisé à l'Ajax et non plus du Json.
         return new Response($template);
     }
+
+    /**
+     * @ParamConverter("document", class="InnovaCollecticielBundle:Document", options={"id" = "documentId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "dropzoneId"})
+     * @Template()
+     */
+    public function renderReturnReceiptAction(Document $document, Dropzone $dropzone)
+    {
+
+        // Récupération de l'accusé de réceptoin
+        $returnReceiptType = $this->getDoctrine()
+        ->getRepository('InnovaCollecticielBundle:ReturnReceipt')
+        ->doneReturnReceiptForADocument($dropzone, $document);
+
+        // Initialisation de la variable car un document peut ne pas avoir d'accusé de réception.
+        $id = 0;
+
+        if (!empty($returnReceiptType)) {
+            // Récupération de la valeur de l'accusé de réceptoin
+            $id = $returnReceiptType[0]->getReturnReceiptType()->getId();
+        }
+
+        return array('value' => $id);
+    }
+
 }

@@ -1,8 +1,29 @@
 {# Affichage du tableau de l'onglet "Espaces partagés" #}
 <tr>
+    {# Affichage de l'image de profil #}
+    {% if dropzone.picture == 1  %}
+        <td>
+            {% if usersByWorkspace.getPicture() != '' %}
+                <div class="user-panel">
+                    <div class="pull-left image">
+                        <img src="{{ asset('uploads/pictures/') ~ usersByWorkspace.getPicture() }}"
+                        class=""
+                        alt="{{ usersByWorkspace.getLastName() ~ ' ' ~ usersByWorkspace.getFirstName() }}">
+                    </div>
+                </div>
+            {% else %}
+                <i class="centered direct-chat-img direct-chat-img-you right fa fa-user" ></i>
+            {% endif %}
+        </td>
+    {% endif %}
+
     <td>{{ usersByWorkspace.lastName|upper }}</td>
     <td>{{ usersByWorkspace.firstName|capitalize }}</td>
-    <td>{{ usersByWorkspace.userName|capitalize }}</td>
+
+    {% if dropzone.username == 1  %}
+        <td>{{ usersByWorkspace.userName|capitalize }}</td>
+    {% endif %}
+
     <td class="centered">0</td>
     <td class="centered">0</td>
     <td class="centered"> {# Appel de la vue "Espaces collecticiel". #}
@@ -14,5 +35,4 @@
             </a>
         </div>
     </td>
-
 </tr>

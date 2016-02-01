@@ -98,7 +98,8 @@
                                     <input id="innova_collecticiel_common_form_published2" type="checkbox"
                                     {% if dropzone.resourceNode.isPublished == 1 %}checked="checked"{% endif %}
                                     name="innova_collecticiel_common_form[published2]">
-                                    <label for="innova_collecticiel_common_form_published2">Publié</label>
+                                    <label class="col-xs-offset-2 col-xs-12 col-sm-2" for="innova_collecticiel_common_form_published2">     {{ 'Published'|trans({}, 'innova_collecticiel') }}
+                                    </label>
                                 </label>
                             </div>
                         </div>
@@ -111,8 +112,8 @@
         <div id="return_receipt">
             <h4>{{ 'Return receipt'|trans({}, 'innova_collecticiel') }}</h4>
             <div class="row form-group">
-                <div class="col-md-6">
-                    {{ form_row(form.returnReceipt, {'label_attr': {'class': 'control-label col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
+                <div class="col-md-10">
+                    {{ form_row(form.returnReceipt, {'label_attr': {'class': 'col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
                      ) }}
                  </div>
              </div>
@@ -122,8 +123,26 @@
         <div id="evaluation">
             <h4>{{ 'Evaluation'|trans({}, 'innova_collecticiel') }}</h4>
             <div class="row form-group">
-                <div class="col-md-6">
-                    {{ form_row(form.evaluation, {'label_attr': {'class': 'control-label col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
+                <div class="col-md-10">
+                    {{ form_row(form.evaluation, {'label_attr': {'class': 'col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
+                     ) }}
+                 </div>
+             </div>
+        </div>
+
+        {# Accusé de réception. Ajout de cette zone, demande JJQ. InnovaERV  #}
+        <div id="display">
+            <h4>{{ 'Display'|trans({}, 'innova_collecticiel') }}</h4>
+            <div class="row form-group">
+                <div class="col-md-8">
+                    {{ form_row(form.picture, {'label_attr': {'class': 'col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
+                     ) }}
+                 </div>
+             </div>
+
+            <div class="row form-group">
+                <div class="col-md-8">
+                    {{ form_row(form.username, {'label_attr': {'class': 'col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
                      ) }}
                  </div>
              </div>

@@ -6,11 +6,11 @@ use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Innova\CollecticielBundle\Entity\Dropzone;
-use Innova\CollecticielBundle\Entity\Comment;
+use Innova\CollecticielBundle\Entity\Document;
 
-class LogDropzoneAddCommentEvent extends AbstractLogResourceEvent implements NotifiableInterface {
+class LogDropzoneReturnReceiptEvent extends AbstractLogResourceEvent implements NotifiableInterface {
 
-    const ACTION = 'resource-innova_collecticiel-dropzone_add_comment';
+    const ACTION = 'resource-innova_collecticiel-dropzone_return_receipt';
 
     protected $dropzone;
     protected $newState;
@@ -22,23 +22,32 @@ class LogDropzoneAddCommentEvent extends AbstractLogResourceEvent implements Not
      * @param Section $section
      * @param Contribution $contribution
     */
-    public function __construct(Dropzone $dropzone, $newstate, $userIds, Comment $comment)
+    public function __construct(Document $document, Dropzone $dropzone, $userIds)
     {
 
-        $this->dropzone = $dropzone;
-        $this->comment  = $comment;
-        $this->newState = $dropzone->getResourceNode()->getName();
-        $this->userIds  = $userIds;
+        $this->document = $document;
+
+        // Traitement du paramètre "type" : gestion du cas spécifique du type URL.
+        if ($document->getType() == 'url') {
+            $this->type = $document->getUrl();
+        }
+        elseif (strlen($document->getTitle())>0)
+        {
+            $this->type = $document->getTitle();
+        }
+        else
+        {
+            $this->type = $document->getResourceNode()->getName();
+        }
+        $this->userIds = $userIds;
 
         $this->details = array(
 //            'newState'=> $this->newState
         );
 
-        $this->userId = $dropzone->getDrops()[0]->getUser()->getId();
-
         // Récupération du nom et du prénom
-        $this->firstName = $dropzone->getDrops()[0]->getUser()->getFirstName();
-        $this->lastName = $dropzone->getDrops()[0]->getUser()->getLastName();
+        $this->firstName = $document->getSender()->getFirstName();
+        $this->lastName = $document->getSender()->getLastName();
 
         parent::__construct($dropzone->getResourceNode(), $this->details);
     }
@@ -117,10 +126,9 @@ class LogDropzoneAddCommentEvent extends AbstractLogResourceEvent implements Not
         $notificationDetails = array_merge($this->details, array());
 
         $notificationDetails['resource'] = array(
-            'id' => $this->dropzone->getId(),
+            'id' => $this->document->getId(),
             'name' => $this->firstName . " " . $this->lastName, // $this->resource->getName(),
-            'type' => $this->dropzone->getResourceNode()->getName() .
-            " : " . substr(strip_tags($this->comment->getCommentText()), 0, 10)
+            'type' => $this->type
         );
 
         return $notificationDetails;

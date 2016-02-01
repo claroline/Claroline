@@ -5,6 +5,7 @@
  * Time: 15:18
  * Modifiey by : Eric VINCENT InnovaERV Add ReturnReceipt Column
  * Modifiey by : Eric VINCENT InnovaERV Add Evaluation Column
+ * Modifiey by : Eric VINCENT InnovaERV Add Username and Picture Column
  */
 
 namespace Innova\CollecticielBundle\Entity;
@@ -255,6 +256,21 @@ class Dropzone extends AbstractResource
      */
     protected $evaluation = false;
 
+    /**
+     * @var bool
+     * Display or not picture value
+     *
+     * @ORM\Column(name="picture",type="boolean",nullable=false,options={"default" = false})
+     */
+    protected $picture = false;
+
+    /**
+     * @var bool
+     * Display or not username value
+     *
+     * @ORM\Column(name="username",type="boolean",nullable=false,options={"default" = false})
+     */
+    protected $username = false;
 
     /**
      * @var Event
@@ -1070,5 +1086,53 @@ class Dropzone extends AbstractResource
     public function getEvaluation()
     {
         return $this->evaluation;
+    }
+
+    /**
+     * Set picture
+     *
+     * @param boolean $picture
+     *
+     * @return Dropzone
+     */
+    public function setPicture($picture)
+    {
+        $this->picture = $picture;
+
+        return $this;
+    }
+
+    /**
+     * Get picture
+     *
+     * @return boolean
+     */
+    public function getPicture()
+    {
+        return $this->picture;
+    }
+
+    /**
+     * Set username
+     *
+     * @param boolean $username
+     *
+     * @return Dropzone
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    /**
+     * Get username
+     *
+     * @return boolean
+     */
+    public function getUsername()
+    {
+        return $this->username;
     }
 }

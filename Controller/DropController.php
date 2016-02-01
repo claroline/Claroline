@@ -36,6 +36,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Innova\CollecticielBundle\Event\Log\LogDropzoneReturnReceiptEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropzoneAddDocumentEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropzoneValidateDocumentEvent;
 
 class DropController extends DropzoneBaseController
 {
@@ -507,6 +511,7 @@ class DropController extends DropzoneBaseController
     public function dropsAwaitingAction($dropzone, $page)
     {
 
+        $translator = $this->get('translator');
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
         $dropzoneManager = $this->get('innova.manager.dropzone_manager');
@@ -518,7 +523,19 @@ class DropController extends DropzoneBaseController
         // dropsQuery : finished à TRUE et unlocked_drop à FALSE
         $dropsQuery = $dropRepo->getDropsAwaitingCorrectionQuery($dropzone, 1);
 
+        // Nombre d'AR pour CE dropzone / Repo : ReturnReceipt
+        $countReturnReceiptForDropzone = $this->getDoctrine()
+                            ->getRepository('InnovaCollecticielBundle:ReturnReceipt')
+                            ->countTextToRead($this->get('security.token_storage')->getToken()->getUser(),
+                                              $dropzone
+                            );
+
         $countUnterminatedDrops = $dropRepo->countUnterminatedDropsByDropzone($dropzone->getId());
+
+        // Déclaration du compteur de documents sans accusé de réception
+        $alertNbDocumentWithoutReturnReceipt = 0;
+        $totalValideAndNotAdminDocs = 0;
+        $countReturnReceiptForUserAndDropzone = 0;
 
         // Déclarations des nouveaux tableaux, qui seront passés à la vue
         $userToCommentCount = array();
@@ -526,28 +543,46 @@ class DropController extends DropzoneBaseController
         $haveReturnReceiptOrNotArray = array();
 
         foreach ($dropzone->getDrops() as $drop) {
-            /** InnovaERV : ajout pour calculer les 2 zones **/
 
-            // Nombre de commentaires non lus/ Repo : Comment
+            // Calcul du compteur de documents sans accusé de réception
+
+            /** InnovaERV : ajout pour calculer les 2 zones **/
+            // Nombre de commentaires non lus / Repo : Comment
             $nbCommentsPerUser = $this->getDoctrine()
                                 ->getRepository('InnovaCollecticielBundle:Comment')
                                 ->countCommentNotRead($drop->getUser());
 
-            // Nombre de demandes adressées/ Repo : Document
+            // Nombre de demandes adressées / Repo : Document
             $nbTextToRead = $this->getDoctrine()
                                 ->getRepository('InnovaCollecticielBundle:Document')
                                 ->countTextToRead($drop->getUser(), $drop->getDropZone());
 
-            // Nombre de demandes adressées/ Repo : Document
+
+            // Nombre de demandes adressées / Repo : Document
+            $countValideAndNotAdminDocs = $this->getDoctrine()
+                                ->getRepository('InnovaCollecticielBundle:Document')
+                                ->countValideAndNotAdminDocs($this->get('security.token_storage')->getToken()->getUser(),
+                                $drop);
+
+            // Nombre d'AR pour cet utilisateur et pour ce dropzone / Repo : ReturnReceiputtwment
             $haveReturnReceiptOrNot = $this->getDoctrine()
                                 ->getRepository('InnovaCollecticielBundle:ReturnReceipt')
                                 ->haveReturnReceiptOrNot(
                                     $this->get('security.token_storage')->getToken()->getUser(),
                                     $drop->getDropZone());
 
-            // Parcours du tableau
-            $arrayCount = count($haveReturnReceiptOrNot)-1;
-            for ($indice = 0; $indice<=$arrayCount; $indice++)
+            $totalValideAndNotAdminDocs = $totalValideAndNotAdminDocs + $countValideAndNotAdminDocs;
+
+
+            // Nombre d'AR pour cet utilisateur et pour ce dropzone / Repo : ReturnReceiputtwment
+            $countReturnReceiptForUserAndDropzone = $this->getDoctrine()
+                                ->getRepository('InnovaCollecticielBundle:ReturnReceipt')
+                                ->countTextToRead($this->get('security.token_storage')->getToken()->getUser(), $drop->getDropZone());
+
+            $countReturnReceiptForUserAndDropzone = $countReturnReceiptForUserAndDropzone -1;
+
+            // Traitement du tableau
+            for ($indice = 0; $indice<=$countReturnReceiptForUserAndDropzone; $indice++)
             {
                 $documentId = $haveReturnReceiptOrNot[$indice]->getDocument()->getId();
                 $returnReceiptTypeId = $haveReturnReceiptOrNot[$indice]->getReturnReceiptType()->getId();
@@ -557,7 +592,10 @@ class DropController extends DropzoneBaseController
             // Affectations des résultats dans les tableaux
             $userToCommentCount[$drop->getUser()->getId()] = $nbCommentsPerUser;
             $userNbTextToRead[$drop->getUser()->getId()] = $nbTextToRead;
+
         }
+
+        $alertNbDocumentWithoutReturnReceipt = $totalValideAndNotAdminDocs - $countReturnReceiptForDropzone;
 
         $adapter = new DoctrineORMAdapter($dropsQuery);
         $pager = new Pagerfanta($adapter);
@@ -585,6 +623,10 @@ class DropController extends DropzoneBaseController
             $adminInnova = true;
         }*/
 
+        if (count($pager) == 0) {
+            $this->getRequest()->getSession()->getFlashBag()->add('success', $translator->trans('No copy waiting for correction', array(), 'innova_collecticiel'));
+        }
+
         $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
 
         $dataToView = $this->addDropsStats($dropzone, array(
@@ -598,6 +640,7 @@ class DropController extends DropzoneBaseController
             'adminInnova' => $adminInnova,
             'collecticielOpenOrNot' => $collecticielOpenOrNot,
             'haveReturnReceiptOrNotArray' => $haveReturnReceiptOrNotArray,
+            'alertNbDocumentWithoutReturnReceipt' => $alertNbDocumentWithoutReturnReceipt,
         ));
 
         return $dataToView;
@@ -1099,7 +1142,6 @@ class DropController extends DropzoneBaseController
 
         $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
 
-
         /*
         if ($this->get('security.context')->isGranted('ROLE_ADMIN' === true)) {
             $adminInnova = true;
@@ -1132,7 +1174,7 @@ class DropController extends DropzoneBaseController
      */
     public function returnReceiptAction()
     {
-        
+       
         // Récupération de l'ID de l'accusé de réception choisi
         $returnReceiptId = $this->get('request')->query->get('returnReceiptId');
         $returnReceiptType = 
@@ -1157,31 +1199,54 @@ class DropController extends DropzoneBaseController
             $docIdS = explode("_", $documentId);
             $docId = $docIdS[2];
 
-            // Récupération de l'objet document
-            $document = $this->getDoctrine()
-            ->getRepository('InnovaCollecticielBundle:Document')->findBy(array('id' => $docId));
+            if ($docId > 0) {
 
-            // Nombre de demandes adressées/ Repo : Document
-            $countHaveReturnReceiptOrNotForADocument = $this->getDoctrine()
-                                ->getRepository('InnovaCollecticielBundle:ReturnReceipt')
-                                ->haveReturnReceiptOrNotForADocument($user, $dropzone, $document[0]);
+                // Récupération de l'objet document
+                $document = $this->getDoctrine()
+                ->getRepository('InnovaCollecticielBundle:Document')->find($docId);
 
-            // S'il y a déjà un accusé de réception alors je le supprime avant de créer le nouveau
-            if ($countHaveReturnReceiptOrNotForADocument != 0) {
                 // Nombre de demandes adressées/ Repo : Document
-                $reqDeleteReturnReceipt = $this->getDoctrine()
+                $countHaveReturnReceiptOrNotForADocument = $this->getDoctrine()
                                     ->getRepository('InnovaCollecticielBundle:ReturnReceipt')
-                                    ->deleteReturnReceipt($user, $dropzone, $document[0]);
+                                    ->haveReturnReceiptOrNotForADocument($user, $dropzone, $document);
+
+                // S'il y a déjà un accusé de réception alors je le supprime avant de créer le nouveau
+                if ($countHaveReturnReceiptOrNotForADocument != 0) {
+                    // Nombre de demandes adressées/ Repo : Document
+                    $reqDeleteReturnReceipt = $this->getDoctrine()
+                                        ->getRepository('InnovaCollecticielBundle:ReturnReceipt')
+                                        ->deleteReturnReceipt($user, $dropzone, $document);
+                }
+
+                // Création du nouvel accusé de réception
+                $returnReceipt = new ReturnReceipt();
+                $returnReceipt->setDocument($document);
+                $returnReceipt->setUser($user);
+                $returnReceipt->setDropzone($dropzone);
+                $returnReceipt->setReturnReceiptType($returnReceiptType);
+
+                $em->persist($returnReceipt);
+
+                // Envoi notification. InnovaERV
+                $usersIds = array();
+
+                // Ici, on récupère le créateur du collecticiel = l'admin
+                $userCreator = $dropzone->getResourceNode()->getCreator()->getId();
+                // Ici, on récupère celui qui vient de déposer le nouveau document
+                //$userAddDocument = $this->get('security.context')->getToken()->getUser()->getId(); 
+                $userDropDocument = $document->getDrop()->getUser()->getId();
+                $userSenderDocument = $document->getSender()->getId();
+            
+                // Ici avertir l'étudiant qui a travaillé sur ce collecticiel
+                $usersIds[] = $userDropDocument;
+
+                //$event = new LogDropzoneValidateDocumentEvent($document, $dropzone, $usersIds);
+                $event = new LogDropzoneReturnReceiptEvent($document, $dropzone, $usersIds);
+
+                $this->get('event_dispatcher')->dispatch('log', $event);
+                // Fin de l'ajout de la notification
+
             }
-
-            // Création du nouvel accusé de réception
-            $returnReceipt = new ReturnReceipt();
-            $returnReceipt->setDocument($document[0]);
-            $returnReceipt->setUser($user);
-            $returnReceipt->setDropzone($dropzone);
-            $returnReceipt->setReturnReceiptType($returnReceiptType);
-
-            $em->persist($returnReceipt);
         }
 
         // Mise en base, enregistrement
@@ -1201,14 +1266,19 @@ class DropController extends DropzoneBaseController
       
         $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
 
-        return $this->redirect(
-            $this->generateUrl(
-                'innova_collecticiel_drops_awaiting',
-                array(
+        $redirectRoot = $this->generateUrl(
+            'innova_collecticiel_drops_awaiting',
+            array(
                     'resourceId' => $dropzone->getId(),
                 )
+            );
+
+        return new JsonResponse(
+            array(
+                'link' => $redirectRoot
             )
         );
+
     }
 
 }

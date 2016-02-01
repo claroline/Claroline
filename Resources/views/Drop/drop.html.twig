@@ -146,6 +146,7 @@
     '../vendor/twbs/bootstrap/js/modal.js' %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
+
     {% javascripts
     vars=["locale"]
     "@ClarolineCoreBundle/Resources/views/Resource/breadcrumbs.html.twigjs"
@@ -158,10 +159,6 @@
     filter="twig_js" %}
     <script language="javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
-
-    <script type='text/javascript'
-            src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}'></script>
-    <script src="{{ asset('bundles/innovacollecticiel/js/popup.js') }}"></script>
 
     <script>
         tinymce.claroline.configuration.toolbar1 = 'bold italic strikethrough | alignleft aligncenter alignright alignjustify | ';

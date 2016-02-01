@@ -24,13 +24,59 @@ $(document).ready(function () {
         ;
     });
 
+    //
+    // Appel de cette fonction quand on affiche la liste des documents d'UN collecticiel
+    // Appel pour le traitement en Ajax des états du document
+    //
+    $('.td_action').each(function(){
+        //
+        // Récupération des données, voir documentItem.html.twig.
+        //
+        var documentId = $(this).find('input[name="document_id"]').val();
+        var isValidate = document.getElementById('document_validate_' + documentId).value;
+        var commentLength = document.getElementById('document_comments_length_' + documentId).value;
+        var senderId = document.getElementById('document_sender_' + documentId).value;
+        var docDropUserId = document.getElementById('document_drop_user_' + documentId).value;
+        var adminInnova = document.getElementById('adminInnova_' + documentId).value;
+
+        //
+        // Afficher les tests ici qui permettront de rafraîchir les données.
+        //
+        // Reprise ici dans tests déclarés avant dans le fichier documentItem.
+        //
+        if (adminInnova == true) {
+            if (isValidate == false || senderId != docDropUserId) {
+                var selector = "#delete_" + documentId;
+            }
+            else if (isValidate == true && commentLength == 0 && senderId == docDropUserId) {
+                var selector = "#cancel_" + documentId;
+            }
+            else {
+                var selector = "#lock_" + documentId;
+            }
+        }
+        if (adminInnova == false) {
+            if (isValidate == false || (adminInnova == true && senderId != docDropUserId)) {
+                var selector = "#delete_" + documentId;
+            }
+            else if (isValidate == true && adminInnova == false && commentLength == 0 && senderId == docDropUserId) {
+                var selector = "#cancel_" + documentId;
+            }
+            else {
+                var selector = "#lock_" + documentId;
+            }
+        }
+        $(selector).css({'display': 'inline'});
+
+    });
+
 
     // InnovaERV
-    // Ajout pour le traitement de la case à cocher pour la création de commentaire à la volée
+    // Ajout pour le traitement de la case Ã  cocher pour la crÃ©ation de commentaire Ã  la volÃ©e
     $('.comment_validate').on('click', function (event) {
         event.preventDefault();
  
-        // Récupération de l'id du document
+        // RÃ©cupÃ©ration de l'id du document
         var dropzoneId = $(this).attr("data-dropzone_id");
 
         var arrayDocsId = [];
@@ -38,8 +84,10 @@ $(document).ready(function () {
 
         $("input[type='checkbox']:checked").each(
             function() {
-                arrayDocsId.push($(this).attr('id'));
-                arrayDropsId.push($(this).attr("data-drop_id"));
+                if ($(this).attr('id') !== "document_id_0") {
+                    arrayDocsId.push($(this).attr('id'));
+                    arrayDropsId.push($(this).attr("data-drop_id"));
+                }
             });          
 
         $.ajax({
@@ -54,31 +102,39 @@ $(document).ready(function () {
                 arrayDropsId: arrayDropsId
             },
             complete : function(data) {
-//                alert(JSON.stringify(data.responseText));
-                    var data = $.parseJSON(data.responseText)
+                var data_link = $.parseJSON(data.responseText)
 //                    var resource = data[0];
 
-                if (data !== 'false') {
-                    console.log(" data.link : " + data.link);
-                    document.location.href=data.link;
+                if (data_link !== 'false') {
+                    document.location.href=data_link.link;
                 }
             }
         });
 
     });
 
-
     // InnovaERV
     // Ajout pour le traitement de la case à cocher lors de la soumission de documents
     $('#validate-modal').on('show.bs.modal', function (event) {
-      var button = $(event.relatedTarget); // Button that triggered the modal
-      var documentId = button.data('document_id'); // Extract info from data-* attributes
-      // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-      // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-      var modal = $(this);
-      modal.find('#modal_confirm').attr("data-document_id", documentId); //TODO change this to use data() instead of attr()
-      //documentId
-      //
+
+        var button     = $(event.relatedTarget); // Button that triggered the modal
+        var documentId = button.data('document_id'); // Extract info from data-* attributes
+
+        var senderId      = button.data('document_sender_id'); // Extract info from data-* attributes
+        var commentLength = button.data('document_comment_length');
+        var docDropUserId = button.data('document_dropuser_id');
+        var adminInnova   = button.data('data-document_adminInnova');
+
+        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+        var modal = $(this);
+        modal.find('#modal_confirm').attr("data-document_id", documentId); //TODO change this to use data() instead of attr()
+        modal.find('#modal_confirm').attr("data-document_sender_id", senderId); //TODO change this to use data() instead of attr()
+        modal.find('#modal_confirm').attr("data-document_comment_length", commentLength); //TODO change this to use data() instead of attr()
+        modal.find('#modal_confirm').attr("data-document_docDropUser_id", docDropUserId); //TODO change this to use data() instead of attr()
+        modal.find('#modal_confirm').attr("data-document_adminInnova", adminInnova); //TODO change this to use data() instead of attr()
+        //documentId
+        //
     });
 
     // InnovaERV
@@ -96,13 +152,31 @@ $(document).ready(function () {
 
         // Récupération de l'id du document
         var docId = $(this).attr("data-document_id");
+        var senderId = $(this).attr("data-document_sender_id");
+        var commentLength = $(this).attr("data-document_comment_length");
+        var docDropUserId = $(this).attr("data-document_docDropUser_id"); // Extract info from data-* attributes
+        var adminInnova = $(this).attr("data-document_adminInnova");
 
-        // Ajax : appel de la route qui va mettre à jour la base de données
+        // Ajax : appel de la route qui va mettre Ã  jour la base de donnÃ©es
         // Ajax : route "innova_collecticiel_validate_document" dans DocumentController
         var req = "#request_id_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
 
+        //
+        // Afficher les tests ici qui permettront de rafraîchir les données.
+        //
+        if (senderId != docDropUserId) {
+            var selector = "#delete_" + documentId;
+        }
+        else if (commentLength == 0 && senderId == docDropUserId) {
+            var selector = "#cancel_" + documentId;
+        }
+        else {
+            var selector = "#lock_" + documentId;
+        }
+        $(selector).css({'display': 'inline'});
+
         // Ajout : vu avec Arnaud.
-        // Ajout de "complete" afin de mettre à jour la partie "HTML" qui va actualiser et afficher "Demande transmise"
+        // Ajout de "complete" afin de mettre Ã  jour la partie "HTML" qui va actualiser et afficher "Demande transmise"
         $.ajax({
             url: Routing.generate('innova_collecticiel_validate_document',
                 { documentId: docId
@@ -122,9 +196,20 @@ $(document).ready(function () {
 
     });
 
+    // InnovaERV
+    // Ajout pour le traitement de la case Ã  cocher lors de la soumission de documents
+    $('#validate-modal-return-receipt').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget); // Button that triggered the modal
+      var documentId = button.data('document_id'); // Extract info from data-* attributes
+      // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+      // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+      var modal = $(this);
+      $(".data-document_id").append(documentId);
+      modal.find('#modal_confirm_return_receipt').attr("data-document_id", documentId);
+    });
 
     // InnovaERV
-    // Ajout pour le traitement de la modal de choix du type d'accusé de réception
+    // Ajout pour le traitement de la modal de choix du type d'accusÃ© de rÃ©ception
     $('#modal_confirm_return_receipt').on('click', function(event) {
         event.preventDefault();
  
@@ -148,15 +233,27 @@ $(document).ready(function () {
             returnReceiptId = document.getElementById('choix5').value;
         }
 
-        // Récupération de l'id du document
+        // RÃ©cupÃ©ration de l'id du document
         var dropzoneId = $(this).attr("data-dropzone_id");
+
+        // RÃ©cupÃ©ration de l'id du document
+        var documentId = $(this).attr("data-document_id");
 
         var arrayDocsId = [];
 
-        $("input[type='checkbox']:checked").each(
-            function() {
-                arrayDocsId.push($(this).attr('id'));
+        if (!documentId)
+        {
+            $("input[type='checkbox']:checked").each(
+                function() {
+                    arrayDocsId.push($(this).attr('id'));
             });          
+        }
+        else
+        {
+            var numDocPush = $(this).attr('data-document_id');
+            var docPush = "document_id_"+$(this).attr('data-document_id');
+            arrayDocsId.push(docPush);
+        }
 
         $.ajax({
             url: Routing.generate('innova_collecticiel_return_receipt',
@@ -170,28 +267,51 @@ $(document).ready(function () {
                 arrayDocsId: arrayDocsId
             },
             complete : function(data) {
+                var data_link = $.parseJSON(data.responseText)
+
+                if (data_link !== 'false') {
+                    document.location.href=data_link.link;
+                }
+
             }
         });
 
         // Fermeture de la modal
-        $('#validate-modal').modal('hide');
+        $('#validate-modal-return-receipt').modal('hide');
 
     });
 
     // InnovaERV
-    // Ajout pour le traitement de la demande de commentaire : mise à jour de la table Document
-    // Mise à jour de la colonne "validate"
+    // Ajout pour le traitement de la demande de commentaire : mise Ã  jour de la table Document
+    // Mise Ã  jour de la colonne "validate"
     $('.document_validate').on('click', function(event) {
     });
     
+    // InnovaERV
+    // Appel lors de la suppression d'un document
     $('a.cancel_button').on('click', function(event) {
+
         event.preventDefault();
         var docId = $(this).attr("data-document_id");
+
+        var adminInnova = $(this).attr("data-document_adminInnova");
+
+        // Affichage du nouveau sélecteur
+        var selector = "#delete_" + docId;
+        $(selector).css({'display': 'inline'});
+
+        // Je n'affiche plus l'ancien sélecteur
+        var selector = "#cancel_" + docId;
+        $(selector).css({'display': 'none'});
 
         $.ajax(
             {
                 url: Routing.generate('innova_collecticiel_unvalidate_document', {documentId: docId}),
                 method: "POST",
+                data:
+                {
+                    adminInnova: adminInnova
+                },
                 complete: function(data) {
                     $("#is-validate-" + docId).html(data.responseText);
                 }
@@ -201,35 +321,22 @@ $(document).ready(function () {
 
     // InnovaERV : sélection et déselection dans la liste des demandes adressées.
     $('#document_id_0').on('click', function(event) {
+        if($(this).is(':checked')){
+            $('input[type=checkbox]').each(function(i,k){
+                $(k).prop('checked',true);
+              })
+        }
+        else
+        {
+            $('input[type=checkbox]').each(function(i,k){
+                $(k).prop('checked',false);
+            })
+        }
+    })
 
-        var selector = "#document_id_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
-        var selectorId = $(this).attr("data-document_id"); // Extract info from data-* attributes
-
-        // Récupération du choix de l'utilisateur : tout sélectionner ou tout déselectionner
-        if (selectorId == 0) {
-            if ($(selector).prop('checked') == false)
-            {
-                var checkedDisplay = false;
-                $(selector).prop('checked', checkedDisplay); // Cocher la case "Valider"
-            }
-            else
-            {
-                var checkedDisplay = true;
-                $(selector).prop('checked', checkedDisplay); // Cocher la case "Valider"
-            }   
-        }   
-
-        // Affectation du choix "tout sélectionner" ou "tout déselectionner" au reste des documents
-        $("input[type='checkbox']").each(
-            function() {
-                var selector = "#document_id_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
-                var id = $(this).attr("data-document_id"); // Extract info from data-* attributes
-                if (id != 0) {
-                    $(selector).prop('checked', checkedDisplay); // Cocher la case "Valider"
-                }
-            }
-        );          
-    });
+    $('input[type=checkbox]').not('#document_id_0').click(function() {
+        $('#document_id_0').prop('indeterminate', true);
+    })
 
     // InnovaERV : ajout du bouton "Retour" dans la liste des commentaires.
     $('.backLink').on('click', function(event) {

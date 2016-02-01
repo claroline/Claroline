@@ -5,7 +5,6 @@
         action="{{ path('innova_collecticiel_add_comment',
         {'documentId': document.id, 'userId': user.id, 'dropzoneId': dropzone.id, 'correctionId': correction.id}) }}">
             {{ form(formComment) }}
-            <hr>
         </form>
     </div>
 {% endblock %}
@@ -21,5 +20,4 @@
             color: #FFFFFF;
         }
     </style>
-    <link href="{{ asset("bundles/innovacollecticiel/css/adminLte.css") }}" rel="stylesheet" />
 {% endblock %}

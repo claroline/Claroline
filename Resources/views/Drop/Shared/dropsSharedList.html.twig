@@ -1,8 +1,29 @@
 {# Affichage du tableau de l'onglet "Espaces partagés" #}
 <tr>
+    {# Affichage de l'image de profil #}
+    {% if dropzone.picture == 1  %}
+        <td>
+            <div class="user-panel">
+                <div class="pull-left image">
+                    {% if drop.user.getPicture() != '' %}
+                        <img src="{{ asset('uploads/pictures/') ~ drop.user.getPicture() }}"
+                        class=""
+                        alt="{{ drop.user.getLastName() ~ ' ' ~ drop.user.getFirstName() }}">
+                    {% else %}
+                        <img class="img-polaroid img-responsive" src="{{ asset('bundles/icapnotification/images/default-avatar.png') }}">
+                  {% endif %}
+                </div>
+            </div>
+        </td>
+    {% endif %}
+
     <td>{{ drop.user.lastName|upper }}</td>
     <td>{{ drop.user.firstName|capitalize }}</td>
-    <td>{{ drop.user.userName|capitalize }}</td>
+
+    {% if dropzone.username == 1  %}
+        <td>{{ drop.user.userName|capitalize }}</td>
+    {% endif %}
+
     <td class="centered">
         {# Afficher ici la valeur "Documents déposés" #}
         {% include 'InnovaCollecticielBundle:Document:documentsNbDocDropped.html.twig' %}
