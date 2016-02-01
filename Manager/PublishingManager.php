@@ -159,7 +159,7 @@ class PublishingManager
 
         // Publish steps for this path
         $toProcess = !empty($this->pathStructure->steps) ? $this->pathStructure->steps : array();
-/*//echo "JSON steps : <br>\n";var_dump($this->pathStructure->steps);*/
+
         $publishedSteps = $this->publishSteps(0, null, $toProcess);
 
         // Clean steps to remove
@@ -173,7 +173,7 @@ class PublishingManager
         $json = $this->replaceStepConditionId($json);
         $json = $this->replaceCriteriagroupId($json);
         $json = $this->replaceCriteriaId($json);
-//echo "json final :".$json;
+
         // Re encode updated structure and update Path
         $this->path->setStructure($json);
 
@@ -220,21 +220,15 @@ class PublishingManager
         // Retrieve existing steps for this path
         $existingSteps = $this->path->getSteps();
 
-//        //echo "DB steps : <br>";var_dump($existingSteps);
-
         foreach ($steps as $stepStructure) {
-//echo "before : stepStructure->resourceId=";//echo $stepStructure->resourceId."<br>\n";
             if (empty($stepStructure->resourceId) || !$existingSteps->containsKey($stepStructure->resourceId)) {
-//echo "create step <br>";//echo 'level'.$level."<br>\n";
                 // Current step has never been published or step entity has been deleted => create it
                 $step = $this->stepManager->create($this->path, $level, $parent, $currentOrder, $stepStructure);
                 $uniqId = "_STEP".uniqid();
                 $this->uniqId2step[$uniqId] = $step;
                 // Update json structure with new resource ID
                 $stepStructure->resourceId = $uniqId;
-//echo "after create step : stepStructure->resourceId =";//echo $stepStructure->resourceId."<br>\n";
             } else {
-//echo "update step <br>";//echo 'level'.$level.' stepStructure->resourceId:'.$stepStructure->resourceId.' parent'.$parent."<br>\n";
                 // Step already exists => update it
                 $step = $existingSteps->get($stepStructure->resourceId);
                 $step = $this->stepManager->edit($this->path, $level, $parent, $currentOrder, $stepStructure, $step);

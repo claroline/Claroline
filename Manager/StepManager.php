@@ -143,7 +143,7 @@ class StepManager
             $name = $stepStructure->name;
         } else {
             // Create a default name
-            $name = $step->getPath()->getName() . ' - ' . Step::DEFAULT_NAME . ' ' . $step->getOrder();
+            $name = Step::DEFAULT_NAME . ' ' . $step->getOrder();
         }
         $activity->setName($name);
         $activity->setTitle($name);

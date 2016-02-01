@@ -18,6 +18,8 @@ use Innova\PathBundle\Entity\StepCondition;
  */
 class Step implements \JsonSerializable
 {
+    const DEFAULT_NAME = 'Step';
+
     /**
      * Unique identifier of the step
      * @var integer
