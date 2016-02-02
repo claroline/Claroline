@@ -17,18 +17,17 @@
             .state(
                 'administration.groups.users',
                 {
-                    url: "/users",
+                    url: "/{groupId}",
                     templateUrl: function($stateParam) {
                         return AngularApp.webDir +
                             'bundles/clarolinecore/js/administration/groups/Partial/group_show_users.html';
                     },
                     ncyBreadcrumb: {
                         label: translate('users')
-                    }
-
+                    },
+                    controller: 'UserListController',
+                    controllerAs: 'ucl'
                 }
             );
-
-        $urlRouterProvider.otherwise("/list");
     });
 })();

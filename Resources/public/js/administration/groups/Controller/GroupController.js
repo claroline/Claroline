@@ -1,8 +1,13 @@
-
-var controller = function($http, clarolineSearch) {
+var controller = function($http, clarolineSearch, $state, $stateParams) {
     var translate = function(key) {
         return translator.trans(key, {}, 'platform');
     }
+
+    console.log('init groupctrl');
+    console.log('Grp state');
+    console.log($state);
+    console.log('Grp params');
+    console.log($stateParams);
 
     this.search = '';
     this.savedSearch = [];
@@ -20,7 +25,8 @@ var controller = function($http, clarolineSearch) {
         {
             name: translate('actions'),
             cellRenderer: function(scope) {
-                var actions = '<a ui-sref="administration.groups.users"> users </a>';
+                var groupId = scope.$row.id;
+                var actions = '<a ui-sref="administration.groups.users({groupId: ' + groupId + '})"> users </a>';
                 return actions;
             }
         }
