@@ -54,7 +54,6 @@ img[title=captcha] {
 #wrap {
     min-height: 100%;
     height: auto !important;
-    height: 100%;
     /* Negative indent footer by it's height */
     margin: 0 auto -@navbar-height;
 }
@@ -66,8 +65,16 @@ img[title=captcha] {
     height: 100%;
 }
 
-.container {
+.container-fluid {
     max-width: 4000px;
+}
+
+form .checkbox input[type=checkbox] {
+    /* ensure checkboxes are to the left of the text, using pre-3.3 rules */
+    position: inherit;
+    float: left;
+    margin-left: 0;
+    margin-right: 7px;
 }
 
 /*************/
@@ -81,7 +88,7 @@ html.iframe, body.iframe {
 }
 
 body.iframe {
-    .carousel-control, #top_bar, #left-bar, #footer, > #wrap > .container > .row:first-child, #wrap .visible-xs > .list-group.menu {
+    .carousel-control, #top_bar, #left-bar, #footer, > #wrap > .container-fluid > .row:first-child, #wrap .visible-xs > .list-group.menu {
         display: none;
     }
 
@@ -428,7 +435,7 @@ ul.desktop-parameters-menu
     background-color: @gray-lighter;
     color: lighten(@gray, 30%);
 
-    .container {
+    .container-fluid {
         p, h1, h2, h3, h4, h5, h6 {
             margin: 15px;
             max-height: 100%;
@@ -775,6 +782,7 @@ ul.desktop-parameters-menu
 
         input[type=checkbox] {
             vertical-align: top;
+            margin-left: 0;
         }
 
         .node-name {
@@ -1159,18 +1167,17 @@ form .global-error {
     .content-size (@index) when (@index >= 1) {
 
         .content-@{index} {
-            width: unit(((@index * 100 / @content-iteration) - @content-margin - 0.1), "%");
-            /*margin-left: unit(@content-margin, "%");*/
-            margin-right: unit(@content-margin, "%");
+            width: unit(((@index * 100 / @content-iteration) - @content-margin - 0.1), %);
+            margin-right: unit(@content-margin, %);
             float: left;
         }
 
         .spacing-right{
-            padding-right: unit(@content-margin, "%");
+            padding-right: unit(@content-margin, %);
         }
 
         .content-offset@{index} {
-            margin-left: unit(((@index * 100 / @content-iteration)), "%");
+            margin-left: unit(((@index * 100 / @content-iteration)), %);
         }
 
         .content-size(@index - 1);

@@ -29,7 +29,7 @@ class LoadThemeData implements RequiredFixture
         $themes = $this->container->get('claroline.manager.theme_manager')
             ->listStockThemeNames();
 
-        foreach ($themes as $name => $path) {
+        foreach ($themes as $name) {
             $theme = new Theme();
             $theme->setName($name);
             $manager->persist($theme);
