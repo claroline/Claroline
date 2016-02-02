@@ -12,7 +12,6 @@
     ]);
 
     UsersManager.config(function($stateProvider, $urlRouterProvider) {
-        console.log($stateProvider);
         $stateProvider
             .state(
                 'users',

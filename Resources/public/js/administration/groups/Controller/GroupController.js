@@ -4,8 +4,6 @@ var controller = function($http, clarolineSearch) {
         return translator.trans(key, {}, 'platform');
     }
 
-    console.log('Kawabunga groupes !!!');
-
     this.search = '';
     this.savedSearch = [];
     this.groups = [];
@@ -14,7 +12,6 @@ var controller = function($http, clarolineSearch) {
     var vm = this;
 
     $http.get(Routing.generate('api_get_group_searchable_fields')).then(function(d) {
-        console.log(d.data);
         vm.fields = d.data;
     });
 
@@ -23,7 +20,7 @@ var controller = function($http, clarolineSearch) {
         {
             name: translate('actions'),
             cellRenderer: function(scope) {
-                var actions = 'delete';
+                var actions = '<a ui-sref="groups.users"> users </a>';
                 return actions;
             }
         }
