@@ -8,6 +8,7 @@ var controller = function($http, clarolineSearch) {
     this.savedSearch = [];
     this.groups = [];
     this.fields = [];
+    this.pageTitle = translate('group_list');
 
     var vm = this;
 

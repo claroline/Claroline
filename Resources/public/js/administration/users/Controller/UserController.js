@@ -3,7 +3,6 @@ var controller = function(
     clarolineSearch,
     clarolineAPI
 ) {
-    console.log('Kawabunga users !!!');
     var vm = this;
     var translator = window.Translator;
 
