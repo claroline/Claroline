@@ -114,6 +114,7 @@ To update your installation, use:
 ```
 composer update --prefer-source
 php app/console claroline:update
+npm run build
 ```
 
 ### Plugin installation
