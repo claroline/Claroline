@@ -52,20 +52,15 @@
 
     function deleteTheme(id)
     {
-        $.ajax(home.path + 'admin/theme/delete/' + id)
-        .done(function (data) {
-            if (data === 'true') {
-                window.location = home.path + 'admin/theme/list';
-            } else {
-                modal.fromRoute('claro_theme_error');
-            }
-        })
-        .error(function () {
-            modal.fromRoute('claro_theme_error');
-        });
+        var url = Routing.generate('claro_admin_theme_delete', { id: id });
+
+        $.ajax(url, { type: 'DELETE' })
+            .done(function () {
+                window.location = Routing.generate('claro_admin_theme_list');
+            });
     }
 
-    $('body').on('click', '.theme-generator .btn.dele', function () {
+    $('body').on('click', '.theme-list .btn.dele', function () {
         var id = $(this).data('id');
         modal.fromRoute('claro_theme_confirm', {}, function (element) {
             element.on('click', '.btn.delete', function () {
@@ -73,24 +68,12 @@
             });
         });
     })
-    .on('click', '.theme-generator .alert .close', function () {
+    .on('click', '.theme-list .alert .close', function () {
         var id = $(this).data('id');
         modal.fromRoute('claro_theme_confirm', {}, function (element) {
             element.on('click', '.btn.delete', function () {
                 deleteTheme(id);
             });
-        });
-    })
-    .on('click', '.theme-generator .btn.save', function () {
-        save($(this).data('id'))
-        .done(function () {
-            window.location = home.path + 'admin/theme/list';
-        });
-    })
-    .on('click', '.theme-generator .btn.preview', function () {
-        save($(this).data('id'))
-        .done(function (data) {
-            window.location = home.path + 'admin/theme/preview/' + data;
         });
     })
     .on('click', '.theme-value .btn', function () {

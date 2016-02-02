@@ -19,15 +19,7 @@ claro_locale:
 
 claro_theme:
     resource: "@ClarolineCoreBundle/Controller/ThemeController.php"
-    prefix: /admin/theme
     type: annotation
-
-claro_theme_error:
-    pattern: /admin/theme/error
-    options: { expose: true }
-    defaults:
-        _controller: FrameworkBundle:Template:template
-        template: 'ClarolineCoreBundle:Theme:error.html.twig'
 
 claro_theme_confirm:
     pattern: /admin/theme/confirm
@@ -310,7 +302,7 @@ claro_contact:
     resource: "@ClarolineCoreBundle/Controller/ContactController.php"
     prefix: contact
     type: annotation
-    
+
 claro_admin_widget:
     prefix: admin/widget
     resource: "@ClarolineCoreBundle/Controller/Administration/WidgetController.php"

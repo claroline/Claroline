@@ -1,11 +1,11 @@
 <div id="footer">
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             <p>
                 {% if app.security.token is not null %}
                     {% if not is_granted('ROLE_USER') and footerLogin %}
                         <a href="{{ path("claro_desktop_open") }}"><i class="fa fa-user"></i> {{ "login" | trans({}, "platform") }}</a> &nbsp;&nbsp;&nbsp;&nbsp;
-                        
+
                         {% if selfRegistration %}
                             <a href="{{ path("claro_registration_user_registration_form") }}">
                                 <i class="fa fa-user-plus"></i>

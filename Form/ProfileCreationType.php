@@ -51,7 +51,7 @@ class ProfileCreationType extends AbstractType
         if (php_sapi_name() === 'cli') {
             $this->isAdmin = true;
         }
-        
+
         parent::buildForm($builder, $options);
         $isAdmin = $this->isAdmin;
 

@@ -1,44 +1,11 @@
-{# find which theme will be used and load it #}
-{% if config.getParameter('theme') is defined and asset_exists(asset('') ~ 'themes/' ~ config.getParameter('theme') ~ '/bootstrap.css') %}
+{% if config.getParameter('theme') is defined and asset_exists('themes/' ~ config.getParameter('theme') ~ '/bootstrap.css') %}
     {# from theme #}
-    {# please use asset_exists to be sure the theme is here #}
     {% set themeCSS = asset('') ~ 'themes/' ~ config.getParameter('theme') ~ '/bootstrap.css' %}
 {% else %}
     {# default #}
     {% set themeCSS = asset('') ~ 'themes/' ~ 'claroline' ~ '/bootstrap.css' %}
 {% endif %}
-<link rel="stylesheet" href="{{ themeCSS }}" screen="media" />
 
-{% stylesheets debug=false filter='lessphp, cssmin'  output='vendor/fortawesome/font-awesome/css/font-awesome.css'
-'../vendor/fortawesome/font-awesome/less/font-awesome.less'
-%}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-{% endstylesheets %}
-
-
-
-{% image debug=false output='vendor/fortawesome/font-awesome/fonts/FontAwesome.otf'
-    '../vendor/fortawesome/font-awesome/fonts/FontAwesome.otf' %}
-{% endimage %}
-
-{% image debug=false output='vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.eot'
-    '../vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.eot' %}
-{% endimage %}
-
-{% image debug=false output='vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.svg'
-    '../vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.svg' %}
-{% endimage %}
-
-{% image debug=false output='vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.ttf'
-    '../vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.ttf' %}
-{% endimage %}
-
-{% image debug=false output='vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.woff'
-    '../vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.woff' %}
-{% endimage %}
-
-{% image debug=false output='vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.woff2'
-    '../vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.woff2' %}
-{% endimage %}
-
+<link rel="stylesheet" href="{{ themeCSS }}" media="screen" />
+<link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/font-awesome/css/font-awesome.min.css') }}'/>
 <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css')}}'>

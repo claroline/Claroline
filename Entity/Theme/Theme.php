@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Entity\Theme;
 
 use Claroline\CoreBundle\Entity\Plugin;
+use Claroline\CoreBundle\Manager\ThemeManager;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -37,35 +38,13 @@ class Theme
     private $name;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(nullable=true)
-     */
-    private $path;
-
-    /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $plugin;
 
-    public function __construct($name = null, $path = null)
-    {
-        $this->setName($name);
-        $this->setPath($path);
-    }
-
-    public function get($variable)
-    {
-        if (isset($this->$variable)) {
-            return $this->$variable;
-        }
-    }
-
     /**
-     * Get id
-     *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -73,21 +52,14 @@ class Theme
     }
 
     /**
-     * Set name
-     *
-     * @param  string $name
-     * @return Theme
+     * @param string $name
      */
     public function setName($name)
     {
         $this->name = $name;
-
-        return $this;
     }
 
     /**
-     * Get name
-     *
      * @return string
      */
     public function getName()
@@ -96,35 +68,39 @@ class Theme
     }
 
     /**
-     * Set path
-     *
-     * @param  string $path
-     * @return Theme
+     * @param Plugin $plugin
      */
-    public function setPath($path)
-    {
-        $this->path = $path;
-
-        return $this;
-    }
-
-    /**
-     * Get path
-     *
-     * @return string
-     */
-    public function getPath()
-    {
-        return $this->path;
-    }
-
     public function setPlugin(Plugin $plugin)
     {
         $this->plugin = $plugin;
     }
 
+    /**
+     * @return Plugin
+     */
     public function getPlugin()
     {
         return $this->plugin;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCustom()
+    {
+        // TODO: use a dedicated db field to store that information
+
+        return !in_array($this->name, ThemeManager::listStockThemeNames());
+    }
+
+    /**
+     * Returns a lowercase version of the theme name, with spaces replaced
+     * by hyphens (used as an id or a file/directory name).
+     *
+     * @return string
+     */
+    public function getNormalizedName()
+    {
+        return str_replace(' ', '-', strtolower($this->getName()));
     }
 }

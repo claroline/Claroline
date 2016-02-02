@@ -29,6 +29,7 @@ use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\SecurityTokenManager;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
+use Claroline\CoreBundle\Manager\ThemeManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
@@ -70,6 +71,7 @@ class ParametersController extends Controller
     private $userManager;
     private $workspaceManager;
     private $eventDispatcher;
+    private $themeManager;
 
     /**
      * @DI\InjectParams({
@@ -91,7 +93,8 @@ class ParametersController extends Controller
      *     "tokenManager"       = @DI\Inject("claroline.manager.security_token_manager"),
      *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher")
+     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "themeManager"       = @DI\Inject("claroline.manager.theme_manager")
      * })
      */
     public function __construct(
@@ -113,7 +116,8 @@ class ParametersController extends Controller
         SecurityTokenManager $tokenManager,
         UserManager $userManager,
         WorkspaceManager $workspaceManager,
-        StrictDispatcher $eventDispatcher
+        StrictDispatcher $eventDispatcher,
+        ThemeManager $themeManager
     )
     {
         $this->configHandler      = $configHandler;
@@ -136,6 +140,7 @@ class ParametersController extends Controller
         $this->userManager        = $userManager;
         $this->workspaceManager   = $workspaceManager;
         $this->eventDispatcher    = $eventDispatcher;
+        $this->themeManager       = $themeManager;
     }
 
     /**
@@ -270,7 +275,7 @@ class ParametersController extends Controller
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
             new AdminForm\AppearanceType(
-                $this->getThemes(),
+                $this->themeManager->listThemeNames(),
                 $this->configHandler->getLockedParamaters()
             ),
             $platformConfig
@@ -1034,22 +1039,6 @@ class ParametersController extends Controller
 
             return new Response('Forbidden', 403);
         }
-    }
-
-    /**
-     *  Returns the list of available themes.
-     *
-     *  @return array
-     */
-    private function getThemes()
-    {
-        $tmp = array();
-
-        foreach ($this->get('claroline.common.theme_service')->getThemes() as $theme) {
-            $tmp[str_replace(' ', '-', strtolower($theme->getName()))] = $theme->getName();
-        }
-
-        return $tmp;
     }
 
     private function updateMailContent($formData, $form, $errors, $content)

@@ -1,0 +1,46 @@
+@import "../layout";
+@import "../form-state";
+
+@navbar-default-brand-color: #fff;
+@navbar-inverse-bg: @component-active-bg;
+@navbar-inverse-link-color: lighten(@navbar-inverse-bg, 40%);
+@navbar-inverse-toggle-hover-bg: darken(@navbar-inverse-bg, 20%);
+@navbar-inverse-toggle-border-color: darken(@navbar-inverse-bg, 18%);
+@baseBorderRadius: 5px;
+@grid-float-breakpoint: @screen-md;
+@claroline-topbar-border: #f89406;
+
+body {
+    background: lighten(@gray, 55%);
+}
+
+.navbar.navbar-inverse.navbar-fixed-top {
+    border-bottom: 3px solid @claroline-topbar-border;
+}
+
+.navbar.navbar-inverse.navbar-fixed-top,
+.impersonalitation .navbar.navbar-default.navbar-fixed-top {
+    .box-shadow(0 2px 3px rgba(0,0,0,.25));
+}
+
+#left-bar {
+    .box-shadow(3px 0 3px rgba(0,0,0,.25));
+}
+
+#right-bar {
+    .box-shadow(-3px 0 3px rgba(0,0,0,.25));
+}
+
+.list-group.menu,
+.panel,
+.creator .panel,
+.creator .form-control,
+.creator .mce-tinymce.mce-container.mce-panel,
+.breadcrumb,
+.navbar.desktop {
+    .box-shadow(2px 2px 3px rgba(0,0,0,.15));
+}
+
+.panel .panel, .panel .breadcrumb {
+    .box-shadow(none);
+}
