@@ -15,7 +15,7 @@
     GroupsManager.config(function($stateProvider, $urlRouterProvider) {
         $stateProvider
             .state(
-                'groups.users',
+                'administration.groups.users',
                 {
                     url: "/users",
                     templateUrl: function($stateParam) {

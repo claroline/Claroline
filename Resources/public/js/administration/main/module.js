@@ -1,14 +1,16 @@
 (function () {
     'use strict';
 
+    var AdministrationModule = angular.module('AdministrationModule', [
+        'ui.router',
+        'ncy-angular-breadcrumb',
+        'UsersManager',
+        'GroupsManager'
+    ]);
+
     var translate = function(key) {
         return translator.trans(key, {}, 'platform');
     }
-
-    var AdministrationModule = angular.module('AdministrationModule', [
-        'ui.router',
-        'ncy-angular-breadcrumb'
-    ]);
 
     AdministrationModule.config(function($stateProvider, $urlRouterProvider) {
         $stateProvider
@@ -25,7 +27,8 @@
                     }
 
                 }
-            );
+            )
+        ;
 
         $urlRouterProvider.otherwise("/administration");
     });

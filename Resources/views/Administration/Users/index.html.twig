@@ -4,9 +4,9 @@
 {% block title %}{{ parent() ~ ' - ' ~ 'users' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block section_content %}
-    <div id="users-panel" class="panel panel-default" ng-app="UsersManager">
-        <user-manager>
-        </user-manager>
+    <div id="users-panel" class="panel panel-default" ng-app="AdministrationModule">
+        <div ui-view>
+        </div>
     </div>
 
 {% endblock %}
@@ -20,7 +20,6 @@
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('vendor/angular.js')}}"> </script>
     <script type="text/javascript" src="{{ asset('vendor/angular-ui.js')}}"> </script>
-    {#<script type="text/javascript" src="{{ asset('bundles/frontend/angular-ui-router/release/angular-ui-router.min.js') }}"> </script>#}
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/angular/services/api.services.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/angular-ui-translation/angular-translation.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/angular-bootstrap/ui-bootstrap-tpls.js') }}"> </script>
@@ -33,12 +32,20 @@
         AngularApp.webDir = "{{ asset('') }}";
     </script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/angular/search/generic/search.app.js') }}></script>
+
+    {# main #}
+
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/main/module.js') }}></script> 
+
+    {# users #}
+
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/users/module.js') }}></script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/users/Controller/UserController.js') }}></script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/users/Directive/UserActionsDirective.js') }}></script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/users/Directive/UserListDirective.js') }}></script>
-    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/users/Directive/UserManagerDirective.js') }}></script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/users/Directive/UserSearchDirective.js') }}></script>
+
+    {# groups #}
 
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/groups/modules.js') }}></script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/groups/Controller/GroupController.js') }}></script>

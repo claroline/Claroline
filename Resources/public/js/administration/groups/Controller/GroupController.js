@@ -8,7 +8,6 @@ var controller = function($http, clarolineSearch) {
     this.savedSearch = [];
     this.groups = [];
     this.fields = [];
-    this.pageTitle = translate('group_list');
 
     var vm = this;
 
@@ -21,7 +20,7 @@ var controller = function($http, clarolineSearch) {
         {
             name: translate('actions'),
             cellRenderer: function(scope) {
-                var actions = '<a ui-sref="groups.users"> users </a>';
+                var actions = '<a ui-sref="administration.groups.users"> users </a>';
                 return actions;
             }
         }

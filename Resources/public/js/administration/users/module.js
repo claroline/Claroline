@@ -6,7 +6,6 @@
         'data-table',
         'ui.bootstrap.tpls',
         'clarolineAPI',
-        'GroupsManager',
         'ui.translation',
         'ui.router',
         'ncy-angular-breadcrumb'
@@ -19,7 +18,7 @@
     UsersManager.config(function($stateProvider, $urlRouterProvider) {
         $stateProvider
             .state(
-                'users',
+                'administration.users',
                 {
                     url: "/users",
                     templateUrl: function($stateParam) {
@@ -28,12 +27,13 @@
                     },
                     ncyBreadcrumb: {
                         label: translate('user_list')
-                    }
-
+                    },
+                    controller: 'UserController',
+                    controllerAs: 'uc'
                 }
             )
             .state(
-                'groups',
+                'administration.groups',
                 {
                     url: "/groups",
                     templateUrl: function($stateParam) {
