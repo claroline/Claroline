@@ -11,6 +11,7 @@
         color: #777;
     }
 </style>
+{% if not app.request.isXmlHttpRequest() %}
 <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
 
 {# TODO: the following scripts should be packed and minified #}
@@ -21,7 +22,7 @@
 <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.dateAxisRenderer.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.canvasAxisTickRenderer.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.canvasAxisLabelRenderer.js') }}"></script>
-
+{% endif %}
 {% if actionName is not defined or actionName is empty or '-' not in actionName %}
 <legend>{{ 'actions_per_day'|trans({}, 'platform') }}</legend>
 {% else %}
