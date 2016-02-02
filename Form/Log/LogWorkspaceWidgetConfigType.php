@@ -49,7 +49,8 @@ class LogWorkspaceWidgetConfigType extends AbstractType
                     'required'              => false,
                     'multiple'              => true,
                     'expanded'              => false,
-                    'translation_domain'    => 'log'
+                    'translation_domain'    => 'log',
+                    'attr'                  => array('placeholder' => 'click_to_choose')
                 )
             )
             ->add(
