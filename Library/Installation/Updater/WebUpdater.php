@@ -20,7 +20,7 @@ class WebUpdater
     public function __construct($rootDir)
     {
         $ds = DIRECTORY_SEPARATOR;
-        $this->webSrc = "{$rootDir}{$ds}..{$ds}vendor{$ds}claroline{$ds}core-bundle{$ds}Claroline{$ds}CoreBundle{$ds}Resources/web";
+        $this->webSrc = "{$rootDir}{$ds}..{$ds}vendor{$ds}claroline{$ds}core-bundle{$ds}Resources/web";
         $this->webProd = "{$rootDir}{$ds}..{$ds}web";
         $this->listFiles($this->webSrc);
     }
