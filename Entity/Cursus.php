@@ -89,6 +89,7 @@ class Cursus
      *     inversedBy="children"
      * )
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
+     * @Groups({"api"})
      */
     protected $parent;
 
@@ -97,6 +98,8 @@ class Cursus
      *     targetEntity="Claroline\CursusBundle\Entity\Cursus",
      *     mappedBy="parent"
      * )
+     * @ORM\OrderBy({"cursusOrder" = "ASC"})
+     * @Groups({"api"})
      */
     protected $children;
 

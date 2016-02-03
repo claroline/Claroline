@@ -1,0 +1,19 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <button class="close" ng-click="cuumc.closeModal()">x</button>
+        <h4 class="modal-title">
+            {{ cuumc.name }}
+        </h4>
+    </div>
+    <div class="modal-body">
+        {{ 'unregister_user_from_cursus_confirm_message'|trans:{}:'cursus' }}
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-default" ng-click="cuumc.closeModal()">
+            {{ 'cancel'|trans:{}:'platform' }}
+        </button>
+        <button class="btn btn-primary" ng-click="cuumc.confirmModal()">
+            {{ 'ok'|trans:{}:'platform' }}
+        </button>
+    </div>
+</div>

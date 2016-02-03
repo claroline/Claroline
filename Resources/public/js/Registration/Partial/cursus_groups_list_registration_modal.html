@@ -1,0 +1,43 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <button class="close" ng-click="cglrmc.closeModal()">x</button>
+        <h4 class="modal-title">
+            {{ 'register_groups_to_cursus'|trans:{}:'cursus' }}
+        </h4>
+    </div>
+    <div class="modal-body">
+        <div class="alert alert-info" ng-if="cglrmc.search != ''">
+            {{ 'results_for_search_on'|trans:{}:'platform' }} :
+            "{{ cglrmc.search }}"
+        </div>
+        
+        <div class="input-group col-md-6 pull-right">
+            <input class="form-control search-group"
+                   type="text"
+                   placeholder="{{ 'search'|trans:{}:'platform' }}"
+                   ng-model="cglrmc.tempSearch"
+            >
+            <span class="input-group-btn">
+                <button class="filter btn btn-default"
+                        type="button"
+                        ng-click="cglrmc.searchGroups()"
+                        ng-keypress="$event.which == '13' && cglrmc.searchGroups()"
+                >
+                    <i class="fa fa-search"></i>
+                </button>
+            </span>
+        </div>
+        <br>
+        <br>
+        <br>
+        
+        <div class="alert alert-warning" ng-if="cglrmc.groups.length === 0">
+            {{ 'no_group'|trans:{}:'platform' }}
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-default" ng-click="cglrmc.closeModal()">
+            {{ 'close'|trans:{}:'platform' }}
+        </button>
+    </div>
+</div>

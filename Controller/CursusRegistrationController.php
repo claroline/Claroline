@@ -72,6 +72,22 @@ class CursusRegistrationController extends Controller
     public function cursusToolRegistrationIndexAction()
     {
         $this->checkToolAccess();
+
+        return array();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/tool/registration/index2",
+     *     name="claro_cursus_tool_registration_index2",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:CursusRegistration:cursusToolRegistrationIndex2.html.twig")
+     */
+    public function cursusToolRegistrationIndex2Action()
+    {
+        $this->checkToolAccess();
         $displayedWords = array();
 
         foreach (CursusDisplayedWord::$defaultKey as $key) {
