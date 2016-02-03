@@ -13,7 +13,7 @@
         }
     ],
     "require": {
-        "php": ">=5.4.1",
+        "php": ">=5.5",
         "ext-mcrypt": "*",
         "symfony/symfony": "~2.7.0",
         "doctrine/dbal": "~2.4",
@@ -59,7 +59,6 @@
         "cocur/slugify": "~1.0"
     },
     "autoload": {
-        "psr-0": { "Claroline\\CoreBundle": "" }
-    },
-    "target-dir": "Claroline/CoreBundle"
+        "psr-4": { "Claroline\\CoreBundle\\": "" }
+    }
 }
