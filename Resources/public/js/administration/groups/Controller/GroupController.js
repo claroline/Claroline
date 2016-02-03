@@ -1,17 +1,10 @@
-var controller = function($http, clarolineSearch, $state, $stateParams) {
+var controller = function($http, clarolineSearch) {
     var translate = function(key) {
         return translator.trans(key, {}, 'platform');
     }
 
-    console.log('init groupctrl');
-    console.log('Grp state');
-    console.log($state);
-    console.log('Grp params');
-    console.log($stateParams);
-
     this.search = '';
     this.savedSearch = [];
-    this.groups = [];
     this.fields = [];
 
     var vm = this;
@@ -27,13 +20,14 @@ var controller = function($http, clarolineSearch, $state, $stateParams) {
             cellRenderer: function(scope) {
                 var groupId = scope.$row.id;
                 var actions = '<a ui-sref="administration.groups.users({groupId: ' + groupId + '})"> users </a>';
+                //var actions = '<a href="#"> sdfsdf </a>';
                 return actions;
             }
         }
     ];
 
     this.dataTableOptions = {
-        scrollbarV: false,
+        scrollbarV: true,
         columnMode: 'force',
         headerHeight: 50,
         footerHeight: 50,
@@ -46,6 +40,8 @@ var controller = function($http, clarolineSearch, $state, $stateParams) {
             size: 10
         }
     };
+
+        this.dataTableOptions.paging.count = 2;
 
     this.onSearch = function(searches) {
         this.savedSearch = searches;

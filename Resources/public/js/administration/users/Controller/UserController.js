@@ -3,7 +3,7 @@ var controller = function(
     clarolineSearch,
     clarolineAPI
 ) {
-console.log('Init user controller');
+    console.log('Init user controller');
 
     var vm = this;
     var translator = window.Translator;
