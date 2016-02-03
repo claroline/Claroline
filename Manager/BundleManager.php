@@ -226,7 +226,7 @@ class BundleManager
         //It's much easier than trying to load/refresh everything.
         //TODO: use Sf2 proces library to avoid mistakes
         //sanitize this
-        $executor = $this->kernelRootDir . '/../vendor/claroline/core-bundle/Claroline/CoreBundle/Library/Installation/scripts/operation_executor.php';
+        $executor = $this->kernelRootDir . '/../vendor/claroline/core-bundle/Library/Installation/scripts/operation_executor.php';
         $phpErrors = $this->kernelRootDir . "/logs/php_errors_{$date}.log";
         exec("php $executor $date > $phpErrors");
     }

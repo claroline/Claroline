@@ -35,7 +35,7 @@ class AuthenticationManager
     {
         $this->container = $container;
         $this->fileTypes = '/\.yml$/';
-        $this->driverPath = __DIR__ . "/../../../../../../app/config/Authentication/";
+        $this->driverPath = $container->getParameter('kernel.root_dir') . '/config/Authentication/';
         $this->finder = new Finder();
     }
 

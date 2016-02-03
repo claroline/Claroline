@@ -112,7 +112,7 @@ class Configuration implements ConfigurationInterface
                                     ->ifTrue(
                                         function ($v) use ($plugin) {
                                             return !call_user_func_array(
-                                                __CLASS__ . '::isResourceLocationValid',
+                                                __CLASS__ . '::isResourceClassLoadable',
                                                 array($v, $plugin)
                                             );
                                         }
@@ -338,21 +338,9 @@ class Configuration implements ConfigurationInterface
         ->end()->end();
     }
 
-    public static function isResourceLocationValid($v)
+    public static function isResourceClassLoadable($v)
     {
-        if (!class_exists($v)) {
-            // the autoloader doesn't know the resource namespace
-            $classFile = __DIR__ . '/../../../../../../plugin/' . str_replace('\\', '/', $v) . '.php';
-
-            if (!file_exists($classFile)) {
-                return false;
-            }
-
-            // force class loading (needed for next check)
-            require_once $classFile;
-        }
-
-        return true;
+        return class_exists($v);
     }
 
     public static function isAbstractResourceExtended($v)
