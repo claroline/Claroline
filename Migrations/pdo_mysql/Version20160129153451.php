@@ -52,7 +52,7 @@ class Version20160129153451 extends AbstractMigration
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
-            CREATE TABLE ujm_Picture (
+            CREATE TABLE ujm_picture (
                 id INT AUTO_INCREMENT NOT NULL, 
                 user_id INT DEFAULT NULL, 
                 `label` VARCHAR(255) NOT NULL, 
@@ -95,7 +95,7 @@ class Version20160129153451 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
-            ALTER TABLE ujm_Picture 
+            ALTER TABLE ujm_picture 
             ADD CONSTRAINT FK_4717F516A76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id)
         ");
@@ -119,7 +119,7 @@ class Version20160129153451 extends AbstractMigration
         $this->addSql("
             ALTER TABLE ujm_interaction_graphic 
             ADD CONSTRAINT FK_9EBD442FEE45BDBF FOREIGN KEY (picture_id) 
-            REFERENCES ujm_Picture (id)
+            REFERENCES ujm_picture (id)
         ");
         $this->addSql("
             CREATE INDEX IDX_9EBD442FEE45BDBF ON ujm_interaction_graphic (picture_id)
@@ -191,7 +191,7 @@ class Version20160129153451 extends AbstractMigration
             DROP TABLE ujm_step
         ");
         $this->addSql("
-            DROP TABLE ujm_Picture
+            DROP TABLE ujm_picture
         ");
         $this->addSql("
             ALTER TABLE ujm_choice 

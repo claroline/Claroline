@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * UJM\ExoBundle\Entity\Picture.
  *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\PictureRepository")
- * @ORM\Table(name="ujm_Picture")
+ * @ORM\Table(name="ujm_picture")
  */
 class Picture
 {
