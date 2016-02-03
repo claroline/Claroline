@@ -13,11 +13,10 @@
         }
     ],
     "require": {
-        "php": ">=5.4.1",
+        "php": ">=5.5",
         "claroline/core-bundle": "~6.0"
     },
     "autoload": {
-        "psr-0": { "Claroline\\SurveyBundle": "" }
-    },
-    "target-dir": "Claroline/SurveyBundle"
+        "psr-4": { "Claroline\\SurveyBundle\\": "" }
+    }
 }
