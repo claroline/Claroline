@@ -86,14 +86,14 @@
                                 <a target="_blank" data-ng-href="{{ '{{ vm.menu.currentEditPageNode.generateResourceUrl() }}' }}">{{ '{{ vm.menu.currentEditPageNode.resourceNodeName }}' }}</a>
                             </div>
                             <div>
-                                <button type="button" class="btn btn-sm btn-success" data-ui-resource-picker="vm.resourcePickerConfig">
+                                <btn-resource-picker type="button" class="btn btn-sm btn-success" data-parameters="vm.resourcePickerConfig">
                                     <span data-ng-if="!vm.menu.currentEditPageNode.resourceNode">
                                         <i class="fa fa-plus"></i> {{ 'add_resource'|trans({}, 'icap_website') }}
                                     </span>
                                     <span data-ng-if="vm.menu.currentEditPageNode.resourceNode">
                                         <i class="fa fa-refresh"></i> {{ 'change_resource'|trans({}, 'icap_website') }}
                                     </span>
-                                </button>
+                                </btn-resource-picker>
                             </div>
                             <input id="page-resource-node" type="hidden" class="form-control" data-ng-model="vm.menu.currentEditPageNode.resourceNode"/>
                             <input id="page-resource-node" type="hidden" class="form-control" data-ng-model="vm.menu.currentEditPageNode.resourceNodeType"/>

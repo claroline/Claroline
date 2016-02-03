@@ -1,5 +1,6 @@
 {% extends 'IcapWebsiteBundle::view_layout.html.twig' %}
 {% import 'IcapWebsiteBundle:Website:Macros/common_macros.html.twig' as commonMacros %}
+{% import 'IcapWebsiteBundle:Website:Macros/view_macros.html.twig' as viewMacros %}
 
 {% set options = _resource.options %}
 
@@ -88,7 +89,7 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ commonMacros.angularScripts() }}
+    {{ viewMacros.getVendorScripts() }}
 
     <script type="text/javascript">
         (function() {
@@ -108,60 +109,7 @@
         })();
     </script>
 
-    {#
-        Import utilities module
-    #}
-    {% javascripts debug=false output='js/website/app/components/utilities.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/utilities/utilities.module.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/utilities/utilities.service.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/utilities/iframeHeightOnLoad.directive.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-    {% if options.menuOrientation == 'horizontal' %}
-        {#
-            Import flexnav module
-        #}
-        {% javascripts debug=false filter='jsmin' output='js/website/components/flexnav.js'
-        '@IcapWebsiteBundle/Resources/public/js/components/flexnav/flexnav.module.js'
-        '@IcapWebsiteBundle/Resources/public/js/components/flexnav/flexnav-options.service.js'
-        '@IcapWebsiteBundle/Resources/public/js/components/flexnav/flexnav-utils.service.js'
-        '@IcapWebsiteBundle/Resources/public/js/components/flexnav/flexnav.directive.js'
-        '@IcapWebsiteBundle/Resources/public/js/components/flexnav/flexnav-submenu.directive.js'
-        '@IcapWebsiteBundle/Resources/public/js/components/flexnav/templates/main_menu.tpl.js'
-        '@IcapWebsiteBundle/Resources/public/js/components/flexnav/templates/sub_menu.tpl.js'
-        %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-        {% endjavascripts %}
-    {% else %}
-        <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/vendor/angular-ui/multi-level-push-menu/pushmenu.js') }}"></script>
-    {% endif %}
-
-    {#
-        Import resizer component
-    #}
-    {% javascripts debug=false filter='jsmin' output='js/website/app/components/resizer.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/resizer/resizer.module.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/resizer/resizer.directive.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/resizer/resizerBottom.directive.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/resizer/resizerRight.directive.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/resizer/changeHeight.directive.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-    {#
-        Import app module
-    #}
-    {% javascripts debug=false filter='jsmin' output='js/website/app/app.view.js'
-    '@IcapWebsiteBundle/Resources/public/js/view-app/app.js'
-    '@IcapWebsiteBundle/Resources/public/js/view-app/app.config.js'
-    '@IcapWebsiteBundle/Resources/public/js/app.bootstrap.js'
-    '@IcapWebsiteBundle/Resources/public/js/view-app/main.controller.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    {{ viewMacros.getAppScripts(options.menuOrientation) }}
 
     {% if options.analyticsProvider=="google" and options.analyticsId is not empty %}
         <script>
@@ -179,15 +127,6 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% if options.menuOrientation == 'horizontal' %}
-        <link rel="stylesheet" href="{{ asset('bundles/icapwebsite/css/angular/flexnav.css') }}" screen="media" />
-    {% else %}
-        <link rel="stylesheet" href="{{ asset('bundles/icapwebsite/css/angular/pushmenu.css') }}" screen="media" />
-    {% endif %}
-    {% stylesheets debug=false filter='lessphp, cssmin' output='bundles/icapwebsite/css/style-view.css'
-    "@IcapWebsiteBundle/Resources/views/less/view.less"
-    %}
-    <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
-    {% endstylesheets %}
+    {{ viewMacros.getStylesheets(options.menuOrientation) }}
     {% include 'IcapWebsiteBundle:Website:View/view.css.twig' with {'options': _resource.options, 'commonMacros': commonMacros} %}
 {% endblock %}

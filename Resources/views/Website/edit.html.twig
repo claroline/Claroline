@@ -1,5 +1,6 @@
 {% extends 'IcapWebsiteBundle::edit_layout.html.twig' %}
 {% import 'IcapWebsiteBundle:Website:Macros/common_macros.html.twig' as commonMacros %}
+{% import 'IcapWebsiteBundle:Website:Macros/edit_macros.html.twig' as editMacros %}
 
 {% set optionTabs = {'structure':'fa-sitemap', 'general':'fa-th-large', 'menu':'fa-list', 'banner':'fa-angle-up', 'footer':'fa-angle-down'} %}
 {% block content %}
@@ -25,7 +26,7 @@
                 <div class="website-preview-inner" data-ng-style="vm.websitePreviewInnerStyle()">
                     <div class="banner resizeable-bottom" ng-style="vm.bannerStyle()" data-ng-show="vm.options.bannerEnabled">
                         <div data-ng-show="!vm.options.bannerEditorActive" data-ng-bind-html="vm.options.deliberatelyTrustSnippet('bannerText')"></div>
-                        <div data-ng-show="vm.options.bannerEditorActive" data-ng-style="{'height':vm.options.bannerHeight+'px'}"><textarea id="banner-text" data-ng-style="{'height':vm.options.footerHeight}" class="form-control" ui-tinymce="vm.tinymceConfig" data-ng-model="vm.options.bannerText"></textarea></div>
+                        <div data-ng-show="vm.options.bannerEditorActive" data-ng-style="{'height':vm.options.bannerHeight+'px'}"><textarea id="banner-text" data-ng-style="{'height':vm.options.footerHeight}" class="form-control" data-ui-tinymce="vm.tinymceConfig" data-ng-model="vm.options.bannerText"></textarea></div>
                     </div>
                     <div class="horizontal-resizer" resizer-bottom resizer="vm.options.bannerHeight" resizer-max="200" resizer-min="0" data-ng-show="vm.options.bannerEnabled">
                         <div class="resizer-box-left"></div>
@@ -75,24 +76,12 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('bundles/icapwebsite/css/angular/bootstrap-additions.min.css') }}" screen="media" />
-    <link rel="stylesheet" href="{{ asset('bundles/icapwebsite/css/angular/angular-ui-tree.min.css') }}" screen="media" />
-    <link rel="stylesheet" href="{{ asset('bundles/icapwebsite/css/angular/angular-motion.min.css') }}" screen="media" />
-    {% stylesheets debug=false filter='lessphp, cssmin' output='bundles/icapwebsite/css/style-edit.css'
-    "@IcapWebsiteBundle/Resources/views/less/edit.less"
-    %}
-    <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
-    {% endstylesheets %}
-    <link rel="stylesheet" href="{{ asset('bundles/icapwebsite/css/angular/pushmenu.css') }}" screen="media" />
-    <link rel="stylesheet" href="{{ asset('bundles/icapwebsite/css/angular/flexnav.css') }}" screen="media" />
-
+    {{ editMacros.getStylesheets() }}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-
-    {{ commonMacros.angularScripts() }}
-
+    {{ editMacros.getVendorScripts() }}
     <script type="text/javascript">
         (function() {
             'use strict';
@@ -117,98 +106,7 @@
                     .constant('website.data', websiteData);
         })();
     </script>
-
-    {#
-        Import httpInterceptor module
-    #}
-    {% javascripts debug=false output='js/website/app/blocks/httpInterceptor.js'
-    '@IcapWebsiteBundle/Resources/public/js/blocks/httpInterceptor/httpInterceptor.module.js'
-    '@IcapWebsiteBundle/Resources/public/js/blocks/httpInterceptor/requestHandler.js'
-    '@IcapWebsiteBundle/Resources/public/js/blocks/httpInterceptor/httpInterceptor.config.js'
-    '@IcapWebsiteBundle/Resources/public/js/blocks/httpInterceptor/httpInterceptor.factory.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-    {#
-        Import router module
-    #}
-    {% javascripts debug=false output='js/website/app/blocks/router.js'
-    '@IcapWebsiteBundle/Resources/public/js/blocks/router/router.module.js'
-    '@IcapWebsiteBundle/Resources/public/js/blocks/router/routeHelper.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-    {#
-        Import utilities module
-    #}
-    {% javascripts debug=false output='js/website/app/components/utilities.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/utilities/utilities.module.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/utilities/utilities.service.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/utilities/iframeHeightOnLoad.directive.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-    {#
-        Import resource picker module
-    #}
-    {% javascripts debug=false output='js/website/app/components/resourcePicker.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/resourcePicker/resourcePicker.module.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/resourcePicker/resourcePicker.config.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/resourcePicker/resourcePicker.directive.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/vendor/angular-ui/ui-tree/angular-ui-tree.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/vendor/angular-ui/multi-level-push-menu/pushmenu.js') }}"></script>
-    {#
-        Import flexnav module
-    #}
-    {% javascripts debug=false filter='jsmin' output='js/website/components/flexnav.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/flexnav/flexnav.module.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/flexnav/flexnav-options.service.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/flexnav/flexnav-utils.service.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/flexnav/flexnav.directive.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/flexnav/flexnav-submenu.directive.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/flexnav/templates/main_menu.tpl.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/flexnav/templates/sub_menu.tpl.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-    {#
-        Import resizer component
-    #}
-    {% javascripts debug=false filter='jsmin' output='js/website/app/components/resizer.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/resizer/resizer.module.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/resizer/resizer.directive.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/resizer/resizerBottom.directive.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/resizer/resizerRight.directive.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/resizer/changeHeight.directive.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-    {#
-        Import app module
-    #}
-    {% javascripts debug=false filter='jsmin' output='js/website/app/app.edit.js'
-    '@IcapWebsiteBundle/Resources/public/js/edit-app/app.js'
-    '@IcapWebsiteBundle/Resources/public/js/edit-app/app.config.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/tinyMceConfig/tinyMceConfig.js'
-    '@IcapWebsiteBundle/Resources/public/js/edit-app/websiteTree/websiteTreeNode.service.js'
-    '@IcapWebsiteBundle/Resources/public/js/edit-app/websiteTree/websiteTree.service.js'
-    '@IcapWebsiteBundle/Resources/public/js/edit-app/websiteOptions/websiteOptions.service.js'
-    '@IcapWebsiteBundle/Resources/public/js/edit-app/main.controller.js'
-    '@IcapWebsiteBundle/Resources/public/js/templates/menu_renderer.tpl.js'
-    '@IcapWebsiteBundle/Resources/public/js/templates/tree_renderer.tpl.js'
-    '@IcapWebsiteBundle/Resources/public/js/app.bootstrap.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    {{ editMacros.getAppScripts() }}
 
     <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_website' }) }}"></script>
 {% endblock %}

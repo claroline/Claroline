@@ -15,7 +15,8 @@
                 'ui.tinymce',
                 'ui.resourcePicker',
                 'wxy.pushmenu',
-                'ui.flexnav'
+                'ui.flexnav',
+                'bs.colorpicker'
             ]
         );
 })();

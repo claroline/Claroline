@@ -12,6 +12,7 @@
 @light-grey: #E5E5E5;
 @dark-grey:  #767676;
 @resizer-black: #000;
+@placeholderMargin: 15px;
 
 body {
   padding:0;
@@ -191,24 +192,30 @@ div.admin-bar {
         width: auto;
         display: inline;
         height: auto;
-        /*line-height:1.42857;
-        color:@dark-grey;
-        background-color:white;
-        background-image:none;
-        border:1px solid #cbd5dd;
-        border-radius:2px;
-        -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);
-        box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);
-        -webkit-transition:border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
-        transition:border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;*/
       }
 
       input[type="number"] {
         max-width:55px;
       }
-      input.color {
-        /*border:1px solid @light-grey;*/
-        max-width:80px;
+      div.input-group.color-group{
+        max-width: 80px;
+        input {
+          display:inline;
+          height:auto;
+          padding: 4px;
+          max-width:90px;
+        }
+        .input-group-addon{
+          padding: 4px;
+          height: auto;
+          line-height: 1.2;
+          i.fa{
+            line-height: 16px;
+          }
+          i:not(.fa){
+            border:1px solid #ccc;
+          }
+        }
       }
       input.full-width{
         width: 100%;
@@ -398,23 +405,48 @@ div.edit-menu-container {
         background-color:transparent;
       }
     }
+    .angular-ui-tree-placeholder {
+      background:#f0f9ff;
+      border:1px dashed #bed2db;
+      min-height:10px !important;
+      height:20px !important;
+      font-weight: normal !important;
+      line-height:10px;
+    }
+    .angular-ui-tree-drag {
+      font-weight:normal !important;
+      ul {
+        display:none !important;
+      }
+      .btn {
+        visibility:hidden;
+        font-weight:normal;
+      }
+    }
+    .generate-placeholder-margin-levels(15);
   }
 }
-.angular-ui-tree-placeholder {
-  background:#f0f9ff;
-  border:1px dashed #bed2db;
-  min-height:10px !important;
-  height:10px !important;
-  font-weight: normal !important;
-  line-height:10px;
-}
-.angular-ui-tree-drag {
-  font-weight:normal !important;
-  ul {
-    display:none !important;
-  }
-  .btn {
-    visibility:hidden;
-    font-weight:normal;
+
+//Placeholder margin levels for menu
+.generate-placeholder-margin-levels(@n, @i: 1) when (@i =< @n) {
+  li {
+    .angular-ui-tree-placeholder{
+      margin-left: (@i * @placeholderMargin);
+    }
+    .generate-placeholder-margin-levels(@n, (@i + 1));
   }
 }
+
+
+//Colorpicker style
+div.ws-colorpicker{
+  .colorpicker-selectors{
+    i:first-child{
+      background-image: url("/bundles/frontend/mjolnic-bootstrap-colorpicker/dist/img/bootstrap-colorpicker/alpha.png");
+      background-position: 0 100%;
+      border: 1px solid #777;
+    }
+  }
+}
+
+

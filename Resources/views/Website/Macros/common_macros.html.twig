@@ -1,22 +1,3 @@
-{% macro angularScripts() %}
-    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/vendor/jscolor/jscolor.js') }}"></script>
-    {% javascripts debug=false filter='jsmin' output='js/website/angular.js'
-    '@IcapWebsiteBundle/Resources/public/js/vendor/angular-plugins/angular-file-upload/angular-file-upload-shim.min.js'
-    '@InnovaAngularJSBundle/Resources/public/js/angular.min.js'
-    '@InnovaAngularJSBundle/Resources/public/js/angular-resource.min.js'
-    '@InnovaAngularJSBundle/Resources/public/js/angular-route.min.js'
-    '@InnovaAngularJSBundle/Resources/public/js/angular-touch.min.js'
-    '@InnovaAngularJSBundle/Resources/public/js/angular-animate.min.js'
-    '@InnovaAngularJSBundle/Resources/public/js/angular-sanitize.min.js'
-    '@IcapWebsiteBundle/Resources/public/js/vendor/angular-plugins/angular-file-upload/angular-file-upload.min.js'
-    '@IcapWebsiteBundle/Resources/public/js/vendor/angular-ui/ui-tinymce/tinymce.js'
-    '@IcapWebsiteBundle/Resources/public/js/vendor/angular-plugins/angular-strap/angular-strap.min.js'
-    '@IcapWebsiteBundle/Resources/public/js/vendor/angular-plugins/angular-strap/angular-strap.tpl.min.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-{% endmacro %}
-
 {% macro buildMenu(siteRoot, websiteId) %}
     <ul>
         {% for page in siteRoot.children %}
