@@ -2645,4 +2645,20 @@ class CursusManager
 
         return $users;
     }
+
+    public function getSessionsByGroupAndType(Group $group, $groupType = 0)
+    {
+        $sessions = array();
+        $sessionGroups = $this->getSessionGroupsByGroup($group);
+
+        foreach ($sessionGroups as $sessionGroup) {
+            $type = $sessionGroup->getGroupType();
+
+            if ($type === $groupType) {
+                $sessions[] = $sessionGroup->getSession();
+            }
+        }
+
+        return $sessions;
+    }
 }
