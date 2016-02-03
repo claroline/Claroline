@@ -7,7 +7,7 @@
     <div class="input-group col-md-6">
         {{ form_widget(form.picture) }}
         <span class="input-group-btn">
-            <a class="btn btn-primary" id="LoadImg" onclick="LoadPic('{{ path('ujm_interactiongraphic_DisplayPic') }}', '{{ asset('uploads') }}', '{{ form.document.vars.id }}','{{'no_img' | trans({}, 'ujm_exo') }}');" class="btn btn-primary">
+            <a class="btn btn-primary" id="LoadImg" onclick="LoadPic('{{ path('ujm_interactiongraphic_DisplayPic') }}', '{{ asset('uploads') }}', '{{ form.picture.vars.id }}','{{'no_img' | trans({}, 'ujm_exo') }}');" class="btn btn-primary">
                 {{ 'select' | trans({}, 'ujm_exo') }}
             </a>
             {% if src == 'edit' %}
