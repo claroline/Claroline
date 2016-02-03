@@ -1,0 +1,125 @@
+{% macro displayCourseSessions(datas, type) %}
+    {% set course = datas['course'] %}
+    {% set groupSessions = datas['sessions'] %}
+
+    <div>
+        <span class="collapsed pointer-hand"
+           role="button"
+           data-toggle="collapse"
+           href="#sessions-{{ type }}-{{ course.getId() }}"
+        >
+            {{ course.getTitle() }}
+            <small>
+                [{{ course.getCode() }}]
+            </small>
+            &nbsp;
+            <i class="fa fa-caret-down"></i>
+        </span>
+        <ul id="sessions-{{ type }}-{{ course.getId() }}" class="collapse in">
+            
+            {% for groupSession in groupSessions %}
+                {% set session = groupSession.getSession() %}
+                <li id="session-row-{{ groupSession.getId() }}">
+                    <span class="label label-primary">
+                        {{ session.getName() }}
+                    </span>
+                    <span class="label label-danger pointer-hand delete-session-group-btn"
+                          data-session-group-id="{{ groupSession.getId() }}"
+                          data-type="{{ type }}"
+                    >
+                        <i class="fa fa-trash"></i>
+                    </span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endmacro %}
+
+{% from _self import displayCourseSessions %}
+
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}
+    {{
+        parent() ~
+        ' - ' ~
+        group.getName() ~
+        ' - ' ~
+        'user_sessions_management' | trans({}, 'cursus') | striptags | raw
+    }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'users_management'|trans({}, 'platform'),
+                'href': path('claro_admin_users_management')
+            },
+            {
+                'name': 'groups'|trans({}, 'platform'),
+                'href': path('claro_admin_group_list')
+            },
+            {
+                'name': group.getName(),
+                'href': path('claro_admin_group_list')
+            },
+            {
+                'name': 'user_sessions_management'|trans({}, 'cursus'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'user_sessions_management'|trans({}, 'cursus') }}
+        </h3>
+    </div>
+    <div class="panel-body">
+        <h3>{{ group.getName() }}</h3>
+        <hr>
+        <a class="btn btn-primary"
+           href="{{ path('claro_cursus_group_sessions_registration_management', {'group': group.getId(), 'type': 0}) }}"
+        >
+            <i class="fa fa-sign-in"></i>
+            {{ 'registration'|trans({}, 'platform') }}
+        </a>    
+        <hr>
+        
+        {% if learnerSessions|length > 0 %}
+
+            {% for learnerSession in learnerSessions %}
+                {{ displayCourseSessions(learnerSession, 0) }}
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-warning">
+                {{ 'no_session'|trans({}, 'cursus') }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div id="group-sessions-datas-box"
+         data-group-id="{{ group.getId() }}"
+    >
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript"
+            src="{{ url('bazinga_jstranslation_js', { 'domain': 'cursus' }) }}"
+    >
+    </script>
+    <script src='{{ asset('bundles/clarolinecursus/js/groupSessionsManagement.js') }}'
+            type="text/javascript"
+    >
+    </script>
+{% endblock %}

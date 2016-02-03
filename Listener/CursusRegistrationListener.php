@@ -13,6 +13,7 @@ namespace Claroline\CursusBundle\Listener;
 
 use Claroline\CoreBundle\Event\LogCreateEvent;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
+use Claroline\CoreBundle\Menu\GroupAdditionalActionEvent;
 use Claroline\CoreBundle\Menu\UserAdditionalActionEvent;
 use Claroline\CursusBundle\Manager\CursusManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -160,6 +161,28 @@ class CursusRegistrationListener
         $url = $this->router->generate(
             'claro_cursus_user_sessions_management',
             array('user' => $user->getId())
+        );
+
+        $menu = $event->getMenu();
+        $menu->addChild(
+            $this->translator->trans('user_sessions_management', array(), 'cursus'),
+            array('uri' => $url)
+        )->setExtra('icon', 'fa fa-list-alt');
+
+        return $menu;
+    }
+
+    /**
+     * @DI\Observe("claroline_group_additional_action")
+     *
+     * @param \Claroline\CoreBundle\Menu\GroupAdditionalActionEvent $event
+     */
+    public function onGroupActionMenuRender(GroupAdditionalActionEvent $event)
+    {
+        $group = $event->getGroup();
+        $url = $this->router->generate(
+            'claro_cursus_group_sessions_management',
+            array('group' => $group->getId())
         );
 
         $menu = $event->getMenu();
