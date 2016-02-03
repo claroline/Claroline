@@ -47,8 +47,10 @@ class CourseSessionUserRepository extends EntityRepository
         $dql = '
             SELECT csu
             FROM Claroline\CursusBundle\Entity\CourseSessionUser csu
+            JOIN csu.session s
+            JOIN s.course c
             WHERE csu.user = :user
-            ORDER BY csu.registrationDate DESC
+            ORDER BY c.title ASC
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('user', $user);
@@ -67,7 +69,7 @@ class CourseSessionUserRepository extends EntityRepository
             JOIN csu.user u
             WHERE csu.session = :session
             AND u.isEnabled = true
-            ORDER BY u.username ASC
+            ORDER BY u.lastName ASC
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('session', $session);

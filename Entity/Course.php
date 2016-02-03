@@ -30,14 +30,14 @@ class Course
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api"})
+     * @Groups({"api", "bulletin"})
      */
     protected $id;
     
     /**
      * @ORM\Column(unique=true)
      * @Assert\NotBlank()
-     * @Groups({"api"})
+     * @Groups({"api", "bulletin"})
      * @SerializedName("code")
      */
     protected $code;
@@ -45,7 +45,7 @@ class Course
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api"})
+     * @Groups({"api", "bulletin"})
      * @SerializedName("title")
      */
     protected $title;

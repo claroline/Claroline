@@ -25,6 +25,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -33,6 +35,7 @@ class CursusRegistrationController extends Controller
     private $authorization;
     private $cursusManager;
     private $platformConfigHandler;
+    private $router;
     private $toolManager;
     private $translator;
 
@@ -41,6 +44,7 @@ class CursusRegistrationController extends Controller
      *     "authorization"         = @DI\Inject("security.authorization_checker"),
      *     "cursusManager"         = @DI\Inject("claroline.manager.cursus_manager"),
      *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "router"                = @DI\Inject("router"),
      *     "toolManager"           = @DI\Inject("claroline.manager.tool_manager"),
      *     "translator"            = @DI\Inject("translator")
      * })
@@ -49,6 +53,7 @@ class CursusRegistrationController extends Controller
         AuthorizationCheckerInterface $authorization,
         CursusManager $cursusManager,
         PlatformConfigurationHandler $platformConfigHandler,
+        RouterInterface $router,
         ToolManager $toolManager,
         TranslatorInterface $translator
     )
@@ -56,6 +61,7 @@ class CursusRegistrationController extends Controller
         $this->authorization = $authorization;
         $this->cursusManager = $cursusManager;
         $this->platformConfigHandler = $platformConfigHandler;
+        $this->router = $router;
         $this->toolManager = $toolManager;
         $this->translator = $translator;
     }
@@ -808,6 +814,221 @@ class CursusRegistrationController extends Controller
         }
 
         return array('cursus' => $cursus, 'hierarchy' => $hierarchy);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/user/{user}/course/sessions/management",
+     *     name="claro_cursus_user_sessions_management",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function userSessionsManagementAction(User $user)
+    {
+        $this->checkToolAccess();
+        $sessionUsers = $this->cursusManager->getSessionUsersByUser($user);
+        $tutorSessions = array();
+        $learnerSessions = array();
+
+        foreach ($sessionUsers as $sessionUser) {
+            $type = $sessionUser->getUserType();
+            $session = $sessionUser->getSession();
+            $course = $session->getCourse();
+            $courseCode = $course->getCode();
+
+            if ($type == 0) {
+
+                if (!isset($learnerSessions[$courseCode])) {
+                    $learnerSessions[$courseCode] = array();
+                    $learnerSessions[$courseCode]['course'] = $course;
+                    $learnerSessions[$courseCode]['sessions'] = array();
+                }
+                $learnerSessions[$courseCode]['sessions'][] = $sessionUser;
+            } else if ($type == 1) {
+
+                if (!isset($tutorSessions[$courseCode])) {
+                    $tutorSessions[$courseCode] = array();
+                    $tutorSessions[$courseCode]['course'] = $course;
+                    $tutorSessions[$courseCode]['sessions'] = array();
+                }
+                $tutorSessions[$courseCode]['sessions'][] = $sessionUser;
+            }
+        }
+
+        return array(
+            'user' => $user,
+            'tutorSessions' => $tutorSessions,
+            'learnerSessions' => $learnerSessions
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/user/{user}/type/{type}/course/sessions/registration/management",
+     *     name="claro_cursus_user_sessions_registration_management",
+     *     defaults={"page"=1, "max"=50},
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function userSessionsRegistrationManagementAction(User $user, $type)
+    {
+        $this->checkToolAccess();
+        $sessions = $this->cursusManager->getSessionsByUserAndType($user, intval($type));
+
+        return array(
+            'user' => $user,
+            'type' => $type,
+            'sessions' => $sessions
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/group/{group}/course/sessions/management",
+     *     name="claro_cursus_group_sessions_management",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function groupSessionsManagementAction(Group $group)
+    {
+        $this->checkToolAccess();
+        $sessionGroups = $this->cursusManager->getSessionGroupsByGroup($group);
+        $tutorSessions = array();
+        $learnerSessions = array();
+
+        foreach ($sessionGroups as $sessionGroup) {
+            $type = $sessionGroup->getGroupType();
+            $session = $sessionGroup->getSession();
+            $course = $session->getCourse();
+            $courseCode = $course->getCode();
+
+            if ($type == 0) {
+
+                if (!isset($learnerSessions[$courseCode])) {
+                    $learnerSessions[$courseCode] = array();
+                    $learnerSessions[$courseCode]['course'] = $course;
+                    $learnerSessions[$courseCode]['sessions'] = array();
+                }
+                $learnerSessions[$courseCode]['sessions'][] = $sessionGroup;
+            } else if ($type == 1) {
+
+                if (!isset($tutorSessions[$courseCode])) {
+                    $tutorSessions[$courseCode] = array();
+                    $tutorSessions[$courseCode]['course'] = $course;
+                    $tutorSessions[$courseCode]['sessions'] = array();
+                }
+                $tutorSessions[$courseCode]['sessions'][] = $sessionGroup;
+            }
+        }
+
+        return array(
+            'group' => $group,
+            'tutorSessions' => $tutorSessions,
+            'learnerSessions' => $learnerSessions
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/group/{group}/type/{type}/course/sessions/registration/management",
+     *     name="claro_cursus_group_sessions_registration_management",
+     *     defaults={"page"=1, "max"=50},
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function groupSessionsRegistrationManagementAction(Group $group, $type)
+    {
+        $this->checkToolAccess();
+        $sessions = $this->cursusManager->getSessionsByGroupAndType($group, intval($type));
+
+        return array(
+            'group' => $group,
+            'type' => $type,
+            'sessions' => $sessions
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "course/sessions/datas/list/page/{page}/max/{max}/search/{search}",
+     *     name="claro_cursus_sessions_datas_list",
+     *     defaults={"search"="","page"=1, "max"=20},
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function sessionsDatasListAction($search = '', $page = 1, $max = 20)
+    {
+        $this->checkToolAccess();
+        $sessionsDatas = $this->cursusManager->getSessionsDatas($search, true, $page, $max);
+
+        return array(
+            'sessionsDatas' => $sessionsDatas,
+            'search' => $search,
+            'page' => $page,
+            'max' => $max
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "course/sessions/user/{user}/type/{type}/register",
+     *     name="claro_cursus_sessions_register",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *     "sessions",
+     *      class="ClarolineCursusBundle:CourseSession",
+     *      options={"multipleIds" = true, "name" = "sessionsIds"}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function sessionsRegisterAction(User $user, $type, array $sessions)
+    {
+        $this->checkToolAccess();
+        $this->cursusManager->registerUsersToSessions($sessions, array($user), $type);
+
+        return new RedirectResponse(
+            $this->router->generate(
+                'claro_cursus_user_sessions_management',
+                array('user' => $user->getId())
+            )
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "course/sessions/group/{group}/type/{type}/register",
+     *     name="claro_cursus_sessions_register_group",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *     "sessions",
+     *      class="ClarolineCursusBundle:CourseSession",
+     *      options={"multipleIds" = true, "name" = "sessionsIds"}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function sessionsRegisterGroupAction(Group $group, $type, array $sessions)
+    {
+        $this->checkToolAccess();
+        $this->cursusManager->registerGroupToSessions($sessions, $group, $type);
+
+        return new RedirectResponse(
+            $this->router->generate(
+                'claro_cursus_group_sessions_management',
+                array('group' => $group->getId())
+            )
+        );
     }
 
     private function checkToolAccess()
