@@ -13,12 +13,11 @@
         }
     ],
     "require": {
-        "php": ">=5.4.1",
+        "php": ">=5.5",
         "claroline/core-bundle": "~6.0",
         "claroline/video-js-bundle": "~6.0"
     },
     "autoload": {
-        "psr-0": { "Claroline\\VideoPlayerBundle": "" }
-    },
-    "target-dir": "Claroline/VideoPlayerBundle"
+        "psr-4": { "Claroline\\VideoPlayerBundle\\": "" }
+    }
 }
