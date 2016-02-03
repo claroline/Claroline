@@ -7,7 +7,7 @@ target.all = function () {
 };
 
 target.themes = function () {
-  var lessDir = path.resolve(__dirname, 'vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/less/themes');
+  var lessDir = path.resolve(__dirname, 'vendor/claroline/core-bundle/Resources/less/themes');
   var cssDir = path.resolve(__dirname, 'web/themes');
 
   ls(lessDir).forEach(function (file) {
