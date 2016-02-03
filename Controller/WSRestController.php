@@ -33,7 +33,7 @@ class WSRestController extends Controller
 
         $request = $this->container->get('request');
         $fileUp = $request->files->get('picture');
-        
+
         if ($this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
             $userDir = './uploads/ujmexo/users_pictures/'.$this->container->get('security.token_storage')
                 ->getToken()->getUser()->getUsername();
@@ -56,7 +56,7 @@ class WSRestController extends Controller
             if ((isset($fileUp)) && ($fileUp != '')) {
                 $file = $fileUp->getClientOriginalName();
                 $fileUp->move($userDir.'/images/', $fileUp->getClientOriginalName());
-                
+
                 // get height and width of the uploaded picture
                 list($width, $height) = getimagesize($userDir.'/images/'.$file);
 
