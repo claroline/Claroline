@@ -13,7 +13,7 @@
         }
     ],
     "require": {
-        "php": ">=5.4.1",
+        "php": ">=5.5",
         "claroline/core-bundle": "~6.0",
         "claroline/message-bundle": "~6.0",
         "icap/notification-bundle": "~6.0"
@@ -22,9 +22,8 @@
         "claroline/dev-bundle": "dev-master"
     },
     "autoload": {
-        "psr-0": { "Claroline\\ForumBundle": "" }
-    },
-    "target-dir": "Claroline/ForumBundle",
+        "psr-4": { "Claroline\\ForumBundle\\": "" }
+    }
     "minimum-stability": "dev",
     "prefer-stable": true
 }
