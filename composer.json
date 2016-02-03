@@ -29,7 +29,6 @@
         "mikey179/vfsStream": "dev-master"
     },
     "autoload": {
-        "psr-0": { "Claroline\\MigrationBundle": "" }
-    },
-    "target-dir": "Claroline/MigrationBundle"
+        "psr-4": { "Claroline\\MigrationBundle\\": "" }
+    }
 }
