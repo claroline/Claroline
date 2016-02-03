@@ -17,6 +17,6 @@
         "claroline/core-bundle": "~6.0"
     },
     "autoload": {
-        "psr-4": { "Claroline\\CursusBundle": "" }
+        "psr-4": { "Claroline\\CursusBundle\\": "" }
     }
 }
