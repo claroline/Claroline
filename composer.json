@@ -18,6 +18,6 @@
         "symfony/filesystem": "~2.0"
     },
     "autoload": {
-        "psr-0": { "Claroline\\KernelBundle\\": "" }
+        "psr-4": { "Claroline\\KernelBundle\\": "" }
     }
 }
