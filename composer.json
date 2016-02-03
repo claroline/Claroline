@@ -23,7 +23,7 @@
     },
     "autoload": {
         "psr-4": { "Claroline\\ForumBundle\\": "" }
-    }
+    },
     "minimum-stability": "dev",
     "prefer-stable": true
 }
