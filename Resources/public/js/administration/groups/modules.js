@@ -26,7 +26,7 @@
                         label: translate('users')
                     },
                     controller: 'UserListController',
-                    controllerAs: 'ucl'
+                    controllerAs: 'ulc'
                 }
             );
     });

@@ -1,14 +1,13 @@
-var controller = function($http, clarolineSearch, $state, $stateParams) {
+var controller = function($http, clarolineSearch, $stateParams) {
     console.log('init userListCtrl');
-    console.log('Grp state');
-    console.log($state);
     console.log('Grp params');
-    console.log($stateParams);
+    this.groupId = $stateParams.groupId;
 
 };
 
 angular.module('GroupsManager').controller('UserListController', [
     '$http',
     'clarolineSearch',
+    '$stateParams',
     controller
 ]);
