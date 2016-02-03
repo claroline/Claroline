@@ -13,11 +13,10 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=5.5",
         "claroline/core-bundle": "~6.0"
     },
     "autoload": {
-        "psr-0": { "Claroline\\ImagePlayerBundle": "" }
-    },
-    "target-dir": "Claroline/ImagePlayerBundle"
+        "psr-4": { "Claroline\\ImagePlayerBundle\\": "" }
+    }
 }
