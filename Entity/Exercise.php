@@ -90,6 +90,11 @@ class Exercise extends AbstractResource
     private $wasPublishedOnce = false;
 
     /**
+     * @ORM\Column(name="anonymous", type="boolean", nullable=true)
+     */
+    private $anonymous = false;
+
+    /**
      * @ORM\Column(name="type", type="string", length=255)
      * sommatif, formatif, certificatif
      */
@@ -379,6 +384,24 @@ class Exercise extends AbstractResource
     public function setPublishedOnce($wasPublishedOnce)
     {
         $this->wasPublishedOnce = $wasPublishedOnce;
+    }
+
+    /**
+     * Set anonymous.
+     *
+     * @param bool $anonymous
+     */
+    public function setAnonymous($anonymous)
+    {
+        $this->anonymous = $anonymous;
+    }
+
+    /**
+     * Get anonymous.
+     */
+    public function getAnonymous()
+    {
+        return $this->anonymous;
     }
 
     /**
