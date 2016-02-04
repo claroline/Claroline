@@ -52,6 +52,8 @@ class FileController extends Controller
                 readfile($path);
             }
         );
+        
+        $this->get('session')->save();
 
         $response->headers->set('Content-Type', $node->getMimeType());
         $response->send();
