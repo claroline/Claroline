@@ -60,8 +60,30 @@
         </div>
 
         <div id="planning_manual" class="form-group">
-            <div class="col-md-offset-2">{{ 'Choose current phase'|trans({}, 'innova_collecticiel') }}</div>
-            {{ form_row(form.manualState, {'label_attr': {'style': 'display: none;'}}) }}
+            <div class="col-md-offset-2">
+            {{ 'Choose current phase'|trans({}, 'innova_collecticiel') }}</div>
+
+                    {% if dropzone.manualState == 'notStarted' %}
+                    {{ "fff" }}{{ dropzone.manualState }}
+                        {{ form_widget(form.manualState, {
+                        'label_attr':
+                            {
+                                'style': 'display: none;'
+                            },
+                        {'value' : 'allowDropManualState'},
+                        }
+                        ) }}
+                    {% else %}
+                        {{ form_row(form.manualState, {
+                        'label_attr':
+                            {
+                                'style': 'display: none;'
+                            },
+                        'attr' : {},
+                        }
+                        ) }}
+                    {% endif %}
+
         </div>
 
         {# Par date #}
