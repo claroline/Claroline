@@ -28,10 +28,10 @@
 
         <div id="searchDocuments" class="input-group" style="width: 350px; margin-top: 20px;">
             <input type="text" class="form-control" id="labelToFind" placeholder="{{ 'search'|trans({}, 'platform') }}"
-                onkeydown="if (event.keyCode == 13) { searchDoc('{{ path('ujm_question_searchDocuments') }}', 1);return false; }">
+                onkeydown="if (event.keyCode == 13) { searchDoc('{{ path('ujm_question_searchPictures') }}', 1);return false; }">
             <span class="input-group-btn">
                 <button class="btn btn-default" type="button" id="searchDocbutton"
-                    onClick="searchDoc('{{ path('ujm_question_searchDocuments') }}', 1);">
+                    onClick="searchDoc('{{ path('ujm_question_searchPictures') }}', 1);">
             <i class="fa fa-search"></i></button>
             </span>
         </div>
@@ -115,14 +115,14 @@
 
                                     <td class="classic">
                                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans({}, 'ujm_exo') }}"
-                                            onclick="ChangeName('{{ path('ujm_document_change_name') }}', '{{ i }}');">
+                                            onclick="ChangeName('{{ path('ujm_picture_change_name') }}', '{{ i }}');">
                                             <i class="fa fa-pencil"></i>
                                         </a>
 
                                         {% if allowToDel[myDoc.id] %}
                                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans({}, 'ujm_exo') }}"
                                            id="delete_document"
-                                           href="{{ path('ujm_document_del', { 'idDoc': myDoc.id }) }}"
+                                           href="{{ path('ujm_Picture_del', { 'idDoc': myDoc.id }) }}"
                                            >
                                             <i class="fa fa-trash-o"></i>
                                         </a>

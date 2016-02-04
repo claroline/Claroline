@@ -529,7 +529,7 @@ class QuestionController extends Controller {
             $interGraph = $this->getDoctrine()
                     ->getManager()
                     ->getRepository('UJMExoBundle:InteractionGraphic')
-                    ->findOneBy(array('Picture' => $doc->getId()));
+                    ->findOneBy(array('id' => $doc->getId()));
             if ($interGraph) {
                 $allowToDel[$doc->getId()] = false;
             } else {
@@ -548,7 +548,7 @@ class QuestionController extends Controller {
         $pagerDoc = $pagination[1];
 
         return $this->render(
-                        'UJMExoBundle:Document:manageImg.html.twig', array(
+                        'UJMExoBundle:Picture:manageImg.html.twig', array(
                     'listDoc' => $listDocPager,
                     'pagerDoc' => $pagerDoc,
                     'allowToDel' => $allowToDel,
