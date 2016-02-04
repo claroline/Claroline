@@ -65,16 +65,9 @@ class DropzoneController extends DropzoneBaseController
 
             $form->handleRequest($this->getRequest());
 
-            // Récupération de la EXTRA donnée "publish". InnovaERV.
-            $extraDataPublished = "";
-            foreach ($form->getExtraData() as $ps) {
-                $extraDataPublished = $ps;
-            }
-
-//          $published = $form->get('published')->getData();
             // Mise à jour de la publication dans la table "claro_resource_node"
             $resourceId = $dropzone->getResourceNode()->getId();
-            $resourceNodes = $dropzoneManager->updatePublished($resourceId, $extraDataPublished);
+            $resourceNodes = $dropzoneManager->updatePublished($resourceId, $form->get('published')->getData());
 
             $dropzone = $form->getData();
             $form = $this->handleFormErrors($form, $dropzone);

@@ -87,25 +87,33 @@
 
         {# Publication. Ajout de cette zone, demande JJQ. InnovaERV #}
         {# Partie sans form_row car c'est une extraData. InnovaERV #}
-        <div>
+        <div id="published">
             <h4>{{ 'Publication Title'|trans({}, 'innova_collecticiel') }}</h4>
             <div class="row form-group">
-                <div class="col-md-6">
-                    <div>
-                        <div class="col-md-10">
-                            <div class="checkbox">
-                                <label>
-                                    <input id="innova_collecticiel_common_form_published2" type="checkbox"
-                                    {% if dropzone.resourceNode.isPublished == 1 %}checked="checked"{% endif %}
-                                    name="innova_collecticiel_common_form[published2]">
-                                    <label class="col-xs-offset-2 col-xs-12 col-sm-2" for="innova_collecticiel_common_form_published2">     {{ 'Published'|trans({}, 'innova_collecticiel') }}
-                                    </label>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                <div class="col-md-10">
+                    {% if dropzone.resourceNode.isPublished == 1 %}
+                        {{ form_row(form.published, {
+                        'label_attr':
+                            {
+                                'class': 'col-xs-offset-2 col-xs-12 col-sm-2',
+                                'style': 'font-weight: normal;'
+                            },
+                        'attr' : {'checked' : 'checked'},
+                        }
+                        ) }}
+                    {% else %}
+                        {{ form_row(form.published, {
+                        'label_attr':
+                            {
+                                'class': 'col-xs-offset-2 col-xs-12 col-sm-2',
+                                'style': 'font-weight: normal;'
+                            },
+                        'attr' : {},
+                        }
+                        ) }}
+                    {% endif %}
+                 </div>
+             </div>
         </div>
 
         {# Accusé de réception. Ajout de cette zone, demande JJQ. InnovaERV  #}
@@ -114,7 +122,7 @@
             <div class="row form-group">
                 <div class="col-md-10">
                     {{ form_row(form.returnReceipt, {'label_attr': {'class': 'col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
-                     ) }}
+                    ) }}
                  </div>
              </div>
         </div>
@@ -125,7 +133,7 @@
             <div class="row form-group">
                 <div class="col-md-10">
                     {{ form_row(form.evaluation, {'label_attr': {'class': 'col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
-                     ) }}
+                    ) }}
                  </div>
              </div>
         </div>
@@ -136,7 +144,7 @@
             <div class="row form-group">
                 <div class="col-md-8">
                     {{ form_row(form.picture, {'label_attr': {'class': 'col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
-                     ) }}
+                    ) }}
                  </div>
              </div>
 
@@ -169,13 +177,10 @@
     {{ tinymce_init() }}
     <script>
         $('document').ready(function() {
-
             // hack dégueu pour recharger les calendriers avec le même format.
             var pickers = $("#innova_collecticiel_common_form_startAllowDrop_date, #innova_collecticiel_common_form_endAllowDrop_date");
             pickers.datepicker('remove');
             pickers.datepicker({format: 'dd/mm/yyyy'});
-
-
             $('#expected-total-correction-explication, .popoverItem').popover({
                 'trigger': 'hover',
                 'html': true
@@ -191,12 +196,10 @@
                     $("#innova_collecticiel_common_form_endAllowDrop_time").val("00:00");
                 }
             });
-
             $("input:radio[name='innova_collecticiel_common_form[manualState]']").click(function()
             {
                 onManualStateChange($(this));
             });
-
             $('#innova_collecticiel_common_form_stayHere').val(0);
             $('#innova_collecticiel_common_form_autoCloseForManualStates').val(0);
             $('.save-button').on('click', function(event) {
@@ -204,20 +207,17 @@
                 $('#innova_collecticiel_common_form_stayHere').val(1);
                 $('.submit_button').trigger('click');
             });
-
             $('#innova_collecticiel_common_form_peerReview_0').on('click', function() {
                 enablePeerReviewOptions(false);
             });
             $('#innova_collecticiel_common_form_peerReview_1').on('click', function() {
                 enablePeerReviewOptions(true);
             });
-
             var $displayNotationToLearner = $('#innova_collecticiel_common_form_displayNotationMessageToLearners');
             manageSuccessFailMessagesVisibility($displayNotationToLearner);
             $displayNotationToLearner.change(function () {
                 manageSuccessFailMessagesVisibility($(this));
             });
-
             var enablePeerReviewOptions = function (peerReviewEnabled) {
                 // when loading the page without having saved yet, all tabs available by default
                 if (peerReviewEnabled || typeof peerReviewEnabled === 'undefined') {
@@ -237,7 +237,6 @@
                     $('.manual-review-option').show();
                     $('#innova_collecticiel_common_form_manualState_2').parent().hide();
                     $('#innova_collecticiel_common_form_manualState_3').parent().hide();
-
                     var $expectedTotalCorrection = $('#innova_collecticiel_common_form_expectedTotalCorrection');
                     if ($expectedTotalCorrection.val() < 1 || $expectedTotalCorrection.val() > 10) {
                         $expectedTotalCorrection.val(3);
@@ -246,58 +245,46 @@
                     $('#innova_collecticiel_common_form_endReview_time').val(null);
                     $('#innova_collecticiel_common_form_startReview_date').val(null);
                     $('#innova_collecticiel_common_form_startReview_time').val(null);
-
                     $('#dropzone_notification_part').show();
-
                     $('.submit_button').html('{{ 'Save and finished'|trans({}, 'innova_collecticiel') }}'); 
-
                 }
                 manageCorrectionVisibility(peerReviewEnabled);
             };
             
             enablePeerReviewOptions({{ dropzone.peerReview }});
-
             var manualPlanning = function () {
                 var $planning_dates = $('#planning_dates');
                 $planning_dates.addClass('text-muted');
                 $planning_dates.find('input').prop('disabled', true);
-
                 var $planning_manual = $('#planning_manual');
                 $planning_manual.removeClass('text-muted');
                 $planning_manual.find('input').prop('disabled', false);
             };
-
             var datesPlanning = function () {
                 var $planning_manual = $('#planning_manual');
                 $planning_manual.addClass('text-muted');
                 $planning_manual.find('input').prop('disabled', true);
-
                 var $planning_dates = $('#planning_dates');
                 $planning_dates.removeClass('text-muted');
                 $planning_dates.find('input').prop('disabled', false);
                 $("#innova_collecticiel_common_form_manualPlanning_1").attr('checked','checked');
             };
-
             $('#innova_collecticiel_common_form_manualPlanning_0').on('click', manualPlanning);
             $('#innova_collecticiel_common_form_manualPlanning_1').on('click', datesPlanning);
-
             if ({{ dropzone.manualPlanning ? 'true' : 'false' }}) {
                 manualPlanning();
             } else {
                 datesPlanning();
             }
-
             $('#innova_collecticiel_common_form_diplayCorrectionsToLearners').click(function()
             {
                 manageCorrectionDeny();
             });
-
             $('#editCriteriaLink').click(function (e) {
                 e.preventDefault();
                 $('#submitAndGotoCriteriaButton').trigger('click');
             });
         });
-
         function manageCorrectionDeny()
         {
             // Set manageCorrectionDeny dependencies
@@ -309,9 +296,7 @@
                 $('#innova_collecticiel_common_form_allowCorrectionDeny').prop('checked',false);
                 $('#allow-correction-deny').parent().hide();
             }
-
         }
-
         function manageCorrectionVisibility(peerReviewEnabled)
         {
             // Set PeerReview dependency
@@ -326,7 +311,6 @@
             $('#innova_collecticiel_common_form_diplayCorrectionsToLearners').parent().show();
             manageCorrectionDeny();
         }
-
         function manageSuccessFailMessagesVisibility($cb)
         {
             var $div = $('#dropzone-message-part');
@@ -336,7 +320,6 @@
                 $div.fadeOut();
             }
         }
-
         /**
          * When manual state has changed and involve that poeple will not be able to drop anymore, this will ask if
          * you want to close opened drop. ( same as autoClose when time is up ).
@@ -356,7 +339,6 @@
                 });
             }
         }
-
     </script>
 {% endblock %}
 

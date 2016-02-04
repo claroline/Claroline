@@ -245,7 +245,11 @@ $(document).ready(function () {
         {
             $("input[type='checkbox']:checked").each(
                 function() {
-                    arrayDocsId.push($(this).attr('id'));
+                    var chaineCaractere = $(this).attr('id');
+                    var splitChaine = chaineCaractere.split('_');
+                    if (splitChaine[2] != '0') {
+                        arrayDocsId.push($(this).attr('id'));
+                    }
             });          
         }
         else
@@ -345,3 +349,5 @@ $(document).ready(function () {
     });
 
 });
+
+

@@ -53,56 +53,105 @@ class DropzoneCommonType extends AbstractType
                 'choices' => array(
                     'allowDrop' => 'allowDropManualState',
                     'finished' => 'finishedManualState',
-
                 ),
+//                'data' => 'allowDrop',
                 'expanded' => true,
                 'multiple' => false,
             ))
             ->add('startAllowDrop', 'datetimepicker', $defaultDateTimeOptions)
-            ->add('endAllowDrop', 'datetimepicker', $defaultDateTimeOptions)
+            ->add('endAllowDrop', 'datetimepicker', $defaultDateTimeOptions);
 
-            // Publication. Ajout de cette zone, demande JJQ. InnovaERV
-            //->add('published', 'checkbox', 
-            //    array(
-            //        'attr' => array('checked' => 'checked'),
-            //        'mapped' => false,
-            //        'required' => false)
-            //         )
 
+        $builder
+            // Accusé de réception. Ajout de cette zone, demande JJQ. InnovaERV
+            ->add('published', 'checkbox', 
+                array(
+                    'attr' => array(),
+                    'mapped' => false,
+                    'required' => false)
+                     );
+      
+
+        // $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+        //     $dropzone = $event->getData();
+        //     $form = $event->getForm();
+        //     $publishedAttr = array();
+
+        //     // check if the Product object is "new"
+        //     // If no data is passed to the form, the data is "null".
+        //     // This should be considered a new "Product"
+        //     if ($dropzone->getResourceNode()->isPublished()) {
+        //         $publishedAttr['checked'] = 'checked';
+        //     }
+
+        //     $form
+        //         // Publication. Ajout de cette zone, demande JJQ. InnovaERV
+        //         ->add('published', 'checkbox', 
+        //             array(
+        //                 'attr' => $publishedAttr,
+        //                 'mapped' => false,
+        //                 'required' => false)
+        //                  );
+        // });
+
+
+
+
+        // $builder->addEventListener(
+        // FormEvents::POST_SUBMIT,
+        // function (FormEvent $event) {
+        //     $dropzone = $event->getData();
+        //     $form = $event->getForm();
+        //     $publishedAttr = array();
+
+
+        //     // check if the Product object is "new"
+        //     // If no data is passed to the form, the data is "null".
+        //     // This should be considered a new "Product"
+        //     if ($dropzone->getResourceNode()->isPublished()) {
+        //         $publishedAttr['checked'] = 'checked';
+        //     }
+
+        //     $form
+        //         // Publication. Ajout de cette zone, demande JJQ. InnovaERV
+        //         ->add('published', 'checkbox', 
+        //             array(
+        //                 'attr' => $publishedAttr,
+        //                 'mapped' => false,
+        //                 'required' => false)
+        //                  );
+        //     }
+        // );
+
+
+        $builder
             // Accusé de réception. Ajout de cette zone, demande JJQ. InnovaERV
             ->add('returnReceipt', 'checkbox',
                  array(
 //                     'attr' => array('checked' => 'checked'),
                      'required' => false)
                       )
-
             // Evaluation. Ajout de cette zone, demande JJQ. InnovaERV
             ->add('evaluation', 'checkbox',
                  array(
                      'required' => false)
                       )
-
             // Picture. Ajout de cette zone, demande JJQ. InnovaERV
             ->add('picture', 'checkbox',
                  array(
                      'required' => false)
                       )
-
             // Username. Ajout de cette zone, demande JJQ. InnovaERV
             ->add('username', 'checkbox',
                  array(
                      'required' => false)
                       )
-
-
             ;
     }
-
     public function getName()
     {
         return 'innova_collecticiel_common_form';
     }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
