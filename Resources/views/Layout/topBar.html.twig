@@ -10,7 +10,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 {% if config.getParameter('logo') != "" %}
-                    <a class="navbar-brand logo" href="{{ path('claro_index') }}">
+                    <a class="navbar-brand logo" href="{{ path('claro_index') }}" title="{{ 'home' | trans({}, "platform") }}">
                         <img src="{{ asset("") ~ "uploads/logos/" ~ config.getParameter('logo') }}" height="35"
                             {% if config.getParameter('name') != "" %}alt="{{ config.getParameter('name') }}"{% endif %}>
                     </a>
@@ -32,7 +32,7 @@
                         {% for item in homeMenu %}
                             {% if item.content.title is defined %}
                                 <li>
-                                    <a{% if item.content.content is defined %} href="{{ item.content.content | homeLink }}"{% endif %}>
+                                    <a{% if item.content.content is defined %} href="{{ item.content.content | homeLink }}" title="{{ item.content.getTitle() }}"{% endif %} >
                                         {{ item.content.getTitle() }}
                                     </a>
                                 </li>
