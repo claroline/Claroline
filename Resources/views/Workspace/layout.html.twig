@@ -2,11 +2,9 @@
 
 {% block title %}
     {% spaceless %}
-
+        {{ workspace.getName() }}
     {% if _resource is defined %}
         {{ _resource.getResourceNode().getName() | striptags | raw }}
-    {% else %}
-        {{ parent() }}
     {% endif %}
     {% endspaceless %}
 {% endblock %}

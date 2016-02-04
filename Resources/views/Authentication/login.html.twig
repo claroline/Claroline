@@ -51,13 +51,13 @@ same message when authentication has failed (no precise validation errors).
                     </label>
                 </div>
                 <p>
-                    <a href ="{{ path('claro_security_forgot_password')}}" tabindex="4">{{ 'forgot_password'|trans({}, 'platform') }}</a>
+                    <a href ="{{ path('claro_security_forgot_password')}}" tabindex="4" title="{{ 'forgot_password'|trans({}, 'platform') }}">{{ 'forgot_password'|trans({}, 'platform') }}</a>
                 </p>
 
                 <button type="submit" class="btn btn-success btn-block" tabindex="3">{{ 'login'|trans({}, 'platform') }}</button>
                 
                 {% if selfRegistrationAllowed and showRegisterButton %}
-                    <a class="btn btn-default btn-block" tabindex="3" href="{{ path('claro_registration_user_registration_form') }}">
+                    <a class="btn btn-default btn-block" tabindex="3" href="{{ path('claro_registration_user_registration_form') }}" title="{{ 'register'|trans({}, 'platform') }}">
                         {{ 'register'|trans({}, 'platform') }}
                     </a>
                 {% endif %}
