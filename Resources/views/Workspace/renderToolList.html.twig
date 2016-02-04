@@ -1,5 +1,5 @@
 {% if not hideToolsMenu %}
-    <div class="list-group menu">
+    <div class="list-group menu" role="menubar">
         <div class="list-group-item disabled">{{ workspace.getName() }} <em>({{ workspace.getCode() }})</em></div>
         {% if hasManagerAccess %}
             <a class="list-group-item accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse">
@@ -22,7 +22,8 @@
         {% endif %}
         {% for orderedTool in orderedTools %}
             <a class="list-group-item{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': orderedTool.getTool().getName()}) | compareRoute(" active") | raw }}"
-                href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': orderedTool.getTool().getName()}) }}">
+                href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': orderedTool.getTool().getName()}) }}"
+                title="{{ orderedTool.getName()|trans({}, 'tools') }}" role="menuitem">
                 <i class="fa fa-{{ orderedTool.getTool().getClass() }}"></i>
                 <span>{{ orderedTool.getName()|trans({}, 'tools') }}</span>
             </a>

@@ -3,8 +3,9 @@
         <a  role="menuitem"
             {% if params.dropdown is defined and params.dropdown is not empty %}class="pointer-hand dropdown-toggle" data-toggle="dropdown"{% endif %}
             {% if params.href is defined and params.href is not empty %}href="{{ params.href }}"{% endif %}
-            {% if params.title is defined and params.title is not empty %}title="{{ params.title }}"{% endif %}
-            >
+            {% if params.title is not defined and params.name is defined and params.name is not empty %}title="{{ params.name | trans({}, 'platform') }}"{% endif %}
+            {% if params.title is defined and params.title is not empty %}title="{{ params.title}}"{% endif %}
+                >
             {% if params.icon is defined and params.icon is not empty %}<i class="fa fa-{{ params.icon }}"></i> {% endif %}
             <span {% if params.breakhide is defined %}class="break-hide"{% endif %}>
                 {% if params.name is defined %} {{ params.name | trans({}, 'platform') }} {% endif %}
@@ -44,7 +45,7 @@
         {% if register_target is not empty %}
             {{ topbar.item({'name':'register', 'href': register_target, 'icon':'user-plus'}) }}
         {% endif %}
-        {{ topbar.item({'name':'login', 'href': login_target, 'icon':'user'}) }}
+        {{ topbar.item({'name':'login', 'href': login_target, 'icon':'user', 'title':'login' | trans({}, 'platform') ~ ' Claroline Connect'}) }}
     {% endblock login %}
 
     {% block logged %}
