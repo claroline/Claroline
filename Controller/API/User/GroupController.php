@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Controller\API\Admin;
+namespace Claroline\CoreBundle\Controller\API\User;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use FOS\RestBundle\Controller\FOSRestController;

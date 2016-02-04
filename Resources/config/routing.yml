@@ -287,7 +287,7 @@ claro_api:
     type: annotation
 
 claro_user_api:
-    resource: "@ClarolineCoreBundle/Controller/API/Admin/UserController.php"
+    resource: "@ClarolineCoreBundle/Controller/API/User/UserController.php"
     type: rest
     prefix: api
     defaults: {_format: json}
@@ -304,7 +304,7 @@ claro_workspace_api:
         expose: true
 
 claro_group_api:
-    resource: "@ClarolineCoreBundle/Controller/API/Admin/GroupController.php"
+    resource: "@ClarolineCoreBundle/Controller/API/User/GroupController.php"
     type: rest
     prefix: api
     defaults: {_format: json}
