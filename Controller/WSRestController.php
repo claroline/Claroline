@@ -57,12 +57,17 @@ class WSRestController extends Controller
                 $file = $fileUp->getClientOriginalName();
                 $fileUp->move($userDir.'/images/', $fileUp->getClientOriginalName());
 
+                // get height and width of the uploaded picture
+                list($width, $height) = getimagesize($userDir.'/images/'.$file);
+
                 $em = $this->getDoctrine()->getManager();
                 $picture = new Picture();
 
                 $picture->setLabel(trim($request->get('label')));
                 $picture->setUrl($userDir.'/images/'.$file);
                 $picture->setType(strrchr($file, '.'));
+                $picture->setWidth($width);
+                $picture->setHeight($height);
                 $picture->setUser($this->container->get('security.token_storage')->getToken()->getUser());
 
                 if ($redirection == 1 || ($redirection == 0 && (

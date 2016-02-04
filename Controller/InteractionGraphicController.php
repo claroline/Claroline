@@ -155,6 +155,9 @@ class InteractionGraphicController extends Controller
         $interactionGraph = $em->getRepository('UJMExoBundle:InteractionGraphic')
             ->findOneByQuestion($attr->get('interaction')->getId());
 
+        $picture = $em->getRepository('UJMExoBundle:Picture')
+            ->findOneBy(array('id' => $interactionGraph->getPicture()));
+
         $position = $em->getRepository('UJMExoBundle:Coords')->findBy(
             array('interactionGraphic' => $interactionGraph->getId())
         );
@@ -169,13 +172,14 @@ class InteractionGraphicController extends Controller
 
         $linkedCategory = $catSer->getLinkedCategories();
 
-        $variables['entity'] = $interactionGraph;
+        $variables['entityInterGraph'] = $interactionGraph;
         $variables['edit_form'] = $editForm->createView();
         $variables['nbResponses'] = $graphSer->getNbReponses($attr->get('interaction'));
         $variables['linkedCategory'] = $linkedCategory;
         $variables['position'] = $position;
         $variables['exoID'] = $attr->get('exoID');
         $variables['locker'] = $catSer->getLockCategory();
+        $variables['entityPicture'] = $picture;
 
         if ($attr->get('exoID') != -1) {
             $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($attr->get('exoID'));
