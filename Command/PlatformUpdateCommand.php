@@ -61,7 +61,6 @@ class PlatformUpdateCommand extends ContainerAwareCommand
         $refresher = $this->getContainer()->get('claroline.installation.refresher');
 
         $refresher->dumpAssets($this->getContainer()->getParameter('kernel.environment'));
-        $refresher->compileGeneratedThemes();
 
         MaintenanceHandler::disableMaintenance();
 
