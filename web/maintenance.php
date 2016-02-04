@@ -20,7 +20,7 @@ if (!$maintenanceMode) {
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
 </head>
 <body style="padding-top:40px; background-color:#F7F7F9">
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-md-offset-4 col-md-4">
             <div class="panel panel-default">

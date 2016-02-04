@@ -46,13 +46,13 @@ $vendorDir = __DIR__ . "/../../vendor";
     <body>
 		<div id="data" data-locale='<?php echo isset($_GET['_locale']) ? $_GET['_locale']: 'en' ?>'></div>
         <nav class="navbar navbar-static-top navbar-inverse" role="navigation">
-            <div class="container">
+            <div class="container-fluid">
                 <div class="navbar-header">
                     <img src="../uploads/logos/clarolineconnect.png"/>
                 </div>
             </div>
         </nav>
-        <div class="container">
+        <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
                     <div class="panel panel-default">
