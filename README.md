@@ -79,13 +79,13 @@ php app/console claroline:install
     - *composer-max.json* (complete installation, with plugins)
     - *composer-v6.json* (complete installation based on the v6/dev version)
 - Run the following commands:
-    - `composer update --prefer-source` *(\*)*
+    - `composer update --prefer-source` *(***)*
     - `npm install` 
     - `php app/console claroline:install`
     - `npm run build`
     - `rm app/config/operations.xml`
 
-*(\*)* At this point, you can ignore the following error(s): *Class
+*(***)* At this point, you can ignore the following error(s): *Class
     Claroline\BundleRecorder\ScriptHandler is not autoloadable, can not call
     post-package-install script*
 
