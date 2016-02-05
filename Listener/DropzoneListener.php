@@ -23,6 +23,7 @@ class DropzoneListener extends ContainerAware
 {
     public function onCreateForm(CreateFormResourceEvent $event)
     {
+
         $form = $this->container->get('form.factory')->create(new DropzoneType(), new Dropzone());
         
         $content = $this->container->get('templating')->render(
@@ -75,7 +76,9 @@ class DropzoneListener extends ContainerAware
                     'innova_collecticiel_drop',
                     array('resourceId' => $event->getResource()->getId())
                 );
-        } else {
+        }
+        else
+        {
         // Modification ERV (août 2015) InnovaERV
         // suite demande JJQ, voir son document de référence d'août 2015
         // il faut venir sur l'onglet "Demandes adressées" et non plus sur "Paramètres"
@@ -97,7 +100,8 @@ class DropzoneListener extends ContainerAware
                         array('resourceId' => $event->getResource()->getId())
                 );
             }
-            else {
+            else 
+            {
                 $route = $this->container
                     ->get('router')
                     ->generate(

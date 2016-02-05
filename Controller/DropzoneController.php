@@ -53,6 +53,12 @@ class DropzoneController extends DropzoneBaseController
         $dropzoneVoter->isAllowToEdit($dropzone);
         $dropzoneManager = $this->get('innova.manager.dropzone_manager');
 
+        if ($dropzone->getManualState() == 'notStarted') {
+            $dropzone->setManualState("allowDrop");
+            $em->persist($dropzone);
+            $em->flush();
+        }
+
         $form = $this->createForm(
             new DropzoneCommonType(), $dropzone,
             array('language' => $platformConfigHandler->getParameter('locale_language'), 'date_format' => 'dd/MM/yyyy')
