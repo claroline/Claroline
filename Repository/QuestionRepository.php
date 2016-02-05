@@ -44,10 +44,10 @@ class QuestionRepository extends EntityRepository
     public function findByExercise(Exercise $exercise)
     {
         return $this->createQueryBuilder('q')
-            ->join('q.exerciseQuestions', 'eq')
-            ->join('eq.exercise', 'e')
-            ->where('e = :exercise')
-            ->orderBy('eq.ordre')
+            ->join('q.stepQuestions', 'sq')
+            ->join('sq.step', 's')
+            ->where('s = :exercise')
+            ->orderBy('sq.ordre')
             ->setParameter(':exercise', $exercise)
             ->getQuery()
             ->getResult();
