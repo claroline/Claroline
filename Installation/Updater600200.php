@@ -11,6 +11,7 @@ class Updater600200 {
 
     private $connection;
     private $widthHeightPic = array();
+    private $refPictureInInterGraph = array();
 
     public function __construct(ContainerInterface $container)
     {
@@ -70,7 +71,7 @@ class Updater600200 {
         $this->log('Checking InteractionGraphic ...');
 
         $checkQuery = '
-            SELECT document_id, width, height
+            SELECT id, document_id, width, height
             FROM ujm_interaction_graphic
         ';
 
@@ -78,7 +79,20 @@ class Updater600200 {
         foreach ($results as $res) {
             $wh = array($res['width'], $res['height']);
             $this->widthHeightPic[$res['document_id']] = $wh;
+            $this->refPictureInInterGraph[$res['id']] = $res['document_id'];
         }
+
+        /*
+         * To execute :
+         * ALTER TABLE ujm_interaction_graphic
+            ADD CONSTRAINT FK_9EBD442FEE45BDBF FOREIGN KEY (picture_id)
+            REFERENCES ujm_picture (id)
+         */
+        $this->connection->exec("
+            UPDATE ujm_interaction_graphic
+            SET document_id = NULL
+        ");
+
     }
 
     /**
@@ -144,6 +158,14 @@ class Updater600200 {
                 . ", "
                 . $this->widthHeightPic[$doc['id']][1])
                 . ")";
+        }
+
+        $this->log('UPDATE Interaction_Graphic ...');
+        foreach ($this->refPictureInInterGraph as $key => $ref) {
+            $this->connection->exec("
+                UPDATE ujm_interaction_graphic
+                SET picture_id = " . $ref
+                ." WHERE id = " . $key);
         }
     }
 
