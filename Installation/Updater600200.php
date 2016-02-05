@@ -188,7 +188,7 @@ class Updater600200 {
         $query = 'SELECT * FROM ujm_step WHERE exercise_id=' . $exoId;
         $step = $this->connection->query($query)->fetch();
 
-        return $step;
+        return $step['id'];
     }
 
     /**
