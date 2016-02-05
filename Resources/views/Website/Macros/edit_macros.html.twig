@@ -63,11 +63,11 @@
 {% macro getStylesheets() %}
     {% stylesheets debug=false filter='lessphp, cssmin' output='bundles/icapwebsite/css/edit-style.css'
     '@IcapWebsiteBundle/Resources/public/css/angular/bootstrap-additions.min.css'
+    '@FrontEndBundle/Resources/public/angular-ui-tree/dist/angular-ui-tree.min.css'
     '@IcapWebsiteBundle/Resources/public/css/angular/angular-motion.min.css'
     '@IcapWebsiteBundle/Resources/views/less/edit.less'
     '@IcapWebsiteBundle/Resources/public/css/angular/pushmenu.css'
     '@IcapWebsiteBundle/Resources/public/css/angular/flexnav.css'
-    '@FrontEndBundle/Resources/public/angular-ui-tree/dist/angular-ui-tree.min.css'
     %}
     <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
     {% endstylesheets %}
