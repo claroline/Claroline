@@ -69,7 +69,7 @@ Project setup
 #### With the installation script
 
 ```
-curl -sS https://raw.githubusercontent.com/claroline/repository-scripts/master/install.sh | sh
+curl -sS https://raw.githubusercontent.com/claroline/repository-scripts/5.x/install.sh | sh
 php app/console claroline:install
 ```
 
@@ -92,7 +92,6 @@ php app/console claroline:install
 - Create a *composer.json* based on one of the following *composer* files:
     - *composer-min.json* (minimal installation, without plugins)
     - *composer-max.json* (complete installation, with plugins)
-    - *composer-v6.json* (complete installation based on the v6/dev version)
 - Run the following commands:
     - `composer update --prefer-source` <sub>(1)</sub>
     - `php app/console claroline:install`
