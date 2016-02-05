@@ -338,7 +338,7 @@ users: Users
 validate: Validate
 
 # W
-warning: Are you sure you want to delete this document
+warning: Are you sure you want to delete this picture
 warning_change_type_q: Warning you may lose your data entered continue
 warning_one_word: You chose a question word. Attention has spaces in your answer.
 weight_choice: Assign points by response

@@ -121,8 +121,8 @@
 
                                         {% if allowToDel[myDoc.id] %}
                                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans({}, 'ujm_exo') }}"
-                                           id="delete_document"
-                                           href="{{ path('ujm_Picture_del', { 'idDoc': myDoc.id }) }}"
+                                           id="delete_picture"
+                                           href="{{ path('ujm_Picture_del', { 'idPic': myDoc.id }) }}"
                                            >
                                             <i class="fa fa-trash-o"></i>
                                         </a>
@@ -159,5 +159,5 @@
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/sortAndSearch.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/malsup.js') }}"></script>
     <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'ujm_exo' }) }}"></script>
-    {% include "UJMExoBundle:Partial:modal/confirmDelDoc.html.twig" %}
+    {% include "UJMExoBundle:Partial:modal/confirmDelPic.html.twig" %}
 {% endblock %}

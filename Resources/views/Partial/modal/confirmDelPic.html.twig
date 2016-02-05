@@ -1,7 +1,7 @@
 {% javascripts
     debug=false
     vars=["locale"]
-    "@UJMExoBundle/Resources/views/ConfirmationMessage/removeDocumentConfirm.html.twigjs"
+    "@UJMExoBundle/Resources/views/ConfirmationMessage/removePictureConfirm.html.twigjs"
     filter="twig_js"
 %}
     <script language="javascript" src="{{ asset_url }}"></script>
@@ -10,7 +10,7 @@
     function createValidationBox() {
         var html = Twig.render(
             ModalWindow,
-            {'footer': Twig.render(ValidationFooter), 'isHidden': true, 'modalId': 'confirm-modal', 'body': Twig.render(removeDocumentConfirm, {'nbItems': 1})}
+            {'footer': Twig.render(ValidationFooter), 'isHidden': true, 'modalId': 'confirm-modal', 'body': Twig.render(removePictureConfirm, {'nbItems': 1})}
         );
         $('body').append(html);
     }
@@ -19,7 +19,7 @@
     var tmpRoute = '';
     var tmpEl = undefined;
 
-    $('body').on('click', '#delete_document', function(event) {
+    $('body').on('click', '#delete_picture', function(event) {
         event.preventDefault();
         $('#confirm-modal').modal('show');
         tmpRoute = event.currentTarget.href;
