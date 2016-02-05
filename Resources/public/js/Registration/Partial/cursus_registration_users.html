@@ -8,14 +8,18 @@
                data-toggle="tooltip"
                data-placement="left"
                title="{{ 'register_users_to_cursus'|trans:{}:'cursus' }}"
-               ng-click="crmc.registerUsers(crmc.currentCursusId)"
+               ng-click="crmc.registerUsers()"
             >
             </i>
         </span>
     </div>
     <div id="collapse-users-list" class="panel-collapse collapse in">
         <div class="panel-body">
-            <dtable options="crmc.dataUsersTableOptions" rows="crmc.cursusUsers" class="material" ng-if="crmc.cursusUsers.length > 0">
+            <dtable options="crmc.dataUsersTableOptions"
+                    rows="crmc.cursusUsers"
+                    class="material"
+                    ng-if="crmc.cursusUsers.length > 0"
+            >
             </dtable>
             <div class="alert alert-warning" ng-if="crmc.cursusUsers.length == 0">
                 {{ 'no_user'|trans:{}:'platform' }}

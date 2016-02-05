@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Controller\API;
 
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusGroup;
@@ -39,9 +40,9 @@ class CursusController extends FOSRestController
 
     /**
      * @DI\InjectParams({
-     *     "cursusManager"   = @DI\Inject("claroline.manager.cursus_manager"),
-     *     "formFactory"     = @DI\Inject("form.factory"),
-     *     "requestStack"    = @DI\Inject("request_stack")
+     *     "cursusManager" = @DI\Inject("claroline.manager.cursus_manager"),
+     *     "formFactory"   = @DI\Inject("form.factory"),
+     *     "requestStack"  = @DI\Inject("request_stack")
      * })
      */
     public function __construct(
@@ -76,105 +77,9 @@ class CursusController extends FOSRestController
      */
     public function getDatasForCursusRegistrationAction(Cursus $cursus)
     {
-        $hierarchy = array();
-        $lockedHierarchy = array();
-        $unlockedCursus = array();
-        $hierarchyArray = array();
-        $unlockedArray = array();
-        $groupsArray = array();
-        $usersArray = array();
-        $allRelatedCursus = $this->cursusManager->getRelatedHierarchyByCursus($cursus);
-        $cursusGroups = $this->cursusManager->getCursusGroupsByCursus($cursus);
-        $cursusUsers = $this->cursusManager->getCursusUsersByCursus($cursus);
+        $datas = $this->cursusManager->getDatasForCursusRegistration($cursus);
 
-        foreach ($allRelatedCursus as $oneCursus) {
-            $parent = $oneCursus->getParent();
-            $lockedHierarchy[$oneCursus->getId()] = 'blocked';
-
-            if (is_null($parent)) {
-
-                if (!isset($hierarchy['root'])) {
-                    $hierarchy['root'] = array();
-                }
-                $hierarchy['root'][] = $oneCursus;
-            } else {
-                $parentId = $parent->getId();
-
-                if (!isset($hierarchy[$parentId])) {
-                    $hierarchy[$parentId] = array();
-                }
-                $hierarchy[$parentId][] = $oneCursus;
-            }
-        }
-        $this->cursusManager->unlockedHierarchy(
-            $cursus,
-            $hierarchy,
-            $lockedHierarchy,
-            $unlockedCursus
-        );
-
-        foreach ($hierarchy as $key => $values) {
-            $hierarchyArray[$key] = array();
-
-            foreach ($values as $value) {
-                $course = $value->getCourse();
-                $valueEntry = array(
-                    'id' => $value->getId(),
-                    'code' => $value->getCode(),
-                    'title' => $value->getTitle(),
-                    'cursusOrder' => $value->getCursusOrder(),
-                    'blocking' => $value->isBlocking(),
-                    'description' => $value->getDescription(),
-                    'details' => $value->getDetails(),
-                    'lft' => $value->getLft(),
-                    'rgt' => $value->getRgt(),
-                    'lvl' => $value->getLvl(),
-                    'root' => $value->getRoot(),
-                    'course' => is_null($course) ? null : $course->getId()
-                );
-                $hierarchyArray[$key][] = $valueEntry;
-            }
-        }
-
-        foreach ($unlockedCursus as $unlocked) {
-            $unlockedArray[] = $unlocked->getId();
-        }
-
-        foreach ($cursusGroups as $cursusGroup) {
-            $group = $cursusGroup->getGroup();
-            $groupEntry = array(
-                'id' => $cursusGroup->getId(),
-                'groupType' => $cursusGroup->getGroupType(),
-                'registrationDate' => $cursusGroup->getRegistrationDate(),
-                'groupId' => $group->getId(),
-                'groupName' => $group->getName(),
-            );
-            $groupsArray[] = $groupEntry;
-        }
-
-        foreach ($cursusUsers as $cursusUser) {
-            $user = $cursusUser->getUser();
-            $userEntry = array(
-                'id' => $cursusUser->getId(),
-                'userType' => $cursusUser->getUserType(),
-                'registrationDate' => $cursusUser->getRegistrationDate(),
-                'userId' => $user->getId(),
-                'username' => $user->getUsername(),
-                'firstName' => $user->getFirstName(),
-                'lastName' => $user->getLastName()
-            );
-            $usersArray[] = $userEntry;
-        }
-
-        return new JsonResponse(
-            array(
-                'hierarchy' => $hierarchyArray,
-                'lockedHierarchy' => $lockedHierarchy,
-                'unlockedCursus' => $unlockedArray,
-                'cursusGroups' => $groupsArray,
-                'cursusUsers' => $usersArray
-            )
-        );
+        return new JsonResponse($datas, 200);
     }
 
     /**
@@ -281,6 +186,62 @@ class CursusController extends FOSRestController
             'ASC',
             false
         );
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Retrieve sessions infos from a list of cursus",
+     *     views = {"cursus"}
+     * )
+     */
+    public function getSessionsForCursusListAction($cursusIdsTxt)
+    {
+        $cursusList = $this->cursusManager->getCursusFromCursusIdsTxt($cursusIdsTxt);
+        $sessionsInfos = $this->cursusManager->getSessionsInfosFromCursusList($cursusList);
+
+        return new JsonResponse($sessionsInfos, 200);
+    }
+    
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Register group to cursus and sessions",
+     *     views = {"cursus"}
+     * )
+     */
+    public function postGroupRegisterToMultipleCursusAction(
+        Group $group,
+        $cursusIdsTxt,
+        $sessionsIdsTxt
+    )
+    {
+        $multipleCursus = $this->cursusManager->getCursusFromCursusIdsTxt($cursusIdsTxt);
+        $sessions = $this->cursusManager->getSessionsFromSessionsIdsTxt($sessionsIdsTxt);
+        $this->cursusManager->registerGroupToCursusAndSessions($group, $multipleCursus, $sessions);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Register array of users to cursus and sessions",
+     *     views = {"cursus"}
+     * )
+     */
+    public function postUsersRegisterToMultipleCursusAction(
+        $usersIdsTxt,
+        $cursusIdsTxt,
+        $sessionsIdsTxt
+    )
+    {
+        $users = $this->cursusManager->getUsersFromUsersIdsTxt($usersIdsTxt);
+        $multipleCursus = $this->cursusManager->getCursusFromCursusIdsTxt($cursusIdsTxt);
+        $sessions = $this->cursusManager->getSessionsFromSessionsIdsTxt($sessionsIdsTxt);
+        $this->cursusManager->registerUsersToCursusAndSessions($users, $multipleCursus, $sessions);
+
+        return new JsonResponse('success', 200);
     }
 
 

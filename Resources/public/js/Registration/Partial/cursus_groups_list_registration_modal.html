@@ -6,7 +6,7 @@
         </h4>
     </div>
     <div class="modal-body">
-        <div class="alert alert-info" ng-if="cglrmc.search != ''">
+        <div class="alert alert-info" ng-if="cglrmc.search !== ''">
             {{ 'results_for_search_on'|trans:{}:'platform' }} :
             "{{ cglrmc.search }}"
         </div>
@@ -21,7 +21,6 @@
                 <button class="filter btn btn-default"
                         type="button"
                         ng-click="cglrmc.searchGroups()"
-                        ng-keypress="$event.which == '13' && cglrmc.searchGroups()"
                 >
                     <i class="fa fa-search"></i>
                 </button>
@@ -29,8 +28,13 @@
         </div>
         <br>
         <br>
-        <br>
-        
+        <hr>
+        <dtable options="cglrmc.dataTableOptions"
+                rows="cglrmc.groups" 
+                class="material"
+                ng-if="cglrmc.groups.length > 0"
+        >
+        </dtable>
         <div class="alert alert-warning" ng-if="cglrmc.groups.length === 0">
             {{ 'no_group'|trans:{}:'platform' }}
         </div>

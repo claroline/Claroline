@@ -16,10 +16,12 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Manager\ContentManager;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -41,10 +43,11 @@ use Claroline\CursusBundle\Event\Log\LogCursusUserUnregistrationEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializationContext;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("claroline.manager.cursus_manager")
@@ -58,13 +61,17 @@ class CursusManager
     private $iconsDirectory;
     private $om;
     private $pagerFactory;
+    private $platformConfigHandler;
     private $roleManager;
     private $serializer;
     private $templateDir;
+    private $tokenStorage;
     private $translator;
     private $ut;
+    private $userManager;
     private $workspaceManager;
     private $clarolineDispatcher;
+
     private $courseRepo;
     private $courseQueueRepo;
     private $courseSessionRepo;
@@ -79,18 +86,21 @@ class CursusManager
 
     /**
      * @DI\InjectParams({
-     *     "container"        = @DI\Inject("service_container"),
-     *     "contentManager"   = @DI\Inject("claroline.manager.content_manager"),
-     *     "eventDispatcher"  = @DI\Inject("event_dispatcher"),
-     *     "clarolineDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
-     *     "pagerFactory"     = @DI\Inject("claroline.pager.pager_factory"),
-     *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
-     *     "serializer"       = @DI\Inject("jms_serializer"),
-     *     "templateDir"      = @DI\Inject("%claroline.param.templates_directory%"),
-     *     "translator"       = @DI\Inject("translator"),
-     *     "ut"               = @DI\Inject("claroline.utilities.misc"),
-     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
+     *     "container"             = @DI\Inject("service_container"),
+     *     "contentManager"        = @DI\Inject("claroline.manager.content_manager"),
+     *     "eventDispatcher"       = @DI\Inject("event_dispatcher"),
+     *     "clarolineDispatcher"   = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "om"                    = @DI\Inject("claroline.persistence.object_manager"),
+     *     "pagerFactory"          = @DI\Inject("claroline.pager.pager_factory"),
+     *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "roleManager"           = @DI\Inject("claroline.manager.role_manager"),
+     *     "serializer"            = @DI\Inject("jms_serializer"),
+     *     "templateDir"           = @DI\Inject("%claroline.param.templates_directory%"),
+     *     "tokenStorage"          = @DI\Inject("security.token_storage"),
+     *     "translator"            = @DI\Inject("translator"),
+     *     "userManager"           = @DI\Inject("claroline.manager.user_manager"),
+     *     "ut"                    = @DI\Inject("claroline.utilities.misc"),
+     *     "workspaceManager"      = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
     // why no claroline dispatcher ?
@@ -100,10 +110,13 @@ class CursusManager
         EventDispatcherInterface $eventDispatcher,
         ObjectManager $om,
         PagerFactory $pagerFactory,
+        PlatformConfigurationHandler $platformConfigHandler,
         RoleManager $roleManager,
         Serializer $serializer,
         $templateDir,
+        TokenStorageInterface $tokenStorage,
         TranslatorInterface $translator,
+        UserManager $userManager,
         ClaroUtilities $ut,
         WorkspaceManager $workspaceManager,
         $clarolineDispatcher
@@ -116,10 +129,13 @@ class CursusManager
         $this->iconsDirectory = $this->container->getParameter('claroline.param.thumbnails_directory') . '/';
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
+        $this->platformConfigHandler = $platformConfigHandler;
         $this->roleManager = $roleManager;
         $this->serializer = $serializer;
         $this->templateDir = $templateDir;
+        $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
+        $this->userManager = $userManager;
         $this->ut = $ut;
         $this->workspaceManager = $workspaceManager; 
         $this->clarolineDispatcher = $clarolineDispatcher;
@@ -1728,6 +1744,328 @@ class CursusManager
             $sessionsDatas;
     }
 
+    public function getDatasForCursusRegistration(Cursus $cursus)
+    {
+        $hierarchy = array();
+        $lockedHierarchy = array();
+        $unlockedCursus = array();
+        $hierarchyArray = array();
+        $unlockedArray = array();
+        $groupsArray = array();
+        $usersArray = array();
+        $allRelatedCursus = $this->getRelatedHierarchyByCursus($cursus);
+        $cursusGroups = $this->getCursusGroupsByCursus($cursus);
+        $cursusUsers = $this->getCursusUsersByCursus($cursus);
+
+        foreach ($allRelatedCursus as $oneCursus) {
+            $parent = $oneCursus->getParent();
+            $lockedHierarchy[$oneCursus->getId()] = 'blocked';
+
+            if (is_null($parent)) {
+
+                if (!isset($hierarchy['root'])) {
+                    $hierarchy['root'] = array();
+                }
+                $hierarchy['root'][] = $oneCursus;
+            } else {
+                $parentId = $parent->getId();
+
+                if (!isset($hierarchy[$parentId])) {
+                    $hierarchy[$parentId] = array();
+                }
+                $hierarchy[$parentId][] = $oneCursus;
+            }
+        }
+        $this->unlockedHierarchy(
+            $cursus,
+            $hierarchy,
+            $lockedHierarchy,
+            $unlockedCursus
+        );
+
+        foreach ($hierarchy as $key => $values) {
+            $hierarchyArray[$key] = array();
+
+            foreach ($values as $value) {
+                $course = $value->getCourse();
+                $valueEntry = array(
+                    'id' => $value->getId(),
+                    'code' => $value->getCode(),
+                    'title' => $value->getTitle(),
+                    'cursusOrder' => $value->getCursusOrder(),
+                    'blocking' => $value->isBlocking(),
+                    'description' => $value->getDescription(),
+                    'details' => $value->getDetails(),
+                    'lft' => $value->getLft(),
+                    'rgt' => $value->getRgt(),
+                    'lvl' => $value->getLvl(),
+                    'root' => $value->getRoot(),
+                    'course' => is_null($course) ? null : $course->getId()
+                );
+                $hierarchyArray[$key][] = $valueEntry;
+            }
+        }
+
+        foreach ($unlockedCursus as $unlocked) {
+            $unlockedArray[] = $unlocked->getId();
+        }
+
+        foreach ($cursusGroups as $cursusGroup) {
+            $group = $cursusGroup->getGroup();
+            $groupEntry = array(
+                'id' => $cursusGroup->getId(),
+                'groupType' => $cursusGroup->getGroupType(),
+                'registrationDate' => $cursusGroup->getRegistrationDate(),
+                'groupId' => $group->getId(),
+                'groupName' => $group->getName(),
+            );
+            $groupsArray[] = $groupEntry;
+        }
+
+        foreach ($cursusUsers as $cursusUser) {
+            $user = $cursusUser->getUser();
+            $userEntry = array(
+                'id' => $cursusUser->getId(),
+                'userType' => $cursusUser->getUserType(),
+                'registrationDate' => $cursusUser->getRegistrationDate(),
+                'userId' => $user->getId(),
+                'username' => $user->getUsername(),
+                'firstName' => $user->getFirstName(),
+                'lastName' => $user->getLastName()
+            );
+            $usersArray[] = $userEntry;
+        }
+
+        return array(
+            'hierarchy' => $hierarchyArray,
+            'lockedHierarchy' => $lockedHierarchy,
+            'unlockedCursus' => $unlockedArray,
+            'cursusGroups' => $groupsArray,
+            'cursusUsers' => $usersArray
+        );
+    }
+
+    public function getCursusFromCursusIdsTxt($cursusIdsTxt)
+    {
+        $cursusIds = array();
+        $cursusIdsArray = explode(',', $cursusIdsTxt);
+
+        foreach ($cursusIdsArray as $cursusId) {
+
+            if (!empty($cursusId)) {
+                $cursusIds[] = intval($cursusId);
+            }
+        }
+        $multipleCursus = $this->getCursusByIds($cursusIds);
+
+        return $multipleCursus;
+    }
+
+    public function getSessionsFromSessionsIdsTxt($sessionsIdsTxt)
+    {
+        $sessionIds = array();
+        $sessionsIdsArray = explode(',', $sessionsIdsTxt);
+
+        foreach ($sessionsIdsArray as $sessionId) {
+            $id = intval($sessionId);
+
+            if (!empty($id)) {
+                $sessionIds[] = $id;
+            }
+        }
+        $sessions = $this->getSessionsByIds($sessionIds);
+
+        return $sessions;
+    }
+
+    public function getUsersFromUsersIdsTxt($usersIdsTxt)
+    {
+        $userIds = array();
+        $usersIdsArray = explode(',', $usersIdsTxt);
+
+        foreach ($usersIdsArray as $userId) {
+
+            if (!empty($userId)) {
+                $userIds[] = intval($userId);
+            }
+        }
+        $users = $this->userManager->getUsersByIds($userIds);
+
+        return $users;
+    }
+
+    public function getSessionsInfosFromCursusList($cursusList)
+    {
+        $sessionsInfos = array();
+        $courses = array();
+
+        foreach ($cursusList as $cursus) {
+            $course = $cursus->getCourse();
+
+            if (!is_null($course)) {
+                $courses[] = $course;
+            }
+        }
+        $sessions = $this->getSessionsByCourses($courses);
+
+        foreach ($courses as $course) {
+            $courseId = $course->getId();
+
+            if (!isset($sessionsInfos[$courseId])) {
+                $sessionsInfos[$courseId] = array();
+                $sessionsInfos[$courseId]['courseId'] = $course->getId();
+                $sessionsInfos[$courseId]['courseTitle'] = $course->getTitle();
+                $sessionsInfos[$courseId]['courseCode'] = $course->getCode();
+                $sessionsInfos[$courseId]['sessions'] = array();
+            }
+        }
+
+        foreach ($sessions as $session) {
+
+            if ($session->getSessionStatus() !== 2) {
+                $courseId = $session->getCourse()->getId();
+
+                $sessionsInfos[$courseId]['sessions'][] = array(
+                    'sessionId' => $session->getId(),
+                    'sessionName' => $session->getName(),
+                    'sessionStatus' => $session->getSessionStatus()
+                );
+            }
+        }
+
+        return $sessionsInfos;
+    }
+
+    public function registerGroupToCursusAndSessions(
+        Group $group,
+        array $multipleCursus,
+        array $sessions
+    )
+    {
+        $authenticatedUser = $this->tokenStorage->getToken()->getUser();
+        $coursesWithSession = array();
+        $sessionsToCreate = array();
+        $root = 0;
+        $cursusRoot = null;
+        $registrationDate = new \DateTime();
+        $configStartDate = $this->platformConfigHandler
+            ->getParameter('cursusbundle_default_session_start_date');
+        $configEndDate = $this->platformConfigHandler
+            ->getParameter('cursusbundle_default_session_end_date');
+        $startDate = empty($configStartDate) ?
+            null :
+            new \DateTime($configStartDate);
+        $endDate = empty($configEndDate) ?
+            null :
+            new \DateTime($configEndDate);
+
+        foreach ($sessions as $session) {
+            $course = $session->getCourse();
+            $coursesWithSession[$course->getId()] = true;
+        }
+
+        foreach ($multipleCursus as $cursus) {
+            $root = $cursus->getRoot();
+            $course = $cursus->getCourse();
+
+            if (!is_null($course) &&
+                !isset($coursesWithSession[$course->getId()]) &&
+                !in_array($course, $sessionsToCreate)) {
+
+                $sessionsToCreate[] = $course;
+            }
+        }
+
+        if ($root > 0) {
+            $cursusRoot = $this->getOneCursusById($root);
+            $this->associateCursusToSessions($cursusRoot, $sessions);
+        }
+        // Generate the list of sessions where the user will be register
+        foreach ($sessionsToCreate as $course) {
+            $sessionName = $group->getName();
+            $session = $this->createCourseSession(
+                $course,
+                $authenticatedUser,
+                $sessionName,
+                $cursusRoot,
+                $registrationDate,
+                $startDate,
+                $endDate
+            );
+            $sessions[] = $session;
+        }
+        $this->registerGroupToMultipleCursus($multipleCursus, $group);
+        $this->registerGroupToSessions($sessions, $group);
+    }
+
+    public function registerUsersToCursusAndSessions(
+        array $users,
+        array $multipleCursus,
+        array $sessions
+    )
+    {
+        $authenticatedUser = $this->tokenStorage->getToken()->getUser();
+        $coursesWithSession = array();
+        $sessionsToCreate = array();
+        $root = 0;
+        $cursusRoot = null;
+        $registrationDate = new \DateTime();
+        $configStartDate = $this->platformConfigHandler
+            ->getParameter('cursusbundle_default_session_start_date');
+        $configEndDate = $this->platformConfigHandler
+            ->getParameter('cursusbundle_default_session_end_date');
+        $startDate = empty($configStartDate) ?
+            null :
+            new \DateTime($configStartDate);
+        $endDate = empty($configEndDate) ?
+            null :
+            new \DateTime($configEndDate);
+
+        foreach ($sessions as $session) {
+            $course = $session->getCourse();
+            $coursesWithSession[$course->getId()] = true;
+        }
+
+        foreach ($multipleCursus as $cursus) {
+            $root = $cursus->getRoot();
+            $course = $cursus->getCourse();
+
+            if (!is_null($course) &&
+                !isset($coursesWithSession[$course->getId()]) &&
+                !in_array($course, $sessionsToCreate)) {
+
+                $sessionsToCreate[] = $course;
+            }
+        }
+
+        if ($root > 0) {
+            $cursusRoot = $this->getOneCursusById($root);
+            $this->associateCursusToSessions($cursusRoot, $sessions);
+        }
+        // Generate the list of sessions where the user will be register
+        foreach ($sessionsToCreate as $course) {
+
+            if (is_null($cursusRoot)) {
+                $sessionName = 'Session';
+            } else {
+                $sessionName = $cursusRoot->getTitle();
+            }
+            $sessionName .= ' (' . $registrationDate->format('d/m/Y H:i') . ')';
+            $session = $this->createCourseSession(
+                $course,
+                $authenticatedUser,
+                $sessionName,
+                $cursusRoot,
+                $registrationDate,
+                $startDate,
+                $endDate
+            );
+            $sessions[] = $session;
+        }
+        $this->registerUsersToMultipleCursus($multipleCursus, $users);
+        $this->registerUsersToSessions($sessions, $users);
+    }
+
 
     /***************************************************
      * Access to CursusDisplayedWordRepository methods *
@@ -2330,6 +2668,13 @@ class CursusManager
             $order,
             $executeQuery
         );
+    }
+
+    public function getSessionsByIds(array $ids, $executeQuery = true)
+    {
+        return count($ids) > 0 ?
+            $this->courseSessionRepo->findSessionsByIds($ids, $executeQuery)
+            : array();
     }
 
 

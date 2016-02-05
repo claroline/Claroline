@@ -16,6 +16,8 @@
         '$uibModal',
         function ($routeParams, $http, $uibModal) {
             var vm = this;
+            var unlockedCursusTxt = '';
+            var usersIdsTxt;
             this.currentCursusId = $routeParams['cursusId'];
             this.hierarchy = [];
             this.lockedHierarchy = [];
@@ -23,33 +25,61 @@
             this.cursusGroups = [];
             this.cursusUsers = [];
 
+            var userPickerCallBack = function (datas) {
+                
+                if (datas === null) {
+                    usersIdsTxt = '0';
+                } else {
+                    usersIdsTxt = '';
+                    
+                    for (var i = 0; i < datas.length; i++) {
+                        usersIdsTxt += datas[i]['id'] + ',';
+                    }
+                    var length = usersIdsTxt.length;
+                    
+                    if (length > 0) {
+                        usersIdsTxt = usersIdsTxt.substr(0, length - 1)
+                    }
+                }
+                $uibModal.open({
+                    templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Partial/cursus_registration_sessions_modal.html',
+                    controller: 'CursusRegistrationSessionsModalCtrl',
+                    controllerAs: 'crsmc',
+                    resolve: {
+                        sourceId: function () { return usersIdsTxt; },
+                        sourceType: function () { return 'user'; },
+                        cursusIdsTxt: function () { return unlockedCursusTxt; }
+                    }
+                });
+            };
+
             var usersColumns = [
                 {
                     name: 'firstName',
                     prop: 'firstName',
                     isCheckboxColumn: true,
                     headerCheckbox: true,
-                    headerRenderer: function() {
+                    headerRenderer: function () {
                         return '<b>' + translator.trans('first_name', {}, 'platform') + '</b>';
                     }
                 },
                 {
                     name: 'lastName',
                     prop: 'lastName',
-                    headerRenderer: function() {
+                    headerRenderer: function () {
                         return '<b>' + translator.trans('last_name', {}, 'platform') + '</b>';
                     }
                 },
                 {
                     name: 'username',
                     prop: 'username',
-                    headerRenderer: function() {
+                    headerRenderer: function () {
                         return '<b>' + translator.trans('username', {}, 'platform') + '</b>';
                     }
                 },
                 {
                     name: 'registration_date',
-                    headerRenderer: function() {
+                    headerRenderer: function () {
                         return '<b>' + translator.trans('registration_date', {}, 'cursus') + '</b>';
                     },
                     cellRenderer: function(scope) {
@@ -58,21 +88,21 @@
                 },
                 {
                     name: 'actions',
-                    headerRenderer: function() {
+                    headerRenderer: function () {
                         
-                        return '<span class="btn btn-default btn-sm pointer-hand" ng-click="crmc.unregisterSelectedUsers()">' +
+                        return '<button class="btn btn-default btn-sm" ng-click="crmc.unregisterSelectedUsers()">' +
                             translator.trans('unregister_selected_users', {}, 'cursus') +
-                            '</span>';
+                            '</button>';
                     },
-                    cellRenderer: function(scope) {
+                    cellRenderer: function (scope) {
                         
-                        return '<span class="btn btn-danger btn-sm pointer-hand" ng-click="crmc.unregisterUser(' +
+                        return '<button class="btn btn-danger btn-sm" ng-click="crmc.unregisterUser(' +
                             scope.$row['id'] +
                             ', \'' +
                             scope.$row['firstName']  + ' ' + scope.$row['lastName']  + ' (' + scope.$row['username'] + ')' +
                             '\')">' +
                             translator.trans('unregister', {}, 'cursus') +
-                            '</span>';
+                            '</button>';
                     }
                 }
             ];
@@ -83,13 +113,13 @@
                     prop: 'groupName',
                     isCheckboxColumn: true,
                     headerCheckbox: true,
-                    headerRenderer: function() {
+                    headerRenderer: function () {
                         return '<b>' + translator.trans('name', {}, 'platform') + '</b>';
                     }
                 },
                 {
                     name: 'registration_date',
-                    headerRenderer: function() {
+                    headerRenderer: function () {
                         return '<b>' + translator.trans('registration_date', {}, 'cursus') + '</b>';
                     },
                     cellRenderer: function(scope) {
@@ -98,19 +128,19 @@
                 },
                 {
                     name: 'actions',
-                    headerRenderer: function() {
+                    headerRenderer: function () {
                         
-                        return '<span class="btn btn-default btn-sm pointer-hand" ng-click="crmc.unregisterSelectedGroups()">' +
+                        return '<button class="btn btn-default btn-sm" ng-click="crmc.unregisterSelectedGroups()">' +
                             translator.trans('unregister_selected_groups', {}, 'cursus') +
-                            '</span>';
+                            '</button>';
                     },
-                    cellRenderer: function(scope) {
+                    cellRenderer: function (scope) {
                         
-                        return '<span class="btn btn-danger btn-sm pointer-hand" ng-click="crmc.unregisterGroup(' +
+                        return '<button class="btn btn-danger btn-sm" ng-click="crmc.unregisterGroup(' +
                             scope.$row['id'] + ', \'' + scope.$row['groupName'] +
                             '\')">' +
                             translator.trans('unregister', {}, 'cursus') +
-                            '</span>';
+                            '</button>';
                     }
                 }
             ];
@@ -123,10 +153,6 @@
                 multiSelect: true,
                 checkboxSelection: true,
                 columns: groupsColumns
-//                paging: {
-//                    externalPaging: true,
-//                    size: 10
-//                }
             };
             
             this.dataUsersTableOptions = {
@@ -137,32 +163,37 @@
                 multiSelect: true,
                 checkboxSelection: true,
                 columns: usersColumns
-//                paging: {
-//                    externalPaging: true,
-//                    size: 10
-//                }
             };
             
-            this.registerGroups = function (cursusId) {
+            this.registerGroups = function () {
                 $uibModal.open({
                     templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Partial/cursus_groups_list_registration_modal.html',
                     controller: 'CursusGroupsListRegistrationModalCtrl',
                     controllerAs: 'cglrmc',
                     resolve: {
-                        cursusId: function () { return cursusId; }
+                        cursusId: function () { return vm.currentCursusId; },
+                        cursusIdsTxt: function () { return unlockedCursusTxt; }
                     }
                 });
             };
             
-            this.registerUsers = function (cursusId) {
-                $uibModal.open({
-                    templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Partial/cursus_users_list_registration_modal.html',
-                    controller: 'CursusUsersListRegistrationModalCtrl',
-                    controllerAs: 'culrmc',
-                    resolve: {
-                        cursusId: function () { return cursusId; }
-                    }
-                });
+            this.registerUsers = function () {
+                var usersIds = [];
+                
+                for (var i = 0; i < vm.cursusUsers.length; i++) {
+                    usersIds.push(vm.cursusUsers[i]['userId']);
+                }
+                var userPicker = new UserPicker();
+                var config = {
+                    picker_name: 'cursus-registration-users-picker',
+                    picker_title: Translator.trans('register_users_to_cursus', {}, 'cursus'),
+                    multiple: true,
+                    blacklist: usersIds,
+                    return_datas: true,
+                    attach_name: false
+                };
+                userPicker.configure(config, userPickerCallBack);
+                userPicker.open();
             };
             
             this.unregisterGroup = function (cursusGroupId, groupName) {
@@ -230,6 +261,14 @@
                     vm.unlockedCursus = data['unlockedCursus'];
                     vm.cursusGroups = data['cursusGroups'];
                     vm.cursusUsers = data['cursusUsers'];
+
+                    for (var i = 0; i < vm.unlockedCursus.length; i++) {
+                        unlockedCursusTxt += vm.unlockedCursus[i];
+                        
+                        if (i < vm.unlockedCursus.length - 1) {
+                            unlockedCursusTxt += ',';
+                        }
+                    }
                 });
             };
             

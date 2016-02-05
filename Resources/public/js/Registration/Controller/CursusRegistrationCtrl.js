@@ -12,7 +12,7 @@
 
     angular.module('CursusRegistrationModule').controller('CursusRegistrationCtrl', [
         '$http',
-        function ($http, CursusService) {
+        function ($http) {
             var vm = this;
             this.initialized = false;
             this.cursusRoots = [];
