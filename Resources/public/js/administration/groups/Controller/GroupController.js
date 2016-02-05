@@ -1,7 +1,33 @@
-var controller = function($http, clarolineSearch) {
+var controller = function(
+    $http, 
+    clarolineSearch, 
+    clarolineAPI,
+    $uibModalStack, 
+    $uibModal,
+    $scope
+) {
     var translate = function(key) {
         return translator.trans(key, {}, 'platform');
     }
+
+    var generateQsForSelected = function() {
+        var qs = '';
+
+        for (var i = 0; i < this.selected.length; i++) {
+            qs += 'groupIds[]=' + this.selected[i].id + '&';
+        }
+
+        return qs;
+    }
+
+    var deleteCallback = function(data) {
+        clarolineAPI.removeElements(this.selected, this.users);
+        this.selected.splice(0, this.selected.length);
+        this.alerts.push({
+            type: 'success',
+            msg: translate('user_removed_success_message')
+        });0
+    }.bind(this);
 
     this.search = '';
     this.savedSearch = [];
@@ -64,10 +90,44 @@ var controller = function($http, clarolineSearch) {
             this.dataTableOptions.paging.count = d.data.total;
         }.bind(this));
     }.bind(this);
+
+    this.clickDelete = function() {
+        var url = Routing.generate('api_delete_groups') + '?' + generateQsForSelected();
+
+        clarolineAPI.confirm(
+            {url: url, method: 'DELETE'},
+            deleteCallback,
+            translate('delete_groups'),
+            translate('delete_groups_confirm')
+        );
+    };
+
+    this.clickNew = function() {
+        var modalInstance = $uibModal.open({
+            templateUrl: Routing.generate('api_get_create_group_form', {'_format': 'html'}),
+            controller: 'CreateModalController',
+            resolve: {
+                groups: function() {
+                    return vm.groups;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (result) {
+            if (!result) return;
+            //dirty but it works
+            vm.groups.push(result);
+            vm.dataTableOptions.paging.count = vm.groups.length;
+        });
+    }.bind(this);
 };
 
 angular.module('GroupsManager').controller('GroupController', [
     '$http',
     'clarolineSearch',
+    'clarolineAPI',
+    '$uibModalStack', 
+    '$uibModal',
+    '$scope',
     controller
 ]);

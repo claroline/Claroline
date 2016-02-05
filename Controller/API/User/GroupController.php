@@ -24,6 +24,8 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use Claroline\CoreBundle\Manager\ApiManager;
+use Claroline\CoreBundle\Form\User\GroupSettingsType;
 
 /**
  * @NamePrefix("api_")
@@ -36,7 +38,8 @@ class GroupController extends FOSRestController
      *     "groupManager" = @DI\Inject("claroline.manager.group_manager"),
      *     "roleManager"  = @DI\Inject("claroline.manager.role_manager"),
      *     "request"      = @DI\Inject("request"),
-     *     "om"           = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
+     *     "apiManager"   = @DI\Inject("claroline.manager.api_manager")
      * })
      */
     public function __construct(
@@ -44,15 +47,17 @@ class GroupController extends FOSRestController
         GroupManager  $groupManager,
         RoleManager   $roleManager,
         ObjectManager $om,
-        Request       $request
+        Request       $request,
+        ApiManager    $apiManager
     )
     {
-        $this->formFactory = $formFactory;
-        $this->groupManager = $groupManager;
-        $this->roleManager = $roleManager;
-        $this->om = $om;
+        $this->formFactory     = $formFactory;
+        $this->groupManager    = $groupManager;
+        $this->roleManager     = $roleManager;
+        $this->om              = $om;
         $this->groupRepository = $this->om->getRepository('ClarolineCoreBundle:Group');
-        $this->request = $request;
+        $this->request         = $request;
+        $this->apiManager      = $apiManager;
     }
 
     /**
@@ -89,22 +94,26 @@ class GroupController extends FOSRestController
      */
     public function postGroupAction()
     {
-        $groupType = new GroupType();
+        $groupType = new GroupSettingsType();
         $groupType->enableApi();
         $form = $this->formFactory->create($groupType, new Group());
         $form->submit($this->request);
-        //$form->handleRequest($this->request);
+        $group = null;
+        $httpCode = 400;
 
         if ($form->isValid()) {
             $group = $form->getData();
-            $userRole = $this->roleManager->getRoleByName('ROLE_USER');
-            $group->setPlatformRole($userRole);
             $this->groupManager->insertGroup($group);
-
-            return $group;
+            $httpCode = 200;
         }
 
-        return $form;
+        $options = array(
+            'http_code' => $httpCode,
+            'extra_parameters' => $group
+        );
+
+
+        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:User\createGroupForm.html.twig', $form, $options);
     }
 
     /**
@@ -144,6 +153,27 @@ class GroupController extends FOSRestController
     public function deleteGroupAction(Group $group)
     {
         $this->groupManager->deleteGroup($user);
+
+        return array('success');
+    }
+
+    /**
+     * @View()
+     * @ApiDoc(
+     *     description="Removes a list of group",
+     *     views = {"group"},
+     * )
+     */
+    public function deleteGroupsAction()
+    {
+        $groups = $this->apiManager->getParameters('groupIds', 'Claroline\CoreBundle\Entity\Group');
+        $this->container->get('claroline.persistence.object_manager')->startFlushSuite();
+
+        foreach ($groups as $group) {
+            $this->groupManager->deleteGroup($group);
+        }
+
+        $this->container->get('claroline.persistence.object_manager')->endFlushSuite();
 
         return array('success');
     }
@@ -203,5 +233,68 @@ class GroupController extends FOSRestController
         $baseFields = Group::getSearchableFields();
 
         return $baseFields;
+    }
+
+    /**
+     * @View()
+     * @ApiDoc(
+     *     description="Add a list of users to a group",
+     *     views = {"group"},
+     * )
+     */
+    public function addUsersToGroup(Group $group)
+    {
+        $users = $this->apiManager->getParameters('userIds', 'Claroline\CoreBundle\Entity\User');
+        $this->groupManager->addUsersToGroup($group, $users);
+
+        return $group;
+    }
+
+    /**
+     * @View()
+     * @ApiDoc(
+     *     description="Removes a list of users from a group",
+     *     views = {"group"},
+     * )
+     */
+    public function removeUsersFromGroup(Group $group)
+    {
+        $users = $this->apiManager->getParameters('userIds', 'Claroline\CoreBundle\Entity\User');
+        $this->groupManager->removeUsersFromGroup($group, $users);
+
+        return $group;
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Returns the group creation form",
+     *     views = {"location"}
+     * )
+     */
+    public function getCreateGroupFormAction()
+    {
+        $formType = new GroupSettingsType();
+        $formType->enableApi();
+        $form = $this->createForm($formType);
+
+        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:User\createGroupForm.html.twig', $form);
+    }
+
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Returns the group edition form",
+     *     views = {"location"}
+     * )
+     */
+    public function getEditLocationFormAction(Group $group)
+    {
+        $formType = new GroupSettingsType();
+        $formType->enableApi();
+        $form = $this->createForm($formType, $group);
+
+        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:User\editGroupForm.html.twig', $form);
     }
 }

@@ -269,10 +269,10 @@ class UserController extends FOSRestController
     }
 
     /**
-     * @EXT\ParamConverter(
-     *     "users",
-     *      class="ClarolineCoreBundle:User",
-     *      options={"multipleIds" = true}
+     * @View()
+     * @ApiDoc(
+     *     description="Removes a list of users",
+     *     views = {"group"},
      * )
      */
     public function deleteUsersAction()
@@ -282,7 +282,6 @@ class UserController extends FOSRestController
 
         foreach ($users as $user) {
             $this->userManager->deleteUser($user);
-            $this->eventDispatcher->dispatch('log', 'Log\LogUserDelete', array($user));
         }
 
         $this->container->get('claroline.persistence.object_manager')->endFlushSuite();

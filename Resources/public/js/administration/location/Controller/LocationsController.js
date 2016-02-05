@@ -15,7 +15,6 @@ var controller =  function(
     }.bind(this)
 
     this.createForm = function() {
-        console.log('clickclick');
         $uibModal.open({
             templateUrl: Routing.generate('api_get_create_location_form', {'_format': 'html'}),
             controller: 'CreateModalController',

@@ -181,6 +181,7 @@ class GroupManager
     {
         foreach ($users as $user) {
             $group->removeUser($user);
+            $this->eventDispatcher->dispatch('log', 'Log\LogGroupRemoveUser', array($group, $user));
         }
 
         $this->om->persist($group);
