@@ -5,7 +5,7 @@
             [
                 'ngSanitize',
                 'ui.resizer',
-                'angularFileUpload',
+                'ngFileUpload',
                 'website.constants',
                 'components.utilities',
                 'blocks.httpInterceptor',

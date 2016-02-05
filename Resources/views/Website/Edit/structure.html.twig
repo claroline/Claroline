@@ -13,8 +13,8 @@
                     <button data-ng-class="{'disabled':vm.menu.currentPageNode==vm.menu.root}" data-ng-click="vm.confirmNodeDelete(vm.menu.currentPageNode)" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button>
                 </div>
             </div>
-            <div class="ui-tree-container" ui-tree="vm.treeOptions" keep-drag-content-on-scene="true" id="tree-root">
-                <ul id="nd-{{ '{{ menu.root.id }}' }}" class="edit-menu" ui-tree-nodes data-ng-model="vm.menu.root.children">
+            <div class="ui-tree-container" ui-tree data-drag-enabled="true" id="tree-root">
+                <ul id="nd-{{ '{{ vm.menu.root.id }}' }}" class="edit-menu" ui-tree-nodes data-ng-model="vm.menu.root.children">
                     <li id="nd-{{ '{{ node.id }}' }}" data-ng-repeat="node in vm.menu.root.children" ui-tree-node data-ng-include="'tree_renderer.tpl'"></li>
                 </ul>
             </div>

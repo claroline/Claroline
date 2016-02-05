@@ -1,17 +1,17 @@
 {% macro getVendorScripts() %}
     {% javascripts debug=false filter='jsmin' output='js/icapwebsite/edit.vendor.js'
     '@FrontEndBundle/Resources/public/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js'
-    '@IcapWebsiteBundle/Resources/public/js/vendor/angular-plugins/angular-file-upload/angular-file-upload-shim.min.js'
+    '@FrontEndBundle/Resources/public/ng-file-upload/ng-file-upload-shim.min.js'
     '@FrontEndBundle/Resources/public/angular/angular.min.js'
-    '@InnovaAngularJSBundle/Resources/public/js/angular-resource.min.js'
-    '@InnovaAngularJSBundle/Resources/public/js/angular-route.min.js'
-    '@InnovaAngularJSBundle/Resources/public/js/angular-touch.min.js'
-    '@InnovaAngularJSBundle/Resources/public/js/angular-animate.min.js'
-    '@InnovaAngularJSBundle/Resources/public/js/angular-sanitize.min.js'
-    '@IcapWebsiteBundle/Resources/public/js/vendor/angular-plugins/angular-file-upload/angular-file-upload.min.js'
+    '@FrontEndBundle/Resources/public/angular-resource/angular-resource.min.js'
+    '@FrontEndBundle/Resources/public/angular-route/angular-route.min.js'
+    '@FrontEndBundle/Resources/public/angular-touch/angular-touch.min.js'
+    '@FrontEndBundle/Resources/public/angular-animate/angular-animate.min.js'
+    '@FrontEndBundle/Resources/public/angular-sanitize/angular-sanitize.min.js'
+    '@FrontEndBundle/Resources/public/ng-file-upload/ng-file-upload.js'
     '@InnovaAngularUITinyMCEBundle/Resources/public/js/angular-tinymce-directive.js'
-    '@IcapWebsiteBundle/Resources/public/js/vendor/angular-plugins/angular-strap/angular-strap.min.js'
-    '@IcapWebsiteBundle/Resources/public/js/vendor/angular-plugins/angular-strap/angular-strap.tpl.min.js'
+    '@FrontEndBundle/Resources/public/angular-strap/dist/angular-strap.min.js'
+    '@FrontEndBundle/Resources/public/angular-strap/dist/angular-strap.tpl.min.js'
     '@FrontEndBundle/Resources/public/angular-ui-tree/dist/angular-ui-tree.min.js'
     '@IcapWebsiteBundle/Resources/public/js/vendor/angular-ui/multi-level-push-menu/pushmenu.js'
     %}
@@ -20,7 +20,7 @@
 {% endmacro %}
 
 {% macro getAppScripts() %}
-    {% javascripts debug=false filter='jsmin' output='js/icapwebsite/edit.app.js'
+    {% javascripts debug=true filter='jsmin' output='js/icapwebsite/edit.app.js'
     '@IcapWebsiteBundle/Resources/public/js/blocks/httpInterceptor/httpInterceptor.module.js'
     '@IcapWebsiteBundle/Resources/public/js/blocks/httpInterceptor/requestHandler.js'
     '@IcapWebsiteBundle/Resources/public/js/blocks/httpInterceptor/httpInterceptor.config.js'
@@ -63,11 +63,11 @@
 {% macro getStylesheets() %}
     {% stylesheets debug=false filter='lessphp, cssmin' output='bundles/icapwebsite/css/edit-style.css'
     '@IcapWebsiteBundle/Resources/public/css/angular/bootstrap-additions.min.css'
-    '@FrontEndBundle/Resources/public/angular-ui-tree/dist/angular-ui-tree.min.css'
     '@IcapWebsiteBundle/Resources/public/css/angular/angular-motion.min.css'
     '@IcapWebsiteBundle/Resources/views/less/edit.less'
     '@IcapWebsiteBundle/Resources/public/css/angular/pushmenu.css'
     '@IcapWebsiteBundle/Resources/public/css/angular/flexnav.css'
+    '@FrontEndBundle/Resources/public/angular-ui-tree/dist/angular-ui-tree.min.css'
     %}
     <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
     {% endstylesheets %}
