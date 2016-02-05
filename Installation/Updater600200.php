@@ -10,8 +10,6 @@ class Updater600200 {
     use LoggableTrait;
 
     private $connection;
-    private $widthHeightPic = array();
-    private $refPictureInInterGraph = array();
 
     public function __construct(ContainerInterface $container)
     {
@@ -20,7 +18,8 @@ class Updater600200 {
 
     public function preUpdate()
     {
-        $this->checkInteractionGraphic();
+        $this->createTemporaryInterGraph();
+        $this->createTemporaryPicture();
     }
 
     public function postUpdate()
@@ -31,6 +30,51 @@ class Updater600200 {
         $this->insertScorePaper();
         $this->dropUnusedTables();
     }
+
+    /**
+     * create temporary table for picture in order to recover data
+     */
+    private function createTemporaryPicture()
+    {
+        $this->log('Create ujm_picture_temp ...');
+        $this->connection->exec("
+            CREATE TABLE ujm_picture_temp (
+                id INT NOT NULL,
+                user_id INT DEFAULT NULL,
+                `label` VARCHAR(255) NOT NULL,
+                url VARCHAR(255) NOT NULL,
+                type VARCHAR(255) NOT NULL,
+                width INT NOT NULL,
+                height INT NOT NULL,
+                INDEX IDX_88AACC8AA76ED395 (user_id),
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+        ");
+
+        $this->checkDocument();
+    }
+
+    /**
+     * create temporary table for interaction_graphic in order to recover picture_id
+     */
+    private function createTemporaryInterGraph()
+    {
+        $this->log('Create ujm_interaction_graphic_temp ...');
+        $this->connection->exec("
+            CREATE TABLE ujm_interaction_graphic_temp (
+                id INT NOT NULL,
+                document_id INT NOT NULL,
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+        ");
+
+        $this->connection->exec("
+            INSERT INTO ujm_interaction_graphic_temp (id, document_id)
+            SELECT id, document_id
+            FROM ujm_interaction_graphic
+        ");
+    }
+
 
     /**
      * recover the questions of an exercise in order to inject in step_question
@@ -44,7 +88,20 @@ class Updater600200 {
             FROM ujm_document
         ';
 
-        return $this->connection->query($checkQuery)->fetchAll();
+        $results = $this->connection->query($checkQuery)->fetchAll();
+        foreach ($results as $res) {
+            $this->connection->exec("
+                INSERT INTO ujm_picture_temp
+                VALUES ({$res['id']}, {$res['user_id']}, '"
+                . addslashes($res['label']) . "', '"
+                . addslashes($res['url']) . "', '"
+                . addslashes($res['type']) . "',
+                0, 0
+                )
+            ");
+        }
+
+        $this->checkInteractionGraphic();
     }
 
     /**
@@ -77,9 +134,11 @@ class Updater600200 {
 
         $results = $this->connection->query($checkQuery)->fetchAll();
         foreach ($results as $res) {
-            $wh = array($res['width'], $res['height']);
-            $this->widthHeightPic[$res['document_id']] = $wh;
-            $this->refPictureInInterGraph[$res['id']] = $res['document_id'];
+           $this->connection->exec("
+                UPDATE ujm_picture_temp
+                SET width = {$res['width']}, height = {$res['height']}
+                WHERE id = {$res['id']}
+            ");
         }
 
         /*
@@ -115,8 +174,12 @@ class Updater600200 {
     private function dropUnusedTables()
     {
         $this->dropTables([
+            'ujm_document_interaction',
+            'ujm_document_question',
             'ujm_document',
-            'ujm_exercise_question'
+            'ujm_exercise_question',
+            'ujm_picture_temp',
+            'ujm_interaction_graphic_temp'
         ]);
     }
 
@@ -142,34 +205,27 @@ class Updater600200 {
     }
 
     /**
-     * Move data document in picture
+     * Move data picture_temp in picture
      */
     private function migratePicture()
     {
         $this->log('UPDATE Picture ...');
 
-        $documents = $this->checkDocument();
+        $this->connection->exec("
+            INSERT INTO ujm_picture (id, user_id, `label`, url, type, width, height)
+            SELECT id, user_id, `label`, url, type, width, height
+            FROM ujm_picture_temp
+        ");
 
-        $this->log('INSERT INTO ujm_picture ...');
-        foreach ($documents as $doc) {
-            $this->connection->exec("
-                INSERT INTO ujm_picture VALUES
-                ({$doc['id']}, '". addslashes($doc['label']) . "', '" 
-                . addslashes($doc['url']) . "', '" 
-                . addslashes($doc['type']) . "', "
-                . $this->widthHeightPic[$doc['id']][0]
-                . ", "
-                . $this->widthHeightPic[$doc['id']][1])
-                . ")";
+        $this->log('UPDATE interaction_graphic -> picture_id ...');
+        $query = 'SELECT * FROM ujm_interaction_graphic_temp';
+        $results = $this->connection->query($query)->fetchAll();
+        foreach ($results as $res) {
+            $query ='UPDATE ujm_interaction_graphic SET picture_id=' . $res['document_id']
+                . ' WHERE id=' . $res['id'];
+            $this->connection->exec($query);
         }
 
-        $this->log('UPDATE Interaction_Graphic ...');
-        foreach ($this->refPictureInInterGraph as $key => $ref) {
-            $this->connection->exec("
-                UPDATE ujm_interaction_graphic
-                SET picture_id = " . $ref
-                ." WHERE id = " . $key);
-        }
     }
 
     /**
@@ -233,7 +289,7 @@ class Updater600200 {
                 . 'WHERE paper_id=' . $idPaper;
         $result = $this->connection->query($query)->fetch();
 
-        $this->updatePaper($result['score']);
+        $this->updatePaper($result['score'], $idPaper);
     }
 
     /*
