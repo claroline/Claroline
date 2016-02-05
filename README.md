@@ -54,7 +54,7 @@ Project setup
 #### With the installation script
 
 ```
-curl -sS https://raw.githubusercontent.com/claroline/repository-scripts/master/install.sh | bash
+curl -sS https://raw.githubusercontent.com/claroline/repository-scripts/master/install6.sh | bash
 php app/console claroline:install
 ```
 
