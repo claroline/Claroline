@@ -509,7 +509,7 @@ class QuestionController extends Controller {
     /**
      * To manage the User's documents.
      *
-     * @EXT\Route("/manageDoc", name="ujm_question_manage_doc")
+     * @EXT\Route("/managePic", name="ujm_question_manage_doc")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -523,9 +523,9 @@ class QuestionController extends Controller {
                 ->getManager()
                 ->getRepository('UJMExoBundle:Picture');
 
-        $listDoc = $repository->findBy(array('user' => $user->getId()));
+        $listPic = $repository->findBy(array('user' => $user->getId()));
 
-        foreach ($listDoc as $doc) {
+        foreach ($listPic as $doc) {
             $interGraph = $this->getDoctrine()
                     ->getManager()
                     ->getRepository('UJMExoBundle:InteractionGraphic')
@@ -542,15 +542,15 @@ class QuestionController extends Controller {
 
         $page = $request->query->get('page', 1); // Which page
 
-        $pagination = $paginationSer->pagination($listDoc, $max, $page);
+        $pagination = $paginationSer->pagination($listPic, $max, $page);
 
-        $listDocPager = $pagination[0];
-        $pagerDoc = $pagination[1];
+        $listPicPager = $pagination[0];
+        $pagerPic = $pagination[1];
 
         return $this->render(
                         'UJMExoBundle:Picture:manageImg.html.twig', array(
-                    'listDoc' => $listDocPager,
-                    'pagerDoc' => $pagerDoc,
+                    'listDoc' => $listPicPager,
+                    'pagerDoc' => $pagerPic,
                     'allowToDel' => $allowToDel,
                         )
         );
@@ -559,25 +559,25 @@ class QuestionController extends Controller {
     /**
      * To delete a User's Picture.
      *
-     * @EXT\Route("/deleteDoc/{idDoc}", name="ujm_Picture_del")
+     * @EXT\Route("/deleteImg/{idPic}", name="ujm_Picture_del")
      *
-     * @param int $idDoc id Picture
+     * @param int $idPic id Picture
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteDocAction($idDoc) {
+    public function deletePicAction($idPic) {
         $repositoryDoc = $this->getDoctrine()
                 ->getManager()
                 ->getRepository('UJMExoBundle:Picture');
 
-        $doc = $repositoryDoc->find($idDoc);
+        $pic = $repositoryDoc->find($idPic);
 
         $em = $this->getDoctrine()->getManager();
 
-        $interGraph = $em->getRepository('UJMExoBundle:InteractionGraphic')->findBy(array('picture' => $doc));
+        $interGraph = $em->getRepository('UJMExoBundle:InteractionGraphic')->findBy(array('picture' => $pic));
 
         if (count($interGraph) == 0) {
-            $em->remove($doc);
+            $em->remove($pic);
             $em->flush();
         }
 

@@ -78,7 +78,7 @@ display_all_list: Display the whole list
 display_all_on_this_page: Display all on this page
 display_pagination: Display with pagination
 docimology: Docimology
-doc_manage: Manage my documents
+pic_manage: Manage my documents
 document: Document
 drop_category: Drop this category
 duplicate: Duplicate
@@ -338,7 +338,7 @@ users: Users
 validate: Validate
 
 # W
-warning: Are you sure you want to delete this document
+warning: Are you sure you want to delete this picture
 warning_change_type_q: Warning you may lose your data entered continue
 warning_one_word: You chose a question word. Attention has spaces in your answer.
 weight_choice: Assign points by response

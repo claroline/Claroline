@@ -78,7 +78,7 @@ display_all_list: Afficher la liste complète
 display_all_on_this_page: Tout afficher sur cette page
 display_pagination: Afficher la pagination
 docimology: Docimologie
-doc_manage: Gestion de mes documents
+pic_manage: Gestion de mes documents
 document: Document
 drop_category: Supprimer cette catégorie
 duplicate: Dupliquer
@@ -339,7 +339,7 @@ users: Utilisateurs
 validate: Valider
 
 # W
-warning: Êtes-vous sûr de vouloir supprimer ce document
+warning: Êtes-vous sûr de vouloir supprimer cette image
 warning_change_type_q: Attention vous risquez de perdre vos données saisies, continuer
 warning_one_word: Vous avez choisi une question à un mot. Attention, il a des espaces dans votre réponse.
 weight_choice: Attribuer les points par réponse
