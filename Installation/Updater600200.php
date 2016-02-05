@@ -26,7 +26,7 @@ class Updater600200 {
     {
         $this->migrateExerciseQuestionData();
         $this->migratePicture();
-        $this->upTypeExercise();
+        $this->upExercise();
         $this->insertScorePaper();
         $this->dropUnusedTables();
     }
@@ -155,15 +155,15 @@ class Updater600200 {
     }
 
     /**
-     * update type of an exercise
+     * update exercise, type and anonymous
      */
-    private function upTypeExercise ()
+    private function upExercise ()
     {
         $this->log('UPDATE type of exercise ...');
 
         $this->connection->exec("
             UPDATE ujm_exercise
-            SET type = 'sommatif'
+            SET type = 'sommatif', anonymous = FALSE
         ");
     }
 
