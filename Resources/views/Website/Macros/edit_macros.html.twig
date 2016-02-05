@@ -20,7 +20,7 @@
 {% endmacro %}
 
 {% macro getAppScripts() %}
-    {% javascripts debug=true filter='jsmin' output='js/icapwebsite/edit.app.js'
+    {% javascripts debug=false filter='jsmin' output='js/icapwebsite/edit.app.js'
     '@IcapWebsiteBundle/Resources/public/js/blocks/httpInterceptor/httpInterceptor.module.js'
     '@IcapWebsiteBundle/Resources/public/js/blocks/httpInterceptor/requestHandler.js'
     '@IcapWebsiteBundle/Resources/public/js/blocks/httpInterceptor/httpInterceptor.config.js'
