@@ -152,7 +152,7 @@ class Updater600200 {
 
         foreach ($documents as $doc) {
             $this->connection->exec("
-                INSERT INTO ujm_picture
+                INSERT INTO ujm_picture VALUES
                 ({$doc['id']}, {$doc['label']}, {$doc['url']}, {$doc['type']}, "
                 . $this->widthHeightPic[$doc['id']][0]
                 . ", "
@@ -180,7 +180,7 @@ class Updater600200 {
 
         $this->connection->exec("
             INSERT INTO ujm_step
-            ('exercise_id', 'value', 'nbQuestion', 'keepSameQuestion', 'shuffle', 'duration', 'max_attempts', 'ordre')
+            (exercise_id, value, nbQuestion, keepSameQuestion, shuffle, duration, max_attempts, ordre)
             VALUES
             ({$exoId}, '', 0, FALSE, FALSE, 0, 0, 1)
         ");
@@ -202,7 +202,7 @@ class Updater600200 {
         $this->log('UPDATE StepQuestion ...');
 
         $this->connection->exec("
-            INSERT INTO ujm_step_question
+            INSERT INTO ujm_step_question VALUES
             ({$stepId}, {$qid}, {$order})
         ");
     }
