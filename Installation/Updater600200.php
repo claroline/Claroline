@@ -150,10 +150,13 @@ class Updater600200 {
 
         $documents = $this->checkDocument();
 
+        $this->log('INSERT INTO ujm_picture ...');
         foreach ($documents as $doc) {
             $this->connection->exec("
                 INSERT INTO ujm_picture VALUES
-                ({$doc['id']}, {$doc['label']}, {$doc['url']}, {$doc['type']}, "
+                ({$doc['id']}, '". addslashes($doc['label']) . "', '" 
+                . addslashes($doc['url']) . "', '" 
+                . addslashes($doc['type']) . "', "
                 . $this->widthHeightPic[$doc['id']][0]
                 . ", "
                 . $this->widthHeightPic[$doc['id']][1])
