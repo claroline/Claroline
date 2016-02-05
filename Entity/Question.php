@@ -94,10 +94,18 @@ class Question
      * )
      */
     private $hints;
+    
+     /**
+     * Note: used for joins only.
+     *
+     * @ORM\OneToMany(targetEntity="StepQuestion", mappedBy="question")
+     */
+    private $stepQuestions;
 
     public function __construct()
     {
         $this->hints = new ArrayCollection();
+        $this->stepQuestions = new ArrayCollection();
         $this->dateCreate = new \DateTime();
     }
 
