@@ -11,12 +11,12 @@
     <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
-{% block title %} {{ 'doc_manage' | trans({}, 'ujm_exo') }} {% endblock %}
+{% block title %} {{ 'pic_manage' | trans({}, 'ujm_exo') }} {% endblock %}
 
 {% block section_content %}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'doc_manage' | trans({}, 'ujm_exo') }}</h3>
+        <h3 class="panel-title">{{ 'pic_manage' | trans({}, 'ujm_exo') }}</h3>
     </div>
 
     <div class="panel-body">
@@ -28,10 +28,10 @@
 
         <div id="searchDocuments" class="input-group" style="width: 350px; margin-top: 20px;">
             <input type="text" class="form-control" id="labelToFind" placeholder="{{ 'search'|trans({}, 'platform') }}"
-                onkeydown="if (event.keyCode == 13) { searchDoc('{{ path('ujm_question_searchPictures') }}', 1);return false; }">
+                onkeydown="if (event.keyCode == 13) { searchPic('{{ path('ujm_question_searchPictures') }}', 1);return false; }">
             <span class="input-group-btn">
                 <button class="btn btn-default" type="button" id="searchDocbutton"
-                    onClick="searchDoc('{{ path('ujm_question_searchPictures') }}', 1);">
+                    onClick="searchPic('{{ path('ujm_question_searchPictures') }}', 1);">
             <i class="fa fa-search"></i></button>
             </span>
         </div>

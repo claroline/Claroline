@@ -56,7 +56,7 @@ function sortDocument(type, path, page) {
 }
 
 // Search documents with specific label
-function searchDoc(path, page) {
+function searchPic(path, page) {
 
     var labelToFind = $('#labelToFind').val();
 
