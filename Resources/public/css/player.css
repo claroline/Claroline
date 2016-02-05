@@ -100,3 +100,8 @@ input.form-control {
   right: auto;
   left: 0;
 }
+
+/* #229 : Réduire la taille du nombre de commentaires dans les cellules */
+.very-small {
+    font-size: 10px;
+}

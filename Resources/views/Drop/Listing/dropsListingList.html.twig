@@ -52,7 +52,7 @@
 
     <td class="centered">
     {# Appel de la vue "Vue d'un fichier" où seront affichés les différents commentaires. #}
-        <div class="btn-group ">
+        <div class="btn-group">
            {# Variable qui va compter le nombre de commentaires #}
            {# Affichage d'un bouton si pas de commentaires #}
             {% if document.comments|length == 0 %}
@@ -61,8 +61,9 @@
            {# Sinon affichage du compteur et des nouveaux commentaires #}
             {% else %}
                 <a data-toggle="tooltip" data-placement="top" data-original-title="{{ 'To drop'|trans({},'innova_collecticiel') }}" class="fa fa-commenting-o" href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" type="button">
-                    <div class="short-div">
-                        {{ document.comments|length }} 
+                {# #229 : Réduire la taille du nombre de commentaires dans les cellules #}
+                    <div class="very-small">
+                       {{ document.comments|length }} 
                        {% if document.getUnReadComments( app.user.id ) != 0 %}
                             (+{{ document.getUnReadComments( app.user.id ) }})
                         {% endif %}
