@@ -31,6 +31,10 @@
 		{% endif %}
 	{% endif %}
 {% else %}
-	{# un "v" : check #}
-    <i class="fa fa-check" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Request sent'|trans({},'innova_collecticiel') }}"></i>
+	{#223 : Modifier le traitement des documents déposés par l'enseignant, demande JJQ #}
+	{# on n'affiche plus cette zone quand c'est un enseignant qui a déposé le document #}
+	{% if document.sender.id == document.drop.user.id  %}
+		{# un "v" : check #}
+	    <i class="fa fa-check" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Request sent'|trans({},'innova_collecticiel') }}"></i>
+	{% endif %}
 {% endif %}
