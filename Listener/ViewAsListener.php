@@ -20,6 +20,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Security\Token\ViewAsToken;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Library\Security\TokenUpdater;
 
 /**
  * @DI\Service
@@ -29,28 +30,30 @@ class ViewAsListener
     private $tokenStorage;
     private $authorization;
     private $roleManager;
+    private $tokenUpdater;
 
     /**
      * @DI\InjectParams({
-     *     "authorization"   = @DI\Inject("security.authorization_checker"),
-     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
-     *     "em"             = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "roleManager"    = @DI\Inject("claroline.manager.role_manager")
+     *     "authorization" = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage"  = @DI\Inject("security.token_storage"),
+     *     "em"            = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "roleManager"   = @DI\Inject("claroline.manager.role_manager"),
+     *     "tokenUpdater"  = @DI\Inject("claroline.security.token_updater")
      * })
-     *
-     * @param SecurityContextInterface $context
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
         EntityManager $em,
-        RoleManager $roleManager
+        RoleManager $roleManager,
+        TokenUpdater $tokenUpdater
     )
     {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
         $this->em = $em;
         $this->roleManager = $roleManager;
+        $this->tokenUpdater = $tokenUpdater;
     }
 
     /**
@@ -62,6 +65,14 @@ class ViewAsListener
         $attributes = $request->query->all();
 
         if (array_key_exists('view_as', $attributes)) {
+            //first, if we're already usurpating a user role with the sf2 function, we cancel this.
+            //ROLE_PREVIOUS_ADMIN means we're an administrator usurpating a user account.
+
+            if ($this->authorization->isGranted('ROLE_PREVIOUS_ADMIN')) {
+                $this->tokenUpdater->cancelUserUsurpation($this->tokenStorage->getToken());
+            }
+
+            //then we go as intended
             $user = $this->tokenStorage->getToken()->getUser();
             $viewAs = $attributes['view_as'];
             if ($viewAs === 'exit') {

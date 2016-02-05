@@ -127,11 +127,12 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
      */
     protected function installAssets(OutputInterface $output)
     {
+        $webDir = $this->getContainer()->getParameter('kernel.root_dir') . '/../web';
         $command = $this->getApplication()->find('assets:install');
         $input = new ArrayInput(
             array(
                 'command' => 'assets:install',
-                'target' => realpath(__DIR__ . '/../../../../../web'),
+                'target' => realpath($webDir),
                 '--symlink' => true
             )
         );

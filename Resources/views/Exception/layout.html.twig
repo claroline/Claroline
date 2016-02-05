@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="{{ asset('') ~ 'themes/' ~ config.getParameter('theme') ~ '/bootstrap.css' }}" screen="media" />
     {% endif %}
 
-    <link rel="stylesheet" href="{{ asset('vendor/fortawesome/font-awesome/css/font-awesome.css') }}" screen="media" />
+    <link rel="stylesheet" href="{{ asset('bundles/frontend/font-awesome/css/font-awesome.min.css') }}" screen="media" />
 {% endblock %}
 
 {% block javascripts_header %}
@@ -25,7 +25,7 @@
             <h4><span class="label label-warning"> {{ 'please_wait'|trans({}, 'platform') }} </span></h4>
         </div>
         <div id="top_bar" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-            <div class="container">
+            <div class="container-fluid">
                 <div class="navbar-header">
                     <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                         <span class="icon-bar"></span>
@@ -47,7 +47,7 @@
             </div>
         </div>
 
-        <div class="container">
+        <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
                     {% block breadcrumb %}{% endblock %}

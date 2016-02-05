@@ -9,7 +9,7 @@
 
 (function () {
     'use strict';
-    
+
     var type = $('#datas-box').data('type');
 
     $('#edit-tools-btn').on('click', function (e) {
@@ -36,23 +36,23 @@
             }
         });
     });
-    
+
     $('#tools-table-body').sortable({
         items: '.row-tool-config',
         cursor: 'move'
     });
-    
+
     $('#tools-table-body').on('sortupdate', function (event, ui) {
-        
+
         if (this === ui.item.parents('#tools-table-body')[0]) {
             var orderedToolId = $(ui.item).data('ordered-tool-id');
             var nextOrderedToolId = -1;
             var nextElement = $(ui.item).next();
-            
+
             if (nextElement !== undefined && nextElement.hasClass('row-tool-config')) {
                 nextOrderedToolId = nextElement.data('ordered-tool-id');
             }
-            
+
             $.ajax({
                 url: Routing.generate(
                     'claro_desktop_update_ordered_tool_order',

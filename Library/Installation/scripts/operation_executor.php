@@ -1,17 +1,15 @@
 <?php
 
-//vendor/claroline/core-bundle/Claroline/CoreBundle/Library/Installation/src.
-// ..   / ..  /       ..      /    ..    / ..      /  ..   /   ..       /.. ||8
 //This will execute the operations.xml file.
 //You shouldn't execute it manually.
-require_once __DIR__ . '/../../../../../../../../app/bootstrap.php.cache';
-require_once __DIR__ . '/../../../../../../../../app/AppKernel.php';
+require_once __DIR__ . '/../../../../../../app/bootstrap.php.cache';
+require_once __DIR__ . '/../../../../../../app/AppKernel.php';
 
 use Claroline\CoreBundle\Library\Installation\Refresher;
 use Symfony\Component\Console\Output\StreamOutput;
 
 //The cache must be cleared first.
-$cacheDir =  __DIR__ . '/../../../../../../../../app/cache';
+$cacheDir =  __DIR__ . '/../../../../../../app/cache';
 Refresher::removeContentFrom($cacheDir);
 
 $kernel = new AppKernel('dev', true); //'prod',  false pour l'env de prod

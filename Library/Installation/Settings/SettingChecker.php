@@ -221,7 +221,7 @@ class SettingChecker
     private function checkFilePermissions()
     {
         $category = new SettingCategory('File permissions');
-        $rootDir = __DIR__ . '/../../../../../../../..';
+        $rootDir = __DIR__ . '/../../../../../..';
         $writableElements = array(
             'app/cache' => 'directory',
             'app/sessions' => 'directory',

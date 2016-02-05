@@ -65,7 +65,7 @@ class AdditionalInstaller extends BaseInstaller
         $this->setLocale();
 
         switch (true) {
-            case version_compare($currentVersion, '2.0', '<')  && version_compare($targetVersion, '2.0', '>='):
+            case version_compare($currentVersion, '2.0', '<') && version_compare($targetVersion, '2.0', '>='):
                 $updater = new Updater\Updater020000($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
@@ -77,7 +77,7 @@ class AdditionalInstaller extends BaseInstaller
                 $this->log('Creating acl tables if not present...');
                 $command = new InitAclCommand();
                 $command->setContainer($this->container);
-                $command->run(new ArrayInput(array(), new NullOutput()));
+                $command->run(new ArrayInput(array()), new NullOutput());
             case version_compare($currentVersion, '2.2.0', '<'):
                 $updater = new Updater\Updater020200($this->container);
                 $updater->setLogger($this->logger);
@@ -244,6 +244,10 @@ class AdditionalInstaller extends BaseInstaller
                 $updater->postUpdate();
             case version_compare($currentVersion, '6.6.9', '<'):
                 $updater = new Updater\Updater060609($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+            case version_compare($currentVersion, '6.7.0', '<'):
+                $updater = new Updater\Updater060700($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
         }

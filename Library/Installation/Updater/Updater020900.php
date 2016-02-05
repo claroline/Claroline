@@ -148,7 +148,7 @@ class Updater020900 extends Updater
         $rootDir = $this->container->getParameter('kernel.root_dir');
         $webDir = realpath("{$rootDir}/../web");
         $sourcePath = realpath(
-            "{$rootDir}/../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/web/app.php"
+            "{$rootDir}/../vendor/claroline/core-bundle/Resources/web/app.php"
         );
         $targetPath = "{$webDir}/app.php";
 

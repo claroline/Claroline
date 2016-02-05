@@ -20,7 +20,7 @@ Feature: User management
     Given the admin account "root" is created
       And I log in with "root"/"root"
       And I am on "/admin/user/management/import/form"
-    When I attach the file "claroline/core-bundle/Claroline/CoreBundle/Tests/Stub/users.txt" to "File"
+    When I attach the file "claroline/core-bundle/Tests/Stub/users.txt" to "File"
       And I press "Ok"
     Then I should be on "/admin/users/page/1/max/50/order"
       And I should see 10 ".row-user" elements

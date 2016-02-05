@@ -88,7 +88,7 @@ class Updater020000 extends Updater
         $this->log('Dumping logos and icons...');
         $filesystem = new Filesystem();
         $imgDir = __DIR__ . '/../../../Resources/public/images';
-        $webDir = __DIR__ . '/../../../../../../../../web';
+        $webDir = __DIR__ . '/../../../../../../web';
         $filesystem->mirror("{$imgDir}/logos", "{$webDir}/uploads/logos");
         $filesystem->copy("{$imgDir}/ico/favicon.ico", "{$webDir}/favicon.ico", true);
         $filesystem->copy("{$imgDir}/ico/apple-touch-icon.png", "{$webDir}/apple-touch-icon.png", true);
