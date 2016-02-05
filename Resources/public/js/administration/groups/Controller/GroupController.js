@@ -2,9 +2,7 @@ var controller = function(
     $http, 
     clarolineSearch, 
     clarolineAPI,
-    $uibModalStack, 
-    $uibModal,
-    $scope
+    $uibModal
 ) {
     var translate = function(key) {
         return translator.trans(key, {}, 'platform');
@@ -18,21 +16,21 @@ var controller = function(
         }
 
         return qs;
-    }
+    }.bind(this);
 
     var deleteCallback = function(data) {
-        clarolineAPI.removeElements(this.selected, this.users);
+        clarolineAPI.removeElements(this.selected, this.groups);
         this.selected.splice(0, this.selected.length);
         this.alerts.push({
             type: 'success',
-            msg: translate('user_removed_success_message')
+            msg: translate('group_removed_success_message')
         });0
     }.bind(this);
 
     this.search = '';
     this.savedSearch = [];
     this.fields = [];
-
+    this.selected = [];
     var vm = this;
 
     $http.get(Routing.generate('api_get_group_searchable_fields')).then(function(d) {
@@ -126,8 +124,6 @@ angular.module('GroupsManager').controller('GroupController', [
     '$http',
     'clarolineSearch',
     'clarolineAPI',
-    '$uibModalStack', 
     '$uibModal',
-    '$scope',
     controller
 ]);

@@ -12,8 +12,6 @@ var controller = function(
         return translator.trans(key, {}, 'platform');
     }
 
-    console.log('controller init');
-
     var generateQsForSelected = function() {
         var qs = '';
 

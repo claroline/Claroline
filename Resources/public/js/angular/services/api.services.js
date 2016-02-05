@@ -112,18 +112,18 @@ clarolineAPI.factory('clarolineAPI', function($http, $httpParamSerializerJQLike,
     }
 });
 
-clarolineAPI.controller('ConfirmModalController', function(callback, urlObject, title, content, $http, $scope, $uibModalStack) {
+clarolineAPI.controller('ConfirmModalController', function(callback, urlObject, title, content, $http, $scope, $uibModalInstance) {
     $scope.title = title;
     $scope.content = content;
     $scope.submit = function() {
         $http(urlObject).then(
             function successHandler(d) {
+                $uibModalInstance.close();
                 callback(d.data);
-                $uibModalStack.dismissAll();
             },
             function errorHandler (d) {
                 alert('An error occured');
-                $uibModalStack.dismissAll();
+                $uibModalInstance.close();
             }
         );
     }
