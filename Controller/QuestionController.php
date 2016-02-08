@@ -509,7 +509,7 @@ class QuestionController extends Controller {
     /**
      * To manage the User's documents.
      *
-     * @EXT\Route("/managePic", name="ujm_question_manage_doc")
+     * @EXT\Route("/managePic", name="ujm_question_manage_pic")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -548,9 +548,9 @@ class QuestionController extends Controller {
         $pagerPic = $pagination[1];
 
         return $this->render(
-                        'UJMExoBundle:Picture:manageImg.html.twig', array(
-                    'listDoc' => $listPicPager,
-                    'pagerDoc' => $pagerPic,
+                        'UJMExoBundle:Picture:managePic.html.twig', array(
+                    'listPic' => $listPicPager,
+                    'pagerPic' => $pagerPic,
                     'allowToDel' => $allowToDel,
                         )
         );
@@ -626,7 +626,7 @@ class QuestionController extends Controller {
         $em->remove($listDoc[0]);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('ujm_question_manage_doc'));
+        return $this->redirect($this->generateUrl('ujm_question_manage_pic'));
     }
 
     /**
@@ -640,10 +640,10 @@ class QuestionController extends Controller {
      */
     public function changePictureNameAction() {
         $request = $this->get('request'); // Get the request which contains the following parameters :
-        $oldDocLabel = $request->request->get('oldDocLabel');
+        $oldPicLabel = $request->request->get('oldPicLabel');
         $i = $request->request->get('i');
 
-        return $this->render('UJMExoBundle:Picture:changeName.html.twig', array('oldDocLabel' => $oldDocLabel, 'i' => $i));
+        return $this->render('UJMExoBundle:Picture:changeName.html.twig', array('oldPicLabel' => $oldPicLabel, 'i' => $i));
     }
 
     /**
@@ -706,8 +706,8 @@ class QuestionController extends Controller {
 
             // Put the result in a twig
             $divResultSearch = $this->render(
-                    'UJMExoBundle:Picture:sortDoc.html.twig', array(
-                'listFindDoc' => $listDocSortPager,
+                    'UJMExoBundle:Picture:sortPic.html.twig', array(
+                'listFindPic' => $listDocSortPager,
                 'pagerFindDoc' => $pagerSortDoc,
                 'labelToFind' => $searchLabel,
                 'whichAction' => 'sort',
@@ -724,15 +724,15 @@ class QuestionController extends Controller {
 
                 // Send the form to search and the result
                 return $this->render(
-                                'UJMExoBundle:Picture:manageImg.html.twig', array(
+                                'UJMExoBundle:Picture:managePic.html.twig', array(
                             'divResultSearch' => $divResultSearch,
                                 )
                 );
             }
         } else {
             return $this->render(
-                            'UJMExoBundle:Picture:sortDoc.html.twig', array(
-                        'listFindDoc' => '',
+                            'UJMExoBundle:Picture:sortPic.html.twig', array(
+                        'listFindPic' => '',
                         'whichAction' => 'sort',
                             )
             );
@@ -769,8 +769,8 @@ class QuestionController extends Controller {
 
             // Put the result in a twig
             $divResultSearch = $this->render(
-                    'UJMExoBundle:Picture:sortDoc.html.twig', array(
-                'listFindDoc' => $listFindDocPager,
+                    'UJMExoBundle:Picture:sortPic.html.twig', array(
+                'listFindPic' => $listFindDocPager,
                 'pagerFindDoc' => $pagerFindDoc,
                 'labelToFind' => $labelToFind,
                 'whichAction' => 'search',
@@ -786,15 +786,15 @@ class QuestionController extends Controller {
 
                 // Send the form to search and the result
                 return $this->render(
-                                'UJMExoBundle:Picture:manageImg.html.twig', array(
+                                'UJMExoBundle:Picture:managePic.html.twig', array(
                             'divResultSearch' => $divResultSearch,
                                 )
                 );
             }
         } else {
             return $this->render(
-                            'UJMExoBundle:Picture:sortDoc.html.twig', array(
-                        'listFindDoc' => '',
+                            'UJMExoBundle:Picture:sortPic.html.twig', array(
+                        'listFindPic' => '',
                         'whichAction' => 'search',
                             )
             );

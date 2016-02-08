@@ -94,11 +94,11 @@ class WSRestController extends Controller
                     ->getManager()
                     ->getRepository('UJMExoBundle:Picture');
 
-                $listDoc = $repository->findBy(array('user' => $user->getId()));
+                $listPic = $repository->findBy(array('user' => $user->getId()));
 
                 // Pagination of pictures
-                $adapterDoc = new ArrayAdapter($listDoc);
-                $pagerDoc = new Pagerfanta($adapterDoc);
+                $adapterPic = new ArrayAdapter($listPic);
+                $pagerPic = new Pagerfanta($adapterPic);
 
                 if ($nbItem != 0) {
                     // If new item > max per page, display next page
@@ -110,7 +110,7 @@ class WSRestController extends Controller
                 }
 
                 try {
-                    $listDocPager = $pagerDoc
+                    $listPicPager = $pagerPic
                         ->setMaxPerPage($maxPage)
                         ->setCurrentPage($pageToGo)
                         ->getCurrentPageResults();
@@ -119,10 +119,10 @@ class WSRestController extends Controller
                 }
 
                 return $this->render(
-                    'UJMExoBundle:Picture:manageImg.html.twig',
+                    'UJMExoBundle:Picture:managePic.html.twig',
                     array(
-                        'listDoc' => $listDocPager,
-                        'pagerDoc' => $pagerDoc,
+                        'listPic' => $listPicPager,
+                        'pagerPic' => $pagerPic,
                     )
                 );
             }
