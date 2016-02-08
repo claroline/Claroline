@@ -2,8 +2,8 @@
     'use strict';
 
     angular.module('ConfirmModule').factory('ConfirmService', [
-        '$modal',
-        function ConfirmService($modal) {
+        '$uibModal',
+        function ConfirmService($uibModal) {
             var webDir = AngularApp.webDir;
 
             return {
@@ -26,7 +26,7 @@
                     }
 
                     // Display confirm modal
-                    var modalInstance = $modal.open({
+                    var modalInstance = $uibModal.open({
                         templateUrl: webDir + 'bundles/innovapath/js/Confirm/Partial/confirm.html',
                         controller: 'ConfirmModalCtrl',
                         resolve: {

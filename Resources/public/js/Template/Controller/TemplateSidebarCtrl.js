@@ -6,11 +6,11 @@
     'use strict';
 
     angular.module('TemplateModule').controller('TemplateSidebarCtrl', [
-        '$modal',
+        '$uibModal',
         'ClipboardService',
         'AlertService',
         'TemplateService',
-        function TemplateSidebarCtrl($modal, ClipboardService, AlertService, TemplateService) {
+        function TemplateSidebarCtrl($uibModal, ClipboardService, AlertService, TemplateService) {
             this.templates = [];
 
             /**
@@ -25,7 +25,7 @@
              * @param   {*} template - the Template to edit
              */
             this.edit = function (template) {
-                var modalInstance = $modal.open({
+                var modalInstance = $uibModal.open({
                     templateUrl: AngularApp.webDir + 'bundles/innovapath/js/Template/Partial/modal-form.html',
                     controller: 'TemplateFormModalCtrl as templateFormModalCtrl',
                     resolve: {
