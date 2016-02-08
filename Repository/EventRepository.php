@@ -188,6 +188,7 @@ class EventRepository extends EntityRepository
             FROM Claroline\AgendaBundle\Entity\Event e
             WHERE e.workspace = :workspaceId
             AND e.isTask = :isTask
+            AND e.isTaskDone = false
             " . $lastEventSql . "
             ORDER BY e.start ASC
         ";
@@ -274,6 +275,7 @@ class EventRepository extends EntityRepository
             AND e.user = :userId
             AND e.isTask = false
             AND e.workspace is null
+            AND e.isTaskDone = false
             ORDER BY e.start ASC
         ";
 
@@ -303,6 +305,7 @@ class EventRepository extends EntityRepository
                 WHERE (u.id = :userId OR gru = :userId)
             )
             WHERE e.isTask = false
+            AND e.isTaskDone = false
             AND e.end > :endDate
             ORDER BY e.start ASC
         ";
