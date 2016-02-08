@@ -1,3 +1,40 @@
+<div class="row">
+{# S'il faut mettre le dropdown tout à droite alors il ajouter ajouter :
+text-right
+au div situé ci-dessous
+#}
+    <div class="col-sm-offset-11 col-sm-1">
+        <div class="btn-group-vertical">
+            <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+                {{ 'Action'|trans({}, 'innova_collecticiel') }} 
+                <span class="caret"></span>
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-right">
+                <li>
+                    <a class="comment_validate"
+                    href="#" id="dropzone_id_{{dropzone.id}}" name="dropzoneId" data-dropzone_id="{{ dropzone.id }}">
+                    {{ 'Comment Auto'|trans({}, 'innova_collecticiel') }}
+                    </a>
+                </li>
+                {# Demande JJQ. InnovaERV
+                #226 : si accusé de réception pas sélectionné dans paramètres alors griser
+                et désactiver "Accuser la réception" dans le menu déroulant
+                #}
+                {% if dropzone.returnReceipt == 1  %}
+                    <li>
+                {% else %}
+                    <li class="disabled" >
+                {% endif %}
+                    <a class="" href="#" data-toggle="modal" data-target="#validate-modal-return-receipt" data-dropzone_id="{{ dropzone.id }}">
+                        {{ 'To add a return receipt'|trans({}, 'innova_collecticiel') }}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
 <form class="form-horizontal" method="GET" 
 action="{{ path('innova_collecticiel_return_receipt')}}">
 
@@ -5,6 +42,8 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
     <a href="{{ path('innova_collecticiel_add_more_comments', {'resourceId': dropzone.id}) }}"
     type="button" class="btn btn-default btn-sm">{{ 'Comment Auto'|trans({}, 'innova_collecticiel') }}</a>
 #}
+
+
 <!-- Vue donnant la liste des copies. Exemple d'URL : innovacollecticielbundle/2/drops/awaiting -->
 <table class="table table-striped table-hover datatable sharedSpacesTable">
     <thead>
@@ -73,39 +112,10 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
             <th class="centered"><i class="fa fa-mail-forward"></th>
         {% endif %}
 
-        <th class="centered no-sort">
+        <th class="centered no-sort sorting_disabled">
         {# Demande JJQ. InnovaERV
             {{ 'Selection'|trans({}, 'innova_collecticiel') }}
         #}
-                <div class="btn-group-vertical">
-                    <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
-                        {{ 'Action'|trans({}, 'innova_collecticiel') }} 
-                        <span class="caret"></span>
-                    </button>
-
-                    <ul class="dropdown-menu dropdown-menu-right">
-                        <li>
-                            <a class="comment_validate"
-                            href="#" id="dropzone_id_{{dropzone.id}}" name="dropzoneId" data-dropzone_id="{{ dropzone.id }}">
-                            {{ 'Comment Auto'|trans({}, 'innova_collecticiel') }}
-                            </a>
-                        </li>
-                        {# Demande JJQ. InnovaERV
-                        #226 : si accusé de réception pas sélectionné dans paramètres alors griser
-                        et désactiver "Accuser la réception" dans le menu déroulant
-                        #}
-                        {% if dropzone.returnReceipt == 1  %}
-                            <li>
-                        {% else %}
-                            <li class="disabled" >
-                        {% endif %}
-                            <a class="" href="#" data-toggle="modal" data-target="#validate-modal-return-receipt" data-dropzone_id="{{ dropzone.id }}">
-                                {{ 'To add a return receipt'|trans({}, 'innova_collecticiel') }}
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
             <div>
                 <input align="center" id="document_id_0" data-dropzone-select_id={{ dropzone.id }} type="checkbox" name="documentId" data-document_id="0" class="btn btn-danger btn-sm"
                  data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Selection'|trans({},'innova_collecticiel') }}"
