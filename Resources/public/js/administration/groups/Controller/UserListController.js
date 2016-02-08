@@ -4,6 +4,7 @@ var controller = function($http, clarolineSearch, $stateParams) {
         return translator.trans(key, {}, 'platform');
     }
 
+    var vm = this;
     this.groupId = $stateParams.groupId;
     this.users = [];
     this.search = '';
@@ -11,6 +12,7 @@ var controller = function($http, clarolineSearch, $stateParams) {
     this.selected = [];
     this.alerts = [];
     this.fields = [];
+    this.baseSearch = '';
 
     var columns = [
         {name: translate('username'), prop: "username", isCheckboxColumn: true, headerCheckbox: true},
@@ -36,10 +38,9 @@ var controller = function($http, clarolineSearch, $stateParams) {
 
     $http.get(Routing.generate('api_get_user_searchable_fields')).then(function(d) {
         vm.fields = d.data;
-        console.log(fields);
     })
 
-    clarolineSearch.find('api_get_search_users', searches, this.dataTableOptions.paging.offset, this.dataTableOptions.paging.size).then(function(d) {
+    clarolineSearch.find('api_get_search_users', this.baseSearch, this.dataTableOptions.paging.offset, this.dataTableOptions.paging.size).then(function(d) {
         this.users = d.data.users;
         this.dataTableOptions.paging.count = d.data.total;
     }.bind(this));
