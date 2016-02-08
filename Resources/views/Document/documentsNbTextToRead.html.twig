@@ -1,6 +1,6 @@
 {# Variable qui va compter le nombre de commentaires #}
 {% if document.comments|length == 0 %}
-        <span class="fa fa-minus" title="Demande non traitée"> </span>
+        <span class="fa fa-minus" title="{{ 'Document not commented'|trans({}, 'innova_collecticiel') }}"> </span>
 {% else %}
-        <span class="fa fa-check" title="Demande traitée"></span>
+        <span class="fa fa-check" title="{{ 'Document commented'|trans({}, 'innova_collecticiel') }}"></span>
 {% endif %}
