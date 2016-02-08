@@ -7,59 +7,69 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="panel panel-default">
                     <nav class="navbar navbar-default navbar-static-top" role="navigation">
-                        <ul class="nav navbar-nav navbar-left">
-                            <!-- Path summary -->
-                            <li data-ng-class="{ 'active': pathEditCtrl.summaryState.opened }">
-                                <a href="" data-ng-click="pathEditCtrl.toggleSummary()" data-placement="top" data-toggle="tooltip" data-original-title="{{ 'toggle_summary'|trans:{}:'path_wizards' }}">
+                        <div class="container-fluid">
+                            <div class="navbar-header">
+                                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#path-editor-navbar" aria-expanded="false">
+                                    <span class="sr-only">Toggle navigation</span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+
+                                <a href="" class="navbar-brand" data-ng-class="{ 'active': pathEditCtrl.summaryState.opened }" data-ng-click="pathEditCtrl.toggleSummary()" data-placement="top" data-toggle="tooltip" data-original-title="{{ 'toggle_summary'|trans:{}:'path_wizards' }}">
                                     <span class="fa fa-sitemap"></span>
                                     <span class="sr-only">{{ 'toggle_summary'|trans:{}:'path_wizards' }}</span>
                                 </a>
-                            </li>
+                            </div>
 
-                            <!-- Undo from history button -->
-                            <li data-ng-class="{ 'disabled': pathEditCtrl.historyDisabled.undo }">
-                                <a href="" data-ng-click="pathEditCtrl.undo()" data-placement="bottom" data-toggle="tooltip" data-original-title="{{ 'undo'|trans:{}:'path_wizards' }}">
-                                    <span class="fa fa-reply"></span>
-                                    <span class="sr-only"> {{ 'undo'|trans:{}:'path_wizards' }}</span>
-                                </a>
-                            </li>
+                            <div class="collapse navbar-collapse" id="path-editor-navbar">
+                                <ul class="nav navbar-nav navbar-left">
+                                    <!-- Undo from history button -->
+                                    <li data-ng-class="{ 'disabled': pathEditCtrl.historyDisabled.undo }">
+                                        <a href="" data-ng-click="pathEditCtrl.undo()" data-placement="bottom" data-toggle="tooltip" data-original-title="{{ 'undo'|trans:{}:'path_wizards' }}">
+                                            <span class="fa fa-reply"></span>
+                                            <span class="sr-only"> {{ 'undo'|trans:{}:'path_wizards' }}</span>
+                                        </a>
+                                    </li>
 
-                            <!-- Redo from history button -->
-                            <li data-ng-class="{ 'disabled': pathEditCtrl.historyDisabled.redo }">
-                                <a href="" data-ng-click="pathEditCtrl.redo()" data-placement="bottom" data-toggle="tooltip" data-original-title="{{ 'redo'|trans:{}:'path_wizards' }}">
-                                    <span class="fa fa-share"></span>
-                                    <span class="sr-only">{{ 'redo'|trans:{}:'path_wizards' }}</span>
-                                </a>
-                            </li>
-                        </ul>
+                                    <!-- Redo from history button -->
+                                    <li data-ng-class="{ 'disabled': pathEditCtrl.historyDisabled.redo }">
+                                        <a href="" data-ng-click="pathEditCtrl.redo()" data-placement="bottom" data-toggle="tooltip" data-original-title="{{ 'redo'|trans:{}:'path_wizards' }}">
+                                            <span class="fa fa-share"></span>
+                                            <span class="sr-only">{{ 'redo'|trans:{}:'path_wizards' }}</span>
+                                        </a>
+                                    </li>
+                                </ul>
 
-                        <ul class="nav navbar-nav navbar-right">
-                            <!-- Save button -->
-                            <li data-ng-class="{ 'disabled': !pathEditCtrl.unsaved }">
-                                <a href="" data-ng-click="pathEditCtrl.save()">
-                                    <span class="fa fa-floppy-o"></span> {{ 'save'|trans:{}:'path_wizards' }}
-                                </a>
-                            </li>
+                                <ul class="nav navbar-nav navbar-right">
+                                    <!-- Save button -->
+                                    <li data-ng-class="{ 'disabled': !pathEditCtrl.unsaved }">
+                                        <a href="" data-ng-click="pathEditCtrl.save()">
+                                            <span class="fa fa-floppy-o"></span> {{ 'save'|trans:{}:'path_wizards' }}
+                                        </a>
+                                    </li>
 
-                            <!-- Publish button -->
-                            <li data-ng-class="{ 'disabled': pathEditCtrl.published && !pathEditCtrl.modified }">
-                                <a href="" data-ng-click="pathEditCtrl.publish()">
-                                    <span class="fa fa-share-square-o"></span> {{ 'publish'|trans:{}:'path_wizards' }}
-                                </a>
-                            </li>
+                                    <!-- Publish button -->
+                                    <li data-ng-class="{ 'disabled': pathEditCtrl.published && !pathEditCtrl.modified }">
+                                        <a href="" data-ng-click="pathEditCtrl.publish()">
+                                            <span class="fa fa-share-square-o"></span> {{ 'publish'|trans:{}:'path_wizards' }}
+                                        </a>
+                                    </li>
 
-                            <!-- Preview button -->
-                            <li data-ng-class="{ 'disabled': !pathEditCtrl.published }">
-                                <a href="" data-ng-click="pathEditCtrl.preview()">
-                                    <span class="fa fa-sign-out"></span> {{ 'preview'|trans:{}:'path_wizards' }}
-                                </a>
-                            </li>
-                        </ul>
+                                    <!-- Preview button -->
+                                    <li data-ng-class="{ 'disabled': !pathEditCtrl.published }">
+                                        <a href="" data-ng-click="pathEditCtrl.preview()">
+                                            <span class="fa fa-sign-out"></span> {{ 'preview'|trans:{}:'path_wizards' }}
+                                        </a>
+                                    </li>
+                                </ul>
 
-                        <p class="navbar-text navbar-right">
+                                <p class="navbar-text navbar-right">
                             <!-- User messages -->
                             <alert-box></alert-box>
                         </p>
+                            </div>
+                        </div>
                     </nav>
 
                     <div class="panel-body" data-ng-if="!hidePath">
