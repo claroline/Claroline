@@ -100,7 +100,7 @@ class Validator
 
     private function uriToFile($uri)
     {
-        $vendorDir = __DIR__ . '/../../../../../..';
+        $vendorDir = __DIR__ . '/../../../..';
         $schemaDir = realpath("{$vendorDir}/json-quiz/json-quiz/format");
         $baseUri = 'http://json-quiz.github.io/json-quiz/schemas';
 

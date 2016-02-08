@@ -20,7 +20,7 @@ class ValidatorTest extends TransactionalTestCase
     {
         parent::setUp();
         $this->validator = $this->client->getContainer()->get('ujm.exo.json_validator');
-        $this->formatDir = realpath(__DIR__ . '/../../../../../../../json-quiz/json-quiz/format');
+        $this->formatDir = realpath(__DIR__ . '/../../../../../json-quiz/json-quiz/format');       
     }
 
     public function testValidateQuestionWithNoType()
@@ -76,7 +76,7 @@ class ValidatorTest extends TransactionalTestCase
         $data = file_get_contents("{$this->formatDir}/question/$dataFilename");
         $question = json_decode($data);
         $errors = $this->validator->validateQuestion($question);
-        $this->assertEquals(0, count($this->validator->validateQuestion($question)));
+        $this->assertEquals(0, count($errors));
     }
 
     public function testValidateExercise()
