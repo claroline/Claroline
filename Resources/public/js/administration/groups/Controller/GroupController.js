@@ -2,7 +2,8 @@ var controller = function(
     $http, 
     clarolineSearch, 
     clarolineAPI,
-    $uibModal
+    $uibModal,
+    $scope
 ) {
     var translate = function(key) {
         return translator.trans(key, {}, 'platform');
@@ -43,8 +44,10 @@ var controller = function(
             name: translate('actions'),
             cellRenderer: function(scope) {
                 var groupId = scope.$row.id;
-                var actions = '<a ui-sref="administration.groups.users({groupId: ' + groupId + '})"> users </a>';
-                //var actions = '<a href="#"> sdfsdf </a>';
+                var users = '<a ui-sref="administration.groups.users({groupId: ' + groupId + '})"><i class="fa fa-users"></i> </a>';
+                var edit =  '<a ng-click="gc.clickEdit($row)"><i class="fa fa-cog"></i></a>';
+                var actions = users + edit;
+
                 return actions;
             }
         }
@@ -100,15 +103,23 @@ var controller = function(
         );
     };
 
+    this.clickEdit = function(group) {
+        var modalInstance = $uibModal.open({
+            templateUrl: Routing.generate('api_get_edit_group_form', {'_format': 'html', 'group': group.id}),
+            controller: 'EditModalController'
+        });
+
+        modalInstance.result.then(function (result) {
+            if (!result) return;
+            //dirty but it works
+            vm.groups = clarolineAPI.replaceById(result, vm.groups);
+        });
+    }
+
     this.clickNew = function() {
         var modalInstance = $uibModal.open({
             templateUrl: Routing.generate('api_get_create_group_form', {'_format': 'html'}),
-            controller: 'CreateModalController',
-            resolve: {
-                groups: function() {
-                    return vm.groups;
-                }
-            }
+            controller: 'CreateModalController'
         });
 
         modalInstance.result.then(function (result) {
@@ -125,5 +136,6 @@ angular.module('GroupsManager').controller('GroupController', [
     'clarolineSearch',
     'clarolineAPI',
     '$uibModal',
+    '$scope',
     controller
 ]);

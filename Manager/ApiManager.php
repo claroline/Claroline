@@ -112,18 +112,20 @@ class ApiManager
     public function handleFormView($template, $form, array $options = array())
     {
         $httpCode = isset($options['http_code']) ? $options['http_code']: 200;
+        $parameters = isset($options['form_view']) ? $options['form_view']: array();
 
         return $form->isValid() ?
             $this->createSerialized($options['extra_parameters']):
-            $this->createFormView($template, $form, $httpCode);
+            $this->createFormView($template, $form, $httpCode, $parameters);
 
     }
 
-    private function createFormView($template, $form, $formHttpCode)
+    private function createFormView($template, $form, $formHttpCode, $parameters)
     {
         $formHttpCode = $formHttpCode ?:200;
         $view = View::create($form, $formHttpCode);
         $view->setTemplate($template);
+        $view->setTemplateData($parameters);
         $view->setFormat($this->container->get('request')->getRequestFormat());
 
         return $this->viewHandler->handle($view);

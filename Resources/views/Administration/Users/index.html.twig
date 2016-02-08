@@ -14,6 +14,8 @@
     {{ parent() }}
 
     <link rel="stylesheet" href="{{ asset('vendor/angular/angular-ui.css')}}"> </link>
+    {# we should be able to remove the following line if it's included in angular-ui.css #}
+    <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/select.css') }}"></link>
 {% endblock %}
 
 {% block javascripts %}
@@ -50,6 +52,7 @@
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/groups/modules.js') }}></script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/groups/Controller/GroupController.js') }}></script>    
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/groups/Controller/CreateModalController.js') }}></script>
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/groups/Controller/EditModalController.js') }}></script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/groups/Controller/UserListController.js') }}></script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/groups/Directive/GroupListDirective.js') }}></script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/groups/Directive/GroupSearchDirective.js') }}></script>

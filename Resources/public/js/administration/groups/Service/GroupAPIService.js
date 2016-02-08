@@ -8,6 +8,16 @@ var service = function($http, clarolineAPI) {
                 data,
                 {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
             );
+        },
+        edit: function(group) {
+            console.log(group);
+            var data = clarolineAPI.formSerialize('group_form', group);
+
+            return $http.put(
+                Routing.generate('api_put_group', {'_format': 'html', 'group': group.id}),
+                data,
+                {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
+            )
         }
     }
 };

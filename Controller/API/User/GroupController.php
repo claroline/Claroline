@@ -113,7 +113,11 @@ class GroupController extends FOSRestController
         );
 
 
-        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:User\createGroupForm.html.twig', $form, $options);
+        return $this->apiManager->handleFormView(
+            'ClarolineCoreBundle:API:User\createGroupForm.html.twig', 
+            $form, 
+            $options
+        );
     }
 
     /**
@@ -126,21 +130,30 @@ class GroupController extends FOSRestController
      */
     public function putGroupAction(Group $group)
     {
-        $groupType = new GroupType();
+        $groupType = new GroupSettingsType();
         $groupType->enableApi();
         $form = $this->formFactory->create($groupType, $group);
-        $form->submit($this->request);
-        //$form->handleRequest($this->request);
+        $form->submit($this->request);        
+        $httpCode = 400;
 
         if ($form->isValid()) {
             $group = $form->getData();
-            $userRole = $this->roleManager->getRoleByName('ROLE_USER');
             $this->groupManager->insertGroup($group);
-
-            return $group;
+            $httpCode = 200;
         }
 
-        return $form;
+        $options = array(
+            'http_code' => $httpCode,
+            'extra_parameters' => $group,
+            'form_view' => array('group' => $group)
+        );
+
+
+        return $this->apiManager->handleFormView(
+            'ClarolineCoreBundle:API:User\editGroupForm.html.twig', 
+            $form, 
+            $options
+        );
     }
 
     /**
@@ -289,12 +302,13 @@ class GroupController extends FOSRestController
      *     views = {"location"}
      * )
      */
-    public function getEditLocationFormAction(Group $group)
+    public function getEditGroupFormAction(Group $group)
     {
         $formType = new GroupSettingsType();
         $formType->enableApi();
         $form = $this->createForm($formType, $group);
+        $options = array('form_view' => array('group' => $group));
 
-        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:User\editGroupForm.html.twig', $form);
+        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:User\editGroupForm.html.twig', $form, $options);
     }
 }

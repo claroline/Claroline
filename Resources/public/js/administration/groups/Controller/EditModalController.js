@@ -3,7 +3,7 @@ var controller = function(GroupAPI, $scope, $uibModalInstance, $uibModal) {
     var vm = this;
 
     $scope.submit = function() {
-        GroupAPI.create($scope.group).then(
+        GroupAPI.edit($scope.group).then(
             function successHandler (d) {
                 $uibModalInstance.close(d.data);
             },
@@ -12,7 +12,7 @@ var controller = function(GroupAPI, $scope, $uibModalInstance, $uibModal) {
                     $uibModalInstance.close();
                     $uibModal.open({
                         template: d.data,
-                        controller: 'CreateModalController',
+                        controller: 'EditModalController',
                         bindToController: true
                     })
                 }
@@ -21,4 +21,4 @@ var controller = function(GroupAPI, $scope, $uibModalInstance, $uibModal) {
     }
 };
 
-angular.module('GroupsManager').controller('CreateModalController', controller);
+angular.module('GroupsManager').controller('EditModalController', controller);
