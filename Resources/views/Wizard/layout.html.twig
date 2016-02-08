@@ -5,8 +5,8 @@
     {{ parent() }}
 
     {# Path Editor styles #}
-    {% stylesheets debug=false filter='lessphp, cssmin' output='vendor/innovapath/wizards.css'
-        '@InnovaAngularUITreeBundle/Resources/public/css/*'
+    {% stylesheets debug=false filter='less, cssmin' output='vendor/innovapath/wizards.css'
+        '@FrontEndBundle/Resources/public/angular-ui-tree/dist/angular-ui-tree.min.css'
         '@InnovaPathBundle/Resources/public/less/wizards.less'
     %}
     <link rel="stylesheet" media="screen" href="{{ asset_url }}" />
@@ -25,24 +25,23 @@
     <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'path_wizards' }) }}"></script>
 
     {# Angular JS #}
-    {% javascripts debug=false filter='jsmin' output='vendor/angular/angular-js.js'
-        '@InnovaAngularJSBundle/Resources/public/js/angular.min.js'
-        '@InnovaAngularJSBundle/Resources/public/js/angular-sanitize.min.js'
-        '@InnovaAngularJSBundle/Resources/public/js/angular-route.min.js'
-        '@InnovaAngularJSBundle/Resources/public/js/angular-resource.min.js'
-        '@InnovaAngularJSBundle/Resources/public/js/angular-touch.min.js'
+    {% javascripts debug=false filter='jsmin' output='vendor/innovapath/angular-js.js'
+        '@FrontEndBundle/Resources/public/angular/angular.min.js'
+        '@FrontEndBundle/Resources/public/angular-sanitize/angular-sanitize.min.js'
+        '@FrontEndBundle/Resources/public/angular-route/angular-route.min.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
     {# Angular UI #}
-    {% javascripts debug=false filter='jsmin' output='vendor/angular/angular-ui.js'
-        '@InnovaAngularUIBootstrapBundle/Resources/public/js/*'
-        '@InnovaAngularUITreeBundle/Resources/public/js/*'
+    {% javascripts debug=false filter='jsmin' output='vendor/innovapath/angular-ui.js'
+        '@FrontEndBundle/Resources/public/angular-bootstrap/ui-bootstrap-tpls.min.js'
+        '@FrontEndBundle/Resources/public/angular-ui-tree/dist/angular-ui-tree.min.js'
+        '@FrontEndBundle/Resources/public/angular-ui-tinymce/src/tinymce.js'
+        '@FrontEndBundle/Resources/public/angular-ui-translation/angular-translation.js'
+        '@FrontEndBundle/Resources/public/angular-ui-resource-picker/angular-resource-picker.js'
+
         '@InnovaAngularUIPageslideBundle/Resources/public/js/*'
-        '@InnovaAngularUITinyMCEBundle/Resources/public/js/*'
-        '@InnovaAngularUITranslationBundle/Resources/public/js/*'
-        '@InnovaAngularUIResourcePickerBundle/Resources/public/js/*'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -51,7 +50,6 @@
         '@InnovaPathBundle/Resources/public/js/Utils/*'
         '@InnovaPathBundle/Resources/public/js/Utils/Filter/*'
         '@InnovaPathBundle/Resources/public/js/Utils/Service/*'
-        '@InnovaPathBundle/Resources/public/js/Utils/Resource/*'
 
         '@InnovaPathBundle/Resources/public/js/Form/*'
         '@InnovaPathBundle/Resources/public/js/Form/Directive/*'
