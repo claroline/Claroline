@@ -1,31 +1,34 @@
+//no call in the code
 // Display inline-block to add a new document
-function AddDocument() {
-    if ($('#AddDocuments').css("display") == "none") {
-        $('#AddDocuments').css({"display" : "inline-block"});
-        $('#icon').attr('class', 'fa fa-minus');
-    } else {
-        $('#AddDocuments').css({"display" : "none"});
-        $('#icon').attr('class', 'fa fa-plus');
-    }
-}
+//function AddDocument() {
+//    if ($('#AddDocuments').css("display") == "none") {
+//        $('#AddDocuments').css({"display" : "inline-block"});
+//        $('#icon').attr('class', 'fa fa-minus');
+//    } else {
+//        $('#AddDocuments').css({"display" : "none"});
+//        $('#icon').attr('class', 'fa fa-plus');
+//    }
+//}
 
+//no call in the code
 // Display inline-block to sort documents
-function sortDoc() {
-    if ($('#sortDocuments').css("display") == "none") {
-        $('#sortDocuments').css({"display" : "inline-block"});
-    } else {
-        $('#sortDocuments').css({"display" : "none"});
-    }
-}
+//function sortDoc() {
+//    if ($('#sortDocuments').css("display") == "none") {
+//        $('#sortDocuments').css({"display" : "inline-block"});
+//    } else {
+//        $('#sortDocuments').css({"display" : "none"});
+//    }
+//}
 
+//no call in the code
 // Display inline-block to search documents
-function searchDocuments() {
-    if ($('#searchDocuments').css("display") == "none") {
-        $('#searchDocuments').css({"display" : "inline-block"});
-    } else {
-        $('#searchDocuments').css({"display" : "none"});
-    }
-}
+//function searchDocuments() {
+//    if ($('#searchDocuments').css("display") == "none") {
+//        $('#searchDocuments').css({"display" : "inline-block"});
+//    } else {
+//        $('#searchDocuments').css({"display" : "none"});
+//    }
+//}
 
 // Sort documents depending on its type
 function sortDocument(type, path, page) {
@@ -74,7 +77,7 @@ function searchPic(path, page) {
     });
 }
 
-// Display modal to change name of a document
+// Display modal to change name of a picture
 function ChangeName(url, i) {
     var oldPicLabel = $('#PicLabel' + i).html().trim();
 
@@ -92,7 +95,7 @@ function ChangeName(url, i) {
     });
 }
 
-// change document name
+// change picture name
 function changePictureName(data) {
     $('body').append(data);
 }

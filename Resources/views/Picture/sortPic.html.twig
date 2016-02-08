@@ -23,6 +23,7 @@
             </tr>
         </thead>
         <tbody>
+            {% set i = 0 %}
             {% for myPic in listFindPic %}
                 <tr>
                     <td class="classic">
@@ -64,23 +65,24 @@
                        {% endif %}
                     </td>
 
-                    <td class="classic">
+                    <td class="classic" id="PicLabel{{ i }}">
                         {{ myPic.label }}
                     </td>
 
                     <td class="classic">
                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans({}, 'ujm_exo') }}"
-                            href="#" onclick="ChangeName('{{ myPic.label }}');event.preventDefault();">
+                            href="#" onclick="ChangeName('{{ path('ujm_picture_change_name') }}', '{{ i }}');">
                             <i class="fa fa-pencil"></i>
                         </a>
 
                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans({}, 'ujm_exo') }}"
-                           href="{{ path('ujm_Picture_del', { 'idPic': myPic.id }) }}"
-                           onclick="return confirm('{{ 'warning' | trans({}, 'ujm_exo') }} ?');">
-                            <i class="fa fa-trash-o"></i>
-                        </a>
+                            id="delete_picture"
+                            href="{{ path('ujm_Picture_del', { 'idPic': myPic.id }) }}">
+                             <i class="fa fa-trash-o"></i>
+                         </a>
                     </td>
                 </tr>
+                {% set i = i + 1 %}
             {% endfor %}
         </tbody>
     </table>
@@ -88,13 +90,13 @@
     <input type="hidden" id="label2Find" value="{{ labelToFind }}"/>
     <input type="hidden" id="whichAction" value="{{ whichAction }}"/>
 
-    {% if pagerFindDoc.haveToPaginate %}
+    {% if pagerFindPic.haveToPaginate %}
         <div class="text-center panel-footer">
             {% if whichAction == 'sort' %}
-                {{ pagerfanta(pagerFindDoc, 'twitter_bootstrap_translated',{ 'routeName': 'ujm_question_sortDocuments',
-                    'routeParams': { 'searchLabel': labelToFind, 'doctype': doctype } }) }}
+                {{ pagerfanta(pagerFindPic, 'twitter_bootstrap_translated',{ 'routeName': 'ujm_question_sortPictures',
+                    'routeParams': { 'searchLabel': labelToFind, 'picType': picType } }) }}
             {% else %}
-                {{ pagerfanta(pagerFindDoc, 'twitter_bootstrap_translated',{ 'routeName': 'ujm_question_searchDocuments',
+                {{ pagerfanta(pagerFindPic, 'twitter_bootstrap_translated',{ 'routeName': 'ujm_question_searchPictures',
                     'routeParams': { 'labelToFind': labelToFind } }) }}
             {% endif %}
         </div>
