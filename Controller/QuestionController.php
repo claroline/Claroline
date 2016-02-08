@@ -513,7 +513,7 @@ class QuestionController extends Controller {
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function manageDocAction() {
+    public function managePicAction() {
         $allowToDel = array();
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $request = $this->get('request');
@@ -525,15 +525,15 @@ class QuestionController extends Controller {
 
         $listPic = $repository->findBy(array('user' => $user->getId()));
 
-        foreach ($listPic as $doc) {
+        foreach ($listPic as $pic) {
             $interGraph = $this->getDoctrine()
                     ->getManager()
                     ->getRepository('UJMExoBundle:InteractionGraphic')
-                    ->findOneBy(array('id' => $doc->getId()));
+                    ->findOneBy(array('id' => $pic->getId()));
             if ($interGraph) {
-                $allowToDel[$doc->getId()] = false;
+                $allowToDel[$pic->getId()] = false;
             } else {
-                $allowToDel[$doc->getId()] = true;
+                $allowToDel[$pic->getId()] = true;
             }
         }
 
@@ -566,11 +566,11 @@ class QuestionController extends Controller {
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deletePicAction($idPic) {
-        $repositoryDoc = $this->getDoctrine()
+        $repositoryPic = $this->getDoctrine()
                 ->getManager()
                 ->getRepository('UJMExoBundle:Picture');
 
-        $pic = $repositoryDoc->find($idPic);
+        $pic = $repositoryPic->find($idPic);
 
         $em = $this->getDoctrine()->getManager();
 
@@ -587,24 +587,24 @@ class QuestionController extends Controller {
     /**
      * To delete a User's picture linked to questions but not to paper.
      *
-     * @EXT\Route("/deletelinkedDoc/{label}", name="ujm_picture_del_linked")
+     * @EXT\Route("/deletelinkedPic/{label}", name="ujm_picture_del_linked")
      *
      * @param string $label label of picture
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deletelinkedDocAction($label) {
+    public function deletelinkedPicAction($label) {
         $userId = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
 
-        $repositoryDoc = $this->getDoctrine()
+        $repositoryPic = $this->getDoctrine()
                 ->getManager()
                 ->getRepository('UJMExoBundle:Picture');
 
-        $listDoc = $repositoryDoc->findByLabel($label, $userId, 0);
+        $listPic = $repositoryPic->findByLabel($label, $userId, 0);
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->findBy(array('picture' => $listDoc));
+        $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->findBy(array('picture' => $listPic));
 
         $end = count($entity);
 
@@ -623,7 +623,7 @@ class QuestionController extends Controller {
             $em->remove($entity[$i]);
         }
 
-        $em->remove($listDoc[0]);
+        $em->remove($listPic[0]);
         $em->flush();
 
         return $this->redirect($this->generateUrl('ujm_question_manage_pic'));
@@ -662,11 +662,11 @@ class QuestionController extends Controller {
         $oldlabel = $request->get('oldName');
         $em = $this->getDoctrine()->getManager();
 
-        $alterDoc = $em->getRepository('UJMExoBundle:Picture')->findOneBy(array('label' => $oldlabel));
+        $alterPic = $em->getRepository('UJMExoBundle:Picture')->findOneBy(array('label' => $oldlabel));
 
-        $alterDoc->setLabel($newlabel);
+        $alterPic->setLabel($newlabel);
 
-        $em->persist($alterDoc);
+        $em->persist($alterPic);
         $em->flush();
 
         return new \Symfony\Component\HttpFoundation\Response($newlabel);
@@ -688,7 +688,7 @@ class QuestionController extends Controller {
 
         $max = 10; // Max per page
 
-        $type = $request->query->get('doctype');
+        $type = $request->query->get('picType');
         $searchLabel = $request->query->get('searchLabel');
         $page = $request->query->get('page');
 
@@ -697,21 +697,21 @@ class QuestionController extends Controller {
                     ->getManager()
                     ->getRepository('UJMExoBundle:Picture');
 
-            $listDocSort = $repository->findByType($type, $user->getId(), $searchLabel);
+            $listPicSort = $repository->findByType($type, $user->getId(), $searchLabel);
 
-            $pagination = $paginationSer->pagination($listDocSort, $max, $page);
+            $pagination = $paginationSer->pagination($listPicSort, $max, $page);
 
-            $listDocSortPager = $pagination[0];
-            $pagerSortDoc = $pagination[1];
+            $listPicSortPager = $pagination[0];
+            $pagerSortPic = $pagination[1];
 
             // Put the result in a twig
             $divResultSearch = $this->render(
                     'UJMExoBundle:Picture:sortPic.html.twig', array(
-                'listFindPic' => $listDocSortPager,
-                'pagerFindDoc' => $pagerSortDoc,
+                'listFindPic' => $listPicSortPager,
+                'pagerFindPic' => $pagerSortPic,
                 'labelToFind' => $searchLabel,
                 'whichAction' => 'sort',
-                'doctype' => $type,
+                'picType' => $type,
                     )
             );
 
@@ -748,7 +748,7 @@ class QuestionController extends Controller {
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function searchDocAction() {
+    public function searchPicAction() {
         $userId = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
         $request = $this->get('request');
         $paginationSer = $this->container->get('ujm.exo_pagination');
@@ -760,18 +760,18 @@ class QuestionController extends Controller {
 
         if ($labelToFind) {
             $em = $this->getDoctrine()->getManager();
-            $listFindDoc = $em->getRepository('UJMExoBundle:Picture')->findByLabel($labelToFind, $userId, 1);
+            $listFindPic = $em->getRepository('UJMExoBundle:Picture')->findByLabel($labelToFind, $userId, 1);
 
-            $pagination = $paginationSer->pagination($listFindDoc, $max, $page);
+            $pagination = $paginationSer->pagination($listFindPic, $max, $page);
 
-            $listFindDocPager = $pagination[0];
-            $pagerFindDoc = $pagination[1];
+            $listFindPicPager = $pagination[0];
+            $pagerFindPic = $pagination[1];
 
             // Put the result in a twig
             $divResultSearch = $this->render(
                     'UJMExoBundle:Picture:sortPic.html.twig', array(
-                'listFindPic' => $listFindDocPager,
-                'pagerFindDoc' => $pagerFindDoc,
+                'listFindPic' => $listFindPicPager,
+                'pagerFindPic' => $pagerFindPic,
                 'labelToFind' => $labelToFind,
                 'whichAction' => 'search',
                     )
