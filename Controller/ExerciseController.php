@@ -11,7 +11,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use UJM\ExoBundle\Form\ExerciseType;
 use UJM\ExoBundle\Form\ExerciseHandler;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\ExerciseQuestion;
+use UJM\ExoBundle\Entity\StepQuestion;
+use \UJM\ExoBundle\Entity\Step;
 use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Entity\Response;
 
@@ -234,7 +235,7 @@ class ExerciseController extends Controller
                 ->getManager()
                 ->getRepository('UJMExoBundle:Question')
                 ->findByExercise($exercise);
-
+           
             if ($displayAll == 1) {
                 $max = count($questions);
             }
@@ -460,18 +461,19 @@ class ExerciseController extends Controller
      */
     public function importValidateAction()
     {
+        $em = $this->getDoctrine()->getManager();
         $request = $this->container->get('request');
 
         if ($request->isXmlHttpRequest()) {
             $exoID = $request->request->get('exoID');
+            $exo =$em->getRepository('UJMExoBundle:Exercise')->find($exoID) ;
             $pageGoNow = $request->request->get('pageGoNow');
             $qid = $request->request->get('qid');
 
-            $em = $this->getDoctrine()->getManager();
-            $dql = 'SELECT max(eq.ordre) FROM UJM\ExoBundle\Entity\ExerciseQuestion eq '
-                         .'WHERE eq.exercise='.$exoID;
-            $query = $em->createQuery($dql);
-            $result = $query->getResult();
+            
+           
+            $result=$em->getRepository('UJMExoBundle:StepQuestion')->getMaxOrder($exo);
+           
             $maxOrdre = (int) $result[0][1] + 1;
 
             foreach ($qid as $q) {
@@ -481,12 +483,28 @@ class ExerciseController extends Controller
                     ->find($q);
 
                 if (count($question) > 0) {
-                    $exo = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
+                    
+                    //PARTIE EN ATTENDANT LA GESTION DES ETAPES                    
+                    $steps = $em->getRepository('UJMExoBundle:Step')->findDefaultStep($exo);          
+                    if(empty($steps[0])){
+                        $step= new Step();
+                        $step->setText('step default');
+                        $step->setExercise($exo);
+                        $step->setNbQuestion('0');
+                        $step->setDuration(0);
+                        $step->setMaxAttempts(0);
+                        $step->setOrder(0);
+                        $em->persist($step);
+                    } 
+                    else{
+                        $step=$steps[0];
+                    }
+                    //Fin partie A MODIFIER !!!!              
                     $question = $em->getRepository('UJMExoBundle:Question')->find($q);
-
-                    $eq = new ExerciseQuestion($exo, $question);
-                    $eq->setOrdre((int) $maxOrdre);
-                    $em->persist($eq);
+                    
+                    $sq = new StepQuestion($step, $question);
+                    $sq->setOrdre((int) $maxOrdre);
+                    $em->persist($sq);
                     ++$maxOrdre;
                 }
             }
