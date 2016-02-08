@@ -35,4 +35,5 @@ class AdditionalInstaller extends BaseInstaller
             $updater->postUpdate();
         }
     }
+
 }

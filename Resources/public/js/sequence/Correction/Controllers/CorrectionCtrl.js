@@ -25,9 +25,7 @@
                 this.exercise = exercise;
                 this.paper = paper;
                 this.user = user;
-
                 this.questions = questions;
-                console.log(questions);
                 this.globalNote = 0;//CommonService.getPaperScore(this.paper, this.questions);
                 this.showHideRetryLink();
             };
@@ -147,6 +145,8 @@
                             return CorrectionService.getClozeQuestionScore(question, this.paper);
                         } else if (question.type === 'application/x.short+json') {
                             return CorrectionService.getShortQuestionScore(question, this.paper);
+                        } else if (question.type === 'application/x.graphic+json') {
+                            return CorrectionService.getGraphicQuestionScore(question, this.paper);
                         }
                     }
                 }

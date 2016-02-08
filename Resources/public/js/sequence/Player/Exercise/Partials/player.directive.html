@@ -17,21 +17,20 @@
                 <div class="step-container" data-ng-repeat="item in exercisePlayerCtrl.exercise.steps[exercisePlayerCtrl.currentStepIndex].items">
                     <!-- switch on item type -->
                     <div data-ng-switch="item.type">
-                        <div data-ng-switch-when="application/x.choice+json">
+                        <div data-ng-switch-when="application/x.choice+json" class="choice-directive-container">
                             <choice-question data-can-see-feedback="exercisePlayerCtrl.checkIfFeedbackIsAvailable()" data-question="item"></choice-question>                           
                         </div>                       
-                        <div data-ng-switch-when="application/x.match+json">
+                        <div data-ng-switch-when="application/x.match+json" class="match-directive-container">
                             <match-question data-can-see-feedback="exercisePlayerCtrl.checkIfFeedbackIsAvailable()" data-question="item"></match-question>
-                        </div> 
-                        <!--
-                        <div data-ng-switch-when="application/x.sort+json">
-                            <sort-question data-step="stepShowCtrl.currentStep" data-question="item"></sort-question>
-                        </div>-->
-                        <div data-ng-switch-when="application/x.cloze+json">
+                        </div>
+                        <div data-ng-switch-when="application/x.cloze+json" class="cloze-directive-container">
                             <cloze-question data-step="stepShowCtrl.currentStep" data-question="item"></cloze-question>
                         </div> 
-                        <div data-ng-switch-when="application/x.short+json">
+                        <div data-ng-switch-when="application/x.short+json" class="short-directive-container">
                             <open-question data-step="stepShowCtrl.currentStep" data-question="item"></open-question>
+                        </div>
+                        <div data-ng-switch-when="application/x.graphic+json" class="graphic-directive-container">
+                            <graphic-question data-can-see-feedback="exercisePlayerCtrl.checkIfFeedbackIsAvailable()" data-question="item"></graphic-question>
                         </div>
                     </div>
                 </div>

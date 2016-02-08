@@ -16,6 +16,13 @@ comment: Comment
 # d
 dropdown_step_navigate_choice_label: Step N°%1% / %2%
 
+
+# g
+graphic_setpoint_first: Drag the "sights" on the picture. The sight center defines your answer.
+graphic_setpoint_second: Use drag and drop to answer.
+graphic_setpoint_third: Correct answers are only counted once.
+graphic_reset_answers: Init answers.
+
 # k
 keys_words: Keys words
 
