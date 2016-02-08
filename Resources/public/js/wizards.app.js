@@ -22,7 +22,7 @@
         'PathNavigationModule',
         'PathModule',
         'StepModule',
-        'TemplateModule',
+        /*'TemplateModule',*/
         'UserProgressionModule',
         'StepConditionsModule'
     ];
