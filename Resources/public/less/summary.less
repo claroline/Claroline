@@ -4,24 +4,23 @@
 
 // Default state
 .path-summary-container {
-    /*overflow-y: hidden;*/
-    top: 70px !important; /* Same as body padding top */
-    bottom: 70px !important;
-
+    margin-top: @navbar-height;
     height: auto !important;
-    width: inherit;
-    z-index: 10 !important;
+    z-index: 9 !important;
+    background: @navbar-default-bg;
+    box-shadow: 3px 0 3px rgba(0,0,0,.25);
 
     /* Sidebar close button */
     .ps-close {
+        font-size: 16px;
         position: absolute;
         z-index: 2;
         right: 0;
         display: inline-block;
-        line-height: @navbar-height;
+        line-height: @navbar-height - 3;
         padding: 0 floor(@grid-gutter-width / 2);
-        color: @text-color;
-        opacity: 0.6;
+        color: darken(@navbar-default-link-color, 10%);
+        opacity: 0.75;
 
         &:hover,
         &:focus {
@@ -34,31 +33,35 @@
         left: 0;
         height: 100%;
         width: 100%;
-        padding-top: @navbar-height;
-        background-color: #EEE;
-        border: 1px solid @panel-default-border;
-        border-radius: @border-radius-base;
+        padding-top: @navbar-height - 3;
 
         /* Sidebar title */
         h2 {
-            font-size: 17px;
+            font-size: 16px;
+            font-weight: bold;
+            color: darken(@navbar-default-link-color, 10%);
             margin: 0;
             padding: 0 @grid-gutter-width 0 floor(@grid-gutter-width / 2);
+            border-bottom: 3px solid @gray-light !important;
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: @navbar-height;
-            line-height: @navbar-height;
+            height: @navbar-height - 3;
+            line-height: @navbar-height - 3;
             z-index: 1;
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
-            width: 100%;
+
+            .fa {
+                margin-right: 5px;
+            }
         }
 
         em {
-            padding: 0 floor(@grid-gutter-width / 2);
+            display: block;
+            padding: floor(@grid-gutter-width / 2) 0;
         }
 
         .path-summary-tree {
@@ -87,10 +90,6 @@
 
                 li {
                     list-style: none;
-
-                    &:first-child .tree-item {
-                        margin-top: 0 !important;
-                    }
                 }
             }
 
@@ -242,29 +241,26 @@
         overflow: visible !important;
         width: @path-summary-width !important; // Override pageslideDirective width to make it a little more responsive
     }
-
-    /* Shift content when sidebar is opened */
-    @media (min-width: @screen-sm) {
-        #wrap .container {
-            margin-left: @path-summary-width + @grid-gutter-width !important;
-        }
-    }
-
-    @media (max-width: (@screen-sm - 1)) {
-        #wrap .container {
-            margin-left: @path-summary-width + @grid-gutter-width !important;
-        }
-    }
 }
 
-// Add a margin to the sidebar when the left menu is displayed
-.left-bar-push {
+/* Shift content when sidebar is present */
+@media (min-width: @screen-sm) {
     .path-summary-container {
-        margin-left: 40px + floor(@grid-gutter-width / 2);
+        margin-left: 40px;
+    }
+
+    .path-summary-opened {
+        margin-left: @path-summary-width + 40px !important;
     }
 }
 
-// No margin on the sidebar when the left bar is not displayed
-.path-summary-container {
-    margin-left: floor(@grid-gutter-width / 2);
+/* Reset margin when no leftbar (on small screen) */
+@media (max-width: (@screen-sm - 1)) {
+    .path-summary-container {
+        margin-left: 0px;
+    }
+
+    .path-summary-opened {
+        margin-left: @path-summary-width !important;
+    }
 }
