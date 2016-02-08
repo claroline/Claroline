@@ -1606,7 +1606,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 if (in_array($key, $baseFieldsName)) {
                     $qb->andWhere("UPPER (u.{$key}) LIKE :{$key}{$id}");
                     $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
-                }
+                } 
+
                 if (in_array($key, $facetFieldsName)) {
                     $qb->join('u.fieldsFacetValue', "ffv{$id}");
                     $qb->join("ffv{$id}.fieldFacet", "f{$id}");
@@ -1615,6 +1616,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                     $qb->andWhere("f{$id}.name LIKE :facet{$id}");
                     $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
                     $qb->setParameter("facet{$id}", $key);
+                }
+
+                if ($key === 'group') {
+                    $qb->join('u.groups', "g{$id}");
+                    $qb->andWhere("UPPER (g{$id}.name) LIKE :{$key}{$id}");
+                    $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
                 }
             }
         }

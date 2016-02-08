@@ -1,1 +1,12 @@
-Je suis le groupe {{ ulc.groupId }}
+<div>
+    Je suis le groupe {{ ulc.groupId }}
+
+    <div align="center" class="action-bar">
+        <div class="panel-body">
+            <clarolinesearch on-search="ulc.onSearch" fields="ulc.fields"></clarolinesearch>
+        </div>   
+    </div>
+    <div>
+        <dtable options="ulc.dataTableOptions" rows="ulc.users" class="material" on-page="ulc.paging(offset, size)" selected="ulc.selected"></dtable>
+    </div>
+</div>

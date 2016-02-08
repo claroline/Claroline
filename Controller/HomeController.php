@@ -346,7 +346,6 @@ class HomeController
     {
         //cant use @Secure(roles="ROLE_ADMIN") annotation beacause this method is called in anonymous mode
         if ($this->canEdit()) {
-            var_dump('ClarolineCoreBundle:Home/types:'.$type.'.creator.twig');
             return $this->render(
                 'ClarolineCoreBundle:Home/types:'.$type.'.creator.twig',
                 $this->manager->getCreator($type, $id, $content, $father),

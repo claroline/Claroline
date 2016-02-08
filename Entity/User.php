@@ -1159,8 +1159,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
             'lastName',
             'mail',
             'administrativeCode',
-            'username',
-            'groups'
+            'username'
         );
     }
     

@@ -95,7 +95,6 @@ var controller = function(
 
     this.onSearch = function(searches) {
         this.savedSearch = searches;
-        console.log(this.savecSearch);
         clarolineSearch.find('api_get_search_users', searches, this.dataTableOptions.paging.offset, this.dataTableOptions.paging.size).then(function(d) {
             this.users = d.data.users;
             this.dataTableOptions.paging.count = d.data.total;
