@@ -149,7 +149,6 @@ $installer->setLogger($consoleLogger);
 $refresher->setOutput($output);
 $refresher->installAssets();
 $refresher->dumpAssets($container->getParameter('kernel.environment'));
-$refresher->compileGeneratedThemes();
 $installer->setBundleVersion();
 
 $logLine = "Done\n";

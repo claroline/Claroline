@@ -260,7 +260,6 @@ class BundleManager
         $this->installer->installFromOperationFile();
         $this->refresher->installAssets();
         $this->refresher->dumpAssets('prod');
-        $this->refresher->compileGeneratedThemes();
         $logLine = "Done !\n";
         file_put_contents($logFile, $logLine, FILE_APPEND);
     }
@@ -368,6 +367,5 @@ class BundleManager
         $this->refresher->setOutput($output);
         $this->refresher->installAssets();
         $this->refresher->dumpAssets('prod');
-        $this->refresher->compileGeneratedThemes();
     }
 }
