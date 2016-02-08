@@ -31,7 +31,7 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
 
     {% if dropzone.evaluation != 1  %}
         <!-- Colonne ajoutée "Devoirs à corriger" modifiée en "Etat" -->
-        <th class="centered"><i class="fa fa-yelp"></i></th>
+        <th class="centered"><i class="fa fa-yelp"  data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Request for comment'|trans({},'innova_collecticiel') }}"></i></th>
     {% endif %}
 
     <!-- Colonne ajoutée "Voir" modifiée en "Commentaire  - Evaluation"  -->
