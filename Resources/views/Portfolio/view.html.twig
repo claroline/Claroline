@@ -210,8 +210,8 @@
       "@IcapPortfolioBundle/Resources/views/less/style.less"
       "@IcapPortfolioBundle/Resources/views/less/interface.less"
       "bundles/frontend/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css"
-      "bundles/icapportfolio/css/angular-motion/angular-motion.min.css"
-      "bundles/icapportfolio/css/angular-gridster/angular-gridster.less"
+      "@FrontEndBundle/Resources/public/angular-motion/dist/angular-motion.min.css"
+      "@FrontEndBundle/Resources/public/angular-gridster/src/angular-gridster.less"
     %}
         <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
     {% endstylesheets %}
@@ -250,20 +250,17 @@
             '@FrontEndBundle/Resources/public/confirm-bootstrap/confirm-bootstrap.js'
             '@FrontEndBundle/Resources/public/bootstrap-datepicker/dist/js/bootstrap-datepicker.js'
             '@FrontEndBundle/Resources/public/angular/angular.min.js'
-            '@InnovaAngularJSBundle/Resources/public/js/angular-resource.min.js'
-            '@InnovaAngularJSBundle/Resources/public/js/angular-sanitize.min.js'
-            '@InnovaAngularJSBundle/Resources/public/js/angular-animate.min.js'
+            '@FrontEndBundle/Resources/public/angular-resource/angular-resource.min.js'
+            '@FrontEndBundle/Resources/public/angular-sanitize/angular-sanitize.min.js'
+            '@FrontEndBundle/Resources/public/angular-animate/angular-animate.min.js'
             '@InnovaAngularUITinyMCEBundle/Resources/public/js/angular-tinymce-directive.js'
             '@FrontEndBundle/Resources/public/moment/min/moment.min.js'
-            '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/dimensions.min.js'
-            '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/tooltip.min.js'
-            '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/tooltip.tpl.min.js'
-            '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/popover.min.js'
-            '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/popover.tpl.min.js'
+            '@FrontEndBundle/Resources/public/angular-strap/dist/angular-strap.min.js'
+            '@FrontEndBundle/Resources/public/angular-strap/dist/angular-strap.tpl.min.js'
             '@FrontEndBundle/Resources/public/angular-bootstrap/ui-bootstrap.js'
             '@FrontEndBundle/Resources/public/angular-bootstrap/ui-bootstrap-tpls.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/javascript-detect-element-resize/jquery.resize.js'
-            '@IcapPortfolioBundle/Resources/public/js/vendor/angular-gridster/angular-gridster.js'
+            '@FrontEndBundle/Resources/public/angular-gridster/dist/angular-gridster.min.js'
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
@@ -298,8 +295,8 @@
     {% else %}
         {% javascripts debug=false output='js/portfolio/portfolio/vendor_view.js'
             '@FrontEndBundle/Resources/public/angular/angular.min.js'
-            '@InnovaAngularJSBundle/Resources/public/js/angular-sanitize.min.js'
-            '@IcapPortfolioBundle/Resources/public/js/vendor/angular-gridster/angular-gridster.js'
+            '@FrontEndBundle/Resources/public/angular-sanitize/angular-sanitize.min.js'
+            '@FrontEndBundle/Resources/public/angular-gridster/dist/angular-gridster.min.js'
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
