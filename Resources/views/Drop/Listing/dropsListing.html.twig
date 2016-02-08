@@ -83,6 +83,7 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
                         {{ 'Action'|trans({}, 'innova_collecticiel') }} 
                         <span class="caret"></span>
                     </button>
+
                     <ul class="dropdown-menu dropdown-menu-right">
                         <li>
                             <a class="comment_validate"
@@ -90,14 +91,23 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
                             {{ 'Comment Auto'|trans({}, 'innova_collecticiel') }}
                             </a>
                         </li>
-                        <li>
+                        {# Demande JJQ. InnovaERV
+                        #226 : si accusé de réception pas sélectionné dans paramètres alors griser
+                        et désactiver "Accuser la réception" dans le menu déroulant
+                        #}
+                        {% if dropzone.returnReceipt == 1  %}
+                            <li>
+                        {% else %}
+                            <li class="disabled" >
+                        {% endif %}
                             <a class="" href="#" data-toggle="modal" data-target="#validate-modal-return-receipt" data-dropzone_id="{{ dropzone.id }}">
-                                {{ 'Return receipt'|trans({}, 'innova_collecticiel') }}
+                                {{ 'To add a return receipt'|trans({}, 'innova_collecticiel') }}
                             </a>
                         </li>
                     </ul>
                 </div>
             </div>
+
             <div>
                 <input align="center" id="document_id_0" data-dropzone-select_id={{ dropzone.id }} type="checkbox" name="documentId" data-document_id="0" class="btn btn-danger btn-sm" />
             </div>
