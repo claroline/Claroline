@@ -1845,6 +1845,114 @@ class CursusManager
         );
     }
 
+    public function getDatasForSearchedCursusRegistration($search)
+    {
+        $searchedCursusList = array();
+        $searchedCursus = $this->getAllCursus(
+            $search,
+            'title',
+            'ASC'
+        );
+        $rootIds = array();
+
+        foreach ($searchedCursus as $cursus) {
+            $course = $cursus->getCourse();
+            $root = $cursus->getRoot();
+
+            $searchedCursusList[] = array(
+                'id' => $cursus->getId(),
+                'code' => $cursus->getCode(),
+                'title' => $cursus->getTitle(),
+                'cursusOrder' => $cursus->getCursusOrder(),
+                'blocking' => $cursus->isBlocking(),
+                'description' => $cursus->getDescription(),
+                'details' => $cursus->getDetails(),
+                'lft' => $cursus->getLft(),
+                'rgt' => $cursus->getRgt(),
+                'lvl' => $cursus->getLvl(),
+                'root' => $root,
+                'course' => is_null($course) ? null : $course->getId(),
+                'courseTitle' => is_null($course) ? null : $course->getTitle(),
+                'courseCode' => is_null($course) ? null : $course->getCode(),
+                'courseDescription' => is_null($course) ? null : $course->getDescription()
+            );
+
+            if (!in_array($root, $rootIds)) {
+                $rootIds[] = $root;
+            }
+
+        }
+        $cursusRoots = $this->getCursusByIds($rootIds);
+        $roots = array();
+
+        foreach ($cursusRoots as $cursusRoot) {
+            $roots[$cursusRoot->getId()] = array(
+                'id' =>  $cursusRoot->getId(),
+                'code' => $cursusRoot->getCode(),
+                'title' => $cursusRoot->getTitle()
+            );
+        }
+
+        return array(
+            'searchedCursus' => $searchedCursusList,
+            'roots' => $roots
+        );
+    }
+
+    public function getDatasForCursusHierarchy(Cursus $cursus)
+    {
+        $hierarchy = array();
+        $allCursus = $this->getRelatedHierarchyByCursus($cursus);
+
+        foreach ($allCursus as $oneCursus) {
+            $parent = $oneCursus->getParent();
+            $course = $oneCursus->getCourse();
+
+            if (is_null($parent)) {
+
+                if (!isset($hierarchy['root'])) {
+                    $hierarchy['root'] = array();
+                }
+                $hierarchy['root'][] = array(
+                    'id' => $oneCursus->getId(),
+                    'code' => $oneCursus->getCode(),
+                    'title' => $oneCursus->getTitle(),
+                    'cursusOrder' => $oneCursus->getCursusOrder(),
+                    'blocking' => $oneCursus->isBlocking(),
+                    'description' => $oneCursus->getDescription(),
+                    'details' => $oneCursus->getDetails(),
+                    'lft' => $oneCursus->getLft(),
+                    'rgt' => $oneCursus->getRgt(),
+                    'lvl' => $oneCursus->getLvl(),
+                    'root' => $oneCursus->getRoot(),
+                    'course' => is_null($course) ? null : $course->getId()
+                );
+            } else {
+                $parentId = $parent->getId();
+
+                if (!isset($hierarchy[$parentId])) {
+                    $hierarchy[$parentId] = array();
+                }
+                $hierarchy[$parentId][] = array(
+                    'id' => $oneCursus->getId(),
+                    'code' => $oneCursus->getCode(),
+                    'title' => $oneCursus->getTitle(),
+                    'cursusOrder' => $oneCursus->getCursusOrder(),
+                    'blocking' => $oneCursus->isBlocking(),
+                    'description' => $oneCursus->getDescription(),
+                    'details' => $oneCursus->getDetails(),
+                    'lft' => $oneCursus->getLft(),
+                    'rgt' => $oneCursus->getRgt(),
+                    'lvl' => $oneCursus->getLvl(),
+                    'root' => $oneCursus->getRoot(),
+                    'course' => is_null($course) ? null : $course->getId()
+                );
+            }
+        }
+
+        return $hierarchy;
+    }
+
     public function getCursusFromCursusIdsTxt($cursusIdsTxt)
     {
         $cursusIds = array();

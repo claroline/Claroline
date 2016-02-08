@@ -17,6 +17,7 @@
             this.initialized = false;
             this.cursusRoots = [];
             this.hoveredCursusId = 0;
+            this.search = '';
             
             function initialize() {
                 

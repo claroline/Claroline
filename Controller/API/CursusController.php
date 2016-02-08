@@ -85,6 +85,34 @@ class CursusController extends FOSRestController
     /**
      * @View(serializerGroups={"api"})
      * @ApiDoc(
+     *     description="Returns datas for searched cursus",
+     *     views = {"cursus"}
+     * )
+     */
+    public function getDatasForSearchedCursusRegistrationAction($search)
+    {
+        $datas = $this->cursusManager->getDatasForSearchedCursusRegistration($search);
+
+        return new JsonResponse($datas, 200);
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Returns hierarchy datas for cursus",
+     *     views = {"cursus"}
+     * )
+     */
+    public function getDatasForCursusHierarchyAction(Cursus $cursus)
+    {
+        $datas = $this->cursusManager->getDatasForCursusHierarchy($cursus);
+
+        return new JsonResponse($datas, 200);
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
      *     description="Unregister group from cursus",
      *     views = {"cursus"}
      * )

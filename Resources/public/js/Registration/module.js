@@ -32,6 +32,11 @@
                     controller: 'CursusRegistrationCtrl',
                     controllerAs: 'crc'
                 }).
+                when('/registration/searched/cursus/:search', {
+                    templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Partial/cursus_registration_searched_cursus_list.html',
+                    controller: 'CursusRegistrationSearchCtrl',
+                    controllerAs: 'crsc'
+                }).
                 when('/registration/cursus/:cursusId/management', {
                     templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Partial/cursus_registration_cursus_management.html',
                     controller: 'CursusRegistrationManagementCtrl',
