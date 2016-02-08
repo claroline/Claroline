@@ -13,6 +13,12 @@ class AdditionalInstaller extends BaseInstaller
             $updater->setLogger($this->logger);
             $updater->preUpdate();
         }
+
+        if (version_compare($currentVersion, '6.0.0.0', '=')) {
+            $updater = new Updater600101($this->container);
+            $updater->setLogger($this->logger);
+            $updater->preUpdate();
+        }
     }
 
     public function postUpdate($currentVersion, $targetVersion)
@@ -23,4 +29,5 @@ class AdditionalInstaller extends BaseInstaller
             $updater->postUpdate();
         }
     }
+
 }
