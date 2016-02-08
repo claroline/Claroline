@@ -76,27 +76,27 @@ function searchPic(path, page) {
 
 // Display modal to change name of a document
 function ChangeName(url, i) {
-    var oldDocLabel = $('#docLabel' + i).html().trim();
+    var oldPicLabel = $('#PicLabel' + i).html().trim();
 
     $.ajax({
         type: "POST",
         url: url,
         data: {
-            oldDocLabel : oldDocLabel,
+            oldPicLabel : oldPicLabel,
             i : i
         },
         cache: false,
         success: function (data) {
-            changeDocumentName(data);
+            changePictureName(data);
         }
     });
 }
 
 // change document name
-function changeDocumentName(data) {
+function changePictureName(data) {
     $('body').append(data);
 }
 
 $(document.body).on('hidden.bs.modal', function () {
-    $('#modaldocument').remove();
+    $('#modalpicture').remove();
 });
