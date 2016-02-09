@@ -1,4 +1,4 @@
-var controller = function($http, clarolineSearch, $stateParams, GroupAPI) {
+var controller = function($http, clarolineSearch, $stateParams, GroupAPI, clarolineAPI) {
 
     var translate = function(key) {
         return translator.trans(key, {}, 'platform');
@@ -18,6 +18,42 @@ var controller = function($http, clarolineSearch, $stateParams, GroupAPI) {
         return searches;
     }   
 
+    var addToGroupCallback = function(data) {
+        /*var count = this.users.length;
+
+        for (var i = 0; i < data.length; i++) {
+            this.users[count + i] = data[i];
+        }*/
+
+        this.users = this.users.concat(data);
+        console.log(this.users);
+        this.dataTableOptions.paging.count += data.length;
+    }.bind(this);
+
+    var removeFromGroupCallback = function(data) {
+        clarolineAPI.removeElements(this.selected, this.users);
+        this.dataTableOptions.paging.count -= this.selected.length;
+        this.selected.splice(0, this.selected.length);
+    }.bind(this);
+
+    var pickerCallback = function(data) {
+        var userIds = [];
+
+        for (var i = 0; i < data.length; i++) {
+            userIds.push(data[i]);
+        }
+
+        var url = Routing.generate('api_add_users_to_group', {'group': this.groupId}) + '?' + clarolineAPI.generateQueryString(userIds, 'userIds');
+
+        clarolineAPI.confirm(
+            {url: url, method: 'GET'},
+            addToGroupCallback,
+            translate('add_users_to_group'),
+            translate('add_users_to_group_confirm')
+        );
+
+    }.bind(this);
+
     var vm = this;
     this.groupId = $stateParams.groupId;
     this.group = [];
@@ -30,7 +66,6 @@ var controller = function($http, clarolineSearch, $stateParams, GroupAPI) {
     var baseSearch = {'field': 'group', 'id': 0, 'value': this.groupId};
 
     GroupAPI.find(this.groupId).then(function(d) {
-        console.log(d);
         this.group = d.data;
     }.bind(this));
 
@@ -42,11 +77,11 @@ var controller = function($http, clarolineSearch, $stateParams, GroupAPI) {
     ];
 
     this.dataTableOptions = {
-        scrollbarV: false,
+        scrollbarV: true,
         columnMode: 'force',
         headerHeight: 50,
         footerHeight: 50,
-        //selectable: true,
+        selectable: true,
         multiSelect: true,
         checkboxSelection: true,
         columns: columns,
@@ -89,6 +124,32 @@ var controller = function($http, clarolineSearch, $stateParams, GroupAPI) {
             this.dataTableOptions.paging.count = d.data.total;
         }.bind(this));
     }.bind(this);
+
+    this.addUser = function() {
+        //maybe improve this later...
+        var excludeUser = [];
+        var userPicker = new UserPicker();
+        var options = {
+            'picker_name': 'user_group_picker',
+            'picker_title': translate('add_user'),
+            'multiple': true,
+            'blacklist': excludeUser
+        }
+
+        userPicker.configure(options, pickerCallback);
+        userPicker.open();
+    }.bind(this);
+
+    this.clickDelete = function() {
+        var url = Routing.generate('api_remove_users_from_group',  {'group': this.groupId}) + '?' + clarolineAPI.generateQueryString(this.selected, 'userIds');
+
+        clarolineAPI.confirm(
+            {url: url, method: 'GET'},
+            removeFromGroupCallback,
+            translate('remove_users_from_group'),
+            translate('remove_users_from_group_confirm')
+        );
+    }.bind(this);
 };
 
 angular.module('GroupsManager').controller('UserListController', [
@@ -96,5 +157,6 @@ angular.module('GroupsManager').controller('UserListController', [
     'clarolineSearch',
     '$stateParams',
     'GroupAPI',
+    'clarolineAPI',
     controller
 ]);

@@ -381,4 +381,33 @@ class UserController extends FOSRestController
         return array('success');
     }
 
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Add a list of users to a group",
+     *     views = {"group"},
+     * )
+     */
+    public function addUsersToGroupAction(Group $group)
+    {
+        $users = $this->apiManager->getParameters('userIds', 'Claroline\CoreBundle\Entity\User');
+        $users = $this->groupManager->addUsersToGroup($group, $users);
+
+        return $users;
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Removes a list of users from a group",
+     *     views = {"group"},
+     * )
+     */
+    public function removeUsersFromGroupAction(Group $group)
+    {
+        $users = $this->apiManager->getParameters('userIds', 'Claroline\CoreBundle\Entity\User');
+        $this->groupManager->removeUsersFromGroup($group, $users);
+
+        return $users;
+    }
 }

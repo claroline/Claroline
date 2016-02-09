@@ -249,36 +249,6 @@ class GroupController extends FOSRestController
     }
 
     /**
-     * @View()
-     * @ApiDoc(
-     *     description="Add a list of users to a group",
-     *     views = {"group"},
-     * )
-     */
-    public function addUsersToGroup(Group $group)
-    {
-        $users = $this->apiManager->getParameters('userIds', 'Claroline\CoreBundle\Entity\User');
-        $this->groupManager->addUsersToGroup($group, $users);
-
-        return $group;
-    }
-
-    /**
-     * @View()
-     * @ApiDoc(
-     *     description="Removes a list of users from a group",
-     *     views = {"group"},
-     * )
-     */
-    public function removeUsersFromGroup(Group $group)
-    {
-        $users = $this->apiManager->getParameters('userIds', 'Claroline\CoreBundle\Entity\User');
-        $this->groupManager->removeUsersFromGroup($group, $users);
-
-        return $group;
-    }
-
-    /**
      * @View(serializerGroups={"api"})
      * @ApiDoc(
      *     description="Returns the group creation form",

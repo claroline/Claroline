@@ -139,12 +139,15 @@ class GroupManager
      */
     public function addUsersToGroup(Group $group, array $users)
     {
+        $addedUsers = array();
+        
         if(!$this->validateAddUsersToGroup($users, $group)) {
             throw new Exception\AddRoleException();
         }
 
         foreach ($users as $user) {
             if (!$group->containsUser($user)) {
+                $addedUsers[] = $user;
                 $group->addUser($user);
                 $this->eventDispatcher->dispatch('log', 'Log\LogGroupAddUser', array($group, $user));
             }
@@ -152,6 +155,8 @@ class GroupManager
 
         $this->om->persist($group);
         $this->om->flush();
+
+        return $addedUsers;
     }
 
     /**

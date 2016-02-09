@@ -86,7 +86,6 @@ clarolineAPI.factory('clarolineAPI', function($http, $httpParamSerializerJQLike,
         },
         removeElements: function(toRemove, elements) {
             var idxs = [];
-            console.log(toRemove);
 
             for (var i = 0; i < toRemove.length; i++) {
                 idxs.push(elements.indexOf(toRemove[i]));
@@ -94,7 +93,6 @@ clarolineAPI.factory('clarolineAPI', function($http, $httpParamSerializerJQLike,
 
             for (var i = 0; i < idxs.length; i++) {
                 elements.splice(idxs[i] - i, 1);
-                console.log('splice');
             }
 
             return elements;
@@ -107,9 +105,19 @@ clarolineAPI.factory('clarolineAPI', function($http, $httpParamSerializerJQLike,
                     callback: function() {return callback;},
                     urlObject: function() {return urlObject;},
                     title: function() {return title;},
-                    content: function() {return content}
+                    content: function() {return content;}
                 }
             });
+        },
+        generateQueryString: function(array, name) {
+            var qs = '';
+
+            for (var i = 0; i < array.length; i++) {
+                var id = (array[i].id) ? array[i].id: array[i];
+                qs += name + '[]=' + id + '&';
+            }
+
+            return qs;
         }
     }
 });
