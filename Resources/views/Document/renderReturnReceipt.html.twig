@@ -6,7 +6,8 @@
 
 {# 0 : pas d'accusé de réception #}
 {% if value == 0 %}
-    <span class="fa fa-times" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'No return recept'|trans({}, 'innova_collecticiel') }}"> </span>
+	{#225 : changement de font-awesome #}
+    <span class="fa fa-minus" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'No return recept'|trans({}, 'innova_collecticiel') }}"> </span>
 {% endif %}
 {# 1 : doublon #}
 {% if value == 1 %}
