@@ -51,9 +51,14 @@ class Facebook implements NetworkInterface
     public function countShares($url)
     {
         $api_url = sprintf(self::API_URL, urlencode($url));
-        $data = json_decode(file_get_contents($api_url));
+        $data = null;
+        try{
+            $data = json_decode(file_get_contents($api_url));
+        } catch(\Exception $e) {
+            $data = null;
+        }
 
-        return isset($data[0]->share_count)?intval($data[0]->share_count):0;
+        return ($data !== null && isset($data[0]->share_count))?intval($data[0]->share_count):0;
     }
 
     /**

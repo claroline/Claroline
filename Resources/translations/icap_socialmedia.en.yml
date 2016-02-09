@@ -22,3 +22,8 @@ load_next_likes: View more likes
 load_next_wall_items: View more items
 comments_are_public: Comments are public
 notes_are_private: Remiders are personal
+platform_share_message: Shares number on platform
+facebook_share_message: Shares on Facebook
+twitter_share_message: Shares on Twitter are not available due to its new policy
+google_share_message: Shares on Google+
+linkedin_share_message: Shares on LinkedIn

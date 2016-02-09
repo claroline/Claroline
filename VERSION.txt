@@ -1,1 +1,1 @@
-dev-master
+v6.0.1

@@ -7,9 +7,9 @@
         <div class="modal-body">
             <h4>{{ 'choose_share_network'|trans({}, 'icap_socialmedia') }}</h4>
             <div class="socialmedia-network-list text-center">
-                <a target="_blank" class="btn" style="font-weight:bold; background-color: #cccccc" href="{{ path("icap_socialmedia_share", {"resourceId":resourceNode.id}) }}"><span class="socialmedia-network-logo">cc</span><br/><span class="socialmedia-network-shares">{{ shares|smartCounter|raw }}</span></a>
+                <a target="_blank" class="btn" title="platform_share_message" style="font-weight:bold; background-color: #cccccc" href="{{ path("icap_socialmedia_share", {"resourceId":resourceNode.id}) }}"><span class="socialmedia-network-logo">cc</span><br/><span class="socialmedia-network-shares">{{ shares|smartCounter|raw }}</span></a>
                 {% for network in networks %}
-                <a target="_blank" class="btn" style="background-color: {{ network.color }}" href="{{ path("icap_socialmedia_share", {"resourceId":resourceNode.id, "network":network.name}) }}"><i class="socialmedia-network-logo fa fa-{{ network.iconClass }}"></i><br/><span class="socialmedia-network-shares">{{ network.countShares(resourceUrl)|smartCounter|raw }}</span></a>
+                <a target="_blank" class="btn" title="{{ (network.name~'_share_message')|trans({}, 'icap_socialmedia') }}" style="background-color: {{ network.color }}" href="{{ path("icap_socialmedia_share", {"resourceId":resourceNode.id, "network":network.name}) }}"><i class="socialmedia-network-logo fa fa-{{ network.iconClass }}"></i><br/><span class="socialmedia-network-shares">{{ network.countShares(resourceUrl)|smartCounter|raw }}</span></a>
                 {% endfor %}
             </div>
             <div class="text-center socialmedia-share-info">

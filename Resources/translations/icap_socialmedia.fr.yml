@@ -22,3 +22,8 @@ load_next_likes: Voir les suivants
 load_next_wall_items: Voir les éléments suivants
 comments_are_public: Tous les commentaires sont publics
 notes_are_private: Tous les pense-bêtes sont privés
+platform_share_message: Nombre de partages sur la plateforme
+facebook_share_message: Nombre de partages sur Facebook
+twitter_share_message: Nombre de partages sur Twitter indisponible à cause de la nouvelle politique du site de twitter
+google_share_message: Nombre de partages sur Google+
+linkedin_share_message: Nombre de partages sur LinkedIn

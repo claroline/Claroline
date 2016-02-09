@@ -53,9 +53,14 @@ class Twitter implements NetworkInterface
     public function countShares($url)
     {
         $api_url = sprintf(self::API_URL, urlencode($url));
-        $data = json_decode(file_get_contents($api_url));
+        $data = null;
+        try{
+            $data = json_decode(file_get_contents($api_url));
+        } catch(\Exception $e) {
+            $data = null;
+        }
 
-        return isset($data->count)?intval($data->count):0;
+        return ($data !== null && isset($data->count))?intval($data->count):0;
     }
 
     /**
