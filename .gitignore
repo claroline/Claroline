@@ -10,6 +10,7 @@ app/sessions/*
 app/config/.update
 app/config/Authentication/*
 app/config/bundles.ini
+app/config/frontend.json
 app/config/ips
 app/config/is_installed.php
 app/config/operations.xml*
@@ -27,6 +28,7 @@ templates/*
 vendor/*
 web/bundles/*
 web/css/*
+web/dist
 web/js/*
 web/packages
 web/themes/*

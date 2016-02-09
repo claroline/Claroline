@@ -10,7 +10,8 @@
   "homepage": "https://github.com/claroline/Claroline#readme",
   "scripts": {
     "bower": "bower install",
-    "build": "node make.js"
+    "build": "node make.js",
+    "webpack": "rm -rf web/dist/* && webpack"
   },
   "devDependencies": {
     "autoprefixer": "^6.3.1",
@@ -18,6 +19,8 @@
     "cssnano": "^3.4.0",
     "less": "^2.5.3",
     "postcss-cli": "^2.5.0",
-    "shelljs": "^0.5.3"
+    "shelljs": "^0.5.3",
+    "webpack": "^1.12.13",
+    "webpack-dev-server": "^1.14.1"
   }
 }
