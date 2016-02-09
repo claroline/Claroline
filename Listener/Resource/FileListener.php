@@ -1,5 +1,7 @@
 <?php
 
+//MzBhZWJiNTI4ZTM0ZWY3ZGEzYTU5YWE5ZjIzYjliNTc1YTRkMmI1NWI1ODEyMTMxNDYzNjhiYTVhZGFiMWQ1NA
+
 /*
  * This file is part of the Claroline Connect package.
  *
@@ -97,54 +99,8 @@ class FileListener implements ContainerAwareInterface
         $form = $this->container->get('form.factory')->create(new FileType(true), new File());
         $form->handleRequest($request);
 
-
         if ($form->isValid()) {
-            $workspace = $event->getParent()->getWorkspace();
-            $workspaceDir = $this->workspaceManager->getStorageDirectory($workspace);
-            $isStorageLeft = $this->resourceManager->checkEnoughStorageSpaceLeft(
-                $workspace,
-                $form->get('file')->getData()
-            );
-
-            if (!$isStorageLeft) {
-                $this->resourceManager->addStorageExceededFormError(
-                    $form, filesize($form->get('file')->getData()), $workspace
-                );
-            } else {
-                //check if there is enough space liedt
-                $file = $form->getData();
-                $tmpFile = $form->get('file')->getData();
-                $published = $form->get('published')->getData();
-                $event->setPublished($published);
-                $fileName = $tmpFile->getClientOriginalName();
-                $ext = strtolower($tmpFile->getClientOriginalExtension());
-                $mimeType = $this->container->get('claroline.utilities.mime_type_guesser')->guess($ext);
-
-                if (!is_dir($workspaceDir)) {
-                    mkdir($workspaceDir);
-                }
-
-                if (pathinfo($fileName, PATHINFO_EXTENSION) === 'zip' && $form->get('uncompress')->getData()) {
-                    $roots = $this->unzip($tmpFile, $event->getParent(), $published);
-                    $event->setResources($roots);
-
-                    //do not process the resources afterwards because nodes have been created with the unzip function.
-                    $event->setProcess(false);
-                    $event->stopPropagation();
-                } else {
-                    $file = $this->createFile(
-                        $file,
-                        $tmpFile,
-                        $fileName,
-                        $mimeType,
-                        $workspace
-                    );
-                    $event->setResources(array($file));
-                    $event->stopPropagation();
-                }
-
-                return;
-            }
+            $this->handleFileCreation($form, $event);
         }
 
         $content = $this->container->get('templating')->render(
@@ -155,6 +111,28 @@ class FileListener implements ContainerAwareInterface
             )
         );
         $event->setErrorFormContent($content);
+        $event->stopPropagation();
+    }
+
+        /**
+     * @DI\Observe("create_api_file")
+     *
+     * @param CreateResourceEvent $event
+     */
+    public function onApiCreate(CreateResourceEvent $event)
+    {
+        $request = $this->container->get('request');
+        $form = new FileType(true);
+        $form->enableApi();
+        $form = $this->container->get('form.factory')->create($form, new File());
+        $form->submit($this->container->get('request'));
+
+
+        if ($form->isValid()) {
+            $this->handleFileCreation($form, $event);
+        }
+
+        $event->setErrorFormContent($form);
         $event->stopPropagation();
     }
 
@@ -475,5 +453,69 @@ class FileListener implements ContainerAwareInterface
         $file->setMimeType($mimeType);
 
         return $file;
+    }
+
+    private function handleFileCreation($form, CreateResourceEvent $event)
+    {
+        $workspace = $event->getParent()->getWorkspace();
+        $workspaceDir = $this->workspaceManager->getStorageDirectory($workspace);
+        $isStorageLeft = $this->resourceManager->checkEnoughStorageSpaceLeft(
+            $workspace,
+            $form->get('file')->getData()
+        );
+
+        if (!$isStorageLeft) {
+            $this->resourceManager->addStorageExceededFormError(
+                $form, filesize($form->get('file')->getData()), $workspace
+            );
+        } else {
+            //check if there is enough space liedt
+            //$file is the entity
+            //$tmpFile is the other file
+            $file = $form->getData();
+            $tmpFile = $form->get('file')->getData();
+
+            //the tmpFile may require some encoding.
+            if ($encoding = $event->getEncoding() !== 'none') {
+                $tmpFile = $this->encodeFile($tmpFile, $event->getEncoding());
+            }
+
+            $published = $form->get('published')->getData();
+            $event->setPublished($published);
+            $fileName = $tmpFile->getClientOriginalName();
+            $ext = strtolower($tmpFile->getClientOriginalExtension());
+            $mimeType = $this->container->get('claroline.utilities.mime_type_guesser')->guess($ext);
+
+            if (!is_dir($workspaceDir)) {
+                mkdir($workspaceDir);
+            }
+
+            if (pathinfo($fileName, PATHINFO_EXTENSION) === 'zip' && $form->get('uncompress')->getData()) {
+                $roots = $this->unzip($tmpFile, $event->getParent(), $published);
+                $event->setResources($roots);
+
+                //do not process the resources afterwards because nodes have been created with the unzip function.
+                $event->setProcess(false);
+                $event->stopPropagation();
+            } else {
+                $file = $this->createFile(
+                    $file,
+                    $tmpFile,
+                    $fileName,
+                    $mimeType,
+                    $workspace
+                );
+                $event->setResources(array($file));
+                $event->stopPropagation();
+            }
+        }
+    }
+
+    private function encodeFile($file, $encoding)
+    {
+        $eventName = 'encode_file_' . $encoding;
+        $encodeEvent = $this->container->get('claroline.event.event_dispatcher')->dispatch($eventName, 'EncodeFile', array($file));
+
+        return $encodeEvent->getFile();
     }
 }

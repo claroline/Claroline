@@ -20,10 +20,12 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class FileType extends AbstractType
 {
     private $uncompress;
+    private $forApi;
 
     public function __construct($uncompress = false)
     {
         $this->uncompress = $uncompress;
+        $this->forApi = false;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -65,6 +67,11 @@ class FileType extends AbstractType
         );
     }
 
+    public function enableApi()
+    {
+        $this->forApi = true;
+    }
+
     public function getName()
     {
         return 'file_form';
@@ -72,11 +79,8 @@ class FileType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver
-        ->setDefaults(
-            array(
-                'translation_domain' => 'platform'
-                )
-        );
+        $default = array('translation_domain' => 'platform');
+        if ($this->forApi) $default['csrf_protection'] = false;
+        $resolver->setDefaults($default);
     }
 }
