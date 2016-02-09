@@ -1,5 +1,17 @@
 <div>
-    Je suis le groupe {{ ulc.groupId }}
+    <h3> {{ ulc.group.name }} </h3>
+
+    <div>
+        <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-cog"></i> <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a ng-click="ulc.addUser()"> {{ 'add'|trans:{}:'platform' }} </a></li>
+                <li><a ng-click="ulc.clickDelete()"> {{ 'delete'|trans:{}:'platform' }} </a></li>
+            </ul>
+        </div>
+    </div>
 
     <div align="center" class="action-bar">
         <div class="panel-body">

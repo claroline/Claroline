@@ -18,6 +18,9 @@ var service = function($http, clarolineAPI) {
                 data,
                 {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
             )
+        },
+        find: function(groupId) {
+            return $http.get(Routing.generate('api_get_group', {'group': groupId}));
         }
     }
 };

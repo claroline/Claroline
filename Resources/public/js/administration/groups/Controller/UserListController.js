@@ -1,4 +1,4 @@
-var controller = function($http, clarolineSearch, $stateParams) {
+var controller = function($http, clarolineSearch, $stateParams, GroupAPI) {
 
     var translate = function(key) {
         return translator.trans(key, {}, 'platform');
@@ -20,6 +20,7 @@ var controller = function($http, clarolineSearch, $stateParams) {
 
     var vm = this;
     this.groupId = $stateParams.groupId;
+    this.group = [];
     this.users = [];
     this.search = '';
     this.savedSearch = [];
@@ -27,6 +28,11 @@ var controller = function($http, clarolineSearch, $stateParams) {
     this.alerts = [];
     this.fields = [];
     var baseSearch = {'field': 'group', 'id': 0, 'value': this.groupId};
+
+    GroupAPI.find(this.groupId).then(function(d) {
+        console.log(d);
+        this.group = d.data;
+    }.bind(this));
 
     var columns = [
         {name: translate('username'), prop: "username", isCheckboxColumn: true, headerCheckbox: true},
@@ -89,5 +95,6 @@ angular.module('GroupsManager').controller('UserListController', [
     '$http',
     'clarolineSearch',
     '$stateParams',
+    'GroupAPI',
     controller
 ]);
