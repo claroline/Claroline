@@ -383,6 +383,11 @@ claro_event_api:
     options:
         expose: true
 
+claro_resources_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Resource/ResourceController.php"
+    type: rest
+    prefix: api
+
 claro_contact:
     resource: "@ClarolineCoreBundle/Controller/ContactController.php"
     prefix: contact

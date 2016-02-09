@@ -14,7 +14,7 @@ use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 
-class OrganizationUpdater extends Updater
+class Updater060704 extends Updater
 {
     private $container;
 

@@ -27,12 +27,14 @@ class CreateResourceEvent extends Event implements DataConveyorEventInterface
     private $isPopulated = false;
     private $process = true;
     private $published = true;
+    private $encoding;
 
-    public function __construct($parent = null, $resourceType = null)
+    public function __construct($parent = null, $resourceType = null, $encoding = 'none')
     {
         $this->parent = $parent;
         $this->resourceType = $resourceType;
         $this->resources = array();
+        $this->encoding = $encoding;
     }
 
     /**
@@ -116,5 +118,10 @@ class CreateResourceEvent extends Event implements DataConveyorEventInterface
     public function isPublished()
     {
         return $this->published;
+    }
+
+    public function getEncoding()
+    {
+        return $this->encoding;
     }
 }
