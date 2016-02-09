@@ -29,6 +29,9 @@ class AdditionalInstaller extends BaseInstaller
     {
         $maintenanceUpdater = new Updater\WebUpdater($this->container->getParameter('kernel.root_dir'));
         $maintenanceUpdater->preUpdate();
+        $rootDirUpdater = new Updater\RootDirUpdater($this->container->getParameter('kernel.root_dir'));
+        $rootDirUpdater->setLogger($this->logger);
+        $rootDirUpdater->preUpdate();
 
         $this->setLocale();
 
@@ -251,6 +254,7 @@ class AdditionalInstaller extends BaseInstaller
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
         }
+
         $termsOfServiceManager = $this->container->get('claroline.common.terms_of_service_manager');
         $termsOfServiceManager->sendDatas();
     }
