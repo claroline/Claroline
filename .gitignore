@@ -28,6 +28,7 @@ vendor/*
 web/bundles/*
 web/css/*
 web/js/*
+web/packages
 web/themes/*
 web/thumbnails/*
 web/uploads/*

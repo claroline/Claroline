@@ -9,10 +9,12 @@
   "license": "GPL-3.0+",
   "homepage": "https://github.com/claroline/Claroline#readme",
   "scripts": {
+    "bower": "bower install",
     "build": "node make.js"
   },
   "devDependencies": {
     "autoprefixer": "^6.3.1",
+    "bower": "^1.7.7",
     "cssnano": "^3.4.0",
     "less": "^2.5.3",
     "postcss-cli": "^2.5.0",
