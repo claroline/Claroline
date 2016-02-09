@@ -130,7 +130,7 @@
                                     </a>
                                 </li>
                             {% endif %}
-                            {% for role in user.personalWorkspace.roles %}
+                            {% for role in _resource.resourceNode.workspace.roles %}
                                 {% if has_role_access_to_workspace(role.getName(), _resource.resourceNode.workspace.id) %}
                                     <li>
                                         <a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}?view_as={{ role.getName() }}">
