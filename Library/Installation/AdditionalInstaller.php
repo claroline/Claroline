@@ -241,14 +241,6 @@ class AdditionalInstaller extends BaseInstaller
                 $updater = new Updater\Updater060607($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
-            case version_compare($currentVersion, '6.6.8', '<'):
-                $updater = new Updater\Updater060608($this->container);
-                $updater->setLogger($this->logger);
-                $updater->postUpdate();
-            case version_compare($currentVersion, '6.6.9', '<'):
-                $updater = new Updater\Updater060609($this->container);
-                $updater->setLogger($this->logger);
-                $updater->postUpdate();
             case version_compare($currentVersion, '6.7.0', '<'):
                 $updater = new Updater\Updater060700($this->container);
                 $updater->setLogger($this->logger);
@@ -257,6 +249,10 @@ class AdditionalInstaller extends BaseInstaller
 
         $termsOfServiceManager = $this->container->get('claroline.common.terms_of_service_manager');
         $termsOfServiceManager->sendDatas();
+
+        $resourceIconsUpdater = new Updater\ResourceIconsUpdater($this->container);
+        $resourceIconsUpdater->setLogger($this->logger);
+        $resourceIconsUpdater->postUpdate();
     }
 
     private function setLocale()

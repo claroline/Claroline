@@ -14,6 +14,7 @@ class Version20160128111525 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        return;
         $this->addSql("
             ALTER TABLE claro_theme 
             DROP path

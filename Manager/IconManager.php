@@ -359,37 +359,104 @@ class IconManager
             array('res_folder.png', 'custom/directory'),
             array('res_text.png', 'text/plain'),
             array('res_text.png', 'custom/text'),
-            array('res_url.png', 'custom/url'),
-            array('res_exercice.png', 'custom/exercice'),
+
+            //array('res_url.png', 'custom/url'),
+            //array('res_exercice.png', 'custom/exercice'),
+            array('res_jpeg.png', 'image'),
             array('res_audio.png', 'audio'),
-            array('res_video.png', 'video'),
-            //excel
-            array('res_msexcel.png', 'application/excel'),
-            array('res_msexcel.png', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
-            array('res_msexcel.png', 'application/vnd.ms-excel'),
-            array('res_msexcel.png', 'application/msexcel'),
-            array('res_msexcel.png', 'application/x-msexcel'),
-            array('res_msexcel.png', 'application/x-ms-excel'),
-            array('res_msexcel.png', 'application/x-excel'),
-            array('res_msexcel.png', 'application/xls'),
-            array('res_msexcel.png', 'application/x-xls'),
-            array('res_msexcel.png', 'application/x-dos_ms_excel'),
+            array('res_avi.png', 'video'),
+
+            //images
+            array('res_bmp.png', 'image/bmp'),
+            array('res_bmp.png', 'image/x-windows-bmp'),
+            array('res_jpeg.png', 'image/jpeg'),
+            array('res_jpeg.png', 'image/pjpeg'),
+            array('res_gif.png', 'image/gif'),
+            array('res_tiff.png', 'image/tiff'),
+            array('res_tiff.png', 'image/x-tiff'),
+            
+            //videos
+            array('res_mp4.png', 'video/mp4'),
+            array('res_mpeg.png', 'video/mpeg'),
+            array('res_mpeg.png', 'audio/mpeg'),
+
+            //sounds
+            array('res_wav.png', 'audio/wav'),
+            array('res_wav.png', 'audio/x-wav'),
+
+            array('res_mp3.png', 'audio/mpeg3'),
+            array('res_mp3.png', 'audio/x-mpeg3'),
+            array('res_mp3.png', 'audio/mp3'),
+            array('res_mp3.png', 'audio/mpeg'),
+
+            //html
+            array('res_html.png', 'text/html'),
+
+            //xls
+            array('res_xls.png', 'application/excel'),
+            array('res_xls.png', 'application/vnd.ms-excel'),
+            array('res_xls.png', 'application/msexcel'),
+            array('res_xls.png', 'application/x-msexcel'),
+            array('res_xls.png', 'application/x-ms-excel'),
+            array('res_xls.png', 'application/x-excel'),
+            array('res_xls.png', 'application/xls'),
+            array('res_xls.png', 'application/x-xls'),
+            array('res_xls.png', 'application/x-dos_ms_excel'),
+
+            //xlsx
+            array('res_xlsx.png', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
+
+            //odt
+            array('res_odt.png', 'application/vnd.oasis.opendocument.text '),
+
             //ppt
-            array('res_mspowerpoint.png', 'application/powerpoint'),
-            array('res_mspowerpoint.png', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'),
-            array('res_msword.png', 'application/msword'),
-            array('res_msword.png', 'application/vnd.oasis.opendocument.text'),
-            array('res_msword.png', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'),
+            array('res_ppt.png', 'application/mspowerpoint'),
+            array('res_ppt.png', 'application/powerpoint'),
+            array('res_ppt.png', 'application/vnd.ms-powerpoint'),
+            array('res_ppt.png', 'application/application/x-mspowerpoint'),
+
+            //pptx
+            array('res_pptx.png', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'),
+
+            //doc
+            array('res_doc.png', 'application/msword'),
+
+            //doc
+            array('res_docx.png', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'),
+
+            //pdf
             array('res_pdf.png', 'application/pdf'),
-            array('res_image.png', 'image'),
-            array('res_vector.png', 'application/postscript'),
-            array('res_vector.png', 'application/ai'),
-            array('res_vector.png', 'application/illustrator'),
-            array('res_vector.png', 'image/svg+xml'),
+
+            //zip
             array('res_zip.png', 'application/zip'),
-            array('res_zip.png', 'application/x-rar-compressed'),
+            array('res_rar.png', 'application/x-rar-compressed'),
+
+            //rar
             array('res_archive.png', 'application/x-gtar'),
-            array('res_archive.png', 'application/x-7z-compressed')
+            array('res_archive.png', 'application/x-7z-compressed'),
+
+            //gz
+            array('res_gz.png', 'application/x-compressed'),
+            array('res_gz.png', 'application/x-gzip'),
+            array('res_gz.png', 'multipart/x-gzip'),
+
+            //tar
+            array('res_tar.png', 'application/x-tar'),
+
+            //array('res_dot.png') alias for msword
+
+            //odp
+            array('res_odp.png', 'application/vnd.oasis.opendocument.presentation'),
+
+            //ods
+            array('res_ods.png', 'application/vnd.oasis.opendocument.spreadsheet'),
+            
+            //array('res_pps.png') alias for powerpoint
+            //array('res_psp.png') couldn't find mime type 
+
+            array('res_rtf.png', 'application/rtf'),
+            array('res_rtf.png', 'application/x-rtf'),
+            array('res_rtf.png', 'text/richtext')
         );
     }
 
