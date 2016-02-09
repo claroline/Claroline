@@ -12,6 +12,8 @@
 namespace Claroline\CursusBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
@@ -112,9 +114,40 @@ class Course
      */
     protected $icon;
 
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace"
+     * )
+     * @ORM\JoinColumn(name="workspace_id", nullable=true, onDelete="SET NULL")
+     */
+    protected $workspace;
+
+    /**
+     * @ORM\Column(name="user_validation", type="boolean")
+     * @Groups({"api"})
+     * @SerializedName("userValidation")
+     */
+    protected $userValidation = false;
+
+    /**
+     * @ORM\Column(name="max_users", nullable=true, type="integer")
+     * @Groups({"api"})
+     * @SerializedName("maxUsers")
+     */
+    protected $maxUsers;
+
+    /**
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\User"
+     * )
+     * @ORM\JoinTable(name="claro_cursusbundle_course_validators")
+     */
+    protected $validators;
+
     public function __construct()
     {
         $this->sessions = new ArrayCollection();
+        $this->validators = new ArrayCollection();
     }
 
     public function getId()
@@ -230,6 +263,59 @@ class Course
     public function setIcon($icon)
     {
         $this->icon = $icon;
+    }
+
+    public function getWorkspace()
+    {
+        return $this->workspace;
+    }
+
+    public function setWorkspace(Workspace $workspace = null)
+    {
+        $this->workspace = $workspace;
+    }
+
+    public function getUserValidation()
+    {
+        return $this->userValidation;
+    }
+
+    public function setUserValidation($userValidation)
+    {
+        $this->userValidation = $userValidation;
+    }
+
+    public function getMaxUsers()
+    {
+        return $this->maxUsers;
+    }
+
+    public function setMaxUsers($maxUsers)
+    {
+        $this->maxUsers = $maxUsers;
+    }
+
+    public function getValidators()
+    {
+        return $this->validators->toArray();
+    }
+
+    public function addValidator(User $validator)
+    {
+        if (!$this->validators->contains($validator)) {
+            $this->validators->add($validator);
+        }
+
+        return $this;
+    }
+
+    public function removeValidator(User $validator)
+    {
+        if ($this->validators->contains($validator)) {
+            $this->validators->removeElement($validator);
+        }
+
+        return $this;
     }
 
     public function __toString()
