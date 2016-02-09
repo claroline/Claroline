@@ -1,0 +1,57 @@
+<style>
+    .btn.icap-oauth-btn {
+        color: #fff;
+        padding-left: 30px;
+        padding-top: 0;
+        padding-bottom: 0;
+        line-height: 34px;
+    }
+    .btn.icap-oauth-btn::before{
+        width: 30px;
+        font-size: 1.3em;
+        line-height: 34px;
+        position: absolute;
+        left: 0;
+        font-family: "FontAwesome";
+        border-right: 1px solid;
+    }
+    .btn.icap-oauth-btn:hover {
+        opacity: 0.8;
+        color: #fff;
+    }
+    .icap-oauth-btn.facebook-connect {
+        background-color: #3b5998;
+    }
+    .icap-oauth-btn.facebook-connect::before{
+        content: "\f09a";
+        border-right-color: #4A70BF;
+    }
+    .icap-oauth-btn.twitter-connect {
+        background-color: #00aced;
+    }
+    .icap-oauth-btn.twitter-connect::before {
+        content: "\f099";
+        border-right-color: #00D5ED;
+    }
+    .icap-oauth-btn.google-connect {
+        background-color: #dd4b39;
+    }
+    .icap-oauth-btn.google-connect::before {
+        content: "\f1a0";
+        border-right-color: #DD6239;
+    }
+    .icap-oauth-btn.linkedin-connect {
+        background-color: #007bb6;
+    }
+    .icap-oauth-btn.linkedin-connect::before {
+        content: "\f0e1";
+        border-right-color: #00A1B6;
+    }
+</style>
+
+{% for service in services %}
+    <a href="{{ url("hwi_oauth_service_redirect", {service: service}) }}" type="button" id="{{ service }}-connect-btn" class='btn {{ service }}-connect icap-oauth-btn btn-block' style="position: relative">
+        {{ ('login_'~service)|trans({}, 'icap_oauth') }}
+    </a>
+{#{% include 'IcapOAuthBundle:Buttons:'~service~'.html.twig' %}#}
+{% endfor %}

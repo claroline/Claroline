@@ -1,0 +1,50 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'server' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+    macros.breadcrumbs([
+    {
+        'icon': 'fa fa-cog',
+        'name': 'administration'|trans({}, 'platform'),
+        'href': path('claro_admin_index')
+    },
+    {
+        'name': 'parameters'|trans({}, 'platform'),
+        'href': path('claro_admin_index')
+    },
+    {
+        'name': 'oauth'|trans({}, 'platform'),
+        'href': path('claro_admin_parameters_oauth_index')
+    },
+    {
+        'name': service|trans({}, 'platform'),
+        'href': ''
+    }
+    ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ service|trans({}, 'platform') }}</h3>
+    </div>
+    {{ macros.flashBox() }}
+    <form role="form" class="form-horizontal" action="{{ path('claro_admin_oauth_form_submit', {'service':service}) }}" method="post" {{ form_enctype(form) }} id="form_settings">
+        <div class="panel-body">
+            {{ form_widget(form) }}
+        </div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            <a href="{{ path('claro_admin_index') }}">
+                <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+            </a>
+        </div>
+    </form>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/administration/mail.js') }}"></script>
+{% endblock%}

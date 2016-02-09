@@ -1,0 +1,46 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block title %}{{ 'login' | trans({}, 'platform') ~ ' - ' ~ parent() | striptags | raw }}{% endblock %}
+
+{% block topBarRender %}
+    {% include 'IcapOAuthBundle:Connect:top_bar_render.html.twig' %}
+{% endblock %}
+
+{% block content %}
+    {{ macros.flashBox() }}
+    <div class="row login_form_container" style="background-color: whitesmoke">
+        <div class="col-md-offset-5 col-md-2">
+            <form role="form" action="{{ path('icap_oauth_link_account') }}" method="post">
+                <h2>{{ 'login' | trans({}, "platform")}}</h2>
+                {% if error is defined %}
+                    <div class="alert alert-danger">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        {{ 'login_failure'|trans({}, 'platform') }}
+                    </div>
+                {% endif %}
+                <div class="form-group">
+                    <label for="username">{{ 'username_or_email'|trans({}, 'platform') }}</label>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-user" title="{{ 'username_or_email'|trans({}, 'platform') }}"></i>
+                        </span>
+                        <input type="text" class="form-control" id="username" name="_username" placeholder="{{ 'username_or_email' | trans({}, 'platform') }}" tabindex="1" autofocus>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password">
+                        {{ 'password'|trans({}, 'platform') }}
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-lock" title="{{ 'password'|trans({}, 'platform') }}"></i>
+                        </span>
+                        <input type="password" class="form-control" id="password" name="_password" placeholder="{{ 'password'|trans({}, 'platform') }}" tabindex="2">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success btn-block" tabindex="3">{{ 'login'|trans({}, 'platform') }}</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
