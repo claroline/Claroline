@@ -24,6 +24,10 @@
             this.unlockedCursus = [];
             this.cursusGroups = [];
             this.cursusUsers = [];
+            this.selectedUsers = {};
+            this.selectedCursusGroups = {};
+            this.allUsers = false;
+            this.allGroups = false;
 
             var userPickerCallBack = function (datas) {
                 
@@ -55,11 +59,23 @@
 
             var usersColumns = [
                 {
+                    name: 'checkboxes',
+                    headerRenderer: function () {
+                        
+                        return '<span><input type="checkbox" ng-click="crmc.toggleAllUsers()"></span>';
+                    },
+                    cellRenderer: function(scope) {
+                        
+                        return '<span><input type="checkbox" ng-model="crmc.selectedUsers[' +
+                            scope.$row['userId'] +
+                            ']"></span>';
+                    }
+                },
+                {
                     name: 'firstName',
                     prop: 'firstName',
-                    isCheckboxColumn: true,
-                    headerCheckbox: true,
                     headerRenderer: function () {
+                        
                         return '<b>' + translator.trans('first_name', {}, 'platform') + '</b>';
                     }
                 },
@@ -67,6 +83,7 @@
                     name: 'lastName',
                     prop: 'lastName',
                     headerRenderer: function () {
+                        
                         return '<b>' + translator.trans('last_name', {}, 'platform') + '</b>';
                     }
                 },
@@ -74,15 +91,19 @@
                     name: 'username',
                     prop: 'username',
                     headerRenderer: function () {
+                        
                         return '<b>' + translator.trans('username', {}, 'platform') + '</b>';
                     }
                 },
                 {
                     name: 'registration_date',
+                    prop: 'registrationDate',
                     headerRenderer: function () {
+                        
                         return '<b>' + translator.trans('registration_date', {}, 'cursus') + '</b>';
                     },
                     cellRenderer: function(scope) {
+                        
                         return '<span>' + scope.$row['registrationDate']['date'] + '</span>';
                     }
                 },
@@ -90,7 +111,9 @@
                     name: 'actions',
                     headerRenderer: function () {
                         
-                        return '<button class="btn btn-default btn-sm" ng-click="crmc.unregisterSelectedUsers()">' +
+                        return '<button class="btn btn-default btn-sm"' +
+                            ' ng-click="crmc.unregisterSelectedUsers()"' +
+                            ' ng-disabled="!crmc.isUserSelected()">' +
                             translator.trans('unregister_selected_users', {}, 'cursus') +
                             '</button>';
                     },
@@ -109,20 +132,35 @@
 
             var groupsColumns = [
                 {
+                    name: 'checkboxes',
+                    headerRenderer: function () {
+                        
+                        return '<span><input type="checkbox" ng-click="crmc.toggleAllGroups()"></span>';
+                    },
+                    cellRenderer: function(scope) {
+                        
+                        return '<span><input type="checkbox" ng-model="crmc.selectedCursusGroups[' +
+                            scope.$row['id'] +
+                            ']"></span>';
+                    }
+                },
+                {
                     name: 'name',
                     prop: 'groupName',
-                    isCheckboxColumn: true,
-                    headerCheckbox: true,
                     headerRenderer: function () {
+                        
                         return '<b>' + translator.trans('name', {}, 'platform') + '</b>';
                     }
                 },
                 {
                     name: 'registration_date',
+                    prop: 'registrationDate',
                     headerRenderer: function () {
+                        
                         return '<b>' + translator.trans('registration_date', {}, 'cursus') + '</b>';
                     },
                     cellRenderer: function(scope) {
+                        
                         return '<span>' + scope.$row['registrationDate']['date'] + '</span>';
                     }
                 },
@@ -130,7 +168,9 @@
                     name: 'actions',
                     headerRenderer: function () {
                         
-                        return '<button class="btn btn-default btn-sm" ng-click="crmc.unregisterSelectedGroups()">' +
+                        return '<button class="btn btn-default btn-sm"' +
+                            ' ng-click="crmc.unregisterSelectedGroups()"' +
+                            ' ng-disabled="!crmc.isGroupSelected()">' +
                             translator.trans('unregister_selected_groups', {}, 'cursus') +
                             '</button>';
                     },
@@ -152,6 +192,7 @@
                 selectable: true,
                 multiSelect: true,
                 checkboxSelection: true,
+                resizable: true,
                 columns: groupsColumns
             };
             
@@ -162,6 +203,7 @@
                 selectable: true,
                 multiSelect: true,
                 checkboxSelection: true,
+                resizable: true,
                 columns: usersColumns
             };
             
@@ -210,7 +252,28 @@
             };
             
             this.unregisterSelectedGroups = function () {
-                console.log('Unregister selected groups');
+                var cursusGroupsIdsTxt = '';
+                
+                for (var cursusGroupId in vm.selectedCursusGroups) {
+                    
+                    if (vm.selectedCursusGroups[cursusGroupId]) {
+                        cursusGroupsIdsTxt += cursusGroupId + ',';
+                    }
+                }
+                var length = cursusGroupsIdsTxt.length;
+                
+                if (length > 0) {
+                    cursusGroupsIdsTxt = cursusGroupsIdsTxt.substr(0, length - 1);
+                }
+                $uibModal.open({
+                    templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Partial/cursus_groups_unregistration_modal.html',
+                    controller: 'CursusGroupsUnregistrationModalCtrl',
+                    controllerAs: 'cgumc',
+                    resolve: {
+                        cursusGroupsIdsTxt: function () { return cursusGroupsIdsTxt; },
+                        callBack: function () { return vm.removeCursusGroups; }
+                    }
+                });
             };
             
             this.removeCursusGroup = function (cursusGroupId) {
@@ -220,6 +283,28 @@
                     if (vm.cursusGroups[i]['id'] === cursusGroupId) {
                         vm.cursusGroups.splice(i, 1);
                         break;
+                    }
+                }
+                updateCursusUsers();
+            };
+            
+            this.removeCursusGroups = function (cursusGroupIds) {
+                
+                for (var i = vm.cursusGroups.length - 1; i >= 0; i--) {
+                    
+                    if (cursusGroupIds.indexOf(vm.cursusGroups[i]['id']) >= 0) {
+                        vm.cursusGroups.splice(i, 1);
+                    }
+                }
+                updateCursusUsers();
+            };
+            
+            this.removeCursusUsers = function (userIds) {
+                
+                for (var i = vm.cursusUsers.length - 1; i >= 0; i--) {
+                    
+                    if (userIds.indexOf(vm.cursusUsers[i]['userId']) >= 0) {
+                        vm.cursusUsers.splice(i, 1);
                     }
                 }
             };
@@ -238,7 +323,29 @@
             };
             
             this.unregisterSelectedUsers = function () {
-                console.log('Unregister selected users');
+                var usersIdsTxt = '';
+                
+                for (var userId in vm.selectedUsers) {
+                    
+                    if (vm.selectedUsers[userId]) {
+                        usersIdsTxt += userId + ',';
+                    }
+                }
+                var length = usersIdsTxt.length;
+                
+                if (length > 0) {
+                    usersIdsTxt = usersIdsTxt.substr(0, length - 1);
+                }
+                $uibModal.open({
+                    templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Partial/cursus_users_unregistration_modal.html',
+                    controller: 'CursusUsersUnregistrationModalCtrl',
+                    controllerAs: 'cuumc',
+                    resolve: {
+                        cursusId: function () { return vm.currentCursusId; },
+                        usersIdsTxt: function () { return usersIdsTxt; },
+                        callBack: function () { return vm.removeCursusUsers; }
+                    }
+                });
             };
             
             this.removeCursusUser = function (cursusUserId) {
@@ -249,6 +356,50 @@
                         vm.cursusUsers.splice(i, 1);
                         break;
                     }
+                }
+            };
+            
+            this.isGroupSelected = function () {
+                var selected = false;
+                
+                for (var cursusGroupId in vm.selectedCursusGroups) {
+                    
+                    if (vm.selectedCursusGroups[cursusGroupId]) {
+                        selected = true;
+                        break;
+                    }
+                }
+                
+                return selected;
+            };
+            
+            this.isUserSelected = function () {
+                var selected = false;
+                
+                for (var userId in vm.selectedUsers) {
+                    
+                    if (vm.selectedUsers[userId]) {
+                        selected = true;
+                        break;
+                    }
+                }
+                
+                return selected;
+            };
+            
+            this.toggleAllGroups = function () {
+                vm.allGroups = !vm.allGroups;
+                
+                for (var cursusGroupId in vm.selectedCursusGroups) {
+                    vm.selectedCursusGroups[cursusGroupId] = vm.allGroups;
+                }
+            };
+            
+            this.toggleAllUsers = function () {
+                vm.allUsers = !vm.allUsers;
+                
+                for (var userId in vm.selectedUsers) {
+                    vm.selectedUsers[userId] = vm.allUsers;
                 }
             };
             
@@ -269,8 +420,32 @@
                             unlockedCursusTxt += ',';
                         }
                     }
+                    
+                    for (var i = 0; i < vm.cursusGroups.length; i++) {
+                        var cursusGroupId = vm.cursusGroups[i]['id'];
+                        vm.selectedCursusGroups[cursusGroupId] = false;
+                    }
+                    
+                    for (var i = 0; i < vm.cursusUsers.length; i++) {
+                        var userId = vm.cursusUsers[i]['userId'];
+                        vm.selectedUsers[userId] = false;
+                    }
                 });
             };
+            
+            function updateCursusUsers()
+            {
+                var route = Routing.generate(
+                    'api_get_cursus_users_for_cursus_registration',
+                    {cursus: vm.currentCursusId}
+                );
+                $http.get(route).then(function (datas) {
+                    
+                    if (datas['status'] === 200) {
+                        vm.cursusUsers = datas['data'];
+                    }
+                });
+            }
             
             initialize();
         }

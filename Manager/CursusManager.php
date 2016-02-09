@@ -1845,6 +1845,28 @@ class CursusManager
         );
     }
 
+    public function getCursusUsersForCursusRegistration(Cursus $cursus)
+    {
+        $usersArray = array();
+        $cursusUsers = $this->getCursusUsersByCursus($cursus);
+
+        foreach ($cursusUsers as $cursusUser) {
+            $user = $cursusUser->getUser();
+            $userEntry = array(
+                'id' => $cursusUser->getId(),
+                'userType' => $cursusUser->getUserType(),
+                'registrationDate' => $cursusUser->getRegistrationDate(),
+                'userId' => $user->getId(),
+                'username' => $user->getUsername(),
+                'firstName' => $user->getFirstName(),
+                'lastName' => $user->getLastName()
+            );
+            $usersArray[] = $userEntry;
+        }
+
+        return $usersArray;
+    }
+
     public function getDatasForSearchedCursusRegistration($search)
     {
         $searchedCursusList = array();
@@ -2000,6 +2022,22 @@ class CursusManager
         $users = $this->userManager->getUsersByIds($userIds);
 
         return $users;
+    }
+
+    public function getCursusGroupsFromCursusGroupsIdsTxt($cursusGroupsIdsTxt)
+    {
+        $cursusGroupsIds = array();
+        $cursusGroupsIdsArray = explode(',', $cursusGroupsIdsTxt);
+
+        foreach ($cursusGroupsIdsArray as $cursusGroupId) {
+
+            if (!empty($cursusGroupId)) {
+                $cursusGroupsIds[] = intval($cursusGroupId);
+            }
+        }
+        $cursusGroups = $this->getCursusGroupsByIds($cursusGroupsIds);
+
+        return $cursusGroups;
     }
 
     public function getSessionsInfosFromCursusList($cursusList)
@@ -2665,6 +2703,13 @@ class CursusManager
         return $withPager ?
             $this->pagerFactory->createPagerFromArray($groups, $page, $max) :
             $groups;
+    }
+
+    public function getCursusGroupsByIds(array $ids, $executeQuery = true)
+    {
+        return count($ids) > 0 ?
+            $this->cursusGroupRepo->findCursusGroupsByIds($ids, $executeQuery)
+            : array();
     }
 
 

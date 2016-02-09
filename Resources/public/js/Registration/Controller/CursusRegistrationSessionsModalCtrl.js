@@ -13,13 +13,11 @@
     angular.module('CursusRegistrationModule').controller('CursusRegistrationSessionsModalCtrl', [
         '$http',
         '$route',
-        '$uibModal',
         '$uibModalStack',
-        'cursusId',
         'sourceId',
         'sourceType',
         'cursusIdsTxt',
-        function ($http, $route, $uibModal, $uibModalStack, sourceId, sourceType, cursusIdsTxt) {
+        function ($http, $route, $uibModalStack, sourceId, sourceType, cursusIdsTxt) {
             var vm = this;
             var sourceId = sourceId;
             var sourceType = sourceType;

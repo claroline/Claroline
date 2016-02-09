@@ -85,6 +85,20 @@ class CursusController extends FOSRestController
     /**
      * @View(serializerGroups={"api"})
      * @ApiDoc(
+     *     description="Returns cursus users for cursus registration",
+     *     views = {"cursus"}
+     * )
+     */
+    public function getCursusUsersForCursusRegistrationAction(Cursus $cursus)
+    {
+        $datas = $this->cursusManager->getCursusUsersForCursusRegistration($cursus);
+
+        return new JsonResponse($datas, 200);
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
      *     description="Returns datas for searched cursus",
      *     views = {"cursus"}
      * )
@@ -130,6 +144,22 @@ class CursusController extends FOSRestController
     /**
      * @View(serializerGroups={"api"})
      * @ApiDoc(
+     *     description="Unregister groups from cursus",
+     *     views = {"cursus"}
+     * )
+     */
+    public function deleteCursusGroupsAction($cursusGroupsIdsTxt)
+    {
+        $cursusGroups = $this->cursusManager
+            ->getCursusGroupsFromCursusGroupsIdsTxt($cursusGroupsIdsTxt);
+        $this->cursusManager->unregisterGroupsFromCursus($cursusGroups);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
      *     description="Unregister user from cursus",
      *     views = {"cursus"}
      * )
@@ -140,6 +170,21 @@ class CursusController extends FOSRestController
             $cursusUser->getCursus(),
             $cursusUser->getUser()
         );
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Unregister users from cursus",
+     *     views = {"cursus"}
+     * )
+     */
+    public function deleteCursusUsersAction(Cursus $cursus, $usersIdsTxt)
+    {
+        $users = $this->cursusManager->getUsersFromUsersIdsTxt($usersIdsTxt);
+        $this->cursusManager->unregisterUsersFromCursus($cursus, $users);
 
         return new JsonResponse('success', 200);
     }
