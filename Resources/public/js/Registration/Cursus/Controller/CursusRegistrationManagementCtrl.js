@@ -46,7 +46,7 @@
                     }
                 }
                 $uibModal.open({
-                    templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Partial/cursus_registration_sessions_modal.html',
+                    templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Cursus/Partial/cursus_registration_sessions_modal.html',
                     controller: 'CursusRegistrationSessionsModalCtrl',
                     controllerAs: 'crsmc',
                     resolve: {
@@ -209,7 +209,7 @@
             
             this.registerGroups = function () {
                 $uibModal.open({
-                    templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Partial/cursus_groups_list_registration_modal.html',
+                    templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Cursus/Partial/cursus_groups_list_registration_modal.html',
                     controller: 'CursusGroupsListRegistrationModalCtrl',
                     controllerAs: 'cglrmc',
                     resolve: {
@@ -240,7 +240,7 @@
             
             this.unregisterGroup = function (cursusGroupId, groupName) {
                 $uibModal.open({
-                    templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Partial/cursus_group_unregistration_modal.html',
+                    templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Cursus/Partial/cursus_group_unregistration_modal.html',
                     controller: 'CursusGroupUnregistrationModalCtrl',
                     controllerAs: 'cgumc',
                     resolve: {
@@ -266,7 +266,7 @@
                     cursusGroupsIdsTxt = cursusGroupsIdsTxt.substr(0, length - 1);
                 }
                 $uibModal.open({
-                    templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Partial/cursus_groups_unregistration_modal.html',
+                    templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Cursus/Partial/cursus_groups_unregistration_modal.html',
                     controller: 'CursusGroupsUnregistrationModalCtrl',
                     controllerAs: 'cgumc',
                     resolve: {
@@ -311,7 +311,7 @@
             
             this.unregisterUser = function (cursusUserId, name) {
                 $uibModal.open({
-                    templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Partial/cursus_user_unregistration_modal.html',
+                    templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Cursus/Partial/cursus_user_unregistration_modal.html',
                     controller: 'CursusUserUnregistrationModalCtrl',
                     controllerAs: 'cuumc',
                     resolve: {
@@ -337,7 +337,7 @@
                     usersIdsTxt = usersIdsTxt.substr(0, length - 1);
                 }
                 $uibModal.open({
-                    templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Partial/cursus_users_unregistration_modal.html',
+                    templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Cursus/Partial/cursus_users_unregistration_modal.html',
                     controller: 'CursusUsersUnregistrationModalCtrl',
                     controllerAs: 'cuumc',
                     resolve: {

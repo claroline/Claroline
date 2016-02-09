@@ -177,7 +177,7 @@
                 
                 if (infos !== null) {
                     $uibModal.open({
-                        templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Partial/cursus_description_modal.html',
+                        templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Cursus/Partial/cursus_description_modal.html',
                         controller: 'CursusDescriptionModalCtrl',
                         controllerAs: 'cdmc',
                         resolve: {

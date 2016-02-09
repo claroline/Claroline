@@ -10,12 +10,13 @@
 (function () {
     'use strict';
 
-    angular.module('CursusRegistrationModule').directive('cursusList', [
+    angular.module('CursusRegistrationModule').directive('cursusRegistrationGroups', [
         function () {
             return {
                 restrict: 'E',
                 replace: true,
-                templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Partial/cursus_list.html'
+                templateUrl: AngularApp.webDir +
+                    'bundles/clarolinecursus/js/Registration/Cursus/Partial/cursus_registration_groups.html'
             };
         }
     ]);

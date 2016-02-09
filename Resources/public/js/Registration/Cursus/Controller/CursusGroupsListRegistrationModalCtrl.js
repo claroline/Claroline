@@ -72,7 +72,7 @@
             this.selectGroupForSessionsValidation = function (groupId) {
                 vm.closeModal();
                 $uibModal.open({
-                    templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Partial/cursus_registration_sessions_modal.html',
+                    templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Cursus/Partial/cursus_registration_sessions_modal.html',
                     controller: 'CursusRegistrationSessionsModalCtrl',
                     controllerAs: 'crsmc',
                     resolve: {
