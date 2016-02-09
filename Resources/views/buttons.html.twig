@@ -53,5 +53,4 @@
     <a href="{{ url("hwi_oauth_service_redirect", {service: service}) }}" type="button" id="{{ service }}-connect-btn" class='btn {{ service }}-connect icap-oauth-btn btn-block' style="position: relative">
         {{ ('login_'~service)|trans({}, 'icap_oauth') }}
     </a>
-{#{% include 'IcapOAuthBundle:Buttons:'~service~'.html.twig' %}#}
 {% endfor %}
