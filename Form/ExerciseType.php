@@ -96,6 +96,18 @@ class ExerciseType extends AbstractType
             ->add('lockAttempt', 'checkbox', [
                  'required' => false,
                  'label' => 'lock_attempt',
+            ])
+            ->add('anonymous', 'checkbox', [
+                'required' => false,
+                'label' => 'anonymous',
+            ])
+            ->add('type', 'choice', [
+                'label' => 'type_exo',
+                'choices' => [
+                    '1' => 'summative',
+                    '2' => 'evaluative',
+                    '3' => 'formative',
+                ],
             ]);
     }
 

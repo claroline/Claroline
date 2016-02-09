@@ -15,6 +15,7 @@ all_question: Toutes les questions
 already: Cette question est déjà partagée avec cet utilisateur
 already_answered: Vous avez déjà répondu à cet exercice
 already_exist: Ce nom existe déjà.
+anonymous : Anonyme
 answer_coched: Aucune réponse attendue n\'est cochée
 answer_zone: Zone de réponse
 attempt_info1: Vous avez droit à
@@ -89,6 +90,7 @@ duration: Durée
 edit: Editer
 edit_category: Editer cette catégorie
 edit_question: Editer une question
+evaluative: Evalutatif
 end_date: Date de fin
 entry: Entrer
 exercise: Exercice
@@ -118,6 +120,7 @@ finish: Terminer
 for_type_of: pour une question de type
 frequency: Fréquence
 from: A partir du
+formative : Formatif
 
 # G
 graphic: Graphique
@@ -318,13 +321,14 @@ size: Taille
 start_again: Recommencer
 start_date: Date de début
 sort: Trier les documents
-
+summative : Sommatif
 
 # T
 temporary_mark: Note temporaire
 test_exit: Sortie du test
 title: Titre
 type: Type
+type_exo : Type de l'exercice
 type_qcm: Type du QCM
 type_question: Type de la question
 

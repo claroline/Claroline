@@ -98,7 +98,7 @@ class Exercise extends AbstractResource
      * @ORM\Column(name="type", type="string", length=255)
      * sommatif, formatif, certificatif
      */
-    private $type = 'sommatif';
+    private $type = '1';
 
     public function __construct()
     {

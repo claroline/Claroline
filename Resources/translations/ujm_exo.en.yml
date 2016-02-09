@@ -15,6 +15,7 @@ all_question: All the questions
 already: This question is already shared with this user
 already_answered: You have already answered at this exercise
 already_exist: This name exist already
+anonymous : Anonymous
 answer_coched: No response expected is checked
 answer_zone: Answer zone
 attempt_info1: You have
@@ -91,6 +92,7 @@ edit_category: Edit a category
 edit_question: Edit a question
 end_date: End date
 entry: Entry
+evaluative: Evalutative
 exercise: Exercise
 exercise_alert_break: The interruption of this exercise is not allowed. Your paper will be considered finish !
 exercise_definition: Exercise definition
@@ -118,6 +120,7 @@ finish: Finish
 for_type_of: for a question of type
 frequency: Frequency
 from: From
+formative : Formative
 
 # G
 graphic: Graphic
@@ -318,12 +321,14 @@ size: Size
 start_again: Start again
 start_date: Start date
 sort: Sort documents
+summative : Summative
 
 # T
 temporary_mark: Temporary mark
 test_exit: Test output
 title: Title
 type: Type
+type_exo : Type of exercise
 type_qcm: QCM type
 type_question: Question type
 
