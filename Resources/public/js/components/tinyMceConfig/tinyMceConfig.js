@@ -10,15 +10,14 @@
     var plugins = [
         'autoresize advlist autolink lists link image charmap print preview hr anchor pagebreak',
         'searchreplace wordcount visualblocks visualchars fullscreen',
-        'insertdatetime media nonbreaking table directionality',
-        'template paste textcolor emoticons code'
+        'insertdatetime media nonbreaking save table directionality',
+        'template paste textcolor emoticons code -mention -accordion -codemirror'
     ];
-    var toolbar = 'undo redo | styleselect | bold italic underline | forecolor | alignleft aligncenter alignright | preview fullscreen';
-
+    var toolbar1 = 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | fullscreen displayAllButtons';
     $.each(tinymce.claroline.plugins, function(key, value) {
         if ('autosave' != key &&  value === true) {
             plugins.push(key);
-            toolbar += ' ' + key;
+            toolbar1 += ' ' + key;
         }
     });
 
@@ -30,8 +29,7 @@
     }
 
     tinyMceConfig.plugins = plugins;
-    tinyMceConfig.toolbar1 = toolbar;
-    tinyMceConfig.toolbar2 = "";
+    tinyMceConfig.toolbar1 = toolbar1;
     tinyMceConfig.format = 'text';
 
     editApp.value('tinyMceConfig', tinyMceConfig);
