@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2016/02/09 01:40:37
+ * Generation date: 2016/02/10 11:19:37
  */
-class Version20160209134032 extends AbstractMigration
+class Version20160210111934 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -55,6 +55,23 @@ class Version20160209134032 extends AbstractMigration
             ADD CONSTRAINT FK_7EE284A7A76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id) 
             ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_cursusbundle_course_session_registration_queue 
+            ADD validator_id INT DEFAULT NULL, 
+            ADD queue_status INT NOT NULL, 
+            ADD validation_date DATETIME DEFAULT NULL, 
+            ADD user_validation_date DATETIME DEFAULT NULL, 
+            ADD validator_validation_date DATETIME DEFAULT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_cursusbundle_course_session_registration_queue 
+            ADD CONSTRAINT FK_334FC296B0644AEC FOREIGN KEY (validator_id) 
+            REFERENCES claro_user (id) 
+            ON DELETE SET NULL
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_334FC296B0644AEC ON claro_cursusbundle_course_session_registration_queue (validator_id)
         ");
         $this->addSql("
             ALTER TABLE claro_cursusbundle_course 
@@ -105,6 +122,21 @@ class Version20160209134032 extends AbstractMigration
             DROP user_validation, 
             DROP max_users, 
             DROP session_type
+        ");
+        $this->addSql("
+            ALTER TABLE claro_cursusbundle_course_session_registration_queue 
+            DROP FOREIGN KEY FK_334FC296B0644AEC
+        ");
+        $this->addSql("
+            DROP INDEX IDX_334FC296B0644AEC ON claro_cursusbundle_course_session_registration_queue
+        ");
+        $this->addSql("
+            ALTER TABLE claro_cursusbundle_course_session_registration_queue 
+            DROP validator_id, 
+            DROP queue_status, 
+            DROP validation_date, 
+            DROP user_validation_date, 
+            DROP validator_validation_date
         ");
     }
 }
