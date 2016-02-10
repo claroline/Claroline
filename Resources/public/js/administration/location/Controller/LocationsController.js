@@ -72,8 +72,13 @@ var controller =  function(
         },
         {
             name: translate('coordinates'),
-            cellRenderer: function() {
-                return '<div>' + translate('latitude') + ': {{ $row.latitude }} | ' + translate('longitude') + ': {{ $row.longitude }} </div>'
+            cellRenderer: function(scope) {
+                var gmaplink = '';
+                //var gmapurl = 'https://www.google.be/maps/@' + scope.$row.latitude + ',' + scope.$row.longitude;
+                //var gmaplink = '<a href="' + gmapurl + '"><i class="fa fa-globe"></i></a>';
+                //does not work yet
+
+                return '<div>' + translate('latitude') + ': {{ $row.latitude }} | ' + translate('longitude') + ': {{ $row.longitude }} |  ' + gmaplink + ' </div>'
             }
         }
     ];

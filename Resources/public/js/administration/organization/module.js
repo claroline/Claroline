@@ -17,35 +17,53 @@
 
     OrganizationManager.config(function($stateProvider, $urlRouterProvider) {
         $stateProvider
+            .state ('organizations', {
+                abstract: true,
+                url: '/organizations',
+                templateUrl: AngularApp.webDir + 'bundles/clarolinecore/js/administration/organization/Partial/main.html',
+
+            })
             .state(
-                'organizations',
+                'organizations.list',
                 {
-                    url: "/organizations",
-                    templateUrl: function($stateParam) {
-                        return AngularApp.webDir + 'bundles/clarolinecore/js/administration/organization/Partial/organizations_main.html'
-                    },
+                    url: "",
                     ncyBreadcrumb: {
                         label: translate('organizations')
                     },
-                    controller: 'OrganizationController',
-                    controllerAs: 'oc'
+                    views: {
+                        'organizations': {
+                            templateUrl: function($stateParam) {
+                                return AngularApp.webDir + 'bundles/clarolinecore/js/administration/organization/Partial/organizations_main.html'
+                            },
+                            controller: 'OrganizationController',
+                            controllerAs: 'oc'
+                        }
+                    }
                 }
             )
+            
             .state(
                 'organizations.locations',
                 {
                     url: "/locations",
-                    templateUrl: function($stateParam) {
-                        return AngularApp.webDir + 'bundles/clarolinecore/js/administration/location/Partial/locations_main.html'
-                    },
                     ncyBreadcrumb: {
-                        label: translate('locations')
+                        label: translate('locations'),
+                        parent: 'organizations.list'
                     },
-                    controller: 'LocationController',
-                    controllerAs: 'lc'
+                    views: {
+                        'locations': {
+                            templateUrl: function($stateParam) {
+                                return AngularApp.webDir + 'bundles/clarolinecore/js/administration/location/Partial/locations_main.html'
+                            },
+
+                        controller: 'LocationController',
+                        controllerAs: 'lc'
+                        }
+                    }
                 }
             )
         ;
+
 
         $urlRouterProvider.otherwise("/organizations");
     });

@@ -25,6 +25,7 @@
                     ncyBreadcrumb: {
                         label: translate('users')
                     },
+                    abstract: true,
                     controller: 'UserListController',
                     controllerAs: 'ulc'
                 }
