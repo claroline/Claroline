@@ -9,7 +9,7 @@
   "license": "GPL-3.0+",
   "homepage": "https://github.com/claroline/Claroline#readme",
   "scripts": {
-    "bower": "bower install",
+    "bower": "bower update",
     "build": "node make.js",
     "webpack": "rm -rf web/dist/* && webpack"
   },
@@ -22,5 +22,8 @@
     "shelljs": "^0.5.3",
     "webpack": "^1.12.13",
     "webpack-dev-server": "^1.14.1"
+  },
+  "dependencies": {
+    "filesystem-bower-resolver": "^1.2.0"
   }
 }

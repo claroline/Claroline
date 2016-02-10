@@ -1,4 +1,7 @@
 {
   "directory": "web/packages",
-  "analytics": false
+  "analytics": false,
+  "resolvers": [
+    "filesystem-bower-resolver"
+  ]
 }
