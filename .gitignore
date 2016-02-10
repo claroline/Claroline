@@ -19,7 +19,6 @@ app/config/platform_options.yml
 app/logs/*
 app/SymfonyRequirements.php
 bin/*
-behat.yml
 files/*
 node_modules
 templates/*
