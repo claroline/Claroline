@@ -12,6 +12,7 @@ class GraphicExport extends QtiExport
 {
     private $interactiongraph;
     private $selectPointInteraction;
+    private $picture;
 
     /**
      * Implements the abstract method.
@@ -30,6 +31,11 @@ class GraphicExport extends QtiExport
                                 ->getManager()
                                 ->getRepository('UJMExoBundle:InteractionGraphic')
                                 ->findOneByQuestion($question);
+
+        $this->picture = $this->doctrine
+                        ->getManager()
+                        ->getRepository('UJMExoBundle:Picture')
+                        ->findOneBy(array('id' => $this->interactiongraph->getPicture()));
 
         if (count($this->interactiongraph->getCoords()) > 1) {
             $cardinality = 'multiple';
@@ -141,8 +147,8 @@ class GraphicExport extends QtiExport
             $mimetype = 'image/'.$mimetype;
         }
         $object->setAttribute('type', $mimetype);
-        $object->setAttribute('width', $this->interactiongraph->getWidth());
-        $object->setAttribute('height', $this->interactiongraph->getHeight());
+        $object->setAttribute('width', $this->picture->getWidth());
+        $object->setAttribute('height', $this->picture->getHeight());
         $object->setAttribute('data', $pictureName);
         $objecttxt = $this->document->CreateTextNode($this->interactiongraph->getPicture()->getLabel());
         $object->appendChild($objecttxt);
