@@ -11,8 +11,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use UJM\ExoBundle\Form\ExerciseType;
 use UJM\ExoBundle\Form\ExerciseHandler;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\StepQuestion;
-use \UJM\ExoBundle\Entity\Step;
 use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Entity\Response;
 
@@ -474,33 +472,21 @@ class ExerciseController extends Controller
 
             $maxOrdre = (int) $result[0][1] + 1;
 
-            foreach ($qid as $q) {
+            foreach ($qid as $q) {               
                 $question = $this->getDoctrine()
                     ->getManager()
                     ->getRepository('UJMExoBundle:Question')
                     ->find($q);
 
-                if (count($question) > 0) {
-
-                    //Creating a step by question                          
-                    $step= new Step();
-                    $step->setText('Etape '.$q);
-                    $step->setExercise($exo);
-                    $step->setNbQuestion('0');
-                    $step->setDuration(0);
-                    $step->setMaxAttempts(0);
-                    $step->setOrder(0);
-                    $em->persist($step);
-                                  
+                if (count($question) > 0) {            
                     $question = $em->getRepository('UJMExoBundle:Question')->find($q);
-
-                    $sq = new StepQuestion($step, $question);
-                    $sq->setOrdre((int) $maxOrdre);
-                    $em->persist($sq);
+                    $order = (int) $maxOrdre;
+                    //Create a step for one question in the exercise
+                    $this->container->get('ujm.exo_exercise')->createStepForOneQuestion($exo,$question,$order);
                     ++$maxOrdre;
                 }
             }
-            $em->flush();
+//            $em->flush();
             $url = (string) $this->generateUrl('ujm_exercise_questions', array('id' => $exoID, 'pageNow' => $pageGoNow));
 
             return new \Symfony\Component\HttpFoundation\Response($url);

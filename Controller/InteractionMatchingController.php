@@ -114,6 +114,8 @@ class InteractionMatchingController extends Controller
                     )
                 );
             } else {
+                //Create a step for one question in the exercise
+                $this->container->get('ujm.exo_exercise')->createStepForOneQuestion($exercise,$interMatching->getQuestion(),'1');
                 return $this->redirect(
                     $this->generateUrl('ujm_exercise_questions', array(
                         'id' => $exoID, 'categoryToFind' => $categoryToFind, 'titleToFind' => $titleToFind, )

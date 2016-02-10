@@ -11,6 +11,10 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use UJM\ExoBundle\Entity\ExerciseQuestion;
 use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Event\Log\LogExerciseEvaluatedEvent;
+use UJM\ExoBundle\Entity\Question;
+use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Entity\Step;
+use UJM\ExoBundle\Entity\StepQuestion;
 
 class ExerciseServices
 {
@@ -263,5 +267,30 @@ class ExerciseServices
         }
 
         return $uid;
+    }
+    
+    /**
+     * Create a step for one question in the exercise
+     * 
+     * @param Exercise $exercise
+     * @param Question $question
+     * @param int $order order of the question in the step
+     */
+    public function createStepForOneQuestion( Exercise $exercise,Question $question, $order){
+                $em = $this->doctrine->getManager();            
+                //Creating a step by question
+                $step = new Step();
+                $step->setText(' ');
+                $step->setExercise($exercise);
+                $step->setNbQuestion('0');
+                $step->setDuration(0);
+                $step->setMaxAttempts(0);
+                $step->setOrder(0);
+                $em->persist($step);
+
+                $sq = new StepQuestion($step, $question);
+                $sq->setOrdre($order);
+                $em->persist($sq);
+                $em->flush();
     }
 }
