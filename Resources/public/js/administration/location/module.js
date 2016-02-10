@@ -5,28 +5,13 @@
         return translator.trans(key, {}, 'platform');
     }
 
-    var AdministrationModule = angular.module('AdministrationModule', [
+    var LocationManager = angular.module('LocationManager', [
+        'clarolineAPI',
+        'ui.bootstrap.tpls',
+        'ui.translation',
+        'data-table',
         'ui.router',
         'ncy-angular-breadcrumb'
     ]);
 
-    AdministrationModule.config(function($stateProvider, $urlRouterProvider) {
-        $stateProvider
-            .state(
-                'administration',
-                {
-                    url: "/administration",
-                    templateUrl: function($stateParam) {
-                        return AngularApp.webDir +
-                            'bundles/clarolinecore/js/administration/main/Partial/main.html';
-                    },
-                    ncyBreadcrumb: {
-                        label: translate('administration')
-                    }
-
-                }
-            );
-
-        $urlRouterProvider.otherwise("/administration");
-    });
 })();

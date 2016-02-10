@@ -1,32 +1,52 @@
 (function () {
     'use strict';
 
-    var module = angular.module('OrganizationManager', [
+    var translate = function(key) {
+        return translator.trans(key, {}, 'platform');
+    }
+
+    var OrganizationManager = angular.module('OrganizationManager', [
+        'ui.router',
         'ui.tree',
         'clarolineAPI',
-        'ui.bootstrap',
-        'ui.bootstrap.tpls',
-        'ngRoute',
+        'ui.bootstrap.tpls',        
         'LocationManager',
-        'ClarolineBreadcrumbs',
-        'ui.translation'
+        'ui.translation',
+        'ncy-angular-breadcrumb'
     ]);
 
-    module.config(['$routeProvider',
-        function($routeProvider) {
-            $routeProvider.
-                when('/organizations', {
-                    templateUrl: AngularApp.webDir + 'bundles/clarolinecore/js/administration/organization/Partial/organizations_main.html',
+    OrganizationManager.config(function($stateProvider, $urlRouterProvider) {
+        $stateProvider
+            .state(
+                'organizations',
+                {
+                    url: "/organizations",
+                    templateUrl: function($stateParam) {
+                        return AngularApp.webDir + 'bundles/clarolinecore/js/administration/organization/Partial/organizations_main.html'
+                    },
+                    ncyBreadcrumb: {
+                        label: translate('organizations')
+                    },
                     controller: 'OrganizationController',
                     controllerAs: 'oc'
-                }).
-                when('/locations', {
-                    templateUrl: AngularApp.webDir + 'bundles/clarolinecore/js/administration/location/Partial/locations_main.html',
+                }
+            )
+            .state(
+                'organizations.locations',
+                {
+                    url: "/locations",
+                    templateUrl: function($stateParam) {
+                        return AngularApp.webDir + 'bundles/clarolinecore/js/administration/location/Partial/locations_main.html'
+                    },
+                    ncyBreadcrumb: {
+                        label: translate('locations')
+                    },
                     controller: 'LocationController',
                     controllerAs: 'lc'
-                }).
-                otherwise({
-                    redirectTo: '/organizations'
-                });
-        }]);
+                }
+            )
+        ;
+
+        $urlRouterProvider.otherwise("/organizations");
+    });
 })();

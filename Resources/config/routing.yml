@@ -228,11 +228,6 @@ claro_admin_users:
     resource: "@ClarolineCoreBundle/Controller/Administration/UsersController.php"
     type: annotation
 
-claro_admin_groups:
-    prefix: admin/groups
-    resource: "@ClarolineCoreBundle/Controller/Administration/GroupsController.php"
-    type: annotation
-
 claro_admin_logs:
     prefix: admin/logs
     resource: "@ClarolineCoreBundle/Controller/Administration/LogsController.php"

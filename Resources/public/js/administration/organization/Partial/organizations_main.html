@@ -1,5 +1,4 @@
-<div>
-    <breadcrumbs breadcrumbs="oc.breadcrumbs"></breadcrumbs>
+<div ui-view>
     <div class="col-md-8">
         <button ng-click="oc.addRootOrganization()"> {{ 'add'|trans:{}:'platform' }} </button>
         <!-- Nested node template -->
@@ -37,6 +36,6 @@
         </div>
     </div>
     <div class="col-md-4">
-        <a class="btn btn-primary" href="#/locations"> {{ 'locations'|trans:{}:'platform' }} </a>
+        <a class="btn btn-primary" ui-sref="organizations.locations"> {{ 'locations'|trans:{}:'platform' }} </a>
     </div>
 </div>

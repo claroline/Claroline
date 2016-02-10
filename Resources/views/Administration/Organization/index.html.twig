@@ -1,27 +1,12 @@
 
-{% extends "ClarolineCoreBundle::layout_angular.html.twig" %}
+{% extends "ClarolineCoreBundle::layout.html.twig" %}
 
 {% block title %}{{ parent() ~ ' - ' ~ 'organizations' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
-{% block breadcrumb %}
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'fa fa-cog',
-                'name': 'administration'|trans({}, 'platform'),
-                'href': path('claro_admin_index')
-            },
-            {
-                'name': 'organization_management'|trans({}, 'platform'),
-                'href': ''
-            }
-        ])
-    }}
-{% endblock %}
-
 {% block content %}
     <div id="organization-panel" class="panel panel-default" ng-app="OrganizationManager">
-        <div class="panel-body" ng-view></div>
+        <div ncy-breadcrumb></div>
+        <div class="panel-body" ui-view></div>
     </div>
 {% endblock %}
 
@@ -32,11 +17,12 @@
 
 {% block javascripts %}
     {{ parent() }}
-
     <script type="text/javascript" src="{{ asset('vendor/angular.js')}}"> </script>
     <script type="text/javascript" src="{{ asset('vendor/angular-ui.js')}}"> </script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/angular-bootstrap/ui-bootstrap-tpls.js') }}"> </script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/angular/services/api.services.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/angular-ui-translation/angular-translation.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/angular-bootstrap/ui-bootstrap-tpls.js') }}"> </script>
+    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/angular/search/generic/search.app.js') }}></script>
 
     {# Set some vars needed by Angular parts #}
     <script type="text/javascript">
@@ -45,14 +31,12 @@
         var AngularApp = {};
         AngularApp.webDir = "{{ asset('') }}";
     </script>
-    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/angular/services/api.services.js') }}></script>
-    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/angular/search/generic/search.app.js') }}></script>
+
 
     {# organizations #}
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/organization/module.js') }}></script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/organization/Controller/EditModalController.js') }}></script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/organization/Controller/OrganizationController.js') }}></script>
-    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/organization/Directive/OrganizationListDirective.js') }}></script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/organization/Service/OrganizationAPIService.js') }}></script>
 
     {# locations #}
@@ -61,10 +45,5 @@
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/location/Controller/EditModalController.js') }}></script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/location/Controller/LocationsController.js') }}></script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/location/Service/LocationAPIService.js') }}></script>
-    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/location/Directive/LocationManagerDirective.js') }}></script>
-
-    {# breadcrumbs #}
-    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/angular/breadcrumbs/module.js') }}></script>
-    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/angular/breadcrumbs/Controller/BreadcrumbsController.js') }}></script>
-    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/angular/breadcrumbs/Directive/BreadcrumbsDirective.js') }}></script>
+    
 {% endblock %}

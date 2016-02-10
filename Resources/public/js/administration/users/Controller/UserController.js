@@ -26,7 +26,7 @@ var controller = function(
         this.selected.splice(0, this.selected.length);
         this.alerts.push({
             type: 'success',
-            msg: translate('user_removed_success_message')
+            msg: translate('user_removed')
         });0
     }.bind(this);
 

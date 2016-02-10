@@ -2,6 +2,8 @@
 //ça me semble compliqué pour une SPA.
 
 var controller = function($http, organizationAPI, clarolineAPI, $uibModalStack, $uibModal) {
+    console.log('init Organization Controller');
+
     this.organizations = [];
 
     var removeOrganization = function(organizations, organizationId) {

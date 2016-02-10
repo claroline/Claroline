@@ -19,36 +19,50 @@ var controller = function($http, clarolineSearch, $stateParams, GroupAPI, clarol
     }   
 
     var addToGroupCallback = function(data) {
-        /*var count = this.users.length;
+        this.users = this.users.concat(data);
 
         for (var i = 0; i < data.length; i++) {
-            this.users[count + i] = data[i];
-        }*/
+            this.alerts.push({
+                type: 'success',
+                msg: translate('user_added', {'%username%': data[i].username})
+            });
+        }
 
-        this.users = this.users.concat(data);
-        console.log(this.users);
         this.dataTableOptions.paging.count += data.length;
     }.bind(this);
 
     var removeFromGroupCallback = function(data) {
         clarolineAPI.removeElements(this.selected, this.users);
         this.dataTableOptions.paging.count -= this.selected.length;
+
+        for (var i = 0; i < this.selected.length; i++) {
+            console.log(this.selected[i]);
+            this.alerts.push({
+                type: 'success',
+                msg: translate('user_removed', {'%username%': this.selected[i].username})
+            });
+        }
+
         this.selected.splice(0, this.selected.length);
     }.bind(this);
 
     var pickerCallback = function(data) {
         var userIds = [];
+        var li = '';
 
         for (var i = 0; i < data.length; i++) {
             userIds.push(data[i]);
+            li += '<li>' + data.username + '</li>';
         }
 
         var url = Routing.generate('api_add_users_to_group', {'group': this.groupId}) + '?' + clarolineAPI.generateQueryString(userIds, 'userIds');
+        var userList = "<ul>" + li + "</ul>";
+        console.log(this.group);
 
         clarolineAPI.confirm(
             {url: url, method: 'GET'},
             addToGroupCallback,
-            translate('add_users_to_group'),
+            translate('add_users_to_group', {group: this.group.name, user_list: userList}),
             translate('add_users_to_group_confirm')
         );
 
@@ -149,6 +163,10 @@ var controller = function($http, clarolineSearch, $stateParams, GroupAPI, clarol
             translate('remove_users_from_group'),
             translate('remove_users_from_group_confirm')
         );
+    }.bind(this);
+
+    this.closeAlert = function(index) {
+        this.alerts.splice(index, 1);
     }.bind(this);
 };
 

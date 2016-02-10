@@ -1061,7 +1061,6 @@ user_parameters: 'Paramètres de l''utilisateur'
 user_picker: 'Outil pour choisir un utilisateur'
 user_profile: 'Profil utilisateur'
 user_public_profile_not_visible: 'Votre profil public n''est visible par personne. <br> Vous pouvez rendre votre profil visible par les <span class="shared_policy_link shared_policy_link_platform_users">utilisateurs de la plateforme</span>, ou par <span class="shared_policy_link shared_policy_link_everybody">tout le monde</span>.'
-user_removed: 'Utilisateur supprimé'
 user_selector: 'Sélecteur d''utilisateurs'
 user_visit: 'Audience/Visites utilisateurs'
 username: 'Identifiant'
@@ -1239,3 +1238,9 @@ administrators: Administrateurs
 edit_organization: Modifier une organisation
 coordinates: Coordonnées
 address: Adresse
+add_users_to_group: Ajouter des utilisateurs à un groupe.
+add_users_to_group_confirm: Êtes-vous sûr de vouloir ajouter les utilisateurs suivant au groupe %group%: </br> %user_list%
+user_added: Utilisateur %username% ajouté.
+user_removed: Utilisateur %username% supprimé.
+remove_users_from_group: Supprimer des utilisateurs d'un groupe.
+remove_users_from_group_confirm: Êtes-vous sûr de vouloir supprimer les utilisateurs suivant du groupe %group%: </br> %user_list%
