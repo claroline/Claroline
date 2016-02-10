@@ -20,8 +20,6 @@ app/logs/*
 app/SymfonyRequirements.php
 bin/*
 behat.yml
-composer.json
-composer.lock
 files/*
 node_modules
 templates/*

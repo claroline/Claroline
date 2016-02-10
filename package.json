@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "description": "Claroline dev dependencies and scripts",
   "scripts": {
-    "fetch": "composer install && npm install && npm run bower",
-    "bower": "bower update",
+    "fetch": "composer install --prefer-source && npm install && bower update",
     "build": "node make.js",
     "webpack": "rm -rf web/dist/* && webpack"
   },

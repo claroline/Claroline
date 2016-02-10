@@ -21,6 +21,7 @@
         "claroline/rss-reader-bundle": "~6.0",
         "claroline/web-resource-bundle": "~6.0",
         "claroline/cursus-bundle": "~6.0",
+        "claroline/dev-bundle": "master",
         "icap/blog-bundle": "~6.0",
         "icap/wiki-bundle": "~6.0",
         "icap/lesson-bundle": "~6.0",
@@ -29,7 +30,7 @@
         "icap/dropzone-bundle": "~6.0",
         "icap/badge-bundle": "~6.0",
         "icap/socialmedia-bundle": "~6.0",
-        "ujm/exo-bundle": "~6.0",
+        "ujm/exo-bundle": "6.x-dev",
         "innova/path-bundle": "~6.0",
         "innova/angular-js-bundle" : "~5.0",
         "innova/angular-ui-bootstrap-bundle" : "~5.0",
@@ -45,6 +46,9 @@
         "formalibre/reservation-bundle": "~6.0",
         "formalibre/presence-bundle": "~6.0",
         "formalibre/support-bundle": "~6.0"
+    },
+    "require-dev": {
+        "symfony/phpunit-bridge": "*"
     },
     "scripts": {
         "pre-install-cmd": [
@@ -92,8 +96,5 @@
         "symfony-app-dir": "app",
         "symfony-web-dir": "web",
         "symfony-assets-install": "symlink"
-    },
-    "require-dev": {
-        "symfony/phpunit-bridge": "^3.1@dev"
     }
 }

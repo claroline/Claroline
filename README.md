@@ -74,12 +74,8 @@ php app/console claroline:install
     - *app/config*
     - *files*
     - *web/uploads*
-- Create a *composer.json* based on one of the following *composer* files:
-    - *composer-min.json* (minimal installation, without plugins)
-    - *composer-max.json* (complete installation, with plugins)
 - Run the following commands:
-    - `composer update --prefer-source` *(***)*
-    - `npm install` 
+    - `npm run fetch`
     - `php app/console claroline:install`
     - `npm run build`
     - `rm app/config/operations.xml`
@@ -108,10 +104,10 @@ php app/console claroline:user:create -a
 
 ### Update
 
-To update your installation, use:
+To update your installation, pull the latest changes in this repository, then run:
 
 ```
-composer update --prefer-source
+composer install --prefer-source
 php app/console claroline:update
 npm run build
 ```
