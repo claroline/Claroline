@@ -86,16 +86,6 @@ class ExerciseListener
             $em->persist($exercise);
             $em->persist($subscription);
             
-            // create the default step in the exercise
-            $step= new Step();
-            $step->setText('Default');
-            $step->setExercise($exercise);
-            $step->setNbQuestion('0');
-            $step->setDuration(0);
-            $step->setMaxAttempts(0);
-            $step->setOrder(0);
-            $em->persist($step);
-
             $event->setResources(array($exercise));
             $event->stopPropagation();
 

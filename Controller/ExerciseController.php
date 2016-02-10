@@ -384,7 +384,7 @@ class ExerciseController extends Controller
             $pagerShared = $page;
         }
 
-        if ($exoAdmin === true) {
+        if ($exoAdmin === true) {            
             if ($QuestionsExo == 'true') {
 
                 $listQExo= $questionSer->getListQuestionExo($idExo,$user,$exercise);
@@ -395,7 +395,7 @@ class ExerciseController extends Controller
                 $alreadyShared = $allActions[2];
                 $sharedWithMe = $allActions[3];
                 $shareRight = $allActions[4];
-            } else {
+            } else {             
                 $userQuestions = $this->getDoctrine()
                     ->getManager()
                     ->getRepository('UJMExoBundle:Question')
@@ -482,11 +482,16 @@ class ExerciseController extends Controller
 
                 if (count($question) > 0) {
 
-                    //PARTIE EN ATTENDANT LA GESTION DES ETAPES
-                    $steps = $em->getRepository('UJMExoBundle:Step')->findDefaultStep($exo);
-                    $step=$steps[0];
-                        
-                    //Fin partie A MODIFIER !!!!
+                    //Creating a step by question                          
+                    $step= new Step();
+                    $step->setText('Etape '.$q);
+                    $step->setExercise($exo);
+                    $step->setNbQuestion('0');
+                    $step->setDuration(0);
+                    $step->setMaxAttempts(0);
+                    $step->setOrder(0);
+                    $em->persist($step);
+                                  
                     $question = $em->getRepository('UJMExoBundle:Question')->find($q);
 
                     $sq = new StepQuestion($step, $question);
