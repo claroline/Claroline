@@ -4,8 +4,9 @@
   "description": "Claroline dev dependencies and scripts",
   "scripts": {
     "fetch": "composer install --prefer-source && npm install && bower update",
-    "build": "node vendor/claroline/core-bundle/Resources/scripts/build-themes",
-    "webpack": "rm -rf web/dist/* && webpack"
+    "build": "npm run themes && npm run webpack",
+    "themes": "node vendor/claroline/core-bundle/Resources/scripts/build-themes",
+    "webpack": "rm -rf web/dist/* && webpack --config webpack.js --progress --profile --colors"
   },
   "dependencies": {
     "claroline-core": "file:./vendor/claroline/core-bundle"

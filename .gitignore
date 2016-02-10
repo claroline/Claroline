@@ -27,6 +27,7 @@ web/bundles/*
 web/css/*
 web/dist
 web/js/*
+/webpack-prod.js
 web/packages
 web/themes/*
 web/thumbnails/*
