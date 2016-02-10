@@ -484,19 +484,8 @@ class ExerciseController extends Controller
 
                     //PARTIE EN ATTENDANT LA GESTION DES ETAPES
                     $steps = $em->getRepository('UJMExoBundle:Step')->findDefaultStep($exo);
-                    if(empty($steps[0])){
-                        $step= new Step();
-                        $step->setText('step default');
-                        $step->setExercise($exo);
-                        $step->setNbQuestion('0');
-                        $step->setDuration(0);
-                        $step->setMaxAttempts(0);
-                        $step->setOrder(0);
-                        $em->persist($step);
-                    }
-                    else{
-                        $step=$steps[0];
-                    }
+                    $step=$steps[0];
+                        
                     //Fin partie A MODIFIER !!!!
                     $question = $em->getRepository('UJMExoBundle:Question')->find($q);
 
