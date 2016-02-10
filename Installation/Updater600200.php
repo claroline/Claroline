@@ -196,11 +196,9 @@ class Updater600200 {
         foreach ($exoQuestion as $eq) {
             if ($eq['exercise_id'] != $exoId) {
                 $exoId = $eq['exercise_id'];
-                $stepId = $this->newStep($exoId);
             }
-
-            $this->addQuestionStep($stepId, $eq['question_id'], $eq['ordre']);
-
+            $stepId = $this->newStep($exoId, $eq['ordre']);
+            $this->addQuestionStep($stepId, $eq['question_id'], 1);
         }
     }
 
@@ -233,7 +231,7 @@ class Updater600200 {
      *
      * @param Integer $exoId
      */
-    private function newStep($exoId)
+    private function newStep($exoId, $orderStep)
     {
         $this->log('UPDATE Step ...');
 
@@ -241,7 +239,7 @@ class Updater600200 {
             INSERT INTO ujm_step
             (exercise_id, value, nbQuestion, keepSameQuestion, shuffle, duration, max_attempts, ordre)
             VALUES
-            ({$exoId}, '', 0, FALSE, FALSE, 0, 0, 1)
+            ({$exoId}, '', 0, FALSE, FALSE, 0, 0, {$orderStep})
         ");
 
         $query = 'SELECT * FROM ujm_step WHERE exercise_id=' . $exoId;
