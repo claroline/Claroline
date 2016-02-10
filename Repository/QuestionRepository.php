@@ -84,10 +84,10 @@ class QuestionRepository extends EntityRepository
         $limitToModels = false
     )
     {
-        $exerciseQuestionsQuery = $this->createQueryBuilder('q1')
-            ->join('q1.exerciseQuestions', 'eq')
-            ->join('eq.exercise', 'e')
-            ->where('e = :exercise');
+        $stepQuestionsQuery = $this->createQueryBuilder('q1')
+            ->join('q1.stepQuestions', 'sq')
+            ->join('sq.step', 's')
+            ->where('s = :exercise');
 
         $qb = $this->createQueryBuilder('q')
             ->leftJoin('q.category', 'c')
@@ -98,7 +98,7 @@ class QuestionRepository extends EntityRepository
         }
 
         return $qb
-            ->andWhere($qb->expr()->notIn('q', $exerciseQuestionsQuery->getDQL()))
+            ->andWhere($qb->expr()->notIn('q', $stepQuestionsQuery->getDQL()))
             ->orderBy('c.value, q.title', 'ASC')
             ->setParameters([
                 'user' => $user,
@@ -224,12 +224,12 @@ class QuestionRepository extends EntityRepository
         ];
 
         if ($excluded) {
-            $exerciseQuestionsQuery = $this->createQueryBuilder('q1')
-                ->join('q1.exerciseQuestions', 'eq')
-                ->join('eq.exercise', 'e')
-                ->where('e = :exercise');
+            $stepQuestionsQuery = $this->createQueryBuilder('q1')
+                ->join('q1.stepQuestions', 'sq')
+                ->join('sq.step', 's')
+                ->where('s = :exercise');
             $qb->andWhere(
-                $qb->expr()->notIn('q', $exerciseQuestionsQuery->getDQL())
+                $qb->expr()->notIn('q', $stepQuestionsQuery->getDQL())
             );
             $parameters['exercise'] = $excluded;
         }

@@ -12,6 +12,7 @@ use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerCollector;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("ujm.exo.paper_manager")
@@ -22,40 +23,45 @@ class PaperManager
     private $handlerCollector;
     private $exerciseManager;
     private $questionManager;
+    private $translator;
 
     /**
      * @DI\InjectParams({
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "collector"          = @DI\Inject("ujm.exo.question_handler_collector"),
      *     "exerciseManager"    = @DI\Inject("ujm.exo.exercise_manager"),
-     *     "questionManager"    = @DI\Inject("ujm.exo.question_manager")
+     *     "questionManager"    = @DI\Inject("ujm.exo.question_manager"),
+     *     "translator"         = @DI\Inject("translator")
      * })
      *
-     * @param ObjectManager             $om
-     * @param QuestionHandlerCollector  $collector
-     * @param ExerciseManager           $exerciseManager
-     * @param QuestionManager           $questionManager
+     * @param ObjectManager $om
+     * @param QuestionHandlerCollector $collector
+     * @param ExerciseManager $exerciseManager
+     * @param QuestionManager $questionManager
+     * @param Translator $translator
      */
     public function __construct(
         ObjectManager $om,
         QuestionHandlerCollector $collector,
         ExerciseManager $exerciseManager,
-        QuestionManager $questionManager
-    )
-    {
+        QuestionManager $questionManager,
+        TranslatorInterface $translator
+
+    ) {
         $this->om = $om;
         $this->handlerCollector = $collector;
         $this->exerciseManager = $exerciseManager;
         $this->questionManager = $questionManager;
+        $this->translator = $translator;
     }
 
     /**
      * Returns the JSON representation of an exercise with its last associated paper
      * for a given user. If no paper exists, a new one is created.
      *
-     * @param Exercise  $exercise
-     * @param User      $user
-     * @param bool      $withSolutions
+     * @param Exercise $exercise
+     * @param User $user
+     * @param bool $withSolutions
      * @return array
      */
     public function openPaper(Exercise $exercise, User $user, $withSolutions = false)
@@ -69,8 +75,8 @@ class PaperManager
     /**
      * Creates a new exercise paper for a given user.
      *
-     * @param User      $user
-     * @param Exercise  $exercise
+     * @param User $user
+     * @param Exercise $exercise
      * @return Paper
      */
     public function createPaper(User $user, Exercise $exercise)
@@ -85,7 +91,7 @@ class PaperManager
         $order = '';
 
         foreach ($questions as $question) {
-            $order .= $question->getId().';';
+            $order .= $question->getId() . ';';
         }
 
         $paper = new Paper();
@@ -105,8 +111,8 @@ class PaperManager
      * that given exercise and user, a new one is created. Otherwise the latest is
      * returned.
      *
-     * @param User      $user
-     * @param Exercise  $exercise
+     * @param User $user
+     * @param Exercise $exercise
      * @return Paper
      */
     public function exportPaper(Exercise $exercise, User $user)
@@ -121,7 +127,7 @@ class PaperManager
             $paper = $papers[0];
             $questions = $this->exportPaperQuestions($paper);
         }
-        
+
         return [
             'id' => $paper->getId(),
             'number' => $paper->getNumPaper(),
@@ -132,10 +138,10 @@ class PaperManager
     /**
      * Records or updates an answer for a given question and paper.
      *
-     * @param Paper     $paper
-     * @param Question  $question
-     * @param mixed     $data
-     * @param string    $ip
+     * @param Paper $paper
+     * @param Question $question
+     * @param mixed $data
+     * @param string $ip
      */
     public function recordAnswer(Paper $paper, Question $question, $data, $ip)
     {
@@ -159,19 +165,20 @@ class PaperManager
         $this->om->persist($response);
         $this->om->flush();
     }
-    
+
     /**
-     * 
+     *
      * @param Question $question
      * @param Paper $paper
      * @param int $score
      */
-    public function recordOpenScore(Question $question, Paper $paper, $score) {
+    public function recordOpenScore(Question $question, Paper $paper, $score)
+    {
         $response = $this->om->getRepository('UJMExoBundle:Response')
             ->findOneBy(['paper' => $paper, 'question' => $question]);
-        
+
         $response->setMark($score);
-        
+
         $this->om->persist($response);
         $this->om->flush();
     }
@@ -181,7 +188,7 @@ class PaperManager
      * Returns whether a hint is related to a paper.
      *
      * @param Paper $paper
-     * @param Hint  $hint
+     * @param Hint $hint
      * @return bool
      */
     public function hasHint(Paper $paper, Hint $hint)
@@ -199,7 +206,7 @@ class PaperManager
      * has been consulted for a given paper.
      *
      * @param Paper $paper
-     * @param Hint  $hint
+     * @param Hint $hint
      * @return string
      */
     public function viewHint(Paper $paper, Hint $hint)
@@ -224,7 +231,7 @@ class PaperManager
     public function finishPaper(Paper $paper)
     {
         if (!$paper->getEnd()) {
-            $paper->setEnd(new \DateTime());            
+            $paper->setEnd(new \DateTime());
         }
         $paper->setInterupt(false);
         $this->om->flush();
@@ -235,8 +242,8 @@ class PaperManager
      * Also includes the complete definition and solution of each question
      * associated with the exercise.
      *
-     * @param Exercise  $exercise
-     * @param User      $user
+     * @param Exercise $exercise
+     * @param User $user
      * @return array
      */
     public function exportUserPapers(Exercise $exercise, User $user)
@@ -246,11 +253,11 @@ class PaperManager
             ->findBy(['exercise' => $exercise, 'user' => $user]);
 
         $papers = array_map(function ($paper) {
-            $_user = $paper->getUser();
+
             return [
                 'id' => $paper->getId(),
                 'number' => $paper->getNumPaper(),
-                'user' => $_user->getFirstName().' '.$_user->getLastName(),
+                'user' => $this->showUserPaper($paper),
                 'start' => $paper->getStart()->format('Y-m-d H:i:s'),
                 'end' => $paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : null,
                 'interrupted' => $paper->getInterupt(),
@@ -267,25 +274,24 @@ class PaperManager
             'papers' => $papers
         ];
     }
-    
+
     /**
      * Returns one specific paper details.
      * Also includes the complete definition and solution of each question
      * associated with the exercise.
      *
-     * @param Paper     $paper
-     * @param Exercise  $exercise
+     * @param Paper $paper
+     * @param Exercise $exercise
      * @return array
      */
     public function exportUserPaper(Paper $paper, Exercise $exercise)
     {
         $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
 
-        $user = $paper->getUser();
         $_paper = [
             'id' => $paper->getId(),
             'number' => $paper->getNumPaper(),
-            'user' => $user->getFirstName().' '.$user->getLastName(),
+            'user' => $this->showUserPaper($paper),
             'start' => $paper->getStart()->format('Y-m-d H:i:s'),
             'end' => $paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : null,
             'interrupted' => $paper->getInterupt(),
@@ -301,25 +307,45 @@ class PaperManager
             'paper' => $_paper
         ];
     }
-    
+
+    /**
+     * Return user name or anonymous, according to exercise settings
+     *
+     * @param Paper $paper
+     * @return string
+     */
+    private function showUserPaper(Paper $paper)
+    {
+        $user = $paper->getUser();
+
+        $showUser = $user->getFirstName() . ' ' . $user->getLastName();
+
+        if ($paper->getExercise()->getAnonymous()) {
+            $showUser = $this->translator->trans('anonymous', array(), 'ujm_exo');
+        }
+
+        return $showUser;
+    }
+
     /**
      * Returns the number of finished papers already done by the user for a given exercise
-     * @param Exercise  $exercise
-     * @param User      $user
+     * @param Exercise $exercise
+     * @param User $user
      * @return array
      */
-    public function countUserFinishedPapers(Exercise $exercise, User $user){
+    public function countUserFinishedPapers(Exercise $exercise, User $user)
+    {
         $nbPapers = $this->om->getRepository('UJMExoBundle:Paper')
             ->countUserFinishedPapers($exercise, $user);
         return $nbPapers;
     }
-    
+
     /**
      * Returns the papers for a given exercise, in a JSON format.
      * Also includes the complete definition and solution of each question
      * associated with the exercise.
      *
-     * @param Exercise  $exercise
+     * @param Exercise $exercise
      * @return array
      */
     public function exportExercisePapers(Exercise $exercise)
@@ -329,10 +355,10 @@ class PaperManager
             ->findBy(['exercise' => $exercise]);
 
         $papers = array_map(function ($paper) {
-            $user = $paper->getUser();
+
             return [
                 'id' => $paper->getId(),
-                'user' => $user->getFirstName().' '.$user->getLastName(),
+                'user' => $this->showUserPaper($paper),
                 'number' => $paper->getNumPaper(),
                 'start' => $paper->getStart()->format('Y-m-d H:i:s'),
                 'end' => $paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : null,
@@ -388,14 +414,14 @@ class PaperManager
             $links = $linkRepo->findViewedByPaperAndQuestion($paper, $question);
 
             $answer = $response ? $handler->convertAnswerDetails($response) : null;
-            $answerScore = $response ? $response->getMark():0;
+            $answerScore = $response ? $response->getMark() : 0;
             $hints = array_map(function ($link) {
-                return (string) $link->getHint()->getId();
+                return (string)$link->getHint()->getId();
             }, $links);
 
             if ($answer || count($hints) > 0) {
                 $paperQuestions[] = [
-                    'id' => (string) $question->getId(),
+                    'id' => (string)$question->getId(),
                     'answer' => $answer,
                     'hints' => $hints,
                     'score' => $answerScore

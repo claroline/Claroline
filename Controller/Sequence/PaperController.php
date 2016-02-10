@@ -23,7 +23,8 @@ class PaperController extends Controller
     public function exercisePapersAction(Exercise $exercise)
     {
             return $this->render('UJMExoBundle:Sequence:papers.html.twig', array(
-                    '_resource' => $exercise
+                    '_resource' => $exercise,
+                    'workspace' => $exercise->getResourceNode()->getWorkspace()
             )
         );
     }

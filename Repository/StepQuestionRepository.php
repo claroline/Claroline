@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use \UJM\ExoBundle\Entity\Exercise;
 
 /**
  * StepQuestionRepository.
@@ -12,5 +13,19 @@ use Doctrine\ORM\EntityRepository;
  */
 class StepQuestionRepository extends EntityRepository
 {
-    //put your code here
+   /**
+     * Returns the order max.
+     *
+     * @param Exercice $exo
+     * @return Question[]
+     */
+    public function getMaxOrder(Exercise $exo){       
+        return $this->createQueryBuilder('sq')
+            ->select('max(sq.ordre)')
+            ->join('sq.step', 's')
+            ->where('s = :exercise')
+            ->setParameter(':exercise', $exo)
+            ->getQuery()
+            ->getResult();
+    }
 }

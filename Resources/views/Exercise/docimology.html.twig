@@ -103,12 +103,12 @@
 {% block javascripts %}
     {{ parent() }}
 
-    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/jquery.jqplot.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.barRenderer.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.pointLabels.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.categoryAxisRenderer.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasTextRenderer.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasAxisLabelRenderer.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/jquery.jqplot.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.barRenderer.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.pointLabels.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.categoryAxisRenderer.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.canvasTextRenderer.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.canvasAxisLabelRenderer.js') }}"></script>
 
     {% if nbPapers >= 12 %}
         <script type="text/javascript">

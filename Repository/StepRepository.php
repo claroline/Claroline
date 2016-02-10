@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use \UJM\ExoBundle\Entity\Exercise;
 
 /**
  * StepRepository.
@@ -12,5 +13,20 @@ use Doctrine\ORM\EntityRepository;
  */
 
 class StepRepository extends EntityRepository {
-    //put your code here
+    
+    /**
+     * Returns the step default. (En attendant d'avoir la partie gestion des steps)
+     *
+     * @param Exercice $exo
+     * @return Question[]
+     */
+    public function findDefaultStep(Exercise $exo){ 
+
+        return $this->createQueryBuilder('s')
+            ->join('s.exercise','e')
+            ->where('e = :exercise')
+            ->setParameter(':exercise', $exo)
+            ->getQuery()
+            ->getResult();
+    }
 }

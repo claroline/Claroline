@@ -99,6 +99,18 @@
                                 {% endif %}
                             </td>
                         </tr>
+                        <tr class="hiddencells">
+                            <th class="classic">{{ 'type' | trans({}, 'ujm_exo') }}</th>
+                            <td class="classic">
+                                {% if(exercise.type == 1) %}
+                                    {{ 'summative' | trans({}, 'ujm_exo') }}
+                                {% elseif (exercise.type == 2) %}
+                                    {{ 'evaluative' | trans({}, 'ujm_exo') }}
+                                {% elseif (exercise.type == 3) %}
+                                    {{ 'formative' | trans({}, 'ujm_exo') }}
+                                {% endif %}
+                            </td>
+                        </tr>
                         {% if is_granted('ADMINISTRATE', exercise) %}
                             <tr class="hiddencells">
                                 <th class="classic">{{ 'random_questions' | trans({}, 'ujm_exo') }}</th>
@@ -120,7 +132,16 @@
                                     {% endif %}
                                 </td>
                             </tr>
-
+                            <tr class="hiddencells">
+                            <th class="classic">{{ 'anonymous' | trans({}, 'ujm_exo') }}</th>
+                            <td class="classic">
+                                {% if exercise.anonymous is not empty %}
+                                    {{ exercise.anonymous|raw }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            </tr>
                             {#---not operational---#}
                             {#<tr class="hiddencells">
                             <th class="classic">{{ 'keep_same_question' | trans({}, 'ujm_exo') }}</th>
@@ -230,13 +251,13 @@
                     <button type="button" id="more" class="btn btn-primary" onclick="moreInformation();">
                         <i class="fa fa-plus"></i> {{ 'more_info' | trans({}, 'ujm_exo') }}
                     </button>
-                     <button type="button" id="less" class="btn btn-primary" onclick="lessInformation();">
+                    <button type="button" id="less" class="btn btn-primary" onclick="lessInformation();">
                         <i class="fa fa-minus"></i> {{ 'less_information' | trans({}, 'ujm_exo') }}
                     </button>
                 {% endif %}
             </div>
             <div class="text-center panel-footer">
-                {% if allowedToCompose and nbQuestion > 0 %}                   
+                {% if allowedToCompose and nbQuestion > 0 %}
                     {% if nbUserPaper == 0 %}
                         <a class="btn btn-primary" href="{{ path('ujm_exercise_play', { 'id': exercise.id }) }}#/{{exercise.id}}">
                             <i class="fa fa-check-square-o"></i> {{ 'compose' | trans({}, 'ujm_exo') }} [Angular]

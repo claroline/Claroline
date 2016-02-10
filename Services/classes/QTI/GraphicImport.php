@@ -42,8 +42,6 @@ class GraphicImport extends QtiImport
 
         $this->interactionGraph = new InteractionGraphic();
         $this->interactionGraph->setQuestion($this->question);
-        $this->interactionGraph->setHeight($ob->getAttribute('height'));
-        $this->interactionGraph->setWidth($ob->getAttribute('width'));
 
         $this->om->persist($this->interactionGraph);
         $this->om->flush();
@@ -102,6 +100,8 @@ class GraphicImport extends QtiImport
         $picture->setType($objectTag->getAttribute('type'));
         $picture->setUrl('./uploads/ujmexo/users_documents/'.$user->getUsername().'/images/'.$picName);
         $picture->setUser($user);
+        $picture->setHeight($objectTag->getAttribute('height'));
+        $picture->setWidth($objectTag->getAttribute('width'));
 
         $this->om->persist($picture);
         $this->om->flush();
