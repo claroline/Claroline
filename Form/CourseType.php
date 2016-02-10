@@ -12,39 +12,63 @@
 namespace Claroline\CursusBundle\Form;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CursusBundle\Manager\CursusManager;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Image;
+use Symfony\Component\Validator\Constraints\Range;
 
 class CourseType extends AbstractType
 {
+    private $cursusManager;
+    private $translator;
     private $user;
 
-    public function __construct(User $user)
+    public function __construct(
+        User $user,
+        CursusManager $cursusManager,
+        TranslatorInterface $translator
+    )
     {
+        $this->cursusManager = $cursusManager;
+        $this->translator = $translator;
         $this->user = $user;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $user = $this->user;
+        $validatorsRoles = $this->cursusManager->getValidatorsRoles();
 
         $builder->add(
             'title',
             'text',
-            array('required' => true)
+            array(
+                'required' => true,
+                'label' => 'title',
+                'translation_domain' => 'platform'
+            )
         );
         $builder->add(
             'code',
             'text',
-            array('required' => true)
+            array(
+                'required' => true,
+                'label' => 'code',
+                'translation_domain' => 'platform'
+            )
         );
         $builder->add(
             'description',
             'tinymce',
-            array('required' => false)
+            array(
+                'required' => false,
+                'label' => 'description',
+                'translation_domain' => 'platform'
+            )
         );
         $builder->add(
             'icon',
@@ -59,17 +83,26 @@ class CourseType extends AbstractType
         $builder->add(
             'publicRegistration',
             'checkbox',
-            array('required' => true)
+            array(
+                'required' => true,
+                'label' => 'public_registration'
+            )
         );
         $builder->add(
             'publicUnregistration',
             'checkbox',
-            array('required' => true)
+            array(
+                'required' => true,
+                'label' => 'public_unregistration'
+            )
         );
         $builder->add(
             'registrationValidation',
             'checkbox',
-            array('required' => true)
+            array(
+                'required' => true,
+                'label' => 'registration_validation'
+            )
         );
         $builder->add(
             'workspaceModel',
@@ -85,7 +118,8 @@ class CourseType extends AbstractType
                         ->orderBy('wm.name', 'ASC');
                 },
                 'property' => 'name',
-                'required' => false
+                'required' => false,
+                'label' => 'workspace_model'
             )
         );
         $builder->add(
@@ -93,7 +127,8 @@ class CourseType extends AbstractType
             'text',
             array(
                 'required' => false,
-                'attr' => array('class' => 'role-name-txt')
+                'attr' => array('class' => 'role-name-txt'),
+                'label' => 'tutor_role_name'
             )
         );
         $builder->add(
@@ -101,7 +136,41 @@ class CourseType extends AbstractType
             'text',
             array(
                 'required' => false,
-                'attr' => array('class' => 'role-name-txt')
+                'attr' => array('class' => 'role-name-txt'),
+                'label' => 'learner_role_name'
+            )
+        );
+        $builder->add(
+            'maxUsers',
+            'integer',
+            array(
+                'required' => false,
+                'constraints' => array(
+                    new Range(array('min' => 0))
+                ),
+                'attr' => array('min' => 0),
+                'label' => 'max_users'
+            )
+        );
+        $builder->add(
+            'userValidation',
+            'checkbox',
+            array(
+                'required' => true,
+                'label' => 'user_validation'
+            )
+        );
+        $builder->add(
+            'validators',
+            'userpicker',
+            array(
+                'required' => false,
+                'picker_name' => 'validators-picker',
+                'picker_title' => $this->translator->trans('validators_selection', array(), 'cursus'),
+                'multiple' => true,
+                'attach_name' => false,
+                'forced_roles' => $validatorsRoles,
+                'label' => $this->translator->trans('validators', array(), 'cursus')
             )
         );
     }

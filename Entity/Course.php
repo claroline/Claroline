@@ -300,6 +300,10 @@ class Course
         return $this->validators->toArray();
     }
 
+    /**
+     * Adds a validator to the course
+     * @param \Claroline\CoreBundle\Entity\User $validator
+     */
     public function addValidator(User $validator)
     {
         if (!$this->validators->contains($validator)) {
@@ -309,6 +313,10 @@ class Course
         return $this;
     }
 
+    /**
+     * Removes a validator from the course
+     * @param \Claroline\CoreBundle\Entity\User $validator
+     */
     public function removeValidator(User $validator)
     {
         if ($this->validators->contains($validator)) {

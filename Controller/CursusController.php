@@ -673,7 +673,10 @@ class CursusController extends Controller
     public function cursusCourseCreateFormAction(User $authenticatedUser, Cursus $cursus)
     {
         $this->checkToolAccess();
-        $form = $this->formFactory->create(new CourseType($authenticatedUser), new Course());
+        $form = $this->formFactory->create(
+            new CourseType($authenticatedUser, $this->cursusManager, $this->translator),
+            new Course()
+        );
 
         return array(
             'form' => $form->createView(),
@@ -694,7 +697,10 @@ class CursusController extends Controller
     {
         $this->checkToolAccess();
         $course = new Course();
-        $form = $this->formFactory->create(new CourseType($authenticatedUser), $course);
+        $form = $this->formFactory->create(
+            new CourseType($authenticatedUser, $this->cursusManager, $this->translator),
+            $course
+        );
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {

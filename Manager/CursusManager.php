@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Manager\ContentManager;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
@@ -66,6 +67,7 @@ class CursusManager
     private $serializer;
     private $templateDir;
     private $tokenStorage;
+    private $toolManager;
     private $translator;
     private $ut;
     private $userManager;
@@ -97,6 +99,7 @@ class CursusManager
      *     "serializer"            = @DI\Inject("jms_serializer"),
      *     "templateDir"           = @DI\Inject("%claroline.param.templates_directory%"),
      *     "tokenStorage"          = @DI\Inject("security.token_storage"),
+     *     "toolManager"           = @DI\Inject("claroline.manager.tool_manager"),
      *     "translator"            = @DI\Inject("translator"),
      *     "userManager"           = @DI\Inject("claroline.manager.user_manager"),
      *     "ut"                    = @DI\Inject("claroline.utilities.misc"),
@@ -115,6 +118,7 @@ class CursusManager
         Serializer $serializer,
         $templateDir,
         TokenStorageInterface $tokenStorage,
+        ToolManager $toolManager,
         TranslatorInterface $translator,
         UserManager $userManager,
         ClaroUtilities $ut,
@@ -134,6 +138,7 @@ class CursusManager
         $this->serializer = $serializer;
         $this->templateDir = $templateDir;
         $this->tokenStorage = $tokenStorage;
+        $this->toolManager = $toolManager;
         $this->translator = $translator;
         $this->userManager = $userManager;
         $this->ut = $ut;
@@ -2210,6 +2215,21 @@ class CursusManager
         }
         $this->registerUsersToMultipleCursus($multipleCursus, $users);
         $this->registerUsersToSessions($sessions, $users);
+    }
+
+    public function getValidatorsRoles()
+    {
+        $roles = array();
+        $registrationTool = $this->toolManager
+            ->getAdminToolByName('claroline_cursus_tool_registration');
+
+        if (!is_null($registrationTool)) {
+            $roles = $registrationTool->getRoles()->toArray();
+        }
+        $adminRole = $this->roleManager->getRoleByName('ROLE_ADMIN');
+        $roles[] = $adminRole;
+
+        return $roles;
     }
 
 

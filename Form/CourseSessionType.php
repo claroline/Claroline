@@ -11,15 +11,29 @@
 
 namespace Claroline\CursusBundle\Form;
 
+use Claroline\CursusBundle\Manager\CursusManager;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\Range;
 
 class CourseSessionType extends AbstractType
 {
+    private $cursusManager;
+    private $translator;
+
+    public function __construct(CursusManager $cursusManager, TranslatorInterface $translator)
+    {
+        $this->cursusManager = $cursusManager;
+        $this->translator = $translator;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $validatorsRoles = $this->cursusManager->getValidatorsRoles();
+
         $builder->add(
             'name',
             'text',
@@ -98,6 +112,39 @@ class CourseSessionType extends AbstractType
                 'property' => 'title',
                 'multiple' => true,
                 'expanded' => true
+            )
+        );
+        $builder->add(
+            'maxUsers',
+            'integer',
+            array(
+                'required' => false,
+                'constraints' => array(
+                    new Range(array('min' => 0))
+                ),
+                'attr' => array('min' => 0),
+                'label' => 'max_users'
+            )
+        );
+        $builder->add(
+            'userValidation',
+            'checkbox',
+            array(
+                'required' => true,
+                'label' => 'user_validation'
+            )
+        );
+        $builder->add(
+            'validators',
+            'userpicker',
+            array(
+                'required' => false,
+                'picker_name' => 'validators-picker',
+                'picker_title' => $this->translator->trans('validators_selection', array(), 'cursus'),
+                'multiple' => true,
+                'attach_name' => false,
+                'forced_roles' => $validatorsRoles,
+                'label' => $this->translator->trans('validators', array(), 'cursus')
             )
         );
     }
