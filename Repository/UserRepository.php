@@ -1585,4 +1585,54 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return $query->getOneOrNullResult();
     }
+
+    public function searchPartialList(array $searches = array(), $page = null, $limit = null, $count = false)
+    {
+        $baseFieldsName = User::getUserSearchableFields();
+        $facetFields = $this->_em->getRepository('ClarolineCoreBundle:Facet\FieldFacet')->findAll();
+        $facetFieldsName = array();
+
+        foreach ($facetFields as $facetField) {
+            $facetFieldsName[] = $facetField->getName();
+        }
+
+        $qb = $this->_em->createQueryBuilder();
+        $count ? $qb->select('count(u)'): $qb->select('u');
+        $qb->from('Claroline\CoreBundle\Entity\User', 'u')
+            ->where('u.isEnabled = true');
+
+        foreach ($searches as $key => $search) {
+            foreach ($search as $id => $el) {
+                if (in_array($key, $baseFieldsName)) {
+                    $qb->andWhere("UPPER (u.{$key}) LIKE :{$key}{$id}");
+                    $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
+                } 
+
+                if (in_array($key, $facetFieldsName)) {
+                    $qb->join('u.fieldsFacetValue', "ffv{$id}");
+                    $qb->join("ffv{$id}.fieldFacet", "f{$id}");
+                    $qb->andWhere("UPPER (ffv{$id}.stringValue) LIKE :{$key}{$id}");
+                    $qb->orWhere("ffv{$id}.floatValue = :{$key}{$id}");
+                    $qb->andWhere("f{$id}.name LIKE :facet{$id}");
+                    $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
+                    $qb->setParameter("facet{$id}", $key);
+                }
+
+                if ($key === 'group') {
+                    $qb->join('u.groups', "g{$id}");
+                    $qb->andWhere("UPPER (g{$id}.name) LIKE :{$key}{$id}");
+                    $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
+                }
+            }
+        }
+
+        $query = $qb->getQuery();
+
+        if ($page && $limit && !$count) {
+            $query->setMaxResults($limit);
+            $query->setFirstResult($page * $limit);
+        }
+
+        return $count ? $query->getSingleScalarResult(): $query->getResult();
+    }
 }

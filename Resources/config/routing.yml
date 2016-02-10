@@ -228,11 +228,6 @@ claro_admin_users:
     resource: "@ClarolineCoreBundle/Controller/Administration/UsersController.php"
     type: annotation
 
-claro_admin_groups:
-    prefix: admin/groups
-    resource: "@ClarolineCoreBundle/Controller/Administration/GroupsController.php"
-    type: annotation
-
 claro_admin_logs:
     prefix: admin/logs
     resource: "@ClarolineCoreBundle/Controller/Administration/LogsController.php"
@@ -263,6 +258,11 @@ claro_admin_oauth:
     prefix: admin/oauth
     type: annotation
 
+claro_admin_organization:
+    resource: "@ClarolineCoreBundle/Controller/Administration/OrganizationController.php"
+    prefix: admin/organization
+    type: annotation
+
 claro_admin_i18n:
     resource: "@ClarolineCoreBundle/Controller/Administration/InternationalizationController.php"
     prefix: admin/i18n
@@ -274,29 +274,109 @@ claro_api:
     type: annotation
 
 claro_user_api:
-    resource: "@ClarolineCoreBundle/Controller/API/Admin/UserController.php"
+    resource: "@ClarolineCoreBundle/Controller/API/User/UserController.php"
     type: rest
     prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
 
 claro_workspace_api:
     resource: "@ClarolineCoreBundle/Controller/API/Admin/WorkspaceController.php"
     type: rest
     prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
 
 claro_group_api:
-    resource: "@ClarolineCoreBundle/Controller/API/Admin/GroupController.php"
+    resource: "@ClarolineCoreBundle/Controller/API/User/GroupController.php"
     type: rest
     prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_organization_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Organization/OrganizationController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_location_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Organization/LocationController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
 
 claro_parameters_api:
     resource: "@ClarolineCoreBundle/Controller/API/Admin/ParametersController.php"
     type: rest
     prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
 
 claro_packages_api:
     resource: "@ClarolineCoreBundle/Controller/API/Admin/PackageController.php"
     type: rest
     prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_year_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Calendar/YearController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_leave_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Calendar/LeaveController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_period_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Calendar/PeriodController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_schedule_template_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Calendar/ScheduleTemplateController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_time_slot_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Calendar/TimeSlotController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_event_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Calendar/EventController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
 
 claro_resources_api:
     resource: "@ClarolineCoreBundle/Controller/API/Resource/ResourceController.php"

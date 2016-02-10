@@ -193,7 +193,8 @@ class ProfileController extends Controller
     /**
      * @EXT\Route(
      *     "/profile/edit/{user}",
-     *     name="claro_user_profile_edit"
+     *     name="claro_user_profile_edit",
+     *     options={"expose"=true}
      * )
      * @SEC\Secure(roles="ROLE_USER")
      *
@@ -206,7 +207,6 @@ class ProfileController extends Controller
         $isGrantedUserAdmin = $this->get('security.authorization_checker')->isGranted(
             'OPEN', $this->toolManager->getAdminToolByName('user_management')
         );
-        $editYourself = false;
 
         if (null !== $user && !$isAdmin && !$isGrantedUserAdmin) {
             throw new AccessDeniedException();
@@ -214,8 +214,9 @@ class ProfileController extends Controller
 
         if (null === $user) {
             $user = $loggedUser;
-            $editYourself = true;
         }
+
+        $editYourself = $user->getId() === $loggedUser->getId();
         $userRole = $this->roleManager->getUserRoleByUser($user);
         $roles = $this->roleManager->getPlatformRoles($user);
         $accesses = $this->profilePropertyManager->getAccessesForCurrentUser();
@@ -265,7 +266,7 @@ class ProfileController extends Controller
             $successMessage = $translator->trans('edit_profile_success', array(), 'platform');
             $errorMessage   = $translator->trans('edit_profile_error', array(), 'platform');
             $errorRight = $translator->trans('edit_profile_error_right', array(), 'platform');
-            $redirectUrl = $this->generateUrl('claro_admin_user_list');
+            $redirectUrl = $this->generateUrl('claro_admin_users_index');
 
             if ($editYourself) {
                 $successMessage = $translator->trans('edit_your_profile_success', array(), 'platform');
@@ -379,7 +380,7 @@ class ProfileController extends Controller
             if ($selfEdit) {
                 return $this->redirect($this->generateUrl('claro_profile_view'));
             } else {
-                return $this->redirect($this->generateUrl('claro_admin_user_list'));
+                return $this->redirect($this->generateUrl('claro_admin_users_index'));
             }
         }
 

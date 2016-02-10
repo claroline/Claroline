@@ -12,7 +12,7 @@
             },
             {
                 'name': 'users_management'|trans({}, 'platform'),
-                'href': path('claro_admin_users_management')
+                'href': path('claro_admin_users_index')
             },
             {
                 'name':'import'|trans({}, 'platform'),
@@ -23,11 +23,10 @@
 {% endblock %}
 
 {% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'users_import'|trans({}, 'platform') }}</h3>
-    </div>
     <form role="form" class="form-horizontal" action="{{ path('claro_admin_import_users') }}" method="post" {{ form_enctype(form) }} >
         <div class="panel-body">
+            {% include 'ClarolineCoreBundle:Administration:Users\\actionbar.html.twig' %}
+            <h3>{{ 'users_import'|trans({}, 'platform') }}</h3>
             <div>{{ macros.flashBox() }}</div>
             {% if error is defined %}
                 {% if error %}
@@ -78,7 +77,7 @@
         </div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-            <a href="{{ path('claro_admin_user_list') }}" class="btn btn-default" role="button">
+            <a href="{{ path('claro_admin_users_index') }}" class="btn btn-default" role="button">
                 {{ 'cancel'|trans({}, 'platform') }}
             </a>
         </div>

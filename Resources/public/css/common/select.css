@@ -1,0 +1,8 @@
+.upper-index {
+    z-index: 999;
+}
+
+/* wololo */
+ul.ui-select-choices.ui-select-choices-content.ui-select-dropdown.dropdown-menu.ng-scope {
+    z-index: 11;
+}

@@ -19,7 +19,11 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Claroline\CoreBundle\Persitence\ObjectManager;
 use Claroline\CoreBundle\Manager\BundleManager;
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
 
+/**
+ * @NamePrefix("api_")
+ */
 class PackageController extends FOSRestController
 {
     private $bundleManager;

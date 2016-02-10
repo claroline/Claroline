@@ -70,8 +70,10 @@
     'bundles/frontend/jquery-ui/ui/widget.js'
     'bundles/frontend/jquery-ui/ui/mouse.js'
     'bundles/frontend/jquery-ui/ui/sortable.js'
-    %}<script type="text/javascript" src="{{ asset_url }}"></script>
+%}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
+
 
 {% javascripts debug=false
     'bundles/bazingajstranslation/js/translator.min.js'
@@ -83,13 +85,13 @@
 
 <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
 <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/bootstrap-datepicker/dist/js/bootstrap-datepicker.js') }}"></script>
 {% if 'en' != app.request.locale %}
-    <script type="text/javascript" src="{{ asset('bundles/frontend/bootstrap-datepicker/dist/locales/bootstrap-datepicker.' ~ app.request.locale ~ '.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/bootstrap-datepicker/js/locales/bootstrap-datepicker.' ~ app.request.locale ~ '.js') }}"></script>
 {% endif %}
 
-<script type="text/javascript" src="{{ asset('bundles/frontend/underscore/underscore-min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/backbone/backbone-min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/underscore/underscore.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/backbone/backbone.js') }}"></script>
 
 {% javascripts debug=false filter='jsmin' output='vendor/claroline/js/libraries.js'
     'bundles/clarolinecore/js/common.js'
@@ -122,6 +124,24 @@
     'bundles/clarolinecore/js/user/user_picker.js'
 %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
+{# Angular JS #}
+{% javascripts debug=false filter='jsmin' output='vendor/angular.js'
+    'bundles/frontend/angular/angular.min.js'
+    'bundles/frontend/angular-route/angular-route.min.js'
+%}
+{% endjavascripts %}
+
+{# Angular UI #}
+{% javascripts debug=false filter='jsmin' output='vendor/angular-ui.js'
+    'bundles/frontend/angular-ui-tree/dist/angular-ui-tree.js'
+    'bundles/frontend/angular-ui-select/dist/select.min.js'
+    'bundles/frontend/angular-data-table/release/dataTable.helpers.min.js'
+    'bundles/frontend/angular-breadcrumb/dist/angular-breadcrumb.min.js'
+    'bundles/frontend/angular-ui-router/release/angular-ui-router.min.js'
+    'bundles/frontend/angular-sanitize/angular-sanitize.min.js'
+%}
 {% endjavascripts %}
 
 <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js') }}"></script>

@@ -12,7 +12,7 @@
             },
             {
                 'name': 'users_management'|trans({}, 'platform'),
-                'href': path('claro_admin_users_management')
+                'href': path('claro_admin_users_index')
             },
             {
                 'name':'import_profile_pics'|trans({}, 'platform'),
@@ -23,11 +23,10 @@
 {% endblock %}
 
 {% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'import_profile_pics'|trans({}, 'platform') }}</h3>
-    </div>
     <form role="form" class="form-horizontal" action="{{ path('import_profile_pics') }}" method="post" {{ form_enctype(form) }} >
         <div class="panel-body">
+            {% include 'ClarolineCoreBundle:Administration:Users\\actionbar.html.twig' %}
+            <h3>{{ 'import_profile_pics'|trans({}, 'platform') }}</h3>
             <div class="well">
                 {{ 'import_profile_pics_explanation'|trans({}, 'platform')}}
             </div>
@@ -36,7 +35,7 @@
         </div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-            <a href="{{ path('claro_admin_user_list') }}" class="btn btn-default" role="button">
+            <a href="{{ path('claro_admin_users_index') }}" class="btn btn-default" role="button">
                 {{ 'cancel'|trans({}, 'platform') }}
             </a>
         </div>

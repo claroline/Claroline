@@ -17,7 +17,11 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\View;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
 
+/**
+ * @NamePrefix("api_")
+ */
 class ParametersController extends FOSRestController
 {
     private $request;

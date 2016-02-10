@@ -298,7 +298,6 @@
                 url: route,
                 type: 'DELETE',
                 success: function() {
-                    console.log(target.parents('td').first().find('span').length);
                     if (target.parents('td').first().find('span').length === 1) {
                         target.parents('tr').first().remove();
                     } else {

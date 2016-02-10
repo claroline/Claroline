@@ -22,6 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Validator\Constraints as ClaroAssert;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -49,7 +50,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api"})
+     * @Groups({"api", "admin"})
      */
     protected $id;
 
@@ -58,7 +59,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      *
      * @ORM\Column(name="first_name", length=50)
      * @Assert\NotBlank()
-     * @Groups({"api"})
+     * @Groups({"api", "admin"})
      * @SerializedName("firstName")
      */
     protected $firstName;
@@ -68,7 +69,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      *
      * @ORM\Column(name="last_name", length=50)
      * @Assert\NotBlank()
-     * @Groups({"api"})
+     * @Groups({"api", "admin"})
      * @SerializedName("lastName")
      */
     protected $lastName;
@@ -80,7 +81,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @Assert\NotBlank()
      * @Assert\Length(min="3")
      * @ClaroAssert\Username()
-     * @Groups({"api"})
+     * @Groups({"api", "admin"})
      * @SerializedName("username")
      */
     protected $username;
@@ -96,7 +97,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @var string
      *
      * @ORM\Column(nullable=true)
-     * @Groups({"api"})
+     * @Groups({"api", "admin"})
      * @SerializedName("locale")
      */
     protected $locale;
@@ -120,7 +121,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @var string
      *
      * @ORM\Column(nullable=true)
-     * @Groups({"api"})
+     * @Groups({"api", "admin"})
      * @SerializedName("phone")
      */
     protected $phone;
@@ -131,14 +132,14 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @ORM\Column(unique=true)
      * @Assert\NotBlank()
      * @Assert\Email(checkMX = false)
-     * @Groups({"api"})
+     * @Groups({"api", "admin"})
      * @SerializedName("mail")
      */
     protected $mail;
 
     /**
      * @ORM\Column()
-     * @Groups({"api"})
+     * @Groups({"api", "admin"})
      * @SerializedName("guid")
      */
     protected $guid;
@@ -147,7 +148,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @var string
      *
      * @ORM\Column(name="administrative_code", nullable=true)
-     * @Groups({"api"})
+     * @Groups({"api", "admin"})
      * @SerializedName("administrativeCode")
      */
     protected $administrativeCode;
@@ -160,6 +161,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      *      inversedBy="users"
      * )
      * @ORM\JoinTable(name="claro_user_group")
+     * @Groups({"admin"})
      */
     protected $groups;
 
@@ -173,7 +175,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      *     cascade={"merge"}
      * )
      * @ORM\JoinTable(name="claro_user_role")
-     * @Groups({"api"})
+     * @Groups({"api", "admin"})
      */
     protected $roles;
 
@@ -202,7 +204,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      *
      * @ORM\Column(name="creation_date", type="datetime")
      * @Gedmo\Timestampable(on="create")
-     * @Groups({"api"})
+     * @Groups({"api", "admin"})
      * @SerializedName("created")
      */
     protected $created;
@@ -211,7 +213,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @var \DateTime
      *
      * @ORM\Column(name="initialization_date", type="datetime", nullable=true)
-     * @Groups({"api"})
+     * @Groups({"api", "admin"})
      * @SerializedName("initDate")
      */
     protected $initDate;
@@ -250,7 +252,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"api"})
+     * @Groups({"api", "admin"})
      * @SerializedName("description")
      */
     protected $description;
@@ -259,7 +261,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @var boolean
      *
      * @ORM\Column(type="boolean", nullable=true)
-     * @Groups({"api"})
+     * @Groups({"api", "admin"})
      * @SerializedName("hasAcceptedTerms")
      */
     protected $hasAcceptedTerms;
@@ -277,7 +279,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @var boolean
      *
      * @ORM\Column(name="is_mail_notified", type="boolean")
-     * @Groups({"api"})
+     * @Groups({"api", "admin"})
      * @SerializedName("isMailNotified")
      */
     protected $isMailNotified = true;
@@ -286,7 +288,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @var boolean
      *
      * @ORM\Column(name="is_mail_validated", type="boolean")
-     * @Groups({"api"})
+     * @Groups({"api", "admin"})
      * @SerializedName("isMailValidated")
      */
     protected $isMailValidated = false;
@@ -295,7 +297,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @var boolean
      *
      * @ORM\Column(name="hide_mail_warning", type="boolean")
-     * @Groups({"api"})
+     * @Groups({"api", "admin"})
      * @SerializedName("isMailValidated")
      */
     protected $hideMailWarning = false;
@@ -329,7 +331,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @var \DateTime
      *
      * @ORM\Column(name="expiration_date", type="datetime", nullable=true)
-     * @Groups({"api"})
+     * @Groups({"api", "admin"})
      * @SerializedName("expirationDate")
      */
     protected $expirationDate;
@@ -340,6 +342,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      *     mappedBy="user",
      *     cascade={"persist"}
      * )
+     * @Groups({"admin"})
      */
     protected $fieldsFacetValue;
 
@@ -359,7 +362,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @var string
      *
      * @ORM\Column(nullable=true)
-     * @Groups({"api"})
+     * @Groups({"api", "admin"})
      * @SerializedName("authentication")
      */
     protected $authentication;
@@ -378,6 +381,24 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     protected $emailValidationHash;
 
+    /**
+     * @var Organization[]|ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization"
+     * )
+     */
+    protected $organizations;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Calendar\Event",
+     *     mappedBy="user",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $events;
+
     public function __construct()
     {
         parent::__construct();
@@ -388,6 +409,8 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $this->orderedTools      = new ArrayCollection();
         $this->fieldsFacetValue  = new ArrayCollection();
         $this->models            = new ArrayCollection();
+        $this->organizations     = new ArrayCollection();
+        $this->events            = new ArrayCollection();
     }
 
     /**
@@ -1117,5 +1140,31 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function getHideMailWarning()
     {
         return $this->hideMailWarning;
+    }
+
+    public function getOrganizations()
+    {
+        return $this->organizations;
+    }
+
+    public function setOrganizations(ArrayCollection $organizations)
+    {
+        $this->organizations = $organizations;
+    }
+
+    public static function getUserSearchableFields()
+    {
+        return array(
+            'firstName',
+            'lastName',
+            'mail',
+            'administrativeCode',
+            'username'
+        );
+    }
+    
+    public static function getSearchableFields()
+    {
+        return self::getUserSearchableFields();
     }
 }

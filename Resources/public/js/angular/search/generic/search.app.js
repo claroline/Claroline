@@ -29,65 +29,63 @@ genericSearch.config(function ($httpProvider) {
 	});
 });
 
-genericSearch.controller('GenericSearchCtrl', function(
-	$scope,
-	$log,
-	$http,
-	clarolineSearch
-) {
-	$scope.fields 	= [];
-	$scope.$log   	= $log;
-	$scope.searches = [];
-	$scope.selected = [];
-	$scope.options  = [];
+genericSearch.controller(
+	'GenericSearchCtrl',
+	['$log', '$http', 'clarolineSearch', 'searchOptionsService',
+	function($log, $http, clarolineSearch, searchOptionsService)
+{
+	this.$log     = $log;
+	this.selected = [];
+	this.options  = [];
 
-	//init field list
-	$http.get(Routing.generate(clarolineSearch.getFieldRoute())).then(function(d) {
-		$scope.fields = d.data;
-		$scope.options = generateOptions();
-	})
+	this.refreshOptions = function($select) {
+		//I should not be doing this here. Probably in a directive would be better.
+		this.options = searchOptionsService.generateOptions(this.fields);
 
-	$scope.refreshOption = function($select) {		
-		for (var i = 0; i < $scope.options.length; i++) {
-			$scope.options[i].name = getOptionValue($scope.options[i].field, $select.search);
-			$scope.options[i].value = $select.search;
+		for (var i = 0; i < this.options.length; i++) {
+			this.options[i].name = searchOptionsService.getOptionValue(this.options[i].field, $select.search);
+			this.options[i].value = $select.search;
 		}
-	}
+	}.bind(this);
 
-	$scope.onSelect = function($item, $model, $select) {
+	this.onSelect = function($item, $model, $select) {
 		//angular and its plugins does not make any sense to me.
 		$select.selected.pop();
 		var cloned = angular.copy($item);
 		$select.selected.push(cloned);
-		$scope.options.push(getOptionValue($item.field));
-		$scope.selected = $select.selected;
-	}
+		this.options.push(searchOptionsService.getOptionValue($item.field));
+		this.selected = angular.copy($select.selected);
+	}.bind(this);
 
-	$scope.onRemove = function($item, $model, $select) {
-		$scope.selected = $select.selected;
-	}
+	this.onRemove = function($item, $model, $select) {
+		this.selected = $select.selected;
+	}.bind(this);
 
-	$scope.search = function(searches) {
-		console.log('go');
-		$scope.onSearch(searches);
-	}
+	this.search = function() {
+		//what the actual fuck ?
+		//#brainmalfunction
+		this.onSearch()(this.selected);
+	}.bind(this);
+}]);
 
-	var getOptionValue = function(field, search) {
+genericSearch.service('searchOptionsService', function() {
+	this.getOptionValue = function(field, search) {
 		if (!field) return;
 		search = !search ? '': search.trim();
-		
-		return translator.trans('filter_by', {}, 'platform') + ' ' + translator.trans(field, {}, 'platform').toLowerCase() + ': ' + search + ''; 
+
+		return translator.trans('filter_by', {}, 'platform') + ' ' + translator.trans(field, {}, 'platform').toLowerCase() + ': ' + search + '';
 	}
 
-	var generateOptions = function() {
+	this.generateOptions = function(fields) {
+		if (fields == undefined) return [];
 		var options = [];
 
-		for (var i = 0; i < $scope.fields.length; i++) {
+		for (var i = 0; i < fields.length; i++) {
 			options.push(
 				{
 					id: i,
-					name: getOptionValue($scope.fields[i]),
-					field: $scope.fields[i],
+					name: this.getOptionValue(fields[i]),
+					field: fields[i],
 					value: ''
 				}
 			);
@@ -97,27 +95,9 @@ genericSearch.controller('GenericSearchCtrl', function(
 	}
 });
 
-genericSearch.directive('clarolinesearch', [
-	function clarolinesearch() {
-		return {
-			restrict: 'E',
-			templateUrl: AngularApp.webDir + 'bundles/clarolinecore/js/angular/search/generic/views/search.html',
-			replace: false,
-			controller: 'GenericSearchCtrl',
-		    bindToController: {
-		      onSearch: '&'
-		    },
-	    	controllerAs: 'cs',
-		}
-	}
-]);
-
 genericSearch.provider("clarolineSearch", function() {
-	var baseRoute = searchRoute = fieldRoute = '';
-	var enablePager = true;
-	var baseParam = {};
-	var searchParam = {};
-	var that = this;
+	this.enablePager = true;
+	this.searchParam = {};
 
 	var mergeObject = function(obj1, obj2) {
 
@@ -128,56 +108,46 @@ genericSearch.provider("clarolineSearch", function() {
 		return obj1;
 	}
 
-	this.setBaseRoute = function(route, baseParam) {
-		baseRoute = route;
-		that.baseParam = baseParam || {};
-		console.log(baseParam);
-	};
-	
-	this.setSearchRoute = function(route, searchParam) {
-		searchRoute = route;
-		that.searchParam = searchParam || {};
-	};
-
-	this.setFieldRoute = function(route) {
-		fieldRoute = route;
-	};
-
 	this.disablePager = function() {
-		enablePager = false;
-	}
+		this.enablePager = false;
+	}.bind(this);
+
+	var vm = this;
 
 	this.$get = function($http) {
 		return {
-			getBaseRoute: function() {
-				return baseRoute;
-			},
-			getSearchRoute: function() {
-				return searchRoute;
-			},
-			getFieldRoute: function() {
-				return fieldRoute;
-			},
-			find: function(searches, page, limit) {
-				var params = enablePager ? {'page': page, 'limit': limit}: {};
+			find: function(route, searches, page, limit) {
+				var params = vm.enablePager ? {'page': page, 'limit': limit}: {};
+				var qs = '?';
 
-				if (searches.length > 0) {
-					var qs = '?';
-
-					for (var i = 0; i < searches.length; i++) {
-						qs += searches[i].field +'[]=' + searches[i].value + '&';
-					} 
-
-					params = mergeObject(params, that.searchParam);
-					var route = Routing.generate(searchRoute, params) + qs;
-
-					return $http.get(route);
-				} else {
-					params = mergeObject(params, that.baseParam);
-
-					return $http.get(Routing.generate(baseRoute, params));
+				for (var i = 0; i < searches.length; i++) {
+					qs += searches[i].field +'[]=' + searches[i].value + '&';
 				}
+
+				params = mergeObject(params, vm.searchParam);
+				var route = Routing.generate(route, params) + qs;
+
+				return $http.get(route);
 			}
 		}
-	}
+	};
 });
+
+genericSearch.directive('clarolinesearch', [
+	function clarolinesearch() {
+		var bindings = {
+			onSearch: '&',
+			fields: '='
+		};
+
+		return {
+			scope: {},
+			restrict: 'E',
+			templateUrl: AngularApp.webDir + 'bundles/clarolinecore/js/angular/search/generic/views/search.html',
+			replace: false,
+			controller: 'GenericSearchCtrl',
+			bindToController: bindings,
+			controllerAs: 'cs'
+		}
+	}
+]);

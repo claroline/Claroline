@@ -1,6 +1,6 @@
 # app/config/config.yml
 fos_rest:
-    disable_csrf_role: true
+    disable_csrf_role: ROLE_API
     param_fetcher_listener: true
     body_listener: true
     format_listener: true
@@ -9,6 +9,7 @@ fos_rest:
         formats:
             json: true
             xml: true
+            html: true
     format_listener:
         rules:
             priorities: ['json']

@@ -5,23 +5,41 @@
         {% set timedPickerName = picker_name ~ '-' ~ 'now'|date('U') %}
 
         {% if multiple %}
-            <input type="hidden"
-                   name="{{ full_name }}[]"
+            <input type="text"
+                   name="{{ full_name }}"
                    id="user-picker-input-{{ timedPickerName }}"
+                   {# angularjs doesn't like hidden fields, so we use a text one with display: none; AND IT SUCKS #}
+                   style="display: none;"
+
+                   {% if model is defined %}
+                       ng-model="{{ model }}.{{ name }}"
+                   {% endif %}
 
                    {% if value is not empty %}
-                   
                        {% if value[0] is iterable %}
                            value="{% for v in value %}{% if v['id'] is defined %}{{ v['id'] }}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}"
+                           {% if model is defined %}
+                               ng-init='{{ model }}.{{ name }}="{% for v in value %}{% if v['id'] is defined %}{{ v['id'] }}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}"'
+                           {% endif %}
                        {% else %}
                            value="{{ value[0] }}"
+                           {% if model is defined %}
+                               ng-init='{{ value[0] }}'
+                           {% endif %}
                        {% endif %}
                    {% endif %}
             >
         {% else %}
-            <input type="hidden"
+            <input type="text"
                    name="{{ full_name }}"
                    id="user-picker-input-{{ timedPickerName }}"
+                   {# angularjs doesn't like hidden fields, so we use a text one with display: none; AND IT SUCKS #}
+                   style="display: none;"
+
+                   {% if model is defined %}
+                       ng-model="{{ model }}.{{ name }}"
+                       ng-init='{{ model }}.{{ name }}="{{ value|ng_escape }}"'
+                   {% endif %}
 
                    {% if (value is not empty) and (value is iterable) and (value['id'] is defined) %}
                        value="{{ value['id'] }}"

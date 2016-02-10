@@ -1,13 +1,37 @@
-{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% extends editYourself == true ? "ClarolineCoreBundle:Desktop:layout.html.twig": "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% if not editYourself %}
+    {% block breadcrumb %}
+        {{
+        macros.breadcrumbs([
+        {
+            'icon': 'fa fa-cog',
+            'name': 'administration'|trans({}, 'platform'),
+            'href': path('claro_admin_index')
+        },
+        {
+            'name': 'users_management'|trans({}, 'platform'),
+            'href': path('claro_admin_users_index')
+        },
+        {
+            'name':'profile_edition'|trans({}, 'platform'),
+            'href':''
+        }
+        ])
+        }}
+    {% endblock %}
+{% endif %}
 
 {% block title %}{{ 'profil_edition'|trans({}, 'platform') }}{% endblock %}
 
 {% block content %}
     <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">{{ 'profil_edition'|trans({}, 'platform') }}</h3>
-        </div>
-        {% if not user.isMailValidated() and is_mailer_available() %}
+        {% if editYourself %}
+            <div class="panel-heading">
+                <h3 class="panel-title">{{ 'profil_edition'|trans({}, 'platform') }}</h3>
+            </div>
+        {% endif %}
+        {% if not user.isMailValidated() and is_mailer_available() and editYourself %}
             <div class="alert alert-warning">
                 {{ 'email_not_activated_part_1'|trans({'%email%': app.user.mail}, 'platform') }}
                 <a href="{{ path('claro_security_validate_email_send', {'hash': app.user.emailValidationHash}) }}" class="confirm-email"> {{ 'email_not_activated_part_2'|trans({}, 'platform') }}</a>
@@ -15,9 +39,13 @@
             </div>
         {% endif %}
         {% set actionForm = editYourself ? path('claro_user_profile_edit') : path('claro_user_profile_edit', {'user': user.getId()}) %}
-        {% set cancelUrl  = editYourself ? path('claro_profile_view') : path('claro_admin_user_list') %}
+        {% set cancelUrl  = editYourself ? path('claro_profile_view') : path('claro_admin_users_index') %}
         <form role="form" class="form-horizontal" action="{{ actionForm }}" method="post" {{ form_enctype(form) }} id="profile_form">
             <div class="panel-body">
+                {% if not editYourself %}
+                    {% include 'ClarolineCoreBundle:Administration:Users\\actionbar.html.twig' %}
+                    <h3>{{ 'user_edit'|trans({}, 'platform') }}</h3
+                {% endif %}
                 {% for role in unavailableRoles %}
                     <div class="alert alert-warning"> {{ 'role_limit_reached'|trans({'%translationKey%': role.getTranslationKey()|trans({}, 'platform')}, 'platform') }}</div>
                 {% endfor %}

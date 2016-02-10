@@ -220,10 +220,20 @@ class Workspace
      */
     protected $options;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Calendar\Event",
+     *     mappedBy="workspace",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $events;
+
     public function __construct()
     {
-        $this->roles = new ArrayCollection();
+        $this->roles        = new ArrayCollection();
         $this->orderedTools = new ArrayCollection();
+        $this->events       = new ArrayCollection();
     }
 
     public function getId()

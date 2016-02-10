@@ -261,7 +261,8 @@ class DesktopController extends Controller
     /**
      * @EXT\Route(
      *     "/open",
-     *     name="claro_desktop_open"
+     *     name="claro_desktop_open",
+     *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
