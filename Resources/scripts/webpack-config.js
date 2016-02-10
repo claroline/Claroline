@@ -30,6 +30,20 @@ function configure(frontendConfig, rootDir) {
       new Commons({ name: 'commons', minChunks: 10 }),
       ...frontendConfig.webpack.commons.map(common => new Commons(common))
     ],
+    module: {
+      loaders: [
+        {
+          test: /\.js$/,
+          exclude: /(node_modules|packages)/,
+          loader: 'babel',
+          query: {
+            cacheDirectory: true,
+            presets: ['es2015'],
+            plugins: ['transform-runtime']
+          }
+        }
+      ]
+    },
     devServer: {
       proxy: {
         '/app_dev.php*': {
