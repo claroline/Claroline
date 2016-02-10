@@ -18,36 +18,46 @@
 
     UsersManager.config(function($stateProvider, $urlRouterProvider) {
         $stateProvider
+            .state ('users', {
+                abstract: true,
+                url: '/users',
+                templateUrl: AngularApp.webDir + 'bundles/clarolinecore/js/administration/users/Partial/main.html',
+
+            })
             .state(
-                'users',
+                'users.list',
                 {
-                    url: "/users",
-                    templateUrl: function($stateParam) {
-                        return AngularApp.webDir +
-                            'bundles/clarolinecore/js/administration/users/Partial/user_content.html';
-                    },
+                    url: "",
                     ncyBreadcrumb: {
                         label: translate('user_list')
                     },
-                    controller: 'UserController',
-                    controllerAs: 'uc'
+                    views: {
+                        'users': {
+                            templateUrl: function($stateParam) {
+                                return AngularApp.webDir +
+                                    'bundles/clarolinecore/js/administration/users/Partial/user_content.html';
+                            },
+                            controller: 'UserController',
+                            controllerAs: 'uc'
+                        }
+                    }
                 }
             )
             .state(
                 'users.groups',
                 {
+                    abstract: true,
                     url: "/groups",
-                    templateUrl: function($stateParam) {
-                        return AngularApp.webDir + 'bundles/clarolinecore/js/administration/groups/Partial/group_manager.html';
-
-                    },
-                    controller: 'GroupController',
-                    controllerAs: 'gc',
-                    data: {
-                        'pageTitle': translate('group_list')
-                    },
                     ncyBreadcrumb: {
-                        label: translate('group_list')
+                        label: translate('group_list'),
+                        parent: 'users.list'
+                    },
+                    views: {
+                        'groups': {
+                            templateUrl: function($stateParam) {
+                                return AngularApp.webDir + 'bundles/clarolinecore/js/administration/groups/Partial/main.html';
+                            }
+                        }
                     }
                 }
             )

@@ -1,5 +1,5 @@
 <!-- this could cause double loading -->
-<div ui-view>
+<div>
     <uib-alert ng-repeat="alert in gc.alerts" type="{{ alert.type }}" close="gc.closeAlert($index)">{{ alert.msg }}</uib-alert>
     <div>
         <div class="btn-group">

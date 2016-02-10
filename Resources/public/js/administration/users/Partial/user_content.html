@@ -1,6 +1,4 @@
-<div ncy-breadcrumb></div>
-
-<div ui-view>
+<div>
     <div>
         <uib-alert ng-repeat="alert in uc.alerts" type="{{ alert.type }}" close="uc.closeAlert($index)">{{ alert.msg }}</uib-alert>
         <div class="btn-group">
@@ -10,7 +8,7 @@
             <ul class="dropdown-menu">
                 <li><a href="#" ng-click="uc.clickDelete()"> {{ 'delete'|trans:{}:'platform' }} </a></li>
                 <li><a href="#" ng-click="uc.initPassword()"> {{ 'reset_password'|trans:{}:'platform' }} </a></li>
-                <li><a ui-sref="users.groups"> {{ 'manage_group'|trans:{}:'platform' }} </a></li>
+                <li><a ui-sref="users.groups.list"> {{ 'manage_group'|trans:{}:'platform' }} </a></li>
                 <li><a href="#"> {{ 'new'|trans:{}:'platform' }} </a></li>
                 <li><a href="#"> {{ 'import'|trans:{}:'platform'}} </a></li>
                 <li><a href="#"> {{ 'personal_workspace'|trans:{}:'platform' }} </a></li>
