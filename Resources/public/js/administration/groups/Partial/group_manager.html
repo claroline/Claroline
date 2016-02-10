@@ -1,6 +1,6 @@
 <!-- this could cause double loading -->
 <div ui-view>
-
+    <uib-alert ng-repeat="alert in gc.alerts" type="{{ alert.type }}" close="gc.closeAlert($index)">{{ alert.msg }}</uib-alert>
     <div>
         <div class="btn-group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

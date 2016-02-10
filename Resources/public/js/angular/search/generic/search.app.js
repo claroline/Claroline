@@ -39,7 +39,6 @@ genericSearch.controller(
 	this.options  = [];
 
 	this.refreshOptions = function($select) {
-		console.log(this.fields);
 		//I should not be doing this here. Probably in a directive would be better.
 		this.options = searchOptionsService.generateOptions(this.fields);
 

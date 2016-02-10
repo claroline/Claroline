@@ -4,7 +4,6 @@ var controller =  function(
     $uibModalStack,
     $uibModal
 ) {
-    console.log('init Location Controller');
     var translate = function(key) {
         return window.Translator.trans(key, {}, 'platform');
     }

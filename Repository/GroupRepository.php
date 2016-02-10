@@ -558,7 +558,7 @@ class GroupRepository extends EntityRepository
 
         $query = $qb->getQuery();
 
-        if ($page && $limit) {
+        if ($page && $limit && !$count) {
             $query->setMaxResults($limit);
             $query->setFirstResult($page * $limit);
         }

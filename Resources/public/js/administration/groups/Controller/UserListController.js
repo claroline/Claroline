@@ -1,5 +1,15 @@
 var controller = function($http, clarolineSearch, $stateParams, GroupAPI, clarolineAPI) {
 
+    var vm = this;
+    this.groupId = $stateParams.groupId;
+    this.group = [];
+    this.users = [];
+    this.search = '';
+    this.savedSearch = [];
+    this.selected = [];
+    this.alerts = [];
+    this.fields = [];
+
     var translate = function(key, data) {
         if (!data) data = {};
         return translator.trans(key, data, 'platform');
@@ -37,7 +47,6 @@ var controller = function($http, clarolineSearch, $stateParams, GroupAPI, clarol
         this.dataTableOptions.paging.count -= this.selected.length;
 
         for (var i = 0; i < this.selected.length; i++) {
-            console.log(this.selected[i]);
             this.alerts.push({
                 type: 'success',
                 msg: translate('user_removed', {'username': this.selected[i].username})
@@ -52,7 +61,6 @@ var controller = function($http, clarolineSearch, $stateParams, GroupAPI, clarol
         var users = '';
 
         for (var i = 0; i < data.length; i++) {
-            console.log(data);
             userIds.push(data[i]);
             users +=  data[i].username
             if (i < data.length - 1) users += ', ';
@@ -69,15 +77,6 @@ var controller = function($http, clarolineSearch, $stateParams, GroupAPI, clarol
 
     }.bind(this);
 
-    var vm = this;
-    this.groupId = $stateParams.groupId;
-    this.group = [];
-    this.users = [];
-    this.search = '';
-    this.savedSearch = [];
-    this.selected = [];
-    this.alerts = [];
-    this.fields = [];
     var baseSearch = {'field': 'group', 'id': 0, 'value': this.groupId};
 
     GroupAPI.find(this.groupId).then(function(d) {

@@ -4,9 +4,17 @@ var controller = function(
     clarolineAPI,
     $uibModal,
     $scope
-) {
-    var translate = function(key) {
-        return translator.trans(key, {}, 'platform');
+) { 
+    this.search = '';
+    this.savedSearch = [];
+    this.fields = [];
+    this.selected = [];
+    this.alerts = [];
+    var vm = this;
+
+    var translate = function(key, data) {
+        if (!data) data = {};
+        return translator.trans(key, data, 'platform');
     }
 
     var generateQsForSelected = function() {
@@ -20,19 +28,18 @@ var controller = function(
     }.bind(this);
 
     var deleteCallback = function(data) {
+        
+        for (var i = 0; i < this.selected.length; i++) {
+            this.alerts.push({
+                type: 'success',
+                msg: translate('group_removed', {group: this.selected[i].name})
+            });
+        }
+
+        this.dataTableOptions.paging.count -= this.selected.length;
         clarolineAPI.removeElements(this.selected, this.groups);
         this.selected.splice(0, this.selected.length);
-        this.alerts.push({
-            type: 'success',
-            msg: translate('group_removed_success_message')
-        });0
     }.bind(this);
-
-    this.search = '';
-    this.savedSearch = [];
-    this.fields = [];
-    this.selected = [];
-    var vm = this;
 
     $http.get(Routing.generate('api_get_group_searchable_fields')).then(function(d) {
         vm.fields = d.data;
@@ -54,7 +61,7 @@ var controller = function(
     ];
 
     this.dataTableOptions = {
-        scrollbarV: true,
+        scrollbarV: false,
         columnMode: 'force',
         headerHeight: 50,
         footerHeight: 50,
@@ -67,8 +74,6 @@ var controller = function(
             size: 10
         }
     };
-
-        this.dataTableOptions.paging.count = 2;
 
     this.onSearch = function(searches) {
         this.savedSearch = searches;
@@ -95,13 +100,20 @@ var controller = function(
     this.clickDelete = function() {
         var url = Routing.generate('api_delete_groups') + '?' + generateQsForSelected();
 
+        var groups = '';
+
+        for (var i = 0; i < this.selected.length; i++) {
+            groups +=  this.selected[i].name
+            if (i < this.selected.length - 1) groups += ', ';
+        }
+
         clarolineAPI.confirm(
             {url: url, method: 'DELETE'},
             deleteCallback,
             translate('delete_groups'),
-            translate('delete_groups_confirm')
+            translate('delete_groups_confirm', {group_list: groups})
         );
-    };
+    }.bind(this);
 
     this.clickEdit = function(group) {
         var modalInstance = $uibModal.open({
@@ -125,9 +137,19 @@ var controller = function(
         modalInstance.result.then(function (result) {
             if (!result) return;
             //dirty but it works
+            console.log(result);
             vm.groups.push(result);
             vm.dataTableOptions.paging.count = vm.groups.length;
-        });
+
+            this.alerts.push({
+                type: 'success',
+                msg: translate('group_created', {group: result.name})
+            });
+        }.bind(this));
+    }.bind(this);
+
+    this.closeAlert = function(index) {
+        this.alerts.splice(index, 1);
     }.bind(this);
 };
 

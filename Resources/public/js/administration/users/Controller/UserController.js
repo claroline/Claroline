@@ -6,8 +6,9 @@ var controller = function(
     var vm = this;
     var translator = window.Translator;
 
-    var translate = function(key) {
-        return translator.trans(key, {}, 'platform');
+    var translate = function(key, data) {
+        if (!data) data = {};
+        return translator.trans(key, data, 'platform');
     }
 
     var generateQsForSelected = function() {
@@ -22,17 +23,28 @@ var controller = function(
     }.bind(this);
 
     var deleteCallback = function(data) {
+
+        for (var i = 0; i < this.selected.length; i++) {
+            this.alerts.push({
+                type: 'success',
+                msg: translate('user_removed', { user: this.selected[i].username })
+            });
+        }
+
+        this.dataTableOptions.paging.count -= this.selected.length;
         clarolineAPI.removeElements(this.selected, this.users);
         this.selected.splice(0, this.selected.length);
-        this.alerts.push({
-            type: 'success',
-            msg: translate('user_removed')
-        });0
     }.bind(this);
 
     var initPwdCallback = function(data) {
-        alert('yeah !!');
-    }
+        for (var i = 0; i < this.selected.length; i++) {
+            this.alerts.push({
+                type: 'success',
+                msg: translate('password_initialized', { user: this.selected[i].username })
+            });
+        }
+        this.selected.splice(0, this.selected.length);
+    }.bind(this);
 
     this.userActions = [];
 
@@ -84,6 +96,7 @@ var controller = function(
         footerHeight: 50,
         multiSelect: true,
         checkboxSelection: true,
+        selectable: true,
         columns: columns,
         paging: {
             externalPaging: true,
@@ -116,27 +129,37 @@ var controller = function(
     this.clickDelete = function() {
         var url = Routing.generate('api_delete_users') + '?' + generateQsForSelected();
 
+        var users = '';
+
+        for (var i = 0; i < this.selected.length; i++) {
+            users +=  this.selected[i].username
+            if (i < this.selected.length - 1) users += ', ';
+        }
+
         clarolineAPI.confirm(
             {url: url, method: 'DELETE'},
             deleteCallback,
             translate('delete_users'),
-            translate('delete_users_confirm')
+            translate('delete_users_confirm', {user_list: users})
         );
-    };
+    }.bind(this);
 
     this.initPassword = function() {
         var url = Routing.generate('api_users_password_initialize') + '?' + generateQsForSelected();
+
+        var users = '';
+
+        for (var i = 0; i < this.selected.length; i++) {
+            users +=  this.selected[i].username
+            if (i < this.selected.length - 1) users += ', ';
+        }
 
         clarolineAPI.confirm(
             {url: url, method: 'GET'},
             initPwdCallback,
             translate('init_password'),
-            translate('init_password_confirm')
+            translate('init_password_confirm', {user_list: users})
         );
-    }
-
-    this.addAlert = function() {
-        this.alerts.push({msg: 'Another alert!'});
     }.bind(this);
 
     this.closeAlert = function(index) {

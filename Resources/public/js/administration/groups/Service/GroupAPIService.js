@@ -10,7 +10,6 @@ var service = function($http, clarolineAPI) {
             );
         },
         edit: function(group) {
-            console.log(group);
             var data = clarolineAPI.formSerialize('group_form', group);
 
             return $http.put(

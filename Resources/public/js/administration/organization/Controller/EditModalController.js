@@ -2,10 +2,8 @@ var modalController = function(organizationAPI, $scope, organizations, organizat
     $scope.organization = {};
 
     $scope.submit = function() {
-        console.log($scope.organization);
         organizationAPI.update(organization.id, $scope.organization).then(
             function successHandler (d) {
-                console.log(organizations);
                 $uibModalStack.dismissAll();
                 clarolineAPI.replaceById(d.data, organizations);
             },
