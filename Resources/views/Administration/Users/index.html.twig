@@ -4,8 +4,8 @@
 {% block title %}{{ parent() ~ ' - ' ~ 'users' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block section_content %}
-    <div id="users-panel" class="panel panel-default" ng-app="AdministrationModule">
-        <div ui-view>
+    <div id="users-panel" class="panel panel-default" ng-app="UsersManager">
+        <div class="panel panel-body" ui-view>
         </div>
     </div>
 
@@ -35,9 +35,6 @@
     </script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/angular/search/generic/search.app.js') }}></script>
 
-    {# main #}
-    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/main/module.js') }}></script> 
-
     {# users #}
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/users/module.js') }}></script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/users/Controller/UserController.js') }}></script>
@@ -51,8 +48,5 @@
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/groups/Controller/CreateModalController.js') }}></script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/groups/Controller/EditModalController.js') }}></script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/groups/Controller/UserListController.js') }}></script>
-    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/groups/Directive/GroupListDirective.js') }}></script>
-    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/groups/Directive/GroupSearchDirective.js') }}></script>
-    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/groups/Directive/GroupActionsDirective.js') }}></script>
     <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/groups/Service/GroupAPIService.js') }}></script>
 {% endblock %}

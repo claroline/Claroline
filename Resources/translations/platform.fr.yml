@@ -1238,9 +1238,11 @@ administrators: Administrateurs
 edit_organization: Modifier une organisation
 coordinates: Coordonnées
 address: Adresse
-add_users_to_group: Ajouter des utilisateurs à un groupe.
-add_users_to_group_confirm: Êtes-vous sûr de vouloir ajouter les utilisateurs suivant au groupe %group%: </br> %user_list%
+add_users_to_group: Ajouter des utilisateurs à un groupe
+add_users_to_group_confirm: Êtes-vous sûr de vouloir ajouter le(s) utlisateur(s) [ %user_list% ] dans le groupe %group% ? 
 user_added: Utilisateur %username% ajouté.
 user_removed: Utilisateur %username% supprimé.
-remove_users_from_group: Supprimer des utilisateurs d'un groupe.
-remove_users_from_group_confirm: Êtes-vous sûr de vouloir supprimer les utilisateurs suivant du groupe %group%: </br> %user_list%
+remove_users_from_group: Supprimer des utilisateurs d'un groupe
+remove_users_from_group_confirm: Êtes-vous sûr de vouloir supprimer le(s) utilisateur(s) [ %user_list% ] du groupe %group% ?
+delete_groups: Supprimer des groupes
+delete_groups_confirm: Êtes-vous sûr de vouloir supprimer le(s) groupe(s) [ %group_list% ] ?

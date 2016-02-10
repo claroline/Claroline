@@ -8,6 +8,7 @@
         'clarolineAPI',
         'ui.translation',
         'ui.router',
+        'GroupsManager',
         'ncy-angular-breadcrumb'
     ]);
 
@@ -18,7 +19,7 @@
     UsersManager.config(function($stateProvider, $urlRouterProvider) {
         $stateProvider
             .state(
-                'administration.users',
+                'users',
                 {
                     url: "/users",
                     templateUrl: function($stateParam) {
@@ -33,7 +34,7 @@
                 }
             )
             .state(
-                'administration.groups',
+                'users.groups',
                 {
                     url: "/groups",
                     templateUrl: function($stateParam) {

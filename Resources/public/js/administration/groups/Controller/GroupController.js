@@ -44,8 +44,8 @@ var controller = function(
             name: translate('actions'),
             cellRenderer: function(scope) {
                 var groupId = scope.$row.id;
-                var users = '<a ui-sref="administration.groups.users({groupId: ' + groupId + '})"><i class="fa fa-users"></i> </a>';
-                var edit =  '<a ng-click="gc.clickEdit($row)"><i class="fa fa-cog"></i></a>';
+                var users = '<a ui-sref="users.groups.users({groupId: ' + groupId + '})"><i class="fa fa-users"></i> </a>';
+                var edit =  '<a class="pointer" ng-click="gc.clickEdit($row)"><i class="fa fa-cog"></i></a>';
                 var actions = users + edit;
 
                 return actions;

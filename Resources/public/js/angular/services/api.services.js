@@ -1,4 +1,4 @@
-var clarolineAPI = angular.module('clarolineAPI', ['ui.bootstrap', 'ui.bootstrap.tpls']);
+var clarolineAPI = angular.module('clarolineAPI', ['ui.bootstrap', 'ui.bootstrap.tpls', 'ngSanitize']);
 var modal = window.Claroline.Modal;
 
 clarolineAPI.config(function ($httpProvider) {
@@ -122,9 +122,10 @@ clarolineAPI.factory('clarolineAPI', function($http, $httpParamSerializerJQLike,
     }
 });
 
-clarolineAPI.controller('ConfirmModalController', function(callback, urlObject, title, content, $http, $scope, $uibModalInstance) {
+clarolineAPI.controller('ConfirmModalController', function(callback, urlObject, title, content, $http, $scope, $uibModalInstance, $sce) {
     $scope.title = title;
     $scope.content = content;
+
     $scope.submit = function() {
         $http(urlObject).then(
             function successHandler(d) {

@@ -1,7 +1,8 @@
 var controller = function($http, clarolineSearch, $stateParams, GroupAPI, clarolineAPI) {
 
-    var translate = function(key) {
-        return translator.trans(key, {}, 'platform');
+    var translate = function(key, data) {
+        if (!data) data = {};
+        return translator.trans(key, data, 'platform');
     }
 
     var mergeSearches = function(searches, element) {
@@ -24,7 +25,7 @@ var controller = function($http, clarolineSearch, $stateParams, GroupAPI, clarol
         for (var i = 0; i < data.length; i++) {
             this.alerts.push({
                 type: 'success',
-                msg: translate('user_added', {'%username%': data[i].username})
+                msg: translate('user_added', {'username': data[i].username})
             });
         }
 
@@ -39,7 +40,7 @@ var controller = function($http, clarolineSearch, $stateParams, GroupAPI, clarol
             console.log(this.selected[i]);
             this.alerts.push({
                 type: 'success',
-                msg: translate('user_removed', {'%username%': this.selected[i].username})
+                msg: translate('user_removed', {'username': this.selected[i].username})
             });
         }
 
@@ -48,22 +49,22 @@ var controller = function($http, clarolineSearch, $stateParams, GroupAPI, clarol
 
     var pickerCallback = function(data) {
         var userIds = [];
-        var li = '';
+        var users = '';
 
         for (var i = 0; i < data.length; i++) {
+            console.log(data);
             userIds.push(data[i]);
-            li += '<li>' + data.username + '</li>';
+            users +=  data[i].username
+            if (i < data.length - 1) users += ', ';
         }
 
         var url = Routing.generate('api_add_users_to_group', {'group': this.groupId}) + '?' + clarolineAPI.generateQueryString(userIds, 'userIds');
-        var userList = "<ul>" + li + "</ul>";
-        console.log(this.group);
 
         clarolineAPI.confirm(
             {url: url, method: 'GET'},
             addToGroupCallback,
-            translate('add_users_to_group', {group: this.group.name, user_list: userList}),
-            translate('add_users_to_group_confirm')
+            translate('add_users_to_group'),
+            translate('add_users_to_group_confirm', {group: this.group.name, user_list: users})
         );
 
     }.bind(this);
@@ -147,7 +148,8 @@ var controller = function($http, clarolineSearch, $stateParams, GroupAPI, clarol
             'picker_name': 'user_group_picker',
             'picker_title': translate('add_user'),
             'multiple': true,
-            'blacklist': excludeUser
+            'blacklist': excludeUser,
+            'return_datas': true
         }
 
         userPicker.configure(options, pickerCallback);
@@ -156,12 +158,18 @@ var controller = function($http, clarolineSearch, $stateParams, GroupAPI, clarol
 
     this.clickDelete = function() {
         var url = Routing.generate('api_remove_users_from_group',  {'group': this.groupId}) + '?' + clarolineAPI.generateQueryString(this.selected, 'userIds');
+        var users = '';
+
+        for (var i = 0; i < this.selected.length; i++) {
+            users +=  this.selected[i].username
+            if (i < this.selected.length - 1) users += ', ';
+        }
 
         clarolineAPI.confirm(
             {url: url, method: 'GET'},
             removeFromGroupCallback,
             translate('remove_users_from_group'),
-            translate('remove_users_from_group_confirm')
+            translate('remove_users_from_group_confirm', {group: this.group.name, user_list: users})
         );
     }.bind(this);
 
