@@ -105,7 +105,7 @@ class ExerciseType extends AbstractType
                 'label' => 'type_exo',
                 'choices' => [
                     '1' => 'summative',
-                    '2' => 'evaluative',
+                    '2' => 'certificatif',
                     '3' => 'formative',
                 ],
             ]);

@@ -43,6 +43,7 @@ calculation_measure_difficulty: Il se calcul avec le nombre de candidats ayant r
 category: Catégorie
 case_sensitive: Respecter la casse
 cercle: Cercle
+certificatif : Certificatif
 change: Changer
 change_name: Changer le nom du document
 change_order: Pour changer l'ordre des questions, déplacez-les en utilisant le glisser/déposer
@@ -90,7 +91,6 @@ duration: Durée
 edit: Editer
 edit_category: Editer cette catégorie
 edit_question: Editer une question
-evaluative: Evalutatif
 end_date: Date de fin
 entry: Entrer
 exercise: Exercice

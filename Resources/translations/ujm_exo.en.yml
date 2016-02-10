@@ -43,6 +43,7 @@ calculation_measure_difficulty: It's calculate with the number of applicant whic
 category: Category
 case_sensitive: Case sensitive
 cercle: Circle
+certificatif : Certificatif
 change: Change
 change_name: Change the name of the document
 change_order: To change questions order, move it by using drag and drop
@@ -92,7 +93,6 @@ edit_category: Edit a category
 edit_question: Edit a question
 end_date: End date
 entry: Entry
-evaluative: Evalutative
 exercise: Exercise
 exercise_alert_break: The interruption of this exercise is not allowed. Your paper will be considered finish !
 exercise_definition: Exercise definition
