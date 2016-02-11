@@ -29,6 +29,7 @@ $(document).ready(function () {
     // Appel pour le traitement en Ajax des états du document
     //
     $('.td_action').each(function(){
+
         //
         // Récupération des données, voir documentItem.html.twig.
         //
@@ -72,11 +73,37 @@ $(document).ready(function () {
 
 
     // InnovaERV
+    // Ajout pour le traitement des 2 actions du bouton "Action"
+    $('.inputReturnReceipt').on('click', function (event) {
+
+        var selectorDocument = "#document_id_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
+
+        var checkOneAtLeast = false;
+
+        $("input[type='checkbox']:checked").each(
+            function() {
+                checkOneAtLeast = true;
+//                $(selectorDocument).prop('checked', true); // Cocher la case "Valider"
+
+                var selector = "#actionReturnReceipt";
+
+                $("#actionReturnReceipt").removeClass("disabled"); // Ne pas pouvoir modifier cette ligne
+                $("#actionReturnReceipt2").removeClass("disabled"); // Ne pas pouvoir modifier cette ligne
+            });          
+
+        if (checkOneAtLeast == false) {
+            $("#actionReturnReceipt").addClass("disabled"); // Ne pas pouvoir modifier cette ligne
+        }
+
+    });
+
+
+    // InnovaERV
     // Ajout pour le traitement de la case Ã  cocher pour la crÃ©ation de commentaire Ã  la volÃ©e
     $('.comment_validate').on('click', function (event) {
         event.preventDefault();
- 
-        // RÃ©cupÃ©ration de l'id du document
+
+        // Récupération de l'id du document
         var dropzoneId = $(this).attr("data-dropzone_id");
 
         var arrayDocsId = [];
@@ -199,13 +226,43 @@ $(document).ready(function () {
     // InnovaERV
     // Ajout pour le traitement de la case Ã  cocher lors de la soumission de documents
     $('#validate-modal-return-receipt').on('show.bs.modal', function (event) {
-      var button = $(event.relatedTarget); // Button that triggered the modal
-      var documentId = button.data('document_id'); // Extract info from data-* attributes
-      // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-      // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-      var modal = $(this);
-      $(".data-document_id").append(documentId);
-      modal.find('#modal_confirm_return_receipt').attr("data-document_id", documentId);
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var documentId = button.data('document_id'); // Extract info from data-* attributes
+        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+        var modal = $(this);
+        $(".data-document_id").append(documentId);
+        modal.find('#modal_confirm_return_receipt').attr("data-document_id", documentId);
+
+        // bouton "OK" fermé si aucun document sélectionné
+        document.getElementById('modal_confirm_return_receipt').disabled = true;
+        // réinit de la valeur "pas sélectionné" sur tous les boutons des AR.
+        document.getElementById('choix0').checked = false;
+        document.getElementById('choix1').checked = false;
+        document.getElementById('choix2').checked = false;
+        document.getElementById('choix3').checked = false;
+        document.getElementById('choix4').checked = false;
+        document.getElementById('choix5').checked = false;
+    });
+
+    // Si je choisis un "accusé de réception" alors je réactive le bouton "OK"
+    $('#choix0').on('click', function(event) {
+        document.getElementById('modal_confirm_return_receipt').disabled = false;
+    });
+    $('#choix1').on('click', function(event) {
+        document.getElementById('modal_confirm_return_receipt').disabled = false;
+    });
+    $('#choix2').on('click', function(event) {
+        document.getElementById('modal_confirm_return_receipt').disabled = false;
+    });
+    $('#choix3').on('click', function(event) {
+        document.getElementById('modal_confirm_return_receipt').disabled = false;
+    });
+    $('#choix4').on('click', function(event) {
+        document.getElementById('modal_confirm_return_receipt').disabled = false;
+    });
+    $('#choix5').on('click', function(event) {
+        document.getElementById('modal_confirm_return_receipt').disabled = false;
     });
 
     // InnovaERV
@@ -233,10 +290,10 @@ $(document).ready(function () {
             returnReceiptId = document.getElementById('choix5').value;
         }
 
-        // RÃ©cupÃ©ration de l'id du document
+        // Récupération de l'id du document
         var dropzoneId = $(this).attr("data-dropzone_id");
 
-        // RÃ©cupÃ©ration de l'id du document
+        // Récupération de l'id du document
         var documentId = $(this).attr("data-document_id");
 
         var arrayDocsId = [];
@@ -327,12 +384,16 @@ $(document).ready(function () {
     $('#document_id_0').on('click', function(event) {
         if($(this).is(':checked')){
             $('input[type=checkbox]').each(function(i,k){
+                $("#actionReturnReceipt").removeClass("disabled"); // Ne pas pouvoir modifier cette ligne
+                $("#actionReturnReceipt2").removeClass("disabled"); // Ne pas pouvoir modifier cette ligne
                 $(k).prop('checked',true);
               })
         }
         else
         {
             $('input[type=checkbox]').each(function(i,k){
+                $("#actionReturnReceipt").addClass("disabled"); // Ne pas pouvoir modifier cette ligne
+                $("#actionReturnReceipt2").addClass("disabled"); // Ne pas pouvoir modifier cette ligne
                 $(k).prop('checked',false);
             })
         }
