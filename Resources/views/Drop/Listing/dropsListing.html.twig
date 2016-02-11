@@ -11,7 +11,7 @@ au div situé ci-dessous
             </button>
 
             <ul class="dropdown-menu dropdown-menu-right">
-                <li>
+                <li class="disabled" id="actionReturnReceipt">
                     <a class="comment_validate"
                     href="#" id="dropzone_id_{{dropzone.id}}" name="dropzoneId" data-dropzone_id="{{ dropzone.id }}">
                     {{ 'Comment Auto'|trans({}, 'innova_collecticiel') }}
@@ -22,9 +22,9 @@ au div situé ci-dessous
                 et désactiver "Accuser la réception" dans le menu déroulant
                 #}
                 {% if dropzone.returnReceipt == 1  %}
-                    <li>
+                    <li class="disabled" id="actionReturnReceipt2">
                 {% else %}
-                    <li class="disabled" >
+                    <li class="disabled">
                 {% endif %}
                     <a class="" href="#" data-toggle="modal" data-target="#validate-modal-return-receipt" data-dropzone_id="{{ dropzone.id }}">
                         {{ 'To add a return receipt'|trans({}, 'innova_collecticiel') }}
@@ -94,7 +94,7 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
                     {% endif %}
                 </div>
             {% endif %}
-            <i class="fa fa-arrow-right" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Request for comment'|trans({},'innova_collecticiel') }}"></i>
+            <i class="fa fa-arrow-right" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Request comment'|trans({},'innova_collecticiel') }}"></i>
         </th>
     {% endif %}
 
@@ -123,7 +123,7 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
                         {% endif %}
                     </div>
                 {% endif %}
-                <i class="fa fa-hand-o-right">
+                <i class="fa fa-hand-o-right" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Return receipt'|trans({},'innova_collecticiel') }}"></i>
             </th>
         {% endif %}
 
@@ -208,7 +208,7 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
                 </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</button>
+            <button type="button" class="btn btn-default" id="cancel_button" data-dismiss="modal">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</button>
             <button data-dropzone_id="{{dropzone.id}}" id="modal_confirm_return_receipt" data-method="VALIDATE" type="button" class="btn btn-primary rest" href="#">{{ 'Ok'|trans({}, 'innova_collecticiel') }}</button>
         </div>
         </div>
