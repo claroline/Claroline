@@ -75,7 +75,7 @@ $(function(){
         var countExistingTabs = $("a[data-toggle='tab']", ruleTabs).length;
         addRuleTab(countExistingTabs);
         addRuleTabContent(countExistingTabs);
-        $("a[href=#rule" + countExistingTabs + "]", ruleTabs).tab('show');
+        $("a[href='#rule" + countExistingTabs + "']", ruleTabs).tab('show');
         countExistingTabs++;
     }
 
