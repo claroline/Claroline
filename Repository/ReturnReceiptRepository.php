@@ -60,6 +60,7 @@ class ReturnReceiptRepository extends EntityRepository
             ->Join('returnreceipt.document', 'document')
             ->andWhere('returnreceipt.user = :user')
             ->andWhere('returnreceipt.dropzone = :dropzone')
+            ->andWhere('returnreceipt.returnReceiptType != 0')
             ->andWhere('document.validate = true')
             ->setParameter('user', $user)
             ->setParameter('dropzone', $dropzone);
@@ -69,8 +70,33 @@ class ReturnReceiptRepository extends EntityRepository
 
         return $numberDocuments;
 
+    }
+
+    /**
+     *  Pour avoir le type d'accusé de réception pour l'utilisateur indiqué et le dropzone indiqué
+     * @param $userId
+     * @param $dropzoneId
+    */
+    public function countTextToReadAll(User $user, Dropzone $dropzone)
+    {
+
+        /* requête avec CreateQuery : */
+        $qb = $this->createQueryBuilder('returnreceipt')
+            ->select('returnreceipt')
+            ->Join('returnreceipt.document', 'document')
+            ->andWhere('returnreceipt.user = :user')
+            ->andWhere('returnreceipt.dropzone = :dropzone')
+            ->andWhere('document.validate = true')
+            ->setParameter('user', $user)
+            ->setParameter('dropzone', $dropzone);
+            ;
+
+        $numberDocuments = count($qb->getQuery()->getResult());
+
+        return $numberDocuments;
 
     }
+
 
     /**
      *  Pour savoir le type d'accusé de réception pour l'utilisateur indiqué et le dropzone indiqué

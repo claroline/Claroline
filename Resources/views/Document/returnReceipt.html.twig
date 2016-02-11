@@ -1,15 +1,17 @@
 {% set found = false %}
 
 {% for key, value in haveReturnReceiptOrNotArray %}
+
 	{% if key == document.id %}
 
 		{% set found = true %}
+
+		{#240 : demande de JJQ de pouvoir modifier un AR dans la colonne des AR et pas seulement par "Actions" #}
+		<a href="#validate-modal-return-receipt" data-toggle="modal" data-dropzone_id="{{ dropzone.id }}" data-document_id="{{ document.id }}" id="document_id_{{ document.id }}" name="document_id_{{ document.id }}" class="document_validate" >
+
 		{# 0 : pas d'accusé de réception #}
 		{% if value == 0 %}
-			<a href="#validate-modal-return-receipt" data-toggle="modal" data-dropzone_id="{{ dropzone.id }}" data-document_id="{{ document.id }}" id="document_id_{{ document.id }}" name="document_id_{{ document.id }}" class="document_validate" >
-		        <span data-toggle="tooltip" data-placement="top" data-original-title="{{ 'To add a return receipt'|trans({},'innova_collecticiel') }}" class="fa fa-hand-o-right">
-		        </span>
-			</a>
+			<span data-toggle="tooltip" data-placement="top" data-original-title="{{ 'To add a return receipt'|trans({},'innova_collecticiel') }}" class="fa fa-hand-o-right"></span>
 		{% endif %}
 		{# 1 : doublon #}
 		{% if value == 1 %}
@@ -17,20 +19,23 @@
 		{% endif %}
 		{# 2 : document bien reçu #}
 		{% if value == 2 %}
-	        <span class="fa fa-thumbs-o-up" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Document received'|trans({},'innova_collecticiel') }}"> </span>
+	        <span class="fa fa-thumbs-o-up" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Document received'|trans({},'innova_collecticiel') }}"></span>
 		{% endif %}
 		{# 3 : document illisible #}
 		{% if value == 3 %}
-	        <span class="fa fa-hand-paper-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Document unreadable'|trans({}, 'innova_collecticiel') }}"> </span>
+	        <span class="fa fa-hand-paper-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Document unreadable'|trans({}, 'innova_collecticiel') }}"></span>
 		{% endif %}
 		{# 4 : document incomplet #}
 		{% if value == 4 %}
-	        <span class="fa fa-hand-paper-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Incomplete document'|trans({}, 'innova_collecticiel') }}"> </span>
+	        <span class="fa fa-hand-paper-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Incomplete document'|trans({}, 'innova_collecticiel') }}"></span>
 		{% endif %}
 		{# 5 : erreur de document #}
 		{% if value == 5 %}
-	        <span class="fa fa-hand-paper-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Error document'|trans({}, 'innova_collecticiel') }}"> </span>
+	        <span class="fa fa-hand-paper-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Error document'|trans({}, 'innova_collecticiel') }}"></span>
 		{% endif %}
+
+		</a>
+
 	{% endif %}
 {% endfor %}
 

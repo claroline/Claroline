@@ -577,7 +577,7 @@ class DropController extends DropzoneBaseController
             // Nombre d'AR pour cet utilisateur et pour ce dropzone / Repo : ReturnReceiputtwment
             $countReturnReceiptForUserAndDropzone = $this->getDoctrine()
                                 ->getRepository('InnovaCollecticielBundle:ReturnReceipt')
-                                ->countTextToRead($this->get('security.token_storage')->getToken()->getUser(), $drop->getDropZone());
+                                ->countTextToReadAll($this->get('security.token_storage')->getToken()->getUser(), $drop->getDropZone());
 
             $countReturnReceiptForUserAndDropzone = $countReturnReceiptForUserAndDropzone -1;
 

@@ -16,7 +16,7 @@
             {# InnovaERV : car il fallait voir les documents qund on va sur l'espace d'un étudiant #}
             {# voir également documentItem.html.twig #}
             {% if drop.documents|length == 0  %}
-                <p  class="text-danger">{{ 'No document associated'|trans({},'innova_collecticiel') }}</p>
+                <p class="text-danger">{{ 'No document associated'|trans({},'innova_collecticiel') }}</p>
             {% else %}
                 <table class="table table-responsive {% if mode == "condensed" %}table-condensed{% endif %} well datatable">
                     <thead>
