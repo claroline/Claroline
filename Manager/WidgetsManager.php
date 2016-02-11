@@ -378,7 +378,11 @@ class WidgetsManager
 
     public function getWidgetSizeByType($widgetType)
     {
-        $classNamespace = '\Icap\PortfolioBundle\Entity\Widget\\' . ucfirst($widgetType) . 'Widget';
+        if (strtoupper($widgetType) == "BADGES") {
+            $classNamespace = '\Icap\BadgeBundle\Entity\Portfolio\BadgesWidget';
+        } else {
+            $classNamespace = '\Icap\PortfolioBundle\Entity\Widget\\' . ucfirst($widgetType) . 'Widget';
+        }
         $position = [
             'sizeX' => $classNamespace::SIZE_X,
             'sizeY' => $classNamespace::SIZE_Y

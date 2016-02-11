@@ -1,5 +1,5 @@
 datepicker_date_format: 'dd/mm/yyyy'
-date_field_format: 'DD/MM/YYYY'
+date_field_format: 'dd/MM/yyyy'
 no_portfolios_create_one: 'Vous n''avez aucun portfolio pour le moment.<br>Vous pouvez <a href="%newPortfolioUrl%" title="Ajouter un portfolio">en créer</a> pour montrer vos compétences.'
 updated_on: 'Mis à jour le %date%'
 portfolio_deletion_confirm_title: "Suppression d'un portfolio"
