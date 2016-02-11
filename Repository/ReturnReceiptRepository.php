@@ -34,9 +34,9 @@ class ReturnReceiptRepository extends EntityRepository
         /* requête avec CreateQuery : */
         $qb = $this->createQueryBuilder('returnreceipt')
             ->select('returnreceipt')
-            ->andWhere('returnreceipt.user = :user')
+//            ->andWhere('returnreceipt.user = :user')
             ->andWhere('returnreceipt.dropzone = :dropzone')
-            ->setParameter('user', $user)
+//            ->setParameter('user', $user)
             ->setParameter('dropzone', $dropzone);
             ;
 
@@ -84,10 +84,10 @@ class ReturnReceiptRepository extends EntityRepository
         $qb = $this->createQueryBuilder('returnreceipt')
             ->select('returnreceipt')
             ->Join('returnreceipt.document', 'document')
-            ->andWhere('returnreceipt.user = :user')
+//            ->andWhere('returnreceipt.user = :user')
             ->andWhere('returnreceipt.dropzone = :dropzone')
             ->andWhere('document.validate = true')
-            ->setParameter('user', $user)
+//            ->setParameter('user', $user)
             ->setParameter('dropzone', $dropzone);
             ;
 
