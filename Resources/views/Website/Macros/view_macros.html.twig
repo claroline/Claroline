@@ -1,13 +1,13 @@
 {% macro getVendorScripts() %}
     {% javascripts debug=false filter='jsmin' output='js/website/view.vendor.js'
     '@FrontEndBundle/Resources/public/angular/angular.min.js'
-    '@InnovaAngularJSBundle/Resources/public/js/angular-resource.min.js'
-    '@InnovaAngularJSBundle/Resources/public/js/angular-route.min.js'
-    '@InnovaAngularJSBundle/Resources/public/js/angular-touch.min.js'
-    '@InnovaAngularJSBundle/Resources/public/js/angular-animate.min.js'
-    '@InnovaAngularJSBundle/Resources/public/js/angular-sanitize.min.js'
-    '@IcapWebsiteBundle/Resources/public/js/vendor/angular-plugins/angular-strap/angular-strap.min.js'
-    '@IcapWebsiteBundle/Resources/public/js/vendor/angular-plugins/angular-strap/angular-strap.tpl.min.js'
+    '@FrontEndBundle/Resources/public/angular-resource/angular-resource.min.js'
+    '@FrontEndBundle/Resources/public/angular-route/angular-route.min.js'
+    '@FrontEndBundle/Resources/public/angular-touch/angular-touch.min.js'
+    '@FrontEndBundle/Resources/public/angular-animate/angular-animate.min.js'
+    '@FrontEndBundle/Resources/public/angular-sanitize/angular-sanitize.min.js'
+    '@FrontEndBundle/Resources/public/angular-strap/dist/angular-strap.min.js'
+    '@FrontEndBundle/Resources/public/angular-strap/dist/angular-strap.tpl.min.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

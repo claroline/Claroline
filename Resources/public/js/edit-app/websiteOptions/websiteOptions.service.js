@@ -5,9 +5,9 @@
         .module('app')
         .factory('websiteOptions', websiteOptions);
 
-    websiteOptions.$inject = ['$http', '$q', '$upload', '$sce', 'utilityFunctions', 'website.data'];
+    websiteOptions.$inject = ['$http', '$q', 'Upload', '$sce', 'utilityFunctions', 'website.data'];
 
-    function websiteOptions($http, $q, $upload, $sce, utilityFunctions, websiteData){
+    function websiteOptions($http, $q, Upload, $sce, utilityFunctions, websiteData){
         var extendedOptions = {
             bannerEditorActive : false,
             footerEditorActive : false,
@@ -74,13 +74,12 @@
             }
         }
 
-        function proceedImageUpload($files, imageStr) {
+        function proceedImageUpload($file, imageStr) {
             var options = this;
-            return $upload.upload({
+            return Upload.upload({
                 url : Routing.generate('icap_website_options_image_upload', {websiteId: websiteData.id, imageStr: imageStr}),
                 method: 'POST',
-                fileFormDataName: 'imageFile',
-                file: $files[0]
+                data: {'imageFile': $file}
             }).success(function(response) {
                     options[imageStr] = response[imageStr];
                     return response;

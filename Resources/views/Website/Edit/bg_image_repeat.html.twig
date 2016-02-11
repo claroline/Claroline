@@ -13,7 +13,7 @@
         <input id="{{ classPrefix }}-image-upload-choice" type="radio" value="upload" ng-model="vm.options.temp.{{ variablePrefix }}ImageChoice"> <label for="{{ classPrefix }}-image-upload-choice" class="normal-text">{{ 'upload_image'|trans({},'icap_website') }}</label>
     </div>
     <div class="form-group" data-ng-if="vm.options.temp.{{ variablePrefix }}ImageChoice=='upload'">
-        <input id="{{ classPrefix }}-image" class="form-control full-width" type="file" ng-file-select="vm.uploadImage($files, '{{ variablePrefix }}Image')" accept="image/*">
+        <input id="{{ classPrefix }}-image" class="form-control full-width" type="file" ngf-select="vm.uploadImage($file, '{{ variablePrefix }}Image')" ngf-pattern="image/*" ngf-accept="'image/*'">
     </div>
     <div data-ng-if="vm.options.temp.{{ variablePrefix }}ImageChoice=='url'">
         <input id="{{ classPrefix }}-image-url" class="form-control" type="url" data-ng-model="vm.options.temp.{{ variablePrefix }}ImagePath"> <button class="btn btn-sm btn-primary" data-ng-click="vm.updateImagePath('{{ variablePrefix }}Image', false)">{{ 'apply'|trans({},'icap_website') }}</button>
