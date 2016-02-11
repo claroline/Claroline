@@ -25,7 +25,7 @@
 {% block layout %}
     <div id="sf-environement" data-env="{{ app.environment }}" class="hide"></div>
     <div id="homePath" class="hide">{{ path("claro_index") }}</div>
-    <div id="homeAsset" class="hide">{{ app.request.getSchemeAndHttpHost() ~ asset("") }}</div>
+    <div id="homeAsset" class="hide">{{ app.request.getSchemeAndHttpHost() ~ app.request.getBasePath() ~ '/' }}</div>
     <div id="homeLocale" class="hide">{% spaceless %}
         {% if asset_exists("bundles/stfalcontinymce/vendor/tinymce/langs/" ~ app.request.locale ~ ".js") %}
             {{ app.request.locale }}

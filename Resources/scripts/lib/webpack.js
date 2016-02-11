@@ -16,7 +16,7 @@ function configure(frontendConfig, rootDir, isWatchMode) {
   // all entries are compiled in the web/dist directory
   const output = {
     path: path.resolve(rootDir, 'web'),
-    publicPath: '/',
+    publicPath: 'http://localhost:8080/',
     filename: 'dist/[name].js'
   }
 
@@ -45,7 +45,7 @@ function configure(frontendConfig, rootDir, isWatchMode) {
   }
 
   const loaders = [
-    makeJsLoader(isProd)
+    makeJsLoader(isProd),
   ]
 
   return {
@@ -55,12 +55,7 @@ function configure(frontendConfig, rootDir, isWatchMode) {
     plugins: plugins,
     module: { loaders: loaders },
     devServer: {
-      proxy: {
-        '/app_dev.php*': {
-          target: frontendConfig.webpack.proxyTarget,
-          secure: false
-        }
-      }
+      headers: { "Access-Control-Allow-Origin": "*" }
     }
   }
 }

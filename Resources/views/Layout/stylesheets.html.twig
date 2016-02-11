@@ -1,9 +1,9 @@
 {% if config.getParameter('theme') is defined and asset_exists('themes/' ~ config.getParameter('theme') ~ '/bootstrap.css') %}
     {# from theme #}
-    {% set themeCSS = asset('') ~ 'themes/' ~ config.getParameter('theme') ~ '/bootstrap.css' %}
+    {% set themeCSS = asset('') ~ '/themes/' ~ config.getParameter('theme') ~ '/bootstrap.css' %}
 {% else %}
     {# default #}
-    {% set themeCSS = asset('') ~ 'themes/' ~ 'claroline' ~ '/bootstrap.css' %}
+    {% set themeCSS = asset('') ~ '/themes/' ~ 'claroline' ~ '/bootstrap.css' %}
 {% endif %}
 
 <link rel="stylesheet" href="{{ themeCSS }}" media="screen" />
