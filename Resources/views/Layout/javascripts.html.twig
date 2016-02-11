@@ -171,3 +171,7 @@
         });
     });
 </script>
+
+{% if app.environment == 'dev' %}
+    <script src="{{ asset('webpack-dev-server.js') }}"></script>
+{% endif %}

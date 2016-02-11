@@ -410,4 +410,12 @@ class UserController extends FOSRestController
 
         return $users;
     }
+
+    /**
+     *
+     */
+    public function importUsersAction()
+    {
+
+    }
 }
