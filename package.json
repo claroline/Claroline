@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "description": "Claroline dev dependencies and scripts",
   "scripts": {
-    "fetch": "composer install --prefer-source && npm install && bower update",
+    "fetch": "composer install --prefer-source && npm install && npm run bower",
     "build": "npm run themes && npm run webpack",
     "themes": "node vendor/claroline/core-bundle/Resources/scripts/build-themes",
-    "webpack": "rm -rf web/dist/* && webpack --config webpack.js --progress --profile --colors"
+    "bower": "bower update",
+    "webpack": "rm -rf web/dist/* && webpack --config webpack.js --progress --profile --colors --display-error-details",
+    "watch": "webpack-dev-server --hot --inline --content-base web --config webpack-watch.js --display-error-details"
   },
   "dependencies": {
     "claroline-core": "file:./vendor/claroline/core-bundle"
