@@ -11,9 +11,9 @@
 {% block javascripts %}
     {{ parent() }}
     {% javascripts output='js/blog.js'
-    '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.position.min.js'
-    '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.menu.min.js'
-    '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.autocomplete.min.js'
+    '@FrontEndBundle/Resources/public/jquery-ui/ui/minified/position.min.js'
+    '@FrontEndBundle/Resources/public/jquery-ui/ui/minified/menu.min.js'
+    '@FrontEndBundle/Resources/public/jquery-ui/ui/minified/autocomplete.min.js'
     %}<script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 {% endblock %}
