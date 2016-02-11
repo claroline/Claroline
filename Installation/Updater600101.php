@@ -32,7 +32,7 @@ class Updater600101
             WHERE version = \'20150923181250\'
         ';
         $res = $this->connection->query($query);
-        if ($res->rowCount() > 0) {
+        if ($res->rowCount() == 0) {
             $this->connection->exec("
                 INSERT INTO doctrine_ujmexobundle_versions VALUES('20150923181250')
             ");
