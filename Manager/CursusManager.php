@@ -48,6 +48,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -56,6 +57,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 class CursusManager
 {
     private $archiveDir;
+    private $authorization;
     private $container;
     private $contentManager;
     private $eventDispatcher;
@@ -88,6 +90,7 @@ class CursusManager
 
     /**
      * @DI\InjectParams({
+     *     "authorization"         = @DI\Inject("security.authorization_checker"),
      *     "container"             = @DI\Inject("service_container"),
      *     "contentManager"        = @DI\Inject("claroline.manager.content_manager"),
      *     "eventDispatcher"       = @DI\Inject("event_dispatcher"),
@@ -108,6 +111,7 @@ class CursusManager
      */
     // why no claroline dispatcher ?
     public function __construct(
+        AuthorizationCheckerInterface $authorization,
         ContainerInterface $container,
         ContentManager $contentManager,
         EventDispatcherInterface $eventDispatcher,
@@ -127,6 +131,7 @@ class CursusManager
     )
     {
         $this->archiveDir = $container->getParameter('claroline.param.platform_generated_archive_path');
+        $this->authorization = $authorization;
         $this->container = $container;
         $this->contentManager = $contentManager;
         $this->eventDispatcher = $eventDispatcher;
@@ -1266,6 +1271,18 @@ class CursusManager
                 $queue->setSession($session);
                 $queue->setUser($user);
                 $queue->setApplicationDate(new \DateTime());
+
+                $status = CourseSessionRegistrationQueue::WAITING;
+                $validators = $session->getValidators();
+
+                if ($session->getUserValidation()) {
+                    $status += CourseSessionRegistrationQueue::WAITING_USER;
+                }
+
+                if (count($validators) > 0) {
+                    $status += CourseSessionRegistrationQueue::WAITING_VALIDATOR;
+                }
+                $queue->setStatus($status);
                 $this->om->persist($queue);
                 $this->om->flush();
             }
@@ -2232,6 +2249,185 @@ class CursusManager
         return $roles;
     }
 
+//    public function getRegistrationQueuesByValidator($search = '')
+//    {
+//        $authenticatedUser = $this->tokenStorage->getToken()->getUser();
+//    }
+
+    public function getCoursesDatasFromCourses(array $courses)
+    {
+        $datas = array();
+
+        foreach ($courses as $course) {
+            $courseDatas = array(
+                'id' => $course->getId(),
+                'code' => $course->getCode(),
+                'title' => $course->getTitle(),
+                'description' => $course->getDescription(),
+                'publicRegistration' => $course->getPublicRegistration(),
+                'publicUnregistration' => $course->getPublicUnregistration(),
+                'registrationValidation' => $course->getRegistrationValidation(),
+                'userValidation' => $course->getUserValidation(),
+                'maxUsers' => $course->getMaxUsers(),
+                'validators' => array()
+            );
+            $validators = $course->getValidators();
+
+            foreach ($validators as $validator) {
+                $validatorsDatas = array(
+                    'id' => $validator->getId(),
+                    'username' => $validator->getUsername(),
+                    'firstName' => $validator->getFirstName(),
+                    'lastName' => $validator->getLastName()
+                );
+                $courseDatas['validators'][] = $validatorsDatas;
+            }
+            $datas[] = $courseDatas;
+        }
+
+        return $datas;
+    }
+
+    public function getSessionsDatasFromCourses(array $courses)
+    {
+        $datas = array();
+
+        foreach ($courses as $course) {
+            $courseId = $course->getId();
+            $datas[$courseId] = array();
+            $sessions = $course->getSessions();
+
+            foreach ($sessions as $session) {
+                $sessionStatus = $session->getSessionStatus();
+
+                if ($sessionStatus === CourseSession::SESSION_NOT_STARTED ||
+                    $sessionStatus === CourseSession::SESSION_OPEN) {
+
+                    $sessionDatas = array(
+                        'id' => $session->getId(),
+                        'name' => $session->getName(),
+                        'courseId' => $courseId,
+                        'sessionStatus' => $sessionStatus,
+                        'creationDate' => $session->getCreationDate(),
+                        'startDate' => $session->getStartDate(),
+                        'endDate' => $session->getEndDate(),
+                        'defaultSession' => $session->isDefaultSession(),
+                        'publicRegistration' => $session->getPublicRegistration(),
+                        'publicUnregistration' => $session->getPublicUnregistration(),
+                        'registrationValidation' => $session->getRegistrationValidation(),
+                        'userValidation' => $session->getUserValidation(),
+                        'maxUsers' => $session->getMaxUsers(),
+                        'validators' => array()
+                    );
+                    $validators = $session->getValidators();
+
+                    foreach ($validators as $validator) {
+                        $validatorsDatas = array(
+                            'id' => $validator->getId(),
+                            'username' => $validator->getUsername(),
+                            'firstName' => $validator->getFirstName(),
+                            'lastName' => $validator->getLastName()
+                        );
+                        $sessionDatas['validators'][] = $validatorsDatas;
+                    }
+                    $datas[$courseId][] = $sessionDatas;
+                }
+            }
+        }
+
+        return $datas;
+    }
+
+    public function getSessionsQueuesDatasFromCourses(array $courses)
+    {
+        $datas = array();
+        $queues = $this->getSessionQueuesByCourses($courses);
+
+        foreach ($queues as $queue) {
+            $session = $queue->getSession();
+            $user = $queue->getUser();
+            $course = $session->getCourse();
+            $sessionId = $session->getId();
+            $courseId = $course->getId();
+
+            if (!isset($datas[$courseId])) {
+                $datas[$courseId] = array();
+            }
+
+            if (!isset($datas[$courseId][$sessionId])) {
+                $datas[$courseId][$sessionId] = array();
+            }
+            $datas[$courseId][$sessionId][] = array(
+                'id' => $queue->getId(),
+                'courseId' => $courseId,
+                'sessionId' => $sessionId,
+                'applicationDate' => $queue->getApplicationDate(),
+                'status' => $queue->getStatus(),
+                'userId' => $user->getId(),
+                'username' => $user->getUsername(),
+                'firstName' => $user->getFirstName(),
+                'lastName' => $user->getLastName(),
+            );
+        }
+
+        return $datas;
+    }
+
+    public function canValidateSessionQueue(CourseSessionRegistrationQueue $queue)
+    {
+        $canValidate = false;
+        $authenticatedUser = $this->tokenStorage->getToken()->getUser();
+
+        if ($this->authorization->isGranted('ROLE_ADMIN')) {
+            $canValidate = true;
+        }
+
+        if (!$canValidate) {
+            $session = $queue->getSession();
+            $canValidate = $this->isValidator($authenticatedUser, $session);
+        }
+
+        return $canValidate;
+    }
+
+    public function isValidator(User $user, CourseSession $session)
+    {
+        $isValidator = false;
+        $validators = $session->getValidators();
+
+        foreach ($validators as $validator) {
+
+            if ($validator->getId() === $user->getId()) {
+                $isValidator = true;
+                break;
+            }
+        }
+
+        return $isValidator;
+    }
+
+    public function validateSessionQueue(CourseSessionRegistrationQueue $queue)
+    {
+        $status = $queue->getStatus();
+
+        if ($status & CourseSessionRegistrationQueue::WAITING_VALIDATOR) {
+            $authenticatedUser = $this->tokenStorage->getToken()->getUser();
+            $status -= CourseSessionRegistrationQueue::WAITING_VALIDATOR;
+            $queue->setStatus($status);
+            $queue->setValidatorValidationDate(new \DateTime());
+            $queue->setValidator($authenticatedUser);
+            $this->persistCourseSessionRegistrationQueue($queue);
+        }
+
+        return $queue;
+    }
+
+    public function persistCourseSessionRegistrationQueue(CourseSessionRegistrationQueue $queue)
+    {
+        $this->om->persist($queue);
+        $this->om->flush();
+    }
+
 
     /***************************************************
      * Access to CursusDisplayedWordRepository methods *
@@ -3091,6 +3287,33 @@ class CursusManager
             $course,
             $executeQuery
         );
+    }
+
+    public function getSessionQueuesByCourses(array $courses)
+    {
+        return count($courses) > 0 ?
+            $this->sessionQueueRepo->findSessionQueuesByCourses($courses) :
+            array();
+    }
+
+    public function getAllUnvalidatedSessionQueues()
+    {
+        return $this->sessionQueueRepo->findAllUnvalidatedSessionQueues();
+    }
+
+    public function getAllSearchedUnvalidatedSessionQueues($search)
+    {
+        return $this->sessionQueueRepo->findAllSearchedUnvalidatedSessionQueues($search);
+    }
+
+    public function getUnvalidatedSessionQueuesByValidator(User $user)
+    {
+        return $this->sessionQueueRepo->findUnvalidatedSessionQueuesByValidator($user);
+    }
+
+    public function getUnvalidatedSearchedSessionQueuesByValidator(User $user, $search)
+    {
+        return $this->sessionQueueRepo->findUnvalidatedSearchedSessionQueuesByValidator($user, $search);
     }
 
 

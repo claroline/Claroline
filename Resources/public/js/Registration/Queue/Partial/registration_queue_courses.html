@@ -1,0 +1,37 @@
+<div class="panel panel-default" ng-repeat="course in cqmc.courses">
+    <div class="panel-heading">
+        <h4 class="panel-title pointer-hand" data-toggle="collapse" href="#collapse-{{ course['id'] }}">
+            {{ course['title'] }} [{{ course['code'] }}]
+            <span class="badge" ng-if="cqmc.nbQueues[course['id']] > 0">
+                {{ cqmc.nbQueues[course['id']] }}
+            </span>
+        </h4>
+    </div>
+    <div id="collapse-{{ course['id'] }}" class="panel-collape collapse">
+        <div class="panel-body">
+            <div ng-repeat="validator in course['validators']">
+                {{ validator['firstName'] }}
+                {{ validator['lastName'] }}
+            </div>
+            <hr>
+            <div ng-repeat="session in cqmc.sessions[course['id']]">
+                {{ session['name'] }}
+                [
+                <span ng-repeat="validator in session['validators']">
+                    {{ validator['firstName'] }}
+                    {{ validator['lastName'] }}
+                </span>
+                ]
+                <div ng-if="cqmc.sessionsQueues[course['id']] && cqmc.sessionsQueues[course['id']][session['id']]">
+                    <div ng-repeat="queue in cqmc.sessionsQueues[course['id']][session['id']]">
+                        {{ queue['id'] }} :
+                        {{ queue['firstName'] }}
+                        {{ queue['lastName'] }}
+                        [{{ queue['status'] }}]
+                        <i class="fa fa-check pointer-hand" ng-click="cqmc.validateSessionQueue(queue['id'])"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

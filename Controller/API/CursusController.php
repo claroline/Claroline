@@ -17,6 +17,7 @@ use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusGroup;
 use Claroline\CursusBundle\Entity\CursusUser;
 use Claroline\CursusBundle\Entity\CourseSession;
+use Claroline\CursusBundle\Entity\CourseSessionRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSessionUser;
 use Claroline\CursusBundle\Manager\CursusManager;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
@@ -317,6 +318,94 @@ class CursusController extends FOSRestController
         return new JsonResponse('success', 200);
     }
 
+//    /**
+//     * @View(serializerGroups={"api"})
+//     * @ApiDoc(
+//     *     description="Returns datas for registration queues",
+//     *     views = {"cursus"}
+//     * )
+//     */
+//    public function getRegistrationQueuesDatasAction()
+//    {
+//
+//    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Returns datas for all courses",
+     *     views = {"cursus"}
+     * )
+     */
+    public function getCoursesDatasAction()
+    {
+        $courses = $this->cursusManager->getAllCourses('', 'title', 'ASC', false);
+        $datas['courses'] = $this->cursusManager->getCoursesDatasFromCourses($courses);
+        $datas['sessions'] = $this->cursusManager->getSessionsDatasFromCourses($courses);
+        $datas['sessionsQueues'] = $this->cursusManager->getSessionsQueuesDatasFromCourses($courses);
+
+        return $datas;
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Returns datas for searched courses",
+     *     views = {"cursus"}
+     * )
+     */
+    public function getSearchedCoursesDatasAction($search)
+    {
+        $datas = array();
+        $courses = $this->cursusManager->getAllCourses($search, 'title', 'ASC', false);
+        $datas['courses'] = $this->cursusManager->getCoursesDatasFromCourses($courses);
+        $datas['sessions'] = $this->cursusManager->getSessionsDatasFromCourses($courses);
+        $datas['sessionsQueues'] = $this->cursusManager->getSessionsQueuesDatasFromCourses($courses);
+
+        return $datas;
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Validate session queue",
+     *     views = {"cursus"}
+     * )
+     */
+    public function putSessionQueueValidateAction(CourseSessionRegistrationQueue $queue)
+    {
+        $canValidate = $this->cursusManager->canValidateSessionQueue($queue);
+
+        if (!$canValidate) {
+
+            return new JsonResponse('Forbidden', 403);
+        }
+        $validatedQueue = $this->cursusManager->validateSessionQueue($queue);
+        $session = $validatedQueue->getSession();
+        $course = $session->getCourse();
+        $user = $queue->getUser();
+        $validator = $queue->getValidator();
+
+        $validatedQueueDatas = array(
+            'id' => $validatedQueue->getId(),
+            'courseId' => $course->getId(),
+            'sessionId' => $session->getId(),
+            'applicationDate' => $validatedQueue->getApplicationDate(),
+            'status' => $validatedQueue->getStatus(),
+            'userId' => $user->getId(),
+            'username' => $user->getUsername(),
+            'firstName' => $user->getFirstName(),
+            'lastName' => $user->getLastName(),
+            'validatorValidationDate' => $validatedQueue->getValidatorValidationDate(),
+            'validatorId' => $validator->getId(),
+            'validatorUsername' => $validator->getUsername(),
+            'validatorFirstName' => $validator->getFirstName(),
+            'validatorLastName' => $validator->getLastName()
+        );
+
+        return new JsonResponse($validatedQueueDatas, 200);
+    }
+
 
     /***********************************
      * Not used in angular refactoring *
@@ -383,7 +472,7 @@ class CursusController extends FOSRestController
     /**
      * @View(serializerGroups={"api"})
      * @ApiDoc(
-     *     description="Returns the course list",
+     *     description="Returns the courses list",
      *     views = {"cursus"}
      * )
      */

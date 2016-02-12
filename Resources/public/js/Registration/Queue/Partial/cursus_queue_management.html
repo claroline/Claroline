@@ -1,1 +1,34 @@
-Registration management
+<div class="panel-heading">
+    <h3 class="panel-title">
+        {{ 'registration_queue_management'|trans:{}:'cursus' }}
+    </h3>
+</div>
+<div class="panel-body">
+    <div class="alert alert-info" ng-if="cqmc.search !== ''">
+        {{ 'results_for_search_on'|trans:{}:'platform' }} :
+        "{{ cqmc.search }}"
+    </div>
+
+    <div class="input-group col-md-6 pull-right">
+        <input class="form-control search-group"
+               type="text"
+               placeholder="{{ 'search'|trans:{}:'platform' }}"
+               ng-model="cqmc.tempSearch"
+        >
+        <span class="input-group-btn">
+            <button class="filter btn btn-default"
+                    type="button"
+                    ng-click="cqmc.searchCourses()"
+            >
+                <i class="fa fa-search"></i>
+            </button>
+        </span>
+    </div>
+    <br>
+    <br>
+    <hr>
+    <registration-queue-courses ng-if="cqmc.courses.length > 0"></registration-queue-courses>
+    <div class="alert alert-warning" ng-if="cqmc.courses.length === 0">
+        {{ 'no_course'|trans:{}:'cursus' }}
+    <div>
+</div>
