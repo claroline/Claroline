@@ -44,13 +44,15 @@
     </td>
 
     {% if dropzone.evaluation != 1  %}
-    <td class="centered">
+    <td class="centered centering-columns">
         {# Afficher ici la valeur "Devoirs à corriger" modifiée en "Etat" #}
+        <div class="btn-group">
         {% include 'InnovaCollecticielBundle:Document:documentsNbTextToRead.html.twig' %}
+        </div>
     </td>
     {% endif %}
 
-    <td class="centered">
+    <td class="centered centering-columns">
     {# Appel de la vue "Vue d'un fichier" où seront affichés les différents commentaires. #}
         <div class="btn-group">
            {# Variable qui va compter le nombre de commentaires #}
@@ -76,9 +78,11 @@
     {% if adminInnova %}
         {# Affiche cette colonne si le créateur du collecticiel veut gérer les accusés de réception. Demande JJQ. InnovaERV #}
         {% if dropzone.returnreceipt == 1  %}
-            <td class="centered">
+            <td class="centered centering-columnsAR">
+        <div class="btn-group">
                 {# Afficher ici la valeur de l'accusé de réception #}
                 {% include 'InnovaCollecticielBundle:Document:returnReceipt.html.twig' %}
+        </div>
             </td>
         {% endif %}
 
@@ -89,9 +93,11 @@
         {% endif %}
     {% endif %}
 
-    <td class="centered">
+    <td class="centered no-sort sorting_disabled">
+    <div>
         {# Affiche de la case à cocher en étant "coché" ou "décoche". Demande JJQ. InnovaERV #}
         {% include 'InnovaCollecticielBundle:Document:inputReturnReceipt.html.twig' %}
+    </div>
     </td>
 
 </tr>
