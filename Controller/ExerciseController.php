@@ -126,7 +126,7 @@ class ExerciseController extends Controller
             $nbUserPaper = 0;
         }
 
-        $nbQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->getCountQuestion($exerciseId);
+        $nbQuestions = $em->getRepository('UJMExoBundle:StepQuestion')->getCountQuestion($exercise);
         $nbPapers = $em->getRepository('UJMExoBundle:Paper')->countPapers($exerciseId);
 
         return $this->render(

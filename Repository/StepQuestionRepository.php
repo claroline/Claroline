@@ -23,9 +23,28 @@ class StepQuestionRepository extends EntityRepository
         return $this->createQueryBuilder('sq')
             ->select('max(sq.ordre)')
             ->join('sq.step', 's')
-            ->where('s = :exercise')
+            ->where('s.exercise = :exercise')
             ->setParameter(':exercise', $exo)
             ->getQuery()
             ->getResult();
+    }
+    
+      /**
+     * Number of question for an exercise.
+     *
+     *
+     * @param Exercise $exo if Exercise
+     *
+     * Return aintger
+     */
+    public function getCountQuestion($exo)
+    {
+        return $query = $this->createQueryBuilder('sq')
+                ->select('count(sq.ordre) as nbq')
+                ->join('sq.step', 's')
+                ->where('s.exercise = :exercise')
+                ->setParameter(':exercise', $exo)
+                ->getQuery()
+                ->getSingleResult();
     }
 }
