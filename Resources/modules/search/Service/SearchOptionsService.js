@@ -1,8 +1,4 @@
 export default class SearchOptionsService {
-    constructor() {
-        alert('construct serv');
-    }
-
     translate(key) {
         return window.Translator.trans(key, {}, 'platform')
     }

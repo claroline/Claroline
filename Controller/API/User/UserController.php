@@ -151,7 +151,7 @@ class UserController extends FOSRestController
             $baseFields[] = $field->getName();
         }
 
-        $baseFields[] = 'group';
+        $baseFields[] = 'group_name';
 
         return $baseFields;
     }

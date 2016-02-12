@@ -6,8 +6,6 @@ import ClarolineSearchDirective from './Directive/ClarolineSearchDirective'
 import ClarolineSearchService from './Service/ClarolineSearchService'
 import SearchOptionsService  from './Service/SearchOptionsService'
 
-console.log(ClarolineSearchController);
-
 angular.module('ClarolineSearch', ['ui.select'])
 	.config(Interceptors)
 	.directive('clarolinesearch', () => new ClarolineSearchDirective)

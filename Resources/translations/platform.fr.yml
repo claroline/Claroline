@@ -1256,3 +1256,4 @@ password_initialized: Mot de passe réinitialisé pour %user%
 delete_users: Supprimer des utilisateurs
 delete_users_confirm: Êtes-vous sûr de vouloir supprimer ces utilisateurs [ %user_list% ] ?
 organizations: Organizations
+group_name: Nom du groupe

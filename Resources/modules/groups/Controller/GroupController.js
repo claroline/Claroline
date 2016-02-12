@@ -2,10 +2,10 @@ import CreateModalController from './CreateModalController'
 import EditModalController from './EditModalController'
 
 export default class GroupController {
-    constructor($http, ClarolineSearchService, clarolineAPI, $uibModal) {
+    constructor($http, ClarolineSearchService, ClarolineAPIService, $uibModal) {
         this.$http = $http
         this.ClarolineSearchService = ClarolineSearchService
-        this.clarolineAPI = clarolineAPI
+        this.ClarolineAPIService = ClarolineAPIService
         this.$uibModal = $uibModal
         this.search = ''
         this.savedSearch = []
@@ -18,6 +18,7 @@ export default class GroupController {
             {
                 name: this.translate('actions'),
                 cellRenderer: function(scope) {
+                    //commented code doesn't work. Idk why.
                     /*
                     const groupId = scope.$row.id;
                     const actions = 
@@ -53,6 +54,31 @@ export default class GroupController {
 
         $http.get(Routing.generate('api_get_group_searchable_fields'))
             .then(d => this.fields = d.data)
+
+        /**********************************************************/
+        /* THE FOLLOWING CALLBACKS NEED THE CURRENT OBJECT "THIS" */
+        /**********************************************************/
+
+        this._deleteCallback = function(data) {
+            for (let i = 0; i < this.selected.length; i++) {
+                this.alerts.push({
+                    type: 'success',
+                    msg: this.translate('group_removed', {group: this.selected[i].name})
+                });
+            }
+
+            this.dataTableOptions.paging.count -= this.selected.length;
+            this.ClarolineAPIService.removeElements(this.selected, this.groups);
+            this.selected.splice(0, this.selected.length);
+        }.bind(this)
+
+        this._onSearch = function(searches) {
+            this.savedSearch = searches;
+            this.ClarolineSearchService.find('api_get_search_groups', searches, this.dataTableOptions.paging.offset, this.dataTableOptions.paging.size).then(d => {
+                this.groups = d.data.groups;
+                this.dataTableOptions.paging.count = d.data.total;
+            })
+        }.bind(this)
     }
 
     translate(key, data = {}) {
@@ -69,27 +95,18 @@ export default class GroupController {
         return qs
     }
 
-    deleteCallback(data) {
-        for (let i = 0; i < this.selected.length; i++) {
-            this.alerts.push({
-                type: 'success',
-                msg: this.translate('group_removed', {group: this.selected[i].name})
-            });
-        }
-
-        this.dataTableOptions.paging.count -= this.selected.length;
-        this.clarolineAPI.removeElements(this.selected, this.groups);
-        this.selected.splice(0, this.selected.length);
-    }
-
     closeAlert(index) {
         this.alerts.splice(index, 1);
     }
 
     clickNew() {
+
+        CreateModalController.$inject = ['GroupAPIService', '$uibModalInstance', '$uibModal']
+
         const modalInstance = this.$uibModal.open({
             templateUrl: Routing.generate('api_get_create_group_form', {'_format': 'html'}),
-            controller: () => new CreateModalController
+            controller: CreateModalController,
+            controllerAs: 'modal'
         })
 
         modalInstance.result.then(result => {
@@ -99,30 +116,26 @@ export default class GroupController {
 
             this.alerts.push({
                 type: 'success',
-                msg: this.translate('group_created', {group: result.name})
+                msg: this.translate('group_created', {group: result.name}),
+                controllerAs: 'modal'
             });
         })
     }
 
     clickEdit(group) {
+
+        EditModalController.$inject = ['GroupAPIService', '$uibModalInstance', '$uibModal']
+
         const modalInstance = this.$uibModal.open({
             templateUrl: Routing.generate('api_get_edit_group_form', {'_format': 'html', 'group': group.id}),
-            controller: () => EditModalController
+            controller: EditModalController
         });
 
         modalInstance.result.then(result => {
             if (!result) return;
             //dirty but it works
-            this.groups = this.clarolineAPI.replaceById(result, this.groups);
+            this.groups = this.ClarolineAPIService.replaceById(result, this.groups);
         });
-    }
-
-    onSearch(searches) {
-        this.savedSearch = searches;
-        this.ClarolineSearchService.find('api_get_search_groups', searches, this.dataTableOptions.paging.offset, this.dataTableOptions.paging.size).then(d => {
-            this.groups = d.data.groups;
-            this.dataTableOptions.paging.count = d.data.total;
-        })
     }
 
    paging(offset, size) {
@@ -149,9 +162,9 @@ export default class GroupController {
             if (i < this.selected.length - 1) groups += ', ';
         }
 
-        this.clarolineAPI.confirm(
+        this.ClarolineAPIService.confirm(
             {url: url, method: 'DELETE'},
-            this.deleteCallback,
+            this._deleteCallback,
             this.translate('delete_groups'),
             this.translate('delete_groups_confirm', {group_list: groups})
         );

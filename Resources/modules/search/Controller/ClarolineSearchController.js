@@ -3,7 +3,6 @@ export default class ClarolineSearchController {
     constructor($http, SearchOptionsService) {
         this.$http = $http
         this.SearchOptionsService = SearchOptionsService
-
         this.selected = [];
         this.options  = [];
     }

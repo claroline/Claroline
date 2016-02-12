@@ -1,13 +1,13 @@
 export default class GroupAPIService {
-    constructor($http, clarolineAPI) {
+    constructor($http, ClarolineAPIService) {
         this.$http = $http
-        this.clarolineAPI = clarolineAPI
+        this.ClarolineAPIService = ClarolineAPIService
     }
 
     create(newGroup) {
-        const data = this.clarolineAPI.formSerialize('group_form', newGroup);
+        const data = this.ClarolineAPIService.formSerialize('group_form', newGroup);
 
-        return $http.post(
+        return this.$http.post(
             Routing.generate('api_post_group', {'_format': 'html'}),
             data,
             {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
@@ -15,7 +15,7 @@ export default class GroupAPIService {
     }
 
     edit(group) {
-        const data = clarolineAPI.formSerialize('group_form', group);
+        const data = ClarolineAPIService.formSerialize('group_form', group);
 
         return this.$http.put(
             Routing.generate('api_put_group', {'_format': 'html', 'group': group.id}),
