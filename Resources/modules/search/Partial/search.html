@@ -1,0 +1,35 @@
+<div>
+    <div class="input-group">
+        <ui-select
+            ng-model="cs.searches"
+            ng-change="cs.updateOptions"
+            on-select="cs.onSelect($item, $model, $select)"
+            reset-search-input="true"
+            tagging multiple
+            on-remove="cs.onRemove($item, $model, $select)"
+
+        >
+            <ui-select-match>
+                {{ $item.name }}
+            </ui-select-match>
+            <ui-select-choices
+                repeat="dataitem in (cs.options)"
+                refresh="cs.refreshOptions($select)"
+                refresh-delay="0"
+            >
+                {{ dataitem.name }}
+            </ui-select-choices>
+        </ui-select>
+
+        <div id="search-el"></div>
+        <span class="input-group-btn">
+            <button
+                class="filter btn btn-default"
+                type="button"
+                ng-click="cs.search()"
+                id="search-button">
+                <i class="fa fa-search"></i>
+            </button>
+        </span>
+    </div>
+</div>
