@@ -272,6 +272,8 @@ claro_api:
     resource: "@ClarolineCoreBundle/Controller/API/User/ApiController.php"
     prefix: api
     type: annotation
+    options:
+        expose: true
 
 claro_user_api:
     resource: "@ClarolineCoreBundle/Controller/API/User/UserController.php"
