@@ -29,7 +29,7 @@ function configure(frontendConfig, rootDir, isWatchMode) {
   const plugins = [
     makeBundleResolverPlugin(frontendConfig.bundles),
     makeBowerPlugin(),
-    makeBaseCommonsPlugin(),
+    //makeBaseCommonsPlugin(),
     ...makeBundleCommonsPlugins(frontendConfig.webpack.commons)
   ]
 
@@ -46,6 +46,10 @@ function configure(frontendConfig, rootDir, isWatchMode) {
 
   const loaders = [
     makeJsLoader(isProd),
+    {
+      test: /\.html/,
+      loader: 'raw'
+    }
   ]
 
   return {
@@ -169,7 +173,7 @@ function makeJsLoader(isProd) {
     query: {
       cacheDirectory: true,
       presets: ['es2015'],
-      plugins: isProd ? ['transform-runtime'] : []
+      plugins: ['transform-runtime']
     }
   }
 }
