@@ -47,4 +47,22 @@ class StepQuestionRepository extends EntityRepository
                 ->getQuery()
                 ->getSingleResult();
     }
+    
+      /**
+     *
+     *
+     * @param Exercise $exo if Exercise
+     *
+     * Return aintger
+     */
+    public function findExoByOrder($exo)
+    {
+        return $query = $this->createQueryBuilder('sq')               
+                ->join('sq.step', 's')
+                ->where('s.exercise = :exercise')
+                ->setParameter(':exercise', $exo)
+                ->orderBy('sq.ordre')
+                ->getQuery()
+                ->getResult();
+    }
 }

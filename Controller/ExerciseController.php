@@ -810,12 +810,9 @@ class ExerciseController extends Controller
         $docimoServ = $this->container->get('ujm.exo_docimology');
         $em = $this->getDoctrine()->getManager();
         $this->checkAccess($exercise);
-
-        $eqs = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(
-            array('exercise' => $exercise->getId()),
-            array('ordre' => 'ASC')
-        );
-
+        
+        $eqs = $em->getRepository('UJMExoBundle:StepQuestion')->findExoByOrder($exercise);
+        
         $papers = $em->getRepository('UJMExoBundle:Paper')->getExerciseAllPapers($exercise->getId());
 
         if ($this->container->get('ujm.exo_exercise')->isExerciseAdmin($exercise)) {
