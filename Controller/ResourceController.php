@@ -481,6 +481,46 @@ class ResourceController
 
     /**
      * @EXT\Route(
+     *     "/log/{node}/user/csv",
+     *     name="claro_resource_logs_by_user_csv"
+     * )
+     *
+     * Exports in CSV the list of user actions for the given criteria
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     *
+     * @throws \Exception
+     * @return Response
+     */
+    public function logByUserCSVAction(ResourceNode $node)
+    {
+        $resource = $this->resourceManager->getResourceFromNode($node);
+        $collection = new ResourceCollection(array($node));
+        $this->checkAccess("ADMINISTRATE", $collection);
+
+        $logManager = $this->logManager;
+
+        $response = new StreamedResponse(function() use($logManager, $resource) {
+
+            $results = $logManager->countByUserListForCSV('workspace', null, $resource);
+            $handle = fopen('php://output', 'w+');
+            while (false !== ($row = $results->next())) {
+                // add a line in the csv file. You need to implement a toArray() method
+                // to transform your object into an array
+                fputcsv($handle, array($row[$results->key()]['name'],$row[$results->key()]['actions']));
+            }
+
+            fclose($handle);
+        });
+        $dateStr = date('YmdHis');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition','attachment; filename="user_actions_'.$dateStr.'.csv"');
+
+        return $response;
+    }
+
+    /**
+     * @EXT\Route(
      *     "/download",
      *     name="claro_resource_download",
      *     options={"expose"=true},

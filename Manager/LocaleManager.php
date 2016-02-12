@@ -139,7 +139,6 @@ class LocaleManager
         } else {
             $locale = $this->defaultLocale;
         }
-
         $request->getSession()->set('_locale', $locale);
 
         return $locale;

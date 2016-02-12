@@ -19,17 +19,18 @@ use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
- * @Service
- *
+ * @Service("claroline.locale_setter")
  * Listener setting the platform language according to platform_options.yml.
  */
 class LocaleSetter
 {
     private $localeManager;
+
     /**
      * @InjectParams({
      *     "localeManager"  = @Inject("claroline.common.locale_manager")
      * })
+     * @param LocaleManager $localeManager
      */
     public function __construct(LocaleManager $localeManager)
     {
@@ -37,7 +38,7 @@ class LocaleSetter
     }
 
     /**
-     * @Observe("kernel.request")
+     * @Observe("kernel.request", priority = 17)
      *
      * Sets the platform language.
      *

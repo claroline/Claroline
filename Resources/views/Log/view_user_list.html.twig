@@ -28,25 +28,28 @@
 
 <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
 
-{# TODO: the following scripts should be packed and minified #}
 <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/jquery.jqplot.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.highlighter.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.barRenderer.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.cursor.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.canvasTextRenderer.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.dateAxisRenderer.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.canvasAxisTickRenderer.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.canvasAxisLabelRenderer.js') }}"></script>
+{% javascripts debug=false filter='jsmin' output='js/corebundle/jqplot.view-user-list.min.js'
+'bundles/clarolinecore/js/jqplot/jqplot.colors.js'
+'bundles/frontend/jqPlot/src/plugins/jqplot.highlighter.js'
+'bundles/frontend/jqPlot/src/plugins/jqplot.barRenderer.js'
+'bundles/frontend/jqPlot/src/plugins/jqplot.cursor.js'
+'bundles/frontend/jqPlot/src/plugins/jqplot.canvasTextRenderer.js'
+'bundles/frontend/jqPlot/src/plugins/jqplot.dateAxisRenderer.js'
+'bundles/frontend/jqPlot/src/plugins/jqplot.canvasAxisTickRenderer.js'
+'bundles/frontend/jqPlot/src/plugins/jqplot.canvasAxisLabelRenderer.js'
+%}
+<script src="{{ asset_url }}"></script>
+{% endjavascripts %}
 
 {% set newNameOrder = 'ASC' %}
-{% set newActionsOrder = 'ASC' %}
+{% set newActionsOrder = 'DESC' %}
 {% if orderBy == 'name' %}
     {% set newNameOrder = (order == 'ASC')?'DESC':'ASC' %}
 {% elseif orderBy == 'actions' %}
     {% set newActionsOrder = (order == 'ASC')?'DESC':'ASC' %}
 {% endif %}
 {% set route = app.request.attributes.get('_route') %}
-{% set routeParams = app.request.attributes.get('_route_params')|merge(app.request.query.all) %}
 <div class='logs-list'>
     <div class='row'>
         <div class="col-md-3 log_list_item_head">
