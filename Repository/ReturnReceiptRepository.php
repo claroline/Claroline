@@ -151,13 +151,15 @@ class ReturnReceiptRepository extends EntityRepository
     public function deleteReturnReceipt(User $user, Dropzone $dropzone, Document $document)
     {
 
+        /* #254 : on supprime tous les AR avant de créer le nouveau */
+
         /* requête avec CreateQuery : */
         $qb = $this->createQueryBuilder('returnreceipt')
             ->delete()
-            ->andWhere('returnreceipt.user = :user')
+//            ->andWhere('returnreceipt.user = :user')
             ->andWhere('returnreceipt.dropzone = :dropzone')
             ->andWhere('returnreceipt.document = :document')
-            ->setParameter('user', $user)
+//            ->setParameter('user', $user)
             ->setParameter('dropzone', $dropzone)
             ->setParameter('document', $document);
 
