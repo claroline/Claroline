@@ -27,6 +27,7 @@
         "claroline/migration-bundle": "~6.0",
         "cocur/slugify": "~1.0",
         "composer/composer": "dev-master",
+        "composer/semver": "dev-master",
         "doctrine/dbal": "~2.4",
         "doctrine/doctrine-bundle": "~1.3",
         "doctrine/orm": "~2.4",
