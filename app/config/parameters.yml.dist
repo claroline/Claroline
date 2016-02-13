@@ -8,16 +8,16 @@ parameters:
     database_driver: pdo_mysql
     database_host: localhost
     database_port: ~
-    database_name: claroline_prod
+    database_name: claroline
     database_user: root
     database_password: ~
 
-    test_database_driver: pdo_mysql
-    test_database_host: localhost
-    test_database_port: ~
-    test_database_name: claroline_test
-    test_database_user: root
-    test_database_password: ~
+    test_database_driver: %database_driver%
+    test_database_host: %database_host%
+    test_database_port: %database_port%
+    test_database_name: %database_name%_test
+    test_database_user: %database_user%
+    test_database_password: %database_password%
 
 # mail
 
