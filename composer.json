@@ -51,6 +51,36 @@
         "symfony/phpunit-bridge": "*"
     },
     "scripts": {
+        "sync": [
+            "composer run fetch",
+            "composer run configure",
+            "composer run build",
+            "php app/console claroline:update",
+            "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::disableMaintenance"
+        ],
+        "fetch": [
+            "composer install --prefer-source -o",
+            "composer run check",
+            "npm install",
+            "npm run bower"
+        ],
+        "check": [
+            "Claroline\\CoreBundle\\Library\\Installation\\ScriptHandler::checkEnvironment"
+        ],
+        "configure": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
+        ],
+        "build": [
+            "Claroline\\BundleRecorder\\ScriptHandler::buildBundleFile",
+            "Claroline\\CoreBundle\\Library\\Installation\\Refresher::deleteCache",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+            "npm run themes",
+            "npm run webpack"
+        ],
+        "watch": [
+            "npm run watch"
+        ],
         "pre-install-cmd": [
             "Claroline\\BundleRecorder\\ScriptHandler::checkForPendingOperations"
         ],
@@ -69,26 +99,6 @@
         ],
         "post-package-uninstall": [
             "Claroline\\BundleRecorder\\ScriptHandler::logUninstallOperation"
-        ],
-        "post-install-cmd": [
-            "composer run-script configure",
-            "composer run-script install-assets"
-        ],
-        "post-update-cmd": [
-            "composer run-script configure",
-            "composer run-script install-assets"
-        ],
-        "check-env": [
-            "Claroline\\CoreBundle\\Library\\Installation\\ScriptHandler::checkEnvironment"
-        ],
-        "configure": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
-            "Claroline\\BundleRecorder\\ScriptHandler::buildBundleFile",
-            "Claroline\\CoreBundle\\Library\\Installation\\Refresher::deleteCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap"
-        ],
-        "install-assets": [
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets"
         ]
     },
     "minimum-stability": "dev",
