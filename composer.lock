@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "cc0f537570d7ea0e5f8ead1d24dc7c3f",
-    "content-hash": "930de682c4dea5d2dae8739652896386",
+    "hash": "aa1eab7f28cb768197ac0b3b1d08e091",
+    "content-hash": "1a4c467de8118391a6f4febe5da2a9b7",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -286,12 +286,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/stefk/CoreBundle.git",
-                "reference": "a469ddb8b35e7d4ebcceb3e22616045ea6f8a7af"
+                "reference": "1ed61fcf24763d0483c5fa729c89b3e92eaea5e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stefk/CoreBundle/zipball/a469ddb8b35e7d4ebcceb3e22616045ea6f8a7af",
-                "reference": "a469ddb8b35e7d4ebcceb3e22616045ea6f8a7af",
+                "url": "https://api.github.com/repos/stefk/CoreBundle/zipball/1ed61fcf24763d0483c5fa729c89b3e92eaea5e8",
+                "reference": "1ed61fcf24763d0483c5fa729c89b3e92eaea5e8",
                 "shasum": ""
             },
             "require": {
@@ -317,6 +317,7 @@
                 "friendsofsymfony/rest-bundle": "~1.4",
                 "gedmo/doctrine-extensions": "~2.3",
                 "gregwar/captcha-bundle": "1.0.12",
+                "hwi/oauth-bundle": "0.4.*@dev",
                 "idci/exporter-bundle": "1.0.0",
                 "jms/di-extra-bundle": "1.5.0",
                 "jms/security-extra-bundle": "1.5.1",
@@ -329,7 +330,7 @@
                 "natxet/cssmin": "3.0.2",
                 "nelmio/api-doc-bundle": "dev-master",
                 "php": ">=5.5",
-                "sensio/distribution-bundle": "*",
+                "sensio/distribution-bundle": "~2.3.4",
                 "sensio/framework-extra-bundle": "~3.0.0",
                 "sensio/generator-bundle": "~2.4",
                 "stefk/incenteev-parameters": "dev-master",
@@ -371,7 +372,7 @@
             "support": {
                 "source": "https://github.com/stefk/CoreBundle/tree/angular-es6"
             },
-            "time": "2016-02-13 13:35:18"
+            "time": "2016-02-13 16:03:30"
         },
         {
             "name": "claroline/cursus-bundle",
@@ -1271,12 +1272,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "25e089eee90799ed0f6046dfd17521804b113f25"
+                "reference": "8ed894cf999756089f9ffa969b3756f26bf4af1d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/25e089eee90799ed0f6046dfd17521804b113f25",
-                "reference": "25e089eee90799ed0f6046dfd17521804b113f25",
+                "url": "https://api.github.com/repos/composer/composer/zipball/8ed894cf999756089f9ffa969b3756f26bf4af1d",
+                "reference": "8ed894cf999756089f9ffa969b3756f26bf4af1d",
                 "shasum": ""
             },
             "require": {
@@ -1338,7 +1339,7 @@
                 "dependency",
                 "package"
             ],
-            "time": "2016-02-12 14:03:59"
+            "time": "2016-02-13 15:33:04"
         },
         {
             "name": "composer/semver",
@@ -4045,62 +4046,6 @@
             "time": "2015-06-09 14:59:11"
         },
         {
-            "name": "innova/angular-ui-bootstrap-bundle",
-            "version": "5.0.0",
-            "target-dir": "Innova/AngularUIBootstrapBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/InnovaLangues/AngularUIBootsrapBundle.git",
-                "reference": "77877fde891c9f390ea1e14d0ffd658a441fd12c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/InnovaLangues/AngularUIBootsrapBundle/zipball/77877fde891c9f390ea1e14d0ffd658a441fd12c",
-                "reference": "77877fde891c9f390ea1e14d0ffd658a441fd12c",
-                "shasum": ""
-            },
-            "require": {
-                "innova/angular-js-bundle": "~5.0",
-                "php": ">=5.3.0",
-                "symfony/symfony": "2.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Innova\\AngularUIBootstrapBundle": "."
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Arnaud Bey",
-                    "email": "arnaud.bey@u-grenoble3.fr"
-                },
-                {
-                    "name": "Axel Penin",
-                    "email": "axel.penin@u-grenoble3.fr"
-                },
-                {
-                    "name": "Eric Vincent",
-                    "email": "eric.vincent@u-grenoble3.fr"
-                },
-                {
-                    "name": "Donovan Tengblad",
-                    "email": "donovan.tengblad@u-grenoble3.fr"
-                }
-            ],
-            "description": "Symfony 2 bundle which provides Angular UI Twitter Bootstrap.",
-            "homepage": "http://github.com/InnovaLangues/AngularUIBootstrapBundle",
-            "keywords": [
-                "Symfony2",
-                "angular-ui"
-            ],
-            "time": "2015-05-12 12:46:47"
-        },
-        {
             "name": "innova/angular-ui-pageslide-bundle",
             "version": "5.0.1",
             "target-dir": "Innova/AngularUIPageslideBundle",
@@ -4217,65 +4162,6 @@
             "time": "2015-05-22 14:02:35"
         },
         {
-            "name": "innova/angular-ui-sortable-bundle",
-            "version": "5.0.0",
-            "target-dir": "Innova/AngularUISortableBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/InnovaLangues/AngularUISortableBundle.git",
-                "reference": "2260e6b91701d6e975a14f0868955aa1df22db2d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/InnovaLangues/AngularUISortableBundle/zipball/2260e6b91701d6e975a14f0868955aa1df22db2d",
-                "reference": "2260e6b91701d6e975a14f0868955aa1df22db2d",
-                "shasum": ""
-            },
-            "require": {
-                "innova/angular-js-bundle": "~5.0",
-                "php": ">=5.3.0",
-                "symfony/symfony": "2.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Innova\\AngularUISortableBundle": "."
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Arnaud Bey",
-                    "email": "arnaud.bey@u-grenoble3.fr"
-                },
-                {
-                    "name": "Axel Penin",
-                    "email": "axel.penin@u-grenoble3.fr"
-                },
-                {
-                    "name": "Eric Vincent",
-                    "email": "eric.vincent@u-grenoble3.fr"
-                },
-                {
-                    "name": "Donovan Tengblad",
-                    "email": "donovan.tengblad@u-grenoble3.fr"
-                }
-            ],
-            "description": "AngularJS UI Sortable Symfony 2 bundle",
-            "homepage": "http://github.com/InnovaLangues/AngularUISortableBundle",
-            "keywords": [
-                "Symfony2",
-                "angular",
-                "jquery",
-                "jquery-ui",
-                "sortable"
-            ],
-            "time": "2015-05-26 09:00:32"
-        },
-        {
             "name": "innova/angular-ui-tinymce-bundle",
             "version": "5.1.1",
             "target-dir": "Innova/AngularUITinyMCEBundle",
@@ -4331,124 +4217,6 @@
                 "tinymce"
             ],
             "time": "2015-09-03 13:13:32"
-        },
-        {
-            "name": "innova/angular-ui-translation-bundle",
-            "version": "5.0.1",
-            "target-dir": "Innova/AngularUITranslationBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/InnovaLangues/AngularUITranslationBundle.git",
-                "reference": "306a572a1b44126d3e94421d975de1a714a16fbf"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/InnovaLangues/AngularUITranslationBundle/zipball/306a572a1b44126d3e94421d975de1a714a16fbf",
-                "reference": "306a572a1b44126d3e94421d975de1a714a16fbf",
-                "shasum": ""
-            },
-            "require": {
-                "innova/angular-js-bundle": "~5.0",
-                "php": ">=5.3.0",
-                "symfony/symfony": "2.*",
-                "willdurand/js-translation-bundle": "~2.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Innova\\AngularUITranslationBundle": "."
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Arnaud Bey",
-                    "email": "arnaud.bey@u-grenoble3.fr"
-                },
-                {
-                    "name": "Axel Penin",
-                    "email": "axel.penin@u-grenoble3.fr"
-                },
-                {
-                    "name": "Eric Vincent",
-                    "email": "eric.vincent@u-grenoble3.fr"
-                },
-                {
-                    "name": "Donovan Tengblad",
-                    "email": "donovan.tengblad@u-grenoble3.fr"
-                }
-            ],
-            "description": "Provides a new Angular JS filter which can access to Symfony 2 translations.",
-            "homepage": "http://github.com/InnovaLangues/AngularUITranslationBundle",
-            "keywords": [
-                "Symfony2",
-                "angular",
-                "translation"
-            ],
-            "time": "2015-10-14 10:04:29"
-        },
-        {
-            "name": "innova/angular-ui-tree-bundle",
-            "version": "5.0.0",
-            "target-dir": "Innova/AngularUITreeBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/InnovaLangues/AngularUITreeBundle.git",
-                "reference": "02f23ec460e7d4ac135508ec2c8e83554486af4b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/InnovaLangues/AngularUITreeBundle/zipball/02f23ec460e7d4ac135508ec2c8e83554486af4b",
-                "reference": "02f23ec460e7d4ac135508ec2c8e83554486af4b",
-                "shasum": ""
-            },
-            "require": {
-                "innova/angular-js-bundle": "~5.0",
-                "php": ">=5.3.0",
-                "symfony/symfony": "2.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Innova\\AngularUITreeBundle": "."
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Arnaud Bey",
-                    "email": "arnaud.bey@u-grenoble3.fr"
-                },
-                {
-                    "name": "Axel Penin",
-                    "email": "axel.penin@u-grenoble3.fr"
-                },
-                {
-                    "name": "Eric Vincent",
-                    "email": "eric.vincent@u-grenoble3.fr"
-                },
-                {
-                    "name": "Donovan Tengblad",
-                    "email": "donovan.tengblad@u-grenoble3.fr"
-                }
-            ],
-            "description": "AngularJS UI Tree Symfony 2 bundle",
-            "homepage": "http://github.com/InnovaLangues/AngularUISortableBundle",
-            "keywords": [
-                "Symfony2",
-                "angular",
-                "jquery",
-                "jquery-ui",
-                "sortable",
-                "tree"
-            ],
-            "time": "2015-05-12 12:51:14"
         },
         {
             "name": "innova/path-bundle",
@@ -5142,24 +4910,6 @@
                 "ics"
             ],
             "time": "2016-01-25 21:17:05"
-        },
-        {
-            "name": "json-quiz/json-quiz",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/json-quiz/json-quiz.git",
-                "reference": "15da51bdac43dcaf68811272ef22ea4d5d54ddc8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/15da51bdac43dcaf68811272ef22ea4d5d54ddc8",
-                "reference": "15da51bdac43dcaf68811272ef22ea4d5d54ddc8",
-                "shasum": ""
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "time": "2016-02-12 10:44:18"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -8058,45 +7808,35 @@
         },
         {
             "name": "ujm/exo-bundle",
-            "version": "6.x-dev",
+            "version": "6.0.0",
+            "target-dir": "UJM/ExoBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/UJM-dev/ExoBundle.git",
-                "reference": "20f0db58cea7368f7a7a1c3d37fc09f5c0481839"
+                "reference": "cd3d6626467bc70071fe084661ca3090a723ae60"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/UJM-dev/ExoBundle/zipball/20f0db58cea7368f7a7a1c3d37fc09f5c0481839",
-                "reference": "20f0db58cea7368f7a7a1c3d37fc09f5c0481839",
+                "url": "https://api.github.com/repos/UJM-dev/ExoBundle/zipball/cd3d6626467bc70071fe084661ca3090a723ae60",
+                "reference": "cd3d6626467bc70071fe084661ca3090a723ae60",
                 "shasum": ""
             },
             "require": {
-                "claroline/core-bundle": "^6.6.4",
-                "doctrine/orm": "~2.5",
-                "icap/badge-bundle": "~6.0",
-                "innova/angular-js-bundle": "~5.1",
-                "innova/angular-ui-bootstrap-bundle": "~5.0",
-                "innova/angular-ui-pageslide-bundle": "~5.0",
-                "innova/angular-ui-resource-picker-bundle": "~6.0",
-                "innova/angular-ui-sortable-bundle": "~5.0",
-                "innova/angular-ui-tinymce-bundle": "~5.0",
-                "innova/angular-ui-translation-bundle": "~5.0",
-                "json-quiz/json-quiz": "dev-master",
-                "php": ">=5.5",
-                "stefk/jval": "dev-master"
-            },
-            "require-dev": {
-                "claroline/dev-bundle": "dev-master"
+                "claroline/core-bundle": "~6.0",
+                "icap/badge-bundle": "~6.0"
             },
             "type": "claroline-plugin",
+            "extra": {
+                "dbVersion": "20150717103127"
+            },
             "autoload": {
-                "psr-4": {
-                    "UJM\\ExoBundle\\": ""
+                "psr-0": {
+                    "UJM\\ExoBundle": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "description": "Exercise tool for Claroline Connect",
-            "time": "2016-02-12 16:22:57"
+            "description": "Exercise tool for Claroline-Connect",
+            "time": "2015-08-24 08:51:06"
         },
         {
             "name": "werkint/jsmin",
@@ -8734,9 +8474,7 @@
     ],
     "minimum-stability": "dev",
     "stability-flags": {
-        "claroline/core-bundle": 20,
-        "ujm/exo-bundle": 20,
-        "hwi/oauth-bundle": 20
+        "claroline/core-bundle": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
