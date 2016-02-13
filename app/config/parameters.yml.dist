@@ -32,7 +32,7 @@ parameters:
 # others
 
     locale: fr
-    secret: ThisTokenIsNotSoSecretChangeIt
+    secret: change_me
 
 # logs
     non_repeatable_log_time_in_seconds: 600

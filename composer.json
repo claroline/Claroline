@@ -102,9 +102,12 @@
         "incenteev-parameters": {
             "file": "app/config/parameters.yml",
             "interactive-keys": [
-              "database_name",
-              "database_user",
-              "database_password"
+                "database_host",
+                "database_port",
+                "database_name",
+                "database_user",
+                "database_password",
+                "secret"
             ]
         }
     }
