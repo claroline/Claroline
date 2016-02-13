@@ -37,7 +37,7 @@ Project setup
 - MySQL >=5.0 (MariaDB should work as well)
 - A web server like Apache or Nginx
 - A global installation of [composer][composer] (for dependency management)
-- A global installation of [Node.js][node] (for frontend build tools)
+- [Node.js][node] >= 5.5 and [npm][npm] >= 3.7 (for frontend build tools)
 
 ### Additional (recommended) requirements
 
@@ -144,6 +144,7 @@ For development documentation, see
 
 [composer]:     https://getcomposer.org
 [node]:         https://nodejs.org
+[npm]:          https://docs.npmjs.com
 [timezones]:    http://www.php.net/manual/en/timezones.php
 [varnish]:      https://www.varnish-cache.org
 [gd]:           http://www.php.net/manual/en/book.image.php

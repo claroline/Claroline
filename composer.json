@@ -78,6 +78,9 @@
             "composer run-script configure",
             "composer run-script install-assets"
         ],
+        "check-env": [
+            "Claroline\\CoreBundle\\Library\\Installation\\ScriptHandler::checkEnvironment"
+        ],
         "configure": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "Claroline\\BundleRecorder\\ScriptHandler::buildBundleFile",
