@@ -71,17 +71,20 @@
             "Claroline\\BundleRecorder\\ScriptHandler::logUninstallOperation"
         ],
         "post-install-cmd": [
-            "Claroline\\BundleRecorder\\ScriptHandler::buildBundleFile",
-            "Claroline\\CoreBundle\\Library\\Installation\\Refresher::deleteCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets"
+            "composer run-script configure",
+            "composer run-script install-assets"
         ],
         "post-update-cmd": [
+            "composer run-script configure",
+            "composer run-script install-assets"
+        ],
+        "configure": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "Claroline\\BundleRecorder\\ScriptHandler::buildBundleFile",
             "Claroline\\CoreBundle\\Library\\Installation\\Refresher::deleteCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap"
+        ],
+        "install-assets": [
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets"
         ]
     },
@@ -95,6 +98,14 @@
     "extra": {
         "symfony-app-dir": "app",
         "symfony-web-dir": "web",
-        "symfony-assets-install": "symlink"
+        "symfony-assets-install": "symlink",
+        "incenteev-parameters": {
+            "file": "app/config/parameters.yml",
+            "interactive-keys": [
+              "database_name",
+              "database_user",
+              "database_password"
+            ]
+        }
     }
 }
