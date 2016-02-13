@@ -21,6 +21,7 @@ app/SymfonyRequirements.php
 bin/*
 files/*
 node_modules
+npm-debug.log
 templates/*
 vendor/*
 web/bundles/*
