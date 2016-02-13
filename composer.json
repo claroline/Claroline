@@ -5,7 +5,7 @@
         "php": ">=5.5",
         "sensio/distribution-bundle": "~2.3.4",
         "claroline/bundle-recorder": "~6.0",
-        "claroline/core-bundle": "~6.7",
+        "claroline/core-bundle": "dev-angular-es6 as 6.7",
         "claroline/web-installer": "~6.0",
         "claroline/message-bundle": "~6.0",
         "claroline/agenda-bundle": "~6.0",
@@ -50,6 +50,12 @@
     "require-dev": {
         "symfony/phpunit-bridge": "*"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/stefk/CoreBundle"
+        }
+    ],
     "scripts": {
         "sync": [
             "composer run fetch",

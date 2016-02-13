@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "bf08467d1434363dc599d0ed0301bbf3",
-    "content-hash": "b49907da1bdad5d4d4ca60402254a45c",
+    "hash": "cc0f537570d7ea0e5f8ead1d24dc7c3f",
+    "content-hash": "930de682c4dea5d2dae8739652896386",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -282,16 +282,16 @@
         },
         {
             "name": "claroline/core-bundle",
-            "version": "6.7.3.1",
+            "version": "dev-angular-es6",
             "source": {
                 "type": "git",
-                "url": "https://github.com/claroline/CoreBundle.git",
-                "reference": "2f30202ba733283616f199494361daa7f861e4d9"
+                "url": "https://github.com/stefk/CoreBundle.git",
+                "reference": "a469ddb8b35e7d4ebcceb3e22616045ea6f8a7af"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/CoreBundle/zipball/2f30202ba733283616f199494361daa7f861e4d9",
-                "reference": "2f30202ba733283616f199494361daa7f861e4d9",
+                "url": "https://api.github.com/repos/stefk/CoreBundle/zipball/a469ddb8b35e7d4ebcceb3e22616045ea6f8a7af",
+                "reference": "a469ddb8b35e7d4ebcceb3e22616045ea6f8a7af",
                 "shasum": ""
             },
             "require": {
@@ -303,10 +303,15 @@
                 "claroline/migration-bundle": "~6.0",
                 "cocur/slugify": "~1.0",
                 "composer/composer": "dev-master",
+                "composer/semver": "dev-master",
                 "doctrine/dbal": "~2.4",
                 "doctrine/doctrine-bundle": "~1.3",
                 "doctrine/orm": "~2.4",
-                "ext-mcrypt": "*",
+                "ext-curl": "*",
+                "ext-fileinfo": "*",
+                "ext-gd": "*",
+                "ext-intl": "*",
+                "ext-pdo_mysql": "*",
                 "friendsofsymfony/jsrouting-bundle": "~1.5",
                 "friendsofsymfony/oauth-server-bundle": "~1.4",
                 "friendsofsymfony/rest-bundle": "~1.4",
@@ -327,6 +332,7 @@
                 "sensio/distribution-bundle": "*",
                 "sensio/framework-extra-bundle": "~3.0.0",
                 "sensio/generator-bundle": "~2.4",
+                "stefk/incenteev-parameters": "dev-master",
                 "stfalcon/tinymce-bundle": "0.3.8",
                 "stof/doctrine-extensions-bundle": "1.1.0",
                 "symfony/assetic-bundle": "~2.4",
@@ -346,7 +352,6 @@
                     "Claroline\\CoreBundle\\": ""
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0+"
             ],
@@ -361,9 +366,12 @@
             "homepage": "http://www.claroline.net",
             "keywords": [
                 "Claroline",
-                "core"
+                "Core"
             ],
-            "time": "2016-02-04 12:58:36"
+            "support": {
+                "source": "https://github.com/stefk/CoreBundle/tree/angular-es6"
+            },
+            "time": "2016-02-13 13:35:18"
         },
         {
             "name": "claroline/cursus-bundle",
@@ -499,16 +507,16 @@
         },
         {
             "name": "claroline/front-end-bundle",
-            "version": "7.0.1",
+            "version": "7.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/FrontEndBundle.git",
-                "reference": "f8efd6de2ab36e8930e50c82f7151809a9796940"
+                "reference": "0d27b8d786cde3d065fb1a77997919179aba5009"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/FrontEndBundle/zipball/f8efd6de2ab36e8930e50c82f7151809a9796940",
-                "reference": "f8efd6de2ab36e8930e50c82f7151809a9796940",
+                "url": "https://api.github.com/repos/claroline/FrontEndBundle/zipball/0d27b8d786cde3d065fb1a77997919179aba5009",
+                "reference": "0d27b8d786cde3d065fb1a77997919179aba5009",
                 "shasum": ""
             },
             "require": {
@@ -527,7 +535,7 @@
                 "GPL-3.0+"
             ],
             "description": "Front-end dependencies bundle for Claroline 2.0",
-            "time": "2016-02-03 10:48:49"
+            "time": "2016-02-09 09:56:51"
         },
         {
             "name": "claroline/image-player-bundle",
@@ -848,16 +856,16 @@
         },
         {
             "name": "claroline/scorm-bundle",
-            "version": "6.1.7.1",
+            "version": "6.1.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/ScormBundle.git",
-                "reference": "bdc4a01ad4da1b4e56b6f0382ea7f684ecda977c"
+                "reference": "d07ff22b05ba85110d62142cf577245f0716ebf9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/ScormBundle/zipball/bdc4a01ad4da1b4e56b6f0382ea7f684ecda977c",
-                "reference": "bdc4a01ad4da1b4e56b6f0382ea7f684ecda977c",
+                "url": "https://api.github.com/repos/claroline/ScormBundle/zipball/d07ff22b05ba85110d62142cf577245f0716ebf9",
+                "reference": "d07ff22b05ba85110d62142cf577245f0716ebf9",
                 "shasum": ""
             },
             "require": {
@@ -888,7 +896,7 @@
                 "plugin",
                 "scorm"
             ],
-            "time": "2016-02-03 11:00:04"
+            "time": "2016-02-09 16:03:15"
         },
         {
             "name": "claroline/survey-bundle",
@@ -1026,27 +1034,26 @@
         },
         {
             "name": "claroline/video-js-bundle",
-            "version": "6.0.1",
-            "target-dir": "Claroline/VideoJsBundle",
+            "version": "6.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/VideoJsBundle.git",
-                "reference": "0b2483a72f30883664441f306f47bf9ddb96070d"
+                "reference": "99255cf76b89809ef559408145e666214101726d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/VideoJsBundle/zipball/0b2483a72f30883664441f306f47bf9ddb96070d",
-                "reference": "0b2483a72f30883664441f306f47bf9ddb96070d",
+                "url": "https://api.github.com/repos/claroline/VideoJsBundle/zipball/99255cf76b89809ef559408145e666214101726d",
+                "reference": "99255cf76b89809ef559408145e666214101726d",
                 "shasum": ""
             },
             "require": {
                 "claroline/core-bundle": "~6.0",
-                "php": ">=5.4.1"
+                "php": ">=5.5"
             },
             "type": "claroline-plugin",
             "autoload": {
-                "psr-0": {
-                    "Claroline\\VideoJsBundle": ""
+                "psr-4": {
+                    "Claroline\\VideoJsBundle\\": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1058,7 +1065,7 @@
                 "Claroline",
                 "plugin"
             ],
-            "time": "2015-11-16 14:34:59"
+            "time": "2016-02-03 12:41:30"
         },
         {
             "name": "claroline/video-player-bundle",
@@ -1197,16 +1204,16 @@
         },
         {
             "name": "cocur/slugify",
-            "version": "v1.4",
+            "version": "v1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cocur/slugify.git",
-                "reference": "05f00fa75f1c53edfcf4d0425e7e62e95b8888dd"
+                "reference": "16cdd7e792657d524cde931ea666436623b23301"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cocur/slugify/zipball/05f00fa75f1c53edfcf4d0425e7e62e95b8888dd",
-                "reference": "05f00fa75f1c53edfcf4d0425e7e62e95b8888dd",
+                "url": "https://api.github.com/repos/cocur/slugify/zipball/16cdd7e792657d524cde931ea666436623b23301",
+                "reference": "16cdd7e792657d524cde931ea666436623b23301",
                 "shasum": ""
             },
             "require": {
@@ -1256,7 +1263,7 @@
                 "slug",
                 "slugify"
             ],
-            "time": "2015-09-29 18:26:32"
+            "time": "2016-02-11 09:53:46"
         },
         {
             "name": "composer/composer",
@@ -1264,12 +1271,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "79ac2cac82cfdc5460fa378b758d9322d5422893"
+                "reference": "25e089eee90799ed0f6046dfd17521804b113f25"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/composer/composer/zipball/25e089eee90799ed0f6046dfd17521804b113f25",
-                "reference": "79ac2cac82cfdc5460fa378b758d9322d5422893",
+                "reference": "25e089eee90799ed0f6046dfd17521804b113f25",
                 "shasum": ""
             },
             "require": {
@@ -1331,11 +1338,11 @@
                 "dependency",
                 "package"
             ],
-            "time": "2016-02-04 12:40:23"
+            "time": "2016-02-12 14:03:59"
         },
         {
             "name": "composer/semver",
-            "version": "1.2.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/semver.git",
@@ -1959,16 +1966,16 @@
         },
         {
             "name": "doctrine/doctrine-bundle",
-            "version": "1.6.1",
+            "version": "1.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineBundle.git",
-                "reference": "c4ffef2b2296e9d0179eb0b5248e5ae25c9bba3b"
+                "reference": "e9c2ccf573b59b7cea566390f34254fed3c20ed9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineBundle/zipball/c4ffef2b2296e9d0179eb0b5248e5ae25c9bba3b",
-                "reference": "c4ffef2b2296e9d0179eb0b5248e5ae25c9bba3b",
+                "url": "https://api.github.com/repos/doctrine/DoctrineBundle/zipball/e9c2ccf573b59b7cea566390f34254fed3c20ed9",
+                "reference": "e9c2ccf573b59b7cea566390f34254fed3c20ed9",
                 "shasum": ""
             },
             "require": {
@@ -1984,6 +1991,7 @@
                 "doctrine/orm": "~2.3",
                 "phpunit/phpunit": "~4",
                 "satooshi/php-coveralls": "~0.6.1",
+                "symfony/phpunit-bridge": "~2.7|~3.0",
                 "symfony/validator": "~2.2|~3.0",
                 "symfony/yaml": "~2.2|~3.0",
                 "twig/twig": "~1.10"
@@ -2033,7 +2041,7 @@
                 "orm",
                 "persistence"
             ],
-            "time": "2015-11-16 17:11:46"
+            "time": "2016-01-10 17:21:44"
         },
         {
             "name": "doctrine/doctrine-cache-bundle",
@@ -2304,12 +2312,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/migrations.git",
-                "reference": "360ad927e2593deca126379a330704605ad0eeac"
+                "reference": "7ab492c6a65ebe7c0f4665bf96320bef4fb31b70"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/doctrine/migrations/zipball/7ab492c6a65ebe7c0f4665bf96320bef4fb31b70",
-                "reference": "360ad927e2593deca126379a330704605ad0eeac",
+                "reference": "7ab492c6a65ebe7c0f4665bf96320bef4fb31b70",
                 "shasum": ""
             },
             "require": {
@@ -2365,7 +2373,7 @@
                 "database",
                 "migrations"
             ],
-            "time": "2016-01-26 18:29:47"
+            "time": "2016-02-08 09:40:13"
         },
         {
             "name": "doctrine/orm",
@@ -2611,27 +2619,27 @@
         },
         {
             "name": "friendsofsymfony/jsrouting-bundle",
-            "version": "1.5.4",
+            "version": "1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfSymfony/FOSJsRoutingBundle.git",
-                "reference": "539a6ac0c1fb6b010f92a1c877426a4caa5abba1"
+                "reference": "2f52d924692647db02bbcb27c159fef03bf000c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSJsRoutingBundle/zipball/539a6ac0c1fb6b010f92a1c877426a4caa5abba1",
-                "reference": "539a6ac0c1fb6b010f92a1c877426a4caa5abba1",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSJsRoutingBundle/zipball/2f52d924692647db02bbcb27c159fef03bf000c9",
+                "reference": "2f52d924692647db02bbcb27c159fef03bf000c9",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2",
-                "symfony/console": "~2.0",
-                "symfony/framework-bundle": "~2.0",
-                "symfony/serializer": "~2.0",
+                "symfony/console": "~2.0|3.*",
+                "symfony/framework-bundle": "~2.0|3.*",
+                "symfony/serializer": "~2.0|3.*",
                 "willdurand/jsonp-callback-validator": "~1.0"
             },
             "require-dev": {
-                "symfony/expression-language": "~2.4"
+                "symfony/expression-language": "~2.4|3.*"
             },
             "type": "symfony-bundle",
             "extra": {
@@ -2665,25 +2673,25 @@
                 "javascript",
                 "routing"
             ],
-            "time": "2015-01-23 02:44:26"
+            "time": "2015-10-28 15:08:39"
         },
         {
             "name": "friendsofsymfony/oauth-server-bundle",
-            "version": "1.5.0",
+            "version": "1.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfSymfony/FOSOAuthServerBundle.git",
-                "reference": "61f20a2816ec5c4f59c41c2f36f0c3ec87eaa763"
+                "reference": "da183e55932d22fe1445f8d4d160db4747059958"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSOAuthServerBundle/zipball/61f20a2816ec5c4f59c41c2f36f0c3ec87eaa763",
-                "reference": "61f20a2816ec5c4f59c41c2f36f0c3ec87eaa763",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSOAuthServerBundle/zipball/da183e55932d22fe1445f8d4d160db4747059958",
+                "reference": "da183e55932d22fe1445f8d4d160db4747059958",
                 "shasum": ""
             },
             "require": {
                 "friendsofsymfony/oauth2-php": "~1.1",
-                "php": ">=5.3.3",
+                "php": "^5.3.3|^7.0",
                 "symfony/framework-bundle": "~2.2|~3.0",
                 "symfony/security-bundle": "~2.1|~3.0"
             },
@@ -2694,6 +2702,7 @@
                 "phing/phing": "~2.4",
                 "propel/propel1": "^1.6.5",
                 "symfony/class-loader": "~2.1|~3.0",
+                "symfony/form": "~2.1|~3.0",
                 "symfony/yaml": "~2.1|~3.0",
                 "willdurand/propel-typehintable-behavior": "^1.0.4"
             },
@@ -2701,6 +2710,7 @@
                 "doctrine/doctrine-bundle": "*",
                 "doctrine/mongodb-odm-bundle": "*",
                 "propel/propel-bundle": "If you want to use Propel with Symfony2, then you will have to install the PropelBundle",
+                "symfony/form": "Needed to be able to use the AuthorizeFormType",
                 "willdurand/propel-typehintable-behavior": "The Typehintable behavior is useful to add type hints on generated methods, to be compliant with interfaces"
             },
             "type": "symfony-bundle",
@@ -2735,7 +2745,7 @@
                 "oauth2",
                 "server"
             ],
-            "time": "2016-01-14 17:10:18"
+            "time": "2016-02-04 17:56:54"
         },
         {
             "name": "friendsofsymfony/oauth2-php",
@@ -3497,17 +3507,17 @@
         },
         {
             "name": "icap/badge-bundle",
-            "version": "v6.2.6",
+            "version": "v6.3.0",
             "target-dir": "Icap/BadgeBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iCAPLyon1/BadgeBundle.git",
-                "reference": "11a2ede6168bdd32571e56944bcd49e08b640826"
+                "reference": "a05e09e36280f032a70c4171fdf970f8a4d596ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/BadgeBundle/zipball/11a2ede6168bdd32571e56944bcd49e08b640826",
-                "reference": "11a2ede6168bdd32571e56944bcd49e08b640826",
+                "url": "https://api.github.com/repos/iCAPLyon1/BadgeBundle/zipball/a05e09e36280f032a70c4171fdf970f8a4d596ea",
+                "reference": "a05e09e36280f032a70c4171fdf970f8a4d596ea",
                 "shasum": ""
             },
             "require": {
@@ -3539,21 +3549,21 @@
                 "badge",
                 "plugin"
             ],
-            "time": "2015-12-18 13:43:57"
+            "time": "2016-02-11 08:33:05"
         },
         {
             "name": "icap/blog-bundle",
-            "version": "v6.2.1",
+            "version": "v6.2.2",
             "target-dir": "Icap/BlogBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iCAPLyon1/BlogBundle.git",
-                "reference": "b8c042f3fc2287180e03c8e514fbbac30fa7130e"
+                "reference": "80c80524662f6527e7f60bbc831bf2dd3582d93e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/BlogBundle/zipball/b8c042f3fc2287180e03c8e514fbbac30fa7130e",
-                "reference": "b8c042f3fc2287180e03c8e514fbbac30fa7130e",
+                "url": "https://api.github.com/repos/iCAPLyon1/BlogBundle/zipball/80c80524662f6527e7f60bbc831bf2dd3582d93e",
+                "reference": "80c80524662f6527e7f60bbc831bf2dd3582d93e",
                 "shasum": ""
             },
             "require": {
@@ -3582,21 +3592,21 @@
                 "blog",
                 "plugin"
             ],
-            "time": "2015-10-06 13:34:12"
+            "time": "2016-02-11 08:30:16"
         },
         {
             "name": "icap/dropzone-bundle",
-            "version": "v6.0.4",
+            "version": "v6.1.0",
             "target-dir": "Icap/DropzoneBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iCAPLyon1/DropZoneBundle.git",
-                "reference": "182b4842b56607f30330b826b68c0de665aefef5"
+                "reference": "91152b66cf5a1fceb872c1f52cb54528230b85ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/DropZoneBundle/zipball/182b4842b56607f30330b826b68c0de665aefef5",
-                "reference": "182b4842b56607f30330b826b68c0de665aefef5",
+                "url": "https://api.github.com/repos/iCAPLyon1/DropZoneBundle/zipball/91152b66cf5a1fceb872c1f52cb54528230b85ce",
+                "reference": "91152b66cf5a1fceb872c1f52cb54528230b85ce",
                 "shasum": ""
             },
             "require": {
@@ -3630,7 +3640,7 @@
                 "plugin",
                 "wiki"
             ],
-            "time": "2016-01-20 14:40:14"
+            "time": "2016-02-11 08:32:10"
         },
         {
             "name": "icap/html-diff",
@@ -3680,17 +3690,17 @@
         },
         {
             "name": "icap/lesson-bundle",
-            "version": "v6.0.5",
+            "version": "v6.1.0",
             "target-dir": "Icap/LessonBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iCAPLyon1/LessonBundle.git",
-                "reference": "ad69efa28cc9be7f6f4e8e100dc81c1eb9e57e3f"
+                "reference": "098612dd867332124b757b68f7c763c2a894a73c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/LessonBundle/zipball/ad69efa28cc9be7f6f4e8e100dc81c1eb9e57e3f",
-                "reference": "ad69efa28cc9be7f6f4e8e100dc81c1eb9e57e3f",
+                "url": "https://api.github.com/repos/iCAPLyon1/LessonBundle/zipball/098612dd867332124b757b68f7c763c2a894a73c",
+                "reference": "098612dd867332124b757b68f7c763c2a894a73c",
                 "shasum": ""
             },
             "require": {
@@ -3719,7 +3729,7 @@
                 "lesson",
                 "plugin"
             ],
-            "time": "2016-01-13 16:15:49"
+            "time": "2016-02-11 08:34:11"
         },
         {
             "name": "icap/notification-bundle",
@@ -3764,17 +3774,17 @@
         },
         {
             "name": "icap/portfolio-bundle",
-            "version": "v6.2.1",
+            "version": "v6.2.2",
             "target-dir": "Icap/PortfolioBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iCAPLyon1/PortfolioBundle.git",
-                "reference": "83bbda71b70b453a1bf48d14459819b952d8b4cd"
+                "reference": "d55aafb1f10bc87b6599fa361357790a59e5e269"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/PortfolioBundle/zipball/83bbda71b70b453a1bf48d14459819b952d8b4cd",
-                "reference": "83bbda71b70b453a1bf48d14459819b952d8b4cd",
+                "url": "https://api.github.com/repos/iCAPLyon1/PortfolioBundle/zipball/d55aafb1f10bc87b6599fa361357790a59e5e269",
+                "reference": "d55aafb1f10bc87b6599fa361357790a59e5e269",
                 "shasum": ""
             },
             "require": {
@@ -3805,21 +3815,21 @@
                 "Claroline",
                 "portfolio"
             ],
-            "time": "2015-10-08 08:23:27"
+            "time": "2016-02-11 08:28:40"
         },
         {
             "name": "icap/socialmedia-bundle",
-            "version": "v6.0.1",
+            "version": "v6.0.2",
             "target-dir": "Icap/SocialmediaBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iCAPLyon1/SocialmediaBundle.git",
-                "reference": "d24e7bc5056f330ddbf36257ce6bd28a72596414"
+                "reference": "b69e8f8e0205b4b145ae0cc4e6b0c13271153ee5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/SocialmediaBundle/zipball/d24e7bc5056f330ddbf36257ce6bd28a72596414",
-                "reference": "d24e7bc5056f330ddbf36257ce6bd28a72596414",
+                "url": "https://api.github.com/repos/iCAPLyon1/SocialmediaBundle/zipball/b69e8f8e0205b4b145ae0cc4e6b0c13271153ee5",
+                "reference": "b69e8f8e0205b4b145ae0cc4e6b0c13271153ee5",
                 "shasum": ""
             },
             "require": {
@@ -3840,21 +3850,21 @@
                 "ICAP",
                 "social media"
             ],
-            "time": "2015-10-01 12:58:51"
+            "time": "2016-02-09 16:03:16"
         },
         {
             "name": "icap/website-bundle",
-            "version": "v6.0.2",
+            "version": "v6.1.0",
             "target-dir": "Icap/WebsiteBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iCAPLyon1/WebsiteBundle.git",
-                "reference": "53a5405f320ee90c6b39ed8445056c39fdd99067"
+                "reference": "5a5b629a7d4e7ee57badc28c9a4032f42b4110f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/WebsiteBundle/zipball/53a5405f320ee90c6b39ed8445056c39fdd99067",
-                "reference": "53a5405f320ee90c6b39ed8445056c39fdd99067",
+                "url": "https://api.github.com/repos/iCAPLyon1/WebsiteBundle/zipball/5a5b629a7d4e7ee57badc28c9a4032f42b4110f1",
+                "reference": "5a5b629a7d4e7ee57badc28c9a4032f42b4110f1",
                 "shasum": ""
             },
             "require": {
@@ -3884,21 +3894,21 @@
                 "plugin",
                 "website"
             ],
-            "time": "2015-11-03 16:07:48"
+            "time": "2016-02-11 09:16:32"
         },
         {
             "name": "icap/wiki-bundle",
-            "version": "v6.1.3",
+            "version": "v6.2.0",
             "target-dir": "Icap/WikiBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iCAPLyon1/WikiBundle.git",
-                "reference": "228edfc792d2412268356e1c8f6719d661a93c03"
+                "reference": "5261c15e1de31062c50ad0e31dc0a9471c0d766c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/WikiBundle/zipball/228edfc792d2412268356e1c8f6719d661a93c03",
-                "reference": "228edfc792d2412268356e1c8f6719d661a93c03",
+                "url": "https://api.github.com/repos/iCAPLyon1/WikiBundle/zipball/5261c15e1de31062c50ad0e31dc0a9471c0d766c",
+                "reference": "5261c15e1de31062c50ad0e31dc0a9471c0d766c",
                 "shasum": ""
             },
             "require": {
@@ -3928,7 +3938,7 @@
                 "plugin",
                 "wiki"
             ],
-            "time": "2015-11-23 10:13:11"
+            "time": "2016-02-11 08:35:34"
         },
         {
             "name": "idci/exporter-bundle",
@@ -4442,29 +4452,23 @@
         },
         {
             "name": "innova/path-bundle",
-            "version": "v6.1.4",
+            "version": "v6.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/InnovaLangues/PathBundle.git",
-                "reference": "3f29ebe2f0a5f90c65395482d0a21f8523e7e44d"
+                "reference": "cd21c80d48ba7db05aed18cd251a49f74fd074be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/InnovaLangues/PathBundle/zipball/3f29ebe2f0a5f90c65395482d0a21f8523e7e44d",
-                "reference": "3f29ebe2f0a5f90c65395482d0a21f8523e7e44d",
+                "url": "https://api.github.com/repos/InnovaLangues/PathBundle/zipball/cd21c80d48ba7db05aed18cd251a49f74fd074be",
+                "reference": "cd21c80d48ba7db05aed18cd251a49f74fd074be",
                 "shasum": ""
             },
             "require": {
                 "claroline/core-bundle": "~6.0",
                 "claroline/tag-bundle": "~6.0",
                 "claroline/team-bundle": "~6.0",
-                "innova/angular-js-bundle": "~5.1",
-                "innova/angular-ui-bootstrap-bundle": "~5.0",
-                "innova/angular-ui-pageslide-bundle": "~5.0",
-                "innova/angular-ui-resource-picker-bundle": "~6.0",
-                "innova/angular-ui-tinymce-bundle": "~5.1",
-                "innova/angular-ui-translation-bundle": "~5.0",
-                "innova/angular-ui-tree-bundle": "~5.0"
+                "innova/angular-ui-pageslide-bundle": "~5.0"
             },
             "type": "claroline-plugin",
             "autoload": {
@@ -4500,7 +4504,7 @@
                 "Claroline",
                 "path"
             ],
-            "time": "2016-02-02 09:25:12"
+            "time": "2016-02-09 08:38:15"
         },
         {
             "name": "jdorn/sql-formatter",
@@ -5145,17 +5149,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/json-quiz/json-quiz.git",
-                "reference": "ff05ee8b637e3a923fde8625a9904158dde4de4b"
+                "reference": "15da51bdac43dcaf68811272ef22ea4d5d54ddc8"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/15da51bdac43dcaf68811272ef22ea4d5d54ddc8",
-                "reference": "ff05ee8b637e3a923fde8625a9904158dde4de4b",
+                "reference": "15da51bdac43dcaf68811272ef22ea4d5d54ddc8",
                 "shasum": ""
             },
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2016-02-01 13:01:28"
+            "time": "2016-02-12 10:44:18"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -5855,33 +5859,81 @@
             "time": "2016-01-08 12:33:10"
         },
         {
-            "name": "ocramius/proxy-manager",
-            "version": "1.0.2",
+            "name": "ocramius/package-versions",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Ocramius/ProxyManager.git",
-                "reference": "57e9272ec0e8deccf09421596e0e2252df440e11"
+                "url": "https://github.com/Ocramius/PackageVersions.git",
+                "reference": "56253310fb94b3086fa123f5f3e7ab76723594aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Ocramius/ProxyManager/zipball/57e9272ec0e8deccf09421596e0e2252df440e11",
-                "reference": "57e9272ec0e8deccf09421596e0e2252df440e11",
+                "url": "https://api.github.com/repos/Ocramius/PackageVersions/zipball/56253310fb94b3086fa123f5f3e7ab76723594aa",
+                "reference": "56253310fb94b3086fa123f5f3e7ab76723594aa",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3",
-                "zendframework/zend-code": ">2.2.5,<3.0"
+                "composer-plugin-api": "^1.0",
+                "php": "~7.0"
             },
             "require-dev": {
+                "composer/composer": "^1.0.0-ALPHA8@ALPHA",
+                "phpunit/phpunit": "^5.0"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "PackageVersions\\Installer",
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PackageVersions\\": "src/PackageVersions"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marco Pivetta",
+                    "email": "ocramius@gmail.com"
+                }
+            ],
+            "description": "Composer plugin that provides efficient querying for installed package versions (no runtime IO)",
+            "time": "2016-02-02 17:50:05"
+        },
+        {
+            "name": "ocramius/proxy-manager",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Ocramius/ProxyManager.git",
+                "reference": "40e205f0a371777ebf297593abd881ad11199548"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Ocramius/ProxyManager/zipball/40e205f0a371777ebf297593abd881ad11199548",
+                "reference": "40e205f0a371777ebf297593abd881ad11199548",
+                "shasum": ""
+            },
+            "require": {
+                "ocramius/package-versions": "^1.0",
+                "php": "~7.0",
+                "zendframework/zend-code": "~3.0"
+            },
+            "require-dev": {
+                "couscous/couscous": "^1.4.0",
                 "ext-phar": "*",
-                "phpunit/phpunit": "~4.0",
-                "squizlabs/php_codesniffer": "1.5.*"
+                "phpunit/phpunit": "^5.1.3",
+                "squizlabs/php_codesniffer": "^2.5.0"
             },
             "suggest": {
                 "ocramius/generated-hydrator": "To have very fast object to array to object conversion for ghost objects",
                 "zendframework/zend-json": "To have the JsonRpc adapter (Remote Object feature)",
                 "zendframework/zend-soap": "To have the Soap adapter (Remote Object feature)",
-                "zendframework/zend-stdlib": "To use the hydrator proxy",
                 "zendframework/zend-xmlrpc": "To have the XmlRpc adapter (Remote Object feature)"
             },
             "type": "library",
@@ -5903,7 +5955,7 @@
                 {
                     "name": "Marco Pivetta",
                     "email": "ocramius@gmail.com",
-                    "homepage": "http://ocramius.github.com/"
+                    "homepage": "http://ocramius.github.io/"
                 }
             ],
             "description": "A library providing utilities to generate, instantiate and generally operate with Object Proxies",
@@ -5915,7 +5967,7 @@
                 "proxy pattern",
                 "service proxies"
             ],
-            "time": "2015-08-09 04:28:19"
+            "time": "2016-01-30 09:38:56"
         },
         {
             "name": "pagerfanta/pagerfanta",
@@ -5986,16 +6038,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "1.1.6",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "e6f80ab77885151908d0ec743689ca700886e8b0"
+                "reference": "b0e69d10852716b2ccbdff69c75c477637220790"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/e6f80ab77885151908d0ec743689ca700886e8b0",
-                "reference": "e6f80ab77885151908d0ec743689ca700886e8b0",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/b0e69d10852716b2ccbdff69c75c477637220790",
+                "reference": "b0e69d10852716b2ccbdff69c75c477637220790",
                 "shasum": ""
             },
             "require": {
@@ -6030,7 +6082,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2016-01-29 16:19:52"
+            "time": "2016-02-06 03:52:05"
         },
         {
             "name": "phpcollection/phpcollection",
@@ -6483,16 +6535,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.8.22",
+            "version": "4.8.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "dfb11aa5236376b4fc63853cf746af39fe780e72"
+                "reference": "6e351261f9cd33daf205a131a1ba61c6d33bd483"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/dfb11aa5236376b4fc63853cf746af39fe780e72",
-                "reference": "dfb11aa5236376b4fc63853cf746af39fe780e72",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/6e351261f9cd33daf205a131a1ba61c6d33bd483",
+                "reference": "6e351261f9cd33daf205a131a1ba61c6d33bd483",
                 "shasum": ""
             },
             "require": {
@@ -6551,7 +6603,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2016-02-02 09:01:21"
+            "time": "2016-02-11 14:56:33"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -8010,12 +8062,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/UJM-dev/ExoBundle.git",
-                "reference": "f4d7257af3d51ab13e1937064e708b9c83cfb42e"
+                "reference": "20f0db58cea7368f7a7a1c3d37fc09f5c0481839"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/UJM-dev/ExoBundle/zipball/20f0db58cea7368f7a7a1c3d37fc09f5c0481839",
-                "reference": "f4d7257af3d51ab13e1937064e708b9c83cfb42e",
+                "reference": "20f0db58cea7368f7a7a1c3d37fc09f5c0481839",
                 "shasum": ""
             },
             "require": {
@@ -8044,7 +8096,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "description": "Exercise tool for Claroline Connect",
-            "time": "2016-01-25 07:38:25"
+            "time": "2016-02-12 16:22:57"
         },
         {
             "name": "werkint/jsmin",
@@ -8306,26 +8358,27 @@
         },
         {
             "name": "zendframework/zend-code",
-            "version": "2.6.2",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-code.git",
-                "reference": "c4e8f976a772cfb14b47dabd69b5245a423082b4"
+                "reference": "09405eb04b7199733219cbf1f0803883a7bab842"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-code/zipball/c4e8f976a772cfb14b47dabd69b5245a423082b4",
-                "reference": "c4e8f976a772cfb14b47dabd69b5245a423082b4",
+                "url": "https://api.github.com/repos/zendframework/zend-code/zipball/09405eb04b7199733219cbf1f0803883a7bab842",
+                "reference": "09405eb04b7199733219cbf1f0803883a7bab842",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5",
-                "zendframework/zend-eventmanager": "^2.6|^3.0"
+                "php": "^5.5 || ^7.0",
+                "zendframework/zend-eventmanager": "^2.6 || ^3.0"
             },
             "require-dev": {
                 "doctrine/annotations": "~1.0",
-                "fabpot/php-cs-fixer": "1.7.*",
-                "phpunit/phpunit": "~4.0",
+                "ext-phar": "*",
+                "phpunit/phpunit": "^4.8.21",
+                "squizlabs/php_codesniffer": "^2.5",
                 "zendframework/zend-stdlib": "~2.7"
             },
             "suggest": {
@@ -8335,8 +8388,8 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.6-dev",
-                    "dev-develop": "2.7-dev"
+                    "dev-master": "3.0-dev",
+                    "dev-develop": "3.1-dev"
                 }
             },
             "autoload": {
@@ -8354,7 +8407,7 @@
                 "code",
                 "zf2"
             ],
-            "time": "2016-01-05 05:58:37"
+            "time": "2016-01-26 17:57:25"
         },
         {
             "name": "zendframework/zend-crypt",
@@ -8671,12 +8724,19 @@
             "time": "2016-01-21 09:38:31"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "alias": "6.7",
+            "alias_normalized": "6.7.0.0",
+            "version": "dev-angular-es6",
+            "package": "claroline/core-bundle"
+        }
+    ],
     "minimum-stability": "dev",
     "stability-flags": {
+        "claroline/core-bundle": 20,
         "ujm/exo-bundle": 20,
-        "hwi/oauth-bundle": 20,
-        "stefk/incenteev-parameters": 20
+        "hwi/oauth-bundle": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
