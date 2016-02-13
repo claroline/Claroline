@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "74fc70871fed662112ca9496cd728d75",
-    "content-hash": "3355989fe7dd316a6ed648bf284d8e00",
+    "hash": "bf08467d1434363dc599d0ed0301bbf3",
+    "content-hash": "b49907da1bdad5d4d4ca60402254a45c",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1268,7 +1268,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/79ac2cac82cfdc5460fa378b758d9322d5422893",
+                "url": "https://api.github.com/repos/composer/composer/zipball/25e089eee90799ed0f6046dfd17521804b113f25",
                 "reference": "79ac2cac82cfdc5460fa378b758d9322d5422893",
                 "shasum": ""
             },
@@ -2308,7 +2308,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/migrations/zipball/360ad927e2593deca126379a330704605ad0eeac",
+                "url": "https://api.github.com/repos/doctrine/migrations/zipball/7ab492c6a65ebe7c0f4665bf96320bef4fb31b70",
                 "reference": "360ad927e2593deca126379a330704605ad0eeac",
                 "shasum": ""
             },
@@ -5149,7 +5149,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/ff05ee8b637e3a923fde8625a9904158dde4de4b",
+                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/15da51bdac43dcaf68811272ef22ea4d5d54ddc8",
                 "reference": "ff05ee8b637e3a923fde8625a9904158dde4de4b",
                 "shasum": ""
             },
@@ -7306,6 +7306,57 @@
             "time": "2015-03-17 06:36:52"
         },
         {
+            "name": "stefk/incenteev-parameters",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stefk/ParameterHandler.git",
+                "reference": "25a82b1ac02e94ea68c78a2466f7d29168172fe1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stefk/ParameterHandler/zipball/25a82b1ac02e94ea68c78a2466f7d29168172fe1",
+                "reference": "25a82b1ac02e94ea68c78a2466f7d29168172fe1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "symfony/yaml": "~2.3|~3.0"
+            },
+            "require-dev": {
+                "composer/composer": "1.0.*@dev",
+                "phpspec/prophecy-phpunit": "~1.0",
+                "symfony/filesystem": "~2.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Incenteev\\ParameterHandler\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Christophe Coevoet",
+                    "email": "stof@notk.org"
+                }
+            ],
+            "description": "Tmp fork of incenteev/composer-parameter-handler, allowing filter on interactive parameters",
+            "homepage": "https://github.com/Incenteev/ParameterHandler",
+            "keywords": [
+                "parameters management"
+            ],
+            "time": "2016-02-13 11:08:36"
+        },
+        {
             "name": "stefk/jval",
             "version": "dev-master",
             "source": {
@@ -7963,7 +8014,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/UJM-dev/ExoBundle/zipball/f4d7257af3d51ab13e1937064e708b9c83cfb42e",
+                "url": "https://api.github.com/repos/UJM-dev/ExoBundle/zipball/20f0db58cea7368f7a7a1c3d37fc09f5c0481839",
                 "reference": "f4d7257af3d51ab13e1937064e708b9c83cfb42e",
                 "shasum": ""
             },
@@ -8624,7 +8675,8 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "ujm/exo-bundle": 20,
-        "hwi/oauth-bundle": 20
+        "hwi/oauth-bundle": 20,
+        "stefk/incenteev-parameters": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
