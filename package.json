@@ -5,8 +5,8 @@
   "scripts": {
     "bower": "bower update",
     "themes": "node vendor/claroline/core-bundle/Resources/scripts/build-themes",
-    "webpack": "rm -rf web/dist/* && webpack --config webpack.js --progress --profile --colors --display-error-details",
-    "watch": "webpack-dev-server --hot --inline --content-base web --config webpack-watch.js --display-error-details"
+    "webpack": "rm -rf web/dist/* && webpack --progress --profile --colors --display-error-details",
+    "watch": "webpack-dev-server --hot --inline --content-base web --claro-tgt=watch --display-error-details"
   },
   "dependencies": {
     "claroline-core": "file:./vendor/claroline/core-bundle"
