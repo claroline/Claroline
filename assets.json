@@ -1,0 +1,8 @@
+{
+  "webpack": {
+    "entry": {
+      "mod-1": "modules/foo",
+      "mod-2": "modules/bar"
+    }
+  }
+}
