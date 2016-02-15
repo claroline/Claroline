@@ -15,6 +15,6 @@ var LocationManager = angular.module('LocationManager', [
     'ncy-angular-breadcrumb'
 ])
     .service('LocationAPIService', LocationAPIService)
-    .controller('LocationController', ['$http', 'LocationAPIService', '$uibModal', LocationController])
-    .controller('CreateLocationModalController', CreateLocationModalController)
     .controller('EditLocationModalController', EditLocationModalController)
+    .controller('CreateLocationModalController', CreateLocationModalController)
+    .controller('LocationController', ['$http', 'LocationAPIService', '$uibModal', LocationController])

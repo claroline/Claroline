@@ -1,4 +1,4 @@
-export class EditLocationModalController {
+export default class EditLocationModalController {
     constructor(LocationAPIService, locations, location, $uibModalInstance, $uibModal, ClarolineAPIService) {
         this.LocationAPIService = LocationAPIService
         this.locations = locations

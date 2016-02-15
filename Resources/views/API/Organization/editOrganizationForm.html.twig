@@ -6,10 +6,10 @@
 {% block form %}
     {% form_theme form 'ClarolineCoreBundle::form_theme_angular.html.twig' %}
     <form role="form"
-          class="form-horizontal"
-          ng-submit="eofm.submit($scope)"
-          method="post" {{ form_enctype(form) }}
-            >
+            class="form-horizontal"
+            ng-submit="eofm.submit($scope)"
+            method="post" {{ form_enctype(form) }}
+        >
         <div class="modal-body">
             {{ form_widget(form) }}
         </div>

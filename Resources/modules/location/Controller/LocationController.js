@@ -33,8 +33,8 @@ export default class LocationController {
                     //var gmaplink = '<a href="' + gmapurl + '"><i class="fa fa-globe"></i></a>';
                     //does not work yet
 
-                    return '<div>' + translate('latitude') + ': {{ $row.latitude }} | ' + translate('longitude') + ': {{ $row.longitude }} |  ' + gmaplink + ' </div>'
-                }
+                    return '<div>' + this.translate('latitude') + ': {{ $row.latitude }} | ' + this.translate('longitude') + ': {{ $row.longitude }} |  ' + gmaplink + ' </div>'
+                }.bind(this)
             }
         ];
 
@@ -67,7 +67,7 @@ export default class LocationController {
     createForm() {
         const modal = this.$uibModal.open({
             templateUrl: Routing.generate('api_get_create_location_form', {'_format': 'html'}),
-            controller: CreateLocationModalController,
+            controller: 'CreateLocationModalController',
             controllerAs: 'clfm',
             resolve: {
                 locations: () => { return this.locations }
@@ -76,13 +76,12 @@ export default class LocationController {
 
         modal.result.then(result => {
             if (!result) return;
-            alert('go')
+            this.locations.push(result)
         });
     }
 
     editLocation(location) {
         const modal = this.$uibModal.open({
-            //bust = no cache
             templateUrl: Routing.generate('api_get_edit_location_form', {'_format': 'html', 'location': location.id}) + '?bust=' + Math.random().toString(36).slice(2),
             controller: 'EditLocationModalController',
             controllerAs: 'elfm',
@@ -91,5 +90,10 @@ export default class LocationController {
                 location: () => { return location }
             }
         })
+
+        modal.result.then(result => {
+            if (!result) return;
+            clarolineAPI.replaceById(result, this.locations)
+        });
     }
 }

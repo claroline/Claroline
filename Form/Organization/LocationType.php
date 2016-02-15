@@ -51,6 +51,7 @@ class LocationType extends AngularType
         $default = array('translation_domain' => 'platform');
         if ($this->forApi) $default['csrf_protection'] = false;
         $default['ng-model'] = 'location';
+        $default['ng-controllerAs'] = $this->ngAlias;
 
         $resolver->setDefaults($default);
     }
