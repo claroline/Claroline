@@ -12,6 +12,7 @@
 namespace Claroline\CursusBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CursusBundle\Entity\CourseRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSession;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
@@ -28,10 +29,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  */
 class CourseSessionRegistrationQueue
 {
-    const WAITING = 1;
-    const WAITING_USER = 2;
-    const WAITING_VALIDATOR = 4;
-
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -59,7 +56,7 @@ class CourseSessionRegistrationQueue
     /**
      * @ORM\Column(name="queue_status", type="integer")
      */
-    protected $status = self::WAITING;
+    protected $status = CourseRegistrationQueue::WAITING;
 
     /**
      * @ORM\Column(name="validation_date", nullable=true, type="datetime")

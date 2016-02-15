@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusGroup;
 use Claroline\CursusBundle\Entity\CursusUser;
+use Claroline\CursusBundle\Entity\CourseRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSession;
 use Claroline\CursusBundle\Entity\CourseSessionRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSessionUser;
@@ -318,31 +319,16 @@ class CursusController extends FOSRestController
         return new JsonResponse('success', 200);
     }
 
-//    /**
-//     * @View(serializerGroups={"api"})
-//     * @ApiDoc(
-//     *     description="Returns datas for registration queues",
-//     *     views = {"cursus"}
-//     * )
-//     */
-//    public function getRegistrationQueuesDatasAction()
-//    {
-//
-//    }
-
     /**
      * @View(serializerGroups={"api"})
      * @ApiDoc(
-     *     description="Returns datas for all courses",
+     *     description="Returns datas for registration queues",
      *     views = {"cursus"}
      * )
      */
-    public function getCoursesDatasAction()
+    public function getRegistrationQueuesDatasAction()
     {
-        $courses = $this->cursusManager->getAllCourses('', 'title', 'ASC', false);
-        $datas['courses'] = $this->cursusManager->getCoursesDatasFromCourses($courses);
-        $datas['sessions'] = $this->cursusManager->getSessionsDatasFromCourses($courses);
-        $datas['sessionsQueues'] = $this->cursusManager->getSessionsQueuesDatasFromCourses($courses);
+        $datas = $this->cursusManager->getRegistrationQueuesDatasByValidator();
 
         return $datas;
     }
@@ -350,19 +336,54 @@ class CursusController extends FOSRestController
     /**
      * @View(serializerGroups={"api"})
      * @ApiDoc(
-     *     description="Returns datas for searched courses",
+     *     description="Returns datas for registration queues",
      *     views = {"cursus"}
      * )
      */
-    public function getSearchedCoursesDatasAction($search)
+    public function getRegistrationQueuesDatasBySearchAction($search)
     {
-        $datas = array();
-        $courses = $this->cursusManager->getAllCourses($search, 'title', 'ASC', false);
-        $datas['courses'] = $this->cursusManager->getCoursesDatasFromCourses($courses);
-        $datas['sessions'] = $this->cursusManager->getSessionsDatasFromCourses($courses);
-        $datas['sessionsQueues'] = $this->cursusManager->getSessionsQueuesDatasFromCourses($courses);
+        $datas = $this->cursusManager->getRegistrationQueuesDatasByValidator($search);
 
         return $datas;
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Validate session queue",
+     *     views = {"cursus"}
+     * )
+     */
+    public function putCourseQueueValidateAction(CourseRegistrationQueue $queue)
+    {
+        $canValidate = $this->cursusManager->canValidateCourseQueue($queue);
+
+        if (!$canValidate) {
+
+            return new JsonResponse('Forbidden', 403);
+        }
+        $validatedQueue = $this->cursusManager->validateCourseQueue($queue);
+        $course = $validatedQueue->getCourse();
+        $user = $queue->getUser();
+        $validator = $queue->getValidator();
+
+        $validatedQueueDatas = array(
+            'id' => $validatedQueue->getId(),
+            'courseId' => $course->getId(),
+            'applicationDate' => $validatedQueue->getApplicationDate(),
+            'status' => $validatedQueue->getStatus(),
+            'userId' => $user->getId(),
+            'username' => $user->getUsername(),
+            'firstName' => $user->getFirstName(),
+            'lastName' => $user->getLastName(),
+            'validatorValidationDate' => $validatedQueue->getValidatorValidationDate(),
+            'validatorId' => $validator->getId(),
+            'validatorUsername' => $validator->getUsername(),
+            'validatorFirstName' => $validator->getFirstName(),
+            'validatorLastName' => $validator->getLastName()
+        );
+
+        return new JsonResponse($validatedQueueDatas, 200);
     }
 
     /**
@@ -380,32 +401,50 @@ class CursusController extends FOSRestController
 
             return new JsonResponse('Forbidden', 403);
         }
-        $validatedQueue = $this->cursusManager->validateSessionQueue($queue);
-        $session = $validatedQueue->getSession();
-        $course = $session->getCourse();
-        $user = $queue->getUser();
-        $validator = $queue->getValidator();
+        $datas = $this->cursusManager->validateSessionQueue($queue);
 
-        $validatedQueueDatas = array(
-            'id' => $validatedQueue->getId(),
-            'courseId' => $course->getId(),
-            'sessionId' => $session->getId(),
-            'applicationDate' => $validatedQueue->getApplicationDate(),
-            'status' => $validatedQueue->getStatus(),
-            'userId' => $user->getId(),
-            'username' => $user->getUsername(),
-            'firstName' => $user->getFirstName(),
-            'lastName' => $user->getLastName(),
-            'validatorValidationDate' => $validatedQueue->getValidatorValidationDate(),
-            'validatorId' => $validator->getId(),
-            'validatorUsername' => $validator->getUsername(),
-            'validatorFirstName' => $validator->getFirstName(),
-            'validatorLastName' => $validator->getLastName()
-        );
-
-        return new JsonResponse($validatedQueueDatas, 200);
+        return new JsonResponse($datas, 200);
     }
 
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Delete session queue",
+     *     views = {"cursus"}
+     * )
+     */
+    public function deleteCourseQueueAction(CourseRegistrationQueue $queue)
+    {
+        $canValidate = $this->cursusManager->canValidateCourseQueue($queue);
+
+        if (!$canValidate) {
+
+            return new JsonResponse('Forbidden', 403);
+        }
+        $queueDatas = $this->cursusManager->deleteCourseQueue($queue);
+
+        return new JsonResponse($queueDatas, 200);
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Delete session queue",
+     *     views = {"cursus"}
+     * )
+     */
+    public function deleteSessionQueueAction(CourseSessionRegistrationQueue $queue)
+    {
+        $canValidate = $this->cursusManager->canValidateSessionQueue($queue);
+
+        if (!$canValidate) {
+
+            return new JsonResponse('Forbidden', 403);
+        }
+        $queueDatas = $this->cursusManager->deleteSessionQueue($queue);
+
+        return new JsonResponse($queueDatas, 200);
+    }
 
     /***********************************
      * Not used in angular refactoring *

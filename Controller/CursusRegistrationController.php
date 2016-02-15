@@ -15,6 +15,8 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CursusBundle\Entity\CourseRegistrationQueue;
+use Claroline\CursusBundle\Entity\CourseSessionRegistrationQueue;
 use Claroline\CursusBundle\Manager\CursusManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -289,6 +291,58 @@ class CursusRegistrationController extends Controller
                 'claro_cursus_group_sessions_management',
                 array('group' => $group->getId())
             )
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "course/registration/queue/{queue}/user/validate",
+     *     name="claro_cursus_course_registration_queue_user_validate",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function courseRegistrationQueueUserValidateAction(
+        User $authenticatedUser,
+        CourseRegistrationQueue $queue
+    )
+    {
+        $user = $queue->getUser();
+
+        if ($authenticatedUser->getId() !== $user->getId()) {
+
+            throw new AccessDeniedException();
+        }
+        $this->cursusManager->validateUserCourseRegistrationQueue($queue);
+
+        return new RedirectResponse(
+            $this->router->generate('claro_index')
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "session/registration/queue/{queue}/user/validate",
+     *     name="claro_cursus_session_registration_queue_user_validate",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function sessionRegistrationQueueUserValidateAction(
+        User $authenticatedUser,
+        CourseSessionRegistrationQueue $queue
+    )
+    {
+        $user = $queue->getUser();
+
+        if ($authenticatedUser->getId() !== $user->getId()) {
+
+            throw new AccessDeniedException();
+        }
+        $this->cursusManager->validateUserSessionRegistrationQueue($queue);
+
+        return new RedirectResponse(
+            $this->router->generate('claro_index')
         );
     }
 

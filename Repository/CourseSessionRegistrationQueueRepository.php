@@ -13,6 +13,7 @@ namespace Claroline\CursusBundle\Repository;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CursusBundle\Entity\Course;
+use Claroline\CursusBundle\Entity\CourseRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSession;
 use Doctrine\ORM\EntityRepository;
 
@@ -137,13 +138,16 @@ class CourseSessionRegistrationQueueRepository extends EntityRepository
             SELECT q
             FROM Claroline\CursusBundle\Entity\CourseSessionRegistrationQueue q
             JOIN q.session s
-            JOIN s.course c
-            JOIN s.validators v
+            LEFT JOIN s.validators v
             WHERE q.status > 0
-            AND v = :user
+            AND (
+                BIT_AND(q.status, :value) = :value
+                OR v = :user
+            )
             ORDER BY q.applicationDate ASC
         ';
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('value', CourseRegistrationQueue::WAITING);
         $query->setParameter('user', $user);
 
         return $query->getResult();
@@ -156,9 +160,12 @@ class CourseSessionRegistrationQueueRepository extends EntityRepository
             FROM Claroline\CursusBundle\Entity\CourseSessionRegistrationQueue q
             JOIN q.session s
             JOIN s.course c
-            JOIN s.validators v
+            LEFT JOIN s.validators v
             WHERE q.status > 0
-            AND v = :user
+            AND (
+                BIT_AND(q.status, :value) = :value
+                OR v = :user
+            )
             AND (
                 UPPER(s.name) LIKE :search
                 OR UPPER(c.title) LIKE :search
@@ -167,6 +174,7 @@ class CourseSessionRegistrationQueueRepository extends EntityRepository
             ORDER BY q.applicationDate ASC
         ';
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('value', CourseRegistrationQueue::WAITING);
         $query->setParameter('user', $user);
         $upperSearch = strtoupper($search);
         $query->setParameter('search', "%{$upperSearch}%");

@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2016/02/10 11:19:37
+ * Generation date: 2016/02/15 08:45:33
  */
-class Version20160210111934 extends AbstractMigration
+class Version20160215084531 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -55,6 +55,23 @@ class Version20160210111934 extends AbstractMigration
             ADD CONSTRAINT FK_7EE284A7A76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id) 
             ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_cursusbundle_course_registration_queue 
+            ADD validator_id INT DEFAULT NULL, 
+            ADD queue_status INT NOT NULL, 
+            ADD validation_date DATETIME DEFAULT NULL, 
+            ADD user_validation_date DATETIME DEFAULT NULL, 
+            ADD validator_validation_date DATETIME DEFAULT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_cursusbundle_course_registration_queue 
+            ADD CONSTRAINT FK_E068776EB0644AEC FOREIGN KEY (validator_id) 
+            REFERENCES claro_user (id) 
+            ON DELETE SET NULL
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_E068776EB0644AEC ON claro_cursusbundle_course_registration_queue (validator_id)
         ");
         $this->addSql("
             ALTER TABLE claro_cursusbundle_course_session_registration_queue 
@@ -116,6 +133,21 @@ class Version20160210111934 extends AbstractMigration
             DROP workspace_id, 
             DROP user_validation, 
             DROP max_users
+        ");
+        $this->addSql("
+            ALTER TABLE claro_cursusbundle_course_registration_queue 
+            DROP FOREIGN KEY FK_E068776EB0644AEC
+        ");
+        $this->addSql("
+            DROP INDEX IDX_E068776EB0644AEC ON claro_cursusbundle_course_registration_queue
+        ");
+        $this->addSql("
+            ALTER TABLE claro_cursusbundle_course_registration_queue 
+            DROP validator_id, 
+            DROP queue_status, 
+            DROP validation_date, 
+            DROP user_validation_date, 
+            DROP validator_validation_date
         ");
         $this->addSql("
             ALTER TABLE claro_cursusbundle_course_session 

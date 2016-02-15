@@ -31,17 +31,22 @@
 {% block stylesheets %}
     {{ parent() }}
     
-    <link rel="stylesheet" href="{{ asset('vendor/angular-ui.css')}}"> </link>
+{#    <link rel="stylesheet" href="{{ asset('vendor/angular-ui.css')}}"> </link>#}
     <link rel="stylesheet"  href="{{ asset('bundles/frontend/angular-ui-tree/dist/angular-ui-tree.min.css') }}" />
+    <link rel="stylesheet"  href="{{ asset('bundles/frontend/angular-data-table/release/dataTable.css') }}" />
+    <link rel="stylesheet"  href="{{ asset('bundles/frontend/angular-data-table/release/material.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'tools' }) }}"></script>
     <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'cursus' }) }}"></script>
-    <script type="text/javascript" src="{{ asset('vendor/angular.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('vendor/angular-ui.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/angular/services/api.services.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/angular/angular.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/angular-route/angular-route.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/angular-ui-tree/dist/angular-ui-tree.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/angular-data-table/release/dataTable.helpers.js') }}"></script>
+{#    <script type="text/javascript" src="{{ asset('vendor/angular-ui.js') }}"></script>#}
+{#    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/angular/services/api.services.js') }}"></script>#}
     <script type="text/javascript" src="{{ asset('bundles/frontend/angular-bootstrap/ui-bootstrap-tpls.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/angular-ui-translation/angular-translation.js') }}"></script>
 

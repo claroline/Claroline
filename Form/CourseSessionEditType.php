@@ -100,11 +100,6 @@ class CourseSessionEditType extends AbstractType
             'checkbox',
             array('required' => true)
         );
-        $builder->add(
-            'registrationValidation',
-            'checkbox',
-            array('required' => true)
-        );
 
         if (!is_null($workspace)) {
             $builder->add(
@@ -180,6 +175,11 @@ class CourseSessionEditType extends AbstractType
                 'required' => true,
                 'label' => 'user_validation'
             )
+        );
+        $builder->add(
+            'registrationValidation',
+            'checkbox',
+            array('required' => true)
         );
         $builder->add(
             'validators',

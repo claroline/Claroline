@@ -93,11 +93,6 @@ class CourseSessionType extends AbstractType
             array('required' => true)
         );
         $builder->add(
-            'registrationValidation',
-            'checkbox',
-            array('required' => true)
-        );
-        $builder->add(
             'cursus',
             'entity',
             array(
@@ -133,6 +128,11 @@ class CourseSessionType extends AbstractType
                 'required' => true,
                 'label' => 'user_validation'
             )
+        );
+        $builder->add(
+            'registrationValidation',
+            'checkbox',
+            array('required' => true)
         );
         $builder->add(
             'validators',

@@ -42,6 +42,7 @@ class CourseType extends AbstractType
     {
         $user = $this->user;
         $validatorsRoles = $this->cursusManager->getValidatorsRoles();
+        $workspaces = $this->cursusManager->getWorkspacesListForCurrentUser();
 
         $builder->add(
             'title',
@@ -97,11 +98,16 @@ class CourseType extends AbstractType
             )
         );
         $builder->add(
-            'registrationValidation',
-            'checkbox',
+            'workspace',
+            'entity',
             array(
-                'required' => true,
-                'label' => 'registration_validation'
+                'class' => 'ClarolineCoreBundle:Workspace\Workspace',
+                'choices' => $workspaces,
+                'property' => 'name',
+                'required' => false,
+                'label' => 'workspace',
+                'translation_domain' => 'platform',
+                'multiple' => false
             )
         );
         $builder->add(
@@ -158,6 +164,14 @@ class CourseType extends AbstractType
             array(
                 'required' => true,
                 'label' => 'user_validation'
+            )
+        );
+        $builder->add(
+            'registrationValidation',
+            'checkbox',
+            array(
+                'required' => true,
+                'label' => 'registration_validation'
             )
         );
         $builder->add(
