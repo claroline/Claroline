@@ -22,9 +22,8 @@
                     var progressionAuthorized = false;
 
                     var userProgression = UserProgressionService.get();
-                    if ((!angular.isDefined(step.condition) || !angular.isObject(step.condition))
-                        || (angular.isDefined(userProgression[step.id]) && angular.isDefined(userProgression[step.id].authorized) && userProgression[step.id].authorized) ) {
-                        // Step is already authorized or there is no condition on it
+                    if (angular.isDefined(userProgression[step.id]) && angular.isDefined(userProgression[step.id].authorized) && userProgression[step.id].authorized) {
+                        // Step is already authorized
                         progressionAuthorized = true;
                     }
 
