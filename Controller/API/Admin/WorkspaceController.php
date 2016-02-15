@@ -28,7 +28,11 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
 
+/**
+ * @NamePrefix("api_")
+ */
 class WorkspaceController extends FOSRestController
 {
     private $formFactory;

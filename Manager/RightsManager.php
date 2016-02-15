@@ -57,6 +57,7 @@ class RightsManager
     private $dispatcher;
     /** @var RoleManager */
     private $roleManager;
+
     private $container;
 
     /**

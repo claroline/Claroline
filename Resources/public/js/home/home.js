@@ -20,8 +20,6 @@
     home.locale = $('#homeLocale').html(); //global
     home.asset = $('#homeAsset').html(); //global
 
-    console.log(home.path);
-
     if (!home.path) {
         home.path = './';
     }
@@ -149,7 +147,6 @@
     home.reloadContent = function (element, id, type) {
         $.ajax(routing.generate('claroline_get_content_by_id_and_type', {'content': id, 'type': type}))
         .done(function (data) {
-            console.log(data);
             $(element).replaceWith(data);
             $('.contents').trigger('ContentModified');
         })

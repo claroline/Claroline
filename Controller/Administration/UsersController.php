@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Controller\Administration;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\UserAdminAction;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Administration\ProfilePicsImportType;
 use Claroline\CoreBundle\Form\ImportUserType;
@@ -130,22 +131,6 @@ class UsersController extends Controller
     }
 
     /**
-     * @EXT\Route("/menu", name="claro_admin_users_management")
-     * @EXT\Template
-     *
-     * @return Response
-     */
-    public function indexAction()
-    {
-        $canUserBeCreated = $this->roleManager->validateRoleInsert(
-            new User(),
-            $this->roleManager->getRoleByName('ROLE_USER')
-        );
-
-        return array('canUserBeCreated' => $canUserBeCreated);
-    }
-
-    /**
      * @EXT\Route("/new", name="claro_admin_user_creation_form")
      * @EXT\Template
      *
@@ -226,7 +211,7 @@ class UsersController extends Controller
                 $this->translator->trans('user_creation_success', array(), 'platform')
             );
 
-            return $this->redirect($this->generateUrl('claro_admin_user_list'));
+            return $this->redirect($this->generateUrl('claro_admin_users_index'));
         }
 
         $error = null;
@@ -244,118 +229,19 @@ class UsersController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/",
-     *     name="claro_admin_multidelete_user",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Method("DELETE")
-     * @EXT\ParamConverter(
-     *     "users",
-     *      class="ClarolineCoreBundle:User",
-     *      options={"multipleIds" = true}
-     * )
-     *
-     * Removes many users from the platform.
-     *
-     * @param User[] $users
-     *
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function deleteAction(array $users)
-    {
-        $this->container->get('claroline.persistence.object_manager')->startFlushSuite();
-
-        foreach ($users as $user) {
-            if (!$this->authorization->isGranted('ROLE_ADMIN') && $user->hasRole('ROLE_ADMIN')) {
-                throw new AccessDeniedException();
-            }
-
-            $this->userManager->deleteUser($user);
-            $this->eventDispatcher->dispatch('log', 'Log\LogUserDelete', array($user));
-        }
-
-        $this->container->get('claroline.persistence.object_manager')->endFlushSuite();
-
-        return new Response('user(s) removed', 204);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/page/{page}/max/{max}/order/{order}/direction/{direction}",
-     *     name="claro_admin_user_list",
-     *     defaults={"page"=1, "search"="", "max"=50, "order"="id","direction"="ASC"},
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Route(
-     *     "/users/page/{page}/search/{search}/max/{max}/order/{order}/direction/{direction}",
-     *     name="claro_admin_user_list_search",
-     *     defaults={"page"=1, "max"=50, "order"="id","direction"="ASC"},
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Template
-     * @EXT\ParamConverter(
-     *     "order",
-     *     class="Claroline\CoreBundle\Entity\User",
-     *     options={"orderable"=true}
-     * )
-     *
-     * Displays the platform user list.
-     *
-     * @param integer $page
-     * @param string  $search
-     * @param integer $max
-     * @param string  $order
-     * @param string  $direction
-     *
-     * @return array
-     */
-    public function listAction($page, $search, $max, $order, $direction)
-    {
-        $canUserBeCreated = $this->roleManager->validateRoleInsert(new User(),$this->roleManager->getRoleByName('ROLE_USER'));
-        $pager = $search === '' ?
-            $this->userManager->getAllUsers($page, $max, $order, $direction) :
-            $this->userManager->getUsersByName($search, $page, $max, $order, $direction);
-
-        return array(
-            'canUserBeCreated' => $canUserBeCreated,
-            'pager' => $pager,
-            'search' => $search,
-            'max' => $max,
-            'order' => $order,
-            'direction' => $direction,
-        );
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/page/{page}/pic",
-     *     name="claro_admin_user_list_pics",
-     *     defaults={"page"=1, "search"=""},
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Route(
-     *     "/page/{page}/pic/search/{search}",
-     *     name="claro_admin_user_list_search_pics",
-     *     defaults={"page"=1},
+     *     "/index",
+     *     name="claro_admin_users_index",
      *     options = {"expose"=true}
      * )
      * @EXT\Template
      *
      * Displays the platform user list.
      *
-     * @param integer $page
-     * @param string  $search
-     *
      * @return array
      */
-    public function listPicsAction($page, $search)
+    public function indexAction()
     {
-        $pager = $search === '' ?
-            $this->userManager->getAllUsers($page) :
-            $this->userManager->getUsersByName($search, $page);
-
-        return array('pager' => $pager, 'search' => $search);
+        return array();
     }
 
     /**
@@ -497,7 +383,7 @@ class UsersController extends Controller
                 $sessionFlashBag->add('success', $msg);
             }
 
-            return new RedirectResponse($this->router->generate('claro_admin_user_list'));
+            return new RedirectResponse($this->router->generate('claro_admin_users_index'));
         }
 
         return array('form' => $form->createView());
@@ -533,16 +419,6 @@ class UsersController extends Controller
         $response->headers->set('Connection', 'close');
 
         return $response;
-    }
-
-    /**
-     * @EXT\Route("/user/workspace/index", name="claro_admin_user_personal_workspace_index"),
-     *
-     * @EXT\Template("ClarolineCoreBundle:Administration/Users:personnalWorkspaceIndex.html.twig")
-     */
-    public function personalWorkspaceIndexAction()
-    {
-        return array();
     }
 
     /**
@@ -715,5 +591,19 @@ class UsersController extends Controller
         }
 
         return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{user}/admin/{action}",
+     *     name="admin_user_action",
+     *     options={"expose"=true}
+     * )
+     */
+    public function executeAdminAction(User $user, $action)
+    {
+        $event = $this->eventDispatcher->dispatch('admin_user_action_' . $action, 'AdminUserAction', array('user' => $user));
+
+        return $event->getResponse();
     }
 }

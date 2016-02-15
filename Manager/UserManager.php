@@ -220,9 +220,10 @@ class UserManager
      */
     public function deleteUser(User $user)
     {
+        /* When the api will identify a user, please uncomment this
         if ($this->container->get('security.token_storage')->getToken()->getUser()->getId() === $user->getId()) {
             throw new \Exception('A user cannot delete himself');
-        }
+        }*/
         $userRole = $this->roleManager->getUserRoleByUser($user);
 
         //soft delete~
@@ -1505,5 +1506,10 @@ class UserManager
         $user->setHideMailWarning(true);
         $this->objectManager->persist($user);
         $this->objectManager->flush();
+    }
+
+    public function searchPartialList($searches, $page, $limit, $count = false)
+    {
+        return $this->userRepo->searchPartialList($searches, $page, $limit, $count);
     }
 }

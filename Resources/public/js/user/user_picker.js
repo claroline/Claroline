@@ -163,7 +163,7 @@ UserPicker.prototype.open = function () {
         url: route,
         type: 'GET',
         success: function (modalContent) {
-            var modalElement = modal.create(modalContent);
+            var modalElement = modal.create(modalContent, 'userpicker');
             var modalId = '#user-picker-modal-' + userPicker.pickerName;
             var currentSearch = $(modalId + ' #user-picker-datas-box').data('search');
             var currentMax = $(modalId + ' #user-picker-datas-box').data('max');
@@ -780,8 +780,8 @@ UserPicker.prototype.open = function () {
                             ids[i] = parseInt(userIds[i]['id']);
                             names[i] = userIds[i]['name'];
                         }
-                        $('#user-picker-input-' + userPicker.pickerName).val(ids);
-                        $('#user-picker-input-view-' + userPicker.pickerName).val(names);
+                        $('#user-picker-input-' + userPicker.pickerName).val(ids).trigger('input');
+                        $('#user-picker-input-view-' + userPicker.pickerName).val(names).trigger('input');
 
                         (ids.length > 0) ?
                             userPicker.callBack(ids) :
@@ -789,12 +789,12 @@ UserPicker.prototype.open = function () {
                     } else if (userPicker.multiple === 'single') {
 
                         if (userIds.length > 0) {
-                            $('#user-picker-input-' + userPicker.pickerName).val(parseInt(userIds[0]['id']));
-                            $('#user-picker-input-view-' + userPicker.pickerName).val(userIds[0]['name']);
+                            $('#user-picker-input-' + userPicker.pickerName).val(parseInt(userIds[0]['id'])).trigger('input');
+                            $('#user-picker-input-view-' + userPicker.pickerName).val(userIds[0]['name']).trigger('input');
                             userPicker.callBack(userIds[0]['id']);
                         } else {
-                            $('#user-picker-input-' + userPicker.pickerName).val(null);
-                            $('#user-picker-input-view-' + userPicker.pickerName).val(null);
+                            $('#user-picker-input-' + userPicker.pickerName).val(null).trigger('input');
+                            $('#user-picker-input-view-' + userPicker.pickerName).val(null).trigger('input');
                             userPicker.callBack(null);
                         }
                     }

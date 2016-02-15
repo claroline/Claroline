@@ -15,6 +15,8 @@ use FOS\RestBundle\Util\Codes;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use FOS\RestBundle\Controller\Annotations\View;
+use JMS\Serializer\SerializationContext;
 
 class ApiController extends Controller
 {
@@ -24,27 +26,41 @@ class ApiController extends Controller
     public function connectedUserAction()
     {
         /** @var \Symfony\Component\Security\Core\SecurityContext $securityContext */
-        $tokenStorage    = $this->container->get('security.token_storage');
-        $securityToken   = $tokenStorage->getToken();
+        $tokenStorage  = $this->container->get('security.token_storage');
+        $token = $tokenStorage->getToken();
 
-        if (null !== $securityToken) {
-            /** @var \Claroline\CoreBundle\Entity\User $user */
-            $user = $securityToken->getUser();
+        if ($token) {
+            $user = $token->getUser();
+            $context = new SerializationContext();
+            $context->setGroups('api');
+            $data = $this->container->get('serializer')->serialize($user, 'json', $context);
+            $users = json_decode($data);
 
-            if ($user) {
-                return new JsonResponse(array(
-                        'id'       => $user->getId(),
-                        'username' => $user->getUsername(),
-                        'user_id'  => $user->getUsername() . $user->getId(),
-                        'first_name' => $user->getFirstName(),
-                        'last_name' => $user->getLastName(),
-                        'email' => $user->getMail()
-                    ));
-            }
+            return new JsonResponse($users);
         }
 
-        return new JsonResponse(array(
-            'message' => 'User is not identified'
-        ), Codes::HTTP_NOT_FOUND);
+        throw new \Exception('No security token.');
+    }
+
+    /**
+     * @Route("/connected_roles")
+     */
+    public function connectedRoles()
+    {
+        /** @var \Symfony\Component\Security\Core\SecurityContext $securityContext */
+        $tokenStorage  = $this->container->get('security.token_storage');
+        $token = $tokenStorage->getToken();
+
+        if ($token) {
+            $roles = $token->getRoles();
+            $context = new SerializationContext();
+            $context->setGroups('api');
+            $data = $this->container->get('serializer')->serialize($roles, 'json');
+            $roles = json_decode($data);
+
+            return new JsonResponse($roles);
+        }
+
+        throw new \Exception('No security token.');
     }
 }

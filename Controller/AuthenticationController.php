@@ -166,27 +166,6 @@ class AuthenticationController
 
     /**
      * @Route(
-     *     "/passwords/reset",
-     *     name="claro_security_initialize_password",
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter(
-     *     "users",
-     *      class="ClarolineCoreBundle:User",
-     *      options={"multipleIds" = true, "name" = "ids"}
-     * )
-     */
-    public function passwordInitializationAction(array $users)
-    {
-        foreach ($users as $user) {
-            $this->mailManager->sendForgotPassword($user);
-        }
-
-        return new Response(204);
-    }
-
-    /**
-     * @Route(
      *     "/sendmail",
      *     name="claro_security_send_token",
      *     options={"expose"=true}

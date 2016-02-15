@@ -89,6 +89,9 @@ class PlatformConfigurationHandler
         'mailer_from' => null,
         'default_workspace_tag' => null,
         'is_pdf_export_active' => false,
+        'google_geocoding_client_id' => null,
+        'google_geocoding_signature' => null,
+        'google_geocoding_key' => null
     );
     private $lockedParameters;
 
@@ -202,6 +205,9 @@ class PlatformConfigurationHandler
         $config->setDomainName($this->parameters['domain_name']);
         $config->setDefaultWorkspaceTag($this->parameters['default_workspace_tag']);
         $config->setIsPdfExportActive($this->parameters['is_pdf_export_active']);
+        $config->setGoogleGeocodingClientId($this->parameters['google_geocoding_client_id']);
+        $config->setGoogleGeocodingSignature($this->parameters['google_geocoding_signature']);
+        $config->setGoogleGeocodingKey($this->parameters['google_geocoding_key']);
 
         return $config;
     }

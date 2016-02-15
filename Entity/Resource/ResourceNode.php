@@ -17,6 +17,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * Base entity for all resources.
@@ -33,6 +35,7 @@ class ResourceNode
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api"})
      */
     protected $id;
 
@@ -86,6 +89,7 @@ class ResourceNode
      * @Gedmo\TreePathSource
      * @ORM\Column()
      * @Assert\NotBlank()
+     * @Groups({"api"})
      */
     protected $name;
 

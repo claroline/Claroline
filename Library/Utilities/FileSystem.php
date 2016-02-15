@@ -36,7 +36,10 @@ class FileSystem extends Fs
         }
     }
 
-    //override not supported yet
+    /**
+     * @deprecated
+     * Please remove me from bundle manager if you can and do something better
+     */
     public function copyDir($path, $target, $originalPath = '', $originalTarget = '')
     {
         $iterator = new \DirectoryIterator($path);

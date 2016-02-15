@@ -61,6 +61,7 @@ class UserPickerType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->userPickerTransformer->setOptions(array('multiple' => $options['multiple']));
         $builder->addModelTransformer($this->userPickerTransformer);
     }
 

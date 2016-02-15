@@ -447,7 +447,7 @@ id_col: 'Colonne des identifiants'
 identical_group_name: 'Nom de groupe identique'
 identical_role_name: 'Nom de rôle identique'
 import: Importer
-import_profile_pics: 'Importer des profils d''utilisateurs'
+import_profile_pics: 'Importer des photos d''utilisateurs'
 import_profile_pics_explanation: 'Veuillez sélectionner une archive zip. Cette archive doit contenir une liste d''images dont les noms sont structurés de cette manière: identifiant.extension'
 import_roles: 'Importer des rôles'
 import_user_file_file: 'Importer depuis fichier csv'
@@ -1061,7 +1061,6 @@ user_parameters: 'Paramètres de l''utilisateur'
 user_picker: 'Outil pour choisir un utilisateur'
 user_profile: 'Profil utilisateur'
 user_public_profile_not_visible: 'Votre profil public n''est visible par personne. <br> Vous pouvez rendre votre profil visible par les <span class="shared_policy_link shared_policy_link_platform_users">utilisateurs de la plateforme</span>, ou par <span class="shared_policy_link shared_policy_link_everybody">tout le monde</span>.'
-user_removed: 'Utilisateur supprimé'
 user_selector: 'Sélecteur d''utilisateurs'
 user_visit: 'Audience/Visites utilisateurs'
 username: 'Identifiant'
@@ -1217,6 +1216,44 @@ oauth_required_data: Les informations suivantes seront envoyées:
 client_list: Liste des clients
 allow_authentication: Autoriser l'authentification
 user_subscription_notification_for_admin: s'est inscrit dans l'espace d'activité %workspace%
+filter_by: Filtrer sur
+user_list: Liste des utilisateurs
+list: Lister
+group_list: Liste des groupes
 loading: Chargement
 register_to_workspace_account_exists: Vous avez déjà un compte? Identifiez vous %link% pour vous inscrire.
 here: ici
+group_list: Liste des groupes
+box_number : Numéro de boite
+street_number: Numéro de rue
+street: Rue
+postal_code: Code postal
+town: Ville
+country: Pays
+create_location: Créer une localisation
+locations: Localisations
+location: Localisation
+add: Ajouter
+administrators: Administrateurs
+edit_organization: Modifier une organisation
+coordinates: Coordonnées
+address: Adresse
+add_users_to_group: Ajouter des utilisateurs à un groupe
+add_users_to_group_confirm: Êtes-vous sûr de vouloir ajouter le(s) utlisateur(s) [ %user_list% ] dans le groupe %group% ? 
+user_added: Utilisateur %user% ajouté.
+user_removed: Utilisateur %user% supprimé.
+remove_users_from_group: Supprimer des utilisateurs d'un groupe
+remove_users_from_group_confirm: Êtes-vous sûr de vouloir supprimer le(s) utilisateur(s) [ %user_list% ] du groupe %group% ?
+delete_groups: Supprimer des groupes
+delete_groups_confirm: Êtes-vous sûr de vouloir supprimer le(s) groupe(s) [ %group_list% ] ?
+group_removed: Groupe %group% supprimé.
+group_created: Groupe %group% créé.
+edit_group: Modifier un groupe
+manage_group: Gérer les groupes
+init_password: Réinitialisation du mot de passe
+init_password_confirm: Êtes-vous sûr de vouloir réinitialiser les mots de passe des utilisateurs [ %user_list% ] ?
+password_initialized: Mot de passe réinitialisé pour %user%
+delete_users: Supprimer des utilisateurs
+delete_users_confirm: Êtes-vous sûr de vouloir supprimer ces utilisateurs [ %user_list% ] ?
+organizations: Organizations
+group_name: Nom du groupe
