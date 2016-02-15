@@ -2,30 +2,20 @@
 
 {% block title %}{{ parent() ~ ' - ' ~ 'resources' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
-{% block breadcrumb %}
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'fa fa-cog',
-                'name': 'administration'|trans({}, 'platform'),
-                'href': path('claro_admin_index')
-            },
-            {
-                'name': 'users_management'|trans({}, 'platform'),
-                'href': path('claro_admin_users_index')
-            },
-            {
-                'name': 'claro_admin_personal_workspace_resource_rights'|trans({}, 'platform'),
-                'href': '#'
-            },
-        ])
-    }}
-{% endblock %}
-
 {% block section_content %}
     <div class="panel-body">
-        {% include 'ClarolineCoreBundle:Administration:Users\\actionbar.html.twig' %}
-        <h3>{{ 'claro_admin_personal_workspace_resource_rights'|trans({}, 'platform') }}</h3>
+        {{
+            macros.breadcrumbs([
+                {
+                    'name': 'users_management'|trans({}, 'platform'),
+                    'href': path('claro_admin_users_index')
+                },
+                {
+                    'name': 'claro_admin_personal_workspace_resource_rights'|trans({}, 'platform'),
+                    'href': '#'
+                },
+            ])
+        }}
         <table id="tool-table-body" class="table table-striped table-bordered table-condensed">
             <thead>
                 <tr>

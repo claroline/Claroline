@@ -1618,16 +1618,23 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                     $qb->setParameter("facet{$id}", $key);
                 }
 
-                if ($key === 'group') {
+                //should be renamed to group_name
+                if ($key === 'group_name') {
                     $qb->join('u.groups', "g{$id}");
                     $qb->andWhere("UPPER (g{$id}.name) LIKE :{$key}{$id}");
                     $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
+                }
+
+                if ($key === 'group_id') {
+                    $qb->join('u.groups', "g{$id}");
+                    $qb->andWhere("g{$id}.id = :{$key}{$id}");
+                    $qb->setParameter($key . $id, $el);
                 }
             }
         }
 
         $query = $qb->getQuery();
-
+        
         if ($page && $limit && !$count) {
             $query->setMaxResults($limit);
             $query->setFirstResult($page * $limit);

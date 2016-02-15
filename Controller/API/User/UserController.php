@@ -151,7 +151,7 @@ class UserController extends FOSRestController
             $baseFields[] = $field->getName();
         }
 
-        $baseFields[] = 'group';
+        $baseFields[] = 'group_name';
 
         return $baseFields;
     }
@@ -409,5 +409,13 @@ class UserController extends FOSRestController
         $this->groupManager->removeUsersFromGroup($group, $users);
 
         return $users;
+    }
+
+    /**
+     *
+     */
+    public function importUsersAction()
+    {
+
     }
 }

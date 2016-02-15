@@ -17,9 +17,10 @@ use Claroline\CoreBundle\Form\Angular\AngularType;
 
 class LocationType extends AngularType
 {
-    public function __construct()
+    public function __construct($ngAlias = 'clfm')
     {
         $this->forApi = false;
+        $this->ngAlias = $ngAlias;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -50,6 +51,7 @@ class LocationType extends AngularType
         $default = array('translation_domain' => 'platform');
         if ($this->forApi) $default['csrf_protection'] = false;
         $default['ng-model'] = 'location';
+        $default['ng-controllerAs'] = $this->ngAlias;
 
         $resolver->setDefaults($default);
     }

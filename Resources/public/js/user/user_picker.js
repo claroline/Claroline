@@ -163,7 +163,7 @@ UserPicker.prototype.open = function () {
         url: route,
         type: 'GET',
         success: function (modalContent) {
-            var modalElement = modal.create(modalContent, 'userpicker');
+            var modalElement = modal.create(modalContent, 'userpicker', {'z-index': 2000});
             var modalId = '#user-picker-modal-' + userPicker.pickerName;
             var currentSearch = $(modalId + ' #user-picker-datas-box').data('search');
             var currentMax = $(modalId + ' #user-picker-datas-box').data('max');

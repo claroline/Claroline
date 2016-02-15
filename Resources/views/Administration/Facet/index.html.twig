@@ -2,29 +2,20 @@
 
 {% block title %}{{ parent() ~ ' - ' ~ 'users_management' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
-{% block breadcrumb %}
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'fa fa-cog',
-                'name': 'administration'|trans({}, 'platform'),
-                'href': path('claro_admin_index')
-            },
-            {
-                'name': 'users_management'|trans({}, 'platform'),
-                'href': path('claro_admin_users_index')
-            },
-            {
-                'name': 'profile_management'|trans({}, 'platform'),
-                'href': ''
-            }
-        ])
-    }}
-{% endblock %}
-
 {% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'profile_management'|trans({}, 'platform') }}</h3>
+    <div class="panel panel-body">
+        {{
+            macros.breadcrumbs([
+                {
+                    'name': 'users_management'|trans({}, 'platform'),
+                    'href': path('claro_admin_users_index')
+                },
+                {
+                    'name': 'profile_management'|trans({}, 'platform'),
+                    'href': ''
+                }
+            ])
+        }}
     </div>
     <div class="list-group">
         <a class="list-group-item" href="{{ path('claro_admin_facet') }}" id="link_personnal_workspace">
@@ -33,7 +24,8 @@
         <a class="list-group-item" href="{{ path('claro_admin_profile_properties') }}" id="claro_admin_profile_properties">
             {{ 'profile_properties_management'|trans({}, 'platform') }}
         </a>
-</div>
+    </div>
+
 {% endblock %}
 
 {% block javascripts %}

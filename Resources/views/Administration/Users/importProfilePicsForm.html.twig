@@ -2,31 +2,21 @@
 
 {% block title %}{{ parent() ~ ' - ' ~ 'import' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
-{% block breadcrumb %}
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'fa fa-cog',
-                'name': 'administration'|trans({}, 'platform'),
-                'href': path('claro_admin_index')
-            },
-            {
-                'name': 'users_management'|trans({}, 'platform'),
-                'href': path('claro_admin_users_index')
-            },
-            {
-                'name':'import_profile_pics'|trans({}, 'platform'),
-                'href':''
-            }
-        ])
-    }}
-{% endblock %}
-
 {% block section_content %}
     <form role="form" class="form-horizontal" action="{{ path('import_profile_pics') }}" method="post" {{ form_enctype(form) }} >
         <div class="panel-body">
-            {% include 'ClarolineCoreBundle:Administration:Users\\actionbar.html.twig' %}
-            <h3>{{ 'import_profile_pics'|trans({}, 'platform') }}</h3>
+            {{
+                macros.breadcrumbs([
+                    {
+                        'name': 'users_management'|trans({}, 'platform'),
+                        'href': path('claro_admin_users_index')
+                    },
+                    {
+                        'name':'import_profile_pics'|trans({}, 'platform'),
+                        'href':''
+                    }
+                ])
+            }}
             <div class="well">
                 {{ 'import_profile_pics_explanation'|trans({}, 'platform')}}
             </div>

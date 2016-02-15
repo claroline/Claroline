@@ -1562,10 +1562,6 @@ form .global-error {
     z-index: (@zindex-modal + 5) !important;
 }
 
-.userpicker {
-    z-index: (@zindex-modal + 5);
-}
-
 .claroline-tag-highlight {
     font-weight: bolder;
     font-size: larger;
@@ -1795,4 +1791,13 @@ body.mce-fullscreen .modal.fullscreen {
 
 .pointer {
     cursor: pointer;
+}
+
+/***********/
+/** MODAL **/
+/***********/
+
+//fix for datatable
+.dt.dt-loaded {
+    z-index: 0;
 }

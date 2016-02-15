@@ -16,13 +16,16 @@ use Symfony\Component\Form\AbstractType;
 use Claroline\CoreBundle\Form\User\GroupType;
 use Claroline\CoreBundle\Entity\Role;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class GroupSettingsType extends GroupType
 {
-    public function __construct($isAdmin = true)
+    public function __construct($roles = null, $isAdmin = true, $ngAlias = 'cgfm')
     {
         parent::__construct();
         $this->isAdmin = $isAdmin;
+        $this->ngAlias = $ngAlias;
+        $this->roles   = $roles ? $roles: new ArrayCollection();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -37,6 +40,7 @@ class GroupSettingsType extends GroupType
                 'class' => 'Claroline\CoreBundle\Entity\Role',
                 'choice_translation_domain' => true,
                 'mapped' => false,
+                'data' => $this->roles,
                 'expanded' => true,
                 'multiple' => true,
                 'property' => 'translationKey',
@@ -64,6 +68,11 @@ class GroupSettingsType extends GroupType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        parent::setDefaultOptions($resolver);
+        $default = array('translation_domain' => 'platform');
+        if ($this->forApi) $default['csrf_protection'] = false;
+        $default['ng-model'] = 'group';
+        $default['ng-controllerAs'] = $this->ngAlias;
+
+        $resolver->setDefaults($default);
     }
 }
