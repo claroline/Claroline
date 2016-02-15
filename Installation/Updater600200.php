@@ -269,7 +269,7 @@ class Updater600200 {
      */
     private function insertScorePaper()
     {
-        $query = 'SELECT * FROM ujm_paper';
+        $query = 'SELECT * FROM ujm_paper WHERE end IS NOT NULL';
         $papers = $this->connection->query($query)->fetchAll();
         foreach ($papers as $paper) {
             $this->calculateScore($paper['id']);
@@ -287,7 +287,12 @@ class Updater600200 {
                 . 'WHERE paper_id=' . $idPaper;
         $result = $this->connection->query($query)->fetch();
 
-        $this->updatePaper($result['score'], $idPaper);
+        if ($result['score'] == '') {
+            $score = 0;
+        } else {
+            $score = $result['score'];
+        }
+        $this->updatePaper($score, $idPaper);
     }
 
     /*
