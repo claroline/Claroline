@@ -68,7 +68,7 @@
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
         ],
         "build": [
-            "Claroline\\BundleRecorder\\ScriptHandler::buildBundleFile",
+            "composer run bundles",
             "Claroline\\CoreBundle\\Library\\Installation\\Refresher::deleteCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
@@ -78,12 +78,21 @@
         "watch": [
             "npm run watch"
         ],
+        "bundles": [
+            "Claroline\\BundleRecorder\\ScriptHandler::buildBundleFile"
+        ],
         "pre-install-cmd": [
             "Claroline\\BundleRecorder\\ScriptHandler::checkForPendingOperations"
+        ],
+        "post-install-cmd": [
+            "composer run bundles"
         ],
         "pre-update-cmd": [
             "Claroline\\BundleRecorder\\ScriptHandler::checkForPendingOperations",
             "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::enableMaintenance"
+        ],
+        "post-update-cmd": [
+            "composer run bundles"
         ],
         "post-package-install": [
             "Claroline\\BundleRecorder\\ScriptHandler::logInstallOperation"
