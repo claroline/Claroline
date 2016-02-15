@@ -27,6 +27,7 @@ export default class OrganizationController {
         this.$uibModal.open({
             templateUrl: Routing.generate('api_get_edit_organization_form', {'organization': organization.id, '_format': 'html'}) + '?bust=' + Math.random().toString(36).slice(2),
             controller: 'EditModalController',
+            controllerAs: 'eofm',
             resolve: {
                 organizations: () => { return this.organizations },
                 organization: () => { return organization }

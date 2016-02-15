@@ -82,32 +82,6 @@ class OrganizationController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
-     * @ApiDoc(
-     *     description="Update an organization name",
-     *     views = {"organization"},
-     *     input="Claroline\CoreBundle\Form\OrganizationType"
-     * )
-     * @EXT\ParamConverter("organization", class="ClarolineCoreBundle:Organization\Organization")
-     */
-    public function putOrganizationNameAction(Organization $organization)
-    {
-        $organizationNameType = new OrganizationNameType();
-        $organizationNameType->enableApi();
-        $form = $this->formFactory->create($organizationNameType, $organization);
-        $form->submit($this->request);
-        //form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            $this->organizationManager->edit($form->getData());
-
-            return array('success');
-        }
-
-        return $form;
-    }
-
-    /**
      * @View()
      * @ApiDoc(
      *     description="Removes an organization",
@@ -144,7 +118,7 @@ class OrganizationController extends FOSRestController
      */
     public function getEditOrganizationFormAction(Organization $organization)
     {
-        $formType = new OrganizationParametersType();
+        $formType = new OrganizationParametersType('eofm');
         $formType->enableApi();
         $form = $this->createForm($formType, $organization);
 
@@ -161,7 +135,7 @@ class OrganizationController extends FOSRestController
      */
     public function putOrganizationAction(Organization $organization)
     {
-        $formType = new OrganizationParametersType();
+        $formType = new OrganizationParametersType('eofm');
         $formType->enableApi();
         $form = $this->formFactory->create($formType, $organization);
         $form->submit($this->request);

@@ -11,7 +11,7 @@ import ClarolineAPI from '../services/module'
 import LocationManager from '../location/module'
 import EditModalController from './Controller/EditModalController'
 import OrganizationController from './Controller/OrganizationController'
-import OrganizationAPI from './Service/OrganizationAPIService'
+import OrganizationAPIService from './Service/OrganizationAPIService'
 
 var OrganizationManager = angular.module('OrganizationManager', [
     'ui.router',
@@ -23,5 +23,5 @@ var OrganizationManager = angular.module('OrganizationManager', [
 ])
     .controller('EditModalController', EditModalController)
     .controller('OrganizationController', ['$http', 'OrganizationAPIService', '$uibModal', OrganizationController])
-    .service('OrganizationAPIService', OrganizationAPI)
+    .service('OrganizationAPIService', OrganizationAPIService)
     .config(Routing)

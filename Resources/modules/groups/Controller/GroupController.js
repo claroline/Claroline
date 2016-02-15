@@ -12,6 +12,7 @@ export default class GroupController {
         this.fields = []
         this.selected = []
         this.alerts = []
+        this.groups = undefined
 
         const columns = [
             {name: this.translate('name'), prop: "name", isCheckboxColumn: true, headerCheckbox: true},
@@ -100,12 +101,9 @@ export default class GroupController {
     }
 
     clickNew() {
-
-        CreateModalController.$inject = ['GroupAPIService', '$uibModalInstance', '$uibModal']
-
         const modalInstance = this.$uibModal.open({
             templateUrl: Routing.generate('api_get_create_group_form', {'_format': 'html'}),
-            controller: CreateModalController,
+            controller: 'CreateModalController',
             controllerAs: 'cgfm'
         })
 
@@ -122,18 +120,16 @@ export default class GroupController {
     }
 
     clickEdit(group) {
-
-        EditModalController.$inject = ['GroupAPIService', '$uibModalInstance', '$uibModal']
-
         const modalInstance = this.$uibModal.open({
-            templateUrl: Routing.generate('api_get_edit_group_form', {'_format': 'html', 'group': group.id}),
-            controller: EditModalController,
+            templateUrl: Routing.generate('api_get_edit_group_form', {'_format': 'html', 'group': group.id}) + '?bust=' + Math.random().toString(36).slice(2),
+            controller: 'EditModalController',
             controllerAs: 'egfm'
         });
 
         modalInstance.result.then(result => {
             if (!result) return;
             //dirty but it works
+            console.log(result);
             this.groups = this.ClarolineAPIService.replaceById(result, this.groups);
         });
     }

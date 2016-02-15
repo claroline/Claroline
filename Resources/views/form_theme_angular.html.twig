@@ -15,7 +15,6 @@
         ng-model="{{ alias }}.{{ model }}.{{ form.parent.vars.name }}[{{ name }}]"
         {# here I assume we use checkboxes... this could be bad tho #}
         {% if checked is defined and checked == true %}
-            {# ng-checked="true" #}
             ng-init="{{ alias }}.{{ model }}.{{ form.parent.vars.name }}[{{ name }}]=true"
         {% else %}
             ng-init="{{ alias }}.{{ model }}.{{ form.parent.vars.name }}[{{ name }}]=false"

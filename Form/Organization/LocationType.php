@@ -17,9 +17,10 @@ use Claroline\CoreBundle\Form\Angular\AngularType;
 
 class LocationType extends AngularType
 {
-    public function __construct()
+    public function __construct($ngAlias = 'clfm')
     {
         $this->forApi = false;
+        $this->ngAlias = $ngAlias;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

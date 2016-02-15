@@ -5,11 +5,11 @@ export default class modalController {
         this.$uibModalInstance = $uibModalInstance
         this.$uibModal = $uibModal
         this.ClarolineAPIService = ClarolineAPIService
-        this.organization = {}
+        this.organizationId = organization.id
     }
 
     submit() {
-        this.OrganizationAPIService.update(organization.id, this.organization).then(
+        this.OrganizationAPIService.update(this.organizationId, this.organization).then(
             d => {
                 this.$uibModalInstance.close();
                 this.ClarolineAPIService.replaceById(d.data, organizations);
