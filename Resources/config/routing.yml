@@ -17,3 +17,6 @@ claro_cursus_bundle_api_cursus:
     resource: "@ClarolineCursusBundle/Controller/API/CursusController.php"
     type:     rest
     prefix:   api
+    defaults: {_format: json}
+    options:
+        expose: true

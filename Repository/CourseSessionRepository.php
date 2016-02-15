@@ -178,4 +178,17 @@ class CourseSessionRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
+    public function findSessionsByIds(array $ids, $executeQuery = true)
+    {
+        $dql = '
+            SELECT DISTINCT cs
+            FROM Claroline\CursusBundle\Entity\CourseSession cs
+            WHERE cs.id IN (:ids)
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('ids', $ids);
+
+        return $executeQuery ? $query->execute() : $query;
+    }
 }

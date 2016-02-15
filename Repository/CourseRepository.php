@@ -229,4 +229,18 @@ class CourseRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
+    public function findCoursesByIds(array $ids, $orderedBy = 'title', $order = 'ASC')
+    {
+        $dql = "
+            SELECT c
+            FROM Claroline\CursusBundle\Entity\Course c
+            WHERE c.id IN (:ids)
+            ORDER BY c.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('ids', $ids);
+
+        return $query->getResult();
+    }
 }

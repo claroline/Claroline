@@ -196,4 +196,17 @@ class CursusGroupRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
+    public function findCursusGroupsByIds(array $ids, $executeQuery = true)
+    {
+        $dql = '
+            SELECT DISTINCT cg
+            FROM Claroline\CursusBundle\Entity\CursusGroup cg
+            WHERE cg.id IN (:ids)
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('ids', $ids);
+
+        return $executeQuery ? $query->execute() : $query;
+    }
 }

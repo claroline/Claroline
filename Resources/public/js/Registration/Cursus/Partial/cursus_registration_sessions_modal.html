@@ -1,0 +1,86 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <button class="close" ng-click="crsmc.closeModal()">x</button>
+        <h4 class="modal-title">
+            {{ 'sessions_for_registration_selection'|trans:{}:'cursus' }}
+        </h4>
+    </div>
+    <div class="modal-body">
+        <div ng-repeat="datas in crsmc.sessionsDatas">
+            <span data-toggle="collapse"
+                  href="#sessions-collapse-{{ datas['courseId'] }}"
+                  class="label label-primary pointer-hand"
+            >
+                {{ datas['courseTitle'] }}
+                <small>
+                    ({{ datas['courseCode'] }})
+                </small>
+            </span>
+            &nbsp;
+            <i class="fa fa-caret-right pointer-hand"
+               data-toggle="collapse"
+               href="#sessions-collapse-{{ datas['courseId'] }}"
+            >
+            </i>
+            <div id="sessions-collapse-{{ datas['courseId'] }}"
+                 ng-class="datas['sessions'].length > 0 ? 'collapse in' : 'collapse'"
+            >
+                <div class="radio col-md-offset-1" ng-repeat="session in datas['sessions']">
+                    <small>
+                        <label>
+                            <input type="radio"
+                                   name="options-course-{{ datas['courseId'] }}"
+                                   value="{{ session['sessionId'] }}"
+                                   ng-model="crsmc.selectedSessions[datas['courseId']]"
+                            >
+                            {{ session['sessionName'] }}
+                            &nbsp;
+                            <i class="fa fa-circle"
+                               data-toggle="tooltip"
+                               data-placement="top"
+                               title="{{ 'session_not_started'|trans:{}:'cursus' }}"
+                               style="color: #706c6c"
+                               ng-if="session['sessionStatus'] === 0"
+                            >
+                            </i>
+                            <i class="fa fa-circle"
+                               data-toggle="tooltip"
+                               data-placement="top"
+                               title="{{ 'session_open'|trans:{}:'cursus' }}"
+                               style="color: #5CB85C"
+                               ng-if="session['sessionStatus'] === 1"
+                            >
+                            </i>
+                        </label>
+                    </small>
+                </div>
+                <div class="radio col-md-offset-1">
+                    <small>
+                        <code>
+                            <label>
+                                <input type="radio"
+                                       name="options-course-{{ datas['courseId'] }}"
+                                       value="0"
+                                       ng-model="crsmc.selectedSessions[datas['courseId']]"
+                                >
+                                <i class="fa fa-plus"></i>
+                                {{ 'create_new_session'|trans:{}:'cursus' }}
+                            </label>
+                        </code>
+                    </small>
+                </div>
+            </div>
+        </div>
+        <div class="alert alert-info" ng-if="crsmc.sessionsDatas.length === 0">
+            {{ 'no_course'|trans:{}:'cursus' }}
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-default" ng-click="crsmc.closeModal()">
+            {{ 'cancel'|trans:{}:'platform' }}
+        </button>
+        <button class="btn btn-primary" ng-click="crsmc.confirmModal()">
+            {{ 'ok'|trans:{}:'platform' }}
+        </button>
+    </div>
+</div>

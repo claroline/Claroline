@@ -21,7 +21,7 @@
                         <label class="control-label col-md-3"
                                for="course_form_tutorRoleName"
                         >
-                            {{ 'course_form_tutorRoleName'|trans({}, 'cursus') }}
+                            {{ 'tutor_role_name'|trans({}, 'cursus') }}
                         </label>
                         <div class="col-md-9">
                             <select id="tutor-role-name-choice"
@@ -34,7 +34,7 @@
                         <label class="control-label col-md-3"
                                for="course_form_learnerRoleName"
                         >
-                            {{ 'course_form_learnerRoleName'|trans({}, 'cursus') }}
+                            {{ 'learner_role_name'|trans({}, 'cursus') }}
                         </label>
                         <div class="col-md-9">
                             <select id="learner-role-name-choice"
@@ -60,9 +60,9 @@
 {% block javascripts %}
     <script type="text/javascript">
         
-        function manageModelValue()
+        function manageWorkspaceValue()
         {
-            var value = $('#course_form_workspaceModel').val();
+            var value = $('#course_form_workspace').val();
             
             if (value === '') {
                 $('#role-name-choice').addClass('hidden');
@@ -71,14 +71,15 @@
                 });
                 $('#tutor-role-name-choice').empty();
                 $('#learner-role-name-choice').empty();
+                manageModelValue();
             } else {
                 var tutorValue = $('#course_form_tutorRoleName').val();
                 var learnerValue = $('#course_form_learnerRoleName').val();
                 
                 $.ajax({
                     url: Routing.generate(
-                        'ws_model_roles_translation_keys_retrieve',
-                        {'model': value}
+                        'course_workspace_roles_translation_keys_retrieve',
+                        {'workspace': value}
                     ),
                     type: 'GET',
                     success: function (datas) {
@@ -109,6 +110,59 @@
             }
         }
         
+        function manageModelValue()
+        {
+            var value = $('#course_form_workspaceModel').val();
+            var workspaceValue = $('#course_form_workspace').val();
+            
+            if (workspaceValue === '') {
+            
+                if (value === '') {
+                    $('#role-name-choice').addClass('hidden');
+                    $('.role-name-txt').each(function () {
+                        $(this).parents('.form-group').removeClass('hidden');
+                    });
+                    $('#tutor-role-name-choice').empty();
+                    $('#learner-role-name-choice').empty();
+                } else {
+                    var tutorValue = $('#course_form_tutorRoleName').val();
+                    var learnerValue = $('#course_form_learnerRoleName').val();
+
+                    $.ajax({
+                        url: Routing.generate(
+                            'ws_model_roles_translation_keys_retrieve',
+                            {'model': value}
+                        ),
+                        type: 'GET',
+                        success: function (datas) {
+                            $('#tutor-role-name-choice').empty();
+                            $('#tutor-role-name-choice').append('<option value></option>');
+                            $('#learner-role-name-choice').empty();
+                            $('#learner-role-name-choice').append('<option value></option>');
+
+                            for (var i = 0; i < datas.length; i++) {
+                                var option = '<option value="' +
+                                    datas[i] +
+                                    '">' +
+                                    datas[i] +
+                                    '</option>';
+                                $('#tutor-role-name-choice').append(option);
+                                $('#learner-role-name-choice').append(option);
+                            }
+                            $('.role-name-txt').each(function () {
+                                $(this).parents('.form-group').addClass('hidden');
+                            });
+                            $('#role-name-choice').removeClass('hidden');
+                            $('#tutor-role-name-choice option[value="' + tutorValue + '"]').prop('selected', true);
+                            $('#learner-role-name-choice option[value="' + learnerValue + '"]').prop('selected', true);
+                            $('#course_form_tutorRoleName').val($('#tutor-role-name-choice').val());
+                            $('#course_form_learnerRoleName').val($('#learner-role-name-choice').val());
+                        }
+                    });
+                }
+            }
+        }
+        
         $('#tutor-role-name-choice').on('change', function () {
             var value = $(this).val();
             $('#course_form_tutorRoleName').val(value);
@@ -123,6 +177,11 @@
             manageModelValue();
         });
         
+        $('#course_form_workspace').on('change', function () {
+            manageWorkspaceValue();
+        });
+        
         manageModelValue();
+        manageWorkspaceValue();
     </script>
 {% endblock %}

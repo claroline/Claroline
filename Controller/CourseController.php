@@ -13,6 +13,7 @@ namespace Claroline\CursusBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
@@ -42,6 +43,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -50,6 +53,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class CourseController extends Controller
 {
+    private $authorization;
     private $cursusManager;
     private $formFactory;
     private $mailManager;
@@ -62,6 +66,7 @@ class CourseController extends Controller
 
     /**
      * @DI\InjectParams({
+     *     "authorization"    = @DI\Inject("security.authorization_checker"),
      *     "cursusManager"    = @DI\Inject("claroline.manager.cursus_manager"),
      *     "formFactory"      = @DI\Inject("form.factory"),
      *     "mailManager"      = @DI\Inject("claroline.manager.mail_manager"),
@@ -74,6 +79,7 @@ class CourseController extends Controller
      * })
      */
     public function __construct(
+        AuthorizationCheckerInterface $authorization,
         CursusManager $cursusManager,
         FormFactory $formFactory,
         MailManager $mailManager,
@@ -85,6 +91,7 @@ class CourseController extends Controller
         WorkspaceManager $workspaceManager
     )
     {
+        $this->authorization = $authorization;
         $this->cursusManager = $cursusManager;
         $this->formFactory = $formFactory;
         $this->mailManager = $mailManager;
@@ -156,7 +163,10 @@ class CourseController extends Controller
         foreach (CursusDisplayedWord::$defaultKey as $key) {
             $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
         }
-        $form = $this->formFactory->create(new CourseType($authenticatedUser), new Course());
+        $form = $this->formFactory->create(
+            new CourseType($authenticatedUser, $this->cursusManager, $this->translator),
+            new Course()
+        );
 
         return array(
             'form' => $form->createView(),
@@ -176,7 +186,10 @@ class CourseController extends Controller
     public function courseCreateAction(User $authenticatedUser)
     {
         $course = new Course();
-        $form = $this->formFactory->create(new CourseType($authenticatedUser), $course);
+        $form = $this->formFactory->create(
+            new CourseType($authenticatedUser, $this->cursusManager, $this->translator),
+            $course
+        );
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -242,7 +255,7 @@ class CourseController extends Controller
             $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
         }
         $form = $this->formFactory->create(
-            new CourseType($authenticatedUser),
+            new CourseType($authenticatedUser, $this->cursusManager, $this->translator),
             $course
         );
 
@@ -277,7 +290,7 @@ class CourseController extends Controller
     )
     {
         $form = $this->formFactory->create(
-            new CourseType($authenticatedUser),
+            new CourseType($authenticatedUser, $this->cursusManager, $this->translator),
             $course
         );
         $form->handleRequest($this->request);
@@ -428,7 +441,17 @@ class CourseController extends Controller
         $session->setPublicRegistration($course->getPublicRegistration());
         $session->setPublicUnregistration($course->getPublicUnregistration());
         $session->setRegistrationValidation($course->getRegistrationValidation());
-        $form = $this->formFactory->create(new CourseSessionType(), $session);
+        $session->setMaxUsers($course->getMaxUsers());
+        $session->setUserValidation($course->getUserValidation());
+        $validators = $course->getValidators();
+
+        foreach ($validators as $validator) {
+            $session->addValidator($validator);
+        }
+        $form = $this->formFactory->create(
+            new CourseSessionType($this->cursusManager, $this->translator),
+            $session
+        );
 
         return array('form' => $form->createView(), 'course' => $course);
     }
@@ -445,7 +468,10 @@ class CourseController extends Controller
     public function courseSessionCreateAction(Course $course, User $authenticatedUser)
     {
         $session = new CourseSession();
-        $form = $this->formFactory->create(new CourseSessionType(), $session);
+        $form = $this->formFactory->create(
+            new CourseSessionType($this->cursusManager, $this->translator),
+            $session
+        );
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -475,7 +501,10 @@ class CourseController extends Controller
      */
     public function courseSessionEditFormAction(CourseSession $session)
     {
-        $form = $this->formFactory->create(new CourseSessionEditType($session), $session);
+        $form = $this->formFactory->create(
+            new CourseSessionEditType($session, $this->cursusManager, $this->translator),
+            $session
+        );
 
         return array('form' => $form->createView(), 'session' => $session);
     }
@@ -491,7 +520,10 @@ class CourseController extends Controller
      */
     public function courseSessionEditAction(CourseSession $session)
     {
-        $form = $this->formFactory->create(new CourseSessionEditType($session), $session);
+        $form = $this->formFactory->create(
+            new CourseSessionEditType($session, $this->cursusManager, $this->translator),
+            $session
+        );
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -1087,6 +1119,29 @@ class CourseController extends Controller
 
             return array('form' => $form->createView());
         }
+    }
 
+    /**
+     * @EXT\Route(
+     *     "/course/workspace/{workspace}/retrieve/roles/translation/keys",
+     *     name="course_workspace_roles_translation_keys_retrieve",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     */
+    public function retrieveRolesTranslationKeysFromWorkspaceAction(Workspace $workspace)
+    {
+        if (!$this->authorization->isGranted('OPEN', $workspace)) {
+
+            throw new AccessDeniedException();
+        }
+        $results = array();
+        $roles = $this->roleManager->getRolesByWorkspace($workspace);
+
+        foreach ($roles as $role) {
+            $results[] = $role->getTranslationKey();
+        }
+
+        return new JsonResponse($results);
     }
 }

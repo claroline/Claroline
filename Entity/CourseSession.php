@@ -12,6 +12,7 @@
 namespace Claroline\CursusBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\Cursus;
@@ -151,11 +152,40 @@ class CourseSession
      */
     protected $extra = array();
 
+    /**
+     * @ORM\Column(name="user_validation", type="boolean")
+     * @Groups({"api"})
+     * @SerializedName("userValidation")
+     */
+    protected $userValidation = false;
+
+    /**
+     * @ORM\Column(name="max_users", nullable=true, type="integer")
+     * @Groups({"api"})
+     * @SerializedName("maxUsers")
+     */
+    protected $maxUsers;
+
+    /**
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\User"
+     * )
+     * @ORM\JoinTable(name="claro_cursusbundle_course_session_validators")
+     */
+    protected $validators;
+
+    /**
+     * @ORM\Column(name="session_type", type="integer")
+     * @Groups({"api"})
+     */
+    protected $type = 0;
+
     public function __construct()
     {
         $this->cursus = new ArrayCollection();
         $this->sessionUsers = new ArrayCollection();
         $this->sessionGroups = new ArrayCollection();
+        $this->validators = new ArrayCollection();
     }
 
     public function getId()
@@ -382,5 +412,58 @@ class CourseSession
     public function getExtra()
     {
         return $this->extra;
+    }
+
+    public function getUserValidation()
+    {
+        return $this->userValidation;
+    }
+
+    public function setUserValidation($userValidation)
+    {
+        $this->userValidation = $userValidation;
+    }
+
+    public function getMaxUsers()
+    {
+        return $this->maxUsers;
+    }
+
+    public function setMaxUsers($maxUsers)
+    {
+        $this->maxUsers = $maxUsers;
+    }
+
+    public function getValidators()
+    {
+        return $this->validators->toArray();
+    }
+
+    public function addValidator(User $validator)
+    {
+        if (!$this->validators->contains($validator)) {
+            $this->validators->add($validator);
+        }
+
+        return $this;
+    }
+
+    public function removeValidator(User $validator)
+    {
+        if ($this->validators->contains($validator)) {
+            $this->validators->removeElement($validator);
+        }
+
+        return $this;
+    }
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
     }
 }

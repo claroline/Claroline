@@ -13,6 +13,7 @@ namespace Claroline\CursusBundle\Repository;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CursusBundle\Entity\Course;
+use Claroline\CursusBundle\Entity\CourseRegistrationQueue;
 use Doctrine\ORM\EntityRepository;
 
 class CourseRegistrationQueueRepository extends EntityRepository
@@ -63,5 +64,86 @@ class CourseRegistrationQueueRepository extends EntityRepository
         $query->setParameter('user', $user);
 
         return $executeQuery ? $query->getOneOrNullResult() : $query;
+    }
+
+    public function findAllUnvalidatedCourseQueues()
+    {
+        $dql = '
+            SELECT q
+            FROM Claroline\CursusBundle\Entity\CourseRegistrationQueue q
+            WHERE q.status > 0
+            ORDER BY q.applicationDate ASC
+        ';
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
+
+    public function findAllSearchedUnvalidatedCourseQueues($search)
+    {
+        $dql = '
+            SELECT q
+            FROM Claroline\CursusBundle\Entity\CourseRegistrationQueue q
+            JOIN q.course c
+            WHERE q.status > 0
+            AND (
+                UPPER(c.title) LIKE :search
+                OR UPPER(c.code) LIKE :search
+            )
+            ORDER BY q.applicationDate ASC
+        ';
+        $query = $this->_em->createQuery($dql);
+        $upperSearch = strtoupper($search);
+        $query->setParameter('search', "%{$upperSearch}%");
+
+        return $query->getResult();
+    }
+
+    public function findUnvalidatedCourseQueuesByValidator(User $user)
+    {
+        $dql = '
+            SELECT q
+            FROM Claroline\CursusBundle\Entity\CourseRegistrationQueue q
+            JOIN q.course c
+            LEFT JOIN c.validators v
+            WHERE q.status > 0
+            AND (
+                BIT_AND(q.status, :value) = :value
+                OR v = :user
+            )
+            ORDER BY q.applicationDate ASC
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('value', CourseRegistrationQueue::WAITING);
+        $query->setParameter('user', $user);
+
+        return $query->getResult();
+    }
+
+    public function findUnvalidatedSearchedCourseQueuesByValidator(User $user, $search)
+    {
+        $dql = '
+            SELECT q
+            FROM Claroline\CursusBundle\Entity\CourseRegistrationQueue q
+            JOIN q.course c
+            LEFT JOIN c.validators v
+            WHERE q.status > 0
+            AND (
+                BIT_AND(q.status, :value) = :value
+                OR v = :user
+            )
+            AND (
+                UPPER(c.title) LIKE :search
+                OR UPPER(c.code) LIKE :search
+            )
+            ORDER BY q.applicationDate ASC
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('value', CourseRegistrationQueue::WAITING);
+        $query->setParameter('user', $user);
+        $upperSearch = strtoupper($search);
+        $query->setParameter('search', "%{$upperSearch}%");
+
+        return $query->getResult();
     }
 }

@@ -12,6 +12,7 @@
 namespace Claroline\CursusBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CursusBundle\Entity\CourseRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSession;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
@@ -52,6 +53,32 @@ class CourseSessionRegistrationQueue
      */
     protected $applicationDate;
 
+    /**
+     * @ORM\Column(name="queue_status", type="integer")
+     */
+    protected $status = CourseRegistrationQueue::WAITING;
+
+    /**
+     * @ORM\Column(name="validation_date", nullable=true, type="datetime")
+     */
+    protected $validationDate;
+
+    /**
+     * @ORM\Column(name="user_validation_date", nullable=true, type="datetime")
+     */
+    protected $userValidationDate;
+
+    /**
+     * @ORM\Column(name="validator_validation_date", nullable=true, type="datetime")
+     */
+    protected $validatorValidationDate;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     * @ORM\JoinColumn(name="validator_id", nullable=true, onDelete="SET NULL")
+     */
+    protected $validator;
+
     public function getId()
     {
         return $this->id;
@@ -90,5 +117,55 @@ class CourseSessionRegistrationQueue
     public function setApplicationDate($applicationDate)
     {
         $this->applicationDate = $applicationDate;
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    public function getValidationDate()
+    {
+        return $this->validationDate;
+    }
+
+    public function setValidationDate($validationDate)
+    {
+        $this->validationDate = $validationDate;
+    }
+
+    public function getUserValidationDate()
+    {
+        return $this->userValidationDate;
+    }
+
+    public function setUserValidationDate($userValidationDate)
+    {
+        $this->userValidationDate = $userValidationDate;
+    }
+
+    public function getValidatorValidationDate()
+    {
+        return $this->validatorValidationDate;
+    }
+
+    public function setValidatorValidationDate($validatorValidationDate)
+    {
+        $this->validatorValidationDate = $validatorValidationDate;
+    }
+
+    public function getValidator()
+    {
+        return $this->validator;
+    }
+
+    public function setValidator(User $validator = null)
+    {
+        $this->validator = $validator;
     }
 }
