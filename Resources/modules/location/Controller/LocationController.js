@@ -1,3 +1,5 @@
+import CreateLocationModalController from './CreateLocationModalController'
+
 export default class LocationController {
     constructor($http, LocationAPIService, $uibModal) {
         this.$http = $http
@@ -63,22 +65,27 @@ export default class LocationController {
     }
 
     createForm() {
-        this.$uibModal.open({
+        const modal = this.$uibModal.open({
             templateUrl: Routing.generate('api_get_create_location_form', {'_format': 'html'}),
-            controller: 'CreateModalController',
-            constrollerAs: 'clmc',
+            controller: CreateLocationModalController,
+            controllerAs: 'clfm',
             resolve: {
                 locations: () => { return this.locations }
             }
         });
+
+        modal.result.then(result => {
+            if (!result) return;
+            alert('go')
+        });
     }
 
     editLocation(location) {
-        this.$uibModal.open({
+        const modal = this.$uibModal.open({
             //bust = no cache
             templateUrl: Routing.generate('api_get_edit_location_form', {'_format': 'html', 'location': location.id}) + '?bust=' + Math.random().toString(36).slice(2),
-            controller: 'EditModalController',
-            controllerAs: 'elmc',
+            controller: 'EditLocationModalController',
+            controllerAs: 'elfm',
             resolve: {
                 locations: () => { return this.locations },
                 location: () => { return location }

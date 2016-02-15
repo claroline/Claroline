@@ -76,7 +76,7 @@ class LocationController extends FOSRestController
      */
     public function getCreateLocationFormAction()
     {
-        $formType = new LocationType();
+        $formType = new LocationType('clfm');
         $formType->enableApi();
         $form = $this->createForm($formType);
 
@@ -93,7 +93,7 @@ class LocationController extends FOSRestController
      */
     public function getEditLocationFormAction(Location $location)
     {
-        $formType = new LocationType();
+        $formType = new LocationType('elfm');
         $formType->enableApi();
         $form = $this->createForm($formType, $location);
 

@@ -23,12 +23,12 @@ export default class OrganizationAPIService {
         );
     }
 
-    delete(locationId) {
+    delete(organizationId) {
         return this.$http.delete(Routing.generate('api_delete_organization', {'organization': organizationId}))
     }
 
-    update(locationId, updatedLocation) {
-        var data = this.clarolineAPIService.formSerialize('organization_form', organization);
+    update(organizationId, organization) {
+        var data = this.ClarolineAPIService.formSerialize('organization_form', organization);
 
         return this.$http.put(
             Routing.generate('api_put_organization', {'organization': organizationId, '_format': 'html'}),

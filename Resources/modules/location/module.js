@@ -1,7 +1,10 @@
+import bootstrap from 'angular-bootstrap'
+
 import LocationAPIService from './Service/LocationAPIService' 
-import CreateModalController from './Controller/CreateModalController' 
-import EditModalController from './Controller/EditModalController'
 import LocationController from './Controller/LocationController' 
+import EditLocationModalController from './Controller/EditLocationModalController'
+import CreateLocationModalController from './Controller/CreateLocationModalController' 
+import ClarolineAPI from '../services/module'
 
 var LocationManager = angular.module('LocationManager', [
     'ClarolineAPI',
@@ -12,6 +15,6 @@ var LocationManager = angular.module('LocationManager', [
     'ncy-angular-breadcrumb'
 ])
     .service('LocationAPIService', LocationAPIService)
-    .controller('LocationController', ['$http', 'LocationAPIService', '$uibModalStack', '$uibModal', LocationController])
-    .controller('CreateModalController', CreateModalController)
-    .controller('EditModalController', EditModalController)
+    .controller('LocationController', ['$http', 'LocationAPIService', '$uibModal', LocationController])
+    .controller('CreateLocationModalController', CreateLocationModalController)
+    .controller('EditLocationModalController', EditLocationModalController)

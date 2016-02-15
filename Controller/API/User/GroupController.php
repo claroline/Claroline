@@ -94,9 +94,9 @@ class GroupController extends FOSRestController
      */
     public function postGroupAction()
     {
-        $groupType = new GroupSettingsType(true, 'cgfm');
+        $groupType = new GroupSettingsType(null, true, 'cgfm');
         $groupType->enableApi();
-        $form = $this->formFactory->create(null, $groupType, new Group());
+        $form = $this->formFactory->create($groupType, new Group());
         $form->submit($this->request);
         $group = null;
         $httpCode = 400;

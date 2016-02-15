@@ -9,7 +9,7 @@ export default class LocationAPIService {
     }
 
     create(newLocation) {
-        var data = clarolineAPI.formSerialize('location_form', newLocation);
+        var data = this.ClarolineAPIService.formSerialize('location_form', newLocation);
 
         return this.$http.post(
             Routing.generate('api_post_location', {'_format': 'html'}),
@@ -23,7 +23,7 @@ export default class LocationAPIService {
     }
 
     update(locationId, updatedLocation) {
-        var data = this.clarolineAPI.formSerialize('location_form', updatedLocation);
+        var data = this.ClarolineAPIService.formSerialize('location_form', updatedLocation);
 
         return this.$http.put(
             Routing.generate('api_put_location', {'location': locationId, '_format': 'html'}),

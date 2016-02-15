@@ -1,4 +1,4 @@
-export class CreateModalController {
+export class CreateLocationModalController {
     constructor(LocationAPIService, locations, $uibModal, $uibModalInstance) {
         this.LocationAPIService = LocationAPIService
         this.locations = locations
@@ -6,18 +6,20 @@ export class CreateModalController {
         this.$uibModalInstance = $uibModalInstance
         this.location = {}
     }
-
+    
     submit() {
-        this.LocationAPIService.create(this.location).then(d => {
-                $this.uibModalInstance.close();
-                locations.push(d.data);
+        alert('submission !')
+        this.LocationAPIService.create(this.location).then(
+            d => {
+                this.$uibModalInstance.close(d.data)
             },
-            function errorHandler (d) {
+            d => {
                 if (d.status === 400) {
                     $this.uibModalInstance.close();
                     this.$uibModal.open({
                         template: d.data,
-                        controller: 'CreateModalController',
+                        controller: 'CreateLocationModalController',
+                        controllerAs: 'clfm',
                         bindToController: true,
                         resolve: {
                             locations: () => { return location }

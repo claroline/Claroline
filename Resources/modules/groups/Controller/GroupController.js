@@ -1,5 +1,5 @@
-import CreateModalController from './CreateModalController'
-import EditModalController from './EditModalController'
+import CreateGroupModalController from './CreateGroupModalController'
+import EditGroupModalController from './EditGroupModalController'
 
 export default class GroupController {
     constructor($http, ClarolineSearchService, ClarolineAPIService, $uibModal) {
@@ -103,7 +103,7 @@ export default class GroupController {
     clickNew() {
         const modalInstance = this.$uibModal.open({
             templateUrl: Routing.generate('api_get_create_group_form', {'_format': 'html'}),
-            controller: 'CreateModalController',
+            controller: 'CreateGroupModalController',
             controllerAs: 'cgfm'
         })
 
@@ -122,7 +122,7 @@ export default class GroupController {
     clickEdit(group) {
         const modalInstance = this.$uibModal.open({
             templateUrl: Routing.generate('api_get_edit_group_form', {'_format': 'html', 'group': group.id}) + '?bust=' + Math.random().toString(36).slice(2),
-            controller: 'EditModalController',
+            controller: 'EditGroupModalController',
             controllerAs: 'egfm'
         });
 

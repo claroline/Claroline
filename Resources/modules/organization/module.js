@@ -9,7 +9,7 @@ import uiTree from 'angular-ui-tree'
 import Routing from './routing.js'
 import ClarolineAPI from '../services/module'
 import LocationManager from '../location/module'
-import EditModalController from './Controller/EditModalController'
+import EditOrganizationModalController from './Controller/EditOrganizationModalController'
 import OrganizationController from './Controller/OrganizationController'
 import OrganizationAPIService from './Service/OrganizationAPIService'
 
@@ -21,7 +21,7 @@ var OrganizationManager = angular.module('OrganizationManager', [
     'ui.translation',
     'ncy-angular-breadcrumb'
 ])
-    .controller('EditModalController', EditModalController)
+    .controller('EditOrganizationModalController', EditOrganizationModalController)
     .controller('OrganizationController', ['$http', 'OrganizationAPIService', '$uibModal', OrganizationController])
     .service('OrganizationAPIService', OrganizationAPIService)
     .config(Routing)
