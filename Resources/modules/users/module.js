@@ -10,9 +10,11 @@ import GroupManager from '../groups/module'
 import clarolineSearch from '../search/module'
 import clarolineAPI from '../services/module'
 import Routing from './routing.js'
+import bazinga from '../fos-js-router/module'
 
 angular.module('UsersManager', [
     'ClarolineSearch',
+    'ui.fos-js-router',
     'data-table',
     'ui.bootstrap.tpls',
     'ClarolineAPI',

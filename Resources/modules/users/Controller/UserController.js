@@ -100,7 +100,7 @@ export default class UserController {
 
         this._onSearch = function(searches) {
             this.savedSearch = searches;
-            this.ClarolineSearchService.find('api_get_search_users', searches, this.dataTableOptions.paging.offset, this.dataTableOptions.paging.size)
+            this.ClarolineSearchService.find('api_get_search_users', searches, 0, this.dataTableOptions.paging.size)
                 .then(d => {
                     this.users = d.data.users;
                     this.dataTableOptions.paging.count = d.data.total

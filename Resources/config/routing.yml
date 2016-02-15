@@ -227,6 +227,7 @@ claro_admin_users:
     prefix: admin/users
     resource: "@ClarolineCoreBundle/Controller/Administration/UsersController.php"
     type: annotation
+    options: { expose: true }
 
 claro_admin_logs:
     prefix: admin/logs
@@ -252,6 +253,8 @@ claro_admin_facet:
     resource: "@ClarolineCoreBundle/Controller/Administration/FacetController.php"
     prefix: admin/facet
     type: annotation
+    options:
+        expose: true
 
 claro_admin_oauth:
     resource: "@ClarolineCoreBundle/Controller/Administration/OauthController.php"

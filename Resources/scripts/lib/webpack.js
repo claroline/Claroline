@@ -37,7 +37,7 @@ function configure(frontendConfig, rootDir, isWatchMode) {
   // TODO: use tree-shaking when webpack 2.0 is stable!
   if (isProd) {
     plugins.push(
-      makeUglifyJsPlugin(),
+      //makeUglifyJsPlugin(),
       makeDedupePlugin(),
       makeDefinePlugin(),
       makeNoErrorsPlugin()
