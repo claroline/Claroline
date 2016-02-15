@@ -106,7 +106,7 @@ export default class GroupController {
         const modalInstance = this.$uibModal.open({
             templateUrl: Routing.generate('api_get_create_group_form', {'_format': 'html'}),
             controller: CreateModalController,
-            controllerAs: 'modal'
+            controllerAs: 'cgfm'
         })
 
         modalInstance.result.then(result => {
@@ -116,8 +116,7 @@ export default class GroupController {
 
             this.alerts.push({
                 type: 'success',
-                msg: this.translate('group_created', {group: result.name}),
-                controllerAs: 'modal'
+                msg: this.translate('group_created', {group: result.name})
             });
         })
     }
@@ -128,7 +127,8 @@ export default class GroupController {
 
         const modalInstance = this.$uibModal.open({
             templateUrl: Routing.generate('api_get_edit_group_form', {'_format': 'html', 'group': group.id}),
-            controller: EditModalController
+            controller: EditModalController,
+            controllerAs: 'egfm'
         });
 
         modalInstance.result.then(result => {

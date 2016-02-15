@@ -94,7 +94,7 @@ class GroupController extends FOSRestController
      */
     public function postGroupAction()
     {
-        $groupType = new GroupSettingsType();
+        $groupType = new GroupSettingsType(true, 'cgfm');
         $groupType->enableApi();
         $form = $this->formFactory->create($groupType, new Group());
         $form->submit($this->request);
@@ -130,7 +130,7 @@ class GroupController extends FOSRestController
      */
     public function putGroupAction(Group $group)
     {
-        $groupType = new GroupSettingsType();
+        $groupType = new GroupSettingsType(true, 'egfm');
         $groupType->enableApi();
         $form = $this->formFactory->create($groupType, $group);
         $form->submit($this->request);        
@@ -257,7 +257,7 @@ class GroupController extends FOSRestController
      */
     public function getCreateGroupFormAction()
     {
-        $formType = new GroupSettingsType();
+        $formType = new GroupSettingsType(true, 'cgfm');
         $formType->enableApi();
         $form = $this->createForm($formType);
 
@@ -274,7 +274,7 @@ class GroupController extends FOSRestController
      */
     public function getEditGroupFormAction(Group $group)
     {
-        $formType = new GroupSettingsType();
+        $formType = new GroupSettingsType(true, 'egfm');
         $formType->enableApi();
         $form = $this->createForm($formType, $group);
         $options = array('form_view' => array('group' => $group));

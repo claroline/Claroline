@@ -19,10 +19,11 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class GroupSettingsType extends GroupType
 {
-    public function __construct($isAdmin = true)
+    public function __construct($isAdmin = true, $ngAlias = 'cgfm')
     {
         parent::__construct();
         $this->isAdmin = $isAdmin;
+        $this->ngAlias = $ngAlias;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -64,6 +65,11 @@ class GroupSettingsType extends GroupType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        parent::setDefaultOptions($resolver);
+        $default = array('translation_domain' => 'platform');
+        if ($this->forApi) $default['csrf_protection'] = false;
+        $default['ng-model'] = 'group';
+        $default['ng-controllerAs'] = $this->ngAlias;
+
+        $resolver->setDefaults($default);
     }
 }

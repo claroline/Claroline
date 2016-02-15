@@ -17,33 +17,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript" src="{{ asset('vendor/angular.js')}}"> </script>
-    <script type="text/javascript" src="{{ asset('vendor/angular-ui.js')}}"> </script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/angular/services/api.services.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/angular-ui-translation/angular-translation.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/angular-bootstrap/ui-bootstrap-tpls.js') }}"> </script>
-    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/angular/search/generic/search.app.js') }}></script>
-
-    {# Set some vars needed by Angular parts #}
-    <script type="text/javascript">
-        {# Make Twig variables accessibles by AngularJS #}
-
-        var AngularApp = {};
-        AngularApp.webDir = "{{ asset('') }}";
-    </script>
-
-
-    {# organizations #}
-    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/organization/module.js') }}></script>
-    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/organization/Controller/EditModalController.js') }}></script>
-    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/organization/Controller/OrganizationController.js') }}></script>
-    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/organization/Service/OrganizationAPIService.js') }}></script>
-
-    {# locations #}
-    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/location/module.js') }}></script>
-    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/location/Controller/CreateModalController.js') }}></script>
-    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/location/Controller/EditModalController.js') }}></script>
-    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/location/Controller/LocationsController.js') }}></script>
-    <script type="text/javascript" src={{ asset('bundles/clarolinecore/js/administration/location/Service/LocationAPIService.js') }}></script>
+    <script src="{{ asset('dist/claroline-core-organization-management.js') }}"></script>
     
 {% endblock %}
