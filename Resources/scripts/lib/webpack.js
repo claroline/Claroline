@@ -1,5 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
+const failPlugin = require('webpack-fail-plugin')
 
 /**
  * Builds a webpack configuration suitable for export.
@@ -48,7 +49,8 @@ function configure(rootDir, packages, isWatchMode) {
       makeUglifyJsPlugin(),
       makeDedupePlugin(),
       makeDefinePlugin(),
-      makeNoErrorsPlugin()
+      makeNoErrorsPlugin(),
+      makeFailOnErrorPlugin()
     )
   }
 
@@ -219,6 +221,16 @@ function makeNoErrorsPlugin() {
   return new webpack.NoErrorsPlugin({
     bail: true
   })
+}
+
+/**
+ * This plugin makes webpack exit with a non-zero status code
+ * in case of error when not in watch mode.
+ *
+ * @see https://github.com/webpack/webpack/issues/708
+ */
+function makeFailOnErrorPlugin() {
+  return failPlugin
 }
 
 /**
