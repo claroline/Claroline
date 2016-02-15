@@ -15,7 +15,7 @@ export default class GroupAPIService {
     }
 
     edit(group) {
-        const data = ClarolineAPIService.formSerialize('group_form', group);
+        const data = this.ClarolineAPIService.formSerialize('group_form', group);
 
         return this.$http.put(
             Routing.generate('api_put_group', {'_format': 'html', 'group': group.id}),

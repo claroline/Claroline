@@ -7,11 +7,11 @@
     {% form_theme form 'ClarolineCoreBundle::form_theme_angular.html.twig' %}
     <form role="form"
             class="form-horizontal"
-            ng-submit="modal.submit($scope)"
+            ng-submit="egfm.submit($scope)"
             method="post" {{ form_enctype(form) }}
         >
         <div class="modal-body">
-            <div ng-model='modal.{{ form.vars.model }}.id' ng-init='modal.{{ form.vars.model }}.id="{{ group.id|ng_escape }}"'></div>
+            <div ng-model='egfm.{{ form.vars.model }}.id' ng-init='egfm.{{ form.vars.model }}.id="{{ group.id|ng_escape }}"'></div>
             {{ form_widget(form) }}
         </div>
         <div class="modal-footer">

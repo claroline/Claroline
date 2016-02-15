@@ -76,7 +76,7 @@ class LocationController extends FOSRestController
      */
     public function getCreateLocationFormAction()
     {
-        $formType = new LocationType();
+        $formType = new LocationType('clfm');
         $formType->enableApi();
         $form = $this->createForm($formType);
 
@@ -93,7 +93,7 @@ class LocationController extends FOSRestController
      */
     public function getEditLocationFormAction(Location $location)
     {
-        $formType = new LocationType();
+        $formType = new LocationType('elfm');
         $formType->enableApi();
         $form = $this->createForm($formType, $location);
 
@@ -110,7 +110,7 @@ class LocationController extends FOSRestController
      */
     public function postLocationAction()
     {
-        $locationType = new LocationType();
+        $locationType = new LocationType('clfm');
         $locationType->enableApi();
         $form = $this->formFactory->create($locationType, new Location());
         $form->submit($this->request);
@@ -128,7 +128,7 @@ class LocationController extends FOSRestController
             'extra_parameters' => $location
         );
 
-        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Admin\Location\createLocationForm.html.twig', $form, $options);
+        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Organization\createLocationForm.html.twig', $form, $options);
     }
 
     /**
@@ -141,7 +141,7 @@ class LocationController extends FOSRestController
      */
     public function putLocationAction(Location $location)
     {
-        $locationType = new LocationType();
+        $locationType = new LocationType('elfm');
         $locationType->enableApi();
         $form = $this->formFactory->create($locationType, $location);
         $form->submit($this->request);

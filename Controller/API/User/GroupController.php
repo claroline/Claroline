@@ -94,7 +94,7 @@ class GroupController extends FOSRestController
      */
     public function postGroupAction()
     {
-        $groupType = new GroupSettingsType();
+        $groupType = new GroupSettingsType(null, true, 'cgfm');
         $groupType->enableApi();
         $form = $this->formFactory->create($groupType, new Group());
         $form->submit($this->request);
@@ -103,6 +103,8 @@ class GroupController extends FOSRestController
 
         if ($form->isValid()) {
             $group = $form->getData();
+            $newRoles = $form['platformRoles']->getData();
+            $this->groupManager->setPlatformRoles($group, $newRoles);
             $this->groupManager->insertGroup($group);
             $httpCode = 200;
         }
@@ -130,7 +132,8 @@ class GroupController extends FOSRestController
      */
     public function putGroupAction(Group $group)
     {
-        $groupType = new GroupSettingsType();
+        $oldRoles = $group->getPlatformRoles();
+        $groupType = new GroupSettingsType($oldRoles, true, 'egfm');
         $groupType->enableApi();
         $form = $this->formFactory->create($groupType, $group);
         $form->submit($this->request);        
@@ -138,7 +141,9 @@ class GroupController extends FOSRestController
 
         if ($form->isValid()) {
             $group = $form->getData();
-            $this->groupManager->insertGroup($group);
+            $newRoles = $form['platformRoles']->getData();
+            $this->groupManager->setPlatformRoles($group, $newRoles);
+            $this->groupManager->updateGroup($group, $oldRoles);
             $httpCode = 200;
         }
 
@@ -257,7 +262,7 @@ class GroupController extends FOSRestController
      */
     public function getCreateGroupFormAction()
     {
-        $formType = new GroupSettingsType();
+        $formType = new GroupSettingsType(null, true, 'cgfm');
         $formType->enableApi();
         $form = $this->createForm($formType);
 
@@ -274,7 +279,7 @@ class GroupController extends FOSRestController
      */
     public function getEditGroupFormAction(Group $group)
     {
-        $formType = new GroupSettingsType();
+        $formType = new GroupSettingsType($group->getPlatformRole(), true, 'egfm');
         $formType->enableApi();
         $form = $this->createForm($formType, $group);
         $options = array('form_view' => array('group' => $group));

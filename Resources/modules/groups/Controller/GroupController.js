@@ -1,5 +1,5 @@
-import CreateModalController from './CreateModalController'
-import EditModalController from './EditModalController'
+import CreateGroupModalController from './CreateGroupModalController'
+import EditGroupModalController from './EditGroupModalController'
 
 export default class GroupController {
     constructor($http, ClarolineSearchService, ClarolineAPIService, $uibModal) {
@@ -12,6 +12,7 @@ export default class GroupController {
         this.fields = []
         this.selected = []
         this.alerts = []
+        this.groups = undefined
 
         const columns = [
             {name: this.translate('name'), prop: "name", isCheckboxColumn: true, headerCheckbox: true},
@@ -100,13 +101,10 @@ export default class GroupController {
     }
 
     clickNew() {
-
-        CreateModalController.$inject = ['GroupAPIService', '$uibModalInstance', '$uibModal']
-
         const modalInstance = this.$uibModal.open({
             templateUrl: Routing.generate('api_get_create_group_form', {'_format': 'html'}),
-            controller: CreateModalController,
-            controllerAs: 'modal'
+            controller: 'CreateGroupModalController',
+            controllerAs: 'cgfm'
         })
 
         modalInstance.result.then(result => {
@@ -116,24 +114,22 @@ export default class GroupController {
 
             this.alerts.push({
                 type: 'success',
-                msg: this.translate('group_created', {group: result.name}),
-                controllerAs: 'modal'
+                msg: this.translate('group_created', {group: result.name})
             });
         })
     }
 
     clickEdit(group) {
-
-        EditModalController.$inject = ['GroupAPIService', '$uibModalInstance', '$uibModal']
-
         const modalInstance = this.$uibModal.open({
-            templateUrl: Routing.generate('api_get_edit_group_form', {'_format': 'html', 'group': group.id}),
-            controller: EditModalController
+            templateUrl: Routing.generate('api_get_edit_group_form', {'_format': 'html', 'group': group.id}) + '?bust=' + Math.random().toString(36).slice(2),
+            controller: 'EditGroupModalController',
+            controllerAs: 'egfm'
         });
 
         modalInstance.result.then(result => {
             if (!result) return;
             //dirty but it works
+            console.log(result);
             this.groups = this.ClarolineAPIService.replaceById(result, this.groups);
         });
     }
