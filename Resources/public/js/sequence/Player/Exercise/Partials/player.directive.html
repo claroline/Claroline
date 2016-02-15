@@ -76,7 +76,7 @@
                     {{ 'btn_interrupt_sequence_label'|trans:{}:'ujm_sequence' }}
                 </button>
                 <!-- END SEQUENCE -->
-                <button data-ng-if="exercisePlayerCtrl.isLastStep" data-ng-disabled="!(exercisePlayerCtrl.feedbackIsShown && exercisePlayerCtrl.checkIfFeedbackIsAvailable())" role="button" type="button" ng-bootbox-confirm="{{ 'sequence_end_sequence_confirm'|trans:{}:'ujm_sequence'}}" ng-bootbox-confirm-action="exercisePlayerCtrl.validateStep('end')" class="btn btn-default">
+                <button data-ng-if="exercisePlayerCtrl.isLastStep" role="button" type="button" ng-bootbox-confirm="{{ 'sequence_end_sequence_confirm'|trans:{}:'ujm_sequence'}}" ng-bootbox-confirm-action="exercisePlayerCtrl.validateStep('end')" class="btn btn-default">
                     {{ 'btn_end_sequence_label'|trans:{}:'ujm_sequence' }}
                 </button>
             </div>
