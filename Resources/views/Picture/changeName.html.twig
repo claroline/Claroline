@@ -1,4 +1,4 @@
-<div class="modal fade" id="modaldocument" role="dialog" aria-hidden="true">
+<div class="modal fade" id="modalpicture" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -17,10 +17,10 @@
 
                     <div class="modal-footer">
                         <input id="updateSubmit" type="submit" value="{{ 'change' | trans({}, 'ujm_exo') }} !"
-                            onclick="ValidName('{{ 'wrong_name' | trans({}, 'ujm_exo') }}','newlabel', '{{ path('ujm_Document_name_alreadyExist') }}', '{{ 'already_exist' | trans({}, 'ujm_exo') }}', 'updateName');
+                            onclick="ValidName('{{ 'wrong_name' | trans({}, 'ujm_exo') }}','newlabel', '{{ path('ujm_Picture_name_alreadyExist') }}', '{{ 'already_exist' | trans({}, 'ujm_exo') }}', 'updateName');
                                 return false;" class="btn btn-primary"/>
 
-                        <input type="hidden" id="oldName" name="oldName" value="{{oldDocLabel}}"/>
+                        <input type="hidden" id="oldName" name="oldName" value="{{oldPicLabel}}"/>
                         <input type="hidden" id="i" name="i" value="{{i}}"/>
                     </div>
                 </form>
@@ -30,7 +30,7 @@
 </div>
 
 <script type="text/javascript">
-    $('#modaldocument').modal('toggle', 'show');
+    $('#modalpicture').modal('toggle', 'show');
 
     var oldname = $('#oldName').val();
     var i = $('#i').val();
@@ -41,9 +41,9 @@
 
         var options = {
             success: function (data) {
-                if ($('#docLabel' + i).html().trim() == oldname) {
-                    $('#docLabel' + i).html(data);
-                    $('#modaldocument').modal('hide');
+                if ($('#PicLabel' + i).html().trim() == oldname) {
+                    $('#PicLabel' + i).html(data);
+                    $('#modalpicture').modal('hide');
                     return false;
                 }
             },

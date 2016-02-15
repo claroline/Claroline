@@ -15,6 +15,7 @@ all_question: All the questions
 already: This question is already shared with this user
 already_answered: You have already answered at this exercise
 already_exist: This name exist already
+anonymous : Anonymous
 answer_coched: No response expected is checked
 answer_zone: Answer zone
 attempt_info1: You have
@@ -42,6 +43,7 @@ calculation_measure_difficulty: It's calculate with the number of applicant whic
 category: Category
 case_sensitive: Case sensitive
 cercle: Circle
+certificatif : Certificatif
 change: Change
 change_name: Change the name of the document
 change_order: To change questions order, move it by using drag and drop
@@ -78,7 +80,7 @@ display_all_list: Display the whole list
 display_all_on_this_page: Display all on this page
 display_pagination: Display with pagination
 docimology: Docimology
-doc_manage: Manage my documents
+pic_manage: Manage my documents
 document: Document
 drop_category: Drop this category
 duplicate: Duplicate
@@ -118,6 +120,7 @@ finish: Finish
 for_type_of: for a question of type
 frequency: Frequency
 from: From
+formative : Formative
 
 # G
 graphic: Graphic
@@ -206,7 +209,7 @@ no: No
 no_answer: No answer
 no_answer_zone: There is no answer zone
 no_finish: No finished
-no_doc_found: No document found
+no_pic_found: No document found
 no_img: You must upload a picture
 no_img_select: You must select an image
 no_label: No labels associated
@@ -318,12 +321,14 @@ size: Size
 start_again: Start again
 start_date: Start date
 sort: Sort documents
+summative : Summative
 
 # T
 temporary_mark: Temporary mark
 test_exit: Test output
 title: Title
 type: Type
+type_exo : Type of exercise
 type_qcm: QCM type
 type_question: Question type
 
@@ -338,7 +343,7 @@ users: Users
 validate: Validate
 
 # W
-warning: Are you sure you want to delete this document
+warning: Are you sure you want to delete this picture
 warning_change_type_q: Warning you may lose your data entered continue
 warning_one_word: You chose a question word. Attention has spaces in your answer.
 weight_choice: Assign points by response

@@ -1,6 +1,6 @@
 <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 
-{% if listFindDoc is not empty %}
+{% if listFindPic is not empty %}
     <table class="table table-striped table-bordered table-condensed" id="table">
         <thead>
             <tr style="background-color: lightsteelblue;">
@@ -23,16 +23,17 @@
             </tr>
         </thead>
         <tbody>
-            {% for myDoc in listFindDoc %}
+            {% set i = 0 %}
+            {% for myPic in listFindPic %}
                 <tr>
                     <td class="classic">
-                        {% if myDoc.type == ".png" or myDoc.type == ".jpeg"
-                            or myDoc.type == ".jpg" or myDoc.type == ".gif" or myDoc.type == ".bmp" %}
+                        {% if myPic.type == ".png" or myPic.type == ".jpeg"
+                            or myPic.type == ".jpg" or myPic.type == ".gif" or myPic.type == ".bmp" %}
                             <i class="fa fa-picture-o"></i>
-                        {% elseif myDoc.type == ".mp3" or myDoc.type == ".wav" %}
+                        {% elseif myPic.type == ".mp3" or myPic.type == ".wav" %}
                             <i class="fa fa-music"></i>
-                        {% elseif myDoc.type == ".avi" or myDoc.type == ".mpeg"
-                            or myDoc.type == ".wmv" or myDoc.type == ".flv" or myDoc.type == ".mov" %}
+                        {% elseif myPic.type == ".avi" or myPic.type == ".mpeg"
+                            or myPic.type == ".wmv" or myPic.type == ".flv" or myPic.type == ".mov" %}
                             <i class="fa fa-film"></i>
                         {% else %}
                             <i class="fa fa-file"></i>
@@ -40,47 +41,48 @@
                     </td>
 
                     <td class="classic">
-                        {% if myDoc.type == ".png" or myDoc.type == ".jpeg"
-                           or myDoc.type == ".jpg" or myDoc.type == ".gif" or myDoc.type == ".bmp" %}
-                           <img src="{{ asset(myDoc.url) }}" width="100px" height="100px"/>
-                       {% elseif myDoc.type == ".mp3" or myDoc.type == ".wav" %}
+                        {% if myPic.type == ".png" or myPic.type == ".jpeg"
+                           or myPic.type == ".jpg" or myPic.type == ".gif" or myPic.type == ".bmp" %}
+                           <img src="{{ asset(myPic.url) }}" width="100px" height="100px"/>
+                       {% elseif myPic.type == ".mp3" or myPic.type == ".wav" %}
                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'play' | trans({}, 'ujm_exo') }}"
-                              href="{{ asset(myDoc.url) }}" onclick="window.open(this.href, 'ListenSong',
+                              href="{{ asset(myPic.url) }}" onclick="window.open(this.href, 'ListenSong',
                                'height=200, width=300, toolbar=no, menubar=no, location=no, resizable=yes, scrollbars=no, status=no');
                                return false;">
                                <i class="fa fa-play"></i>
                            </a>
-                       {% elseif myDoc.type == ".avi" or myDoc.type == ".mpeg"
-                           or myDoc.type == ".wmv" or myDoc.type == ".flv" or myDoc.type == ".mov" %}
+                       {% elseif myPic.type == ".avi" or myPic.type == ".mpeg"
+                           or myPic.type == ".wmv" or myPic.type == ".flv" or myPic.type == ".mov" %}
                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'play' | trans({}, 'ujm_exo') }}"
-                              href="{{ asset(myDoc.url) }}">
+                              href="{{ asset(myPic.url) }}">
                                <i class="fa fa-play"></i>
                            </a>
                        {% else %}
                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'download' | trans({}, 'ujm_exo') }}"
-                              href="{{ asset(myDoc.url) }}">
+                              href="{{ asset(myPic.url) }}">
                                <i class="fa fa-download"></i>
                            </a>
                        {% endif %}
                     </td>
 
-                    <td class="classic">
-                        {{ myDoc.label }}
+                    <td class="classic" id="PicLabel{{ i }}">
+                        {{ myPic.label }}
                     </td>
 
                     <td class="classic">
                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans({}, 'ujm_exo') }}"
-                            href="#" onclick="ChangeName('{{ myDoc.label }}');event.preventDefault();">
+                            href="#" onclick="ChangeName('{{ path('ujm_picture_change_name') }}', '{{ i }}');">
                             <i class="fa fa-pencil"></i>
                         </a>
 
                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans({}, 'ujm_exo') }}"
-                           href="{{ path('ujm_document_del', { 'idDoc': myDoc.id }) }}"
-                           onclick="return confirm('{{ 'warning' | trans({}, 'ujm_exo') }} ?');">
-                            <i class="fa fa-trash-o"></i>
-                        </a>
+                            id="delete_picture"
+                            href="{{ path('ujm_Picture_del', { 'idPic': myPic.id }) }}">
+                             <i class="fa fa-trash-o"></i>
+                         </a>
                     </td>
                 </tr>
+                {% set i = i + 1 %}
             {% endfor %}
         </tbody>
     </table>
@@ -88,19 +90,19 @@
     <input type="hidden" id="label2Find" value="{{ labelToFind }}"/>
     <input type="hidden" id="whichAction" value="{{ whichAction }}"/>
 
-    {% if pagerFindDoc.haveToPaginate %}
+    {% if pagerFindPic.haveToPaginate %}
         <div class="text-center panel-footer">
             {% if whichAction == 'sort' %}
-                {{ pagerfanta(pagerFindDoc, 'twitter_bootstrap_translated',{ 'routeName': 'ujm_question_sortDocuments',
-                    'routeParams': { 'searchLabel': labelToFind, 'doctype': doctype } }) }}
+                {{ pagerfanta(pagerFindPic, 'twitter_bootstrap_translated',{ 'routeName': 'ujm_question_sortPictures',
+                    'routeParams': { 'searchLabel': labelToFind, 'picType': picType } }) }}
             {% else %}
-                {{ pagerfanta(pagerFindDoc, 'twitter_bootstrap_translated',{ 'routeName': 'ujm_question_searchDocuments',
+                {{ pagerfanta(pagerFindPic, 'twitter_bootstrap_translated',{ 'routeName': 'ujm_question_searchPictures',
                     'routeParams': { 'labelToFind': labelToFind } }) }}
             {% endif %}
         </div>
     {% endif %}
 {% else %}
-    <div class="alert alert-info">{{ 'no_doc_found'|trans({}, 'ujm_exo') }} ...</div>
+    <div class="alert alert-info">{{ 'no_pic_found'|trans({}, 'ujm_exo') }} ...</div>
 {% endif %}
 
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/sortAndSearch.js') }}"></script>

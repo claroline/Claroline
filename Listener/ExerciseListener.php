@@ -14,6 +14,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Entity\Step;
 use UJM\ExoBundle\Entity\ExerciseQuestion;
 use UJM\ExoBundle\Entity\Subscription;
 use UJM\ExoBundle\Form\ExerciseType;
@@ -77,14 +78,14 @@ class ExerciseListener
             $exercise = $form->getData();
             $exercise->setName($exercise->getTitle());
             $event->setPublished((bool) $form->get('publish')->getData());
-
+            
             $subscription = new Subscription($user, $exercise);
             $subscription->setAdmin(true);
             $subscription->setCreator(true);
 
             $em->persist($exercise);
             $em->persist($subscription);
-
+            
             $event->setResources(array($exercise));
             $event->stopPropagation();
 

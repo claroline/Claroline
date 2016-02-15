@@ -40,7 +40,7 @@ class ExerciseQuestionRepository extends EntityRepository
     public function getCountQuestion($exoId)
     {
         $query = $this->_em->createQuery(
-                'SELECT count(eq.question) as nbq
+               'SELECT count(eq.question) as nbq
                 FROM UJM\ExoBundle\Entity\ExerciseQuestion eq
                 WHERE eq.exercise = ?1'
         );

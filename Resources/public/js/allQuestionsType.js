@@ -153,6 +153,10 @@ function displayDeleteCategory(idCat,valueCat,locker) {
            $('#linkedCategory').css({"display" : "none"});
                  break;
        }
+       else{
+           $('#linkedCategory').css({"display" : "inline-block"});
+                 break;
+       }
     }
 }
 

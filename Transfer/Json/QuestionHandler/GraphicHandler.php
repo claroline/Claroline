@@ -149,17 +149,18 @@ class GraphicHandler implements QuestionHandlerInterface {
     public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true, $forPaperList = false) {
         $repo = $this->om->getRepository('UJMExoBundle:InteractionGraphic');
         $graphic = $repo->findOneBy(['question' => $question]);
+        
         $coords = $graphic->getCoords()->toArray();
         
-        $exportData->width = $graphic->getWidth();
-        $exportData->height = $graphic->getHeight();
+        $picture = $this->om->getRepository('UJMExoBundle:Picture')->findOneBy(array('id' => $graphic->getPicture()));
         
+        $exportData->width = $picture->getWidth();
+        $exportData->height = $picture->getHeight();
         
-        $interDocument = $graphic->getDocument();
         $document = new \stdClass();        
-        $document->id = $interDocument->getId();
-        $document->label = $interDocument->getLabel();
-        $document->url = $interDocument->getUrl();        
+        $document->id = $picture->getId();
+        $document->label = $picture->getLabel();
+        $document->url = $picture->getUrl();        
         $exportData->document = $document;
                 
         $exportData->coords = array_map(function ($coord) {

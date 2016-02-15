@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -61,6 +62,11 @@ class Label
      * @ORM\Column(name="feedback", type="text", nullable=true)
      */
     private $feedback;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     */
+    private $resourceNode;
 
     /**
      * Get id.
@@ -185,5 +191,21 @@ class Label
     public function setFeedback($feedback)
     {
         $this->feedback = $feedback;
+    }
+
+    /**
+     * @return ResourceNode
+     */
+    public function getResourceNode()
+    {
+        return $this->resourceNode;
+    }
+
+    /**
+     * @param ResourceNode $resourceNode
+     */
+    public function setResourceNode(ResourceNode $resourceNode)
+    {
+        $this->resourceNode = $resourceNode;
     }
 }
