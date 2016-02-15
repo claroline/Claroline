@@ -70,7 +70,7 @@
                             }
                             // expected answer not checked by student
                             if(!found){
-                                isValid = 2;
+                                isValid = 0;
                             }
                         } else if (this.solutions[i].id === choice.id && this.solutions[i].score <= 0) {
                             // search for unexpected answer checked by student
@@ -85,7 +85,7 @@
                     for (var i = 0; i < this.solutions.length; i++) {
                         if (this.solutions[i].id === choice.id && this.solutions[i].score > 0) {
                             // expected answer not checked by student
-                            isValid = 2;
+                            isValid = 0;
                         }
                     }
                 }
