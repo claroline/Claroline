@@ -30,5 +30,7 @@
     },
     "autoload": {
         "psr-4": { "Claroline\\MigrationBundle\\": "" }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
