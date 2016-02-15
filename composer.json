@@ -1,15 +1,15 @@
 {
     "name": "claroline/claroline",
     "description": "Claroline Connect",
+    "license": "GPL-3.0+",
     "require": {
         "php": ">=5.5",
         "claroline/activity-tool-bundle": "~6.0",
         "claroline/agenda-bundle": "~6.0",
         "claroline/announcement-bundle": "~6.0",
         "claroline/bundle-recorder": "~6.0",
-        "claroline/core-bundle": "dev-angular-es6 as 6.7",
+        "claroline/core-bundle": "~6.7",
         "claroline/cursus-bundle": "~6.0",
-        "claroline/dev-bundle": "master",
         "claroline/forum-bundle": "~6.0",
         "claroline/image-player-bundle": "~6.0",
         "claroline/message-bundle": "~6.0",
@@ -39,7 +39,8 @@
         "ujm/exo-bundle": "~6.0"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "*"
+        "symfony/phpunit-bridge": "*",
+        "claroline/dev-bundle": "master"
     },
     "repositories": [
         {
@@ -49,7 +50,7 @@
     ],
     "scripts": {
         "sync": [
-            "composer run fetch",
+            "COMPOSER_PROCESS_TIMEOUT=900 composer run fetch",
             "composer run configure",
             "composer run build",
             "php app/console claroline:update",
