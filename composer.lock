@@ -286,12 +286,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/stefk/CoreBundle.git",
-                "reference": "1ed61fcf24763d0483c5fa729c89b3e92eaea5e8"
+                "reference": "78c9bd2ca2c0723ef00689a3a1eb88a8866868ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stefk/CoreBundle/zipball/1ed61fcf24763d0483c5fa729c89b3e92eaea5e8",
-                "reference": "1ed61fcf24763d0483c5fa729c89b3e92eaea5e8",
+                "url": "https://api.github.com/repos/stefk/CoreBundle/zipball/78c9bd2ca2c0723ef00689a3a1eb88a8866868ca",
+                "reference": "78c9bd2ca2c0723ef00689a3a1eb88a8866868ca",
                 "shasum": ""
             },
             "require": {
@@ -372,7 +372,7 @@
             "support": {
                 "source": "https://github.com/stefk/CoreBundle/tree/angular-es6"
             },
-            "time": "2016-02-13 16:03:30"
+            "time": "2016-02-14 22:27:48"
         },
         {
             "name": "claroline/cursus-bundle",
@@ -711,21 +711,21 @@
         },
         {
             "name": "claroline/migration-bundle",
-            "version": "6.0.3",
+            "version": "6.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/MigrationBundle.git",
-                "reference": "0739b7b0d56fef4d4fe9f61de0d6b9afea856f73"
+                "reference": "81a9a6a00e21e9c42cf82a5b07c3fd817387b01e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/MigrationBundle/zipball/0739b7b0d56fef4d4fe9f61de0d6b9afea856f73",
-                "reference": "0739b7b0d56fef4d4fe9f61de0d6b9afea856f73",
+                "url": "https://api.github.com/repos/claroline/MigrationBundle/zipball/81a9a6a00e21e9c42cf82a5b07c3fd817387b01e",
+                "reference": "81a9a6a00e21e9c42cf82a5b07c3fd817387b01e",
                 "shasum": ""
             },
             "require": {
                 "claroline/kernel-bundle": "~6.0",
-                "doctrine/migrations": "dev-master",
+                "doctrine/migrations": "~1.3",
                 "doctrine/orm": "~2.2",
                 "jdorn/sql-formatter": "~1.0",
                 "php": ">=5.5",
@@ -762,7 +762,7 @@
                 "Claroline",
                 "migration"
             ],
-            "time": "2016-02-03 10:54:46"
+            "time": "2016-02-15 09:38:01"
         },
         {
             "name": "claroline/pdf-player-bundle",
@@ -1272,12 +1272,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "8ed894cf999756089f9ffa969b3756f26bf4af1d"
+                "reference": "d6d0435c5437111e42a123b06e4071e26ba7cb6e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/8ed894cf999756089f9ffa969b3756f26bf4af1d",
-                "reference": "8ed894cf999756089f9ffa969b3756f26bf4af1d",
+                "url": "https://api.github.com/repos/composer/composer/zipball/d6d0435c5437111e42a123b06e4071e26ba7cb6e",
+                "reference": "d6d0435c5437111e42a123b06e4071e26ba7cb6e",
                 "shasum": ""
             },
             "require": {
@@ -1339,7 +1339,7 @@
                 "dependency",
                 "package"
             ],
-            "time": "2016-02-13 15:33:04"
+            "time": "2016-02-14 19:51:23"
         },
         {
             "name": "composer/semver",
@@ -2309,21 +2309,21 @@
         },
         {
             "name": "doctrine/migrations",
-            "version": "dev-master",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/migrations.git",
-                "reference": "7ab492c6a65ebe7c0f4665bf96320bef4fb31b70"
+                "reference": "2ce8d87d4247e4b87cc5905ea5f8446b12bd9b5b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/migrations/zipball/7ab492c6a65ebe7c0f4665bf96320bef4fb31b70",
-                "reference": "7ab492c6a65ebe7c0f4665bf96320bef4fb31b70",
+                "url": "https://api.github.com/repos/doctrine/migrations/zipball/2ce8d87d4247e4b87cc5905ea5f8446b12bd9b5b",
+                "reference": "2ce8d87d4247e4b87cc5905ea5f8446b12bd9b5b",
                 "shasum": ""
             },
             "require": {
                 "doctrine/dbal": "~2.2",
-                "ocramius/proxy-manager": "^1.0|^2.0",
+                "ocramius/proxy-manager": "^1.0",
                 "php": "^5.5|^7.0",
                 "symfony/console": "~2.3|~3.0",
                 "symfony/yaml": "~2.3|~3.0"
@@ -2374,7 +2374,7 @@
                 "database",
                 "migrations"
             ],
-            "time": "2016-02-08 09:40:13"
+            "time": "2016-01-23 09:49:17"
         },
         {
             "name": "doctrine/orm",
@@ -4220,16 +4220,16 @@
         },
         {
             "name": "innova/path-bundle",
-            "version": "v6.1.5",
+            "version": "v6.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/InnovaLangues/PathBundle.git",
-                "reference": "cd21c80d48ba7db05aed18cd251a49f74fd074be"
+                "reference": "6a4bd36542c080c388a0bd9898eecca9d30237ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/InnovaLangues/PathBundle/zipball/cd21c80d48ba7db05aed18cd251a49f74fd074be",
-                "reference": "cd21c80d48ba7db05aed18cd251a49f74fd074be",
+                "url": "https://api.github.com/repos/InnovaLangues/PathBundle/zipball/6a4bd36542c080c388a0bd9898eecca9d30237ba",
+                "reference": "6a4bd36542c080c388a0bd9898eecca9d30237ba",
                 "shasum": ""
             },
             "require": {
@@ -4272,7 +4272,7 @@
                 "Claroline",
                 "path"
             ],
-            "time": "2016-02-09 08:38:15"
+            "time": "2016-02-15 08:54:13"
         },
         {
             "name": "jdorn/sql-formatter",
@@ -5531,12 +5531,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nelmio/NelmioApiDocBundle.git",
-                "reference": "5d9c47bbad2e064340cabfd3f96f5057a80773c4"
+                "reference": "07545629aa99441cfec1c18619050a346ea273f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nelmio/NelmioApiDocBundle/zipball/5d9c47bbad2e064340cabfd3f96f5057a80773c4",
-                "reference": "5d9c47bbad2e064340cabfd3f96f5057a80773c4",
+                "url": "https://api.github.com/repos/nelmio/NelmioApiDocBundle/zipball/07545629aa99441cfec1c18619050a346ea273f9",
+                "reference": "07545629aa99441cfec1c18619050a346ea273f9",
                 "shasum": ""
             },
             "require": {
@@ -5606,84 +5606,36 @@
                 "documentation",
                 "rest"
             ],
-            "time": "2016-01-08 12:33:10"
-        },
-        {
-            "name": "ocramius/package-versions",
-            "version": "1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Ocramius/PackageVersions.git",
-                "reference": "56253310fb94b3086fa123f5f3e7ab76723594aa"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Ocramius/PackageVersions/zipball/56253310fb94b3086fa123f5f3e7ab76723594aa",
-                "reference": "56253310fb94b3086fa123f5f3e7ab76723594aa",
-                "shasum": ""
-            },
-            "require": {
-                "composer-plugin-api": "^1.0",
-                "php": "~7.0"
-            },
-            "require-dev": {
-                "composer/composer": "^1.0.0-ALPHA8@ALPHA",
-                "phpunit/phpunit": "^5.0"
-            },
-            "type": "composer-plugin",
-            "extra": {
-                "class": "PackageVersions\\Installer",
-                "branch-alias": {
-                    "dev-master": "2.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "PackageVersions\\": "src/PackageVersions"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Marco Pivetta",
-                    "email": "ocramius@gmail.com"
-                }
-            ],
-            "description": "Composer plugin that provides efficient querying for installed package versions (no runtime IO)",
-            "time": "2016-02-02 17:50:05"
+            "time": "2016-02-14 16:45:10"
         },
         {
             "name": "ocramius/proxy-manager",
-            "version": "2.0.0",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Ocramius/ProxyManager.git",
-                "reference": "40e205f0a371777ebf297593abd881ad11199548"
+                "reference": "57e9272ec0e8deccf09421596e0e2252df440e11"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Ocramius/ProxyManager/zipball/40e205f0a371777ebf297593abd881ad11199548",
-                "reference": "40e205f0a371777ebf297593abd881ad11199548",
+                "url": "https://api.github.com/repos/Ocramius/ProxyManager/zipball/57e9272ec0e8deccf09421596e0e2252df440e11",
+                "reference": "57e9272ec0e8deccf09421596e0e2252df440e11",
                 "shasum": ""
             },
             "require": {
-                "ocramius/package-versions": "^1.0",
-                "php": "~7.0",
-                "zendframework/zend-code": "~3.0"
+                "php": ">=5.3.3",
+                "zendframework/zend-code": ">2.2.5,<3.0"
             },
             "require-dev": {
-                "couscous/couscous": "^1.4.0",
                 "ext-phar": "*",
-                "phpunit/phpunit": "^5.1.3",
-                "squizlabs/php_codesniffer": "^2.5.0"
+                "phpunit/phpunit": "~4.0",
+                "squizlabs/php_codesniffer": "1.5.*"
             },
             "suggest": {
                 "ocramius/generated-hydrator": "To have very fast object to array to object conversion for ghost objects",
                 "zendframework/zend-json": "To have the JsonRpc adapter (Remote Object feature)",
                 "zendframework/zend-soap": "To have the Soap adapter (Remote Object feature)",
+                "zendframework/zend-stdlib": "To use the hydrator proxy",
                 "zendframework/zend-xmlrpc": "To have the XmlRpc adapter (Remote Object feature)"
             },
             "type": "library",
@@ -5705,7 +5657,7 @@
                 {
                     "name": "Marco Pivetta",
                     "email": "ocramius@gmail.com",
-                    "homepage": "http://ocramius.github.io/"
+                    "homepage": "http://ocramius.github.com/"
                 }
             ],
             "description": "A library providing utilities to generate, instantiate and generally operate with Object Proxies",
@@ -5717,7 +5669,7 @@
                 "proxy pattern",
                 "service proxies"
             ],
-            "time": "2016-01-30 09:38:56"
+            "time": "2015-08-09 04:28:19"
         },
         {
             "name": "pagerfanta/pagerfanta",
@@ -5985,22 +5937,24 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "v1.5.0",
+            "version": "v1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "4745ded9307786b730d7a60df5cb5a6c43cf95f7"
+                "reference": "3c91bdf81797d725b14cb62906f9a4ce44235972"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/4745ded9307786b730d7a60df5cb5a6c43cf95f7",
-                "reference": "4745ded9307786b730d7a60df5cb5a6c43cf95f7",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/3c91bdf81797d725b14cb62906f9a4ce44235972",
+                "reference": "3c91bdf81797d725b14cb62906f9a4ce44235972",
                 "shasum": ""
             },
             "require": {
                 "doctrine/instantiator": "^1.0.2",
+                "php": "^5.3|^7.0",
                 "phpdocumentor/reflection-docblock": "~2.0",
-                "sebastian/comparator": "~1.1"
+                "sebastian/comparator": "~1.1",
+                "sebastian/recursion-context": "~1.0"
             },
             "require-dev": {
                 "phpspec/phpspec": "~2.0"
@@ -6008,7 +5962,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.4.x-dev"
+                    "dev-master": "1.5.x-dev"
                 }
             },
             "autoload": {
@@ -6041,7 +5995,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2015-08-13 10:07:40"
+            "time": "2016-02-15 07:46:21"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -8098,27 +8052,26 @@
         },
         {
             "name": "zendframework/zend-code",
-            "version": "3.0.1",
+            "version": "2.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-code.git",
-                "reference": "09405eb04b7199733219cbf1f0803883a7bab842"
+                "reference": "c4e8f976a772cfb14b47dabd69b5245a423082b4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-code/zipball/09405eb04b7199733219cbf1f0803883a7bab842",
-                "reference": "09405eb04b7199733219cbf1f0803883a7bab842",
+                "url": "https://api.github.com/repos/zendframework/zend-code/zipball/c4e8f976a772cfb14b47dabd69b5245a423082b4",
+                "reference": "c4e8f976a772cfb14b47dabd69b5245a423082b4",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.5 || ^7.0",
-                "zendframework/zend-eventmanager": "^2.6 || ^3.0"
+                "php": ">=5.5",
+                "zendframework/zend-eventmanager": "^2.6|^3.0"
             },
             "require-dev": {
                 "doctrine/annotations": "~1.0",
-                "ext-phar": "*",
-                "phpunit/phpunit": "^4.8.21",
-                "squizlabs/php_codesniffer": "^2.5",
+                "fabpot/php-cs-fixer": "1.7.*",
+                "phpunit/phpunit": "~4.0",
                 "zendframework/zend-stdlib": "~2.7"
             },
             "suggest": {
@@ -8128,8 +8081,8 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.0-dev",
-                    "dev-develop": "3.1-dev"
+                    "dev-master": "2.6-dev",
+                    "dev-develop": "2.7-dev"
                 }
             },
             "autoload": {
@@ -8147,7 +8100,7 @@
                 "code",
                 "zf2"
             ],
-            "time": "2016-01-26 17:57:25"
+            "time": "2016-01-05 05:58:37"
         },
         {
             "name": "zendframework/zend-crypt",
