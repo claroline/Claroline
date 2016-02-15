@@ -180,9 +180,7 @@
              * @returns {Boolean}
              */
             this.checkIfFeedbackIsAvailable = function () {
-                console.log(this.exercise);
-                return this.exercise.meta.exerciseType === 3;
-                //return true;
+                return this.exercise.meta.type === "3";
             };
         }
     ]);
