@@ -389,7 +389,7 @@ class ExerciseController extends Controller
             if ($QuestionsExo == 'true') {
                 
                 $listQExo= $questionSer->getListQuestionExo($idExo,$user,$exercise);
-                $allActions = $this->getActionsAllQuestions($listQExo, $user->getId());
+                $allActions = $questionSer->getActionsAllQuestions($listQExo, $user->getId());
                 
                 $actionQ = $allActions[0];
                 $questionWithResponse = $allActions[1];
