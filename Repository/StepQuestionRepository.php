@@ -4,6 +4,7 @@ namespace UJM\ExoBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use \UJM\ExoBundle\Entity\Exercise;
+use \UJM\ExoBundle\Entity\Question;
 
 /**
  * StepQuestionRepository.
@@ -37,7 +38,7 @@ class StepQuestionRepository extends EntityRepository
      *
      * Return aintger
      */
-    public function getCountQuestion($exo)
+    public function getCountQuestion(Exercise $exo)
     {
         return $query = $this->createQueryBuilder('sq')
                 ->select('count(sq.ordre) as nbq')
@@ -53,15 +54,36 @@ class StepQuestionRepository extends EntityRepository
      *
      * @param Exercise $exo if Exercise
      *
-     * Return aintger
+     * Return StepQuestion
      */
-    public function findExoByOrder($exo)
+    public function findExoByOrder(Exercise $exo)
     {
         return $query = $this->createQueryBuilder('sq')               
                 ->join('sq.step', 's')
                 ->where('s.exercise = :exercise')
                 ->setParameter(':exercise', $exo)
                 ->orderBy('sq.ordre')
+                ->getQuery()
+                ->getResult();
+    }
+    
+       /**
+     *
+     *
+     * @param Exercise $exo if Exercise
+     *
+     * Return StepQuestion
+     */
+    public function findStepByExoQuestion(Exercise $exo, Question $question)
+    {
+        return $query = $this->createQueryBuilder('sq')
+                ->join('sq.step', 's')
+                ->where('s.exercise = :exercise')
+                ->andWhere('sq.question = :question')
+                ->setParameters([
+                    'exercise' => $exo,
+                    'question' => $question
+                ])               
                 ->getQuery()
                 ->getResult();
     }
