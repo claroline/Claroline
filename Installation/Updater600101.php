@@ -25,9 +25,18 @@ class Updater600101
     public function upDoctrineExo()
     {
         $this->log('20150923181250');
-        $this->connection->exec("
-            INSERT INTO doctrine_ujmexobundle_versions VALUES('20150923181250')
-        ");
+        //if no exist, case if the first installation is an v6.0.0
+        $query = '
+            SELECT *
+            FROM doctrine_ujmexobundle_versions
+            WHERE version = \'20150923181250\'
+        ';
+        $res = $this->connection->query($query);
+        if ($res->rowCount() == 0) {
+            $this->connection->exec("
+                INSERT INTO doctrine_ujmexobundle_versions VALUES('20150923181250')
+            ");
+        }
     }
 
     /**
