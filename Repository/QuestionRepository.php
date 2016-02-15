@@ -212,11 +212,11 @@ class QuestionRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('q')
             ->leftJoin('q.category', 'c')
-            ->where('q.user = :user')
-            ->andWhere('c.value LIKE :search')
+            ->Where('c.value LIKE :search')
             ->orWhere('q.type LIKE :search')
             ->orWhere('q.title LIKE :search')
-            ->orWhere('q.invite LIKE :search');
+            ->orWhere('q.invite LIKE :search')
+            ->andWhere('q.user = :user');
 
         $parameters = [
             'user' => $user,
