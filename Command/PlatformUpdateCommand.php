@@ -12,7 +12,9 @@
 namespace Claroline\CoreBundle\Command;
 
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
+use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
 use Psr\Log\LogLevel;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -44,6 +46,11 @@ class PlatformUpdateCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln(sprintf('<comment>%s - Updating the platform...</comment>', date('H:i:s')));
+
+        $databaseCreator = new CreateDatabaseDoctrineCommand();
+        $databaseCreator->setContainer($this->getContainer());
+        $databaseCreator->run(new ArrayInput(array()), $output);
+
         $verbosityLevelMap = array(
             LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
             LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
