@@ -89,9 +89,11 @@
                         <!-- Min height of the Activity -->
                         <div class="form-group">
                             <label class="control-label col-md-4" for="activity-height">{{ 'activity_height'|trans:{}:'path_wizards' }}</label>
-                            <div class="input-group col-md-3">
-                                <input type="text" class="form-control text-right" name="activity-height" id="activity-height" data-ng-model="stepEditCtrl.step.activityHeight" data-ng-disabled="!stepEditCtrl.step.primaryResource || stepEditCtrl.step.primaryResource.length == 0" />
-                                <span class="input-group-addon">px</span>
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <input type="text" class="form-control text-right" name="activity-height" id="activity-height" data-ng-model="stepEditCtrl.step.activityHeight" data-ng-disabled="!stepEditCtrl.step.primaryResource || stepEditCtrl.step.primaryResource.length == 0" />
+                                    <span class="input-group-addon">px</span>
+                                </div>
                             </div>
                         </div>
 
