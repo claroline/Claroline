@@ -13,7 +13,7 @@
 {% block stylesheets %}
     {{ parent() }}
 
-    <link rel="stylesheet" href="{{ asset('vendor/angular/angular-ui.css')}}"> </link>
+    <link rel="stylesheet" href="{{ asset('vendor/angular-ui.css')}}"> </link>
     {# we should be able to remove the following line if it's included in angular-ui.css #}
     <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/select.css') }}"></link>
 {% endblock %}
