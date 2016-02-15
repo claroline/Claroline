@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Manager\ContentManager;
+use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -45,9 +46,11 @@ use Claroline\CursusBundle\Event\Log\LogCursusUserUnregistrationEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializationContext;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -63,12 +66,15 @@ class CursusManager
     private $contentManager;
     private $eventDispatcher;
     private $iconsDirectory;
+    private $mailManager;
     private $om;
     private $pagerFactory;
     private $platformConfigHandler;
     private $roleManager;
+    private $router;
     private $serializer;
     private $templateDir;
+    private $templating;
     private $tokenStorage;
     private $toolManager;
     private $translator;
@@ -97,12 +103,15 @@ class CursusManager
      *     "contentManager"        = @DI\Inject("claroline.manager.content_manager"),
      *     "eventDispatcher"       = @DI\Inject("event_dispatcher"),
      *     "clarolineDispatcher"   = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "mailManager"           = @DI\Inject("claroline.manager.mail_manager"),
      *     "om"                    = @DI\Inject("claroline.persistence.object_manager"),
      *     "pagerFactory"          = @DI\Inject("claroline.pager.pager_factory"),
      *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
      *     "roleManager"           = @DI\Inject("claroline.manager.role_manager"),
+     *     "router"                = @DI\Inject("router"),
      *     "serializer"            = @DI\Inject("jms_serializer"),
      *     "templateDir"           = @DI\Inject("%claroline.param.templates_directory%"),
+     *     "templating"            = @DI\Inject("templating"),
      *     "tokenStorage"          = @DI\Inject("security.token_storage"),
      *     "toolManager"           = @DI\Inject("claroline.manager.tool_manager"),
      *     "translator"            = @DI\Inject("translator"),
@@ -118,12 +127,15 @@ class CursusManager
         ContainerInterface $container,
         ContentManager $contentManager,
         EventDispatcherInterface $eventDispatcher,
+        MailManager $mailManager,
         ObjectManager $om,
         PagerFactory $pagerFactory,
         PlatformConfigurationHandler $platformConfigHandler,
         RoleManager $roleManager,
+        UrlGeneratorInterface $router,
         Serializer $serializer,
         $templateDir,
+        TwigEngine $templating,
         TokenStorageInterface $tokenStorage,
         ToolManager $toolManager,
         TranslatorInterface $translator,
@@ -140,12 +152,15 @@ class CursusManager
         $this->contentManager = $contentManager;
         $this->eventDispatcher = $eventDispatcher;
         $this->iconsDirectory = $this->container->getParameter('claroline.param.thumbnails_directory') . '/';
+        $this->mailManager = $mailManager;
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
         $this->platformConfigHandler = $platformConfigHandler;
         $this->roleManager = $roleManager;
+        $this->router = $router;
         $this->serializer = $serializer;
         $this->templateDir = $templateDir;
+        $this->templating = $templating;
         $this->tokenStorage = $tokenStorage;
         $this->toolManager = $toolManager;
         $this->translator = $translator;
@@ -1307,6 +1322,10 @@ class CursusManager
                 $queue->setStatus($status);
                 $this->om->persist($queue);
                 $this->om->flush();
+
+                if (($status & CourseRegistrationQueue::WAITING_USER) === CourseRegistrationQueue::WAITING_USER) {
+                    $this->sendSessionQueueRequestConfirmationMail($queue);
+                }
             }
         }
     }
@@ -1359,7 +1378,45 @@ class CursusManager
             $queue->setStatus($status);
             $this->om->persist($queue);
             $this->om->flush();
+
+            if (($status & CourseRegistrationQueue::WAITING_USER) === CourseRegistrationQueue::WAITING_USER) {
+                $this->sendCourseQueueRequestConfirmationMail($queue);
+            }
         }
+    }
+
+    public function sendCourseQueueRequestConfirmationMail(CourseRegistrationQueue $queue)
+    {
+        $user = $queue->getUser();
+        $title = $this->translator->trans('course_registration_request_confirmation', array(), 'cursus');
+        $link = $this->router->generate(
+            'claro_cursus_course_registration_queue_user_validate',
+            array('queue' => $queue->getId()),
+            true
+        );
+        $content = $this->templating->render(
+            'ClarolineCursusBundle:CursusRegistration:courseRequestConfirmationMail.html.twig',
+            array('queue' => $queue, 'link' => $link)
+        );
+
+        $this->mailManager->send($title, $content, array($user));
+    }
+
+    public function sendSessionQueueRequestConfirmationMail(CourseSessionRegistrationQueue $queue)
+    {
+        $user = $queue->getUser();
+        $title = $this->translator->trans('session_registration_request_confirmation', array(), 'cursus');
+        $link = $this->router->generate(
+            'claro_cursus_session_registration_queue_user_validate',
+            array('queue' => $queue->getId()),
+            true
+        );
+        $content = $this->templating->render(
+            'ClarolineCursusBundle:CursusRegistration:sessionRequestConfirmationMail.html.twig',
+            array('queue' => $queue, 'link' => $link)
+        );
+
+        $this->mailManager->send($title, $content, array($user));
     }
 
     public function removeUserFromCourseQueue(User $user, Course $course)

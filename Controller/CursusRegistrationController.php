@@ -23,6 +23,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -33,6 +34,7 @@ class CursusRegistrationController extends Controller
     private $cursusManager;
     private $platformConfigHandler;
     private $router;
+    private $session;
     private $toolManager;
     private $translator;
 
@@ -42,6 +44,7 @@ class CursusRegistrationController extends Controller
      *     "cursusManager"         = @DI\Inject("claroline.manager.cursus_manager"),
      *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
      *     "router"                = @DI\Inject("router"),
+     *     "session"               = @DI\Inject("session"),
      *     "toolManager"           = @DI\Inject("claroline.manager.tool_manager"),
      *     "translator"            = @DI\Inject("translator")
      * })
@@ -51,6 +54,7 @@ class CursusRegistrationController extends Controller
         CursusManager $cursusManager,
         PlatformConfigurationHandler $platformConfigHandler,
         RouterInterface $router,
+        SessionInterface $session,
         ToolManager $toolManager,
         TranslatorInterface $translator
     )
@@ -59,6 +63,7 @@ class CursusRegistrationController extends Controller
         $this->cursusManager = $cursusManager;
         $this->platformConfigHandler = $platformConfigHandler;
         $this->router = $router;
+        $this->session = $session;
         $this->toolManager = $toolManager;
         $this->translator = $translator;
     }
@@ -314,9 +319,19 @@ class CursusRegistrationController extends Controller
             throw new AccessDeniedException();
         }
         $this->cursusManager->validateUserCourseRegistrationQueue($queue);
+        $course = $queue->getCourse();
+        $sessionFlashBag = $this->session->getFlashBag();
+        $sessionFlashBag->add(
+            'success',
+            $this->translator->trans(
+                'course_request_confirmation_success',
+                array('%courseTitle%' => $course->getTitle()),
+                'cursus'
+            )
+        );
 
         return new RedirectResponse(
-            $this->router->generate('claro_index')
+            $this->router->generate('claro_desktop_open')
         );
     }
 
@@ -340,9 +355,20 @@ class CursusRegistrationController extends Controller
             throw new AccessDeniedException();
         }
         $this->cursusManager->validateUserSessionRegistrationQueue($queue);
+        $session = $queue->getSession();
+        $course = $session->getCourse();
+        $sessionFlashBag = $this->session->getFlashBag();
+        $sessionFlashBag->add(
+            'success',
+            $this->translator->trans(
+                'session_request_confirmation_success',
+                array('%courseTitle%' => $course->getTitle(), '%sessionName%' => $session->getName()),
+                'cursus'
+            )
+        );
 
         return new RedirectResponse(
-            $this->router->generate('claro_index')
+            $this->router->generate('claro_desktop_open')
         );
     }
 
