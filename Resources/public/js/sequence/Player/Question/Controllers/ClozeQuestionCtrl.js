@@ -3,11 +3,12 @@
 
     angular.module('Question').controller('ClozeQuestionCtrl', [
         '$ngBootbox',
+        '$scope',
         'CommonService',
         'PlayerDataSharing',
         'QuestionService',
         '$timeout',
-        function ($ngBootbox, CommonService, PlayerDataSharing, QuestionService, $timeout) {
+        function ($ngBootbox, $scope, CommonService, PlayerDataSharing, QuestionService, $timeout) {
 
             this.question = {};
             this.formatedClozeText = '';
@@ -198,6 +199,17 @@
                     input += ' >';
                     return input;
                 }
+            };
+            
+            /**
+             * Listen to show-feedback event (broadcasted by ExercisePlayerCtrl)
+             */
+            $scope.$on('show-feedback', function (event, data) {
+                this.showFeedback();
+            }.bind(this));
+            
+            this.showFeedback = function () {
+                
             };
 
             /**
