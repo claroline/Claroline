@@ -45,7 +45,8 @@ export default class OrganizationController {
 
     removeOrganization(organizations, organizationId) {
         for (var i = 0; i < organizations.length; i++) {
-            if (organizations[i].children) removeOrganization(organizations[i].children, organizationId);
+            //recursion
+            if (organizations[i].children) this.removeOrganization(organizations[i].children, organizationId);
 
             if (organizations[i].id === organizationId) {
                 organizations.splice(i, 1);
