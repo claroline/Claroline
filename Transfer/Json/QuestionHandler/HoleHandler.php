@@ -229,6 +229,33 @@ class HoleHandler implements QuestionHandlerInterface
             }, $holes);
         return $exportData;
     }
+    
+    public function convertQuestionAnswers(Question $question, \stdClass $exportData){
+        $repo = $this->om->getRepository('UJMExoBundle:InteractionHole');
+        $holeQuestion = $repo->findOneBy(['question' => $question]);
+        
+        $holes = $holeQuestion->getHoles()->toArray();
+        $exportData->solutions = array_map(function ($hole) {
+                $solutionData = new \stdClass();
+                $solutionData->id = (string) $hole->getId();
+                $solutionData->type = 'text/html';
+                $solutionData->selector = $hole->getSelector();
+                $solutionData->position = (string) $hole->getPosition();
+                $solutionData->wordResponses = array_map(function ($wr) {
+                    $wrData = new \stdClass();
+                    $wrData->id = (string) $wr->getId();
+                    $wrData->response = (string) $wr->getResponse();
+                    $wrData->score = $wr->getScore();
+                    if ($wr->getFeedback()) {
+                        $wrData->feedback = $wr->getFeedback();
+                    }
+                    return $wrData;
+                }, $hole->getWordResponses()->toArray());
+
+                return $solutionData;
+            }, $holes);
+        return $exportData;
+    }
 
     /**
      * {@inheritdoc}
