@@ -1,7 +1,8 @@
 {
   "webpack": {
     "entry": {
-      "user-management": "modules/users/module"
+      "user-management": "modules/groups/module",
+      "organization-management": "modules/organization/module"
     }
   }
 }
