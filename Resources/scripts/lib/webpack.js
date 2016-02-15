@@ -56,6 +56,7 @@ function configure(rootDir, packages, isWatchMode) {
 
   const loaders = [
     makeJsLoader(isProd),
+    makeRawLoader()
     {
       test: /\.html/,
       loader: 'raw'
@@ -108,7 +109,7 @@ function extractEntries(packages) {
     .filter(def => def.assets.webpack && def.assets.webpack.entry)
     .reduce((entries, def) => {
       Object.keys(def.assets.webpack.entry).forEach(entry => {
-        entries[`${def.name}-${entry}`] = `${def.path}/${def.assets.webpack.entry[entry]}`
+        entries[`${def.name}-${entry}`] = `${def.path}/Resources/${def.assets.webpack.entry[entry]}`
       })
 
       return entries
@@ -179,7 +180,7 @@ function makeBaseCommonsPlugin() {
 function makeBundleCommonsPlugins(commons) {
   return commons.map(config => {
     return new webpack.optimize.CommonsChunkPlugin(config)
-  });
+  })
 }
 
 /**
@@ -246,6 +247,17 @@ function makeJsLoader(isProd) {
       presets: ['es2015'],
       plugins: ['transform-runtime']
     }
+  }
+}
+
+/**
+ * This loader returns the file content as plain string,
+ * without any transformation.
+ */
+function makeRawLoader() {
+  return {
+    test: /\.html$/,
+    loader: 'raw'
   }
 }
 
