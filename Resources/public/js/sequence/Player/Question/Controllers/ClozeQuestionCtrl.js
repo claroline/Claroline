@@ -209,7 +209,15 @@
             }.bind(this));
             
             this.showFeedback = function () {
-                
+                // get question answers and feedback ONLY IF NEEDED
+                var promise = QuestionService.getQuestionSolutions(this.question.id);
+                promise.then(function (result) {
+                    this.feedbackIsVisible = true;
+                    this.solutions = result.solutions;
+                    this.questionFeedback = result.feedback;
+                }.bind(this));
+                console.log(this.solutions);
+                console.log(this.questionFeedback);
             };
 
             /**
