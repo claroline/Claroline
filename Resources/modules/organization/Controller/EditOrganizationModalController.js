@@ -6,11 +6,13 @@ export default class EditOrganizationModalController {
         this.$uibModal = $uibModal
         this.ClarolineAPIService = ClarolineAPIService
         this.organizationId = organization.id
+        this.organization = {}
     }
 
     submit() {
         this.OrganizationAPIService.update(this.organizationId, this.organization).then(
             d => {
+                console.log(this.organization)
                 this.$uibModalInstance.close(d.data);
             },
             d => {
