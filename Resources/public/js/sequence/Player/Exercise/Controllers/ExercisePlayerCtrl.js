@@ -180,8 +180,9 @@
              * @returns {Boolean}
              */
             this.checkIfFeedbackIsAvailable = function () {
-                //return this.exercise.meta.exerciseType === 'formatif';
-                return false;
+                console.log(this.exercise);
+                return this.exercise.meta.exerciseType === 3;
+                //return true;
             };
         }
     ]);
