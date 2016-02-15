@@ -521,9 +521,10 @@ class ExerciseController extends Controller
 
         if ($exoAdmin === true) {
             $em = $this->getDoctrine()->getManager();
-            $eq = $em->getRepository('UJMExoBundle:ExerciseQuestion')
-                ->findOneBy(array('exercise' => $exercise->getId(), 'question' => $qid));
-            $em->remove($eq);
+            $question = $em->getRepository('UJMExoBundle:Question')->find($qid);
+            $sq = $em->getRepository('UJMExoBundle:StepQuestion')
+                ->findStepByExoQuestion($exercise,$question);
+            $em->remove($sq);
             $em->flush();
 
              // If delete last item of page, display the previous one
