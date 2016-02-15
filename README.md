@@ -12,19 +12,10 @@ Doctrine Migrations integration bundle providing :
 Installation
 ------------
 
-Add the bundle to your composer.json:
-
-```json
-"require": {
-    // ...
-    "claroline/migration-bundle": "dev-master"
-},
-```
-
-Launch:
+Install the bundle with composer:
 
 ```sh
-composer update claroline/migration-bundle
+composer require claroline/migration-bundle
 ```
 
 Then add the bundle to your application kernel:
