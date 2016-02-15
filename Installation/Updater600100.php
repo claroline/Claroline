@@ -127,7 +127,7 @@ class Updater600100
 
             foreach ($candidateTables as $table => $foreignKey) {
                 $referenceQuery = "
-                    SELECT interaction_id
+                    SELECT id, interaction_id
                     FROM {$table}
                     WHERE interaction_id IN ({$idChain})
                 ";
@@ -153,7 +153,7 @@ class Updater600100
                         $this->connection->exec("
                             UPDATE {$table}
                             SET interaction_id = {$divergentByInteraction[$idRow['interaction_id']]}
-                            WHERE interaction_id = {$idRow['interaction_id']}
+                            WHERE id = {$idRow['id']}
                         ");
                     }
 

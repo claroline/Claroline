@@ -87,6 +87,10 @@
                                         <div data-ng-switch-when="application/x.short+json">
                                             <correction-short data-question="question" data-paper="correctionCtrl.paper"></correction-short>
                                         </div>
+                                        <!-- for graphic question only we use a directive -->
+                                        <div data-ng-switch-when="application/x.graphic+json">
+                                            <correction-graphic data-question="question" data-paper="correctionCtrl.paper"></correction-graphic>                                         
+                                        </div>
                                     </div>
                                 </div>
                             </div>

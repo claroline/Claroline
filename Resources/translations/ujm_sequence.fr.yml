@@ -16,6 +16,12 @@ comment: Commentaire
 # d
 dropdown_step_navigate_choice_label: Etape n°%1% / %2%
 
+# g
+graphic_setpoint_first: Positionner le(s) pointeur(s) ci-dessous (croix rouge) sur l'image. La position du centre du pointeur défini votre réponse.
+graphic_setpoint_second: Pour répondre, utiliser la technique du glisser/déposer.
+graphic_setpoint_third: Les bonnes réponses ne sont comptabilisées qu'une seule fois.
+graphic_reset_answers: Réinitialiser les réponses.
+
 # k
 keys_words: Mots clés
 

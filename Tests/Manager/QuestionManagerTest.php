@@ -20,7 +20,7 @@ class ApiManagerTest extends TransactionalTestCase
         parent::setUp();
         $this->om = $this->client->getContainer()->get('claroline.persistence.object_manager');
         $this->manager = $this->client->getContainer()->get('ujm.exo.question_manager');
-        $this->formatDir = realpath(__DIR__ . '/../../../../../../json-quiz/json-quiz/format');
+        $this->formatDir = realpath(__DIR__ . '/../../../../json-quiz/json-quiz/format');
     }
 
     /**
