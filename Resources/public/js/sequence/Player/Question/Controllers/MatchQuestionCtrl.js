@@ -117,8 +117,22 @@
                     this.solutions = result.solutions;
                     this.questionFeedback = result.feedback;
                 }.bind(this));
-                
-                console.log(this.solutions);
+            };
+            
+            this.checkAnswerValidity = function (label) {
+                var valid = false;
+                for (var i=0; i<this.connections.length; i++) {
+                    if (this.connections[i].target === label.id) {
+                        for (var j=0; j<this.solutions.length; j++) {
+                            if (this.solutions[j].secondId === label.id) {
+                                if (this.solutions[j].firstId === this.connections[i].source) {
+                                    valid = true;
+                                }
+                            }
+                        }
+                    }
+                }
+                return valid;
             };
             
             /**
