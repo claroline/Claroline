@@ -141,6 +141,8 @@
                     this.questionFeedback = result.feedback;
                     console.log(this.solutions);
                 }.bind(this));
+                
+                console.log(this.solutions);
             };
             
             this.checkAnswerValidity = function (label) {
