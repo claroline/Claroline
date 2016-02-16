@@ -9,7 +9,8 @@
         'PlayerDataSharing',
         'ExerciseService',
         'MatchQuestionService',
-        function ($ngBootbox, $scope, CommonService, QuestionService, PlayerDataSharing, ExerciseService, MatchQuestionService) {
+        '$timeout',
+        function ($ngBootbox, $scope, CommonService, QuestionService, PlayerDataSharing, ExerciseService, MatchQuestionService, $timeout) {
             this.question = {};
             this.currentQuestionPaperData = {};
             this.connections = []; // for toBind questions
@@ -116,23 +117,27 @@
                     this.feedbackIsVisible = true;
                     this.solutions = result.solutions;
                     this.questionFeedback = result.feedback;
+                    if (!this.question.toBind) {
+                        $('.draggable').draggable("disable");
+                        $('.draggable').fadeTo(100, 0.3);
+                    }
+                    else {
+                        //$('.endPoints').draggable("disable");
+                    }
                 }.bind(this));
             };
             
-            this.checkAnswerValidity = function (label) {
-                var valid = false;
-                for (var i=0; i<this.connections.length; i++) {
-                    if (this.connections[i].target === label.id) {
-                        for (var j=0; j<this.solutions.length; j++) {
-                            if (this.solutions[j].secondId === label.id) {
-                                if (this.solutions[j].firstId === this.connections[i].source) {
-                                    valid = true;
-                                }
-                            }
-                        }
+            this.hideFeedback = function () {
+                this.feedbackIsVisible = false;
+                if (!this.question.toBind) {
+                    $('.draggable').draggable('enable');
+                    $('.draggable').fadeTo(100, 1);
+                    
+                    for (var i=0; i<this.dropped.length; i++) {
+                        $('#draggable_' + this.dropped[i].source).draggable("disable");
+                        $('#draggable_' + this.dropped[i].source).fadeTo(100, 0.3);
                     }
                 }
-                return valid;
             };
             
             /**
@@ -220,49 +225,6 @@
                         }
                     }
                 }
-                return valid || valid2;
-            };
-            
-            this.checkAnswerValidity = function (label) {
-                if (!this.orphanAnswersAreChecked) {
-                    var hasSolution;
-                    for (var i=0; i<this.question.secondSet.length; i++) {
-                        hasSolution = false;
-                        for (var j=0; j<this.solutions.length; j++) {
-                            if (this.question.secondSet[i].id === this.solutions[j].secondId) {
-                                hasSolution = true;
-                            }
-                        }
-                        if (!hasSolution) {
-                            this.orphanAnswers.push(this.question.secondSet[i]);
-                        }
-                    }
-                    this.orphanAnswersAreChecked = true;
-                }
-                
-                var valid = false;
-                for (var i=0; i<this.connections.length; i++) {
-                    if (this.connections[i].target === label.id) {
-                        for (var j=0; j<this.solutions.length; j++) {
-                            if (this.solutions[j].secondId === label.id) {
-                                if (this.solutions[j].firstId === this.connections[i].source) {
-                                    valid = true;
-                                }
-                            }
-                        }
-                    }
-                }
-                var valid2 = false;
-                for (var i=0; i<this.orphanAnswers.length; i++) {
-                    if (this.orphanAnswers[i].id === label.id) {
-                        valid2 = true;
-                        for (var j=0; j<this.connections.length; j++) {
-                            if (this.orphanAnswers[i].id === this.connections[j].target) {
-                                valid2 = false;
-                            }
-                        }
-                    }
-                }
                 
                 if (valid2) {
                     return true;
@@ -295,8 +257,6 @@
                         }
                     }
                 }
-                console.log(this.connections);
-                console.log(this.question.firstSet);
                 return answers;
             };
             
@@ -337,7 +297,37 @@
              */
             $scope.$on('show-feedback', function (event, data) {
                 this.showFeedback();
+                /*
+                 * //todo: Find another solution to disable question "à lier"
+                 * Unbinding events is a bad solution
+                 * - It doesn't prevent the user from creating new segments, it just doesn't save them
+                 * - The events cannot be re-bound after being unbound (on the "hide-feedback")
+                 */
+                //this.unbindEvents();
             }.bind(this));
+            
+            $scope.$on('hide-feedback', function () {
+                this.hideFeedback();
+                //this.bindEvents();
+            }.bind(this));
+            
+            this.bindEvents = function () {
+                $timeout(function () {
+                    jsPlumb.bind("beforeDrop", function (info) {
+                        return this.handleBeforDrop(info);
+                    });
+
+                    // remove one connection
+                    jsPlumb.bind("click", function (connection) {
+                        this.removeConnection(connection);
+                    });
+                }.bind(this));
+            };
+            
+            this.unbindEvents = function () {
+                jsPlumb.unbind("beforeDrop");
+                jsPlumb.unbind("click");
+            };
 
             /**
              * Hide / show a specific panel content and handle hide / show button icon 
@@ -496,7 +486,7 @@
                 // connection is removed from dom even with this commented... 
                 // If not commented, code stops at this methods...
                 // jsPlumb.detach(data); 
-                
+
                 for (var i = 0; i < this.connections.length; i++) {
                     if (this.connections[i].source === sourceId && this.connections[i].target === targetId) {
                         this.connections.splice(i, 1);
