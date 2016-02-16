@@ -139,23 +139,27 @@
                     this.feedbackIsVisible = true;
                     this.solutions = result.solutions;
                     this.questionFeedback = result.feedback;
+                    if (!this.question.toBind) {
+                        $('.draggable').draggable("disable");
+                        $('.draggable').fadeTo(100, 0.3);
+                    }
+                    else {
+                        //$('.endPoints').draggable("disable");
+                    }
                 }.bind(this));
             };
             
-            this.checkAnswerValidity = function (label) {
-                var valid = false;
-                for (var i=0; i<this.connections.length; i++) {
-                    if (this.connections[i].target === label.id) {
-                        for (var j=0; j<this.solutions.length; j++) {
-                            if (this.solutions[j].secondId === label.id) {
-                                if (this.solutions[j].firstId === this.connections[i].source) {
-                                    valid = true;
-                                }
-                            }
-                        }
+            this.hideFeedback = function () {
+                this.feedbackIsVisible = false;
+                if (!this.question.toBind) {
+                    $('.draggable').draggable('enable');
+                    $('.draggable').fadeTo(100, 1);
+                    
+                    for (var i=0; i<this.dropped.length; i++) {
+                        $('#draggable_' + this.dropped[i].source).draggable("disable");
+                        $('#draggable_' + this.dropped[i].source).fadeTo(100, 0.3);
                     }
                 }
-                return valid;
             };
             
             this.checkAnswerValidity = function (label) {
@@ -460,8 +464,6 @@
                         }
                     }
                 }
-                console.log(this.connections);
-                console.log(this.question.firstSet);
                 return answers;
             };
             
