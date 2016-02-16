@@ -148,6 +148,20 @@
                 console.log(this.question.firstSet);
                 return answers;
             };
+            
+            this.getCorrectAnswers = function (label) {
+                var answers = [];
+                for (var i=0; i<this.solutions.length; i++) {
+                    if (this.solutions[i].secondId === label.id) {
+                        for (var j=0; j<this.question.firstSet.length; j++) {
+                            if (this.question.firstSet[j].id === this.solutions[i].firstId) {
+                                answers.push(this.question.firstSet[j].data);
+                            }
+                        }
+                    }
+                }
+                return answers;
+            };
 
             /**
              * Listen to show-feedback event (broadcasted by ExercisePlayerCtrl)
