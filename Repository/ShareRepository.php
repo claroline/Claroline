@@ -45,8 +45,8 @@ class ShareRepository extends EntityRepository
     {
         $questions = array();
 
-        $dql = 'SELECT eq FROM UJM\ExoBundle\Entity\ExerciseQuestion eq WHERE eq.exercise= ?1
-                ORDER BY eq.ordre';
+        $dql = 'SELECT sq FROM UJM\ExoBundle\Entity\StepQuestion sq JOIN sq.step s WHERE s.exercise= ?1
+                ORDER BY sq.ordre';
 
         $query = $em->createQuery($dql)->setParameter(1, $exoId);
         $eqs = $query->getResult();

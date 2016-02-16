@@ -156,8 +156,8 @@ class ExerciseListener
                 ->findOneByExercise($event->getResource());
 
         if (count($papers) == 0) {
-            $eqs = $em->getRepository('UJMExoBundle:ExerciseQuestion')
-                    ->findByExercise($event->getResource());
+            $eqs = $em->getRepository('UJMExoBundle:StepQuestion')
+                    ->findExoByOrder($event->getResource());
 
             foreach ($eqs as $eq) {
                 $em->remove($eq);
@@ -197,7 +197,7 @@ class ExerciseListener
         $resource = $event->getResource();
 
         $exerciseToCopy = $event->getResource();
-        $listQuestionsExoToCopy = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(['exercise' => $exerciseToCopy->getId()]);
+        $listQuestionsExoToCopy = $em->getRepository('UJMExoBundle:StepQuestion')->findExoByOrder($exerciseToCopy);
 
         $newExercise = new Exercise();
         $newExercise->setName($exerciseToCopy->getName());
@@ -219,10 +219,7 @@ class ExerciseListener
 
         foreach ($listQuestionsExoToCopy as $eq) {
             $questionToAdd = $em->getRepository('UJMExoBundle:Question')->find($eq->getQuestion());
-            $exerciseQuestion = new ExerciseQuestion($newExercise, $questionToAdd);
-            $exerciseQuestion->setOrdre($eq->getOrdre());
-
-            $em->persist($exerciseQuestion);
+            $this->container->get('ujm.exo_exercise')->createStepForOneQuestion($newExercise,$questionToAdd, 1);
         }
 
         $user = $this->container->get('security.token_storage')->getToken()->getUser();

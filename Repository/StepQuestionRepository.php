@@ -67,15 +67,17 @@ class StepQuestionRepository extends EntityRepository
                 ->getResult();
     }
     
-       /**
-     *
+     /**
+     * Temporary : Waiting step manager
+     * 
+     * Get StepQuestion with the question and exercise
      *
      * @param Exercise $exo if Exercise
      *
      * Return StepQuestion
      */
     public function findStepByExoQuestion(Exercise $exo, Question $question)
-    {
+    {      
         return $query = $this->createQueryBuilder('sq')
                 ->join('sq.step', 's')
                 ->where('s.exercise = :exercise')
@@ -85,6 +87,24 @@ class StepQuestionRepository extends EntityRepository
                     'question' => $question
                 ])               
                 ->getQuery()
+                ->getSingleResult();
+    }
+    
+    /**
+     * Exercises use the question.
+     *
+     *
+     * @param int $question Question
+     *
+     * Return array[ExerciseQuestion]
+     */
+    public function getExercises(Question $question)
+    {       
+        return $query = $this->createQueryBuilder('sq')               
+                ->where('sq.question = :question')
+                ->setParameter(':question', $question)
+                ->getQuery()
                 ->getResult();
+
     }
 }

@@ -382,8 +382,8 @@ class QuestionController extends Controller {
         if ($question) {
             $eq = $this->getDoctrine()
                     ->getManager()
-                    ->getRepository('UJMExoBundle:ExerciseQuestion')
-                    ->getExercises($id);
+                    ->getRepository('UJMExoBundle:StepQuestion')
+                    ->getExercises($question);
 
             foreach ($eq as $e) {
                 $em->remove($e);
