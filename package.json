@@ -24,5 +24,8 @@
   },
   "scripts": {
     "test": "mocha Resources/scripts/test"
-  }
+  },
+  "files": [
+    "package.json"
+  ]
 }

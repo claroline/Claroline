@@ -18,9 +18,7 @@ use Claroline\InstallationBundle\Bundle\InstallableInterface;
 use Claroline\InstallationBundle\Manager\InstallationManager;
 use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Entity\Bundle;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\SecurityBundle\Command\InitAclCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -92,17 +90,15 @@ class PlatformInstaller
     }
 
     /**
-     * This is the method fired when an update is fired.
+     * Installs or updates platform packages based on the comparison
+     * of local repositories versions ("vendor/composer/installed.json"
+     * versus "app/config/previous-installed.json").
      */
-    public function installFromOperationFile($operationFile = null)
+    public function updateFromComposerInfo()
     {
         $this->launchPreInstallActions();
-
-        if ($operationFile) {
-            $this->operationExecutor->setOperationFile($operationFile);
-        }
-
-        $this->operationExecutor->execute();
+        $operations = $this->operationExecutor->buildOperationList();
+        $this->operationExecutor->execute($operations);
     }
 
     /**

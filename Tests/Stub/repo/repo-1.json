@@ -1,0 +1,17 @@
+[
+  {
+    "name": "foo",
+    "type": "claroline-core",
+    "version-normalized": "1.0.0.0"
+  },
+  {
+    "name": "bar",
+    "type": "claroline-plugin",
+    "version-normalized": "2.0.0.0"
+  },
+  {
+    "name": "baz",
+    "type": "extraneous",
+    "version-normalized": "0.0.1.0"
+  }
+]

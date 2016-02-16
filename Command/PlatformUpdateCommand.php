@@ -62,7 +62,7 @@ class PlatformUpdateCommand extends ContainerAwareCommand
         $installer = $this->getContainer()->get('claroline.installation.platform_installer');
         $installer->setOutput($output);
         $installer->setLogger($consoleLogger);
-        $installer->installFromOperationFile();
+        $installer->updateFromComposerInfo();
 
         /** @var \Claroline\CoreBundle\Library\Installation\Refresher $refresher */
         $refresher = $this->getContainer()->get('claroline.installation.refresher');
