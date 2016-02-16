@@ -431,13 +431,14 @@ class DropzoneManager
         return $event;
     }
 
-    public function updatePublished($resourceId, $extraDataPublished)
+    /**
+     * Update published column for a Dropzone
+     * @param  ResourceId (id)
+     * @param  Published (boolean)
+     * @return Resource
+     */
+    public function updatePublished($resourceId, $published)
     {
-
-        $published = 0;
-        if ($extraDataPublished == "on") {
-          $published = 1;
-        }
 
         $resourceNodes = $this->resourceNodeRepo->findBy(array('id' => $resourceId));
 

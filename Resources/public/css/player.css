@@ -100,3 +100,58 @@ input.form-control {
   right: auto;
   left: 0;
 }
+
+/* #229 : Réduire la taille du nombre de commentaires dans les cellules */
+.very-small {
+    font-size: 11px;
+}
+
+/* #224 et #228 : Centrage des colonnes */
+.centering-columns a {
+    position: absolute;
+    left: -17px;
+    top: -8px;
+}
+.centering-columns span {
+    position: absolute;
+    left: -17px;
+    top: -8px;
+}
+.centering-columnsAR span {
+    position: absolute;
+    left: -18px;
+    top: -8px;
+}
+.centering-columns-input input {
+    margin-left: 20px;
+}
+
+.centering-columns-study span {
+    margin-left: 5px;
+}
+.centering-columnsComment-study span {
+  position: absolute;
+  margin-left: -18px;
+  margin-top: -5px;
+}
+.centering-columnsComment-study a {
+  position: absolute;
+  margin-left: -18px;
+  margin-top: -5px;
+}
+
+.centering-columns-study a {
+  position: absolute;
+  left: -17px;
+  top: -8px;
+}
+.centering-columnsAR-study span {
+  position: absolute;
+  margin-left: -20px;
+  margin-top: -3px;
+}
+
+.centering-actions {
+  position: absolute;
+  margin-top: -45px;
+ }

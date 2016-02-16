@@ -16,7 +16,7 @@
             {# InnovaERV : car il fallait voir les documents qund on va sur l'espace d'un étudiant #}
             {# voir également documentItem.html.twig #}
             {% if drop.documents|length == 0  %}
-                <p  class="text-danger">{{ 'No document associated'|trans({},'innova_collecticiel') }}</p>
+                <p class="text-danger">{{ 'No document associated'|trans({},'innova_collecticiel') }}</p>
             {% else %}
                 <table class="table table-responsive {% if mode == "condensed" %}table-condensed{% endif %} well datatable">
                     <thead>
@@ -82,10 +82,24 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="myModalLabel">{{ 'Commented document modal'|trans({}, 'innova_collecticiel') }}</h4>
+                    <h4 class="modal-title" id="myModalLabel">
+                    {# Version commentaire #}
+                    {% if dropzone.evaluation != 1  %}
+                        {{ 'Commented document modal'|trans({}, 'innova_collecticiel') }}
+                    {# Version évaluation #}
+                    {% else %}
+                        {{ 'Evaluation document modal'|trans({}, 'innova_collecticiel') }}
+                    {% endif %}
+                    </h4>
                 </div>
                 <div class="modal-body">
-                    {{ 'Sure to ask comment for document'|trans({}, 'innova_collecticiel') }}
+                    {# Version commentaire #}
+                    {% if dropzone.evaluation != 1  %}
+                        {{ 'Sure to ask comment for document'|trans({}, 'innova_collecticiel') }}
+                    {# Version évaluation #}
+                    {% else %}
+                        {{ 'Sure to ask evaluation for document'|trans({}, 'innova_collecticiel') }}
+                    {% endif %}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</button>

@@ -17,7 +17,7 @@
         </td>
     {% endif %}
 
-    <td>{{ drop.user.lastName|upper }}</td>
+    <td>{{ document.validate }} {{ drop.user.lastName|upper }}</td>
 
     <td>{{ drop.user.firstName|capitalize }}</td>
 
@@ -44,15 +44,17 @@
     </td>
 
     {% if dropzone.evaluation != 1  %}
-    <td class="centered">
+    <td class="centered centering-columns">
         {# Afficher ici la valeur "Devoirs à corriger" modifiée en "Etat" #}
-        {% include 'InnovaCollecticielBundle:Document:documentsNbTextToRead.html.twig' %}
+        <div class="btn-group">
+            {% include 'InnovaCollecticielBundle:Document:documentsNbTextToRead.html.twig' %}
+        </div>
     </td>
     {% endif %}
 
-    <td class="centered">
+    <td class="centered centering-columns">
     {# Appel de la vue "Vue d'un fichier" où seront affichés les différents commentaires. #}
-        <div class="btn-group ">
+        <div class="btn-group">
            {# Variable qui va compter le nombre de commentaires #}
            {# Affichage d'un bouton si pas de commentaires #}
             {% if document.comments|length == 0 %}
@@ -61,9 +63,10 @@
            {# Sinon affichage du compteur et des nouveaux commentaires #}
             {% else %}
                 <a data-toggle="tooltip" data-placement="top" data-original-title="{{ 'To drop'|trans({},'innova_collecticiel') }}" class="fa fa-commenting-o" href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" type="button">
-                    <div class="short-div">
+                {# #229 : Réduire la taille du nombre de commentaires dans les cellules #}
+                    <div class="very-small">
                         {{ document.comments|length }} 
-                       {% if document.getUnReadComments( app.user.id ) != 0 %}
+                        {% if document.getUnReadComments( app.user.id ) != 0 %}
                             (+{{ document.getUnReadComments( app.user.id ) }})
                         {% endif %}
                     </div>
@@ -75,9 +78,11 @@
     {% if adminInnova %}
         {# Affiche cette colonne si le créateur du collecticiel veut gérer les accusés de réception. Demande JJQ. InnovaERV #}
         {% if dropzone.returnreceipt == 1  %}
-            <td class="centered">
+            <td class="centered centering-columnsAR">
+        <div class="btn-group">
                 {# Afficher ici la valeur de l'accusé de réception #}
                 {% include 'InnovaCollecticielBundle:Document:returnReceipt.html.twig' %}
+        </div>
             </td>
         {% endif %}
 
@@ -88,9 +93,11 @@
         {% endif %}
     {% endif %}
 
-    <td class="centered">
+    <td class="centered no-sort sorting_disabled">
+    <div>
         {# Affiche de la case à cocher en étant "coché" ou "décoche". Demande JJQ. InnovaERV #}
         {% include 'InnovaCollecticielBundle:Document:inputReturnReceipt.html.twig' %}
+    </div>
     </td>
 
 </tr>

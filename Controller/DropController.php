@@ -497,6 +497,7 @@ class DropController extends DropzoneBaseController
      *      "/{resourceId}/drops/awaiting",
      *      name="innova_collecticiel_drops_awaiting",
      *      requirements={"resourceId" = "\d+"},
+     *      options={"expose"=true},
      *      defaults={"page" = 1}
      * )
      * @Route(
@@ -541,6 +542,7 @@ class DropController extends DropzoneBaseController
         $userToCommentCount = array();
         $userNbTextToRead = array();
         $haveReturnReceiptOrNotArray = array();
+        $haveCommentOrNotArray = array();
 
         foreach ($dropzone->getDrops() as $drop) {
 
@@ -577,8 +579,8 @@ class DropController extends DropzoneBaseController
             // Nombre d'AR pour cet utilisateur et pour ce dropzone / Repo : ReturnReceiputtwment
             $countReturnReceiptForUserAndDropzone = $this->getDoctrine()
                                 ->getRepository('InnovaCollecticielBundle:ReturnReceipt')
-                                ->countTextToRead($this->get('security.token_storage')->getToken()->getUser(), $drop->getDropZone());
-
+                                ->countTextToReadAll($this->get('security.token_storage')->getToken()->getUser(),
+                                 $drop->getDropZone());
             $countReturnReceiptForUserAndDropzone = $countReturnReceiptForUserAndDropzone -1;
 
             // Traitement du tableau
@@ -587,6 +589,46 @@ class DropController extends DropzoneBaseController
                 $documentId = $haveReturnReceiptOrNot[$indice]->getDocument()->getId();
                 $returnReceiptTypeId = $haveReturnReceiptOrNot[$indice]->getReturnReceiptType()->getId();
                 $haveReturnReceiptOrNotArray[$documentId]=$returnReceiptTypeId;
+            }
+
+            // Boucle pour calcul si le document X a un commentaire déposé par l'enseignant
+            foreach ($drop->getDocuments() as $document2) {
+
+                if ($document2->getValidate() == 1) {
+                    $documentId = $document2->getId();
+
+                    // Ajout pour savoir si le document a un commentaire lu par l'enseignant
+                    $commentReadForATeacherOrNot = $this->getDoctrine()
+                                    ->getRepository('InnovaCollecticielBundle:Comment')
+                                    ->commentReadForATeacherOrNot(
+                                        $this->get('security.token_storage')->getToken()->getUser(),
+                                        $documentId
+                                    );
+
+                    $commentReadForATeacherOrNot2 = $this->getDoctrine()
+                                    ->getRepository('InnovaCollecticielBundle:Comment')
+                                    ->commentReadForATeacherOrNot2(
+                                        $this->get('security.token_storage')->getToken()->getUser(),
+                                        $documentId
+                                    );
+
+                    $commentReadForATeacherOrNot3 = $this->getDoctrine()
+                                    ->getRepository('InnovaCollecticielBundle:Comment')
+                                    ->commentReadForATeacherOrNot3(
+                                        $this->get('security.token_storage')->getToken()->getUser(),
+                                        $documentId
+                                    );
+
+//                    var_dump("User : " . $this->get('security.token_storage')->getToken()->getUser()->getId());
+//                    var_dump("Document : " . $documentId);
+//                    var_dump("Compteur : créé élève lu admin " . $commentReadForATeacherOrNot .
+    //                "+ élève " . $commentReadForATeacherOrNot2 .
+//                    "+ créé admin lu admin " . $commentReadForATeacherOrNot3)
+                    ;
+                    $haveCommentOrNotArray[$documentId]=$commentReadForATeacherOrNot+$commentReadForATeacherOrNot3;
+    //                var_dump("Indice : " . $indice);
+
+                }
             }
 
             // Affectations des résultats dans les tableaux
@@ -641,6 +683,7 @@ class DropController extends DropzoneBaseController
             'collecticielOpenOrNot' => $collecticielOpenOrNot,
             'haveReturnReceiptOrNotArray' => $haveReturnReceiptOrNotArray,
             'alertNbDocumentWithoutReturnReceipt' => $alertNbDocumentWithoutReturnReceipt,
+            'haveCommentOrNotArray' => $haveCommentOrNotArray
         ));
 
         return $dataToView;
@@ -1265,6 +1308,37 @@ class DropController extends DropzoneBaseController
         $activeRoute = $this->getRequest()->attributes->get('_route');
       
         $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
+
+        $redirectRoot = $this->generateUrl(
+            'innova_collecticiel_drops_awaiting',
+            array(
+                    'resourceId' => $dropzone->getId(),
+                )
+            );
+
+        return new JsonResponse(
+            array(
+                'link' => $redirectRoot
+            )
+        );
+
+    }
+
+    /**
+     * @Route(
+     *      "/back/link",
+     *      name="innova_collecticiel_back_link",
+     *      options={"expose"=true}
+     * )
+     * @Template()
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function backLinkAction()
+    {
+       
+        // Récupération de l'ID du dropzone choisi
+        $dropzoneId = $this->get('request')->query->get('dropzoneId');
+        $dropzone = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Dropzone')->find($dropzoneId);
 
         $redirectRoot = $this->generateUrl(
             'innova_collecticiel_drops_awaiting',

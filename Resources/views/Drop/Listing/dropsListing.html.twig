@@ -1,10 +1,58 @@
+{# S'il faut mettre le dropdown tout à droite alors il ajouter ajouter :
+text-right
+au div situé ci-dessous
+#}
+<div class="row">
+    <div class="col-sm-offset-10 col-sm-2 text-center  centering-actions">
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+                {{ 'Action'|trans({}, 'innova_collecticiel') }} 
+                <span class="caret"></span>
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-right">
+                <li class="disabled" id="actionReturnReceipt">
+                    <a class="comment_validate"
+                    href="#" id="dropzone_id_{{dropzone.id}}" name="dropzoneId" data-dropzone_id="{{ dropzone.id }}">
+                    {{ 'Comment Auto'|trans({}, 'innova_collecticiel') }}
+                    </a>
+                </li>
+                {# Demande JJQ. InnovaERV
+                #226 : si accusé de réception pas sélectionné dans paramètres alors griser
+                et désactiver "Accuser la réception" dans le menu déroulant
+                #}
+                {% if dropzone.returnReceipt == 1  %}
+                    <li class="disabled" id="actionReturnReceipt2">
+                {% else %}
+                    <li class="disabled">
+                {% endif %}
+                    <a class="" href="#" data-toggle="modal" data-target="#validate-modal-return-receipt" data-dropzone_id="{{ dropzone.id }}">
+                        {{ 'To add a return receipt'|trans({}, 'innova_collecticiel') }}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{# Parcours du tableau, des données et affichage du tableau. InnovaERV #}
+{# Voir https://github.com/InnovaLangues/CollecticielBundle/issues/246 #}
+{% set alertNbDocumentWithoutComment = 0 %}
+
+{% for drop in pager.currentPageResults %}
+    {% for document in drop.documents %}
+        {% for key,value in haveCommentOrNotArray %}
+            {% if document.id == key %}
+                {% if value == 0  %}
+                    {% set alertNbDocumentWithoutComment = alertNbDocumentWithoutComment + 1 %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+{% endfor %}
+
 <form class="form-horizontal" method="GET" 
 action="{{ path('innova_collecticiel_return_receipt')}}">
-
-{# 
-    <a href="{{ path('innova_collecticiel_add_more_comments', {'resourceId': dropzone.id}) }}"
-    type="button" class="btn btn-default btn-sm">{{ 'Comment Auto'|trans({}, 'innova_collecticiel') }}</a>
-#}
 <!-- Vue donnant la liste des copies. Exemple d'URL : innovacollecticielbundle/2/drops/awaiting -->
 <table class="table table-striped table-hover datatable sharedSpacesTable">
     <thead>
@@ -29,9 +77,29 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
     <i class="fa fa-file-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Document'|trans({},'innova_collecticiel') }}"></i>
     </th>
 
+    {# Transmettre une demande de commentaire #}
     {% if dropzone.evaluation != 1  %}
         <!-- Colonne ajoutée "Devoirs à corriger" modifiée en "Etat" -->
-        <th class="centered"><i class="fa fa-yelp"></i></th>
+        <th class="centered">
+            {# Affichage du nombre d'opérations en attente #}
+            {# Voir https://github.com/InnovaLangues/CollecticielBundle/issues/246 #}
+            {% if alertNbDocumentWithoutComment != 0  %}
+                <div class="short-div">
+                    {# Ajout d'une alerte avec le nombre d'éléments non traités. InnovaERV, demande JJQ #}
+                    {% if alertNbDocumentWithoutComment > 1  %}
+                        <i class="fa fa-exclamation-circle" data-toggle="tooltip" data-placement="top"
+                        data-original-title="{{ alertNbDocumentWithoutComment }} {{ 'Deals Pending'|trans({},'innova_collecticiel') }}">
+                        </i>
+                    {% endif %}
+                    {% if alertNbDocumentWithoutComment == 1  %}
+                        <i class="fa fa-exclamation-circle" data-toggle="tooltip" data-placement="top"
+                        data-original-title="{{ alertNbDocumentWithoutComment }} {{ 'Deal Pending'|trans({},'innova_collecticiel') }}">
+                        </i>
+                    {% endif %}
+                </div>
+            {% endif %}
+            <i class="fa fa-arrow-right" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Request comment'|trans({},'innova_collecticiel') }}"></i>
+        </th>
     {% endif %}
 
     <!-- Colonne ajoutée "Voir" modifiée en "Commentaire  - Evaluation"  -->
@@ -44,23 +112,22 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
         {# Demande JJQ. InnovaERV #}
         {% if dropzone.returnReceipt == 1  %}
             <th class="centered">
-                <div class="short-div">
-                    {# Ajout d'une alerte avec le nombre d'éléments non traités. InnovaERV, demande JJQ #}
-                    {% if alertNbDocumentWithoutReturnReceipt > 1  %}
-                        <i class="fa fa-exclamation-circle" data-toggle="tooltip" data-placement="top"
-                        <i class="fa fa-exclamation-circle" data-toggle="tooltip" data-placement="top"
-                        data-original-title="{{ alertNbDocumentWithoutReturnReceipt }} {{ 'Deals Pending'|trans({},'innova_collecticiel') }}">
-                        </i>
-                    {% endif %}
-                    {% if alertNbDocumentWithoutReturnReceipt == 1  %}
-                        <i class="fa fa-exclamation-circle" data-toggle="tooltip" data-placement="top"
-                        <i class="fa fa-exclamation-circle" data-toggle="tooltip" data-placement="top"
-                        data-original-title="{{ alertNbDocumentWithoutReturnReceipt }} {{ 'Deal Pending'|trans({},'innova_collecticiel') }}">
-                        </i>
-                    {% endif %}
-                </i>
-                </div>
-                <i class="fa fa-hand-o-right">
+                {% if alertNbDocumentWithoutReturnReceipt != 0  %}
+                    <div class="short-div">
+                        {# Ajout d'une alerte avec le nombre d'éléments non traités. InnovaERV, demande JJQ #}
+                        {% if alertNbDocumentWithoutReturnReceipt > 1  %}
+                            <i class="fa fa-exclamation-circle" data-toggle="tooltip" data-placement="top"
+                            data-original-title="{{ alertNbDocumentWithoutReturnReceipt }} {{ 'Deals Pending'|trans({},'innova_collecticiel') }}">
+                            </i>
+                        {% endif %}
+                        {% if alertNbDocumentWithoutReturnReceipt == 1  %}
+                            <i class="fa fa-exclamation-circle" data-toggle="tooltip" data-placement="top"
+                            data-original-title="{{ alertNbDocumentWithoutReturnReceipt }} {{ 'Deal Pending'|trans({},'innova_collecticiel') }}">
+                            </i>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                <i class="fa fa-hand-o-right" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Return receipt'|trans({},'innova_collecticiel') }}"></i>
             </th>
         {% endif %}
 
@@ -73,33 +140,14 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
             <th class="centered"><i class="fa fa-mail-forward"></th>
         {% endif %}
 
-        <th class="centered no-sort">
+        <th class="centered no-sort sorting_disabled centering-columns-input">
         {# Demande JJQ. InnovaERV
             {{ 'Selection'|trans({}, 'innova_collecticiel') }}
         #}
-            <div class="btn-group-vertical">
-                <div class="btn-group-vertical">
-                    <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
-                        {{ 'Action'|trans({}, 'innova_collecticiel') }} 
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-right">
-                        <li>
-                            <a class="comment_validate"
-                            href="#" id="dropzone_id_{{dropzone.id}}" name="dropzoneId" data-dropzone_id="{{ dropzone.id }}">
-                            {{ 'Comment Auto'|trans({}, 'innova_collecticiel') }}
-                            </a>
-                        </li>
-                        <li>
-                            <a class="" href="#" data-toggle="modal" data-target="#validate-modal-return-receipt" data-dropzone_id="{{ dropzone.id }}">
-                                {{ 'Return receipt'|trans({}, 'innova_collecticiel') }}
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
             <div>
-                <input align="center" id="document_id_0" data-dropzone-select_id={{ dropzone.id }} type="checkbox" name="documentId" data-document_id="0" class="btn btn-danger btn-sm" />
+                <input align="center" id="document_id_0" data-dropzone-select_id={{ dropzone.id }} type="checkbox" name="documentId" data-document_id="0" class="btn btn-danger btn-sm"
+                 data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Selection'|trans({},'innova_collecticiel') }}"
+                  />
             </div>
         </th>
     {% endif %}
@@ -110,8 +158,10 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
         {# Parcours du tableau, des données et affichage du tableau. InnovaERV #}
         {% for drop in pager.currentPageResults %}
             {% for document in drop.documents %}
-                {# Séparation de l'affichage de la vue. InnovaERV #}
-                {% include 'InnovaCollecticielBundle:Drop:Listing/dropsListingList.html.twig' %}
+                {% if (document.validate == 1) %}
+                    {# Séparation de l'affichage de la vue. InnovaERV #}
+                    {% include 'InnovaCollecticielBundle:Drop:Listing/dropsListingList.html.twig' %}
+                {% endif %}
             {% endfor %}
         {% endfor %}
     </tbody>
@@ -164,7 +214,7 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
                 </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</button>
+            <button type="button" class="btn btn-default" id="cancel_button" data-dismiss="modal">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</button>
             <button data-dropzone_id="{{dropzone.id}}" id="modal_confirm_return_receipt" data-method="VALIDATE" type="button" class="btn btn-primary rest" href="#">{{ 'Ok'|trans({}, 'innova_collecticiel') }}</button>
         </div>
         </div>
