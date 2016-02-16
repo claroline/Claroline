@@ -132,6 +132,22 @@
                 }
                 return valid;
             };
+            
+            this.getStudentAnswers = function (label) {
+                var answers = [];
+                for (var i=0; i<this.connections.length; i++) {
+                    if (this.connections[i].target === label.id) {
+                        for (var j=0; j<this.question.firstSet.length; j++) {
+                            if (this.question.firstSet[j].id === this.connections[i].source) {
+                                answers.push(this.question.firstSet[j].data);
+                            }
+                        }
+                    }
+                }
+                console.log(this.connections);
+                console.log(this.question.firstSet);
+                return answers;
+            };
 
             /**
              * Listen to show-feedback event (broadcasted by ExercisePlayerCtrl)
