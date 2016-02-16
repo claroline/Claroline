@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "92edf4ed8e78ec12b4f390abbd4b6065",
-    "content-hash": "854fb16f2429261177ca1e224aaf10b4",
+    "hash": "0debfd9a4051138b832e758300692a29",
+    "content-hash": "98c58939ef8f29ece79499a87d272cb9",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -238,20 +238,19 @@
         },
         {
             "name": "claroline/bundle-recorder",
-            "version": "6.0.4",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/stefk/BundleRecorder.git",
-                "reference": "579b55435df64ea8059cf0c3466033167eb4c088"
+                "url": "https://github.com/claroline/BundleRecorder.git",
+                "reference": "2649b2477619e253e5b097da18c6b43ff710198f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stefk/BundleRecorder/zipball/579b55435df64ea8059cf0c3466033167eb4c088",
-                "reference": "579b55435df64ea8059cf0c3466033167eb4c088",
+                "url": "https://api.github.com/repos/claroline/BundleRecorder/zipball/2649b2477619e253e5b097da18c6b43ff710198f",
+                "reference": "2649b2477619e253e5b097da18c6b43ff710198f",
                 "shasum": ""
             },
             "require": {
-                "composer-plugin-api": "^1.0",
                 "composer/composer": "*",
                 "php": ">=5.5",
                 "psr/log": "1.0.*@dev"
@@ -262,6 +261,7 @@
                     "Claroline\\BundleRecorder\\": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0+"
             ],
@@ -278,23 +278,20 @@
                 "Bundle recorder",
                 "Claroline"
             ],
-            "support": {
-                "source": "https://github.com/stefk/BundleRecorder/tree/6.0.4"
-            },
-            "time": "2016-02-16 08:55:12"
+            "time": "2016-02-17 11:52:22"
         },
         {
             "name": "claroline/core-bundle",
-            "version": "6.7.9",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/stefk/CoreBundle.git",
-                "reference": "3eca200f377b8ac7c506b94f6bad4cffd5bde434"
+                "url": "https://github.com/claroline/CoreBundle.git",
+                "reference": "7e47f643bed908d4f4af52820ac91872c7bd5a33"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stefk/CoreBundle/zipball/3eca200f377b8ac7c506b94f6bad4cffd5bde434",
-                "reference": "3eca200f377b8ac7c506b94f6bad4cffd5bde434",
+                "url": "https://api.github.com/repos/claroline/CoreBundle/zipball/7e47f643bed908d4f4af52820ac91872c7bd5a33",
+                "reference": "7e47f643bed908d4f4af52820ac91872c7bd5a33",
                 "shasum": ""
             },
             "require": {
@@ -354,6 +351,7 @@
                     "Claroline\\CoreBundle\\": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0+"
             ],
@@ -368,12 +366,9 @@
             "homepage": "http://www.claroline.net",
             "keywords": [
                 "Claroline",
-                "Core"
+                "core"
             ],
-            "support": {
-                "source": "https://github.com/stefk/CoreBundle/tree/6.7.9"
-            },
-            "time": "2016-02-16 08:36:55"
+            "time": "2016-02-17 11:52:59"
         },
         {
             "name": "claroline/cursus-bundle",
@@ -8417,9 +8412,25 @@
             "time": "2016-01-21 09:38:31"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "alias": "6.1",
+            "alias_normalized": "6.1.0.0",
+            "version": "9999999-dev",
+            "package": "claroline/bundle-recorder"
+        },
+        {
+            "alias": "6.7.4",
+            "alias_normalized": "6.7.4.0",
+            "version": "9999999-dev",
+            "package": "claroline/core-bundle"
+        }
+    ],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "claroline/bundle-recorder": 20,
+        "claroline/core-bundle": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

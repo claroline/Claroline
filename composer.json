@@ -7,8 +7,8 @@
         "claroline/activity-tool-bundle": "~6.0",
         "claroline/agenda-bundle": "~6.0",
         "claroline/announcement-bundle": "~6.0",
-        "claroline/bundle-recorder": "~6.0",
-        "claroline/core-bundle": "~6.7",
+        "claroline/bundle-recorder": "dev-master as 6.1",
+        "claroline/core-bundle": "dev-master as 6.7.4",
         "claroline/cursus-bundle": "~6.0",
         "claroline/forum-bundle": "~6.0",
         "claroline/image-player-bundle": "~6.0",
@@ -42,16 +42,6 @@
         "symfony/phpunit-bridge": "*",
         "claroline/dev-bundle": "master"
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/stefk/CoreBundle"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/stefk/BundleRecorder"
-        }
-    ],
     "scripts": {
         "sync": [
             "COMPOSER_PROCESS_TIMEOUT=900 composer run fetch",
@@ -87,29 +77,17 @@
             "Claroline\\BundleRecorder\\ScriptHandler::buildBundleFile"
         ],
         "pre-install-cmd": [
-            "Claroline\\BundleRecorder\\ScriptHandler::checkForPendingOperations"
+            "php pre-composer.php"
         ],
         "post-install-cmd": [
             "composer run bundles"
         ],
         "pre-update-cmd": [
-            "Claroline\\BundleRecorder\\ScriptHandler::checkForPendingOperations",
+            "php pre-composer.php",
             "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::enableMaintenance"
         ],
         "post-update-cmd": [
             "composer run bundles"
-        ],
-        "post-package-install": [
-            "Claroline\\BundleRecorder\\ScriptHandler::logInstallOperation"
-        ],
-        "post-package-update": [
-            "Claroline\\BundleRecorder\\ScriptHandler::logUpdateOperation"
-        ],
-        "pre-package-uninstall": [
-            "Claroline\\BundleRecorder\\ScriptHandler::prepareUninstallOperation"
-        ],
-        "post-package-uninstall": [
-            "Claroline\\BundleRecorder\\ScriptHandler::logUninstallOperation"
         ]
     },
     "minimum-stability": "dev",
