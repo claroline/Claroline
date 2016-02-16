@@ -295,8 +295,6 @@
                         }
                     }
                 }
-                console.log(this.connections);
-                console.log(this.question.firstSet);
                 return answers;
             };
             
@@ -319,11 +317,6 @@
                 return answers;
             };
             
-            /**
-             * Get the specific feedback for this label
-             * @param {type} label
-             * @returns {MatchQuestionCtrl_L12@arr;solutions@pro;feedback}
-             */
             this.getCurrentItemFeedBack = function (label) {
                 for (var i=0; i<this.solutions.length; i++) {
                     if (this.solutions[i].secondId === label.id) {
