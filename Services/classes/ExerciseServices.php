@@ -272,14 +272,15 @@ class ExerciseServices
 
     /**
      * Temporary : Waiting step manager
-     * 
+     *
      * Create a step for one question in the exercise
-     * 
+     *
      * @param Exercise $exercise
      * @param Question $question
      * @param int $orderStep order of the step in the exercise
      */
-    public function createStepForOneQuestion(Exercise $exercise,Question $question, $orderStep){
+    public function createStepForOneQuestion(Exercise $exercise,
+            Question $question, $orderStep) {
                 $em = $this->doctrine->getManager();
                 //Creating a step by question
                 $step = new Step();
