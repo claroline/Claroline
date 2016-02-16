@@ -147,6 +147,8 @@
                         //$('.endPoints').draggable("disable");
                     }
                 }.bind(this));
+                
+                console.log(this.solutions);
             };
             
             this.hideFeedback = function () {
