@@ -117,6 +117,8 @@
                     this.solutions = result.solutions;
                     this.questionFeedback = result.feedback;
                 }.bind(this));
+                
+                console.log(this.solutions);
             };
             
             /**
