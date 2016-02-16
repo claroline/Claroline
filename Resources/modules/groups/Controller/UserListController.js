@@ -169,7 +169,6 @@ export default class UserListController {
         }
 
         var url = Routing.generate('api_add_users_to_group', {'group': this.groupId}) + '?' + this.ClarolineAPIService.generateQueryString(userIds, 'userIds');
-        console.log(url);
 
         this.ClarolineAPIService.confirm(
             {url: url, method: 'GET'},

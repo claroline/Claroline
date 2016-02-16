@@ -83,11 +83,11 @@ export default class ClarolineAPIService {
 
     confirm(urlObject, callback, title, content) {
         //the order is important
-        ConfirmModalController.$inject = ['callback', 'urlObject', 'title', 'content', '$http', '$uibModalInstance']
+        //ConfirmModalController.$inject = ['callback', 'urlObject', 'title', 'content', '$http', '$uibModalInstance']
 
         this.$uibModal.open({
             template: require('../Partial/confirm_modal.html'),
-            controller: ConfirmModalController,
+            controller: 'ConfirmModalController',
             controllerAs: 'cmc',
             resolve: {
                 callback: function() {return callback},

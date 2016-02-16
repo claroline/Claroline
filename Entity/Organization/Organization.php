@@ -122,10 +122,10 @@ class Organization
      * @var User[]|ArrayCollection
      *
      * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\User"
+     *     targetEntity="Claroline\CoreBundle\Entity\User",
+     *     mappedBy="administratedOrganizations"
      * )
      * @ORM\JoinTable(name="claro_user_administrator")
-     * @Groups({"api"})
      */
     protected $administrators;
 

@@ -1586,6 +1586,9 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $query->getOneOrNullResult();
     }
 
+    /**
+     * Big method for searching users with filters. It can handle most use cases.
+     */
     public function searchPartialList(array $searches = array(), $page = null, $limit = null, $count = false)
     {
         $baseFieldsName = User::getUserSearchableFields();
@@ -1606,9 +1609,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 if (in_array($key, $baseFieldsName)) {
                     $qb->andWhere("UPPER (u.{$key}) LIKE :{$key}{$id}");
                     $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
-                } 
-
-                if (in_array($key, $facetFieldsName)) {
+                } elseif (in_array($key, $facetFieldsName)) {
                     $qb->join('u.fieldsFacetValue', "ffv{$id}");
                     $qb->join("ffv{$id}.fieldFacet", "f{$id}");
                     $qb->andWhere("UPPER (ffv{$id}.stringValue) LIKE :{$key}{$id}");
@@ -1616,18 +1617,21 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                     $qb->andWhere("f{$id}.name LIKE :facet{$id}");
                     $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
                     $qb->setParameter("facet{$id}", $key);
-                }
-
-                //should be renamed to group_name
-                if ($key === 'group_name') {
+                } elseif ($key === 'group_name') {
                     $qb->join('u.groups', "g{$id}");
                     $qb->andWhere("UPPER (g{$id}.name) LIKE :{$key}{$id}");
                     $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
-                }
-
-                if ($key === 'group_id') {
+                } if ($key === 'group_id') {
                     $qb->join('u.groups', "g{$id}");
                     $qb->andWhere("g{$id}.id = :{$key}{$id}");
+                    $qb->setParameter($key . $id, $el);
+                } if ($key === 'organization_name') {
+                    $qb->join('u.organizations', "o{$id}");
+                    $qb->andWhere("UPPER (o{$id}.name) LIKE :{$key}{$id}");
+                    $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
+                } if ($key === 'organization_id') {
+                    $qb->join('u.organizations', "o{$id}");
+                    $qb->andWhere('o{$id}.id = :id');
                     $qb->setParameter($key . $id, $el);
                 }
             }

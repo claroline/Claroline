@@ -126,7 +126,6 @@ class UserController extends FOSRestController
                 case 'email': $data['mail'] = $search; break;
                 default: $data[$key] = $search;
             }
-
         }
 
         $users = $this->userManager->searchPartialList($data, $page, $limit);
@@ -152,6 +151,7 @@ class UserController extends FOSRestController
         }
 
         $baseFields[] = 'group_name';
+        $baseFields[] = 'organization_name';
 
         return $baseFields;
     }

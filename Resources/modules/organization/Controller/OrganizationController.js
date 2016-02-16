@@ -1,10 +1,11 @@
 export default class OrganizationController {
-    constructor($http, OrganizationAPIService, $uibModal) {
+    constructor($http, OrganizationAPIService, $uibModal, ClarolineAPIService) {
         this.$http = $http;
         this.OrganizationAPIService = OrganizationAPIService
         this.$uibModal = $uibModal
         this.organizations = []
         this.treeOptions = {}
+        this.ClarolineAPIService = ClarolineAPIService
         OrganizationAPIService.findAll().then(d => this.organizations = d.data)
     }
 
@@ -35,12 +36,9 @@ export default class OrganizationController {
         });
 
         modal.result.then(result => {
-            console.log(result)
+            if (!result) return;
+            this.groups = this.ClarolineAPIService.replaceById(result, this.organizations);
         });
-    }
-
-    editOrganization(organization) {
-        this.OrganizationAPIService.editName(organization);
     }
 
     removeOrganization(organizations, organizationId) {

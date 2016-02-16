@@ -1255,7 +1255,8 @@ init_password_confirm: Êtes-vous sûr de vouloir réinitialiser les mots de pas
 password_initialized: Mot de passe réinitialisé pour %user%
 delete_users: Supprimer des utilisateurs
 delete_users_confirm: Êtes-vous sûr de vouloir supprimer ces utilisateurs [ %user_list% ] ?
-organizations: Organizations
+organizations: Organisation
 group_name: Nom du groupe
 profile_edition: Modification du profil
 claro_admin_personal_workspace_resource_rights: Gestion des ressources de l'espace personnel
+organization_name: Nom de l'organisation

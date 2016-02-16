@@ -19,9 +19,10 @@ var OrganizationManager = angular.module('OrganizationManager', [
     'ui.bootstrap.tpls',        
     'LocationManager',
     'ui.translation',
+    'ClarolineAPI',
     'ncy-angular-breadcrumb'
 ])
     .controller('EditOrganizationModalController', EditOrganizationModalController)
-    .controller('OrganizationController', ['$http', 'OrganizationAPIService', '$uibModal', OrganizationController])
+    .controller('OrganizationController', ['$http', 'OrganizationAPIService', '$uibModal', 'ClarolineAPIService', OrganizationController])
     .service('OrganizationAPIService', OrganizationAPIService)
     .config(Routing)

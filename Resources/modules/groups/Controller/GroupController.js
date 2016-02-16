@@ -106,8 +106,6 @@ export default class GroupController {
 
         modalInstance.result.then(result => {
             if (!result) return;
-            //dirty but it works
-            console.log(result);
             this.groups = this.ClarolineAPIService.replaceById(result, this.groups);
         });
     }
