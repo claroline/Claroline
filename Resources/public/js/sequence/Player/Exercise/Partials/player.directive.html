@@ -47,7 +47,7 @@
                     <button role="button" data-ng-disabled="exercisePlayerCtrl.currentStepIndex === 0" data-container="body" data-toggle="tooltip" title="{{ 'btn_prev_step_label'|trans:{}:'ujm_sequence' }}" type="button" data-ng-click="exercisePlayerCtrl.validateStep('backward')" class="btn btn-default">    
                         <i class="fa fa-arrow-circle-left"></i>
                     </button>
-                    <button role="button" data-ng-disabled="exercisePlayerCtrl.feedbackIsShown && exercisePlayerCtrl.checkIfFeedbackIsAvailable()" data-ng-show="exercisePlayerCtrl.checkIfFeedbackIsAvailable()" data-container="body" data-toggle="tooltip" type="button" data-ng-click="exercisePlayerCtrl.showFeedback()" class="btn btn-default">
+                    <button role="button" data-ng-show="exercisePlayerCtrl.checkIfFeedbackIsAvailable()" data-container="body" data-toggle="tooltip" type="button" data-ng-click="exercisePlayerCtrl.showFeedback()" class="btn btn-default">    
                         <i class="fa fa-check"> {{ 'btn_validate_step'|trans:{}:'ujm_sequence' }}</i>
                     </button> 
                     <!--
@@ -76,7 +76,7 @@
                     {{ 'btn_interrupt_sequence_label'|trans:{}:'ujm_sequence' }}
                 </button>
                 <!-- END SEQUENCE -->
-                <button data-ng-if="exercisePlayerCtrl.isLastStep" role="button" type="button" ng-bootbox-confirm="{{ 'sequence_end_sequence_confirm'|trans:{}:'ujm_sequence'}}" ng-bootbox-confirm-action="exercisePlayerCtrl.validateStep('end')" class="btn btn-default">
+                <button data-ng-if="exercisePlayerCtrl.isLastStep" data-ng-disabled="!(exercisePlayerCtrl.feedbackIsShown && exercisePlayerCtrl.checkIfFeedbackIsAvailable())" role="button" type="button" ng-bootbox-confirm="{{ 'sequence_end_sequence_confirm'|trans:{}:'ujm_sequence'}}" ng-bootbox-confirm-action="exercisePlayerCtrl.validateStep('end')" class="btn btn-default">
                     {{ 'btn_end_sequence_label'|trans:{}:'ujm_sequence' }}
                 </button>
             </div>
