@@ -130,7 +130,7 @@
                                         <span data-ng-class="correctionMatchCtrl.checkProposalValidity(item.id) ? '':'wrong-label'">{{item.data}}</span>
                                          -->
                                     </li>
-                                    <li data-ng-if="item.length == 0" data-ng-repeat="item in correctionMatchCtrl.getStudentAnswers(label)">
+                                    <li data-ng-if="item.length == 0" data-ng-repeat="item in matchQuestionCtrl.getStudentAnswers(label)">
                                         -
                                     </li>
                                 </ul>
@@ -147,9 +147,9 @@
                             </div>
                             <div class="panel-body">
                                 <ul>
-                                    <li data-ng-repeat="item in correctionMatchCtrl.getCorrectAnswers(label)">
+                                    <li data-ng-repeat="item in matchQuestionCtrl.getCorrectAnswers(label)">
 
-                                        <div data-ng-bind-html="item.data | unsafe"></div>
+                                        <div data-ng-bind-html="item | unsafe"></div>
                                     </li>
                                 </ul>
                             </div>
