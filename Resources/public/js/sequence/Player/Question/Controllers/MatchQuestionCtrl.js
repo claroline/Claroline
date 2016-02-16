@@ -417,8 +417,6 @@
                         }
                     }
                 }
-                console.log(this.connections);
-                console.log(this.question.firstSet);
                 return answers;
             };
             
