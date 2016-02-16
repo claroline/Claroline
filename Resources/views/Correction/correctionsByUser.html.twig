@@ -14,7 +14,7 @@
 
 {% block dropzone_content %}
 
-    <div class="container container-dropzone">
+    <div class="panel-body container-dropzone">
         <h2>
             {{ 'List of corrections made by %user%'|trans({'%user%':user.firstName|capitalize ~' '~ user.lastName|upper}, 'innova_collecticiel') }}
             <a class=" btn btn-default pull-right" href="{{ path('innova_collecticiel_edit', {'resourceId': dropzone.id}) }}"><span
