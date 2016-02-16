@@ -44,6 +44,7 @@ class SequenceController extends Controller
         
         return $this->render('UJMExoBundle:Sequence:play.html.twig', array(
                     '_resource' => $exercise,
+                    'workspace' => $exercise->getResourceNode()->getWorkspace(),
                     'exercise' => $exo,
                     'paper' => $paper,
                     'user' => json_encode($u),
