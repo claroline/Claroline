@@ -31,7 +31,7 @@
         }
 
         var exists = false;
-        $("*[id$='_interaction_question_category'] option").each(function() {
+        $("*[id$='_question_category'] option").each(function() {
 
             if ($(this).text() == nom_cat) {
                 exists = true;
@@ -53,7 +53,7 @@
                     cache: false,
                     success: function(data){
                         // ne rien faire
-                        $("*[id$='_interaction_question_category']")
+                        $("*[id$='_question_category']")
                             .append($('<option selected="selected" value="'+data+'"></option>')
                             .text(nom_cat));
 
@@ -63,7 +63,7 @@
                 });
             } else {
                 // Id of the category to update
-                var idOldCategory = $("*[id$='_interaction_question_category']").val();
+                var idOldCategory = $("*[id$='_question_category']").val();
                 // New label of the category
                 var newlabel = $('#category').val();
                 $.ajax({
@@ -76,10 +76,10 @@
                     cache: false,
                     success: function (data) {
                         // Remove the old label from the list
-                        $("*[id$='_interaction_question_category'] option[value=\""+idOldCategory+"\"]").remove();
+                        $("*[id$='_question_category'] option[value=\""+idOldCategory+"\"]").remove();
 
                         // Add the new one to the list
-                        $("*[id$='_interaction_question_category']")
+                        $("*[id$='_question_category']")
                             .append($('<option selected="selected" value="'+data+'"></option>')
                             .text(newlabel));
 
@@ -93,7 +93,7 @@
     });
 
     if ($('#edit').val() == 1) {
-        $('#category').val($("*[id$='_interaction_question_category'] option:selected").text());
+        $('#category').val($("*[id$='_question_category'] option:selected").text());
     }
     $('#modalcategory').modal('toggle', 'show');
 </script>
