@@ -56,30 +56,8 @@ export default class GroupController {
         $http.get(Routing.generate('api_get_group_searchable_fields'))
             .then(d => this.fields = d.data)
 
-        /**********************************************************/
-        /* THE FOLLOWING CALLBACKS NEED THE CURRENT OBJECT "THIS" */
-        /**********************************************************/
-
-        this._deleteCallback = function(data) {
-            for (let i = 0; i < this.selected.length; i++) {
-                this.alerts.push({
-                    type: 'success',
-                    msg: this.translate('group_removed', {group: this.selected[i].name})
-                });
-            }
-
-            this.dataTableOptions.paging.count -= this.selected.length;
-            this.ClarolineAPIService.removeElements(this.selected, this.groups);
-            this.selected.splice(0, this.selected.length);
-        }.bind(this)
-
-        this._onSearch = function(searches) {
-            this.savedSearch = searches;
-            this.ClarolineSearchService.find('api_get_search_groups', searches, 0, this.dataTableOptions.paging.size).then(d => {
-                this.groups = d.data.groups;
-                this.dataTableOptions.paging.count = d.data.total;
-            })
-        }.bind(this)
+        this._deleteCallback = this._deleteCallback.bind(this) 
+        this._onSearch = this._onSearch.bind(this) 
     }
 
     translate(key, data = {}) {
@@ -164,5 +142,26 @@ export default class GroupController {
             this.translate('delete_groups'),
             this.translate('delete_groups_confirm', {group_list: groups})
         );
+    }
+
+    _onSearch(searches) {
+        this.savedSearch = searches;
+        this.ClarolineSearchService.find('api_get_search_groups', searches, 0, this.dataTableOptions.paging.size).then(d => {
+            this.groups = d.data.groups;
+            this.dataTableOptions.paging.count = d.data.total;
+        })
+    }
+
+    _deleteCallback(data) {
+        for (let i = 0; i < this.selected.length; i++) {
+            this.alerts.push({
+                type: 'success',
+                msg: this.translate('group_removed', {group: this.selected[i].name})
+            });
+        }
+
+        this.dataTableOptions.paging.count -= this.selected.length;
+        this.ClarolineAPIService.removeElements(this.selected, this.groups);
+        this.selected.splice(0, this.selected.length);
     }
 }
