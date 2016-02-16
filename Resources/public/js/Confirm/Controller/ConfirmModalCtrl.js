@@ -6,11 +6,11 @@
 
     angular.module('ConfirmModule').controller('ConfirmModalCtrl', [
         '$scope',
-        '$modalInstance',
+        '$uibModalInstance',
         'title',
         'message',
         'confirmButton',
-        function ConfirmModalCtrl($scope, $modalInstance, title, message, confirmButton) {
+        function ConfirmModalCtrl($scope, $uibModalInstance, title, message, confirmButton) {
             $scope.title         = title;
             $scope.message       = message;
             $scope.confirmButton = confirmButton;
@@ -20,7 +20,7 @@
              * @returns void
              */
             $scope.confirm = function() {
-                $modalInstance.close();
+                $uibModalInstance.close();
             };
 
             /**
@@ -28,7 +28,7 @@
              * @returns void
              */
             $scope.cancel = function() {
-                $modalInstance.dismiss('cancel');
+                $uibModalInstance.dismiss('cancel');
             };
         }
     ]);

@@ -34,7 +34,7 @@
                     <em>{{ path.entity.description | striptags | truncate(40, true, ' [...]') }}</em>
                 </td>
 
-                <td>
+                <td class="text-right">
                     {% if path.canEdit %}
                     <a href="{{ path('innova_path_publish', { id: path.entity.id, redirect: true }) }}" class="btn btn-default btn-xs">
                         <span class="fa fa-share-square-o"></span>
@@ -52,6 +52,6 @@
         </tbody>
     </table>
     {% else %}
-    <em  style="display: block;margin-top: 15px;" class="text-center">{{ 'no_path'|trans({}, 'innova_tools') }}</em>
+    <em style="display: block;margin-top: 15px;" class="text-center">{{ 'no_path'|trans({}, 'innova_tools') }}</em>
     {% endif %}
 </div>

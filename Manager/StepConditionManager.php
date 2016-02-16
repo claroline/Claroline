@@ -3,23 +3,22 @@
 namespace Innova\PathBundle\Manager;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\StepCondition;
 use Innova\PathBundle\Entity\Criterion;
 use Innova\PathBundle\Entity\Criteriagroup;
 
-class StepConditionsManager
+class StepConditionManager
 {
     /**
-     *
+     * Object manager
      * @var \Doctrine\Common\Persistence\ObjectManager $om
      */
     protected $om;
 
     /**
      * Class constructor
-     * @param \Doctrine\Common\Persistence\ObjectManager                 $om
+     * @param \Doctrine\Common\Persistence\ObjectManager $om
      */
     public function __construct(
         ObjectManager            $om)

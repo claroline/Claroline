@@ -18,15 +18,15 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Claroline\CoreBundle\Entity\Activity\AbstractEvaluation;
 
 /**
- * Class StepConditionsController
+ * Class StepConditionController
  *
  * @Route(
  *      "/stepconditions",
- *      name    = "innova_path_stepconditions",
- *      service = "innova_path.controller.step_conditions"
+ *      name    = "innova_path_stepcondition",
+ *      service = "innova_path.controller.step_condition"
  * )
  */
-class StepConditionsController extends Controller
+class StepConditionController extends Controller
 {
     /**
      * Object manager
@@ -107,7 +107,7 @@ class StepConditionsController extends Controller
         $userId = $user->getId();
         $data = array();
         //retrieve list of groups object for this user
-        $groupforuser = $this->om->getRepository("InnovaPathBundle:StepConditionsGroup")->getAllForUser($userId, true, 'id');
+        $groupforuser = $this->om->getRepository("InnovaPathBundle:StepConditionsGroup")->getAllForUser($userId, true);
         if ($groupforuser != null) {
             //data needs to be explicitly set because Group does not extends Serializable
             foreach($groupforuser as $ug) {

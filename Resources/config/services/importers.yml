@@ -1,7 +1,7 @@
 services:
     # Path importer
     innova_path.importer.importer:
-        class: %innova_path.importer.importer.class%
+        class: Innova\PathBundle\Transfer\PathImporter
         calls:
             - [setContainer, ["@service_container"]]
         tags:

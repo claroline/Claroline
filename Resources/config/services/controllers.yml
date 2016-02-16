@@ -1,30 +1,36 @@
 services: 
     # Path controller
     innova_path.controller.path:
-        class: %innova_path.controller.path.class%
+        class: Innova\PathBundle\Controller\PathController
         arguments:
-            om:                   @doctrine.orm.entity_manager
-            formFactory:          @form.factory
             session:              @session
             translator:           @translator
-            authorizationChecker: @security.authorization_checker
             pathManager:          @innova_path.manager.path
             publishingManager:    @innova_path.manager.publishing
-            tagManager:           @claroline.manager.tag_manager
         scope: request
 
     # Path template controller
     innova_path.controller.path_template:
-        class: %innova_path.controller.path_template.class%
+        class: Innova\PathBundle\Controller\PathTemplateController
         arguments:
             formFactory:         @form.factory
             pathTemplateManager: @innova_path.manager.path_template
-            pathTemplateHandler: @innova_path.form.handler.path_template
         scope: request
-        
+
+    # Path Widget controller
+    innova_path.controller.path_widget:
+        class: Innova\PathBundle\Controller\Widget\PathWidgetController
+        arguments:
+            om:                   @doctrine.orm.entity_manager
+            formFactory:          @form.factory
+            authorizationChecker: @security.authorization_checker
+            pathManager:          @innova_path.manager.path
+            tagManager:           @claroline.manager.tag_manager
+        scope: request
+
     # Player controller
     innova_path.controller.path_player:
-        class: %innova_path.controller.path_player.class%
+        class: Innova\PathBundle\Controller\Wizard\PlayerController
         arguments:
             objectManager: @doctrine.orm.entity_manager
             pathManager:   @innova_path.manager.path
@@ -32,7 +38,7 @@ services:
           
     # Editor controller
     innova_path.controller.path_editor:
-        class: %innova_path.controller.path_editor.class%
+        class: Innova\PathBundle\Controller\Wizard\EditorController
         arguments:
             objectManager:   @doctrine.orm.entity_manager
             router:          @router
@@ -43,14 +49,14 @@ services:
 
     # User Progression controller
     innova_path.controller.user_progression:
-        class: %innova_path.controller.user_progression.class%
+        class: Innova\PathBundle\Controller\UserProgressionController
         arguments:
             userProgressionManager: @innova_path.manager.user_progression
         scope: request
 
     # Step Conditions controller
-    innova_path.controller.step_conditions:
-        class: %innova_path.controller.step_conditions.class%
+    innova_path.controller.step_condition:
+        class: Innova\PathBundle\Controller\StepConditionController
         arguments:
             objectManager:  @claroline.persistence.object_manager
             groupManager:   @claroline.manager.group_manager

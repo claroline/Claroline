@@ -10,7 +10,7 @@ use Innova\PathBundle\Entity\InheritedResource;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\StepCondition;
-use Innova\PathBundle\Manager\StepConditionsManager;
+use Innova\PathBundle\Manager\StepConditionManager;
 
 /**
  * Manage Publishing of the paths
@@ -77,25 +77,25 @@ class PublishingManager
      *StepConditions Manager
      * @var \Claroline\CoreBundle\Manager\ResourceManager
      */
-    protected $stepConditionsManager;
+    protected $stepConditionManager;
 
     /**
      * Class constructor
-     * @param \Doctrine\Common\Persistence\ObjectManager $objectManager
-     * @param \Innova\PathBundle\Manager\StepManager $stepManager
-     * @param StepConditionsManager $stepConditionsManager
-     * @param \Claroline\CoreBundle\Manager\RightsManager $rightsManager
+     * @param \Doctrine\Common\Persistence\ObjectManager      $objectManager
+     * @param \Innova\PathBundle\Manager\StepManager          $stepManager
+     * @param \Innova\PathBundle\Manager\StepConditionManager $stepConditionManager
+     * @param \Claroline\CoreBundle\Manager\RightsManager     $rightsManager
      */
     public function __construct(
-        ObjectManager                 $objectManager,
-        StepManager                   $stepManager,
-        StepConditionsManager         $stepConditionsManager,
-        RightsManager                 $rightsManager)
+        ObjectManager        $objectManager,
+        StepManager          $stepManager,
+        StepConditionManager $stepConditionManager,
+        RightsManager        $rightsManager)
     {
-        $this->om            = $objectManager;
-        $this->stepManager   = $stepManager;
-        $this->stepConditionsManager = $stepConditionsManager;
-        $this->rightsManager = $rightsManager;
+        $this->om                   = $objectManager;
+        $this->stepManager          = $stepManager;
+        $this->stepConditionManager = $stepConditionManager;
+        $this->rightsManager        = $rightsManager;
     }
 
     /**
@@ -472,30 +472,26 @@ class PublishingManager
         $existingCondition = $stepDB->getCondition();
         $processedCondition = array();
 
-        if (isset($stepJS->condition))
-        {
-            //retrieve the condition
+        if (!empty($stepJS->condition)) {
+            // retrieve the condition
             $conditionJS = $stepJS->condition;
 
             // Current condition has never been published or condition entity has been deleted => create it
-            if (empty($conditionJS->scid)
-                || ($existingCondition->getId() != $conditionJS->scid))
-            {
-//echo "create condition <br>\n";
-                $publishedCondition = $this->stepConditionsManager->createStepCondition($stepDB);
+            if (empty($conditionJS->scid) || ($existingCondition->getId() != $conditionJS->scid)) {
+                // Create StepCondition
+                $publishedCondition = $this->stepConditionManager->createStepCondition($stepDB);
                 $uniqId = "_COND".uniqid();
                 $this->uniqId2sc[$uniqId] = $publishedCondition;
                 // Update json structure with new resource ID
                 $conditionJS->scid = $uniqId;
             }
-            else
-            {
-//echo "update condition <br>\n";
+            else {
+                // Update CriteriaGroup
                 $publishedCondition = $this->getStepCondition($conditionJS->scid);
-                $publishedCondition = $this->stepConditionsManager->editStepCondition($stepDB, $publishedCondition);
+                $publishedCondition = $this->stepConditionManager->editStepCondition($stepDB, $publishedCondition);
             }
+
             $processedCondition[] = $publishedCondition;
-//echo "manage criteriagroups <br>\n";
 
             //manage criteriagroups
             $existingCriteriagroups = $publishedCondition->getCriteriagroups()->toArray();
@@ -506,9 +502,11 @@ class PublishingManager
 
 //echo "Clean Condition to remove <br>\n";
             // Clean Condition to remove
-            if (is_object($existingCondition))
+            if (is_object($existingCondition)) {
                 $this->cleanCondition($publishedCondition, $existingCondition, $stepDB);
+            }
         }
+
         return $processedCondition;
     }
 
@@ -536,7 +534,7 @@ class PublishingManager
             if (empty($criteriagroupJS->cgid) || !$existingCriteriagroups->containsKey($criteriagroupJS->cgid))
             {
 //echo "create group <br>\n";
-                $criteriagroupDB = $this->stepConditionsManager->createCriteriagroup($level, $currentOrder, $parentCG, $conditionDB);
+                $criteriagroupDB = $this->stepConditionManager->createCriteriagroup($level, $currentOrder, $parentCG, $conditionDB);
                 $uniqId = "_CG".uniqid();
                 $this->uniqId2cg[$uniqId] = $criteriagroupDB;
                 // Update json structure with new resource ID
@@ -548,7 +546,7 @@ class PublishingManager
                 //retrieve CG
                 $criteriagroupDB = $existingCriteriagroups->get($criteriagroupJS->cgid);
                 //edit CG in DB
-                $criteriagroupDB = $this->stepConditionsManager->editCriteriagroup($level, $currentOrder, $parentCG, $conditionDB, $criteriagroupDB);
+                $criteriagroupDB = $this->stepConditionManager->editCriteriagroup($level, $currentOrder, $parentCG, $conditionDB, $criteriagroupDB);
             }
 //echo "Manage criteria <br>\n";
             // Manage criteria
@@ -600,7 +598,7 @@ class PublishingManager
             if (empty($criterionJS->critid) || !$existingCriteria->containsKey($criterionJS->critid))
             {
 //echo "criterion add <br>\n";
-                $criterionDB = $this->stepConditionsManager->createCriterion($data, $ctype, $criteriagroupDB);
+                $criterionDB = $this->stepConditionManager->createCriterion($data, $ctype, $criteriagroupDB);
                 $uniqId = "_CRIT".uniqid();
                 $this->uniqId2crit[$uniqId] = $criterionDB;
                 // Update json structure with new resource ID
@@ -610,7 +608,7 @@ class PublishingManager
                 //retrieve criterion
                 $criterionDB = $existingCriteria->get($criterionJS->critid);
                 //edit criterion in DB
-                $criterionDB = $this->stepConditionsManager->editCriterion($data, $ctype, $criteriagroupDB, $criterionDB);
+                $criterionDB = $this->stepConditionManager->editCriterion($data, $ctype, $criteriagroupDB, $criterionDB);
             }
             // Store criteria to know it doesn't have to be deleted when we will clean the condition
             $processedCriteria[] = $criterionDB;

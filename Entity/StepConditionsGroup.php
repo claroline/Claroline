@@ -1,4 +1,5 @@
 <?php
+
 namespace Innova\PathBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

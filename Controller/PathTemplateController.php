@@ -4,6 +4,7 @@ namespace Innova\PathBundle\Controller;
 
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -12,7 +13,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 // Controller dependencies
 use Innova\PathBundle\Manager\PathTemplateManager;
 use Innova\PathBundle\Entity\Path\PathTemplate;
-use Innova\PathBundle\Form\Handler\PathTemplateHandler;
 
 /**
  * Class PathTemplateController
@@ -51,16 +51,13 @@ class PathTemplateController
      * Inject needed dependencies
      * @param \Symfony\Component\Form\FormFactoryInterface $formFactory
      * @param \Innova\PathBundle\Manager\PathTemplateManager $pathTemplateManager
-     * @param \Innova\PathBundle\Form\Handler\PathTemplateHandler $pathTemplateHandler
      */
     public function __construct(
         FormFactoryInterface $formFactory,
-        PathTemplateManager  $pathTemplateManager,
-        PathTemplateHandler  $pathTemplateHandler)
+        PathTemplateManager  $pathTemplateManager)
     {
         $this->formFactory         = $formFactory;
         $this->pathTemplateManager = $pathTemplateManager;
-        $this->pathTemplateHandler = $pathTemplateHandler;
     }
     
     /**
@@ -92,7 +89,7 @@ class PathTemplateController
      * )
      * @Method("POST")
      */
-    public function addAction()
+    public function addAction(Request $request)
     {
         $pathTemplate = new PathTemplate();
         
@@ -100,11 +97,10 @@ class PathTemplateController
         $form = $this->formFactory->create('innova_path_template', $pathTemplate, array (
             'csrf_protection' => false,
         ));
-        
-        $this->pathTemplateHandler->setForm($form);
-        if ($this->pathTemplateHandler->process()) {
-            // Success => modified data
-            $pathTemplate = $this->pathTemplateHandler->getData();
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $this->pathTemplateManager->create($pathTemplate);
 
             return new Response(
                 $pathTemplate->getId()
@@ -126,18 +122,17 @@ class PathTemplateController
      * )
      * @Method("PUT")
      */
-    public function editAction(PathTemplate $pathTemplate) 
+    public function editAction(PathTemplate $pathTemplate, Request $request)
     {
         // Create form to validate data
         $form = $this->formFactory->create('innova_path_template', $pathTemplate, array (
             'method' => 'PUT',
             'csrf_protection' => false,
         ));
-        
-        $this->pathTemplateHandler->setForm($form);
-        if ($this->pathTemplateHandler->process()) {
-            // Success => modified data
-            $pathTemplate = $this->pathTemplateHandler->getData();
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $this->pathTemplateManager->edit($pathTemplate);
             
             return new Response(
                 $pathTemplate->getId()

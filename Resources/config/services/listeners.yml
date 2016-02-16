@@ -1,6 +1,6 @@
 services:
     innova_path.listener.path:
-        class: %innova_path.listener.path.class%
+        class: Innova\PathBundle\EventListener\Resource\PathListener
         calls:
             - [setContainer, ["@service_container"]]
         tags:

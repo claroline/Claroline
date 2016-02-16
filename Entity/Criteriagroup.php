@@ -10,7 +10,7 @@ use Innova\PathBundle\Entity\StepCondition;
  * Criteriagroup
  *
  * @ORM\Table(name="innova_stepcondition_criteriagroup")
- * @ORM\Entity(repositoryClass="Innova\PathBundle\Repository\CriteriagroupRepository")
+ * @ORM\Entity
  */
 class Criteriagroup implements \JsonSerializable
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Innova\PathBundle\EventListener;
+namespace Innova\PathBundle\EventListener\Widget;
 
 use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
@@ -31,14 +31,17 @@ class PathWidgetListener
      */
     private $pathManager;
 
+    /**
+     * @var \Claroline\TagBundle\Manager\TagManager
+     */
     private $tagManager;
 
     /**
      * @DI\InjectParams({
-     *     "twig"           = @DI\Inject("templating"),
-     *     "formFactory"    = @DI\Inject("form.factory"),
-     *     "pathManager"    = @DI\Inject("innova_path.manager.path"),
-     *     "tagManager"    = @DI\Inject("claroline.manager.tag_manager")
+     *     "twig"        = @DI\Inject("templating"),
+     *     "formFactory" = @DI\Inject("form.factory"),
+     *     "pathManager" = @DI\Inject("innova_path.manager.path"),
+     *     "tagManager"  = @DI\Inject("claroline.manager.tag_manager")
      * })
      */
     public function __construct(

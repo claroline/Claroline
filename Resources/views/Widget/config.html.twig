@@ -12,14 +12,16 @@
         {{ form_widget(form) }}
 
         <div class="tagList">
-            {% for resourceTag in form.vars.value.tags %}
-            <span class="label label-success margin-bottom-sm margin-right-sm">
-                <i class="fa fa-tag"></i>
-                {{ resourceTag.getName() }}
+            {% if form.vars.value is not null and form.vars.value.tags is not empty %}
+                {% for resourceTag in form.vars.value.tags %}
+                <span class="label label-success margin-bottom-sm margin-right-sm">
+                    <i class="fa fa-tag"></i>
+                    {{ resourceTag.getName() }}
 
-                <a role=button class="removeTag" href="" data-tag-id="{{ resourceTag.getId() }}"><span class="fa fa-times"></span></a>
-            </span>
-            {% endfor %}
+                    <a role=button class="removeTag" href="" data-tag-id="{{ resourceTag.getId() }}"><span class="fa fa-times"></span></a>
+                </span>
+                {% endfor %}
+            {% endif %}
         </div>
     </div>
 

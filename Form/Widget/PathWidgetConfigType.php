@@ -1,6 +1,6 @@
 <?php
 
-namespace Innova\PathBundle\Form\Type;
+namespace Innova\PathBundle\Form\Widget;
 
 use Claroline\TagBundle\Form\TagType;
 use Symfony\Component\Form\AbstractType;

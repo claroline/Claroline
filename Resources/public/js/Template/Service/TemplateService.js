@@ -61,7 +61,7 @@
                                 AlertService.addAlert('error', Translator.trans('path_template_save_error', {}, 'path_wizards'));
                             }
 
-                            $modalInstance.close();
+                            $uibModalInstance.close();
                         })
                         .error(function (data, status) {
                             AlertService.addAlert('error', Translator.trans('path_template_save_error', {}, 'path_wizards'));

@@ -1,6 +1,6 @@
 <?php
 
-namespace Innova\PathBundle\Form\Type;
+namespace Innova\PathBundle\Form;
 
 class PathTemplateType extends AbstractPathType
 {

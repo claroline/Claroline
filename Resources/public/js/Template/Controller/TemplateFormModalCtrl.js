@@ -5,9 +5,9 @@
     'use strict';
 
     angular.module('TemplateModule').controller('TemplateFormModalCtrl', [
-        '$modalInstance',
+        '$uibModalInstance',
         'template',
-        function ($modalInstance, template) {
+        function ($uibModalInstance, template) {
             this.template = template;
 
             // Store symfony base partials route
@@ -18,7 +18,7 @@
              * @returns void
              */
             this.close = function() {
-                $modalInstance.dismiss('cancel');
+                $uibModalInstance.dismiss('cancel');
             };
 
             /**

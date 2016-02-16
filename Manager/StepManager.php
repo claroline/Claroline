@@ -9,7 +9,6 @@ use Claroline\CoreBundle\Manager\ResourceManager;
 use Innova\PathBundle\Entity\InheritedResource;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\Path\Path;
-use Innova\PathBundle\Entity\StepCondition;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -43,15 +42,14 @@ class StepManager
      * Class constructor
      * @param \Doctrine\Common\Persistence\ObjectManager $om
      * @param \Claroline\CoreBundle\Manager\ResourceManager $resourceManager
-     * @param StepConditionsManager $stepConditionsManager
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
      * @param \Symfony\Component\Translation\TranslatorInterface $translator
      */
     public function __construct(
-        ObjectManager            $om,
-        ResourceManager          $resourceManager,
-        SessionInterface         $session,
-        TranslatorInterface      $translator)
+        ObjectManager       $om,
+        ResourceManager     $resourceManager,
+        SessionInterface    $session,
+        TranslatorInterface $translator)
     {
         $this->om              = $om;
         $this->resourceManager = $resourceManager;

@@ -11,7 +11,7 @@ use Innova\PathBundle\Entity\Criteriagroup;
  * StepCondition
  *
  * @ORM\Table(name="innova_stepcondition")
- * @ORM\Entity(repositoryClass="Innova\PathBundle\Repository\StepConditionRepository")
+ * @ORM\Entity
  */
 class StepCondition implements \JsonSerializable
 {

@@ -290,18 +290,16 @@
                  * Display the step
                  * @param step
                  */
-                goTo: function goTo(step, checkAccess) {
-                    if (!checkAccess || AuthorizationCheckerService.isAuthorized(step)) {
-                        // Ugly as fuck, but can't make it work without timeout
-                        $timeout(function(){
-                            if (angular.isObject(step)) {
-                                $location.path('/' + step.id);
-                            } else {
-                                // User must be able to navigate to root step, so does not check authorization
-                                $location.path('/');
-                            }
-                        }, 1);
-                    }
+                goTo: function goTo(step) {
+                    // Ugly as fuck, but can't make it work without timeout
+                    $timeout(function(){
+                        if (angular.isObject(step)) {
+                            $location.path('/' + step.id);
+                        } else {
+                            // User must be able to navigate to root step, so does not check authorization
+                            $location.path('/');
+                        }
+                    }, 1);
                 },
 
                 /**

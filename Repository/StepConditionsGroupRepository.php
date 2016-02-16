@@ -13,11 +13,9 @@ class StepConditionsGroupRepository extends GroupRepository
      *
      * @param $userId
      * @param bool $executeQuery
-     * @param string $orderedBy
-     * @param null $order
      * @return array|\Doctrine\ORM\Query
      */
-    public function getAllForUser($userId, $executeQuery = true, $orderedBy = 'id', $order = null)
+    public function getAllForUser($userId, $executeQuery = true)
     {
         $qb = $this->_em->createQueryBuilder()
             ->select('g')
@@ -25,7 +23,9 @@ class StepConditionsGroupRepository extends GroupRepository
             ->leftJoin('g.users', 'u')
             ->where('u.id = :id')
             ->setParameter('id', $userId);
+
         $query = $qb->getQuery();
+
         return $executeQuery ? $query->getResult() : $query;
     }
 }
