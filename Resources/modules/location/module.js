@@ -17,4 +17,4 @@ var LocationManager = angular.module('LocationManager', [
     .service('LocationAPIService', LocationAPIService)
     .controller('EditLocationModalController', EditLocationModalController)
     .controller('CreateLocationModalController', CreateLocationModalController)
-    .controller('LocationController', ['$http', 'LocationAPIService', '$uibModal', LocationController])
+    .controller('LocationController', ['$http', 'LocationAPIService', '$uibModal', 'ClarolineAPIService', LocationController])

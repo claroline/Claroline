@@ -1,11 +1,12 @@
 import CreateLocationModalController from './CreateLocationModalController'
 
 export default class LocationController {
-    constructor($http, LocationAPIService, $uibModal) {
+    constructor($http, LocationAPIService, $uibModal, ClarolineAPIService) {
         this.$http = $http
         this.LocationAPIService = LocationAPIService
         this.$uibModal = $uibModal
         this.locations = undefined
+        this.ClarolineAPIService = ClarolineAPIService
 
         this.columns = [
             {
@@ -93,7 +94,7 @@ export default class LocationController {
 
         modal.result.then(result => {
             if (!result) return;
-            clarolineAPI.replaceById(result, this.locations)
+            this.ClarolineAPIService.replaceById(result, this.locations)
         });
     }
 }

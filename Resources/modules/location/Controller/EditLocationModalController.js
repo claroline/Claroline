@@ -2,14 +2,14 @@ export default class EditLocationModalController {
     constructor(LocationAPIService, locations, location, $uibModalInstance, $uibModal, ClarolineAPIService) {
         this.LocationAPIService = LocationAPIService
         this.locations = locations
-        //this.location = { } // .??
+        this.locationId = location.id
         this.$uibModalInstance = $uibModalInstance
         this.$uibModal = $uibModal
         this.ClarolineAPIService = ClarolineAPIService
     }
 
     submit() {
-        this.LocationAPIService.update(location.id, $this.location).then(
+        this.LocationAPIService.update(this.locationId, this.location).then(
             d => { 
                 this.$uibModalInstance.close(d.data)
             },            

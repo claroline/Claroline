@@ -25,14 +25,12 @@
     </ol>
 </script>
 
-<div class="col-md-8">
-    <button ng-click="oc.addRootOrganization()"> {{ 'add'|trans:{}:'platform' }} </button>
+<div>
+    <button class="btn btn-primary" ng-click="oc.addRootOrganization()"> {{ 'add'|trans:{}:'platform' }} </button>
+    <a class="btn btn-primary" ui-sref="organizations.locations"> {{ 'locations'|trans:{}:'platform' }} </a>
     <div ui-tree id="tree-root">
         <ol ui-tree-nodes ng-model="oc.organizations">
             <li ng-repeat="organization in oc.organizations" ui-tree-node ng-include="'nodes_renderer.html'"></li>
         </ol>
     </div>
-</div>
-<div class="col-md-4">
-    <a class="btn btn-primary" ui-sref="organizations.locations"> {{ 'locations'|trans:{}:'platform' }} </a>
 </div>
