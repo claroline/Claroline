@@ -10,7 +10,7 @@
         <tr data-ng-repeat="label in correctionMatchCtrl.question.secondSet">
             <!-- student answer -->
             <td class="center-text">
-                <div class="panel" data-ng-class="correctionMatchCtrl.checkAnswerValidity(label) ? 'panel-success':'panel-danger'">
+                <div class="panel" data-ng-class="matchQuestionCtrl.checkAnswerValidity(label) ? 'panel-success':'panel-danger'">
                     <div class="panel-heading clearfix">
                         <h4 class="panel-title pull-left">
                              <div data-ng-bind-html="label.data | unsafe"></div>
