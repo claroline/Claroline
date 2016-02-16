@@ -1,11 +1,14 @@
 <style type="text/css">
     #logFilter label {font-weight: normal;}
     #logFilter div.row {padding-bottom: 3px;}
+    small.logs-csv-link {font-size: 70%;}
 </style>
 <div class="panel-body logs-container">
     {% if _resource is defined %}
+        {% set csv_path = 'claro_resource_logs_by_user_csv' %}
         {% include 'ClarolineCoreBundle:Log:workspace_resource_tabs.html.twig' with {'_resource':_resource, 'activeTab': 'user'} %}
     {% elseif workspace is defined %}
+        {% set csv_path = 'claro_workspace_logs_by_user_csv' %}
         {% include 'ClarolineCoreBundle:Log:workspace_resource_tabs.html.twig' with {'workspace':workspace, 'activeTab': 'user'} %}
     {% endif %}
     <div class="logs-form-container" style="margin: 20px 0;">
@@ -52,7 +55,7 @@
     </div>
     {% if 0 < pager.nbResults %}
         <legend>
-            {{ 'user_list'|trans({}, 'log') }}
+            {{ 'user_list'|trans({}, 'log') }} <small class="logs-csv-link">[<a href="{{ path(csv_path, routeParams) }}" title="{{ 'download_csv_list'|trans({}, 'log') }}"><i class="fa fa-download"></i> CSV</a>]</small>
         </legend>
 
         <div class="text-center">

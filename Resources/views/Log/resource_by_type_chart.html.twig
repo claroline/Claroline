@@ -11,6 +11,7 @@
 
 {% if filesImported is not defined or filesImported is empty %}
     <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/jquery.jqplot.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/jqplot/jqplot.colors.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.pieRenderer.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.canvasTextRenderer.js') }}"></script>
 {% else %}

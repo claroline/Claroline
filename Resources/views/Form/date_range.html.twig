@@ -13,7 +13,7 @@
             <script type="text/javascript" src="{{ asset('bundles/frontend/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
         {% endblock %}
         <script type="text/javascript">
-
+            var schoolYear = moment().month()>=8?moment().year():moment().subtract(1, 'year').year();
             var possibleRanges = {
                 'today': {
                     'value': [
@@ -73,15 +73,15 @@
                 },
                 'this_school_year': {
                     'value': [
-                        moment().month(8).startOf('month'),
-                        moment().month(8).endOf('month').add(1, 'year').subtract(1, 'month')
+                        moment().month(8).year(schoolYear).startOf('month'),
+                        moment().month(8).year(schoolYear).endOf('month').add(1, 'year').subtract(1, 'month')
                     ],
                     'label': '{{ 'date_range.this_school_year'|trans({}, 'platform') }}'
                 },
                 'last_school_year': {
                     'value': [
-                        moment().month(8).startOf('month').subtract(1, 'year'),
-                        moment().month(8).endOf('month').subtract(1, 'month')
+                        moment().month(8).year(schoolYear).startOf('month').subtract(1, 'year'),
+                        moment().month(8).year(schoolYear).endOf('month').subtract(1, 'month')
                     ],
                     'label': '{{ 'date_range.last_school_year'|trans({}, 'platform') }}'
                 },

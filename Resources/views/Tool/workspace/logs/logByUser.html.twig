@@ -1,5 +1,5 @@
 {% extends 'ClarolineCoreBundle:Tool/workspace/logs:layout.html.twig' %}
-
+{% set routeParams = filter|merge({'workspaceId': workspace.id}) %}
 {% block section_content %}
     {% set filterFormAction = path('claro_workspace_logs_by_user_show', {'workspaceId': workspace.id}) %}
     {% set pagination %}
@@ -10,7 +10,7 @@
                 {
                     'proximity' : 1,
                     'routeName': 'claro_workspace_logs_by_user_show_paginated',
-                    'routeParams': {'workspaceId': workspace.id, 'filter': filter}
+                    'routeParams': routeParams
                 }
             )
         }}

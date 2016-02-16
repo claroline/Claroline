@@ -12,16 +12,20 @@
     }
 </style>
 {% if not app.request.isXmlHttpRequest() %}
-<link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
 
-{# TODO: the following scripts should be packed and minified #}
-<script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/jquery.jqplot.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.highlighter.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.cursor.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.canvasTextRenderer.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.dateAxisRenderer.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.canvasAxisTickRenderer.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.canvasAxisLabelRenderer.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/jquery.jqplot.js') }}"></script>
+    {% javascripts debug=false filter='jsmin' output='js/corebundle/jqplot.count-by-day.min.js'
+    'bundles/clarolinecore/js/jqplot/jqplot.colors.js'
+    'bundles/frontend/jqPlot/src/plugins/jqplot.highlighter.js'
+    'bundles/frontend/jqPlot/src/plugins/jqplot.cursor.js'
+    'bundles/frontend/jqPlot/src/plugins/jqplot.canvasTextRenderer.js'
+    'bundles/frontend/jqPlot/src/plugins/jqplot.dateAxisRenderer.js'
+    'bundles/frontend/jqPlot/src/plugins/jqplot.canvasAxisTickRenderer.js'
+    'bundles/frontend/jqPlot/src/plugins/jqplot.canvasAxisLabelRenderer.js'
+    %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endif %}
 {% if actionName is not defined or actionName is empty or '-' not in actionName %}
 <legend>{{ 'actions_per_day'|trans({}, 'platform') }}</legend>
