@@ -144,8 +144,6 @@
                         }
                     }
                 }
-                console.log(this.connections);
-                console.log(this.question.firstSet);
                 return answers;
             };
             
@@ -161,6 +159,14 @@
                     }
                 }
                 return answers;
+            };
+            
+            this.getCurrentItemFeedBack = function (label) {
+                for (var i=0; i<this.solutions.length; i++) {
+                    if (this.solutions[i].secondId === label.id) {
+                        return this.solutions[i].feedback;
+                    }
+                }
             };
 
             /**
