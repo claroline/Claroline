@@ -54,69 +54,10 @@ export default class UserListController {
             }
         });
 
-        /**********************************************************/
-        /* THE FOLLOWING CALLBACKS NEED THE CURRENT OBJECT "THIS" */
-        /**********************************************************/
-
-        this._addToGroupCallback = function(data) {
-            this.users = this.users.concat(data);
-
-            for (var i = 0; i < data.length; i++) {
-                this.alerts.push({
-                    type: 'success',
-                    msg: this.translate('user_added', {'username': data[i].username})
-                });
-            }
-
-            this.dataTableOptions.paging.count += data.length;
-        }.bind(this)
-
-
-        this._removeFromGroupCallback = function(data) {
-            this.ClarolineAPIService.removeElements(this.selected, this.users);
-            this.dataTableOptions.paging.count -= this.selected.length;
-
-            for (var i = 0; i < this.selected.length; i++) {
-                this.alerts.push({
-                    type: 'success',
-                    msg: this.translate('user_removed', {'username': this.selected[i].username})
-                });
-            }
-
-            this.selected.splice(0, this.selected.length);
-        }.bind(this)
-
-        this._pickerCallback = function(data) {
-            alert
-            var userIds = [];
-            var users = '';
-
-            for (var i = 0; i < data.length; i++) {
-                userIds.push(data[i]);
-                users +=  data[i].username
-                if (i < data.length - 1) users += ', ';
-            }
-
-            var url = Routing.generate('api_add_users_to_group', {'group': this.groupId}) + '?' + this.ClarolineAPIService.generateQueryString(userIds, 'userIds');
-            console.log(url);
-
-            this.ClarolineAPIService.confirm(
-                {url: url, method: 'GET'},
-                this._addToGroupCallback,
-                this.translate('add_users_to_group'),
-                this.translate('add_users_to_group_confirm', {group: this.group.name, user_list: users})
-            );
-
-        }.bind(this)
-
-        this._onSearch = function(searches) {
-            searches = this.mergeSearches(searches, this.baseSearch);
-            this.savedSearch = searches;
-            ClarolineSearchService.find('api_get_search_users', searches, this.dataTableOptions.paging.offset, this.dataTableOptions.paging.size).then(d => {
-                this.users = d.data.users;
-                this.dataTableOptions.paging.count = d.data.total;
-            })
-        }
+        this._addToGroupCallback = this._addToGroupCallback.bind(this) 
+        this._removeFromGroupCallback = this._removeFromGroupCallback.bind(this)
+        this._pickerCallback = this._pickerCallback.bind(this)
+        this._onSearch = this._onSearch.bind(this)
     }
 
     translate(key, data = {}) {
@@ -187,6 +128,64 @@ export default class UserListController {
 
     closeAlert(index) {
         this.alerts.splice(index, 1);
+    }
+
+    _addToGroupCallback(data) {
+        this.users = this.users.concat(data);
+
+        for (var i = 0; i < data.length; i++) {
+            this.alerts.push({
+                type: 'success',
+                msg: this.translate('user_added', {'username': data[i].username})
+            });
+        }
+
+        this.dataTableOptions.paging.count += data.length;
+    }
+
+    _removeFromGroupCallback(data) {
+        this.ClarolineAPIService.removeElements(this.selected, this.users);
+        this.dataTableOptions.paging.count -= this.selected.length;
+
+        for (var i = 0; i < this.selected.length; i++) {
+            this.alerts.push({
+                type: 'success',
+                msg: this.translate('user_removed', {'username': this.selected[i].username})
+            });
+        }
+
+        this.selected.splice(0, this.selected.length);
+    }
+
+    _pickerCallback(data) {
+        alert
+        var userIds = [];
+        var users = '';
+
+        for (var i = 0; i < data.length; i++) {
+            userIds.push(data[i]);
+            users +=  data[i].username
+            if (i < data.length - 1) users += ', ';
+        }
+
+        var url = Routing.generate('api_add_users_to_group', {'group': this.groupId}) + '?' + this.ClarolineAPIService.generateQueryString(userIds, 'userIds');
+        console.log(url);
+
+        this.ClarolineAPIService.confirm(
+            {url: url, method: 'GET'},
+            this._addToGroupCallback,
+            this.translate('add_users_to_group'),
+            this.translate('add_users_to_group_confirm', {group: this.group.name, user_list: users})
+        );
+    }
+
+    _onSearch(searches) {
+        searches = this.mergeSearches(searches, this.baseSearch);
+        this.savedSearch = searches;
+        ClarolineSearchService.find('api_get_search_users', searches, this.dataTableOptions.paging.offset, this.dataTableOptions.paging.size).then(d => {
+            this.users = d.data.users;
+            this.dataTableOptions.paging.count = d.data.total;
+        })
     }
 }
 

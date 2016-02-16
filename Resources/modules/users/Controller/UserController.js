@@ -66,47 +66,9 @@ export default class UserController {
         $http.get(Routing.generate('api_get_user_searchable_fields'))
             .then(d => this.fields = d.data)
 
-
-        /**********************************************************/
-        /* THE FOLLOWING CALLBACKS NEED THE CURRENT OBJECT "THIS" */
-        /**********************************************************/
-
-        //Note: it may be possible to do something else but no idea how
-
-        //callbacks want to use the "this" from our current object. Not from the ModalController
-        this._initPwdCallback = function(data) {
-            for (let i = 0; i < this.selected.length; i++) {
-                this.alerts.push({
-                    type: 'success',
-                    msg: this.translate('password_initialized', { user: this.selected[i].username })
-                })
-            }
-            this.selected.splice(0, this.selected.length);
-        }.bind(this)
-
-        //same as above. That one we want to us this.ClarolineAPI (it's either that or inject it dynamically into the ModalController)
-        this._deleteCallback = function(data) {
-            for (let i = 0; i < this.selected.length; i++) {
-                this.alerts.push({
-                    type: 'success',
-                    msg: this.translate('user_removed', { user: data[i].username })
-                })
-            }
-
-            this.dataTableOptions.paging.count -= this.selected.length;
-            this.ClarolineAPI.removeElements(this.selected, this.users);
-            this.selected.splice(0, this.selected.length);
-        }.bind(this)
-
-        this._onSearch = function(searches) {
-            this.savedSearch = searches;
-            this.ClarolineSearchService.find('api_get_search_users', searches, 0, this.dataTableOptions.paging.size)
-                .then(d => {
-                    this.users = d.data.users;
-                    this.dataTableOptions.paging.count = d.data.total
-                }
-            )
-        }.bind(this)
+        this._onSearch = this._onSearch.bind(this)
+        this._initPwdCallback = this._initPwdCallback.bind(this)
+        this._deleteCallback = this._deleteCallback.bind(this)
     }
 
     translate(key, data = {}) {
@@ -175,5 +137,39 @@ export default class UserController {
 
     closeAlert(index) {
         this.alerts.splice(index, 1);
+    }
+
+    _onSearch(searches) {
+        this.savedSearch = searches;
+        this.ClarolineSearchService.find('api_get_search_users', searches, 0, this.dataTableOptions.paging.size)
+            .then(d => {
+                this.users = d.data.users;
+                this.dataTableOptions.paging.count = d.data.total
+            }
+        )
+    }
+
+
+    _initPwdCallback(data) {
+        for (let i = 0; i < this.selected.length; i++) {
+            this.alerts.push({
+                type: 'success',
+                msg: this.translate('password_initialized', { user: this.selected[i].username })
+            })
+        }
+        this.selected.splice(0, this.selected.length);
+    }
+
+    _deleteCallback(data) {
+        for (let i = 0; i < this.selected.length; i++) {
+            this.alerts.push({
+                type: 'success',
+                msg: this.translate('user_removed', { user: data[i].username })
+            })
+        }
+
+        this.dataTableOptions.paging.count -= this.selected.length;
+        this.ClarolineAPI.removeElements(this.selected, this.users);
+        this.selected.splice(0, this.selected.length);
     }
 }
