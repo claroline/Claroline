@@ -123,8 +123,8 @@
                             </div>
                             <div class="panel-body">
                                 <ul>
-                                    <li data-ng-repeat="item in correctionMatchCtrl.getStudentAnswers(label)">
-                                        <div data-ng-bind-html="item.data | unsafe"></div>
+                                    <li data-ng-repeat="item in matchQuestionCtrl.getStudentAnswers(label)">
+                                        <div data-ng-bind-html="item | unsafe"></div>
                                          <!--
                                          KEEP THIS FOR THE TIME WHEN WE WOULD BE ABLE TO KNOW PROPOSAL / LABEL TYPE (ie HTML vs Text)
                                         <span data-ng-class="correctionMatchCtrl.checkProposalValidity(item.id) ? '':'wrong-label'">{{item.data}}</span>
