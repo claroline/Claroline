@@ -15,8 +15,7 @@
 			data-document_dropuser_id="{{ document.drop.user.id }}" 
 			data-document_adminInnova="{{ adminInnova }}" 
 			data-dropzone_id="{{ dropzone.id }}" data-document_id="{{ document.id }}" id="document_id_{{ document.id }}" name="document_id_{{ document.id }}" class="document_validate" >
-			<span data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Comment transmission'|trans({},'innova_collecticiel') }}" class="fa fa-arrow-right">
-			</span>
+				<i data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Comment transmission'|trans({},'innova_collecticiel') }}" class="fa fa-arrow-right"></i>
 			</a>
 		{% else %}
 			<a href="#validate-modal" data-toggle="modal"
@@ -25,8 +24,7 @@
 			data-document_dropuser_id="{{ document.drop.user.id }}" 
 			data-document_adminInnova="{{ adminInnova }}" 
 			data-dropzone_id="{{ dropzone.id }}" data-document_id="{{ document.id }}" id="document_id_{{ document.id }}" name="document_id_{{ document.id }}" class="document_validate" >
-			<span data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Evaluation transmission'|trans({},'innova_collecticiel') }}" class="fa fa-arrow-right">
-			</span>
+				<i data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Evaluation transmission'|trans({},'innova_collecticiel') }}" class="fa fa-arrow-right"></i>
 			</a>
 		{% endif %}
 	{% endif %}

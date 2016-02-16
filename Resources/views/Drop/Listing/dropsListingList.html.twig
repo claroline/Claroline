@@ -17,7 +17,7 @@
         </td>
     {% endif %}
 
-    <td>{{ drop.user.lastName|upper }}</td>
+    <td>{{ document.validate }} {{ drop.user.lastName|upper }}</td>
 
     <td>{{ drop.user.firstName|capitalize }}</td>
 
@@ -47,7 +47,7 @@
     <td class="centered centering-columns">
         {# Afficher ici la valeur "Devoirs à corriger" modifiée en "Etat" #}
         <div class="btn-group">
-        {% include 'InnovaCollecticielBundle:Document:documentsNbTextToRead.html.twig' %}
+            {% include 'InnovaCollecticielBundle:Document:documentsNbTextToRead.html.twig' %}
         </div>
     </td>
     {% endif %}

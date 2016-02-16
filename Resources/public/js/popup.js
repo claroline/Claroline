@@ -404,9 +404,31 @@ $(document).ready(function () {
     })
 
     // InnovaERV : ajout du bouton "Retour" dans la liste des commentaires.
+    // InnovaERV : ajout de la redirection via Ajax.
     $('.backLink').on('click', function(event) {
         event.preventDefault();
-        history.back(-1);
+
+        var dropzoneId = $(this).attr("data-resource_id");
+
+        $.ajax({
+            url: Routing.generate('innova_collecticiel_back_link',
+                { 
+                dropzoneId: dropzoneId,
+                }),
+            method: "GET",
+            data:
+            {
+            },
+            complete : function(data) {
+                var data_link = $.parseJSON(data.responseText)
+
+                if (data_link !== 'false') {
+                    document.location.href=data_link.link;
+                }
+
+            }
+        });
+
     });
 
 });

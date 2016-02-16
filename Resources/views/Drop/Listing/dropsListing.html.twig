@@ -1,9 +1,9 @@
-<div class="row">
 {# S'il faut mettre le dropdown tout à droite alors il ajouter ajouter :
 text-right
 au div situé ci-dessous
 #}
-    <div class="col-sm-offset-10 col-sm-2 text-center">
+<div class="row">
+    <div class="col-sm-offset-10 col-sm-2 text-center  centering-actions">
         <div class="btn-group">
             <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
                 {{ 'Action'|trans({}, 'innova_collecticiel') }} 
@@ -38,14 +38,18 @@ au div situé ci-dessous
 {# Parcours du tableau, des données et affichage du tableau. InnovaERV #}
 {# Voir https://github.com/InnovaLangues/CollecticielBundle/issues/246 #}
 {% set alertNbDocumentWithoutComment = 0 %}
+
 {% for drop in pager.currentPageResults %}
     {% for document in drop.documents %}
-        {% if document.comments|length == 0 %}
-            {% set alertNbDocumentWithoutComment = alertNbDocumentWithoutComment +1 %}
-        {% endif %}
+        {% for key,value in haveCommentOrNotArray %}
+            {% if document.id == key %}
+                {% if value == 0  %}
+                    {% set alertNbDocumentWithoutComment = alertNbDocumentWithoutComment + 1 %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
     {% endfor %}
 {% endfor %}
-
 
 <form class="form-horizontal" method="GET" 
 action="{{ path('innova_collecticiel_return_receipt')}}">
@@ -154,8 +158,10 @@ action="{{ path('innova_collecticiel_return_receipt')}}">
         {# Parcours du tableau, des données et affichage du tableau. InnovaERV #}
         {% for drop in pager.currentPageResults %}
             {% for document in drop.documents %}
-                {# Séparation de l'affichage de la vue. InnovaERV #}
-                {% include 'InnovaCollecticielBundle:Drop:Listing/dropsListingList.html.twig' %}
+                {% if (document.validate == 1) %}
+                    {# Séparation de l'affichage de la vue. InnovaERV #}
+                    {% include 'InnovaCollecticielBundle:Drop:Listing/dropsListingList.html.twig' %}
+                {% endif %}
             {% endfor %}
         {% endfor %}
     </tbody>

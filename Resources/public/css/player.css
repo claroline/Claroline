@@ -130,18 +130,28 @@ input.form-control {
     margin-left: 5px;
 }
 .centering-columnsComment-study span {
-   position: absolute;
-   margin-left: -18px;
-   margin-top: -5px;
- }
+  position: absolute;
+  margin-left: -18px;
+  margin-top: -5px;
+}
+.centering-columnsComment-study a {
+  position: absolute;
+  margin-left: -18px;
+  margin-top: -5px;
+}
 
 .centering-columns-study a {
-    position: absolute;
-    left: -17px;
-    top: -8px;
+  position: absolute;
+  left: -17px;
+  top: -8px;
 }
 .centering-columnsAR-study span {
-    position: absolute;
-    margin-left: -20px;
-    margin-top: -3px;
+  position: absolute;
+  margin-left: -20px;
+  margin-top: -3px;
 }
+
+.centering-actions {
+  position: absolute;
+  margin-top: -45px;
+ }

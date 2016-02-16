@@ -1,5 +1,16 @@
 {# Variable qui va compter le nombre de commentaires #}
-{% if document.comments|length == 0 %}
+{% set nbComment = 0 %}
+
+{# stackoverflow.com/questions/10299202/twig-for-loop-and-array-with-key #}
+{# Parcours du tableau pour afficher le nombre de commentaires de l'utilisateur en train d'être traité #}
+{% for key,value in haveCommentOrNotArray %}
+    {% if document.id == key %}
+        {% set nbComment = value %}
+    {% endif %}
+{% endfor %}
+
+{# Variable qui va compter le nombre de commentaires #}
+{% if nbComment == 0 %}
         <span class="fa fa-minus" title="{{ 'Document not commented'|trans({}, 'innova_collecticiel') }}"> </span>
 {% else %}
         <span class="fa fa-check" title="{{ 'Document commented'|trans({}, 'innova_collecticiel') }}"></span>
