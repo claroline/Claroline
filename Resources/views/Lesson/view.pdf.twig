@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>{{ _resource.resourceNode.name ~ '.pdf' }}</title>
-    {% stylesheets debug=false filter='lessphp' output='bundles/icaplesson/css/pdf.css'
+    {% stylesheets debug=false filter='less' output='bundles/icaplesson/css/pdf.css'
     "@IcapLessonBundle/Resources/views/less/pdf.less"
     %}
     <link rel="stylesheet" type="text/css" href="{{ app.request.getSchemeAndHttpHost() ~ asset_url }}"/>
