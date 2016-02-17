@@ -9,7 +9,7 @@
     {% if collecticielOpenOrNot %}
 		{# flèche bleue : arrow right #}
 		{% if dropzone.evaluation != 1  %}
-			<a href="#validate-modal" data-toggle="modal" 
+			<a data-target="#validate-modal" data-toggle="modal" 
 			data-document_comment_length="{{ document.comments|length }}" 
 			data-document_sender_id="{{ document.sender.id }}" 
 			data-document_dropuser_id="{{ document.drop.user.id }}" 
@@ -18,7 +18,7 @@
 				<i data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Comment transmission'|trans({},'innova_collecticiel') }}" class="fa fa-arrow-right"></i>
 			</a>
 		{% else %}
-			<a href="#validate-modal" data-toggle="modal"
+			<a data-target="#validate-modal" data-toggle="modal"
 			data-document_comment_length="{{ document.comments|length }}" 
 			data-document_sender_id="{{ document.sender.id }}" 
 			data-document_dropuser_id="{{ document.drop.user.id }}" 

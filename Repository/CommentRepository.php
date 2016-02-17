@@ -76,10 +76,8 @@ class CommentRepository extends EntityRepository {
         /* requête avec CreateQuery : */
         $qb = $this->createQueryBuilder('comment')
             ->select('comment')
-            ->leftJoin('comment.comments', 'comment_read')
             ->andWhere('comment.document = :document')
-//            ->andWhere('comment.user != :user')
-            ->andWhere('comment_read.user != :user')
+            ->andWhere('comment.user = :user')
             ->setParameter('document', $documentId)
             ->setParameter('user', $user);
             ;

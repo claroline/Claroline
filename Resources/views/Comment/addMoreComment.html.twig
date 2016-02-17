@@ -1,7 +1,7 @@
 {% block dropzone_add_comment %}
 
     <h3>{{ 'Add comment'|trans({}, 'innova_collecticiel') }}</h3>
-    <div class="container">
+    <div class="">
 
         <form class="form-horizontal" role="form" method="POST" 
         action="{{ path('innova_collecticiel_add_comment_for_docs', {'userId': user.id, 'dropzoneId': dropzone.id}) }}">
