@@ -17,6 +17,8 @@
             this.canSeeFeedback = false;
             this.feedbackIsVisible = false;
             this.usedHints = [];
+            this.orphanAnswers = [];
+            this.orphanAnswersAreChecked = false;
 
             // when in formative mode
             this.solutions = {};
@@ -36,6 +38,28 @@
                         this.getHintData(this.currentQuestionPaperData.hints[i]);
                     }
                 }
+            };
+            
+            /**
+             * find all orphan answers and set them in an array
+             */
+            this.setOrphanAnswers = function () {
+                var hasSolution;
+                for (var i=0; i<this.question.secondSet.length; i++) {
+                    hasSolution = false;
+                    console.log(this.solutions);
+                    for (var j=0; j<this.solutions.length; j++) {
+                        console.log(this.question.secondSet[i].id);
+                        console.log(this.solutions[j].secondId);
+                        if (this.question.secondSet[i].id === this.solutions[j].secondId) {
+                            hasSolution = true;
+                        }
+                    }
+                    if (!hasSolution) {
+                        this.orphanAnswers.push(this.question.secondSet[i]);
+                    }
+                }
+                console.log(this.orphanAnswers);
             };
 
             /**
@@ -114,10 +138,27 @@
                     this.feedbackIsVisible = true;
                     this.solutions = result.solutions;
                     this.questionFeedback = result.feedback;
+                    console.log(this.solutions);
                 }.bind(this));
             };
             
             this.checkAnswerValidity = function (label) {
+                if (!this.orphanAnswersAreChecked) {
+                    var hasSolution;
+                    for (var i=0; i<this.question.secondSet.length; i++) {
+                        hasSolution = false;
+                        for (var j=0; j<this.solutions.length; j++) {
+                            if (this.question.secondSet[i].id === this.solutions[j].secondId) {
+                                hasSolution = true;
+                            }
+                        }
+                        if (!hasSolution) {
+                            this.orphanAnswers.push(this.question.secondSet[i]);
+                        }
+                    }
+                    this.orphanAnswersAreChecked = true;
+                }
+                
                 var valid = false;
                 for (var i=0; i<this.connections.length; i++) {
                     if (this.connections[i].target === label.id) {
@@ -130,7 +171,18 @@
                         }
                     }
                 }
-                return valid;
+                var valid2 = false;
+                for (var i=0; i<this.orphanAnswers.length; i++) {
+                    if (this.orphanAnswers[i].id === label.id) {
+                        valid2 = true;
+                        for (var j=0; j<this.connections.length; j++) {
+                            if (this.orphanAnswers[i].id === this.connections[j].target) {
+                                valid2 = false;
+                            }
+                        }
+                    }
+                }
+                return valid || valid2;
             };
             
             this.getStudentAnswers = function (label) {
