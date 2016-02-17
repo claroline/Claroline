@@ -4,7 +4,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets debug=false filter='lessphp'  output='css/icapdropzone/style.css'
+    {% stylesheets debug=false filter='less'  output='css/icapdropzone/style.css'
       "@IcapDropzoneBundle/Resources/views/less/style.less"
     %}
         <link rel="stylesheet" href="{{ asset_url }}" screen="media" />

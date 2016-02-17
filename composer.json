@@ -19,9 +19,8 @@
         "claroline/agenda-bundle": "~6.0"
     },
     "autoload": {
-        "psr-0": { "Icap\\DropzoneBundle": "" }
+        "psr-4": { "Icap\\DropzoneBundle\\": "" }
     },
-    "target-dir": "Icap/DropzoneBundle",
     "require-dev": {
         "phpunit/phpunit": "4.1.*"
     }
