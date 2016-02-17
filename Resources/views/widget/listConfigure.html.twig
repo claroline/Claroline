@@ -3,7 +3,7 @@
 {% form_theme form 'IcapBlogBundle:widget:list_form_theme.html.twig' %}
 
 {% block stylesheets %}
-    {% stylesheets debug=false filter="lessphp, cssmin"  output="css/icapblog/widget_list.css"
+    {% stylesheets debug=false filter="less, cssmin"  output="css/icapblog/widget_list.css"
       "@IcapBlogBundle/Resources/views/less/widget_list.less"
     %}
         <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
