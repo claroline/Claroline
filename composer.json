@@ -10,7 +10,6 @@
         "hwi/oauth-bundle": "0.4.*@dev"
     },
     "autoload": {
-        "psr-0": { "Icap\\OAuth": "" }
-    },
-    "target-dir": "Icap/OAuthBundle"
+        "psr-4": { "Icap\\OAuthBundle\\": "" }
+    }
 }
