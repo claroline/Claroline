@@ -39,28 +39,6 @@
                     }
                 }
             };
-            
-            /**
-             * find all orphan answers and set them in an array
-             */
-            this.setOrphanAnswers = function () {
-                var hasSolution;
-                for (var i=0; i<this.question.secondSet.length; i++) {
-                    hasSolution = false;
-                    console.log(this.solutions);
-                    for (var j=0; j<this.solutions.length; j++) {
-                        console.log(this.question.secondSet[i].id);
-                        console.log(this.solutions[j].secondId);
-                        if (this.question.secondSet[i].id === this.solutions[j].secondId) {
-                            hasSolution = true;
-                        }
-                    }
-                    if (!hasSolution) {
-                        this.orphanAnswers.push(this.question.secondSet[i]);
-                    }
-                }
-                console.log(this.orphanAnswers);
-            };
 
             /**
              * check if a Hint has already been used (in paper)
@@ -138,11 +116,20 @@
                     this.feedbackIsVisible = true;
                     this.solutions = result.solutions;
                     this.questionFeedback = result.feedback;
-                    console.log(this.solutions);
+                    console.log(this.question);
+                    console.log(this.connections);
+                    console.log(this.dropped);
                 }.bind(this));
             };
             
             this.checkAnswerValidity = function (label) {
+                var answers;
+                if (this.question.toBind) {
+                    answers = this.connections;
+                }
+                else {
+                    answers = this.dropped;
+                }
                 if (!this.orphanAnswersAreChecked) {
                     var hasSolution;
                     for (var i=0; i<this.question.secondSet.length; i++) {
@@ -160,11 +147,11 @@
                 }
                 
                 var valid = false;
-                for (var i=0; i<this.connections.length; i++) {
-                    if (this.connections[i].target === label.id) {
+                for (var i=0; i<answers.length; i++) {
+                    if (answers[i].target === label.id) {
                         for (var j=0; j<this.solutions.length; j++) {
                             if (this.solutions[j].secondId === label.id) {
-                                if (this.solutions[j].firstId === this.connections[i].source) {
+                                if (this.solutions[j].firstId === answers[i].source) {
                                     valid = true;
                                 }
                             }
@@ -175,8 +162,8 @@
                 for (var i=0; i<this.orphanAnswers.length; i++) {
                     if (this.orphanAnswers[i].id === label.id) {
                         valid2 = true;
-                        for (var j=0; j<this.connections.length; j++) {
-                            if (this.orphanAnswers[i].id === this.connections[j].target) {
+                        for (var j=0; j<answers.length; j++) {
+                            if (this.orphanAnswers[i].id === answers[j].target) {
                                 valid2 = false;
                             }
                         }
@@ -229,11 +216,18 @@
             };
             
             this.getStudentAnswers = function (label) {
+                var answers_to_check;
+                if (this.question.toBind) {
+                    answers_to_check = this.connections;
+                }
+                else {
+                    answers_to_check = this.dropped;
+                }
                 var answers = [];
-                for (var i=0; i<this.connections.length; i++) {
-                    if (this.connections[i].target === label.id) {
+                for (var i=0; i<answers_to_check.length; i++) {
+                    if (answers_to_check[i].target === label.id) {
                         for (var j=0; j<this.question.firstSet.length; j++) {
-                            if (this.question.firstSet[j].id === this.connections[i].source) {
+                            if (this.question.firstSet[j].id === answers_to_check[i].source) {
                                 answers.push(this.question.firstSet[j].data);
                             }
                         }
