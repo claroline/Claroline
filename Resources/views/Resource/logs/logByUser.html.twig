@@ -1,5 +1,6 @@
 {% extends 'ClarolineCoreBundle:Resource/logs:layout.html.twig' %}
 
+{% set routeParams = filter|merge({'node': _resource.resourceNode.id}) %}
 {% block section_content %}
     {% set filterFormAction = path('claro_resource_logs_by_user', {'node': _resource.resourceNode.id}) %}
     {% set pagination %}
@@ -10,7 +11,7 @@
         {
             'proximity' : 1,
             'routeName': 'claro_resource_logs_by_user_paginated',
-            'routeParams': {'node': _resource.resourceNode.id, 'filter': filter}
+            'routeParams': routeParams
         }
         )
         }}
