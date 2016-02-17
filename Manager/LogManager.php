@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
+use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Adapter\DoctrineCollectionAdapter;
@@ -37,6 +38,9 @@ class LogManager
 
     private $container;
 
+    /**
+     * @var EntityManager
+     */
     private $em;
 
     /** @var \CLaroline\CoreBundle\Repository\Log\LogRepository $logRepository */
@@ -55,6 +59,11 @@ class LogManager
         $this->container = $container;
         $this->em = $entityManager;
         $this->logRepository = $entityManager->getRepository('ClarolineCoreBundle:Log\Log');
+    }
+
+    public function detach($obj)
+    {
+        $this->em->detach($obj);
     }
 
     public function getDesktopWidgetList(WidgetInstance $instance)
@@ -364,6 +373,60 @@ class LogManager
         );
     }
 
+    public function countByUserListForCSV(
+        $actionsRestriction,
+        $workspace = null,
+        $resource = null
+    ) {
+        $workspaceIds = ($workspace == null)?null:array($workspace->getId());
+        $resourceNodeIds = ($resource == null)?null:array($resource->getResourceNode()->getId());
+        if ($workspaceIds == null && $resourceNodeIds == null) {
+            $workspaceIds = $this->getAdminOrCollaboratorWorkspaceIds();
+        }
+        if ($workspaceIds !== null) {
+            $logFilterFormType = $this->container->get('claroline.form.workspaceLogFilter');
+            $resourceClass = null;
+        } else {
+            $logFilterFormType = $this->container->get('claroline.form.resourceLogFilter');
+            $resourceClass = get_class($resource);
+        }
+        $dateRangeToTextTransformer = new DateRangeToTextTransformer($this->container->get('translator'));
+        $data = $this->processFormData($actionsRestriction, $logFilterFormType, $workspaceIds, $resourceClass, $dateRangeToTextTransformer);
+
+        $action = $data['action'];
+
+        $orderBy = 'name';
+        if (!empty($data['orderBy'])) {
+            $orderBy = $data['orderBy'];
+        }
+        $order = 'ASC';
+        if (!empty($data['order'])) {
+            $order = $data['order'];
+        }
+
+        //Find if action refers to an resource type
+        $actionData = $this->getResourceTypeFromAction($action);
+        $actionString = $actionData['action'];
+        $resourceType = $actionData['resourceType'];
+
+        $topUsers = $this->logRepository->topUsersByActionQuery(
+            $actionString,
+            $data['range'],
+            $data['user'],
+            $actionsRestriction,
+            $workspaceIds,
+            -1,
+            $resourceType,
+            $resourceNodeIds,
+            false,
+            null,
+            $orderBy,
+            $order
+        )->iterate();
+
+        return $topUsers;
+    }
+
     public function countByUserWorkspaceList($workspace, $page)
     {
         if ($workspace == null) {
@@ -433,7 +496,7 @@ class LogManager
         $filterForm = $this->container->get('form.factory')->create($logFilterFormType, $data);
 
         $data['range'] = $dateRangeToTextTransformer->transform($range);
-        $filter = urlencode(json_encode($data));
+        //$filter = urlencode(json_encode($data));
 
         //Find if action refers to an resource type
         $actionData = $this->getResourceTypeFromAction($data['action']);
@@ -509,7 +572,7 @@ class LogManager
 
         return array(
             'pager'         => $pager,
-            'filter'        => $filter,
+            'filter'        => $data,
             'filterForm'    => $filterForm->createView(),
             'actionName'    => $actionString,
             'orderBy'       => $orderBy,
@@ -592,10 +655,6 @@ class LogManager
         $action = null;
         $range = null;
         $userSearch = null;
-        if (!empty($data['orderBy'])) {
-            $orderBy = $data['orderBy'];
-            $order = $data['order'];
-        }
 
         if (array_key_exists('filter', $data)) {
             $decodeFilter = json_decode(urldecode($data['filter']));
@@ -603,6 +662,10 @@ class LogManager
                 $action = $decodeFilter->action;
                 $range = $dateRangeToTextTransformer->reverseTransform($decodeFilter->range);
                 $userSearch = $decodeFilter->user;
+                if (!empty($decodeFilter['orderBy'])) {
+                    $orderBy = $decodeFilter['orderBy'];
+                    $order = $decodeFilter['order'];
+                }
             }
         } else {
             $dataClass['resourceClass'] = $resourceClass ? $resourceClass: null;
@@ -612,6 +675,10 @@ class LogManager
             $action = isset($formData['action']) ? $formData['action']: null;
             $range = isset($formData['range']) ?$formData['range']:null;
             $userSearch = isset($formData['user'])?$formData['user']:null;
+            if (!empty($data['orderBy'])) {
+                $orderBy = $data['orderBy'];
+                $order = $data['order'];
+            }
         }
 
         if ($range == null) {

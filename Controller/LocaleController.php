@@ -67,9 +67,8 @@ class LocaleController
     {
         if (($token = $this->tokenStorage->getToken()) && $token->getUser() !== 'anon.') {
             $this->localeManager->setUserLocale($locale);
-        } else {
-            $request->getSession()->set('_locale', $locale);
         }
+        $request->getSession()->set('_locale', $locale);
 
         return new Response('Locale changed to ' . $locale, 200);
     }

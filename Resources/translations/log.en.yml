@@ -125,7 +125,7 @@ log_workspace-delete_filter: 'Workspace deletion'
 log_workspace-delete_sentence: 'has deleted workspace %workspace%'
 log_workspace-delete_shortname: Delete
 log_workspace-delete_title: 'Workspace deletion'
-log_workspace-enter_filter: log_workspace-enter_filter
+log_workspace-enter_filter: 'Workspace entry'
 log_workspace-enter_sentence: 'accessed workspace %workspace%'
 log_workspace-enter_shortname: Open
 log_workspace-enter_title: 'Access a workspace'
@@ -182,3 +182,4 @@ user_tracking: Tracking by user
 user_list: User list
 actions_per_day_chart: Actions per day chart
 click_to_choose: Click to display action list
+download_csv_list: Download list into CSV file

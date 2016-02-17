@@ -238,7 +238,7 @@ class LogRepository extends EntityRepository
             ->groupBy('ws')
             ->orderBy('actions', 'DESC');
 
-        if ($max > 1) {
+        if ($max > 0) {
             $queryBuilder->setMaxResults($max);
         }
 
@@ -261,7 +261,7 @@ class LogRepository extends EntityRepository
             ->orderBy('actions', 'DESC')
             ->setParameter('fileType', 'file');
 
-        if ($max > 1) {
+        if ($max > 0) {
             $queryBuilder->setMaxResults($max);
         }
 
@@ -281,7 +281,7 @@ class LogRepository extends EntityRepository
             ->groupBy('node')
             ->orderBy('actions', 'DESC');
 
-        if ($max > 1) {
+        if ($max > 0) {
             $queryBuilder->setMaxResults($max);
         }
 
@@ -319,9 +319,13 @@ class LogRepository extends EntityRepository
             ->select(
                 'doer.id, '
                 . "CONCAT(CONCAT(doer.firstName, ' '), doer.lastName) AS name, "
+                . "CONCAT(CONCAT(doer.lastName, ' '), doer.firstName) AS sortingName, "
                 . 'doer.username, count(log.id) AS actions'
             )
             ->groupBy('doer');
+        if ($orderBy == 'name') {
+            $orderBy = 'sortingName';
+        }
         if ($orderBy == null) {
             $orderBy = 'actions';
         }
@@ -347,7 +351,7 @@ class LogRepository extends EntityRepository
             );
         }
 
-        if ($maxResult > 1) {
+        if ($maxResult > 0) {
             $queryBuilder->setMaxResults($maxResult);
             if ($page !== null) {
                 $page = max(0, $page-1);

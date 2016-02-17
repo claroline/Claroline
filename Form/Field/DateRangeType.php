@@ -16,6 +16,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Claroline\CoreBundle\Form\DataTransformer\DateRangeToTextTransformer;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("claroline.form.daterange")
@@ -23,14 +24,18 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class DateRangeType extends AbstractType
 {
+    /**
+     * @var TranslatorInterface
+     */
     protected $translator;
 
     /**
      * @DI\InjectParams({
      *     "translator" = @DI\Inject("translator")
      * })
+     * @param TranslatorInterface $translator
      */
-    public function __construct($translator)
+    public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
     }

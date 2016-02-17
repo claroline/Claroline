@@ -23,15 +23,18 @@
         {% if 0 < resourceCount|length %}
             <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
 
-            {# TODO: the following scripts should be packed and minified #}
             <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/jquery.jqplot.js') }}"></script>
-            <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.highlighter.js') }}"></script>
-            <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.cursor.js') }}"></script>
-            <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.canvasTextRenderer.js') }}"></script>
-            <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.dateAxisRenderer.js') }}"></script>
-            <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.canvasAxisTickRenderer.js') }}"></script>
-            <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.canvasAxisLabelRenderer.js') }}"></script>
-
+            {% javascripts debug=false filter='jsmin' output='js/corebundle/jqplot.resources.min.js'
+            'bundles/clarolinecore/js/jqplot/jqplot.colors.js'
+            'bundles/frontend/jqPlot/src/plugins/jqplot.highlighter.js'
+            'bundles/frontend/jqPlot/src/plugins/jqplot.cursor.js'
+            'bundles/frontend/jqPlot/src/plugins/jqplot.canvasTextRenderer.js'
+            'bundles/frontend/jqPlot/src/plugins/jqplot.dateAxisRenderer.js'
+            'bundles/frontend/jqPlot/src/plugins/jqplot.canvasAxisTickRenderer.js'
+            'bundles/frontend/jqPlot/src/plugins/jqplot.canvasAxisLabelRenderer.js'
+            %}
+            <script src="{{ asset_url }}"></script>
+            {% endjavascripts %}
             <div class="row">
                 <div class="col-md-6">
                     {% include 'ClarolineCoreBundle:Log:resource_by_type_chart.html.twig' with {'filesImported' : true, 'resourceCount' : resourceCount, 'chartHeight' : 400, 'numberRows' : 4} %}
