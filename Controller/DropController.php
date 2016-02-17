@@ -622,10 +622,10 @@ class DropController extends DropzoneBaseController
 //                    var_dump("User : " . $this->get('security.token_storage')->getToken()->getUser()->getId());
 //                    var_dump("Document : " . $documentId);
 //                    var_dump("Compteur : créé élève lu admin " . $commentReadForATeacherOrNot .
-    //                "+ élève " . $commentReadForATeacherOrNot2 .
+//                    "+ élève " . $commentReadForATeacherOrNot2 .
 //                    "+ créé admin lu admin " . $commentReadForATeacherOrNot3)
                     ;
-                    $haveCommentOrNotArray[$documentId]=$commentReadForATeacherOrNot+$commentReadForATeacherOrNot3;
+                    $haveCommentOrNotArray[$documentId]=$commentReadForATeacherOrNot+$commentReadForATeacherOrNot2+$commentReadForATeacherOrNot3;
     //                var_dump("Indice : " . $indice);
 
                 }
