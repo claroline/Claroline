@@ -15,7 +15,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets debug=false filter="lessphp, cssmin" output="css/icapbadge/badge.css"
+    {% stylesheets debug=false filter="less, cssmin" output="css/icapbadge/badge.css"
       "@IcapBadgeBundle/Resources/views/less/badge.less"
     %}
         <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
