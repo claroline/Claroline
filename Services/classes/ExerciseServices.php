@@ -212,15 +212,16 @@ class ExerciseServices
      * Add an Interaction in an exercise if created from an exercise.
      *
      *
-     * @param type                          $inter
+     * @param UJM\ExoBundle\Entity\Question $question
      * @param UJM\ExoBundle\Entity\Exercise $exercise instance of Exercise
      * @param Doctrine EntityManager        $em
      */
-    public function addQuestionInExercise($inter, $exercise)
+    public function addQuestionInExercise($question, $exercise)
     {
         if ($exercise != null) {
             if ($this->isExerciseAdmin($exercise)) {
-                $this->setExerciseQuestion($exercise, $inter);
+                //$this->setExerciseQuestion($exercise, $inter);
+                $this->createStepForOneQuestion($exercise,$question, 1);
             }
         }
     }
@@ -268,16 +269,19 @@ class ExerciseServices
 
         return $uid;
     }
-    
+
     /**
+     * Temporary : Waiting step manager
+     *
      * Create a step for one question in the exercise
-     * 
+     *
      * @param Exercise $exercise
      * @param Question $question
-     * @param int $order order of the question in the step
+     * @param int $orderStep order of the step in the exercise
      */
-    public function createStepForOneQuestion( Exercise $exercise,Question $question, $order){
-                $em = $this->doctrine->getManager();            
+    public function createStepForOneQuestion(Exercise $exercise,
+            Question $question, $orderStep) {
+                $em = $this->doctrine->getManager();
                 //Creating a step by question
                 $step = new Step();
                 $step->setText(' ');
@@ -285,11 +289,11 @@ class ExerciseServices
                 $step->setNbQuestion('0');
                 $step->setDuration(0);
                 $step->setMaxAttempts(0);
-                $step->setOrder(0);
+                $step->setOrder($orderStep);
                 $em->persist($step);
 
                 $sq = new StepQuestion($step, $question);
-                $sq->setOrdre($order);
+                $sq->setOrdre('1');
                 $em->persist($sq);
                 $em->flush();
     }

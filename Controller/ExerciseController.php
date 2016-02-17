@@ -231,7 +231,7 @@ class ExerciseController extends Controller
                 ->getManager()
                 ->getRepository('UJMExoBundle:Question')
                 ->findByExercise($exercise);
-
+        
             if ($displayAll == 1) {
                 $max = count($questions);
             }
@@ -382,18 +382,18 @@ class ExerciseController extends Controller
             $pagerShared = $page;
         }
 
-        if ($exoAdmin === true) {            
+        if ($exoAdmin === true) {   
             if ($QuestionsExo == 'true') {
 
                 $listQExo= $questionSer->getListQuestionExo($idExo,$user,$exercise);
-                $allActions = $this->getActionsAllQuestions($listQExo, $user->getId());
-
+                $allActions = $questionSer->getActionsAllQuestions($listQExo, $user->getId());
+                
                 $actionQ = $allActions[0];
                 $questionWithResponse = $allActions[1];
                 $alreadyShared = $allActions[2];
                 $sharedWithMe = $allActions[3];
-                $shareRight = $allActions[4];
-            } else {             
+                $shareRight = $allActions[4];       
+            } else {                                  
                 $userQuestions = $this->getDoctrine()
                     ->getManager()
                     ->getRepository('UJMExoBundle:Question')
@@ -521,9 +521,11 @@ class ExerciseController extends Controller
 
         if ($exoAdmin === true) {
             $em = $this->getDoctrine()->getManager();
-            $eq = $em->getRepository('UJMExoBundle:ExerciseQuestion')
-                ->findOneBy(array('exercise' => $exercise->getId(), 'question' => $qid));
-            $em->remove($eq);
+            $question = $em->getRepository('UJMExoBundle:Question')->find($qid);
+            //Temporary : Waiting step manager
+            $sq = $em->getRepository('UJMExoBundle:StepQuestion')
+                ->findStepByExoQuestion($exercise,$question);
+            $em->remove($sq);
             $em->flush();
 
              // If delete last item of page, display the previous one
@@ -760,10 +762,12 @@ class ExerciseController extends Controller
      */
     public function changeQuestionOrderAction()
     {
+        $em = $this->getDoctrine()->getManager();
         $request = $this->container->get('request');
-
+        
         if ($request->isXmlHttpRequest()) {
             $exoID = $request->request->get('exoID');
+            $exercise=$em->getRepository('UJMExoBundle:Exercise')->find($exoID);
             $order = $request->request->get('order');
             $currentPage = $request->request->get('currentPage');
             $questionMaxPerPage = $request->request->get('questionMaxPerPage');
@@ -772,7 +776,7 @@ class ExerciseController extends Controller
                 $length = count($order);
 
                 $em = $this->getDoctrine()->getManager();
-                $exoQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(array('exercise' => $exoID));
+                $exoQuestions = $em->getRepository('UJMExoBundle:StepQuestion')->findExoByOrder($exercise);
 
                 foreach ($exoQuestions as $exoQuestion) {
                     for ($i = 0; $i < $length; ++$i) {

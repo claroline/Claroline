@@ -20,7 +20,7 @@ class StepRepository extends EntityRepository {
      * @param Exercice $exo
      * @return Question[]
      */
-    public function findDefaultStep(Exercise $exo){ 
+    public function findByExercise(Exercise $exo){ 
 
         return $this->createQueryBuilder('s')
             ->join('s.exercise','e')

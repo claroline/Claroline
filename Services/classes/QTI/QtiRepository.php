@@ -317,7 +317,8 @@ class QtiRepository
     private function addQuestionInExercise($interX, $order = -1)
     {
         $exoServ = $this->container->get('ujm.exo_exercise');
-        $exoServ->setExerciseQuestion($this->exercise, $interX, $order);
+        $exoServ->createStepForOneQuestion($this->exercise,
+                $interX->getQuestion(), $order);
     }
 
     /**

@@ -198,23 +198,28 @@ class QuestionService {
         return $interactionType;
     }
     /**
+     * Get list of question after the filter
      * 
-     * @param type $idExo
+     * @param type $idExo id exercise selected in the filter, -1 if not selection
      * @param type $user
      * @param Exercise $exercise
      * @return type
      */
-    public function getListQuestionExo($idExo,User $user, Exercise $exercise) {
+    public function getListQuestionExo($idExo,User $user, Exercise $exercise) {       
+        //"My models"
         if ($idExo == -2) {
-            $listQExo = $this->getDoctrine()
+            $listQExo = $this->doctrine
                     ->getManager()
                     ->getRepository('UJMExoBundle:Question')
                     ->findByUserNotInExercise($user, $exercise, true);
-        } else {
-            $listQExo = $this->getDoctrine()
+        }
+        //Other exercise
+        else {
+            $exoFilter=$this->doctrine->getManager()->getRepository('UJMExoBundle:Exercise')->find($idExo);
+            $listQExo = $this->doctrine
                     ->getManager()
                     ->getRepository('UJMExoBundle:Question')
-                    ->findByExercise($exercise);
+                    ->findByExercise($exoFilter);
         }
 
         return $listQExo;
