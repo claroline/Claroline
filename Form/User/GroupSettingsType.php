@@ -59,6 +59,18 @@ class GroupSettingsType extends GroupType
                 }
             )
         );
+
+        $builder->add(
+            'organizations',
+            'entity',
+            array(
+                'label' => 'organizations',
+                'class' => 'Claroline\CoreBundle\Entity\Organization\Organization',
+                'expanded' => true,
+                'multiple' => true,
+                'property' => 'name'
+            )
+        );
     }
 
     public function getName()

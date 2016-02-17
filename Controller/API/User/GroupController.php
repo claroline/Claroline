@@ -104,8 +104,10 @@ class GroupController extends FOSRestController
         if ($form->isValid()) {
             $group = $form->getData();
             $newRoles = $form['platformRoles']->getData();
-            $this->groupManager->setPlatformRoles($group, $newRoles);
+            
+            var_dump(count($form->get('organizations')->getData()));
             $this->groupManager->insertGroup($group);
+            $this->groupManager->setPlatformRoles($group, $newRoles);
             $httpCode = 200;
         }
 

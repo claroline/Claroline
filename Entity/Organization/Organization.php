@@ -122,6 +122,16 @@ class Organization
      * @var User[]|ArrayCollection
      *
      * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Group"
+     * )
+     * @ORM\JoinTable(name="claro_group_organization")
+     */
+    protected $groups;
+
+    /**
+     * @var User[]|ArrayCollection
+     *
+     * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     mappedBy="administratedOrganizations"
      * )
@@ -152,6 +162,7 @@ class Organization
         $this->locations      = new ArrayCollection();
         $this->departments    = new ArrayCollection();
         $this->users          = new ArrayCollection();
+        $this->groups         = new ArrayCollection();
         $this->administrators = new ArrayCollection();
         $this->timeSlots      = new ArrayCollection();
         $this->years          = new ArrayCollection();

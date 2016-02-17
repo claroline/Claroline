@@ -68,7 +68,7 @@ export default class GroupController {
         let qs = '';
 
         for (let i = 0; i < this.selected.length; i++) {
-            qs += 'userIds[]=' + this.selected[i].id + '&'
+            qs += 'groupIds[]=' + this.selected[i].id + '&'
         }
 
         return qs

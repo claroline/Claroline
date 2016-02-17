@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use JMS\Serializer\Annotation\Groups;
+use Claroline\CoreBundle\Entity\Organization\Organization;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\GroupRepository")
@@ -85,11 +86,21 @@ class Group extends AbstractRoleSubject implements OrderableInterface
      */
     protected $models;
 
+    /**
+     * @var Organization[]|ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization"
+     * )
+     */
+    protected $organizations;
+
     public function __construct()
     {
         parent::__construct();
-        $this->users  = new ArrayCollection();
-        $this->models = new ArrayCollection();
+        $this->users         = new ArrayCollection();
+        $this->models        = new ArrayCollection();
+        $this->organizations = new ArrayCollection();
     }
 
     public function getId()
@@ -238,4 +249,15 @@ class Group extends AbstractRoleSubject implements OrderableInterface
     {
         return $this->name;
     }
+
+    public function getOrganizations()
+    {
+        return $this->organizations;
+    }
+
+    public function setOrganizations(ArrayCollection $organizations)
+    {
+        $this->organizations = $organizations;
+    }
+
 }
