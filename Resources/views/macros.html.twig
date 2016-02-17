@@ -39,15 +39,13 @@
                                 <i class="fa fa-calendar-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Date hour'|trans({},'innova_collecticiel') }}"></i>
                             </th>
                             {# #146 : on affiche cette colonne même en tant qu'enseignant, demande de JJQ #}
-                            {#  {% if not adminInnova %} #}
                             <th class="centered">
-                                {% if dropzone.evaluation != 1  %}
+                                {% if dropzone.evaluation != 1 %}
                                     <i class="fa fa-arrow-right" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Comment transmission'|trans({},'innova_collecticiel') }}"></i>
                                 {% else %}
                                     <i class="fa fa-arrow-right" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Evaluation transmission'|trans({},'innova_collecticiel') }}"></i>
                                 {% endif %}
                             </th>
-                            {#  {% endif %} #}
                             <th class="centered">
                                 <i class="fa fa-commenting-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Comment evaluation'|trans({},'innova_collecticiel') }}"></i>
                             </th>
