@@ -18,6 +18,6 @@
         "icap/notification-bundle": "~6.0"
     },
     "autoload": {
-        "psr-4": { "Icap\\WikiBundle\\": "" }
+        "psr-4": { "Icap\\WikiBundle": "" }
     }
 }
