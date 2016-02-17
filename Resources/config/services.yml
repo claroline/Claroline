@@ -21,6 +21,12 @@ services:
         arguments:
             - Claroline\CoreBundle\Entity\Log\Log
 
+    claroline.repository.user:
+        class: Claroline\CoreBundle\Repository\UserRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - Claroline\CoreBundle\Entity\User
+
     # pseudo-services used for dynamic parameter injection
     # (see Claroline\CoreBundle\DependencyInjection\Compiler\DynamicConfigPass
     claroline.session.storage_options:

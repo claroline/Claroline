@@ -25,6 +25,7 @@ use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\TransfertManager;
+use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -1508,8 +1509,92 @@ class UserManager
         $this->objectManager->flush();
     }
 
+    /**
+     * Big user search method ! hell yeah !
+     */
     public function searchPartialList($searches, $page, $limit, $count = false)
     {
-        return $this->userRepo->searchPartialList($searches, $page, $limit, $count);
+        $baseFieldsName = User::getUserSearchableFields();
+        $facetFields = $this->objectManager->getRepository('ClarolineCoreBundle:Facet\FieldFacet')->findAll();
+        $facetFieldsName = array();
+
+        foreach ($facetFields as $facetField) {
+            $facetFieldsName[] = $facetField->getName();
+        }
+
+        $qb = $this->objectManager->createQueryBuilder();
+        $count ? $qb->select('count(u)'): $qb->select('u');
+        $qb->from('Claroline\CoreBundle\Entity\User', 'u')
+            ->where('u.isEnabled = true');
+
+        foreach ($searches as $key => $search) {
+            foreach ($search as $id => $el) {
+                if (in_array($key, $baseFieldsName)) {
+                    $qb->andWhere("UPPER (u.{$key}) LIKE :{$key}{$id}");
+                    $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
+                } elseif (in_array($key, $facetFieldsName)) {
+                    $qb->join('u.fieldsFacetValue', "ffv{$id}");
+                    $qb->join("ffv{$id}.fieldFacet", "f{$id}");
+                    $qb->andWhere("UPPER (ffv{$id}.stringValue) LIKE :{$key}{$id}");
+                    $qb->orWhere("ffv{$id}.floatValue = :{$key}{$id}");
+                    $qb->andWhere("f{$id}.name LIKE :facet{$id}");
+                    $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
+                    $qb->setParameter("facet{$id}", $key);
+                } elseif ($key === 'group_name') {
+                    $qb->join('u.groups', "g{$id}");
+                    $qb->andWhere("UPPER (g{$id}.name) LIKE :{$key}{$id}");
+                    $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
+                } if ($key === 'group_id') {
+                    $qb->join('u.groups', "g{$id}");
+                    $qb->andWhere("g{$id}.id = :{$key}{$id}");
+                    $qb->setParameter($key . $id, $el);
+                } if ($key === 'organization_name') {
+                    $qb->join('u.organizations', "o{$id}");
+                    $qb->andWhere("UPPER (o{$id}.name) LIKE :{$key}{$id}");
+                    $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
+                } if ($key === 'organization_id') {
+                    $qb->join('u.organizations', "o{$id}");
+                    $qb->andWhere('o{$id}.id = :id');
+                    $qb->setParameter($key . $id, $el);
+                }
+            }
+        }
+
+        $event = $this->strictEventDispatcher->dispatch(
+            'user_edit_search_event',
+            'UserEditSearch',
+            array($qb)
+        );
+
+        $query = $qb->getQuery();
+        
+        if ($page && $limit && !$count) {
+            $query->setMaxResults($limit);
+            $query->setFirstResult($page * $limit);
+        }
+
+        return $count ? $query->getSingleScalarResult(): $query->getResult();
+    }
+
+    public function getUserSearchableFields()
+    {
+        $fields = $this->container->get('claroline.manager.facet_manager')->getFieldFacets();
+
+        $baseFields = User::getSearchableFields();
+
+        foreach ($fields as $field) {
+            $baseFields[] = $field->getName();
+        }
+
+        $baseFields[] = 'group_name';
+        $baseFields[] = 'organization_name';
+
+        $event = $this->strictEventDispatcher->dispatch(
+            'user_add_filter_event',
+            'UserAddFilter',
+            array($baseFields)
+        );
+
+        return $event->getFilters();
     }
 }

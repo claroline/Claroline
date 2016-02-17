@@ -25,7 +25,6 @@ use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\MailManager;
-use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CoreBundle\Manager\AuthenticationManager;
 use Claroline\CoreBundle\Manager\ProfilePropertyManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -55,7 +54,6 @@ class UserController extends FOSRestController
      *     "groupManager"           = @DI\Inject("claroline.manager.group_manager"),
      *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
      *     "profilePropertyManager" = @DI\Inject("claroline.manager.profile_property_manager"),
-     *     "facetManager"           = @DI\Inject("claroline.manager.facet_manager"),
      *     "mailManager"            = @DI\Inject("claroline.manager.mail_manager"),
      *     "apiManager"             = @DI\Inject("claroline.manager.api_manager")
      * })
@@ -70,7 +68,6 @@ class UserController extends FOSRestController
         GroupManager $groupManager,
         RoleManager $roleManager,
         ObjectManager $om,
-        FacetManager $facetManager,
         ProfilePropertyManager $profilePropertyManager,
         MailManager $mailManager,
         ApiManager $apiManager
@@ -82,7 +79,6 @@ class UserController extends FOSRestController
         $this->localeManager          = $localeManager;
         $this->request                = $request;
         $this->userManager            = $userManager;
-        $this->facetManager           = $facetManager;
         $this->groupManager           = $groupManager;
         $this->roleManager            = $roleManager;
         $this->om                     = $om;
@@ -142,18 +138,7 @@ class UserController extends FOSRestController
      */
     public function getUserSearchableFieldsAction()
     {
-        $fields = $this->facetManager->getFieldFacets();
-
-        $baseFields = User::getSearchableFields();
-
-        foreach ($fields as $field) {
-            $baseFields[] = $field->getName();
-        }
-
-        $baseFields[] = 'group_name';
-        $baseFields[] = 'organization_name';
-
-        return $baseFields;
+        return $this->userManager->getUserSearchableFields();
     }
 
     /**

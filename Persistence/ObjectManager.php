@@ -136,6 +136,11 @@ class ObjectManager extends ObjectManagerDecorator
         }
     }
 
+    public function createQueryBuilder()
+    {
+        return $this->wrapped->createQueryBuilder();
+    }
+
     /**
      * Starts a transaction.
      *
