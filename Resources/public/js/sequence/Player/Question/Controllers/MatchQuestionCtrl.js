@@ -143,6 +143,22 @@
             };
             
             this.checkAnswerValidity = function (label) {
+                if (!this.orphanAnswersAreChecked) {
+                    var hasSolution;
+                    for (var i=0; i<this.question.secondSet.length; i++) {
+                        hasSolution = false;
+                        for (var j=0; j<this.solutions.length; j++) {
+                            if (this.question.secondSet[i].id === this.solutions[j].secondId) {
+                                hasSolution = true;
+                            }
+                        }
+                        if (!hasSolution) {
+                            this.orphanAnswers.push(this.question.secondSet[i]);
+                        }
+                    }
+                    this.orphanAnswersAreChecked = true;
+                }
+                
                 var valid = false;
                 for (var i=0; i<this.connections.length; i++) {
                     if (this.connections[i].target === label.id) {
@@ -155,7 +171,18 @@
                         }
                     }
                 }
-                return valid;
+                var valid2 = false;
+                for (var i=0; i<this.orphanAnswers.length; i++) {
+                    if (this.orphanAnswers[i].id === label.id) {
+                        valid2 = true;
+                        for (var j=0; j<this.connections.length; j++) {
+                            if (this.orphanAnswers[i].id === this.connections[j].target) {
+                                valid2 = false;
+                            }
+                        }
+                    }
+                }
+                return valid || valid2;
             };
             
             this.checkAnswerValidity = function (label) {
