@@ -16,7 +16,7 @@
     {% block document_body %}
         <div class="row">
             <div class='col-md-8'>
-                <div class='input-group'>
+                <div class='input-group col-md-8'>
                     {{ form_widget(form.document,{'label_col_size': ' ', 'attr': {'placeholder': (documentType~'_placeholder')|trans({}, 'innova_collecticiel')}, 'label_attr': {'class': 'sr-only'},'id':'innova_collecticiel_document_file_form_'~documentType }) }}
                     <span class='input-group-btn'>
                         <button type="submit" class="btn btn-default">
