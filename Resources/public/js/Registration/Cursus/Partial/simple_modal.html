@@ -1,0 +1,16 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <button class="close" ng-click="smc.closeModal()">x</button>
+        <h3 class="modal-title">
+            {{ smc.title }}
+        </h3>
+    </div>
+    <div class="modal-body">
+        <div ng-bind-html="smc.content"></div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-default" ng-click="smc.closeModal()">
+            {{ 'close'|trans:{}:'platform' }}
+        </button>
+    </div>
+</div>

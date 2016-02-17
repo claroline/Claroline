@@ -13,11 +13,12 @@
     angular.module('CursusRegistrationModule').controller('CursusRegistrationSessionsModalCtrl', [
         '$http',
         '$route',
+        '$uibModal',
         '$uibModalStack',
         'sourceId',
         'sourceType',
         'cursusIdsTxt',
-        function ($http, $route, $uibModalStack, sourceId, sourceType, cursusIdsTxt) {
+        function ($http, $route, $uibModal, $uibModalStack, sourceId, sourceType, cursusIdsTxt) {
             var vm = this;
             var sourceId = sourceId;
             var sourceType = sourceType;
@@ -54,7 +55,40 @@
                         
                         if (datas['status'] === 200) {
                             $uibModalStack.dismissAll();
-                            $route.reload();
+                            var resultsDatas = datas['data'];
+                            
+                            if (resultsDatas['status'] === 'success') {
+                                $route.reload();
+                            } else {
+                                var title = Translator.trans('registration_failed', {}, 'cursus');
+                                var content = '';
+                                var errorDatas = resultsDatas['datas'];
+                                
+                                for (var i = 0; i < errorDatas.length; i++) {
+                                    content += '<div class="alert alert-danger">' +
+                                        Translator.trans(
+                                            'session_not_enough_place_msg',
+                                            {
+                                                sessionName: errorDatas[i]['sessionName'],
+                                                courseTitle: errorDatas[i]['courseTitle'],
+                                                courseCode: errorDatas[i]['courseCode'],
+                                                remainingPlaces: errorDatas[i]['remainingPlaces']
+                                            },
+                                            'cursus'
+                                        ) +
+                                        '</div>';
+                                }
+                                
+                                $uibModal.open({
+                                    templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Cursus/Partial/simple_modal.html',
+                                    controller: 'SimpleModalCtrl',
+                                    controllerAs: 'smc',
+                                    resolve: {
+                                        title: function () { return title; },
+                                        content: function () { return content; }
+                                    }
+                                });
+                            }
                         }
                     });
                 } else if (sourceType === 'user') {
@@ -70,7 +104,40 @@
                         
                         if (datas['status'] === 200) {
                             $uibModalStack.dismissAll();
-                            $route.reload();
+                            var resultsDatas = datas['data'];
+                            
+                            if (resultsDatas['status'] === 'success') {
+                                $route.reload();
+                            } else {
+                                var title = Translator.trans('registration_failed', {}, 'cursus');
+                                var content = '';
+                                var errorDatas = resultsDatas['datas'];
+                                
+                                for (var i = 0; i < errorDatas.length; i++) {
+                                    content += '<div class="alert alert-danger">' +
+                                        Translator.trans(
+                                            'session_not_enough_place_msg',
+                                            {
+                                                sessionName: errorDatas[i]['sessionName'],
+                                                courseTitle: errorDatas[i]['courseTitle'],
+                                                courseCode: errorDatas[i]['courseCode'],
+                                                remainingPlaces: errorDatas[i]['remainingPlaces']
+                                            },
+                                            'cursus'
+                                        ) +
+                                        '</div>';
+                                }
+                                
+                                $uibModal.open({
+                                    templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Cursus/Partial/simple_modal.html',
+                                    controller: 'SimpleModalCtrl',
+                                    controllerAs: 'smc',
+                                    resolve: {
+                                        title: function () { return title; },
+                                        content: function () { return content; }
+                                    }
+                                });
+                            }
                         }
                     });
                 }

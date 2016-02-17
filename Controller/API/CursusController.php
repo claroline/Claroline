@@ -293,9 +293,9 @@ class CursusController extends FOSRestController
     {
         $multipleCursus = $this->cursusManager->getCursusFromCursusIdsTxt($cursusIdsTxt);
         $sessions = $this->cursusManager->getSessionsFromSessionsIdsTxt($sessionsIdsTxt);
-        $this->cursusManager->registerGroupToCursusAndSessions($group, $multipleCursus, $sessions);
+        $results = $this->cursusManager->registerGroupToCursusAndSessions($group, $multipleCursus, $sessions);
 
-        return new JsonResponse('success', 200);
+        return new JsonResponse($results, 200);
     }
 
     /**
@@ -314,9 +314,9 @@ class CursusController extends FOSRestController
         $users = $this->cursusManager->getUsersFromUsersIdsTxt($usersIdsTxt);
         $multipleCursus = $this->cursusManager->getCursusFromCursusIdsTxt($cursusIdsTxt);
         $sessions = $this->cursusManager->getSessionsFromSessionsIdsTxt($sessionsIdsTxt);
-        $this->cursusManager->registerUsersToCursusAndSessions($users, $multipleCursus, $sessions);
+        $results = $this->cursusManager->registerUsersToCursusAndSessions($users, $multipleCursus, $sessions);
 
-        return new JsonResponse('success', 200);
+        return new JsonResponse($results, 200);
     }
 
     /**

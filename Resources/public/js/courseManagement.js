@@ -191,42 +191,54 @@
             ),
             type: 'POST',
             success: function (datas) {
-                $('#registration-row-user-' + userId).remove();
                 
-                for (var i = 0; i < datas.length; i++) {
-                    var sessionUserElement =
-                        '<tr id="row-session-user-' + datas[i]['id'] + '">' +
-                            '<td>' +
-                                datas[i]['user_first_name'] + ' ' +
-                                datas[i]['user_last_name'] +
-                                ' <small>(' + datas[i]['username'] + ')</small>' +
-                                ' &nbsp;' +
-                                '<i class="fa fa-envelope-o user-send-confirmation-mail-btn pointer-hand"' +
-                                   ' data-toggle="tooltip"' +
-                                   ' data-placement="top"' +
-                                   ' data-container="#session-management-box"' +
-                                   ' title="' + Translator.trans('send_confirmation_mail_to_user', {}, 'cursus') + '"' +
-                                   ' data-session-id="' + sessionId + '"' +
-                                   ' data-user-id="' + datas[i]['user_id'] + '"' +
-                                '>' +    
-                                '</i> ' +
-                                '<i class="fa fa-times-circle unregister-user-from-session pointer-hand"' +
-                                   ' data-toggle="tooltip"' +
-                                   ' data-placement="top"' +
-                                   ' data-container="#session-management-box"' +
-                                   ' title="' + Translator.trans('unregister_tutor_from_session', {}, 'cursus') + '"' +
-                                   ' data-session-user-id="' + datas[i]['id'] + '"' +
-                                   ' style="color: #D9534F"' +
-                                '>' +
-                                '</i>' +
-                            '</td>' +
-                        '</tr>';
-                
-                    if (parseInt(datas[i]['user_type']) === 0) {
-                        $('#session-learners-table').append(sessionUserElement);
-                    } else if (parseInt(datas[i]['user_type']) === 1) {
-                        $('#session-tutors-table').append(sessionUserElement);
+                if (datas['status'] === 'success') {
+                    $('#registration-row-user-' + userId).remove();
+                    var usersDatas = datas['datas'];
+
+                    for (var i = 0; i < usersDatas.length; i++) {
+                        var unregisterMsg = (parseInt(usersDatas[i]['user_type']) === 0) ?
+                            Translator.trans('unregister_learner_from_session', {}, 'cursus') :
+                            Translator.trans('unregister_tutor_from_session', {}, 'cursus');
+                        var sessionUserElement =
+                            '<tr id="row-session-user-' + usersDatas[i]['id'] + '">' +
+                                '<td>' +
+                                    usersDatas[i]['user_first_name'] + ' ' +
+                                    usersDatas[i]['user_last_name'] +
+                                    ' <small>(' + usersDatas[i]['username'] + ')</small>' +
+                                    ' &nbsp;' +
+                                    '<i class="fa fa-envelope-o user-send-confirmation-mail-btn pointer-hand"' +
+                                       ' data-toggle="tooltip"' +
+                                       ' data-placement="top"' +
+                                       ' data-container="#session-management-box"' +
+                                       ' title="' + Translator.trans('send_confirmation_mail_to_user', {}, 'cursus') + '"' +
+                                       ' data-session-id="' + sessionId + '"' +
+                                       ' data-user-id="' + usersDatas[i]['user_id'] + '"' +
+                                    '>' +    
+                                    '</i> ' +
+                                    '<i class="fa fa-times-circle unregister-user-from-session pointer-hand"' +
+                                       ' data-toggle="tooltip"' +
+                                       ' data-placement="top"' +
+                                       ' data-container="#session-management-box"' +
+                                       ' title="' + unregisterMsg + '"' +
+                                       ' data-session-user-id="' + usersDatas[i]['id'] + '"' +
+                                       ' style="color: #D9534F"' +
+                                    '>' +
+                                    '</i>' +
+                                '</td>' +
+                            '</tr>';
+
+                        if (parseInt(usersDatas[i]['user_type']) === 0) {
+                            $('#session-learners-table').append(sessionUserElement);
+                        } else if (parseInt(usersDatas[i]['user_type']) === 1) {
+                            $('#session-tutors-table').append(sessionUserElement);
+                        }
                     }
+                } else if (datas['status'] === 'failed') {
+                    var fullSessionAlert = '<div class="alert alert-danger">' +
+                        Translator.trans('full_session_msg', {}, 'cursus') +
+                        '</div>';
+                    $('#view-registration-body').html(fullSessionAlert);
                 }
             }
         });
@@ -247,8 +259,29 @@
                 }
             ),
             type: 'POST',
-            success: function () {
-                $('#registration-row-group-' + groupId).remove();
+            success: function (results) {
+                
+                if (results['status'] === 'success') {
+                    $('#registration-row-group-' + groupId).remove();
+                } else {
+                    var datas = results['datas'];
+                    var fullSessionAlert = '';
+                    
+                    for (var i = 0; i < datas.length; i++) {
+                        fullSessionAlert += '<div class="alert alert-danger">' +
+                            Translator.trans(
+                                'session_not_enough_place_msg',
+                                {
+                                    sessionName: datas[i]['sessionName'],
+                                    courseTitle: datas[i]['courseTitle'],
+                                    courseCode: datas[i]['courseCode'],
+                                    remainingPlaces: datas[i]['remainingPlaces']
+                                },
+                                'cursus'
+                            ) + '<div>';
+                    }
+                    $('#view-registration-body').html(fullSessionAlert);
+                }
             }
         });
     });

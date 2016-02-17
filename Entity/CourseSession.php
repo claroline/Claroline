@@ -466,4 +466,9 @@ class CourseSession
     {
         $this->type = $type;
     }
+
+    public function hasValidation()
+    {
+        return $this->userValidation || $this->registrationValidation;
+    }
 }

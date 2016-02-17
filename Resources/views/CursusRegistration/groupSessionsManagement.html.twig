@@ -49,34 +49,6 @@
     }}
 {% endblock %}
 
-{% block breadcrumb %}
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'fa fa-cog',
-                'name': 'administration'|trans({}, 'platform'),
-                'href': path('claro_admin_index')
-            },
-            {
-                'name': 'users_management'|trans({}, 'platform'),
-                'href': path('claro_admin_users_management')
-            },
-            {
-                'name': 'groups'|trans({}, 'platform'),
-                'href': path('claro_admin_group_list')
-            },
-            {
-                'name': group.getName(),
-                'href': path('claro_admin_group_list')
-            },
-            {
-                'name': 'user_sessions_management'|trans({}, 'cursus'),
-                'href': ''
-            }
-        ])
-    }}
-{% endblock %}
-
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">
@@ -84,6 +56,7 @@
         </h3>
     </div>
     <div class="panel-body">
+        {{ macros.flashBox() }}
         <h3>{{ group.getName() }}</h3>
         <hr>
         <a class="btn btn-primary"

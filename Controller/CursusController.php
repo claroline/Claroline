@@ -1041,12 +1041,14 @@ class CursusController extends Controller
         User $authenticatedUser
     )
     {
+        $results = null;
+
         if ($session->getPublicRegistration()) {
 
-            if ($session->getRegistrationValidation()) {
+            if ($session->hasValidation()) {
                 $this->cursusManager->addUserToSessionQueue($authenticatedUser, $session);
             } else {
-                $this->cursusManager->registerUsersToSession(
+                $results = $this->cursusManager->registerUsersToSession(
                     $session,
                     array($authenticatedUser),
                     0
@@ -1054,7 +1056,7 @@ class CursusController extends Controller
             }
         }
 
-        return new JsonResponse('success', 200);
+        return new JsonResponse($results, 200);
     }
 
     /**

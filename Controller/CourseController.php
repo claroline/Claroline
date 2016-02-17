@@ -673,24 +673,11 @@ class CourseController extends Controller
         $userType
     )
     {
-        $results = array();
-        $sessionUsers = $this->cursusManager->registerUsersToSession(
+        $results = $this->cursusManager->registerUsersToSession(
             $session,
             array($user),
             $userType
         );
-
-        foreach ($sessionUsers as $sessionUser) {
-            $user = $sessionUser->getUser();
-            $results[] = array(
-                'id' => $sessionUser->getId(),
-                'user_type' => $sessionUser->getUserType(),
-                'user_id' => $user->getId(),
-                'username' => $user->getUsername(),
-                'user_first_name' => $user->getFirstName(),
-                'user_last_name' => $user->getLastName()
-            );
-        }
 
         return new JsonResponse($results, 200);
     }
@@ -783,13 +770,13 @@ class CourseController extends Controller
         $groupType
     )
     {
-        $this->cursusManager->registerGroupToSessions(
+        $results = $this->cursusManager->registerGroupToSessions(
             array($session),
             $group,
             $groupType
         );
 
-        return new JsonResponse('success', 200);
+        return new JsonResponse($results, 200);
     }
 
     /**
@@ -918,10 +905,13 @@ class CourseController extends Controller
     {
         $user = $queue->getUser();
         $session = $queue->getSession();
-        $this->cursusManager->registerUsersToSession($session, array($user), 0);
-        $this->cursusManager->deleteSessionQueue($queue);
+        $results = $this->cursusManager->registerUsersToSession($session, array($user), 0);
 
-        return new JsonResponse('success', 200);
+        if ($results['status'] === 'success') {
+            $this->cursusManager->deleteSessionQueue($queue);
+        }
+
+        return new JsonResponse($results, 200);
     }
 
     /**

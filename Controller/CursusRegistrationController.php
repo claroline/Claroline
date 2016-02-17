@@ -263,7 +263,28 @@ class CursusRegistrationController extends Controller
     public function sessionsRegisterAction(User $user, $type, array $sessions)
     {
         $this->checkToolAccess();
-        $this->cursusManager->registerUsersToSessions($sessions, array($user), $type);
+        $results = $this->cursusManager->registerUsersToSessions($sessions, array($user), $type);
+
+        if ($results['status'] === 'failed') {
+            $datas = $results['datas'];
+            $sessionFlashBag = $this->session->getFlashBag();
+
+            foreach ($datas as $data) {
+                $sessionFlashBag->add(
+                    'error',
+                    $this->translator->trans(
+                        'session_not_enough_place_msg',
+                        array(
+                            '%courseTitle%' => $data['courseTitle'],
+                            '%courseCode%' => $data['courseCode'],
+                            '%sessionName%' => $data['sessionName'],
+                            '%remainingPlaces%' => $data['remainingPlaces'],
+                        ),
+                        'cursus'
+                    )
+                );
+            }
+        }
 
         return new RedirectResponse(
             $this->router->generate(
@@ -289,7 +310,28 @@ class CursusRegistrationController extends Controller
     public function sessionsRegisterGroupAction(Group $group, $type, array $sessions)
     {
         $this->checkToolAccess();
-        $this->cursusManager->registerGroupToSessions($sessions, $group, $type);
+        $results = $this->cursusManager->registerGroupToSessions($sessions, $group, $type);
+
+        if ($results['status'] === 'failed') {
+            $datas = $results['datas'];
+            $sessionFlashBag = $this->session->getFlashBag();
+
+            foreach ($datas as $data) {
+                $sessionFlashBag->add(
+                    'error',
+                    $this->translator->trans(
+                        'session_not_enough_place_msg',
+                        array(
+                            '%courseTitle%' => $data['courseTitle'],
+                            '%courseCode%' => $data['courseCode'],
+                            '%sessionName%' => $data['sessionName'],
+                            '%remainingPlaces%' => $data['remainingPlaces'],
+                        ),
+                        'cursus'
+                    )
+                );
+            }
+        }
 
         return new RedirectResponse(
             $this->router->generate(

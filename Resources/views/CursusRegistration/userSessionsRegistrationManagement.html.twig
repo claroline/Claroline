@@ -24,19 +24,6 @@
     {{
         macros.breadcrumbs([
             {
-                'icon': 'fa fa-cog',
-                'name': 'administration'|trans({}, 'platform'),
-                'href': path('claro_admin_index')
-            },
-            {
-                'name': 'users_management'|trans({}, 'platform'),
-                'href': path('claro_admin_user_list')
-            },
-            {
-                'name': user.getFirstName() ~ ' ' ~ user.getLastName(),
-                'href': path('claro_admin_user_list')
-            },
-            {
                 'name': 'user_sessions_management'|trans({}, 'cursus'),
                 'href': path('claro_cursus_user_sessions_management', {'user': user.getId()})
             },
