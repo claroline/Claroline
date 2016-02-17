@@ -65,10 +65,12 @@
         </div>
 
         {# Par date #}
-        <label class="radio">
-            {{ form_widget(form.manualPlanning.1) }}
-            <strong>{{ 'scheduleByDatePlanning'|trans({}, 'innova_collecticiel') }}</strong>
-        </label>
+        <div class="radio">
+            <label>
+                {{ form_widget(form.manualPlanning.1) }}
+                <strong>{{ 'scheduleByDatePlanning'|trans({}, 'innova_collecticiel') }}</strong>
+            </label>
+        </div>
         
         <div id="planning_dates">
             <div class="row form-group">
