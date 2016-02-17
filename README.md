@@ -28,6 +28,7 @@ Click on the following links to learn how to configure your App for every provid
 Once you've created your App and got your keys, it's time to enable login to your Claroline platform.
 
 To enable your social login, let's say _facebook login_ for example:
+
 1. Head over to _Administration_ -> _Platform parameters_
 2. Click on **Oauth** option
 3. Choose the provider you wish to enable/configure (e.g. _facebook_)
