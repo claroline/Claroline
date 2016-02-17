@@ -226,19 +226,20 @@ class MatchHandler implements QuestionHandlerInterface {
 
         if ($withSolution) {
 
-            $exportData->solutions = array_map(function ($proposal) {
+            $exportData->solutions = array();
+            foreach ($proposals as $proposal) {
                 $associatedLabels = $proposal->getAssociatedLabel();
-                $solutionData = new \stdClass();
-                $solutionData->firstId = (string) $proposal->getId();
                 foreach ($associatedLabels as $label) {
-                    $solutionData->secondId = (string) $label->getId();
-                    $solutionData->score = $label->getScoreRightResponse();
+                    $solution = new \stdClass();
+                    $solution->firstId = (string) $proposal->getId();
+                    $solution->secondId = (string) $label->getId();
+                    $solution->score = $label->getScoreRightResponse();
                     if ($label->getFeedback()) {
-                        $solutionData->feedback = $label->getFeedback();
+                        $solution->feedback = $label->getFeedback();
                     }
+                    array_push($exportData->solutions, $solution);
                 }
-                return $solutionData;
-            }, $proposals);
+            }
         }
 
         return $exportData;
@@ -247,22 +248,23 @@ class MatchHandler implements QuestionHandlerInterface {
     public function convertQuestionAnswers(Question $question, \stdClass $exportData) {
         $repo = $this->om->getRepository('UJMExoBundle:InteractionMatching');
         $match = $repo->findOneBy(['question' => $question]);
-
+        
         $proposals = $match->getProposals()->toArray();
-        $exportData->solutions = array_map(function ($proposal) {
+        $exportData->solutions = array();
+        foreach ($proposals as $proposal) {
             $associatedLabels = $proposal->getAssociatedLabel();
-            $solutionData = new \stdClass();
-            $solutionData->firstId = (string) $proposal->getId();
             foreach ($associatedLabels as $label) {
-                $solutionData->secondId = (string) $label->getId();
-                $solutionData->score = $label->getScoreRightResponse();
+                $solution = new \stdClass();
+                $solution->firstId = (string) $proposal->getId();
+                $solution->secondId = (string) $label->getId();
+                $solution->score = $label->getScoreRightResponse();
                 if ($label->getFeedback()) {
-                    $solutionData->feedback = $label->getFeedback();
+                    $solution->feedback = $label->getFeedback();
                 }
+                array_push($exportData->solutions, $solution);
             }
-
-            return $solutionData;
-        }, $proposals);
+        }
+        
         return $exportData;
     }
 
