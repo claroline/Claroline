@@ -11,20 +11,20 @@
 
 namespace Claroline\BundleRecorder\Logger;
 
-use Composer\IO\ConsoleIO;
+use Composer\IO\IOInterface;
 use Psr\Log\AbstractLogger;
 
 class ConsoleIoLogger extends AbstractLogger
 {
     /**
-     * @var ConsoleIO
+     * @var IOInterface
      */
     protected $consoleIo;
 
     /**
-     * @param ConsoleIO $consoleIo
+     * @param IOInterface $consoleIo
      */
-    public function __construct(ConsoleIO $consoleIo)
+    public function __construct(IOInterface $consoleIo)
     {
         $this->consoleIo = $consoleIo;
     }
@@ -41,4 +41,5 @@ class ConsoleIoLogger extends AbstractLogger
     public function log($level, $message, array $context = array())
     {
         $this->consoleIo->write($message);
-    }}
+    }
+}

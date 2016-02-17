@@ -13,14 +13,13 @@ namespace Claroline\BundleRecorder;
 
 use Claroline\BundleRecorder\Detector\Detector;
 use Claroline\BundleRecorder\Handler\BundleHandler;
-use Claroline\BundleRecorder\Handler\OperationHandler;
-use Claroline\BundleRecorder\Operation;
 use Composer\DependencyResolver\DefaultPolicy;
+use Composer\DependencyResolver\Operation\InstallOperation;
 use Composer\DependencyResolver\Pool;
 use Composer\DependencyResolver\Request;
 use Composer\DependencyResolver\Solver;
 use Composer\Json\JsonFile;
-use Composer\Package\PackageInterface;
+use Composer\Package\Package;
 use Composer\Repository\ArrayRepository;
 use Composer\Repository\InstalledFilesystemRepository;
 use Composer\Repository\PlatformRepository;
@@ -29,85 +28,26 @@ class Recorder
 {
     private $detector;
     private $bundleHandler;
-    private $operationHandler;
+    private $aliases;
     private $vendorDir;
-    private $removableBundles = array();
-    private $fromRepo;
-    private $operations;
 
     public function __construct(
         Detector $detector,
         BundleHandler $bundleHandler,
-        OperationHandler $operationHandler,
+        array $aliases,
         $vendorDir
     )
     {
         $this->detector = $detector;
         $this->bundleHandler = $bundleHandler;
-        $this->operationHandler = $operationHandler;
+        $this->aliases = $aliases;
         $this->vendorDir = $vendorDir;
-    }
-
-    public function checkForPendingOperations()
-    {
-        if (!$this->operationHandler->isFileEmpty()) {
-            throw new \Exception('A non empty operation file is already present (assumed not executed).');
-        }
-    }
-
-    public function addInstallOperation(PackageInterface $package)
-    {
-        if ($this->isClarolinePackage($package)) {
-            $bundle = $this->detector->detectBundle($package->getPrettyName());
-            $type = $this->getOperationBundleType($package);
-            $operation = new Operation(Operation::INSTALL, $bundle, $type);
-            $this->operationHandler->addOperation($operation);
-        }
-    }
-
-    public function addUpdateOperation(PackageInterface $target, PackageInterface $initial)
-    {
-        if ($this->isClarolinePackage($target)) {
-            $bundle = $this->detector->detectBundle($target->getPrettyName());
-            $type = $this->getOperationBundleType($target);
-            $operation = new Operation(Operation::UPDATE, $bundle, $type);
-            $operation->setFromVersion($initial->getVersion());
-            $operation->setToVersion($target->getVersion());
-            $this->operationHandler->addOperation($operation);
-        }
-    }
-
-    public function addVersion(PackageInterface $package) {
-        if ($this->isClarolinePackage($package)) {
-            $ds = DIRECTORY_SEPARATOR;
-            $vpath = $this->vendorDir . $ds . $package->getName() . $ds . $package->getTargetDir() . $ds . 'VERSION.txt';
-            file_put_contents($vpath, $package->getPrettyVersion());
-        }
-    }
-
-    public function addRemovablePackage(PackageInterface $package)
-    {
-        if ($this->isClarolinePackage($package)) {
-            $bundleFqcn = $this->detector->detectBundle($package->getPrettyName());
-            $this->removableBundles[$package->getPrettyName()] = $bundleFqcn;
-        }
-    }
-
-    public function addUninstallOperation(PackageInterface $package)
-    {
-        if (isset($this->removableBundles[$package->getPrettyName()])) {
-            $bundleFqcn = $this->removableBundles[$package->getPrettyName()];
-            $type = $this->getOperationBundleType($package);
-            $operation = new Operation(Operation::UNINSTALL, $bundleFqcn, $type);
-            $this->operationHandler->addOperation($operation);
-            unset($this->removableBundles[$package->getPrettyName()]);
-        }
     }
 
     public function buildBundleFile()
     {
-        $orderedBundles = array();
         $operations = $this->getOperations();
+        $orderedBundles = [];
 
         foreach ($operations as $operation) {
             $package = $operation->getPackage();
@@ -123,48 +63,31 @@ class Recorder
     }
 
     /**
-     * Returns if the $element is a claroline package.
-     *
-     * @param PackageInterface|string $element
-     * @return boolean
+     * @return InstallOperation[]
      */
-    private function isClarolinePackage($element)
-    {
-        if ($element instanceof PackageInterface) {
-            return $element->getType() === 'claroline-core' || $element->getType() === 'claroline-plugin';
-        }
-
-        $operations = $this->getOperations();
-
-        foreach ($operations as $operation) {
-            $package = $operation->getPackage();
-
-            if ($element == $package->getPrettyName()) {
-                return $this->isClarolinePackage($package);
-            }
-        }
-
-        return false;
-    }
-
-    private function getOperationBundleType(PackageInterface $package)
-    {
-        return $package->getType() === 'claroline-core' ?
-            Operation::BUNDLE_CORE :
-            Operation::BUNDLE_PLUGIN;
-    }
-
     private function getOperations()
     {
         $installedFile = new JsonFile($this->vendorDir . '/composer/installed.json');
-        $this->fromRepo = new InstalledFilesystemRepository($installedFile);
+        $fromRepo = new InstalledFilesystemRepository($installedFile);
+
+        foreach ($this->aliases as $alias) {
+            // we need to replace the version of aliased packages in the local
+            // repository by their aliases in the root package (composer always
+            // stores the actual installed version instead), otherwise the whole
+            // dependency resolution below will fail.
+            $aliased = $fromRepo->findPackage($alias['package'], $alias['version']);
+            $version = new \ReflectionProperty('Composer\Package\Package', 'version');
+            $version->setAccessible(true);
+            $version->setValue($aliased, $alias['alias_normalized']);
+        }
+
         $toRepo = new ArrayRepository();
         $pool = new Pool();
-        $pool->addRepository($this->fromRepo);
+        $pool->addRepository($fromRepo);
         $pool->addRepository(new PlatformRepository());
         $request = new Request($pool);
 
-        foreach ($this->fromRepo->getPackages() as $package) {
+        foreach ($fromRepo->getPackages() as $package) {
             $request->install($package->getName());
         }
 
