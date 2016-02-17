@@ -251,9 +251,9 @@ class MatchHandler implements QuestionHandlerInterface {
         $proposals = $match->getProposals()->toArray();
         $exportData->solutions = array_map(function ($proposal) {
             $associatedLabels = $proposal->getAssociatedLabel();
+            $solutionData = new \stdClass();
+            $solutionData->firstId = (string) $proposal->getId();
             foreach ($associatedLabels as $label) {
-                $solutionData = new \stdClass();
-                $solutionData->firstId = (string) $proposal->getId();
                 $solutionData->secondId = (string) $label->getId();
                 $solutionData->score = $label->getScoreRightResponse();
                 if ($label->getFeedback()) {
