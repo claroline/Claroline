@@ -44,7 +44,7 @@
     },
     "scripts": {
         "sync": [
-            "COMPOSER_PROCESS_TIMEOUT=900 composer run fetch",
+            "composer run fetch",
             "composer run configure",
             "composer run build",
             "php app/console claroline:update",
@@ -102,6 +102,11 @@
         "symfony-web-dir": "web",
         "symfony-assets-install": "symlink",
         "incenteev-parameters": {
+            "env-map": {
+                "database_name": "CLAROLINE_DATABASE_NAME",
+                "database_user": "CLAROLINE_DATABASE_USER",
+		"database_password": "CLAROLINE_DATABASE_PASSWORD" 
+            },
             "file": "app/config/parameters.yml",
             "interactive-keys": [
                 "database_host",
