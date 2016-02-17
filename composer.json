@@ -18,7 +18,7 @@
         "innova/angular-js-bundle": "~5.0"
     },
     "autoload": {
-        "psr-4": { "Icap\\WebsiteBundle": "" }
+        "psr-4": { "Icap\\WebsiteBundle\\": "" }
     }
 }
 
