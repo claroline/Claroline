@@ -97,7 +97,7 @@ class OrganizationController extends FOSRestController
         return array('success');
     }
 
-        /**
+    /**
      * @View(serializerGroups={"api"})
      * @ApiDoc(
      *     description="Returns the organizations list",
@@ -107,6 +107,18 @@ class OrganizationController extends FOSRestController
     public function getOrganizationsAction()
     {
         return $this->organizationManager->getRoots();
+    }
+
+    /**
+     * @View(serializerGroups={"organization_list"})
+     * @ApiDoc(
+     *     description="Returns the organizations list",
+     *     views = {"organization"}
+     * )
+     */
+    public function getOrganizationListAction()
+    {
+        return $this->organizationManager->getAll();
     }
 
     /**

@@ -35,7 +35,7 @@ class Organization
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api"})
+     * @Groups({"api", "organization_list"})
      */
     protected $id;
 
@@ -48,14 +48,14 @@ class Organization
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api"})    
+     * @Groups({"api", "organization_list"})    
      */
     protected $name;
 
     /**
      * @ORM\Column(nullable=true)
      * @Assert\Email()
-     * @Groups({"api"})    
+     * @Groups({"api", "organization_list"})    
      */
     protected $email;
 

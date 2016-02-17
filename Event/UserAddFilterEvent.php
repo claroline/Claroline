@@ -33,7 +33,6 @@ class UserAddFilterEvent extends Event
        if (($key = array_search($filter, $this->filters)) !== false) {
             unset($filters[$key]);
         }
-     
     }
 
     public function getFilters()
