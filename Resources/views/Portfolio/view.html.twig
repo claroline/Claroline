@@ -206,7 +206,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets debug=false filter='lessphp, cssmin'  output='css/icapportfolio/style_view.css'
+    {% stylesheets debug=false filter='less, cssmin'  output='css/icapportfolio/style_view.css'
       "@IcapPortfolioBundle/Resources/views/less/style.less"
       "@IcapPortfolioBundle/Resources/views/less/interface.less"
       "bundles/frontend/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css"

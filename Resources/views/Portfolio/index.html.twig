@@ -92,7 +92,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets debug=false filter='lessphp, cssmin'  output='css/icapportfolio/index.css'
+    {% stylesheets debug=false filter='less, cssmin'  output='css/icapportfolio/index.css'
       '@IcapPortfolioBundle/Resources/views/less/comments.less'
       '@IcapPortfolioBundle/Resources/views/less/statistics.less'
       '@IcapPortfolioBundle/Resources/views/less/daterangepicker.less'

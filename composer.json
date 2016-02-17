@@ -20,7 +20,6 @@
         "innova/angular-ui-tinymce-bundle": "5.*"
     },
     "autoload": {
-        "psr-0": { "Icap\\PortfolioBundle": "" }
-    },
-    "target-dir": "Icap/PortfolioBundle"
+        "psr-4": { "Icap\\PortfolioBundle\\": "" }
+    }
 }

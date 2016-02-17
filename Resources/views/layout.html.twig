@@ -21,7 +21,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets debug=false filter='lessphp, cssmin'  output='css/icapportfolio/style.css'
+    {% stylesheets debug=false filter='less, cssmin'  output='css/icapportfolio/style.css'
     "@IcapPortfolioBundle/Resources/views/less/style.less"
     "@IcapPortfolioBundle/Resources/views/less/tabs.less" %}
     <link rel="stylesheet" href="{{ asset_url }}" screen="media"/>
