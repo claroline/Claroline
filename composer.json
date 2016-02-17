@@ -15,9 +15,6 @@
         "claroline/core-bundle": "~6.0"
     },
     "autoload": {
-        "psr-0": {
-            "Icap\\NotificationBundle": ""
-        }
-    },
-    "target-dir": "Icap/NotificationBundle"
+        "psr-4": { "Icap\\NotificationBundle\\": "" }
+    }
 }
