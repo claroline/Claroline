@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Claroline dev dependencies and scripts",
   "scripts": {
-    "bower": "bower update",
+    "bower": "bower update --allow-root",
     "themes": "node vendor/claroline/core-bundle/Resources/scripts/build-themes",
     "webpack": "rm -rf web/dist/* && webpack --progress --profile --colors --display-error-details",
     "watch": "webpack-dev-server --hot --inline --content-base web --claro-tgt=watch --display-error-details"
