@@ -1,0 +1,39 @@
+[
+  {
+    "name": "behat/transliterator",
+    "version": "v1.1.0",
+    "version_normalized": "1.1.0.0",
+    "type": "library"
+  },
+  {
+    "name": "gedmo/doctrine-extensions",
+    "version": "v2.3.12",
+    "version_normalized": "2.3.12.0",
+    "type": "library"
+  },
+  {
+    "name": "foo/bar-bundle",
+    "version": "v6.0.2",
+    "version_normalized": "6.0.2.0",
+    "target-dir": "Foo/BarBundle",
+    "type": "claroline-core"
+  },
+  {
+    "name": "stof/doctrine-extensions-bundle",
+    "version": "v1.1.0",
+    "version_normalized": "1.1.0.0",
+    "target-dir": "Stof/DoctrineExtensionsBundle"
+  },
+  {
+    "name": "baz/quz-bundle",
+    "version": "v6.2.6",
+    "version_normalized": "6.2.6.0",
+    "type": "claroline-plugin"
+  },
+  {
+    "name": "ext/ext-bundle",
+    "version": "v5.3.3",
+    "version_normalized": "5.3.3.0",
+    "type": "claroline-plugin"
+  }
+]
