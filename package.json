@@ -1,21 +1,14 @@
 {
   "name": "claroline",
-  "version": "6.0.0",
-  "description": "Learning management system",
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/claroline/Claroline.git"
-  },
-  "license": "GPL-3.0+",
-  "homepage": "https://github.com/claroline/Claroline#readme",
+  "version": "1.0.0",
+  "description": "Claroline dev dependencies and scripts",
   "scripts": {
-    "build": "node make.js"
+    "bower": "bower update",
+    "themes": "node vendor/claroline/core-bundle/Resources/scripts/build-themes",
+    "webpack": "rm -rf web/dist/* && webpack --progress --profile --colors --display-error-details",
+    "watch": "webpack-dev-server --hot --inline --content-base web --claro-tgt=watch --display-error-details"
   },
-  "devDependencies": {
-    "autoprefixer": "^6.3.1",
-    "cssnano": "^3.4.0",
-    "less": "^2.5.3",
-    "postcss-cli": "^2.5.0",
-    "shelljs": "^0.5.3"
+  "dependencies": {
+    "claroline-core": "file:./vendor/claroline/core-bundle"
   }
 }
