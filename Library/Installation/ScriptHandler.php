@@ -45,7 +45,7 @@ class ScriptHandler
                 "If no recent version of Node.js is available as an official package or installer for \n" .
                 "your OS, consider using a version manager like nvm (http://github.com/creationix/nvm).",
                 self::MIN_NODE_VERSION,
-                $version
+                $nodeVersion
             ));
         }
 
