@@ -8,6 +8,12 @@
         <h2>
             {{ dropzone.resourceNode.name }} (Collecticiel)
 
+            {% if not collecticielOpenOrNot %}
+                <div class="alert alert-warning closed-collecticiel">
+                    {{ 'Closed collecticiel'|trans({}, 'innova_collecticiel') }}
+                </div>
+            {% endif %}
+
             <div class="btn-group pull-right">
                 {# Suivre cette ressource 
                 Libéllé à cacher #46 InnovaERV #}
@@ -55,11 +61,6 @@
                         {{ 'Parameters'|trans({}, 'innova_collecticiel') }}
                     </a>
                 </li>
-                {% if not collecticielOpenOrNot %}
-                <li style="float: right; padding: 8px;" class="alert alert-warning">
-                    {{ 'Closed collecticiel'|trans({}, 'innova_collecticiel') }}
-                </li>
-                {% endif %}
             {% else %}
                 <!-- (Mon) Espace collecticiel -->
                 {% include "InnovaCollecticielBundle:Dropzone:editNotAdmin.html.twig" %}
