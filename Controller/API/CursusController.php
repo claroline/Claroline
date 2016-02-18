@@ -403,7 +403,7 @@ class CursusController extends FOSRestController
 
             return new JsonResponse('Forbidden', 403);
         }
-        $queueDatas = $this->cursusManager->deleteCourseQueue($queue);
+        $queueDatas = $this->cursusManager->declineCourseQueue($queue);
 
         return new JsonResponse($queueDatas, 200);
     }
@@ -423,7 +423,7 @@ class CursusController extends FOSRestController
 
             return new JsonResponse('Forbidden', 403);
         }
-        $queueDatas = $this->cursusManager->deleteSessionQueue($queue);
+        $queueDatas = $this->cursusManager->declineSessionQueue($queue);
 
         return new JsonResponse($queueDatas, 200);
     }

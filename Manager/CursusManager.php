@@ -39,10 +39,14 @@ use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusGroup;
 use Claroline\CursusBundle\Entity\CursusUser;
 use Claroline\CursusBundle\Entity\CursusDisplayedWord;
+use Claroline\CursusBundle\Event\Log\LogCourseQueueCreateEvent;
+use Claroline\CursusBundle\Event\Log\LogCourseQueueDeclineEvent;
 use Claroline\CursusBundle\Event\Log\LogCourseSessionUserRegistrationEvent;
 use Claroline\CursusBundle\Event\Log\LogCourseSessionUserUnregistrationEvent;
 use Claroline\CursusBundle\Event\Log\LogCursusUserRegistrationEvent;
 use Claroline\CursusBundle\Event\Log\LogCursusUserUnregistrationEvent;
+use Claroline\CursusBundle\Event\Log\LogSessionQueueCreateEvent;
+use Claroline\CursusBundle\Event\Log\LogSessionQueueDeclineEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializationContext;
@@ -1428,6 +1432,9 @@ class CursusManager
                 $this->om->persist($queue);
                 $this->om->flush();
 
+                $event = new LogSessionQueueCreateEvent($queue);
+                $this->eventDispatcher->dispatch('log', $event);
+
                 if (($status & CourseRegistrationQueue::WAITING_USER) === CourseRegistrationQueue::WAITING_USER) {
                     $this->sendSessionQueueRequestConfirmationMail($queue);
                 }
@@ -1451,6 +1458,16 @@ class CursusManager
         );
         $this->om->remove($queue);
         $this->om->flush();
+
+        return $queueDatas;
+    }
+
+
+    public function declineSessionQueue(CourseSessionRegistrationQueue $queue)
+    {
+        $queueDatas = $this->deleteSessionQueue($queue);
+        $event = new LogSessionQueueDeclineEvent($queue);
+        $this->eventDispatcher->dispatch('log', $event);
 
         return $queueDatas;
     }
@@ -1483,6 +1500,9 @@ class CursusManager
             $queue->setStatus($status);
             $this->om->persist($queue);
             $this->om->flush();
+
+            $event = new LogCourseQueueCreateEvent($queue);
+            $this->eventDispatcher->dispatch('log', $event);
 
             if (($status & CourseRegistrationQueue::WAITING_USER) === CourseRegistrationQueue::WAITING_USER) {
                 $this->sendCourseQueueRequestConfirmationMail($queue);
@@ -1532,7 +1552,7 @@ class CursusManager
         );
 
         if (!is_null($queue)) {
-            $this->deleteCourseQueue($queue);
+            $this->declineCourseQueue($queue);
         }
     }
 
@@ -1550,6 +1570,15 @@ class CursusManager
         );
         $this->om->remove($queue);
         $this->om->flush();
+
+        return $queueDatas;
+    }
+
+    public function declineCourseQueue(CourseRegistrationQueue $queue)
+    {
+        $queueDatas = $this->deleteCourseQueue($queue);
+        $event = new LogCourseQueueDeclineEvent($queue);
+        $this->eventDispatcher->dispatch('log', $event);
 
         return $queueDatas;
     }

@@ -929,7 +929,7 @@ class CourseController extends Controller
         CourseSessionRegistrationQueue $queue
     )
     {
-        $this->cursusManager->deleteSessionQueue($queue);
+        $this->cursusManager->declineSessionQueue($queue);
 
         return new JsonResponse('success', 200);
     }
