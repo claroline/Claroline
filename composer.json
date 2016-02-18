@@ -43,6 +43,12 @@
         "claroline/dev-bundle": "master"
     },
     "scripts": {
+    	"fast-install" : [
+	    "composer run configure",
+            "php app/console doctrine:database:create",
+            "php bin/doctrine dbal:import claroline.sql -vvv",
+	    "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets"
+	],
         "sync": [
             "composer run fetch",
             "composer run configure",
