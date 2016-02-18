@@ -164,3 +164,8 @@ input.form-control {
   margin-top:-30px;
   margin-right:-10px
 }
+
+/* #271 : Afficher les liens en noir */
+.blackLink {
+  color:black;  
+}
