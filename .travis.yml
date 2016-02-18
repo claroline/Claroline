@@ -20,7 +20,7 @@ before_install:
 
 before_script:
   - composer validate
-  - composer run sync
+  - composer run sync-dev
 
 script: echo done
 
