@@ -94,6 +94,9 @@ class DocumentController extends DropzoneBaseController
                 ->findManagerRole($dropzone->getResourceNode()->getWorkspace());
 
             $resourceManager = $this->get('claroline.manager.resource_manager');
+
+
+
             $resourceManager->create(
                 $hiddenDropDirectory,
                 $resourceManager->getResourceTypeByName('directory'),
@@ -145,7 +148,7 @@ class DocumentController extends DropzoneBaseController
         return $file->getResourceNode();
     }
 
-    private function createText(Dropzone $dropzone, Drop $drop, $richText)
+    private function createText(Dropzone $dropzone, Drop $drop, $richText, $titleText)
     {
         $em = $this->getDoctrine()->getManager();
         $parent = $this->getDropHiddenDirectory($dropzone, $drop);
@@ -154,7 +157,9 @@ class DocumentController extends DropzoneBaseController
         $revision->setContent($richText);
         $revision->setUser($drop->getUser());
         $text = new Text();
-        $text->setName($this->get('translator')->trans('Free text', array(), 'innova_collecticiel'));
+        // #272 : Maintenant, on insère le TITRE qui est saisi.
+//      $text->setName($this->get('translator')->trans('Free text', array(), 'innova_collecticiel'));
+        $text->setName($titleText);
         $revision->setText($text);
         $em->persist($text);
         $em->persist($revision);
@@ -207,7 +212,8 @@ class DocumentController extends DropzoneBaseController
             $node = $this->createFile($dropzone, $drop, $file->getData());
         } else if ($documentType == 'text') {
             $data = $form->getData();
-            $node = $this->createText($dropzone, $drop, $data['document']);
+            // #272 : Maintenant, on insère le TITRE qui est saisi.
+            $node = $this->createText($dropzone, $drop, $data['document'], $data['title']);
         } else if ($documentType == 'resource') {
             $data = $form->getData();
             $node = $this->createResource($dropzone, $drop, $data['document']);
