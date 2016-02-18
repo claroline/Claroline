@@ -56,11 +56,7 @@ function configure(rootDir, packages, isWatchMode) {
 
   const loaders = [
     makeJsLoader(isProd),
-    makeRawLoader(),
-    {
-      test: /\.html/,
-      loader: 'raw'
-    }
+    makeRawLoader()
   ]
 
   return {

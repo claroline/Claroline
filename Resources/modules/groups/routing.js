@@ -1,4 +1,4 @@
-export default function($stateProvider, $urlRouterProvider) {    
+export default function($stateProvider, $urlRouterProvider) {
     const translate = function(key) {
         return window.Translator.trans(key, {}, 'platform');
     }

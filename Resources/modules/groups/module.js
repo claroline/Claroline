@@ -1,3 +1,5 @@
+import 'angular/angular.min'
+
 import GroupController from './Controller/GroupController'
 import EditGroupModalController from './Controller/EditGroupModalController'
 import CreateGroupModalController from './Controller/CreateGroupModalController'

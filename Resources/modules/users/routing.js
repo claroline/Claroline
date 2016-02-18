@@ -7,8 +7,7 @@ export default function($stateProvider, $urlRouterProvider) {
         .state ('users', {
             abstract: true,
             url: '/users',
-            template: require('./Partial/main.html'),
-
+            template: require('./Partial/main.html')
         })
         .state(
             'users.list',
@@ -37,12 +36,11 @@ export default function($stateProvider, $urlRouterProvider) {
                 },
                 views: {
                     'groups': {
-                        template: require('../groups/Partial/main.html')
+                        template: require('./../groups/Partial/main.html')
                     }
                 }
             }
         )
-    ;
 
-    $urlRouterProvider.otherwise("/users");
+    $urlRouterProvider.otherwise('/users');
 }

@@ -1,3 +1,4 @@
+import 'angular/angular.min'
 import 'angular-ui-select'
 
 import Interceptors from '../interceptorsDefault'
