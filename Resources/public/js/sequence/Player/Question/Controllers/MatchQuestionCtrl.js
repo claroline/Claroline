@@ -116,12 +116,15 @@
                     this.feedbackIsVisible = true;
                     this.solutions = result.solutions;
                     this.questionFeedback = result.feedback;
-                    console.log(this.question);
-                    console.log(this.connections);
-                    console.log(this.dropped);
                 }.bind(this));
             };
             
+            /**
+             * Check if all answers are good and complete
+             * and colours the panel accordingly
+             * @param {type} label
+             * @returns {Boolean}
+             */
             this.checkAnswerValidity = function (label) {
                 var answers;
                 if (this.question.toBind) {
@@ -130,6 +133,9 @@
                 else {
                     answers = this.dropped;
                 }
+                
+                // set the orphan answers list
+                // (runs only once)
                 if (!this.orphanAnswersAreChecked) {
                     var hasSolution;
                     for (var i=0; i<this.question.secondSet.length; i++) {
@@ -146,18 +152,47 @@
                     this.orphanAnswersAreChecked = true;
                 }
                 
-                var valid = false;
-                for (var i=0; i<answers.length; i++) {
-                    if (answers[i].target === label.id) {
-                        for (var j=0; j<this.solutions.length; j++) {
-                            if (this.solutions[j].secondId === label.id) {
-                                if (this.solutions[j].firstId === answers[i].source) {
-                                    valid = true;
-                                }
+                /**
+                 * Check if all the right answers are selected by the student
+                 */
+                var valid = true;
+                var subvalid;
+                for (var i=0; i<this.solutions.length; i++) {
+                    if (this.solutions[i].secondId === label.id) {
+                        subvalid = false;
+                        for (var j=0; j<answers.length; j++) {
+                            if (this.solutions[i].firstId === answers[j].source && this.solutions[i].secondId === answers[j].target) {
+                                subvalid = true;
                             }
+                        }
+                        if (subvalid === false) {
+                            valid = false;
                         }
                     }
                 }
+                
+                /**
+                 * Check if there are wrong answers selected by the student
+                 */
+                var valid3 = true;
+                for (var i=0; i<answers.length; i++) {
+                    if (answers[i].target === label.id) {
+                        subvalid = false;
+                        for (var j=0; j<this.solutions.length; j++) {
+                            if (this.solutions[j].firstId === answers[i].source && this.solutions[j].secondId === answers[i].target) {
+                                subvalid = true;
+                            }
+                        }
+                        if (subvalid === false) {
+                            valid3 = false;
+                        }
+                    }
+                }
+                
+                /**
+                 * Check if this label is an orphan, and if so,
+                 * check if the student left it unconnected
+                 */
                 var valid2 = false;
                 for (var i=0; i<this.orphanAnswers.length; i++) {
                     if (this.orphanAnswers[i].id === label.id) {
@@ -212,9 +247,20 @@
                         }
                     }
                 }
-                return valid || valid2;
+                
+                if (valid2) {
+                    return true;
+                }
+                else {
+                    return valid && valid3;
+                }
             };
             
+            /**
+             * Get the student's answers for this label
+             * @param {type} label
+             * @returns {Array}
+             */
             this.getStudentAnswers = function (label) {
                 var answers_to_check;
                 if (this.question.toBind) {
@@ -236,6 +282,11 @@
                 return answers;
             };
             
+            /**
+             * Get the correct answers for this label
+             * @param {type} label
+             * @returns {Array}
+             */
             this.getCorrectAnswers = function (label) {
                 var answers = [];
                 for (var i=0; i<this.solutions.length; i++) {
@@ -250,6 +301,11 @@
                 return answers;
             };
             
+            /**
+             * Get the specific feedback for this label
+             * @param {type} label
+             * @returns {MatchQuestionCtrl_L12@arr;solutions@pro;feedback}
+             */
             this.getCurrentItemFeedBack = function (label) {
                 for (var i=0; i<this.solutions.length; i++) {
                     if (this.solutions[i].secondId === label.id) {
