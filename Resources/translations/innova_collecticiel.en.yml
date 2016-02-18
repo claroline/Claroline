@@ -349,7 +349,7 @@ unlock_all: "unlock all"
 cancel_unlock: "cancel unlock for all"
 Start evaluation: 'Démarrer le collecticiel'
 Complete collecticiel: 'Compléter le collecticiel'
-Type of document: 'Type'
+Type of document: 'Type of document'
 Name of document: 'Document'
 Validated document: 'To be validated'
 See personal view: 'See personal view'

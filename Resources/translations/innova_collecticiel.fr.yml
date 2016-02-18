@@ -349,8 +349,8 @@ unlock_all: "débloquer tous "
 cancel_unlock: "annuler le déblocage"
 Start evaluation: 'Démarrer le collecticiel'
 Complete evaluation: 'Compléter le collecticiel'
-Type of document: 'Type'
-Name of document: 'Type de document'
+Type of document: 'Type de document'
+Name of document: 'Document déposé'
 Validated document: 'Demande d''évaluation'
 See personal view: 'Accéder à la vue personnelle'
 Study: 'Etudiant'
