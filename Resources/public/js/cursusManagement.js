@@ -282,7 +282,6 @@
     });
     
     var addCursusRow = function (data) {
-        console.log(data);
         var cursusRow =
             '<li id="cursus-row-' + data['id'] + '"' +
                 ' data-cursus-id="' + data['id'] + '">' +

@@ -29,6 +29,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CourseSessionUser
 {
+    const LEARNER = 0;
+    const TEACHER = 1;
+    const PENDING_LEARNER = 2;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -61,7 +65,7 @@ class CourseSessionUser
     /**
      * @ORM\Column(name="user_type", type="integer", nullable=false)
      */
-    protected $userType = 0;
+    protected $userType = self::LEARNER;
 
     public function getId()
     {

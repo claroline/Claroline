@@ -326,6 +326,11 @@ class Course
         return $this;
     }
 
+    public function hasValidation()
+    {
+        return $this->userValidation || $this->registrationValidation;
+    }
+
     public function __toString()
     {
         return $this->getTitle() . ' [' . $this->getCode() . ']';

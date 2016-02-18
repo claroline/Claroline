@@ -833,63 +833,53 @@ class CursusManager
         return $removableCursusGroups;
     }
 
+    public function getSessionRemainingPlace(CourseSession $session)
+    {
+        $remaingPlace = null;
+        $maxUsers = $session->getMaxUsers();
+
+        if (!is_null($maxUsers)) {
+            $remaingPlace = $maxUsers;
+            $sessionUsers = $this->getSessionUsersBySession($session);
+
+            foreach ($sessionUsers as $sessionUser) {
+
+                if ($sessionUser->getUserType() === CourseSessionUser::LEARNER ||
+                    $sessionUser->getUserType() === CourseSessionUser::PENDING_LEARNER) {
+
+                    $remaingPlace--;
+                }
+            }
+        }
+
+        return $remaingPlace;
+    }
+
     public function registerUsersToSession(
         CourseSession $session,
         array $users,
         $type
     )
     {
-        $results = array();
+        $results = array('status' => 'success', 'datas' => array());
         $registrationDate = new \DateTime();
+        $course = $session->getCourse();
+        $remainingPlaces = (intval($type) === CourseSessionUser::LEARNER) ?
+            $this->getSessionRemainingPlace($session) :
+            null;
 
-        $this->om->startFlushSuite();
-
-        foreach ($users as $user) {
-            $sessionUser = $this->sessionUserRepo->findOneSessionUserBySessionAndUserAndType(
-                $session,
-                $user,
-                $type
-            );
-
-            if (is_null($sessionUser)) {
-                $sessionUser = new CourseSessionUser();
-                $sessionUser->setSession($session);
-                $sessionUser->setUser($user);
-                $sessionUser->setUserType($type);
-                $sessionUser->setRegistrationDate($registrationDate);
-                $this->om->persist($sessionUser);
-                $results[] = $sessionUser;
-                $event = new LogCourseSessionUserRegistrationEvent($session, $user);
-                $this->eventDispatcher->dispatch('log', $event);
-            }
-        }
-        $role = null;
-
-        if (intval($type) === 0) {
-            $role = $session->getLearnerRole();
-        } elseif (intval($type) === 1) {
-            $role = $session->getTutorRole();
-        }
-
-        if (!is_null($role)) {
-            $this->roleManager->associateRoleToMultipleSubjects($users, $role);
-        }
-        $this->om->endFlushSuite();
-
-        return $results;
-    }
-
-    public function registerUsersToSessions(
-        array $sessions,
-        array $users,
-        $type = 0
-    )
-    {
-        $registrationDate = new \DateTime();
-
-        $this->om->startFlushSuite();
-
-        foreach ($sessions as $session) {
+        if (!is_null($remainingPlaces) && ($remainingPlaces < count($users))) {
+            $results['status'] = 'failed';
+            $results['datas']['remainingPlaces'] = $remainingPlaces;
+            $results['datas']['requiredPlaces'] = count($users);
+            $results['datas']['sessionId'] = $session->getId();
+            $results['datas']['sessionName'] = $session->getName();
+            $results['datas']['courseId'] = $course->getId();
+            $results['datas']['courseTitle'] = $course->getTitle();
+            $results['datas']['courseCode'] = $course->getCode();
+        } else {
+            $sessionUsers = array();
+            $this->om->startFlushSuite();
 
             foreach ($users as $user) {
                 $sessionUser = $this->sessionUserRepo->findOneSessionUserBySessionAndUserAndType(
@@ -905,6 +895,7 @@ class CursusManager
                     $sessionUser->setUserType($type);
                     $sessionUser->setRegistrationDate($registrationDate);
                     $this->om->persist($sessionUser);
+                    $sessionUsers[] = $sessionUser;
                     $event = new LogCourseSessionUserRegistrationEvent($session, $user);
                     $this->eventDispatcher->dispatch('log', $event);
                 }
@@ -920,8 +911,97 @@ class CursusManager
             if (!is_null($role)) {
                 $this->roleManager->associateRoleToMultipleSubjects($users, $role);
             }
+            $this->om->endFlushSuite();
+
+            foreach ($sessionUsers as $su) {
+                $user = $su->getUser();
+                $results['datas'][] = array(
+                    'id' => $su->getId(),
+                    'user_type' => $su->getUserType(),
+                    'user_id' => $user->getId(),
+                    'username' => $user->getUsername(),
+                    'user_first_name' => $user->getFirstName(),
+                    'user_last_name' => $user->getLastName(),
+                    'sessionId' => $session->getId(),
+                    'sessionName' => $session->getName(),
+                    'courseId' => $course->getId(),
+                    'courseTitle' => $course->getTitle(),
+                    'courseCode' => $course->getCode()
+                );
+            }
         }
-        $this->om->endFlushSuite();
+
+        return $results;
+    }
+
+    public function registerUsersToSessions(
+        array $sessions,
+        array $users,
+        $type = 0
+    )
+    {
+        $results = array('status' => 'success', 'datas' => array());
+
+        if (intval($type) === CourseSessionUser::LEARNER) {
+
+            foreach ($sessions as $session) {
+                $course = $session->getCourse();
+                $remainingPlaces = $this->getSessionRemainingPlace($session);
+
+                if (!is_null($remainingPlaces) && ($remainingPlaces < count($users))) {
+                    $results['status'] = 'failed';
+                    $results['datas'][] = array(
+                        'sessionId' => $session->getId(),
+                        'sessionName' => $session->getName(),
+                        'courseId' => $course->getId(),
+                        'courseTitle' => $course->getTitle(),
+                        'courseCode' => $course->getCode(),
+                        'remainingPlaces' => $remainingPlaces
+                    );
+                }
+            }
+        }
+
+        if ($results['status'] === 'success') {
+            $this->om->startFlushSuite();
+            $registrationDate = new \DateTime();
+
+            foreach ($sessions as $session) {
+
+                foreach ($users as $user) {
+                    $sessionUser = $this->sessionUserRepo->findOneSessionUserBySessionAndUserAndType(
+                        $session,
+                        $user,
+                        $type
+                    );
+
+                    if (is_null($sessionUser)) {
+                        $sessionUser = new CourseSessionUser();
+                        $sessionUser->setSession($session);
+                        $sessionUser->setUser($user);
+                        $sessionUser->setUserType($type);
+                        $sessionUser->setRegistrationDate($registrationDate);
+                        $this->om->persist($sessionUser);
+                        $event = new LogCourseSessionUserRegistrationEvent($session, $user);
+                        $this->eventDispatcher->dispatch('log', $event);
+                    }
+                }
+                $role = null;
+
+                if (intval($type) === 0) {
+                    $role = $session->getLearnerRole();
+                } elseif (intval($type) === 1) {
+                    $role = $session->getTutorRole();
+                }
+
+                if (!is_null($role)) {
+                    $this->roleManager->associateRoleToMultipleSubjects($users, $role);
+                }
+            }
+            $this->om->endFlushSuite();
+        }
+
+        return $results;
     }
 
     public function unregisterUsersFromSession(array $sessionUsers)
@@ -956,56 +1036,81 @@ class CursusManager
         $type = 0
     )
     {
-        $registrationDate = new \DateTime();
+        $users = $group->getUsers()->toArray();
+        $results = array('status' => 'success', 'datas' => array());
 
-        $this->om->startFlushSuite();
+        if (intval($type) === CourseSessionUser::LEARNER) {
 
-        foreach ($sessions as $session) {
-            $users = $group->getUsers()->toArray();
-            $sessionGroup = $this->sessionGroupRepo->findOneSessionGroupBySessionAndGroup(
-                $session,
-                $group,
-                $type
-            );
+            foreach ($sessions as $session) {
+                $course = $session->getCourse();
+                $remainingPlaces = $this->getSessionRemainingPlace($session);
 
-            if (is_null($sessionGroup)) {
-                $sessionGroup = new CourseSessionGroup();
-                $sessionGroup->setSession($session);
-                $sessionGroup->setGroup($group);
-                $sessionGroup->setGroupType($type);
-                $sessionGroup->setRegistrationDate($registrationDate);
-                $this->om->persist($sessionGroup);
+                if (!is_null($remainingPlaces) && ($remainingPlaces < count($users))) {
+                    $results['status'] = 'failed';
+                    $results['datas'][] = array(
+                        'sessionId' => $session->getId(),
+                        'sessionName' => $session->getName(),
+                        'courseId' => $course->getId(),
+                        'courseTitle' => $course->getTitle(),
+                        'courseCode' => $course->getCode(),
+                        'remainingPlaces' => $remainingPlaces
+                    );
+                }
             }
+        }
 
-            foreach ($users as $user) {
-                $sessionUser = $this->sessionUserRepo->findOneSessionUserBySessionAndUserAndType(
+        if ($results['status'] === 'success') {
+            $this->om->startFlushSuite();
+            $registrationDate = new \DateTime();
+
+            foreach ($sessions as $session) {
+                $sessionGroup = $this->sessionGroupRepo->findOneSessionGroupBySessionAndGroup(
                     $session,
-                    $user,
+                    $group,
                     $type
                 );
 
-                if (is_null($sessionUser)) {
-                    $sessionUser = new CourseSessionUser();
-                    $sessionUser->setSession($session);
-                    $sessionUser->setUser($user);
-                    $sessionUser->setUserType($type);
-                    $sessionUser->setRegistrationDate($registrationDate);
-                    $this->om->persist($sessionUser);
+                if (is_null($sessionGroup)) {
+                    $sessionGroup = new CourseSessionGroup();
+                    $sessionGroup->setSession($session);
+                    $sessionGroup->setGroup($group);
+                    $sessionGroup->setGroupType($type);
+                    $sessionGroup->setRegistrationDate($registrationDate);
+                    $this->om->persist($sessionGroup);
+                }
+
+                foreach ($users as $user) {
+                    $sessionUser = $this->sessionUserRepo->findOneSessionUserBySessionAndUserAndType(
+                        $session,
+                        $user,
+                        $type
+                    );
+
+                    if (is_null($sessionUser)) {
+                        $sessionUser = new CourseSessionUser();
+                        $sessionUser->setSession($session);
+                        $sessionUser->setUser($user);
+                        $sessionUser->setUserType($type);
+                        $sessionUser->setRegistrationDate($registrationDate);
+                        $this->om->persist($sessionUser);
+                    }
+                }
+                $role = null;
+
+                if (intval($type) === 0) {
+                    $role = $session->getLearnerRole();
+                } elseif (intval($type) === 1) {
+                    $role = $session->getTutorRole();
+                }
+
+                if (!is_null($role)) {
+                    $this->roleManager->associateRole($group, $role);
                 }
             }
-            $role = null;
-
-            if (intval($type) === 0) {
-                $role = $session->getLearnerRole();
-            } elseif (intval($type) === 1) {
-                $role = $session->getTutorRole();
-            }
-
-            if (!is_null($role)) {
-                $this->roleManager->associateRole($group, $role);
-            }
+            $this->om->endFlushSuite();
         }
-        $this->om->endFlushSuite();
+
+        return $results;
     }
 
     public function unregisterGroupFromSession(CourseSessionGroup $sessionGroup)
@@ -1456,9 +1561,14 @@ class CursusManager
     {
         $user = $queue->getUser();
         $this->om->startFlushSuite();
-        $this->registerUsersToSession($session, array($user), 0);
-        $this->om->remove($queue);
+        $results = $this->registerUsersToSession($session, array($user), 0);
+
+        if ($results['status'] === 'success') {
+            $this->om->remove($queue);
+        }
         $this->om->endFlushSuite();
+
+        return $results;
     }
 
     public function getCoursesWidgetConfiguration(WidgetInstance $widgetInstance)
@@ -1494,19 +1604,22 @@ class CursusManager
 
     public function registerUserToCourse(User $user, Course $course)
     {
+        $results = array('status' => 'success', 'datas' => array());
         $sessions = $this->getDefaultPublicSessionsByCourse($course);
 
         if (count($sessions) > 0) {
             $session = $sessions[0];
 
-            if ($session->getRegistrationValidation()) {
+            if ($session->hasValidation()) {
                 $this->addUserToSessionQueue($user, $session);
             } else {
-                $this->registerUsersToSession($session, array($user), 0);
+                $results = $this->registerUsersToSession($session, array($user), 0);
             }
         } elseif ($course->getPublicRegistration()) {
             $this->addUserToCourseQueue($user, $course);
         }
+
+        return $results;
     }
 
     public function unlockedHierarchy(
@@ -2281,8 +2394,13 @@ class CursusManager
             );
             $sessions[] = $session;
         }
-        $this->registerGroupToMultipleCursus($multipleCursus, $group);
-        $this->registerGroupToSessions($sessions, $group);
+        $results = $this->registerGroupToSessions($sessions, $group);
+
+        if ($results['status'] === 'success') {
+            $this->registerGroupToMultipleCursus($multipleCursus, $group);
+        }
+
+        return $results;
     }
 
     public function registerUsersToCursusAndSessions(
@@ -2349,8 +2467,13 @@ class CursusManager
             );
             $sessions[] = $session;
         }
-        $this->registerUsersToMultipleCursus($multipleCursus, $users);
-        $this->registerUsersToSessions($sessions, $users);
+        $results = $this->registerUsersToSessions($sessions, $users);
+
+        if ($results['status'] === 'success') {
+            $this->registerUsersToMultipleCursus($multipleCursus, $users);
+        }
+
+        return $results;
     }
 
     public function getValidatorsRoles()
@@ -2593,6 +2716,7 @@ class CursusManager
 
     public function validateUserSessionRegistrationQueue(CourseSessionRegistrationQueue $queue)
     {
+        $results = array('status' => 'success', 'datas' => array());
         $status = $queue->getStatus();
         $user = $queue->getUser();
         $session = $queue->getSession();
@@ -2605,9 +2729,66 @@ class CursusManager
         }
 
         if ($queue->getStatus() === 0) {
-            $this->registerUsersToSession($session, array($user), 0);
-            $this->deleteSessionQueue($queue);
+            $results = $this->registerUsersToSession($session, array($user), 0);
+
+            if ($results['status'] === 'success') {
+                $this->deleteSessionQueue($queue);
+            } else {
+                $queue->setStatus(CourseRegistrationQueue::WAITING);
+                $this->persistCourseSessionRegistrationQueue($queue);
+            }
         }
+
+        return $results;
+    }
+
+    public function validateCourseQueue(CourseRegistrationQueue $queue)
+    {
+        $isAdmin = $this->authorization->isGranted('ROLE_ADMIN');
+        $status = $queue->getStatus();
+        $user = $queue->getUser();
+        $course = $queue->getCourse();
+        $queueDatas = array(
+            'type' => 'none',
+            'id' => $queue->getId(),
+            'courseId' => $course->getId(),
+            'applicationDate' => $queue->getApplicationDate(),
+            'userId' => $user->getId(),
+            'username' => $user->getUsername(),
+            'firstName' => $user->getFirstName(),
+            'lastName' => $user->getLastName(),
+            'status' => $queue->getStatus()
+        );
+
+        if ($status & CourseRegistrationQueue::WAITING_VALIDATOR) {
+            $authenticatedUser = $this->tokenStorage->getToken()->getUser();
+
+            if ($isAdmin) {
+                $status = 0;
+            } else {
+                $status -= CourseRegistrationQueue::WAITING_VALIDATOR;
+            }
+            $queue->setStatus($status);
+            $queue->setValidatorValidationDate(new \DateTime());
+            $queue->setValidator($authenticatedUser);
+            $this->persistCourseRegistrationQueue($queue);
+
+            $queueDatas['type'] = 'validated';
+            $queueDatas['status'] = $queue->getStatus();
+            $queueDatas['validatorValidationDate'] = $queue->getValidatorValidationDate();
+            $queueDatas['validatorId'] = $authenticatedUser->getId();
+            $queueDatas['validatorUsername'] = $authenticatedUser->getUsername();
+            $queueDatas['validatorFirstName'] = $authenticatedUser->getFirstName();
+            $queueDatas['validatorLastName'] = $authenticatedUser->getLastName();
+        }
+
+        if ($queue->getStatus() === 0) {
+            $queue->setStatus(CourseRegistrationQueue::WAITING);
+            $this->persistCourseRegistrationQueue($queue);
+            $queueDatas['status'] = $queue->getStatus();
+        }
+
+        return $queueDatas;
     }
 
     public function validateSessionQueue(CourseSessionRegistrationQueue $queue)
@@ -2653,9 +2834,15 @@ class CursusManager
         }
         
         if ($queue->getStatus() === 0) {
-            $this->registerUsersToSession($session, array($user), 0);
-            $this->deleteSessionQueue($queue);
-            $queueDatas['type'] = 'registered';
+            $results = $this->registerUsersToSession($session, array($user), 0);
+
+            if ($results['status'] === 'success') {
+                $this->deleteSessionQueue($queue);
+                $queueDatas['type'] = 'registered';
+            } else {
+                $queue->setStatus(CourseRegistrationQueue::WAITING);
+                $this->persistCourseSessionRegistrationQueue($queue);
+            }
         }
 
         return $queueDatas;
@@ -3197,7 +3384,7 @@ class CursusManager
     public function getSessionsByCourse(
         Course $course,
         $orderedBy = 'creationDate',
-        $order = 'DESC',
+        $order = 'ASC',
         $executeQuery = true
     )
     {
@@ -3213,7 +3400,7 @@ class CursusManager
         Course $course,
         $status,
         $orderedBy = 'creationDate',
-        $order = 'DESC',
+        $order = 'ASC',
         $executeQuery = true
     )
     {
@@ -3229,7 +3416,7 @@ class CursusManager
     public function getDefaultSessionsByCourse(
         Course $course,
         $orderedBy = 'creationDate',
-        $order = 'DESC',
+        $order = 'ASC',
         $executeQuery = true
     )
     {
@@ -3244,7 +3431,7 @@ class CursusManager
     public function getSessionsByCourses(
         array $courses,
         $orderedBy = 'creationDate',
-        $order = 'DESC',
+        $order = 'ASC',
         $executeQuery = true
     )
     {
@@ -3266,7 +3453,7 @@ class CursusManager
         Cursus $cursus,
         array $courses,
         $orderedBy = 'creationDate',
-        $order = 'DESC',
+        $order = 'ASC',
         $executeQuery = true
     )
     {
@@ -3288,7 +3475,7 @@ class CursusManager
     public function getDefaultPublicSessionsByCourse(
         Course $course,
         $orderedBy = 'creationDate',
-        $order = 'DESC',
+        $order = 'ASC',
         $executeQuery = true
     )
     {

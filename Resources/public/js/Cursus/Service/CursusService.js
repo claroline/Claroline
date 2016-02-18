@@ -25,7 +25,6 @@
                         $http.get(route).then(function (datas) {
                             
                             if (datas['status'] === 200) {
-                                console.log(datas);
                                 cursusRoots = datas['data'];
                                 cursusDatasReady = true;
                             }

@@ -76,7 +76,7 @@
                     prop: 'firstName',
                     headerRenderer: function () {
                         
-                        return '<b>' + translator.trans('first_name', {}, 'platform') + '</b>';
+                        return '<b>' + Translator.trans('first_name', {}, 'platform') + '</b>';
                     }
                 },
                 {
@@ -84,7 +84,7 @@
                     prop: 'lastName',
                     headerRenderer: function () {
                         
-                        return '<b>' + translator.trans('last_name', {}, 'platform') + '</b>';
+                        return '<b>' + Translator.trans('last_name', {}, 'platform') + '</b>';
                     }
                 },
                 {
@@ -92,7 +92,7 @@
                     prop: 'username',
                     headerRenderer: function () {
                         
-                        return '<b>' + translator.trans('username', {}, 'platform') + '</b>';
+                        return '<b>' + Translator.trans('username', {}, 'platform') + '</b>';
                     }
                 },
                 {
@@ -100,7 +100,7 @@
                     prop: 'registrationDate',
                     headerRenderer: function () {
                         
-                        return '<b>' + translator.trans('registration_date', {}, 'cursus') + '</b>';
+                        return '<b>' + Translator.trans('registration_date', {}, 'cursus') + '</b>';
                     },
                     cellRenderer: function(scope) {
                         
@@ -114,7 +114,7 @@
                         return '<button class="btn btn-default btn-sm"' +
                             ' ng-click="crmc.unregisterSelectedUsers()"' +
                             ' ng-disabled="!crmc.isUserSelected()">' +
-                            translator.trans('unregister_selected_users', {}, 'cursus') +
+                            Translator.trans('unregister_selected_users', {}, 'cursus') +
                             '</button>';
                     },
                     cellRenderer: function (scope) {
@@ -124,7 +124,7 @@
                             ', \'' +
                             scope.$row['firstName']  + ' ' + scope.$row['lastName']  + ' (' + scope.$row['username'] + ')' +
                             '\')">' +
-                            translator.trans('unregister', {}, 'cursus') +
+                            Translator.trans('unregister', {}, 'cursus') +
                             '</button>';
                     }
                 }
@@ -149,7 +149,7 @@
                     prop: 'groupName',
                     headerRenderer: function () {
                         
-                        return '<b>' + translator.trans('name', {}, 'platform') + '</b>';
+                        return '<b>' + Translator.trans('name', {}, 'platform') + '</b>';
                     }
                 },
                 {
@@ -157,7 +157,7 @@
                     prop: 'registrationDate',
                     headerRenderer: function () {
                         
-                        return '<b>' + translator.trans('registration_date', {}, 'cursus') + '</b>';
+                        return '<b>' + Translator.trans('registration_date', {}, 'cursus') + '</b>';
                     },
                     cellRenderer: function(scope) {
                         
@@ -171,7 +171,7 @@
                         return '<button class="btn btn-default btn-sm"' +
                             ' ng-click="crmc.unregisterSelectedGroups()"' +
                             ' ng-disabled="!crmc.isGroupSelected()">' +
-                            translator.trans('unregister_selected_groups', {}, 'cursus') +
+                            Translator.trans('unregister_selected_groups', {}, 'cursus') +
                             '</button>';
                     },
                     cellRenderer: function (scope) {
@@ -179,7 +179,7 @@
                         return '<button class="btn btn-danger btn-sm" ng-click="crmc.unregisterGroup(' +
                             scope.$row['id'] + ', \'' + scope.$row['groupName'] +
                             '\')">' +
-                            translator.trans('unregister', {}, 'cursus') +
+                            Translator.trans('unregister', {}, 'cursus') +
                             '</button>';
                     }
                 }
