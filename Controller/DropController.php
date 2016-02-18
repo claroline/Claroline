@@ -672,12 +672,15 @@ class DropController extends DropzoneBaseController
 
         $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
 
+        // Tableau donnant pour chaque document le premier enseignant qui a commenté
+        $teacherCommentDocArray = array();
+
         // Calcul du nombre d'AR en attente en prenant la même boucle que l'affichage de la liste.
         $alertNbDocumentWithoutReturnReceipt=0;
         foreach ($pager->getcurrentPageResults() as $drop) {
             foreach ($drop->getDocuments() as $document) {
-                //var_dump($document->getId());
-                // Récupération de l'accusé de réceptoin
+
+                // Récupération de l'accusé de réception
                 $returnReceiptType = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:ReturnReceipt')
                 ->doneReturnReceiptForADocument($dropzone, $document);
 
@@ -695,7 +698,31 @@ class DropController extends DropzoneBaseController
                 {
                     $alertNbDocumentWithoutReturnReceipt++;
                 }
+
+                // Récupération du premier enseignant qui a commenté ce document
+                $userComments = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Comment')
+                ->teacherCommentDocArray($document);
+
+var_dump(count($userComments));die();
+
+                // Traitement du tableau
+                for ($indice = 0; $indice<=count($userComments); $indice++)
+                {
+                // Initialisation de la variable car un document peut ne pas avoir d'accusé de réception.
+                $id = 0;
+
+                if (!empty($userComment)) {
+                    // Récupération de la valeur de l'accusé de réceptoin
+                    $teacherCommentDocArray[$document->getId()]= $userComment->getUser()->getId()->getUserName() . " " . $userComment->getFirstName();
+                }
+                else
+                {
+                    $teacherCommentDocArray[$document->getId()]="";
+                }
+                }
+
             }
+
         }
 
         $dataToView = $this->addDropsStats($dropzone, array(

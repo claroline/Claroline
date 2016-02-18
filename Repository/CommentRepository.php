@@ -8,6 +8,7 @@ namespace Innova\CollecticielBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\User;
+use Innova\CollecticielBundle\Entity\Document;
 
 class CommentRepository extends EntityRepository {
 
@@ -112,5 +113,24 @@ class CommentRepository extends EntityRepository {
         return $numberCommentRead;
 
     }
+
+    /**
+     *  Pour savoir le type d'accusé de réception pour l'utilisateur indiqué et le dropzone indiqué
+     * @param $documentId
+    */
+    public function teacherCommentDocArray(Document $document)
+    {
+
+        /* requête avec CreateQuery : */
+        $qb = $this->createQueryBuilder('comment')
+            ->select('comment')
+            ->andWhere('comment.document = :document')
+            ->setParameter('document', $document)
+            ->addOrderBy('comment.commentDate', 'ASC')
+            ;
+        return $qb->getQuery()->getResult();
+
+    }
+
 
 }
