@@ -46,12 +46,14 @@ class ScriptHandler
             $vendorDir = realpath(rtrim($event->getComposer()->getConfig()->get('vendor-dir'), '/'));
             $configDir = realpath($vendorDir . '/../app/config');
             $logger = new ConsoleIoLogger($event->getIO());
-            $aliases = $event->getComposer()->getPackage()->getAliases();
+            $manager = $event->getComposer()->getRepositoryManager();
+            $rootPackage = $event->getComposer()->getPackage();
 
             static::$recorder = new Recorder(
+                $manager->getLocalRepository(),
                 new Detector($vendorDir),
                 new BundleHandler($configDir . '/bundles.ini', $logger),
-                $aliases,
+                $rootPackage->getAliases(),
                 $vendorDir
             );
         }

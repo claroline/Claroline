@@ -18,26 +18,28 @@ use Composer\DependencyResolver\Operation\InstallOperation;
 use Composer\DependencyResolver\Pool;
 use Composer\DependencyResolver\Request;
 use Composer\DependencyResolver\Solver;
-use Composer\Json\JsonFile;
 use Composer\Package\Package;
 use Composer\Repository\ArrayRepository;
-use Composer\Repository\InstalledFilesystemRepository;
 use Composer\Repository\PlatformRepository;
+use Composer\Repository\RepositoryInterface;
 
 class Recorder
 {
+    private $localRepo;
     private $detector;
     private $bundleHandler;
-    private $aliases;
     private $vendorDir;
+    private $aliases;
 
     public function __construct(
+        RepositoryInterface $localRepo,
         Detector $detector,
         BundleHandler $bundleHandler,
         array $aliases,
         $vendorDir
     )
     {
+        $this->localRepo = $localRepo;
         $this->detector = $detector;
         $this->bundleHandler = $bundleHandler;
         $this->aliases = $aliases;
@@ -67,15 +69,12 @@ class Recorder
      */
     private function getOperations()
     {
-        $installedFile = new JsonFile($this->vendorDir . '/composer/installed.json');
-        $fromRepo = new InstalledFilesystemRepository($installedFile);
-
         foreach ($this->aliases as $alias) {
             // we need to replace the version of aliased packages in the local
             // repository by their aliases in the root package (composer always
             // stores the actual installed version instead), otherwise the whole
             // dependency resolution below will fail.
-            $aliased = $fromRepo->findPackage($alias['package'], $alias['version']);
+            $aliased = $this->localRepo->findPackage($alias['package'], $alias['version']);
             $version = new \ReflectionProperty('Composer\Package\Package', 'version');
             $version->setAccessible(true);
             $version->setValue($aliased, $alias['alias_normalized']);
@@ -83,11 +82,11 @@ class Recorder
 
         $toRepo = new ArrayRepository();
         $pool = new Pool();
-        $pool->addRepository($fromRepo);
+        $pool->addRepository($this->localRepo);
         $pool->addRepository(new PlatformRepository());
         $request = new Request($pool);
 
-        foreach ($fromRepo->getPackages() as $package) {
+        foreach ($this->localRepo->getCanonicalPackages() as $package) {
             $request->install($package->getName());
         }
 
