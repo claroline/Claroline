@@ -8,10 +8,12 @@
         <h2>
             {{ dropzone.resourceNode.name }} (Collecticiel)
 
-            {% if not collecticielOpenOrNot %}
-                <div class="alert alert-warning closed-collecticiel">
-                    {{ 'Closed collecticiel'|trans({}, 'innova_collecticiel') }}
-                </div>
+            {% if adminInnova %}
+                {% if not collecticielOpenOrNot %}
+                    <div class="alert alert-warning closed-collecticiel">
+                        {{ 'Closed collecticiel'|trans({}, 'innova_collecticiel') }}
+                    </div>
+                {% endif %}
             {% endif %}
 
             <div class="btn-group pull-right">
