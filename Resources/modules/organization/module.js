@@ -1,4 +1,5 @@
 import 'angular/angular.min'
+
 import dataTable from 'angular-data-table/release/dataTable.helpers.min'
 import bootstrap from 'angular-bootstrap'
 import translation from 'angular-ui-translation/angular-translation'
@@ -16,7 +17,7 @@ import OrganizationAPIService from './Service/OrganizationAPIService'
 var OrganizationManager = angular.module('OrganizationManager', [
     'ui.router',
     'ui.tree',
-    'ui.bootstrap.tpls',        
+    'ui.bootstrap.tpls',
     'LocationManager',
     'ui.translation',
     'ClarolineAPI',

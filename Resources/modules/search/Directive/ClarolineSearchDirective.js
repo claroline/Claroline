@@ -11,7 +11,7 @@ export default class ClarolineSearchDirective {
         this.bindToController = {
             onSearch: '&',
             fields: '='
-        };   
+        };
     }
 }
 
