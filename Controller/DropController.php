@@ -637,6 +637,7 @@ class DropController extends DropzoneBaseController
 
         }
 
+        // Calcul du nombre de documents sans accusé de réception
         $alertNbDocumentWithoutReturnReceipt = $totalValideAndNotAdminDocs - $countReturnReceiptForDropzone;
 
         $adapter = new DoctrineORMAdapter($dropsQuery);
@@ -670,6 +671,32 @@ class DropController extends DropzoneBaseController
         }
 
         $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
+
+        // Calcul du nombre d'AR en attente en prenant la même boucle que l'affichage de la liste.
+        $alertNbDocumentWithoutReturnReceipt=0;
+        foreach ($pager->getcurrentPageResults() as $drop) {
+            foreach ($drop->getDocuments() as $document) {
+                //var_dump($document->getId());
+                // Récupération de l'accusé de réceptoin
+                $returnReceiptType = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:ReturnReceipt')
+                ->doneReturnReceiptForADocument($dropzone, $document);
+
+                // Initialisation de la variable car un document peut ne pas avoir d'accusé de réception.
+                $id = 0;
+
+                if (!empty($returnReceiptType)) {
+                    // Récupération de la valeur de l'accusé de réceptoin
+                    $id = $returnReceiptType[0]->getReturnReceiptType()->getId();
+                    if ($id == 0) {
+                        $alertNbDocumentWithoutReturnReceipt++;
+                    }
+                }
+                else
+                {
+                    $alertNbDocumentWithoutReturnReceipt++;
+                }
+            }
+        }
 
         $dataToView = $this->addDropsStats($dropzone, array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
