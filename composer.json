@@ -77,13 +77,13 @@
             "Claroline\\BundleRecorder\\ScriptHandler::buildBundleFile"
         ],
         "pre-install-cmd": [
-            "php pre-composer.php"
+            "php pre-update.php"
         ],
         "post-install-cmd": [
             "composer run bundles"
         ],
         "pre-update-cmd": [
-            "php pre-composer.php",
+            "php pre-update.php",
             "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::enableMaintenance"
         ],
         "post-update-cmd": [
@@ -105,7 +105,7 @@
             "env-map": {
                 "database_name": "CLAROLINE_DATABASE_NAME",
                 "database_user": "CLAROLINE_DATABASE_USER",
-		"database_password": "CLAROLINE_DATABASE_PASSWORD" 
+		            "database_password": "CLAROLINE_DATABASE_PASSWORD"
             },
             "file": "app/config/parameters.yml",
             "interactive-keys": [

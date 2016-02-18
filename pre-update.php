@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * This script creates a backup of the local package repository
+ * (stored in vendor/composer/installed.json) so that the upgrade
+ * process can be based on the difference between that version and
+ * the version resulting from an update of the vendors.
+ */
+
 $installed = __DIR__.'/vendor/composer/installed.json';
 $previous = __DIR__.'/app/config/previous-installed.json';
 
