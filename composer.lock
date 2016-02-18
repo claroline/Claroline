@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0debfd9a4051138b832e758300692a29",
-    "content-hash": "98c58939ef8f29ece79499a87d272cb9",
+    "hash": "cf31a4094db5ef1818a32414a9e7318f",
+    "content-hash": "ba96bbaca831f54696788ac4837bf980",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -286,12 +286,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/CoreBundle.git",
-                "reference": "7e47f643bed908d4f4af52820ac91872c7bd5a33"
+                "reference": "7308bbced61aaebc583d1a135ce98dd080cbded9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/CoreBundle/zipball/7e47f643bed908d4f4af52820ac91872c7bd5a33",
-                "reference": "7e47f643bed908d4f4af52820ac91872c7bd5a33",
+                "url": "https://api.github.com/repos/claroline/CoreBundle/zipball/7308bbced61aaebc583d1a135ce98dd080cbded9",
+                "reference": "7308bbced61aaebc583d1a135ce98dd080cbded9",
                 "shasum": ""
             },
             "require": {
@@ -368,7 +368,7 @@
                 "Claroline",
                 "core"
             ],
-            "time": "2016-02-17 11:52:59"
+            "time": "2016-02-17 12:30:15"
         },
         {
             "name": "claroline/cursus-bundle",
@@ -3411,17 +3411,16 @@
         },
         {
             "name": "icap/badge-bundle",
-            "version": "v6.3.0",
-            "target-dir": "Icap/BadgeBundle",
+            "version": "v6.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iCAPLyon1/BadgeBundle.git",
-                "reference": "a05e09e36280f032a70c4171fdf970f8a4d596ea"
+                "reference": "365041da8fdf78b3158d6f15ee3d7b16b1fa285f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/BadgeBundle/zipball/a05e09e36280f032a70c4171fdf970f8a4d596ea",
-                "reference": "a05e09e36280f032a70c4171fdf970f8a4d596ea",
+                "url": "https://api.github.com/repos/iCAPLyon1/BadgeBundle/zipball/365041da8fdf78b3158d6f15ee3d7b16b1fa285f",
+                "reference": "365041da8fdf78b3158d6f15ee3d7b16b1fa285f",
                 "shasum": ""
             },
             "require": {
@@ -3431,8 +3430,8 @@
             },
             "type": "claroline-plugin",
             "autoload": {
-                "psr-0": {
-                    "Icap\\BadgeBundle": ""
+                "psr-4": {
+                    "Icap\\BadgeBundle\\": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3453,21 +3452,20 @@
                 "badge",
                 "plugin"
             ],
-            "time": "2016-02-11 08:33:05"
+            "time": "2016-02-17 15:56:07"
         },
         {
             "name": "icap/blog-bundle",
-            "version": "v6.2.2",
-            "target-dir": "Icap/BlogBundle",
+            "version": "v6.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iCAPLyon1/BlogBundle.git",
-                "reference": "80c80524662f6527e7f60bbc831bf2dd3582d93e"
+                "reference": "13760c15b07a39c34b6b44b22a17a881085054fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/BlogBundle/zipball/80c80524662f6527e7f60bbc831bf2dd3582d93e",
-                "reference": "80c80524662f6527e7f60bbc831bf2dd3582d93e",
+                "url": "https://api.github.com/repos/iCAPLyon1/BlogBundle/zipball/13760c15b07a39c34b6b44b22a17a881085054fd",
+                "reference": "13760c15b07a39c34b6b44b22a17a881085054fd",
                 "shasum": ""
             },
             "require": {
@@ -3477,8 +3475,8 @@
             },
             "type": "claroline-plugin",
             "autoload": {
-                "psr-0": {
-                    "Icap\\BlogBundle": ""
+                "psr-4": {
+                    "Icap\\BlogBundle\\": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3496,21 +3494,20 @@
                 "blog",
                 "plugin"
             ],
-            "time": "2016-02-11 08:30:16"
+            "time": "2016-02-17 16:27:36"
         },
         {
             "name": "icap/dropzone-bundle",
-            "version": "v6.1.0",
-            "target-dir": "Icap/DropzoneBundle",
+            "version": "v6.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iCAPLyon1/DropZoneBundle.git",
-                "reference": "91152b66cf5a1fceb872c1f52cb54528230b85ce"
+                "reference": "a38b2ab50ecb6d7ac7d891ac000895dd5439e5e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/DropZoneBundle/zipball/91152b66cf5a1fceb872c1f52cb54528230b85ce",
-                "reference": "91152b66cf5a1fceb872c1f52cb54528230b85ce",
+                "url": "https://api.github.com/repos/iCAPLyon1/DropZoneBundle/zipball/a38b2ab50ecb6d7ac7d891ac000895dd5439e5e9",
+                "reference": "a38b2ab50ecb6d7ac7d891ac000895dd5439e5e9",
                 "shasum": ""
             },
             "require": {
@@ -3525,8 +3522,8 @@
             },
             "type": "claroline-plugin",
             "autoload": {
-                "psr-0": {
-                    "Icap\\DropzoneBundle": ""
+                "psr-4": {
+                    "Icap\\DropzoneBundle\\": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3544,34 +3541,32 @@
                 "plugin",
                 "wiki"
             ],
-            "time": "2016-02-11 08:32:10"
+            "time": "2016-02-17 16:24:15"
         },
         {
             "name": "icap/html-diff",
-            "version": "v1.0.1",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iCAPLyon1/HtmlDiff.git",
-                "reference": "a470d2c4882c9928f325363856e70ffaf5be0be6"
+                "reference": "f58ddb196292ae585a2efb7692653d015ecc436f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/HtmlDiff/zipball/a470d2c4882c9928f325363856e70ffaf5be0be6",
-                "reference": "a470d2c4882c9928f325363856e70ffaf5be0be6",
+                "url": "https://api.github.com/repos/iCAPLyon1/HtmlDiff/zipball/f58ddb196292ae585a2efb7692653d015ecc436f",
+                "reference": "f58ddb196292ae585a2efb7692653d015ecc436f",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
             },
             "require-dev": {
-                "php": ">=5.3.0",
-                "pimple/pimple": "1.0.*",
-                "silex/silex": "1.0.*"
+                "php": ">=5.3.0"
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "Icap\\HtmlDiff\\": "src/"
+                "psr-4": {
+                    "Icap\\HtmlDiff\\": "src/Icap/HtmlDiff"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3590,21 +3585,20 @@
                 "daisy diff",
                 "html diff"
             ],
-            "time": "2013-10-24 13:50:09"
+            "time": "2016-02-17 16:35:09"
         },
         {
             "name": "icap/lesson-bundle",
-            "version": "v6.1.0",
-            "target-dir": "Icap/LessonBundle",
+            "version": "v6.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iCAPLyon1/LessonBundle.git",
-                "reference": "098612dd867332124b757b68f7c763c2a894a73c"
+                "reference": "07a4389c0cf187c813695e6731b0714cd7d80532"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/LessonBundle/zipball/098612dd867332124b757b68f7c763c2a894a73c",
-                "reference": "098612dd867332124b757b68f7c763c2a894a73c",
+                "url": "https://api.github.com/repos/iCAPLyon1/LessonBundle/zipball/07a4389c0cf187c813695e6731b0714cd7d80532",
+                "reference": "07a4389c0cf187c813695e6731b0714cd7d80532",
                 "shasum": ""
             },
             "require": {
@@ -3614,8 +3608,8 @@
             },
             "type": "claroline-plugin",
             "autoload": {
-                "psr-0": {
-                    "Icap\\LessonBundle": ""
+                "psr-4": {
+                    "Icap\\LessonBundle\\": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3633,21 +3627,20 @@
                 "lesson",
                 "plugin"
             ],
-            "time": "2016-02-11 08:34:11"
+            "time": "2016-02-17 16:21:22"
         },
         {
             "name": "icap/notification-bundle",
-            "version": "v6.0.2",
-            "target-dir": "Icap/NotificationBundle",
+            "version": "v6.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iCAPLyon1/NotificationBundle.git",
-                "reference": "5a286b4475c6197367c904918f72cb03b03acac3"
+                "reference": "2b1e591454b0036fc222020b674b9a1bfae11940"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/NotificationBundle/zipball/5a286b4475c6197367c904918f72cb03b03acac3",
-                "reference": "5a286b4475c6197367c904918f72cb03b03acac3",
+                "url": "https://api.github.com/repos/iCAPLyon1/NotificationBundle/zipball/2b1e591454b0036fc222020b674b9a1bfae11940",
+                "reference": "2b1e591454b0036fc222020b674b9a1bfae11940",
                 "shasum": ""
             },
             "require": {
@@ -3656,8 +3649,8 @@
             },
             "type": "claroline-core",
             "autoload": {
-                "psr-0": {
-                    "Icap\\NotificationBundle": ""
+                "psr-4": {
+                    "Icap\\NotificationBundle\\": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3674,21 +3667,20 @@
                 "ICAP",
                 "notification"
             ],
-            "time": "2015-12-03 21:20:05"
+            "time": "2016-02-17 15:39:26"
         },
         {
             "name": "icap/portfolio-bundle",
-            "version": "v6.2.2",
-            "target-dir": "Icap/PortfolioBundle",
+            "version": "v6.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iCAPLyon1/PortfolioBundle.git",
-                "reference": "d55aafb1f10bc87b6599fa361357790a59e5e269"
+                "reference": "3eea8caf3a3ef6bcb9e1b798217524a8d5215380"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/PortfolioBundle/zipball/d55aafb1f10bc87b6599fa361357790a59e5e269",
-                "reference": "d55aafb1f10bc87b6599fa361357790a59e5e269",
+                "url": "https://api.github.com/repos/iCAPLyon1/PortfolioBundle/zipball/3eea8caf3a3ef6bcb9e1b798217524a8d5215380",
+                "reference": "3eea8caf3a3ef6bcb9e1b798217524a8d5215380",
                 "shasum": ""
             },
             "require": {
@@ -3702,8 +3694,8 @@
             },
             "type": "claroline-plugin",
             "autoload": {
-                "psr-0": {
-                    "Icap\\PortfolioBundle": ""
+                "psr-4": {
+                    "Icap\\PortfolioBundle\\": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3719,21 +3711,20 @@
                 "Claroline",
                 "portfolio"
             ],
-            "time": "2016-02-11 08:28:40"
+            "time": "2016-02-17 15:16:43"
         },
         {
             "name": "icap/socialmedia-bundle",
-            "version": "v6.0.2",
-            "target-dir": "Icap/SocialmediaBundle",
+            "version": "v6.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iCAPLyon1/SocialmediaBundle.git",
-                "reference": "b69e8f8e0205b4b145ae0cc4e6b0c13271153ee5"
+                "reference": "11a4943b9d1757a61800761d2ef61891c2de1ac4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/SocialmediaBundle/zipball/b69e8f8e0205b4b145ae0cc4e6b0c13271153ee5",
-                "reference": "b69e8f8e0205b4b145ae0cc4e6b0c13271153ee5",
+                "url": "https://api.github.com/repos/iCAPLyon1/SocialmediaBundle/zipball/11a4943b9d1757a61800761d2ef61891c2de1ac4",
+                "reference": "11a4943b9d1757a61800761d2ef61891c2de1ac4",
                 "shasum": ""
             },
             "require": {
@@ -3742,8 +3733,8 @@
             },
             "type": "claroline-plugin",
             "autoload": {
-                "psr-0": {
-                    "Icap\\SocialmediaBundle": ""
+                "psr-4": {
+                    "Icap\\SocialmediaBundle\\": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3754,21 +3745,20 @@
                 "ICAP",
                 "social media"
             ],
-            "time": "2016-02-09 16:03:16"
+            "time": "2016-02-17 14:57:18"
         },
         {
             "name": "icap/website-bundle",
-            "version": "v6.1.0",
-            "target-dir": "Icap/WebsiteBundle",
+            "version": "v6.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iCAPLyon1/WebsiteBundle.git",
-                "reference": "5a5b629a7d4e7ee57badc28c9a4032f42b4110f1"
+                "reference": "5d8cc04f3c0e3951b84a606f587b9acf30627f46"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/WebsiteBundle/zipball/5a5b629a7d4e7ee57badc28c9a4032f42b4110f1",
-                "reference": "5a5b629a7d4e7ee57badc28c9a4032f42b4110f1",
+                "url": "https://api.github.com/repos/iCAPLyon1/WebsiteBundle/zipball/5d8cc04f3c0e3951b84a606f587b9acf30627f46",
+                "reference": "5d8cc04f3c0e3951b84a606f587b9acf30627f46",
                 "shasum": ""
             },
             "require": {
@@ -3779,8 +3769,8 @@
             },
             "type": "claroline-plugin",
             "autoload": {
-                "psr-0": {
-                    "Icap\\WebsiteBundle": ""
+                "psr-4": {
+                    "Icap\\WebsiteBundle\\": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3798,33 +3788,32 @@
                 "plugin",
                 "website"
             ],
-            "time": "2016-02-11 09:16:32"
+            "time": "2016-02-17 15:06:58"
         },
         {
             "name": "icap/wiki-bundle",
-            "version": "v6.2.0",
-            "target-dir": "Icap/WikiBundle",
+            "version": "v6.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iCAPLyon1/WikiBundle.git",
-                "reference": "5261c15e1de31062c50ad0e31dc0a9471c0d766c"
+                "reference": "90ff11977892f33a93584accc7242ac88ec432a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/WikiBundle/zipball/5261c15e1de31062c50ad0e31dc0a9471c0d766c",
-                "reference": "5261c15e1de31062c50ad0e31dc0a9471c0d766c",
+                "url": "https://api.github.com/repos/iCAPLyon1/WikiBundle/zipball/90ff11977892f33a93584accc7242ac88ec432a5",
+                "reference": "90ff11977892f33a93584accc7242ac88ec432a5",
                 "shasum": ""
             },
             "require": {
                 "claroline/core-bundle": "~6.0",
-                "icap/html-diff": "1.0.1",
+                "icap/html-diff": "~1.1",
                 "icap/notification-bundle": "~6.0",
                 "php": ">=5.3.0"
             },
             "type": "claroline-plugin",
             "autoload": {
-                "psr-0": {
-                    "Icap\\WikiBundle": ""
+                "psr-4": {
+                    "Icap\\WikiBundle\\": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3842,7 +3831,7 @@
                 "plugin",
                 "wiki"
             ],
-            "time": "2016-02-11 08:35:34"
+            "time": "2016-02-17 16:59:01"
         },
         {
             "name": "idci/exporter-bundle",
