@@ -13,5 +13,5 @@
 {% if nbComment == 0 %}
         <span class="fa fa-minus" title="{{ 'Document not commented'|trans({}, 'innova_collecticiel') }}"> </span>
 {% else %}
-        <span class="fa fa-check" title="{{ 'Document commented'|trans({}, 'innova_collecticiel') }}"></span>
+        <span class="fa fa-check" title="{{ drop.user.userName ~ " " ~ drop.user.firstName }} {{ 'Document commented'|trans({}, 'innova_collecticiel') }}"></span>
 {% endif %}
