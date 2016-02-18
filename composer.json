@@ -44,15 +44,29 @@
     },
     "scripts": {
         "sync": [
-            "composer run fetch",
-            "composer run configure",
-            "composer run build",
+            "composer fetch",
+            "composer configure",
+            "composer build",
+            "php app/console claroline:update --env=prod",
+            "composer disable-maintenance"
+        ],
+        "sync-dev": [
+            "composer fetch-dev",
+            "composer configure",
+            "composer build",
             "php app/console claroline:update",
-            "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::disableMaintenance"
+            "composer disable-maintenance"
         ],
         "fetch": [
-            "composer install --prefer-source -o",
-            "composer run check",
+            "composer install --prefer-dist --no-dev",
+            "composer fetch-post"
+        ],
+        "fetch-dev": [
+            "composer install --prefer-source",
+            "composer fetch-post"
+        ],
+        "fetch-post": [
+            "composer check",
             "npm install",
             "npm run bower"
         ],
@@ -62,8 +76,11 @@
         "configure": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
         ],
+        "disable-maintenance": [
+            "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::disableMaintenance"
+        ],
         "build": [
-            "composer run bundles",
+            "composer bundles",
             "Claroline\\CoreBundle\\Library\\Installation\\Refresher::deleteCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
@@ -80,22 +97,23 @@
             "php pre-update.php"
         ],
         "post-install-cmd": [
-            "composer run bundles"
+            "composer bundles"
         ],
         "pre-update-cmd": [
             "php pre-update.php",
             "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::enableMaintenance"
         ],
         "post-update-cmd": [
-            "composer run bundles"
+            "composer bundles"
         ]
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
         "bin-dir": "bin",
-        "github-protocols": ["https", "http", "git"],
-        "cache-files-ttl": 0
+        "github-protocols": ["https", "git", "ssh"],
+        "optimize-autoloader": true,
+        "process-timeout": 3600
     },
     "extra": {
         "symfony-app-dir": "app",
@@ -105,7 +123,7 @@
             "env-map": {
                 "database_name": "CLAROLINE_DATABASE_NAME",
                 "database_user": "CLAROLINE_DATABASE_USER",
-		            "database_password": "CLAROLINE_DATABASE_PASSWORD"
+                "database_password": "CLAROLINE_DATABASE_PASSWORD"
             },
             "file": "app/config/parameters.yml",
             "interactive-keys": [

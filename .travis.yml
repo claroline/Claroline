@@ -20,7 +20,7 @@ before_install:
 
 before_script:
   - composer validate
-  - composer run sync --timeout=0
+  - composer run sync
 
 script: echo done
 
