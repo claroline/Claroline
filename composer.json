@@ -43,7 +43,7 @@
         "claroline/dev-bundle": "master"
     },
     "scripts": {
-    	  "fast-install" :
+    	  "fast-install" : [
             "composer run configure",
             "php app/console doctrine:database:create",
             "php bin/doctrine dbal:import claroline.sql -vvv",
