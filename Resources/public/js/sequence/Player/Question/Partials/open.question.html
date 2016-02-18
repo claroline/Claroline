@@ -32,5 +32,35 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div data-ng-if="openQuestionCtrl.feedbackIsVisible">
+                <div class="col-md-12">
+                    <label data-ng-bind-html="openQuestionCtrl.questionFeedback | unsafe"></label>
+                </div>
+            </div>
+        </div>
+        <div data-ng-if="openQuestionCtrl.question.typeOpen !== 'long' && openQuestionCtrl.feedbackIsVisible" >
+            <h3 class="panel-title">{{ 'keys_words'|trans:{}:'ujm_sequence' }}</h3>
+            <table class="table table-striped table-bordered table-condensed">
+                <tr>
+                    <th class="center-text">{{ 'keys_words'|trans:{}:'ujm_sequence' }}</th>
+                    <th class="center-text">{{ 'case_sensitive'|trans:{}:'ujm_sequence' }}</th>
+                    <th class="center-text">{{ 'points'|trans:{}:'ujm_sequence' }}</th>
+                    <th class="center-text">{{ 'comment'|trans:{}:'ujm_sequence' }}</th>
+                </tr>
+                <tr data-ng-repeat="keyword in openQuestionCtrl.solutions">
+                    <td>{{ keyword.word }}</td>
+                    <td class="center-text">
+                        <span data-ng-if="keyword.caseSensitive === true " class="fa fa-check-square-o"></span>
+                        <span data-ng-if="keyword.caseSensitive === false " class="fa fa-square-o"></span>
+                    </td>
+                    <td class="center-text">{{ keyword.score }}</td>
+                    <td class="center-text">
+                        <span data-ng-if="keyword.feedback === null"> - </span>
+                        <span data-ng-if="keyword.feedback !== null">{{ keyword.feedback }}</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
 </div>
