@@ -2742,6 +2742,55 @@ class CursusManager
         return $results;
     }
 
+    public function validateCourseQueue(CourseRegistrationQueue $queue)
+    {
+        $isAdmin = $this->authorization->isGranted('ROLE_ADMIN');
+        $status = $queue->getStatus();
+        $user = $queue->getUser();
+        $course = $queue->getCourse();
+        $queueDatas = array(
+            'type' => 'none',
+            'id' => $queue->getId(),
+            'courseId' => $course->getId(),
+            'applicationDate' => $queue->getApplicationDate(),
+            'userId' => $user->getId(),
+            'username' => $user->getUsername(),
+            'firstName' => $user->getFirstName(),
+            'lastName' => $user->getLastName(),
+            'status' => $queue->getStatus()
+        );
+
+        if ($status & CourseRegistrationQueue::WAITING_VALIDATOR) {
+            $authenticatedUser = $this->tokenStorage->getToken()->getUser();
+
+            if ($isAdmin) {
+                $status = 0;
+            } else {
+                $status -= CourseRegistrationQueue::WAITING_VALIDATOR;
+            }
+            $queue->setStatus($status);
+            $queue->setValidatorValidationDate(new \DateTime());
+            $queue->setValidator($authenticatedUser);
+            $this->persistCourseRegistrationQueue($queue);
+
+            $queueDatas['type'] = 'validated';
+            $queueDatas['status'] = $queue->getStatus();
+            $queueDatas['validatorValidationDate'] = $queue->getValidatorValidationDate();
+            $queueDatas['validatorId'] = $authenticatedUser->getId();
+            $queueDatas['validatorUsername'] = $authenticatedUser->getUsername();
+            $queueDatas['validatorFirstName'] = $authenticatedUser->getFirstName();
+            $queueDatas['validatorLastName'] = $authenticatedUser->getLastName();
+        }
+
+        if ($queue->getStatus() === 0) {
+            $queue->setStatus(CourseRegistrationQueue::WAITING);
+            $this->persistCourseRegistrationQueue($queue);
+            $queueDatas['status'] = $queue->getStatus();
+        }
+
+        return $queueDatas;
+    }
+
     public function validateSessionQueue(CourseSessionRegistrationQueue $queue)
     {
         $isAdmin = $this->authorization->isGranted('ROLE_ADMIN');
@@ -3335,7 +3384,7 @@ class CursusManager
     public function getSessionsByCourse(
         Course $course,
         $orderedBy = 'creationDate',
-        $order = 'DESC',
+        $order = 'ASC',
         $executeQuery = true
     )
     {
@@ -3351,7 +3400,7 @@ class CursusManager
         Course $course,
         $status,
         $orderedBy = 'creationDate',
-        $order = 'DESC',
+        $order = 'ASC',
         $executeQuery = true
     )
     {
@@ -3367,7 +3416,7 @@ class CursusManager
     public function getDefaultSessionsByCourse(
         Course $course,
         $orderedBy = 'creationDate',
-        $order = 'DESC',
+        $order = 'ASC',
         $executeQuery = true
     )
     {
@@ -3382,7 +3431,7 @@ class CursusManager
     public function getSessionsByCourses(
         array $courses,
         $orderedBy = 'creationDate',
-        $order = 'DESC',
+        $order = 'ASC',
         $executeQuery = true
     )
     {
@@ -3404,7 +3453,7 @@ class CursusManager
         Cursus $cursus,
         array $courses,
         $orderedBy = 'creationDate',
-        $order = 'DESC',
+        $order = 'ASC',
         $executeQuery = true
     )
     {
@@ -3426,7 +3475,7 @@ class CursusManager
     public function getDefaultPublicSessionsByCourse(
         Course $course,
         $orderedBy = 'creationDate',
-        $order = 'DESC',
+        $order = 'ASC',
         $executeQuery = true
     )
     {

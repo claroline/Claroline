@@ -430,7 +430,7 @@
     });
     
     $('.transfer-to-session-btn').on('click', function () {
-        var queueId = $(this).data('queue-id')
+        var queueId = $(this).data('queue-id');
         
         window.Claroline.Modal.displayForm(
             Routing.generate(
@@ -483,7 +483,27 @@
         $('#row-queued-user-' + queueId).remove();
     };
     
-    var removeCourseQueueRow = function (queueId) {
-        $('#queued-user-row-' + queueId).remove();
+    var removeCourseQueueRow = function (results) {
+        var queueId = results['queueId'];
+        
+        if (results['status'] === 'success') {
+            $('#queued-user-row-' + queueId).remove();
+        } else {
+            var datas = results['datas'];
+            var alertElement = '<div class="alert alert-danger">' +
+                Translator.trans(
+                    'session_not_enough_place_msg',
+                    {
+                        sessionName: datas['sessionName'],
+                        courseTitle: datas['courseTitle'],
+                        courseCode: datas['courseCode'],
+                        remainingPlaces: datas['remainingPlaces']
+                    },
+                    'cursus'
+                ) +
+                '</div>';
+            $('#registration-error-box-body').html(alertElement);
+            $('#registration-error-box').modal('show');
+        }
     };
 })();

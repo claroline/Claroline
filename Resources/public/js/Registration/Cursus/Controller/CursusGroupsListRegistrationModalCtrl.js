@@ -39,21 +39,21 @@
                     prop: 'name',
                     headerRenderer: function () {
                         
-                        return '<b>' + translator.trans('name', {}, 'platform') + '</b>';
+                        return '<b>' + Translator.trans('name', {}, 'platform') + '</b>';
                     }
                 },
                 {
                     name: 'actions',
                     headerRenderer: function () {
                         
-                        return '<b>' + translator.trans('actions', {}, 'platform') + '</b>';
+                        return '<b>' + Translator.trans('actions', {}, 'platform') + '</b>';
                     },
                     cellRenderer: function (scope) {
                         
                         return '<button class="btn btn-success btn-sm" ng-click="cglrmc.selectGroupForSessionsValidation(' +
                             scope.$row['id'] +
                             ')">' +
-                            translator.trans('register', {}, 'cursus') +
+                            Translator.trans('register', {}, 'cursus') +
                             '</button>';
                     }
                 }

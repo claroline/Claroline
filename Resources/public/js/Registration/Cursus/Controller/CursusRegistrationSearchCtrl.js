@@ -31,7 +31,7 @@
                     prop: 'title',
                     headerRenderer: function () {
                         
-                        return '<b>' + translator.trans('title', {}, 'platform') + '</b>';
+                        return '<b>' + Translator.trans('title', {}, 'platform') + '</b>';
                     },
                     cellRenderer: function (scope) {
                         
@@ -49,14 +49,14 @@
                     prop: 'code',
                     headerRenderer: function () {
                         
-                        return '<b>' + translator.trans('code', {}, 'platform') + '</b>';
+                        return '<b>' + Translator.trans('code', {}, 'platform') + '</b>';
                     }
                 },
                 {
                     name: 'desciption',
                     headerRenderer: function () {
                         
-                        return '<b>' + translator.trans('description', {}, 'platform') + '</b>';
+                        return '<b>' + Translator.trans('description', {}, 'platform') + '</b>';
                     },
                     cellRenderer: function (scope) {
                         var description = scope.$row['description'];
@@ -78,7 +78,7 @@
                     prop: 'root',
                     headerRenderer: function () {
                         
-                        return '<b>' + translator.trans('cursus', {}, 'cursus') + '</b>';
+                        return '<b>' + Translator.trans('cursus', {}, 'cursus') + '</b>';
                     },
                     cellRenderer: function (scope) {
                         var rootTitle = '-';
@@ -95,14 +95,14 @@
                     name: 'type',
                     headerRenderer: function () {
                         
-                        return '<b>' + translator.trans('type', {}, 'platform') + '</b>';
+                        return '<b>' + Translator.trans('type', {}, 'platform') + '</b>';
                     },
                     cellRenderer: function (scope) {
-                        var type = translator.trans('cursus', {}, 'cursus');                        
+                        var type = Translator.trans('cursus', {}, 'cursus');                        
                         var courseId = scope.$row['course'];
                         
                         if (courseId) {
-                            type = translator.trans('course', {}, 'cursus');
+                            type = Translator.trans('course', {}, 'cursus');
                         }
                         
                         return '<span>' + type + '</span>';

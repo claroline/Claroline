@@ -92,41 +92,49 @@ class CourseSession
 
     /**
      * @ORM\Column(name="session_status", type="integer")
+     * @Groups({"api"})
      */
     protected $sessionStatus = self::SESSION_NOT_STARTED;
 
     /**
      * @ORM\Column(name="default_session", type="boolean")
+     * @Groups({"api"})
      */
     protected $defaultSession = false;
 
     /**
      * @ORM\Column(name="creation_date", type="datetime", nullable=false)
+     * @Groups({"api"})
      */
     protected $creationDate;
 
     /**
      * @ORM\Column(name="public_registration", type="boolean")
+     * @Groups({"api"})
      */
     protected $publicRegistration = false;
 
     /**
      * @ORM\Column(name="public_unregistration", type="boolean")
+     * @Groups({"api"})
      */
     protected $publicUnregistration = false;
 
     /**
      * @ORM\Column(name="registration_validation", type="boolean")
+     * @Groups({"api"})
      */
     protected $registrationValidation = false;
 
     /**
      * @ORM\Column(name="start_date", type="datetime", nullable=true)
+     * @Groups({"api"})
      */
     protected $startDate;
 
     /**
      * @ORM\Column(name="end_date", type="datetime", nullable=true)
+     * @Groups({"api"})
      */
     protected $endDate;
 

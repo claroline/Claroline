@@ -12,7 +12,8 @@
 
     angular.module('CursusRegistrationModule').controller('CursusQueueManagementCtrl', [
         '$http',
-        function ($http) {
+        '$uibModal',
+        function ($http, $uibModal) {
             var vm = this;
             this.connectedUser = {id: 0};
             this.courses = [];
@@ -28,7 +29,7 @@
                     prop: 'firstName',
                     headerRenderer: function () {
                         
-                        return '<b>' + translator.trans('first_name', {}, 'platform') + '</b>';
+                        return '<b>' + Translator.trans('first_name', {}, 'platform') + '</b>';
                     }
                 },
                 {
@@ -36,7 +37,7 @@
                     prop: 'lastName',
                     headerRenderer: function () {
                         
-                        return '<b>' + translator.trans('last_name', {}, 'platform') + '</b>';
+                        return '<b>' + Translator.trans('last_name', {}, 'platform') + '</b>';
                     }
                 },
                 {
@@ -44,7 +45,7 @@
                     prop: 'applicationDate',
                     headerRenderer: function () {
                         
-                        return '<b>' + translator.trans('application_date', {}, 'cursus') + '</b>';
+                        return '<b>' + Translator.trans('application_date', {}, 'cursus') + '</b>';
                     },
                     cellRenderer: function(scope) {
                         
@@ -56,11 +57,11 @@
                     prop: 'sessionName',
                     headerRenderer: function () {
                         
-                        return '<b>' + translator.trans('session', {}, 'cursus') + '</b>';
+                        return '<b>' + Translator.trans('session', {}, 'cursus') + '</b>';
                     },
                     cellRenderer: function() {
                         
-                        return '<span>[' + translator.trans('to_define', {}, 'cursus') + ']</span>';
+                        return '<span>[' + Translator.trans('to_define', {}, 'cursus') + ']</span>';
                     }
                 },
                 {
@@ -68,33 +69,80 @@
                     prop: 'status',
                     headerRenderer: function () {
                         
-                        return '<b>' + translator.trans('status', {}, 'platform') + '</b>';
+                        return '<b>' + Translator.trans('status', {}, 'platform') + '</b>';
                     },
                     cellRenderer: function(scope) {
                         var status = scope.$row['status'];
                         var userValidation = (status & 2) === 2;
                         var validatorValidation = (status & 4) === 4;
-                        var cell = '<span>';
+                        var cell = '';
                         
-                        if (userValidation) {
-                            cell += '<span class="label label-primary" data-toggle="tooltip" data-placement="top" data-container="body" data-title="' +
-                                translator.trans('waiting_user_validation', {}, 'cursus') +
+                        if (status === 1) {
+                            cell += '<span class="label label-warning" data-toggle="tooltip" data-placement="top" data-container="body" data-title="' +
+                                Translator.trans('waiting_for_session_transfer', {}, 'cursus') +
                                 '">' +
                                 '<i class="fa fa-clock-o"></i>&nbsp;' +
-                                translator.trans('user', {}, 'platform') +
+                                Translator.trans('session', {}, 'cursus') +
                                 '</span><br>';
-                        }
-                        
-                        if (validatorValidation) {
-                            cell += '<span class="label label-success" data-toggle="tooltip" data-placement="top" data-container="body" data-title="' +
-                                translator.trans('waiting_validator_validation', {}, 'cursus') +
-                                '">' +
-                                '<i class="fa fa-clock-o"></i>&nbsp;' +
-                                translator.trans('validator', {}, 'cursus') +
-                                '</span><br>';
+                        } else {
                             
+                            if (userValidation) {
+                                cell += '<span class="label label-primary" data-toggle="tooltip" data-placement="top" data-container="body" data-title="' +
+                                    Translator.trans('waiting_user_validation', {}, 'cursus') +
+                                    '">' +
+                                    '<i class="fa fa-clock-o"></i>&nbsp;' +
+                                    Translator.trans('user', {}, 'platform') +
+                                    '</span><br>';
+                            }
+
+                            if (validatorValidation) {
+                                cell += '<span class="label label-success" data-toggle="tooltip" data-placement="top" data-container="body" data-title="' +
+                                    Translator.trans('waiting_validator_validation', {}, 'cursus') +
+                                    '">' +
+                                    '<i class="fa fa-clock-o"></i>&nbsp;' +
+                                    Translator.trans('validator', {}, 'cursus') +
+                                    '</span><br>';
+
+                            }
                         }
                         
+                        return cell;
+                    }
+                },
+                {
+                    name: 'actions',
+                    headerRenderer: function () {
+                        
+                        return '<b>' + Translator.trans('actions', {}, 'platform') + '</b>';
+                    },
+                    cellRenderer: function (scope) {
+                        var status = scope.$row['status'];
+                        var isValidated = (status === 1);
+                        var userValidation = (status & 2) === 2;
+                        var disabled = !vm.isAdmin && userValidation;
+                        var cell = '';
+                        
+                        if (isValidated) {
+                            cell += '<button class="btn btn-success btn-sm" ng-click="cqmc.transferCourseQueue(' +
+                                scope.$row['id'] + ', ' + scope.$row['courseId'] +
+                                ')">';
+                                cell += '<i class="fa fa-sign-in"></i></button>&nbsp;';
+                        } else {
+                            cell += disabled ?
+                                '<button class="btn btn-success btn-sm disabled" data-toggle="tooltip" data-placement="top" data-container="body" data-title="' +
+                                Translator.trans('waiting_user_validation', {}, 'cursus') +
+                                '">' :
+                                '<button class="btn btn-success btn-sm" ng-click="cqmc.validateCourseQueue(' +
+                                scope.$row['id'] +
+                                ')">';
+                                cell += '<i class="fa fa-check"></i></button>&nbsp;';
+                        }
+                        cell += '<button class="btn btn-danger btn-sm" ng-click="cqmc.declineCourseQueue(' +
+                            scope.$row['id'] +
+                            ')">' +
+                            '<i class="fa fa-times"></i>' +
+                            '</button>';
+                    
                         return cell;
                     }
                 }
@@ -106,7 +154,7 @@
                     prop: 'firstName',
                     headerRenderer: function () {
                         
-                        return '<b>' + translator.trans('first_name', {}, 'platform') + '</b>';
+                        return '<b>' + Translator.trans('first_name', {}, 'platform') + '</b>';
                     }
                 },
                 {
@@ -114,7 +162,7 @@
                     prop: 'lastName',
                     headerRenderer: function () {
                         
-                        return '<b>' + translator.trans('last_name', {}, 'platform') + '</b>';
+                        return '<b>' + Translator.trans('last_name', {}, 'platform') + '</b>';
                     }
                 },
                 {
@@ -122,7 +170,7 @@
                     prop: 'applicationDate',
                     headerRenderer: function () {
                         
-                        return '<b>' + translator.trans('application_date', {}, 'cursus') + '</b>';
+                        return '<b>' + Translator.trans('application_date', {}, 'cursus') + '</b>';
                     },
                     cellRenderer: function(scope) {
                         
@@ -134,7 +182,7 @@
                     prop: 'sessionName',
                     headerRenderer: function () {
                         
-                        return '<b>' + translator.trans('session', {}, 'cursus') + '</b>';
+                        return '<b>' + Translator.trans('session', {}, 'cursus') + '</b>';
                     }
                 },
                 {
@@ -142,7 +190,7 @@
                     prop: 'status',
                     headerRenderer: function () {
                         
-                        return '<b>' + translator.trans('status', {}, 'platform') + '</b>';
+                        return '<b>' + Translator.trans('status', {}, 'platform') + '</b>';
                     },
                     cellRenderer: function(scope) {
                         var status = scope.$row['status'];
@@ -152,19 +200,19 @@
                         
                         if (userValidation) {
                             cell += '<span class="label label-primary" data-toggle="tooltip" data-placement="top" data-container="body" data-title="' +
-                                translator.trans('waiting_user_validation', {}, 'cursus') +
+                                Translator.trans('waiting_user_validation', {}, 'cursus') +
                                 '">' +
                                 '<i class="fa fa-clock-o"></i>&nbsp;' +
-                                translator.trans('user', {}, 'platform') +
+                                Translator.trans('user', {}, 'platform') +
                                 '</span><br>';
                         }
                         
                         if (validatorValidation) {
                             cell += '<span class="label label-success" data-toggle="tooltip" data-placement="top" data-container="body" data-title="' +
-                                translator.trans('waiting_validator_validation', {}, 'cursus') +
+                                Translator.trans('waiting_validator_validation', {}, 'cursus') +
                                 '">' +
                                 '<i class="fa fa-clock-o"></i>&nbsp;' +
-                                translator.trans('validator', {}, 'cursus') +
+                                Translator.trans('validator', {}, 'cursus') +
                                 '</span><br>';
                             
                         }
@@ -177,7 +225,7 @@
                     name: 'actions',
                     headerRenderer: function () {
                         
-                        return '<b>' + translator.trans('actions', {}, 'platform') + '</b>';
+                        return '<b>' + Translator.trans('actions', {}, 'platform') + '</b>';
                     },
                     cellRenderer: function (scope) {
                         var status = scope.$row['status'];
@@ -186,7 +234,7 @@
                         
                         var cell = disabled ?
                             '<button class="btn btn-success btn-sm disabled" data-toggle="tooltip" data-placement="top" data-container="body" data-title="' +
-                            translator.trans('waiting_user_validation', {}, 'cursus') +
+                            Translator.trans('waiting_user_validation', {}, 'cursus') +
                             '">' :
                             '<button class="btn btn-success btn-sm" ng-click="cqmc.validateSessionQueue(' +
                             scope.$row['id'] +
@@ -326,10 +374,7 @@
                                     queueDatas['id'], 
                                     queueDatas['status']
                                 );
-                            } else if (queueDatas['type'] === 'registered') {
-                                removeCourseQueue(queueDatas['courseId'], queueDatas['id']);
                             }
-                            console.log(queue);
                         }
                     },
                     function (datas) {
@@ -374,6 +419,19 @@
                 );
             };
             
+            this.transferCourseQueue = function (queueId, courseId) {
+                $uibModal.open({
+                    templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Queue/Partial/sessions_choices_transfer_modal.html',
+                    controller: 'SessionsChoicesTransferModalCtrl',
+                    controllerAs: 'sctmc',
+                    resolve: {
+                        queueId: function () { return queueId; },
+                        courseId: function () { return courseId; },
+                        callback: function () { return removeCourseQueue;}
+                    }
+                });
+            };
+            
             function getAllDatas()
             {
                 var route = Routing.generate('api_get_registration_queues_datas');
@@ -415,8 +473,8 @@
                 }
             }
             
-            function removeCourseQueue(courseId, queueId)
-            {
+            var removeCourseQueue = function (courseId, queueId) {
+                
                 if (vm.coursesQueues[courseId]) {
                 
                     for (var i = 0; i < vm.coursesQueues[courseId].length; i++) {
@@ -428,10 +486,10 @@
                         }
                     }
                 }
-            }
+            };
             
-            function removeSessionQueue(courseId, queueId)
-            {
+            var removeSessionQueue = function (courseId, queueId) {
+            
                 if (vm.sessionsQueues[courseId]) {
                 
                     for (var i = 0; i < vm.sessionsQueues[courseId].length; i++) {
@@ -443,10 +501,10 @@
                         }
                     }
                 }
-            }
+            };
             
-            function updateCourseQueue(courseId, queueId, status)
-            {
+            var updateCourseQueue = function (courseId, queueId, status) {
+            
                 if (vm.coursesQueues[courseId]) {
                 
                     for (var i = 0; i < vm.coursesQueues[courseId].length; i++) {
@@ -458,10 +516,10 @@
                         }
                     }
                 }
-            }
+            };
             
-            function updateSessionQueue(courseId, queueId, status)
-            {
+            var updateSessionQueue = function (courseId, queueId, status) {
+            
                 if (vm.sessionsQueues[courseId]) {
                 
                     for (var i = 0; i < vm.sessionsQueues[courseId].length; i++) {
@@ -473,7 +531,7 @@
                         }
                     }
                 }
-            }
+            };
             
             function initialize()
             {

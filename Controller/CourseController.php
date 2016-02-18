@@ -965,16 +965,16 @@ class CourseController extends Controller
      */
     public function courseQueuedUserTransferAction(CourseRegistrationQueue $queue)
     {
-        $queueId = $queue->getId();
         $course = $queue->getCourse();
         $form = $this->formFactory->create(new CourseQueuedUserTransferType($course));
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $session = $form->get('session')->getData();
-            $this->cursusManager->transferQueuedUserToSession($queue, $session);
+            $results = $this->cursusManager->transferQueuedUserToSession($queue, $session);
+            $results['queueId'] = $queue->getId();
 
-            return new JsonResponse($queueId, 200);
+            return new JsonResponse($results, 200);
         } else {
 
             return array(
