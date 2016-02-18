@@ -14,7 +14,6 @@
         var word = $(this).data('word');
         var inputId = $(this).data('input-id');
         var value = $('#' + inputId).val();
-        console.log(value);
         
         $.ajax({
             url: Routing.generate(
