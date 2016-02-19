@@ -16,11 +16,6 @@
         </div>
         <!-- Question cloze text row -->
         <div data-ng-if="clozeQuestionCtrl.question.text" class="question-row">
-            <div class="row" data-ng-if="clozeQuestionCtrl.feedbackIsVisible">
-                <div class="col-md-12">
-                    <label data-ng-bind-html="clozeQuestionCtrl.questionFeedback | unsafe"></label>
-                </div>
-            </div>
             <div class="form-inline choice-item-col">
                 <div class="form-group">
                     <h4 ng-bind-html="question.invite"></h4>
@@ -29,6 +24,11 @@
             </div>
         </div>
         <div data-ng-if="clozeQuestionCtrl.feedbackIsVisible">
+            <div class="row">
+                <div class="col-md-12">
+                    <label data-ng-bind-html="clozeQuestionCtrl.questionFeedback | unsafe"></label>
+                </div>
+            </div>
             <div data-ng-repeat="hole in clozeQuestionCtrl.question.holes">
                 <h4>{{ 'answer_zone'|trans:{}:'ujm_sequence' }} {{ $index +1 }}</h4>
                 <table class="table table-striped table-bordered table-condensed" border="1">
