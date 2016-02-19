@@ -7,7 +7,7 @@
     </div>
     <div class="modal-body">
         <div class="alert alert-danger" ng-if="sctmc.errorMessage !== ''">
-            <i class="close fa fa-times"></i>
+            <i class="close fa fa-times" ng-click="sctmc.deleteErrorMessage()"></i>
             {{ sctmc.errorMessage }}
         </div>
         <dtable options="sctmc.dataTableOptions"

@@ -326,8 +326,20 @@
                     function (datas) {
                         
                         if (datas['status'] === 403) {
-                            console.log('Cannot decline');
-                            console.log(datas['data']);
+                            var title = Translator.trans('decline_failed', {}, 'cursus');
+                            var content = '<div class="alert alert-danger">' +
+                                Translator.trans(datas['data'], {}, 'cursus') +
+                                '</div>';
+
+                            $uibModal.open({
+                                templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Cursus/Partial/simple_modal.html',
+                                controller: 'SimpleModalCtrl',
+                                controllerAs: 'smc',
+                                resolve: {
+                                    title: function () { return title; },
+                                    content: function () { return content; }
+                                }
+                            });
                         }
                     }
                 );
@@ -350,8 +362,20 @@
                     function (datas) {
                         
                         if (datas['status'] === 403) {
-                            console.log('Cannot decline');
-                            console.log(datas['data']);
+                            var title = Translator.trans('decline_failed', {}, 'cursus');
+                            var content = '<div class="alert alert-danger">' +
+                                Translator.trans(datas['data'], {}, 'cursus') +
+                                '</div>';
+
+                            $uibModal.open({
+                                templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Cursus/Partial/simple_modal.html',
+                                controller: 'SimpleModalCtrl',
+                                controllerAs: 'smc',
+                                resolve: {
+                                    title: function () { return title; },
+                                    content: function () { return content; }
+                                }
+                            });
                         }
                     }
                 );
@@ -380,8 +404,20 @@
                     function (datas) {
                         
                         if (datas['status'] === 403) {
-                            console.log('Cannot validate');
-                            console.log(datas['data']);
+                            var title = Translator.trans('validation_failed', {}, 'cursus');
+                            var content = '<div class="alert alert-danger">' +
+                                Translator.trans(datas['data'], {}, 'cursus') +
+                                '</div>';
+
+                            $uibModal.open({
+                                templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Cursus/Partial/simple_modal.html',
+                                controller: 'SimpleModalCtrl',
+                                controllerAs: 'smc',
+                                resolve: {
+                                    title: function () { return title; },
+                                    content: function () { return content; }
+                                }
+                            });
                         }
                     }
                 );
@@ -407,13 +443,42 @@
                             } else if (queueDatas['type'] === 'registered') {
                                 removeSessionQueue(queueDatas['courseId'], queueDatas['id']);
                             }
+                            
+                            if (queueDatas['status'] === 'failed') {
+                                var title = Translator.trans('registration_failed', {}, 'cursus');
+                                var content = '<div class="alert alert-danger">' +
+                                    Translator.trans('full_session_msg', {}, 'cursus') +
+                                    '</div>';
+
+                                $uibModal.open({
+                                    templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Cursus/Partial/simple_modal.html',
+                                    controller: 'SimpleModalCtrl',
+                                    controllerAs: 'smc',
+                                    resolve: {
+                                        title: function () { return title; },
+                                        content: function () { return content; }
+                                    }
+                                });
+                            }
                         }
                     },
                     function (datas) {
                         
                         if (datas['status'] === 403) {
-                            console.log('Cannot validate');
-                            console.log(datas['data']);
+                            var title = Translator.trans('validation_failed', {}, 'cursus');
+                            var content = '<div class="alert alert-danger">' +
+                                Translator.trans(datas['data'], {}, 'cursus') +
+                                '</div>';
+
+                            $uibModal.open({
+                                templateUrl: AngularApp.webDir + 'bundles/clarolinecursus/js/Registration/Cursus/Partial/simple_modal.html',
+                                controller: 'SimpleModalCtrl',
+                                controllerAs: 'smc',
+                                resolve: {
+                                    title: function () { return title; },
+                                    content: function () { return content; }
+                                }
+                            });
                         }
                     }
                 );

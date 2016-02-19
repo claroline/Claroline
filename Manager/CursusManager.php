@@ -2844,6 +2844,7 @@ class CursusManager
         $session = $queue->getSession();
         $course = $session->getCourse();
         $queueDatas = array(
+            'status' => 'success',
             'type' => 'none',
             'id' => $queue->getId(),
             'courseId' => $course->getId(),
@@ -2856,7 +2857,9 @@ class CursusManager
             'status' => $queue->getStatus()
         );
 
-        if ($status & CourseRegistrationQueue::WAITING_VALIDATOR) {
+        if ($status === CourseRegistrationQueue::WAITING) {
+            $queue->setStatus(0);
+        } else if ($status & CourseRegistrationQueue::WAITING_VALIDATOR) {
             $authenticatedUser = $this->tokenStorage->getToken()->getUser();
 
             if ($isAdmin) {
@@ -2890,6 +2893,8 @@ class CursusManager
             } else {
                 $queue->setStatus(CourseRegistrationQueue::WAITING);
                 $this->persistCourseSessionRegistrationQueue($queue);
+                $queueDatas['status'] = 'failed';
+                $queueDatas['datas'] = $results['datas'];
             }
         }
 
