@@ -26,11 +26,6 @@
         <hr/>
         <!-- Question choices row -->
         <div data-ng-if="choiceQuestionCtrl.question.choices" class="question-row">
-            <div class="row" data-ng-if="choiceQuestionCtrl.feedbackIsVisible">
-                <div class="col-md-12">
-                    <label data-ng-bind-html="choiceQuestionCtrl.questionFeedback | unsafe"></label>
-                </div>
-            </div>
             <table class="table choice-question-choice-table">
                 <tr data-ng-repeat="choice in choiceQuestionCtrl.question.choices">
                     <td class="choice">
@@ -61,7 +56,12 @@
                     </td>
                     -->
                 </tr>
-            </table>      
+            </table>    
+            <div class="row" data-ng-if="choiceQuestionCtrl.feedbackIsVisible">
+                <div class="col-md-12">
+                    <label data-ng-bind-html="choiceQuestionCtrl.questionFeedback | unsafe"></label>
+                </div>
+            </div>  
         </div>
         <div data-ng-if="choiceQuestionCtrl.question.hints">
             <hr/>
