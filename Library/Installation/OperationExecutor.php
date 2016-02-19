@@ -104,22 +104,27 @@ class OperationExecutor
     {
         $this->log('Building install/update operations list...');
 
-        $current = $this->openRepository($this->previousRepoFile);
-        $target = $this->openRepository($this->installedRepoFile);
+        $previous = $this->openRepository($this->previousRepoFile);
+        $current = $this->openRepository($this->installedRepoFile);
         $operations = [];
 
-        /** @var PackageInterface $targetPackage */
-        foreach ($target->getCanonicalPackages() as $targetPackage) {
-            if (!($currentPackage = $current->findPackage($targetPackage->getName(), '*'))) {
-                $this->log("  - Installation of {$targetPackage->getName()} required");
-                $operation = $this->buildOperation(Operation::INSTALL, $targetPackage);
+        /** @var PackageInterface $currentPackage */
+        foreach ($current->getCanonicalPackages() as $currentPackage) {
+            if (!($previousPackage = $previous->findPackage($currentPackage->getName(), '*'))) {
+                $this->log("Installation of {$currentPackage->getName()} required");
+                $operation = $this->buildOperation(Operation::INSTALL, $currentPackage);
                 $operations[$operation->getBundleFqcn()] = $operation;
-            } elseif ($targetPackage->getVersion() !== $currentPackage->getVersion()
-                || $targetPackage->isDev()) {
-                $this->log("  - Update of {$targetPackage->getName()} required");
-                $operation = $this->buildOperation(Operation::UPDATE, $targetPackage);
-                $operation->setFromVersion($currentPackage->getVersion());
-                $operation->setToVersion($targetPackage->getVersion());
+            } elseif ($currentPackage->getVersion() !== $previousPackage->getVersion()
+                || $currentPackage->isDev()) {
+                $this->log(sprintf(
+                    'Update of %s from %s to %s required',
+                    $previousPackage->getName(),
+                    $previousPackage->getVersion(),
+                    $currentPackage->getVersion()
+                ));
+                $operation = $this->buildOperation(Operation::UPDATE, $currentPackage);
+                $operation->setFromVersion($previousPackage->getVersion());
+                $operation->setToVersion($currentPackage->getVersion());
                 $operations[$operation->getBundleFqcn()] = $operation;
             }
         }
@@ -221,7 +226,7 @@ class OperationExecutor
         $repo = new InstalledFilesystemRepository($json);
 
         if ($filter) {
-            foreach ($repo->getCanonicalPackages() as $package) {
+            foreach ($repo->getPackages() as $package) {
                 if ($package->getType() !== 'claroline-core'
                     && $package->getType() !== 'claroline-plugin') {
                     $repo->removePackage($package);

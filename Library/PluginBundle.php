@@ -18,7 +18,7 @@ use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 /**
  * Base class of all the plugin bundles on the claroline platform.
  */
-abstract class PluginBundle extends InstallableBundle implements AutoConfigurableInterface
+abstract class PluginBundle extends InstallableBundle implements PluginBundleInterface
 {
     final public function getVendorName()
     {
