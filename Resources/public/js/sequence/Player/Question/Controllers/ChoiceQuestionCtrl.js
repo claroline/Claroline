@@ -138,7 +138,6 @@
             this.getHintData = function (id) {
                 var promise = QuestionService.getHint(id);
                 promise.then(function (result) {
-                    //console.log(result);
                     this.usedHints.push(result);
 
                 }.bind(this));
