@@ -43,6 +43,11 @@
                         <div data-ng-if="choiceQuestionCtrl.getChoiceSimpleType(choice) == 'simple-text'">{{choice.data}}</div>
                         <div data-ng-if="choiceQuestionCtrl.getChoiceSimpleType(choice) == 'html-text'" data-ng-bind-html="choice.data | unsafe"></div>
                     </td>
+                    <td class="choice-feedback-comment">
+                        <label data-ng-if="choiceQuestionCtrl.feedbackIsVisible">
+                            {{choiceQuestionCtrl.getChoiceFeedback(choice)}}
+                        </label>
+                    </td>
                     <td class="choice-feedback">
                         <div data-ng-if="choiceQuestionCtrl.feedbackIsVisible" data-ng-class="{'btn btn-small btn-success fa fa-check' : choiceQuestionCtrl.choiceIsValid(choice) === 1, 'btn btn-small btn-danger fa fa-close': choiceQuestionCtrl.choiceIsValid(choice) === 2}" title="{{choiceQuestionCtrl.getChoiceFeedback(choice)}}">
                             

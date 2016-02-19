@@ -93,10 +93,14 @@
             };
 
             this.getChoiceFeedback = function (choice) {
-
-                for (var i = 0; i < this.solutions.length; i++) {
-                    if (this.solutions[i].id === choice.id) {
-                        return this.solutions[i].feedback;
+                var sdata = PlayerDataSharing.getStudentData();
+                for (var j = 0; j < sdata.answers.length; j++) {
+                    if (sdata.answers[j] === choice.id) {
+                        for (var i = 0; i < this.solutions.length; i++) {
+                            if (this.solutions[i].id === choice.id) {
+                                return this.solutions[i].feedback;
+                            }
+                        }
                     }
                 }
 
