@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * This file is required by bin/doctrine.php. It allows to use
+ * doctrine commands missing in the default command set of
+ * Symfony (like dbal:import).
+ */
+
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 
 require_once 'app/bootstrap.php.cache';

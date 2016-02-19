@@ -286,12 +286,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/CoreBundle.git",
-                "reference": "b4277468175f370e44133ad0bf52486ae8a41dd9"
+                "reference": "9b2cbf9c5f84d5cbb6110ec80c519b86477c73e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/CoreBundle/zipball/b4277468175f370e44133ad0bf52486ae8a41dd9",
-                "reference": "b4277468175f370e44133ad0bf52486ae8a41dd9",
+                "url": "https://api.github.com/repos/claroline/CoreBundle/zipball/9b2cbf9c5f84d5cbb6110ec80c519b86477c73e7",
+                "reference": "9b2cbf9c5f84d5cbb6110ec80c519b86477c73e7",
                 "shasum": ""
             },
             "require": {
@@ -368,7 +368,7 @@
                 "Claroline",
                 "core"
             ],
-            "time": "2016-02-18 15:48:25"
+            "time": "2016-02-19 14:45:51"
         },
         {
             "name": "claroline/cursus-bundle",
