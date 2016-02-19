@@ -234,7 +234,16 @@ class PaperManager
             $paper->setEnd(new \DateTime());
         }
         $paper->setInterupt(false);
+        $paper->setScore($this->calculateScore($paper->getId()));
         $this->om->flush();
+    }
+
+    private function calculateScore($paperId)
+    {
+        $score = $this->om->getRepository('UJMExoBundle:Response')
+                          ->getScoreExercise($paperId);
+
+        return $score;
     }
 
     /**
