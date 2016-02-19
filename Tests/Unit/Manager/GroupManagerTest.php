@@ -156,45 +156,6 @@ class GroupManagerTest extends MockeryTestCase
         $manager->importUsers($group, $users);
     }
 
-    public function testConvertGroupsToArray()
-    {
-        $groupA = $this->mock('Claroline\CoreBundle\Entity\Group');
-        $groupB = $this->mock('Claroline\CoreBundle\Entity\Group');
-        $roleAA = $this->mock('Claroline\CoreBundle\Entity\Role');
-        $roleAB = $this->mock('Claroline\CoreBundle\Entity\Role');
-        $roleBA = $this->mock('Claroline\CoreBundle\Entity\Role');
-        $roleBB = $this->mock('Claroline\CoreBundle\Entity\Role');
-
-        $groupA->shouldReceive('getId')->once()->andReturn(1);
-        $groupA->shouldReceive('getName')->once()->andReturn('group_1');
-        $groupA->shouldReceive('getEntityRoles')->once()->andReturn(array($roleAA, $roleAB));
-        $roleAA->shouldReceive('getTranslationKey')->once()->andReturn('ROLE_AA');
-        $this->translator->shouldReceive('trans')
-            ->with('ROLE_AA', array(), 'platform')
-            ->once()
-            ->andReturn('ROLE_AA_TRAD');
-        $roleAB->shouldReceive('getTranslationKey')->once()->andReturn('ROLE_AB');
-        $this->translator->shouldReceive('trans')
-            ->with('ROLE_AB', array(), 'platform')
-            ->once()
-            ->andReturn('ROLE_AB_TRAD');
-        $groupB->shouldReceive('getId')->once()->andReturn(2);
-        $groupB->shouldReceive('getName')->once()->andReturn('group_2');
-        $groupB->shouldReceive('getEntityRoles')->once()->andReturn(array($roleBA, $roleBB));
-        $roleBA->shouldReceive('getTranslationKey')->once()->andReturn('ROLE_BA');
-        $this->translator->shouldReceive('trans')
-            ->with('ROLE_BA', array(), 'platform')
-            ->once()
-            ->andReturn('ROLE_BA_TRAD');
-        $roleBB->shouldReceive('getTranslationKey')->once()->andReturn('ROLE_BB');
-        $this->translator->shouldReceive('trans')
-            ->with('ROLE_BB', array(), 'platform')
-            ->once()
-            ->andReturn('ROLE_BB_TRAD');
-
-        $this->getManager()->convertGroupsToArray(array($groupA, $groupB));
-    }
-
     public function testGetWorkspaceOutsiders()
     {
         $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');

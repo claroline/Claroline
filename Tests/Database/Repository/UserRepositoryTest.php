@@ -97,20 +97,6 @@ class UserRepositoryTest extends RepositoryTestCase
         $this->assertEquals(2, count($users));
     }
 
-    public function testFindGroupOutsiders()
-    {
-        $users = self::$repo->findGroupOutsiders(self::get('group_1'));
-        $this->assertEquals(3, count($users));
-    }
-
-    public function testFindGroupOutsidersByName()
-    {
-        $users = self::$repo->findGroupOutsidersByName(self::get('group_1'), 'o');
-        $this->assertEquals(2, count($users));
-        $users = self::$repo->findGroupOutsidersByName(self::get('group_1'), 'iLL');
-        $this->assertEquals(1, count($users));
-    }
-
     public function testFindAllExcept()
     {
         $users = self::$repo->findAllExcept(self::get('john'));

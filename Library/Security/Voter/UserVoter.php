@@ -24,7 +24,7 @@ class UserVoter implements VoterInterface
     public function vote(TokenInterface $token, $object, array $attributes)
     {
         //no implementation yet
-        return true;
+        return false;
     }
 
     public function supportsAttribute($attribute)

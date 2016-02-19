@@ -207,42 +207,6 @@ class GroupManager
     }
 
     /**
-     * Serialize a group array.
-     *
-     * @param Group[] $groups
-     *
-     * @return array
-     */
-    public function convertGroupsToArray(array $groups)
-    {
-        $content = array();
-        $i = 0;
-
-        foreach ($groups as $group) {
-            $content[$i]['id'] = $group->getId();
-            $content[$i]['name'] = $group->getName();
-
-            $rolesString = '';
-            $roles = $group->getEntityRoles();
-            $rolesCount = count($roles);
-            $j = 0;
-
-            foreach ($roles as $role) {
-                $rolesString .= "{$this->translator->trans($role->getTranslationKey(), array(), 'platform')}";
-
-                if ($j < $rolesCount - 1) {
-                    $rolesString .= ' ,';
-                }
-                $j++;
-            }
-            $content[$i]['roles'] = $rolesString;
-            $i++;
-        }
-
-        return $content;
-    }
-
-    /**
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param integer $page
      * @param integer $max
@@ -330,6 +294,8 @@ class GroupManager
      * @param string  $orderedBy
      * @param string  $order
      *
+     * @deprecated use api instead.
+     *
      * @return \PagerFanta\PagerFanta
      */
     public function getGroups($page, $max = 50, $orderedBy = 'id', $order = null)
@@ -344,6 +310,8 @@ class GroupManager
      * @param integer $page
      * @param integer $max
      * @param string  $orderedBy
+     *
+     * @deprecated use api instead.
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -424,47 +392,6 @@ class GroupManager
     }
 
     /**
-     * @param integer $page
-     * @param int $max
-     *
-     * @return \PagerFanta\PagerFanta
-     */
-    public function getAllGroups($page, $max = 50)
-    {
-        $query = $this->groupRepo->findAll(false);
-
-        return $this->pagerFactory->createPager($query, $page, $max);
-    }
-
-    /**
-     * @param integer $page
-     * @param string $search
-     * @param int $max
-     *
-     * @return \PagerFanta\PagerFanta
-     */
-    public function getAllGroupsBySearch($page, $search, $max = 50)
-    {
-        $query = $this->groupRepo->findAllGroupsBySearch($search);
-
-        return $this->pagerFactory->createPagerFromArray($query, $page, $max);
-    }
-
-    /**
-     * @param string[] $names
-     *
-     * @return Group[]
-     */
-    public function getGroupsByNames(array $names)
-    {
-        if (count($names) > 0) {
-            return $this->groupRepo->findGroupsByNames($names);
-        }
-
-        return array();
-    }
-
-    /**
      * Returns users who don't have access to the model $model
      *
      * @param WorkspaceModel $model
@@ -527,17 +454,13 @@ class GroupManager
         return $this->groupRepo->findGroupByName($name, $executeQuery);
     }
 
-    public function getAllGroupsWithoutPager(
-        $orderedBy = 'id',
-        $order = 'ASC',
-        $executeQuery = true
-    )
-    {
-        return $this->groupRepo->findAllGroups($orderedBy, $order, $executeQuery);
-    }
-
     public function searchPartialList($searches, $page, $limit, $count = false)
     {
         return $this->groupRepo->searchPartialList($searches, $page, $limit, $count);
+    }
+
+    public function getAll()
+    {
+        return $this->groupRepo->findAll();
     }
 }

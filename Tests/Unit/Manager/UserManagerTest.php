@@ -327,24 +327,6 @@ class UserManagerTest extends MockeryTestCase
         $this->assertEquals('pager', $this->getManager()->getUsersByName('search', 1));
     }
 
-    public function testGetUsersByGroup()
-    {
-        $group = $this->mock('Claroline\CoreBundle\Entity\Group');
-        $em = $this->mock('Doctrine\ORM\EntityManager');
-        $query = new \Doctrine\ORM\Query($em);
-
-        $this->userRepo->shouldReceive('findByGroup')
-            ->with($group, false, 'id')
-            ->once()
-            ->andReturn($query);
-        $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1, 20)
-            ->once()
-            ->andReturn('pager');
-
-        $this->assertEquals('pager', $this->getManager()->getUsersByGroup($group, 1));
-    }
-
     public function testGetUsersByNameAndGroup()
     {
         $group = $this->mock('Claroline\CoreBundle\Entity\Group');
@@ -362,43 +344,7 @@ class UserManagerTest extends MockeryTestCase
 
         $this->assertEquals('pager', $this->getManager()->getUsersByNameAndGroup('search', $group, 1));
     }
-
-    public function testGetGroupOutsiders()
-    {
-        $group = $this->mock('Claroline\CoreBundle\Entity\Group');
-        $em = $this->mock('Doctrine\ORM\EntityManager');
-        $query = new \Doctrine\ORM\Query($em);
-
-        $this->userRepo->shouldReceive('findGroupOutsiders')
-            ->with($group, false, 'id')
-            ->once()
-            ->andReturn($query);
-        $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1, 20)
-            ->once()
-            ->andReturn('pager');
-
-        $this->assertEquals('pager', $this->getManager()->getGroupOutsiders($group, 1));
-    }
-
-    public function testGetGroupOutsidersByName()
-    {
-        $group = $this->mock('Claroline\CoreBundle\Entity\Group');
-        $em = $this->mock('Doctrine\ORM\EntityManager');
-        $query = new \Doctrine\ORM\Query($em);
-
-        $this->userRepo->shouldReceive('findGroupOutsidersByName')
-            ->with($group, 'search', false, 'id')
-            ->once()
-            ->andReturn($query);
-        $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1, 20)
-            ->once()
-            ->andReturn('pager');
-
-        $this->assertEquals('pager', $this->getManager()->getGroupOutsidersByName($group, 1, 'search'));
-    }
-
+    
     public function testGetNbUsers()
     {
         $this->userRepo->shouldReceive('count')
