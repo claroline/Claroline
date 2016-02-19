@@ -1,9 +1,11 @@
+import 'angular/angular.min'
+
 import bootstrap from 'angular-bootstrap'
 
-import LocationAPIService from './Service/LocationAPIService' 
-import LocationController from './Controller/LocationController' 
+import LocationAPIService from './Service/LocationAPIService'
+import LocationController from './Controller/LocationController'
 import EditLocationModalController from './Controller/EditLocationModalController'
-import CreateLocationModalController from './Controller/CreateLocationModalController' 
+import CreateLocationModalController from './Controller/CreateLocationModalController'
 import ClarolineAPI from '../services/module'
 
 var LocationManager = angular.module('LocationManager', [

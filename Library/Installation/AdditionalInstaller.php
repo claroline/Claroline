@@ -29,9 +29,6 @@ class AdditionalInstaller extends BaseInstaller
     {
         $maintenanceUpdater = new Updater\WebUpdater($this->container->getParameter('kernel.root_dir'));
         $maintenanceUpdater->preUpdate();
-        $rootDirUpdater = new Updater\RootDirUpdater($this->container->getParameter('kernel.root_dir'));
-        $rootDirUpdater->setLogger($this->logger);
-        $rootDirUpdater->preUpdate();
 
         $this->setLocale();
 
