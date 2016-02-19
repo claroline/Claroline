@@ -114,36 +114,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
-     * Returns all the users by search.
-     *
-     * @param string $search
-     *
-     * @return User[]
-     */
-    public function findAllUserBySearch($search)
-    {
-        $upperSearch = strtoupper(trim($search));
-
-        if ($search !== '') {
-            $dql = '
-                SELECT u
-                FROM Claroline\CoreBundle\Entity\User u
-                WHERE UPPER(u.firstName) LIKE :search
-                OR UPPER(u.lastName) LIKE :search
-                OR UPPER(u.username) LIKE :search
-                AND u.isEnabled = true
-            ';
-
-            $query = $this->_em->createQuery($dql);
-            $query->setParameter('search', "%{$upperSearch}%");
-
-            return $query->getResult();
-        }
-
-        return parent::findAll();
-    }
-
-    /**
      * Search users whose first name, last name or username match a given search string.
      *
      * @param string $search
@@ -400,93 +370,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query->setParameter('type', Role::WS_ROLE);
 
         return $executeQuery ? $query->getResult() : $query;
-    }
-
-    /**
-     * Returns the users who are not members of a group.
-     *
-     * @param Group   $group
-     * @param boolean $executeQuery
-     * @param string  $orderedBy
-     *
-     * @return User[]|Query
-     *
-     * @todo Find out why the join on profile preferences is necessary
-     */
-    public function findGroupOutsiders(Group $group, $executeQuery = true, $orderedBy = 'id')
-    {
-        $dql = "
-            SELECT DISTINCT u FROM Claroline\CoreBundle\Entity\User u
-            WHERE u NOT IN (
-                SELECT us FROM Claroline\CoreBundle\Entity\User us
-                JOIN us.groups gs
-                WHERE gs.id = :groupId
-            )
-            AND u.isEnabled = true
-            ORDER BY u.{$orderedBy}
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('groupId', $group->getId());
-
-        return $executeQuery ? $query->getResult() : $query;
-    }
-
-    /**
-     * Returns the users who are not members of a group and whose first name, last
-     * name or username match a given search string.
-     *
-     * @param \Claroline\CoreBundle\Entity\Group $group
-     * @param string $search
-     * @param boolean $executeQuery
-     * @param string $orderedBy
-     *
-     * @return User[]|Query
-     *
-     * @todo Find out why the join on profile preferences is necessary
-     */
-    public function findGroupOutsidersByName(Group $group, $search, $executeQuery = true, $orderedBy = 'id')
-    {
-        $dql = "
-            SELECT DISTINCT u FROM Claroline\CoreBundle\Entity\User u
-            WHERE (
-                UPPER(u.lastName) LIKE :search
-                OR UPPER(u.firstName) LIKE :search
-                OR UPPER(u.lastName) LIKE :search
-            )
-            AND u NOT IN (
-                SELECT us FROM Claroline\CoreBundle\Entity\User us
-                JOIN us.groups gr
-                WHERE gr.id = :groupId
-            )
-            AND u.isEnabled = true
-            ORDER BY u.{$orderedBy}
-        ";
-        $search = strtoupper($search);
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('groupId', $group->getId());
-        $query->setParameter('search', "%{$search}%");
-
-        return $executeQuery ? $query->getResult() : $query;
-    }
-
-    /**
-     * Returns all the users except a given one.
-     *
-     * @param array $excludedUser
-     *
-     * @return User[]
-     */
-    public function findAllExcept(array $excludedUser)
-    {
-        $dql = '
-            SELECT u FROM Claroline\CoreBundle\Entity\User u
-            WHERE u NOT IN (:userIds)
-            AND u.isEnabled = true
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('userIds', $excludedUser);
-
-        return $query->getResult();
     }
 
     /**
@@ -782,32 +665,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query->setParameter('email', $email);
 
         return $query->getResult();
-    }
-
-    /**
-     * @param Workspace $workspace
-     *
-     * @return array
-     */
-    public function findByWorkspaceWithUsersFromGroup(Workspace $workspace)
-    {
-        $dql = '
-            SELECT u
-            FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.roles ur
-            LEFT JOIN u.groups g
-            LEFT JOIN g.roles gr
-            LEFT JOIN gr.workspace grws
-            LEFT JOIN ur.workspace uws
-            WHERE uws.id = :wsId
-            OR grws.id = :wsId
-         ';
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('wsId', $workspace->getId());
-        $res = $query->getResult();
-
-        return $res;
     }
 
     /**

@@ -60,6 +60,7 @@ class UserManager
     private $uploadsDirectory;
     private $transfertManager;
     private $container;
+    private $authorization;
 
     /**
      * Constructor.
@@ -469,11 +470,12 @@ class UserManager
     }
 
     /**
-     * Serialize a user.
+     * Serialize a user. Use JMS serializer from entities instead
      *
      * @param array $users
      *
      * @return array
+     * @deprecated 
      */
     public function convertUsersToArray(array $users)
     {
@@ -556,34 +558,6 @@ class UserManager
     }
 
     /**
-     * @param integer $page
-     * @param integer $max
-     * @param string  $orderedBy
-     * @param string  $order
-     *
-     * @return \Pagerfanta\Pagerfanta;
-     */
-    public function getAllUsersExcept($page, $max = 20, $orderedBy = 'id', $order = null, array $users )
-    {
-        $query = $this->userRepo->findAllExcept($users);
-        return $this->pagerFactory->createPagerFromArray($query, $page, $max);
-    }
-
-    /**
-     * @param string  $search
-     * @param integer $page
-     * @param integer $max
-     *
-     * @return \Pagerfanta\Pagerfanta;
-     */
-    public function getAllUsersBySearch($page, $search, $max = 20)
-    {
-        $users = $this->userRepo->findAllUserBySearch($search);
-
-        return $this->pagerFactory->createPagerFromArray($users, $page, $max);
-    }
-
-    /**
      * @param string  $search
      * @param integer $page
      * @param integer $max
@@ -617,26 +591,6 @@ class UserManager
         $query = $this->userRepo->findByGroup($group, false, $orderedBy, $order);
 
         return $this->pagerFactory->createPager($query, $page, $max);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Group $group
-     *
-     * @return User[]
-     */
-    public function getUsersByGroupWithoutPager(Group $group)
-    {
-        return $this->userRepo->findByGroup($group);
-    }
-
-    /**
-     * @param Workspace $workspace
-     *
-     * @return User[]
-     */
-    public function getByWorkspaceWithUsersFromGroup(Workspace $workspace)
-    {
-        return $this->userRepo->findByWorkspaceWithUsersFromGroup($workspace);
     }
 
     /**
@@ -690,27 +644,6 @@ class UserManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace[] $workspaces
-     * @param integer                                                    $page
-     * @param string                                                     $search
-     * @param integer                                                    $max
-     *
-     * @return \Pagerfanta\Pagerfanta
-     */
-    public function getUsersByWorkspacesAndSearch(
-        array $workspaces,
-        $page,
-        $search,
-        $max = 20
-    )
-    {
-        $users = $this->userRepo
-            ->findUsersByWorkspacesAndSearch($workspaces, $search);
-
-        return $this->pagerFactory->createPagerFromArray($users, $page, $max);
-    }
-
-    /**
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param string                                                   $search
      * @param integer                                                  $page
@@ -721,37 +654,6 @@ class UserManager
     public function getAllUsersByWorkspaceAndName(Workspace $workspace, $search, $page, $max = 20)
     {
         $query = $this->userRepo->findAllByWorkspaceAndName($workspace, $search, false);
-
-        return $this->pagerFactory->createPager($query, $page, $max);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Group $group
-     * @param integer                            $page
-     * @param integer                            $max
-     * @param string                             $orderedBy
-     *
-     * @return \Pagerfanta\Pagerfanta
-     */
-    public function getGroupOutsiders(Group $group, $page, $max = 20, $orderedBy = 'id')
-    {
-        $query = $this->userRepo->findGroupOutsiders($group, false, $orderedBy);
-
-        return $this->pagerFactory->createPager($query, $page, $max);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Group $group
-     * @param integer                            $page
-     * @param string                             $search
-     * @param integer                            $max
-     * @param string                             $orderedBy
-     *
-     * @return \Pagerfanta\Pagerfanta
-     */
-    public function getGroupOutsidersByName(Group $group, $page, $search, $max = 20, $orderedBy = 'id')
-    {
-        $query = $this->userRepo->findGroupOutsidersByName($group, $search, false, $orderedBy);
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }
@@ -1596,5 +1498,10 @@ class UserManager
         );
 
         return $event->getFilters();
+    }
+
+    public function isGranted($action, User $user)
+    {
+        return $this->container->get('security.authorization_checker')->isGranted($action, $user);
     }
 }
