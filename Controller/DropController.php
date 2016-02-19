@@ -710,7 +710,6 @@ echo "<br />";
                 // Traitement du tableau
                 for ($indice = 0; $indice<count($userComments); $indice++)
                 {
-                    echo "UserId " . $userComments[$indice]->getUser()->getId();
                     $ResourceNode = $dropzone->getResourceNode();
                     $workspace = $ResourceNode->getWorkspace();
                     // getting the  Manager role
@@ -725,6 +724,14 @@ echo "<br />";
                         if (strpos('_' . $roleName, 'ROLE_WS_MANAGER') === 1)
                         {
                             echo "TROUVE";
+                            echo "UserId " . $userComments[$indice]->getUser()->getId();
+                            echo "DocId " . $document->getId();
+                            $teacherCommentDocArray[$document->getId()]=
+                            $userComments[$indice]->getUser()->getFirstName() .
+                            " " . $userComments[$indice]->getUser()->getLastName();
+
+                            echo $teacherCommentDocArray[$document->getId()];
+
                         }
 
                         echo "Rôle*" . $roleName . "*";
