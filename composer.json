@@ -46,12 +46,12 @@
         "symfony/phpunit-bridge": "*"
     },
     "scripts": {
-    	  "fast-install" : [
+        "fast-install" : [
             "composer run configure",
             "php app/console doctrine:database:create --if-not-exists",
             "php bin/doctrine dbal:import claroline.sql -vvv",
             "php app/console assets:install web --symlink"
-	      ],
+        ],
         "sync": [
             "composer fetch",
             "composer configure",

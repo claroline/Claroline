@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5b6e20fc42b74ef1260881ca5520268a",
+    "hash": "0f882b0fdace28e3b5b9a1786d841123",
     "content-hash": "533fe13cc42ab9c3b12347ad63366f6d",
     "packages": [
         {
@@ -286,12 +286,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/CoreBundle.git",
-                "reference": "b532e405efd0e2d248953bd95e78ad97cbec0083"
+                "reference": "0a4a76ec06e8326fd15812344a0ef4d4044d257f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/CoreBundle/zipball/b532e405efd0e2d248953bd95e78ad97cbec0083",
-                "reference": "b532e405efd0e2d248953bd95e78ad97cbec0083",
+                "url": "https://api.github.com/repos/claroline/CoreBundle/zipball/0a4a76ec06e8326fd15812344a0ef4d4044d257f",
+                "reference": "0a4a76ec06e8326fd15812344a0ef4d4044d257f",
                 "shasum": ""
             },
             "require": {
@@ -368,7 +368,7 @@
                 "Claroline",
                 "core"
             ],
-            "time": "2016-02-19 17:09:03"
+            "time": "2016-02-19 19:11:21"
         },
         {
             "name": "claroline/cursus-bundle",
