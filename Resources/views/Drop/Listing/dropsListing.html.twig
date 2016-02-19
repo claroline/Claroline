@@ -41,13 +41,15 @@ au div situé ci-dessous
 
 {% for drop in pager.currentPageResults %}
     {% for document in drop.documents %}
-        {% for key,value in haveCommentOrNotArray %}
+        {% set foundDocument = false %}
+        {% for key,value in teacherCommentDocArray %}
             {% if document.id == key %}
-                {% if value == 0  %}
-                    {% set alertNbDocumentWithoutComment = alertNbDocumentWithoutComment + 1 %}
-                {% endif %}
+                {% set foundDocument = true  %}
             {% endif %}
         {% endfor %}
+        {% if foundDocument == false  %}
+            {% set alertNbDocumentWithoutComment = alertNbDocumentWithoutComment + 1 %}
+        {% endif %}
     {% endfor %}
 {% endfor %}
 

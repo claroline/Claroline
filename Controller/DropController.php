@@ -672,6 +672,10 @@ class DropController extends DropzoneBaseController
 
         $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
 
+        //
+        // Partie pour calculer les compteurs
+        //
+
         // Tableau donnant pour chaque document le premier enseignant qui a commenté
         $teacherCommentDocArray = array();
 
@@ -700,63 +704,40 @@ class DropController extends DropzoneBaseController
                 }
 
 
-echo "<br />";
-
-//var_dump($usersIds);die();
                 // Récupération du premier enseignant qui a commenté ce document
                 $userComments = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Comment')
                 ->teacherCommentDocArray($document);
-                echo "Document " . $document->getId();
                 // Traitement du tableau
+                $foundAdminComment = false;
                 for ($indice = 0; $indice<count($userComments); $indice++)
                 {
                     $ResourceNode = $dropzone->getResourceNode();
                     $workspace = $ResourceNode->getWorkspace();
                     // getting the  Manager role
-                    $this->role_manager =  $this->get('claroline.manager.role_manager');;
+                    $this->role_manager =  $this->get('claroline.manager.role_manager');
                     $role = $this->role_manager->getWorkspaceRolesForUser($userComments[$indice]->getUser(), $workspace);
 
                     // Traitement du tableau
                     for ($indiceRole = 0; $indiceRole<count($role); $indiceRole++)
                     {
-                        echo "Résultat/" . $role[$indiceRole]->getTranslationKey()."/";
                         $roleName = $role[$indiceRole]->getName();
                         if (strpos('_' . $roleName, 'ROLE_WS_MANAGER') === 1)
                         {
-                            echo "TROUVE";
-                            echo "UserId " . $userComments[$indice]->getUser()->getId();
-                            echo "DocId " . $document->getId();
-                            $teacherCommentDocArray[$document->getId()]=
-                            $userComments[$indice]->getUser()->getFirstName() .
-                            " " . $userComments[$indice]->getUser()->getLastName();
-
-                            echo $teacherCommentDocArray[$document->getId()];
-
-                        }
-
-                        echo "Rôle*" . $roleName . "*";
-
+                            if ($foundAdminComment == false)
+                            {
+                                $teacherCommentDocArray[$document->getId()]=
+                                $userComments[$indice]->getUser()->getFirstName() .
+                                " " . $userComments[$indice]->getUser()->getLastName();
+                                $foundAdminComment = true;
                             }
-//                die();
-
-
-//                    var_dump($adminInnova);
-                // // Initialisation de la variable car un document peut ne pas avoir d'accusé de réception.
-                // $id = 0;
-
-                // if (!empty($userComment)) {
-                //     // Récupération de la valeur de l'accusé de réceptoin
-                //     $teacherCommentDocArray[$document->getId()]= $userComment->getUser()->getId()->getUserName() . " " . $userComment->getFirstName();
-                // }
-                // else
-                // {
-                //     $teacherCommentDocArray[$document->getId()]="";
-                // }
+                        }
+                    }
                 }
-
             }
-
         }
+        //
+        // Fin partie pour calculer les compteurs
+        //
 
         $dataToView = $this->addDropsStats($dropzone, array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
@@ -770,7 +751,8 @@ echo "<br />";
             'collecticielOpenOrNot' => $collecticielOpenOrNot,
             'haveReturnReceiptOrNotArray' => $haveReturnReceiptOrNotArray,
             'alertNbDocumentWithoutReturnReceipt' => $alertNbDocumentWithoutReturnReceipt,
-            'haveCommentOrNotArray' => $haveCommentOrNotArray
+            'haveCommentOrNotArray' => $haveCommentOrNotArray,
+            'teacherCommentDocArray' => $teacherCommentDocArray
         ));
 
         return $dataToView;
