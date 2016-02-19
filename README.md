@@ -2,10 +2,9 @@ README
 ======
 
 This repository provides the basic application structure of the Claroline
-platform.
-It doesn't contain the sources nor the third-party libraries required to make
-the application fully functional. Those sources have to be installed following
-the procedure described below.
+platform. It doesn't contain the sources nor the third-party libraries 
+required to make the application fully functional. Those sources have to 
+be installed following the procedure described below.
 
 If you want to contribute or directly browse the sources of the project, here
 is a (non-exhaustive) list of their dedicated repositories:

@@ -39,8 +39,11 @@
         "ujm/exo-bundle": "~6.0"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "*",
-        "claroline/dev-bundle": "master"
+        "claroline/dev-bundle": "master",
+        "fabpot/php-cs-fixer": "^1.10",
+        "mikey179/vfsStream": "~1.5",
+        "phpunit/phpunit": "~4.6",
+        "symfony/phpunit-bridge": "*"
     },
     "scripts": {
     	  "fast-install" : [

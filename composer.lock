@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "fe1620b4a115ac3c4e86fb917b36910c",
-    "content-hash": "ba96bbaca831f54696788ac4837bf980",
+    "hash": "5b6e20fc42b74ef1260881ca5520268a",
+    "content-hash": "533fe13cc42ab9c3b12347ad63366f6d",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -242,12 +242,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/BundleRecorder.git",
-                "reference": "2649b2477619e253e5b097da18c6b43ff710198f"
+                "reference": "8862f38b8b9429f1755b85c40d3fc4ec8c7a4e90"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/BundleRecorder/zipball/2649b2477619e253e5b097da18c6b43ff710198f",
-                "reference": "2649b2477619e253e5b097da18c6b43ff710198f",
+                "url": "https://api.github.com/repos/claroline/BundleRecorder/zipball/8862f38b8b9429f1755b85c40d3fc4ec8c7a4e90",
+                "reference": "8862f38b8b9429f1755b85c40d3fc4ec8c7a4e90",
                 "shasum": ""
             },
             "require": {
@@ -278,7 +278,7 @@
                 "Bundle recorder",
                 "Claroline"
             ],
-            "time": "2016-02-17 11:52:22"
+            "time": "2016-02-18 18:06:07"
         },
         {
             "name": "claroline/core-bundle",
@@ -286,12 +286,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/CoreBundle.git",
-                "reference": "63f9983dce95eff507f7b860ce00decb044c5c35"
+                "reference": "b4277468175f370e44133ad0bf52486ae8a41dd9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/CoreBundle/zipball/63f9983dce95eff507f7b860ce00decb044c5c35",
-                "reference": "63f9983dce95eff507f7b860ce00decb044c5c35",
+                "url": "https://api.github.com/repos/claroline/CoreBundle/zipball/b4277468175f370e44133ad0bf52486ae8a41dd9",
+                "reference": "b4277468175f370e44133ad0bf52486ae8a41dd9",
                 "shasum": ""
             },
             "require": {
@@ -368,7 +368,7 @@
                 "Claroline",
                 "core"
             ],
-            "time": "2016-02-18 10:22:37"
+            "time": "2016-02-18 15:48:25"
         },
         {
             "name": "claroline/cursus-bundle",
@@ -7150,16 +7150,16 @@
         },
         {
             "name": "zendframework/zend-eventmanager",
-            "version": "3.0.0",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-eventmanager.git",
-                "reference": "8c9917f1595ff260f289439bdeb1f46500c65d62"
+                "reference": "5c80bdee0e952be112dcec0968bad770082c3a6e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-eventmanager/zipball/8c9917f1595ff260f289439bdeb1f46500c65d62",
-                "reference": "8c9917f1595ff260f289439bdeb1f46500c65d62",
+                "url": "https://api.github.com/repos/zendframework/zend-eventmanager/zipball/5c80bdee0e952be112dcec0968bad770082c3a6e",
+                "reference": "5c80bdee0e952be112dcec0968bad770082c3a6e",
                 "shasum": ""
             },
             "require": {
@@ -7170,11 +7170,11 @@
                 "container-interop/container-interop": "^1.1.0",
                 "phpunit/phpunit": "~4.0",
                 "squizlabs/php_codesniffer": "^2.0",
-                "zendframework/zend-stdlib": "^2.7.3"
+                "zendframework/zend-stdlib": "^2.7.3 || ^3.0"
             },
             "suggest": {
                 "container-interop/container-interop": "^1.1.0, to use the lazy listeners feature",
-                "zendframework/zend-stdlib": "^2.7.3, to use the FilterChain feature"
+                "zendframework/zend-stdlib": "^2.7.3 || ^3.0, to use the FilterChain feature"
             },
             "type": "library",
             "extra": {
@@ -7200,7 +7200,7 @@
                 "events",
                 "zf2"
             ],
-            "time": "2016-01-12 23:27:48"
+            "time": "2016-02-18 20:53:00"
         },
         {
             "name": "zendframework/zend-math",
