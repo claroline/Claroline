@@ -11,9 +11,11 @@
 
 namespace Claroline\CoreBundle\Library\Installation;
 
+use Composer\Package\PackageInterface;
+
 /**
  * Holds the details of an install/update operation, such as the type
- * of the operation, the package name, the target version, etc.
+ * of the operation, the original package, the target version, etc.
  */
 class Operation
 {
@@ -26,7 +28,7 @@ class Operation
     private $fromVersion;
     private $toVersion;
 
-    public function __construct($type, \stdClass $package, $bundleFqcn)
+    public function __construct($type, PackageInterface $package, $bundleFqcn)
     {
         if (!in_array($type, [self::INSTALL, self::UPDATE])) {
             throw new \InvalidArgumentException(
@@ -44,14 +46,9 @@ class Operation
         return $this->type;
     }
 
-    public function getPackageName()
+    public function getPackage()
     {
-        return $this->package->name;
-    }
-
-    public function getPackageType()
-    {
-        return $this->package->type;
+        return $this->package;
     }
 
     public function getBundleFqcn()
@@ -77,10 +74,5 @@ class Operation
     public function getToVersion()
     {
         return $this->toVersion;
-    }
-
-    public function getRawPackage()
-    {
-        return $this->package;
     }
 }
