@@ -186,7 +186,7 @@ class OperationExecutor
 
             if ($operation->getType() === Operation::INSTALL) {
                 $installer->install($bundles[$operation->getBundleFqcn()]);
-                $previousRepo->addPackage($operation->getPackage());
+                $previousRepo->addPackage(clone $operation->getPackage());
             } elseif ($operation->getType() === Operation::UPDATE) {
                 $installer->update(
                     $bundles[$operation->getBundleFqcn()],
@@ -243,7 +243,7 @@ class OperationExecutor
         $targetDir = $package->getTargetDir() ?: '';
         $packageDir = empty($targetDir) ?
             $package->getPrettyName() :
-            "{$targetDir}/{$package->getName()}";
+            "{$package->getName()}/{$targetDir}";
         $fqcn = $this->detector->detectBundle("{$vendorDir}/{$packageDir}");
 
         return new Operation($type, $package, $fqcn);
