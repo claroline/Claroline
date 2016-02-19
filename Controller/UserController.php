@@ -377,7 +377,7 @@ class UserController extends Controller
             case 'group':
 
                 if ($isAdmin) {
-                    $groups = $this->groupManager->getAllGroupsWithoutPager('name');
+                    $groups = $this->groupManager->getAll();
                 } else {
                     $groups = $authenticatedUser->getGroups();
                 }

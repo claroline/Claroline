@@ -550,8 +550,6 @@ class UserManager
         return $this->pagerFactory->createPager($query, $page, $max);
     }
 
-    /**
-     */
     public function getAll()
     {
         return $this->userRepo->findAll();
