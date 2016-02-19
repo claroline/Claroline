@@ -699,26 +699,52 @@ class DropController extends DropzoneBaseController
                     $alertNbDocumentWithoutReturnReceipt++;
                 }
 
+
+echo "<br />";
+
+//var_dump($usersIds);die();
                 // Récupération du premier enseignant qui a commenté ce document
                 $userComments = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Comment')
                 ->teacherCommentDocArray($document);
-
-var_dump(count($userComments));die();
-
+                echo "Document " . $document->getId();
                 // Traitement du tableau
-                for ($indice = 0; $indice<=count($userComments); $indice++)
+                for ($indice = 0; $indice<count($userComments); $indice++)
                 {
-                // Initialisation de la variable car un document peut ne pas avoir d'accusé de réception.
-                $id = 0;
+                    echo "UserId " . $userComments[$indice]->getUser()->getId();
+                    $ResourceNode = $dropzone->getResourceNode();
+                    $workspace = $ResourceNode->getWorkspace();
+                    // getting the  Manager role
+                    $this->role_manager =  $this->get('claroline.manager.role_manager');;
+                    $role = $this->role_manager->getWorkspaceRolesForUser($userComments[$indice]->getUser(), $workspace);
 
-                if (!empty($userComment)) {
-                    // Récupération de la valeur de l'accusé de réceptoin
-                    $teacherCommentDocArray[$document->getId()]= $userComment->getUser()->getId()->getUserName() . " " . $userComment->getFirstName();
-                }
-                else
-                {
-                    $teacherCommentDocArray[$document->getId()]="";
-                }
+                    // Traitement du tableau
+                    for ($indiceRole = 0; $indiceRole<count($role); $indiceRole++)
+                    {
+                        echo "Résultat/" . $role[$indiceRole]->getTranslationKey()."/";
+                        $roleName = $role[$indiceRole]->getName();
+                        if (strpos('_' . $roleName, 'ROLE_WS_MANAGER') === 1)
+                        {
+                            echo "TROUVE";
+                        }
+
+                        echo "Rôle*" . $roleName . "*";
+
+                            }
+//                die();
+
+
+//                    var_dump($adminInnova);
+                // // Initialisation de la variable car un document peut ne pas avoir d'accusé de réception.
+                // $id = 0;
+
+                // if (!empty($userComment)) {
+                //     // Récupération de la valeur de l'accusé de réceptoin
+                //     $teacherCommentDocArray[$document->getId()]= $userComment->getUser()->getId()->getUserName() . " " . $userComment->getFirstName();
+                // }
+                // else
+                // {
+                //     $teacherCommentDocArray[$document->getId()]="";
+                // }
                 }
 
             }
