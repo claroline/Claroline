@@ -103,7 +103,6 @@
                     this.feedbackIsVisible = true;
                     this.solutions = result.solutions;
                     this.questionFeedback = result.feedback;
-                    console.log(this.solutions);
                 }.bind(this));
             };
 
