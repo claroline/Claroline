@@ -68,7 +68,7 @@
             "composer disable-maintenance"
         ],
         "fetch": [
-            "composer install --prefer-dist --no-dev",
+            "composer install --prefer-dist --no-dev --optimize-autoloader",
             "composer fetch-post"
         ],
         "fetch-dev": [
@@ -122,7 +122,6 @@
     "config": {
         "bin-dir": "bin",
         "github-protocols": ["https", "git", "ssh"],
-        "optimize-autoloader": true,
         "process-timeout": 3600
     },
     "extra": {
