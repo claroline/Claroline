@@ -48,46 +48,32 @@
     },
     "scripts": {
         "fast-install" : [
-            "composer run configure",
+            "php scripts/check.php",
             "php app/console doctrine:database:create --if-not-exists",
             "php bin/doctrine dbal:import claroline.sql -vvv",
             "php app/console assets:install web --symlink"
         ],
         "sync": [
             "composer fetch",
-            "composer configure",
             "composer build",
             "php app/console claroline:update --env=prod",
             "composer disable-maintenance"
         ],
         "sync-dev": [
             "composer fetch-dev",
-            "composer configure",
             "composer build",
             "php app/console claroline:update",
             "composer disable-maintenance"
         ],
         "fetch": [
             "composer install --prefer-dist --no-dev --optimize-autoloader",
-            "composer fetch-post"
-        ],
-        "fetch-dev": [
-            "composer install --prefer-source",
-            "composer fetch-post"
-        ],
-        "fetch-post": [
-            "composer check",
             "npm install",
             "npm run bower"
         ],
-        "check": [
-            "Claroline\\CoreBundle\\Library\\Installation\\ScriptHandler::checkEnvironment"
-        ],
-        "configure": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
-        ],
-        "disable-maintenance": [
-            "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::disableMaintenance"
+        "fetch-dev": [
+            "composer install --prefer-source",
+            "npm install",
+            "npm run bower"
         ],
         "build": [
             "composer bundles",
@@ -97,20 +83,22 @@
             "npm run themes",
             "npm run webpack"
         ],
-        "watch": [
-            "npm run watch"
+        "disable-maintenance": [
+            "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::disableMaintenance"
         ],
         "bundles": [
             "Claroline\\BundleRecorder\\ScriptHandler::buildBundleFile"
         ],
         "pre-install-cmd": [
-            "php pre-update.php"
+            "php scripts/check.php",
+            "php scripts/save-repo.php"
         ],
         "post-install-cmd": [
             "composer bundles"
         ],
         "pre-update-cmd": [
-            "php pre-update.php",
+            "php scripts/check.php",
+            "php scripts/save-repo.php",
             "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::enableMaintenance"
         ],
         "post-update-cmd": [
@@ -127,22 +115,6 @@
     "extra": {
         "symfony-app-dir": "app",
         "symfony-web-dir": "web",
-        "symfony-assets-install": "symlink",
-        "incenteev-parameters": {
-            "env-map": {
-                "database_name": "CLAROLINE_DATABASE_NAME",
-                "database_user": "CLAROLINE_DATABASE_USER",
-                "database_password": "CLAROLINE_DATABASE_PASSWORD"
-            },
-            "file": "app/config/parameters.yml",
-            "interactive-keys": [
-                "database_host",
-                "database_port",
-                "database_name",
-                "database_user",
-                "database_password",
-                "secret"
-            ]
-        }
+        "symfony-assets-install": "symlink"
     }
 }
