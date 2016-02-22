@@ -12,16 +12,13 @@
 namespace Claroline\InstallationBundle\Manager;
 
 use Claroline\BundleRecorder\Log\LoggableTrait;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Claroline\CoreBundle\Entity\Bundle;
+use Claroline\InstallationBundle\Additional\AdditionalInstallerInterface;
+use Claroline\InstallationBundle\Bundle\InstallableInterface;
+use Claroline\InstallationBundle\Fixtures\FixtureLoader;
 use Claroline\MigrationBundle\Manager\Manager;
 use Claroline\MigrationBundle\Migrator\Migrator;
-use Claroline\InstallationBundle\Fixtures\FixtureLoader;
-use Claroline\InstallationBundle\Bundle\BundleVersion;
-use Claroline\InstallationBundle\Bundle\InstallableInterface;
-use Claroline\InstallationBundle\Bundle\InstallableBundle;
-use Claroline\InstallationBundle\Additional\AdditionalInstallerInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class InstallationManager
 {
@@ -89,13 +86,16 @@ class InstallationManager
             $this->log('Launching post-installation actions...');
             $additionalInstaller->postInstall();
         }
-
-        $this->persistBundleInfo($bundle);
     }
 
     public function update(InstallableInterface $bundle, $currentVersion, $targetVersion)
     {
-        $this->log(sprintf("<comment>Updating %s...</comment>", $bundle->getName()));
+        $this->log(sprintf(
+            "<comment>Updating %s from %s to %s...</comment>",
+            $bundle->getName(),
+            $currentVersion,
+            $targetVersion
+        ));
         $additionalInstaller = $this->getAdditionalInstaller($bundle);
 
         if ($additionalInstaller) {
@@ -112,8 +112,6 @@ class InstallationManager
             $this->log('Launching post-update actions...');
             $additionalInstaller->postUpdate($currentVersion, $targetVersion);
         }
-
-        $this->persistBundleInfo($bundle);
     }
 
     public function uninstall(InstallableInterface $bundle)
@@ -158,31 +156,5 @@ class InstallationManager
         }
 
         return false;
-    }
-
-    private function persistBundleInfo(InstallableInterface $bundle)
-    {
-        if ($bundle instanceof InstallableBundle) {
-            $ds = DIRECTORY_SEPARATOR;
-            $om = $this->container->get('doctrine.orm.entity_manager');
-            $entity = $om->getRepository('ClarolineCoreBundle:Bundle')
-                ->findOneByName($bundle->getClarolineName());
-    
-            if (!$entity) {
-                $entity = new Bundle();
-            }
-    
-            $entity->setName($bundle->getClarolineName());
-            $entity->setVersion($bundle->getVersion());
-            $entity->setAuthors($bundle->getAuthors());
-            $entity->setType($bundle->getType());
-            $entity->setDescription($bundle->getDescription());
-            $entity->setLicense($bundle->getLicense());
-            $entity->setTargetDir($bundle->getTargetDir());
-            $entity->setBasePath($bundle->getBasePath());
-            $om->persist($entity);
-            $this->log(sprintf("Updating %s info...", $bundle->getName()));
-            $om->flush();
-        }
     }
 }
