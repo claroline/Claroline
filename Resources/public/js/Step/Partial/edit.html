@@ -86,6 +86,17 @@
                     </div>
 
                     <div class="panel-body" data-ng-show="!stepEditCtrl.collapsedPanels.properties">
+                        <!-- Evaluation Type -->
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="evaluation-type">{{ 'step_evaluation_type'|trans:{}:'path_wizards' }}</label>
+                            <div class="col-md-8">
+                                <select class="form-control" id="evaluation-type" name="evaluation-type" data-ng-model="stepEditCtrl.step.evaluationType">
+                                    <option value="manual">{{ 'manual'|trans:{}:'platform' }}</option>
+                                    <option value="automatic">{{ 'automatic'|trans:{}:'platform' }}</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <!-- Min height of the Activity -->
                         <div class="form-group">
                             <label class="control-label col-md-4" for="activity-height">{{ 'activity_height'|trans:{}:'path_wizards' }}</label>
@@ -139,17 +150,6 @@
                             <label class="control-label col-md-4" for="duration">{{ 'step_duration'|trans:{}:'path_wizards' }}</label>
                             <div class="col-md-8">
                                 <duration-field class="row" data-model="stepEditCtrl.step.duration"></duration-field>
-                            </div>
-                        </div>
-
-                        <!-- Evaluation Type -->
-                        <div class="form-group">
-                            <label class="control-label col-md-4" for="evaluation-type">{{ 'step_evaluation_type'|trans:{}:'path_wizards' }}</label>
-                            <div class="col-md-8">
-                                <select class="form-control" id="evaluation-type" name="evaluation-type" data-ng-model="stepEditCtrl.step.evaluationType">
-                                    <option value="manual">{{ 'manual'|trans:{}:'platform' }}</option>
-                                    <option value="automatic">{{ 'automatic'|trans:{}:'platform' }}</option>
-                                </select>
                             </div>
                         </div>
                     </div>

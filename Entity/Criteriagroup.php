@@ -56,7 +56,7 @@ class Criteriagroup implements \JsonSerializable
      * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\StepCondition", inversedBy="criteriagroups")
      * @ORM\JoinColumn(name="stepcondition_id", referencedColumnName="id")
      */
-    protected $stepcondition;
+    protected $condition;
 
     /**
      * Criteria linked to the criteriagroup
@@ -79,8 +79,8 @@ class Criteriagroup implements \JsonSerializable
      */
     public function __construct()
     {
-        $this->children     = new ArrayCollection();
-        $this->criteria     = new ArrayCollection();
+        $this->children = new ArrayCollection();
+        $this->criteria = new ArrayCollection();
     }
 
     /**
@@ -182,16 +182,16 @@ class Criteriagroup implements \JsonSerializable
     }
 
     /**
-     * Set stepcondition
-     * @param  \Innova\PathBundle\Entity\StepCondition $stepcondition
+     * Set condition
+     * @param  \Innova\PathBundle\Entity\StepCondition $condition
      * @return \Innova\PathBundle\Entity\Criteriagroup
      */
-    public function setStepCondition(Stepcondition $stepcondition = null)
+    public function setCondition(Stepcondition $condition = null)
     {
-        if ($stepcondition !== $this->stepcondition) {
-            $this->stepcondition = $stepcondition;
-            if (null !== $stepcondition) {
-                $stepcondition->addCriteriagroup($this);
+        if ($condition !== $this->condition) {
+            $this->condition = $condition;
+            if (null !== $condition) {
+                $condition->addCriteriagroup($this);
             }
         }
 
@@ -199,12 +199,12 @@ class Criteriagroup implements \JsonSerializable
     }
 
     /**
-     * Get stepcondition
+     * Get condition
      * @return \Innova\PathBundle\Entity\StepCondition
      */
-    public function getStepCondition()
+    public function getCondition()
     {
-        return $this->stepcondition;
+        return $this->condition;
     }
 
     /**

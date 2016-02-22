@@ -279,6 +279,10 @@ class Step implements \JsonSerializable
         return $this->children;
     }
 
+    /**
+     * Check if the Step has children
+     * @return bool
+     */
     public function hasChildren()
     {
         return !empty($this->children) && 0 < $this->children->count();
@@ -534,7 +538,7 @@ class Step implements \JsonSerializable
      *
      * @return Step
      */
-    public function setCondition(\Innova\PathBundle\Entity\StepCondition $condition = null)
+    public function setCondition(StepCondition $condition = null)
     {
         if ($condition !== $this->condition) {
             $this->condition = $condition;
@@ -620,7 +624,6 @@ class Step implements \JsonSerializable
                 // Get propagated resources of the current step
                 $propagatedResources = $this->getPropagatedResources($this->lvl);
 
-
                 foreach ($secondaryResources as $secondaryResource) {
                     $jsonArray['resources'][] = array(
                         'id'                  => $secondaryResource->getId(),
@@ -682,6 +685,7 @@ class Step implements \JsonSerializable
                  */
                 return ($a->getOrder() < $b->getOrder()) ? -1 : 1;
             });
+
             $this->children = new ArrayCollection(iterator_to_array($iterator));
 
             $jsonArray['children'] = array_values($this->children->toArray());

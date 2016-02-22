@@ -37,6 +37,7 @@
             var summary = {
                 opened: true
             };
+
             /**
              * list af all steps following the current step
              * @type {Array}
@@ -57,57 +58,75 @@
                     usergrouplist = response;
                     deferred.resolve(response);
                 });
+
             var evaluationstatusespromise = $http.get(Routing.generate('innova_path_criteria_activitystatuses', {}))
                 .success(function (response) {
                     evaluationstatuses = response;
                     deferred.resolve(response);
                 });
+
             var useringrouppromise = $http.get(Routing.generate('innova_path_criteria_groupsforuser', {}))
                 .success(function (response) {
                     useringroup = response;
                     deferred.resolve(response);
                 });
+
             var userinteampromise = $http.get(Routing.generate('innova_path_criteria_teamsforuser', {}))
                 .success(function (response) {
                     userinteam = response;
                     deferred.resolve(response);
                 });
-            //userteampromise : different from above, because needs to pass the pathe_id parameter, not available here
+
+            // userteampromise : different from above, because needs to pass the pathe_id parameter, not available here
             var userteampromise;
+
             return {
-                usergrouppromise:usergrouppromise,
-                evaluationstatusespromise:evaluationstatusespromise,
-                useringrouppromise:useringrouppromise,
-                userteampromise:function userteampromise(pathid) {
+                usergrouppromise: usergrouppromise,
+                evaluationstatusespromise: evaluationstatusespromise,
+                useringrouppromise: useringrouppromise,
+
+                userteampromise: function userteampromise(pathid) {
+                    // Initialize a new Promise
                     var deferred = $q.defer();
-                    var params = {'id':id};
+
                     $http
-                        .get(Routing.generate('innova_path_criteria_teamsforws', params))
+                        .get(Routing.generate('innova_path_criteria_teamsforws', { id: id }))
                         .success(function (response) {
+                            // Store received data
                             userteamlist = response;
+
+                            // Resolve the Promise
                             deferred.resolve(response);
-                        }.bind(this))
+                        }
                         .error(function (response) {
+                            // Reject the Promise
                             deferred.reject(response);
                         });
+
                     return deferred.promise;
                 },
+
                 //create a get method for the variable to retrieve
                 getUsergroupData:function getUsergroupData(){
                     return usergrouplist;
                 },
-                getEvaluationStatusesData:function getEvaluationStatusesData(){
+
+                getEvaluationStatusesData: function getEvaluationStatusesData() {
                     return evaluationstatuses;
                 },
-                getUseringroupData:function getUseringroupData(){
+
+                getUseringroupData: function getUseringroupData() {
                     return useringroup;
                 },
+
                 getUserteamData:function getUserteamData(){
                     return userteamlist;
                 },
+
                 getUserinteamData:function getUserinteamData(){
                     return userinteam;
                 },
+
                 /**
                  * get list of all child steps of a step
                  * @returns {array}
@@ -115,10 +134,13 @@
                 getArrNextAll: function getArrNextAll(step) {
                     //flush the array from previous call
                     this.arrnextall = [];
+
                     //call the recursive function
                     this.getNextAll(step);
+
                     return this.arrnextall;
                 },
+
                 /**
                  * Get ID of the current Path
                  * @returns {Number}
@@ -126,6 +148,7 @@
                 getId: function getId() {
                     return id;
                 },
+
                 /**
                  * Set ID of the current Path
                  * @param {Number} value
@@ -200,9 +223,11 @@
                 initializeFromTemplate: function initializeFromTemplate() {
 
                 },
+
                 conditionValidityCheck: function conditionValidityCheck() {
                     return true;
                 },
+
                 /**
                  * Save modification to DB
                  */
@@ -218,6 +243,7 @@
                         }
                     };
 
+                    // Initialize a new Promise
                     var deferred = $q.defer();
 
                     $http
@@ -225,10 +251,12 @@
 
                         .success(function (response) {
                             if ('ERROR_VALIDATION' === response.status) {
+                                // Display received error messages
                                 for (var i = 0; i < response.messages.length; i++) {
                                     AlertService.addAlert('error', response.messages[i]);
                                 }
 
+                                // Reject the Promise
                                 deferred.reject(response);
                             } else {
                                 // Get updated data
@@ -237,13 +265,16 @@
                                 // Display confirm message
                                 AlertService.addAlert('success', Translator.trans('path_save_success', {}, 'path_wizards'));
 
+                                // Resolve the Promise
                                 deferred.resolve(response);
                             }
                         }.bind(this))
 
                         .error(function (response) {
+                            // Display generic error for the User
                             AlertService.addAlert('error', Translator.trans('path_save_error', {}, 'path_wizards'));
 
+                            // Reject the Promise
                             deferred.reject(response);
                         });
 
@@ -254,6 +285,7 @@
                  * Publish path modifications
                  */
                 publish: function publish() {
+                    // Initialize a new Promise
                     var deferred = $q.defer();
 
                     $http
@@ -261,10 +293,12 @@
 
                         .success(function (response) {
                             if ('ERROR' === response.status) {
+                                // Store received errors in AlertService to display them to the User
                                 for (var i = 0; i < response.messages.length; i++) {
                                     AlertService.addAlert('error', response.messages[i]);
                                 }
 
+                                // Reject the promise
                                 deferred.reject(response);
                             } else {
                                 // Get updated data
@@ -273,13 +307,16 @@
                                 // Display confirm message
                                 AlertService.addAlert('success', Translator.trans('publish_success', {}, 'path_wizards'));
 
+                                // Resolve the promise
                                 deferred.resolve(response);
                             }
                         }.bind(this))
 
                         .error(function (response) {
+                            // Display generic error to the User
                             AlertService.addAlert('error', Translator.trans('publish_error', {}, 'path_wizards'));
 
+                            // Reject the Promise
                             deferred.reject(response);
                         });
 
@@ -381,6 +418,7 @@
 
                     return next;
                 },
+
                 /**
                  * Get all the steps following a step
                  * meaning : all children and parents next siblings
@@ -398,6 +436,7 @@
                     }
                     return true;
                 },
+
                 getAllEvaluationForSteps: function getAllEvaluationForSteps(path){
                     var steps = [];
                     var evaluations = [];
@@ -415,24 +454,29 @@
 
                 /**
                  * Retrieve all evaluation for a path
-                 *
-                 * @param path
+                 * @param {Object} path
                  */
                 getAllEvaluationsForPath: function getAllEvaluationsForPath(path) {
                     var deferred = $q.defer();
-                    var params = {'path':path};
+                    var params = ;
+
                     $http
-                        .get(Routing.generate('innova_path_evaluation', params))
+                        .get(Routing.generate('innova_path_evaluation', { path: path }))
                         .success(function (response) {
                             this.setEvaluation(response);
+
+                            // Resolve the Promise
                             deferred.resolve(response);
                         }.bind(this))
                         .error(function (response) {
+                            // Reject the Promise
                             deferred.reject(response);
                         });
+
                     return deferred.promise;
                 },
-                setEvaluation: function setEvaluation(data){
+
+                setEvaluation: function setEvaluation(data) {
                   this.evaluations = data;
                 },
 
@@ -573,6 +617,11 @@
                     });
                 },
 
+                /**
+                 * Add a new child Step to the parent
+                 * @param {Object}  parent     - The parent step
+                 * @param {Boolean} displayNew - If true, the router will redirect to the created step
+                 */
                 addStep: function addStep(parent, displayNew) {
                     if (parent.lvl < maxDepth) {
                         // Create a new step
@@ -652,6 +701,12 @@
                     return step;
                 },
 
+                /**
+                 * Get inherited resources from `steps` of the Step
+                 * @param   {Array}  steps - The list of Steps in which we need to search the InheritedResources
+                 * @param   {Object} step  - The current Step
+                 * @returns {Array}
+                 */
                 getStepInheritedResources: function getStepInheritedResources(steps, step) {
                     function retrieveInheritedResources(stepToFind, currentStep, inheritedResources) {
                         var stepFound = false;
@@ -692,6 +747,7 @@
                     var inheritedResources = [];
 
                     if (steps && steps.length !== 0) {
+                        // Loop over first level of Steps and search recursivly in children for finding InheritedResources
                         for (var i = 0; i < steps.length; i++) {
                             var currentStep = steps[i];
                             stepFound = retrieveInheritedResources(step, currentStep, inheritedResources);

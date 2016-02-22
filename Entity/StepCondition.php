@@ -27,7 +27,7 @@ class StepCondition implements \JsonSerializable
     /**
      * criteriagroups linked to the condition
      *
-     * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\Criteriagroup", mappedBy="stepcondition", indexBy="id", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\Criteriagroup", mappedBy="condition", indexBy="id", cascade={"persist", "remove"})
      * @ORM\OrderBy({"order" = "ASC"})
      */
     private $criteriagroups;
@@ -59,33 +59,33 @@ class StepCondition implements \JsonSerializable
     }
 
     /**
-     * Add criteriagroup
-     * @param  \Innova\PathBundle\Entity\Criteriagroup $criteriagroup
+     * Add criteriaGroup
+     * @param  \Innova\PathBundle\Entity\Criteriagroup $criteriaGroup
      * @return \Innova\PathBundle\Entity\StepCondition
      */
-    public function addCriteriagroup(Criteriagroup $criteriagroup)
+    public function addCriteriagroup(Criteriagroup $criteriaGroup)
     {
-        if (!$this->criteriagroups->contains($criteriagroup)) {
-            $this->criteriagroups->add($criteriagroup);
+        if (!$this->criteriagroups->contains($criteriaGroup)) {
+            $this->criteriagroups->add($criteriaGroup);
         }
 
-        $criteriagroup->setStepCondition($this);
+        $criteriaGroup->setCondition($this);
 
         return $this;
     }
 
     /**
-     * Remove criteriagroup
-     * @param \Innova\PathBundle\Entity\Criteriagroup $criteriagroup
+     * Remove CriteriaGroup
+     * @param \Innova\PathBundle\Entity\Criteriagroup $criteriaGroup
      * @return \Innova\PathBundle\Entity\StepCondition
      */
-    public function removeCriteriagroup(Criteriagroup $criteriagroup)
+    public function removeCriteriagroup(Criteriagroup $criteriaGroup)
     {
-        if ($this->criteriagroups->contains($criteriagroup)) {
-            $this->criteriagroups->removeElement($criteriagroup);
+        if ($this->criteriagroups->contains($criteriaGroup)) {
+            $this->criteriagroups->removeElement($criteriaGroup);
         }
 
-        $criteriagroup->setStepCondition(null);
+        $criteriaGroup->setCondition(null);
 
         return $this;
     }
@@ -109,10 +109,11 @@ class StepCondition implements \JsonSerializable
         $root = null;
 
         if (!empty($this->criteriagroups)) {
-            foreach ($this->criteriagroups as $criteriagroup) {
-                if (null === $criteriagroup->getParent()) {
+            foreach ($this->criteriagroups as $criteriaGroup) {
+                if (null === $criteriaGroup->getParent()) {
                     // Root criteriagroup found
-                    $root = $criteriagroup;
+                    $root = $criteriaGroup;
+
                     break;
                 }
             }
@@ -154,8 +155,8 @@ class StepCondition implements \JsonSerializable
     {
         // Initialize data array
         $jsonArray = array (
-            'id'                => $this->id,
-            'scid'              => $this->id,
+            'id'   => $this->id,
+            'scid' => $this->id,
         );
 
         $criteriagroups = array();

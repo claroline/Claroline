@@ -77,7 +77,7 @@ class StepConditionController extends Controller
     public function getUserGroups()
     {
         $data = array();
-//        $groupmanager = $this->container->get('claroline.manager.group_manager');
+
         $usergroup = $this->groupManager->getAllGroupsWithoutPager();
         if ($usergroup != null) {
             //data needs to be explicitly set because Group does not extends Serializable
@@ -85,6 +85,7 @@ class StepConditionController extends Controller
                 $data[$ug->getId()] = $ug->getName();
             }
         }
+
         return new JsonResponse($data);
     }
 
@@ -102,18 +103,17 @@ class StepConditionController extends Controller
      */
     public function getGroupsForUser()
     {
-        //retrieve current user
+        // Retrieve the current User
         $user = $this->securityToken->getToken()->getUser();
-        $userId = $user->getId();
+        // Retrieve Groups of the User
+        $groups = $user->getGroups();
+
+        // data needs to be explicitly set because Group does not extends Serializable
         $data = array();
-        //retrieve list of groups object for this user
-        $groupforuser = $this->om->getRepository("InnovaPathBundle:StepConditionsGroup")->getAllForUser($userId, true);
-        if ($groupforuser != null) {
-            //data needs to be explicitly set because Group does not extends Serializable
-            foreach($groupforuser as $ug) {
-                $data[$ug->getId()] = $ug->getName();
-            }
+        foreach($groups as $group) {
+            $data[$group->getId()] = $group->getName();
         }
+
         return new JsonResponse($data);
     }
 
@@ -205,7 +205,7 @@ class StepConditionController extends Controller
         $steps = $this->om->getRepository('InnovaPathBundle:Path')->findById($path);
 
         foreach($steps as $step){
-            $activitylist[$step->getId()] = StepConditionsController::getActivityEvaluation($step->getActivity());
+            $activitylist[$step->getId()] = StepConditionController::getActivityEvaluation($step->getActivity());
         }
         return new JsonResponse($activitylist);
     }

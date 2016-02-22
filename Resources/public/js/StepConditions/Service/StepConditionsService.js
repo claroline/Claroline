@@ -66,6 +66,7 @@
                 this.criterion = [];
                 this.criteriagroup = [];
             };
+
             return {
                 getEvaluation: function getEvaluation(){
                     return this.evaluation;
