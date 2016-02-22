@@ -286,12 +286,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/CoreBundle.git",
-                "reference": "928c0e44c6c7457e14371759a53d8c74bfc2a3c3"
+                "reference": "b21a8d6db2b8cd06187954e59ba1ce196d6730fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/CoreBundle/zipball/928c0e44c6c7457e14371759a53d8c74bfc2a3c3",
-                "reference": "928c0e44c6c7457e14371759a53d8c74bfc2a3c3",
+                "url": "https://api.github.com/repos/claroline/CoreBundle/zipball/b21a8d6db2b8cd06187954e59ba1ce196d6730fe",
+                "reference": "b21a8d6db2b8cd06187954e59ba1ce196d6730fe",
                 "shasum": ""
             },
             "require": {
@@ -331,7 +331,6 @@
                 "sensio/distribution-bundle": "~2.3.4",
                 "sensio/framework-extra-bundle": "~3.0.0",
                 "sensio/generator-bundle": "~2.4",
-                "stefk/incenteev-parameters": "dev-master",
                 "stfalcon/tinymce-bundle": "0.3.8",
                 "stof/doctrine-extensions-bundle": "1.1.0",
                 "symfony/assetic-bundle": "~2.4",
@@ -368,7 +367,7 @@
                 "Claroline",
                 "core"
             ],
-            "time": "2016-02-22 12:36:41"
+            "time": "2016-02-22 16:10:34"
         },
         {
             "name": "claroline/cursus-bundle",
@@ -6065,57 +6064,6 @@
             "time": "2015-03-17 06:36:52"
         },
         {
-            "name": "stefk/incenteev-parameters",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/stefk/ParameterHandler.git",
-                "reference": "25a82b1ac02e94ea68c78a2466f7d29168172fe1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/stefk/ParameterHandler/zipball/25a82b1ac02e94ea68c78a2466f7d29168172fe1",
-                "reference": "25a82b1ac02e94ea68c78a2466f7d29168172fe1",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3",
-                "symfony/yaml": "~2.3|~3.0"
-            },
-            "require-dev": {
-                "composer/composer": "1.0.*@dev",
-                "phpspec/prophecy-phpunit": "~1.0",
-                "symfony/filesystem": "~2.2"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Incenteev\\ParameterHandler\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Christophe Coevoet",
-                    "email": "stof@notk.org"
-                }
-            ],
-            "description": "Tmp fork of incenteev/composer-parameter-handler, allowing filter on interactive parameters",
-            "homepage": "https://github.com/Incenteev/ParameterHandler",
-            "keywords": [
-                "parameters management"
-            ],
-            "time": "2016-02-13 11:08:36"
-        },
-        {
             "name": "stefk/jval",
             "version": "dev-master",
             "source": {
@@ -8351,6 +8299,57 @@
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
             "time": "2015-06-21 13:59:46"
+        },
+        {
+            "name": "stefk/incenteev-parameters",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stefk/ParameterHandler.git",
+                "reference": "25a82b1ac02e94ea68c78a2466f7d29168172fe1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stefk/ParameterHandler/zipball/25a82b1ac02e94ea68c78a2466f7d29168172fe1",
+                "reference": "25a82b1ac02e94ea68c78a2466f7d29168172fe1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "symfony/yaml": "~2.3|~3.0"
+            },
+            "require-dev": {
+                "composer/composer": "1.0.*@dev",
+                "phpspec/prophecy-phpunit": "~1.0",
+                "symfony/filesystem": "~2.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Incenteev\\ParameterHandler\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Christophe Coevoet",
+                    "email": "stof@notk.org"
+                }
+            ],
+            "description": "Tmp fork of incenteev/composer-parameter-handler, allowing filter on interactive parameters",
+            "homepage": "https://github.com/Incenteev/ParameterHandler",
+            "keywords": [
+                "parameters management"
+            ],
+            "time": "2016-02-13 11:08:36"
         },
         {
             "name": "symfony/phpunit-bridge",

@@ -4,6 +4,9 @@
  * This script creates a parameters.yml file (if it doesn't exist) from
  * values provided by the user or available as environment variables.
  *
+ * If a "--default" option is passed, user input and environment variables
+ * are ignored and the parameters are given their default values.
+ *
  * The list of parameters is stored in $params, where each parameter has the
  * following attributes:
  *
