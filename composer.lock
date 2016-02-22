@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0f882b0fdace28e3b5b9a1786d841123",
-    "content-hash": "533fe13cc42ab9c3b12347ad63366f6d",
+    "hash": "6789c619f32270d25412949a4cbbcb1a",
+    "content-hash": "2e72c13f6d24b3be68df9b5504041a26",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -286,12 +286,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/CoreBundle.git",
-                "reference": "0a4a76ec06e8326fd15812344a0ef4d4044d257f"
+                "reference": "928c0e44c6c7457e14371759a53d8c74bfc2a3c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/CoreBundle/zipball/0a4a76ec06e8326fd15812344a0ef4d4044d257f",
-                "reference": "0a4a76ec06e8326fd15812344a0ef4d4044d257f",
+                "url": "https://api.github.com/repos/claroline/CoreBundle/zipball/928c0e44c6c7457e14371759a53d8c74bfc2a3c3",
+                "reference": "928c0e44c6c7457e14371759a53d8c74bfc2a3c3",
                 "shasum": ""
             },
             "require": {
@@ -368,7 +368,7 @@
                 "Claroline",
                 "core"
             ],
-            "time": "2016-02-19 19:11:21"
+            "time": "2016-02-22 12:36:41"
         },
         {
             "name": "claroline/cursus-bundle",
@@ -542,20 +542,20 @@
         },
         {
             "name": "claroline/installation-bundle",
-            "version": "6.0.1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/InstallationBundle.git",
-                "reference": "fdf304e1d4e10508888f79cd2cc8ad51c9a3b46c"
+                "reference": "8669926d861f039a555cba2c085b043dd25665d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/InstallationBundle/zipball/fdf304e1d4e10508888f79cd2cc8ad51c9a3b46c",
-                "reference": "fdf304e1d4e10508888f79cd2cc8ad51c9a3b46c",
+                "url": "https://api.github.com/repos/claroline/InstallationBundle/zipball/8669926d861f039a555cba2c085b043dd25665d1",
+                "reference": "8669926d861f039a555cba2c085b043dd25665d1",
                 "shasum": ""
             },
             "require": {
-                "claroline/core-bundle": "~6.0",
+                "claroline/bundle-recorder": "~6.0",
                 "claroline/kernel-bundle": "~6.0",
                 "claroline/migration-bundle": "~6.0",
                 "doctrine/data-fixtures": "dev-master",
@@ -586,7 +586,7 @@
                 "Claroline",
                 "installation"
             ],
-            "time": "2016-01-26 15:52:53"
+            "time": "2016-02-22 12:02:33"
         },
         {
             "name": "claroline/kernel-bundle",
@@ -8409,6 +8409,12 @@
             "package": "claroline/bundle-recorder"
         },
         {
+            "alias": "6.1",
+            "alias_normalized": "6.1.0.0",
+            "version": "9999999-dev",
+            "package": "claroline/installation-bundle"
+        },
+        {
             "alias": "6.7.4",
             "alias_normalized": "6.7.4.0",
             "version": "9999999-dev",
@@ -8418,6 +8424,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "claroline/bundle-recorder": 20,
+        "claroline/installation-bundle": 20,
         "claroline/core-bundle": 20
     },
     "prefer-stable": true,
