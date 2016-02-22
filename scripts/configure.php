@@ -31,11 +31,12 @@ if (file_exists($paramFile)) {
 }
 
 $fileContent = file_get_contents("{$paramFile}.dist");
+$forceDefault = in_array('--default', $argv);
 
 writeln('Please provide a value for the following parameters:');
 
 foreach ($params as $paramData) {
-    $value = getParameter($paramData);
+    $value = getParameter($paramData, $forceDefault);
     $value = empty($value) ? '~' : $value;
     $pattern = "/( +{$paramData[0]} *: *)([^ ]+) *\\n/";
     $replace = "\${1}{$value}\n";
@@ -52,8 +53,14 @@ file_put_contents($paramFile, $fileContent);
 
 writeln('Config file app/config/parameters.yml written', true);
 
-function getParameter(array $paramData)
+function getParameter(array $paramData, $forceDefault)
 {
+    if ($forceDefault) {
+        writeln("{$paramData[0]} -> forced default value");
+
+        return $paramData[2];
+    }
+
     if ($value = getenv($paramData[1])) {
         writeln("{$paramData[0]} -> provided by environment");
 

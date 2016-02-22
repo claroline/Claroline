@@ -6,12 +6,6 @@ php:
 env:
   - DB=mysql
 
-mysql:
-  adapter: mysql2
-  database: claroline_test
-  username: travis
-  encoding: utf8
-
 before_install:
   - phpenv config-rm xdebug.ini
   - nvm install stable
@@ -20,7 +14,8 @@ before_install:
 
 before_script:
   - composer validate
-  - composer run sync-dev
+  - php scripts/configure.php --default
+  - composer sync-dev
 
 script: echo done
 
