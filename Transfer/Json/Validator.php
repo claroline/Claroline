@@ -12,17 +12,21 @@ use JVal\Validator as SchemaValidator;
 class Validator
 {
     private $handlerCollector;
+    private $kernelDir;
 
     /**
      * @DI\InjectParams({
-     *     "collector" = @DI\Inject("ujm.exo.question_handler_collector")
+     *     "collector" = @DI\Inject("ujm.exo.question_handler_collector"),
+     *     "kernelDir" = @DI\Inject("%kernel.root_dir%")
      * })
      *
-     * @param QuestionHandlerCollector $collector
+     * @param QuestionHandlerCollector  $collector
+     * @param string                    $kernelDir
      */
-    public function __construct(QuestionHandlerCollector $collector)
+    public function __construct(QuestionHandlerCollector $collector, $kernelDir)
     {
         $this->handlerCollector = $collector;
+        $this->kernelDir = $kernelDir;
     }
 
     /**
@@ -100,8 +104,7 @@ class Validator
 
     private function uriToFile($uri)
     {
-        $vendorDir = __DIR__ . '/../../../..';
-        $schemaDir = realpath("{$vendorDir}/json-quiz/json-quiz/format");
+        $schemaDir = realpath("{$this->kernelDir}/../vendor/json-quiz/json-quiz/format");
         $baseUri = 'http://json-quiz.github.io/json-quiz/schemas';
 
         return str_replace($baseUri, $schemaDir, $uri);
