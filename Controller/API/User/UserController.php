@@ -27,6 +27,7 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\AuthenticationManager;
 use Claroline\CoreBundle\Manager\ProfilePropertyManager;
+use Claroline\CoreBundle\Library\Security\Collection\UserCollection;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactory;
@@ -36,6 +37,7 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @NamePrefix("api_")
@@ -99,6 +101,8 @@ class UserController extends FOSRestController
      */
     public function getUsersAction()
     {
+        $this->throwsExceptionIfNotAdmin();
+
         return $this->userManager->getAll();
     }
 
@@ -111,6 +115,8 @@ class UserController extends FOSRestController
      */
     public function getSearchUsersAction($page, $limit)
     {
+        //check pour les organizations que ça soit correct.
+
         $data = [];
         $searches = $this->request->query->all();
         //format search
@@ -151,6 +157,7 @@ class UserController extends FOSRestController
      */
     public function postUserAction()
     {
+        $this->throwExceptionIfNotGranted('create', new User());
         $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
 
         $profileType = new ProfileCreationType(
@@ -189,6 +196,7 @@ class UserController extends FOSRestController
      */
     public function putUserAction(User $user)
     {
+        $this->throwExceptionIfNotGranted('edit', $user);
         $roles = $this->roleManager->getPlatformRoles($user);
         $accesses = $this->profilePropertyManager->getAccessessByRoles(array('ROLE_ADMIN'));
 
@@ -250,6 +258,7 @@ class UserController extends FOSRestController
      */
     public function deleteUserAction(User $user)
     {
+        $this->throwExceptionIfNotGranted('delete', $user);
         $this->userManager->deleteUser($user);
 
         return array('success');
@@ -265,6 +274,7 @@ class UserController extends FOSRestController
     public function deleteUsersAction()
     {
         $users = $this->apiManager->getParameters('userIds', 'Claroline\CoreBundle\Entity\User');
+        $this->throwExceptionIfNotGranted('delete', $users);
         $this->container->get('claroline.persistence.object_manager')->startFlushSuite();
 
         foreach ($users as $user) {
@@ -286,6 +296,7 @@ class UserController extends FOSRestController
      */
     public function addUserRoleAction(User $user, Role $role)
     {
+        $this->throwExceptionIfNotGranted('edit', $user);
         $this->roleManager->associateRole($user, $role, false);
 
         return array('success');
@@ -301,6 +312,7 @@ class UserController extends FOSRestController
      */
     public function removeUserRoleAction(User $user, Role $role)
     {
+        $this->throwExceptionIfNotGranted('edit', $user);
         $this->roleManager->dissociateRole($user, $role);
 
         return array('success');
@@ -316,6 +328,7 @@ class UserController extends FOSRestController
      */
     public function addUserGroupAction(User $user, Group $group)
     {
+        $this->throwExceptionIfNotGranted('edit', $user);
         $this->groupManager->addUsersToGroup($group, array($user));
 
         return array('success');
@@ -331,6 +344,7 @@ class UserController extends FOSRestController
      */
     public function removeUserGroupAction(User $user, Group $group)
     {
+        $this->throwExceptionIfNotGranted('edit', $user);
         $this->groupManager->removeUsersFromGroup($group, array($user));
 
         return array('success');
@@ -357,6 +371,7 @@ class UserController extends FOSRestController
      */
     public function usersPasswordInitializeAction()
     {
+        $this->throwExceptionIfNotGranted('edit', $user);
         $users = $this->apiManager->getParameters('userIds', 'Claroline\CoreBundle\Entity\User');
 
         foreach ($users as $user) {
@@ -376,6 +391,7 @@ class UserController extends FOSRestController
     public function addUsersToGroupAction(Group $group)
     {
         $users = $this->apiManager->getParameters('userIds', 'Claroline\CoreBundle\Entity\User');
+        $this->throwExceptionIfNotGranted('edit', $users);
         $users = $this->groupManager->addUsersToGroup($group, $users);
 
         return $users;
@@ -391,16 +407,32 @@ class UserController extends FOSRestController
     public function removeUsersFromGroupAction(Group $group)
     {
         $users = $this->apiManager->getParameters('userIds', 'Claroline\CoreBundle\Entity\User');
+        $this->throwExceptionIfNotGranted('edit', $users);
         $this->groupManager->removeUsersFromGroup($group, $users);
 
         return $users;
     }
 
-    /**
-     *
-     */
-    public function importUsersAction()
+    private function isAdmin() 
     {
+        return $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN');
+    }
 
+    private function throwsExceptionIfNotAdmin()
+    {
+        if (!$this->isAdmin()) throw new AccessDeniedException("This action can only be done by the administrator");
+    }
+
+    private function isUserGranted($action, User $user)
+    {
+        return $this->container->get('security.authorization_checker')->isGranted($action, $user);
+    }
+
+    private function throwExceptionIfNotGranted($action, $users)
+    {
+        $collection = is_array($user) ? new UserCollection($users): new UserCollection(array($users));  
+        $isGranted = $this->isUserGranted($action, $collection);
+
+        if (!$isGranted) throw new AccessDeniedException("You can't do the action {$action} on the user {$user->getUsername()}");
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBubdle\Tests\API\Calendar;
+namespace Claroline\CoreBundle\Tests\API\Organization;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
@@ -35,6 +35,26 @@ class OrganizationControllerTest extends TransactionalTestCase
         $this->persister->flush();
     }
 
+    public function testPostOrganizationAction()
+    {
+
+    }
+
+    public function testPostOrganizationActionIsProtected()
+    {
+        
+    }
+
+    public function testDeleteOrganizationAction()
+    {
+
+    }
+
+    public function testDeleteOrganizationActionIsProtected()
+    {
+        
+    }
+
     public function testGetOrganizationsAction()
     {
         $this->persister->organization('orga1');
@@ -45,5 +65,47 @@ class OrganizationControllerTest extends TransactionalTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $data = $this->client->getResponse()->getContent();
         $this->assertEquals(2, count(json_decode($data, true)));
+    }
+
+    public function testGetOrganizationsActionIsProtected()
+    {
+        $this->persister->organization('orga1');
+        $this->persister->organization('orga2');
+        $this->persister->flush();
+        $this->logIn($this->admin);
+        $this->client->request('GET', '/api/organizations.json');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $data = $this->client->getResponse()->getContent();
+        $this->assertEquals(2, count(json_decode($data, true)));
+    }
+
+    public function testGetOrganizationListAction()
+    {
+
+    }
+
+    public function testGetOrganizationListActionIsProtected()
+    {
+        
+    }
+
+    public function testGetEditOrganizationFormAction()
+    {
+
+    }
+
+    public function testGetEditOrganizationFormActionIsProtected()
+    {
+
+    }
+
+    public function testPutOrganizationAction()
+    {
+
+    }
+
+    public function testPutOrganizationActionIsProtected()
+    {
+
     }
 }

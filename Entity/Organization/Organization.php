@@ -156,6 +156,11 @@ class Organization
      * )
      */
     protected $years;
+
+    /**
+     * @ORM\Column(name="is_default", type="boolean")
+     */
+    protected $default = false;
     
     public function __construct()
     {
@@ -287,5 +292,15 @@ class Organization
     public function setYears(ArrayCollection $years)
     {
         $this->years = $years;
+    }
+
+    public function setDefault($default)
+    {
+        $this->default = $default;
+    }
+
+    public function getDefault()
+    {
+        return $this->default;
     }
 }

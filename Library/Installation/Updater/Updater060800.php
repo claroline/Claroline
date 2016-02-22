@@ -21,11 +21,15 @@ class Updater060800 extends Updater
     private $om;
     private $adminToolRepo;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, $logger)
     {
         $this->container = $container;
         $this->om = $container->get('claroline.persistence.object_manager');
         $this->adminToolRepo = $this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool');
+        $this->orgaManager = $this->container->get('claroline.manager.organization.organization_manager');
+        $this->orgaManager->setLogger($logger);
+        $this->userManager = $this->container->get('claroline.manager.user_manager');
+        $this->userManager->setLogger($logger);
     }
 
     public function postUpdate()
@@ -46,6 +50,9 @@ class Updater060800 extends Updater
             $this->om->persist($entity);
             $this->om->flush();
         }
+   
+        $this->orgaManager->createDefault();
+        $this->userManager->bindUserToOrganization();
     }
 
     private function removePackageTool()
