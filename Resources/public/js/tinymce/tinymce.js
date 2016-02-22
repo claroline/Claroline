@@ -19,12 +19,12 @@
     var routing =  window.Routing;
 
     //Load external plugins
-    tinymce.PluginManager.load('mention', home.asset + 'bundles/frontend/claroline-tinymce-mention/plugin.min.js');
-    tinymce.PluginManager.load('accordion', home.asset + 'bundles/frontend/claroline-tinymce-accordion/plugin.min.js');
-    tinymce.PluginManager.load('codemirror', home.asset + 'bundles/frontend/tinymce-codemirror/plugins/codemirror/plugin.min.js');
-    tinymce.DOM.loadCSS(home.asset + 'bundles/frontend/claroline-tinymce-mention/css/autocomplete.css');
+    tinymce.PluginManager.load('mention', home.asset + 'packages/claroline-tinymce-mention/plugin.min.js');
+    tinymce.PluginManager.load('accordion', home.asset + 'packages/claroline-tinymce-accordion/plugin.min.js');
+    tinymce.PluginManager.load('codemirror', home.asset + 'packages/tinymce-codemirror/plugins/codemirror/plugin.min.js');
+    tinymce.DOM.loadCSS(home.asset + 'packages/claroline-tinymce-mention/css/autocomplete.css');
 
-    var codemirrorPath = home.asset + 'bundles/frontend/tinymce-codemirror/plugins/codemirror/codemirror-4.8';
+    var codemirrorPath = home.asset + 'packages/tinymce-codemirror/plugins/codemirror/codemirror-4.8';
 
     /**
      * Claroline TinyMCE parameters and methods.

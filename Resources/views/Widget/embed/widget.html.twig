@@ -5,7 +5,7 @@
         <link rel="stylesheet" href="{{ asset('') ~ 'themes/' ~ config.getParameter('theme') ~ '/bootstrap.css' }}" screen="media" />
     {% endif %}
 
-    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/font-awesome/css/font-awesome.min.css') }}'/>
+    <link rel='stylesheet' type='text/css' href='{{ asset('packages/font-awesome/css/font-awesome.min.css') }}'/>
 
     <style>
         body{
@@ -18,7 +18,7 @@
 
 {% block javascripts_header %}
     {{ parent() }}
-    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/dist/jquery.min.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('packages/jquery/dist/jquery.min.js') }}'></script>
 {% endblock %}
 
 {% block layout %}

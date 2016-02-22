@@ -7,10 +7,10 @@
             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
         </div>
         {% block daterange_assets %}
-            <link rel="stylesheet" href="{{ asset( 'bundles/frontend/bootstrap-daterangepicker/daterangepicker.css') }}" screen="media" />
-            <script type="text/javascript" src="{{ asset('bundles/frontend/Datejs/build/date.js') }}"></script>
-            <script type="text/javascript" src="{{ asset('bundles/frontend/moment/min/moment-with-locales.min.js') }}"></script>
-            <script type="text/javascript" src="{{ asset('bundles/frontend/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+            <link rel="stylesheet" href="{{ asset( 'packages/bootstrap-daterangepicker/daterangepicker.css') }}" screen="media" />
+            <script type="text/javascript" src="{{ asset('packages/Datejs/build/date.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('packages/moment/min/moment-with-locales.min.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('packages/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
         {% endblock %}
         <script type="text/javascript">
             var schoolYear = moment().month()>=8?moment().year():moment().subtract(1, 'year').year();
