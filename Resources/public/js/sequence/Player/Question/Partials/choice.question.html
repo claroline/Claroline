@@ -29,8 +29,8 @@
             <table class="table choice-question-choice-table">
                 <tr data-ng-repeat="choice in choiceQuestionCtrl.question.choices">
                     <td class="choice">
-                        <input data-ng-if="choiceQuestionCtrl.question.multiple" data-ng-checked="choiceQuestionCtrl.multipleChoice[choice.id]" data-ng-click="choiceQuestionCtrl.updateStudentData(choice.id)" data-ng-model="choiceQuestionCtrl.multipleChoice[choice.id]" value="{{choice.id}}" name="multiple-choice-{{choice.id}}" type="checkbox">
-                        <input data-ng-if="!choiceQuestionCtrl.question.multiple" data-ng-checked="choiceQuestionCtrl.uniqueChoice === choice.id" data-ng-click="choiceQuestionCtrl.updateStudentData()" data-ng-model="choiceQuestionCtrl.uniqueChoice" value="{{choice.id}}" name="unique-choice-{{choice.id}}" type="radio">
+                        <input data-ng-disabled="choiceQuestionCtrl.feedbackIsVisible" data-ng-if="choiceQuestionCtrl.question.multiple" data-ng-checked="choiceQuestionCtrl.multipleChoice[choice.id]" data-ng-click="choiceQuestionCtrl.updateStudentData(choice.id)" data-ng-model="choiceQuestionCtrl.multipleChoice[choice.id]" value="{{choice.id}}" name="multiple-choice-{{choice.id}}" type="checkbox">
+                        <input data-ng-disabled="choiceQuestionCtrl.feedbackIsVisible" data-ng-if="!choiceQuestionCtrl.question.multiple" data-ng-checked="choiceQuestionCtrl.uniqueChoice === choice.id" data-ng-click="choiceQuestionCtrl.updateStudentData()" data-ng-model="choiceQuestionCtrl.uniqueChoice" value="{{choice.id}}" name="unique-choice-{{choice.id}}" type="radio">
                     </td>
                     <td class="choice-content">
                         <img data-ng-if="choiceQuestionCtrl.getChoiceSimpleType(choice) == 'encoded-image'" data-ng-src="data:{{choice.type}};{{choice.encoding}}, {{choice.data}}"/>
@@ -48,13 +48,6 @@
                             
                         </div>
                     </td>
-                    <!--
-                    <td>
-                        <label data-ng-if="choiceQuestionCtrl.feedbackIsVisible">                            
-                            {{choiceQuestionCtrl.getChoiceFeedback(choice)}}
-                        </label>
-                    </td>
-                    -->
                 </tr>
             </table>    
             <div class="row" data-ng-if="choiceQuestionCtrl.feedbackIsVisible">
