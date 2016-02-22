@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\Profile\ProfileLinksEvent;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\ProfileType;
@@ -168,10 +169,10 @@ class ProfileController extends Controller
             throw new NotFoundHttpException("Page not found");
         }
 
-        $facets = $this->facetManager->getVisibleFacets($this->tokenStorage->getToken());
+        $facets = $this->facetManager->getVisibleFacets();
         $fieldFacetValues = $this->facetManager->getFieldValuesByUser($user);
         $publicProfilePreferences = $this->facetManager->getVisiblePublicPreference();
-        $fieldFacets = $this->facetManager->getVisibleFieldFacets($this->tokenStorage->getToken());
+        $fieldFacets = $this->facetManager->getVisibleFieldFacets();
         $profileLinksEvent = new ProfileLinksEvent($user, $request->getLocale());
         $this->get("event_dispatcher")->dispatch(
             'profile_link_event',
@@ -187,6 +188,59 @@ class ProfileController extends Controller
             'fieldFacetValues' => $fieldFacetValues,
             'fieldFacets' => $fieldFacets,
             'links' => $links
+        );
+    }
+
+    /**
+     * @SEC\Secure(roles="ROLE_USER")
+     * @EXT\Template()
+     * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
+     */
+    public function myProfileWidgetAction(Request $request, User $loggedUser)
+    {
+        $facets = $this->facetManager->getVisibleFacets(5);
+        $fieldFacetValues = $this->facetManager->getFieldValuesByUser($loggedUser);
+        $fieldFacets = $this->facetManager->getVisibleFieldFacets();
+        $profileLinksEvent = new ProfileLinksEvent($loggedUser, $request->getLocale());
+        $publicProfilePreferences = $this->facetManager->getVisiblePublicPreference();
+        $this->get("event_dispatcher")->dispatch(
+            'profile_link_event',
+            $profileLinksEvent
+        );
+        $dektopBadgesEvent = new DisplayToolEvent();
+        $this->get("event_dispatcher")->dispatch(
+            'list_all_my_badges',
+            $dektopBadgesEvent
+        );
+
+        //Test profile completeness
+        $totalVisibleFields = count($fieldFacets);
+        $totalFilledVisibleFields = count(array_filter($fieldFacetValues));
+        if ($publicProfilePreferences['baseData']) {
+            $totalVisibleFields++;
+            if (!empty($loggedUser->getDescription())) {
+                $totalFilledVisibleFields++;
+            }
+        }
+        if ($publicProfilePreferences['phone']) {
+            $totalVisibleFields++;
+            if (!empty($loggedUser->getPhone())) {
+                $totalFilledVisibleFields++;
+            }
+        }
+
+        $completion = round($totalFilledVisibleFields/$totalVisibleFields * 100);
+
+        $links = $profileLinksEvent->getLinks();
+        return array(
+            'user'  => $loggedUser,
+            'publicProfilePreferences' => $publicProfilePreferences,
+            'facets' => $facets,
+            'fieldFacetValues' => $fieldFacetValues,
+            'fieldFacets' => $fieldFacets,
+            'links' => $links,
+            'badges' => $dektopBadgesEvent->getContent(),
+            'completion' => $completion
         );
     }
 
