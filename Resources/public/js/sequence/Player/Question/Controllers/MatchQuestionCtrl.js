@@ -116,6 +116,12 @@
                     this.feedbackIsVisible = true;
                     this.solutions = result.solutions;
                     this.questionFeedback = result.feedback;
+                    if (!this.question.toBind) {
+                        $('.draggable').draggable("disable");
+                        $('.draggable').fadeTo(100, 0.3);
+                    }
+                    /*$('.endPoints').draggable("disable");
+                    console.log($('.endPoints'));*/
                 }.bind(this));
             };
             

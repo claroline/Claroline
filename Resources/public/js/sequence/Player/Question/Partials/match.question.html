@@ -23,7 +23,7 @@
         <!-- RESET CONNECTIONS BTN -->
         <div class="row">
             <div class="col-md-12">
-                <input type="button" name="resetAll"  id="resetAll" value="Reset" class="btn btn-primary">
+                <input data-ng-disabled="matchQuestionCtrl.feedbackIsVisible" type="button" name="resetAll"  id="resetAll" value="Reset" class="btn btn-primary">
             </div>
         </div>        
         <!-- TO BIND PROPOSALS & ASSOCIATED LABELS -->
@@ -86,7 +86,7 @@
                                         
                                     </div>
                                     <div class="col-sm-2">
-                                         <button class="btn btn-danger fa fa-trash" data-ng-click="matchQuestionCtrl.removeDropped(item.source, proposal.id)"></button>
+                                         <button data-ng-disabled="matchQuestionCtrl.feedbackIsVisible" class="btn btn-danger fa fa-trash" data-ng-click="matchQuestionCtrl.removeDropped(item.source, proposal.id)"></button>
                                     </div>
                                 </div>                               
                             </li>
