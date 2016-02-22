@@ -104,8 +104,8 @@ class LayoutController extends Controller
      */
     public function footerAction()
     {
-        //for some reason this doesn't work unless we use the cache:warm command. Since it's annoying
-        //and that I can't find why, we retrieve the version the old fashioned way;
+        // TODO: replace core bundle version by distribution version when available
+        // TODO: find the lightest way to get that information
         $bundleManager = $this->get('claroline.manager.bundle_manager');
         $version = $bundleManager->getCoreBundleVersion();
 

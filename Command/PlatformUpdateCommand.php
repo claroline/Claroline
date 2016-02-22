@@ -25,9 +25,10 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Updates, installs or uninstalls the core and plugin bundles, following
- * the operation order logged in *app/config/operations.xml* during
- * composer execution.
+ * Updates, installs or uninstalls core and plugin bundles, based
+ * on the comparison of packages previously and currently installed
+ * by composer (vendor/composer/installed.json and
+ * app/config/previous-installed.json).
  *
  * @Service("claroline.command.update_command")
  */
@@ -38,8 +39,7 @@ class PlatformUpdateCommand extends ContainerAwareCommand
         parent::configure();
         $this->setName('claroline:update')
             ->setDescription(
-                'Updates, installs or uninstalls the platform packages '
-                . 'brought by composer (requires an operation file).'
+                'Updates, installs or uninstalls the platform packages brought by composer.'
             );
     }
 

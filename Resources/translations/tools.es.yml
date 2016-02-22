@@ -11,7 +11,6 @@ my_contacts: 'Mis contactos'
 parameters: Parámetros
 platform_analytics: 'Análisis de la plataforma'
 platform_logs: 'Registros de la plataforma'
-platform_packages: platform_packages
 platform_parameters: 'Parámetros de la plataforma'
 platform_plugins: 'Plugins de la plataforma'
 registration_to_workspace: 'Inscripción a un espacio de trabajo'

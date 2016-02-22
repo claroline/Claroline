@@ -32,7 +32,6 @@ parameters:
     claroline.param.web_dir: "%kernel.root_dir%/../web"
     claroline.param.platform_generated_archive_path: %kernel.root_dir%/config/tmp_files
     #todo: add .param. in the pathaname
-    claroline.packages_last_tags_file: "%claroline.cache_dir%/last_tags.cache.ini"
     claroline.composer_log_file: "%kernel.root_dir%/logs/composer.log"
     claroline.ip_white_list_file: "%kernel.root_dir%/config/ip_white_list.yml"
     claroline.cache_dir: "%kernel.root_dir%/cache"
