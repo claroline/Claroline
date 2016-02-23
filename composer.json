@@ -47,7 +47,7 @@
         "natxet/CssMin": "3.0.2",
         "nelmio/api-doc-bundle": "dev-master",
         "sensio/distribution-bundle": "~2.3.4",
-        "sensio/framework-extra-bundle": "~3.0.0",
+        "sensio/framework-extra-bundle": "3.0.12",
         "sensio/generator-bundle": "~2.4",
         "stfalcon/tinymce-bundle": "0.3.8",
         "stof/doctrine-extensions-bundle": "1.1.0",
