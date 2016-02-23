@@ -58,6 +58,10 @@ class UserControllerTest extends TransactionalTestCase
         $data = $this->client->getResponse()->getContent();
         $this->assertEquals(4, count(json_decode($data, true)));
 
+        //these 2 lines = lost database
+        //$this->client->request('GET', '/desktop/tool/open/home');
+        //var_dump($this->client->getResponse()->getContent());
+
         //var_dump('log jhn');
         $this->logIn($this->john);
         $this->client->request('GET', '/api/users.json');
