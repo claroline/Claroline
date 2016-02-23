@@ -120,8 +120,9 @@
                         $('.draggable').draggable("disable");
                         $('.draggable').fadeTo(100, 0.3);
                     }
-                    /*$('.endPoints').draggable("disable");
-                    console.log($('.endPoints'));*/
+                    else {
+                        //$('.endPoints').draggable("disable");
+                    }
                 }.bind(this));
             };
             
