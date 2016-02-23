@@ -115,10 +115,9 @@ class UserController extends FOSRestController
      */
     public function getSearchUsersAction($page, $limit)
     {
-        //check pour les organizations que ça soit correct.
-
         $data = [];
         $searches = $this->request->query->all();
+
         //format search
         foreach ($searches as $key => $search) {
             switch ($key) {
@@ -173,6 +172,8 @@ class UserController extends FOSRestController
         //$form->handleRequest($this->request);
 
         if ($form->isValid()) {
+            //can we create the user in the current organization ?
+
             $roles = $form->get('platformRoles')->getData();
             $user = $form->getData();
             $user = $this->userManager->createUser($user, false, $roles);
@@ -423,16 +424,23 @@ class UserController extends FOSRestController
         if (!$this->isAdmin()) throw new AccessDeniedException("This action can only be done by the administrator");
     }
 
-    private function isUserGranted($action, User $user)
+    private function isUserGranted($action, $object)
     {
-        return $this->container->get('security.authorization_checker')->isGranted($action, $user);
+        return $this->container->get('security.authorization_checker')->isGranted($action, $object);
     }
 
     private function throwExceptionIfNotGranted($action, $users)
     {
-        $collection = is_array($user) ? new UserCollection($users): new UserCollection(array($users));  
+        $collection = is_array($users) ? new UserCollection($users): new UserCollection(array($users));  
         $isGranted = $this->isUserGranted($action, $collection);
 
-        if (!$isGranted) throw new AccessDeniedException("You can't do the action {$action} on the user {$user->getUsername()}");
+        if (!$isGranted) {
+            $userlist = '';
+
+            foreach ($collection->getUsers() as $user) {
+                $userlist .= "[{$user->getUsername()}]";
+            }
+            throw new AccessDeniedException("You can't do the action [{$action}] on the user list {$userlist}");
+        } 
     }
 }

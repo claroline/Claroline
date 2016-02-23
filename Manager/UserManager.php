@@ -1426,6 +1426,16 @@ class UserManager
         $qb->from('Claroline\CoreBundle\Entity\User', 'u')
             ->where('u.isEnabled = true');
 
+        //Admin can see everything, but the others... well they can only see their own organizations.
+        if (!$this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+            
+            $currentUser = $this->container->get('security.token_storage')->getToken()->getUser();
+            $qb->leftJoin('u.organizations', 'uo');
+            $qb->leftJoin('uo.administrators', 'ua');
+            $qb->andWhere('ua.id = :userId');
+            $qb->setParameter('userId', $currentUser->getId());
+        }
+
         foreach ($searches as $key => $search) {
             foreach ($search as $id => $el) {
                 if (in_array($key, $baseFieldsName)) {

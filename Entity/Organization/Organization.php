@@ -112,7 +112,8 @@ class Organization
      * @var User[]|ArrayCollection
      *
      * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\User"
+     *     targetEntity="Claroline\CoreBundle\Entity\User",
+     *     mappedBy="organizations"
      * )
      * @ORM\JoinTable(name="claro_user_organization")
      */

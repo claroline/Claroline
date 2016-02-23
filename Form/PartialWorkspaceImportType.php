@@ -21,7 +21,7 @@ class PartialWorkspaceImportType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('workspace', 'file', array('label' => 'file','constraints' => array(new NotBlank())));
+        $builder->add('workspace', 'file', array('label' => 'file', 'constraints' => array(new NotBlank())));
     }
 
     public function getName()

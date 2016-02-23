@@ -385,7 +385,8 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @var Organization[]|ArrayCollection
      *
      * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization"
+     *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization",
+     *     inversedBy="users"
      * )
      */
     protected $organizations;
@@ -412,15 +413,16 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function __construct()
     {
         parent::__construct();
-        $this->roles             = new ArrayCollection();
-        $this->groups            = new ArrayCollection();
-        $this->abstractResources = new ArrayCollection();
-        $this->salt              = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
-        $this->orderedTools      = new ArrayCollection();
-        $this->fieldsFacetValue  = new ArrayCollection();
-        $this->models            = new ArrayCollection();
-        $this->organizations     = new ArrayCollection();
-        $this->events            = new ArrayCollection();
+        $this->roles                      = new ArrayCollection();
+        $this->groups                     = new ArrayCollection();
+        $this->abstractResources          = new ArrayCollection();
+        $this->salt                       = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
+        $this->orderedTools               = new ArrayCollection();
+        $this->fieldsFacetValue           = new ArrayCollection();
+        $this->models                     = new ArrayCollection();
+        $this->organizations              = new ArrayCollection();
+        $this->events                     = new ArrayCollection();
+        $this->administratedOrganizations = new ArrayCollection();
     }
 
     /**
@@ -1181,5 +1183,10 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public static function getSearchableFields()
     {
         return self::getUserSearchableFields();
+    }
+
+    public function getAdministratedOrganizations()
+    {
+        return $this->administratedOrganizations;
     }
 }

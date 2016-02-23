@@ -76,7 +76,7 @@ class UserVoter implements VoterInterface
     private function checkCreation($users)
     {
         //the we can create user. Case closed
-        if ($ch->getParameter('allow_self_registration')) return VoterInterface::ACCESS_GRANTED;
+        if ($this->ch->getParameter('allow_self_registration')) return VoterInterface::ACCESS_GRANTED;
 
         //maybe more tests
     }
@@ -106,7 +106,9 @@ class UserVoter implements VoterInterface
         $userOrganizations = $user->getOrganizations();
 
         foreach ($adminOrganizations as $adminOrganization) {
+            var_dump($adminOrganization->getName());
             foreach ($userOrganizations as $userOrganization) {
+                var_dump($userOrganization->getName());
                 if ($userOrganization === $adminOrganization) return true;
             }
         }
