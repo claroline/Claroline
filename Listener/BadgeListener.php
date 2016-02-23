@@ -165,7 +165,25 @@ class BadgeListener
      */
     public function onDesktopToolMenuConfigure(DisplayToolEvent $event)
     {
-        $event->setContent($this->myBadges($event->getWorkspace()));
+        $event->setContent($this->myDesktopBadges());
+    }
+
+    /**
+     * @DI\Observe("list_all_my_badges")
+     *
+     * @param DisplayToolEvent $event
+     * @return String (content)
+     */
+    public function onListAllMyBadges(DisplayToolEvent $event)
+    {
+        $userBadges = $this->badgeManager->getLoggedUserBadges();
+        $content = $this->templateingEngine->render(
+            'IcapBadgeBundle:Profile:myProfileWidgetBadges.html.twig',
+            array('userBadges' => $userBadges)
+        );
+
+        $event->setContent($content);
+        $event->stopPropagation();
     }
 
     /**
@@ -239,7 +257,7 @@ class BadgeListener
     /**
      * @return string
      */
-    private function myBadges()
+    private function myDesktopBadges()
     {
         $user = $this->tokenStorage->getToken()->getUser();
 

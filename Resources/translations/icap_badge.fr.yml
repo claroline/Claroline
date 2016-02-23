@@ -127,7 +127,7 @@ edit_is_unshared_collection_error: 'Une erreur est survenue lors de la suppressi
 edit_title_collection_error: 'Une erreur est survenue lors de la modification du nom de la collection.'
 month: mois
 my_collections: 'Mes collections'
-my_badges: Badges de l'espace de travail
+my_workspace_badges: Badges de l'espace de travail
 no_badge_claim: 'Aucune demande d''attribution.'
 my_latest_badges: Mes derniers badges
 availables_badges: Badges disponibles

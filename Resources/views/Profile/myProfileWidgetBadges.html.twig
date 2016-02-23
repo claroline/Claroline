@@ -1,0 +1,31 @@
+{% if userBadges is defined and userBadges|length > 0 %}
+    {% stylesheets debug=false filter='less, cssmin' output='css/icapbadge/profile_widget_badges.css'
+    "@IcapBadgeBundle/Resources/views/less/profile_widget_badges.less"
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
+    <div class="my-profile-widget-badges-container">
+        <h3>{{ 'my_badges'|trans({}, 'icap_badge') }}</h3>
+        <ul class="badge-list list-unstyled list-inline">
+        {% for userBadge in userBadges %}
+            {% set badge = userBadge.badge %}
+            <li class="node-thumbnail badge-container">
+                {% if userBadge.isExpired %}
+                    <span class="expired fa fa-exclamation-circle" data-title="{{ 'badge_expired_on_date'|trans({'%expirationDate%': userBadge.expiredAt|date('date_form_datepicker_php'|trans({}, 'platform'))}, 'icap_badge') }}"
+                          data-toggle="tooltip" data-placement="top" data-container="body"></span>
+                {% endif %}
+                <div class="thumbnail">
+                    <div class="thumbnail-image-container">
+                        <img class="badge-image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}"/>
+                    </div>
+                    <div class="caption">
+                        <a href="{{ path('icap_badge_profile_view_badge', {'slug': badge.slug}) }}" title="{{ badge.name }}">
+                            {{ badge.name }}
+                        </a>
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+{% endif %}

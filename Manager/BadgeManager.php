@@ -190,6 +190,7 @@ class BadgeManager
         }
         return $isRulesChanged;
     }
+
     public function makeClaim(Badge $badge, User $user)
     {
         $userBadge = $this->entityManager->getRepository('IcapBadgeBundle:UserBadge')->findOneByBadgeAndUser($badge, $user);
@@ -211,6 +212,7 @@ class BadgeManager
             throw new \Exception('badge_claim_error_message', 0, $exception);
         }
     }
+
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param int                                              $limit
@@ -340,5 +342,16 @@ class BadgeManager
         }
 
         return $availableBadges;
+    }
+
+    /**
+     * @return Badge[]
+     */
+    public function getLoggedUserBadges()
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+        $badgeRepository = $this->entityManager->getRepository('IcapBadgeBundle:UserBadge');
+
+        return $badgeRepository->findByUser($user);
     }
 }
