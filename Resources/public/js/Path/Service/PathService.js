@@ -97,7 +97,7 @@
 
                             // Resolve the Promise
                             deferred.resolve(response);
-                        }
+                        })
                         .error(function (response) {
                             // Reject the Promise
                             deferred.reject(response);
@@ -458,7 +458,6 @@
                  */
                 getAllEvaluationsForPath: function getAllEvaluationsForPath(path) {
                     var deferred = $q.defer();
-                    var params = ;
 
                     $http
                         .get(Routing.generate('innova_path_evaluation', { path: path }))
