@@ -22,6 +22,7 @@
             this.filtered = this.papers;
             this.query = '';
             this.showPagination = true; 
+            this.interrupted = false;
 
             // table config
             this.config = {
@@ -144,8 +145,10 @@
                     // set interrupt property in a human readable way
                     if (this.filtered[i].interrupted) {
                         this.filtered[i].interruptLabel = Translator.trans('paper_list_table_interrupted_yes', {}, 'ujm_sequence');
+                        this.interrupted = true;
                     } else {
                         this.filtered[i].interruptLabel = Translator.trans('paper_list_table_interrupted_no', {}, 'ujm_sequence');
+                        this.interrupted = false;
                     }
                 }
             };
