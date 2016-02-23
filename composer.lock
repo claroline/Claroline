@@ -286,12 +286,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/CoreBundle.git",
-                "reference": "b21a8d6db2b8cd06187954e59ba1ce196d6730fe"
+                "reference": "e5ce30c0030b911e7d04d7eb364176d04ccb66ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/CoreBundle/zipball/b21a8d6db2b8cd06187954e59ba1ce196d6730fe",
-                "reference": "b21a8d6db2b8cd06187954e59ba1ce196d6730fe",
+                "url": "https://api.github.com/repos/claroline/CoreBundle/zipball/e5ce30c0030b911e7d04d7eb364176d04ccb66ed",
+                "reference": "e5ce30c0030b911e7d04d7eb364176d04ccb66ed",
                 "shasum": ""
             },
             "require": {
@@ -329,7 +329,7 @@
                 "nelmio/api-doc-bundle": "dev-master",
                 "php": ">=5.5",
                 "sensio/distribution-bundle": "~2.3.4",
-                "sensio/framework-extra-bundle": "~3.0.0",
+                "sensio/framework-extra-bundle": "3.0.12",
                 "sensio/generator-bundle": "~2.4",
                 "stfalcon/tinymce-bundle": "0.3.8",
                 "stof/doctrine-extensions-bundle": "1.1.0",
@@ -367,7 +367,7 @@
                 "Claroline",
                 "core"
             ],
-            "time": "2016-02-22 16:10:34"
+            "time": "2016-02-23 08:32:26"
         },
         {
             "name": "claroline/cursus-bundle",
@@ -5955,32 +5955,25 @@
         },
         {
             "name": "sensio/framework-extra-bundle",
-            "version": "v3.0.13",
+            "version": "v3.0.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/SensioFrameworkExtraBundle.git",
-                "reference": "bf6be511f4f66d368baeb2cab617203d73cccf4e"
+                "reference": "3e8936fe13aa4086644977d334d8fcd275f50357"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/SensioFrameworkExtraBundle/zipball/bf6be511f4f66d368baeb2cab617203d73cccf4e",
-                "reference": "bf6be511f4f66d368baeb2cab617203d73cccf4e",
+                "url": "https://api.github.com/repos/sensiolabs/SensioFrameworkExtraBundle/zipball/3e8936fe13aa4086644977d334d8fcd275f50357",
+                "reference": "3e8936fe13aa4086644977d334d8fcd275f50357",
                 "shasum": ""
             },
             "require": {
                 "doctrine/common": "~2.2",
-                "symfony/dependency-injection": "~2.3|~3.0",
                 "symfony/framework-bundle": "~2.3|~3.0"
             },
             "require-dev": {
-                "symfony/browser-kit": "~2.3|~3.0",
-                "symfony/dom-crawler": "~2.3|~3.0",
                 "symfony/expression-language": "~2.4|~3.0",
-                "symfony/finder": "~2.3|~3.0",
-                "symfony/phpunit-bridge": "~2.7|~3.0",
-                "symfony/security-bundle": "~2.4|~3.0",
-                "symfony/twig-bundle": "~2.3|~3.0",
-                "twig/twig": "~1.11|~2.0"
+                "symfony/security-bundle": "~2.4|~3.0"
             },
             "suggest": {
                 "symfony/expression-language": "",
@@ -6013,7 +6006,7 @@
                 "annotations",
                 "controllers"
             ],
-            "time": "2016-02-12 08:17:23"
+            "time": "2015-12-18 17:39:27"
         },
         {
             "name": "sensio/generator-bundle",
@@ -8299,57 +8292,6 @@
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
             "time": "2015-06-21 13:59:46"
-        },
-        {
-            "name": "stefk/incenteev-parameters",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/stefk/ParameterHandler.git",
-                "reference": "25a82b1ac02e94ea68c78a2466f7d29168172fe1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/stefk/ParameterHandler/zipball/25a82b1ac02e94ea68c78a2466f7d29168172fe1",
-                "reference": "25a82b1ac02e94ea68c78a2466f7d29168172fe1",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3",
-                "symfony/yaml": "~2.3|~3.0"
-            },
-            "require-dev": {
-                "composer/composer": "1.0.*@dev",
-                "phpspec/prophecy-phpunit": "~1.0",
-                "symfony/filesystem": "~2.2"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Incenteev\\ParameterHandler\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Christophe Coevoet",
-                    "email": "stof@notk.org"
-                }
-            ],
-            "description": "Tmp fork of incenteev/composer-parameter-handler, allowing filter on interactive parameters",
-            "homepage": "https://github.com/Incenteev/ParameterHandler",
-            "keywords": [
-                "parameters management"
-            ],
-            "time": "2016-02-13 11:08:36"
         },
         {
             "name": "symfony/phpunit-bridge",
