@@ -53,26 +53,28 @@ class UserControllerTest extends TransactionalTestCase
     public function testGetUsersAction()
     {
         
-        $this->logIn($this->admin);/*
+        //$this->logIn($this->admin);
+        /*
         $this->client->request('GET', '/api/users.json');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $data = $this->client->getResponse()->getContent();
         $this->assertEquals(4, count(json_decode($data, true)));*/
 
         //1st try = this work
-        $this->client->request('GET', '/desktop/tool/open/home');
+        $this->request('GET', '/desktop/tool/open/home', $this->admin);
         //var_dump($this->client->getResponse()->getContent());
-        var_dump($this->client->getResponse()->getContent());
+        //var_dump($this->client->getResponse()->getContent());
         //2nd try = it breaks
-        $this->client->request('GET', '/desktop/tool/open/home');
-        var_dump($this->client->getResponse()->getContent());
+        $this->request('GET', '/desktop/tool/open/home', $this->admin);
+        //var_dump($this->client->getResponse()->getContent());
 
         //var_dump('log jhn');
-        $this->logIn($this->john);
+        //$this->logIn($this->john);
+        /*
         $this->client->request('GET', '/api/users.json');
         $data = $this->client->getResponse()->getContent();
         //var_dump($data);
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());*/
     }
 /*
     //@url: /api/users.{_format}  
@@ -156,7 +158,7 @@ class UserControllerTest extends TransactionalTestCase
     {
         //do something rather smart here.
     }
-*/
+
     //@url: /api/users.{_format} 
     //@route: api_put_user
     public function testPutUserAction()
@@ -170,7 +172,7 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals('toto', $data['username']);
     }
 
-/*
+
     public function testPutUserActionIsProtected()
     {
         //do something smart
@@ -296,5 +298,16 @@ class UserControllerTest extends TransactionalTestCase
             'administrativeCode' => 'toto',
             'mail' => 'toto@claroline.net'
         );
+    }
+
+    private function request($method, $uri, User $user = null, array $parameters = [])
+    {
+        $server = $user ?
+            [
+                'PHP_AUTH_USER' => $user->getUsername(),
+                'PHP_AUTH_PW' => $this->john->getPlainPassword()
+            ] :
+            [];
+        return $this->client->request($method, $uri, $parameters, [], $server);
     }
 }

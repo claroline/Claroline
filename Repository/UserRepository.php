@@ -63,6 +63,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $class));
         }
 
+        var_dump(count($this->findAll()));
+
         $dql = '
             SELECT u, ur, g, gr FROM Claroline\CoreBundle\Entity\User u
             JOIN u.roles ur
