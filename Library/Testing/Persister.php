@@ -28,13 +28,17 @@ class Persister {
      */
     private $userRole;
 
+    private $container;
+
     /**
      * @InjectParams({
-     *     "om" = @Inject("claroline.persistence.object_manager")
+     *     "om"        = @Inject("claroline.persistence.object_manager"),
+     *     "container" = @Inject("service_container")
      * })
      */
-    public function __construct(ObjectManager $om) {
+    public function __construct(ObjectManager $om, $container) {
         $this->om = $om;
+        $this->container = $container;
     }
 
     /**
@@ -42,30 +46,23 @@ class Persister {
      * @return User
      */
     public function user($username) {
+
+        $roleUser = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
+
+        if (!$roleUser) {
+            $this->role('ROLE_USER');
+            $this->om->flush(); //we really need it
+        }
+
         $user = new User();
         $user->setFirstName($username);
         $user->setLastName($username);
         $user->setUsername($username);
         $user->setPassword($username);
         $user->setMail($username . '@mail.com');
-        $user->setGuid($username);
-        $this->om->persist($user);
 
-        if (!$this->userRole) {
-            $this->userRole = $this->role('ROLE_USER');
-            $this->om->persist($this->userRole);
-        }
-
-        $user->addRole($this->userRole);
-
-        $workspace = new Workspace();
-        $workspace->setName($username);
-        $workspace->setCreator($user);
-        $workspace->setCode($username);
-        $workspace->setGuid($username);
-        $this->om->persist($workspace);
-
-        $user->setPersonalWorkspace($workspace);
+        //much better
+        $this->container->get('claroline.manager.user_manager')->createUser($user, false);
 
         return $user;
     }
@@ -75,10 +72,14 @@ class Persister {
      * @return Role
      */
     public function role($name) {
-        $role = new Role();
-        $role->setName($name);
-        $role->setTranslationKey($name);
-        $this->om->persist($role);
+        $role = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName($name);
+        
+        if (!$role) {
+            $role = new Role();
+            $role->setName($name);
+            $role->setTranslationKey($name);
+            $this->om->persist($role);
+        }
 
         return $role;
     }

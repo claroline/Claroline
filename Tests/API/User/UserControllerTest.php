@@ -40,10 +40,10 @@ class UserControllerTest extends TransactionalTestCase
         $organization = $this->persister->organization('organization');
         $this->adminOrga = $this->persister->user('adminOrga');
         $this->userOrga = $this->persister->user('userOrga');
-        $organization->addAdministrator($this->userOrga);
+        $this->adminOrga->addAdministratedOrganization($organization);
         $this->userOrga->addOrganization($organization);
         $this->persister->persist($this->userOrga);
-        $this->persister->persist($organization);
+        $this->persister->persist($this->adminOrga);
         $this->persister->persist($this->admin);
         $this->persister->flush();
     }
@@ -52,31 +52,13 @@ class UserControllerTest extends TransactionalTestCase
     //@route: api_get_users
     public function testGetUsersAction()
     {
-        
-        //$this->logIn($this->admin);
-        /*
+        $this->logIn($this->admin);
         $this->client->request('GET', '/api/users.json');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $data = $this->client->getResponse()->getContent();
-        $this->assertEquals(4, count(json_decode($data, true)));*/
-
-        //1st try = this work
-        $this->request('GET', '/desktop/tool/open/home', $this->admin);
-        //var_dump($this->client->getResponse()->getContent());
-        //var_dump($this->client->getResponse()->getContent());
-        //2nd try = it breaks
-        $this->request('GET', '/desktop/tool/open/home', $this->admin);
-        //var_dump($this->client->getResponse()->getContent());
-
-        //var_dump('log jhn');
-        //$this->logIn($this->john);
-        /*
-        $this->client->request('GET', '/api/users.json');
-        $data = $this->client->getResponse()->getContent();
-        //var_dump($data);
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());*/
+        $this->assertEquals(4, count(json_decode($data, true)));
     }
-/*
+
     //@url: /api/users.{_format}  
     //@route: api_get_users
     public function testGetUsersActionIsSecured()
@@ -86,6 +68,7 @@ class UserControllerTest extends TransactionalTestCase
         $data = $this->client->getResponse()->getContent();
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
+
 
     //@url: /api/searches/{page}/users/{limit}.{_format}
     //@route: api_get_search_users
@@ -102,7 +85,7 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals(4, count($data['users']));
 
         //now we're adding a simple filter
-        $this->client->request('GET', $url . '?name[]=john');
+        $this->client->request('GET', $url . '?username[]=john');
         $data = $this->client->getResponse()->getContent();
         $data = json_decode($data, true);
 
@@ -145,7 +128,17 @@ class UserControllerTest extends TransactionalTestCase
         $this->setPlatformOption('self_registration', true);
         $this->logIn($this->admin);
 
-        $fields = $this->getToto();
+        $fields = array(
+            'firstName' => 'toto',
+            'lastName' => 'toto',
+            'username' => 'toto',
+            'plainPassword' => array(
+                    'first' => 'toto',
+                    'second' => 'toto'
+                ),
+            'administrativeCode' => 'toto',
+            'mail' => 'toto@claroline.net'
+        );
         $form = array('profile_form_creation' => $fields);
         $this->client->request('POST', '/api/users.json', $form);
         $data = $this->client->getResponse()->getContent();
@@ -164,7 +157,13 @@ class UserControllerTest extends TransactionalTestCase
     public function testPutUserAction()
     {
         $this->logIn($this->adminOrga);
-        $fields = $this->getToto();
+        $fields = array(
+            'firstName' => 'toto',
+            'lastName' => 'toto',
+            'username' => 'toto',
+            'administrativeCode' => 'toto',
+            'mail' => 'toto@claroline.net'
+        );
         $form = array('profile_form' => $fields);
         $this->client->request('PUT', "/api/users/{$this->userOrga->getId()}.json", $form);
         $data = $this->client->getResponse()->getContent();
@@ -172,7 +171,7 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals('toto', $data['username']);
     }
 
-
+/*
     public function testPutUserActionIsProtected()
     {
         //do something smart
@@ -284,21 +283,6 @@ class UserControllerTest extends TransactionalTestCase
     {
 
     }*/
-
-    private function getToto()
-    {
-        return array(
-            'firstName' => 'toto',
-            'lastName' => 'toto',
-            'username' => 'toto',
-            'plainPassword' => array(
-                    'first' => 'toto',
-                    'second' => 'toto'
-                ),
-            'administrativeCode' => 'toto',
-            'mail' => 'toto@claroline.net'
-        );
-    }
 
     private function request($method, $uri, User $user = null, array $parameters = [])
     {

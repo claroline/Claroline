@@ -1189,4 +1189,10 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     {
         return $this->administratedOrganizations;
     }
+
+    public function addAdministratedOrganization(Organization $organization)
+    {
+        $this->administratedOrganizations->add($organization); 
+    }
+
 }

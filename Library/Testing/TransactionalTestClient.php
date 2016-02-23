@@ -24,9 +24,6 @@ class TransactionalTestClient extends Client
     /** @var \Doctrine\DBAL\Connection */
     protected $connection;
 
-    /** @var boolean */
-    protected $requested;
-
     public function __construct(
         HttpKernelInterface $kernel,
         array $server = array(),
@@ -64,13 +61,7 @@ class TransactionalTestClient extends Client
 
     protected function doRequest($request)
     {
-        if ($this->requested) {
-            $this->kernel->shutdown();
-            $this->kernel->boot();
-        }
-
         $this->injectConnection();
-        $this->requested = true;
 
         return $this->kernel->handle($request);
     }

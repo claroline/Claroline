@@ -37,9 +37,6 @@ class GroupVoter implements VoterInterface
     {
         $this->om = $om;
         $this->groupManager = $groupManager;
-        //search from repository
-        $this->userAdminTool = $om->getRepository('Claroline\CoreBundle\Entity\Tool\AdminTool')
-            ->findOneByName('user_management');
     }
 
     //ROLE_ADMIN can always do anything, so we don't have to check that.

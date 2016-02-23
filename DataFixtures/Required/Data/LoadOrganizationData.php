@@ -26,6 +26,6 @@ class LoadOrganizationData implements RequiredFixture
 
     public function load(ObjectManager $manager)
     {
-        $this->container->get('claroline.manager.organization.organization_manager')->createDefault()
+        $this->container->get('claroline.manager.organization.organization_manager')->createDefault();
     }
 }

@@ -52,9 +52,6 @@ class UserVoter implements VoterInterface
         $this->om = $om;
         $this->ch = $ch;
         $this->userManager = $userManager;
-        //search from repository
-        $this->userAdminTool = $om->getRepository('Claroline\CoreBundle\Entity\Tool\AdminTool')
-            ->findOneByName('user_management');
     }
 
     //ROLE_ADMIN can always do anything, so we don't have to check that.
@@ -106,9 +103,7 @@ class UserVoter implements VoterInterface
         $userOrganizations = $user->getOrganizations();
 
         foreach ($adminOrganizations as $adminOrganization) {
-            var_dump($adminOrganization->getName());
             foreach ($userOrganizations as $userOrganization) {
-                var_dump($userOrganization->getName());
                 if ($userOrganization === $adminOrganization) return true;
             }
         }

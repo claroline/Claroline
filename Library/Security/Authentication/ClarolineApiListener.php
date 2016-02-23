@@ -148,8 +148,6 @@ class ClarolineApiListener implements ListenerInterface
             return;
         }
 
-        var_dump($user);
-
         $refreshedUser = $this->userProvider->refreshUser($user);
         $token->setUser($refreshedUser);
 
