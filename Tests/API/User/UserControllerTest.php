@@ -52,15 +52,20 @@ class UserControllerTest extends TransactionalTestCase
     //@route: api_get_users
     public function testGetUsersAction()
     {
-        $this->logIn($this->admin);
+        
+        $this->logIn($this->admin);/*
         $this->client->request('GET', '/api/users.json');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $data = $this->client->getResponse()->getContent();
-        $this->assertEquals(4, count(json_decode($data, true)));
+        $this->assertEquals(4, count(json_decode($data, true)));*/
 
-        //these 2 lines = lost database
-        //$this->client->request('GET', '/desktop/tool/open/home');
+        //1st try = this work
+        $this->client->request('GET', '/desktop/tool/open/home');
         //var_dump($this->client->getResponse()->getContent());
+        var_dump($this->client->getResponse()->getContent());
+        //2nd try = it breaks
+        $this->client->request('GET', '/desktop/tool/open/home');
+        var_dump($this->client->getResponse()->getContent());
 
         //var_dump('log jhn');
         $this->logIn($this->john);
