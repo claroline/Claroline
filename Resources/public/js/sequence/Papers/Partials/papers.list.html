@@ -13,7 +13,8 @@
                 </div>
                 <!-- play exercise -->
                 <a data-ng-if="paperListCtrl.displayRetryExerciseLink" class="btn btn-default pull-right" href="{{paperListCtrl.generateUrl('exercise-play', paperListCtrl.exercise.id)}}#/{{paperListCtrl.exercise.id}}">
-                    <i data-ng-if="paperListCtrl.filtered.length > 0" class="fa fa-check-square-o"> {{ 'link_exercise_retry'|trans:{}:'ujm_sequence' }}</i>
+                    <i data-ng-if="paperListCtrl.interrupted && paperListCtrl.filtered.length > 0" class="fa fa-check-square-o"> {{ 'link_exercise_continue'|trans:{}:'ujm_sequence' }}</i>
+                    <i data-ng-if="!paperListCtrl.interrupted && paperListCtrl.filtered.length > 0" class="fa fa-check-square-o"> {{ 'link_exercise_retry'|trans:{}:'ujm_sequence' }}</i>
                     <i data-ng-if="paperListCtrl.filtered.length === 0" class="fa fa-check-square-o"> {{ 'link_exercise_play'|trans:{}:'ujm_sequence' }}</i>
                 </a>
             </div>
