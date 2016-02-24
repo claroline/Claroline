@@ -2,7 +2,7 @@
 
 {% block stylesheets %}
     {% if config.getParameter('theme') != '' %}
-        <link rel="stylesheet" href="{{ asset('') ~ 'themes/' ~ config.getParameter('theme') ~ '/bootstrap.css' }}" screen="media" />
+        <link rel="stylesheet" href="{{ getAssetPath() ~ '/themes/' ~ config.getParameter('theme') ~ '/bootstrap.css' }}" screen="media" />
     {% endif %}
 
     <link rel='stylesheet' type='text/css' href='{{ asset('packages/font-awesome/css/font-awesome.min.css') }}'/>
