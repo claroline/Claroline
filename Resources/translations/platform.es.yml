@@ -178,7 +178,6 @@ cookie_lifetime: 'Duración de la cookie'
 copiable: Copiable
 copies: copies
 copy: Copiar
-core_packages: 'Core packages'
 count_resources: count_resources
 create: Crear
 create_account: 'Crear la cuenta'
@@ -619,7 +618,6 @@ no_home_tab: 'No hay pestañas'
 no_learning_outcomes: no_learning_outcomes
 no_message: 'No hay mensajes'
 no_model: no_model
-no_package_description: no_package_description
 no_resources_in_workspace: no_resources_in_workspace
 no_role_selected_message: no_role_selected_message
 no_search_results: 'Su búsqueda no ha producido ningún resultado.'
@@ -658,15 +656,6 @@ others: others
 over_max_length: 'Este valor es muy largo'
 owner: Propietario
 owner_s: Propietario(s)
-package_install: package_install
-package_install_auto_reload: package_install_auto_reload
-package_install_confirm: package_install_confirm
-package_update_danger: package_update_danger
-package_update_impossible: package_update_impossible
-package_upgrade_all_warning: 'Advertencia, esto actualizará todos los paquetes de la plataforma. Esta operación no puede ser cancelada. Se recomienda  hacer una copia de seguridad de los archivos y de la base de datos antes de realizar esta operación.'
-packages: Packages
-packages_permissions_error: packages_permissions_error
-packages_upgrade_info_message: 'Advertencia, esta es la página de administración de las actualizaciones.'
 parameters: Parámetros
 parameters_save_error: parameters_save_error
 parameters_save_success: parameters_save_success
@@ -707,7 +696,6 @@ platform_role: 'Roles de la plataforma'
 platform_widgets: 'Widgets de la plataforma'
 please_validate_your_account: please_validate_your_account
 please_wait: 'Por favor espere...'
-plugin_packages: 'Plugin packages'
 port: Puerto
 portfolio_url: portfolio_url
 position: posición

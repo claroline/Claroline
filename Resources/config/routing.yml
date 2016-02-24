@@ -244,11 +244,6 @@ claro_admin_workspace_registration:
     resource: "@ClarolineCoreBundle/Controller/Administration/WorkspaceRegistrationController.php"
     type: annotation
 
-claro_admin_package:
-    resource: "@ClarolineCoreBundle/Controller/Administration/PackageController.php"
-    prefix: admin/package
-    type: annotation
-
 claro_admin_facet:
     resource: "@ClarolineCoreBundle/Controller/Administration/FacetController.php"
     prefix: admin/facet
@@ -321,14 +316,6 @@ claro_location_api:
 
 claro_parameters_api:
     resource: "@ClarolineCoreBundle/Controller/API/Admin/ParametersController.php"
-    type: rest
-    prefix: api
-    defaults: {_format: json}
-    options:
-        expose: true
-
-claro_packages_api:
-    resource: "@ClarolineCoreBundle/Controller/API/Admin/PackageController.php"
     type: rest
     prefix: api
     defaults: {_format: json}

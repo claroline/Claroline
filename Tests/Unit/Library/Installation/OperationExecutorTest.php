@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Claroline Connect package.
  *
@@ -10,6 +11,11 @@
 
 namespace Claroline\CoreBundle\Library\Installation;
 
+use Composer\Json\JsonFile;
+use Composer\Package\Package;
+use Composer\Repository\InstalledFilesystemRepository;
+use org\bovigo\vfs\vfsStream;
+
 class OperationExecutorTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -17,15 +23,17 @@ class OperationExecutorTest extends \PHPUnit_Framework_TestCase
      */
     private $executor;
     private $kernel;
+    private $baseInstaller;
+    private $pluginInstaller;
     private $detector;
 
     protected function setUp()
     {
         $this->kernel = $this->mock('Symfony\Component\HttpKernel\KernelInterface');
-        $installManager = $this->mock('Claroline\InstallationBundle\Manager\InstallationManager');
-        $pluginInstaller = $this->mock('Claroline\CoreBundle\Library\Installation\Plugin\Installer');
+        $this->baseInstaller = $this->mock('Claroline\InstallationBundle\Manager\InstallationManager');
+        $this->pluginInstaller = $this->mock('Claroline\CoreBundle\Library\Installation\Plugin\Installer');
         $this->detector = $this->mock('Claroline\BundleRecorder\Detector\Detector');
-        $this->executor = new OperationExecutor($this->kernel, $installManager, $pluginInstaller);
+        $this->executor = new OperationExecutor($this->kernel, $this->baseInstaller, $this->pluginInstaller);
         $this->executor->setBundleDetector($this->detector);
 
         // always build a fake fqcn based on the given path
@@ -41,8 +49,8 @@ class OperationExecutorTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider missingRepoProvider
-     * @expectedException \Claroline\CoreBundle\Library\Installation\ExecutorException
-     * @expectedExceptionCode 11
+     * @expectedException \RuntimeException
+     * @expectedExceptionCode 123
      */
     public function testBuildOperationListThrowsIfRepoIsMissing($previous, $installed)
     {
@@ -52,21 +60,9 @@ class OperationExecutorTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider notJsonRepoProvider
-     * @expectedException \Claroline\CoreBundle\Library\Installation\ExecutorException
-     * @expectedExceptionCode 12
+     * @expectedException \Composer\Repository\InvalidRepositoryException
      */
     public function testBuildOperationListExecutorThrowsIfRepoIsNotJson($previous, $installed)
-    {
-        $this->executor->setRepositoryFiles($previous, $installed);
-        $this->executor->buildOperationList();
-    }
-
-    /**
-     * @dataProvider notArrayRepoProvider
-     * @expectedException \Claroline\CoreBundle\Library\Installation\ExecutorException
-     * @expectedExceptionCode 13
-     */
-    public function testOperationListThrowsIfRepoIsNotArray($previous, $installed)
     {
         $this->executor->setRepositoryFiles($previous, $installed);
         $this->executor->buildOperationList();
@@ -82,13 +78,13 @@ class OperationExecutorTest extends \PHPUnit_Framework_TestCase
 
         $operations = $this->executor->buildOperationList();
         $this->assertEquals(2, count($operations));
-        $this->assertEquals($operations[0]->getPackageName(), 'foo');
+        $this->assertEquals($operations[0]->getPackage()->getName(), 'foo');
         $this->assertEquals($operations[0]->getBundleFqcn(), 'Foo');
-        $this->assertEquals($operations[0]->getPackageType(), 'claroline-core');
+        $this->assertEquals($operations[0]->getPackage()->getType(), 'claroline-core');
         $this->assertEquals($operations[0]->getType(), Operation::INSTALL);
-        $this->assertEquals($operations[1]->getPackageName(), 'bar');
+        $this->assertEquals($operations[1]->getPackage()->getName(), 'bar');
         $this->assertEquals($operations[1]->getBundleFqcn(), 'Bar');
-        $this->assertEquals($operations[1]->getPackageType(), 'claroline-plugin');
+        $this->assertEquals($operations[1]->getPackage()->getType(), 'claroline-plugin');
         $this->assertEquals($operations[1]->getType(), Operation::INSTALL);
     }
 
@@ -101,9 +97,9 @@ class OperationExecutorTest extends \PHPUnit_Framework_TestCase
 
         $operations = $this->executor->buildOperationList();
         $this->assertEquals(1, count($operations));
-        $this->assertEquals($operations[0]->getPackageName(), 'foo');
+        $this->assertEquals($operations[0]->getPackage()->getName(), 'foo');
         $this->assertEquals($operations[0]->getBundleFqcn(), 'Foo');
-        $this->assertEquals($operations[0]->getPackageType(), 'claroline-core');
+        $this->assertEquals($operations[0]->getPackage()->getType(), 'claroline-core');
         $this->assertEquals($operations[0]->getType(), Operation::UPDATE);
         $this->assertEquals($operations[0]->getFromVersion(), '1.0.0.0');
         $this->assertEquals($operations[0]->getToVersion(), '2.0.0.0');
@@ -119,16 +115,88 @@ class OperationExecutorTest extends \PHPUnit_Framework_TestCase
         ]);
         $operations = $this->executor->buildOperationList();
         $this->assertEquals(2, count($operations));
-        $this->assertEquals($operations[0]->getPackageName(), 'foo');
+        $this->assertEquals($operations[0]->getPackage()->getName(), 'foo');
         $this->assertEquals($operations[0]->getBundleFqcn(), 'Foo');
-        $this->assertEquals($operations[0]->getPackageType(), 'claroline-core');
+        $this->assertEquals($operations[0]->getPackage()->getType(), 'claroline-core');
         $this->assertEquals($operations[0]->getType(), Operation::UPDATE);
         $this->assertEquals($operations[0]->getFromVersion(), '1.0.0.0');
         $this->assertEquals($operations[0]->getToVersion(), '1.2.0.0');
-        $this->assertEquals($operations[1]->getPackageName(), 'quz');
+        $this->assertEquals($operations[1]->getPackage()->getName(), 'quz');
         $this->assertEquals($operations[1]->getBundleFqcn(), 'Quz');
-        $this->assertEquals($operations[1]->getPackageType(), 'claroline-plugin');
+        $this->assertEquals($operations[1]->getPackage()->getType(), 'claroline-plugin');
         $this->assertEquals($operations[1]->getType(), Operation::INSTALL);
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionCode 123
+     */
+    public function testExecuteThrowsIfPreviousRepoDoesNotExist()
+    {
+        $this->executor->setRepositoryFiles('/does/not/exist', '/either');
+        $this->executor->execute([]);
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionCode 456
+     */
+    public function testExecuteThrowsIfPreviousRepoIsNotWritable()
+    {
+        vfsStream::setup('root');
+        $previous = vfsStream::url('root/previous-installed.json');
+        file_put_contents($previous, '[]');
+        chmod($previous, 0444);
+        $this->executor->setRepositoryFiles($previous, '/does/not/exist');
+        $this->executor->execute([]);
+    }
+
+    public function testExecuteRemovesPreviousRepoWhenNoOperationRemain()
+    {
+        vfsStream::setup('root');
+        $previous = vfsStream::url('root/previous-installed.json');
+        file_put_contents($previous, '[]');
+        $this->executor->setRepositoryFiles($previous, '/does/not/exist');
+
+        $this->kernel->expects($this->once())->method('getBundles')->willReturn([]);
+
+        $this->executor->execute([]);
+
+        $this->assertFalse(file_exists($previous));
+    }
+
+    public function testExecuteCallsInstallersAndUpdatePreviousRepo()
+    {
+        vfsStream::setup('root');
+        $previous = vfsStream::url('root/previous-installed.json');
+        file_put_contents($previous, file_get_contents($this->repo('repo-1')));
+        $this->executor->setRepositoryFiles($previous, '/does/not/exist');
+
+        $this->kernel->expects($this->once())->method('getBundles')->willReturn([
+            $this->mockBundle('Foo'),
+            $this->mockBundle('Quz', true),
+            $this->mockBundle('Bar', true)
+        ]);
+
+        $this->baseInstaller->expects($this->once())
+            ->method('install')
+            ->will($this->throwException(new \Exception('from test')));
+
+        $installOp1 = new Operation(Operation::INSTALL, $this->package('quz', '3.4.1.2', 'claroline-plugin'), 'Quz');
+        $updateOp = new Operation(Operation::UPDATE, $this->package('bar', '2.0.0.0', 'claroline-plugin'), 'Bar');
+        $updateOp->setFromVersion('2.0.0.0');
+        $updateOp->setToVersion('3.0.0.0');
+        $installOp2 = new Operation(Operation::INSTALL, $this->package('foo', '5.2.3.1', 'claroline-core'), 'Foo');
+
+        try {
+            $this->executor->execute([$installOp1, $updateOp, $installOp2]);
+            $this->fail('An exception should have been thrown');
+        } catch (\Exception $ex) {
+            $this->assertTrue(file_exists($previous));
+            $repo = new InstalledFilesystemRepository(new JsonFile($previous));
+            $this->assertNotNull($repo->findPackage('quz', '3.4.1.2'));
+            $this->assertNotNull($repo->findPackage('bar', '2.0.0.0'));
+        }
     }
 
     public function missingRepoProvider()
@@ -144,14 +212,6 @@ class OperationExecutorTest extends \PHPUnit_Framework_TestCase
         return $this->buildRepoPaths([
             ['empty', 'not-json'],
             ['not-json', 'empty']
-        ]);
-    }
-
-    public function notArrayRepoProvider()
-    {
-        return $this->buildRepoPaths([
-            ['empty', 'not-array'],
-            ['not-array', 'empty']
         ]);
     }
 
@@ -176,13 +236,23 @@ class OperationExecutorTest extends \PHPUnit_Framework_TestCase
         return __DIR__ . '/../../../Stub/repo/' . $name . '.json';
     }
 
-    private function mockBundle($fqcn)
+    private function mockBundle($fqcn, $plugin = false)
     {
-        $bundle = $this->mock('Symfony\Component\HttpKernel\Bundle\BundleInterface');
+        $class = $plugin ?
+            'Claroline\CoreBundle\Library\PluginBundleInterface' :
+            'Claroline\InstallationBundle\Bundle\InstallableInterface';
+        $bundle = $this->mock($class);
         $bundle->expects($this->any())->method('getNamespace')->willReturn('');
         $bundle->expects($this->any())->method('getName')->willReturn($fqcn);
 
         return $bundle;
     }
 
+    private function package($name, $version, $type)
+    {
+        $package = new Package($name, $version, 'not-important');
+        $package->setType($type);
+
+        return $package;
+    }
 }

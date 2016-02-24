@@ -9,13 +9,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                {% if config.getParameter('logo') != "" %}
+                {% if config.getParameter('logo') != '' %}
                     <a class="navbar-brand logo" href="{{ path('claro_index') }}" title="{{ 'home' | trans({}, "platform") }}">
-                        <img src="{{ asset("") ~ "uploads/logos/" ~ config.getParameter('logo') }}" height="35"
+                        <img src="{{ getAssetPath() ~ '/uploads/logos/' ~ config.getParameter('logo') }}" height="35"
                             {% if config.getParameter('name') != "" %}alt="{{ config.getParameter('name') }}"{% endif %}>
                     </a>
                 {% endif %}
-                {% if config.getParameter('name') != "" and config.getParameter('nameActive') %}
+                {% if config.getParameter('name') != '' and config.getParameter('nameActive') %}
                     <a class="navbar-brand" href="{{ path('claro_index') }}">
                         {{ config.getParameter('name') }}
                     </a>
@@ -51,7 +51,7 @@
                         {% else %}
                             {{ block('login') }}
                         {% endif %}
-                        
+
                         {% if showHelpButton %}
                             <li>
                                 <a href="{{ helpUrl }}">

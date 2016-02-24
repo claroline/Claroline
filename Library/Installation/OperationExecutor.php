@@ -15,6 +15,9 @@ use Claroline\BundleRecorder\Detector\Detector;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Library\Installation\Plugin\Installer;
 use Claroline\InstallationBundle\Manager\InstallationManager;
+use Composer\Json\JsonFile;
+use Composer\Package\PackageInterface;
+use Composer\Repository\InstalledFilesystemRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -101,26 +104,39 @@ class OperationExecutor
     {
         $this->log('Building install/update operations list...');
 
-        $current = $this->openRepository($this->previousRepoFile);
-        $target = $this->openRepository($this->installedRepoFile);
+        $previous = $this->openRepository($this->previousRepoFile);
+        $current = $this->openRepository($this->installedRepoFile);
         $operations = [];
 
-        foreach ($target as $targetName => $targetPackage) {
-            if (!isset($current[$targetName])) {
-                $this->log("  - Installation of {$targetName} required");
-                $operation = $this->buildOperation(Operation::INSTALL, $targetPackage);
+        /** @var PackageInterface $currentPackage */
+        foreach ($current->getCanonicalPackages() as $currentPackage) {
+            if (!($previousPackage = $previous->findPackage($currentPackage->getName(), '*'))) {
+                $this->log("Installation of {$currentPackage->getName()} required");
+                $operation = $this->buildOperation(Operation::INSTALL, $currentPackage);
                 $operations[$operation->getBundleFqcn()] = $operation;
-            } elseif ($targetPackage->{'version-normalized'}
-                !== $current[$targetName]->{'version-normalized'}) {
-                $this->log("  - Update of {$targetName} required");
-                $operation =$this->buildOperation(Operation::UPDATE, $targetPackage);
-                $operation->setFromVersion($current[$targetName]->{'version-normalized'});
-                $operation->setToVersion($targetPackage->{'version-normalized'});
+            } elseif ($currentPackage->getVersion() !== $previousPackage->getVersion()
+                || $currentPackage->isDev()) {
+                $this->log(sprintf(
+                    'Update of %s from %s to %s required',
+                    $previousPackage->getName(),
+                    $previousPackage->getVersion(),
+                    $currentPackage->getVersion()
+                ));
+                $operation = $this->buildOperation(Operation::UPDATE, $currentPackage);
+                $operation->setFromVersion($previousPackage->getVersion());
+                $operation->setToVersion($currentPackage->getVersion());
                 $operations[$operation->getBundleFqcn()] = $operation;
             }
         }
 
-        $this->log("Sorting operations...");
+        // TODO: we *should* do something in case a platform package is
+        // removed (e.g. if the package is a plugin, at least unregister it)
+        // but AFAIK we don't have anything now to support removal of a bundle
+        // whose sources are already gone. Maybe the platform installer could
+        // look after each update if there are records in the plugin table
+        // that don't match any known bundle?
+
+        $this->log('Sorting operations...');
         $bundles = $this->kernel->getBundles();
         $sortedOperations = [];
 
@@ -140,91 +156,94 @@ class OperationExecutor
     /**
      * Executes a list of install/update operations. Each successful operation
      * is followed by an update of the previous local repository, so that the
-     * process can be resumed after an error (e.g. an error) without triggering
-     * again already executed operations. When there's no more operation to
-     * execute, the snapshot of the previous local repository is deleted.
+     * process can be resumed after an interruption (e.g. due to an error)
+     * without triggering again already executed operations. When there's no
+     * more operation to execute, the snapshot of the previous local repository
+     * is deleted.
      *
      * @param Operation[] $operations
-     * @throws ExecutorException if the the previous repository file is not writable
+     * @throws \RuntimeException if the the previous repository file is not writable
      */
     public function execute(array $operations)
     {
-        $this->log("Executing install/update operations...");
+        $this->log('Executing install/update operations...');
 
         $previousRepo = $this->openRepository($this->previousRepoFile, false);
 
         if (!is_writable($this->previousRepoFile)) {
-            throw new ExecutorException("'{$this->previousRepoFile}' must be writable");
+            throw new \RuntimeException(
+                "'{$this->previousRepoFile}' must be writable",
+                456 // this code is there for unit testing only
+            );
         }
 
         $bundles = $this->getBundlesByFqcn();
 
         foreach ($operations as $operation) {
-            $installer = $operation->getPackageType() === 'claroline-core' ?
+            $installer = $operation->getPackage()->getType() === 'claroline-core' ?
                 $this->baseInstaller :
                 $this->pluginInstaller;
 
             if ($operation->getType() === Operation::INSTALL) {
                 $installer->install($bundles[$operation->getBundleFqcn()]);
-                $this->updatePreviousRepo($previousRepo, $operation->getRawPackage(), true);
+                $previousRepo->addPackage(clone $operation->getPackage());
             } elseif ($operation->getType() === Operation::UPDATE) {
                 $installer->update(
                     $bundles[$operation->getBundleFqcn()],
                     $operation->getFromVersion(),
                     $operation->getToVersion()
                 );
-                $this->updatePreviousRepo($previousRepo, $operation->getRawPackage());
+                // there's no cleaner way to update the version of a package...
+                $version = new \ReflectionProperty('Composer\Package\Package', 'version');
+                $version->setAccessible(true);
+                $version->setValue($operation->getPackage(), $operation->getToVersion());
             }
+
+            $previousRepo->write();
         }
 
-        $this->log("Removing previous local repository snapshot...");
+        $this->log('Removing previous local repository snapshot...');
         $filesystem = new Filesystem();
         $filesystem->remove($this->previousRepoFile);
     }
 
+    /**
+     * @param string    $repoFile
+     * @param bool      $filter
+     * @return InstalledFilesystemRepository
+     */
     private function openRepository($repoFile, $filter = true)
     {
-        if (!file_exists($repoFile)) {
-            throw new ExecutorException(
+        $json = new JsonFile($repoFile);
+
+        if (!$json->exists()) {
+            throw new \RuntimeException(
                 "Repository file '{$repoFile}' doesn't exist",
-                ExecutorException::REPO_NOT_FOUND
+                123 // this code is there for unit testing only
             );
         }
 
-        $repo = json_decode(file_get_contents($repoFile));
+        $repo = new InstalledFilesystemRepository($json);
 
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new ExecutorException(
-                "Repository file '{$repoFile}' isn't valid JSON",
-                ExecutorException::REPO_NOT_JSON
-            );
+        if ($filter) {
+            foreach ($repo->getPackages() as $package) {
+                if ($package->getType() !== 'claroline-core'
+                    && $package->getType() !== 'claroline-plugin') {
+                    $repo->removePackage($package);
+                }
+            }
         }
 
-        if (!is_array($repo)) {
-            throw new ExecutorException(
-                "Repository file '{$repoFile}' doesn't contain an array of packages",
-                ExecutorException::REPO_NOT_ARRAY
-            );
-        }
-
-        $packages = !$filter ? $repo : array_filter($repo, function ($package) {
-            return $package->type === 'claroline-core' || $package->type === 'claroline-plugin';
-        });
-
-        $packagesByName = [];
-
-        foreach ($packages as $package) {
-            $packagesByName[$package->name] = $package;
-        }
-
-        return $packagesByName;
+        return $repo;
     }
 
-    private function buildOperation($type, \stdClass $package)
+    private function buildOperation($type, PackageInterface $package)
     {
         $vendorDir = $this->kernel->getRootDir() . '/../vendor';
-        $targetDir = property_exists($package, 'targetDir') ? $package->targetDir : '';
-        $packageDir = empty($targetDir) ? $package->name : "{$targetDir}/{$package->name}";
+        $targetDir = $package->getTargetDir() ?: '';
+        $packageDir = empty($targetDir) ?
+            $package->getPrettyName() :
+            "{$package->getName()}/{$targetDir}";
         $fqcn = $this->detector->detectBundle("{$vendorDir}/{$packageDir}");
 
         return new Operation($type, $package, $fqcn);
@@ -235,25 +254,12 @@ class OperationExecutor
         $byFqcn = array();
 
         foreach ($this->kernel->getBundles() as $bundle) {
-            $byFqcn[get_class($bundle)] = $bundle;
+            $fqcn = $bundle->getNamespace() ?
+                $bundle->getNamespace() . '\\' . $bundle->getName() :
+                $bundle->getName();
+            $byFqcn[$fqcn] = $bundle;
         }
 
         return $byFqcn;
-    }
-
-    private function updatePreviousRepo(array $repo, \stdClass $package, $add = true)
-    {
-        if ($add) {
-            $repo[] = $package;
-        } else {
-            foreach ($repo as $index => $previousPackage) {
-                if ($previousPackage->name === $package->name) {
-                    $repo[$index] = $package;
-                }
-            }
-        }
-
-        $options = JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE;
-        file_put_contents($this->previousRepoFile, json_encode($repo, $options));
     }
 }

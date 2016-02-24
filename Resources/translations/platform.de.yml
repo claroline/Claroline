@@ -176,7 +176,6 @@ cookie_lifetime: 'Durée de vie du cookie'
 copiable: Copiable
 copies: Copies
 copy: Copier
-core_packages: 'Paquets du noyau'
 count_resources: 'Nombre de ressource'
 create: Créer
 create_account: create_account
@@ -613,7 +612,6 @@ no_home_tab: 'Il n''y a aucun onglet'
 no_learning_outcomes: 'Aucun référentiel de compétences'
 no_message: 'Aucun message'
 no_model: 'Aucun modèle'
-no_package_description: 'Aucune description du paquet.'
 no_resources_in_workspace: 'Cet espace ne contient actuellement aucune ressource.'
 no_role_selected_message: 'Aucun role sélectionné.'
 no_search_results: 'Votre recherche n''a retourné aucun résultat.'
@@ -651,15 +649,6 @@ others: Autres
 over_max_length: 'Cette valeur est trop longue'
 owner: Propriétaire
 owner_s: Propriétaire(s)
-package_install: 'Installation d''un paquet'
-package_install_auto_reload: 'Cette page est rechargée automatiquement à la fin de l''installation d''un paquet.'
-package_install_confirm: 'Êtes-vous sûr de vouloir installer %bundle% %version% ?'
-package_update_danger: 'Cette fonctionnalité n''est pas encore totalement stable et peut rendre inutilisable votre plateforme. Il est important de bien faire un backup de vos données avant de l''utiliser.'
-package_update_impossible: 'Mise à jour des paquets impossible sur cette page. Veuillez contacter l''administrateur.'
-package_upgrade_all_warning: 'Attention, ceci mettra à jour tous les paquets de la plateforme. Cette opération ne peut être annulée. Il est conseillé d''effectuer une sauvegarde des fichiers ainsi que de la base de données avant d''effectuer cette opération.'
-packages: Paquets
-packages_permissions_error: 'Veuillez corriger les erreurs suivantes pour commencer les mises à jour.'
-packages_upgrade_info_message: 'Attention, ceci est la page de gestion de mises à jour.'
 parameters: Paramètres
 parameters_save_error: 'Une erreur est survenue pendant la sauvegarde des paramètres.'
 parameters_save_success: 'Paramètres sauvegardés avec succès.'
@@ -700,7 +689,6 @@ platform_role: 'Rôle plateforme'
 platform_widgets: 'Widgets de la plateforme'
 please_validate_your_account: 'Un email vient de vous être envoyé pour activer votre compte.'
 please_wait: 'Veuillez patienter...'
-plugin_packages: 'Paquets des plugins'
 port: Port
 portfolio_url: 'Url d''accès à l''outil de portfolio'
 position: Position

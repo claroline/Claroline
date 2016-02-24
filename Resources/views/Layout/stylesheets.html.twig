@@ -1,27 +1,22 @@
 {% if config.getParameter('theme') is defined and asset_exists('themes/' ~ config.getParameter('theme') ~ '/bootstrap.css') %}
     {# from theme #}
-    {% if app.environment == 'dev' %}
-        {% set prefix = '/' %}
-    {% else %}
-        {% set prefix = '' %}
-    {% endif %}
-    {% set themeCSS = asset('') ~ prefix ~ 'themes/' ~ config.getParameter('theme') ~ '/bootstrap.css' %}
+    {% set themeCSS = getAssetPath() ~ '/themes/' ~ config.getParameter('theme') ~ '/bootstrap.css' %}
 {% else %}
     {# default #}
-    {% set themeCSS = asset('') ~ prefix ~ 'themes/' ~ 'claroline' ~ '/bootstrap.css' %}
+    {% set themeCSS = getAssetPath() ~ '/themes/claroline/bootstrap.css' %}
 {% endif %}
 
 {# Angular UI #}
 {% stylesheets debug=false output='vendor/angular-ui.css'
-    'bundles/frontend/angular-ui-tree/dist/angular-ui-tree.min.css'
-    'bundles/frontend/angular-data-table/release/dataTable.css'
-    'bundles/frontend/angular-data-table/release/material.css'
+    'packages/angular-ui-tree/dist/angular-ui-tree.min.css'
+    'packages/angular-data-table/release/dataTable.css'
+    'packages/angular-data-table/release/material.css'
     'bundles/clarolinecore/css/common/angular-ui-tree.css'
-    'bundles/frontend/angular-ui-select/dist/select.min.css'
+    'packages/angular-ui-select/dist/select.min.css'
     'bundles/clarolinecore/css/common/select.css'
 %}
 {% endstylesheets %}
 
 <link rel="stylesheet" href="{{ themeCSS }}" media="screen" />
-<link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/font-awesome/css/font-awesome.min.css') }}'/>
-<link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css')}}'>
+<link rel='stylesheet' type='text/css' href='{{ asset('packages/font-awesome/css/font-awesome.min.css') }}'/>
+<link rel='stylesheet' type='text/css' href='{{ asset('packages/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css')}}'>

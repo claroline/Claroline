@@ -25,9 +25,8 @@
 
                 {% if not footerMessage is empty %}{{ footerMessage|raw }}{% endif %}
                 <span{% if ((footerLogin or footerWorkspaces) and app.security.token is not null) or not footerMessage is empty %} class="pull-right"{% endif %}>
-                    {{ 'powered_by' | trans({}, 'platform') }} <a href="http://www.claroline.net">Claroline</a> (v{{ coreVersion }})
+                    {{ 'powered_by' | trans({}, 'platform') }} <a href="http://www.claroline.net">Claroline</a> ({{ coreVersion }})
                 </span>
-
             </p>
         </div>
     </div>

@@ -3,7 +3,7 @@
 {% set themePath = 'themes/' ~ config.getParameter('theme') %}
 {% block stylesheets %}
     <link rel='stylesheet' type='text/css' href='{{ asset(themePath ~ '/bootstrap.css') }}'/>
-    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/font-awesome/css/font-awesome.min.css') }}'/>
+    <link rel='stylesheet' type='text/css' href='{{ asset('packages/font-awesome/css/font-awesome.min.css') }}'/>
 {% endblock %}
 
 {% block favicon %}
