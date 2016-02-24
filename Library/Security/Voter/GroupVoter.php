@@ -69,7 +69,7 @@ class GroupVoter implements VoterInterface
         return $this->isOrganizationManager($token, $group) ? VoterInterface::ACCESS_GRANTED: VoterInterface::ACCESS_DENIED;
     }
 
-    private function checkDekete($token, Group $group)
+    private function checkDelete($token, Group $group)
     {
         return $this->isOrganizationManager($token, $group) ? VoterInterface::ACCESS_GRANTED: VoterInterface::ACCESS_DENIED;
     }

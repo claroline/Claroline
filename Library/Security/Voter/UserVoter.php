@@ -87,7 +87,7 @@ class UserVoter implements VoterInterface
         return VoterInterface::ACCESS_GRANTED;
     }
 
-    private function checkDekete($token, $users)
+    private function checkDelete($token, $users)
     {
         foreach ($users as $user) {
             if (!$this->isOrganizationManager($token, $user)) return VoterInterface::ACCESS_DENIED;

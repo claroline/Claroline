@@ -245,6 +245,8 @@ class UserController extends FOSRestController
      */
     public function getUserAction(User $user)
     {
+        $this->throwsExceptionIfNotAdmin();
+
         return $user;
     }
 
@@ -288,7 +290,7 @@ class UserController extends FOSRestController
     }
 
     /**
-     * @View()
+     * @View(serializerGroups={"api"})
      * @ApiDoc(
      *     description="Add a role to a user",
      *     views = {"user"}
@@ -300,11 +302,11 @@ class UserController extends FOSRestController
         $this->throwExceptionIfNotGranted('edit', $user);
         $this->roleManager->associateRole($user, $role, false);
 
-        return array('success');
+        return $user;
     }
 
     /**
-     * @View()
+     * @View(serializerGroups={"api"})
      * @ApiDoc(
      *     description="remove a role from a user",
      *     views = {"user"}
@@ -316,11 +318,10 @@ class UserController extends FOSRestController
         $this->throwExceptionIfNotGranted('edit', $user);
         $this->roleManager->dissociateRole($user, $role);
 
-        return array('success');
-    }
+        return $user;    }
 
     /**
-     * @View()
+     * @View(serializerGroups={"api"})
      * @ApiDoc(
      *     description="Add a user in a group",
      *     views = {"user"}
@@ -332,11 +333,11 @@ class UserController extends FOSRestController
         $this->throwExceptionIfNotGranted('edit', $user);
         $this->groupManager->addUsersToGroup($group, array($user));
 
-        return array('success');
+        return $user;
     }
 
     /**
-     * @View()
+     * @View(serializerGroups={"api"})
      * @ApiDoc(
      *     description="Remove a user from a group",
      *     views = {"user"}
@@ -348,7 +349,7 @@ class UserController extends FOSRestController
         $this->throwExceptionIfNotGranted('edit', $user);
         $this->groupManager->removeUsersFromGroup($group, array($user));
 
-        return array('success');
+        return $user;
     }
 
     /**

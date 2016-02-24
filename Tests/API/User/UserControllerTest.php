@@ -28,6 +28,10 @@ class UserControllerTest extends TransactionalTestCase
     private $adminOrga;
     /** @var User */
     private $userOrga;
+    /** @var Role*/
+    private $teacherRole;
+    /** @var Role*/ 
+    private $baseRole;
 
     protected function setUp()
     {
@@ -35,11 +39,14 @@ class UserControllerTest extends TransactionalTestCase
         $this->persister = $this->client->getContainer()->get('claroline.library.testing.persister');
         $this->john = $this->persister->user('john');
         $roleAdmin = $this->persister->role('ROLE_ADMIN');
+        $this->teacherRole = $this->persister->role('ROLE_TEACHER');
+        $this->baseRole = $this->persister->role('ROLE_BASE');
         $this->admin = $this->persister->user('admin');
         $this->admin->addRole($roleAdmin);
         $organization = $this->persister->organization('organization');
         $this->adminOrga = $this->persister->user('adminOrga');
         $this->userOrga = $this->persister->user('userOrga');
+        $this->userOrga->addRole($this->baseRole);
         $this->adminOrga->addAdministratedOrganization($organization);
         $this->userOrga->addOrganization($organization);
         $this->persister->persist($this->userOrga);
@@ -48,6 +55,12 @@ class UserControllerTest extends TransactionalTestCase
         $this->persister->flush();
     }
 
+    private function initGroup()
+    {
+        $this->group = $this->persister->group('group');
+        //Do more stuff here. Yolo.
+    }
+/*
     //@url: /api/users.{_format}  
     //@route: api_get_users
     public function testGetUsersAction()
@@ -147,9 +160,11 @@ class UserControllerTest extends TransactionalTestCase
     }
 
     //check we can only add we manage
+    //@url: /api/users.{_format} 
+    //@route: api_post_user
     public function testPostUserActionIsProtected()
     {
-        //do something rather smart here.
+        $this->markTestIncomplete('This test has not been implemented yet.');
     }
 
     //@url: /api/users.{_format} 
@@ -171,127 +186,245 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals('toto', $data['username']);
     }
 
-/*
+    //@url: /api/users.{_format} 
+    //@route: api_put_user
     public function testPutUserActionIsProtected()
     {
-        //do something smart
+        $this->logIn($this->adminOrga);
+        $fields = array(
+            'firstName' => 'toto',
+            'lastName' => 'toto',
+            'username' => 'toto',
+            'administrativeCode' => 'toto',
+            'mail' => 'toto@claroline.net'
+        );
+        $form = array('profile_form' => $fields);
+        $this->client->request('PUT', "/api/users/{$this->userOrga->getId()}.json", $form);
+        $data = $this->client->getResponse()->getContent();
+        $data = json_decode($data, true);
+
+        $this->logIn($this->john);
+        $fields = array(
+            'firstName' => 'toto',
+            'lastName' => 'toto',
+            'username' => 'toto',
+            'administrativeCode' => 'toto',
+            'mail' => 'toto@claroline.net'
+        );
+        $form = array('profile_form' => $fields);
+        $this->client->request('PUT', "/api/users/{$this->userOrga->getId()}.json", $form);
+        $data = $this->client->getResponse()->getContent();
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
+    //@route: api_get_user
+    //@url: /api/users/{user}.{_format} 
     public function getUserAction()
     {
-
+        $this->logIn($this->admin);
+        $this->client->request('GET', "api/users/{$this->john->getId()}.json");
+        $data = $this->client->getResponse()->getContent();
+        $data = json_decode($data, true);
+        $this->assertEquals($data['username'], 'john');
     }
 
+    //@route: api_get_user
+    //@url: /api/users/{user}.{_format} 
     public function testGetUserActionIsProtected()
     {
-
+        $this->logIn($this->adminOrga);
+        $this->client->request('GET', "api/users/{$this->john->getId()}.json");
+        $data = $this->client->getResponse()->getContent();
+        $data = json_decode($data, true);
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
+    //@route: api_delete_user
+    //@url: /api/users/{user}.{_format}
     public function testDeleteUserAction()
     {
+        $this->logIn($this->adminOrga);
+        $this->client->request('DELETE', "/api/users/{$this->userOrga->getId()}.json");
 
+        //count the amount of users now...
+        $url = '/api/searches/0/users/10.json';
+        $this->client->request('GET', $url);
+        $data = $this->client->getResponse()->getContent();
+        $data = json_decode($data, true);
+        $this->assertEquals(0, count($data['users']));
     }
 
+    //@route: api_delete_user
+    //@url: /api/users/{user}.{_format}
     public function testDeleteUserActionIsProtected()
     {
+        $this->logIn($this->john);
+        $this->client->request('DELETE', "/api/users/{$this->userOrga->getId()}.json");
+        $data = $this->client->getResponse()->getContent();
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
 
+        //count the amount of users now...
+        $url = '/api/searches/0/users/10.json';
+        $this->client->request('GET', $url);
+        $data = $this->client->getResponse()->getContent();
+        $data = json_decode($data, true);
+        $this->assertEquals(0, count($data['users']));
     }
 
+    //@route: api_delete_users
+    //@url: /api/users.{_format}   
     public function testDeleteUsersAction()
     {
+        $this->logIn($this->adminOrga);
+        $this->client->request('DELETE', "/api/users.json?userIds[]={$this->userOrga->getId()}");
 
+        //count the amount of users now...
+        $url = '/api/searches/0/users/10.json';
+        $this->client->request('GET', $url);
+        $data = $this->client->getResponse()->getContent();
+        $data = json_decode($data, true);
+        $this->assertEquals(0, count($data['users']));
     }
 
+    //@route: api_delete_users
+    //@url: /api/users.{_format}   
     public function testDeleteUsersActionIsProtected()
     {
-
+        $this->logIn($this->john);
+        $this->client->request('DELETE', "/api/users.json?userIds[]={$this->userOrga->getId()}");
+        $data = $this->client->getResponse()->getContent();
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
+    //@route: api_add_user_role
+    //@url: /api/users/{user}/roles/{role}/add.{_format}
     public function testAddUserRoleAction()
     {
-
+        $preCount = count($this->userOrga->getRoles());
+        $this->logIn($this->adminOrga);
+        $this->client->request('PATCH', "/api/users/{$this->userOrga->getId()}/roles/{$this->teacherRole->getId()}/add.json");
+        $data = $this->client->getResponse()->getContent();
+        $data = json_decode($data, true);
+        $this->assertEquals($preCount + 1, count($data['roles']));
     }
 
-    //only user managers can add an remove roles... you can't add a role to yourself
+    //@route: api_add_user_role
+    //@url: /api/users/{user}/roles/{role}/add.{_format}
     public function testAddUserRoleActionIsProtected()
     {
-
+        $this->logIn($this->userOrga);
+        $this->client->request('PATCH', "/api/users/{$this->userOrga->getId()}/roles/{$this->teacherRole->getId()}/add.json");
+        $data = $this->client->getResponse()->getContent();
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
+    
+    //@route: api_remove_user_role
+    //@url: /api/users/{user}/roles/{role}/remove.{_format} 
+    //MAYBE CHANGE THIS TO DELETE BECAUSE THIS SHOULD NOT BE A GET
     public function testRemoveUserRoleAction()
     {
-
+        $preCount = count($this->userOrga->getRoles());
+        $this->logIn($this->adminOrga);
+        $this->client->request('GET', "/api/users/{$this->userOrga->getId()}/roles/{$this->baseRole->getId()}/remove.json");
+        $data = $this->client->getResponse()->getContent();
+        $data = json_decode($data, true);
+        $this->assertEquals($preCount - 1, count($data['roles']));
     }
 
-    //only user managers can add an remove roles... you can't add a role to yourself
+    //@route: api_remove_user_role
+    //@url: /api/users/{user}/roles/{role}/remove.{_format} 
     public function testRemoveUserRoleActionIsProtected()
     {
-
+        $this->logIn($this->userOrga);
+        $this->client->request('GET', "/api/users/{$this->userOrga->getId()}/roles/{$this->baseRole->getId()}/remove.json");
+        $data = $this->client->getResponse()->getContent();
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
+    //@route: api_add_user_group
+    //@url: /api/users/{user}/groups/{group}/add.{_format} 
     public function testAddUserGroupAction()
     {
-
+        $this->markTestIncomplete('This test has not been implemented yet.');
     }
 
+
+    //@route: api_add_user_group
+    //@url: /api/users/{user}/groups/{group}/add.{_format} 
     public function testAddUserGroupActionIsProtected()
     {
-
+        $this->markTestIncomplete('This test has not been implemented yet.');
     }    
 
+
+    //@route: api_remove_user_group
+    //@url: /api/users/{user}/groups/{group}/remove.{_format}
     public function testRemoveUserGroupAction()
     {
-
+        $this->markTestIncomplete('This test has not been implemented yet.');
     }
 
+    //@route: api_remove_user_group
+    //@url: /api/users/{user}/groups/{group}/remove.{_format}
     public function testRemoveUserGroupActionIsProtected()
     {
-
+        $this->markTestIncomplete('This test has not been implemented yet.');
     }
 
+    
+    //@route: api_get_user_admin_actions
+    //@url: /api/user/admin/actions.{_format} 
     public function testGetUserAdminActionsAction()
     {
-
+        $this->logIn($this->admin);
+        $this->client->request('GET', '/api/user/admin/actions.json');
+        $data = $this->client->getResponse()->getContent();
+        $data = json_decode($data, true);
+        //this will vary depending on plugins...
+        $this->assertGreaterThan(1, count($data));
     }
 
+    */
+    //@route: api_users_password_initialize
+    //@url: /api/passwords/initializes/users.{_format}
     public function testUsersPasswordInitializeAction()
     {
 
     }
 
+    //@route: api_users_password_initialize
+    //@url: /api/passwords/initializes/users.{_format}
     public function testUsersPasswordInitializeActionIsProtected()
     {
 
     }
-        
+/*
+    //@route: api_add_users_to_group
+    //@url: /api/users/{group}/to/group/add.{_format} 
     public function testAddUsersToGroupAction()
     {
-
+        $this->markTestIncomplete('This test has not been implemented yet.');
     }
 
+    //@route: api_add_users_to_group
+    //@url: /api/users/{group}/to/group/add.{_format} 
     public function testAddUsersToGroupActionIsProtected()
     {
-
+        $this->markTestIncomplete('This test has not been implemented yet.');
     }
 
+    //@route: api_remove_users_from_group
+    //@url: /api/users/{group}/from/group/remove.{_format}
     public function testRemoveUsersFromGroupAction()
     {
-
+        $this->markTestIncomplete('This test has not been implemented yet.');
     }
 
+    //@route: api_remove_users_from_group
+    //@url: /api/users/{group}/from/group/remove.{_format}
     public function testRemoveUsersFromGroupActionIsProtected()
     {
-
+        $this->markTestIncomplete('This test has not been implemented yet.');
     }*/
-
-    private function request($method, $uri, User $user = null, array $parameters = [])
-    {
-        $server = $user ?
-            [
-                'PHP_AUTH_USER' => $user->getUsername(),
-                'PHP_AUTH_PW' => $this->john->getPlainPassword()
-            ] :
-            [];
-        return $this->client->request($method, $uri, $parameters, [], $server);
-    }
 }
