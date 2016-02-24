@@ -15,7 +15,7 @@
 </div>
 
 <div class="clickable-node node-element{% if not node.published %} unpublished{% endif %}" id="node-element-{{ node.id }}"
-    style="background-image: url('{{ webRoot }}{{ node.large_icon }}');"
+    style="background-image: url('{{ webRoot }}/{{ node.large_icon }}');"
     data-id="{{ node.id }}"
     data-type="{{ node.type }}"
     data-mime-type="{{ node.mime_type }}"

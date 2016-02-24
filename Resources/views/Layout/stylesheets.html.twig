@@ -1,14 +1,9 @@
 {% if config.getParameter('theme') is defined and asset_exists('themes/' ~ config.getParameter('theme') ~ '/bootstrap.css') %}
     {# from theme #}
-    {% if app.environment == 'dev' %}
-        {% set prefix = '/' %}
-    {% else %}
-        {% set prefix = '' %}
-    {% endif %}
-    {% set themeCSS = asset('') ~ prefix ~ 'themes/' ~ config.getParameter('theme') ~ '/bootstrap.css' %}
+    {% set themeCSS = getAssetPath() ~ '/themes/' ~ config.getParameter('theme') ~ '/bootstrap.css' %}
 {% else %}
     {# default #}
-    {% set themeCSS = asset('') ~ prefix ~ 'themes/' ~ 'claroline' ~ '/bootstrap.css' %}
+    {% set themeCSS = getAssetPath() ~ '/themes/claroline/bootstrap.css' %}
 {% endif %}
 
 {# Angular UI #}

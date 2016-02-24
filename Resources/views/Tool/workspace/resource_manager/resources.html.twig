@@ -30,7 +30,7 @@
                 "parentElement": $('div.section-content .panel'),
                 "breadcrumbElement": $('ul.breadcrumb'),
                 "isWorkspace": true,
-                "webPath": "{{ asset('') }}",
+                "webPath": "{{ getAssetPath() }}",
                 "language": "{{ app.request.locale }}",
                 "zoom": "{{ resourceZoom }}",
                 "pickerDirectoryId": "{{ app.session.get('pickerDirectoryId', '0') }}",
