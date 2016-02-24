@@ -72,6 +72,7 @@ export default class CursusQueueManagementCtrl {
                     const status = scope.$row['status']
                     const userValidation = (status & 2) === 2
                     const validatorValidation = (status & 4) === 4
+                    const organizationValidation = (status & 8) === 8
                     let cell = ''
 
                     if (status === 1) {
@@ -101,6 +102,22 @@ export default class CursusQueueManagementCtrl {
                                     <i class="fa fa-clock-o"></i>
                                     &nbsp;
                                     ${Translator.trans('user', {}, 'platform')}
+                                </span>
+                                <br>
+                            `
+                        }
+
+                        if (organizationValidation) {
+                            cell += `
+                                <span class="label label-danger"
+                                      data-toggle="tooltip"
+                                      data-placement="top"
+                                      data-container="body"
+                                      data-title="${Translator.trans('waiting_organization_validation', {}, 'cursus')}"
+                                >
+                                    <i class="fa fa-clock-o"></i>
+                                    &nbsp;
+                                    ${Translator.trans('organization', {}, 'platform')}
                                 </span>
                                 <br>
                             `
@@ -230,6 +247,7 @@ export default class CursusQueueManagementCtrl {
                     const status = scope.$row['status']
                     const userValidation = (status & 2) === 2
                     const validatorValidation = (status & 4) === 4
+                    const organizationValidation = (status & 8) === 8
                     let cell = '<span>'
 
                     if (userValidation) {
@@ -243,6 +261,22 @@ export default class CursusQueueManagementCtrl {
                                 <i class="fa fa-clock-o"></i>
                                 &nbsp;
                                 ${Translator.trans('user', {}, 'platform')}
+                            </span>
+                            <br>
+                        `
+                    }
+
+                    if (organizationValidation) {
+                        cell += `
+                            <span class="label label-danger"
+                                  data-toggle="tooltip"
+                                  data-placement="top"
+                                  data-container="body"
+                                  data-title="${Translator.trans('waiting_organization_validation', {}, 'cursus')}"
+                            >
+                                <i class="fa fa-clock-o"></i>
+                                &nbsp;
+                                ${Translator.trans('organization', {}, 'platform')}
                             </span>
                             <br>
                         `

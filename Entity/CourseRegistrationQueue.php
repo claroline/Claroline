@@ -31,6 +31,7 @@ class CourseRegistrationQueue
     const WAITING = 1;
     const WAITING_USER = 2;
     const WAITING_VALIDATOR = 4;
+    const WAITING_ORGANIZATION = 8;
     
     /**
      * @ORM\Id
@@ -81,6 +82,17 @@ class CourseRegistrationQueue
      * @ORM\JoinColumn(name="validator_id", nullable=true, onDelete="SET NULL")
      */
     protected $validator;
+
+    /**
+     * @ORM\Column(name="organization_validation_date", nullable=true, type="datetime")
+     */
+    protected $organizationValidationDate;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     * @ORM\JoinColumn(name="organization_admin_id", nullable=true, onDelete="SET NULL")
+     */
+    protected $organizationAdmin;
 
     public function getId()
     {
@@ -170,5 +182,25 @@ class CourseRegistrationQueue
     public function setValidator(User $validator = null)
     {
         $this->validator = $validator;
+    }
+
+    function getOrganizationValidationDate()
+    {
+        return $this->organizationValidationDate;
+    }
+
+    function setOrganizationValidationDate($organizationValidationDate)
+    {
+        $this->organizationValidationDate = $organizationValidationDate;
+    }
+
+    function getOrganizationAdmin()
+    {
+        return $this->organizationAdmin;
+    }
+
+    function setOrganizationAdmin(User $organizationAdmin = null)
+    {
+        $this->organizationAdmin = $organizationAdmin;
     }
 }

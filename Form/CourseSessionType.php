@@ -130,6 +130,14 @@ class CourseSessionType extends AbstractType
             )
         );
         $builder->add(
+            'organizationValidation',
+            'checkbox',
+            array(
+                'required' => true,
+                'label' => 'organization_validation'
+            )
+        );
+        $builder->add(
             'registrationValidation',
             'checkbox',
             array('required' => true)

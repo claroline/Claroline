@@ -1428,6 +1428,10 @@ class CursusManager
                     $status += CourseRegistrationQueue::WAITING_USER;
                 }
 
+//                if ($session->getOrganizationValidation()) {
+//                    $status += CourseRegistrationQueue::WAITING_ORGANIZATION;
+//                }
+
                 if (count($validators) > 0) {
                     $status += CourseRegistrationQueue::WAITING_VALIDATOR;
                 } else if ($session->getRegistrationValidation()) {
@@ -1496,6 +1500,10 @@ class CursusManager
             if ($course->getUserValidation()) {
                 $status += CourseRegistrationQueue::WAITING_USER;
             }
+
+//            if ($course->getOrganizationValidation()) {
+//                $status += CourseRegistrationQueue::WAITING_ORGANIZATION;
+//            }
 
             if (count($validators) > 0) {
                 $status += CourseRegistrationQueue::WAITING_VALIDATOR;

@@ -443,6 +443,7 @@ class CourseController extends Controller
         $session->setRegistrationValidation($course->getRegistrationValidation());
         $session->setMaxUsers($course->getMaxUsers());
         $session->setUserValidation($course->getUserValidation());
+        $session->setOrganizationValidation($course->getOrganizationValidation());
         $validators = $course->getValidators();
 
         foreach ($validators as $validator) {
