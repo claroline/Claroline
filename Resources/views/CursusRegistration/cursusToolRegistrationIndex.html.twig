@@ -23,7 +23,7 @@
 
 {% block section_content %}
     <div id="cursus-registration-panel" ng-app="CursusRegistrationModule">
-        <div class="panel panel-default" ng-view>
+        <div class="panel panel-default" ui-view>
         </div>
     </div>
 {% endblock %}
@@ -41,44 +41,5 @@
     {{ parent() }}
     <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'tools' }) }}"></script>
     <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'cursus' }) }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/angular/angular.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/angular-route/angular-route.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/angular-ui-tree/dist/angular-ui-tree.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/angular-data-table/release/dataTable.helpers.js') }}"></script>
-{#    <script type="text/javascript" src="{{ asset('vendor/angular-ui.js') }}"></script>#}
-{#    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/angular/services/api.services.js') }}"></script>#}
-    <script type="text/javascript" src="{{ asset('bundles/frontend/angular-bootstrap/ui-bootstrap-tpls.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/angular-ui-translation/angular-translation.js') }}"></script>
-
-    {# Set some vars needed by Angular parts #}
-    <script type="text/javascript">
-        {# Make Twig variables accessibles by AngularJS #}
-        var AngularApp = {};
-        AngularApp.webDir = "{{ asset('') }}";
-    </script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/angular/search/generic/search.app.js') }}"></script>
-    
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecursus/js/Cursus/module.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecursus/js/Cursus/Service/CursusService.js') }}"></script>
-    
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecursus/js/Registration/module.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecursus/js/Registration/Cursus/Controller/CursusRegistrationCtrl.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecursus/js/Registration/Cursus/Controller/CursusRegistrationSearchCtrl.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecursus/js/Registration/Cursus/Controller/CursusRegistrationManagementCtrl.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecursus/js/Registration/Cursus/Controller/CursusGroupUnregistrationModalCtrl.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecursus/js/Registration/Cursus/Controller/CursusGroupsUnregistrationModalCtrl.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecursus/js/Registration/Cursus/Controller/CursusGroupsListRegistrationModalCtrl.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecursus/js/Registration/Cursus/Controller/CursusUserUnregistrationModalCtrl.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecursus/js/Registration/Cursus/Controller/CursusUsersUnregistrationModalCtrl.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecursus/js/Registration/Cursus/Controller/CursusRegistrationSessionsModalCtrl.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecursus/js/Registration/Cursus/Controller/CursusDescriptionModalCtrl.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecursus/js/Registration/Cursus/Controller/SimpleModalCtrl.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecursus/js/Registration/Cursus/Directive/CursusRegistrationListDirective.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecursus/js/Registration/Cursus/Directive/CursusRegistrationInformationsDirective.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecursus/js/Registration/Cursus/Directive/CursusRegistrationGroupsDirective.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecursus/js/Registration/Cursus/Directive/CursusRegistrationUsersDirective.js') }}"></script>
-    
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecursus/js/Registration/Queue/Controller/CursusQueueManagementCtrl.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecursus/js/Registration/Queue/Controller/SessionsChoicesTransferModalCtrl.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/clarolinecursus/js/Registration/Queue/Directive/RegistrationQueueCoursesDirective.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('dist/claroline-cursus-registration.js') }}"></script>
 {% endblock %}

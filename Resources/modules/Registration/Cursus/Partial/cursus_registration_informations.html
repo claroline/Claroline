@@ -1,0 +1,61 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <span class="pointer-hand" data-toggle="collapse" href="#collapse-informations">
+            {{ 'informations'|trans:{}:'platform' }}
+        </span>
+    </div>
+    <div id="collapse-informations" class="panel-collapse collapse in">
+        <div class="panel-body" ng-if="crmc.hierarchy.root">
+            <script type="text/ng-template" id="cursus_nodes_renderer.html">
+                <div ng-if="!cursus.course">
+                    <div class="cursus-element">
+                        <a ui-sref="registration_cursus_management({cursusId: cursus.id})"
+                           ng-class="(crmc.currentCursusId == cursus.id) ? 'claroline-tag-highlight' : ''"
+                           style="color: #333339"
+                        >
+                            {{ cursus.title }}
+                        </a>
+                        <span ng-if="cursus.blocking">
+                            &nbsp;
+                            <i class="fa fa-lock"></i>
+                        </span>
+                        <span ng-if="crmc.hierarchy[cursus.id]">
+                            &nbsp;
+                            <i class="fa fa-caret-down pointer-hand"
+                               data-toggle="collapse"
+                               href="#collapse-{{ cursus.id }}"
+                            ></i>
+                        </span>
+                        <span ng-if="(crmc.currentCursusId == cursus.id) || (crmc.lockedHierarchy[cursus.id] && (crmc.lockedHierarchy[cursus.id] == 'up' || crmc.lockedHierarchy[cursus.id] == 'down'))">
+                            &nbsp;
+                            <i class="fa fa-check-circle" style="color: #5CB85C"></i>
+                        </span>
+                        <span ng-if="(crmc.currentCursusId != cursus.id) && (!crmc.lockedHierarchy[cursus.id] || (crmc.lockedHierarchy[cursus.id] != 'up' && crmc.lockedHierarchy[cursus.id] != 'down'))">
+                            &nbsp;
+                            <i class="fa fa-times-circle" style="color: #D9534F"></i>
+                        </span>
+                    </div>
+                </div>
+                <span ng-if="cursus.course">
+                    <span class="label label-primary">
+                        {{ cursus.title }}
+                    </span>
+                    <span ng-if="(crmc.currentCursusId == cursus.id) || (crmc.lockedHierarchy[cursus.id] && (crmc.lockedHierarchy[cursus.id] == 'up' || crmc.lockedHierarchy[cursus.id] == 'down'))">
+                        &nbsp;
+                        <i class="fa fa-check-circle" style="color: #5CB85C"></i>
+                    </span>
+                    <span ng-if="(crmc.currentCursusId != cursus.id) && (!crmc.lockedHierarchy[cursus.id] || (crmc.lockedHierarchy[cursus.id] != 'up' && crmc.lockedHierarchy[cursus.id] != 'down'))">
+                        &nbsp;
+                        <i class="fa fa-times-circle" style="color: #D9534F"></i>
+                    </span>
+                </span>
+                <ul ng-if="crmc.hierarchy[cursus.id]" id="collapse-{{ cursus.id }}" class="collapse in">
+                    <li ng-repeat="cursus in crmc.hierarchy[cursus.id]" ng-include="'cursus_nodes_renderer.html'">
+                    </li>
+                </ul>
+            </script>
+            <div ng-repeat="cursus in crmc.hierarchy.root" ng-include="'cursus_nodes_renderer.html'">
+            </div>
+        </div>
+    </div>
+</div>
