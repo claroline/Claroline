@@ -39,10 +39,19 @@ use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusGroup;
 use Claroline\CursusBundle\Entity\CursusUser;
 use Claroline\CursusBundle\Entity\CursusDisplayedWord;
+use Claroline\CursusBundle\Event\Log\LogCourseQueueCreateEvent;
+use Claroline\CursusBundle\Event\Log\LogCourseQueueDeclineEvent;
+use Claroline\CursusBundle\Event\Log\LogCourseQueueTransferEvent;
+use Claroline\CursusBundle\Event\Log\LogCourseQueueUserValidateEvent;
+use Claroline\CursusBundle\Event\Log\LogCourseQueueValidatorValidateEvent;
 use Claroline\CursusBundle\Event\Log\LogCourseSessionUserRegistrationEvent;
 use Claroline\CursusBundle\Event\Log\LogCourseSessionUserUnregistrationEvent;
 use Claroline\CursusBundle\Event\Log\LogCursusUserRegistrationEvent;
 use Claroline\CursusBundle\Event\Log\LogCursusUserUnregistrationEvent;
+use Claroline\CursusBundle\Event\Log\LogSessionQueueCreateEvent;
+use Claroline\CursusBundle\Event\Log\LogSessionQueueDeclineEvent;
+use Claroline\CursusBundle\Event\Log\LogSessionQueueUserValidateEvent;
+use Claroline\CursusBundle\Event\Log\LogSessionQueueValidatorValidateEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializationContext;
@@ -1419,6 +1428,10 @@ class CursusManager
                     $status += CourseRegistrationQueue::WAITING_USER;
                 }
 
+//                if ($session->getOrganizationValidation()) {
+//                    $status += CourseRegistrationQueue::WAITING_ORGANIZATION;
+//                }
+
                 if (count($validators) > 0) {
                     $status += CourseRegistrationQueue::WAITING_VALIDATOR;
                 } else if ($session->getRegistrationValidation()) {
@@ -1427,6 +1440,9 @@ class CursusManager
                 $queue->setStatus($status);
                 $this->om->persist($queue);
                 $this->om->flush();
+
+                $event = new LogSessionQueueCreateEvent($queue);
+                $this->eventDispatcher->dispatch('log', $event);
 
                 if (($status & CourseRegistrationQueue::WAITING_USER) === CourseRegistrationQueue::WAITING_USER) {
                     $this->sendSessionQueueRequestConfirmationMail($queue);
@@ -1455,6 +1471,16 @@ class CursusManager
         return $queueDatas;
     }
 
+
+    public function declineSessionQueue(CourseSessionRegistrationQueue $queue)
+    {
+        $queueDatas = $this->deleteSessionQueue($queue);
+        $event = new LogSessionQueueDeclineEvent($queue);
+        $this->eventDispatcher->dispatch('log', $event);
+
+        return $queueDatas;
+    }
+
     public function addUserToCourseQueue(User $user, Course $course)
     {
         $queue = $this->getOneCourseQueueByCourseAndUser(
@@ -1475,6 +1501,10 @@ class CursusManager
                 $status += CourseRegistrationQueue::WAITING_USER;
             }
 
+//            if ($course->getOrganizationValidation()) {
+//                $status += CourseRegistrationQueue::WAITING_ORGANIZATION;
+//            }
+
             if (count($validators) > 0) {
                 $status += CourseRegistrationQueue::WAITING_VALIDATOR;
             } else if ($course->getRegistrationValidation()) {
@@ -1483,6 +1513,9 @@ class CursusManager
             $queue->setStatus($status);
             $this->om->persist($queue);
             $this->om->flush();
+
+            $event = new LogCourseQueueCreateEvent($queue);
+            $this->eventDispatcher->dispatch('log', $event);
 
             if (($status & CourseRegistrationQueue::WAITING_USER) === CourseRegistrationQueue::WAITING_USER) {
                 $this->sendCourseQueueRequestConfirmationMail($queue);
@@ -1532,7 +1565,7 @@ class CursusManager
         );
 
         if (!is_null($queue)) {
-            $this->deleteCourseQueue($queue);
+            $this->declineCourseQueue($queue);
         }
     }
 
@@ -1554,6 +1587,15 @@ class CursusManager
         return $queueDatas;
     }
 
+    public function declineCourseQueue(CourseRegistrationQueue $queue)
+    {
+        $queueDatas = $this->deleteCourseQueue($queue);
+        $event = new LogCourseQueueDeclineEvent($queue);
+        $this->eventDispatcher->dispatch('log', $event);
+
+        return $queueDatas;
+    }
+
     public function transferQueuedUserToSession(
         CourseRegistrationQueue $queue,
         CourseSession $session
@@ -1564,6 +1606,8 @@ class CursusManager
         $results = $this->registerUsersToSession($session, array($user), 0);
 
         if ($results['status'] === 'success') {
+            $event = new LogCourseQueueTransferEvent($queue, $session);
+            $this->eventDispatcher->dispatch('log', $event);
             $this->om->remove($queue);
         }
         $this->om->endFlushSuite();
@@ -2711,6 +2755,9 @@ class CursusManager
             $queue->setStatus($status);
             $queue->setUserValidationDate(new \DateTime());
             $this->persistCourseRegistrationQueue($queue);
+
+            $event = new LogCourseQueueUserValidateEvent($queue);
+            $this->eventDispatcher->dispatch('log', $event);
         }
     }
 
@@ -2726,6 +2773,9 @@ class CursusManager
             $queue->setStatus($status);
             $queue->setUserValidationDate(new \DateTime());
             $this->persistCourseSessionRegistrationQueue($queue);
+
+            $event = new LogSessionQueueUserValidateEvent($queue);
+            $this->eventDispatcher->dispatch('log', $event);
         }
 
         if ($queue->getStatus() === 0) {
@@ -2773,6 +2823,9 @@ class CursusManager
             $queue->setValidator($authenticatedUser);
             $this->persistCourseRegistrationQueue($queue);
 
+            $event = new LogCourseQueueValidatorValidateEvent($queue);
+            $this->eventDispatcher->dispatch('log', $event);
+
             $queueDatas['type'] = 'validated';
             $queueDatas['status'] = $queue->getStatus();
             $queueDatas['validatorValidationDate'] = $queue->getValidatorValidationDate();
@@ -2799,6 +2852,7 @@ class CursusManager
         $session = $queue->getSession();
         $course = $session->getCourse();
         $queueDatas = array(
+            'status' => 'success',
             'type' => 'none',
             'id' => $queue->getId(),
             'courseId' => $course->getId(),
@@ -2811,7 +2865,9 @@ class CursusManager
             'status' => $queue->getStatus()
         );
 
-        if ($status & CourseRegistrationQueue::WAITING_VALIDATOR) {
+        if ($status === CourseRegistrationQueue::WAITING) {
+            $queue->setStatus(0);
+        } else if ($status & CourseRegistrationQueue::WAITING_VALIDATOR) {
             $authenticatedUser = $this->tokenStorage->getToken()->getUser();
 
             if ($isAdmin) {
@@ -2823,6 +2879,9 @@ class CursusManager
             $queue->setValidatorValidationDate(new \DateTime());
             $queue->setValidator($authenticatedUser);
             $this->persistCourseSessionRegistrationQueue($queue);
+
+            $event = new LogSessionQueueValidatorValidateEvent($queue);
+            $this->eventDispatcher->dispatch('log', $event);
 
             $queueDatas['type'] = 'validated';
             $queueDatas['status'] = $queue->getStatus();
@@ -2842,6 +2901,8 @@ class CursusManager
             } else {
                 $queue->setStatus(CourseRegistrationQueue::WAITING);
                 $this->persistCourseSessionRegistrationQueue($queue);
+                $queueDatas['status'] = 'failed';
+                $queueDatas['datas'] = $results['datas'];
             }
         }
 

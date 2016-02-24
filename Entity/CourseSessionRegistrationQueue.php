@@ -79,6 +79,17 @@ class CourseSessionRegistrationQueue
      */
     protected $validator;
 
+    /**
+     * @ORM\Column(name="organization_validation_date", nullable=true, type="datetime")
+     */
+    protected $organizationValidationDate;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     * @ORM\JoinColumn(name="organization_admin_id", nullable=true, onDelete="SET NULL")
+     */
+    protected $organizationAdmin;
+
     public function getId()
     {
         return $this->id;
@@ -167,5 +178,25 @@ class CourseSessionRegistrationQueue
     public function setValidator(User $validator = null)
     {
         $this->validator = $validator;
+    }
+
+    function getOrganizationValidationDate()
+    {
+        return $this->organizationValidationDate;
+    }
+
+    function setOrganizationValidationDate($organizationValidationDate)
+    {
+        $this->organizationValidationDate = $organizationValidationDate;
+    }
+
+    function getOrganizationAdmin()
+    {
+        return $this->organizationAdmin;
+    }
+
+    function setOrganizationAdmin(User $organizationAdmin = null)
+    {
+        $this->organizationAdmin = $organizationAdmin;
     }
 }

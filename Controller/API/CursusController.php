@@ -361,7 +361,7 @@ class CursusController extends FOSRestController
 
         if (!$canValidate) {
 
-            return new JsonResponse('Forbidden', 403);
+            return new JsonResponse('not_authorized', 403);
         }
         $datas = $this->cursusManager->validateCourseQueue($queue);
 
@@ -381,7 +381,7 @@ class CursusController extends FOSRestController
 
         if (!$canValidate) {
 
-            return new JsonResponse('Forbidden', 403);
+            return new JsonResponse('not_authorized', 403);
         }
         $datas = $this->cursusManager->validateSessionQueue($queue);
 
@@ -401,9 +401,9 @@ class CursusController extends FOSRestController
 
         if (!$canValidate) {
 
-            return new JsonResponse('Forbidden', 403);
+            return new JsonResponse('not_authorized', 403);
         }
-        $queueDatas = $this->cursusManager->deleteCourseQueue($queue);
+        $queueDatas = $this->cursusManager->declineCourseQueue($queue);
 
         return new JsonResponse($queueDatas, 200);
     }
@@ -421,9 +421,9 @@ class CursusController extends FOSRestController
 
         if (!$canValidate) {
 
-            return new JsonResponse('Forbidden', 403);
+            return new JsonResponse('not_authorized', 403);
         }
-        $queueDatas = $this->cursusManager->deleteSessionQueue($queue);
+        $queueDatas = $this->cursusManager->declineSessionQueue($queue);
 
         return new JsonResponse($queueDatas, 200);
     }

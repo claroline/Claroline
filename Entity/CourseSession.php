@@ -168,6 +168,13 @@ class CourseSession
     protected $userValidation = false;
 
     /**
+     * @ORM\Column(name="organization_validation", type="boolean")
+     * @Groups({"api"})
+     * @SerializedName("organizationValidation")
+     */
+    protected $organizationValidation = false;
+
+    /**
      * @ORM\Column(name="max_users", nullable=true, type="integer")
      * @Groups({"api"})
      * @SerializedName("maxUsers")
@@ -430,6 +437,16 @@ class CourseSession
     public function setUserValidation($userValidation)
     {
         $this->userValidation = $userValidation;
+    }
+
+    function getOrganizationValidation()
+    {
+        return $this->organizationValidation;
+    }
+
+    function setOrganizationValidation($organizationValidation)
+    {
+        $this->organizationValidation = $organizationValidation;
     }
 
     public function getMaxUsers()

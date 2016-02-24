@@ -443,6 +443,7 @@ class CourseController extends Controller
         $session->setRegistrationValidation($course->getRegistrationValidation());
         $session->setMaxUsers($course->getMaxUsers());
         $session->setUserValidation($course->getUserValidation());
+        $session->setOrganizationValidation($course->getOrganizationValidation());
         $validators = $course->getValidators();
 
         foreach ($validators as $validator) {
@@ -929,7 +930,7 @@ class CourseController extends Controller
         CourseSessionRegistrationQueue $queue
     )
     {
-        $this->cursusManager->deleteSessionQueue($queue);
+        $this->cursusManager->declineSessionQueue($queue);
 
         return new JsonResponse('success', 200);
     }
