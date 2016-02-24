@@ -64,10 +64,10 @@
 
 {# TODO: remove this when custom js builds are available #}
 {% javascripts debug=false filter='jsmin' output='vendor/jquery/ui/jqueryui.js'
-    'bundles/frontend/jquery-ui/ui/core.js'
-    'bundles/frontend/jquery-ui/ui/widget.js'
-    'bundles/frontend/jquery-ui/ui/mouse.js'
-    'bundles/frontend/jquery-ui/ui/sortable.js'
+    'packages/jquery-ui/ui/core.js'
+    'packages/jquery-ui/ui/widget.js'
+    'packages/jquery-ui/ui/mouse.js'
+    'packages/jquery-ui/ui/sortable.js'
 %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
@@ -83,13 +83,13 @@
 
 <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
 <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/bootstrap-datepicker/dist/js/bootstrap-datepicker.js') }}"></script>
+<script type="text/javascript" src="{{ asset('packages/bootstrap-datepicker/dist/js/bootstrap-datepicker.js') }}"></script>
 {% if 'en' != app.request.locale %}
-    <script type="text/javascript" src="{{ asset('bundles/frontend/bootstrap-datepicker/js/locales/bootstrap-datepicker.' ~ app.request.locale ~ '.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('packages/bootstrap-datepicker/js/locales/bootstrap-datepicker.' ~ app.request.locale ~ '.js') }}"></script>
 {% endif %}
 
-<script type="text/javascript" src="{{ asset('bundles/frontend/underscore/underscore.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/backbone/backbone.js') }}"></script>
+<script type="text/javascript" src="{{ asset('packages/underscore/underscore.js') }}"></script>
+<script type="text/javascript" src="{{ asset('packages/backbone/backbone.js') }}"></script>
 
 {% javascripts debug=false filter='jsmin' output='vendor/claroline/js/libraries.js'
     'bundles/clarolinecore/js/common.js'
@@ -126,19 +126,19 @@
 
 {# Angular JS #}
 {% javascripts debug=false filter='jsmin' output='vendor/angular.js'
-    'bundles/frontend/angular/angular.min.js'
-    'bundles/frontend/angular-route/angular-route.min.js'
+    'packages/angular/angular.min.js'
+    'packages/angular-route/angular-route.min.js'
 %}
 {% endjavascripts %}
 
 {# Angular UI #}
 {% javascripts debug=false filter='jsmin' output='vendor/angular-ui.js'
-    'bundles/frontend/angular-ui-tree/dist/angular-ui-tree.js'
-    'bundles/frontend/angular-ui-select/dist/select.min.js'
-    'bundles/frontend/angular-data-table/release/dataTable.helpers.min.js'
-    'bundles/frontend/angular-breadcrumb/dist/angular-breadcrumb.min.js'
-    'bundles/frontend/angular-ui-router/release/angular-ui-router.min.js'
-    'bundles/frontend/angular-sanitize/angular-sanitize.min.js'
+    'packages/angular-ui-tree/dist/angular-ui-tree.js'
+    'packages/angular-ui-select/dist/select.min.js'
+    'packages/angular-data-table/release/dataTable.helpers.min.js'
+    'packages/angular-breadcrumb/dist/angular-breadcrumb.min.js'
+    'packages/angular-ui-router/release/angular-ui-router.min.js'
+    'packages/angular-sanitize/angular-sanitize.min.js'
 %}
 {% endjavascripts %}
 

@@ -2,9 +2,9 @@
 
 {% block select2_widget %}
     {% spaceless %}
-        <link rel="stylesheet" type="text/css" href="{{ asset('bundles/frontend/select2/select2.css') }}"/>
-        <link rel="stylesheet" type="text/css" href="{{ asset('bundles/frontend/select2/select2-bootstrap.css') }}"/>
-        <script src="{{ asset('bundles/frontend/select2/select2.min.js') }}"></script>
+        <link rel="stylesheet" type="text/css" href="{{ asset('packages/select2/select2.css') }}"/>
+        <link rel="stylesheet" type="text/css" href="{{ asset('packages/select2/select2-bootstrap.css') }}"/>
+        <script src="{{ asset('packages/select2/select2.min.js') }}"></script>
         <div class="select2{% if errors|length > 0 %} has-error{% endif %}">
             {{ block('choice_widget') }}
         </div>

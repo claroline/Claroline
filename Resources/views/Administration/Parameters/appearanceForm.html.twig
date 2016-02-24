@@ -43,7 +43,7 @@
                     {% for logo in logos %}
                         <div style="height:80px" class="alert {% if config.getParameter('logo') == logo %}alert-info{% else %}alert-warning{% endif %} content-4 pointer-hand logo" data-logo="{{ logo }}">
                             <button type="button" class="close" aria-hidden="true">&times;</button>
-                            <img src="{{ asset("") ~ "uploads/logos/" ~ logo }}" height="35" alt="Logo {{loop.index}}">
+                            <img src="{{ getAssetPath() ~ '/uploads/logos/' ~ logo }}" height="35" alt="Logo {{loop.index}}">
                         </div>
                     {% endfor %}
                     <input type="hidden" name="selectlogo" {% if config.getParameter('logo') != "" %}value="{{ config.getParameter('logo') }}"{% endif %}>
