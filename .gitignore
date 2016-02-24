@@ -20,6 +20,7 @@ app/config/previous-installed.json
 app/logs/*
 app/SymfonyRequirements.php
 bin/*
+claroline.sql
 files/*
 node_modules
 npm-debug.log

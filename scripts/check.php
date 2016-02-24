@@ -18,7 +18,7 @@ if (!file_exists(__DIR__ . '/../app/config/parameters.yml')) {
     );
 }
 
-ensureVersion('node', 'node -v', '5.6');
+ensureVersion('node', 'node -v', '5.5');
 ensureVersion('npm', 'npm -v', '3.7');
 
 function abort($msg)
