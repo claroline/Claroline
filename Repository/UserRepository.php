@@ -516,9 +516,9 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             LEFT JOIN u.personalWorkspace ws
             LEFT JOIN u.groups g
             LEFT JOIN g.roles r2
-            WHERE r1 in (:roles)
+            WHERE (r1 in (:roles)
+            OR r2 in (:roles))
             AND u.isEnabled = true
-            OR r2 in (:roles)
             ORDER BY u.{$orderedBy} ".
             $order;
 
@@ -547,9 +547,9 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             LEFT JOIN u.personalWorkspace ws
             LEFT JOIN u.groups g
             LEFT JOIN g.roles r2
-            WHERE r1 in (:roles)
+            WHERE (r1 in (:roles)
+            OR r2 in (:roles))
             AND u.isEnabled = true
-            OR r2 in (:roles)
             ORDER BY u.lastName, u.firstName ASC";
 
         $query = $this->_em->createQuery($dql);
