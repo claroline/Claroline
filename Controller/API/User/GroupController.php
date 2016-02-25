@@ -100,7 +100,7 @@ class GroupController extends FOSRestController
      */
     public function postGroupAction()
     {
-        $this->throwExceptionIfNotGranted('create', $group);
+        $this->throwExceptionIfNotGranted('create', new Group());
 
         $groupType = new GroupSettingsType(null, true, 'cgfm');
         $groupType->enableApi();
@@ -120,7 +120,8 @@ class GroupController extends FOSRestController
 
         $options = array(
             'http_code' => $httpCode,
-            'extra_parameters' => $group
+            'extra_parameters' => $group,
+            'serializer_group'=> "api_group"
         );
 
 
@@ -161,7 +162,8 @@ class GroupController extends FOSRestController
         $options = array(
             'http_code' => $httpCode,
             'extra_parameters' => $group,
-            'form_view' => array('group' => $group)
+            'form_view' => array('group' => $group),
+            'serializer_group'=> "api_group"
         );
 
 
@@ -298,7 +300,7 @@ class GroupController extends FOSRestController
         $formType = new GroupSettingsType($group->getPlatformRole(), true, 'egfm');
         $formType->enableApi();
         $form = $this->createForm($formType, $group);
-        $options = array('form_view' => array('group' => $group));
+        $options = array('form_view' => array('group' => $group), 'serializer_group'=> "api_group");
 
         return $this->apiManager->handleFormView('ClarolineCoreBundle:API:User\editGroupForm.html.twig', $form, $options);
     }

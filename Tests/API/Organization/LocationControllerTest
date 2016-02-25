@@ -35,61 +35,91 @@ class LocationControllerTest extends TransactionalTestCase
         $this->persister->flush();
     }
 
+    //@route: api_get_locations
+    //@url: /api/locations.{_format} 
     public function testGetLocationsAction()
     {
 
     }
 
+    //@route: api_get_locations
+    //@url: /api/locations.{_format} 
     public function testGetLocationsActionIsProtected()
     {
 
     }
 
+    //@route: api_get_create_location_form
+    //@url: /api/create/location/form.{_format}
     public function testGetCreateLocationFormAction()
     {
 
     }
 
+    //@route: api_get_create_location_form
+    //@url: /api/create/location/form.{_format}
     public function testGetCreateLocationFormActionIsProtected()
     {
         
     }
 
+    //@route: api_get_edit_location_form
+    //@url: /api/edits/{location}/location/form.{_format}
     public function testGetEditLocationFormAction()
     {
 
     }
 
+    //@route: api_get_edit_location_form
+    //@url: /api/edits/{location}/location/form.{_format}
     public function testGetEditLocationFormActionIsProtected()
     {
         
     }
 
+    //@route: api_post_location
+    //@url: /api/locations.{_format} 
+    //@method: POST
     public function testPostLocationAction()
     {
 
     }
 
+    //@route: api_post_location
+    //@url: /api/locations.{_format} 
+    //@method: POST
     public function testPostLocationActionIsProtected()
     {
         
     }
 
+    //@route: api_put_location
+    //@url: /api/locations.{_format} 
+    //@method: PUT
     public function testPutLocationAction()
     {
 
     }
 
+    //@route: api_put_location
+    //@url: /api/locations.{_format} 
+    //@method: PUT
     public function testPutLocationActionIsProtected()
     {
         
     }
 
+    //@route: api_delete_location
+    //@url: /api/locations/{location}.{_format} 
+    //@method: DELETE
     public function testDeleteLocationAction()
     {
 
     }
 
+    //@route: api_delete_location
+    //@url: /api/locations/{location}.{_format} 
+    //@method: DELETE
     public function testDeleteLocationActionIsProtected()
     {
         

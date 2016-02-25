@@ -88,7 +88,7 @@ class UserControllerTest extends TransactionalTestCase
     {
         $url = '/api/searches/0/users/10.json';
         //ADMINISTRATOR USAGE !
-        $this->login($this->admin);
+        $this->logIn($this->admin);
 
         //base search should retrieve everything for the administrator
         $this->client->request('GET', $url);
@@ -104,7 +104,7 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals(1, count($data['users']));
 
         //ORGANIZATION MANAGER USAGE !
-        $this->login($this->adminOrga);
+        $this->logIn($this->adminOrga);
 
         //base search should retrive all the users of my organizations
         $this->client->request('GET', $url);
@@ -113,7 +113,7 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals(1, count($data['users']));
 
         //USER USAGE
-        $this->login($this->john);
+        $this->logIn($this->john);
 
         //base search should retrive all the users of my organizations. If I don't have any, it should be 0
         $this->client->request('GET', $url);
