@@ -22,6 +22,36 @@ class CursusControllerTest extends TransactionalTestCase
     /** @var CursusPersister */
     private $cursusPersister;
 
+    /*
+     * Cursus structure :
+     *
+     *      rootCursusA
+     *          |---- cursusA1
+     *          |         |---- cursusA11 (Course)
+     *          |         |         * sessionA11A
+     *          |         |         * sessionA11B
+     *          |         |         * sessionA11C
+     *          |         |---- cursusA12 (Course)
+     *          |         |---- cursusA12 (LOCKED)
+     *          |         |         |---- cursus
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
     protected function setUp()
     {
         parent::setUp();

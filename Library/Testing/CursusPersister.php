@@ -11,10 +11,13 @@
 
 namespace Claroline\CursusBundle\Library\Testing;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\Course;
+use Claroline\CursusBundle\Entity\CourseRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSession;
+use Claroline\CursusBundle\Entity\CourseSessionRegistrationQueue;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
@@ -70,5 +73,63 @@ class CursusPersister
         $this->om->persist($session);
 
         return $session;
+    }
+
+    public function courseQueue(Course $course, User $user)
+    {
+        $now = new \DateTime();
+        $status = 0;
+        $validators = $course->getValidators();
+
+        if ($course->getUserValidation()) {
+            $status += CourseRegistrationQueue::WAITING_USER;
+        }
+
+        if ($course->getOrganizationValidation()) {
+            $status += CourseRegistrationQueue::WAITING_ORGANIZATION;
+        }
+
+        if (count($validators) > 0) {
+            $status += CourseRegistrationQueue::WAITING_VALIDATOR;
+        } else if ($course->getRegistrationValidation()) {
+            $status += CourseRegistrationQueue::WAITING;
+        }
+        $courseQueue = new CourseRegistrationQueue();
+        $courseQueue->setUser($user);
+        $courseQueue->setCourse($course);
+        $courseQueue->setApplicationDate($now);
+        $courseQueue->setStatus($status);
+        $this->om->persist($courseQueue);
+
+        return $courseQueue;
+    }
+
+    public function sessionQueue(CourseSession $session, User $user)
+    {
+        $now = new \DateTime();
+        $status = 0;
+        $validators = $session->getValidators();
+
+        if ($session->getUserValidation()) {
+            $status += CourseRegistrationQueue::WAITING_USER;
+        }
+
+        if ($session->getOrganizationValidation()) {
+            $status += CourseRegistrationQueue::WAITING_ORGANIZATION;
+        }
+
+        if (count($validators) > 0) {
+            $status += CourseRegistrationQueue::WAITING_VALIDATOR;
+        } else if ($session->getRegistrationValidation()) {
+            $status += CourseRegistrationQueue::WAITING;
+        }
+        $sessionQueue = new CourseSessionRegistrationQueue();
+        $sessionQueue->setUser($user);
+        $sessionQueue->setSession($session);
+        $sessionQueue->setApplicationDate($now);
+        $sessionQueue->setStatus($status);
+        $this->om->persist($sessionQueue);
+
+        return $sessionQueue;
     }
 }
