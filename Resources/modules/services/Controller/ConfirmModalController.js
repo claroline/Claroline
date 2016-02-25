@@ -5,7 +5,6 @@ export default class ConfirmModalController {
         this.title = title
         this.content = content
         this.$http = $http
-        this.$uibModalInstance = $uibModalInstance
     }
 
     submit() {
