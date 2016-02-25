@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Library\Testing;
 
 use Claroline\CoreBundle\Entity\Organization\Organization;
+use Claroline\CoreBundle\Entity\Organization\Location;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Role;
@@ -116,6 +117,23 @@ class Persister {
         $this->om->persist($organization);
 
         return $organization;
+    }
+
+    public function location($name)
+    {
+        $location = new Location();
+        $location->setName($name);
+        $location->setStreet($name);
+        $location->setStreetNumber($name);
+        $location->setBoxNumber($name);
+        $location->setPc($name);
+        $location->setTown($name);
+        $location->setCountry($name);
+        $location->setLatitude(123);
+        $location->setLongitude(123);
+        $this->om->persist($location);
+
+        return $location;
     }
 
     /**

@@ -32,73 +32,73 @@ class Location
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api"})
+     * @Groups({"api_location"})
      */
     protected $id;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api"})
+     * @Groups({"api_location"})
      */
     protected $name;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api"})
+     * @Groups({"api_location"})
      */
     protected $street;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api"})
+     * @Groups({"api_location"})
      */
     protected $streetNumber;
 
     /**
      * @ORM\Column(nullable=true)
-     * @Groups({"api"})
+     * @Groups({"api_location"})
      */
     protected $boxNumber;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api"})
+     * @Groups({"api_location"})
      */
     protected $pc;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api"})
+     * @Groups({"api_location"})
      */
     protected $town;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api"})
+     * @Groups({"api_location"})
      */
     protected $country;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"api"})
+     * @Groups({"api_location"})
      */
     protected $latitude;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"api"})
+     * @Groups({"api_location"})
      */
     protected $longitude;
 
     /**
      * @ORM\Column(nullable=true)
-     * @Groups({"api"})
+     * @Groups({"api_location"})
      */
     protected $phone;
 
