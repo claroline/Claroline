@@ -212,6 +212,10 @@ class ExerciseManager
         $creator = $node->getCreator();
         $authorName = sprintf('%s %s', $creator->getFirstName(), $creator->getLastName());
 
+        // Accessibility dates
+        $startDate = $node->getAccessibleFrom()  ? $node->getAccessibleFrom()->format('Y-m-d H:i:s')  : null;
+        $endDate   = $node->getAccessibleUntil() ? $node->getAccessibleUntil()->format('Y-m-d H:i:s') : null;
+
         return [
             'authors' => [$authorName],
             'created' => $node->getCreationDate()->format('Y-m-d H:i:s'),
@@ -223,7 +227,9 @@ class ExerciseManager
             'dispButtonInterrupt' => $exercise->getDispButtonInterrupt(),
             'markMode' => $exercise->getMarkMode(),
             'correctionMode' => $exercise->getCorrectionMode(),
-            'correctionDate' => $exercise->getDateCorrection()->format('Y-m-d H:i:s')
+            'correctionDate' => $exercise->getDateCorrection()->format('Y-m-d H:i:s'),
+            'startDate' => $startDate,
+            'endDate' => $endDate
         ];
     }
 
