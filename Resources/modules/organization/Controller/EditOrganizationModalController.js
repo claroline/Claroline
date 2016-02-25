@@ -12,7 +12,6 @@ export default class EditOrganizationModalController {
     submit() {
         this.OrganizationAPIService.update(this.organizationId, this.organization).then(
             d => {
-                console.log(this.organization)
                 this.$uibModalInstance.close(d.data);
             },
             d => {
