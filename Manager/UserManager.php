@@ -26,6 +26,7 @@ use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\TransfertManager;
 use Claroline\CoreBundle\Manager\FacetManager;
+use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -37,13 +38,18 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\ValidatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Claroline\BundleRecorder\Log\LoggableTrait;
+use Psr\Log\LoggerInterface;
 
 /**
  * @DI\Service("claroline.manager.user_manager")
  */
 class UserManager
 {
+    use LoggableTrait;
+
     const MAX_USER_BATCH_SIZE = 20;
+    const MAX_EDIT_BATCH_SIZE = 100;
 
     private $platformConfigHandler;
     private $strictEventDispatcher;
@@ -61,6 +67,7 @@ class UserManager
     private $transfertManager;
     private $container;
     private $authorization;
+    private $organizationManager;
 
     /**
      * Constructor.
@@ -79,7 +86,8 @@ class UserManager
      *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
      *     "uploadsDirectory"       = @DI\Inject("%claroline.param.uploads_directory%"),
      *     "transfertManager"       = @DI\Inject("claroline.manager.transfert_manager"),
-     *     "container"              = @DI\Inject("service_container")
+     *     "container"              = @DI\Inject("service_container"), 
+     *     "organizationManager"    = @DI\Inject("claroline.manager.organization.organization_manager")
      * })
      */
     public function __construct(
@@ -95,6 +103,7 @@ class UserManager
         ValidatorInterface $validator,
         WorkspaceManager $workspaceManager,
         TransfertManager $transfertManager,
+        OrganizationManager $organizationManager,
         $uploadsDirectory,
         ContainerInterface $container
     )
@@ -113,6 +122,7 @@ class UserManager
         $this->validator              = $validator;
         $this->uploadsDirectory       = $uploadsDirectory;
         $this->transfertManager       = $transfertManager;
+        $this->organizationManager    = $organizationManager;
         $this->container              = $container;
     }
 
@@ -127,8 +137,25 @@ class UserManager
      *
      * @return \Claroline\CoreBundle\Entity\User
      */
-    public function createUser(User $user, $sendMail = true, $additionnalRoles = array(), $model = null, $publicUrl = null)
+    public function createUser(
+        User $user, 
+        $sendMail = true,
+        $rolesToAdd = array(), 
+        $model = null, 
+        $publicUrl = null,
+        $organizations = array()
+    )
     {
+        $additionnalRoles = [];
+
+        foreach ($rolesToAdd as $roleToAdd) {
+            if (is_string($roleToAdd)) $additionnalRoles[] = $this->roleManager->getRoleByName($roleToAdd);
+        }
+
+        if (count($organizations) === 0) {
+            $organizations = array($this->organizationManager->getDefault());
+        }
+
         $this->objectManager->startFlushSuite();
 
         if ($this->personalWorkspaceAllowed($additionnalRoles)) {
@@ -222,6 +249,7 @@ class UserManager
      */
     public function deleteUser(User $user)
     {
+
         /* When the api will identify a user, please uncomment this
         if ($this->container->get('security.token_storage')->getToken()->getUser()->getId() === $user->getId()) {
             throw new \Exception('A user cannot delete himself');
@@ -258,29 +286,6 @@ class UserManager
         $this->strictEventDispatcher->dispatch('claroline_users_delete', 'GenericDatas', array(array($user)));
         $this->strictEventDispatcher->dispatch('log', 'Log\LogUserDelete', array($user));
         $this->strictEventDispatcher->dispatch('delete_user', 'DeleteUser', array($user));
-    }
-
-    /**
-     * Create a user.
-     * Its basic properties (name, username,... ) must already be set.
-     * This user will have the additional role  $roleName.
-     * $roleName must already exists.
-     *
-     * @todo remove this and user createUser instead
-     * @deprecated
-     * @param \Claroline\CoreBundle\Entity\User $user
-     * @param string                            $roleName
-     *
-     * @return \Claroline\CoreBundle\Entity\User
-     */
-    public function createUserWithRole(User $user, $roleName, $sendMail = true)
-    {
-        $this->objectManager->startFlushSuite();
-        $role = $this->roleManager->getRoleByName($roleName);
-        $this->createUser($user, $sendMail, array($role));
-        $this->objectManager->endFlushSuite();
-
-        return $user;
     }
 
     /**
@@ -1427,6 +1432,16 @@ class UserManager
         $qb->from('Claroline\CoreBundle\Entity\User', 'u')
             ->where('u.isEnabled = true');
 
+        //Admin can see everything, but the others... well they can only see their own organizations.
+        if (!$this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+            
+            $currentUser = $this->container->get('security.token_storage')->getToken()->getUser();
+            $qb->leftJoin('u.organizations', 'uo');
+            $qb->leftJoin('uo.administrators', 'ua');
+            $qb->andWhere('ua.id = :userId');
+            $qb->setParameter('userId', $currentUser->getId());
+        }
+
         foreach ($searches as $key => $search) {
             foreach ($search as $id => $el) {
                 if (in_array($key, $baseFieldsName)) {
@@ -1498,8 +1513,39 @@ class UserManager
         return $event->getFilters();
     }
 
-    public function isGranted($action, User $user)
+    /**
+     * This method will bind each users who don't already have an organization to the default one.
+     */
+    public function bindUserToOrganization()
     {
-        return $this->container->get('security.authorization_checker')->isGranted($action, $user);
+        $this->objectManager->startFlushSuite();
+        $users = $this->getAll();
+        $default = $this->organizationManager->getDefault();
+        $i = 0;
+
+        foreach ($users as $user) {
+            if (count($user->getOrganizations()) === 0) {
+                $i++;
+                $this->log('Add default organization for user ' . $user->getUsername());
+                $user->addOrganization($default);
+                $this->objectManager->persist($user);
+
+                if ($i % self::MAX_EDIT_BATCH_SIZE) {
+                    $this->objectManager->forceFlush();
+                }
+            }
+        }
+
+        $this->objectManager->endFlushSuite();
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    public function getLogger()
+    {
+        return $this->logger;
     }
 }

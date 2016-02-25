@@ -113,9 +113,10 @@ class ApiManager
     {
         $httpCode = isset($options['http_code']) ? $options['http_code']: 200;
         $parameters = isset($options['form_view']) ? $options['form_view']: array();
+        $serializerGroup = isset($options['serializer_group']) ? $options['serializer_group']: 'api';
 
         return $form->isValid() ?
-            $this->createSerialized($options['extra_parameters']):
+            $this->createSerialized($options['extra_parameters'], $serializerGroup):
             $this->createFormView($template, $form, $httpCode, $parameters);
 
     }
@@ -131,12 +132,12 @@ class ApiManager
         return $this->viewHandler->handle($view);
     }
 
-    private function createSerialized($data)
+    private function createSerialized($data, $serializerGroup)
     {
         $context = new SerializationContext();
         $format = $this->container->get('request')->getRequestFormat();
         $format = $format === 'html' ? 'json': $format;
-        $context->setGroups('api');
+        $context->setGroups($serializerGroup);
         $content = $this->container->get('serializer')->serialize($data, $format, $context);
         $response = new Response($content);
         $response->headers->set('Content-Type', $this->container->get('request')->getMimeType($format));

@@ -7,3 +7,4 @@ security:
             http_basic: ~
         api:
             http_basic: ~
+            stateless: true

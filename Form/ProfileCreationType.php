@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\AbstractType;
 use Claroline\CoreBundle\Manager\LocaleManager;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class ProfileCreationType extends AbstractType
 {

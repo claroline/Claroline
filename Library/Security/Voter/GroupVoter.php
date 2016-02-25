@@ -14,6 +14,10 @@ namespace Claroline\CoreBundle\Library\Security\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Manager\GroupManager;
+use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Library\Security\Collection\GroupCollection;
 
 /**
  * @DI\Service
@@ -21,9 +25,89 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class GroupVoter implements VoterInterface
 {
+    const CREATE = 'create';
+    const EDIT   = 'edit';
+    const DELETE = 'delete';
+    const VIEW   = 'view';
+
+    /**
+     * @DI\InjectParams({
+     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
+     *     "groupManager" = @DI\Inject("claroline.manager.group_manager")
+     * })
+     */
+    public function __construct(
+        ObjectManager $om, 
+        GroupManager $groupManager
+    )
+    {
+        $this->om = $om;
+        $this->groupManager = $groupManager;
+    }
+
+    //ROLE_ADMIN can always do anything, so we don't have to check that.
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-        //no implementation yet
+        if (!$object instanceof Group && !$object instanceof GroupCollection) return VoterInterface::ACCESS_ABSTAIN;
+        $groups = $object instanceof GroupCollection ? $object->getGroups(): array($object);
+        $action = strtolower($attributes[0]);
+
+        switch ($action) {
+            case self::CREATE: return $this->checkCreation($groups);
+            case self::EDIT:   return $this->checkEdit($token, $groups);
+            case self::DELETE: return $this->checkDelete($token, $groups);
+            case self::VIEW:   return $this->checkView($token, $groups);
+        }
+
+        return VoterInterface::ACCESS_ABSTAIN;
+    }
+
+    private function checkCreation($groups)
+    {
+        //the we can create user. Case closed
+        if ($ch->getParameter('allow_self_registration')) return VoterInterface::ACCESS_GRANTED;
+
+        //maybe more tests
+    }
+
+    private function checkEdit($token, $groups)
+    {
+        foreach ($groups as $group) {
+            if (!$this->isOrganizationManager($token, $group)) return VoterInterface::ACCESS_DENIED;
+        }
+        
+        return VoterInterface::ACCESS_GRANTED;
+    }
+
+    private function checkDelete($token, $groups)
+    {
+        foreach ($groups as $group) {
+            if (!$this->isOrganizationManager($token, $group)) return VoterInterface::ACCESS_DENIED;
+        }
+
+        return VoterInterface::ACCESS_GRANTED;
+    }
+
+    private function checkView($token, $groups)
+    {
+        foreach ($groups as $group) {
+            if (!$this->isOrganizationManager($token, $group)) return VoterInterface::ACCESS_DENIED;
+        }
+
+        return VoterInterface::ACCESS_GRANTED;
+    }
+
+    private function isOrganizationManager(TokenInterface $token, Group $group)
+    {
+        $adminOrganizations = $token->getUser()->getAdministratedOrganizations();
+        $groupOrganizations = $group->getOrganizations();
+
+        foreach ($adminOrganizations as $adminOrganization) {
+            foreach ($groupOrganizations as $groupOrganization) {
+                if ($groupOrganization === $adminOrganization) return true;
+            }
+        }
+
         return false;
     }
 

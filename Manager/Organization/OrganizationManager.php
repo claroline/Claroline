@@ -14,12 +14,16 @@ namespace Claroline\CoreBundle\Manager\Organization;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Organization\Organization;
+use Claroline\BundleRecorder\Log\LoggableTrait;
+use Psr\Log\LoggerInterface;
 
 /**
  * @DI\Service("claroline.manager.organization.organization_manager")
  */
 class OrganizationManager
 {
+    use LoggableTrait;
+
     private $om;
 
     /**
@@ -63,5 +67,33 @@ class OrganizationManager
     public function getRoots()
     {
         return $this->repo->findBy(array('parent' => null));
+    }
+
+    public function getDefault()
+    {
+        return $this->repo->findOneByDefault(true);
+    }
+
+    public function createDefault()
+    {
+        if (count($this->getDefault()) > 0) return;
+        $this->log('Adding default organization...');
+        $orga = new Organization();
+        $orga->setName('default');
+        $orga->setDefault(true);
+        $orga->setPosition(1);
+        $orga->setParent(null);
+        $this->om->persist($orga);
+        $this->om->flush();
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    public function getLogger()
+    {
+        return $this->logger;
     }
 } 

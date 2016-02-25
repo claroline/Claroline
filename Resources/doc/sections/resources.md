@@ -56,7 +56,7 @@ The resource voter currently only works with ResourceCollection objects.
 To test a basic permission, use:
 
 ```php
-$collection = new Claroline\CoreBundle\Library\Resource\ResourceCollection($node);
+$collection = new Claroline\CoreBundle\Library\Security\Collection\ResourceCollection($node);
 $securityContext->isGranted($permission, $collection);
 ```
 

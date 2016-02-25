@@ -41,14 +41,14 @@ class Role implements RoleInterface
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api"})
+     * @Groups({"api_user"})
      */
     protected $id;
 
     /**
      * @ORM\Column(unique=true)
      * @Assert\NotBlank()
-     * @Groups({"api"})
+     * @Groups({"api_user"})
      */
     protected $name;
 
@@ -113,7 +113,7 @@ class Role implements RoleInterface
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"api"})
+     * @Groups({"api_user"})
      */
     protected $type = self::PLATFORM_ROLE;
 

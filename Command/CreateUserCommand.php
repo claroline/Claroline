@@ -103,7 +103,8 @@ class CreateUserCommand extends ContainerAwareCommand
         } else {
             $roleName = PlatformRoles::USER;
         }
+
         $this->getContainer()->get('claroline.manager.user_manager')
-            ->createUserWithRole($user, $roleName, false);
+            ->createUser($user, false, array($roleName));
     }
 }

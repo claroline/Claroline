@@ -16,6 +16,8 @@ use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Bundle\FrameworkBundle\Client;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Doctrine\ORM\Tools\SchemaTool;
 
 abstract class TransactionalTestCase extends WebTestCase
 {
@@ -45,7 +47,7 @@ abstract class TransactionalTestCase extends WebTestCase
 
     protected function logIn(User $user, $firewall = 'main')
     {
-        $this->client = $this->logClient($user, $this->client, $firewall);
+        $this->logClient($user, $this->client, $firewall);
     }
 
     private function logClient(User $user, Client $client, $firewall = 'main')
@@ -63,5 +65,11 @@ abstract class TransactionalTestCase extends WebTestCase
         $client->getCookieJar()->set($cookie);
 
         return $client;
+    }
+
+    public function setPlatformOption($parameter, $value)
+    {
+        $ch = $this->client->getContainer()->get('claroline.config.platform_config_handler');
+        $ch->setParameter($parameter, $value);
     }
 }

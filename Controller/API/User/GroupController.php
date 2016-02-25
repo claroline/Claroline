@@ -26,6 +26,8 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\CoreBundle\Form\User\GroupSettingsType;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Claroline\CoreBundle\Library\Security\Collection\GroupCollection;
 
 /**
  * @NamePrefix("api_")
@@ -61,7 +63,7 @@ class GroupController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_group"})
      * @ApiDoc(
      *     description="Returns the groups list",
      *     views = {"group"}
@@ -69,11 +71,13 @@ class GroupController extends FOSRestController
      */
     public function getGroupsAction()
     {
+        $this->throwsExceptionIfNotAdmin();
+
         return $this->groupRepository->findAll();
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_group"})
      * @ApiDoc(
      *     description="Returns a group",
      *     views = {"group"}
@@ -81,11 +85,13 @@ class GroupController extends FOSRestController
      */
     public function getGroupAction(Group $group)
     {
+        $this->throwExceptionIfNotGranted('view', $group);
+
         return $group;
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_group"})
      * @ApiDoc(
      *     description="Create a group",
      *     views = {"group"},
@@ -94,6 +100,8 @@ class GroupController extends FOSRestController
      */
     public function postGroupAction()
     {
+        $this->throwExceptionIfNotGranted('create', new Group());
+
         $groupType = new GroupSettingsType(null, true, 'cgfm');
         $groupType->enableApi();
         $form = $this->formFactory->create($groupType, new Group());
@@ -105,7 +113,6 @@ class GroupController extends FOSRestController
             $group = $form->getData();
             $newRoles = $form['platformRoles']->getData();
             
-            var_dump(count($form->get('organizations')->getData()));
             $this->groupManager->insertGroup($group);
             $this->groupManager->setPlatformRoles($group, $newRoles);
             $httpCode = 200;
@@ -113,7 +120,8 @@ class GroupController extends FOSRestController
 
         $options = array(
             'http_code' => $httpCode,
-            'extra_parameters' => $group
+            'extra_parameters' => $group,
+            'serializer_group'=> "api_group"
         );
 
 
@@ -125,7 +133,7 @@ class GroupController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_group"})
      * @ApiDoc(
      *     description="Update a group",
      *     views = {"group"},
@@ -134,6 +142,8 @@ class GroupController extends FOSRestController
      */
     public function putGroupAction(Group $group)
     {
+        $this->throwExceptionIfNotGranted('edit', $group);
+
         $oldRoles = $group->getPlatformRoles();
         $groupType = new GroupSettingsType($oldRoles, true, 'egfm');
         $groupType->enableApi();
@@ -152,7 +162,8 @@ class GroupController extends FOSRestController
         $options = array(
             'http_code' => $httpCode,
             'extra_parameters' => $group,
-            'form_view' => array('group' => $group)
+            'form_view' => array('group' => $group),
+            'serializer_group'=> "api_group"
         );
 
 
@@ -172,7 +183,8 @@ class GroupController extends FOSRestController
      */
     public function deleteGroupAction(Group $group)
     {
-        $this->groupManager->deleteGroup($user);
+        $this->throwExceptionIfNotGranted('delete', $group);
+        $this->groupManager->deleteGroup($group);
 
         return array('success');
     }
@@ -187,6 +199,7 @@ class GroupController extends FOSRestController
     public function deleteGroupsAction()
     {
         $groups = $this->apiManager->getParameters('groupIds', 'Claroline\CoreBundle\Entity\Group');
+        $this->throwExceptionIfNotGranted('delete', $groups);
         $this->container->get('claroline.persistence.object_manager')->startFlushSuite();
 
         foreach ($groups as $group) {
@@ -199,7 +212,7 @@ class GroupController extends FOSRestController
     }
 
     /**
-     * @View()
+     * @View(serializerGroups={"api_group"})
      * @ApiDoc(
      *     description="Add a role to a group",
      *     views = {"group"}
@@ -207,13 +220,14 @@ class GroupController extends FOSRestController
      */
     public function addGroupRoleAction(Group $group, Role $role)
     {
+        $this->throwExceptionIfNotGranted('edit', $group);
         $this->roleManager->associateRole($group, $role, false);
 
-        return array('success');
+        return $group;
     }
 
     /**
-     * @View()
+     * @View(serializerGroups={"api_group"})
      * @ApiDoc(
      *     description="Remove a role from a group",
      *     views = {"group"}
@@ -221,13 +235,14 @@ class GroupController extends FOSRestController
      */
     public function removeGroupRoleAction(Group $group, Role $role)
     {
+        $this->throwExceptionIfNotGranted('edit', $group);
         $this->roleManager->dissociateRole($group, $role);
 
-        return array('success');
+        return $group;
     }
 
     /**
-     * @View(serializerGroups={"admin"})
+     * @View(serializerGroups={"api_group"})
      * @ApiDoc(
      *     description="Returns the users list",
      *     views = {"user"}
@@ -256,7 +271,7 @@ class GroupController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_group"})
      * @ApiDoc(
      *     description="Returns the group creation form",
      *     views = {"location"}
@@ -273,7 +288,7 @@ class GroupController extends FOSRestController
 
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_group"})
      * @ApiDoc(
      *     description="Returns the group edition form",
      *     views = {"location"}
@@ -281,11 +296,42 @@ class GroupController extends FOSRestController
      */
     public function getEditGroupFormAction(Group $group)
     {
+        $this->throwExceptionIfNotGranted('edit', $group);
         $formType = new GroupSettingsType($group->getPlatformRole(), true, 'egfm');
         $formType->enableApi();
         $form = $this->createForm($formType, $group);
-        $options = array('form_view' => array('group' => $group));
+        $options = array('form_view' => array('group' => $group), 'serializer_group'=> "api_group");
 
         return $this->apiManager->handleFormView('ClarolineCoreBundle:API:User\editGroupForm.html.twig', $form, $options);
+    }
+
+    private function isAdmin() 
+    {
+        return $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN');
+    }
+
+    private function throwsExceptionIfNotAdmin()
+    {
+        if (!$this->isAdmin()) throw new AccessDeniedException("This action can only be done by the administrator");
+    }
+
+    private function isGroupGranted($action, $object)
+    {
+        return $this->container->get('security.authorization_checker')->isGranted($action, $object);
+    }
+
+    private function throwExceptionIfNotGranted($action, $groups)
+    {
+        $collection = is_array($groups) ? new GroupCollection($groups): new GroupCollection(array($groups));  
+        $isGranted = $this->isGroupGranted($action, $collection);
+
+        if (!$isGranted) {
+            $groupList = '';
+
+            foreach ($collection->getGroups() as $group) {
+                $groupList .= "[{$group->getName()}]";
+            }
+            throw new AccessDeniedException("You can't do the action [{$action}] on the user list {$groupList}");
+        } 
     }
 }
