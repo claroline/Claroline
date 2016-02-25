@@ -1,26 +1,22 @@
 language: php
+
 php:
   - "5.5"
-  - "5.4"
+
 env:
   - DB=mysql
-  - DB=pgsql
-mysql:
-  adapter: mysql2
-  database: claroline_test
-  username: travis
-  encoding: utf8
-postgres:
-  adapter: postgresql
-  database: claroline_test
-  username: postgres
+
+before_install:
+  - phpenv config-rm xdebug.ini
+  - nvm install stable
+  - npm install npm -g
+  - composer self-update
+
 before_script:
-  - cp app/config/parameters.yml.dist app/config/parameters.yml
-  - if [ "$DB" == "mysql" ]; then sed -i "s/root/travis/" app/config/parameters.yml; fi
-  - if [ "$DB" == "pgsql" ]; then sed -i "s/root/postgres/; s/pdo_mysql/pdo_pgsql/" app/config/parameters.yml; fi
-  - composer require claroline/bundle-recorder "~2.1" --prefer-source
-  - cp composer.json.dist composer.json
-  - rm composer.lock
-  - composer --prefer-source --dev install -o
-  - php app/console claroline:init_test_schema --env=test
-script: phpunit -c app
+  - composer validate
+  - php scripts/configure.php --default
+  - composer sync-dev
+
+script: echo done
+
+sudo: false

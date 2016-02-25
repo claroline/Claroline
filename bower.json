@@ -1,0 +1,7 @@
+{
+  "name": "claroline",
+  "description": "Claroline frontend dependencies",
+  "dependencies": {
+    "claroline-core": "./vendor/claroline/core-bundle"
+  }
+}
