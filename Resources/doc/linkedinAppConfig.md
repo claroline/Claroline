@@ -23,7 +23,6 @@ Register and Configure a LinkedIn App
 
 ##### Congratulations you have now registered and configured your LinkedIn App!
 
-[images]: <> (Create image references)
 [home_page]: images/linkedin/linkedin_home.jpg "Developer portal"
 [new_app_create]: images/linkedin/linkedin_new_app_create.jpg "Create new App"
 [new_app_form]: images/linkedin/linkedin_new_app_form.jpg "Fill in your App form"

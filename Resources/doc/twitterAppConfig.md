@@ -22,7 +22,6 @@ You can paste them to Claroline:
 
 ##### Congratulations you have now registered and configured your Twitter App!
 
-[images]: <> (Create image references)
 [new_app_form]: images/twitter/twitter_app_new_form.jpg "New App form"
 [new_app_id_secret]: images/twitter/twitter_app_id_secret.jpg "Your App Id and Secret"
 [new_app_settings]: images/twitter/twitter_settings_icon_organization.jpg "Provide icon and organization data"

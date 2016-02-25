@@ -37,7 +37,6 @@ _Note that you can find your credentials any time by clicking on your client nam
 
 ##### Congratulations you have now registered and configured your Google App!
 
-[images]: <> (Create image references)
 [new_app_menu]: images/google/google_new_app_menu.jpg "New app via dropdown menu"
 [new_app_form]: images/google/google_new_app_form.jpg "Fill in the form for you new App/Project"
 [new_app_api]: images/google/google_new_app_api.jpg "Go to API Manager"

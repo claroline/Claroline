@@ -21,7 +21,6 @@ Register and Configure a Windows Live App
 
 ##### Congratulations you have now registered and configured your Windows Live App!
 
-[images]: <> (Create image references)
 [new_app_create]: images/windows/windows_new_app_create.jpg "Create new app"
 [new_app_info]: images/windows/windows_new_app_info.jpg "New App general info"
 [new_app_api_settings]: images/windows/windows_new_app_api_settings.jpg "Api settings for new App"

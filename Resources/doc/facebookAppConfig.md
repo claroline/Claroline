@@ -38,7 +38,6 @@ Go to the **Advanced** tab and scroll down to **Client OAuth Settings**. Enable 
 
 ##### Congratulations you have now registered and configured your Facebook App!
 
-[images]: <> (Create image references)
 [new_app_menu]: images/facebook/fb_new_app_menu.jpg "New app via dropdown menu"
 [new_app_button]: images/facebook/fb_new_app_new_button.jpg "New app using button"
 [new_app_platform]: images/facebook/fb_new_app_choice.jpg "Choose basic setup when asked for App platform"
