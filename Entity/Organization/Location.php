@@ -32,14 +32,14 @@ class Location
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_location"})
+     * @Groups({"api_location", "api_organization_list", "api_organization_tree"})
      */
     protected $id;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api_location"})
+     * @Groups({"api_location", "api_organization_list", "api_organization_tree"})
      */
     protected $name;
 
@@ -116,7 +116,7 @@ class Location
     /**
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization",
-     *     inversedBy="locations"
+     *     mappedBy="locations"
      * )
      */
     protected $organizations;

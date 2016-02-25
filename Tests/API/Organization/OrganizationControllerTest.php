@@ -34,7 +34,7 @@ class OrganizationControllerTest extends TransactionalTestCase
         $this->persister->persist($this->admin);
         $this->persister->flush();
     }
-
+/*
     //@route: api_post_organization
     //@url: /api/organizations.{_format}
     //@method: POST
@@ -159,25 +159,27 @@ class OrganizationControllerTest extends TransactionalTestCase
         $this->logIn($this->john);
         $this->client->request('GET', "/api/edits/{$orga->getId()}/organization/form.json");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
+    }*/
 
     //@route: api_put_organization
     //@url: /api/organizations/{organization}.{_format} 
     public function testPutOrganizationAction()
     {
-        $orga = $this->persister->organization('orga');        
+        $orga = $this->persister->organization('orga');   
+        $here = $this->persister->location('here');     
         $this->persister->flush();
         $this->logIn($this->admin);
         $fields = array(
             'name' => 'rename',
             'email' => 'toto@toto.net',
-            'administrators' => $this->admin->getId()
+            'administrators' => $this->admin->getId(),
+            'locations' => array($here->getId())
         );
         $form = array('organization_form' => $fields);
 
         $this->client->request('PUT', "/api/organizations/{$orga->getId()}.json", $form);
         $data = $this->client->getResponse()->getContent();
-        $data = json_decode($data, true);
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     //@route: api_put_organization

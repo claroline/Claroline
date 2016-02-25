@@ -47,6 +47,8 @@ class OrganizationManager
 
     public function edit(Organization $organization)
     {
+        //var_dump(count($organization->getAdministrators()));
+        //var_dump(count($organization->getLocations()));
         $this->om->persist($organization);
         $this->om->flush();
 

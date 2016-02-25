@@ -63,8 +63,9 @@ class Organization
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Organization\Location",
      *     cascade={"persist"},
-     *     mappedBy="organizations"
+     *     inversedBy="organizations"
      * )
+     * @ORM\JoinTable(name="claro__location_organization")
      * @Groups({"api_organization_tree", "api_organization_list"})
      */
     protected $locations;
@@ -134,9 +135,10 @@ class Organization
      *
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     mappedBy="administratedOrganizations"
+     *     inversedBy="administratedOrganizations"
      * )
      * @ORM\JoinTable(name="claro_user_administrator")
+     * @Groups({"api_organization_tree", "api_organization_list"})
      */
     protected $administrators;
 
@@ -252,6 +254,7 @@ class Organization
 
     public function setAdministrators(ArrayCollection $users)
     {
+        var_dump('sett');
         $this->administrators = $users;
     }
 

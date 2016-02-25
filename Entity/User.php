@@ -50,7 +50,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_user"})
+     * @Groups({"api_user", "api_organization_tree", "api_organization_list"})
      */
     protected $id;
 
@@ -81,7 +81,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @Assert\NotBlank()
      * @Assert\Length(min="3")
      * @ClaroAssert\Username()
-     * @Groups({"api_user"})
+     * @Groups({"api_user", "api_organization_tree", "api_organization_list"})
      * @SerializedName("username")
      */
     protected $username;
@@ -403,7 +403,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     /**
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization",
-     *     inversedBy="administrators"
+     *     mappedBy="administrators"
      * )
      * @ORM\JoinTable(name="claro_user_administrator")
      * @Groups({"api_user"})
