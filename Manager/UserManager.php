@@ -152,8 +152,9 @@ class UserManager
             if (is_string($roleToAdd)) $additionnalRoles[] = $this->roleManager->getRoleByName($roleToAdd);
         }
 
-        if (count($organizations) === 0) {
+        if (count($organizations) === 0 && count($user->getOrganizations()) === 0) {
             $organizations = array($this->organizationManager->getDefault());
+            $user->setOrganizations($organizations);
         }
 
         $this->objectManager->startFlushSuite();

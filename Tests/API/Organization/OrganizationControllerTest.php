@@ -34,7 +34,7 @@ class OrganizationControllerTest extends TransactionalTestCase
         $this->persister->persist($this->admin);
         $this->persister->flush();
     }
-/*
+
     //@route: api_post_organization
     //@url: /api/organizations.{_format}
     //@method: POST
@@ -159,7 +159,7 @@ class OrganizationControllerTest extends TransactionalTestCase
         $this->logIn($this->john);
         $this->client->request('GET', "/api/edits/{$orga->getId()}/organization/form.json");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }*/
+    }
 
     //@route: api_put_organization
     //@url: /api/organizations/{organization}.{_format} 
