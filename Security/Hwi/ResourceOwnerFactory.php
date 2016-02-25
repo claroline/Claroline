@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use HWI\Bundle\OAuthBundle\OAuth\ResourceOwner\GoogleResourceOwner;
 use HWI\Bundle\OAuthBundle\OAuth\ResourceOwner\LinkedinResourceOwner;
 use HWI\Bundle\OAuthBundle\OAuth\ResourceOwner\TwitterResourceOwner;
+use HWI\Bundle\OAuthBundle\OAuth\ResourceOwner\WindowsLiveResourceOwner;
 use JMS\DiExtraBundle\Annotation as DI;
 use HWI\Bundle\OAuthBundle\OAuth\ResourceOwner\FacebookResourceOwner;
 use Buzz\Client\Curl;
@@ -127,6 +128,28 @@ class ResourceOwnerFactory
                 )
             ),
             'linkedin',
+            new SessionStorage($this->session)
+        );
+
+        return $owner;
+    }
+
+    public function getWindowsLiveResourceOwner()
+    {
+        $owner = new WindowsLiveResourceOwner(
+            $this->createClientHttp(),
+            $this->httpUtils,
+            array(
+                'client_id' => $this->configHandler->getParameter('windows_live_client_id'),
+                'client_secret' => $this->configHandler->getParameter('windows_live_client_secret'),
+                'scope' => 'wl.basic wl.emails',
+                'paths' => array(
+                    'firstname' => 'first_name',
+                    'lastname'  => 'last_name'
+                ),
+                'options' => array()
+            ),
+            'windows_live',
             new SessionStorage($this->session)
         );
 

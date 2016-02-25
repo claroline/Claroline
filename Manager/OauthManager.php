@@ -146,7 +146,7 @@ class OauthManager
     public function refreshCache(RefreshCacheEvent $event)
     {
         foreach (Configuration::resourceOwners() as $resourceOwner) {
-            $service = strtolower($resourceOwner);
+            $service = str_replace(' ', '_', strtolower($resourceOwner));
             $errors = $this->validateService(
                 $service,
                 $this->platformConfigHandler->getParameter($service.'_client_id'),
@@ -169,8 +169,8 @@ class OauthManager
         if (!$appId || !$secret) {
             return array('error' => $service.'_application_validation_error');
         }
-
-        return call_user_func(array($this, "validate".ucfirst($service)), $appId, $secret);
+        $serviceMethodName = str_replace(' ', '', ucwords(str_replace('_', ' ', $service)));
+        return call_user_func(array($this, "validate".$serviceMethodName), $appId, $secret);
     }
 
     public function getConfiguration($service)
@@ -191,7 +191,7 @@ class OauthManager
     {
         $services = array();
         foreach (Configuration::resourceOwners() as $resourceOwner) {
-            $service = strtolower($resourceOwner);
+            $service = str_replace(' ', '_', strtolower($resourceOwner));
             if ($this->isActive($service)) {
                 $services[] = $service;
             }
@@ -353,6 +353,11 @@ class OauthManager
     }
 
     private function validateLinkedin($appId, $secret)
+    {
+        return array();
+    }
+
+    private function validateWindowsLive($appId, $secret)
     {
         return array();
     }

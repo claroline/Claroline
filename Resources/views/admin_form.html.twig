@@ -19,7 +19,7 @@
         'href': path('claro_admin_parameters_oauth_index')
     },
     {
-        'name': service|trans({}, 'platform'),
+        'name': service|trans({}, 'icap_oauth'),
         'href': ''
     }
     ])
@@ -28,7 +28,7 @@
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ service|trans({}, 'platform') }}</h3>
+        <h3 class="panel-title">{{ service|trans({}, 'icap_oauth') }}</h3>
     </div>
     {{ macros.flashBox() }}
     <form role="form" class="form-horizontal" action="{{ path('claro_admin_oauth_form_submit', {'service':service}) }}" method="post" {{ form_enctype(form) }} id="form_settings">

@@ -32,8 +32,12 @@ class LoadParametersData extends AbstractFixture implements ContainerAwareInterf
     public function load(ObjectManager $manager)
     {
         $configHandler = $this->container->get('claroline.config.platform_config_handler');
-        $configHandler->setParameter('facebook_client_id', null);
-        $configHandler->setParameter('facebook_client_secret', null);
-        $configHandler->setParameter('facebook_client_active', null);
+        foreach (Configuration::resourceOwners() as $resourceOwner) {
+            $resourceOwnerStr = str_replace(' ', '_', strtolower($resourceOwner));
+            $configHandler->setParameter($resourceOwnerStr.'_client_id', null);
+            $configHandler->setParameter($resourceOwnerStr.'_client_secret', null);
+            $configHandler->setParameter($resourceOwnerStr.'_client_active', null);
+        }
+
     }
 }

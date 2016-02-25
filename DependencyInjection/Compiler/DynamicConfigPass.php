@@ -32,14 +32,20 @@ class DynamicConfigPass implements CompilerPassInterface
     {
         $factory = new Reference('icap.oauth.hwi.resource_owner_factory');
         foreach (Configuration::resourceOwners() as $resourceOwner) {
+            $resourceOwnerNoSpaces = str_replace(' ', '', $resourceOwner);
             $conf = new Definition();
-            $conf->setClass($resourceOwner.'ResourceOwner');
+            $conf->setClass($resourceOwnerNoSpaces.'ResourceOwner');
             $conf->setFactory(array(
                 $factory,
-                "get{$resourceOwner}ResourceOwner"
+                "get{$resourceOwnerNoSpaces}ResourceOwner"
             ));
-            $container->removeDefinition('hwi_oauth.resource_owner.'.strtolower($resourceOwner));
-            $container->setDefinition('hwi_oauth.resource_owner.'.strtolower($resourceOwner), $conf);
+            $container->removeDefinition(
+                'hwi_oauth.resource_owner.'.str_replace(' ', '_', strtolower($resourceOwner))
+            );
+            $container->setDefinition(
+                'hwi_oauth.resource_owner.'.str_replace(' ', '_', strtolower($resourceOwner)),
+                $conf
+            );
         }
     }
 }

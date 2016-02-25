@@ -1,7 +1,7 @@
 OAuthBundle
 ============
 
-Provides a plugin for Claroline Connect platform that ennables users to connect through social login (facebook, twitter, google, linkedin)
+Provides a plugin for Claroline Connect platform that ennables users to connect through social login (facebook, twitter, google, linkedin, windows live)
 
 Installation
 -------------
@@ -24,6 +24,7 @@ Click on the following links to learn how to configure your App for every provid
 - [Twitter](Resources/doc/twitterAppConfig.md)
 - [Google](Resources/doc/googleAppConfig.md)
 - [LinkedIn](Resources/doc/linkedinAppConfig.md)
+- [Windows Live](Resources/doc/windowsAppConfig.md)
 
 Once you've created your App and got your keys, it's time to enable login to your Claroline platform.
 

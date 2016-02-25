@@ -78,7 +78,7 @@ class Configuration
 
     static public function resourceOwners()
     {
-        $resourceOwners = ['Facebook', 'Twitter', 'Google', 'Linkedin'];
+        $resourceOwners = ['Facebook', 'Twitter', 'Google', 'Linkedin', 'Windows Live'];
 
         return $resourceOwners;
     }

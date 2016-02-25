@@ -22,6 +22,11 @@ hwi_oauth:
             client_id:      <client_id>
             client_secret:  <client_secret>
             scope:          "r_emailaddress r_basicprofile"
+        windows_live:
+            type:           windows_live
+            client_id:      <client_id>
+            client_secret:  <client_secret>
+            scope:          "r_emailaddress r_basicprofile"
 
 
     # an optional setting to configure a query string parameter which can be used to redirect
@@ -41,10 +46,11 @@ security:
         main:
             oauth:
                 resource_owners:
-                    facebook:   /login/check-facebook
-                    twitter:    /login/check-twitter
-                    google:     /login/check-google
-                    linkedin:   /login/check-linkedin
+                    facebook:     /login/check-facebook
+                    twitter:      /login/check-twitter
+                    google:       /login/check-google
+                    linkedin:     /login/check-linkedin
+                    windows_live: /login/check-windows
                 success_handler:    icap.oauth.security_handler
                 failure_handler:    icap.oauth.security_handler
                 login_path: /login

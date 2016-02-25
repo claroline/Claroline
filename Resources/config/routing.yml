@@ -27,3 +27,6 @@ google_login:
 
 linkedin_login:
     path: /login/check-linkedin
+
+windows_live_login:
+    path: /login/check-windows
