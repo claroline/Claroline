@@ -17,6 +17,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Library\Security\Collection\GroupCollection;
 
 /**
  * @DI\Service
@@ -24,7 +25,12 @@ use Claroline\CoreBundle\Entity\Group;
  */
 class GroupVoter implements VoterInterface
 {
-        /**
+    const CREATE = 'create';
+    const EDIT   = 'edit';
+    const DELETE = 'delete';
+    const VIEW   = 'view';
+
+    /**
      * @DI\InjectParams({
      *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
      *     "groupManager" = @DI\Inject("claroline.manager.group_manager")
@@ -42,21 +48,21 @@ class GroupVoter implements VoterInterface
     //ROLE_ADMIN can always do anything, so we don't have to check that.
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-        //this line won't be usefull later
-        if (!$object instanceof Group) return VoterInterface::ACCESS_ABSTAIN;
-
+        if (!$object instanceof Group && !$object instanceof GroupCollection) return VoterInterface::ACCESS_ABSTAIN;
+        $groups = $object instanceof GroupCollection ? $object->getGroups(): array($object);
         $action = strtolower($attributes[0]);
 
         switch ($action) {
-            case self::CREATE: return $this->checkCreation($object);
-            case self::EDIT:   return $this->checkEdit($token, $object);
-            case self::DELETE: return $this->checkDelete($token, $object);
+            case self::CREATE: return $this->checkCreation($groups);
+            case self::EDIT:   return $this->checkEdit($token, $groups);
+            case self::DELETE: return $this->checkDelete($token, $groups);
+            case self::VIEW:   return $this->checkView($token, $groups);
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
     }
 
-    private function checkCreation(Group $group)
+    private function checkCreation($groups)
     {
         //the we can create user. Case closed
         if ($ch->getParameter('allow_self_registration')) return VoterInterface::ACCESS_GRANTED;
@@ -64,24 +70,41 @@ class GroupVoter implements VoterInterface
         //maybe more tests
     }
 
-    private function checkEdit($token, Group $group)
+    private function checkEdit($token, $groups)
     {
-        return $this->isOrganizationManager($token, $group) ? VoterInterface::ACCESS_GRANTED: VoterInterface::ACCESS_DENIED;
+        foreach ($groups as $group) {
+            if (!$this->isOrganizationManager($token, $group)) return VoterInterface::ACCESS_DENIED;
+        }
+        
+        return VoterInterface::ACCESS_GRANTED;
     }
 
-    private function checkDelete($token, Group $group)
+    private function checkDelete($token, $groups)
     {
-        return $this->isOrganizationManager($token, $group) ? VoterInterface::ACCESS_GRANTED: VoterInterface::ACCESS_DENIED;
+        foreach ($groups as $group) {
+            if (!$this->isOrganizationManager($token, $group)) return VoterInterface::ACCESS_DENIED;
+        }
+
+        return VoterInterface::ACCESS_GRANTED;
     }
 
-    private function isOrganizationManager(TokenInterface $token, User $group)
+    private function checkView($token, $groups)
+    {
+        foreach ($groups as $group) {
+            if (!$this->isOrganizationManager($token, $group)) return VoterInterface::ACCESS_DENIED;
+        }
+
+        return VoterInterface::ACCESS_GRANTED;
+    }
+
+    private function isOrganizationManager(TokenInterface $token, Group $group)
     {
         $adminOrganizations = $token->getUser()->getAdministratedOrganizations();
-        $userOrganizations = $group->getOrganizations();
+        $groupOrganizations = $group->getOrganizations();
 
         foreach ($adminOrganizations as $adminOrganization) {
-            foreach ($userOrganizations as $userOrganization) {
-                if ($userOrganization === $adminOrganization) return true;
+            foreach ($groupOrganizations as $groupOrganization) {
+                if ($groupOrganization === $adminOrganization) return true;
             }
         }
 

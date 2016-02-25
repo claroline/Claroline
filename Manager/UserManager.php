@@ -140,12 +140,18 @@ class UserManager
     public function createUser(
         User $user, 
         $sendMail = true,
-        $additionnalRoles = array(), 
+        $rolesToAdd = array(), 
         $model = null, 
         $publicUrl = null,
         $organizations = array()
     )
     {
+        $additionnalRoles = [];
+
+        foreach ($rolesToAdd as $roleToAdd) {
+            if (is_string($roleToAdd)) $additionnalRoles[] = $this->roleManager->getRoleByName($roleToAdd);
+        }
+
         if (count($organizations) === 0) {
             $organizations = array($this->organizationManager->getDefault());
         }

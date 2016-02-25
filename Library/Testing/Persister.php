@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation\Inject;
@@ -45,7 +46,8 @@ class Persister {
      * @param string $username
      * @return User
      */
-    public function user($username) {
+    public function user($username) 
+    {
 
         $roleUser = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
 
@@ -67,11 +69,22 @@ class Persister {
         return $user;
     }
 
+    public function group($name) 
+    {
+        $group = new Group();
+        $group->setGuid($this->container->get('claroline.utilities.misc')->generateGuid());
+        $group->setName($name);
+        $this->om->persist($group);
+
+        return $group;
+    }
+
     /**
      * @param string $name
      * @return Role
      */
-    public function role($name) {
+    public function role($name) 
+    {
         $role = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName($name);
         
         if (!$role) {
@@ -84,7 +97,8 @@ class Persister {
         return $role;
     }
 
-    public function maskDecoder(ResourceType $type, $permission, $value) {
+    public function maskDecoder(ResourceType $type, $permission, $value) 
+    {
         $decoder = new MaskDecoder();
         $decoder->setResourceType($type);
         $decoder->setName($permission);

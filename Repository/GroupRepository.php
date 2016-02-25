@@ -538,31 +538,4 @@ class GroupRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult() : $query;
     }
-
-    public function searchPartialList(array $searches = array(), $page = null, $limit = null, $count = false)
-    {
-        $baseFieldsName = Group::getSearchableFields();
-
-        $qb = $this->_em->createQueryBuilder();
-        $count ? $qb->select('count(g)') : $qb->select('g');
-        $qb->from('Claroline\CoreBundle\Entity\Group', 'g');
-
-        foreach ($searches as $key => $search) {
-            foreach ($search as $id => $el) {
-                if (in_array($key, $baseFieldsName)) {
-                    $qb->andWhere("UPPER (g.{$key}) LIKE :{$key}{$id}");
-                    $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
-                }
-            }
-        }
-
-        $query = $qb->getQuery();
-
-        if ($page && $limit && !$count) {
-            $query->setMaxResults($limit);
-            $query->setFirstResult($page * $limit);
-        }
-
-        return $count ? $query->getSingleScalarResult() : $query->getResult();
-    }
 }

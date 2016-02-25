@@ -35,27 +35,27 @@ class Organization
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api", "organization_list"})
+     * @Groups({"api_user", "api_organization_tree", "api_organization_list"})
      */
     protected $id;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Groups({"api"})
+     * @Groups({"api_organization_tree", "api_organization_list"})
      */
     protected $position;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api", "organization_list"})    
+     * @Groups({"api_user", "api_organization_tree", "api_organization_list"})    
      */
     protected $name;
 
     /**
      * @ORM\Column(nullable=true)
      * @Assert\Email()
-     * @Groups({"api", "organization_list"})    
+     * @Groups({"api_organization_tree", "api_organization_list"})    
      */
     protected $email;
 
@@ -65,7 +65,7 @@ class Organization
      *     cascade={"persist"},
      *     mappedBy="organizations"
      * )
-     * @Groups({"api"})
+     * @Groups({"api_organization_tree", "api_organization_list"})
      */
     protected $locations;
 
@@ -97,14 +97,14 @@ class Organization
      * @Gedmo\TreeParent
      * @ORM\ManyToOne(targetEntity="Organization", inversedBy="children")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
-     * @Groups({"api"})
+     * @Groups({"api_organization_tree"})
      */
     private $parent;
 
     /**
      * @ORM\OneToMany(targetEntity="Organization", mappedBy="parent")
      * @ORM\OrderBy({"lft" = "ASC"})
-     * @Groups({"api"})
+     * @Groups({"api_organization_tree"})
      */
     private $children;
 

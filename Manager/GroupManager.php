@@ -456,7 +456,39 @@ class GroupManager
 
     public function searchPartialList($searches, $page, $limit, $count = false)
     {
-        return $this->groupRepo->searchPartialList($searches, $page, $limit, $count);
+        $baseFieldsName = Group::getSearchableFields();
+
+        $qb = $this->om->createQueryBuilder();
+        $count ? $qb->select('count(g)') : $qb->select('g');
+        $qb->from('Claroline\CoreBundle\Entity\Group', 'g');
+
+        //Admin can see everything, but the others... well they can only see their own organizations.
+        if (!$this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+            
+            $currentUser = $this->container->get('security.token_storage')->getToken()->getUser();
+            $qb->leftJoin('g.organizations', 'go');
+            $qb->leftJoin('go.administrators', 'ga');
+            $qb->andWhere('ga.id = :userId');
+            $qb->setParameter('userId', $currentUser->getId());
+        }
+
+        foreach ($searches as $key => $search) {
+            foreach ($search as $id => $el) {
+                if (in_array($key, $baseFieldsName)) {
+                    $qb->andWhere("UPPER (g.{$key}) LIKE :{$key}{$id}");
+                    $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
+                }
+            }
+        }
+
+        $query = $qb->getQuery();
+
+        if ($page && $limit && !$count) {
+            $query->setMaxResults($limit);
+            $query->setFirstResult($page * $limit);
+        }
+
+        return $count ? $query->getSingleScalarResult() : $query->getResult();
     }
 
     public function getAll()

@@ -60,7 +60,7 @@ class UserControllerTest extends TransactionalTestCase
         $this->group = $this->persister->group('group');
         //Do more stuff here. Yolo.
     }
-/*
+
     //@url: /api/users.{_format}  
     //@route: api_get_users
     public function testGetUsersAction()
@@ -78,7 +78,6 @@ class UserControllerTest extends TransactionalTestCase
     {
         $this->logIn($this->john);
         $this->client->request('GET', '/api/users.json');
-        $data = $this->client->getResponse()->getContent();
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
@@ -314,7 +313,6 @@ class UserControllerTest extends TransactionalTestCase
     {
         $this->logIn($this->userOrga);
         $this->client->request('PATCH', "/api/users/{$this->userOrga->getId()}/roles/{$this->teacherRole->getId()}/add.json");
-        $data = $this->client->getResponse()->getContent();
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
@@ -338,7 +336,6 @@ class UserControllerTest extends TransactionalTestCase
     {
         $this->logIn($this->userOrga);
         $this->client->request('GET', "/api/users/{$this->userOrga->getId()}/roles/{$this->baseRole->getId()}/remove.json");
-        $data = $this->client->getResponse()->getContent();
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
@@ -385,21 +382,26 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertGreaterThan(1, count($data));
     }
 
-    */
     //@route: api_users_password_initialize
     //@url: /api/passwords/initializes/users.{_format}
     public function testUsersPasswordInitializeAction()
     {
-
+        $this->login($this->adminOrga);
+        $this->client->request('GET', "/api/passwords/initializes/users.json?userIds[]={$this->userOrga->getId()}");
+        $data = $this->client->getResponse()->getContent();
+        $data = json_decode($data, true);
+        $this->assertEquals($data[0], 'success');
     }
 
     //@route: api_users_password_initialize
     //@url: /api/passwords/initializes/users.{_format}
     public function testUsersPasswordInitializeActionIsProtected()
     {
-
+        $this->login($this->john);
+        $this->client->request('GET', "/api/passwords/initializes/users.json?userIds[]={$this->userOrga->getId()}");
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
-/*
+
     //@route: api_add_users_to_group
     //@url: /api/users/{group}/to/group/add.{_format} 
     public function testAddUsersToGroupAction()
@@ -426,5 +428,5 @@ class UserControllerTest extends TransactionalTestCase
     public function testRemoveUsersFromGroupActionIsProtected()
     {
         $this->markTestIncomplete('This test has not been implemented yet.');
-    }*/
+    }
 }

@@ -30,6 +30,7 @@ class UserVoter implements VoterInterface
     const CREATE = 'create';
     const EDIT   = 'edit';
     const DELETE = 'delete';
+    const VIEW   = 'view';
 
     private $ch;
     private $om;
@@ -62,6 +63,7 @@ class UserVoter implements VoterInterface
         $action = strtolower($attributes[0]);
 
         switch ($action) {
+            case self::VIEW:   return $this->checkView($users);
             case self::CREATE: return $this->checkCreation($users);
             case self::EDIT:   return $this->checkEdit($token, $users);
             case self::DELETE: return $this->checkDelete($token, $users);
@@ -79,6 +81,15 @@ class UserVoter implements VoterInterface
     }
 
     private function checkEdit($token, $users)
+    {
+        foreach ($users as $user) {
+            if (!$this->isOrganizationManager($token, $user)) return VoterInterface::ACCESS_DENIED;
+        }
+        
+        return VoterInterface::ACCESS_GRANTED;
+    }
+
+    private function checkView($token, $users)
     {
         foreach ($users as $user) {
             if (!$this->isOrganizationManager($token, $user)) return VoterInterface::ACCESS_DENIED;

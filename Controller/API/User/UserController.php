@@ -93,7 +93,7 @@ class UserController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_user"})
      * @ApiDoc(
      *     description="Returns the users list",
      *     views = {"user"}
@@ -107,7 +107,7 @@ class UserController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"admin"})
+     * @View(serializerGroups={"api_user"})
      * @ApiDoc(
      *     description="Returns the users list",
      *     views = {"user"}
@@ -147,7 +147,7 @@ class UserController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_user"})
      * @ApiDoc(
      *     description="Creates a user",
      *     views = {"user"},
@@ -187,7 +187,7 @@ class UserController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_user"})
      * @ApiDoc(
      *     description="Update a user",
      *     views = {"user"},
@@ -236,7 +236,7 @@ class UserController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_user"})
      * @ApiDoc(
      *     description="Returns a user",
      *     views = {"user"}
@@ -255,7 +255,7 @@ class UserController extends FOSRestController
      * @ApiDoc(
      *     description="Removes a user",
      *     section="user",
-     *     views = {"api"}
+     *     views = {"api_user"}
      * )
      * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
@@ -290,7 +290,7 @@ class UserController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_user"})
      * @ApiDoc(
      *     description="Add a role to a user",
      *     views = {"user"}
@@ -306,7 +306,7 @@ class UserController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_user"})
      * @ApiDoc(
      *     description="remove a role from a user",
      *     views = {"user"}
@@ -321,7 +321,7 @@ class UserController extends FOSRestController
         return $user;    }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_user"})
      * @ApiDoc(
      *     description="Add a user in a group",
      *     views = {"user"}
@@ -337,7 +337,7 @@ class UserController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_user"})
      * @ApiDoc(
      *     description="Remove a user from a group",
      *     views = {"user"}
@@ -373,8 +373,8 @@ class UserController extends FOSRestController
      */
     public function usersPasswordInitializeAction()
     {
-        $this->throwExceptionIfNotGranted('edit', $user);
         $users = $this->apiManager->getParameters('userIds', 'Claroline\CoreBundle\Entity\User');
+        $this->throwExceptionIfNotGranted('edit', $users);
 
         foreach ($users as $user) {
             $this->mailManager->sendForgotPassword($user);
@@ -384,7 +384,7 @@ class UserController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_user"})
      * @ApiDoc(
      *     description="Add a list of users to a group",
      *     views = {"group"},
@@ -400,7 +400,7 @@ class UserController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_user"})
      * @ApiDoc(
      *     description="Removes a list of users from a group",
      *     views = {"group"},
