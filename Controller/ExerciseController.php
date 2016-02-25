@@ -22,6 +22,8 @@ class ExerciseController extends Controller
      * @EXT\Route("/{id}/edit", name="ujm_exercise_edit")
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @deprecated Templates will be rendered by AngularJS
      */
     public function editAction(Exercise $exercise)
     {
@@ -60,6 +62,8 @@ class ExerciseController extends Controller
      * @EXT\Method("POST")
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @deprecated Templates will be rendered by AngularJS
      */
     public function updateAction(Exercise $exercise)
     {
@@ -107,6 +111,7 @@ class ExerciseController extends Controller
      */
     public function openAction(Exercise $exercise)
     {
+        // Check if the current User is allowed to open the Exercise
         $this->checkAccess($exercise);
 
         $em = $this->getDoctrine()->getManager();
@@ -127,18 +132,19 @@ class ExerciseController extends Controller
         }
 
         $nbQuestions = $em->getRepository('UJMExoBundle:StepQuestion')->getCountQuestion($exercise);
-        $nbPapers = $em->getRepository('UJMExoBundle:Paper')->countPapers($exerciseId);
+        $nbPapers    = $em->getRepository('UJMExoBundle:Paper')->countPapers($exerciseId);
 
-        return $this->render(
-            'UJMExoBundle:Exercise:show.html.twig',
-            [
-                'exercise' => $exercise,
-                'allowedToCompose' => $isAllowedToCompose,
-                'nbQuestion' => $nbQuestions['nbq'],
-                'nbUserPaper' => $nbUserPaper,
-                'nbPapers' => $nbPapers,
-            ]
-        );
+        // Display the Summary of the Exercise
+        return $this->render('UJMExoBundle:Exercise:summary.html.twig', [
+            // Used to build the Claroline Breadcrumbs
+            '_resource'        => $exercise,
+            'workspace'        => $exercise->getResourceNode()->getWorkspace(),
+            'exercise'         => $this->get('ujm.exo.exercise_manager')->exportExercise($exercise, false),
+            'allowedToCompose' => $isAllowedToCompose,
+            'nbQuestion'       => $nbQuestions['nbq'],
+            'nbUserPaper'      => $nbUserPaper,
+            'nbPapers'         => $nbPapers,
+        ]);
     }
 
     /**

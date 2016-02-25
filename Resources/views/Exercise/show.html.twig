@@ -6,6 +6,7 @@
 
 {% extends layout %}
 
+{% set exercise = _resource %}
 {% set resource = exercise.getResourceNode() %}
 {% set workspace = resource.getWorkspace() %}
 {% set published = resource.isPublished() %}

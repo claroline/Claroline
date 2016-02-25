@@ -1,0 +1,56 @@
+{% extends "UJMExoBundle:Sequence:layout.html.twig" %}
+
+{# Title of the Page #}
+{% block title %} {{ 'exercise' | trans({}, 'ujm_exo') }} : {{ _resource.title }} {% endblock %}
+
+{# Breadcrumbs #}
+{% block breadcrumb %}
+    {{ parent() }}
+{% endblock %}
+
+{# Content of the Page #}
+{% block content %}
+    {# Initialize AngularJS application #}
+   <div data-ng-app="ExerciseApp" data-ng-cloak="">
+       <exercise data-exercise="{{ exercise | json_encode | raw | escape }}"></exercise>
+   </div>
+{% endblock %}
+
+{% block javascripts %}
+    {# Load Claroline JS #}
+    {{ parent() }}
+
+    {# Translations #}
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'ujm_exo' }) }}"></script>
+
+    {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm-exo-app.js'
+        '@UJMExoBundle/Resources/public/js/anonymous-wrapper-start.js'
+
+        '@UJMExoBundle/Resources/public/js/sequence/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Player/Exercise/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Player/Exercise/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Player/Exercise/Directives/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Player/Exercise/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/anonymous-wrapper-end.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+
+    {#'@UJMExoBundle/Resources/public/js/sequence/Common/*'
+    '@UJMExoBundle/Resources/public/js/sequence/Common/Services/*'
+
+    '@UJMExoBundle/Resources/public/js/sequence/Player/Shared/*'
+    '@UJMExoBundle/Resources/public/js/sequence/Player/Shared/Services/*'
+
+    '@UJMExoBundle/Resources/public/js/sequence/Player/Exercise/*'
+    '@UJMExoBundle/Resources/public/js/sequence/Player/Exercise/Controllers/*'
+    '@UJMExoBundle/Resources/public/js/sequence/Player/Exercise/Directives/*'
+    '@UJMExoBundle/Resources/public/js/sequence/Player/Exercise/Services/*'
+
+    '@UJMExoBundle/Resources/public/js/sequence/Player/Question/*'
+    '@UJMExoBundle/Resources/public/js/sequence/Player/Question/Controllers/*'
+    '@UJMExoBundle/Resources/public/js/sequence/Player/Question/Directives/*'
+    '@UJMExoBundle/Resources/public/js/sequence/Player/Question/Services/*'#}
+{% endblock %}
