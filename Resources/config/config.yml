@@ -1,0 +1,12 @@
+plugin:
+  has_options: false
+
+  resources:
+    - class: Claroline\ResultBundle\Entity\Result
+      name: claroline_result
+
+  widgets:
+    - name: claroline_result
+      is_configurable: false
+      is_displayable_in_workspace: true
+      is_displayable_in_desktop: false
