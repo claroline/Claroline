@@ -82,8 +82,16 @@ class InitTestSchemaCommand extends ContainerAwareCommand
 
         foreach ($this->getContainer()->get('kernel')->getBundles() as $bundle) {
             if ($bundle instanceof InstallableBundle && $bundle->hasMigrations()) {
+                
                 if (count($migrator->getBundleStatus($bundle)[Migrator::STATUS_AVAILABLE]) > 1) {
                     $migrator->upgradeBundle($bundle, Migrator::VERSION_FARTHEST);
+                }
+
+                if ($bundle instanceof PluginBundle) {
+                    $this->getContainer()->get('claroline.plugin.installer')->install($bundle);
+                } elseif ($bundle instanceof InstallableInterface) {
+                    $this->getContainer()->get('claroline.installation.manager')->setLogger($consoleLogger);
+                    $this->getContainer()->get('claroline.installation.manager')->install($bundle, true);
                 }
 
                 if ($fixturesDir = $bundle->getRequiredFixturesDirectory($this->environment)) {

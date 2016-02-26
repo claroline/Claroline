@@ -133,11 +133,7 @@ class Organization
     /**
      * @var User[]|ArrayCollection
      *
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     inversedBy="administratedOrganizations"
-     * )
-     * @ORM\JoinTable(name="claro_user_administrator")
+     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\User", mappedBy="administratedOrganizations")
      * @Groups({"api_organization_tree", "api_organization_list"})
      */
     protected $administrators;
@@ -244,17 +240,22 @@ class Organization
 
     public function addAdministrator(User $user)
     {
-        if (!$this->administrators->contains($user)) $this->administrators->add($user);
+        if (!$this->administrators->contains($user)) {
+            $this->administrators->add($user);  
+            $user->addAdministratedOrganization($this);
+        } 
     }
 
     public function removeAdministrator(User $user)
     {
-        if ($this->administrators->contains($user)) $this->administrators->removeElement($user);
+        if ($this->administrators->contains($user)) {
+            $this->administrators->removeElement($user);
+            $user->removeAdministratedOrganization($this);
+        }
     }
 
     public function setAdministrators(ArrayCollection $users)
     {
-        var_dump('sett');
         $this->administrators = $users;
     }
 

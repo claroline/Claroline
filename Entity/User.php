@@ -401,10 +401,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $events;
 
     /**
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization",
-     *     mappedBy="administrators"
-     * )
+     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization", inversedBy="administrators")
      * @ORM\JoinTable(name="claro_user_administrator")
      * @Groups({"api_user"})
      */
@@ -1164,12 +1161,12 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
             }
         }
 
-        return array_unique(array_merge($organizations, $this->organizations->toArray()));
+        return array_merge($organizations, $this->organizations->toArray());
     }
 
     public function addOrganization(Organization $organization)
     {
-        $this->organizations->add($organization); 
+        if (!$this->organizations->contains($organization)) $this->organizations->add($organization); 
     }
 
     //sometimes it's passed as an array and I don't understand why.
@@ -1204,4 +1201,13 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $this->administratedOrganizations->add($organization); 
     }
 
+    public function removeAdministratedOrganization(Organization $organization)
+    {
+        $this->administratedOrganizations->remove($organization); 
+    }
+
+    public function setAdministratedOrganizations($organizations)
+    {
+        $this->administratedOrganizations = $organizations;
+    }
 }

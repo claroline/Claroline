@@ -47,8 +47,14 @@ class OrganizationManager
 
     public function edit(Organization $organization)
     {
-        //var_dump(count($organization->getAdministrators()));
-        //var_dump(count($organization->getLocations()));
+        //if I inverse the mappedBy and inversedBy doctrine mapping, I don't need to do this.
+        //but it it's done, the search request will break.
+        //no idea why
+        foreach ($organization->getAdministrators() as $administrator) {
+            $administrator->addOrganization($organization);
+            $this->om->persist($administrator);
+        }
+
         $this->om->persist($organization);
         $this->om->flush();
 

@@ -1198,7 +1198,7 @@ class UserManager
                 $existingUser->setFirstName($firstName);
                 $existingUser->setLastName($lastName);
                 $existingUser->setUsername($username);
-                $existingUser->setPlainPassword($pwd);
+                if ($pwd != '') $existingUser->setPlainPassword($pwd);
                 $existingUser->setMail($email);
                 $existingUser->setAdministrativeCode($code);
                 $existingUser->setPhone($phone);

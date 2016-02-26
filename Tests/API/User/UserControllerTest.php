@@ -55,12 +55,6 @@ class UserControllerTest extends TransactionalTestCase
         $this->persister->flush();
     }
 
-    private function initGroup()
-    {
-        $this->group = $this->persister->group('group');
-        //Do more stuff here. Yolo.
-    }
-
     //@url: /api/users.{_format}  
     //@route: api_get_users
     public function testGetUsersAction()
@@ -80,7 +74,6 @@ class UserControllerTest extends TransactionalTestCase
         $this->client->request('GET', '/api/users.json');
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
-
 
     //@url: /api/searches/{page}/users/{limit}.{_format}
     //@route: api_get_search_users
@@ -343,7 +336,7 @@ class UserControllerTest extends TransactionalTestCase
     //@url: /api/users/{user}/groups/{group}/add.{_format} 
     public function testAddUserGroupAction()
     {
-        $this->markTestIncomplete('This test has not been implemented yet.');
+        $this->markTestSkipped('This test has not been implemented yet.');
     }
 
 
@@ -351,7 +344,7 @@ class UserControllerTest extends TransactionalTestCase
     //@url: /api/users/{user}/groups/{group}/add.{_format} 
     public function testAddUserGroupActionIsProtected()
     {
-        $this->markTestIncomplete('This test has not been implemented yet.');
+        $this->markTestSkipped('This test has not been implemented yet.');
     }    
 
 
@@ -359,14 +352,14 @@ class UserControllerTest extends TransactionalTestCase
     //@url: /api/users/{user}/groups/{group}/remove.{_format}
     public function testRemoveUserGroupAction()
     {
-        $this->markTestIncomplete('This test has not been implemented yet.');
+        $this->markTestSkipped('This test has not been implemented yet.');
     }
 
     //@route: api_remove_user_group
     //@url: /api/users/{user}/groups/{group}/remove.{_format}
     public function testRemoveUserGroupActionIsProtected()
     {
-        $this->markTestIncomplete('This test has not been implemented yet.');
+        $this->markTestSkipped('This test has not been implemented yet.');
     }
 
     

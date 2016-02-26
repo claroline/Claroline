@@ -35,12 +35,15 @@ class GroupControllerTest extends TransactionalTestCase
     {
         parent::setUp();
         $this->persister = $this->client->getContainer()->get('claroline.library.testing.persister');
+        //users
         $this->john = $this->persister->user('john');
         $roleAdmin = $this->persister->role('ROLE_ADMIN');
         $this->teacherRole = $this->persister->role('ROLE_TEACHER');
         $this->baseRole = $this->persister->role('ROLE_BASE');
         $this->admin = $this->persister->user('admin');
         $this->admin->addRole($roleAdmin);
+
+        //organization
         $organization = $this->persister->organization('organization');
         $this->adminOrga = $this->persister->user('adminOrga');
         $this->groupOrga = $this->persister->group('groupOrga');
@@ -48,6 +51,8 @@ class GroupControllerTest extends TransactionalTestCase
         $this->groupBase = $this->persister->group('groupBase');
         $this->groupOrga->addOrganization($organization);
         $this->adminOrga->addAdministratedOrganization($organization);
+
+        //persist
         $this->persister->persist($this->groupOrga);
         $this->persister->persist($this->adminOrga);
         $this->persister->persist($this->admin);
@@ -99,7 +104,7 @@ class GroupControllerTest extends TransactionalTestCase
     //@method: POST
     public function testPostGroupAction()
     {
-        $this->markTestIncomplete('This test has not been implemented yet.');
+        $this->markTestSkipped('This test has not been implemented yet.');
     }
 
     //@route: api_post_group
@@ -107,7 +112,7 @@ class GroupControllerTest extends TransactionalTestCase
     //@method: POST
     public function testPostGroupActionIsProtected()
     {
-        $this->markTestIncomplete('This test has not been implemented yet.');
+        $this->markTestSkipped('This test has not been implemented yet.');
     }
 
 
@@ -116,7 +121,7 @@ class GroupControllerTest extends TransactionalTestCase
     //@method: PUT
     public function testPutGroupAction()
     {
-        $this->markTestIncomplete('This test has not been implemented yet.');
+        $this->markTestSkipped('This test has not been implemented yet.');
     }
 
     //@route: api_put_group
@@ -124,7 +129,7 @@ class GroupControllerTest extends TransactionalTestCase
     //@method: PUT
     public function testPutGroupActionIsProtected()
     {
-        $this->markTestIncomplete('This test has not been implemented yet.');
+        $this->markTestSkipped('This test has not been implemented yet.');
     }
 
     //@route: api_delete_group

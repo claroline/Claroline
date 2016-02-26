@@ -466,8 +466,8 @@ class GroupManager
         if (!$this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
             
             $currentUser = $this->container->get('security.token_storage')->getToken()->getUser();
-            $qb->leftJoin('g.organizations', 'go');
-            $qb->leftJoin('go.administrators', 'ga');
+            $qb->join('g.organizations', 'go');
+            $qb->join('go.administrators', 'ga');
             $qb->andWhere('ga.id = :userId');
             $qb->setParameter('userId', $currentUser->getId());
         }
