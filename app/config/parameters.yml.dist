@@ -12,12 +12,12 @@ parameters:
     database_user: root
     database_password: ~
 
-    test_database_driver: %database_driver%
-    test_database_host: %database_host%
-    test_database_port: %database_port%
-    test_database_name: %database_name%_test
-    test_database_user: %database_user%
-    test_database_password: %database_password%
+    test_database_driver: '%database_driver%'
+    test_database_host: '%database_host%'
+    test_database_port: '%database_port%'
+    test_database_name: '%database_name%_test'
+    test_database_user: '%database_user%'
+    test_database_password: '%database_password%'
 
 # mail
 
