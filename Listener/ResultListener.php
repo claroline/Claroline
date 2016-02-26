@@ -16,13 +16,60 @@ use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Form\Handler\FormHandler;
+use Claroline\ResultBundle\Manager\ResultManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * @DI\Service
+ * @DI\Service("claroline.result.result_listener")
  */
 class ResultListener
 {
+    private $request;
+    private $kernel;
+    private $manager;
+    private $formHandler;
+
+    /**
+     * @DI\InjectParams({
+     *     "stack"      = @DI\Inject("request_stack"),
+     *     "kernel"     = @DI\Inject("http_kernel"),
+     *     "manager"    = @DI\Inject("claroline.result.result_manager"),
+     *     "handler"    = @DI\Inject("claroline.form_handler")
+     * })
+     *
+     * @param RequestStack          $stack
+     * @param HttpKernelInterface   $kernel
+     * @param ResultManager         $manager
+     * @param FormHandler           $handler
+     */
+    public function __construct(
+        RequestStack $stack,
+        HttpKernelInterface $kernel,
+        ResultManager $manager,
+        FormHandler $handler
+    )
+    {
+        $this->request = $stack->getCurrentRequest();
+        $this->kernel = $kernel;
+        $this->manager = $manager;
+        $this->formHandler = $handler;
+    }
+
+    /**
+     * Test purpose only.
+     *
+     * @param Request $request
+     */
+    public function setRequest(Request $request)
+    {
+        $this->request = $request;
+    }
+
     /**
      * @DI\Observe("create_form_claroline_result")
      *
@@ -30,7 +77,8 @@ class ResultListener
      */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
-
+        $event->setResponseContent($this->formHandler->getView('claroline_form_result'));
+        $event->stopPropagation();
     }
 
     /**
@@ -40,7 +88,13 @@ class ResultListener
      */
     public function onCreate(CreateResourceEvent $event)
     {
+        if ($this->formHandler->isValid('claroline_form_result', $this->request)) {
+            $event->setResources([$this->manager->create($this->formHandler->getData())]);
+        } else {
+            $event->setErrorFormContent($this->formHandler->getView());
+        }
 
+        $event->stopPropagation();
     }
 
     /**
@@ -50,7 +104,9 @@ class ResultListener
      */
     public function onOpen(OpenResourceEvent $event)
     {
-
+        $subRequest = $this->request->duplicate([], null, ['_controller' => 'ClarolineResultBundle:Result:result']);
+        $event->setResponse($this->kernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST));
+        $event->stopPropagation();
     }
 
     /**
@@ -60,7 +116,8 @@ class ResultListener
      */
     public function onDelete(DeleteResourceEvent $event)
     {
-
+        $this->manager->delete($event->getResource());
+        $event->stopPropagation();
     }
 
     /**
@@ -70,6 +127,7 @@ class ResultListener
      */
     public function onDisplayWidget(DisplayWidgetEvent $event)
     {
-
+        $this->manager->getWidgetContent($event->getInstance());
+        $event->stopPropagation();
     }
 }
