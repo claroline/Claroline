@@ -507,22 +507,27 @@
              * @returns {undefined}
              */
             this.handleBeforDrop = function (data) {
-                var jsPlumbConnection = jsPlumb.getConnections(data.connection);
-                // avoid drawing the same connection multiple times
-                if (jsPlumbConnection.length > 0 && data.sourceId === jsPlumbConnection[0].sourceId && data.targetId === jsPlumbConnection[0].targetId) {
-                    jsPlumb.detach(jsPlumbConnection);
-                    return false;
-                } else {
-                    var sourceId = data.sourceId.replace('draggable_', '');
-                    var targetId = data.targetId.replace('droppable_', '');
-                    var connection = {
-                        source: sourceId,
-                        target: targetId
-                    };
-                    this.connections.push(connection);
+                if (!this.feedbackIsVisible) {
+                    var jsPlumbConnection = jsPlumb.getConnections(data.connection);
+                    // avoid drawing the same connection multiple times
+                    if (jsPlumbConnection.length > 0 && data.sourceId === jsPlumbConnection[0].sourceId && data.targetId === jsPlumbConnection[0].targetId) {
+                        jsPlumb.detach(jsPlumbConnection);
+                        return false;
+                    } else {
+                        var sourceId = data.sourceId.replace('draggable_', '');
+                        var targetId = data.targetId.replace('droppable_', '');
+                        var connection = {
+                            source: sourceId,
+                            target: targetId
+                        };
+                        this.connections.push(connection);
+                    }
+                    this.updateStudentData();
+                    return true;
                 }
-                this.updateStudentData();
-                return true;
+                else {
+                    return false;
+                }
             };
 
             /**
@@ -533,18 +538,20 @@
              * @returns {undefined}
              */
             this.removeConnection = function (data) {
-                var sourceId = data.sourceId.replace('draggable_', '');
-                var targetId = data.targetId.replace('droppable_', '');
-                // connection is removed from dom even with this commented... 
-                // If not commented, code stops at this methods...
-                // jsPlumb.detach(data); 
-                
-                for (var i = 0; i < this.connections.length; i++) {
-                    if (this.connections[i].source === sourceId && this.connections[i].target === targetId) {
-                        this.connections.splice(i, 1);
+                if (!this.feedbackIsVisible) {
+                    var sourceId = data.sourceId.replace('draggable_', '');
+                    var targetId = data.targetId.replace('droppable_', '');
+                    // connection is removed from dom even with this commented... 
+                    // If not commented, code stops at this methods...
+                    // jsPlumb.detach(data); 
+
+                    for (var i = 0; i < this.connections.length; i++) {
+                        if (this.connections[i].source === sourceId && this.connections[i].target === targetId) {
+                            this.connections.splice(i, 1);
+                        }
                     }
+                    this.updateStudentData();
                 }
-                this.updateStudentData();
             };
 
             /**
