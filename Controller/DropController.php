@@ -128,6 +128,25 @@ class DropController extends DropzoneBaseController
       
         $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
 
+        $returnReceiptArray = array();
+
+        // Pour avoir l'accusé de réception (ou pas) de chaque document
+        foreach ($drop->getDocuments() as $document) {
+            // Récupération de l'accusé de réceptoin
+            $returnReceiptType = $this->getDoctrine()
+            ->getRepository('InnovaCollecticielBundle:ReturnReceipt')
+            ->doneReturnReceiptForOneDocument($document);
+
+            if (!empty($returnReceiptType)) {
+                // Récupération de la valeur de l'accusé de réceptoin
+                $returnReceiptArray[$document->getId()] = $returnReceiptType[0]->getReturnReceiptType()->getId();
+            }
+            else
+            {
+                $returnReceiptArray[$document->getId()] = 0;
+            }
+        }
+
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
@@ -143,7 +162,8 @@ class DropController extends DropzoneBaseController
             'adminInnova' => $canEdit,
             'userNbTextToRead' => $userNbTextToRead,
             'activeRoute' => $activeRoute,
-            'collecticielOpenOrNot' => $collecticielOpenOrNot
+            'collecticielOpenOrNot' => $collecticielOpenOrNot,
+            'returnReceiptArray' => $returnReceiptArray
         );
     }
 
@@ -576,7 +596,7 @@ class DropController extends DropzoneBaseController
             $totalValideAndNotAdminDocs = $totalValideAndNotAdminDocs + $countValideAndNotAdminDocs;
 
 
-            // Nombre d'AR pour cet utilisateur et pour ce dropzone / Repo : ReturnReceiputtwment
+            // Nombre d'AR pour cet utilisateur et pour ce dropzone / Repo : ReturnReceipt
             $countReturnReceiptForUserAndDropzone = $this->getDoctrine()
                                 ->getRepository('InnovaCollecticielBundle:ReturnReceipt')
                                 ->countTextToReadAll($this->get('security.token_storage')->getToken()->getUser(),
@@ -735,6 +755,7 @@ class DropController extends DropzoneBaseController
                 }
             }
         }
+
         //
         // Fin partie pour calculer les compteurs
         //

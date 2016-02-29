@@ -141,6 +141,24 @@ class ReturnReceiptRepository extends EntityRepository
 
     }
 
+    /**
+     *  Pour savoir le type d'accusé de réception pour l'utilisateur indiqué et le dropzone indiqué
+     * @param $dropzoneId
+     * @param $documentId
+    */
+    public function doneReturnReceiptForOneDocument(Document $document)
+    {
+
+        /* requête avec CreateQuery : */
+        $qb = $this->createQueryBuilder('returnreceipt')
+            ->select('returnreceipt')
+            ->andWhere('returnreceipt.document = :document')
+            ->setParameter('document', $document);
+
+        return $qb->getQuery()->getResult();
+
+    }
+
 
     /**
      *  Suppression de l'ancien accusé de réception

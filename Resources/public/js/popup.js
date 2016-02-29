@@ -39,6 +39,7 @@ $(document).ready(function () {
         var senderId = document.getElementById('document_sender_' + documentId).value;
         var docDropUserId = document.getElementById('document_drop_user_' + documentId).value;
         var adminInnova = document.getElementById('adminInnova_' + documentId).value;
+        var returnReceiptId = document.getElementById('return_receipt_' + documentId).value;
 
         //
         // Afficher les tests ici qui permettront de rafraîchir les données.
@@ -64,6 +65,10 @@ $(document).ready(function () {
                 var selector = "#cancel_" + documentId;
             }
             else {
+                var selector = "#lock_" + documentId;
+            }
+            // #241 : l'élève ne peut rien faire s'il y a un AR sur le document.
+            if (returnReceiptId > 0) {
                 var selector = "#lock_" + documentId;
             }
         }

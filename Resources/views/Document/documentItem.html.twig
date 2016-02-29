@@ -95,8 +95,12 @@
     {# #187 : ajout de la colonne "Accusé de réception", demande de JJQ #}
     {% if dropzone.returnreceipt == 1  %}
         <td class="{{ classArray }} centered centering-columnsAR-study" id="is-validate-{{ document.id }}">
-            {# Pour affichage de la valeur de l'accusé de réception #}
-            {% render(controller('InnovaCollecticielBundle:Document:renderReturnReceipt', {'documentId': document.id, 'dropzoneId': dropzone.id})) %} 
+            {# Pour affichage de la valeur de l'accusé de réception
+            {% render(controller('InnovaCollecticielBundle:Document:renderReturnReceipt',
+            {'documentId': document.id, 'dropzoneId': dropzone.id})) #}
+            {% include 'InnovaCollecticielBundle:Document:renderReturnReceipt.html.twig'
+            with {'value': returnReceiptArray[document.id]} 
+            %}
         </td>
     {% endif %}
 
@@ -129,6 +133,7 @@
                 <input type="hidden" value="{{document.sender.id}}" id="document_sender_{{document.id}}">
                 <input type="hidden" value="{{document.drop.user.id}}" id="document_drop_user_{{document.id}}">
                 <input type="hidden" value="1" id="adminInnova_{{document.id}}">
+                <input type="hidden" value="{{returnReceiptArray[document.id]}}" id="return_receipt_{{document.id}}">
             </td>
         {% endif %}
     {% else %}
@@ -160,6 +165,7 @@
                 <input type="hidden" value="{{document.sender.id}}" id="document_sender_{{document.id}}">
                 <input type="hidden" value="{{document.drop.user.id}}" id="document_drop_user_{{document.id}}">
                 <input type="hidden" value="0" id="adminInnova_{{document.id}}">
+                <input type="hidden" value="{{returnReceiptArray[document.id]}}" id="return_receipt_{{document.id}}">
                 </td>
             {% endif %}
         {% endif %}

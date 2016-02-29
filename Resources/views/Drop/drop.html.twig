@@ -58,7 +58,9 @@
 
         {# DOCUMENTS ALREADY ADDED #}
         <h4>{{ 'Documents added  the copy %nom% %prenom% %pseudo%'|trans({'%nom%': drop.user.firstName, '%prenom%': drop.user.lastName, '%pseudo%': drop.user.username},'innova_collecticiel') }}</h4>
-        {{ dropzoneMacros.displayDocumentsList(drop, dropzone, 12, "complete", null, adminInnova, collecticielOpenOrNot) }}
+        {{ dropzoneMacros.displayDocumentsList
+        (drop, dropzone, 12, "complete", null, adminInnova, collecticielOpenOrNot, returnReceiptArray)
+        }}
 
         {% if adminInnova %}
             {% set lastType = "file" %}

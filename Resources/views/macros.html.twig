@@ -1,4 +1,5 @@
-{% macro displayDocumentsList(drop, dropzone, width, mode, documentListText, adminInnova, collecticielOpenOrNot ) %}
+{% macro displayDocumentsList
+(drop, dropzone, width, mode, documentListText, adminInnova, collecticielOpenOrNot, returnReceiptArray ) %}
     <div class="row">
         <div class="col-md-{{ width }}">
             {% if documentListText is not null %}
@@ -66,7 +67,8 @@
                     </thead>
                     <tbody>
                         {% for index, document in drop.documents %}
-                            {% include 'InnovaCollecticielBundle:Document:documentItem.html.twig' %}
+                            {% include 'InnovaCollecticielBundle:Document:documentItem.html.twig'
+                            with {'returnReceiptArray': returnReceiptArray} %}
                         {% endfor %}
                     </tbody>
                 </table>
