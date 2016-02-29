@@ -216,6 +216,10 @@
                     this.solutions = result.solutions;
                     this.questionFeedback = result.feedback;
                 }.bind(this));
+                
+                $('.blank').each(function () {
+                    $(this).prop('disabled', true);
+                });
             };
 
             /**
