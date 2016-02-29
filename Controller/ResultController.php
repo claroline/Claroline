@@ -11,14 +11,13 @@
 
 namespace Claroline\ResultBundle\Controller;
 
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Form\Handler\FormHandler;
 use Claroline\ResultBundle\Entity\Result;
 use Claroline\ResultBundle\Manager\ResultManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @EXT\Route(requirements={"id"="\d+", "abilityId"="\d+"}, options={"expose"=true})
@@ -32,16 +31,23 @@ class ResultController
     /**
      * @DI\InjectParams({
      *     "manager" = @DI\Inject("claroline.result.result_manager"),
-     *     "handler" = @DI\Inject("claroline.form_handler")
+     *     "handler" = @DI\Inject("claroline.form_handler"),
+     *     "checker" = @DI\Inject("security.authorization_checker")
      * })
      *
-     * @param ResultManager     $manager
-     * @param FormHandler       $handler
+     * @param ResultManager                 $manager
+     * @param FormHandler                   $handler
+     * @param AuthorizationCheckerInterface $checker
      */
-    public function __construct(ResultManager $manager, FormHandler $handler)
+    public function __construct(
+        ResultManager $manager,
+        FormHandler $handler,
+        AuthorizationCheckerInterface $checker
+    )
     {
         $this->manager = $manager;
         $this->formHandler = $handler;
+        $this->checker = $checker;
     }
 
     /**
@@ -53,7 +59,9 @@ class ResultController
      */
     public function resultAction(Result $result)
     {
-        // check access
+        if (!$this->checker->isGranted('OPEN', $result)) {
+            throw new AccessDeniedException();
+        }
 
         return ['result' => $result];
     }
