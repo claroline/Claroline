@@ -60,7 +60,7 @@ class CursusController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
      *     description="Returns root cursus list",
      *     views = {"cursus"}
@@ -72,7 +72,7 @@ class CursusController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
      *     description="Returns datas for cursus registration",
      *     views = {"cursus"}
@@ -80,13 +80,17 @@ class CursusController extends FOSRestController
      */
     public function getDatasForCursusRegistrationAction(Cursus $cursus)
     {
-        $datas = $this->cursusManager->getDatasForCursusRegistration($cursus);
+        $datas = $this->cursusManager->getCursusDatasForCursusRegistration($cursus);
+        $cursusGroupsDatas = $this->cursusManager->getCursusGroupsForCursusRegistration($cursus);
+        $cursusUsersDatas = $this->cursusManager->getCursusUsersForCursusRegistration($cursus);
+        $datas['cursusGroups'] = $cursusGroupsDatas;
+        $datas['cursusUsers'] = $cursusUsersDatas;
 
         return new JsonResponse($datas, 200);
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
      *     description="Returns cursus users for cursus registration",
      *     views = {"cursus"}
@@ -100,7 +104,7 @@ class CursusController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
      *     description="Returns datas for searched cursus",
      *     views = {"cursus"}
@@ -114,7 +118,7 @@ class CursusController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
      *     description="Returns hierarchy datas for cursus",
      *     views = {"cursus"}
@@ -128,7 +132,7 @@ class CursusController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
      *     description="Unregister group from cursus",
      *     views = {"cursus"}
@@ -145,7 +149,7 @@ class CursusController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
      *     description="Unregister groups from cursus",
      *     views = {"cursus"}
@@ -161,7 +165,7 @@ class CursusController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
      *     description="Unregister user from cursus",
      *     views = {"cursus"}
@@ -178,7 +182,7 @@ class CursusController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
      *     description="Unregister users from cursus",
      *     views = {"cursus"}
@@ -193,7 +197,7 @@ class CursusController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_group"})
      * @ApiDoc(
      *     description="Retrieve groups that are not registered to cursus",
      *     views = {"cursus"}
@@ -211,7 +215,7 @@ class CursusController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
      *     description="Retrieve searched groups that are not registered to cursus",
      *     views = {"cursus"}
@@ -229,7 +233,7 @@ class CursusController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
      *     description="Retrieve users who are not registered to cursus",
      *     views = {"cursus"}
@@ -247,7 +251,7 @@ class CursusController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
      *     description="Retrieve searched users who are not registered to cursus",
      *     views = {"cursus"}
@@ -265,7 +269,7 @@ class CursusController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
      *     description="Retrieve sessions infos from a list of cursus",
      *     views = {"cursus"}
@@ -280,7 +284,7 @@ class CursusController extends FOSRestController
     }
     
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
      *     description="Register group to cursus and sessions",
      *     views = {"cursus"}
@@ -300,7 +304,7 @@ class CursusController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
      *     description="Register array of users to cursus and sessions",
      *     views = {"cursus"}
@@ -321,7 +325,7 @@ class CursusController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
      *     description="Returns datas for registration queues",
      *     views = {"cursus"}
@@ -335,7 +339,7 @@ class CursusController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
      *     description="Returns datas for registration queues",
      *     views = {"cursus"}
@@ -349,7 +353,7 @@ class CursusController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
      *     description="Validate session queue",
      *     views = {"cursus"}
@@ -369,7 +373,7 @@ class CursusController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
      *     description="Validate session queue",
      *     views = {"cursus"}
@@ -389,7 +393,7 @@ class CursusController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
      *     description="Delete session queue",
      *     views = {"cursus"}
@@ -409,7 +413,7 @@ class CursusController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
      *     description="Delete session queue",
      *     views = {"cursus"}
@@ -429,7 +433,7 @@ class CursusController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
      *     description="Get all unclosed sessions of a course",
      *     views = {"cursus"}
@@ -451,7 +455,7 @@ class CursusController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
      *     description="Registers user from course queue to a session",
      *     views = {"cursus"}
@@ -473,7 +477,7 @@ class CursusController extends FOSRestController
 
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
      *     description="Returns all the cursus list",
      *     views = {"cursus"}
@@ -485,7 +489,7 @@ class CursusController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
      *     description="Returns all the cursus list order by parent",
      *     views = {"cursus"}
@@ -518,7 +522,7 @@ class CursusController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
      *     description="Returns the cursus list",
      *     views = {"cursus"}
@@ -530,7 +534,7 @@ class CursusController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_cursus"})
      * @ApiDoc(
      *     description="Returns the courses list",
      *     views = {"cursus"}

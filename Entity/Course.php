@@ -32,14 +32,14 @@ class Course
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api", "bulletin"})
+     * @Groups({"api", "api_cursus", "bulletin"})
      */
     protected $id;
     
     /**
      * @ORM\Column(unique=true)
      * @Assert\NotBlank()
-     * @Groups({"api", "bulletin"})
+     * @Groups({"api", "api_cursus", "bulletin"})
      * @SerializedName("code")
      */
     protected $code;
@@ -47,35 +47,35 @@ class Course
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api", "bulletin"})
+     * @Groups({"api", "api_cursus", "bulletin"})
      * @SerializedName("title")
      */
     protected $title;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"api"})
+     * @Groups({"api", "api_cursus"})
      * @SerializedName("description")
      */
     protected $description;
     
     /**
      * @ORM\Column(name="public_registration", type="boolean")
-     * @Groups({"api"})
+     * @Groups({"api", "api_cursus"})
      * @SerializedName("publicRegistration")
      */
     protected $publicRegistration = false;
 
     /**
      * @ORM\Column(name="public_unregistration", type="boolean")
-     * @Groups({"api"})
+     * @Groups({"api", "api_cursus"})
      * @SerializedName("publicUnregistration")
      */
     protected $publicUnregistration = false;
 
     /**
      * @ORM\Column(name="registration_validation", type="boolean")
-     * @Groups({"api"})
+     * @Groups({"api", "api_cursus"})
      * @SerializedName("registrationValidation")
      */
     protected $registrationValidation = false;
@@ -103,13 +103,13 @@ class Course
      *     targetEntity="Claroline\CursusBundle\Entity\CourseSession",
      *     mappedBy="course"
      * )
-     * @Groups({"api"})
+     * @Groups({"api", "api_cursus"})
      */
     protected $sessions;
 
     /**
      * @ORM\Column(nullable=true)
-     * @Groups({"api"})
+     * @Groups({"api", "api_cursus"})
      * @SerializedName("icon")
      */
     protected $icon;
@@ -124,21 +124,21 @@ class Course
 
     /**
      * @ORM\Column(name="user_validation", type="boolean")
-     * @Groups({"api"})
+     * @Groups({"api", "api_cursus"})
      * @SerializedName("userValidation")
      */
     protected $userValidation = false;
 
     /**
      * @ORM\Column(name="organization_validation", type="boolean")
-     * @Groups({"api"})
+     * @Groups({"api", "api_cursus"})
      * @SerializedName("organizationValidation")
      */
     protected $organizationValidation = false;
 
     /**
      * @ORM\Column(name="max_users", nullable=true, type="integer")
-     * @Groups({"api"})
+     * @Groups({"api", "api_cursus"})
      * @SerializedName("maxUsers")
      */
     protected $maxUsers;
