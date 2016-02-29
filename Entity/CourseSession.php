@@ -36,14 +36,14 @@ class CourseSession
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api", "bulletin"})
+     * @Groups({"api", "api_cursus", "bulletin"})
      */
     protected $id;
 
     /**
      * @ORM\Column(name="session_name")
      * @Assert\NotBlank()
-     * @Groups({"api", "bulletin"})
+     * @Groups({"api", "api_cursus", "bulletin"})
      * @SerializedName("name")
      */
     protected $name;
@@ -92,49 +92,49 @@ class CourseSession
 
     /**
      * @ORM\Column(name="session_status", type="integer")
-     * @Groups({"api"})
+     * @Groups({"api", "api_cursus"})
      */
     protected $sessionStatus = self::SESSION_NOT_STARTED;
 
     /**
      * @ORM\Column(name="default_session", type="boolean")
-     * @Groups({"api"})
+     * @Groups({"api", "api_cursus"})
      */
     protected $defaultSession = false;
 
     /**
      * @ORM\Column(name="creation_date", type="datetime", nullable=false)
-     * @Groups({"api"})
+     * @Groups({"api", "api_cursus"})
      */
     protected $creationDate;
 
     /**
      * @ORM\Column(name="public_registration", type="boolean")
-     * @Groups({"api"})
+     * @Groups({"api", "api_cursus"})
      */
     protected $publicRegistration = false;
 
     /**
      * @ORM\Column(name="public_unregistration", type="boolean")
-     * @Groups({"api"})
+     * @Groups({"api", "api_cursus"})
      */
     protected $publicUnregistration = false;
 
     /**
      * @ORM\Column(name="registration_validation", type="boolean")
-     * @Groups({"api"})
+     * @Groups({"api", "api_cursus"})
      */
     protected $registrationValidation = false;
 
     /**
      * @ORM\Column(name="start_date", type="datetime", nullable=true)
-     * @Groups({"api"})
+     * @Groups({"api", "api_cursus"})
      */
     protected $startDate;
 
     /**
      * @ORM\Column(name="end_date", type="datetime", nullable=true)
-     * @Groups({"api"})
+     * @Groups({"api", "api_cursus"})
      */
     protected $endDate;
 
@@ -162,21 +162,21 @@ class CourseSession
 
     /**
      * @ORM\Column(name="user_validation", type="boolean")
-     * @Groups({"api"})
+     * @Groups({"api", "api_cursus"})
      * @SerializedName("userValidation")
      */
     protected $userValidation = false;
 
     /**
      * @ORM\Column(name="organization_validation", type="boolean")
-     * @Groups({"api"})
+     * @Groups({"api", "api_cursus"})
      * @SerializedName("organizationValidation")
      */
     protected $organizationValidation = false;
 
     /**
      * @ORM\Column(name="max_users", nullable=true, type="integer")
-     * @Groups({"api"})
+     * @Groups({"api", "api_cursus"})
      * @SerializedName("maxUsers")
      */
     protected $maxUsers;
@@ -191,7 +191,7 @@ class CourseSession
 
     /**
      * @ORM\Column(name="session_type", type="integer")
-     * @Groups({"api"})
+     * @Groups({"api", "api_cursus"})
      */
     protected $type = 0;
 

@@ -11,9 +11,12 @@
 
 namespace Claroline\CursusBundle\Library\Testing;
 
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CursusBundle\Entity\Cursus;
+use Claroline\CursusBundle\Entity\CursusGroup;
+use Claroline\CursusBundle\Entity\CursusUser;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\CourseRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSession;
@@ -39,13 +42,22 @@ class CursusPersister
         $this->om = $om;
     }
 
-    public function cursus($name)
+    public function cursus(
+        $name,
+        Cursus $parent = null,
+        Course $course = null,
+        $order = 0,
+        $blocking = false
+    )
     {
         $cursus = new Cursus();
         $cursus->setTitle($name);
         $cursus->setCode($name);
         $cursus->setDescription($name);
-        $cursus->setCursusOrder(0);
+        $cursus->setParent($parent);
+        $cursus->setCourse($course);
+        $cursus->setCursusOrder($order);
+        $cursus->setBlocking($blocking);
         $this->om->persist($cursus);
 
         return $cursus;
@@ -62,7 +74,7 @@ class CursusPersister
         return $course;
     }
 
-    public function session($name, Course $course)
+    public function session($name, Course $course, $status = 0)
     {
         $now = new \DateTime();
 
@@ -70,6 +82,7 @@ class CursusPersister
         $session->setName($name);
         $session->setCourse($course);
         $session->setCreationDate($now);
+        $session->setSessionStatus($status);
         $this->om->persist($session);
 
         return $session;
@@ -131,5 +144,31 @@ class CursusPersister
         $this->om->persist($sessionQueue);
 
         return $sessionQueue;
+    }
+
+    public function cursusGroup(Group $group, Cursus $cursus, $type = 0)
+    {
+        $now = new \DateTime();
+        $cursusGroup = new CursusGroup();
+        $cursusGroup->setGroup($group);
+        $cursusGroup->setCursus($cursus);
+        $cursusGroup->setGroupType($type);
+        $cursusGroup->setRegistrationDate($now);
+        $this->om->persist($cursusGroup);
+
+        return $cursusGroup;
+    }
+
+    public function cursusUser(User $user, Cursus $cursus, $type = 0)
+    {
+        $now = new \DateTime();
+        $cursusUser = new CursusUser();
+        $cursusUser->setUser($user);
+        $cursusUser->setCursus($cursus);
+        $cursusUser->setUserType($type);
+        $cursusUser->setRegistrationDate($now);
+        $this->om->persist($cursusUser);
+
+        return $cursusUser;
     }
 }

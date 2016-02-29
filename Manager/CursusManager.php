@@ -62,6 +62,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -447,6 +448,7 @@ class CursusManager
 
     public function unregisterUsersFromCursus(Cursus $cursus, array $users)
     {
+        $this->checkCursusToolRegistrationAccess();
         $toDelete = array();
         $coursesToUnregister = array();
         $root = $cursus->getRoot();
@@ -550,6 +552,7 @@ class CursusManager
 
     public function unregisterGroupFromCursus(Cursus $cursus, Group $group)
     {
+        $this->checkCursusToolRegistrationAccess();
         $users = $group->getUsers()->toArray();
         $cursusGroupsToDelete = array();
         $cursusUsersToDelete = array();
@@ -649,6 +652,7 @@ class CursusManager
 
     public function unregisterGroupsFromCursus(array $cursusGroups)
     {
+        $this->checkCursusToolRegistrationAccess();
         $this->om->startFlushSuite();
 
         foreach ($cursusGroups as $cursusGroup) {
@@ -1474,6 +1478,7 @@ class CursusManager
 
     public function declineSessionQueue(CourseSessionRegistrationQueue $queue)
     {
+        $this->checkCursusToolRegistrationAccess();
         $queueDatas = $this->deleteSessionQueue($queue);
         $event = new LogSessionQueueDeclineEvent($queue);
         $this->eventDispatcher->dispatch('log', $event);
@@ -1589,6 +1594,7 @@ class CursusManager
 
     public function declineCourseQueue(CourseRegistrationQueue $queue)
     {
+        $this->checkCursusToolRegistrationAccess();
         $queueDatas = $this->deleteCourseQueue($queue);
         $event = new LogCourseQueueDeclineEvent($queue);
         $this->eventDispatcher->dispatch('log', $event);
@@ -1601,6 +1607,7 @@ class CursusManager
         CourseSession $session
     )
     {
+        $this->checkCursusToolRegistrationAccess();
         $user = $queue->getUser();
         $this->om->startFlushSuite();
         $results = $this->registerUsersToSession($session, array($user), 0);
@@ -2042,18 +2049,14 @@ class CursusManager
             $sessionsDatas;
     }
 
-    public function getDatasForCursusRegistration(Cursus $cursus)
+    public function getCursusDatasForCursusRegistration(Cursus $cursus)
     {
         $hierarchy = array();
         $lockedHierarchy = array();
         $unlockedCursus = array();
         $hierarchyArray = array();
         $unlockedArray = array();
-        $groupsArray = array();
-        $usersArray = array();
         $allRelatedCursus = $this->getRelatedHierarchyByCursus($cursus);
-        $cursusGroups = $this->getCursusGroupsByCursus($cursus);
-        $cursusUsers = $this->getCursusUsersByCursus($cursus);
 
         foreach ($allRelatedCursus as $oneCursus) {
             $parent = $oneCursus->getParent();
@@ -2108,43 +2111,16 @@ class CursusManager
             $unlockedArray[] = $unlocked->getId();
         }
 
-        foreach ($cursusGroups as $cursusGroup) {
-            $group = $cursusGroup->getGroup();
-            $groupEntry = array(
-                'id' => $cursusGroup->getId(),
-                'groupType' => $cursusGroup->getGroupType(),
-                'registrationDate' => $cursusGroup->getRegistrationDate(),
-                'groupId' => $group->getId(),
-                'groupName' => $group->getName(),
-            );
-            $groupsArray[] = $groupEntry;
-        }
-
-        foreach ($cursusUsers as $cursusUser) {
-            $user = $cursusUser->getUser();
-            $userEntry = array(
-                'id' => $cursusUser->getId(),
-                'userType' => $cursusUser->getUserType(),
-                'registrationDate' => $cursusUser->getRegistrationDate(),
-                'userId' => $user->getId(),
-                'username' => $user->getUsername(),
-                'firstName' => $user->getFirstName(),
-                'lastName' => $user->getLastName()
-            );
-            $usersArray[] = $userEntry;
-        }
-
         return array(
             'hierarchy' => $hierarchyArray,
             'lockedHierarchy' => $lockedHierarchy,
-            'unlockedCursus' => $unlockedArray,
-            'cursusGroups' => $groupsArray,
-            'cursusUsers' => $usersArray
+            'unlockedCursus' => $unlockedArray
         );
     }
 
     public function getCursusUsersForCursusRegistration(Cursus $cursus)
     {
+        $this->checkCursusToolRegistrationAccess();
         $usersArray = array();
         $cursusUsers = $this->getCursusUsersByCursus($cursus);
 
@@ -2163,6 +2139,27 @@ class CursusManager
         }
 
         return $usersArray;
+    }
+
+    public function getCursusGroupsForCursusRegistration(Cursus $cursus)
+    {
+        $this->checkCursusToolRegistrationAccess();
+        $groupsArray = array();
+        $cursusGroups = $this->getCursusGroupsByCursus($cursus);
+
+        foreach ($cursusGroups as $cursusGroup) {
+            $group = $cursusGroup->getGroup();
+            $groupEntry = array(
+                'id' => $cursusGroup->getId(),
+                'groupType' => $cursusGroup->getGroupType(),
+                'registrationDate' => $cursusGroup->getRegistrationDate(),
+                'groupId' => $group->getId(),
+                'groupName' => $group->getName(),
+            );
+            $groupsArray[] = $groupEntry;
+        }
+
+        return $groupsArray;
     }
 
     public function getDatasForSearchedCursusRegistration($search)
@@ -2386,6 +2383,7 @@ class CursusManager
         array $sessions
     )
     {
+        $this->checkCursusToolRegistrationAccess();
         $authenticatedUser = $this->tokenStorage->getToken()->getUser();
         $coursesWithSession = array();
         $sessionsToCreate = array();
@@ -2453,6 +2451,7 @@ class CursusManager
         array $sessions
     )
     {
+        $this->checkCursusToolRegistrationAccess();
         $authenticatedUser = $this->tokenStorage->getToken()->getUser();
         $coursesWithSession = array();
         $sessionsToCreate = array();
@@ -2537,6 +2536,7 @@ class CursusManager
 
     public function getRegistrationQueuesDatasByValidator($search = '')
     {
+        $this->checkCursusToolRegistrationAccess();
         $datas = array();
         $authenticatedUser = $this->tokenStorage->getToken()->getUser();
         $isAdmin = $this->authorization->isGranted('ROLE_ADMIN');
@@ -2794,6 +2794,7 @@ class CursusManager
 
     public function validateCourseQueue(CourseRegistrationQueue $queue)
     {
+        $this->checkCursusToolRegistrationAccess();
         $isAdmin = $this->authorization->isGranted('ROLE_ADMIN');
         $status = $queue->getStatus();
         $user = $queue->getUser();
@@ -2846,6 +2847,7 @@ class CursusManager
 
     public function validateSessionQueue(CourseSessionRegistrationQueue $queue)
     {
+        $this->checkCursusToolRegistrationAccess();
         $isAdmin = $this->authorization->isGranted('ROLE_ADMIN');
         $status = $queue->getStatus();
         $user = $queue->getUser();
@@ -3275,6 +3277,7 @@ class CursusManager
         $max = 50
     )
     {
+        $this->checkCursusToolRegistrationAccess();
         $users = empty($search) ?
             $this->cursusUserRepo->findUnregisteredUsersByCursus(
                 $cursus,
@@ -3384,6 +3387,7 @@ class CursusManager
         $max = 50
     )
     {
+        $this->checkCursusToolRegistrationAccess();
         $groups = empty($search) ?
             $this->cursusGroupRepo->findUnregisteredGroupsByCursus(
                 $cursus,
@@ -3929,5 +3933,21 @@ class CursusManager
         }
 
         return $sessions;
+    }
+
+
+    /*******************
+     * Rights checking *
+     *******************/
+
+    private function checkCursusToolRegistrationAccess()
+    {
+        $cursusTool = $this->toolManager->getAdminToolByName('claroline_cursus_tool_registration');
+
+        if (is_null($cursusTool) ||
+            !$this->authorization->isGranted('OPEN', $cursusTool)) {
+
+            throw new AccessDeniedException();
+        }
     }
 }
