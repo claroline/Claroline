@@ -65,33 +65,47 @@ class HoleHandler implements QuestionHandlerInterface
             return $errors;
         }
 
-        // check solution ids are consistent with choice ids
+        // check solution ids are consistent with hole ids
         $holeIds = array_map(function ($hole) {
             return $hole->id;
         }, $questionData->holes);
 
         foreach ($questionData->solutions as $index => $solution) {
-            if (!in_array($solution->id, $holeIds)) {
+            if (!in_array($solution->holeId, $holeIds)) {
                 $errors[] = [
                     'path' => "solutions[{$index}]",
-                    'message' => "id {$solution->id} doesn't match any choice id"
+                    'message' => "id {$solution->holeId} doesn't match any choice id"
                 ];
             }
         }
 
-        // check there is a positive score solution
-        $maxScore = -1;
+        $checkedHoleIds = $holeIds;
 
-        foreach ($questionData->solutions as $solution) {
-            if ($solution->score > $maxScore) {
-                $maxScore = $solution->score;
+        // check there is a positive answer for each hole
+        foreach ($questionData->solutions as $index => $solution) {
+            $holeMaxScore = -1;
+
+            foreach ($solution->answers as $answer) {
+                if ($answer->score > $holeMaxScore) {
+                    $holeMaxScore = $answer->score;
+                }
             }
+
+            if ($holeMaxScore <= 0) {
+                $errors[] = [
+                    'path' => "solutions/{$index}/answers",
+                    'message' => 'there is no answer with a positive score'
+                ];
+            }
+
+            unset($checkedHoleIds[array_search($solution->holeId, $checkedHoleIds)]);
         }
 
-        if ($maxScore <= 0) {
+        // check every hole as a solution
+        if (count($checkedHoleIds) > 0) {
             $errors[] = [
-                'path' => 'solutions',
-                'message' => 'there is no solution with a positive score'
+                'path' => "solutions",
+                'message' => 'not every hole has a solution'
             ];
         }
 
@@ -158,7 +172,7 @@ class HoleHandler implements QuestionHandlerInterface
 
             return $holeData;
         }, $holes);
-        
+
         return $exportData;
     }
 
@@ -168,11 +182,11 @@ class HoleHandler implements QuestionHandlerInterface
     public function convertAnswerDetails(Response $response)
     {
         $parts = json_decode($response->getResponse());
-        
+
         foreach ($parts as $key=>$value) {
             $array[$key] = $value;
         }
-        
+
     //    $parts = explode(';', $response->getResponse());
 
         return array_filter($array, function ($part) {
@@ -236,7 +250,7 @@ class HoleHandler implements QuestionHandlerInterface
                 }
             }
         }
-        
+
         $answers = [];
         $i=0;
         foreach ($data as $answer) {
@@ -249,7 +263,7 @@ class HoleHandler implements QuestionHandlerInterface
         if ($mark < 0) {
             $mark = 0;
         }
-        
+
         $json = json_encode($answers);
         $response->setResponse($json);
         $response->setMark($mark);

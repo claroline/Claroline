@@ -59,20 +59,6 @@ class OpenHandler implements QuestionHandlerInterface {
             return $errors;
         }
 
-        // check solution ids are consistent with choice ids
-        $holeIds = array_map(function ($hole) {
-            return $hole->id;
-        }, $questionData->holes);
-
-        foreach ($questionData->solutions as $index => $solution) {
-            if (!in_array($solution->id, $holeIds)) {
-                $errors[] = [
-                    'path' => "solutions[{$index}]",
-                    'message' => "id {$solution->id} doesn't match any choice id"
-                ];
-            }
-        }
-
         // check there is a positive score solution
         $maxScore = -1;
 
@@ -141,7 +127,7 @@ class OpenHandler implements QuestionHandlerInterface {
         if ($openQuestion->getTypeOpenQuestion()->getValue() === "long") {
             $exportData->scoreMaxLongResp = $openQuestion->getScoreMaxLongResp();
         }
-        
+
         $exportData->typeOpen = $openQuestion->getTypeOpenQuestion()->getValue();
 
         return $exportData;
@@ -185,7 +171,7 @@ class OpenHandler implements QuestionHandlerInterface {
         $mark = 0;
 
         $answer = $data;
-        
+
         if ($interaction->getTypeOpenQuestion()->getValue() === "long") {
             $mark = -1;
         }
@@ -196,7 +182,7 @@ class OpenHandler implements QuestionHandlerInterface {
                 }
             }
         }
-        
+
         $response->setResponse($answer);
         $response->setMark($mark);
     }
