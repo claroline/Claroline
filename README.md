@@ -61,7 +61,7 @@ file. For an installation from scratch, the commands would be:
 
     git clone http://github.com/claroline/Claroline
     cd Claroline
-    php configure.php
+    php scripts/configure.php
     composer sync-dev
 
 Upgrade
