@@ -17,8 +17,35 @@ use Doctrine\ORM\EntityRepository;
 
 class ResultRepository extends EntityRepository
 {
+    /**
+     * Returns an array representation of all the results associated
+     * with a user in a given workspace.
+     *
+     * @param User      $user
+     * @param Workspace $workspace
+     * @return array
+     */
     public function findByUserAndWorkspace(User $user, Workspace $workspace)
     {
+        $dql = '
+            SELECT
+                n.name AS title,
+                m.value AS mark
+            FROM Claroline\ResultBundle\Entity\Result r
+            JOIN r.resourceNode n
+            JOIN n.workspace w
+            JOIN r.marks m
+            JOIN m.user u
+            WHERE w = :workspace
+            AND u = :user
+        ';
 
+        $query = $this->_em->createQuery($dql);
+        $query->setParameters([
+            ':workspace' => $workspace,
+            ':user' => $user
+        ]);
+
+        return $query->getArrayResult();
     }
 }

@@ -11,15 +11,19 @@
 
 namespace Claroline\ResultBundle\Manager;
 
-use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ResultBundle\Entity\Result;
+use Claroline\ResultBundle\Testing\Persister;
 
 class ResultManagerTest extends TransactionalTestCase
 {
     /** @var ResultManager */
     private $manager;
+    /** @var ObjectManager */
     private $om;
+    /** @var Persister */
+    private $persist;
 
     protected function setUp()
     {
@@ -27,6 +31,7 @@ class ResultManagerTest extends TransactionalTestCase
         $container = $this->client->getContainer();
         $this->manager = $container->get('claroline.result.result_manager');
         $this->om = $container->get('claroline.persistence.object_manager');
+        $this->persist = new Persister($this->om);
     }
 
     public function testCreateAndDelete()
@@ -42,7 +47,9 @@ class ResultManagerTest extends TransactionalTestCase
 
     public function testWidget()
     {
-        $content = $this->manager->getWidgetContent(new WidgetInstance());
+        $bob = $this->persist->user('bob');
+        $this->om->flush();
+        $content = $this->manager->getWidgetContent($bob->getPersonalWorkspace(), $bob);
         $this->assertNotEmpty($content);
     }
 }

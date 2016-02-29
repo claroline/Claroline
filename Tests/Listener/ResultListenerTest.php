@@ -18,18 +18,29 @@ use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ResultBundle\Entity\Result;
+use Claroline\ResultBundle\Testing\Persister;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class ResultListenerTest extends TransactionalTestCase
 {
     /** @var  ResultListener */
     private $listener;
+    /** @var ObjectManager */
+    private $om;
+    /** @var Persister */
+    private $persist;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->listener = $this->client->getContainer()->get('claroline.result.result_listener');
+        $container = $this->client->getContainer();
+        $this->listener = $container->get('claroline.result.result_listener');
+        $this->om = $container->get('claroline.persistence.object_manager');
+        $this->persist = new Persister($this->om);
     }
 
     public function testOnCreateForm()
@@ -59,9 +70,31 @@ class ResultListenerTest extends TransactionalTestCase
         $this->listener->onDelete(new DeleteResourceEvent(new Result()));
     }
 
-    public function testOnWidget()
+    /**
+     * @expectedException \LogicException
+     */
+    public function testOnWidgetThrowsIfNoUser()
     {
         $this->listener->setRequest(new Request());
         $this->listener->onDisplayWidget(new DisplayWidgetEvent(new WidgetInstance()));
+    }
+
+    /**
+     * @expectedException \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     */
+    public function testOnWidgetThrowsIfUserIsNotWorkspaceMember()
+    {
+        $user = $this->persist->user('bob');
+        $this->om->flush();
+
+        /** @var TokenStorage $storage */
+        $storage = $this->client->getContainer()->get('security.context');
+        $storage->setToken(new UsernamePasswordToken($user, null, 'main'));
+
+        $widget = new WidgetInstance();
+        $widget->setWorkspace($user->getPersonalWorkspace());
+
+        $this->listener->setRequest(new Request());
+        $this->listener->onDisplayWidget(new DisplayWidgetEvent($widget));
     }
 }

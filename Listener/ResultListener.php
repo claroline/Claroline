@@ -23,6 +23,9 @@ use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\SecurityContext;
 
 /**
  * @DI\Service("claroline.result.result_listener")
@@ -33,31 +36,36 @@ class ResultListener
     private $kernel;
     private $manager;
     private $formHandler;
+    private $security;
 
     /**
      * @DI\InjectParams({
      *     "stack"      = @DI\Inject("request_stack"),
      *     "kernel"     = @DI\Inject("http_kernel"),
      *     "manager"    = @DI\Inject("claroline.result.result_manager"),
-     *     "handler"    = @DI\Inject("claroline.form_handler")
+     *     "handler"    = @DI\Inject("claroline.form_handler"),
+     *     "context"    = @DI\Inject("security.context")
      * })
      *
      * @param RequestStack          $stack
      * @param HttpKernelInterface   $kernel
      * @param ResultManager         $manager
      * @param FormHandler           $handler
+     * @param SecurityContext       $context
      */
     public function __construct(
         RequestStack $stack,
         HttpKernelInterface $kernel,
         ResultManager $manager,
-        FormHandler $handler
+        FormHandler $handler,
+        SecurityContext $context
     )
     {
         $this->request = $stack->getCurrentRequest();
         $this->kernel = $kernel;
         $this->manager = $manager;
         $this->formHandler = $handler;
+        $this->security = $context;
     }
 
     /**
@@ -127,7 +135,22 @@ class ResultListener
      */
     public function onDisplayWidget(DisplayWidgetEvent $event)
     {
-        $this->manager->getWidgetContent($event->getInstance());
+        $user = $this->security->getToken() ?
+            $this->security->getToken()->getUser() :
+            null;
+
+        if (!$user) {
+            throw new \LogicException('Result widget needs an authenticated user');
+        }
+
+        $workspace = $event->getInstance()->getWorkspace();
+
+        if (!$this->security->isGranted('OPEN', $workspace)) {
+            throw new AccessDeniedException();
+        }
+
+        $content = $this->manager->getWidgetContent($workspace, $user);
+        $event->setContent($content);
         $event->stopPropagation();
     }
 }

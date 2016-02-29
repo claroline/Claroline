@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="claro_result")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\ResultBundle\Repository\ResultRepository"))
  */
 class Result extends AbstractResource
 {

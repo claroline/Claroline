@@ -11,7 +11,8 @@
 
 namespace Claroline\ResultBundle\Manager;
 
-use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ResultBundle\Entity\Result;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -65,8 +66,13 @@ class ResultManager
         $this->om->flush();
     }
 
-    public function getWidgetContent(WidgetInstance $widget)
+    public function getWidgetContent(Workspace $workspace, User $user)
     {
-        return $this->templating->render('ClarolineResultBundle:Result:widget.html.twig');
+        $results = $this->om->getRepository('ClarolineResultBundle:Result')
+            ->findByUserAndWorkspace($user, $workspace);
+
+        return $this->templating->render('ClarolineResultBundle:Result:widget.html.twig', [
+            'results' => $results
+        ]);
     }
 }
