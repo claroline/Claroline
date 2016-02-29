@@ -177,7 +177,7 @@ class Hole extends Interaction
             $mark = $wr->getScore();
         } else {
             foreach ($hole->getWordResponses() as $wr) {
-                $mark = $this->getScoreWordResponse($wr, $response);
+                $mark += $this->getScoreWordResponse($wr, $response);
             }
         }
 
