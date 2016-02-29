@@ -1,37 +1,78 @@
 <div class="exercise-container">
     <div class="panel panel-default">
-        <!-- Display exercise general information -->
-        <table class="table table-striped table-bordered">
-            <tbody>
-                <!-- Title of the Exercise -->
-                <tr>
-                    <th class="text-right" scope="row">{{ 'title'|trans:{}:'ujm_exo' }}</th>
-                    <td class="text-center">{{ exerciseCtrl.exercise.meta.title }}</td>
-                </tr>
+        <div class="panel-heading">
+            <h3 class="panel-title"><b>{{ 'exercise'|trans:{}:'ujm_exo' }} :</b> {{ exerciseCtrl.exercise.meta.title }}</h3>
+        </div>
 
-                <!-- Description of the Exercise -->
-                <tr>
-                    <th class="text-right" scope="row">{{ 'description'|trans:{}:'ujm_exo' }}</th>
-                    <td class="text-center">{{ exerciseCtrl.exercise.meta.description || '-' }}</td>
-                </tr>
+        <nav class="navbar navbar-default navbar-static-top">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#exercise-navbar" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
 
-                <!-- Start date -->
-                <tr>
-                    <th class="text-right" scope="row">{{ 'start_date' | trans:{}:'ujm_exo' }}</th>
-                    <td class="text-center"></td>
-                </tr>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="exercise-navbar">
+                    <!-- Administration links -->
+                    <ul class="nav navbar-nav" data-ng-if="exerciseCtrl.editEnabled">
+                        <!-- Informations about the Exercise -->
+                        <li class="active">
+                            <a href="#/">
+                                <span class="fa fa-info"></span> {{ 'overview' | trans:{}:'ujm_exo' }}
+                            </a>
+                        </li>
 
-                <!-- End date -->
-                <tr>
-                    <th class="text-right" scope="row">{{ 'end_date' | trans:{}:'ujm_exo' }}</th>
-                    <td class="text-center"></td>
-                </tr>
+                        <!-- Edit Exercise parameters -->
+                        <li>
+                            <a href="#/edit">
+                                <span class="fa fa-pencil"></span> {{ 'parameters' | trans:{}:'ujm_exo' }}
+                            </a>
+                        </li>
 
-                <!--  -->
-            </tbody>
-        </table>
+                        <!-- Edit Questions -->
+                        <li>
+                            <a href="#/questions">
+                                <span class="fa fa-question"></span> {{ 'questions' | trans:{}:'ujm_exo' }}
+                            </a>
+                        </li>
 
-        <!-- Display exercise advanced information (for those who can administrate the Exercise) -->
+                        <!-- Publish Exercise -->
+                        <li data-ng-if="!exerciseCtrl.published">
+                            <a href="" role="button" data-ng-click="exerciseCtrl.publish()">
+                                <span class="fa fa-check"></span> {{ 'publish' | trans:{}:'ujm_exo' }}
+                            </a>
+                        </li>
 
+                        <!-- Unpublish Exercise (Only if there is no submitted paper on it) -->
+                        <li data-ng-if="exerciseCtrl.published && 0 == exerciseCtrl.nbPapers">
+                            <a href="" role="button" data-ng-click="exerciseCtrl.unpublish()">
+                                <span class="fa fa-times"></span> {{ 'unpublish' | trans:{}:'ujm_exo' }}
+                            </a>
+                        </li>
+                    </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <!-- Display results of the Exercise -->
+                        <li>
+                            <a href="#">
+                                <span class="fa fa-list"></span> {{ 'result' | trans:{}:'ujm_exo' }}
+                            </a>
+                        </li>
+
+                        <!-- Play the Exercise -->
+                        <li>
+                            <button type="button" class="btn btn-primary navbar-btn">
+                                <span class="fa fa-check-square-o"></span> {{ 'compose' | trans:{}:'ujm_exo' }}
+                            </button>
+                        </li>
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav>
+
+        <div data-ng-view=""></div>
     </div>
 </div>

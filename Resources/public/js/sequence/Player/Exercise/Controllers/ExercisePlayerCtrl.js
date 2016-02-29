@@ -117,7 +117,7 @@
                 if (action && (action === 'forward' || action === 'backward' || action === 'goto')) {
                     this.setCurrentStep(this.currentStepIndex);
                 } else if (action && action === 'end') {
-                    var endPromise = ExerciseService.endSequence(paper);
+                    var endPromise = ExerciseService.end(paper);
                     endPromise.then(function (result) {
                         if (this.checkCorrectionAvailability()) {                      
                             // go to paper correction view

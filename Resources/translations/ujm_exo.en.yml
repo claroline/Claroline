@@ -141,6 +141,7 @@ hole_creation: Hole creation
 hole_edition: Hole edition
 hole_selector: Submit a list
 home_exercise: Home exercise
+hide_additional_info: Hide additional information
 
 # I
 infiny: Indefinite
@@ -239,6 +240,7 @@ open_creation: Open creation
 open_edition: Open Edition
 orders: Instructions
 orthography: Allow misspellings
+overview: Overview
 
 # P
 paper: Paper
@@ -322,6 +324,7 @@ start_again: Start again
 start_date: Start date
 sort: Sort documents
 summative : Summative
+show_additional_info: Display additional information
 
 # T
 temporary_mark: Temporary mark

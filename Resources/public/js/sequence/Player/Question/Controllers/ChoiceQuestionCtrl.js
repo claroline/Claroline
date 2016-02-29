@@ -194,7 +194,7 @@
              * @returns {boolean}
              */
             this.questionHasOtherMeta = function () {
-                return ExerciseService.objectHasOtherMeta(this.question);
+                return CommonService.objectHasOtherMeta(this.question);
             };
 
             /**

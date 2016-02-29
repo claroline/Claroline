@@ -251,7 +251,7 @@
                  * @param {array} the given array
                  * @returns {array} the shuffled array
                  */
-                /*shuffleArray: function (array) {
+                shuffleArray: function (array) {
                     var currentIndex = array.length, temporaryValue, randomIndex;
                     // While there remain elements to shuffle...
                     while (0 !== currentIndex) {
@@ -265,7 +265,8 @@
                         array[randomIndex] = temporaryValue;
                     }
                     return array;
-                },*/
+                },
+
                 generateUrl: function (witch, _id) {
                     switch (witch) {
                         case 'exercise-home':

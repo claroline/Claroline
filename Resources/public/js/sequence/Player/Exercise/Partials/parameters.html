@@ -1,0 +1,85 @@
+<div class="parameters panel-body">
+    <form class="form-horizontal">
+        <!-- Definition of the exercise -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title" data-ng-click="collapsePanelDefinition = !collapsePanelDefinition">
+                    <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': collapsePanelDefinition, 'fa-caret-down': !collapsePanelDefinition }"></span>
+                    {{ 'exercise_definition'|trans:{}:'ujm_exo' }}
+                </h4>
+            </div>
+
+            <div class="panel-body" data-ng-show="!collapsePanelDefinition">
+                <!-- Title -->
+                <div class="form-group">
+                    <label for="exercise-title" class="control-label col-md-4">{{ 'title'|trans:{}:'ujm_exo' }}</label>
+                    <div class="col-md-8">
+                        <input type="text" id="exercise-title" class="form-control" data-ng-model="exerciseParametersCtrl.exercise.meta.title" />
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="form-group">
+                    <label for="exercise-description" class="control-label col-md-4">{{ 'description'|trans:{}:'ujm_exo' }}</label>
+                    <div class="col-md-8">
+                        <textarea data-ui-tinymce="exerciseParametersCtrl.tinymceOptions" data-before-unload="off" id="exercise-description" class="form-control" data-ng-model="exerciseParametersCtrl.exercise.meta.description"></textarea>
+                    </div>
+                </div>
+
+                <!-- Type -->
+                <div class="form-group">
+                    <label for="exercise-type" class="control-label col-md-4">{{ 'type'|trans:{}:'ujm_exo' }}</label>
+                    <div class="col-md-8">
+                        <select class="form-control" id="exercise-type" data-ng-model="exerciseParametersCtrl.exercise.meta.type">
+                            <option value="1">{{ 'summative' | trans:{}:'ujm_exo' }}</option>
+                            <option value="2">{{ 'evaluative' | trans:{}:'ujm_exo' }}</option>
+                            <option value="3">{{ 'formative' | trans:{}:'ujm_exo' }}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Questions -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title" data-ng-click="collapsePanelQuestions = !collapsePanelQuestions">
+                    <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': collapsePanelQuestions, 'fa-caret-down': !collapsePanelQuestions }"></span>
+                    {{ 'questions'|trans:{}:'ujm_exo' }}
+                </h4>
+            </div>
+
+            <div class="panel-body" data-ng-show="!collapsePanelQuestions">
+
+            </div>
+        </div>
+
+        <!-- End of Assessment -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title" data-ng-click="collapsePanelAssessment = !collapsePanelAssessment">
+                    <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': collapsePanelAssessment, 'fa-caret-down': !collapsePanelAssessment }"></span>
+                    {{ 'at_the_end_of_assessment'|trans:{}:'ujm_exo' }}
+                </h4>
+            </div>
+
+            <div class="panel-body" data-ng-show="!collapsePanelAssessment">
+
+            </div>
+        </div>
+
+        <!-- Passage -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title" data-ng-click="collapsePanelPaper = !collapsePanelPaper">
+                    <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': collapsePanelPaper, 'fa-caret-down': !collapsePanelPaper }"></span>
+                    {{ 'paper'|trans:{}:'ujm_exo' }}
+                </h4>
+            </div>
+
+            <div class="panel-body" data-ng-show="!collapsePanelPaper">
+
+            </div>
+        </div>
+    </form>
+</div>

@@ -111,7 +111,7 @@ class ExerciseController extends Controller
      */
     public function openAction(Exercise $exercise)
     {
-        // Check if the current User is allowed to open the Exercise
+        // Check if the current User is allowed to OPEN the Exercise
         $this->checkAccess($exercise);
 
         $em = $this->getDoctrine()->getManager();
@@ -120,12 +120,9 @@ class ExerciseController extends Controller
         $userId = $exerciseSer->getUserId();
         $exerciseId = $exercise->getId();
         $isExoAdmin = $exerciseSer->isExerciseAdmin($exercise);
-        $isAllowedToOpen = $exerciseSer->allowToOpen($exercise);
-        $isAllowedToCompose = $isExoAdmin
-            || $isAllowedToOpen
-            && $exerciseSer->controlMaxAttemps($exercise, $userId, $isExoAdmin);
+        $isAllowedToCompose = $exerciseSer->controlMaxAttemps($exercise, $userId, $isExoAdmin);
 
-        if ($isAllowedToOpen && $userId !== 'anonymous') {
+        if ($userId !== 'anonymous') {
             $nbUserPaper = $exerciseSer->getNbPaper($userId, $exerciseId);
         } else {
             $nbUserPaper = 0;
@@ -135,15 +132,19 @@ class ExerciseController extends Controller
         $nbPapers    = $em->getRepository('UJMExoBundle:Paper')->countPapers($exerciseId);
 
         // Display the Summary of the Exercise
-        return $this->render('UJMExoBundle:Exercise:summary.html.twig', [
+        return $this->render('UJMExoBundle:Exercise:open.html.twig', [
             // Used to build the Claroline Breadcrumbs
             '_resource'        => $exercise,
             'workspace'        => $exercise->getResourceNode()->getWorkspace(),
-            'exercise'         => $this->get('ujm.exo.exercise_manager')->exportExercise($exercise, false),
+
             'allowedToCompose' => $isAllowedToCompose,
             'nbQuestion'       => $nbQuestions['nbq'],
             'nbUserPaper'      => $nbUserPaper,
             'nbPapers'         => $nbPapers,
+
+            // Angular JS data
+            'exercise'         => $this->get('ujm.exo.exercise_manager')->exportExercise($exercise, false),
+            'editEnabled'      => $isExoAdmin,
         ]);
     }
 

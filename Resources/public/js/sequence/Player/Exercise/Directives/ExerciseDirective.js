@@ -11,7 +11,10 @@ var ExerciseDirective = function ExerciseDirective() {
         controllerAs: 'exerciseCtrl',
         templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Player/Exercise/Partials/exercise.html',
         scope: {
-            exercise: '=' // The current Exercise to display
+            exercise    : '=', // The current Exercise to display
+            nbPapers    : '@', // The numbers of Papers submitted for this Exercise
+            editEnabled : '@', // User is allowed to edit current exercise ?
+            published   : '@'  // Is the Exercise already published ?
         },
         bindToController: true
     };

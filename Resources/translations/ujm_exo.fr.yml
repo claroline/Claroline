@@ -141,6 +141,7 @@ hole_creation: Création d'une question à trous
 hole_edition: Edition d'une question à trous
 hole_selector: Proposer une liste
 home_exercise: Accueil de l'exercice
+hide_additional_info: Masquer les informations supplémentaires
 
 # I
 infiny: Infini
@@ -239,6 +240,7 @@ open_creation: Création d'une question ouverte
 open_edition: Edition d'une question ouverte
 orders: Consignes
 orthography: Autoriser les fautes d'orthographe
+overview: Vue d'ensemble
 
 # P
 paper: Passage
@@ -322,6 +324,7 @@ start_again: Recommencer
 start_date: Date de début
 sort: Trier les documents
 summative : Sommatif
+show_additional_info: Afficher les informations supplémentaires
 
 # T
 temporary_mark: Note temporaire
