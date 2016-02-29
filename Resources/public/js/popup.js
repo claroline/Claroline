@@ -343,15 +343,25 @@ $(document).ready(function () {
     });
 
     // InnovaERV
-    // Ajout pour le traitement de la demande de commentaire : mise Ã  jour de la table Document
+    // Ajout pour le traitement de la demande de commentaire : mise à jour de la table Document
     // Mise Ã  jour de la colonne "validate"
     $('.document_validate').on('click', function(event) {
     });
     
     // InnovaERV
-    // Appel lors de la suppression d'un document
-    $('a.cancel_button').on('click', function(event) {
+    // Ajout pour le traitement de la case à cocher lors de la soumission de documents
+    $('#validate-cancel-modal').on('show.bs.modal', function (event) {
 
+        var button     = $(event.relatedTarget); // Button that triggered the modal
+        var documentId = button.data('document_id'); // Extract info from data-* attributes
+
+        var modal = $(this);
+        modal.find('#modal_confirm-cancel').attr("data-document_id", documentId); //TODO change this to use data() instead of attr()
+    });
+
+    // InnovaERV
+    // Appel lors de la suppression d'un document
+    $('#modal_confirm-cancel').on('click', function(event) {
         event.preventDefault();
         var docId = $(this).attr("data-document_id");
 
@@ -378,6 +388,10 @@ $(document).ready(function () {
                 }
             }
         );
+
+        // Fermeture de la modal
+        $('#validate-cancel-modal').modal('hide');
+
     });
 
     // InnovaERV : sélection et déselection dans la liste des demandes adressées.
