@@ -1,5 +1,5 @@
 <?php
-namespace Innova\AudioRecorderBundle;
+namespace Innova\VideoRecorderBundle;
 
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
@@ -8,23 +8,23 @@ use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 /**
  * Bundle class.
  */
-class InnovaAudioRecorderBundle extends PluginBundle implements AutoConfigurableInterface
+class InnovaVideoRecorderBundle extends PluginBundle implements AutoConfigurableInterface
 {
-    
+
     public function supports($environment)
     {
         return true;
     }
    
-    
+
     public function hasMigrations()
     {
         return false;
     }
-    
+
     public function getConfiguration($environment)
     {
         $config = new ConfigurationBuilder();
-        return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'audio_recorder');
+        return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'video_recorder');
     }
 }

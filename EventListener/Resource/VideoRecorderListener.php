@@ -22,18 +22,18 @@ class VideoRecorderListener
 {
 
     private $container;
-    private $arm;
+    private $vrm;
 
     /**
      * @DI\InjectParams({
      *      "container" = @DI\Inject("service_container"),
-     *      "arm" = @DI\Inject("innova.video_recorder.manager")
+     *      "vrm" = @DI\Inject("innova.video_recorder.manager")
      * })
      */
-    public function __construct(ContainerInterface $container, VideoRecorderManager $arm)
+    public function __construct(ContainerInterface $container, VideoRecorderManager $vrm)
     {
         $this->container = $container;
-        $this->arm = $arm;
+        $this->vrm = $vrm;
     }
 
     /**
@@ -69,7 +69,7 @@ class VideoRecorderListener
         $blob = $request->files->get('file');
 
         $workspace = $event->getParent()->getWorkspace();
-        $result = $this->arm->uploadFileAndCreateResource($formData, $blob, $workspace);
+        $result = $this->vrm->uploadFileAndCreateResource($formData, $blob, $workspace);
 
         if (!is_null($result['errors']) && count($result['errors']) > 0) {
             $msg = $result['errors'][0];

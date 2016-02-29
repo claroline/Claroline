@@ -10,16 +10,16 @@ use JMS\DiExtraBundle\Annotation as DI;
 class VideoRecorderController
 {
 
-    protected $arm;
+    protected $vrm;
 
     /**
      * @DI\InjectParams({
-     *      "arm"         = @DI\Inject("innova.video_recorder.manager")
+     *      "vrm"         = @DI\Inject("innova.video_recorder.manager")
      * })
      */
-    public function __construct(VideoRecorderManager $arm)
+    public function __construct(VideoRecorderManager $vrm)
     {
-        $this->arm = $arm;
+        $this->vrm = $vrm;
     }
 
 
