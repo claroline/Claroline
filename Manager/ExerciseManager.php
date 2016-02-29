@@ -221,6 +221,7 @@ class ExerciseManager
             'created' => $node->getCreationDate()->format('Y-m-d H:i:s'),
             'title' => $exercise->getTitle(),
             'description' => $exercise->getDescription(),
+            'type' => $exercise->getType(),
             'pick' => $exercise->getNbQuestion(),
             'random' => $exercise->getShuffle(),
             'maxAttempts' => $exercise->getMaxAttempts(),
