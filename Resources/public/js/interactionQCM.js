@@ -328,7 +328,7 @@ function fillChoicesArray(row,edition,index,comment) {
     if (row.find('*[id$="_feedback"]').length) {
        var idFeedbackVal = row.find('textarea').attr("id");
        //Adds a cell array with a comment button
-       $('#newTable').find('tr:last').append('<td class="classic"><a class="btn btn-default" id="btn_'+idFeedbackVal+'" title="'+comment+'"onClick="addTextareaFeedback(\'span_'+idFeedbackVal+'\',\'btn_'+idFeedbackVal+'\')" ><i class="fa fa-comments-o"></i></a><span id="span_'+idFeedbackVal+'" class="input-group" style="display:none;"></span></td>');
+       $('#newTable').find('tr:last').append('<td class="classic" style="width:400px;"><a class="btn btn-default" id="btn_'+idFeedbackVal+'" title="'+comment+'"onClick="addTextareaFeedback(\'span_'+idFeedbackVal+'\',\'btn_'+idFeedbackVal+'\')" ><i class="fa fa-comments-o"></i></a><span id="span_'+idFeedbackVal+'" class="input-group" style="display:none;"></span></td>');
        //Adds the textarea and its advanced edition button (hidden by default)
        $('#span_'+idFeedbackVal).append(row.find('*[id$="_feedback"]'));
        $('#span_'+idFeedbackVal).append('<span class="input-group-btn"><a class="btn btn-default" id="btnEdition_'+idFeedbackVal+'" onClick="advancedEdition(\'ujm_exobundle_interactionqcmtype_choices_'+index+'_feedback\',\'btnEdition_'+idFeedbackVal+'\',event);" title="'+edition+'"><i class="fa fa-font"></i></a></span>');
