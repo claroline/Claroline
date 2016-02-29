@@ -1,0 +1,9 @@
+plugin:
+  has_options: false
+  icon: video_recorder.png
+
+  resources:
+    - class: Claroline\CoreBundle\Entity\Resource\File
+      name: innova_video_recorder
+      is_exportable: false
+      icon: video_recorder.png
