@@ -228,10 +228,12 @@ class DocumentController extends DropzoneBaseController
         $sender = $this->get('security.token_storage')->getToken()->getUser();
         
         $canEdit = $dropzoneVoter->checkEditRight($dropzone);
-        
-        if ($canEdit) {
-            $document->setValidate(true);
-        }
+  
+// #267 : dès que l'enseignant dépose un document dans son collecticiel ou dans un collecticiel partagé,
+// une demande de commentaire est automatiquement adressé, ce qui ne devrait pas être le cas.  
+//        if ($canEdit) {
+//            $document->setValidate(true);
+//        }
 
         $document->setDrop($drop);
         $document->setSender($sender);
