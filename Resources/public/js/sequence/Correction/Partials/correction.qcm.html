@@ -19,7 +19,7 @@
                 <div class="fa btn btn-small btn-success fa-check" data-ng-if="correctionQCMCtrl.isChoiceValid(question, choice)"></div>
             </td>
             <td class="center-text">
-                <div data-ng-class="{'btn btn-small btn-success fa fa-check' : correctionQCMCtrl.isStudentChoice(question, choice) === 1, 'btn btn-small btn-danger fa fa-close': correctionQCMCtrl.isStudentChoice(question, choice) === 2}" title="{{choiceQuestionCtrl.getChoiceFeedback(choice)}}">
+                <div data-ng-class="{'color-success fa fa-check' : correctionQCMCtrl.isStudentChoice(question, choice) === 1, 'color-danger fa fa-close': correctionQCMCtrl.isStudentChoice(question, choice) === 2}" title="{{choiceQuestionCtrl.getChoiceFeedback(choice)}}">
                     
                 </div>
             </td>
