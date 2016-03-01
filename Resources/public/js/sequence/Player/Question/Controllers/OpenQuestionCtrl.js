@@ -103,8 +103,11 @@
                     this.feedbackIsVisible = true;
                     this.solutions = result.solutions;
                     this.questionFeedback = result.feedback;
-                    console.log(this.solutions);
                 }.bind(this));
+            };
+            
+            this.hideFeedback = function () {
+                this.feedbackIsVisible = false;
             };
 
             /**
@@ -112,6 +115,10 @@
              */
             $scope.$on('show-feedback', function (event, data) {
                 this.showFeedback();
+            }.bind(this));
+            
+            $scope.$on('hide-feedback', function () {
+                this.hideFeedback();
             }.bind(this));
 
             /**

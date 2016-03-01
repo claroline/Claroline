@@ -126,6 +126,19 @@
                 }.bind(this));
             };
             
+            this.hideFeedback = function () {
+                this.feedbackIsVisible = false;
+                if (!this.question.toBind) {
+                    $('.draggable').draggable('enable');
+                    $('.draggable').fadeTo(100, 1);
+                    
+                    for (var i=0; i<this.dropped.length; i++) {
+                        $('#draggable_' + this.dropped[i].source).draggable("disable");
+                        $('#draggable_' + this.dropped[i].source).fadeTo(100, 0.3);
+                    }
+                }
+            };
+            
             /**
              * Check if all answers are good and complete
              * and colours the panel accordingly
@@ -285,6 +298,22 @@
                 this.showFeedback();
                 this.unbindEvents();
             }.bind(this));
+            
+            $scope.$on('hide-feedback', function () {
+                this.hideFeedback();
+                this.bindEvents();
+            }.bind(this));
+            
+            this.bindEvents = function () {
+                jsPlumb.bind("beforeDrop", function (info) {
+                    return this.handleBeforDrop(info);
+                });
+
+                // remove one connection
+                jsPlumb.bind("click", function (connection) {
+                    this.removeConnection(connection);
+                });
+            };
             
             this.unbindEvents = function () {
                 jsPlumb.unbind("beforeDrop");
