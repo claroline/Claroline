@@ -23,8 +23,6 @@ Install with composer : ```$ composer require innova/video-recorder-bundle```
 - According to [this demo](https://www.webrtc-experiment.com/RecordRTC/) It seems that it does not work on Chrome for now...
 - Downloaded video has a chopped sound and can be properly readen in web browser only... see [this](https://github.com/muaz-khan/RecordRTC/issues/62)
 
-
-
 ## Authors
 
 * Donovan Tengblad (purplefish32)
