@@ -56,7 +56,7 @@ class VideoRecorderManager
      * @param Workspace $workspace
      * @return File
      */
-    public function uploadFileAndCreateREsource($postData, UploadedFile $blob, Workspace $workspace = null)
+    public function uploadFileAndCreateResource($postData, UploadedFile $blob, Workspace $workspace = null)
     {
 
         $errors = array();
@@ -75,9 +75,9 @@ class VideoRecorderManager
 
         $doEncode = isset($postData['convert']) && $postData['convert'] == true;
         $isFirefox = $postData['nav'] === 'firefox';
-        $extension = $isFirefox ? 'ogg' : 'wav';
-        $encodingExt = 'mp3';
-        $mimeType = $doEncode ? 'video/' . $encodingExt : 'video/' . $extension;
+        $extension = 'webm';//$isFirefox ? 'ogg' : 'wav';
+        $encodingExt = 'webm';//'mp3';
+        $mimeType = 'video/webm';//$doEncode ? 'video/' . $encodingExt : 'video/' . $extension;
 
         if (!$this->validateParams($postData, $blob)) {
             array_push($errors, 'one or more request parameters are missing.');
@@ -88,15 +88,15 @@ class VideoRecorderManager
         //$fileBaseName = $this->claroUtils->generateGuid();
         $fileBaseName = $postData['fileName'];
         $uniqueBaseName = $this->claroUtils->generateGuid();
-        $fileName = $uniqueBaseName . '.' . $extension;
+        $fileName = $uniqueBaseName . '.webm';// . $extension;
 
 
         $baseHashName = $this->getBaseFileHashName($uniqueBaseName, $workspace);
-        $hashName = $doEncode ? $baseHashName . '.mp3' : $baseHashName . '.' . $extension;
+        $hashName = $baseHashName . '.webm';//$doEncode ? $baseHashName . '.' . $encodingExt : $baseHashName . '.' . $extension;
         // file size @ToBe overriden if doEncode = true
         $size = $blob->getSize();
 
-        if ($doEncode) {
+        /*if ($doEncode) {
             // the filename after encoding
             $encodedName = $uniqueBaseName . '.' . $encodingExt;
             // upload original file in temp upload (ie web/uploads) dir
@@ -126,7 +126,9 @@ class VideoRecorderManager
 
         } else {
             $blob->move($targetDir, $fileName);
-        }
+        }*/
+
+        $blob->move($targetDir, $fileName);
 
         $file = new File();
         $file->setSize($size);

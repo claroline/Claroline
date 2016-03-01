@@ -1547,7 +1547,10 @@ function MediaStreamRecorder(mediaStream, config) {
         // handler. "mTimeSlice < 0" means Session object does not push encoded data to
         // onDataAvailable, instead, it passive wait the client side pull encoded data
         // by calling requestData API.
-        mediaRecorder.start(1);
+
+        // mediaRecorder.start(1);
+        // PGU - HACK
+        mediaRecorder.start(3*1000);
 
         // Start recording. If timeSlice has been provided, mediaRecorder will
         // raise a dataavailable event containing the Blob of collected data on every timeSlice milliseconds.

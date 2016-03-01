@@ -14,7 +14,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title">Video Recorder</h4>
+                <h4 class="modal-title">{{ 'resource_modal_title'|trans({}, 'innova_video_recorder') }}</h4>
             </div>
             <div class="modal-body">
                 <div class="row" id="form-error-msg-row" style="display: none;">
@@ -33,9 +33,8 @@
                     <div id="videoRecorderRow" class="row">
                         <div class="col-md-12 text-center">
                             <div class="btn-group">
-                                <button type="button" role="button" class="btn btn-danger fa fa-circle" id="video-record-start" title="Commencer l'enregistrement" onclick="recordVideo()"></button>
-                                <button type="button" role="button" class="btn btn-default fa fa-stop" id="video-record-stop" title="Arrêter l'enregistrement" disabled="disabled" onclick="stopRecordingVideo()"></button>
-
+                                <button type="button" role="button" class="btn btn-danger fa fa-circle" id="video-record-start" title="Commencer l'enregistrement" onclick="record()"></button>
+                                <button type="button" role="button" class="btn btn-default fa fa-stop" id="video-record-stop" title="Arrêter l'enregistrement" disabled="disabled" onclick="stopRecording()"></button>
                             </div>
                             <canvas class="pull-right" id="analyser" title="Mic level" width="34px" height="25px"></canvas>
                         </div>
@@ -52,16 +51,11 @@
                     </div>
                     <hr/>
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-12 text-center">
                             <div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div id="video-records-container">
-                                            <h3>
-                                                <small>{{ 'my_recordings'|trans({}, 'innova_video_recorder') }}</small>
-                                            </h3>
-                                            <hr/>
-                                        </div>
+                                        <video controls></video>
                                     </div>
                                 </div>
                             </div>

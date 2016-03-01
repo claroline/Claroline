@@ -12,3 +12,4 @@ resource_name: Choisir un nom pour la ressource qui sera générée (ou laisser 
 resource_name_placeholder: Le nom de la resource est obligatoire.
 resource_creation_error: Une erreur est survenue lors de la création de la ressource.
 resource_creation_error_download: Utilisez le bouton de téléchargement pour sauvegarder votre fichier localement.
+resource_modal_title: Enregistreur vidéo
