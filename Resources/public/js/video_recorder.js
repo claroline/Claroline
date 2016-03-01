@@ -228,7 +228,7 @@ function xhr(url, data, progress, callback) {
       console.log('xhr end with success');
       resetData();
       // use reload or generate route...
-      // location.reload();
+      location.reload();
 
     } else if (request.status === 500) {
       console.log('xhr error');

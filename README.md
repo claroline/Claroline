@@ -18,7 +18,6 @@ Install plugin : ```$  php app/console claroline:plugin:install InnovaVideoRecor
 ## Limitations
 
 - RecordRTC can record a single stream (video + audio into webm) at once only in Firefox (audio and video are well synced)
-- On Chrome **you need to activate the flag enable-experimental-web-platform-features** (chrome://flags/)
 - Chrome get two streams. A video stream and an audio stream so we need to merge the two streams in one file.
 - Firefox downloaded video has a chopped sound and **can be properly read in web browser only**... see [this](https://github.com/muaz-khan/RecordRTC/issues/62)
 - Preview playback in Chrome is not accurately synced
