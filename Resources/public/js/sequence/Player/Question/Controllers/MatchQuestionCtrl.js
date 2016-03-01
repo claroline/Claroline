@@ -9,7 +9,8 @@
         'PlayerDataSharing',
         'ExerciseService',
         'MatchQuestionService',
-        function ($ngBootbox, $scope, CommonService, QuestionService, PlayerDataSharing, ExerciseService, MatchQuestionService) {
+        '$timeout',
+        function ($ngBootbox, $scope, CommonService, QuestionService, PlayerDataSharing, ExerciseService, MatchQuestionService, $timeout) {
             this.question = {};
             this.currentQuestionPaperData = {};
             this.connections = []; // for toBind questions
@@ -392,23 +393,31 @@
              */
             $scope.$on('show-feedback', function (event, data) {
                 this.showFeedback();
-                this.unbindEvents();
+                /*
+                 * //todo: Find another solution to disable question "à lier"
+                 * Unbinding events is a bad solution
+                 * - It doesn't prevent the user from creating new segments, it just doesn't save them
+                 * - The events cannot be re-bound after being unbound (on the "hide-feedback")
+                 */
+                //this.unbindEvents();
             }.bind(this));
             
             $scope.$on('hide-feedback', function () {
                 this.hideFeedback();
-                this.bindEvents();
+                //this.bindEvents();
             }.bind(this));
             
             this.bindEvents = function () {
-                jsPlumb.bind("beforeDrop", function (info) {
-                    return this.handleBeforDrop(info);
-                });
+                $timeout(function () {
+                    jsPlumb.bind("beforeDrop", function (info) {
+                        return this.handleBeforDrop(info);
+                    });
 
-                // remove one connection
-                jsPlumb.bind("click", function (connection) {
-                    this.removeConnection(connection);
-                });
+                    // remove one connection
+                    jsPlumb.bind("click", function (connection) {
+                        this.removeConnection(connection);
+                    });
+                }.bind(this));
             };
             
             this.unbindEvents = function () {
