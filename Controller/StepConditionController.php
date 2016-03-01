@@ -36,6 +36,7 @@ class StepConditionController extends Controller
     private $groupManager;
     private $evaluationRepo;
     private $teamManager;
+
     /**
      * Security Token
      * @var \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $securityToken
@@ -78,7 +79,7 @@ class StepConditionController extends Controller
     {
         $data = array();
 
-        $usergroup = $this->groupManager->getAllGroupsWithoutPager();
+        $usergroup = $this->groupManager->getAll();
         if ($usergroup != null) {
             //data needs to be explicitly set because Group does not extends Serializable
             foreach($usergroup as $ug) {
