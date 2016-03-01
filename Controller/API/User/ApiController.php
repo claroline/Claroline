@@ -32,7 +32,7 @@ class ApiController extends Controller
         if ($token) {
             $user = $token->getUser();
             $context = new SerializationContext();
-            $context->setGroups('api');
+            $context->setGroups('api_user');
             $data = $this->container->get('serializer')->serialize($user, 'json', $context);
             $users = json_decode($data);
 
@@ -54,7 +54,7 @@ class ApiController extends Controller
         if ($token) {
             $roles = $token->getRoles();
             $context = new SerializationContext();
-            $context->setGroups('api');
+            $context->setGroups('api_user');
             $data = $this->container->get('serializer')->serialize($roles, 'json');
             $roles = json_decode($data);
 
