@@ -107,8 +107,9 @@ export_csv_results: Export CSV des résultats
 export_qti_exercise : Exporter les questions de l'exercice au format QTI
 
 # F
+false_response: Points pour la mauvaise réponse
 feedback: Feedback général
-feedback_answer_check: Commentaire si la réponse est selectionnée(facultatif)
+feedback_answer_check: Commentaire si la réponse est selectionnée (facultatif)
 find_by: Trouver par
 find_in: Trouver dans
 find_question_advance: Recherche avancée
