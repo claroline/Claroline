@@ -52,9 +52,10 @@ class VideoRecorderManager
     /**
      * Handle web rtc blob file upload, conversion and Claroline File resource creation
      * @param type $postData
-     * @param UploadedFile $blob
+     * @param UploadedFile $video
+     * @param UploadedFile $audio
      * @param Workspace $workspace
-     * @return File
+     * @return Claroline File
      */
     public function uploadFileAndCreateResource($postData, UploadedFile $video, UploadedFile $audio = null, Workspace $workspace = null)
     {
@@ -152,7 +153,9 @@ class VideoRecorderManager
     /**
      * Checks if the data sent by the Ajax Form contain all mandatory fields
      * @param Array  $postData
-     * @param UploadedFile  $file the blob sent by webrtc
+     * @param UploadedFile  $video the video or video + audio blob sent by webrtc
+     * @param Bool $isFirefox
+     * @param UploadedFile $audio the audio blob sent by webrtc if chrome has been used
      */
     private function validateParams($postData, UploadedFile $video, $isFirefox, UploadedFile $audio = null)
     {

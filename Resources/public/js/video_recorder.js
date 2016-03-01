@@ -22,7 +22,8 @@ var videoPlayer = document.querySelector('video');
 var audioPlayer = document.querySelector('audio');
 
 var audioBlob, videoBlob;
-
+var recorderStream;
+var isRecording = false;
 
 
 $('.modal').on('shown.bs.modal', function() {
@@ -43,14 +44,14 @@ $('.modal').on('shown.bs.modal', function() {
 
   $("video").on("play", function() {
     console.log("you pressed play");
-    if (!isFirefox) {
+    if (!isFirefox && !isRecording) {
       audioPlayer.play();
     }
   });
 
   $("video").on("pause", function() {
     console.log("you pressed pause");
-    if (!isFirefox) {
+    if (!isFirefox && !isRecording) {
       audioPlayer.pause();
     }
   });
@@ -65,7 +66,7 @@ $('.modal').on('hide.bs.modal', function() {
 
 
 function record() {
-
+  isRecording = true;
   captureUserMedia({
       video: true,
       audio: true
@@ -99,10 +100,10 @@ function record() {
 
       videoPlayer.pause();
       videoPlayer.muted = true;
-      // videoPlayer.src = window.URL.createObjectURL(stream);
       videoPlayer.src = window.URL.createObjectURL(stream);
-      //videoPlayer.load();
       videoPlayer.play();
+
+      recorderStream = stream;
 
       gotStream(stream);
 
@@ -112,6 +113,7 @@ function record() {
     },
     function(error) {
       console.log(error);
+      isRecording = false;
     });
 }
 
@@ -125,6 +127,10 @@ function resetData() {
     audioRecorder.clearRecordedData();
   }
 
+  if (recorderStream) {
+    recorderStream.stop();
+  }
+
   videoBlob = null;
   audioBlob = null;
 
@@ -135,13 +141,14 @@ function resetData() {
   rafID = null;
   analyserContext = null;
   analyserNode = null;
+  isRecording = false;
 }
 
 function stopRecording() {
 
   // avoid recorded blob truncated end by setting a timeout
   window.setTimeout(function() {
-
+    isRecording = false;
     $('#video-record-start').prop('disabled', '');
     $('#video-record-stop').prop('disabled', 'disabled');
     $('#submitButton').prop('disabled', false);
@@ -168,6 +175,11 @@ function stopRecording() {
       });
     }
 
+    // stop sharing usermedia
+    if (recorderStream) {
+      recorderStream.stop();
+    }
+
   }, recordEndTimeOut);
 }
 
@@ -180,16 +192,18 @@ function previewRecordings(videoUrl, audioUrl) {
   videoPlayer.srcObject = null;
   videoPlayer.src = videoUrl;
   videoPlayer.load();
-
-  audioPlayer.pause();
-  audioPlayer.src = audioUrl;
-  audioPlayer.load();
-
+  if (!isFirefox) {
+    audioPlayer.pause();
+    audioPlayer.src = audioUrl;
+    audioPlayer.load();
+  }
   videoPlayer.onended = function() {
     videoPlayer.pause();
-    audioPlayer.pause();
     videoPlayer.src = URL.createObjectURL(videoBlob);
-    audioPlayer.src = URL.createObjectURL(audioBlob);
+    if (!isFirefox) {
+      audioPlayer.pause();
+      audioPlayer.src = URL.createObjectURL(audioBlob);
+    }
   };
 }
 
