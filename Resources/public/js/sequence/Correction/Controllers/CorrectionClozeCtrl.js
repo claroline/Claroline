@@ -141,10 +141,10 @@
                                 }
                             });
                             if (good_answer) {
-                                $('#answer_' + this.question.id).find('#'+holes[j].position).css("color", "#00A700");
+                                $('#answer_' + this.question.id).find('#'+holes[j].position).addClass("color-success");
                             }
                             else {
-                                $('#answer_' + this.question.id).find('#'+holes[j].position).css("color", "#f30000");
+                                $('#answer_' + this.question.id).find('#'+holes[j].position).addClass("color-danger");
                             }
                         }
                     }
