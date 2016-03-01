@@ -2,7 +2,8 @@
 
 var isFirefox = !!navigator.mozGetUserMedia;
 
-var videoRecorder; // WebRtc object
+var videoRecorder; // WebRTC object
+var audioRecorder; // WebRTC object
 
 var audioContext = new window.AudioContext();
 var audioInput = null,
@@ -18,44 +19,11 @@ var meter;
 // avoid the recorded file to be chunked by setting a slight timeout
 var recordEndTimeOut = 1000;
 var videoPlayer = document.querySelector('video');
+var audioPlayer = document.querySelector('audio');
 
-function record() {
+var audioBlob, videoBlob;
 
-  captureUserMedia({
-      video: true,
-      audio: true
-    },
-    function(stream) {
 
-      $('#video-record-start').prop('disabled', 'disabled');
-      $('#video-record-stop').prop('disabled', '');
-
-      videoPlayer.pause();
-      videoPlayer.muted = true;
-      // videoPlayer.src = window.URL.createObjectURL(stream);
-      videoPlayer.srcObject = stream;
-      videoPlayer.load();
-      videoPlayer.play();
-
-      var options = {
-        type: 'video',
-        disableLogs: true/*,
-        bufferSize: 4096,
-        sampleRate: 44100*/
-      };
-
-      videoRecorder = RecordRTC(stream, options);
-      videoRecorder.startRecording();
-      gotStream(stream);
-
-      stream.onended = function() {
-        console.log('stream ended');
-      };
-    },
-    function(error) {
-      console.log(error);
-    });
-}
 
 $('.modal').on('shown.bs.modal', function() {
   console.log('modal shown');
@@ -72,13 +40,93 @@ $('.modal').on('shown.bs.modal', function() {
       return val.replace(' ', '_');
     });
   });
+
+  $("video").on("play", function() {
+    console.log("you pressed play");
+    if (!isFirefox) {
+      audioPlayer.play();
+    }
+  });
+
+  $("video").on("pause", function() {
+    console.log("you pressed pause");
+    if (!isFirefox) {
+      audioPlayer.pause();
+    }
+  });
 });
 
 $('.modal').on('hide.bs.modal', function() {
 
   console.log('modal closed');
+  resetData();
+
+});
+
+
+function record() {
+
+  captureUserMedia({
+      video: true,
+      audio: true
+    },
+    function(stream) {
+
+      $('#video-record-start').prop('disabled', 'disabled');
+      $('#video-record-stop').prop('disabled', '');
+
+      var options = {
+        type: 'video',
+        disableLogs: false
+      };
+
+      videoRecorder = RecordRTC(stream, options);
+      // webkit user agent
+      if (!isFirefox) {
+        console.log('start recording for !firefox');
+        audioRecorder = RecordRTC(stream, {
+          type: 'audio',
+          disableLogs: false,
+          onAudioProcessStarted: function() {
+            videoRecorder.startRecording();
+          }
+        });
+        audioRecorder.startRecording();
+      } else {
+        console.log('start recording for firefox');
+        videoRecorder.startRecording();
+      }
+
+      videoPlayer.pause();
+      videoPlayer.muted = true;
+      // videoPlayer.src = window.URL.createObjectURL(stream);
+      videoPlayer.src = window.URL.createObjectURL(stream);
+      //videoPlayer.load();
+      videoPlayer.play();
+
+      gotStream(stream);
+
+      stream.onended = function() {
+        console.log('stream ended');
+      };
+    },
+    function(error) {
+      console.log(error);
+    });
+}
+
+function resetData() {
   cancelAnalyserUpdates();
-  videoRecorder.clearRecordedData();
+  if (videoRecorder) {
+    videoRecorder.clearRecordedData();
+  }
+
+  if (audioRecorder) {
+    audioRecorder.clearRecordedData();
+  }
+
+  videoBlob = null;
+  audioBlob = null;
 
   audioContext = null;
   audioInput = null;
@@ -87,50 +135,79 @@ $('.modal').on('hide.bs.modal', function() {
   rafID = null;
   analyserContext = null;
   analyserNode = null;
-});
+}
 
 function stopRecording() {
-
-  $('#video-record-start').prop('disabled', '');
-  $('#video-record-stop').prop('disabled', 'disabled');
-  $('#submitButton').prop('disabled', false);
 
   // avoid recorded blob truncated end by setting a timeout
   window.setTimeout(function() {
 
-    videoRecorder.stopRecording(function(url) {
-      cancelAnalyserUpdates();
-      videoPlayer.pause();
-      videoPlayer.muted = false;
-      videoPlayer.srcObject = null;
-      videoPlayer.src = url;
-      videoPlayer.load();
-      videoPlayer.onended = function() {
-        videoPlayer.pause();
-        videoPlayer.src = URL.createObjectURL(videoRecorder.blob);
-      };
+    $('#video-record-start').prop('disabled', '');
+    $('#video-record-stop').prop('disabled', 'disabled');
+    $('#submitButton').prop('disabled', false);
 
-    });
+    var aUrl = null;
+    // webkit based user agent
+    if (!isFirefox) {
+      console.log('not firefox');
+      audioRecorder.stopRecording(function(audioUrl) {
+        aUrl = audioUrl;
+        videoRecorder.stopRecording(function(videoUrl) {
+          // wav audio
+          audioBlob = audioRecorder.blob;
+          // webm video
+          videoBlob = videoRecorder.blob;
+          previewRecordings(videoUrl, audioUrl);
+        });
+      });
+    } else {
+      videoRecorder.stopRecording(function(videoUrl) {
+        // webm containing audio + video
+        videoBlob = videoRecorder.blob;
+        previewRecordings(videoUrl, null);
+      });
+    }
+
   }, recordEndTimeOut);
+}
+
+
+function previewRecordings(videoUrl, audioUrl) {
+  cancelAnalyserUpdates();
+  // @TODO do the same for audio element if !isFirefox
+  videoPlayer.pause();
+  videoPlayer.muted = false;
+  videoPlayer.srcObject = null;
+  videoPlayer.src = videoUrl;
+  videoPlayer.load();
+
+  audioPlayer.pause();
+  audioPlayer.src = audioUrl;
+  audioPlayer.load();
+
+  videoPlayer.onended = function() {
+    videoPlayer.pause();
+    audioPlayer.pause();
+    videoPlayer.src = URL.createObjectURL(videoBlob);
+    audioPlayer.src = URL.createObjectURL(audioBlob);
+  };
 }
 
 
 // use with claro new Resource API
 function uploadVideo() {
-  // get recorded blob
-  var blob = videoRecorder.blob;
+  $('#video-record-start').prop('disabled', 'disabled');
+  $('#video-record-stop').prop('disabled', 'disabled');
   var formData = new FormData();
-  // nav should be mandatory
   if (isFirefox) {
     formData.append('nav', 'firefox');
   } else {
     formData.append('nav', 'chrome');
+    formData.append('audio', audioBlob);
   }
-  // convert is optionnal
-  formData.append('convert', false);
-  // file is mandatory
-  formData.append('file', blob);
-  // filename is mandatory
+
+  formData.append('video', videoBlob);
+
   var fileName = $("#resource-name-input").val();
   formData.append('fileName', fileName);
 
@@ -149,25 +226,20 @@ function xhr(url, data, progress, callback) {
   request.onreadystatechange = function() {
     if (request.readyState === 4 && request.status === 200) {
       console.log('xhr end with success');
-      cancelAnalyserUpdates();
-      videoRecorder.clearRecordedData();
-
-      audioContext = null;
-      audioInput = null;
-      realAudioInput = null;
-      inputPoint = null;
-      rafID = null;
-      analyserContext = null;
-      analyserNode = null;
+      resetData();
       // use reload or generate route...
-      location.reload();
+      // location.reload();
 
     } else if (request.status === 500) {
       console.log('xhr error');
       var errorMessage = Translator.trans('resource_creation_error', {}, 'innova_video_recorder');
       $('#form-error-msg-row').show();
-      // allow user to save the recorded file on his device...
-      $('#btn-video-download').show();
+      // allow user to save the recorded file on his device... only if firefox ? (in chrome user would have to donwload 2 files and merge them)
+      if (isFirefox) {
+        $('#btn-video-download').show();
+      } else {
+        $('#form-error-download-msg').hide();
+      }
       // change form view
       $('#form-content').hide();
       $('#submitButton').hide();

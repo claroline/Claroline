@@ -23,7 +23,7 @@
                             <span class="fa fa-exclamation-circle"></span>
                             <span id="form-error-msg">{{ 'resource_creation_error'|trans({}, 'innova_video_recorder') }}</span>
                             <hr/>
-                            <span id="form-error-msg">{{ 'resource_creation_error_download'|trans({}, 'innova_video_recorder') }}</span>
+                            <span id="form-error-download-msg">{{ 'resource_creation_error_download'|trans({}, 'innova_video_recorder') }}</span>
                             <hr/>
                             <button type="button" title="{{ 'download_video'|trans({}, 'innova_video_recorder') }}" role="button" class="btn btn-danger fa fa-download" id="btn-video-download" onclick="downloadVideo()" style="display: none;"></button>
                         </div>
@@ -56,6 +56,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <video controls></video>
+                                        <audio style="display:none;"></audio>
                                     </div>
                                 </div>
                             </div>

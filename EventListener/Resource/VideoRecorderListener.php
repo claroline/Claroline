@@ -66,10 +66,11 @@ class VideoRecorderListener
     {
         $request = $this->container->get('request');
         $formData = $request->request->all();
-        $blob = $request->files->get('file');
+        $video = $request->files->get('video');
+        $audio = $request->files->get('audio');
 
         $workspace = $event->getParent()->getWorkspace();
-        $result = $this->vrm->uploadFileAndCreateResource($formData, $blob, $workspace);
+        $result = $this->vrm->uploadFileAndCreateResource($formData, $video, $audio, $workspace);
 
         if (!is_null($result['errors']) && count($result['errors']) > 0) {
             $msg = $result['errors'][0];

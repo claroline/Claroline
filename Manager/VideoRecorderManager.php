@@ -56,7 +56,7 @@ class VideoRecorderManager
      * @param Workspace $workspace
      * @return File
      */
-    public function uploadFileAndCreateResource($postData, UploadedFile $blob, Workspace $workspace = null)
+    public function uploadFileAndCreateResource($postData, UploadedFile $video, UploadedFile $audio = null, Workspace $workspace = null)
     {
 
         $errors = array();
@@ -73,37 +73,37 @@ class VideoRecorderManager
           $fs->mkdir($targetDir);
         }
 
-        $doEncode = isset($postData['convert']) && $postData['convert'] == true;
+        //$doEncode = isset($postData['convert']) && $postData['convert'] == true;
         $isFirefox = $postData['nav'] === 'firefox';
-        $extension = 'webm';//$isFirefox ? 'ogg' : 'wav';
-        $encodingExt = 'webm';//'mp3';
-        $mimeType = 'video/webm';//$doEncode ? 'video/' . $encodingExt : 'video/' . $extension;
+        $extension = 'webm';
+        $encodingExt = 'webm';
+        $mimeType = 'video/webm';
 
-        if (!$this->validateParams($postData, $blob)) {
+        if (!$this->validateParams($postData, $video, $isFirefox, $audio)) {
             array_push($errors, 'one or more request parameters are missing.');
             return array('file' => null, 'errors' => $errors);
         }
 
-        // the filename that will be in database (a human readable one should be better)
-        //$fileBaseName = $this->claroUtils->generateGuid();
+        // the filename that will be in database (human readable)
         $fileBaseName = $postData['fileName'];
         $uniqueBaseName = $this->claroUtils->generateGuid();
-        $fileName = $uniqueBaseName . '.webm';// . $extension;
-
+        $fileName = $uniqueBaseName . '.webm';
 
         $baseHashName = $this->getBaseFileHashName($uniqueBaseName, $workspace);
-        $hashName = $baseHashName . '.webm';//$doEncode ? $baseHashName . '.' . $encodingExt : $baseHashName . '.' . $extension;
+        $hashName = $baseHashName . '.webm';
+
         // file size @ToBe overriden if doEncode = true
-        $size = $blob->getSize();
-
-        /*if ($doEncode) {
+        $size = $video->getSize();
+        // marge audio and video in a single webm file for webkit based user agent
+        if (!$isFirefox) {
             // the filename after encoding
-            $encodedName = $uniqueBaseName . '.' . $encodingExt;
+            $encodedName = $uniqueBaseName . '.webm';
             // upload original file in temp upload (ie web/uploads) dir
-            $blob->move($this->tempUploadDir, $fileName);
+            $video->move($this->tempUploadDir, $fileBaseName.'.webm');
+            $audio->move($this->tempUploadDir, $fileBaseName.'.wav');
+            // merge temp files into one webm file
+            $cmd = 'avconv -i '. $this->tempUploadDir . DIRECTORY_SEPARATOR . $fileBaseName.'.wav' .' -i ' . $this->tempUploadDir . DIRECTORY_SEPARATOR . $fileBaseName.'.webm'.' -map 0:0 -map 1:0 '. $this->tempUploadDir . DIRECTORY_SEPARATOR . $encodedName;
 
-            // encode original file to mp3
-            $cmd = 'avconv -i ' . $this->tempUploadDir . DIRECTORY_SEPARATOR . $fileName . ' -acodec libmp3lame -ab 128k ' . $this->tempUploadDir . DIRECTORY_SEPARATOR . $encodedName;
             $output;
             $returnVar;
             exec($cmd, $output, $returnVar);
@@ -122,22 +122,19 @@ class VideoRecorderManager
             // remove temp encoded file
             @unlink($this->tempUploadDir . DIRECTORY_SEPARATOR . $encodedName);
             // remove original non encoded file from temp dir
-            @unlink($this->tempUploadDir . DIRECTORY_SEPARATOR . $fileName);
+            @unlink($this->tempUploadDir . DIRECTORY_SEPARATOR . $fileBaseName.'.webm');
+            @unlink($this->tempUploadDir . DIRECTORY_SEPARATOR . $fileBaseName.'.wav');
 
         } else {
-            $blob->move($targetDir, $fileName);
-        }*/
-
-        $blob->move($targetDir, $fileName);
+            $video->move($targetDir, $fileName);
+        }
 
         $file = new File();
         $file->setSize($size);
-        //$name = $doEncode ? $fileBaseName.'.'.$encodingExt:$fileBaseName.'.'.$extension;
         $file->setName($fileBaseName);
         $file->setHashName($hashName);
         $file->setMimeType($mimeType);
 
-        //return $file;
         return array('file' => $file, 'errors' => []);
     }
 
@@ -157,7 +154,7 @@ class VideoRecorderManager
      * @param Array  $postData
      * @param UploadedFile  $file the blob sent by webrtc
      */
-    private function validateParams($postData, UploadedFile $file)
+    private function validateParams($postData, UploadedFile $video, $isFirefox, UploadedFile $audio = null)
     {
         $availableNavs = ["firefox", "chrome"];
         if (!array_key_exists('nav', $postData) || $postData['nav'] === '' || !in_array($postData['nav'], $availableNavs)) {
@@ -168,9 +165,14 @@ class VideoRecorderManager
             return false;
         }
 
-        if (!isset($file) || $file === null || !$file) {
+        if (!isset($video) || $video === null || !$video) {
             return false;
         }
+
+        if (!$isFirefox && (!isset($audio) || $audio === null || !$audio)) {
+            return false;
+        }
+
         return true;
     }
 
