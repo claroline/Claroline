@@ -16,7 +16,7 @@
                 <div data-ng-if="correctionQCMCtrl.getChoiceSimpleType(choice) == 'html-text'" data-ng-bind-html="choice.data | unsafe"></div>
             </td>
             <td class="center-text">
-                <div class="fa btn btn-small btn-success fa-check" data-ng-if="correctionQCMCtrl.isChoiceValid(question, choice)"></div>
+                <div class="fa color-success fa-check" data-ng-if="correctionQCMCtrl.isChoiceValid(question, choice)"></div>
             </td>
             <td class="center-text">
                 <div data-ng-class="{'color-success fa fa-check' : correctionQCMCtrl.isStudentChoice(question, choice) === 1, 'color-danger fa fa-close': correctionQCMCtrl.isStudentChoice(question, choice) === 2}" title="{{choiceQuestionCtrl.getChoiceFeedback(choice)}}">
