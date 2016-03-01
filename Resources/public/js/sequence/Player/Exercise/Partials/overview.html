@@ -2,42 +2,59 @@
     <table class="table table-striped table-bordered">
         <!-- Display exercise general information -->
         <tbody>
-        <!-- Title of the Exercise -->
-        <tr>
-            <th class="text-right" scope="row">{{ 'title'|trans:{}:'ujm_exo' }}</th>
-            <td class="text-center">{{ exerciseOverviewCtrl.exercise.meta.title }}</td>
-        </tr>
+            <!-- Title of the Exercise -->
+            <tr>
+                <th class="text-right col-md-4" scope="row">{{ 'title'|trans:{}:'ujm_exo' }}</th>
+                <td class="text-center col-md-8">{{ exerciseOverviewCtrl.exercise.meta.title }}</td>
+            </tr>
 
-        <!-- Description of the Exercise -->
-        <tr>
-            <th class="text-right" scope="row">{{ 'description'|trans:{}:'ujm_exo' }}</th>
-            <td class="text-center">{{ exerciseOverviewCtrl.exercise.meta.description || '-' }}</td>
-        </tr>
+            <!-- Description of the Exercise -->
+            <tr>
+                <th class="text-right col-md-4" scope="row">{{ 'description'|trans:{}:'ujm_exo' }}</th>
+                <td class="text-center col-md-8">{{ exerciseOverviewCtrl.exercise.meta.description || '-' }}</td>
+            </tr>
 
-        <!-- Start date -->
-        <tr>
-            <th class="text-right" scope="row">{{ 'start_date' | trans:{}:'ujm_exo' }}</th>
-            <td class="text-center">{{ exerciseOverviewCtrl.exercise.meta.startDate | date:'dd/MM/yyyy \\- HH\\hmm\\mss\\s' }}</td>
-        </tr>
+            <!-- Start date -->
+            <tr>
+                <th class="text-right col-md-4" scope="row">{{ 'start_date' | trans:{}:'ujm_exo' }}</th>
+                <td class="text-center col-md-8">{{ exerciseOverviewCtrl.exercise.meta.startDate | date:'dd/MM/yyyy \\- HH\\hmm\\mss\\s' }}</td>
+            </tr>
 
-        <!-- End date -->
-        <tr>
-            <th class="text-right" scope="row">{{ 'end_date' | trans:{}:'ujm_exo' }}</th>
-            <td class="text-center">{{ exerciseOverviewCtrl.exercise.meta.endDate | date:'dd/MM/yyyy HH:mm:ss' }}</td>
-        </tr>
+            <!-- End date -->
+            <tr>
+                <th class="text-right col-md-4" scope="row">{{ 'end_date' | trans:{}:'ujm_exo' }}</th>
+                <td class="text-center col-md-8">{{ exerciseOverviewCtrl.exercise.meta.endDate | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+            </tr>
         </tbody>
 
         <!-- Display exercise advanced information (for those who can administrate the Exercise) -->
         <tbody data-ng-hide="!exerciseOverviewCtrl.editEnabled || !exerciseOverviewCtrl.additionalInfo">
-        <!-- Type of the Exercise (summative, evaluative, formative) -->
-        <tr>
-            <th class="text-right" scope="row">{{ 'type' | trans:{}:'ujm_exo' }}</th>
-            <td class="text-center" data-ng-switch="exerciseOverviewCtrl.exercise.meta.type">
-                <ANY ng-switch-when="1">{{ 'summative' | trans:{}:'ujm_exo' }}</ANY>
-                <ANY ng-switch-when="2">{{ 'evaluative' | trans:{}:'ujm_exo' }}</ANY>
-                <ANY ng-switch-when="3">{{ 'formative' | trans:{}:'ujm_exo' }}</ANY>
-            </td>
-        </tr>
+            <!-- Type of the Exercise (summative, evaluative, formative) -->
+            <tr>
+                <th class="text-right col-md-4" scope="row">{{ 'type' | trans:{}:'ujm_exo' }}</th>
+                <td class="text-center col-md-8" data-ng-switch="exerciseOverviewCtrl.exercise.meta.type">
+                    <span data-ng-switch-when="1">{{ 'summative' | trans:{}:'ujm_exo' }}</span>
+                    <span data-ng-switch-when="2">{{ 'evaluative' | trans:{}:'ujm_exo' }}</span>
+                    <span data-ng-switch-when="3">{{ 'formative' | trans:{}:'ujm_exo' }}</span>
+                </td>
+            </tr>
+
+            <!-- Shuffle question order -->
+            <tr>
+                <th class="text-right col-md-4" scope="row">{{ 'random_questions' | trans:{}:'ujm_exo' }}</th>
+                <td class="text-center col-md-8">
+                    <span class="fa" data-ng-class="{ 'fa-check-circle': exerciseOverviewCtrl.exercise.meta.random, 'fa-times-circle': !exerciseOverviewCtrl.exercise.meta.random }"></span>
+                </td>
+            </tr>
+
+            <!-- Number of questions to draw -->
+            <tr>
+                <th class="text-right col-md-4" scope="row">{{ 'number_questions_draw' | trans:{}:'ujm_exo' }}</th>
+                <td class="text-center col-md-8" data-ng-switch="exerciseOverviewCtrl.exercise.meta.pick">
+                    <span data-ng-switch-when="0">{{ 'all_question'|trans:{}:'ujm_exo' }}</span>
+                    <span data-ng-switch-default="">{{ exerciseOverviewCtrl.exercise.meta.pick }}</span>
+                </td>
+            </tr>
         </tbody>
     </table>
 

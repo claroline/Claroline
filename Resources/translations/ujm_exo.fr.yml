@@ -228,7 +228,8 @@ no_user_found: Pas d'utilisateur trouvé
 n_question: Question n°
 number_proposal: Numéro de la proposition
 number_of_papers: Nombre de copies
-number_questions_draw: Nombre de questions à tirer (0 pour toutes)
+number_questions_draw: Nombre de questions à tirer
+number_questions_draw_help: Tapez 0 pour tirer toutes les questions
 numerical: Numérique
 num_paper: Numéro de la copie
 

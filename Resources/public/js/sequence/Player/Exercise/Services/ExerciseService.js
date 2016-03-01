@@ -59,6 +59,24 @@ ExerciseService.prototype.setEditEnabled = function setEditEnabled(editEnabled) 
     return this;
 };
 
+ExerciseService.prototype.save = function save(exercise) {
+    var deferred = this.$q.defer();
+
+    this.$http
+        .put(
+            Routing.generate('exercise_update', {id: id}),
+            exercise
+        )
+        .success(function onSuccess(response) {
+            deferred.resolve(response);
+        })
+        .error(function onError(response, status) {
+            deferred.reject(response);
+        });
+
+    return deferred.promise;
+};
+
 /**
  * Start the current Exercise
  * @returns {promise}

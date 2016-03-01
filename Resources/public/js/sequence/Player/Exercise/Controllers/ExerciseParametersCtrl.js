@@ -4,8 +4,12 @@
  * @param {Object} exercise - The exercise to Edit
  * @constructor
  */
-var ExerciseParametersCtrl = function ExerciseEditCtrl(exercise) {
-    this.exercise = exercise;
+var ExerciseParametersCtrl = function ExerciseEditCtrl(ExerciseService, exercise) {
+    this.exerciseService = ExerciseService;
+
+    // Create a copy of the exercise
+    angular.copy(exercise, this.exercise);
+
 
     // Initialize TinyMCE
     var tinymce = window.tinymce;
@@ -40,7 +44,7 @@ var ExerciseParametersCtrl = function ExerciseEditCtrl(exercise) {
 };
 
 // Set up dependency injection
-ExerciseParametersCtrl.$inject = [ 'exercise' ];
+ExerciseParametersCtrl.$inject = [ 'ExerciseService', 'exercise' ];
 
 /**
  * Tiny MCE options
@@ -49,10 +53,17 @@ ExerciseParametersCtrl.$inject = [ 'exercise' ];
 ExerciseParametersCtrl.prototype.tinymceOptions = {};
 
 /**
- * The Exercise to edit
+ * A copy of the Exercise to edit (to not override Exercise data if User cancel the edition)
  * @type {Object}
  */
-ExerciseParametersCtrl.prototype.exercise = null;
+ExerciseParametersCtrl.prototype.exercise = {};
+
+/**
+ * Save modifications of the Exercise
+ */
+ExerciseParametersCtrl.prototype.save = function save() {
+    this.exerciseService.save(this.exercise);
+};
 
 // Register controller into AngularJS
 angular

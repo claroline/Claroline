@@ -229,6 +229,7 @@ n_question: Question n°
 number_proposal: Number of the proposal
 number_of_papers: Number of papers
 number_questions_draw: Number of questions to draw (0 for all)
+number_questions_draw_help: Type 0 to draw all questions
 numerical: Numerical
 num_paper: Paper's number
 
