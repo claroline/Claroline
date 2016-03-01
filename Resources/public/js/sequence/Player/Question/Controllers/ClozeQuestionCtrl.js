@@ -208,6 +208,10 @@
                 this.showFeedback();
             }.bind(this));
             
+            $scope.$on('hide-feedback', function (event, data) {
+                this.hideFeedback();
+            }.bind(this));
+            
             this.showFeedback = function () {
                 // get question answers and feedback ONLY IF NEEDED
                 var promise = QuestionService.getQuestionSolutions(this.question.id);
@@ -219,6 +223,14 @@
                 
                 $('.blank').each(function () {
                     $(this).prop('disabled', true);
+                });
+            };
+            
+            this.hideFeedback = function () {
+                this.feedbackIsVisible = false;
+                
+                $('.blank').each(function () {
+                    $(this).prop('disabled', false);
                 });
             };
 

@@ -105,12 +105,20 @@
                     this.questionFeedback = result.feedback;
                 }.bind(this));
             };
+            
+            this.hideFeedback = function () {
+                this.feedbackIsVisible = false;
+            };
 
             /**
              * Listen to show-feedback event (broadcasted by ExercisePlayerCtrl)
              */
             $scope.$on('show-feedback', function (event, data) {
                 this.showFeedback();
+            }.bind(this));
+            
+            $scope.$on('hide-feedback', function () {
+                this.hideFeedback();
             }.bind(this));
 
             /**
