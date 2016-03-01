@@ -26,7 +26,7 @@
         <div data-ng-if="clozeQuestionCtrl.feedbackIsVisible">
             <div class="row">
                 <div class="col-md-12">
-                    <label data-ng-bind-html="clozeQuestionCtrl.questionFeedback | unsafe"></label>
+                    <label class="alert alert-info" data-ng-bind-html="clozeQuestionCtrl.questionFeedback | unsafe"></label>
                 </div>
             </div>
             <div data-ng-repeat="hole in clozeQuestionCtrl.question.holes">
