@@ -174,6 +174,11 @@
                 this.feedbackIsShown = true;
                 $scope.$broadcast('show-feedback');
             };
+            
+            this.hideFeedback = function () {
+                this.feedbackIsShown = false;
+                $scope.$broadcast('hide-feedback');
+            };
 
             /**
              * Checks if feedback fields can be visible at some times
