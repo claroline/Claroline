@@ -25,7 +25,7 @@ function configure(rootDir, packages, isWatchMode) {
   // all entries are compiled in the web/dist directory
   const output = {
     path: path.resolve(rootDir, 'web/dist'),
-    publicPath: 'http://localhost:8080/',
+    publicPath: 'http://localhost:8080/dist',
     filename: '[name].js'
   }
 
