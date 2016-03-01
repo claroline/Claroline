@@ -129,6 +129,8 @@ class DropController extends DropzoneBaseController
         $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
 
         $returnReceiptArray = array();
+        // Tableau donnant pour chaque document le premier enseignant qui a commenté
+        $teacherCommentDocArray = array();
 
         // Pour avoir l'accusé de réception (ou pas) de chaque document
         foreach ($drop->getDocuments() as $document) {
@@ -145,7 +147,46 @@ class DropController extends DropzoneBaseController
             {
                 $returnReceiptArray[$document->getId()] = 0;
             }
+
+            // Récupération du premier enseignant qui a commenté ce document
+            $teacherCommentDocArray[$document->getId()]= 0;
+            $userComments = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Comment')
+            ->teacherCommentDocArray($document);
+            // Traitement du tableau
+            $foundAdminComment = false;
+            for ($indice = 0; $indice<count($userComments); $indice++)
+            {
+                            echo 'boucle';
+                            echo $document->getId();
+                $ResourceNode = $dropzone->getResourceNode();
+                $workspace = $ResourceNode->getWorkspace();
+                // getting the  Manager role
+                $this->role_manager =  $this->get('claroline.manager.role_manager');
+                $role = $this->role_manager->getWorkspaceRolesForUser($userComments[$indice]->getUser(), $workspace);
+
+                // Traitement du tableau
+                for ($indiceRole = 0; $indiceRole<count($role); $indiceRole++)
+                {
+                    $roleName = $role[$indiceRole]->getName();
+                    if (strpos('_' . $roleName, 'ROLE_WS_MANAGER') === 1)
+                    {
+                        if ($foundAdminComment == false)
+                        {
+                            echo 'trouvé';
+                            echo $document->getId();
+                            $teacherCommentDocArray[$document->getId()]= 1;
+                            $foundAdminComment = true;
+                        }
+                    }
+                }
+            }
+
         }
+
+
+
+
+
 
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
@@ -163,7 +204,8 @@ class DropController extends DropzoneBaseController
             'userNbTextToRead' => $userNbTextToRead,
             'activeRoute' => $activeRoute,
             'collecticielOpenOrNot' => $collecticielOpenOrNot,
-            'returnReceiptArray' => $returnReceiptArray
+            'returnReceiptArray' => $returnReceiptArray,
+            'teacherCommentDocArray' => $teacherCommentDocArray
         );
     }
 

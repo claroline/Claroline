@@ -40,12 +40,19 @@ $(document).ready(function () {
         var docDropUserId = document.getElementById('document_drop_user_' + documentId).value;
         var adminInnova = document.getElementById('adminInnova_' + documentId).value;
         var returnReceiptId = document.getElementById('return_receipt_' + documentId).value;
+        var teacherComment = document.getElementById('teacher_comment_' + documentId).value;
 
         //
         // Afficher les tests ici qui permettront de rafraîchir les données.
         //
         // Reprise ici dans tests déclarés avant dans le fichier documentItem.
         //
+
+        // delete : bouton et action "suppresion"
+        // cancel : bouton et action "annulation"
+        // lock : bouton et action "on ne peut rien faire"
+        
+        // Enseignant
         if (adminInnova == true) {
             if (isValidate == false || senderId != docDropUserId) {
                 var selector = "#delete_" + documentId;
@@ -57,19 +64,23 @@ $(document).ready(function () {
                 var selector = "#lock_" + documentId;
             }
         }
+        // Etudiant
         if (adminInnova == false) {
-            if (isValidate == false || (adminInnova == true && senderId != docDropUserId)) {
-                var selector = "#delete_" + documentId;
-            }
-            else if (isValidate == true && adminInnova == false && commentLength == 0 && senderId == docDropUserId) {
-                var selector = "#cancel_" + documentId;
+            // #241 : l'élève ne peut rien faire s'il y a un AR sur le document.
+            // #247 : l'élève ne peut rien faire s'il y a un commentaire enseignant sur le document.
+            if (returnReceiptId > 0 || teacherComment > 0) {
+                var selector = "#lock_" + documentId;
             }
             else {
-                var selector = "#lock_" + documentId;
-            }
-            // #241 : l'élève ne peut rien faire s'il y a un AR sur le document.
-            if (returnReceiptId > 0) {
-                var selector = "#lock_" + documentId;
+                if (isValidate == false || (adminInnova == true && senderId != docDropUserId)) {
+                    var selector = "#delete_" + documentId;
+                }
+                else if (isValidate == true && adminInnova == false && commentLength == 0 && senderId == docDropUserId) {
+                    var selector = "#cancel_" + documentId;
+                }
+                else {
+                    var selector = "#lock_" + documentId;
+                }
             }
         }
         $(selector).css({'display': 'inline'});

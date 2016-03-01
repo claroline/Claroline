@@ -134,6 +134,7 @@
                 <input type="hidden" value="{{document.drop.user.id}}" id="document_drop_user_{{document.id}}">
                 <input type="hidden" value="1" id="adminInnova_{{document.id}}">
                 <input type="hidden" value="{{returnReceiptArray[document.id]}}" id="return_receipt_{{document.id}}">
+                <input type="hidden" value="{{teacherCommentDocArray[document.id]}}" id="teacher_comment_{{document.id}}">
             </td>
         {% endif %}
     {% else %}
@@ -166,6 +167,7 @@
                 <input type="hidden" value="{{document.drop.user.id}}" id="document_drop_user_{{document.id}}">
                 <input type="hidden" value="0" id="adminInnova_{{document.id}}">
                 <input type="hidden" value="{{returnReceiptArray[document.id]}}" id="return_receipt_{{document.id}}">
+                <input type="hidden" value="{{teacherCommentDocArray[document.id]}}" id="teacher_comment_{{document.id}}">
                 </td>
             {% endif %}
         {% endif %}
