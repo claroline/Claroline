@@ -26,9 +26,12 @@ use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Form\Organization\OrganizationType;
 use Claroline\CoreBundle\Form\Organization\OrganizationParametersType;
 use Claroline\CoreBundle\Form\Organization\OrganizationNameType;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 
 /**
  * @NamePrefix("api_")
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("canOpenAdminTool('user_management')")
  */
 class OrganizationController extends FOSRestController
 {
@@ -57,7 +60,7 @@ class OrganizationController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_organization_list"})
      * @ApiDoc(
      *     description="Creates an organization",
      *     views = {"organization"},
@@ -97,8 +100,8 @@ class OrganizationController extends FOSRestController
         return array('success');
     }
 
-        /**
-     * @View(serializerGroups={"api"})
+    /**
+     * @View(serializerGroups={"api_organization_tree"})
      * @ApiDoc(
      *     description="Returns the organizations list",
      *     views = {"organization"}
@@ -110,7 +113,19 @@ class OrganizationController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_organization_list"})
+     * @ApiDoc(
+     *     description="Returns the organizations list",
+     *     views = {"organization"}
+     * )
+     */
+    public function getOrganizationListAction()
+    {
+        return $this->organizationManager->getAll();
+    }
+
+    /**
+     * @View(serializerGroups={"api_organization_list"})
      * @ApiDoc(
      *     description="Returns the location edition form",
      *     views = {"location"}
@@ -121,12 +136,15 @@ class OrganizationController extends FOSRestController
         $formType = new OrganizationParametersType('eofm');
         $formType->enableApi();
         $form = $this->createForm($formType, $organization);
+        $options = array(
+            'serializer_group'=> "api_organization_list"
+        );
 
-        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Organization\editOrganizationForm.html.twig', $form);
+        return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Organization\editOrganizationForm.html.twig', $form, $options);
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_organization_list"})
      * @ApiDoc(
      *     description="Update an organization",
      *     views = {"location"},
@@ -149,7 +167,8 @@ class OrganizationController extends FOSRestController
 
         $options = array(
             'http_code' => $httpCode,
-            'extra_parameters' => $organization
+            'extra_parameters' => $organization,
+            'serializer_group'=> "api_organization_list"
         );
 
         return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Organization\editLocationForm.html.twig', $form, $options);

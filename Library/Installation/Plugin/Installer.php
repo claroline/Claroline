@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Claroline\BundleRecorder\Log\LoggableTrait;
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\PluginBundleInterface;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\InstallationBundle\Manager\InstallationManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -73,13 +73,13 @@ class Installer
     /**
      * Installs a plugin.
      *
-     * PluginBundle $plugin
+     * PluginBundleInterface $plugin
      *
-     * @param PluginBundle $plugin
+     * @param PluginBundleInterface $plugin
      *
      * @throws \Exception if the plugin doesn't pass the validation
      */
-    public function install(PluginBundle $plugin)
+    public function install(PluginBundleInterface $plugin)
     {
         $this->checkInstallationStatus($plugin, false);
         $this->validatePlugin($plugin);
@@ -91,9 +91,9 @@ class Installer
     /**
      * Uninstalls a plugin.
      *
-     * @param PluginBundle $plugin
+     * @param PluginBundleInterface $plugin
      */
-    public function uninstall(PluginBundle $plugin)
+    public function uninstall(PluginBundleInterface $plugin)
     {
         $this->checkInstallationStatus($plugin, true);
         $this->log('Removing plugin configuration...');
@@ -104,11 +104,11 @@ class Installer
     /**
      * Upgrades/downgrades a plugin to a specific version.
      *
-     * @param PluginBundle $plugin
+     * @param PluginBundleInterface $plugin
      * @param string       $currentVersion
      * @param string       $targetVersion
      */
-    public function update(PluginBundle $plugin, $currentVersion, $targetVersion)
+    public function update(PluginBundleInterface $plugin, $currentVersion, $targetVersion)
     {
         $this->checkInstallationStatus($plugin, true);
         $this->validator->activeUpdateMode();
@@ -119,7 +119,7 @@ class Installer
         $this->recorder->update($plugin, $this->validator->getPluginConfiguration());
     }
 
-    private function checkInstallationStatus(PluginBundle $plugin, $shouldBeInstalled = true)
+    private function checkInstallationStatus(PluginBundleInterface $plugin, $shouldBeInstalled = true)
     {
         $this->log(sprintf('<fg=blue>Checking installation status for plugin %s</fg=blue>', $plugin->getName()));
 
@@ -132,7 +132,7 @@ class Installer
         }
     }
 
-    private function validatePlugin(PluginBundle $plugin)
+    private function validatePlugin(PluginBundleInterface $plugin)
     {
         $this->log('Validating plugin...');
         $errors = $this->validator->validate($plugin);

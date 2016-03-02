@@ -114,36 +114,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
-     * Returns all the users by search.
-     *
-     * @param string $search
-     *
-     * @return User[]
-     */
-    public function findAllUserBySearch($search)
-    {
-        $upperSearch = strtoupper(trim($search));
-
-        if ($search !== '') {
-            $dql = '
-                SELECT u
-                FROM Claroline\CoreBundle\Entity\User u
-                WHERE UPPER(u.firstName) LIKE :search
-                OR UPPER(u.lastName) LIKE :search
-                OR UPPER(u.username) LIKE :search
-                AND u.isEnabled = true
-            ';
-
-            $query = $this->_em->createQuery($dql);
-            $query->setParameter('search', "%{$upperSearch}%");
-
-            return $query->getResult();
-        }
-
-        return parent::findAll();
-    }
-
-    /**
      * Search users whose first name, last name or username match a given search string.
      *
      * @param string $search
@@ -403,93 +373,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
-     * Returns the users who are not members of a group.
-     *
-     * @param Group   $group
-     * @param boolean $executeQuery
-     * @param string  $orderedBy
-     *
-     * @return User[]|Query
-     *
-     * @todo Find out why the join on profile preferences is necessary
-     */
-    public function findGroupOutsiders(Group $group, $executeQuery = true, $orderedBy = 'id')
-    {
-        $dql = "
-            SELECT DISTINCT u FROM Claroline\CoreBundle\Entity\User u
-            WHERE u NOT IN (
-                SELECT us FROM Claroline\CoreBundle\Entity\User us
-                JOIN us.groups gs
-                WHERE gs.id = :groupId
-            )
-            AND u.isEnabled = true
-            ORDER BY u.{$orderedBy}
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('groupId', $group->getId());
-
-        return $executeQuery ? $query->getResult() : $query;
-    }
-
-    /**
-     * Returns the users who are not members of a group and whose first name, last
-     * name or username match a given search string.
-     *
-     * @param \Claroline\CoreBundle\Entity\Group $group
-     * @param string $search
-     * @param boolean $executeQuery
-     * @param string $orderedBy
-     *
-     * @return User[]|Query
-     *
-     * @todo Find out why the join on profile preferences is necessary
-     */
-    public function findGroupOutsidersByName(Group $group, $search, $executeQuery = true, $orderedBy = 'id')
-    {
-        $dql = "
-            SELECT DISTINCT u FROM Claroline\CoreBundle\Entity\User u
-            WHERE (
-                UPPER(u.lastName) LIKE :search
-                OR UPPER(u.firstName) LIKE :search
-                OR UPPER(u.lastName) LIKE :search
-            )
-            AND u NOT IN (
-                SELECT us FROM Claroline\CoreBundle\Entity\User us
-                JOIN us.groups gr
-                WHERE gr.id = :groupId
-            )
-            AND u.isEnabled = true
-            ORDER BY u.{$orderedBy}
-        ";
-        $search = strtoupper($search);
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('groupId', $group->getId());
-        $query->setParameter('search', "%{$search}%");
-
-        return $executeQuery ? $query->getResult() : $query;
-    }
-
-    /**
-     * Returns all the users except a given one.
-     *
-     * @param array $excludedUser
-     *
-     * @return User[]
-     */
-    public function findAllExcept(array $excludedUser)
-    {
-        $dql = '
-            SELECT u FROM Claroline\CoreBundle\Entity\User u
-            WHERE u NOT IN (:userIds)
-            AND u.isEnabled = true
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('userIds', $excludedUser);
-
-        return $query->getResult();
-    }
-
-    /**
      * Returns users by their usernames.
      *
      * @param array $usernames
@@ -633,9 +516,9 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             LEFT JOIN u.personalWorkspace ws
             LEFT JOIN u.groups g
             LEFT JOIN g.roles r2
-            WHERE r1 in (:roles)
+            WHERE (r1 in (:roles)
+            OR r2 in (:roles))
             AND u.isEnabled = true
-            OR r2 in (:roles)
             ORDER BY u.{$orderedBy} ".
             $order;
 
@@ -664,9 +547,9 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             LEFT JOIN u.personalWorkspace ws
             LEFT JOIN u.groups g
             LEFT JOIN g.roles r2
-            WHERE r1 in (:roles)
+            WHERE (r1 in (:roles)
+            OR r2 in (:roles))
             AND u.isEnabled = true
-            OR r2 in (:roles)
             ORDER BY u.lastName, u.firstName ASC";
 
         $query = $this->_em->createQuery($dql);
@@ -799,8 +682,9 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             LEFT JOIN g.roles gr
             LEFT JOIN gr.workspace grws
             LEFT JOIN ur.workspace uws
-            WHERE uws.id = :wsId
-            OR grws.id = :wsId
+            WHERE (uws.id = :wsId
+            OR grws.id = :wsId)
+            AND u.isEnabled = true
          ';
 
         $query = $this->_em->createQuery($dql);
@@ -1584,66 +1468,5 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query->setParameter('data', $data);
 
         return $query->getOneOrNullResult();
-    }
-
-    /**
-     * Big method for searching users with filters. It can handle most use cases.
-     */
-    public function searchPartialList(array $searches = array(), $page = null, $limit = null, $count = false)
-    {
-        $baseFieldsName = User::getUserSearchableFields();
-        $facetFields = $this->_em->getRepository('ClarolineCoreBundle:Facet\FieldFacet')->findAll();
-        $facetFieldsName = array();
-
-        foreach ($facetFields as $facetField) {
-            $facetFieldsName[] = $facetField->getName();
-        }
-
-        $qb = $this->_em->createQueryBuilder();
-        $count ? $qb->select('count(u)'): $qb->select('u');
-        $qb->from('Claroline\CoreBundle\Entity\User', 'u')
-            ->where('u.isEnabled = true');
-
-        foreach ($searches as $key => $search) {
-            foreach ($search as $id => $el) {
-                if (in_array($key, $baseFieldsName)) {
-                    $qb->andWhere("UPPER (u.{$key}) LIKE :{$key}{$id}");
-                    $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
-                } elseif (in_array($key, $facetFieldsName)) {
-                    $qb->join('u.fieldsFacetValue', "ffv{$id}");
-                    $qb->join("ffv{$id}.fieldFacet", "f{$id}");
-                    $qb->andWhere("UPPER (ffv{$id}.stringValue) LIKE :{$key}{$id}");
-                    $qb->orWhere("ffv{$id}.floatValue = :{$key}{$id}");
-                    $qb->andWhere("f{$id}.name LIKE :facet{$id}");
-                    $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
-                    $qb->setParameter("facet{$id}", $key);
-                } elseif ($key === 'group_name') {
-                    $qb->join('u.groups', "g{$id}");
-                    $qb->andWhere("UPPER (g{$id}.name) LIKE :{$key}{$id}");
-                    $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
-                } if ($key === 'group_id') {
-                    $qb->join('u.groups', "g{$id}");
-                    $qb->andWhere("g{$id}.id = :{$key}{$id}");
-                    $qb->setParameter($key . $id, $el);
-                } if ($key === 'organization_name') {
-                    $qb->join('u.organizations', "o{$id}");
-                    $qb->andWhere("UPPER (o{$id}.name) LIKE :{$key}{$id}");
-                    $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
-                } if ($key === 'organization_id') {
-                    $qb->join('u.organizations', "o{$id}");
-                    $qb->andWhere('o{$id}.id = :id');
-                    $qb->setParameter($key . $id, $el);
-                }
-            }
-        }
-
-        $query = $qb->getQuery();
-        
-        if ($page && $limit && !$count) {
-            $query->setMaxResults($limit);
-            $query->setFirstResult($page * $limit);
-        }
-
-        return $count ? $query->getSingleScalarResult(): $query->getResult();
     }
 }

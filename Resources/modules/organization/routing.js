@@ -13,7 +13,7 @@ export default function($stateProvider, $urlRouterProvider) {
         .state(
             'organizations.list',
             {
-                url: "",
+                url: '',
                 ncyBreadcrumb: {
                     label: translate('organizations')
                 },
@@ -26,26 +26,24 @@ export default function($stateProvider, $urlRouterProvider) {
                 }
             }
         )
-        
+
         .state(
             'organizations.locations',
             {
-                url: "/locations",
+                url: '/locations',
                 ncyBreadcrumb: {
                     label: translate('locations'),
                     parent: 'organizations.list'
                 },
                 views: {
                     'locations': {
-                        template: require('../location/Partial/locations_main.html'),
+                        template: require('./../location/Partial/locations_main.html'),
                         controller: 'LocationController',
                         controllerAs: 'lc'
                     }
                 }
             }
         )
-    ;
 
-
-    $urlRouterProvider.otherwise("/organizations");
+    $urlRouterProvider.otherwise('/organizations')
 }

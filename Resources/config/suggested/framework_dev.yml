@@ -6,5 +6,3 @@ framework:
         only_exceptions: false
     session:
         save_path: %kernel.root_dir%/sessions
-    templating:
-        assets_base_url: "http://localhost:8080"

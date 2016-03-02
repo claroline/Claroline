@@ -35,27 +35,27 @@ class Organization
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api"})
+     * @Groups({"api_user", "api_organization_tree", "api_organization_list"})
      */
     protected $id;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Groups({"api"})
+     * @Groups({"api_organization_tree", "api_organization_list"})
      */
     protected $position;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api"})    
+     * @Groups({"api_user", "api_organization_tree", "api_organization_list"})    
      */
     protected $name;
 
     /**
      * @ORM\Column(nullable=true)
      * @Assert\Email()
-     * @Groups({"api"})    
+     * @Groups({"api_organization_tree", "api_organization_list"})    
      */
     protected $email;
 
@@ -63,9 +63,10 @@ class Organization
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Organization\Location",
      *     cascade={"persist"},
-     *     mappedBy="organizations"
+     *     inversedBy="organizations"
      * )
-     * @Groups({"api"})
+     * @ORM\JoinTable(name="claro__location_organization")
+     * @Groups({"api_organization_tree", "api_organization_list"})
      */
     protected $locations;
 
@@ -97,14 +98,14 @@ class Organization
      * @Gedmo\TreeParent
      * @ORM\ManyToOne(targetEntity="Organization", inversedBy="children")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
-     * @Groups({"api"})
+     * @Groups({"api_organization_tree"})
      */
     private $parent;
 
     /**
      * @ORM\OneToMany(targetEntity="Organization", mappedBy="parent")
      * @ORM\OrderBy({"lft" = "ASC"})
-     * @Groups({"api"})
+     * @Groups({"api_organization_tree"})
      */
     private $children;
 
@@ -112,7 +113,8 @@ class Organization
      * @var User[]|ArrayCollection
      *
      * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\User"
+     *     targetEntity="Claroline\CoreBundle\Entity\User",
+     *     mappedBy="organizations"
      * )
      * @ORM\JoinTable(name="claro_user_organization")
      */
@@ -122,10 +124,17 @@ class Organization
      * @var User[]|ArrayCollection
      *
      * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     mappedBy="administratedOrganizations"
+     *     targetEntity="Claroline\CoreBundle\Entity\Group"
      * )
-     * @ORM\JoinTable(name="claro_user_administrator")
+     * @ORM\JoinTable(name="claro_group_organization")
+     */
+    protected $groups;
+
+    /**
+     * @var User[]|ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\User", mappedBy="administratedOrganizations")
+     * @Groups({"api_organization_tree", "api_organization_list"})
      */
     protected $administrators;
 
@@ -146,12 +155,18 @@ class Organization
      * )
      */
     protected $years;
+
+    /**
+     * @ORM\Column(name="is_default", type="boolean")
+     */
+    protected $default = false;
     
     public function __construct()
     {
         $this->locations      = new ArrayCollection();
         $this->departments    = new ArrayCollection();
         $this->users          = new ArrayCollection();
+        $this->groups         = new ArrayCollection();
         $this->administrators = new ArrayCollection();
         $this->timeSlots      = new ArrayCollection();
         $this->years          = new ArrayCollection();
@@ -225,12 +240,18 @@ class Organization
 
     public function addAdministrator(User $user)
     {
-        if (!$this->administrators->contains($user)) $this->administrators->add($user);
+        if (!$this->administrators->contains($user)) {
+            $this->administrators->add($user);  
+            $user->addAdministratedOrganization($this);
+        } 
     }
 
     public function removeAdministrator(User $user)
     {
-        if ($this->administrators->contains($user)) $this->administrators->removeElement($user);
+        if ($this->administrators->contains($user)) {
+            $this->administrators->removeElement($user);
+            $user->removeAdministratedOrganization($this);
+        }
     }
 
     public function setAdministrators(ArrayCollection $users)
@@ -276,5 +297,15 @@ class Organization
     public function setYears(ArrayCollection $years)
     {
         $this->years = $years;
+    }
+
+    public function setDefault($default)
+    {
+        $this->default = $default;
+    }
+
+    public function getDefault()
+    {
+        return $this->default;
     }
 }

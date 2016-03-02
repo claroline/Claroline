@@ -1049,8 +1049,8 @@ class ResourceManager
             return $data;
         }
 
-        if (isset($nodes[0])) {
-            $currentDir = $nodes[0];
+        if (isset($elements[0])) {
+            $currentDir = $elements[0];
         } else {
             $archive->addEmptyDir($elements[0]->getName());
         }
@@ -1066,7 +1066,7 @@ class ResourceManager
                         $node = $resource->getTarget();
                     }
 
-                    $filename = $this->getRelativePath($currentDir, $node) . $node->getName();
+                    $filename = $this->getRelativePath($currentDir, $node);
                     $resource = $this->getResourceFromNode($node);
 
                     //if it's a file, we may have to add the extension back in case someone removed it from the name
@@ -1151,13 +1151,12 @@ class ResourceManager
      *
      * @param ResourceNode $root
      * @param ResourceNode $node
-     * @param string       $path
      *
      * @return string
      */
     private function getRelativePath(ResourceNode $root, ResourceNode $node, $path = '')
     {
-        if ($root !== $node->getParent() && $node->getParent() !== null) {
+        if ($node->getParent() !== $root->getParent() && $node->getParent() !== null) {
             $path = $node->getParent()->getName() . DIRECTORY_SEPARATOR . $path;
             $path = $this->getRelativePath($root, $node->getParent(), $path);
         }

@@ -1,23 +1,32 @@
 const path = require('path')
 const webpack = require('webpack')
+const failPlugin = require('webpack-fail-plugin')
 
 /**
  * Builds a webpack configuration suitable for export.
  *
- * @param frontendConfig  The configuration from app/config/frontend.json
  * @param rootDir         The path of the root directory of the application
+ * @param packages        An array of bundles configs
  * @param isWatchMode     Whether webpack is to be run in watch mode
  * @returns Object
  */
-function configure(frontendConfig, rootDir, isWatchMode) {
+function configure(rootDir, packages, isWatchMode) {
   const isProd = !isWatchMode
-  const entries = frontendConfig.webpack.entry
+
+  // first we must parse the webpack configs of each bundle
+  // and prefix/normalize them to avoid name collisions
+  const webpackPackages = packages.filter(def => def.assets && def.assets.webpack)
+  const bundles = webpackPackages.map(def => def.name)
+  const normalizedPackages = normalizeNames(webpackPackages)
+  const normalizedBundles = normalizedPackages.map(def => def.name)
+  const entries = extractEntries(normalizedPackages)
+  const commons = extractCommons(normalizedPackages)
 
   // all entries are compiled in the web/dist directory
   const output = {
-    path: path.resolve(rootDir, 'web'),
-    publicPath: 'http://localhost:8080/',
-    filename: 'dist/[name].js'
+    path: path.resolve(rootDir, 'web/dist'),
+    publicPath: 'http://localhost:8080/dist',
+    filename: '[name].js'
   }
 
   // third-party modules are taken from the web/packages directory,
@@ -27,10 +36,10 @@ function configure(frontendConfig, rootDir, isWatchMode) {
   // in every environment, plugins are needed for things like bower
   // modules support, bundle resolution, common chunks extraction, etc.
   const plugins = [
-    makeBundleResolverPlugin(frontendConfig.bundles),
+    makeBundleResolverPlugin(normalizedBundles),
     makeBowerPlugin(),
     //makeBaseCommonsPlugin(),
-    ...makeBundleCommonsPlugins(frontendConfig.webpack.commons)
+    ...makeBundleCommonsPlugins(commons)
   ]
 
   // prod build has additional constraints
@@ -40,16 +49,14 @@ function configure(frontendConfig, rootDir, isWatchMode) {
       //makeUglifyJsPlugin(),
       makeDedupePlugin(),
       makeDefinePlugin(),
-      makeNoErrorsPlugin()
+      makeNoErrorsPlugin(),
+      makeFailOnErrorPlugin()
     )
   }
 
   const loaders = [
     makeJsLoader(isProd),
-    {
-      test: /\.html/,
-      loader: 'raw'
-    }
+    makeRawLoader()
   ]
 
   return {
@@ -60,8 +67,59 @@ function configure(frontendConfig, rootDir, isWatchMode) {
     module: { loaders: loaders },
     devServer: {
       headers: { "Access-Control-Allow-Origin": "*" }
+    },
+    _debug: {
+      'Detected webpack configs': bundles,
+      'Compiled entries': entries,
+      'Compiled common chunks': commons
     }
   }
+}
+
+/**
+ * Removes the "bundle" portion of package names and replaces
+ * slashes by hyphens. Example:
+ *
+ * "foo/bar-bundle" -> "foo-bar"
+ */
+function normalizeNames(packages) {
+  return packages.map(def => {
+    var parts = def.name.split(/\/|\-/)
+
+    if (parts[parts.length - 1] === 'bundle') {
+      parts.pop()
+    }
+
+    def.name = parts.join('-')
+
+    return def
+  })
+}
+
+/**
+ * Merges "entry" sections of package configs into one object,
+ * prefixing entry names and paths with package names/paths.
+ */
+function extractEntries(packages) {
+  return packages
+    .filter(def => def.assets.webpack && def.assets.webpack.entry)
+    .reduce((entries, def) => {
+      Object.keys(def.assets.webpack.entry).forEach(entry => {
+        entries[`${def.name}-${entry}`] = `${def.path}/Resources/${def.assets.webpack.entry[entry]}`
+      })
+
+      return entries
+    }, {})
+}
+
+/**
+ * TODO: Implement this function
+ *
+ * Merges the "commons" sections of package configs.
+ *
+ */
+function extractCommons(packages) {
+  return []
 }
 
 /**
@@ -118,7 +176,7 @@ function makeBaseCommonsPlugin() {
 function makeBundleCommonsPlugins(commons) {
   return commons.map(config => {
     return new webpack.optimize.CommonsChunkPlugin(config)
-  });
+  })
 }
 
 /**
@@ -163,6 +221,16 @@ function makeNoErrorsPlugin() {
 }
 
 /**
+ * This plugin makes webpack exit with a non-zero status code
+ * in case of error when not in watch mode.
+ *
+ * @see https://github.com/webpack/webpack/issues/708
+ */
+function makeFailOnErrorPlugin() {
+  return failPlugin
+}
+
+/**
  * This loader enables es6 transpilation with babel.
  */
 function makeJsLoader(isProd) {
@@ -175,6 +243,17 @@ function makeJsLoader(isProd) {
       presets: ['es2015'],
       plugins: ['transform-runtime']
     }
+  }
+}
+
+/**
+ * This loader returns the file content as plain string,
+ * without any transformation.
+ */
+function makeRawLoader() {
+  return {
+    test: /\.html$/,
+    loader: 'raw'
   }
 }
 

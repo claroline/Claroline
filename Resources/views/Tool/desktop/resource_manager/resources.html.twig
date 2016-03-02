@@ -26,7 +26,7 @@
                 "parentElement": $('div.section-content .panel'),
                 "breadcrumbElement": $('ul.breadcrumb'),
                 "isWorkspace": false,
-                "webPath": "{{ asset('') }}",
+                "webPath": "{{ getAssetPath() }}",
                 "language": "{{ app.request.locale }}",
                 "zoom": "{{ resourceZoom }}",
                 "pickerDirectoryId": "{{ app.session.get('pickerDirectoryId', '0') }}",
@@ -71,6 +71,6 @@
     <script type="text/javascript">
         var FileAPI = { debug: false, pingUrl: false }
     </script>
-    <script type="text/javascript" src='{{ asset('bundles/frontend/fileapi/dist/FileAPI.html5.min.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('packages/fileapi/dist/FileAPI.html5.min.js') }}'></script>
     <script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/resource/dragndrop.js') }}'></script>
 {% endblock %}

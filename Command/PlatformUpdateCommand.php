@@ -12,7 +12,9 @@
 namespace Claroline\CoreBundle\Command;
 
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
+use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
 use Psr\Log\LogLevel;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,9 +25,10 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Updates, installs or uninstalls the core and plugin bundles, following
- * the operation order logged in *app/config/operations.xml* during
- * composer execution.
+ * Updates, installs or uninstalls core and plugin bundles, based
+ * on the comparison of packages previously and currently installed
+ * by composer (vendor/composer/installed.json and
+ * app/config/previous-installed.json).
  *
  * @Service("claroline.command.update_command")
  */
@@ -36,14 +39,18 @@ class PlatformUpdateCommand extends ContainerAwareCommand
         parent::configure();
         $this->setName('claroline:update')
             ->setDescription(
-                'Updates, installs or uninstalls the platform packages '
-                . 'brought by composer (requires an operation file).'
+                'Updates, installs or uninstalls the platform packages brought by composer.'
             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln(sprintf('<comment>%s - Updating the platform...</comment>', date('H:i:s')));
+
+        $databaseCreator = new CreateDatabaseDoctrineCommand();
+        $databaseCreator->setContainer($this->getContainer());
+        $databaseCreator->run(new ArrayInput(array()), $output);
+
         $verbosityLevelMap = array(
             LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
             LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
@@ -55,7 +62,7 @@ class PlatformUpdateCommand extends ContainerAwareCommand
         $installer = $this->getContainer()->get('claroline.installation.platform_installer');
         $installer->setOutput($output);
         $installer->setLogger($consoleLogger);
-        $installer->installFromOperationFile();
+        $installer->updateFromComposerInfo();
 
         /** @var \Claroline\CoreBundle\Library\Installation\Refresher $refresher */
         $refresher = $this->getContainer()->get('claroline.installation.refresher');

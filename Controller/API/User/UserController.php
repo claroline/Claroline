@@ -25,9 +25,9 @@ use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\MailManager;
-use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CoreBundle\Manager\AuthenticationManager;
 use Claroline\CoreBundle\Manager\ProfilePropertyManager;
+use Claroline\CoreBundle\Library\Security\Collection\UserCollection;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactory;
@@ -37,6 +37,7 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @NamePrefix("api_")
@@ -55,7 +56,6 @@ class UserController extends FOSRestController
      *     "groupManager"           = @DI\Inject("claroline.manager.group_manager"),
      *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
      *     "profilePropertyManager" = @DI\Inject("claroline.manager.profile_property_manager"),
-     *     "facetManager"           = @DI\Inject("claroline.manager.facet_manager"),
      *     "mailManager"            = @DI\Inject("claroline.manager.mail_manager"),
      *     "apiManager"             = @DI\Inject("claroline.manager.api_manager")
      * })
@@ -70,7 +70,6 @@ class UserController extends FOSRestController
         GroupManager $groupManager,
         RoleManager $roleManager,
         ObjectManager $om,
-        FacetManager $facetManager,
         ProfilePropertyManager $profilePropertyManager,
         MailManager $mailManager,
         ApiManager $apiManager
@@ -82,7 +81,6 @@ class UserController extends FOSRestController
         $this->localeManager          = $localeManager;
         $this->request                = $request;
         $this->userManager            = $userManager;
-        $this->facetManager           = $facetManager;
         $this->groupManager           = $groupManager;
         $this->roleManager            = $roleManager;
         $this->om                     = $om;
@@ -95,7 +93,7 @@ class UserController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_user"})
      * @ApiDoc(
      *     description="Returns the users list",
      *     views = {"user"}
@@ -103,11 +101,13 @@ class UserController extends FOSRestController
      */
     public function getUsersAction()
     {
+        $this->throwsExceptionIfNotAdmin();
+
         return $this->userManager->getAll();
     }
 
     /**
-     * @View(serializerGroups={"admin"})
+     * @View(serializerGroups={"api_user"})
      * @ApiDoc(
      *     description="Returns the users list",
      *     views = {"user"}
@@ -117,6 +117,7 @@ class UserController extends FOSRestController
     {
         $data = [];
         $searches = $this->request->query->all();
+
         //format search
         foreach ($searches as $key => $search) {
             switch ($key) {
@@ -142,22 +143,11 @@ class UserController extends FOSRestController
      */
     public function getUserSearchableFieldsAction()
     {
-        $fields = $this->facetManager->getFieldFacets();
-
-        $baseFields = User::getSearchableFields();
-
-        foreach ($fields as $field) {
-            $baseFields[] = $field->getName();
-        }
-
-        $baseFields[] = 'group_name';
-        $baseFields[] = 'organization_name';
-
-        return $baseFields;
+        return $this->userManager->getUserSearchableFields();
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_user"})
      * @ApiDoc(
      *     description="Creates a user",
      *     views = {"user"},
@@ -166,6 +156,7 @@ class UserController extends FOSRestController
      */
     public function postUserAction()
     {
+        $this->throwExceptionIfNotGranted('create', new User());
         $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
 
         $profileType = new ProfileCreationType(
@@ -181,6 +172,8 @@ class UserController extends FOSRestController
         //$form->handleRequest($this->request);
 
         if ($form->isValid()) {
+            //can we create the user in the current organization ?
+
             $roles = $form->get('platformRoles')->getData();
             $user = $form->getData();
             $user = $this->userManager->createUser($user, false, $roles);
@@ -194,7 +187,7 @@ class UserController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_user"})
      * @ApiDoc(
      *     description="Update a user",
      *     views = {"user"},
@@ -204,6 +197,7 @@ class UserController extends FOSRestController
      */
     public function putUserAction(User $user)
     {
+        $this->throwExceptionIfNotGranted('edit', $user);
         $roles = $this->roleManager->getPlatformRoles($user);
         $accesses = $this->profilePropertyManager->getAccessessByRoles(array('ROLE_ADMIN'));
 
@@ -242,7 +236,7 @@ class UserController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_user"})
      * @ApiDoc(
      *     description="Returns a user",
      *     views = {"user"}
@@ -251,6 +245,8 @@ class UserController extends FOSRestController
      */
     public function getUserAction(User $user)
     {
+        $this->throwsExceptionIfNotAdmin();
+
         return $user;
     }
 
@@ -259,12 +255,13 @@ class UserController extends FOSRestController
      * @ApiDoc(
      *     description="Removes a user",
      *     section="user",
-     *     views = {"api"}
+     *     views = {"api_user"}
      * )
      * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function deleteUserAction(User $user)
     {
+        $this->throwExceptionIfNotGranted('delete', $user);
         $this->userManager->deleteUser($user);
 
         return array('success');
@@ -280,6 +277,7 @@ class UserController extends FOSRestController
     public function deleteUsersAction()
     {
         $users = $this->apiManager->getParameters('userIds', 'Claroline\CoreBundle\Entity\User');
+        $this->throwExceptionIfNotGranted('delete', $users);
         $this->container->get('claroline.persistence.object_manager')->startFlushSuite();
 
         foreach ($users as $user) {
@@ -292,7 +290,7 @@ class UserController extends FOSRestController
     }
 
     /**
-     * @View()
+     * @View(serializerGroups={"api_user"})
      * @ApiDoc(
      *     description="Add a role to a user",
      *     views = {"user"}
@@ -301,13 +299,14 @@ class UserController extends FOSRestController
      */
     public function addUserRoleAction(User $user, Role $role)
     {
+        $this->throwExceptionIfNotGranted('edit', $user);
         $this->roleManager->associateRole($user, $role, false);
 
-        return array('success');
+        return $user;
     }
 
     /**
-     * @View()
+     * @View(serializerGroups={"api_user"})
      * @ApiDoc(
      *     description="remove a role from a user",
      *     views = {"user"}
@@ -316,13 +315,13 @@ class UserController extends FOSRestController
      */
     public function removeUserRoleAction(User $user, Role $role)
     {
+        $this->throwExceptionIfNotGranted('edit', $user);
         $this->roleManager->dissociateRole($user, $role);
 
-        return array('success');
-    }
+        return $user;    }
 
     /**
-     * @View()
+     * @View(serializerGroups={"api_user"})
      * @ApiDoc(
      *     description="Add a user in a group",
      *     views = {"user"}
@@ -331,13 +330,14 @@ class UserController extends FOSRestController
      */
     public function addUserGroupAction(User $user, Group $group)
     {
+        $this->throwExceptionIfNotGranted('edit', $user);
         $this->groupManager->addUsersToGroup($group, array($user));
 
-        return array('success');
+        return $user;
     }
 
     /**
-     * @View()
+     * @View(serializerGroups={"api_user"})
      * @ApiDoc(
      *     description="Remove a user from a group",
      *     views = {"user"}
@@ -346,9 +346,10 @@ class UserController extends FOSRestController
      */
     public function removeUserGroupAction(User $user, Group $group)
     {
+        $this->throwExceptionIfNotGranted('edit', $user);
         $this->groupManager->removeUsersFromGroup($group, array($user));
 
-        return array('success');
+        return $user;
     }
 
     /**
@@ -373,6 +374,7 @@ class UserController extends FOSRestController
     public function usersPasswordInitializeAction()
     {
         $users = $this->apiManager->getParameters('userIds', 'Claroline\CoreBundle\Entity\User');
+        $this->throwExceptionIfNotGranted('edit', $users);
 
         foreach ($users as $user) {
             $this->mailManager->sendForgotPassword($user);
@@ -382,7 +384,7 @@ class UserController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_user"})
      * @ApiDoc(
      *     description="Add a list of users to a group",
      *     views = {"group"},
@@ -391,13 +393,14 @@ class UserController extends FOSRestController
     public function addUsersToGroupAction(Group $group)
     {
         $users = $this->apiManager->getParameters('userIds', 'Claroline\CoreBundle\Entity\User');
+        $this->throwExceptionIfNotGranted('edit', $users);
         $users = $this->groupManager->addUsersToGroup($group, $users);
 
         return $users;
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_user"})
      * @ApiDoc(
      *     description="Removes a list of users from a group",
      *     views = {"group"},
@@ -406,16 +409,39 @@ class UserController extends FOSRestController
     public function removeUsersFromGroupAction(Group $group)
     {
         $users = $this->apiManager->getParameters('userIds', 'Claroline\CoreBundle\Entity\User');
+        $this->throwExceptionIfNotGranted('edit', $users);
         $this->groupManager->removeUsersFromGroup($group, $users);
 
         return $users;
     }
 
-    /**
-     *
-     */
-    public function importUsersAction()
+    private function isAdmin() 
     {
+        return $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN');
+    }
 
+    private function throwsExceptionIfNotAdmin()
+    {
+        if (!$this->isAdmin()) throw new AccessDeniedException("This action can only be done by the administrator");
+    }
+
+    private function isUserGranted($action, $object)
+    {
+        return $this->container->get('security.authorization_checker')->isGranted($action, $object);
+    }
+
+    private function throwExceptionIfNotGranted($action, $users)
+    {
+        $collection = is_array($users) ? new UserCollection($users): new UserCollection(array($users));  
+        $isGranted = $this->isUserGranted($action, $collection);
+
+        if (!$isGranted) {
+            $userlist = '';
+
+            foreach ($collection->getUsers() as $user) {
+                $userlist .= "[{$user->getUsername()}]";
+            }
+            throw new AccessDeniedException("You can't do the action [{$action}] on the user list {$userlist}");
+        } 
     }
 }

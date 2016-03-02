@@ -37,7 +37,17 @@ export default class OrganizationController {
 
         modal.result.then(result => {
             if (!result) return;
-            this.groups = this.ClarolineAPIService.replaceById(result, this.organizations);
+            //Loop through organizations and its childre. Then we replace it if the id is the same.
+            for (var i = 0; i < this.organizations.length; i++) {
+                if (this.organizations[i].id === result.id) {
+                    this.organizations[i] = result;
+                    return;
+                } else {
+                    this.recursiveParseOrganization(this.organizations[i], result);
+                }
+            }
+
+            this.organizations = this.ClarolineAPIService.replaceById(result, this.organizations);
         });
     }
 
@@ -48,6 +58,18 @@ export default class OrganizationController {
 
             if (organizations[i].id === organizationId) {
                 organizations.splice(i, 1);
+            }
+        }
+    }
+
+    recursiveParseOrganization(organization, result) {
+        for (var i = 0; i < organization.children.length; i++) {
+            if (organization.children[i].id === result.id) {
+                organization.children[i] = result;
+
+                return;
+            } else {
+                this.recursiveParseOrganization(organization.children[i], result);
             }
         }
     }

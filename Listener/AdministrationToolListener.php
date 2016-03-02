@@ -85,19 +85,6 @@ class AdministrationToolListener
     }
 
     /**
-     * @DI\Observe("administration_tool_platform_packages")
-     *
-     * @param OpenAdministrationToolEvent $event
-     */
-    public function onOpenPlatformPackages(OpenAdministrationToolEvent $event)
-    {
-        $params = array();
-        $params['_controller'] = 'ClarolineCoreBundle:Administration\Package:list';
-        $this->redirect($params, $event);
-    }
-
-
-    /**
      * @DI\Observe("administration_tool_desktop_and_home")
      *
      * @param OpenAdministrationToolEvent $event

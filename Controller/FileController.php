@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Form\UpdateFileType;
 use Claroline\CoreBundle\Form\TinyMceUploadModalType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;

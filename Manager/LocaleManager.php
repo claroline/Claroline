@@ -130,16 +130,19 @@ class LocaleManager
 
         if ($request->attributes->get('_locale')) {
             $locale = $request->attributes->get('_locale');
-        } elseif (($user = $this->getCurrentUser()) &&  $user->getLocale()) {
+        } elseif (($user = $this->getCurrentUser()) && $user->getLocale()) {
             $locale = $user->getLocale();
-        } elseif ($sessionLocale = $request->getSession()->get('_locale')) {
+        } elseif ($request->getSession() && ($sessionLocale = $request->getSession()->get('_locale'))) {
             $locale = $sessionLocale;
         } elseif (count($preferred) > 0 && isset($locales[$preferred[0]])) {
             $locale = $preferred[0];
         } else {
             $locale = $this->defaultLocale;
         }
-        $request->getSession()->set('_locale', $locale);
+
+        if ($session = $request->getSession()) {
+            $session->set('_locale', $locale);
+        }
 
         return $locale;
     }

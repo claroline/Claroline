@@ -180,7 +180,6 @@ cookie_lifetime: 'Cookie lifetime'
 copiable: Copiable
 copies: Copies
 copy: Copy
-core_packages: 'Core packages'
 count_resources: 'Amount of resources'
 create: Create
 create_account: 'Create account'
@@ -624,7 +623,6 @@ no_home_tab: 'There is no Home tab'
 no_learning_outcomes: 'No learning outcomes'
 no_message: 'No message'
 no_model: 'No model'
-no_package_description: 'No package description.'
 no_resources_in_workspace: 'There are currently no resources in this workspace.'
 no_role_selected_message: 'No role selected.'
 no_search_results: 'Your search hasn''t returned any result.'
@@ -663,15 +661,6 @@ others: Others
 over_max_length: 'This value is too long'
 owner: Owner
 owner_s: Owner(s)
-package_install: 'Package install'
-package_install_auto_reload: 'This page will be reload automatically once an operation is done'
-package_install_confirm: 'Do you really want to install %bundle% %version% ?'
-package_update_danger: 'This functionnality is not stable yet and can crash your platform. Please backup your data before going further.'
-package_update_impossible: 'Package update impossible on this page. please contact the administrator.'
-package_upgrade_all_warning: 'Warning, this will update all packages on the platform. This operation can not be canceled. It is recommended to make a backup of the files and the database before performing this operation.'
-packages: Packages
-packages_permissions_error: 'Please fix these errors before starting any update.'
-packages_upgrade_info_message: 'Warning, this page allows you to update the platform.'
 parameters: Parameters
 parameters_save_error: 'An error occured while saving parameters.'
 parameters_save_success: 'Parameters saved with success.'
@@ -712,7 +701,6 @@ platform_role: 'Platform role'
 platform_widgets: 'Platform widgets'
 please_validate_your_account: 'An email was sent for you to activate your account'
 please_wait: 'Please wait...'
-plugin_packages: 'Plugin packages'
 port: Port
 portfolio_url: 'Portfolio tool''s access url'
 position: Position

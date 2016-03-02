@@ -127,9 +127,10 @@ class RegistrationController extends Controller
         $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
-            $user = $this->get('claroline.manager.user_manager')->createUserWithRole(
+            $user = $this->get('claroline.manager.user_manager')->createUser(
                 $user,
-                PlatformRoles::USER
+                true,
+                array(PlatformRoles::USER)
             );
             $this->roleManager->setRoleToRoleSubject($user, $this->configHandler->getParameter('default_role'));
             //then we adds the differents value for facets.

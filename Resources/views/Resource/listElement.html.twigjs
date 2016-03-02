@@ -20,7 +20,7 @@
             data-id="{{ node.id }}"
             data-type="{{ node.type }}"
             data-mime-type="{{ node.mime_type }}"
-            src='{{ webRoot }}{{ node.large_icon }}' height="30"
+            src='{{ webRoot }}/{{ node.large_icon }}' height="30"
         />
     </div>
 

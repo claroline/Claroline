@@ -24,9 +24,12 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Form\Organization\LocationType;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 
 /**
  * @NamePrefix("api_")
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("canOpenAdminTool('user_management')")
  */
 class LocationController extends FOSRestController
 {
@@ -56,7 +59,7 @@ class LocationController extends FOSRestController
 
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_location"})
      * @ApiDoc(
      *     description="Returns the location list",
      *     views = {"location"}
@@ -68,7 +71,7 @@ class LocationController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_location"})
      * @ApiDoc(
      *     description="Returns the location creation form",
      *     views = {"location"}
@@ -85,7 +88,7 @@ class LocationController extends FOSRestController
 
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_location"})
      * @ApiDoc(
      *     description="Returns the location edition form",
      *     views = {"location"}
@@ -101,7 +104,7 @@ class LocationController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_location"})
      * @ApiDoc(
      *     description="Creates a location",
      *     views = {"location"},
@@ -125,14 +128,15 @@ class LocationController extends FOSRestController
 
         $options = array(
             'http_code' => $httpCode,
-            'extra_parameters' => $location
+            'extra_parameters' => $location,
+            'serializer_group' => 'api_location'
         );
 
         return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Organization\createLocationForm.html.twig', $form, $options);
     }
 
     /**
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_location"})
      * @ApiDoc(
      *     description="Update a location",
      *     views = {"location"},
@@ -155,7 +159,8 @@ class LocationController extends FOSRestController
 
         $options = array(
             'http_code' => $httpCode,
-            'extra_parameters' => $location
+            'extra_parameters' => $location,
+            'serializer_group' => 'api_location'
         );
 
         return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Organization\editLocationForm.html.twig', $form, $options);
@@ -166,7 +171,7 @@ class LocationController extends FOSRestController
      * @ApiDoc(
      *     description="Removes a location",
      *     section="location",
-     *     views = {"api"}
+     *     views = {"api_location"}
      * )
      * @EXT\ParamConverter("location", class="ClarolineCoreBundle:Organization\Location",)
      */

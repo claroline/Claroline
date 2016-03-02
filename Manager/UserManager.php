@@ -25,6 +25,8 @@ use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\TransfertManager;
+use Claroline\CoreBundle\Manager\FacetManager;
+use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -36,13 +38,18 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\ValidatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Claroline\BundleRecorder\Log\LoggableTrait;
+use Psr\Log\LoggerInterface;
 
 /**
  * @DI\Service("claroline.manager.user_manager")
  */
 class UserManager
 {
+    use LoggableTrait;
+
     const MAX_USER_BATCH_SIZE = 20;
+    const MAX_EDIT_BATCH_SIZE = 100;
 
     private $platformConfigHandler;
     private $strictEventDispatcher;
@@ -59,6 +66,8 @@ class UserManager
     private $uploadsDirectory;
     private $transfertManager;
     private $container;
+    private $authorization;
+    private $organizationManager;
 
     /**
      * Constructor.
@@ -77,7 +86,8 @@ class UserManager
      *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
      *     "uploadsDirectory"       = @DI\Inject("%claroline.param.uploads_directory%"),
      *     "transfertManager"       = @DI\Inject("claroline.manager.transfert_manager"),
-     *     "container"              = @DI\Inject("service_container")
+     *     "container"              = @DI\Inject("service_container"), 
+     *     "organizationManager"    = @DI\Inject("claroline.manager.organization.organization_manager")
      * })
      */
     public function __construct(
@@ -93,6 +103,7 @@ class UserManager
         ValidatorInterface $validator,
         WorkspaceManager $workspaceManager,
         TransfertManager $transfertManager,
+        OrganizationManager $organizationManager,
         $uploadsDirectory,
         ContainerInterface $container
     )
@@ -111,6 +122,7 @@ class UserManager
         $this->validator              = $validator;
         $this->uploadsDirectory       = $uploadsDirectory;
         $this->transfertManager       = $transfertManager;
+        $this->organizationManager    = $organizationManager;
         $this->container              = $container;
     }
 
@@ -125,8 +137,26 @@ class UserManager
      *
      * @return \Claroline\CoreBundle\Entity\User
      */
-    public function createUser(User $user, $sendMail = true, $additionnalRoles = array(), $model = null, $publicUrl = null)
+    public function createUser(
+        User $user, 
+        $sendMail = true,
+        $rolesToAdd = array(), 
+        $model = null, 
+        $publicUrl = null,
+        $organizations = array()
+    )
     {
+        $additionnalRoles = [];
+
+        foreach ($rolesToAdd as $roleToAdd) {
+            if (is_string($roleToAdd)) $additionnalRoles[] = $this->roleManager->getRoleByName($roleToAdd);
+        }
+
+        if (count($organizations) === 0 && count($user->getOrganizations()) === 0) {
+            $organizations = array($this->organizationManager->getDefault());
+            $user->setOrganizations($organizations);
+        }
+
         $this->objectManager->startFlushSuite();
 
         if ($this->personalWorkspaceAllowed($additionnalRoles)) {
@@ -220,6 +250,7 @@ class UserManager
      */
     public function deleteUser(User $user)
     {
+
         /* When the api will identify a user, please uncomment this
         if ($this->container->get('security.token_storage')->getToken()->getUser()->getId() === $user->getId()) {
             throw new \Exception('A user cannot delete himself');
@@ -256,29 +287,6 @@ class UserManager
         $this->strictEventDispatcher->dispatch('claroline_users_delete', 'GenericDatas', array(array($user)));
         $this->strictEventDispatcher->dispatch('log', 'Log\LogUserDelete', array($user));
         $this->strictEventDispatcher->dispatch('delete_user', 'DeleteUser', array($user));
-    }
-
-    /**
-     * Create a user.
-     * Its basic properties (name, username,... ) must already be set.
-     * This user will have the additional role  $roleName.
-     * $roleName must already exists.
-     *
-     * @todo remove this and user createUser instead
-     * @deprecated
-     * @param \Claroline\CoreBundle\Entity\User $user
-     * @param string                            $roleName
-     *
-     * @return \Claroline\CoreBundle\Entity\User
-     */
-    public function createUserWithRole(User $user, $roleName, $sendMail = true)
-    {
-        $this->objectManager->startFlushSuite();
-        $role = $this->roleManager->getRoleByName($roleName);
-        $this->createUser($user, $sendMail, array($role));
-        $this->objectManager->endFlushSuite();
-
-        return $user;
     }
 
     /**
@@ -468,11 +476,12 @@ class UserManager
     }
 
     /**
-     * Serialize a user.
+     * Serialize a user. Use JMS serializer from entities instead
      *
      * @param array $users
      *
      * @return array
+     * @deprecated 
      */
     public function convertUsersToArray(array $users)
     {
@@ -547,39 +556,9 @@ class UserManager
         return $this->pagerFactory->createPager($query, $page, $max);
     }
 
-    /**
-     */
     public function getAll()
     {
         return $this->userRepo->findAll();
-    }
-
-    /**
-     * @param integer $page
-     * @param integer $max
-     * @param string  $orderedBy
-     * @param string  $order
-     *
-     * @return \Pagerfanta\Pagerfanta;
-     */
-    public function getAllUsersExcept($page, $max = 20, $orderedBy = 'id', $order = null, array $users )
-    {
-        $query = $this->userRepo->findAllExcept($users);
-        return $this->pagerFactory->createPagerFromArray($query, $page, $max);
-    }
-
-    /**
-     * @param string  $search
-     * @param integer $page
-     * @param integer $max
-     *
-     * @return \Pagerfanta\Pagerfanta;
-     */
-    public function getAllUsersBySearch($page, $search, $max = 20)
-    {
-        $users = $this->userRepo->findAllUserBySearch($search);
-
-        return $this->pagerFactory->createPagerFromArray($users, $page, $max);
     }
 
     /**
@@ -616,26 +595,6 @@ class UserManager
         $query = $this->userRepo->findByGroup($group, false, $orderedBy, $order);
 
         return $this->pagerFactory->createPager($query, $page, $max);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Group $group
-     *
-     * @return User[]
-     */
-    public function getUsersByGroupWithoutPager(Group $group)
-    {
-        return $this->userRepo->findByGroup($group);
-    }
-
-    /**
-     * @param Workspace $workspace
-     *
-     * @return User[]
-     */
-    public function getByWorkspaceWithUsersFromGroup(Workspace $workspace)
-    {
-        return $this->userRepo->findByWorkspaceWithUsersFromGroup($workspace);
     }
 
     /**
@@ -689,27 +648,6 @@ class UserManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace[] $workspaces
-     * @param integer                                                    $page
-     * @param string                                                     $search
-     * @param integer                                                    $max
-     *
-     * @return \Pagerfanta\Pagerfanta
-     */
-    public function getUsersByWorkspacesAndSearch(
-        array $workspaces,
-        $page,
-        $search,
-        $max = 20
-    )
-    {
-        $users = $this->userRepo
-            ->findUsersByWorkspacesAndSearch($workspaces, $search);
-
-        return $this->pagerFactory->createPagerFromArray($users, $page, $max);
-    }
-
-    /**
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param string                                                   $search
      * @param integer                                                  $page
@@ -720,37 +658,6 @@ class UserManager
     public function getAllUsersByWorkspaceAndName(Workspace $workspace, $search, $page, $max = 20)
     {
         $query = $this->userRepo->findAllByWorkspaceAndName($workspace, $search, false);
-
-        return $this->pagerFactory->createPager($query, $page, $max);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Group $group
-     * @param integer                            $page
-     * @param integer                            $max
-     * @param string                             $orderedBy
-     *
-     * @return \Pagerfanta\Pagerfanta
-     */
-    public function getGroupOutsiders(Group $group, $page, $max = 20, $orderedBy = 'id')
-    {
-        $query = $this->userRepo->findGroupOutsiders($group, false, $orderedBy);
-
-        return $this->pagerFactory->createPager($query, $page, $max);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Group $group
-     * @param integer                            $page
-     * @param string                             $search
-     * @param integer                            $max
-     * @param string                             $orderedBy
-     *
-     * @return \Pagerfanta\Pagerfanta
-     */
-    public function getGroupOutsidersByName(Group $group, $page, $search, $max = 20, $orderedBy = 'id')
-    {
-        $query = $this->userRepo->findGroupOutsidersByName($group, $search, false, $orderedBy);
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }
@@ -1291,7 +1198,7 @@ class UserManager
                 $existingUser->setFirstName($firstName);
                 $existingUser->setLastName($lastName);
                 $existingUser->setUsername($username);
-                $existingUser->setPlainPassword($pwd);
+                if ($pwd != '') $existingUser->setPlainPassword($pwd);
                 $existingUser->setMail($email);
                 $existingUser->setAdministrativeCode($code);
                 $existingUser->setPhone($phone);
@@ -1508,8 +1415,138 @@ class UserManager
         $this->objectManager->flush();
     }
 
+    /**
+     * Big user search method ! hell yeah !
+     */
     public function searchPartialList($searches, $page, $limit, $count = false)
     {
-        return $this->userRepo->searchPartialList($searches, $page, $limit, $count);
+        $baseFieldsName = User::getUserSearchableFields();
+        $facetFields = $this->objectManager->getRepository('ClarolineCoreBundle:Facet\FieldFacet')->findAll();
+        $facetFieldsName = array();
+
+        foreach ($facetFields as $facetField) {
+            $facetFieldsName[] = $facetField->getName();
+        }
+
+        $qb = $this->objectManager->createQueryBuilder();
+        $count ? $qb->select('count(u)'): $qb->select('u');
+        $qb->from('Claroline\CoreBundle\Entity\User', 'u')
+            ->where('u.isEnabled = true');
+
+        //Admin can see everything, but the others... well they can only see their own organizations.
+        if (!$this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+            
+            $currentUser = $this->container->get('security.token_storage')->getToken()->getUser();
+            $qb->leftJoin('u.organizations', 'uo');
+            $qb->leftJoin('uo.administrators', 'ua');
+            $qb->andWhere('ua.id = :userId');
+            $qb->setParameter('userId', $currentUser->getId());
+        }
+
+        foreach ($searches as $key => $search) {
+            foreach ($search as $id => $el) {
+                if (in_array($key, $baseFieldsName)) {
+                    $qb->andWhere("UPPER (u.{$key}) LIKE :{$key}{$id}");
+                    $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
+                } elseif (in_array($key, $facetFieldsName)) {
+                    $qb->join('u.fieldsFacetValue', "ffv{$id}");
+                    $qb->join("ffv{$id}.fieldFacet", "f{$id}");
+                    $qb->andWhere("UPPER (ffv{$id}.stringValue) LIKE :{$key}{$id}");
+                    $qb->orWhere("ffv{$id}.floatValue = :{$key}{$id}");
+                    $qb->andWhere("f{$id}.name LIKE :facet{$id}");
+                    $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
+                    $qb->setParameter("facet{$id}", $key);
+                } elseif ($key === 'group_name') {
+                    $qb->join('u.groups', "g{$id}");
+                    $qb->andWhere("UPPER (g{$id}.name) LIKE :{$key}{$id}");
+                    $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
+                } if ($key === 'group_id') {
+                    $qb->join('u.groups', "g{$id}");
+                    $qb->andWhere("g{$id}.id = :{$key}{$id}");
+                    $qb->setParameter($key . $id, $el);
+                } if ($key === 'organization_name') {
+                    $qb->join('u.organizations', "o{$id}");
+                    $qb->andWhere("UPPER (o{$id}.name) LIKE :{$key}{$id}");
+                    $qb->setParameter($key . $id, '%' . strtoupper($el) . '%');
+                } if ($key === 'organization_id') {
+                    $qb->join('u.organizations', "o{$id}");
+                    $qb->andWhere('o{$id}.id = :id');
+                    $qb->setParameter($key . $id, $el);
+                }
+            }
+        }
+
+        $event = $this->strictEventDispatcher->dispatch(
+            'user_edit_search_event',
+            'UserEditSearch',
+            array($qb)
+        );
+
+        $query = $qb->getQuery();
+        
+        if ($page && $limit && !$count) {
+            $query->setMaxResults($limit);
+            $query->setFirstResult($page * $limit);
+        }
+
+        return $count ? $query->getSingleScalarResult(): $query->getResult();
+    }
+
+    public function getUserSearchableFields()
+    {
+        $fields = $this->container->get('claroline.manager.facet_manager')->getFieldFacets();
+
+        $baseFields = User::getSearchableFields();
+
+        foreach ($fields as $field) {
+            $baseFields[] = $field->getName();
+        }
+
+        $baseFields[] = 'group_name';
+        $baseFields[] = 'organization_name';
+
+        $event = $this->strictEventDispatcher->dispatch(
+            'user_add_filter_event',
+            'UserAddFilter',
+            array($baseFields)
+        );
+
+        return $event->getFilters();
+    }
+
+    /**
+     * This method will bind each users who don't already have an organization to the default one.
+     */
+    public function bindUserToOrganization()
+    {
+        $this->objectManager->startFlushSuite();
+        $users = $this->getAll();
+        $default = $this->organizationManager->getDefault();
+        $i = 0;
+
+        foreach ($users as $user) {
+            if (count($user->getOrganizations()) === 0) {
+                $i++;
+                $this->log('Add default organization for user ' . $user->getUsername());
+                $user->addOrganization($default);
+                $this->objectManager->persist($user);
+
+                if ($i % self::MAX_EDIT_BATCH_SIZE) {
+                    $this->objectManager->forceFlush();
+                }
+            }
+        }
+
+        $this->objectManager->endFlushSuite();
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    public function getLogger()
+    {
+        return $this->logger;
     }
 }

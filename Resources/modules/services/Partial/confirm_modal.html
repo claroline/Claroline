@@ -3,11 +3,11 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="$close()">&times;</button>
         <h4>{{ cmc.title }}</h4>
     </div>
-    <div class="modal-body" ng-bind-html="cmc.content">
+    <div class="modal-body" ng-bind-html="cmc.content | trust_html">
         
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary" ng-click="cmc.submit($scope)"> validate </button>
-        <div class="btn btn-default" data-dismiss="modal" ng-click="$close()"> cancel </div>
+        <button class="btn btn-primary" ng-click="cmc.submit($scope)"> {{ 'validate'|trans:{}:'platform' }} </button>
+        <div class="btn btn-default" data-dismiss="modal" ng-click="$close()"> {{ 'cancel'|trans:{}: 'platform '}} </div>
     </div>
 </div>

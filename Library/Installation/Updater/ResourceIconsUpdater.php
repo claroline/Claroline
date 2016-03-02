@@ -41,8 +41,9 @@ class ResourceIconsUpdater extends Updater
 
         foreach ($resourceImages as $resourceImage) {
             $mimeType = $resourceImage[1];
-            $results = $this->repo->findBy(array('mimeType' => $mimeType, 'isShortcut' => false));
-            $rimg = count($results > 0) ? $results[0]: null;
+            $rimg = $this->repo->findOneBy(array('mimeType' => $mimeType, 'isShortcut' => false));
+            //var_dump(count($results));
+            //$rimg = count($results > 0) ? $results[0]: null;
 
             if ($rimg === null) {
                 $this->log('Adding mime type for ' . $mimeType . '.');

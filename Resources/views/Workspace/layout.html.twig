@@ -2,10 +2,16 @@
 
 {% block title %}
     {% spaceless %}
-        {{ workspace.getName() }}
-    {% if _resource is defined %}
-        {{ _resource.getResourceNode().getName() | striptags | raw }}
-    {% endif %}
+        {% if workspace is defined %}
+            {{ workspace.getName() }}
+        {% else %}
+            {% if _resource is defined %}
+                {% if _resource.getWorkspace() %} 
+                    {{ _resource.getWorkspace.getName() }} -
+                {% endif %}
+                {{ _resource.getResourceNode().getName() | striptags | raw }}
+            {% endif %}
+        {% endif %}
     {% endspaceless %}
 {% endblock %}
 

@@ -152,15 +152,12 @@ class DatabaseWriter
         }
 
         // deletion of other plugin db dependencies is made via a cascade mechanism
-        $bundle = $this->em->getRepository('ClarolineCoreBundle:Bundle')->findOneByName($plugin->getBundleName());
         $this->em->remove($plugin);
-        $this->em->remove($bundle);
-
         $this->em->flush();
     }
 
     /**
-     * Checks if a plugin is persited in the database.
+     * Checks if a plugin is persisted in the database.
      *
      * @param \Claroline\CoreBundle\Library\PluginBundle $plugin
      *

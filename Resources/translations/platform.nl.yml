@@ -177,7 +177,6 @@ cookie_lifetime: cookie_lifetime
 copiable: copiable
 copies: copies
 copy: copy
-core_packages: core_packages
 count_resources: count_resources
 create: create
 create_and_update: create_and_update
@@ -604,7 +603,6 @@ no_home_tab: no_home_tab
 no_learning_outcomes: no_learning_outcomes
 no_message: no_message
 no_model: no_model
-no_package_description: no_package_description
 no_resources_in_workspace: no_resources_in_workspace
 no_role_selected_message: no_role_selected_message
 no_search_results: no_search_results
@@ -641,15 +639,6 @@ others: others
 over_max_length: over_max_length
 owner: owner
 owner_s: owner_s
-package_install: package_install
-package_install_auto_reload: package_install_auto_reload
-package_install_confirm: package_install_confirm
-package_update_danger: package_update_danger
-package_update_impossible: package_update_impossible
-package_upgrade_all_warning: package_upgrade_all_warning
-packages: packages
-packages_permissions_error: packages_permissions_error
-packages_upgrade_info_message: packages_upgrade_info_message
 parameters: parameters
 parameters_save_error: parameters_save_error
 parameters_save_success: parameters_save_success
@@ -689,7 +678,6 @@ platform_role: platform_role
 platform_widgets: platform_widgets
 please_validate_your_account: please_validate_your_account
 please_wait: please_wait
-plugin_packages: plugin_packages
 port: port
 portfolio_url: portfolio_url
 position: position

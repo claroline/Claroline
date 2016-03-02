@@ -66,7 +66,7 @@ class UserPickerTransfromer implements DataTransformerInterface
     public function reverseTransform($userId)
     {
         if (empty($userId)) {
-            return null;
+            return ($this->options['multiple']) ? array(): null;
         } elseif (strpos($userId, ',')) {
             $ids = explode(',', $userId);
             $users = $this->getByIds($ids);
