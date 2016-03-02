@@ -79,33 +79,32 @@ function sendData(select, path, prefx) {
 function LoadPic(path, prefx, iddoc,no_img) {
 
     // Selected document label in the list
-    var select = $("*[id$='"+iddoc+"'] option:selected").text();
+    var select = $("*[id$='" + iddoc + "'] option:selected").text();
 
-if(select !== ""){
-    // Get the matching url for a given label in order to load the new image
-    sendData(select, path, prefx);
+    if (select !== "") {
+        // Get the matching url for a given label in order to load the new image
+        sendData(select, path, prefx);
 
-    // New picture load, initialization vars and remove previous answer zones
+        // New picture load, initialization vars and remove previous answer zones
 
-    for (j = 0 ; j < grade ; j++) {
-        if ($('#dragContainer' + j)) {
-            $('#dragContainer' + j).remove();
+        for (j = 0 ; j < grade ; j++) {
+            if ($('#dragContainer' + j)) {
+                $('#dragContainer' + j).remove();
 
-            $('#AlreadyPlacedArray').find('tr:not(:first)').remove();
+                $('#AlreadyPlacedArray').find('tr:not(:first)').remove();
+            }
+        }
+
+        value = 0;
+        grade = 0;
+        point = {};
+
+        //displays the button to add an answer
+        $('#addButtonAnswer').css({"display" : "inline"});
+        } else {
+            alert(no_img);
         }
     }
-
-    value = 0;
-    grade = 0;
-    point = {};
-
-    //displays the button to add an answer
-    $('#addButtonAnswer').css({"display" : "inline"});
-    }
-    else{
-        alert(no_img);
-    }
-}
 
 /**
  * Add an answer zone
@@ -113,9 +112,8 @@ if(select !== ""){
  * @param {String} noImage Information no image selected
  * @returns array
  */
- function addAnswerZone(noImage)
- {
-    if($('#AnswerImage').length){
+ function addAnswerZone(noImage) {
+    if ($('#AnswerImage').length) {
         //For edition : put in order if it adds points
         setOrderAfterDel();
 
@@ -198,7 +196,7 @@ if(select !== ""){
         } else {
          $('#AlreadyPlacedArray').css({"display" : "inline"});
         }
-    }else{
+    } else {
         alert(noImage);
     }
 }
@@ -232,7 +230,7 @@ function Check( noQuestion, noImg, noAnswerZone, invite) {
 
     var empty = false; // Answer zone aren't defined
 
-    for (j = 0; j < grade; j++) {
+    for (j = 0 ; j < grade ; j++) {
 
         // If at least one answer zone exist
         if ($('#img' + j).length > 0) {
@@ -263,7 +261,7 @@ function Check( noQuestion, noImg, noAnswerZone, invite) {
                 $('#imagewidth').val($('#AnswerImage').width()); // Pass width of the image to the controller
                 $('#imageheight').val($('#AnswerImage').height()); // Pass height of the image to the controller
 
-                for (j = 0; j < grade; j++) {
+                for (j = 0 ; j < grade ; j++) {
 
                     var imgN = 'img' + j;
                     var selectedZone = $('#' + imgN); // An answer zone
@@ -290,7 +288,7 @@ function Check( noQuestion, noImg, noAnswerZone, invite) {
                         var val = selectedZone.attr("src") + '§§' + imgx + '__' + imgy + '|-|' + point[imgN] + '~~' + selectedZone.prop("width") + '^^' + feedback;
 
                         // And send it to the controller
-                        $('#coordsZone').val($('#coordsZone').val() + val + ',');
+                        $('#coordsZone').val($('#coordsZone').val() + val + '##');
                     }
 
                 }
@@ -571,12 +569,12 @@ function setOrderAfterDel() {
 
 /**
   * Activate the feedback
-  * @param {type} row 
+  * @param {type} row
   * @param {type} btn the button used to activate the feedback
   * @param {type} index
   */
- function addFeedbackGraphic(index,btn,row){
-     $('#'+btn).remove(); 
+ function addFeedbackGraphic(index,btn,row) {
+     $('#'+btn).remove();
      $('#'+row).append('<span class="input-group">\n\
              <textarea class="form-control" style="height:34px;" id="ujm_exobundle_interactiongraphictype_coords_'+index+'_feedback"></textarea>\n\
              <span class="input-group-btn">\n\

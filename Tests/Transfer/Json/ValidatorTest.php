@@ -20,7 +20,8 @@ class ValidatorTest extends TransactionalTestCase
     {
         parent::setUp();
         $this->validator = $this->client->getContainer()->get('ujm.exo.json_validator');
-        $this->formatDir = realpath(__DIR__ . '/../../../../../json-quiz/json-quiz/format');       
+        $vendorDir = realpath("{$this->client->getKernel()->getRootDir()}/../vendor");
+        $this->formatDir = "{$vendorDir}/json-quiz/json-quiz/format";
     }
 
     public function testValidateQuestionWithNoType()
@@ -69,14 +70,13 @@ class ValidatorTest extends TransactionalTestCase
 
     /**
      * @dataProvider validQuestionProvider
-     * @param string$dataFilename
+     * @param string $dataFilename
      */
     public function testValidQuestionData($dataFilename)
     {
         $data = file_get_contents("{$this->formatDir}/question/$dataFilename");
         $question = json_decode($data);
-        $errors = $this->validator->validateQuestion($question);
-        $this->assertEquals(0, count($errors));
+        $this->assertEquals(0, count($this->validator->validateQuestion($question)));
     }
 
     public function testValidateExercise()
@@ -95,9 +95,8 @@ class ValidatorTest extends TransactionalTestCase
         return [
             ['choice/examples/valid/solutions.json'],
             ['match/examples/valid/solutions.json'],
-//            ['cloze/examples/valid/simple-input.json'],
-//            
-//            ['sort/examples/valid/basic.json'],
+            ['cloze/examples/valid/multiple-answers.json'],
+            ['short/examples/valid/multiple-answers.json'],
         ];
     }
 }

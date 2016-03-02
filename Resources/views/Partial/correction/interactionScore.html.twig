@@ -5,12 +5,14 @@
 
 <hr/>
 
+<p>{{ 'penalty' | trans({}, 'ujm_exo') }} : </p>
 {% for hv in hintViewed %}
-    {% if( hv.hint.id == interactions[p].id ) %}
-        {{ 'penalty' | trans({}, 'ujm_exo') }} : {{ hv.hint.penalty }}
-        <br/><hr/>
+    {% if( hv.hint.question.id == interactions[p].id ) %}
+        {{ hv.hint.value }} : {{ hv.hint.penalty }}
+        <br/>
     {% endif %}
 {% endfor %}
+<hr/>
 
 {% if (inter.question.type == 'InteractionOpen') %}
     {% if responses[p].mark != -1 %}

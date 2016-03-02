@@ -49,7 +49,7 @@ class InteractionQCMType extends AbstractType
                 'scoreFalseResponse', 'text', array(
                     'required' => false,
                     'label' => 'score_false_label',
-                    'attr' => array('placeholder' => 'points', 'class' => 'col-md-2'),
+                    'attr' => array('placeholder' => 'false_response', 'class' => 'col-md-2'),
                     'translation_domain' => 'ujm_exo',
                 )
             );
