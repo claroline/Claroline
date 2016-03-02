@@ -154,6 +154,7 @@ claroline_bundle_missing: claroline_bundle_missing
 classify_my_workspaces: 'Clasificar mis espacios de trabajo'
 classify_workspaces: 'Clasificar espacios de trabajo'
 classroom: Aula
+click_to_view_modify_profile: click_to_view_modify_profile
 client_ip: 'Dirección IP del cliente '
 client_name: 'Nombre del cliente '
 close: Cerrar
@@ -1142,6 +1143,7 @@ ws_most_viewed: 'Espacio de trabajo mas visto'
 yesterday_activity: 'Actividades de ayer'
 your_current_url: your_current_url
 your_platform_id: your_platform_id
+your_profile_is_n_complete: your_profile_is_n_complete
 your_username: 'Su nombre de usuario es '
 your_workspace_activity_overview: 'Resumen de todas las actividades recientes de su espacio e trabajo'
 404: 'Page Not found'
