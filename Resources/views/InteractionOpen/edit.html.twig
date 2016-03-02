@@ -11,7 +11,7 @@
                     'href': path('claro_desktop_open')
                 },
                 {
-                    'name': 'open_edition' | trans,
+                    'name': 'open_edition' | trans({}, 'ujm_exo'),
                     'href': ''
                 }
             ])
@@ -26,13 +26,13 @@
     <link href="{{ asset('bundles/ujmexo/css/errorValidation.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
 
-{% block title %} {{ 'edit_question' | trans }} {% endblock %}
+{% block title %} {{ 'edit_question' | trans({}, 'ujm_exo') }} {% endblock %}
 
 {% block section_content %}
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title">{{'open_edition'|trans}}</h3>
+            <h3 class="panel-title">{{'open_edition'|trans({}, 'ujm_exo')}}</h3>
         </div>
 
         {% include "UJMExoBundle:Partial:question/linkToBack.html.twig" %}
@@ -50,7 +50,7 @@
             </div>
 
             <div class="panel-footer">
-                <button type="submit" id="button_submit" class="btn btn-primary">{{ 'save' | trans }}</button>
+                <button type="submit" id="button_submit" class="btn btn-primary">{{ 'save' | trans({}, 'ujm_exo') }}</button>
                 {% if exoID == -1 %}
                     <a class="btn btn-default" href="{{ path('ujm_question_index') }}">{{ "cancel" | trans({}, "platform") }}</a>
                 {% else %}
@@ -67,7 +67,7 @@
 {% block javascripts %}
     {{ parent() }}
 
-    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'messages' }) }}"></script>
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'ujm_exo' }) }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/interactionOpen.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/category_pop.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/hint.js') }}"></script>
@@ -75,9 +75,9 @@
     {% include "UJMExoBundle:Partial:modal/confirmOneWord.html.twig" %}
     <script type="text/javascript">
         $(document).ready(function() {
-            insertStyle('{{ typeOpen|raw }}', '{{ 'delete' | trans }}');
+            insertStyle('{{ typeOpen|raw }}', '{{ 'delete' | trans({}, 'ujm_exo') }}');
             openEdit({{ nbResponses }});
-            newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
+            newHintEdit('{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'penalty' | trans({}, 'ujm_exo') }}', '{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'delete' | trans({}, 'ujm_exo') }}');
         });
     </script>
 {% endblock %}

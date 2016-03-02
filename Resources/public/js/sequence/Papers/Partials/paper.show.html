@@ -1,0 +1,15 @@
+<div class="panel panel-default">
+    <div class="panel-heading clearfix">
+        <h3 class="panel-title pull-left">{{ 'paper_details_correction_label'|trans:{}:'ujm_sequence'}} - {{paperDetailsCtrl.exercise.meta.title}} - {{ 'sequence_nb_attempts'|trans:{"1":paperDetailsCtrl.paper.number}:'ujm_sequence'}}</h3>        
+    </div>
+    <div class="panel-body">           
+        <div class="row">
+            <div class="col-md-12">
+                <correction-details data-paper="paperDetailsCtrl.paper" data-user="paperDetailsCtrl.user" data-questions="paperDetailsCtrl.questions" data-exercise="paperDetailsCtrl.exercise"></correction-details>
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer">
+       
+    </div>
+</div>

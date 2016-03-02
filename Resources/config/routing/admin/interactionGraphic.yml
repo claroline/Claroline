@@ -3,6 +3,11 @@ ujm_interactiongraphic_AddImg:
     defaults: { _controller: UJMExoBundle:WSRest:postDocumentAdd, pageToGo: 1, maxPage: 10, nbItem: 1 }
     requirements: { _method: post }
 
+ujm_interactiongraphic_edit:
+    pattern: /edit/{interaction}/{exoID}/{catID}/{user}
+    defaults: { _controller: "UJMExoBundle:InteractionGraphic:edit" }
+    requirements: { _method: post }
+
 ujm_interactiongraphic_create:
     pattern:  /create
     defaults: { _controller: "UJMExoBundle:InteractionGraphic:create" }
@@ -26,3 +31,9 @@ ujm_interactiongraphic_update:
     pattern:  /{id}/update
     defaults: { _controller: "UJMExoBundle:InteractionGraphic:update" }
     requirements: { _method: post }
+
+ujm_Document_name_alreadyExist:
+    pattern:  /Document/nameAlreadyExist
+    defaults: { _controller: "UJMExoBundle:WSRest:nameAlreadyExist" }
+    requirements:
+      _method: POST

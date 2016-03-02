@@ -7,7 +7,7 @@
 
 {% extends layout %}
 
-{% block title %} {{ 'exercise_edit' | trans }} {% endblock %}
+{% block title %} {{ 'exercise_edit' | trans({}, 'ujm_exo') }} {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -17,16 +17,16 @@
 
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('claro_resource_open', { 'resourceType': entity.resourceNode.resourceType.name(), 'node': entity.resourceNode.id }) }}">{{ entity.getResourceNode().getName() }}</a></li>
-    <li class="active">{{ 'exercise_edit' | trans }}</li>
+    <li class="active">{{ 'exercise_edit' | trans({}, 'ujm_exo') }}</li>
 {% endblock %}
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'exercise_edit' | trans }}</h3>
+        <h3 class="panel-title">{{ 'exercise_edit' | trans({}, 'ujm_exo') }}</h3>
     </div>
     <div class="panel-body">
         <a class="btn btn-primary" href="{{ path('claro_resource_open', { 'resourceType': entity.resourceNode.resourceType.name(), 'node': entity.resourceNode.id }) }}">
-            <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
+            <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
         </a>
     </div>
 
@@ -36,37 +36,17 @@
                 {#--------------------------------------------- Definition of the exercise -----------------------------------------------#}
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'exercise_definition' | trans }}</h3>
+                        <h3 class="panel-title">{{ 'exercise_definition' | trans({}, 'ujm_exo') }}</h3>
                     </div>
                     <div class="panel-body">
                         {{ form_row(edit_form.title) }}
-                        {{ form_row(edit_form.description) }}
-                        <div class="form-group row date picker">
-                            {{ form_label(edit_form.start_date) }}
-                            <div class="col-md-9">
-                                <div class="input-group">
-                                    {{ form_widget(edit_form.start_date) }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            {{ form_label(edit_form.useDateEnd) }}
-                            <div class="col-md-9">{{ form_widget(edit_form.useDateEnd) }}</div>
-                        </div>
-                        <div class="form-group row date picker" id="dateEnd" style="display: none;">
-                            {{ form_label(edit_form.end_date) }}
-                            <div class="col-md-9">
-                                <div class="input-group">
-                                    {{ form_widget(edit_form.end_date) }}
-                                </div>
-                            </div>
-                        </div>
+                        {{ form_row(edit_form.description) }}                       
                     </div>
                 </div>
                 {#--------------------------------------------- Questions -----------------------------------------------#}
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'questions' | trans }}</h3>
+                        <h3 class="panel-title">{{ 'questions' | trans({}, 'ujm_exo') }}</h3>
                     </div>
                     <div class="panel-body">
                         <div class="form-group row">
@@ -83,7 +63,7 @@
                 {#--------------------------------------------- End of Assessment ----------------------------------------------#}
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'at_the_end_of_assessment' | trans }}</h3>
+                        <h3 class="panel-title">{{ 'at_the_end_of_assessment' | trans({}, 'ujm_exo') }}</h3>
                     </div>
                     <div class="panel-body">
                         <div class="form-group row" style="display: none;">
@@ -105,7 +85,7 @@
                 {#--------------------------------------------- Passage ----------------------------------------------#}
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'paper' | trans }}</h3>
+                        <h3 class="panel-title">{{ 'paper' | trans({}, 'ujm_exo') }}</h3>
                     </div>
                     <div class="panel-body">
                         <div class="form-group" style="display: none;">
@@ -128,7 +108,7 @@
             </div>
         </div>
         <div class="panel-footer">
-            <button type="submit" class="btn btn-primary">{{ "save" | trans }}</button>
+            <button type="submit" class="btn btn-primary">{{ "save" | trans({}, 'ujm_exo') }}</button>
             <a class="btn btn-default" href="{{ path('claro_resource_open', { 'resourceType': entity.resourceNode.resourceType.name(), 'node': entity.resourceNode.id }) }}">
                 {{ 'cancel' | trans({}, 'platform') }}
             </a>
@@ -148,24 +128,12 @@
         $(document).ready(function() {
             $('#ujm_exobundle_exercisetype_doprint').attr("disabled", true);
             $('#ujm_exobundle_exercisetype_duration').attr("disabled", true);
-            $('#ujm_exobundle_exercisetype_lockAttempt').attr("disabled", true);
-
-            if($("#ujm_exobundle_exercisetype_useDateEnd").attr("checked")) {
-                $('#dateEnd').css({"display" : "block"});
-            }
+            $('#ujm_exobundle_exercisetype_lockAttempt').attr("disabled", true);           
 
             if ($("*[id$='_exercisetype_correctionMode']").val() == 3) {
                 $('#CorrectionMode').css({"display" : "block"});
             }
-        });
-
-        $("#ujm_exobundle_exercisetype_useDateEnd").change(function () {
-            if(this.checked) {
-                $('#dateEnd').css({"display" : "block"});
-            } else {
-                $('#dateEnd').css({"display" : "none"});
-            }
-        });
+        });       
 
         $("#ujm_exobundle_exercisetype_correctionMode").change(function () {
             if ($("*[id$='_exercisetype_correctionMode']").val() == 3) {

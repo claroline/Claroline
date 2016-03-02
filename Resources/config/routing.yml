@@ -31,7 +31,8 @@ admin_paper:
     prefix:   /admin/paper
 
 admin_question:
-    resource: "routing/admin/question.yml"
+    resource: "@UJMExoBundle/Controller/QuestionController.php"
+    type: annotation
     prefix:   /admin/question
 
 all_exercise:
@@ -49,3 +50,23 @@ all_paper:
 all_qti:
     resource: "routing/all/qti.yml"
     prefix:   /all/qti
+    
+sequence:
+    resource: "@UJMExoBundle/Controller/Sequence/SequenceController.php"
+    type: annotation
+    prefix: /
+    
+sequence_correction:
+    resource: "@UJMExoBundle/Controller/Sequence/PaperController.php"
+    type: annotation
+    prefix: /papers
+  
+
+ujm_exercise:
+    resource: "@UJMExoBundle/Controller/ExerciseController.php"
+    type: annotation
+
+ujm_api_exercise:
+    resource: "@UJMExoBundle/Controller/Api/ExerciseController.php"
+    type: annotation
+    prefix: /api

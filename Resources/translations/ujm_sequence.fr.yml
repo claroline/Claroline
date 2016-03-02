@@ -1,0 +1,90 @@
+# a
+answer_zone: Zone de réponse
+
+# b
+btn_end_sequence_label: Terminer l'exercice
+btn_interrupt_sequence_label: Interrompre
+btn_prev_step_label: Aller à l'étape précédente
+btn_next_step_label: Aller à l'étape suivante
+btn_validate_step: Valider l'étape
+btn_toggle_all_paper_question_panels: Montrer / cacher les questions
+
+# c
+case_sensitive: Respecter la casse
+comment: Commentaire
+
+# d
+dropdown_step_navigate_choice_label: Etape n°%1% / %2%
+
+# g
+graphic_setpoint_first: Positionner le(s) pointeur(s) ci-dessous (croix rouge) sur l'image. La position du centre du pointeur défini votre réponse.
+graphic_setpoint_second: Pour répondre, utiliser la technique du glisser/déposer.
+graphic_setpoint_third: Les bonnes réponses ne sont comptabilisées qu'une seule fois.
+graphic_reset_answers: Réinitialiser les réponses.
+
+# k
+keys_words: Mots clés
+
+# l
+link_exercice_home: Accueil de l'exercise
+link_exercise_retry: Recommencer
+link_exercise_play: Répondre
+link_exercise_docimology: Docimologie
+link_csv_export: Export CSV
+label_exercise_score: Note globale
+label_exercise_question_score: Note
+label_exercise_correction: Correction
+label_no_labels_associated: Pas de label(s) associé(s)
+label_manual_correction_needed: Correction manuelle nécessaire!
+
+# n
+need_correction: Cette réponse nécessite une correction manuelle
+note_question: Noter cette question
+
+# p
+paper_list: Liste des copies
+paper_list_no_paper: Aucune copie actuellement
+paper_search: Rechercher une copie
+paper_list_manual_correction_needed: Correction manuelle nécessaire
+paper_list_table_user: Utilisateur
+paper_list_table_paper_number: Numéro de copie
+paper_list_table_start_date: Date de début
+paper_list_table_end_date: Date de fin
+paper_list_table_interrupted: Interrompue
+paper_list_table_interrupted_yes: Oui
+paper_list_table_interrupted_no: Non
+paper_list_table_action: Correction
+paper_list_table_action_not_available: Indisponible actuellement
+paper_list_table_score: Score
+paper_list_table_first_page_label: Première
+paper_list_table_last_page_label: Dernière
+paper_list_table_toggle_pagination: Paginer / Dépaginer les resultats
+
+paper_details_table_choice: Choix
+paper_details_table_expected_answer: Réponse attendue
+paper_details_table_your_answer: Votre réponse
+paper_details_table_comment: Commentaire
+paper_details_paper_score: Score global
+paper_details_question_score: Score de la question
+paper_details_correction_label: Correction
+paper_details_your_answers: Vos réponses
+paper_details_right_answers: Bonnes réponses
+
+points: Points
+
+# q
+question_hints: Indices
+question_hint_label: Indice
+question_hint_show_title: Voir l'indice
+question_show_hint_confirm: Êtes vous sur de vouloir utiliser l'indice ? <br/> Cela entrainera une pénalité de %1% points.
+
+# s
+sequence_step: Etape
+sequence_attempts_infos: Vous avez le droit à %1% essai(s)
+sequence_nb_attempts: Essais N° %1%
+sequence_interrupt_sequence_confirm: Êtes vous sur de vouloir interrompre l'exercice ?
+sequence_end_sequence_confirm: Êtes vous sur de vouloir terminer l'exercice ? <br/> Vous ne pourrez plus modifier vos réponses.
+sequence_play_leave_confirm: Êtes vous sur de vouloir quitter l'application ?
+
+# v
+validate: Valider

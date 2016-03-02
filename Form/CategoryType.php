@@ -18,6 +18,7 @@ class CategoryType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class' => 'UJM\ExoBundle\Entity\Category',
+                'translation_domain' => 'ujm_exo',
             )
         );
     }

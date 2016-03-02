@@ -1,25 +1,27 @@
-{% if inter.interaction.feedback != '' %}
+{% if inter.question.feedback != '' %}
     <hr/>
-    <p>{{ inter.interaction.feedback|raw }}</p>
+    <p>{{ inter.question.feedback|raw }}</p>
 {% endif %}
 
 <hr/>
 
+<p>{{ 'penalty' | trans({}, 'ujm_exo') }} : </p>
 {% for hv in hintViewed %}
-    {% if( hv.hint.interaction.id == interactions[p].id ) %}
-        {{ 'penalty' | trans }} : {{ hv.hint.penalty }}
-        <br/><hr/>
+    {% if( hv.hint.question.id == interactions[p].id ) %}
+        {{ hv.hint.value }} : {{ hv.hint.penalty }}
+        <br/>
     {% endif %}
 {% endfor %}
+<hr/>
 
-{% if (inter.interaction.type == 'InteractionOpen') %}
+{% if (inter.question.type == 'InteractionOpen') %}
     {% if responses[p].mark != -1 %}
-        {{ 'score' | trans }} : <span id="open_mark_value_{{ responses[p].id }}">{{ responses[p].mark }} / {{ interInfo['maxScore'] }}</span>
+        {{ 'score' | trans({}, 'ujm_exo') }} : <span id="open_mark_value_{{ responses[p].id }}">{{ responses[p].mark }} / {{ interInfo['maxScore'] }}</span>
         {% set exoMark = exoMark + responses[p].mark %}
     {% else %}
-        {{ 'score' | trans }} : <span id="open_mark_value_{{ responses[p].id }}">{{ 'not_yet_mark' | trans }}</span>
+        {{ 'score' | trans({}, 'ujm_exo') }} : <span id="open_mark_value_{{ responses[p].id }}">{{ 'not_yet_mark' | trans({}, 'ujm_exo') }}</span>
         {% set temporaryMark = true %}
     {% endif %}
 {% else %}
-    {{ 'score' | trans }} : {{ responses[p].mark }} / {{ interInfo['maxScore'] }}
+    {{ 'score' | trans({}, 'ujm_exo') }} : {{ responses[p].mark }} / {{ interInfo['maxScore'] }}
 {% endif %}

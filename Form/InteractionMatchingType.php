@@ -5,7 +5,6 @@ namespace UJM\ExoBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
 use Claroline\CoreBundle\Entity\User;
 
 class InteractionMatchingType extends AbstractType
@@ -15,7 +14,7 @@ class InteractionMatchingType extends AbstractType
 
     public function __construct(User $user, $catID = -1)
     {
-        $this->user  = $user;
+        $this->user = $user;
         $this->catID = $catID;
     }
 
@@ -23,7 +22,7 @@ class InteractionMatchingType extends AbstractType
     {
         $builder
             ->add(
-                'interaction', new InteractionType(
+                'question', new QuestionType(
                     $this->user, $this->catID
                 )
             );
@@ -31,7 +30,7 @@ class InteractionMatchingType extends AbstractType
             ->add(
                 'shuffle', 'checkbox', array(
                     'label' => 'inter_matching_shuffle',
-                    'required' => false
+                    'required' => false,
                 )
             );
         $builder
@@ -39,25 +38,25 @@ class InteractionMatchingType extends AbstractType
                 'typeMatching', 'entity', array(
                     'class' => 'UJM\\ExoBundle\\Entity\\TypeMatching',
                     'label' => 'matching_value',
-                    'choice_translation_domain' => true
+                    'choice_translation_domain' => true,
                 )
             );
         $builder
             ->add(
                 'labels', 'collection', array(
-                    'type' => new LabelType,
+                    'type' => new LabelType(),
                     'prototype' => true,
                     'allow_add' => true,
-                    'allow_delete' => true
+                    'allow_delete' => true,
                 )
             );
         $builder
             ->add(
                 'proposals', 'collection', array(
-                    'type' => new ProposalType,
+                    'type' => new ProposalType(),
                     'prototype' => true,
                     'allow_add' => true,
-                    'allow_delete' => true
+                    'allow_delete' => true,
                 )
             );
     }
@@ -67,7 +66,8 @@ class InteractionMatchingType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class' => 'UJM\ExoBundle\Entity\InteractionMatching',
-                'cascade_validation' => true
+                'cascade_validation' => true,
+                'translation_domain' => 'ujm_exo',
             )
         );
     }

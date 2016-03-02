@@ -11,49 +11,50 @@
     <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
-{% block title %} {{ 'paper_list' | trans }} {% endblock %}
+{% block title %} {{ 'paper_list' | trans({}, 'ujm_exo') }} {% endblock %}
 
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
-    <li class="active">{{ 'paper_list' | trans }}</li>
+    <li class="active">{{ 'paper_list' | trans({}, 'ujm_exo') }}</li>
 {% endblock %}
 
 {% block section_content %}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'paper_list' | trans }}</h3>
+        <h3 class="panel-title">{{ 'paper_list' | trans({}, 'ujm_exo') }}</h3>
     </div>
 
     <div class="panel-body">
-        <a href="{{ path('ujm_exercise_open', { 'exerciseId': exoID }) }}" class="btn btn-primary">
-            <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
+        <a href="{{ path('ujm_exercise_open', { 'id': exoID }) }}" class="btn btn-primary">
+            <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
         </a>
         {% if retryButton and nbUserPaper == 0 and nbQuestions > 0 %}
             <a class="btn btn-primary" href="{{ path('ujm_exercise_paper', { 'id': exoID }) }}">
-                <i class="fa fa-check-square-o"></i> {{ 'compose' | trans }}
+                <i class="fa fa-check-square-o"></i> {{ 'compose' | trans({}, 'ujm_exo') }}
             </a>
         {% endif %}
         {% if isAdmin %}
-            <a href="{{ path('ujm_exercise_docimology', { 'exerciseId': exoID, 'nbPapers': pager.getNbResults }) }}"
+            <a href="{{ path('ujm_exercise_docimology', { 'id': exoID, 'nbPapers': pager.getNbResults }) }}"
                class="btn btn-primary">
-                {{ 'docimology' | trans }}
+                {{ 'docimology' | trans({}, 'ujm_exo') }}
             </a>
             <a href="{{ path('ujm_paper_export_results', { 'exerciseId': exoID }) }}"
                class="btn btn-primary">
-                {{ 'export_csv_results' | trans }}
+                {{ 'export_csv_results' | trans({}, 'ujm_exo') }}
             </a>
-            {% if _resource.published == FALSE %}
-                <a href="{{ path('ujm_exercise_delete_all_paper', { 'id': exoID }) }}"
-                   class="btn btn-primary">
-                    <i class="fa fa-trash-o"></i> {{ 'delete_papers' | trans }}
-                </a>
+            {% if not _resource.getResourceNode().isPublished() and not _resource.wasPublishedOnce() %}
+                <form method="POST" action="{{ path('ujm_exercise_delete_papers', { 'id': exoID }) }}" style="display: inline">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-trash-o"></i> {{ 'delete_papers' | trans({}, 'ujm_exo') }}
+                    </button>
+                </form>
             {% endif %}
         {% endif %}
 
         <hr/>
 
         {% if isAdmin == 1 and  papers is not empty %}
-            {{ 'search_user_paper' | trans }} :
+            {{ 'search_user_paper' | trans({}, 'ujm_exo') }} :
             <div class="input-group">
                 <input type="text" class="form-control" id="nameUser" placeholder="{{ 'search'|trans({}, 'platform') }}"
                     onkeydown="if (event.keyCode == 13) { searchUserPaper('{{ path('ujm_paper_searchUserPaper') }}', {{exoID}});return false; }">
@@ -64,11 +65,11 @@
                 </span>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <a class="btn btn-primary" href="{{ path('ujm_paper_list', { 'exoID': papers[0].exercise.id }) }}">
-                    <i class="fa fa-repeat"></i> {{ 'reset' | trans }}
+                    <i class="fa fa-repeat"></i> {{ 'reset' | trans({}, 'ujm_exo') }}
                </a>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <a class="btn btn-primary" href="{{ path('ujm_paper_list', { 'exoID': papers[0].exercise.id, 'all': 1 }) }}">
-                    <i class="fa fa-list"></i> {{ 'display_all_list' | trans }}
+                    <i class="fa fa-list"></i> {{ 'display_all_list' | trans({}, 'ujm_exo') }}
                 </a>
             </div>
 
@@ -77,11 +78,11 @@
 
         {% if nbUserPaper > 0 %}
             <fieldset id="container" class="alert alert-info">
-                {{ 'already_answered' | trans }}
+                {{ 'already_answered' | trans({}, 'ujm_exo') }}
                 {% if retryButton %} :
                     <div style="float:right;">
                         <a class="btn btn-primary" href="{{ path('ujm_exercise_paper', { 'id': exoID }) }}">
-                            <i class="fa fa-check-square-o"></i> {{ 'start_again' | trans }}
+                            <i class="fa fa-check-square-o"></i> {{ 'start_again' | trans({}, 'ujm_exo') }}
                         </a>
                     </div>
                     {% else %}.
@@ -92,7 +93,7 @@
         {% include "UJMExoBundle:Partial:badgeInfos/infos.html.twig" %}
         {% include "UJMExoBundle:Partial:correction/attemptInfo.html.twig" %}
 
-        <h6 style="color: red; text-align: right;">({{ 'paper_legend' | trans }}).</h6>
+        <h6 style="color: red; text-align: right;">({{ 'paper_legend' | trans({}, 'ujm_exo') }}).</h6>
 
         <div id="resultSearch">
             {% if divResultSearch is defined %}
@@ -109,7 +110,7 @@
                         </div>
                     {% endif %}
                 {% else %}
-                    <div class="alert alert-info">{{ 'no_paper_found'|trans }}</div>
+                    <div class="alert alert-info">{{ 'no_paper_found'|trans({}, 'ujm_exo') }}</div>
                 {% endif %}
             {% endif %}
         </div>

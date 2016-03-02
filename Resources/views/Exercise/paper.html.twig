@@ -13,11 +13,11 @@
     <link href="{{ asset('bundles/ujmexo/css/graphic.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
-{% block title %} {{ 'paper' | trans }} {% endblock %}
+{% block title %} {{ 'paper' | trans({}, 'ujm_exo') }} {% endblock %}
 
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
-    <li class="active">{{ 'n_question' | trans }}{{numQ}}</li>
+    <li class="active">{{ 'n_question' | trans({}, 'ujm_exo') }}{{numQ}}</li>
 {% endblock %}
 
 {% block section_content %}
@@ -27,237 +27,22 @@
         <h3 class="panel-title">{{ _resource.getResourceNode().getName() }}
             <span style="float:right;">
                 {% if(maxAttempsAllowed > 0) %}
-                    {{ "attempt_info1" | trans }} {{ maxAttempsAllowed }}
+                    {{ "attempt_info1" | trans({}, 'ujm_exo') }} {{ maxAttempsAllowed }}
                     {% if(maxAttempsAllowed > 1) %}
-                        {{ "attempt_info2plur" | trans }}
+                        {{ "attempt_info2plur" | trans({}, 'ujm_exo') }}
                     {% else %}
-                        {{ "attempt_info2sing" | trans }}
+                        {{ "attempt_info2sing" | trans({}, 'ujm_exo') }}
                     {% endif %}
                      -
                 {% endif %}
-                {{ "attempt_info3" | trans }} {{ numAttempt }}
+                {{ "attempt_info3" | trans({}, 'ujm_exo') }} {{ numAttempt }}
             </span>
         </h3>
     </div>
     <div class="panel-body">
         <form action="{{ path('ujm_exercise_paper_nav') }}" method="post" name="formResponse" id="formResponse">
             <input type="hidden" name="numQuestionToDisplayed" id="numQuestionToDisplayed" value=""/>
-
-            {#-------------------------------------------------- QCM ------------------------------------------------------------#}
-
-            {% if interactionType == 'InteractionQCM' %}
-
-                <!--<div class="panel-body">-->
-                    <input class="form-control" type="hidden" name="interactionQCMToValidated" value="{{ interactionToDisplayed.id }}"/>
-                    <input class="form-control" type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
-                    <input class="form-control" type="hidden" name="typeInteraction" value="InteractionQCM"/>
-
-                    {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
-
-                    <table class="table-striped" cellspacing="5" cellpadding="2" border="0">
-                        {% for choice in interactionToDisplayed.choices %}
-                            {% set checked = "" %}
-                            <tr>
-                                {% if regexTwig('/' ~ choice.id ~ ';/', response) > 0 %}
-                                    {% set checked = "checked" %}
-                                {% endif %}
-                                {% if interactionToDisplayed.typeQCM.code == 2 %}
-                                    <td><p><INPUT type="radio" name="choice" value="{{ choice.id }}" {{ checked }}/></p></td>
-                                {% else %}
-                                    <td><p><INPUT type="checkbox" name="choice[]" value="{{ choice.id }}" {{ checked }}/></p></td>
-                                {% endif %}
-                                <td>{{ choice.label|raw }}</td>
-                            </tr>
-                        {% endfor %}
-                    </table>
-
-                    {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
-
-                <!--</div>-->
-
-                <input type="hidden" name="testQCM" value="testQCM" />
-                <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
-
-            {#------------------------------------------------- Graphic ---------------------------------------------------------#}
-
-            {% elseif interactionType == 'InteractionGraphic' %}
-
-                <!--<div class="panel-body">-->
-                    <input type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
-                    <input type="hidden" name="typeInteraction" value="InteractionGraphic"/>
-
-                    {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
-
-                    <h5>{{ "consignes" | trans }} :</h5>
-                    <h6><em>{{ "position" | trans }}<br/>{{ "selection" | trans }}<br/>{{ "raz" | trans }}<br/>
-                        {{ "only_once" | trans }}</em>
-                    </h6>
-    </div>
-    <div style="margin-left: 30px;">
-                    <div style="position: relative;" id="Answer">
-                        <p id="ContainerCursorPaper">
-                            {% set i = 1 %}
-                            {% for coords in listCoords %}
-                                <img class="AnswerImage" src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{ i }}"
-                                    id="cursor{{ i }}" style="position: absolute;"/>
-                                {% set i = i + 1 %}
-                            {% endfor %}
-                        </p><p>
-
-                            {% if response is empty %}
-                                {% set response = 'empty' %}
-                            {% endif %}
-
-                            <img class="AnswerImage" src="{{ asset(interactionToDisplayed.document.url) }}" alt="AnswerImg" id="AnswerImg"
-                                width="{{ interactionToDisplayed.width }}" height="{{ interactionToDisplayed.height }}"
-                                style="margin-top: 30px" onload="displayAnswersGraph('{{ response }}');"/>
-                                </p>
-                    </div>
-
-                    <input type="hidden" id="nbpointer" name="nbpointer" value="{{ i }}"/>
-                    <input type="hidden" id="answers" name="answers" value=""/>
-                    <input type="hidden" id="graphId" name="graphId" value="{{ interactionToDisplayed.id }}"/>
-
-                    {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
-
-                    <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
-
-                <!--</div>-->
-            {#-------------------------------------------------- OPEN -----------------------------------------------------------#}
-
-            {% elseif interactionType == 'InteractionOpen' %}
-
-                <!--<div class="panel-body">-->
-                    <input type="hidden" name="interactionOpenToValidated" value="{{ interactionToDisplayed.id }}"/>
-                    <input type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
-                    <input type="hidden" name="typeInteraction" value="InteractionOpen"/>
-
-                    {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
-
-                    {% include "UJMExoBundle:Partial:paper/open.html.twig" %}
-
-                    {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
-
-                    <input type="hidden" name="testOpen" value="testOpen" />
-                    <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
-
-                <!--</div>-->
-            {#--------------------------------------------------- Hole ----------------------------------------------------------#}
-
-            {% elseif interactionType == 'InteractionHole' %}
-
-                    <!--<div class="panel-body">-->
-                        <input class="form-control" type="hidden" name="interactionHoleToValidated" value="{{ interactionToDisplayed.id }}"/>
-                        <input class="form-control" type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
-                        <input class="form-control" type="hidden" name="typeInteraction" value="InteractionHole"/>
-
-                        {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
-
-                        <div id="interHoleResponse">
-                            {{ interactionToDisplayed.htmlWithoutValue | raw }}
-                            {% if response != '' %}
-                                <script type="text/javascript">
-                                    $(document).ready(function() {
-                                        paperResponseHole('{{ response|raw }}');
-                                    });
-                                </script>
-                            {% endif %}
-                        </div>
-
-                        {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
-
-                    <!--</div>-->
-
-                    <input type="hidden" name="testQCM" value="testQCM" />
-                    <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
-
-            {#--------------------------------------------------- Matching ----------------------------------------------------------#}
-            {% elseif interactionType == 'InteractionMatching' %}
-                    {% if interactionToDisplayed.typeMatching.code == 2 %}
-                        <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/matchingdisplaydrag.js') }}"></script>
-                        <link href="{{ asset('bundles/ujmexo/css/matchingDrag.css') }}"  type="text/css" rel="stylesheet"/>
-                    {% else %}
-                        <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/matchingdisplaybind.js') }}"></script>
-                        <link href="{{ asset('bundles/ujmexo/css/matchingBind.css') }}"  type="text/css" rel="stylesheet"/>
-                    {% endif %}
-                    <!--<div class="panel-body">-->
-                    <input class="form-control" type="hidden" name="interactionMatchingToValidated" value="{{ interactionToDisplayed.id }}"/>
-                    <input class="form-control" type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
-                    <input class="form-control" type="hidden" name="typeInteraction" value="InteractionMatching"/>
-
-                    {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
-
-                        <div id="divReset">
-                            <input type="button" name="resetAll"  id="resetAll" value="{{ "reset" | trans }}" class="btn btn-primary">
-                        </div>
-
-                    <div id="interMatchingResponse">
-                        <input type="hidden" id="jsonResponse" name ="jsonResponse" />
-                        <center>
-                        <table>
-                            <tr>
-                                {% if interactionToDisplayed.typeMatching.code == 2 %}
-                                    <td>
-                                        {% for proposal in interactionToDisplayed.proposals %}
-                                            <div id="div_{{ proposal.id }}" class="origin">
-                                                <ul>
-                                                    <li id="draggable_{{ proposal.id }}" class="draggable"> {{ proposal.value | raw }} </li>
-                                                </ul>
-                                            </div>
-                                        {% endfor%}
-                                    </td>
-                                    <td style='padding: 20px;'>
-                                    </td>
-                                    <td>
-                                        {% for label in interactionToDisplayed.labels %}
-                                            <div id="droppable_{{ label.id }}" class="droppable" style="text-align: right;">
-                                                <ul>
-                                                    <li class="lidroppable">{{ label.value | raw }}</li>
-                                                </ul>
-                                                <ul class="dragDropped">
-                                                </ul>
-                                            </div>
-                                        {% endfor %}
-                                    </td>
-                                {% else %}
-                                    <td>
-                                        {% for proposal in interactionToDisplayed.proposals %}
-                                            <div id="draggable_{{ proposal.id }}" class="origin" >
-                                                {{ proposal.value | raw }}
-                                            </div>
-                                        {% endfor%}
-                                    </td>
-                                    <td style='padding: 50px;'>
-                                    </td>
-                                    <td>
-                                        {% for label in interactionToDisplayed.labels %}
-                                            <div id="droppable_{{ label.id }}" class="droppable" style="text-align: right;">
-                                                {{ label.value | raw }}
-                                            </div>
-                                        {% endfor %}
-                                    </td>
-                                {% endif %}
-                            </tr>
-                        </table>
-                    </center>
-                    {% if response != '' %}
-                        {% for key, val in response %}
-                            {% set resp = explodeString('-', val) %}
-                            {% for r in resp %}
-                                <script type="text/javascript">
-                                    placeProposal({{ key }}, {{ r }});
-                                </script>
-                            {% endfor %}
-                        {% endfor %}
-                    {% endif %}
-                    {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
-
-                <!--</div>-->
-
-                <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
-
-            {% endif %}
-            </div>
+                {% include "UJMExoBundle:Partial:exercise/#{interactionType}.html.twig" %}         
         </form>
     </div>
     {#--------------------------------------------------- Pagination ----------------------------------------------------#}
@@ -310,13 +95,13 @@
             {% if dispButtonInterrupt %}
                 <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
                 <li>
-                    <input type="button" value="{{ "interupt" | trans }}" onClick="interupt('{{ interactionType }}');" class="btn btn-primary"/>
+                    <input type="button" value="{{ "interupt" | trans({}, 'ujm_exo') }}" onClick="interupt('{{ interactionType }}');" class="btn btn-primary"/>
                 </li>
             {% endif %}
             <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
             {% if numQ == indexMax %}
                 <li>
-                    <input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}', '{{ 'alert_ending' | trans }}');"
+                    <input type="button" value="{{ "finish" | trans({}, 'ujm_exo') }}" onClick="finish('{{ interactionType }}', '{{ 'alert_ending' | trans({}, 'ujm_exo') }}');"
                         class="btn btn-primary"/>
                 </li>
             {% endif %#}
@@ -334,16 +119,16 @@
 
             {% if numQ == indexMax and numQ == 1 %}
                 <li>
-                    <input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}');"
+                    <input type="button" value="{{ "finish" | trans({}, 'ujm_exo') }}" onClick="finish('{{ interactionType }}');"
                         class="btn btn-primary"/>
                 </li>
             {% else %}
 
                 {% if numQ == 1 %}
-                    <li class="disabled"><a href="#" onclick="event.preventDefault();"><i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans }}</a></li>
+                    <li class="disabled"><a href="#" onclick="event.preventDefault();"><i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans({}, 'ujm_exo') }}</a></li>
                     <li>
                         <a href="#" onClick="submitForm({{ numQ+1 }}, '{{ interactionType }}');">
-                            {{ 'next' | trans }} &nbsp; <i class="fa fa-chevron-right"></i>
+                            {{ 'next' | trans({}, 'ujm_exo') }} &nbsp; <i class="fa fa-chevron-right"></i>
                         </a>
                     </li>
                 {% endif %}
@@ -351,13 +136,13 @@
                 {% if numQ == indexMax %}
                     <li>
                         <a href="#" onClick="submitForm({{ numQ-1 }}, '{{ interactionType }}');">
-                            <i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans }}
+                            <i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans({}, 'ujm_exo') }}
                         </a>
                     </li>
-                    <li class="disabled"><a href="#" onclick="event.preventDefault();">{{ 'next' | trans }} &nbsp; <i class="fa fa-chevron-right"></i></a></li>
+                    <li class="disabled"><a href="#" onclick="event.preventDefault();">{{ 'next' | trans({}, 'ujm_exo') }} &nbsp; <i class="fa fa-chevron-right"></i></a></li>
                     <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
                     <li>
-                        <input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}');"
+                        <input type="button" value="{{ "finish" | trans({}, 'ujm_exo') }}" onClick="finish('{{ interactionType }}');"
                             class="btn btn-primary"/>
                     </li>
                 {% endif %}
@@ -365,12 +150,12 @@
                 {% if numQ != indexMax and numQ != 1 %}
                     <li>
                         <a href="#" onClick="submitForm({{ numQ-1 }}, '{{ interactionType }}');">
-                            <i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans }}
+                            <i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans({}, 'ujm_exo') }}
                         </a>
                     </li>
                     <li>
                         <a href="#" onClick="submitForm({{ numQ+1 }}, '{{ interactionType }}');">
-                            {{ 'next' | trans }} &nbsp; <i class="fa fa-chevron-right"></i>
+                            {{ 'next' | trans({}, 'ujm_exo') }} &nbsp; <i class="fa fa-chevron-right"></i>
                         </a>
                     </li>
                 {% endif %}
@@ -379,7 +164,7 @@
             {% if dispButtonInterrupt %}
                 <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
                 <li>
-                    <input type="button" value="{{ "interupt" | trans }}" onClick="interupt('{{ interactionType }}');" class="btn btn-primary"/>
+                    <input type="button" value="{{ "interupt" | trans({}, 'ujm_exo') }}" onClick="interupt('{{ interactionType }}');" class="btn btn-primary"/>
                 </li>
             {% endif %}
             <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
@@ -387,7 +172,7 @@
             <li>
                 <select id="Qnumber" onchange="submitForm(this.options[this.selectedIndex].value, '{{ interactionType }}');">
                     {% for interactionID in tabOrderInter %}
-                        <option value="{{ loop.index }}">{{ 'n_question' | trans }}{{ loop.index }} / {{ tabOrderInter | length }}</option>
+                        <option value="{{ loop.index }}">{{ 'n_question' | trans({}, 'ujm_exo') }}{{ loop.index }} / {{ tabOrderInter | length }}</option>
                     {% endfor %}
                 </select>
             </li>
@@ -405,21 +190,21 @@
 
     {{ parent() }}
     
-    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'messages' }) }}"></script>
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'ujm_exo' }) }}"></script>
 
     <script type="text/javascript">
-        var mssg             = "{{ "exercise_alert_break" | trans }}";
+        var mssg             = "{{ "exercise_alert_break" | trans({}, 'ujm_exo') }}";
         var allowToInterrupt = "{{ dispButtonInterrupt }}";
         var interType        = "{{ interactionType }}";
     </script>
 
     {% if interactionType == 'InteractionGraphic' %}
-        <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/frontend/jquery-ui/jquery-ui.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphicdisplay.js') }}"></script>
     {% elseif interactionType == 'InteractionMatching' %}
         {% if interactionToDisplayed.typeMatching.code == 2 %}
-            <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('bundles/frontend/jquery-ui/jquery-ui.js') }}"></script>
             <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
         {% else %}
             <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/dom.jsPlumb-1.7.2-min.js') }}"></script>

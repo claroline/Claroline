@@ -1,3 +1,8 @@
+ujm_interactionhole_edit:
+    pattern: /edit/{interaction}/{exoID}/{catID}/{user}
+    defaults: { _controller: "UJMExoBundle:InteractionHole:edit" }
+    requirements: { _method: post }
+
 ujm_interactionhole_create:
     pattern: /create
     defaults: { _controller: "UJMExoBundle:InteractionHole:create" }

@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\ExerciseQuestion
+ * UJM\ExoBundle\Entity\ExerciseQuestion.
  *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\ExerciseQuestionRepository")
  * @ORM\Table(name="ujm_exercise_question")
@@ -15,30 +15,31 @@ class ExerciseQuestion
     /**
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Exercise")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $exercise;
 
     /**
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Question")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $question;
 
     /**
-     * @var integer $ordre
+     * @var int
      *
      * @ORM\Column(name="ordre", type="integer")
      */
     private $ordre;
 
-
-    public function __construct(\UJM\ExoBundle\Entity\Exercise $exercise, \UJM\ExoBundle\Entity\Question $question)
+    public function __construct(Exercise $exercise, Question $question)
     {
         $this->exercise = $exercise;
         $this->question = $question;
     }
 
-    public function setExercise(\UJM\ExoBundle\Entity\Exercise $exercise)
+    public function setExercise(Exercise $exercise)
     {
         $this->exercise = $exercise;
     }
@@ -48,7 +49,7 @@ class ExerciseQuestion
         return $this->exercise;
     }
 
-    public function setQuestion(\UJM\ExoBundle\Entity\Question $question)
+    public function setQuestion(Question $question)
     {
         $this->question = $question;
     }
@@ -59,9 +60,9 @@ class ExerciseQuestion
     }
 
     /**
-     * Set ordre
+     * Set ordre.
      *
-     * @param integer $ordre
+     * @param int $ordre
      */
     public function setOrdre($ordre)
     {
@@ -69,9 +70,9 @@ class ExerciseQuestion
     }
 
     /**
-     * Get ordre
+     * Get ordre.
      *
-     * @return integer
+     * @return int
      */
     public function getOrdre()
     {

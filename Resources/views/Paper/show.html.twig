@@ -13,27 +13,27 @@
     <link href="{{ asset('bundles/ujmexo/css/graphic.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
-{% block title %} {{ 'correction' | trans }} {% endblock %}
+{% block title %} {{ 'correction' | trans({}, 'ujm_exo') }} {% endblock %}
 
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
-    <li class="active">{{ 'paper' | trans }}</li>
+    <li class="active">{{ 'paper' | trans({}, 'ujm_exo') }}</li>
 {% endblock %}
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'correction' | trans }} </h3>
+        <h3 class="panel-title">{{ 'correction' | trans({}, 'ujm_exo') }} </h3>
     </div>
     <div class="panel-body">
-        <a class="btn btn-primary" href="{{ path('ujm_exercise_open', { 'exerciseId':  exoId }) }}">
-            <i class="fa fa-arrow-left"></i> {{ 'home_exercise' | trans }}
+        <a class="btn btn-primary" href="{{ path('ujm_exercise_open', { 'id':  exoId }) }}">
+            <i class="fa fa-arrow-left"></i> {{ 'home_exercise' | trans({}, 'ujm_exo') }}
         </a>
         <a href="{{ path('ujm_paper_list', { 'exoID': exoId }) }}" class="btn btn-primary">
-            <i class="fa fa-list"></i> {{ 'paper_list' | trans }}
+            <i class="fa fa-list"></i> {{ 'paper_list' | trans({}, 'ujm_exo') }}
         </a>
         {% if retryButton %}
             <a class="btn btn-primary" href="{{ path('ujm_exercise_paper', { 'id': exoId }) }}">
-                <i class="fa fa-check-square-o"></i> {{ 'start_again' | trans }}
+                <i class="fa fa-check-square-o"></i> {{ 'start_again' | trans({}, 'ujm_exo') }}
             </a>
         {% endif %}
 
@@ -42,190 +42,14 @@
         {% set temporaryMark = false %}
 
         {% if p >= 0 %}
-        {#--------------------------------------------------- QCM ----------------------------------------------------#}
-
-            {% if(interactions[p].type == 'InteractionQCM') %}
-
-                {% set interInfo = getInterTwig(interactions[p].id, 'InteractionQCM') %}
-                {% set inter =  interInfo['question'] %}
-                {{ inter.sortChoices() }}
-
-                <div class="panel-body">
-
-                    {% if (display == 'all') %}
-
-                        {% include "UJMExoBundle:Partial:correction/qcm.html.twig" %}
-                        {% include "UJMExoBundle:Partial:correction/interactionScore.html.twig" %}
-
-                    {% endif %}
-                </div>
-
-    {#------------------------------------------------- Graphic ------------------------------------------------------#}
-
-            {% elseif(interactions[p].type == 'InteractionGraphic') %}
-
-                {% set interInfo = getInterTwig(interactions[p].id, 'InteractionGraphic') %}
-                {% set inter =  interInfo['question'] %}
-                {% set coords =  getCoordsGraphTwig(inter.id) %}
-                {% set maxScore = 0 %}
-
-
-
-                {% if (display == 'all') %}
-
-                <div class="panel-body">
-                    {% include "UJMExoBundle:Partial:correction/graphic.html.twig" %}
-                </div>
-            </div>
-                <div style="margin-left: 30px;">
-                      
-                    <div id="Answer" style="position: relative;">     
-                        <img class="AnswerImage" src="{{asset (inter.document.url)}}" width="{{ inter.width }}" height="{{ inter.height }}"
-                             alt="AnswerImage" id="AnswerImage{{ inter.interaction.id }}"/>
-                        <br> <br>  
-                    <div style="margin-right: 30px;" >
-                         <table id="tableAnswer" class="table table-striped table-bordered table-condensed">
-                             <thead>
-                                 <tr style="background-color: lightsteelblue;">
-                                     <th class="classic">{{ 'answer_zone' | trans }}</th>
-                                     <th class="classic">{{ 'points' | trans }}</th>
-                                     <th class="classic">{{ 'comment' | trans }}</th>
-                                 </tr>
-                             </thead>
-                             <tbody>
-                             </tbody>
-                         </table>
-                    </div>
-                        {% set repco = responses[p].response|split(';') %}
-                        {% set x = 0 %}
-
-                        {% for c in coords %}
-
-                            {% set maxScore = maxScore + coords[x].scoreCoords %}
-                            {% set numb = coords[x].value|split(',') %}
-                            {% if repco[x] is defined %}
-                                {% set repcoX = repco[x]|split('-') %}
-                            {% endif %}
-
-                            <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" id="{{ inter.interaction.id }}ra{{ x }}"
-                                 alt="RightAnswer{{ x }}" width="{{ coords[x].size }}" style="z-index: 2;"/>
-                            <p id="idra{{x}}" style="position: absolute; left: 5px; top: -20px;">{{x+1}}</p>
-
-                            <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" id="{{ inter.interaction.id }}cursor{{ x }}"
-                                 alt="AnswerZone{{ x }}" style="z-index: 7;"/>
-
-                            <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphicOverview.js') }}"></script>
-
-                            {% if repcoX[0] is defined and repcoX[0] != '' %}
-                                {% set abscissa   = repcoX[0] %}
-                                {% set ordoninate = repcoX[1] %}
-                            {% else %}
-                                {% set abscissa   = 'a' %}
-                                {% set ordoninate = 'a' %}
-                            {% endif %}
-
-                            <script type="text/javascript">
-                                    whichImg('{{coords[x].shape}}', '{{coords[x].color}}', {{x}}, '{{ numb[0] }}', '{{ numb[1] }}',
-                                    '{{abscissa}}', '{{ordoninate}}', '{{ asset('bundles/ujmexo/images/graphic/') }}',
-                                    '{{ coords[x].size }}', '{{inter.interaction.id}}');
-                                    whichTab('{{coords[x].scoreCoords}}','{{coords[x].feedback | raw}}',{{x}});
-                            </script>
-
-                            {% set x = x + 1 %}
-                        {% endfor %}
-                    </div>              
-                    </div>
-                    <div style="margin: 10px" class="panel-body">
-                    {% include "UJMExoBundle:Partial:correction/interactionScore.html.twig" %}
-
-                {% else %}
-                    {% set x = 0 %}
-
-                    {% for c in coords %}
-                        {% set maxScore = maxScore + coords[x].scoreCoords %}
-                        {% set x = x + 1 %}
-                    {% endfor %}
-
-                {% endif %}
-
-
-    {#--------------------------------------------------- Hole -------------------------------------------------------#}
-
-            {% elseif(interactions[p].type == 'InteractionHole') %}
-                {% set interInfo = getInterTwig(interactions[p].id, 'InteractionHole') %}
-                {% set inter =  interInfo['question'] %}
-
-                <div class="panel-body">
-
-                    {% if (display == 'all') %}
-                        {% include "UJMExoBundle:Partial:correction/hole.html.twig" %}
-                        <script type="text/javascript">
-                            $(document).ready(function() {
-                                responseHole('{{ responses[p].response|raw }}');
-                            });
-                        </script>
-
-                        {% include "UJMExoBundle:Partial:correction/interactionScore.html.twig" %}
-
-                    {% endif %}
-                </div>
-
-    {#--------------------------------------------------- Open -------------------------------------------------------#}
-
-            {% elseif(interactions[p].type == 'InteractionOpen') %}
-                {% set interInfo = getInterTwig(interactions[p].id, 'InteractionOpen') %}
-                {% set inter =  interInfo['question'] %}
-
-                <div class="panel-body">
-
-                    {% if (display == 'all') %}
-
-                        {% include "UJMExoBundle:Partial:correction/open.html.twig" %}
-
-                        {% include "UJMExoBundle:Partial:correction/interactionScore.html.twig" %}
-                        <br/>
-
-                        {% if inter.typeopenquestion == 'long' and admin == 1 %}
-                            {% if responses[p].id != '' %}
-                                {% set url = path('ujm_paper_mark_open_question', {'respid': responses[p].id, 'maxScore': interInfo['maxScore']}) %}
-
-                                <input type="hidden" value="{{ responses[p].mark }}" id="currentOpenMark_{{ responses[p].id }}" />
-                                <a id="open_mark_{{ responses[p].id }}"
-                                    onmouseover="body.style.cursor = 'pointer';" onmouseout="body.style.cursor = 'default';"
-                                    onClick="openMark('{{ url }}');"
-                                >{{ 'mark_question' | trans }}</a>
-                            {% endif %}
-                        {% endif %}
-
-                    {% endif %}
-                </div>
-            {#--------------------------------------------------- Matching ----------------------------------------------------#}
-
-            {% elseif(interactions[p].type == 'InteractionMatching') %}
-
-                {% set interInfo = getInterTwig(interactions[p].id, 'InteractionMatching') %}
-                {% set inter =  interInfo['question'] %}
-                {% set tabsResponses = initTabResponseMatching(responses[p].response, inter) %}
-                {% set tabResponseIndex = tabsResponses[0] %}
-                {% set tabRightResponse = tabsResponses[1] %}
-
-                <div class="panel-body">
-
-                    {% if (display == 'all') %}
-
-                        {% include "UJMExoBundle:Partial:correction/matching.html.twig" %}
-                        {% include "UJMExoBundle:Partial:correction/interactionScore.html.twig" %}
-
-                    {% endif %}
-                </div>
-            {% endif %}
-
+            {% set type = interactions[p].type|split('\\')|last %}
+            {% include "UJMExoBundle:Partial:paper/show/#{type}.html.twig" %}
         {% endif %}
 
         {% if p == -2 or p == -1%}
             {% if p == -1 %}
                 <script type="text/javascript">
-                    alert('{{ 'not_allowed_modify_paper' | trans}}');
+                    alert('{{ 'not_allowed_modify_paper' | trans({}, 'ujm_exo') }}');
                 </script>
             {% endif %}
             <hr/>
@@ -234,9 +58,9 @@
                 {% set scoreFinal = scoreFinal * 20 %}
                 <h3 id="finalLabel">
                     {% if scoreTemp == true %}
-                        {{ "temporary_mark" | trans }} :
+                        {{ "temporary_mark" | trans({}, 'ujm_exo') }} :
                     {% else %}
-                        {{ 'final_mark' | trans }} :
+                        {{ 'final_mark' | trans({}, 'ujm_exo') }} :
                     {% endif %}
                     {% set scoreFinal = roundUpOrDown(scoreFinal) %}
                     <span id="paperFinalScore">{{ scoreFinal }} / 20</span>
@@ -247,28 +71,28 @@
             {% endif %}
 
             {% set needLegend = false %}
-            <h3 class="panel-title">{{ 'list_question' | trans }} :</h3>
+            <h3 class="panel-title">{{ 'list_question' | trans({}, 'ujm_exo') }} :</h3>
                 <ol>
                     {% set i = 0 %}
-                    {% for interaction in interactions %}
+                    {% for question in interactions %}
 
                         {% if (display == 'all') %}
                             {% if responses[i].mark == -1 %}
                                 {% set needLegend = true %}
                                 <li>
                                     <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': i }) }}" style="color: red;">
-                                        {{ interaction.question.title }}
+                                        {{ question.title }}
                                     </a>
                                 </li>
                             {% else %}
                                 <li>
                                     <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': i }) }}">
-                                        {{ interaction.question.title }}
+                                        {{ question.title }}
                                     </a>
                                 </li>
                             {% endif %}
                         {% else %}
-                            <li>{{ interaction.question.title }}</li>
+                            <li>{{ question.title }}</li>
                         {% endif %}
 
                         {% set i = i + 1 %}
@@ -277,7 +101,7 @@
 
                 {% if needLegend == true %}
                     <hr/>
-                    <h6 style="color: red;">( {{ 'need_correction' | trans }} ).</h6>
+                    <h6 style="color: red;">( {{ 'need_correction' | trans({}, 'ujm_exo') }} ).</h6>
                 {% endif %}
 
         {% endif %}
@@ -290,7 +114,7 @@
             {#% if p != -2 %}
                 <li>
                     <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': -2 }) }}" class="btn btn-primary" style="background-color: #428BCA;">
-                        {{ 'score_list_question' |trans }}
+                        {{ 'score_list_question' |trans({}, 'ujm_exo') }}
                     </a>
                 </li>
             {% endif %}
@@ -362,7 +186,7 @@
                     <li>
                         <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': -1 }) }}"
                            class="btn btn-primary" style="background-color: #428BCA;">
-                            {{ 'final_mark' |trans }}
+                            {{ 'final_mark' |trans({}, 'ujm_exo') }}
                         </a>
                     </li>
                 {% endif %}
@@ -382,34 +206,34 @@
             {% if p != -2 %}
                 <li>
                     <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': -2 }) }}" class="btn btn-primary" style="background-color: #428BCA;">
-                        {{ 'score_list_question' |trans }}
+                        {{ 'score_list_question' |trans({}, 'ujm_exo') }}
                     </a>
                 </li>
 
                 {% if (display == 'all') %}
                     {% if p == 0 %}
-                        <li class="disabled"><a href="#" onclick="event.preventDefault();"><i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans }}</a></li>
+                        <li class="disabled"><a href="#" onclick="event.preventDefault();"><i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans({}, 'ujm_exo') }}</a></li>
                             <li>
                                 <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': p + 1 }) }}">
-                                    {{ 'next' | trans }} &nbsp; <i class="fa fa-chevron-right"></i>
+                                    {{ 'next' | trans({}, 'ujm_exo') }} &nbsp; <i class="fa fa-chevron-right"></i>
                                 </a>
                         </li>
                     {% elseif p == indexMax - 1 %}
                         <li>
                             <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': p - 1 }) }}">
-                                <i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans }}
+                                <i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans({}, 'ujm_exo') }}
                             </a>
                         </li>
-                        <li class="disabled"><a href="#" onclick="event.preventDefault();">{{ 'next' | trans }} &nbsp; <i class="fa fa-chevron-right"></i></a></li>
+                        <li class="disabled"><a href="#" onclick="event.preventDefault();">{{ 'next' | trans({}, 'ujm_exo') }} &nbsp; <i class="fa fa-chevron-right"></i></a></li>
                     {% else %}
                         <li>
                             <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': p - 1 }) }}">
-                                <i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans }}
+                                <i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans({}, 'ujm_exo') }}
                             </a>
                         </li>
                         <li>
                             <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': p + 1 }) }}">
-                                {{ 'next' | trans }} &nbsp; <i class="fa fa-chevron-right"></i>
+                                {{ 'next' | trans({}, 'ujm_exo') }} &nbsp; <i class="fa fa-chevron-right"></i>
                             </a>
                         </li>
                     {% endif %}
@@ -421,23 +245,23 @@
                             {% for interaction in interactions %}
                                 {% if interaction.type == 'InteractionOpen' %}
                                     <option value="{{ loop.index }}" style="color: purple;" href="{{ path('ujm_paper_show', { 'id': paperID, 'p': loop.index - 1 }) }}">
-                                        {{ 'n_question' | trans }}{{ loop.index }} / {{ interactions | length }}
+                                        {{ 'n_question' | trans({}, 'ujm_exo') }}{{ loop.index }} / {{ interactions | length }}
                                     </option>
                                 {% elseif interaction.type == 'InteractionQCM' %}
                                     <option value="{{ loop.index }}" style="color: green;" href="{{ path('ujm_paper_show', { 'id': paperID, 'p': loop.index - 1 }) }}">
-                                        {{ 'n_question' | trans }}{{ loop.index }} / {{ interactions | length }}
+                                        {{ 'n_question' | trans({}, 'ujm_exo') }}{{ loop.index }} / {{ interactions | length }}
                                     </option>
                                 {% elseif interaction.type == 'InteractionGraphic' %}
                                     <option value="{{ loop.index }}" style="color: black;" href="{{ path('ujm_paper_show', { 'id': paperID, 'p': loop.index - 1 }) }}">
-                                        {{ 'n_question' | trans }}{{ loop.index }} / {{ interactions | length }}
+                                        {{ 'n_question' | trans({}, 'ujm_exo') }}{{ loop.index }} / {{ interactions | length }}
                                     </option>
                                 {% elseif interaction.type == 'InteractionHole' %}
                                     <option value="{{ loop.index }}" style="color: blue;" href="{{ path('ujm_paper_show', { 'id': paperID, 'p': loop.index - 1 }) }}">
-                                        {{ 'n_question' | trans }}{{ loop.index }} / {{ interactions | length }}
+                                        {{ 'n_question' | trans({}, 'ujm_exo') }}{{ loop.index }} / {{ interactions | length }}
                                     </option>
                                 {% elseif interaction.type == 'InteractionMatching' %}
                                     <option value="{{ loop.index }}" style="color: orange;" href="{{ path('ujm_paper_show', { 'id': paperID, 'p': loop.index - 1 }) }}">
-                                        {{ 'n_question' | trans }}{{ loop.index }} / {{ interactions | length }}
+                                        {{ 'n_question' | trans({}, 'ujm_exo') }}{{ loop.index }} / {{ interactions | length }}
                                     </option>
                                 {% endif %}
 

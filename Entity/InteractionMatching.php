@@ -6,72 +6,60 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * UJM\ExoBundle\Entity\InteractionMatching
- *
- * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\InteractionMatchingRepository")
+ * @ORM\Entity
  * @ORM\Table(name="ujm_interaction_matching")
  */
-class InteractionMatching
+class InteractionMatching extends AbstractInteraction
 {
-    /**
-     * @var integer $id
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    const TYPE = 'InteractionMatching';
 
     /**
-     * @var boolean $shuffle
-     *
-     * @ORM\Column(name="shuffle", type="boolean", nullable=true)
+     * @ORM\Column(type="boolean")
      */
-    private $shuffle;
+    private $shuffle = false;
 
     /**
-     * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\Label", mappedBy="interactionMatching", cascade={"remove"})
+     * @ORM\OneToMany(
+     *     targetEntity="Label",
+     *     mappedBy="interactionMatching",
+     *     cascade={"remove"}
+     * )
      */
     private $labels;
 
     /**
-     * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\Proposal", mappedBy="interactionMatching", cascade={"remove"})
+     * @ORM\OneToMany(
+     *     targetEntity="Proposal",
+     *     mappedBy="interactionMatching",
+     *     cascade={"remove"}
+     * )
      */
     private $proposals;
 
     /**
-     * @ORM\OneToOne(targetEntity="UJM\ExoBundle\Entity\Interaction", cascade={"remove"})
-     */
-    private $interaction;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\TypeMatching")
+     * @ORM\ManyToOne(targetEntity="TypeMatching")
      * @ORM\JoinColumn(name="type_matching_id", referencedColumnName="id")
      */
     private $typeMatching;
 
     /**
-     * Constructs a new instance of label and proposal
+     * Constructs a new instance of label and proposal.
      */
     public function __construct()
     {
-        $this->labels   = new ArrayCollection;
-        $this->proposals = new ArrayCollection;
+        $this->labels = new ArrayCollection();
+        $this->proposals = new ArrayCollection();
     }
 
     /**
-     * Get id
-     *
-     * @return integer
+     * @return string
      */
-    public function getId()
+    public static function getQuestionType()
     {
-        return $this->id;
+        return self::TYPE;
     }
 
     /**
-     * Set shuffle
-     *
      * @param boolean $shuffle
      */
     public function setShuffle($shuffle)
@@ -80,58 +68,57 @@ class InteractionMatching
     }
 
     /**
-     * Get shuffle
+     * @return boolean
      */
     public function getShuffle()
     {
         return $this->shuffle;
     }
 
-    public function getInteraction()
-    {
-        return $this->interaction;
-    }
-
-    public function setInteraction(\UJM\ExoBundle\Entity\Interaction $interaction)
-    {
-        $this->interaction = $interaction;
-    }
-
+    /**
+     * @return TypeMatching
+     */
     public function getTypeMatching()
     {
         return $this->typeMatching;
     }
 
-    public function setTypeMatching(\UJM\ExoBundle\Entity\TypeMatching $typeMatching)
+    /**
+     * @param TypeMatching $typeMatching
+     */
+    public function setTypeMatching(TypeMatching $typeMatching)
     {
         $this->typeMatching = $typeMatching;
     }
 
+    /**
+     * @return ArrayCollection
+     */
     public function getLabels()
     {
         return $this->labels;
     }
 
     /**
-     * Add label
-     *
+     * @param Label $label
      */
-    public function addLabel(\UJM\ExoBundle\Entity\Label $label)
+    public function addLabel(Label $label)
     {
-        $this->labels[] = $label;
-        //le label est bien lié à l'entité interactionmatching, mais dans l'entité label il faut
-        //aussi lié l'interactionmatching double travail avec les relations bidirectionnelles avec
-        //lesquelles il faut bien faire attention à garder les données cohérentes dans un autre
-        //script il faudra exécuter $interactionmatching->addLabel() qui garde la cohérence entre les
-        //deux entités, il ne faudra pas exécuter $label->setInteractionMatching(), car lui ne garde
-        //pas la cohérence
+        $this->labels->add($label);
         $label->setInteractionMatching($this);
+    }
+    
+    /**
+     * @return ArrayCollection
+     */
+    public function setProposals(ArrayCollection $proposals)
+    {
+        $this->proposals = $proposals;
+        return $this->proposals;
     }
 
     /**
-     * Get Proposals
-     *
-     * @return Doctrine Collection of proposals
+     * @return ArrayCollection
      */
     public function getProposals()
     {
@@ -139,56 +126,12 @@ class InteractionMatching
     }
 
     /**
-     * Add proposal
-     *
+     * @param Proposal $proposal
      */
-    public function addProposal(\UJM\ExoBundle\Entity\Proposal $proposal)
+    public function addProposal(Proposal $proposal)
     {
-        $this->proposals[] = $proposal;
+        $this->proposals->add($proposal);
         $proposal->setInteractionMatching($this);
-    }
-
-    /**
-     * Clone this interactionMatching
-     *
-     */
-    public function __clone() {
-        if ($this->id) {
-            $this->id = null;
-
-            $newLinkLabelProposal = array();
-
-            $this->interaction = clone $this->interaction;
-
-            $newLabels = new \Doctrine\Common\Collections\ArrayCollection;
-            $newProposals = new \Doctrine\Common\Collections\ArrayCollection;
-
-            foreach ($this->labels as $label) {
-                $newLabel = clone $label;
-                $newLabel->setInteractionMatching($this);
-                $newLabels->add($newLabel);
-
-                $newLinkLabelProposal[$label->getId()] = $newLabel;
-            }
-            $this->labels = $newLabels;
-
-            foreach ($this->proposals as $proposal) {
-                $newProposal = clone $proposal;
-                $newProposal->removeAssociatedLabel();
-                $newProposal->setInteractionMatching($this);
-
-                $newProposals->add($newProposal);
-                if ($proposal->getAssociatedLabel() != null) {
-                    $assocedLabel = $proposal->getAssociatedLabel();
-                    foreach ($assocedLabel as $assocLabel) {
-                        $newProposal->addAssociatedLabel(
-                            $newLinkLabelProposal[$assocLabel->getId()]
-                        );
-                    }
-                }
-            }
-            $this->proposals = $newProposals;
-        }
     }
 
     public function shuffleProposals ()
@@ -196,18 +139,18 @@ class InteractionMatching
         $this->sortProposals();
         $i = 0;
         $tabShuffle = array();
-        $tabFixed   = array();
-        $proposals = new \Doctrine\Common\Collections\ArrayCollection;
+        $tabFixed = array();
+        $proposals = new \Doctrine\Common\Collections\ArrayCollection();
         $proposalCount = count($this->proposals);
 
-        while ( $i < $proposalCount ) {
-            if ( $this->proposals[$i]->getPositionForce() === false ) {
+        while ($i < $proposalCount) {
+            if ($this->proposals[$i]->getPositionForce() === false) {
                 $tabShuffle[$i] = $i;
                 $tabFixed[] = -1;
             } else {
                 $tabFixed[] = $i;
             }
-            $i++;
+            ++$i;
         }
 
         shuffle($tabShuffle);
@@ -215,8 +158,8 @@ class InteractionMatching
         $i = 0;
         $proposalCount = count($this->proposals);
 
-        while ( $i < $proposalCount ) {
-            if ( $tabFixed[$i] != -1 ) {
+        while ($i < $proposalCount) {
+            if ($tabFixed[$i] != -1) {
                 $proposals [] = $this->proposals[$i];
             } else {
                 $index = $tabShuffle[0];
@@ -224,15 +167,15 @@ class InteractionMatching
                 unset($tabShuffle[0]);
                 $tabShuffle = array_merge($tabShuffle);
             }
-            $i++;
+            ++$i;
         }
         $this->proposals = $proposals;
     }
 
     public function sortProposals()
     {
-        $tab = array();
-        $proposals = new \Doctrine\Common\Collections\ArrayCollection;
+        $tab = [];
+        $proposals = new ArrayCollection;
 
         foreach ($this->proposals as $proposal) {
             $tab[] = $proposal->getOrdre();
@@ -247,24 +190,24 @@ class InteractionMatching
         $this->proposals = $proposals;
     }
 
-    public function shuffleLabels ()
+    public function shuffleLabels()
     {
         $this->sortLabels();
 
         $i = 0;
-        $tabShuffle = array();
-        $tabFixed   = array();
-        $labels = new \Doctrine\Common\Collections\ArrayCollection;
+        $tabShuffle = [];
+        $tabFixed = [];
+        $labels = new ArrayCollection;
         $labelCount = count($this->labels);
 
-        while ( $i < $labelCount ) {
-            if ( $this->labels[$i]->getPositionForce() === false ) {
+        while ($i < $labelCount) {
+            if ($this->labels[$i]->getPositionForce() === false) {
                 $tabShuffle[$i] = $i;
                 $tabFixed[] = -1;
             } else {
                 $tabFixed[] = $i;
             }
-            $i++;
+            ++$i;
         }
 
         $i = 0;
@@ -272,8 +215,8 @@ class InteractionMatching
 
         shuffle($tabShuffle);
 
-        while ( $i < $labelCount ) {
-          if ($tabFixed[$i] != -1) {
+        while ($i < $labelCount) {
+            if ($tabFixed[$i] != -1) {
                 $labels [] = $this->labels[$i];
             } else {
                 $index = $tabShuffle[0];
@@ -281,18 +224,18 @@ class InteractionMatching
                 unset($tabShuffle[0]);
                 $tabShuffle = array_merge($tabShuffle);
             }
-            $i++;
+            ++$i;
         }
 
         $this->labels = $labels;
     }
 
-    public function sortLabels ()
+    public function sortLabels()
     {
-        $tab = array();
-        $labels = new \Doctrine\Common\Collections\ArrayCollection;
+        $tab = [];
+        $labels = new ArrayCollection;
 
-        foreach ($this->labels as $label ) {
+        foreach ($this->labels as $label) {
             $tab[] = $label->getOrdre();
         }
 
@@ -303,5 +246,43 @@ class InteractionMatching
         }
 
         $this->labels = $labels;
+    }
+
+    public function __clone()
+    {
+        if ($this->id) {
+            $this->id = null;
+            $newLinkLabelProposal = [];
+            $this->question = clone $this->question;
+            $newLabels = new ArrayCollection;
+            $newProposals = new ArrayCollection;
+
+            foreach ($this->labels as $label) {
+                $newLabel = clone $label;
+                $newLabel->setInteractionMatching($this);
+                $newLabels->add($newLabel);
+                $newLinkLabelProposal[$label->getId()] = $newLabel;
+            }
+
+            $this->labels = $newLabels;
+
+            foreach ($this->proposals as $proposal) {
+                $newProposal = clone $proposal;
+                $newProposal->removeAssociatedLabel();
+                $newProposal->setInteractionMatching($this);
+                $newProposals->add($newProposal);
+
+                if ($proposal->getAssociatedLabel() != null) {
+                    $assocedLabel = $proposal->getAssociatedLabel();
+                    foreach ($assocedLabel as $assocLabel) {
+                        $newProposal->addAssociatedLabel(
+                            $newLinkLabelProposal[$assocLabel->getId()]
+                        );
+                    }
+                }
+            }
+
+            $this->proposals = $newProposals;
+        }
     }
 }

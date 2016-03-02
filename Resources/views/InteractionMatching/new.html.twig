@@ -4,10 +4,10 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'matching_creation' | trans }}</h3>
+        <h3 class="panel-title">{{ 'matching_creation' | trans({}, 'ujm_exo') }}</h3>
     </div>
 
-    <form onsubmit="return check_form('{{ 'nb_proposal' | trans }}', '{{ 'nb_label' | trans }}');"
+    <form onsubmit="return check_form('{{ 'nb_proposal' | trans({}, 'ujm_exo') }}', '{{ 'nb_label' | trans({}, 'ujm_exo') }}');"
           action="{{ path('ujm_interactionmatching_create') }}" method="post" {{ form_enctype(form) }}>
 
         <div class="panel-body">
@@ -19,12 +19,12 @@
         </div>
         <div class="panel-footer">
             <input type="hidden" name="exercise" value="{{ exoID }}" />
-            <button type="submit" id="button_submit" class="btn btn-primary" onclick="setOrderProposal();setOrderLabel();">{{ 'create' | trans }}</button>
+            <button type="submit" id="button_submit" class="btn btn-primary" onclick="setOrderProposal();setOrderLabel();">{{ 'create' | trans({}, 'ujm_exo') }}</button>
         </div>
     </form>
 </div>
 
-<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery-ui/jquery-ui.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/instructions.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/interactionMatching.js') }}"></script>
@@ -34,12 +34,12 @@
 {# functions javascript #}
 {% if error is defined %}
     <script type="text/javascript">
-        creationMatchingEdit('{{ 'add_label' | trans }}', '{{ 'add_proposal' | trans }}', '{{ 'delete' | trans }}', '{{ 'label' | trans }}', '{{ 'score_right_label_matching' | trans }}', '{{ 'proposal' | trans }}', '{{ 'number_proposal'| trans }}', '{{ 'correspondence' | trans }}',  '{{ typeMatching | raw }}', '{{ 'advanced_edition' | trans }}',  '{{ 'remove_advanced_edition' | trans }}', '{{ 'correspondence_empty' | trans }}', 0, '{}', '{}', '{}', '{{ 'correspondence_error' | trans }}', '{{ 'score_error'| trans}}', '{{ 'position_force' | trans }}', '{{ 'position_force' | trans }}','{{ 'advanced_edition' | trans }}','{{ 'comment' | trans }}');
-        newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
+        creationMatchingEdit('{{ 'add_label' | trans({}, 'ujm_exo') }}', '{{ 'add_proposal' | trans({}, 'ujm_exo') }}', '{{ 'delete' | trans({}, 'ujm_exo') }}', '{{ 'label' | trans({}, 'ujm_exo') }}', '{{ 'score_right_label_matching' | trans({}, 'ujm_exo') }}', '{{ 'proposal' | trans({}, 'ujm_exo') }}', '{{ 'number_proposal'| trans({}, 'ujm_exo') }}', '{{ 'correspondence' | trans({}, 'ujm_exo') }}',  '{{ typeMatching | raw }}', '{{ 'advanced_edition' | trans({}, 'ujm_exo') }}',  '{{ 'remove_advanced_edition' | trans({}, 'ujm_exo') }}', '{{ 'correspondence_empty' | trans({}, 'ujm_exo') }}', 0, '{}', '{}', '{}', '{{ 'correspondence_error' | trans({}, 'ujm_exo') }}', '{{ 'score_error'| trans({}, 'ujm_exo') }}', '{{ 'position_force' | trans({}, 'ujm_exo') }}', '{{ 'position_force' | trans({}, 'ujm_exo') }}','{{ 'advanced_edition' | trans({}, 'ujm_exo') }}','{{ 'comment' | trans({}, 'ujm_exo') }}');
+        newHintEdit('{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'penalty' | trans({}, 'ujm_exo') }}', '{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'delete' | trans({}, 'ujm_exo') }}');
     </script>
 {% else %}
     <script type="text/javascript">
-        creationMatching('{{ 'add_label' | trans }}', '{{ 'add_proposal' | trans }}', '{{ 'delete' | trans }}', '{{ 'label' | trans }}', '{{ 'score_right_label_matching' | trans }}', '{{ 'proposal' | trans }}', '{{ 'number_proposal'| trans }}', '{{ 'correspondence' | trans }}', '{{ typeMatching|raw }}', '{{ 'advanced_edition' | trans }}', '{{ 'remove_advanced_edition' | trans }}',  '{{ 'correspondence_empty' | trans }}', '{{ 'correspondence_error' | trans }}', '{{ 'score_error'| trans}}', '{{ 'position_force' | trans }}', '{{ 'position_force' | trans }}','{{ 'advanced_edition' | trans }}','{{ 'comment' | trans }}');
-        newHint('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
+        creationMatching('{{ 'add_label' | trans({}, 'ujm_exo') }}', '{{ 'add_proposal' | trans({}, 'ujm_exo') }}', '{{ 'delete' | trans({}, 'ujm_exo') }}', '{{ 'label' | trans({}, 'ujm_exo') }}', '{{ 'score_right_label_matching' | trans({}, 'ujm_exo') }}', '{{ 'proposal' | trans({}, 'ujm_exo') }}', '{{ 'number_proposal'| trans({}, 'ujm_exo') }}', '{{ 'correspondence' | trans({}, 'ujm_exo') }}', '{{ typeMatching|raw }}', '{{ 'advanced_edition' | trans({}, 'ujm_exo') }}', '{{ 'remove_advanced_edition' | trans({}, 'ujm_exo') }}',  '{{ 'correspondence_empty' | trans({}, 'ujm_exo') }}', '{{ 'correspondence_error' | trans({}, 'ujm_exo') }}', '{{ 'score_error'| trans({}, 'ujm_exo') }}', '{{ 'position_force' | trans({}, 'ujm_exo') }}', '{{ 'position_force' | trans({}, 'ujm_exo') }}','{{ 'advanced_edition' | trans({}, 'ujm_exo') }}','{{ 'comment' | trans({}, 'ujm_exo') }}');
+        newHint('{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'penalty' | trans({}, 'ujm_exo') }}', '{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'delete' | trans({}, 'ujm_exo') }}');
     </script>
 {% endif %}

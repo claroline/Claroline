@@ -1,9 +1,9 @@
 {% include "UJMExoBundle:Partial:correction/interaction.html.twig" %}
 <table border="1" class="table table-striped table-bordered table-condensed">
     <tr>
-        <th class="classic">{{ 'your_answer' | trans }}</th>
-        <th class="classic">{{ 'expected_answer' | trans }}</th>
-        <th class="classic">{{ 'comment' | trans }}</th>
+        <th class="classic">{{ 'your_answer' | trans({}, 'ujm_exo') }}</th>
+        <th class="classic">{{ 'expected_answer' | trans({}, 'ujm_exo') }}</th>
+        <th class="classic">{{ 'comment' | trans({}, 'ujm_exo') }}</th>
     </tr>
 
         {% for label in inter.labels %}
@@ -88,7 +88,7 @@
                         {% if  proposal.associatedLabel is empty %}
                             <div class="labelMatch" align="center">
                                 <div class="labels">
-                                    {{ 'no_label' | trans }}
+                                    {{ 'no_label' | trans({}, 'ujm_exo') }}
                                 </div>
                                     <div class="associatedProposal" align="center">
                                         {{ proposal.value | raw }}

@@ -1,0 +1,12 @@
+<input type="hidden" name="interactionOpenToValidated" value="{{ interactionToDisplayed.id }}"/>
+<input type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.question.id }}"/>
+<input type="hidden" name="typeInteraction" value="InteractionOpen"/>
+
+{% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
+
+{% include "UJMExoBundle:Partial:paper/open.html.twig" %}
+
+{% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
+
+<input type="hidden" name="testOpen" value="testOpen" />
+<input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>

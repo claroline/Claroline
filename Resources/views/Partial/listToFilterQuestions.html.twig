@@ -1,7 +1,7 @@
 {% set ws = '' %}
 
-<option value="-1">{{ 'all_question' | trans }}</option>
-<option value="-2">{{ 'my_models' | trans }}</option>
+<option value="-1">{{ 'all_question' | trans({}, 'ujm_exo') }}</option>
+<option value="-2">{{ 'my_models' | trans({}, 'ujm_exo') }}</option>
 {% for Exo in listExo %}
     {% if ws != Exo['name'] %}
         {% if ws !='' %}

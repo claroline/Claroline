@@ -1,17 +1,17 @@
-{% if inter.interaction.feedback != '' %}
-    <p>{{ inter.interaction.feedback|raw }}</p>
+{% if inter.question.feedback != '' %}
+    <p>{{ inter.question.feedback|raw }}</p>
     <hr/>
 {% endif %}
 
 <div>
     {% if penalty > 0 %}
-        {{ 'penalty' | trans }} : {{ penalty }}.
+        {{ 'penalty' | trans({}, 'ujm_exo') }} : {{ penalty }}.
         <br/><hr/>
     {% endif %}
 
-    {% if (inter.interaction.type == 'InteractionOpen' and inter.typeopenquestion == 'long') %}
-       {{ 'not_yet_mark' | trans }}.
+    {% if (inter.question.type == 'InteractionOpen' and inter.typeopenquestion == 'long') %}
+       {{ 'not_yet_mark' | trans({}, 'ujm_exo') }}.
     {% else %}
-        {{ 'score' | trans }} : <span id="score">{{ score }}.</span>
+        {{ 'score' | trans({}, 'ujm_exo') }} : <span id="score">{{ score }}.</span>
     {% endif %}
 </div>

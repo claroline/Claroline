@@ -2,28 +2,26 @@
 
 namespace UJM\ExoBundle\Form;
 
-class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
+class InteractionOpenHandler extends QuestionHandler
 {
-
-     /**
-     * Implements the abstract method
-     *
-     * @access public
-     *
+    /**
+     * Implements the abstract method.
      */
     public function processAdd()
     {
-        if ( $this->request->getMethod() == 'POST' ) {
+        if ($this->request->getMethod() == 'POST') {
             $this->form->handleRequest($this->request);
             //Uses the default category if no category selected
             $this->checkCategory();
+            //If title null, uses the first 50 characters of "invite" (enuncicate)
             $this->checkTitle();
-            if($this->validateNbClone() === FALSE) {
-                    return 'infoDuplicateQuestion';
+            if ($this->validateNbClone() === false) {
+                return 'infoDuplicateQuestion';
             }
-            if ( $this->form->isValid() ) {
-                    $this->onSuccessAdd($this->form->getData());
-                    return true;
+            if ($this->form->isValid()) {
+                $this->onSuccessAdd($this->form->getData());
+
+                return true;
             }
         }
 
@@ -31,21 +29,18 @@ class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
     }
 
     /**
-     * Implements the abstract method
+     * Implements the abstract method.
      *
-     * @access protected
      *
      * @param \UJM\ExoBundle\Entity\InteractionOpen $interOpen
      */
     protected function onSuccessAdd($interOpen)
     {
-        $interOpen->getInteraction()->getQuestion()->setDateCreate(new \Datetime());
-        $interOpen->getInteraction()->getQuestion()->setUser($this->user);
-        $interOpen->getInteraction()->setType('InteractionOpen');
+        $interOpen->getQuestion()->setDateCreate(new \Datetime());
+        $interOpen->getQuestion()->setUser($this->user);
 
         $this->em->persist($interOpen);
-        $this->em->persist($interOpen->getInteraction()->getQuestion());
-        $this->em->persist($interOpen->getInteraction());
+        $this->em->persist($interOpen->getQuestion());
 
         foreach ($interOpen->getWordResponses() as $wr) {
             $wr->setInteractionOpen($interOpen);
@@ -59,13 +54,11 @@ class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
         $this->addAnExercise($interOpen);
 
         $this->duplicateInter($interOpen);
-
     }
 
     /**
-     * Implements the abstract method
+     * Implements the abstract method.
      *
-     * @access public
      *
      * @param \UJM\ExoBundle\Entity\InteractionOpen $originalInterOpen
      *
@@ -79,14 +72,14 @@ class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
         foreach ($originalInterOpen->getWordResponses() as $wr) {
             $originalWrs[] = $wr;
         }
-        foreach ($originalInterOpen->getInteraction()->getHints() as $hint) {
+        foreach ($originalInterOpen->getQuestion()->getHints() as $hint) {
             $originalHints[] = $hint;
         }
 
-        if ( $this->request->getMethod() == 'POST' ) {
+        if ($this->request->getMethod() == 'POST') {
             $this->form->handleRequest($this->request);
 
-            if ( $this->form->isValid() ) {
+            if ($this->form->isValid()) {
                 $this->onSuccessUpdate($this->form->getData(), $originalWrs, $originalHints);
 
                 return true;
@@ -97,10 +90,7 @@ class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
     }
 
     /**
-     * Implements the abstract method
-     *
-     * @access protected
-     *
+     * Implements the abstract method.
      */
     protected function onSuccessUpdate()
     {
@@ -125,8 +115,7 @@ class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
         $this->modifyHints($interOpen, $originalHints);
 
         $this->em->persist($interOpen);
-        $this->em->persist($interOpen->getInteraction()->getQuestion());
-        $this->em->persist($interOpen->getInteraction());
+        $this->em->persist($interOpen->getQuestion());
 
         foreach ($interOpen->getWordResponses() as $wr) {
             $interOpen->addWordResponse($wr);
@@ -134,6 +123,5 @@ class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
         }
 
         $this->em->flush();
-
     }
 }

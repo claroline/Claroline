@@ -3,7 +3,7 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'open_creation' | trans }}</h3>
+        <h3 class="panel-title">{{ 'open_creation' | trans({}, 'ujm_exo') }}</h3>
     </div>
     <form onsubmit="return checkFormOpen();" id="formOpen" action="{{ path('ujm_interactionopen_create') }}" method="post" {{ form_enctype(form) }}>
 
@@ -16,12 +16,12 @@
         </div>
         <div class="panel-footer">
             <input type="hidden" name="exercise" value="{{ exoID }}" />
-            <button type="submit" id="button_submit" class="btn btn-primary">{{ 'create' | trans }}</button>
+            <button type="submit" id="button_submit" class="btn btn-primary">{{ 'create' | trans({}, 'ujm_exo') }}</button>
         </div>
     </form>
 </div>
 
-<script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'messages' }) }}"></script>
+<script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'ujm_exo' }) }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/interactionOpen.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/category_pop.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/hint.js') }}"></script>
@@ -29,13 +29,13 @@
 {# functions javascript #}
 {% if error is defined %}
     <script type="text/javascript">
-       insertStyle('{{ typeOpen|raw }}', '{{ 'delete' | trans }}','{{ 'advanced_edition' | trans }}','{{ 'comment' | trans }}');
+       insertStyle('{{ typeOpen|raw }}', '{{ 'delete' | trans({}, 'ujm_exo') }}','{{ 'advanced_edition' | trans({}, 'ujm_exo') }}','{{ 'comment' | trans({}, 'ujm_exo') }}');
        openEdit(0);
-       newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
+       newHintEdit('{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'penalty' | trans({}, 'ujm_exo') }}', '{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'delete' | trans({}, 'ujm_exo') }}');
     </script>
 {% else %}
     <script type="text/javascript">
-        insertStyle('{{ typeOpen|raw }}', '{{ 'delete' | trans }}','{{ 'advanced_edition' | trans }}','{{ 'comment' | trans }}');
-        newHint('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
+        insertStyle('{{ typeOpen|raw }}', '{{ 'delete' | trans({}, 'ujm_exo') }}','{{ 'advanced_edition' | trans({}, 'ujm_exo') }}','{{ 'comment' | trans({}, 'ujm_exo') }}');
+        newHint('{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'penalty' | trans({}, 'ujm_exo') }}', '{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'delete' | trans({}, 'ujm_exo') }}');
     </script>
 {% endif %}

@@ -11,7 +11,7 @@
                     'href': path('claro_desktop_open')
                 },
                 {
-                    'name': 'hole_edition' | trans,
+                    'name': 'hole_edition' | trans({}, 'ujm_exo'),
                     'href': ''
                 }
             ])
@@ -27,18 +27,18 @@
     <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
-{% block title %} {{ 'edit_question' | trans }} {% endblock %}
+{% block title %} {{ 'edit_question' | trans({}, 'ujm_exo') }} {% endblock %}
 
 {% block section_content %}
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title">{{'hole_edition'|trans}}</h3>
+            <h3 class="panel-title">{{'hole_edition'|trans({}, 'ujm_exo')}}</h3>
         </div>
 
         {% include "UJMExoBundle:Partial:question/linkToBack.html.twig" %}
 
-        <form onsubmit="return check_form('{{ 'nb_hole' | trans }}')"
+        <form onsubmit="return check_form('{{ 'nb_hole' | trans({}, 'ujm_exo') }}')"
               action="{{ path('ujm_interactionhole_update', { 'id': entity.id }) }}"
               method="post" {{ form_enctype(edit_form) }}>
             <div class="panel-body">
@@ -52,7 +52,7 @@
                 <input type="hidden" name="exercise" value="{{ exoID }}" />
             </div>
             <div class="panel-footer">
-                <button type="submit" id="button_submit" class="btn btn-primary">{{ 'save' | trans }}</button>
+                <button type="submit" id="button_submit" class="btn btn-primary">{{ 'save' | trans({}, 'ujm_exo') }}</button>
                 {% if exoID == -1 %}
                     <a class="btn btn-default" href="{{ path('ujm_question_index') }}">{{ 'cancel' | trans({}, "platform") }}</a>
                 {% else %}
@@ -71,7 +71,7 @@
 {% block javascripts %}
     {{ parent() }}
 
-    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery-ui/jquery-ui.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/instructions.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/interactionHole.js') }}"></script>
@@ -82,13 +82,13 @@
     {# add form choice #}
     <script type="text/javascript">
         $(document).ready(function() {
-            addFormHoleEdit("{{ 'response' | trans }}", "{{ 'size' | trans }}",
-            "{{ 'orthography' | trans }}", "{{ 'delete' | trans }}",
-            "{{ 'hole_selector' | trans }}", "{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}",
-            "{{ 'key_word' | trans }}", "{{ 'points' | trans  }}",
-             {{ nbResponses }}, "{{ 'instruction_add_hole' | trans  }}");
+            addFormHoleEdit("{{ 'response' | trans({}, 'ujm_exo') }}", "{{ 'size' | trans({}, 'ujm_exo') }}",
+            "{{ 'orthography' | trans({}, 'ujm_exo') }}", "{{ 'delete' | trans({}, 'ujm_exo') }}",
+            "{{ 'hole_selector' | trans({}, 'ujm_exo') }}","{{ 'key_word' | trans({}, 'ujm_exo') }}",
+            "{{ 'points' | trans({}, 'ujm_exo') }}",{{ nbResponses }},
+            "{{ 'comment' | trans({}, 'ujm_exo') }}","{{ 'advanced_edition' | trans({}, 'ujm_exo') }}");
 
-            newHintEdit("{{ 'hint' | trans }}", "{{ 'penalty' | trans }}", "{{ 'hint' | trans }}", "{{ 'delete' | trans }}");
+            newHintEdit("{{ 'hint' | trans({}, 'ujm_exo') }}", "{{ 'penalty' | trans({}, 'ujm_exo') }}", "{{ 'hint' | trans({}, 'ujm_exo') }}", "{{ 'delete' | trans({}, 'ujm_exo') }}");
             disableNotYetReady();
         });
     </script>

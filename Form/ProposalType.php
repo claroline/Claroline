@@ -19,15 +19,15 @@ class ProposalType extends AbstractType
                     'required' => true,
                     'label' => ' ',
                     'attr' => array(
-                        'class'=>'form-control',
+                        'class' => 'form-control',
                         'style' => 'height:34px;',
-                        'placeholder' => 'choice'
-                    )
+                        'placeholder' => 'choice',
+                    ),
                 )
             )
             ->add(
                 'positionForce', 'checkbox', array(
-                    'required' => false, 'label' => ' '
+                    'required' => false, 'label' => ' ',
                 )
             );
     }
@@ -37,6 +37,7 @@ class ProposalType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class' => 'UJM\ExoBundle\Entity\Proposal',
+                'translation_domain' => 'ujm_exo',
             ));
     }
 

@@ -1,0 +1,6 @@
+type:
+    - InteractionHole
+    - InteractionQCM
+    - InteractionGraphic
+    - InteractionOpen
+    - InteractionMatching

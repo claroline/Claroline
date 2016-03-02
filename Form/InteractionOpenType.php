@@ -5,7 +5,6 @@ namespace UJM\ExoBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
 use Claroline\CoreBundle\Entity\User;
 
 class InteractionOpenType extends AbstractType
@@ -15,18 +14,14 @@ class InteractionOpenType extends AbstractType
 
     public function __construct(User $user, $catID = -1)
     {
-        $this->user  = $user;
+        $this->user = $user;
         $this->catID = $catID;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add(
-                'interaction', new InteractionType(
-                    $this->user, $this->catID
-                )
-            );
+            ->add('question', new QuestionType($this->user, $this->catID));
         $builder
             ->add(
                 'typeopenquestion', 'entity', array(
@@ -39,16 +34,16 @@ class InteractionOpenType extends AbstractType
             ->add(
                 'orthographyCorrect', 'checkbox', array(
                     'label' => 'orthography',
-                    'required' => false
+                    'required' => false,
                 )
             );
         $builder
             ->add(
                 'wordResponses', 'collection', array(
-                    'type' => new WordResponseType,
+                    'type' => new WordResponseType(),
                     'prototype' => true,
                     'allow_add' => true,
-                    'allow_delete' => true
+                    'allow_delete' => true,
                 )
             );
         $builder
@@ -56,7 +51,7 @@ class InteractionOpenType extends AbstractType
                 'scoreMaxLongResp', 'text', array(
                 'required' => false,
                 'label' => 'right_response',
-                    'attr' => array('placeholder'=>'points')
+                    'attr' => array('placeholder' => 'points'),
                 )
             );
     }
@@ -66,7 +61,8 @@ class InteractionOpenType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class' => 'UJM\ExoBundle\Entity\InteractionOpen',
-                'cascade_validation' => true
+                'cascade_validation' => true,
+                'translation_domain' => 'ujm_exo',
             )
         );
     }

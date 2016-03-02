@@ -5,64 +5,50 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\Response
- *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\ResponseRepository")
  * @ORM\Table(name="ujm_response")
  */
 class Response
 {
     /**
-     * @var integer $id
-     *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @var string $ip
-     *
-     * @ORM\Column(name="ip", type="string", length=255)
+     * @ORM\Column
      */
     private $ip;
 
     /**
-     * @var float $mark
-     *
-     * @ORM\Column(name="mark", type="float")
+     * @ORM\Column(type="float")
      */
     private $mark;
 
     /**
-     * @var integer $nbTries
-     *
      * @ORM\Column(name="nb_tries", type="integer")
      */
-    private $nbTries;
+    private $nbTries = 1;
 
     /**
-     * @var text $response
-     *
-     * @ORM\Column(name="response", type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $response;
 
     /**
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Paper")
+     * @ORM\ManyToOne(targetEntity="Paper")
      */
     private $paper;
 
     /**
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Interaction")
+     * @ORM\ManyToOne(targetEntity="Question")
      */
-    private $interaction;
+    private $question;
 
     /**
-     * Get id
-     *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -70,8 +56,6 @@ class Response
     }
 
     /**
-     * Set ip
-     *
      * @param string $ip
      */
     public function setIp($ip)
@@ -80,8 +64,6 @@ class Response
     }
 
     /**
-     * Get ip
-     *
      * @return string
      */
     public function getIp()
@@ -90,8 +72,6 @@ class Response
     }
 
     /**
-     * Set mark
-     *
      * @param float $mark
      */
     public function setMark($mark)
@@ -100,8 +80,6 @@ class Response
     }
 
     /**
-     * Get mark
-     *
      * @return float
      */
     public function getMark()
@@ -110,9 +88,7 @@ class Response
     }
 
     /**
-     * Set nbTries
-     *
-     * @param integer $nbTries
+     * @param int $nbTries
      */
     public function setNbTries($nbTries)
     {
@@ -120,9 +96,7 @@ class Response
     }
 
     /**
-     * Get nbTries
-     *
-     * @return integer
+     * @return int
      */
     public function getNbTries()
     {
@@ -130,9 +104,7 @@ class Response
     }
 
     /**
-     * Set response
-     *
-     * @param text $response
+     * @param string $response
      */
     public function setResponse($response)
     {
@@ -140,32 +112,42 @@ class Response
     }
 
     /**
-     * Get response
-     *
-     * @return text
+     * @return string
      */
     public function getResponse()
     {
         return $this->response;
     }
 
-    public function setPaper(\UJM\ExoBundle\Entity\Paper $paper)
+    /**
+     * @param Paper $paper
+     */
+    public function setPaper(Paper $paper)
     {
         $this->paper = $paper;
     }
 
+    /**
+     * @return Paper
+     */
     public function getPaper()
     {
         return $this->paper;
     }
 
-    public function getInteraction()
+    /**
+     * @return Question
+     */
+    public function getQuestion()
     {
-        return $this->interaction;
+        return $this->question;
     }
 
-    public function setInteraction(\UJM\ExoBundle\Entity\Interaction $interaction)
+    /**
+     * @param Question $question
+     */
+    public function setQuestion(Question $question)
     {
-        $this->interaction = $interaction;
+        $this->question = $question;
     }
 }

@@ -2,27 +2,24 @@
 
 namespace UJM\ExoBundle\Form;
 
-class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
+class InteractionQCMHandler extends QuestionHandler
 {
-
     /**
-     * Implements the abstract method
-     *
-     * @access public
-     *
+     * Implements the abstract method.
      */
     public function processAdd()
     {
-        if ( $this->request->getMethod() == 'POST' ) {
+        if ($this->request->getMethod() == 'POST') {
             $this->form->handleRequest($this->request);
              //Uses the default category if no category selected
             $this->checkCategory();
+            //If title null, uses the first 50 characters of "invite" (enuncicate)
             $this->checkTitle();
-            if($this->validateNbClone() === FALSE) {
+            if ($this->validateNbClone() === false) {
                 return 'infoDuplicateQuestion';
             }
 
-            if ( $this->form->isValid() ) {
+            if ($this->form->isValid()) {
                 $this->onSuccessAdd($this->form->getData());
 
                 return true;
@@ -33,19 +30,15 @@ class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
     }
 
     /**
-     * Implements the abstract method
+     * Implements the abstract method.
      *
-     * @access protected
      *
      * @param \UJM\ExoBundle\Entity\InteractionQCM $interQCM
      */
     protected function onSuccessAdd($interQCM)
     {
-
-        // \ pour instancier un objet du namespace global et non pas de l'actuel
-        $interQCM->getInteraction()->getQuestion()->setDateCreate(new \Datetime());
-        $interQCM->getInteraction()->getQuestion()->setUser($this->user);
-        $interQCM->getInteraction()->setType('InteractionQCM');
+        $interQCM->getQuestion()->setDateCreate(new \Datetime());
+        $interQCM->getQuestion()->setUser($this->user);
 
         $pointsWrong = str_replace(',', '.', $interQCM->getScoreFalseResponse());
         $pointsRight = str_replace(',', '.', $interQCM->getScoreRightResponse());
@@ -53,9 +46,8 @@ class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
         $interQCM->setScoreFalseResponse($pointsWrong);
         $interQCM->setScoreRightResponse($pointsRight);
 
+        $this->em->persist($interQCM->getQuestion());
         $this->em->persist($interQCM);
-        $this->em->persist($interQCM->getInteraction()->getQuestion());
-        $this->em->persist($interQCM->getInteraction());
 
         // On persiste tous les choices de l'interaction QCM.
         $ord = 1;
@@ -73,13 +65,11 @@ class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
         $this->addAnExercise($interQCM);
 
         $this->duplicateInter($interQCM);
-
     }
 
     /**
-     * Implements the abstract method
+     * Implements the abstract method.
      *
-     * @access public
      *
      * @param \UJM\ExoBundle\Entity\InteractionQCM $originalInterQCM
      *
@@ -94,14 +84,14 @@ class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
         foreach ($originalInterQCM->getChoices() as $choice) {
             $originalChoices[] = $choice;
         }
-        foreach ($originalInterQCM->getInteraction()->getHints() as $hint) {
+        foreach ($originalInterQCM->getQuestion()->getHints() as $hint) {
             $originalHints[] = $hint;
         }
 
-        if ( $this->request->getMethod() == 'POST' ) {
+        if ($this->request->getMethod() == 'POST') {
             $this->form->handleRequest($this->request);
 
-            if ( $this->form->isValid() ) {
+            if ($this->form->isValid()) {
                 $this->onSuccessUpdate($this->form->getData(), $originalChoices, $originalHints);
 
                 return true;
@@ -112,10 +102,7 @@ class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
     }
 
     /**
-     * Implements the abstract method
-     *
-     * @access protected
-     *
+     * Implements the abstract method.
      */
     protected function onSuccessUpdate()
     {
@@ -151,8 +138,7 @@ class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
         $interQCM->setScoreRightResponse($pointsRight);
 
         $this->em->persist($interQCM);
-        $this->em->persist($interQCM->getInteraction()->getQuestion());
-        $this->em->persist($interQCM->getInteraction());
+        $this->em->persist($interQCM->getQuestion());
 
         // On persiste tous les choices de l'interaction QCM.
         foreach ($interQCM->getChoices() as $choice) {
@@ -161,6 +147,5 @@ class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
         }
 
         $this->em->flush();
-
     }
 }

@@ -11,7 +11,7 @@
                     'href': path('claro_desktop_open')
                 },
                 {
-                    'name': 'question_creation' | trans,
+                    'name': 'question_creation' | trans({}, 'ujm_exo'),
                     'href': ''
                 }
             ])
@@ -26,13 +26,13 @@
     <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
-{% block title %} {{ 'question_creation' | trans }} {% endblock %}
+{% block title %} {{ 'question_creation' | trans({}, 'ujm_exo') }} {% endblock %}
 
 {% if _resource is defined %}
     {% block resourceBreadcrumb %}
         <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
-        <li><a href="{{ path('ujm_exercise_questions', { 'id': exoID }) }}">{{ 'my_questions' | trans }}</a></li>
-        <li class="active">{{ 'question_creation' | trans }}</li>
+        <li><a href="{{ path('ujm_exercise_questions', { 'id': exoID }) }}">{{ 'my_questions' | trans({}, 'ujm_exo') }}</a></li>
+        <li class="active">{{ 'question_creation' | trans({}, 'ujm_exo') }}</li>
     {% endblock %}
 {% endif %}
 
@@ -49,16 +49,16 @@
     <input type="hidden" id="categoryArray" value="{{al}}"/>
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'question_creation' | trans }}</h3>
+        <h3 class="panel-title">{{ 'question_creation' | trans({}, 'ujm_exo') }}</h3>
     </div>
     <div class="panel-body">
         {% if exoID == -1 %}
             <a class="btn btn-primary" href="{{ path('ujm_question_index') }}">
-                <i class="fa fa-arrow-left"></i> {{ 'back_to_the_list' | trans }}
+                <i class="fa fa-arrow-left"></i> {{ 'back_to_the_list' | trans({}, 'ujm_exo') }}
             </a>
         {% else %}
             <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': exoID }) }}">
-                <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
+                <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
             </a>
         {% endif %}
     </div>
@@ -66,15 +66,15 @@
         <div class="list-group-item">
             <form name="form_type_question">
                 <div class="form-group row">
-                <label class="col-md-3 control-label" for="menu_type_question">{{ 'kind_question' | trans }}?&nbsp;&nbsp;</label>
+                <label class="col-md-3 control-label" for="menu_type_question">{{ 'kind_question' | trans({}, 'ujm_exo') }}?&nbsp;&nbsp;</label>
                 <div class="col-md-9">
-                    <select class="form-control" name="menu_type_question" id="menu_type_question" onchange="cherche_type('{{ 'warning_change_type_q' | trans }} ?', '{{ exoID }}', '{{ path('ujm_question_display_form_type')}}' )">
-                        <option selected="selected" disabled>{{ 'choose_type' | trans }}</option>
-                        <option value="1">{{ 'hole' | trans }}</option>
-                        <option value="2">{{ 'qcm' | trans }}</option>
-                        <option value="3">{{ 'graphic' | trans }}</option>
-                        <option value="4">{{ 'open' | trans }}</option>
-                        <option value="5">{{ 'matching' | trans }}</option>
+                    <select class="form-control" name="menu_type_question" id="menu_type_question" onchange="cherche_type('{{ 'warning_change_type_q' | trans({}, 'ujm_exo') }} ?', '{{ exoID }}', '{{ path('ujm_question_display_form_type')}}' )">
+                        <option selected="selected" disabled>{{ 'choose_type' | trans({}, 'ujm_exo') }}</option>
+                        {% for type in interactionType %}
+                            {% for value in type %}
+                                <option value="{{ type[loop.index0] }}">{{ type[loop.index0] | trans({}, 'ujm_exo') }}</option>
+                            {% endfor %}
+                        {% endfor %}
                     </select>
                 </div>
                 </div>

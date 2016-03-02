@@ -2,13 +2,11 @@
 
 namespace UJM\ExoBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
 use Claroline\CoreBundle\Entity\User;
-
-use UJM\ExoBundle\Repository\TypeQCMRepository;
 
 class InteractionQCMType extends AbstractType
 {
@@ -17,7 +15,7 @@ class InteractionQCMType extends AbstractType
 
     public function __construct(User $user, $catID = -1)
     {
-        $this->user  = $user;
+        $this->user = $user;
         $this->catID = $catID;
     }
 
@@ -25,7 +23,7 @@ class InteractionQCMType extends AbstractType
     {
         $builder
             ->add(
-                'interaction', new InteractionType(
+                'question', new QuestionType(
                     $this->user, $this->catID
                 )
             );
@@ -33,7 +31,8 @@ class InteractionQCMType extends AbstractType
             ->add(
                 'shuffle', 'checkbox', array(
                     'label' => 'qcm_shuffle',
-                    'required' => false
+                    'required' => false,
+                    'translation_domain' => 'ujm_exo',
                 )
             );
         $builder
@@ -41,7 +40,8 @@ class InteractionQCMType extends AbstractType
                 'scoreRightResponse', 'text', array(
                     'required' => false,
                     'label' => 'score_right_label',
-                    'attr'  => array( 'placeholder' => 'right_response')
+                    'attr' => array('placeholder' => 'right_response'),
+                    'translation_domain' => 'ujm_exo',
                 )
             );
         $builder
@@ -49,14 +49,16 @@ class InteractionQCMType extends AbstractType
                 'scoreFalseResponse', 'text', array(
                     'required' => false,
                     'label' => 'score_false_label',
-                    'attr'  => array( 'placeholder' => 'points','class'=>'col-md-2'),
+                    'attr' => array('placeholder' => 'false_response', 'class' => 'col-md-2'),
+                    'translation_domain' => 'ujm_exo',
                 )
             );
         $builder
             ->add(
                 'weightResponse', 'checkbox', array(
                     'required' => false,
-                    'label' => 'weight_choice'
+                    'label' => 'weight_choice',
+                    'translation_domain' => 'ujm_exo',
                 )
             );
         $builder
@@ -67,19 +69,20 @@ class InteractionQCMType extends AbstractType
                     'data_class' => 'UJM\\ExoBundle\\Entity\\TypeQCM',
                     'multiple' => false,
                     'expanded' => true,
-                    'query_builder' => function(TypeQCMRepository $er) {
+                    'query_builder' => function (EntityRepository $er) {
                         return $er->createQueryBuilder('TypeQCM')
                         ->orderBy('TypeQCM.value', 'DESC');
-                    }
+                    },
+                    'translation_domain' => 'ujm_exo',
                 )
             );
         $builder
             ->add(
                 'choices', 'collection', array(
-                    'type' => new ChoiceType,
+                    'type' => new ChoiceType(),
                     'prototype' => true,
                     'allow_add' => true,
-                    'allow_delete' => true
+                    'allow_delete' => true,
                 )
             );
     }
@@ -89,7 +92,8 @@ class InteractionQCMType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class' => 'UJM\ExoBundle\Entity\InteractionQCM',
-                'cascade_validation' => true
+                'cascade_validation' => true,
+                'translation_domain' => 'ujm_exo',
             )
         );
     }

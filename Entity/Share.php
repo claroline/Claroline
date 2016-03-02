@@ -2,10 +2,11 @@
 
 namespace UJM\ExoBundle\Entity;
 
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\Share
+ * UJM\ExoBundle\Entity\Share.
  *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\ShareRepository")
  * @ORM\Table(name="ujm_share")
@@ -20,25 +21,24 @@ class Share
 
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Question")
+     * @ORM\ManyToOne(targetEntity="Question")
      */
     private $question;
 
     /**
-     * @var boolean $allowToModify
+     * @var bool
      *
      * @ORM\Column(name="allowToModify", type="boolean")
      */
     private $allowToModify;
 
-
-    public function __construct(\Claroline\CoreBundle\Entity\User $user, \UJM\ExoBundle\Entity\Question $question)
+    public function __construct(User $user, Question $question)
     {
         $this->user = $user;
         $this->question = $question;
     }
 
-    public function setUser(\Claroline\CoreBundle\Entity\User $user)
+    public function setUser(User $user)
     {
         $this->user = $user;
     }
@@ -48,7 +48,7 @@ class Share
         return $this->user;
     }
 
-    public function setQuestion(\UJM\ExoBundle\Entity\Question $question)
+    public function setQuestion(Question $question)
     {
         $this->question = $question;
     }
@@ -59,9 +59,9 @@ class Share
     }
 
     /**
-     * Set allowToModify
+     * Set allowToModify.
      *
-     * @param boolean $allowToModify
+     * @param bool $allowToModify
      */
     public function setAllowToModify($allowToModify)
     {
@@ -69,9 +69,9 @@ class Share
     }
 
     /**
-     * Get allowToModify
+     * Get allowToModify.
      *
-     * @return boolean
+     * @return bool
      */
     public function getAllowToModify()
     {

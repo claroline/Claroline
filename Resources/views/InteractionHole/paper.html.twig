@@ -11,11 +11,11 @@
                     'href': path('claro_desktop_open')
                 },
                 {
-                    'name': 'bank_of_questions' | trans,
+                    'name': 'bank_of_questions' | trans({}, 'ujm_exo'),
                     'href': path('ujm_question_index')
                 },
                 {
-                    'name': 'question' | trans,
+                    'name': 'question' | trans({}, 'ujm_exo'),
                     'href': ''
                 }
             ])
@@ -24,7 +24,7 @@
 {% else %}
     {% block resourceBreadcrumb %}
         <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
-        <li class="active">{{ 'bank_of_questions' | trans }}</li>
+        <li class="active">{{ 'bank_of_questions' | trans({}, 'ujm_exo') }}</li>
     {% endblock %}
 {% endif %}
 
@@ -35,21 +35,21 @@
     <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
-{% block title %} {{ 'paper' | trans }} {{ 'question' | trans }} {% endblock %}
+{% block title %} {{ 'paper' | trans({}, 'ujm_exo') }} {{ 'question' | trans({}, 'ujm_exo') }} {% endblock %}
 
 {% block section_content %}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ interactionToDisplayed.interaction.question.title }}</h3>
+        <h3 class="panel-title">{{ interactionToDisplayed.question.title }}</h3>
     </div>
     <div class="panel-body">
         {% if exoID == -1 %}
             <a class="btn btn-primary" href="{{ path('ujm_question_index') }}">
-                <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
+                <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
             </a>
         {% else %}
             <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': exoID }) }}">
-                <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
+                <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
             </a>
         {% endif %}
     </div>
@@ -64,7 +64,7 @@
 
                 <div id="interHoleResponse">{{ interactionToDisplayed.htmlWithoutValue | raw }}</div>
 
-                {% if interactionToDisplayed.interaction.hints is not empty %}
+                {% if interactionToDisplayed.question.hints is not empty %}
                     {% set tryInteraction = interactionToDisplayed %}
                     {% include "UJMExoBundle:Partial:hintTryInteraction.html.twig" %}
                 {% endif %}
@@ -75,7 +75,7 @@
                     <input type="hidden" name="exoID" value="{{ exoID }}" />
                     <input type="hidden" name="recResponse" value="" />
                     <button type="submit" id="submit_response" class="btn btn-primary">
-                        {{ 'validate' | trans }}
+                        {{ 'validate' | trans({}, 'ujm_exo') }}
                     </button>
                 </div>
             </form>
@@ -87,3 +87,4 @@
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
 {% endblock %}
+

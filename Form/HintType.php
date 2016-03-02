@@ -15,13 +15,13 @@ class HintType extends AbstractType
                 'value', 'textarea', array(
                     'label' => 'hint',
                     'attr' => array('style' => 'height:57px',
-                                      'class'=> 'form-control')
+                                      'class' => 'form-control', ),
                 )
             )
             ->add(
                 'penalty', 'text', array(
                     'label' => 'penalty',
-                    'attr' => array('style' => 'width:50px; text-align: end;')
+                    'attr' => array('style' => 'width:50px; text-align: end;'),
                 )
             );
     }
@@ -31,6 +31,7 @@ class HintType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class' => 'UJM\ExoBundle\Entity\Hint',
+                'translation_domain' => 'ujm_exo',
             )
         );
     }
@@ -39,5 +40,4 @@ class HintType extends AbstractType
     {
         return 'ujm_exobundle_hinttype';
     }
-
 }

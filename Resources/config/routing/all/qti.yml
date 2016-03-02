@@ -13,11 +13,9 @@ ujm_qti_export_exercise_questions:
     pattern: /ExportQuestionExercise
     defaults: { _controller: "UJMExoBundle:Qti:exportQuestionsExercise" }
 
-#ham:Debut Export Question to QTI Norme
 ujm_qti_export:
     pattern:  /export/{id}
     defaults: { _controller: UJMExoBundle:Qti:export }
 ujm_qti_import:
     pattern:  /import
     defaults: { _controller: UJMExoBundle:Qti:import }
-#ham:Fin Export Question to QTI Norme

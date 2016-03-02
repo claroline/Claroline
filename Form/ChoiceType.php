@@ -16,7 +16,7 @@ class ChoiceType extends AbstractType
             )
             ->add(
                 'rightResponse', 'checkbox', array(
-                    'required' => false, 'label' => ' '
+                    'required' => false, 'label' => ' ',
                 )
             )
             ->add(
@@ -24,31 +24,31 @@ class ChoiceType extends AbstractType
                     'label' => ' ',
                     'required' => true,
                     'attr' => array('style' => 'height:34px; ',
-                    'class'=>'form-control',
-                    'placeholder' => 'choice'
-                    )
+                    'class' => 'form-control',
+                    'placeholder' => 'choice',
+                    ),
                 )
             )
             ->add(
                 'weight', 'text', array(
                     'required' => false,
                     'label' => ' ',
-                    'attr' => array('placeholder' => 'points','size'=>'10')
+                    'attr' => array('placeholder' => 'points', 'size' => '10'),
                 )
             )
             ->add(
                    'feedback', 'textarea', array(
                    'required' => false, 'label' => ' ',
-                   'attr' => array('class'=>'form-control',
+                   'attr' => array('class' => 'form-control',
                                    'data-new-tab' => 'yes',
                                    'placeholder' => 'feedback_answer_check',
-                                   'style' => 'height:34px;'
-                       )
+                                   'style' => 'height:34px;',
+                       ),
                   )
             )
             ->add(
                 'positionForce', 'checkbox', array(
-                    'required' => false, 'label' => ' '
+                    'required' => false, 'label' => ' ',
                 )
             );
     }
@@ -58,6 +58,7 @@ class ChoiceType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class' => 'UJM\ExoBundle\Entity\Choice',
+                'translation_domain' => 'ujm_exo',
             )
         );
     }
@@ -66,5 +67,4 @@ class ChoiceType extends AbstractType
     {
         return 'ujm_exobundle_choicetype';
     }
-
 }

@@ -11,11 +11,11 @@
                     'href': path('claro_desktop_open')
                 },
                 {
-                    'name': 'bank_of_questions' | trans,
+                    'name': 'bank_of_questions' | trans({}, 'ujm_exo'),
                     'href': path('ujm_question_index')
                 },
                 {
-                    'name': 'question' | trans,
+                    'name': 'question' | trans({}, 'ujm_exo'),
                     'href': ''
                 }
             ])
@@ -24,7 +24,7 @@
 {% else %}
     {% block resourceBreadcrumb %}
         <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
-        <li class="active">{{ 'bank_of_questions' | trans }}</li>
+        <li class="active">{{ 'bank_of_questions' | trans({}, 'ujm_exo') }}</li>
     {% endblock %}
 {% endif %}
 
@@ -35,21 +35,21 @@
     <link href="{{ asset('bundles/ujmexo/css/graphic.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
-{% block title %} {{ 'paper' | trans }} {{ 'question' | trans }} {% endblock %}
+{% block title %} {{ 'paper' | trans({}, 'ujm_exo') }} {{ 'question' | trans({}, 'ujm_exo') }} {% endblock %}
 
 {% block section_content %}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ interactionToDisplayed.interaction.question.title }}</h3>
+        <h3 class="panel-title">{{ interactionToDisplayed.question.title }}</h3>
     </div>
     <div class="panel-body">
         {% if exoID == -1 %}
             <a class="btn btn-primary" href="{{ path('ujm_question_index') }}">
-                <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
+                <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
             </a>
         {% else %}
             <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': exoID }) }}">
-                <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
+                <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
             </a>
         {% endif %}
     </div>
@@ -59,9 +59,9 @@
 
             {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
 
-            <h5>{{ 'orders' | trans }} :</h5>
-            <h6><em>{{ "position" | trans }}<br/>{{ "selection" | trans }}<br/>{{ "raz" | trans }}<br/>
-                {{ "only_once" | trans }}</em>
+            <h5>{{ 'orders' | trans({}, 'ujm_exo') }} :</h5>
+            <h6><em>{{ "position" | trans({}, 'ujm_exo') }}<br/>{{ "selection" | trans({}, 'ujm_exo') }}<br/>{{ "raz" | trans({}, 'ujm_exo') }}<br/>
+                {{ "only_once" | trans({}, 'ujm_exo') }}</em>
             </h6>
 
             <div id="Answer" style="position: relative;">
@@ -84,7 +84,7 @@
                 <input type="hidden" id="answers" name="answers" value=""/>
                 <input type="hidden" id="graphId" name="graphId" value="{{ interactionToDisplayed.id }}"/>
 
-                {% if interactionToDisplayed.interaction.hints is not empty %}
+                {% if interactionToDisplayed.question.hints is not empty %}
                     {% set tryInteraction = interactionToDisplayed %}
                     {% include "UJMExoBundle:Partial:hintTryInteraction.html.twig" %}
                 {% endif %}
@@ -92,7 +92,7 @@
                 <div class="panel-footer">
                     <input type="hidden" name="exoID" value="{{ exoID }}" />
                     <button type="submit" onclick="NoEmptyAnswer();return false;" class="btn btn-primary">
-                        {{ 'validate' | trans }}
+                        {{ 'validate' | trans({}, 'ujm_exo') }}
                     </button>
                 </div>
             </form>
@@ -103,7 +103,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery-ui/jquery-ui.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphicdisplay.js') }}"></script>
 {% endblock %}

@@ -157,14 +157,14 @@ function alreadyPlacedAnswersZoneEdit(shape, color, pathImg, point, feedback) {
     var contenu = '<tr><td class="classic">' + (parseInt(grade) + 1) + '</td><td class="classic">';
 
     if (shape == 'square') {
-        contenu += '<select class="form-control" id="shape' + grade + '"  style="width:100px;display:block; margin:auto;" size="1" onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">\n\
+        contenu += '<select class="form-control" id="shape' + grade + '" size="1" onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">\n\
                         <option value="circle">' + translations['tradCircle'] + '</option>\n\
-                        <option value="square" selected>' + translations['tradSquare'] + '</option>\n\
+                        <option value="square" selected>' + translations['tradSquare', {}, 'ujm_exo'] + '</option>\n\
                     </select></td>'
     } else {
-        contenu += '<select class="form-control" id="shape' + grade + '"  style="width:100px;display:block; margin:auto;" size="1" onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">\n\
+        contenu += '<select class="form-control" id="shape' + grade + '" size="1" onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">\n\
                         <option value="circle" selected>' + translations['tradCircle'] + '</option>\n\
-                        <option value="square">' + translations['tradSquare'] + '</option>\n\
+                        <option value="square">' + translations['tradSquare', {}, 'ujm_exo'] + '</option>\n\
                     </select></td>';
     }
 
@@ -211,7 +211,7 @@ function alreadyPlacedAnswersZoneEdit(shape, color, pathImg, point, feedback) {
              </select></td>';
 
     contenu += '<td class="classic"><input class="form-control" type="TEXT" id="points' + grade + '" style="width:100px;display:block; margin:auto;" value="'
-                    + point + '" onblur="changePoints(\'' + translations['tradWrongPoint'] + '\', this);"></td>\n\
+                    + point + '" onblur="changePoints(\'' + translations['tradWrongPoint', {}, 'ujm_exo'] + '\', this);"></td>\n\
                     <td class="classic" id="row_feedback_'+grade+'"><a class="btn btn-default" id="btn_feedback_'+grade+'" onClick="addFeedbackGraphic('+grade+',\'btn_feedback_'+grade+'\',\'row_feedback_'+grade+'\');"><i class="fa fa-comments-o"></i></a></td>\n\
                     <td class="classic"><a class="btn btn-danger" id="delete'+grade+'"><i class="fa fa-close"></i></a></td></tr>';
             $('#AlreadyPlacedArray').find('tbody').append(contenu);

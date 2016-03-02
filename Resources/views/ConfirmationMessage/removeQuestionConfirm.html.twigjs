@@ -2,4 +2,4 @@
 
 {# no transchoice filter in twigjs... #}
 
-{{ 'remove_question_confirm_message'|trans({}, 'messages') }}
+{{ 'remove_question_confirm_message'|trans({}, 'ujm_exo') }}

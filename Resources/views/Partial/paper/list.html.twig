@@ -6,39 +6,39 @@
                 onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                 <i class="fa fa-chevron-up" id="upU"  style="display: none;"></i>
                 <i class="fa fa-chevron-down" id="downU"  style="display: none;"></i>
-                {{ 'user' | trans }}
+                {{ 'user' | trans({}, 'ujm_exo') }}
             </th>
             <th class="classic" onclick="SortQuestions('numPaper', 'UserArray');"
                 onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                 onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                 <i class="fa fa-chevron-up" id="upN"  style="display: none;"></i>
                 <i class="fa fa-chevron-down" id="downN"  style="display: none;"></i>
-                {{ 'num_paper' | trans }}
+                {{ 'num_paper' | trans({}, 'ujm_exo') }}
             </th>
             <th class="classic" onclick="SortQuestions('startDate', 'UserArray');"
                 onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                 onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                 <i class="fa fa-chevron-up" id="upS"  style="display: none;"></i>
                 <i class="fa fa-chevron-down" id="downS"  style="display: none;"></i>
-                {{ 'start_date' | trans }}
+                {{ 'start_date' | trans({}, 'ujm_exo') }}
             </th>
             <th class="classic" onclick="SortQuestions('endDate', 'UserArray');"
                 onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                 onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                 <i class="fa fa-chevron-up" id="upE"  style="display: none;"></i>
                 <i class="fa fa-chevron-down" id="downE"  style="display: none;"></i>
-                {{ 'end_date' | trans }}
+                {{ 'end_date' | trans({}, 'ujm_exo') }}
             </th>
-            <th class="classic">{{ 'is_interupt' | trans }}</th>
+            <th class="classic">{{ 'is_interupt' | trans({}, 'ujm_exo') }}</th>
             {% if display != 'none' %}
-                <th class="classic">{{ 'actions' | trans }}</th>
+                <th class="classic">{{ 'actions' | trans({}, 'ujm_exo') }}</th>
 
             <th class="classic" onclick="SortQuestions('mark', 'UserArray');"
                 onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                 onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                 <i class="fa fa-chevron-up" id="upM"  style="display: none;"></i>
                 <i class="fa fa-chevron-down" id="downM"  style="display: none;"></i>
-                {{ 'score' | trans }}
+                {{ 'score' | trans({}, 'ujm_exo') }}
             </th>
             {% endif %}
         </tr>
@@ -50,7 +50,11 @@
     {% for paper in papers %}
         <tr>
             <td class="classic">
-                {{ paper.user.firstname }} {{ paper.user.lastName }}
+                {% if paper.user is not null %}
+                    {{ paper.user.firstname }} {{ paper.user.lastName }}
+                {% else %}
+                    {{ 'anonymous'|trans({}, 'ujm_exo') }}
+                {% endif %}
             </td>
             <td class="classic">
                 {{ paper.numpaper }}
@@ -63,9 +67,9 @@
             </td>
             <td class="classic">
                  {% if paper.interupt %}
-                    {{ 'yes'|trans }}
+                    {{ 'yes'|trans({}, 'ujm_exo') }}
                 {% else %}
-                    {{ 'no'|trans }}
+                    {{ 'no'|trans({}, 'ujm_exo') }}
                  {% endif %}
             </td>
             {% if display != 'none' %}
@@ -73,7 +77,7 @@
                     <ul class="list-unstyled">
                         <li>
                             {% if ((paper.end) or (isAdmin == 1)) %}
-                                <a class="btn btn-default" data-toggle="tooltip" title="{{ 'show'|trans }}" href="{{ path('ujm_paper_show', { 'id': paper.id }) }}">
+                                <a class="btn btn-default" data-toggle="tooltip" title="{{ 'show'|trans({}, 'ujm_exo') }}" href="{{ path('ujm_paper_show', { 'id': paper.id }) }}">
                                     <i class="fa fa-eye"></i>
                                  </a>
                             {% endif %}

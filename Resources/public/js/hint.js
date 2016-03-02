@@ -1,15 +1,13 @@
-var containerH = $('div[id$="_interaction_hints"]'); // Div which contain the dataprototype
+var containerH = $('div[id$="_question_hints"]'); // Div which contain the dataprototype
 var tableHints = $('#tableHint'); // div which contain the hints array
 
 function newHint(label, penalty, addHint, deleteHint) {
-
     $('#divHint').find('.form-collection-add').remove();
 
     var begin = true;
 
     // create the button to add a hint
    var add = $('<a href="#" id="add_hint" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;'+addHint+'</a>');
- // var add = $('<a href="#" id="add_hint" class="btn btn-default" >'+addHint+'</a>');
 
     // Add the button after the table
     tableHints.append(add);
@@ -90,7 +88,7 @@ function addHints(container, deleteHint) {
     var index = $('#newTable2').find('tr:not(:first)').length;
 
     while (uniqChoiceID == false) {
-        if ($("*[id$='_interaction_hints_" + index + "_value']").length) {
+        if ($("*[id$='_question_hints_" + index + "_value']").length) {
             index++;
         } else {
             uniqChoiceID = true;

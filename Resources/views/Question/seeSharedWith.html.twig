@@ -11,17 +11,17 @@
     <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
-{% block title %} {{ 'see_shared_with' | trans }} {% endblock %}
+{% block title %} {{ 'see_shared_with' | trans({}, 'ujm_exo') }} {% endblock %}
 
 {% block section_content %}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'see_shared_with' | trans }}</h3>
+        <h3 class="panel-title">{{ 'see_shared_with' | trans({}, 'ujm_exo') }}</h3>
     </div>
 
     <div class="panel-body">
         <a href="{{ path('ujm_question_index') }}" class="btn btn-primary">
-            <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
+            <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
         </a>
     </div>
 
@@ -30,11 +30,11 @@
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">{{ 'shared_user' | trans }}</h3>
+                    <h3 class="panel-title">{{ 'shared_user' | trans({}, 'ujm_exo') }}</h3>
                 </div>
 
                 <div class="panel-body">
-                    {{ 'question_shared_with' | trans }} : <br/><br/>
+                    {{ 'question_shared_with' | trans({}, 'ujm_exo') }} : <br/><br/>
 
                     {% if sharedWith is not empty %}
                         <table id="user-table" class="table table-striped table-bordered table-condensed">
@@ -72,7 +72,7 @@
                             {% endfor %}
                         </table>
                     {% else %}
-                        <div class="alert alert-info">{{ 'no_user_found'|trans }} ...</div>
+                        <div class="alert alert-info">{{ 'no_user_found'|trans({}, 'ujm_exo') }} ...</div>
                     {% endif %}
                 </div>
             </div>
