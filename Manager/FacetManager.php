@@ -532,11 +532,11 @@ class FacetManager
         return $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacetRole')->findByRoles($roles);
     }
 
-    public function getVisibleFacets()
+    public function getVisibleFacets($max = null)
     {
         $token = $this->tokenStorage->getToken();
         $data = [];
-        $entities = $this->om->getRepository('ClarolineCoreBundle:Facet\Facet')->findVisibleFacets($token);
+        $entities = $this->om->getRepository('ClarolineCoreBundle:Facet\Facet')->findVisibleFacets($token, $max);
 
         foreach ($entities as $entity) {
             $data[] = array(

@@ -16,7 +16,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class FacetRepository extends EntityRepository
 {
-    public function findVisibleFacets(TokenInterface $token)
+    public function findVisibleFacets(TokenInterface $token, $max = null)
     {
         $roleNames = array();
 
@@ -26,17 +26,26 @@ class FacetRepository extends EntityRepository
 
         //the mighty admin can do anything in our world
         if (in_array('ROLE_ADMIN', $roleNames)) {
-            return $this->findAll();
-        }
+            $dql = "
+            SELECT facet FROM Claroline\CoreBundle\Entity\Facet\Facet facet
+            ORDER BY facet.position
+        ";
+        $query = $this->_em->createQuery($dql);
+        } else {
 
         $dql = "
             SELECT facet FROM Claroline\CoreBundle\Entity\Facet\Facet facet
             JOIN facet.roles role
             WHERE role.name IN (:rolenames)
+            ORDER BY facet.position
         ";
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('rolenames', $roleNames);
+        }
+        if ($max != null) {
+            $query->setMaxResults($max);
+        }
 
         return $query->getResult();
     }

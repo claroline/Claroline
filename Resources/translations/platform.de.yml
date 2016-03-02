@@ -152,6 +152,7 @@ claroline_bundle_missing: 'Le bundle %bundle% n''est pas installé. Veuillez l''
 classify_my_workspaces: 'Classer mes espaces'
 classify_workspaces: 'Classer les espaces'
 classroom: 'En classe'
+click_to_view_modify_profile: click_to_view_modify_profile
 client_ip: 'Adresse IP du client'
 client_name: 'Nom du client'
 close: Fermer
@@ -1130,6 +1131,7 @@ ws_most_viewed: 'Espaces d''activités les plus consultés'
 yesterday_activity: 'Activité de la veille'
 your_current_url: 'Votre URL actuelle'
 your_platform_id: your_platform_id
+your_profile_is_n_complete: your_profile_is_n_complete
 your_username: 'Votre nom d''utilisateur est '
 your_workspace_activity_overview: 'Aperçu des activités récentes de vos espaces de travail'
 404: 'La page que vous cherchez n''existe pas.'

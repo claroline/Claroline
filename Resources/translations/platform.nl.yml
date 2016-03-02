@@ -152,6 +152,7 @@ claroline_bundle_missing: claroline_bundle_missing
 classify_my_workspaces: classify_my_workspaces
 classify_workspaces: classify_workspaces
 classroom: classroom
+click_to_view_modify_profile: click_to_view_modify_profile
 client_ip: client_ip
 client_name: client_name
 close: close
@@ -1115,6 +1116,7 @@ ws_most_viewed: ws_most_viewed
 'yes': 'yes'
 yesterday_activity: yesterday_activity
 your_current_url: your_current_url
+your_profile_is_n_complete: your_profile_is_n_complete
 your_username: your_username
 your_workspace_activity_overview: your_workspace_activity_overview
 404: 404
