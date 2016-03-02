@@ -495,4 +495,16 @@ class GroupManager
     {
         return $this->groupRepo->findAll();
     }
+
+    /**
+     * @deprecated use getAll() instead
+     */
+    public function getAllGroupsWithoutPager(
+        $orderedBy = 'id',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        return $this->getAll();
+    }
 }
