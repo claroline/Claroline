@@ -50,7 +50,7 @@
                     </td>
                 </tr>
             </table>    
-            <div class="row" data-ng-if="choiceQuestionCtrl.feedbackIsVisible">
+            <div class="row" data-ng-if="choiceQuestionCtrl.feedbackIsVisible && choiceQuestionCtrl.questionFeedback">
                 <div class="col-md-12">
                     <label class="alert alert-info" data-ng-bind-html="choiceQuestionCtrl.questionFeedback | unsafe"></label>
                 </div>
