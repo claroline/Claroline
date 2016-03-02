@@ -53,7 +53,7 @@ class GroupVoter implements VoterInterface
         $action = strtolower($attributes[0]);
 
         switch ($action) {
-            case self::CREATE: return $this->checkCreation($groups);
+            case self::CREATE: return $this->checkCreation($token);
             case self::EDIT:   return $this->checkEdit($token, $groups);
             case self::DELETE: return $this->checkDelete($token, $groups);
             case self::VIEW:   return $this->checkView($token, $groups);
@@ -62,12 +62,23 @@ class GroupVoter implements VoterInterface
         return VoterInterface::ACCESS_ABSTAIN;
     }
 
-    private function checkCreation($groups)
+    private function checkCreation(TokenInterface $token)
     {
-        //the we can create user. Case closed
-        if ($ch->getParameter('allow_self_registration')) return VoterInterface::ACCESS_GRANTED;
+        $tool = $this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool')
+            ->findOneBy(['name' => 'user_management']);
 
-        //maybe more tests
+        $roles = $tool->getRoles();
+        $tokenRoles = $token->getRoles();
+
+        foreach ($tokenRoles as $tokenRole) {
+            foreach ($roles as $role) {
+                if ($role->getRole() === $tokenRole->getRole()) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+            }
+        }
+
+        return VoterInterface::ACCESS_DENIED;
     }
 
     private function checkEdit($token, $groups)
