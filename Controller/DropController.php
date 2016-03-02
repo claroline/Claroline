@@ -156,8 +156,6 @@ class DropController extends DropzoneBaseController
             $foundAdminComment = false;
             for ($indice = 0; $indice<count($userComments); $indice++)
             {
-                            echo 'boucle';
-                            echo $document->getId();
                 $ResourceNode = $dropzone->getResourceNode();
                 $workspace = $ResourceNode->getWorkspace();
                 // getting the  Manager role
@@ -172,8 +170,6 @@ class DropController extends DropzoneBaseController
                     {
                         if ($foundAdminComment == false)
                         {
-                            echo 'trouvé';
-                            echo $document->getId();
                             $teacherCommentDocArray[$document->getId()]= 1;
                             $foundAdminComment = true;
                         }
