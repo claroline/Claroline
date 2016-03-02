@@ -132,7 +132,7 @@ class ClarolineApiListener implements ListenerInterface
 
     /**
      * Refreshes the user by reloading it from the user provider.
-     * This method was copied from always the same, copied from Symfony\Component\Security\Http\Firewall\ContextListener
+     * This method was copied from Symfony\Component\Security\Http\Firewall\ContextListener
      *
      * @param TokenInterface $token
      *

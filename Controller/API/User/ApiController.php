@@ -29,6 +29,8 @@ class ApiController extends Controller
         $tokenStorage  = $this->container->get('security.token_storage');
         $token = $tokenStorage->getToken();
 
+        var_dump($token->getRoles());
+
         if ($token) {
             $user = $token->getUser();
             $context = new SerializationContext();
