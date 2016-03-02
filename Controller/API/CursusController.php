@@ -361,12 +361,6 @@ class CursusController extends FOSRestController
      */
     public function putCourseQueueValidateAction(CourseRegistrationQueue $queue)
     {
-        $canValidate = $this->cursusManager->canValidateCourseQueue($queue);
-
-        if (!$canValidate) {
-
-            return new JsonResponse('not_authorized', 403);
-        }
         $datas = $this->cursusManager->validateCourseQueue($queue);
 
         return new JsonResponse($datas, 200);
@@ -381,12 +375,6 @@ class CursusController extends FOSRestController
      */
     public function putSessionQueueValidateAction(CourseSessionRegistrationQueue $queue)
     {
-        $canValidate = $this->cursusManager->canValidateSessionQueue($queue);
-
-        if (!$canValidate) {
-
-            return new JsonResponse('not_authorized', 403);
-        }
         $datas = $this->cursusManager->validateSessionQueue($queue);
 
         return new JsonResponse($datas, 200);

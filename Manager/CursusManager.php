@@ -41,6 +41,7 @@ use Claroline\CursusBundle\Entity\CursusUser;
 use Claroline\CursusBundle\Entity\CursusDisplayedWord;
 use Claroline\CursusBundle\Event\Log\LogCourseQueueCreateEvent;
 use Claroline\CursusBundle\Event\Log\LogCourseQueueDeclineEvent;
+use Claroline\CursusBundle\Event\Log\LogCourseQueueOrganizationValidateEvent;
 use Claroline\CursusBundle\Event\Log\LogCourseQueueTransferEvent;
 use Claroline\CursusBundle\Event\Log\LogCourseQueueUserValidateEvent;
 use Claroline\CursusBundle\Event\Log\LogCourseQueueValidatorValidateEvent;
@@ -50,6 +51,7 @@ use Claroline\CursusBundle\Event\Log\LogCursusUserRegistrationEvent;
 use Claroline\CursusBundle\Event\Log\LogCursusUserUnregistrationEvent;
 use Claroline\CursusBundle\Event\Log\LogSessionQueueCreateEvent;
 use Claroline\CursusBundle\Event\Log\LogSessionQueueDeclineEvent;
+use Claroline\CursusBundle\Event\Log\LogSessionQueueOrganizationValidateEvent;
 use Claroline\CursusBundle\Event\Log\LogSessionQueueUserValidateEvent;
 use Claroline\CursusBundle\Event\Log\LogSessionQueueValidatorValidateEvent;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -1432,9 +1434,9 @@ class CursusManager
                     $status += CourseRegistrationQueue::WAITING_USER;
                 }
 
-//                if ($session->getOrganizationValidation()) {
-//                    $status += CourseRegistrationQueue::WAITING_ORGANIZATION;
-//                }
+                if ($session->getOrganizationValidation()) {
+                    $status += CourseRegistrationQueue::WAITING_ORGANIZATION;
+                }
 
                 if (count($validators) > 0) {
                     $status += CourseRegistrationQueue::WAITING_VALIDATOR;
@@ -1506,9 +1508,9 @@ class CursusManager
                 $status += CourseRegistrationQueue::WAITING_USER;
             }
 
-//            if ($course->getOrganizationValidation()) {
-//                $status += CourseRegistrationQueue::WAITING_ORGANIZATION;
-//            }
+            if ($course->getOrganizationValidation()) {
+                $status += CourseRegistrationQueue::WAITING_ORGANIZATION;
+            }
 
             if (count($validators) > 0) {
                 $status += CourseRegistrationQueue::WAITING_VALIDATOR;
@@ -2548,16 +2550,51 @@ class CursusManager
             $sessionsQueues = empty($search) ?
                 $this->getAllUnvalidatedSessionQueues() :
                 $this->getAllSearchedUnvalidatedSessionQueues($search);
+
+            $datas['coursesQueues'] = $this->getCoursesQueuesDatasFromQueues($coursesQueues);
+            $datas['sessionsQueues'] = $this->getSessionsQueuesDatasFromQueues($sessionsQueues);
         } else {
-            $coursesQueues = empty($search) ?
+            $validatorCoursesQueues = empty($search) ?
                 $this->getUnvalidatedCourseQueuesByValidator($authenticatedUser) :
                 $this->getUnvalidatedSearchedCourseQueuesByValidator($authenticatedUser, $search);
-            $sessionsQueues = empty($search) ?
+            $orgaCoursesQueues = empty($search) ?
+                $this->getUnvalidatedCourseQueuesByOrganization($authenticatedUser) :
+                $this->getUnvalidatedSearchedCourseQueuesByOrganization($authenticatedUser, $search);
+            $simpleCoursesQueues = empty($search) ?
+                $this->getUnvalidatedCourseQueues() :
+                $this->getUnvalidatedSearchedCourseQueues($search);
+
+            $validatorSessionsQueues = empty($search) ?
                 $this->getUnvalidatedSessionQueuesByValidator($authenticatedUser) :
                 $this->getUnvalidatedSearchedSessionQueuesByValidator($authenticatedUser, $search);
+            $orgaSessionsQueues = empty($search) ?
+                $this->getUnvalidatedSessionQueuesByOrganization($authenticatedUser) :
+                $this->getUnvalidatedSearchedSessionQueuesByOrganization($authenticatedUser, $search);
+            $simpleSessionsQueues = empty($search) ?
+                $this->getUnvalidatedSessionQueues() :
+                $this->getUnvalidatedSearchedSessionQueues($search);
+
+            $coursesQueues = $this->mergeCourseQueues(
+                $validatorCoursesQueues,
+                $orgaCoursesQueues,
+                $simpleCoursesQueues
+            );
+            $sessionsQueues = $this->mergeSessionQueues(
+                $validatorSessionsQueues,
+                $orgaSessionsQueues,
+                $simpleSessionsQueues
+            );
+            $datas['coursesQueues'] = $this->computeCoursesQueuesDatas(
+                $validatorCoursesQueues,
+                $orgaCoursesQueues,
+                $simpleCoursesQueues
+            );
+            $datas['sessionsQueues'] = $this->computeSessionsQueuesDatas(
+                $validatorSessionsQueues,
+                $orgaSessionsQueues,
+                $simpleSessionsQueues
+            );
         }
-        $datas['coursesQueues'] = $this->getCoursesQueuesDatasFromQueues($coursesQueues);
-        $datas['sessionsQueues'] = $this->getSessionsQueuesDatasFromQueues($sessionsQueues);
         $datas['courses'] = $this->getCoursesDatasFromQueues($coursesQueues, $sessionsQueues);
 
         return $datas;
@@ -2635,6 +2672,7 @@ class CursusManager
                 'username' => $user->getUsername(),
                 'firstName' => $user->getFirstName(),
                 'lastName' => $user->getLastName(),
+                'rights' => 0
             );
         }
 
@@ -2670,7 +2708,250 @@ class CursusManager
                 'username' => $user->getUsername(),
                 'firstName' => $user->getFirstName(),
                 'lastName' => $user->getLastName(),
+                'rights' => 0
             );
+        }
+
+        return $datas;
+    }
+
+    public function mergeCourseQueues($validatorQueues, $orgaQueues, $simpleQueues)
+    {
+        $courseQueues = array();
+
+        foreach ($validatorQueues as $queue) {
+            $queueId = $queue->getId();
+            $courseQueues[$queueId] = $queue;
+        }
+
+        foreach ($orgaQueues as $queue) {
+            $queueId = $queue->getId();
+
+            if (!isset($courseQueues[$queueId])) {
+                $courseQueues[$queueId] = $queue;
+            }
+        }
+
+        foreach ($simpleQueues as $queue) {
+            $queueId = $queue->getId();
+
+            if (!isset($courseQueues[$queueId])) {
+                $courseQueues[$queueId] = $queue;
+            }
+        }
+
+        return $courseQueues;
+    }
+
+    public function mergeSessionQueues($validatorQueues, $orgaQueues, $simpleQueues)
+    {
+        $sessionQueues = array();
+
+        foreach ($validatorQueues as $queue) {
+            $queueId = $queue->getId();
+            $sessionQueues[$queueId] = $queue;
+        }
+
+        foreach ($orgaQueues as $queue) {
+            $queueId = $queue->getId();
+
+            if (!isset($sessionQueues[$queueId])) {
+                $sessionQueues[$queueId] = $queue;
+            }
+        }
+
+        foreach ($simpleQueues as $queue) {
+            $queueId = $queue->getId();
+
+            if (!isset($sessionQueues[$queueId])) {
+                $sessionQueues[$queueId] = $queue;
+            }
+        }
+
+        return $sessionQueues;
+    }
+
+    public function computeCoursesQueuesDatas($validatorQueues, $orgaQueues, $simpleQueues)
+    {
+        $datas = array();
+        $queuesDatas = array();
+
+        foreach ($validatorQueues as $queue) {
+            $queueId = $queue->getId();
+            $user = $queue->getUser();
+            $course = $queue->getCourse();
+
+            $queuesDatas[$queueId] = array(
+                'id' => $queue->getId(),
+                'courseId' => $course->getId(),
+                'courseTitle' => $course->getTitle(),
+                'applicationDate' => $queue->getApplicationDate()->format('Y-m-d H:i'),
+                'status' => $queue->getStatus(),
+                'userId' => $user->getId(),
+                'username' => $user->getUsername(),
+                'firstName' => $user->getFirstName(),
+                'lastName' => $user->getLastName(),
+                'rights' => CourseRegistrationQueue::WAITING_VALIDATOR
+            );
+        }
+
+        foreach ($orgaQueues as $queue) {
+            $queueId = $queue->getId();
+
+            if (isset($queuesDatas[$queueId])) {
+                $queuesDatas[$queueId]['rights'] += CourseRegistrationQueue::WAITING_ORGANIZATION;
+            } else {
+                $user = $queue->getUser();
+                $course = $queue->getCourse();
+
+                $queuesDatas[$queueId] = array(
+                    'id' => $queue->getId(),
+                    'courseId' => $course->getId(),
+                    'courseTitle' => $course->getTitle(),
+                    'applicationDate' => $queue->getApplicationDate()->format('Y-m-d H:i'),
+                    'status' => $queue->getStatus(),
+                    'userId' => $user->getId(),
+                    'username' => $user->getUsername(),
+                    'firstName' => $user->getFirstName(),
+                    'lastName' => $user->getLastName(),
+                    'rights' => CourseRegistrationQueue::WAITING_ORGANIZATION
+                );
+            }
+        }
+
+        foreach ($simpleQueues as $queue) {
+            $queueId = $queue->getId();
+
+            if (isset($queuesDatas[$queueId])) {
+                $queuesDatas[$queueId]['rights'] += CourseRegistrationQueue::WAITING;
+            } else {
+                $user = $queue->getUser();
+                $course = $queue->getCourse();
+
+                $queuesDatas[$queueId] = array(
+                    'id' => $queue->getId(),
+                    'courseId' => $course->getId(),
+                    'courseTitle' => $course->getTitle(),
+                    'applicationDate' => $queue->getApplicationDate()->format('Y-m-d H:i'),
+                    'status' => $queue->getStatus(),
+                    'userId' => $user->getId(),
+                    'username' => $user->getUsername(),
+                    'firstName' => $user->getFirstName(),
+                    'lastName' => $user->getLastName(),
+                    'rights' => CourseRegistrationQueue::WAITING
+                );
+            }
+        }
+
+        foreach ($queuesDatas as $queueData) {
+            $courseId = $queueData['courseId'];
+
+            if (!isset($datas[$courseId])) {
+                $datas[$courseId] = array();
+            }
+            $datas[$courseId][] = $queueData;
+        }
+
+        return $datas;
+    }
+
+    public function computeSessionsQueuesDatas($validatorQueues, $orgaQueues, $simpleQueues)
+    {
+        $datas = array();
+        $queuesDatas = array();
+
+        foreach ($validatorQueues as $queue) {
+            $queueId = $queue->getId();
+            $user = $queue->getUser();
+            $session = $queue->getSession();
+            $course = $session->getCourse();
+
+            $queuesDatas[$queueId] = array(
+                'id' => $queue->getId(),
+                'courseId' => $course->getId(),
+                'sessionId' => $session->getId(),
+                'sessionName' => $session->getName(),
+                'sessionMaxUsers' => $session->getMaxUsers(),
+                'sessionUserValidation' => $session->getUserValidation(),
+                'sessionStatus' => $session->getSessionStatus(),
+                'sessionType' => $session->getType(),
+                'applicationDate' => $queue->getApplicationDate()->format('Y-m-d H:i'),
+                'status' => $queue->getStatus(),
+                'userId' => $user->getId(),
+                'username' => $user->getUsername(),
+                'firstName' => $user->getFirstName(),
+                'lastName' => $user->getLastName(),
+                'rights' => CourseRegistrationQueue::WAITING_VALIDATOR
+            );
+        }
+
+        foreach ($orgaQueues as $queue) {
+            $queueId = $queue->getId();
+
+            if (isset($queuesDatas[$queueId])) {
+                $queuesDatas[$queueId]['rights'] += CourseRegistrationQueue::WAITING_ORGANIZATION;
+            } else {
+                $user = $queue->getUser();
+                $session = $queue->getSession();
+                $course = $session->getCourse();
+            
+                $queuesDatas[$queueId] = array(
+                    'id' => $queue->getId(),
+                    'courseId' => $course->getId(),
+                    'sessionId' => $session->getId(),
+                    'sessionName' => $session->getName(),
+                    'sessionMaxUsers' => $session->getMaxUsers(),
+                    'sessionUserValidation' => $session->getUserValidation(),
+                    'sessionStatus' => $session->getSessionStatus(),
+                    'sessionType' => $session->getType(),
+                    'applicationDate' => $queue->getApplicationDate()->format('Y-m-d H:i'),
+                    'status' => $queue->getStatus(),
+                    'userId' => $user->getId(),
+                    'username' => $user->getUsername(),
+                    'firstName' => $user->getFirstName(),
+                    'lastName' => $user->getLastName(),
+                    'rights' => CourseRegistrationQueue::WAITING_ORGANIZATION
+                );
+            }
+        }
+
+        foreach ($simpleQueues as $queue) {
+            $queueId = $queue->getId();
+
+            if (isset($queuesDatas[$queueId])) {
+                $queuesDatas[$queueId]['rights'] += CourseRegistrationQueue::WAITING;
+            } else {
+                $user = $queue->getUser();
+                $session = $queue->getSession();
+                $course = $session->getCourse();
+            
+                $queuesDatas[$queueId] = array(
+                    'id' => $queue->getId(),
+                    'courseId' => $course->getId(),
+                    'sessionId' => $session->getId(),
+                    'sessionName' => $session->getName(),
+                    'sessionMaxUsers' => $session->getMaxUsers(),
+                    'sessionUserValidation' => $session->getUserValidation(),
+                    'sessionStatus' => $session->getSessionStatus(),
+                    'sessionType' => $session->getType(),
+                    'applicationDate' => $queue->getApplicationDate()->format('Y-m-d H:i'),
+                    'status' => $queue->getStatus(),
+                    'userId' => $user->getId(),
+                    'username' => $user->getUsername(),
+                    'firstName' => $user->getFirstName(),
+                    'lastName' => $user->getLastName(),
+                    'rights' => CourseRegistrationQueue::WAITING
+                );
+            }
+        }
+
+        foreach ($queuesDatas as $queueData) {
+            $courseId = $queueData['courseId'];
+
+            if (!isset($datas[$courseId])) {
+                $datas[$courseId] = array();
+            }
+            $datas[$courseId][] = $queueData;
         }
 
         return $datas;
@@ -2686,8 +2967,22 @@ class CursusManager
 
         if (!$canValidate) {
             $authenticatedUser = $this->tokenStorage->getToken()->getUser();
+            $status = $queue->getStatus();
             $course = $queue->getCourse();
-            $canValidate = $this->isCourseValidator($authenticatedUser, $course);
+            $user = $queue->getUser();
+            $userValidation =
+                ($status & CourseRegistrationQueue::WAITING_USER) === CourseRegistrationQueue::WAITING_USER;
+            $validatorValidation =
+                ($status & CourseRegistrationQueue::WAITING_VALIDATOR) === CourseRegistrationQueue::WAITING_VALIDATOR;
+            $organizationValidation =
+                ($status & CourseRegistrationQueue::WAITING_ORGANIZATION) === CourseRegistrationQueue::WAITING_ORGANIZATION;
+            $isValidator = $this->isCourseValidator($authenticatedUser, $course);
+            $isOrganizationAdmin = $this->isUserOrganizationAdmin($authenticatedUser, $user);
+
+            $canValidate = $this->hasCursusToolRegistrationAccess() &&
+                !$userValidation &&
+                (!$organizationValidation || $isOrganizationAdmin) &&
+                ($organizationValidation || !$validatorValidation || $isValidator);
         }
 
         return $canValidate;
@@ -2703,11 +2998,50 @@ class CursusManager
 
         if (!$canValidate) {
             $authenticatedUser = $this->tokenStorage->getToken()->getUser();
+            $status = $queue->getStatus();
             $session = $queue->getSession();
-            $canValidate = $this->isSessionValidator($authenticatedUser, $session);
+            $user = $queue->getUser();
+            $userValidation =
+                ($status & CourseRegistrationQueue::WAITING_USER) === CourseRegistrationQueue::WAITING_USER;
+            $validatorValidation =
+                ($status & CourseRegistrationQueue::WAITING_VALIDATOR) === CourseRegistrationQueue::WAITING_VALIDATOR;
+            $organizationValidation =
+                ($status & CourseRegistrationQueue::WAITING_ORGANIZATION) === CourseRegistrationQueue::WAITING_ORGANIZATION;
+            $isValidator = $this->isSessionValidator($authenticatedUser, $session);
+            $isOrganizationAdmin = $this->isUserOrganizationAdmin($authenticatedUser, $user);
+
+            $canValidate = $this->hasCursusToolRegistrationAccess() &&
+                !$userValidation &&
+                (!$organizationValidation || $isOrganizationAdmin) &&
+                ($organizationValidation || !$validatorValidation || $isValidator);
         }
 
         return $canValidate;
+    }
+
+    public function isUserOrganizationAdmin(User $authenticatedUser, User $user)
+    {
+        $isOrganizationAdmin = false;
+        $organizations = $user->getOrganizations();
+
+        foreach ($organizations as $organization) {
+
+            if ($isOrganizationAdmin) {
+                break;
+            } else {
+                $admins = $organization->getAdministrators();
+
+                foreach ($admins as $admin) {
+
+                    if ($admin === $authenticatedUser) {
+                        $isOrganizationAdmin = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $isOrganizationAdmin;
     }
 
     public function isCourseValidator(User $user, Course $course)
@@ -2733,7 +3067,7 @@ class CursusManager
 
         foreach ($validators as $validator) {
 
-            if ($validator->getId() === $user->getId()) {
+            if ($validator === $user) {
                 $isValidator = true;
                 break;
             }
@@ -2794,9 +3128,6 @@ class CursusManager
 
     public function validateCourseQueue(CourseRegistrationQueue $queue)
     {
-        $this->checkCursusToolRegistrationAccess();
-        $isAdmin = $this->authorization->isGranted('ROLE_ADMIN');
-        $status = $queue->getStatus();
         $user = $queue->getUser();
         $course = $queue->getCourse();
         $queueDatas = array(
@@ -2808,38 +3139,83 @@ class CursusManager
             'username' => $user->getUsername(),
             'firstName' => $user->getFirstName(),
             'lastName' => $user->getLastName(),
-            'status' => $queue->getStatus()
+            'queueStatus' => $queue->getStatus()
         );
+        $canValidate = $this->canValidateCourseQueue($queue);
 
-        if ($status & CourseRegistrationQueue::WAITING_VALIDATOR) {
-            $authenticatedUser = $this->tokenStorage->getToken()->getUser();
+        if ($canValidate) {
+            $status = $queue->getStatus();
+            $isAdmin = $this->authorization->isGranted('ROLE_ADMIN');
 
-            if ($isAdmin) {
-                $status = 0;
-            } else {
-                $status -= CourseRegistrationQueue::WAITING_VALIDATOR;
+            if ($status !== CourseRegistrationQueue::WAITING) {
+                $authenticatedUser = $this->tokenStorage->getToken()->getUser();
+                $isWaitingOrganization = $status & CourseRegistrationQueue::WAITING_ORGANIZATION;
+                $isWaitingValidator = $status & CourseRegistrationQueue::WAITING_VALIDATOR;
+
+                if ($isAdmin) {
+                    $status = 0;
+                    $queue->setStatus($status);
+                    $now = new \DateTime();
+
+                    if ($isWaitingOrganization) {
+                        $queue->setOrganizationValidationDate($now);
+                        $queue->setOrganizationAdmin($authenticatedUser);
+                        $event = new LogCourseQueueOrganizationValidateEvent($queue);
+                        $this->eventDispatcher->dispatch('log', $event);
+                    }
+
+                    if ($isWaitingValidator) {
+                        $queue->setValidatorValidationDate($now);
+                        $queue->setValidator($authenticatedUser);
+                        $event = new LogCourseQueueValidatorValidateEvent($queue);
+                        $this->eventDispatcher->dispatch('log', $event);
+                    }
+                    $this->persistCourseRegistrationQueue($queue);
+                    $queueDatas['type'] = 'admin_validated';
+                } else if ($isWaitingOrganization) {
+                    $status -= CourseRegistrationQueue::WAITING_ORGANIZATION;
+                    $queue->setStatus($status);
+                    $queue->setOrganizationValidationDate(new \DateTime());
+                    $queue->setOrganizationAdmin($authenticatedUser);
+                    $this->persistCourseRegistrationQueue($queue);
+
+                    $event = new LogCourseQueueOrganizationValidateEvent($queue);
+                    $this->eventDispatcher->dispatch('log', $event);
+
+                    $queueDatas['type'] = 'organization_validated';
+                    $queueDatas['queueStatus'] = $queue->getStatus();
+                    $queueDatas['organizationValidationDate'] = $queue->getValidatorValidationDate();
+                    $queueDatas['organizationAdminId'] = $authenticatedUser->getId();
+                    $queueDatas['organizationAdminUsername'] = $authenticatedUser->getUsername();
+                    $queueDatas['organizationAdminFirstName'] = $authenticatedUser->getFirstName();
+                    $queueDatas['organizationAdminLastName'] = $authenticatedUser->getLastName();
+                } else if ($isWaitingValidator) {
+                    $status -= CourseRegistrationQueue::WAITING_VALIDATOR;
+                    $queue->setStatus($status);
+                    $queue->setValidatorValidationDate(new \DateTime());
+                    $queue->setValidator($authenticatedUser);
+                    $this->persistCourseRegistrationQueue($queue);
+
+                    $event = new LogCourseQueueValidatorValidateEvent($queue);
+                    $this->eventDispatcher->dispatch('log', $event);
+
+                    $queueDatas['type'] = 'validator_validated';
+                    $queueDatas['queueStatus'] = $queue->getStatus();
+                    $queueDatas['validatorValidationDate'] = $queue->getValidatorValidationDate();
+                    $queueDatas['validatorId'] = $authenticatedUser->getId();
+                    $queueDatas['validatorUsername'] = $authenticatedUser->getUsername();
+                    $queueDatas['validatorFirstName'] = $authenticatedUser->getFirstName();
+                    $queueDatas['validatorLastName'] = $authenticatedUser->getLastName();
+                }
             }
-            $queue->setStatus($status);
-            $queue->setValidatorValidationDate(new \DateTime());
-            $queue->setValidator($authenticatedUser);
-            $this->persistCourseRegistrationQueue($queue);
 
-            $event = new LogCourseQueueValidatorValidateEvent($queue);
-            $this->eventDispatcher->dispatch('log', $event);
-
-            $queueDatas['type'] = 'validated';
-            $queueDatas['status'] = $queue->getStatus();
-            $queueDatas['validatorValidationDate'] = $queue->getValidatorValidationDate();
-            $queueDatas['validatorId'] = $authenticatedUser->getId();
-            $queueDatas['validatorUsername'] = $authenticatedUser->getUsername();
-            $queueDatas['validatorFirstName'] = $authenticatedUser->getFirstName();
-            $queueDatas['validatorLastName'] = $authenticatedUser->getLastName();
-        }
-
-        if ($queue->getStatus() === 0) {
-            $queue->setStatus(CourseRegistrationQueue::WAITING);
-            $this->persistCourseRegistrationQueue($queue);
-            $queueDatas['status'] = $queue->getStatus();
+            if ($queue->getStatus() === 0) {
+                $queue->setStatus(CourseRegistrationQueue::WAITING);
+                $this->persistCourseRegistrationQueue($queue);
+                $queueDatas['queueStatus'] = $queue->getStatus();
+            }
+        } else {
+            $queueDatas['type'] = 'not_authorized';
         }
 
         return $queueDatas;
@@ -2847,9 +3223,6 @@ class CursusManager
 
     public function validateSessionQueue(CourseSessionRegistrationQueue $queue)
     {
-        $this->checkCursusToolRegistrationAccess();
-        $isAdmin = $this->authorization->isGranted('ROLE_ADMIN');
-        $status = $queue->getStatus();
         $user = $queue->getUser();
         $session = $queue->getSession();
         $course = $session->getCourse();
@@ -2864,48 +3237,74 @@ class CursusManager
             'username' => $user->getUsername(),
             'firstName' => $user->getFirstName(),
             'lastName' => $user->getLastName(),
-            'status' => $queue->getStatus()
+            'queueStatus' => $queue->getStatus()
         );
+        $canValidate = $this->canValidateSessionQueue($queue);
 
-        if ($status === CourseRegistrationQueue::WAITING) {
-            $queue->setStatus(0);
-        } else if ($status & CourseRegistrationQueue::WAITING_VALIDATOR) {
-            $authenticatedUser = $this->tokenStorage->getToken()->getUser();
+        if ($canValidate) {
+            $status = $queue->getStatus();
 
-            if ($isAdmin) {
-                $status = 0;
-            } else {
-                $status -= CourseRegistrationQueue::WAITING_VALIDATOR;
+            if ($status === CourseRegistrationQueue::WAITING) {
+                $queue->setStatus(0);
+            } else if ($status > 0) {
+                $isAdmin = $this->authorization->isGranted('ROLE_ADMIN');
+                $authenticatedUser = $this->tokenStorage->getToken()->getUser();
+
+                if ($isAdmin) {
+                    $status = 0;
+                } else if ($status & CourseRegistrationQueue::WAITING_ORGANIZATION) {
+                    $status -= CourseRegistrationQueue::WAITING_ORGANIZATION;
+                    $queue->setOrganizationValidationDate(new \DateTime());
+                    $queue->setOrganizationAdmin($authenticatedUser);
+                    $queue->setStatus($status);
+                    $this->persistCourseSessionRegistrationQueue($queue);
+
+                    $event = new LogSessionQueueOrganizationValidateEvent($queue);
+                    $this->eventDispatcher->dispatch('log', $event);
+
+                    $queueDatas['type'] = 'organization_validated';
+                    $queueDatas['queueStatus'] = $queue->getStatus();
+                    $queueDatas['organizationValidationDate'] = $queue->getValidatorValidationDate();
+                    $queueDatas['organizationAdminId'] = $authenticatedUser->getId();
+                    $queueDatas['organizationAdminUsername'] = $authenticatedUser->getUsername();
+                    $queueDatas['organizationAdminFirstName'] = $authenticatedUser->getFirstName();
+                    $queueDatas['organizationAdminLastName'] = $authenticatedUser->getLastName();
+                } else if ($status & CourseRegistrationQueue::WAITING_VALIDATOR) {
+                    $status -= CourseRegistrationQueue::WAITING_VALIDATOR;
+                    $queue->setValidatorValidationDate(new \DateTime());
+                    $queue->setValidator($authenticatedUser);
+                    $queue->setStatus($status);
+                    $this->persistCourseSessionRegistrationQueue($queue);
+
+                    $event = new LogSessionQueueValidatorValidateEvent($queue);
+                    $this->eventDispatcher->dispatch('log', $event);
+
+                    $queueDatas['type'] = 'validator_validated';
+                    $queueDatas['queueStatus'] = $queue->getStatus();
+                    $queueDatas['validatorValidationDate'] = $queue->getValidatorValidationDate();
+                    $queueDatas['validatorId'] = $authenticatedUser->getId();
+                    $queueDatas['validatorUsername'] = $authenticatedUser->getUsername();
+                    $queueDatas['validatorFirstName'] = $authenticatedUser->getFirstName();
+                    $queueDatas['validatorLastName'] = $authenticatedUser->getLastName();
+                }
             }
-            $queue->setStatus($status);
-            $queue->setValidatorValidationDate(new \DateTime());
-            $queue->setValidator($authenticatedUser);
-            $this->persistCourseSessionRegistrationQueue($queue);
 
-            $event = new LogSessionQueueValidatorValidateEvent($queue);
-            $this->eventDispatcher->dispatch('log', $event);
+            if ($queue->getStatus() === 0) {
+                $results = $this->registerUsersToSession($session, array($user), 0);
 
-            $queueDatas['type'] = 'validated';
-            $queueDatas['status'] = $queue->getStatus();
-            $queueDatas['validatorValidationDate'] = $queue->getValidatorValidationDate();
-            $queueDatas['validatorId'] = $authenticatedUser->getId();
-            $queueDatas['validatorUsername'] = $authenticatedUser->getUsername();
-            $queueDatas['validatorFirstName'] = $authenticatedUser->getFirstName();
-            $queueDatas['validatorLastName'] = $authenticatedUser->getLastName();
-        }
-        
-        if ($queue->getStatus() === 0) {
-            $results = $this->registerUsersToSession($session, array($user), 0);
-
-            if ($results['status'] === 'success') {
-                $this->deleteSessionQueue($queue);
-                $queueDatas['type'] = 'registered';
-            } else {
-                $queue->setStatus(CourseRegistrationQueue::WAITING);
-                $this->persistCourseSessionRegistrationQueue($queue);
-                $queueDatas['status'] = 'failed';
-                $queueDatas['datas'] = $results['datas'];
+                if ($results['status'] === 'success') {
+                    $this->deleteSessionQueue($queue);
+                    $queueDatas['type'] = 'registered';
+                } else {
+                    $queue->setStatus(CourseRegistrationQueue::WAITING);
+                    $this->persistCourseSessionRegistrationQueue($queue);
+                    $queueDatas['status'] = 'failed';
+                    $queueDatas['queueStatus'] = 1;
+                    $queueDatas['datas'] = $results['datas'];
+                }
             }
+        } else {
+            $queueDatas['type'] = 'not_authorized';
         }
 
         return $queueDatas;
@@ -3829,6 +4228,26 @@ class CursusManager
         return $this->sessionQueueRepo->findUnvalidatedSearchedSessionQueuesByValidator($user, $search);
     }
 
+    public function getUnvalidatedSessionQueuesByOrganization(User $user)
+    {
+        return $this->sessionQueueRepo->findUnvalidatedSessionQueuesByOrganization($user);
+    }
+
+    public function getUnvalidatedSearchedSessionQueuesByOrganization(User $user, $search)
+    {
+        return $this->sessionQueueRepo->findUnvalidatedSearchedSessionQueuesByOrganization($user, $search);
+    }
+
+    public function getUnvalidatedSessionQueues()
+    {
+        return $this->sessionQueueRepo->findUnvalidatedSessionQueues();
+    }
+
+    public function getUnvalidatedSearchedSessionQueues($search)
+    {
+        return $this->sessionQueueRepo->findUnvalidatedSearchedSessionQueues($search);
+    }
+
     /*******************************************************
      * Access to CourseRegistrationQueueRepository methods *
      *******************************************************/
@@ -3880,6 +4299,26 @@ class CursusManager
     public function getUnvalidatedSearchedCourseQueuesByValidator(User $user, $search)
     {
         return $this->courseQueueRepo->findUnvalidatedSearchedCourseQueuesByValidator($user, $search);
+    }
+
+    public function getUnvalidatedCourseQueuesByOrganization(User $user)
+    {
+        return $this->courseQueueRepo->findUnvalidatedCourseQueuesByOrganization($user);
+    }
+
+    public function getUnvalidatedSearchedCourseQueuesByOrganization(User $user, $search)
+    {
+        return $this->courseQueueRepo->findUnvalidatedSearchedCourseQueuesByOrganization($user, $search);
+    }
+
+    public function getUnvalidatedCourseQueues()
+    {
+        return $this->courseQueueRepo->findUnvalidatedCourseQueues();
+    }
+
+    public function getUnvalidatedSearchedCourseQueues($search)
+    {
+        return $this->courseQueueRepo->findUnvalidatedSearchedCourseQueues($search);
     }
 
 
@@ -3949,5 +4388,12 @@ class CursusManager
 
             throw new AccessDeniedException();
         }
+    }
+
+    private function hasCursusToolRegistrationAccess()
+    {
+        $cursusTool = $this->toolManager->getAdminToolByName('claroline_cursus_tool_registration');
+
+        return $this->authorization->isGranted('OPEN', $cursusTool);
     }
 }

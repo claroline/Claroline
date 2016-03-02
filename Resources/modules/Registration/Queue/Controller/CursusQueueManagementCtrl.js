@@ -150,10 +150,27 @@ export default class CursusQueueManagementCtrl {
                     return `<b>${Translator.trans('actions', {}, 'platform')}</b>`
                 },
                 cellRenderer: scope => {
+                    const rights = scope.$row['rights']
                     const status = scope.$row['status']
                     const isValidated = (status === 1)
                     const userValidation = (status & 2) === 2
-                    const disabled = !this.isAdmin && userValidation
+                    const validatorValidation = (status & 4) === 4
+                    const organizationValidation = (status & 8) === 8
+                    const isValidator = (rights & 4) === 4
+                    const isOrganizationAdmin = (rights & 8) === 8
+                    
+                    const disabled = !this.isAdmin && (
+                        userValidation ||
+                        (organizationValidation && !isOrganizationAdmin) ||
+                        (!organizationValidation && validatorValidation && !isValidator)
+                    )
+                    let disabledMsg = ''
+                    
+                    if (userValidation) {
+                        disabledMsg = Translator.trans('waiting_user_validation', {}, 'cursus')
+                    } else if (organizationValidation && !isOrganizationAdmin) {
+                        disabledMsg = Translator.trans('waiting_organization_validation', {}, 'cursus')
+                    }
                     let cell = ''
 
                     if (isValidated) {
@@ -172,7 +189,7 @@ export default class CursusQueueManagementCtrl {
                                         data-toggle="tooltip"
                                         data-placement="top"
                                         data-container="body"
-                                        data-title="${Translator.trans('waiting_user_validation', {}, 'cursus')}"
+                                        data-title="${disabledMsg}"
                                 >
                             ` :
                             `
@@ -309,9 +326,26 @@ export default class CursusQueueManagementCtrl {
                     return `<b>${Translator.trans('actions', {}, 'platform')}</b>`
                 },
                 cellRenderer: scope => {
+                    const rights = scope.$row['rights']
                     const status = scope.$row['status']
                     const userValidation = (status & 2) === 2
-                    const disabled = !this.isAdmin && userValidation
+                    const validatorValidation = (status & 4) === 4
+                    const organizationValidation = (status & 8) === 8
+                    const isValidator = (rights & 4) === 4
+                    const isOrganizationAdmin = (rights & 8) === 8
+                    
+                    const disabled = !this.isAdmin && (
+                        userValidation ||
+                        (organizationValidation && !isOrganizationAdmin) ||
+                        (!organizationValidation && validatorValidation && !isValidator)
+                    )
+                    let disabledMsg = ''
+                    
+                    if (userValidation) {
+                        disabledMsg = Translator.trans('waiting_user_validation', {}, 'cursus')
+                    } else if (organizationValidation && !isOrganizationAdmin) {
+                        disabledMsg = Translator.trans('waiting_organization_validation', {}, 'cursus')
+                    }
 
                     let cell = disabled ?
                         `
@@ -319,7 +353,7 @@ export default class CursusQueueManagementCtrl {
                                     data-toggle="tooltip" 
                                     data-placement="top" 
                                     data-container="body" 
-                                    data-title="${Translator.trans('waiting_user_validation', {}, 'cursus')}"
+                                    data-title="${disabledMsg}"
                             >
                         ` :
                         `
@@ -460,34 +494,45 @@ export default class CursusQueueManagementCtrl {
                 if (datas['status'] === 200) {
                     const queueDatas = datas['data']
 
-                    if (queueDatas['type'] === 'validated') {
+                    if (queueDatas['type'] === 'not_authorized') {
+                        const title = Translator.trans('validation_failed', {}, 'cursus')
+                        const content = `
+                            <div class="alert alert-danger">
+                                ${Translator.trans('not_authorized', {}, 'cursus')}
+                            </div>
+                        `
+
+                        this.$uibModal.open({
+                            template: require('../../Cursus/Partial/simple_modal.html'),
+                            controller: 'SimpleModalCtrl',
+                            controllerAs: 'smc',
+                            resolve: {
+                                title: () => { return title },
+                                content: () => { return content }
+                            }
+                        })
+                    } else if (queueDatas['type'] === 'admin_validated') {
                         this.updateCourseQueue(
                             queueDatas['courseId'], 
                             queueDatas['id'], 
-                            queueDatas['status']
+                            queueDatas['queueStatus'],
+                            0
+                        )
+                    } else if (queueDatas['type'] === 'organization_validated') {
+                        this.updateCourseQueue(
+                            queueDatas['courseId'], 
+                            queueDatas['id'], 
+                            queueDatas['queueStatus'],
+                            8
+                        )
+                    } else if (queueDatas['type'] === 'validator_validated') {
+                        this.updateCourseQueue(
+                            queueDatas['courseId'], 
+                            queueDatas['id'], 
+                            queueDatas['queueStatus'],
+                            4
                         )
                     }
-                }
-            },
-            datas => {
-
-                if (datas['status'] === 403) {
-                    const title = Translator.trans('validation_failed', {}, 'cursus')
-                    const content = `
-                        <div class="alert alert-danger">
-                            ${Translator.trans(datas['data'], {}, 'cursus')}
-                        </div>
-                    `
-
-                    this.$uibModal.open({
-                        template: require('../../Cursus/Partial/simple_modal.html'),
-                        controller: 'SimpleModalCtrl',
-                        controllerAs: 'smc',
-                        resolve: {
-                            title: () => { return title },
-                            content: () => { return content }
-                        }
-                    })
                 }
             }
         )
@@ -504,21 +549,11 @@ export default class CursusQueueManagementCtrl {
                 if (datas['status'] === 200) {
                     const queueDatas = datas['data']
 
-                    if (queueDatas['type'] === 'validated') {
-                        this.updateSessionQueue(
-                            queueDatas['courseId'], 
-                            queueDatas['id'], 
-                            queueDatas['status']
-                        )
-                    } else if (queueDatas['type'] === 'registered') {
-                        this.removeSessionQueue(queueDatas['courseId'], queueDatas['id'])
-                    }
-
-                    if (queueDatas['status'] === 'failed') {
-                        const title = Translator.trans('registration_failed', {}, 'cursus')
+                    if (queueDatas['type'] === 'not_authorized') {
+                        const title = Translator.trans('validation_failed', {}, 'cursus')
                         const content = `
                             <div class="alert alert-danger">
-                                ${Translator.trans('full_session_msg', {}, 'cursus')}
+                                ${Translator.trans('not_authorized', {}, 'cursus')}
                             </div>
                         `
 
@@ -531,28 +566,45 @@ export default class CursusQueueManagementCtrl {
                                 content: () => { return content }
                             }
                         })
-                    }
-                }
-            },
-            datas => {
+                    } else {
 
-                if (datas['status'] === 403) {
-                    const title = Translator.trans('validation_failed', {}, 'cursus')
-                    const content = `
-                        <div class="alert alert-danger">
-                            ${Translator.trans(datas['data'], {}, 'cursus')}
-                        </div>
-                    `
-
-                    this.$uibModal.open({
-                        template: require('../../Cursus/Partial/simple_modal.html'),
-                        controller: 'SimpleModalCtrl',
-                        controllerAs: 'smc',
-                        resolve: {
-                            title: () => { return title },
-                            content: () => { return content }
+                        if (queueDatas['type'] === 'organization_validated') {
+                            this.updateSessionQueue(
+                                queueDatas['courseId'], 
+                                queueDatas['id'], 
+                                queueDatas['queueStatus'],
+                                8
+                            )
+                        } else if (queueDatas['type'] === 'validator_validated') {
+                            this.updateSessionQueue(
+                                queueDatas['courseId'], 
+                                queueDatas['id'], 
+                                queueDatas['queueStatus'],
+                                4
+                            )
+                        } else if (queueDatas['type'] === 'registered') {
+                            this.removeSessionQueue(queueDatas['courseId'], queueDatas['id'])
                         }
-                    })
+
+                        if (queueDatas['status'] === 'failed') {
+                            const title = Translator.trans('registration_failed', {}, 'cursus')
+                            const content = `
+                                <div class="alert alert-danger">
+                                    ${Translator.trans('full_session_msg', {}, 'cursus')}
+                                </div>
+                            `
+
+                            this.$uibModal.open({
+                                template: require('../../Cursus/Partial/simple_modal.html'),
+                                controller: 'SimpleModalCtrl',
+                                controllerAs: 'smc',
+                                resolve: {
+                                    title: () => { return title },
+                                    content: () => { return content }
+                                }
+                            })
+                        }
+                    }
                 }
             }
         )
@@ -596,6 +648,7 @@ export default class CursusQueueManagementCtrl {
     }
 
     checkAdminRole() {
+        
         if (this.connectedUser['roles']) {
             const roles = this.connectedUser['roles']
 
@@ -639,7 +692,7 @@ export default class CursusQueueManagementCtrl {
         }
     }
 
-    updateCourseQueue(courseId, queueId, status) {
+    updateCourseQueue(courseId, queueId, status, mask) {
 
         if (this.coursesQueues[courseId]) {
 
@@ -648,13 +701,23 @@ export default class CursusQueueManagementCtrl {
 
                 if (queueDatas['id'] === queueId) {
                     this.coursesQueues[courseId][i]['status'] = status
+                    let rights = this.coursesQueues[courseId][i]['rights']
+                    
+                    if ((rights & mask) === mask) {
+                        rights -= mask
+                        this.coursesQueues[courseId][i]['rights'] = rights
+                        
+                        if (status !== 1 && rights === 0) {
+                            this.removeCourseQueue(courseId, queueId)
+                        }
+                    }
                     break
                 }
             }
         }
     }
 
-    updateSessionQueue(courseId, queueId, status) {
+    updateSessionQueue(courseId, queueId, status, mask) {
 
         if (this.sessionsQueues[courseId]) {
 
@@ -663,6 +726,16 @@ export default class CursusQueueManagementCtrl {
 
                 if (queueDatas['id'] === queueId) {
                     this.sessionsQueues[courseId][i]['status'] = status
+                    let rights = this.sessionsQueues[courseId][i]['rights']
+                    
+                    if ((rights & mask) === mask) {
+                        rights -= mask
+                        this.sessionsQueues[courseId][i]['rights'] = rights
+                        
+                        if (status !== 1 && rights === 0) {
+                            this.removeSessionQueue(courseId, queueId)
+                        }
+                    }
                     break
                 }
             }
