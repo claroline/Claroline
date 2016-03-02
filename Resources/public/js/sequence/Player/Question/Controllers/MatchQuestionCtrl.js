@@ -149,19 +149,6 @@
                 }.bind(this));
             };
             
-            this.hideFeedback = function () {
-                this.feedbackIsVisible = false;
-                if (!this.question.toBind) {
-                    $('.draggable').draggable('enable');
-                    $('.draggable').fadeTo(100, 1);
-                    
-                    for (var i=0; i<this.dropped.length; i++) {
-                        $('#draggable_' + this.dropped[i].source).draggable("disable");
-                        $('#draggable_' + this.dropped[i].source).fadeTo(100, 0.3);
-                    }
-                }
-            };
-            
             this.checkAnswerValidity = function (label) {
                 if (!this.orphanAnswersAreChecked) {
                     var hasSolution;
