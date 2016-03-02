@@ -81,13 +81,8 @@
 
                 // data set by question directive
                 var studentData = PlayerDataSharing.getStudentData();
-                // save the given answer (even if empty !)
-                var submitPromise = ExerciseService.submitAnswer(this.paper.id, studentData);
-                submitPromise.then(function (result) {                    
-                    // then navigate to desired step / end / terminate exercise
-                    this.handleStepNavigation(action, studentData.paper);
-                    
-                }.bind(this));
+                // navigate to desired step / end / terminate exercise
+                this.handleStepNavigation(action, studentData.paper);
             };
 
             /**
@@ -171,7 +166,11 @@
             };
 
             this.showFeedback = function () {
-                this.feedbackIsShown = true;
+                var studentData = PlayerDataSharing.getStudentData();
+                var submitPromise = ExerciseService.submitAnswer(this.paper.id, studentData);
+                submitPromise.then(function (result) {
+                    this.feedbackIsShown = true;
+                }.bind(this));
                 $scope.$broadcast('show-feedback');
             };
             
