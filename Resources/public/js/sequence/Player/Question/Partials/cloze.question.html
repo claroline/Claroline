@@ -24,7 +24,7 @@
             </div>
         </div>
         <div data-ng-if="clozeQuestionCtrl.feedbackIsVisible">
-            <div class="row">
+            <div class="row" data-ng-if="clozeQuestionCtrl.questionFeedback">
                 <div class="col-md-12">
                     <label class="alert alert-info" data-ng-bind-html="clozeQuestionCtrl.questionFeedback | unsafe"></label>
                 </div>

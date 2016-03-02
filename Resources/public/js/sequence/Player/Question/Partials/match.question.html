@@ -96,7 +96,7 @@
             </div>
         </div>
         <div class="row">
-            <div data-ng-if="matchQuestionCtrl.feedbackIsVisible">
+            <div data-ng-if="matchQuestionCtrl.feedbackIsVisible && matchQuestionCtrl.questionFeedback">
                 <div class="col-md-12">
                     <label class="alert alert-info" data-ng-bind-html="matchQuestionCtrl.questionFeedback | unsafe"></label>
                 </div>

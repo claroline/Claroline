@@ -33,7 +33,7 @@
             </div>
         </div>
         <div class="row">
-            <div data-ng-if="openQuestionCtrl.feedbackIsVisible">
+            <div data-ng-if="openQuestionCtrl.feedbackIsVisible && openQuestionCtrl.questionFeedback">
                 <div class="col-md-12">
                     <label class="alert alert-info" data-ng-bind-html="openQuestionCtrl.questionFeedback | unsafe"></label>
                 </div>
