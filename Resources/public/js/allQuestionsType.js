@@ -255,7 +255,7 @@ function displayOptionalFields(){
       if(valDescription.match("<.+>.+|\s<\/.+>$"))
       {
           $("*[id$='_question_description']").addClass("claroline-tiny-mce hide");
-          $("*[id$=_question_description']").data("data-theme","advanced");
+          $("*[id$='_question_description']").data("data-theme","advanced");
           $("#buttonEdition").remove();
       }
   }

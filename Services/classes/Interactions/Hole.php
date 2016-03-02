@@ -172,12 +172,13 @@ class Hole extends Interaction
     private function getScoreHole($hole, $response)
     {
         $em = $this->doctrine->getManager();
+        $mark = 0;
         if ($hole->getSelector() == true) {
             $wr = $em->getRepository('UJMExoBundle:WordResponse')->find($response);
             $mark = $wr->getScore();
-        } else {
+        } else {            
             foreach ($hole->getWordResponses() as $wr) {
-                $mark = $this->getScoreWordResponse($wr, $response);
+                $mark += $this->getScoreWordResponse($wr, $response);
             }
         }
 

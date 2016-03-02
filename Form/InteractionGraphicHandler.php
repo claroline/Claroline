@@ -46,7 +46,7 @@ class InteractionGraphicHandler extends QuestionHandler
         if ($this->request != null) {
             $coords = $this->request->get('coordsZone'); // Get the answer zones
 
-            $coord = preg_split('[,]', $coords); // Split all informations of one answer zones into a cell
+            $coord = preg_split('[##]', $coords); // Split all informations of one answer zones into a cell
 
             $lengthCoord = count($coord) - 1; // Number of answer zones
 
@@ -126,7 +126,7 @@ class InteractionGraphicHandler extends QuestionHandler
 
         $coords = $this->request->get('coordsZone'); // Get the answer zones
 
-        $coord = preg_split('[,]', $coords); // Split all informations of one answer zones into a cell
+        $coord = preg_split('[##]', $coords); // Split all informations of one answer zones into a cell
 
         $lengthCoord = count($coord) - 1; // Number of answer zones
 
@@ -164,11 +164,11 @@ class InteractionGraphicHandler extends QuestionHandler
             $inter = preg_split('[§§]', $coord[$i]); // Divide the src of the answer zone and the other informations
 
             $before = array('|-|','~~','^^');
-            $after = array(',',',',',');
+            $after = array('@@','@@','@@');
 
             $data = str_replace($before, $after, $inter[1]); // replace separation punctuation of the informations ...
 
-            list(${'value'.$i}, ${'point'.$i}, ${'size'.$i}, ${'feedback'.$i}) = explode(',', $data); //... in order to split informations
+            list(${'value'.$i}, ${'point'.$i}, ${'size'.$i}, ${'feedback'.$i}) = explode('@@', $data); //... in order to split informations
 
             ${'point'.$i} = str_replace('/', '.', ${'point'.$i}); // set the score to a correct value
 

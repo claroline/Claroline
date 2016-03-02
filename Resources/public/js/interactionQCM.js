@@ -4,16 +4,24 @@ var tableChoices = $('#tableChoice'); // div which contain the choices array
 
 var typeQCM;
 
+function rectifyCSS() {
+    $('#ujm_exobundle_interactionqcmtype_typeQCM_1').css({"float" : "left", "position" : "static"});
+    $('#ujm_exobundle_interactionqcmtype_typeQCM_2').css({"float" : "left", "position" : "static"});
+
+    $('.radio').css({"display" : "inline-block", "margin-right" : "4%", "margin-top" : "1%"});
+}
+
 // QCM Creation
 function creationQCM(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice,edition, tQCM) {
-    
+
+    rectifyCSS();
+
     $("#ujm_exobundle_interactionqcmtype_typeQCM_2").prop("checked", true);
     $("#ujm_exobundle_interactionqcmtype_weightResponse").prop("checked", true);
-    $('.radio').css({"display" : "inline-block", "margin-right" : "4%", "margin-top" : "1%"});
 
     //$('ujm_exobundle_interactionqcmtype_typeQCM_1').css({});
     var index; // number of choices
-    
+
     typeQCM = JSON.parse(tQCM);
 
     tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice,edition, 0);
@@ -73,6 +81,8 @@ function creationQCM(expectedAnswer, response, point, comment, positionForce, ad
 // QCM Edition
 function creationQCMEdit(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, tQCM,edition, nbResponses) {
 
+    rectifyCSS();
+
     var index = 0;
     typeQCM = JSON.parse(tQCM);
     tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice,edition, nbResponses);
@@ -81,11 +91,11 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
     container.children().first().children('div').each(function () {
         // Add a row to the table
         $('#newTable').find('tbody').append('<tr></tr>');
-           
+
          $(this).find('.row').each(function () {
 
-            fillChoicesArray($(this),edition,index,comment);    
-          
+            fillChoicesArray($(this),edition,index,comment);
+
             // Add the form errors
             $('#choiceError').append($(this).find('.field-error'));
         });
@@ -93,17 +103,17 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
         if (nbResponses == 0) {
             // Add the delete button
             $('#newTable').find('tr:last').append('<td class="classic"></td>');
-            addDelete($('#newTable').find('td:last'), deleteChoice);          
-          
-        }       
-        
+            addDelete($('#newTable').find('td:last'), deleteChoice);
+
+        }
+
         $('#ujm_exobundle_interactionqcmtype_choices_'+index+'_weight').click(function() {
             $(this).focus();
         });
-        
+
         index++;
-        
-    }); 
+
+    });
    //Show feedback answers
 //   $('.classic').find('textarea').each(function() {
 //        //if there is at the start an open tag and a close at the end. And at the middle all caracters possible or nothing
@@ -113,8 +123,8 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
 //            $('#'+idspanFeedback).removeAttr( 'style' );
 //            $('#'+idBtnFeedback).remove();
 //        }
-//    }); 
- 
+//    });
+
     //Displays enabled tinyMCE
    textareaAdvancedEdition();
 
@@ -146,7 +156,7 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
         });
         return ui;
     };
-   
+
 //        $('tbody').sortable({
 //            helper: fixHelper,
 //            cancel: 'contenteditable',
@@ -183,7 +193,7 @@ function addChoice(container, deleteChoice, comment, edition) {
     addDelete(contain, deleteChoice);
     // Add the modified dataprototype to the page
     container.append(contain);
-     
+
     // Get the form field to fill rows of the choices' table
     container.find('.row').each(function () {
         fillChoicesArray($(this),edition,index,comment);
@@ -197,14 +207,14 @@ function addChoice(container, deleteChoice, comment, edition) {
     tableChoices.next().remove();
 
     whichChecked();
-    
+
     $('#ujm_exobundle_interactionqcmtype_choices_'+index+'_weight').click(function() {
         $(this).focus();
     });
 }
 
 // Check if form is valid
-function check_form(nbrChoices, answerCoched, labelEmpty, pointAnswers, pointAnswer, inviteQuestion) {   
+function check_form(nbrChoices, answerCoched, labelEmpty, pointAnswers, pointAnswer, inviteQuestion) {
         // If no expected answer is selected
     var nbr_rep_coched = 0;
     $('#newTable').find('tr:not(:first)').each(function () {
@@ -215,7 +225,7 @@ function check_form(nbrChoices, answerCoched, labelEmpty, pointAnswers, pointAns
     if (nbr_rep_coched === 0) {
         alert(answerCoched);
         return false;
-    } 
+    }
 }
 
 // Set the choices order
@@ -242,7 +252,7 @@ function whichChecked() {
            $(this).parent('td').hide();
        });
     }
-    // Disable or not the score by response if weightResponse is checked  
+    // Disable or not the score by response if weightResponse is checked
         hiddenScore();
 
     // Change the type od ExpectedAnswer (radio or checkbox) depending on which typeQCM is choose
@@ -272,11 +282,11 @@ function whichChange() {
            });
         }
     });
-   
+
     $('#ujm_exobundle_interactionqcmtype_weightResponse').change(function () {
         hiddenScore();
         });
-     // When "type of QCM (unique/multiple)" change, change the expected response to radio or checkbox    
+     // When "type of QCM (unique/multiple)" change, change the expected response to radio or checkbox
     $('#ujm_exobundle_interactionqcmtype_typeQCM').change(function () {
         var type = $('#ujm_exobundle_interactionqcmtype_typeQCM :checked').val();
 
@@ -291,38 +301,38 @@ function whichChange() {
     });
 }
 
-function fillChoicesArray(row,edition,index,comment) {   
+function fillChoicesArray(row,edition,index,comment) {
     // Add the field of type input
     if (row.find('input').length) {
         if (row.find('input').attr('id').indexOf('ordre') == -1) {
             $('#newTable').find('tr:last').append('<td class="classic"></td>');
             $('#newTable').find('td:last').append(row.find('input'));
-        
+
         } else {
             // Add the field positionForced as hidden td
             $('#newTable').find('tr:last').append('<td class="classic" style="display:none;"></td>');
             $('#newTable').find('td:last').append(row.find('input'));
-      
+
         }
     }
-    
-    //Add the field of type textarea answer 
-    if (row.find('*[id$="_label"]').length) { 
+
+    //Add the field of type textarea answer
+    if (row.find('*[id$="_label"]').length) {
         var idLabelVal = row.find('textarea').attr("id");
         $('#newTable').find('tr:last').append('<td class="classic"><span id="span_'+idLabelVal+'" class="input-group"></span></td>');
         $('#span_'+idLabelVal).append(row.find('*[id$="_label"]'));
         $('#span_'+idLabelVal).append('<span class="input-group-btn"><a class="btn btn-default" id="btnEdition_'+idLabelVal+'" onClick="advancedEdition(\'ujm_exobundle_interactionqcmtype_choices_'+index+'_label\',\'btnEdition_'+idLabelVal+'\',event);" title="'+edition+'"><i class="fa fa-font"></i></a></span>');
    }
-    
+
     //Add the field of type textarea feedback
-    if (row.find('*[id$="_feedback"]').length) { 
+    if (row.find('*[id$="_feedback"]').length) {
        var idFeedbackVal = row.find('textarea').attr("id");
        //Adds a cell array with a comment button
-       $('#newTable').find('tr:last').append('<td class="classic"><a class="btn btn-default" id="btn_'+idFeedbackVal+'" title="'+comment+'"onClick="addTextareaFeedback(\'span_'+idFeedbackVal+'\',\'btn_'+idFeedbackVal+'\')" ><i class="fa fa-comments-o"></i></a><span id="span_'+idFeedbackVal+'" class="input-group" style="display:none;"></span></td>');
+       $('#newTable').find('tr:last').append('<td class="classic" style="width:400px;"><a class="btn btn-default" id="btn_'+idFeedbackVal+'" title="'+comment+'"onClick="addTextareaFeedback(\'span_'+idFeedbackVal+'\',\'btn_'+idFeedbackVal+'\')" ><i class="fa fa-comments-o"></i></a><span id="span_'+idFeedbackVal+'" class="input-group" style="display:none;"></span></td>');
        //Adds the textarea and its advanced edition button (hidden by default)
        $('#span_'+idFeedbackVal).append(row.find('*[id$="_feedback"]'));
        $('#span_'+idFeedbackVal).append('<span class="input-group-btn"><a class="btn btn-default" id="btnEdition_'+idFeedbackVal+'" onClick="advancedEdition(\'ujm_exobundle_interactionqcmtype_choices_'+index+'_feedback\',\'btnEdition_'+idFeedbackVal+'\',event);" title="'+edition+'"><i class="fa fa-font"></i></a></span>');
-    }   
+    }
 }
 
 function tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, edition, nbResponses) {
@@ -334,11 +344,11 @@ function tableChoicesCreation(expectedAnswer, response, point, comment, position
 
         // Add the button after the table
         tableChoices.append(add);
-        
+
         // When click, add a new choice in the table
         add.click(function (e) {
             $('#newTable').find('tbody').append("<tr></tr>");
-            addChoice(container, deleteChoice, comment, edition);      
+            addChoice(container, deleteChoice, comment, edition);
             e.preventDefault(); // prevent add # in the url
             return false;
         });
@@ -349,9 +359,9 @@ function tableChoicesCreation(expectedAnswer, response, point, comment, position
 }
 
 /**
- * If all the points fields are fill   
+ * If all the points fields are fill
  */
-function checkScore() {                    
+function checkScore() {
     if ($('#ujm_exobundle_interactionqcmtype_weightResponse').is(':checked')) {
        if ($('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').val() === '') {
             $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').val('~');
@@ -374,8 +384,8 @@ function checkScore() {
             $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').val('');
         }
         if ($('#ujm_exobundle_interactionqcmtype_scoreRightResponse').val() === '~') {
-            $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').val('');           
-        }      
+            $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').val('');
+        }
         });
     }
 }
