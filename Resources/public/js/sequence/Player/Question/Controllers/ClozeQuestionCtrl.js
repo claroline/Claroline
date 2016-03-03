@@ -219,6 +219,7 @@
                     this.feedbackIsVisible = true;
                     this.solutions = result.solutions;
                     this.questionFeedback = result.feedback;
+                    this.setFeedbacks();
                 }.bind(this));
                 
                 $('.blank').each(function () {
@@ -226,8 +227,63 @@
                 });
             };
             
+            this.setFeedbacks = function () {
+                var fields = $(".blank");
+                for (var i=0; i<fields.length; i++) {
+                    var element = $("<i></i>");
+                    element.attr("data-toggle", "tooltip");
+                    for (var j=0; j<this.solutions.length; j++) {
+                        if (this.solutions[j].position === fields[i].id) {
+                            var betterScore = 0;
+                            for (var k=0; k<this.solutions[j].wordResponses.length; k++) {
+                                if (this.solutions[j].wordResponses[k].score > betterScore) {
+                                    betterScore = this.solutions[j].wordResponses[k].score;
+                                }
+                            }
+                            var found = false;
+                            for (var k=0; k<this.solutions[j].wordResponses.length; k++) {
+                                if (fields[i].tagName === "INPUT" && fields[i].value === this.solutions[j].wordResponses[k].response) {
+                                    element.prop("title", this.solutions[j].wordResponses[k].feedback);
+                                    found = true;
+                                    if (this.solutions[j].wordResponses[k].score === betterScore) {
+                                        element.addClass("feedback-icon fa fa-check color-success");
+                                    }
+                                    else if (this.solutions[j].wordResponses[k].score === 0) {
+                                        element.addClass("feedback-icon fa fa-close color-danger");
+                                    }
+                                    else {
+                                        element.addClass("feedback-icon fa fa-check color-info");
+                                    }
+                                }
+                                else if (fields[i].tagName === "SELECT" && fields[i].value === this.solutions[j].wordResponses[k].id) {
+                                    element.prop("title", this.solutions[j].wordResponses[k].feedback);
+                                    if (this.solutions[j].wordResponses[k].score === betterScore) {
+                                        element.addClass("feedback-icon fa fa-check color-success");
+                                    }
+                                    else if (this.solutions[j].wordResponses[k].score === 0) {
+                                        element.addClass("feedback-icon fa fa-close color-danger");
+                                    }
+                                    else {
+                                        element.addClass("feedback-icon fa fa-check color-info");
+                                    }
+                                }
+                                else if (fields[i].value === "" && fields[i].value !== this.solutions[j].wordResponses[k].response) {
+                                    element.addClass("feedback-icon fa fa-close color-danger");
+                                }
+                            }
+                            if (!found && fields[i].tagName === "INPUT") {
+                                element.addClass("feedback-icon fa fa-close color-danger");
+                            }
+                        }
+                    }
+                    element.insertAfter(document.getElementById(fields[i].id));
+                }
+            };
+            
             this.hideFeedback = function () {
                 this.feedbackIsVisible = false;
+                
+                $(".feedback-icon").remove();
                 
                 $('.blank').each(function () {
                     $(this).prop('disabled', false);
