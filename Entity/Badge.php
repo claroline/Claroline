@@ -734,7 +734,7 @@ class Badge extends Rulable
 
         $uploadRootDir = sprintf(
             '%s%s..%s..%s..%s..%sweb%s%s',
-            __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir()
+            __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir()
         );
         $realpathUploadRootDir = realpath($uploadRootDir);
 
