@@ -22,7 +22,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\ValidatorInterface;
-use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 
 /**
  * @DI\Validator("csv_user_validator")
