@@ -180,12 +180,7 @@ abstract class QuestionHandler
             }
         }
         if ($checkCategory == false) {
-            $newCategory = new Category();
-            $newCategory->setValue($default);
-            $newCategory->setLocker(1);
-            $newCategory->setUser($this->user);
-            $this->em->persist($newCategory);
-            $this->em->flush();
+            $newCategory = $this->createCategoryDefault($default);
             $data->setCategory($newCategory);
         }
     }
@@ -247,8 +242,48 @@ abstract class QuestionHandler
         $title = $copy->getQuestion()->getTitle();
         $copy->getQuestion()
              ->setTitle($title.' #');
+        $this->ctrlCat($copy);
 
         $this->isClone = true;
         $this->onSuccessAdd($copy);
+    }
+
+    /**
+     * Control if the user is the owner of the category
+     * If no, the default category of user will be used
+     *
+     * @param object type of InteractionQCM or InteractionGraphic or .... $inter
+     */
+    protected function ctrlCat($inter)
+    {
+        $category = $inter->getQuestion()->getCategory();
+        $ownerCategory = $category->getUser();
+
+        if ($ownerCategory != $this->user) {
+            $userDefaultCategory = $this->em->getRepository('UJMExoBundle:Category')
+                    ->findOneBy(array('user' => $this->user, 'locker' => true));
+            if (!$userDefaultCategory) {
+                $default = $this->translator->trans('default', array(), 'ujm_exo');
+                $userDefaultCategory = $this->createCategoryDefault($default);
+            }
+            $inter->getQuestion()->setCategory($userDefaultCategory);
+        }
+    }
+
+    /**
+     * Create the default category for the user
+     *
+     * @param string $default name of default's category
+     * @return \UJM\ExoBundle\Entity\Category
+     */
+    private function createCategoryDefault ($default) {
+        $newCategory = new Category();
+        $newCategory->setValue($default);
+        $newCategory->setLocker(1);
+        $newCategory->setUser($this->user);
+        $this->em->persist($newCategory);
+        $this->em->flush();
+
+        return $newCategory;
     }
 }
