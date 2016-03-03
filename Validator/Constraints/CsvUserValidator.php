@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\AuthenticationManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Doctrine\ORM\NonUniqueResultException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -38,7 +39,8 @@ class CsvUserValidator extends ConstraintValidator
      *     "om"                    = @DI\Inject("claroline.persistence.object_manager"),
      *     "trans"                 = @DI\Inject("translator"),
      *     "userManager"           = @DI\Inject("claroline.manager.user_manager"),
-     *     "validator"             = @DI\Inject("validator")
+     *     "validator"             = @DI\Inject("validator"),
+     *     "ut"                    = @DI\Inject("claroline.utilities.misc")
      * })
      */
     public function __construct(
@@ -46,7 +48,8 @@ class CsvUserValidator extends ConstraintValidator
         ObjectManager $om,
         TranslatorInterface $translator,
         UserManager $userManager,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        ClaroUtilities $ut
     )
     {
         $this->authenticationManager = $authenticationManager;
@@ -54,12 +57,14 @@ class CsvUserValidator extends ConstraintValidator
         $this->translator = $translator;
         $this->userManager = $userManager;
         $this->validator = $validator;
+        $this->ut = $ut;
     }
 
     public function validate($value, Constraint $constraint)
     {
         $mode = $constraint->getDefaultOption();
-        $lines = str_getcsv(file_get_contents($value), PHP_EOL);
+        $data = $this->ut->formatCsvOutput(file_get_contents($value));
+        $lines = str_getcsv($data, PHP_EOL);
         $authDrivers = $this->authenticationManager->getDrivers();
 
         foreach ($lines as $line) {

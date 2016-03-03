@@ -288,6 +288,7 @@ class UsersController extends Controller
      */
     public function importAction()
     {
+
         $form = $this->formFactory->create(new ImportUserType(true));
         $form->handleRequest($this->request);
         $mode = $form->get('mode')->getData();
@@ -300,7 +301,9 @@ class UsersController extends Controller
         if ($form->isValid()) {
             $file = $form->get('file')->getData();
             $sendMail = $form->get('sendMail')->getData();
-            $lines = str_getcsv(file_get_contents($file), PHP_EOL);
+            $data = file_get_contents($file);
+            $data = $this->container->get('claroline.utilities.misc')->formatCsvOutput($data);
+            $lines = str_getcsv($data, PHP_EOL);
             $users = array();
             $toUpdate = array();
             $sessionFlashBag = $this->session->getFlashBag();
