@@ -18,6 +18,7 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\ValidatorInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 
 /**
  * @DI\Validator("csv_workspace_user_import_validator")
@@ -28,26 +29,30 @@ class CsvWorkspaceUserImportValidator extends ConstraintValidator
     private $translator;
     private $userManager;
     private $validator;
+    private $ut;
 
     /**
      * @DI\InjectParams({
      *     "roleManager" = @DI\Inject("claroline.manager.role_manager"),
      *     "trans"       = @DI\Inject("translator"),
      *     "userManager" = @DI\Inject("claroline.manager.user_manager"),
-     *     "validator"   = @DI\Inject("validator")
+     *     "validator"   = @DI\Inject("validator"),
+     *     "ut"          = @DI\Inject("claroline.utilities.misc")
      * })
      */
     public function __construct(
         RoleManager $roleManager,
         TranslatorInterface $translator,
         UserManager $userManager,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        ClaroUtilities $ut
     )
     {
         $this->roleManager = $roleManager;
         $this->translator = $translator;
         $this->userManager = $userManager;
         $this->validator = $validator;
+        $this->ut = $ut;
     }
 
     public function validate($value, Constraint $constraint)

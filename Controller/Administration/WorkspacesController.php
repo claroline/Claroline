@@ -214,7 +214,9 @@ class WorkspacesController extends Controller
 
         if ($form->isValid()) {
             $file = $form->get('file')->getData();
-            $lines = str_getcsv(file_get_contents($file), PHP_EOL);
+            $data = file_get_contents($file);
+            $data = $this->container->get('claroline.utilities.misc')->formatCsvOutput($data);
+            $lines = str_getcsv($data, PHP_EOL);
 
             foreach ($lines as $line) {
                 if (trim($line) !== '') {
