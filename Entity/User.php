@@ -174,8 +174,8 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      *     fetch="EXTRA_LAZY",
      *     cascade={"merge"}
      * )
-     * @ORM\JoinTable(name="claro_user_role")
      * @Groups({"api_user"})
+     * @ORM\JoinTable(name="claro_user_role")
      */
     protected $roles;
 

@@ -384,3 +384,4 @@ claro_admin_widget:
     prefix: admin/widget
     resource: "@ClarolineCoreBundle/Controller/Administration/WidgetController.php"
     type: annotation
+

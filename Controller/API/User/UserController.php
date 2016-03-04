@@ -318,7 +318,8 @@ class UserController extends FOSRestController
         $this->throwExceptionIfNotGranted('edit', $user);
         $this->roleManager->dissociateRole($user, $role);
 
-        return $user;    }
+        return $user;    
+    }
 
     /**
      * @View(serializerGroups={"api_user"})

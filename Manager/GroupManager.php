@@ -483,7 +483,7 @@ class GroupManager
 
         $query = $qb->getQuery();
 
-        if ($page && $limit && !$count) {
+        if ($page !== null && $limit !== null && !$count) {
             $query->setMaxResults($limit);
             $query->setFirstResult($page * $limit);
         }
