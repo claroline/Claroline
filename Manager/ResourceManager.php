@@ -1040,7 +1040,7 @@ class ResourceManager
                         $node = $resource->getTarget();
                     }
 
-                    $filename = $this->getRelativePath($currentDir, $node);
+                    $filename = $this->getRelativePath($currentDir, $node) . $node->getName();
                     $resource = $this->getResourceFromNode($node);
 
                     //if it's a file, we may have to add the extension back in case someone removed it from the name
