@@ -176,9 +176,14 @@ class PaperManager
     {
         $response = $this->om->getRepository('UJMExoBundle:Response')
             ->findOneBy(['paper' => $paper, 'question' => $question]);
-
+        
         $response->setMark($score);
 
+        $scorePaper = $paper->getScore();
+        $scoreExercise = $scorePaper + $score;
+        $paper->setScore($scoreExercise);
+
+        $this->om->persist($paper);
         $this->om->persist($response);
         $this->om->flush();
     }
