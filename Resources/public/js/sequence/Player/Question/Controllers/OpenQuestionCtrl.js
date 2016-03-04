@@ -109,6 +109,23 @@
             this.hideFeedback = function () {
                 this.feedbackIsVisible = false;
             };
+            
+            this.getFoundSolutions = function () {
+                var foundSolutions = [];
+                for (var i=0; i<this.solutions.length; i++) {
+                    if (this.solutions[i].caseSensitive) {
+                        if (this.answer.indexOf(this.solutions[i].word) > -1) {
+                            foundSolutions.push(this.solutions[i]);
+                        }
+                    }
+                    else {
+                        if (this.answer.search(new RegExp(this.solutions[i].word, "i")) > -1) {
+                            foundSolutions.push(this.solutions[i]);
+                        }
+                    }
+                }
+                return foundSolutions;
+            };
 
             /**
              * Listen to show-feedback event (broadcasted by ExercisePlayerCtrl)

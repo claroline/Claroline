@@ -48,7 +48,7 @@
                     <th class="center-text">{{ 'points'|trans:{}:'ujm_sequence' }}</th>
                     <th class="center-text">{{ 'comment'|trans:{}:'ujm_sequence' }}</th>
                 </tr>
-                <tr data-ng-repeat="keyword in openQuestionCtrl.solutions">
+                <tr data-ng-repeat="keyword in openQuestionCtrl.getFoundSolutions()">
                     <td>{{ keyword.word }}</td>
                     <td class="center-text">
                         <span data-ng-if="keyword.caseSensitive === true " class="fa fa-check-square-o"></span>
