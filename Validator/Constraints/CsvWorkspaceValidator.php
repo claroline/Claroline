@@ -48,7 +48,8 @@ class CsvWorkspaceValidator extends ConstraintValidator
 
     public function validate($value, Constraint $constraint)
     {
-        $lines = str_getcsv(file_get_contents($value), PHP_EOL);
+        $data = $this->ut->formatCsvOutput(file_get_contents($value));
+        $lines = str_getcsv($data, PHP_EOL);
         $codes = [];
 
         foreach ($lines as $line) {

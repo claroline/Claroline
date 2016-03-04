@@ -16,6 +16,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Manager\UserManager;
 use Symfony\Component\Translation\TranslatorInterface;
+use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 
 /**
  * @DI\Validator("import_user_in_group_validator")
@@ -30,20 +31,24 @@ class ImportUsersInGroupValidator extends ConstraintValidator
      * @DI\InjectParams({
      *     "userManager" = @DI\Inject("claroline.manager.user_manager"),
      *     "translator"  = @DI\Inject("translator"),
+     *     "ut"          = @DI\Inject("claroline.utilities.misc")
      * })
      */
     public function __construct(
         UserManager $userManager,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        ClaroUtilities $ut
     )
     {
         $this->userManager = $userManager;
         $this->translator = $translator;
+        $this->ut = $ut;
     }
 
     public function validate($value, Constraint $constraint)
     {
-        $usernames = str_getcsv(file_get_contents($value), PHP_EOL);
+        $data = $this->ut->formatCsvOutput(file_get_contents($value));
+        $usernames = str_getcsv($data, PHP_EOL);
 
         foreach ($usernames as $username) {
 
