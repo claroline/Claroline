@@ -1531,7 +1531,7 @@ class UserManager
                 $user->addOrganization($default);
                 $this->objectManager->persist($user);
 
-                if ($i % self::MAX_EDIT_BATCH_SIZE) {
+                if ($i % self::MAX_EDIT_BATCH_SIZE == 0) {
                     $this->objectManager->forceFlush();
                 }
             }
