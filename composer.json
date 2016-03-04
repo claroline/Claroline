@@ -14,7 +14,6 @@
         "php": ">=5.4.1",
         "claroline/core-bundle": "~6.0",
         "claroline/team-bundle": "~6.0",
-        "icap/badge-bundle": "~6.0",
         "innova/angular-js-bundle": "~5.0",
         "innova/angular-ui-resource-picker-bundle" : "~6.0",
         "innova/angular-ui-tinymce-bundle": "5.*"
