@@ -127,27 +127,49 @@ class ExerciseManager
      */
     public function pickQuestions(Exercise $exercise)
     {
-        $originalQuestions = $questions = $this->om
-            ->getRepository('UJMExoBundle:Question')
-            ->findByExercise($exercise);
-        $questionCount = count($questions); 
+        $steps = $this->pickSteps($exercise);
+        $finalQuestions = array();
 
-        if ($exercise->getShuffle() && $questionCount > 1) {
-            while ($questions === $originalQuestions) {
-                shuffle($questions); // shuffle until we have a new order
+        foreach ($steps as $step) {$questions = array();
+            $originalQuestions = $questions = $this->om
+                ->getRepository('UJMExoBundle:Question')
+                ->findByStep($step);
+            $questionCount = count($questions);
+
+            if ($exercise->getShuffle() && $questionCount > 1) {
+                while ($questions === $originalQuestions) {
+                    shuffle($questions); // shuffle until we have a new order
+                }
             }
-        }       
+            $finalQuestions = array_merge($finalQuestions, $questions);
+        }
 
         if (($questionToPick = $exercise->getNbQuestion()) > 0) {
             while ($questionToPick > 0) {
-                $index = rand(0, count($questions) - 1);
-                unset($questions[$index]);
-                $questions = array_values($questions); // "re-index" the array
+                $index = rand(0, count($finalQuestions) - 1);
+                unset($finalQuestions[$index]);
+                $finalQuestions = array_values($finalQuestions); // "re-index" the array
                 $questionToPick--;
             }
         }
-        
-        return $questions;
+
+        return $finalQuestions;
+    }
+
+    /**
+     * Returns the step list of an exercise
+     *
+     * @param Exercise $exercise
+     * @return array
+     */
+    public function pickSteps(Exercise $exercise)
+    {
+        $steps = $this->om
+                      ->getRepository('UJMExoBundle:Step')
+                      ->findByExercise($exercise);
+
+
+        return $steps;
     }
 
     /**
@@ -184,7 +206,7 @@ class ExerciseManager
             'steps' => $this->exportSteps($exercise, $withSolutions),
         ];
     }
-    
+
     /**
      * Exports an exercise in a JSON-encodable format.
      *
@@ -243,7 +265,7 @@ class ExerciseManager
      */
     private function exportSteps(Exercise $exercise, $withSolutions = true)
     {
-        $questionRepo = $this->om->getRepository('UJMExoBundle:Question'); 
+        $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
 
         return array_map(function ($question) use ($withSolutions) {
             return [
