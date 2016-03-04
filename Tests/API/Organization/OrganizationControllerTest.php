@@ -12,7 +12,7 @@ use Claroline\CoreBundle\Library\Testing\Persister;
  * - create database
  * - php app/console claroline:init_test_schema --env=test
  * - php app/console doctrine:schema:update --force --env=test
- * - bin/phpunit vendor/claroline/core-bundle/Claroline/CoreBundle/Tests/API/Organization/OrganizationControllerTest.php -c app/phpunit.xml
+ * - bin/phpunit vendor/claroline/core-bundle/Tests/API/Organization/OrganizationControllerTest.php -c app/phpunit.xml
  */
 class OrganizationControllerTest extends TransactionalTestCase
 {
