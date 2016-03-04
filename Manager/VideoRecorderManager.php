@@ -57,7 +57,7 @@ class VideoRecorderManager
      * @param Workspace $workspace
      * @return Claroline File
      */
-    public function uploadFileAndCreateResource($postData, UploadedFile $video, UploadedFile $audio = null, Workspace $workspace = null)
+    public function uploadFileAndCreateResource($postData, UploadedFile $video, Workspace $workspace = null)
     {
 
         $errors = array();
@@ -80,7 +80,7 @@ class VideoRecorderManager
         $encodingExt = 'webm';
         $mimeType = 'video/webm';
 
-        if (!$this->validateParams($postData, $video, $isFirefox, $audio)) {
+        if (!$this->validateParams($postData, $video)) {
             array_push($errors, 'one or more request parameters are missing.');
             return array('file' => null, 'errors' => $errors);
         }
@@ -95,8 +95,11 @@ class VideoRecorderManager
 
         // file size @ToBe overriden if doEncode = true
         $size = $video->getSize();
+
+        $video->move($this->tempUploadDir, $fileName); echo $targetDir; die('end');
+
         // marge audio and video in a single webm file for webkit based user agent
-        if (!$isFirefox) {
+        /*if (!$isFirefox) {
             // the filename after encoding
             $encodedName = $uniqueBaseName . '.webm';
             // upload original file in temp upload (ie web/uploads) dir
@@ -128,7 +131,7 @@ class VideoRecorderManager
 
         } else {
             $video->move($targetDir, $fileName);
-        }
+        }*/
 
         $file = new File();
         $file->setSize($size);
@@ -157,22 +160,14 @@ class VideoRecorderManager
      * @param Bool $isFirefox
      * @param UploadedFile $audio the audio blob sent by webrtc if chrome has been used
      */
-    private function validateParams($postData, UploadedFile $video, $isFirefox, UploadedFile $audio = null)
+    private function validateParams($postData, UploadedFile $video)
     {
-        $availableNavs = ["firefox", "chrome"];
-        if (!array_key_exists('nav', $postData) || $postData['nav'] === '' || !in_array($postData['nav'], $availableNavs)) {
-            return false;
-        }
 
         if(!array_key_exists('fileName', $postData) || !isset($postData['fileName']) || $postData['fileName'] === ''){
             return false;
         }
 
         if (!isset($video) || $video === null || !$video) {
-            return false;
-        }
-
-        if (!$isFirefox && (!isset($audio) || $audio === null || !$audio)) {
             return false;
         }
 

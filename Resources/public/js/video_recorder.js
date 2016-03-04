@@ -1,10 +1,13 @@
 "use strict";
 
-var isFirefox = !!navigator.mozGetUserMedia;
+//var mediaSource = new MediaSource();
+//mediaSource.addEventListener('sourceopen', handleSourceOpen, false);
+var mediaRecorder;
+var recordedBlobs; // array of chunk video blobs
+var sourceBuffer;
+var mediaStream;
 
-var videoRecorder; // WebRTC object
-var audioRecorder; // WebRTC object
-
+// audio input volume visualisation
 var audioContext = new window.AudioContext();
 var audioInput = null,
   realAudioInput = null,
@@ -19,11 +22,14 @@ var meter;
 // avoid the recorded file to be chunked by setting a slight timeout
 var recordEndTimeOut = 1000;
 var videoPlayer = document.querySelector('video');
-var audioPlayer = document.querySelector('audio');
 
-var audioBlob, videoBlob;
-var recorderStream;
-var isRecording = false;
+
+
+navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+var constraints = {
+  audio: true,
+  video: true
+};
 
 
 $('.modal').on('shown.bs.modal', function() {
@@ -42,98 +48,108 @@ $('.modal').on('shown.bs.modal', function() {
     });
   });
 
-  $("video").on("play", function() {
-    console.log("you pressed play");
-    if (!isFirefox && !isRecording) {
-      audioPlayer.play();
-    }
-  });
-
-  $("video").on("pause", function() {
-    console.log("you pressed pause");
-    if (!isFirefox && !isRecording) {
-      audioPlayer.pause();
-    }
-  });
 });
 
 $('.modal').on('hide.bs.modal', function() {
-
   console.log('modal closed');
   resetData();
-
 });
 
 
+function handleDataAvailable(event) {
+
+  if (event.data && event.data.size > 0) {
+    //console.log('yep');
+    recordedBlobs.push(event.data);
+  }
+}
+
+/*
+function handleStop(event) {
+  console.log('Recorder stopped: ', event);
+}
+*/
+/*function handleSourceOpen(event) {
+  console.log('MediaSource opened');
+  sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vp8"');
+  console.log('Source buffer: ', sourceBuffer);
+}*/
+
+
 function record() {
-  isRecording = true;
-  captureUserMedia({
-      video: true,
-      audio: true
-    },
+  //navigator.getUserMedia(constraints, successCallback, errorCallback);
+
+  recordedBlobs = [];
+  navigator.getUserMedia(
+    constraints,
     function(stream) {
+
+      console.log('getUserMedia() got stream: ', stream);
+      window.stream = stream;
+      mediaStream = stream;
 
       $('#video-record-start').prop('disabled', 'disabled');
       $('#video-record-stop').prop('disabled', '');
 
       var options = {
-        type: 'video',
-        disableLogs: false
+        mimeType: 'video/webm'
       };
 
-      videoRecorder = RecordRTC(stream, options);
-      // webkit user agent
-      if (!isFirefox) {
-        console.log('start recording for !firefox');
-        audioRecorder = RecordRTC(stream, {
-          type: 'audio',
-          disableLogs: false,
-          onAudioProcessStarted: function() {
-            videoRecorder.startRecording();
+    //  mediaRecorder = new MediaRecorder(stream, options);
+
+      try {
+        mediaRecorder = new MediaRecorder(stream, options);
+      } catch (e0) {
+        console.log('Unable to create MediaRecorder with options Object: ', e0);
+        try {
+          options = {
+            mimeType: 'video/webm,codecs=vp9'
+          };
+          mediaRecorder = new MediaRecorder(stream, options);
+        } catch (e1) {
+          console.log('Unable to create MediaRecorder with options Object: ', e1);
+          try {
+            options = 'video/vp8'; // Chrome 47
+            mediaRecorder = new MediaRecorder(stream, options);
+          } catch (e2) {
+            alert('MediaRecorder is not supported by this browser.\n\n' +
+              'Try Firefox 29 or later, or Chrome 47 or later, with Enable experimental Web Platform features enabled from chrome://flags.');
+            console.error('Exception while creating MediaRecorder:', e2);
+            return;
           }
-        });
-        audioRecorder.startRecording();
-      } else {
-        console.log('start recording for firefox');
-        videoRecorder.startRecording();
+        }
       }
 
-      videoPlayer.pause();
+      //mediaRecorder.onstop = handleStop;
+      mediaRecorder.ondataavailable = handleDataAvailable;
+      mediaRecorder.start(10); // collect 10ms of data
+      console.log('MediaRecorder started', mediaRecorder);
+
       videoPlayer.muted = true;
-      videoPlayer.src = window.URL.createObjectURL(stream);
+      if (window.URL) {
+        videoPlayer.src = window.URL.createObjectURL(stream);
+      } else {
+        videoPlayer.src = stream;
+      }
+
       videoPlayer.play();
-
-      recorderStream = stream;
-
       gotStream(stream);
-
-      stream.onended = function() {
-        console.log('stream ended');
-      };
     },
     function(error) {
       console.log(error);
-      isRecording = false;
     });
 }
 
 function resetData() {
   cancelAnalyserUpdates();
-  if (videoRecorder) {
-    videoRecorder.clearRecordedData();
+
+  if(mediaStream){
+    mediaStream = null;
   }
-
-  if (audioRecorder) {
-    audioRecorder.clearRecordedData();
-  }
-
-  if (recorderStream) {
-    recorderStream.stop();
-  }
-
-  videoBlob = null;
-  audioBlob = null;
-
+  recordedBlobs = null;
+  mediaSource = null;
+  mediaRecorder = null;
+  sourceBuffer = null;
   audioContext = null;
   audioInput = null;
   realAudioInput = null;
@@ -146,66 +162,41 @@ function resetData() {
 
 function stopRecording() {
 
-  // avoid recorded blob truncated end by setting a timeout
-  window.setTimeout(function() {
-    isRecording = false;
-    $('#video-record-start').prop('disabled', '');
-    $('#video-record-stop').prop('disabled', 'disabled');
-    $('#submitButton').prop('disabled', false);
+  mediaRecorder.stop();
+  $('#video-record-start').prop('disabled', '');
+  $('#video-record-stop').prop('disabled', 'disabled');
+  $('#submitButton').prop('disabled', false);
 
-    var aUrl = null;
-    // webkit based user agent
-    if (!isFirefox) {
-      console.log('not firefox');
-      audioRecorder.stopRecording(function(audioUrl) {
-        aUrl = audioUrl;
-        videoRecorder.stopRecording(function(videoUrl) {
-          // wav audio
-          audioBlob = audioRecorder.blob;
-          // webm video
-          videoBlob = videoRecorder.blob;
-          previewRecordings(videoUrl, audioUrl);
-        });
-      });
-    } else {
-      videoRecorder.stopRecording(function(videoUrl) {
-        // webm containing audio + video
-        videoBlob = videoRecorder.blob;
-        previewRecordings(videoUrl, null);
-      });
-    }
+  /*if(window.stream){
+    window.stream.stop();
+  }*/
 
-    // stop sharing usermedia
-    if (recorderStream) {
-      recorderStream.stop();
-    }
+  if(mediaStream){
+    mediaStream.stop();
+  }
 
-  }, recordEndTimeOut);
+  loadRecordedStream();
+
+
 }
 
-
-function previewRecordings(videoUrl, audioUrl) {
-  cancelAnalyserUpdates();
-  // @TODO do the same for audio element if !isFirefox
+function loadRecordedStream() {
   videoPlayer.pause();
   videoPlayer.muted = false;
-  videoPlayer.srcObject = null;
-  videoPlayer.src = videoUrl;
-  videoPlayer.load();
-  if (!isFirefox) {
-    audioPlayer.pause();
-    audioPlayer.src = audioUrl;
-    audioPlayer.load();
-  }
+  var superBuffer = new Blob(recordedBlobs, {
+    type: 'video/webm'
+  });
+  videoPlayer.src = window.URL.createObjectURL(superBuffer);
+
   videoPlayer.onended = function() {
-    videoPlayer.pause();
-    videoPlayer.src = URL.createObjectURL(videoBlob);
-    if (!isFirefox) {
-      audioPlayer.pause();
-      audioPlayer.src = URL.createObjectURL(audioBlob);
-    }
+    var blob = new Blob(recordedBlobs, {
+      type: 'video/webm'
+    });
+    videoPlayer.src = URL.createObjectURL(blob);
   };
 }
+
+
 
 
 // use with claro new Resource API
@@ -213,14 +204,11 @@ function uploadVideo() {
   $('#video-record-start').prop('disabled', 'disabled');
   $('#video-record-stop').prop('disabled', 'disabled');
   var formData = new FormData();
-  if (isFirefox) {
-    formData.append('nav', 'firefox');
-  } else {
-    formData.append('nav', 'chrome');
-    formData.append('audio', audioBlob);
-  }
-
-  formData.append('video', videoBlob);
+  formData.append('nav', 'firefox');
+  var video = new Blob(recordedBlobs, {
+    type: 'video/webm'
+  });
+  formData.append('video', video);
 
   var fileName = $("#resource-name-input").val();
   formData.append('fileName', fileName);
@@ -242,7 +230,7 @@ function xhr(url, data, progress, callback) {
       console.log('xhr end with success');
       resetData();
       // use reload or generate route...
-      location.reload();
+    //  location.reload();
 
     } else if (request.status === 500) {
       console.log('xhr error');
@@ -269,15 +257,25 @@ function xhr(url, data, progress, callback) {
 
 }
 
+
+function download() {
+  var blob = new Blob(recordedBlobs, {type: 'video/webm'});
+  var url = window.URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.style.display = 'none';
+  a.href = url;
+  a.download = 'test.webm';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function() {
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  }, 100);
+}
+
 function downloadVideo() {
   videoRecorder.save();
 }
-
-function captureUserMedia(mediaConstraints, successCallback, errorCallback) {
-  // needs adapter.js to work in chrome
-  navigator.mediaDevices.getUserMedia(mediaConstraints).then(successCallback).catch(errorCallback);
-}
-
 
 function gotStream(stream) {
   inputPoint = audioContext.createGain();
