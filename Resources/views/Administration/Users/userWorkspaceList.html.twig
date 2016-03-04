@@ -19,30 +19,20 @@
 
 {% block title %}{{ parent() ~ ' - ' ~ 'users' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
-{% block breadcrumb %}
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'fa fa-cog',
-                'name': 'administration'|trans({}, 'platform'),
-                'href': path('claro_admin_index')
-            },
-            {
-                'name': 'users_management'|trans({}, 'platform'),
-                'href': path('claro_admin_users_index')
-            },
-            {
-                'name': 'workspace_list'|trans({}, 'platform') ~ ' (' ~ user.getUsername() ~ ')',
-                'href': ''
-            }
-        ])
-    }}
-{% endblock %}
-
 {% block section_content %}
     <div class="panel-body">
-        <h3>{{ 'workspace_list'|trans({}, 'platform') }} ({{ user.getUsername() }})</h3>
-        {% include 'ClarolineCoreBundle:Administration:Users\\actionbar.html.twig' %}
+        {{
+            macros.breadcrumbs([
+                {
+                    'name': 'users_management'|trans({}, 'platform'),
+                    'href': path('claro_admin_users_index')
+                },
+                {
+                    'name': 'workspace_list'|trans({}, 'platform') ~ ' - ' ~ user.getUsername(),
+                    'href': '#'
+                },
+            ])
+        }}
         <div class="row">
             <div class="col-md-8">
                 {% if pager.getNbPages() > 1 %}
