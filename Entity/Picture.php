@@ -5,12 +5,12 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\Document.
+ * UJM\ExoBundle\Entity\Picture.
  *
- * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\DocumentRepository")
- * @ORM\Table(name="ujm_document")
+ * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\PictureRepository")
+ * @ORM\Table(name="ujm_picture")
  */
-class Document
+class Picture
 {
     /**
      * @var int
@@ -41,6 +41,16 @@ class Document
      * @ORM\Column(name="type", type="string", length=255)
      */
     private $type;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $width;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $height;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
@@ -115,6 +125,38 @@ class Document
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * @param integer $width
+     */
+    public function setWidth($width)
+    {
+        $this->width = $width;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWidth()
+    {
+        return $this->width;
+    }
+
+    /**
+     * @param int $height
+     */
+    public function setHeight($height)
+    {
+        $this->height = $height;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHeight()
+    {
+        return $this->height;
     }
 
     public function getUser()

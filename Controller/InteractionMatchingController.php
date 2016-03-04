@@ -97,7 +97,7 @@ class InteractionMatchingController extends Controller
         $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
         $formHandler = new InteractionMatchingHandler(
                 $form, $this->get('request'), $this->getDoctrine()->getManager(),
-                $this->container->get('ujm.exo_exercise'),
+                $this->container->get('ujm.exo_exercise'), $catSer,
                 $this->container->get('security.token_storage')->getToken()->getUser(), $exercise,
                 $this->get('translator')
          );
@@ -185,6 +185,8 @@ class InteractionMatchingController extends Controller
             ++$ind;
         }
 
+        $catSer->ctrlCategory($interactionMatching->getQuestion());
+
         $editForm = $this->createForm(
             new InteractionMatchingType($attr->get('user'), $attr->get('catID')), $interactionMatching
         );
@@ -245,8 +247,8 @@ class InteractionMatchingController extends Controller
         );
         $formHandler = new InteractionMatchingHandler(
             $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
-            $this->container->get('ujm.exo_exercise'),
-            $this->container->get('security.token_storage')->getToken()->getUser(),
+            $this->container->get('ujm.exo_exercise'), $this->container->get('ujm.exo_category'),
+            $this->container->get('security.token_storage')->getToken()->getUser(), -1,
             $this->get('translator')
         );
 
@@ -288,7 +290,7 @@ class InteractionMatchingController extends Controller
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('UJMExoBundle:InteractionMatching')->find($id);
         //Deleting of relations, if there the question is shared
-        $sharesQuestion = $em->getRepository('UJMExoBundle:Share')->findBy(array('question' => $entity->getQuestion()->getId()));       
+        $sharesQuestion = $em->getRepository('UJMExoBundle:Share')->findBy(array('question' => $entity->getQuestion()->getId()));
         foreach ($sharesQuestion as $share){
             $em->remove($share);
         }

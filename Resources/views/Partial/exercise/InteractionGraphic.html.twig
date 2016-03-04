@@ -24,7 +24,7 @@
                 {% set response = 'empty' %}
             {% endif %}
 
-            <img class="AnswerImage" src="{{ asset(interactionToDisplayed.document.url) }}" alt="AnswerImg" id="AnswerImg"
+            <img class="AnswerImage" src="{{ asset(interactionToDisplayed.picture.url) }}" alt="AnswerImg" id="AnswerImg"
                  width="{{ interactionToDisplayed.width }}" height="{{ interactionToDisplayed.height }}"
                  style="margin-top: 30px" onload="displayAnswersGraph('{{ response }}');"/>
         </p>
@@ -37,4 +37,3 @@
     {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
 </div>
     <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
-    

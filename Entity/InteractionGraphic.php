@@ -14,19 +14,9 @@ class InteractionGraphic extends AbstractInteraction
     const TYPE = 'InteractionGraphic';
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="Picture")
      */
-    private $width;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $height;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Document")
-     */
-    private $document;
+    private $picture;
 
     /**
      * @ORM\OneToMany(
@@ -54,38 +44,6 @@ class InteractionGraphic extends AbstractInteraction
     }
 
     /**
-     * @param integer $width
-     */
-    public function setWidth($width)
-    {
-        $this->width = $width;
-    }
-
-    /**
-     * @return int
-     */
-    public function getWidth()
-    {
-        return $this->width;
-    }
-
-    /**
-     * @param int $height
-     */
-    public function setHeight($height)
-    {
-        $this->height = $height;
-    }
-
-    /**
-     * @return int
-     */
-    public function getHeight()
-    {
-        return $this->height;
-    }
-
-    /**
      * @return Question
      */
     public function getQuestion()
@@ -94,19 +52,19 @@ class InteractionGraphic extends AbstractInteraction
     }
 
     /**
-     * @return Document
+     * @return Picture
      */
-    public function getDocument()
+    public function getPicture()
     {
-        return $this->document;
+        return $this->picture;
     }
 
     /**
-     * @param Document $document
+     * @param Picture $picture
      */
-    public function setDocument(Document $document)
+    public function setPicture(Picture $picture)
     {
-        $this->document = $document;
+        $this->picture = $picture;
     }
 
     /**

@@ -6,7 +6,7 @@
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use UJM\ExoBundle\Entity\Coords;
-use UJM\ExoBundle\Entity\Document;
+use UJM\ExoBundle\Entity\Picture;
 use UJM\ExoBundle\Entity\InteractionGraphic;
 
 class GraphicImport extends QtiImport
@@ -42,8 +42,6 @@ class GraphicImport extends QtiImport
 
         $this->interactionGraph = new InteractionGraphic();
         $this->interactionGraph->setQuestion($this->question);
-        $this->interactionGraph->setHeight($ob->getAttribute('height'));
-        $this->interactionGraph->setWidth($ob->getAttribute('width'));
 
         $this->om->persist($this->interactionGraph);
         $this->om->flush();
@@ -97,16 +95,18 @@ class GraphicImport extends QtiImport
         $userDir = $this->container->getParameter('claroline.param.uploads_directory').'/ujmexo/users_documents/'.$user->getUsername();
         $picName = $this->cpPicture($objectTag->getAttribute('data'), $userDir);
 
-        $document = new Document();
-        $document->setLabel($objectTag->nodeValue);
-        $document->setType($objectTag->getAttribute('type'));
-        $document->setUrl('./uploads/ujmexo/users_documents/'.$user->getUsername().'/images/'.$picName);
-        $document->setUser($user);
+        $picture = new Picture();
+        $picture->setLabel($objectTag->nodeValue);
+        $picture->setType($objectTag->getAttribute('type'));
+        $picture->setUrl('./uploads/ujmexo/users_documents/'.$user->getUsername().'/images/'.$picName);
+        $picture->setUser($user);
+        $picture->setHeight($objectTag->getAttribute('height'));
+        $picture->setWidth($objectTag->getAttribute('width'));
 
-        $this->om->persist($document);
+        $this->om->persist($picture);
         $this->om->flush();
 
-        $this->interactionGraph->setDocument($document);
+        $this->interactionGraph->setPicture($picture);
         $this->om->persist($this->interactionGraph);
         $this->om->flush();
     }

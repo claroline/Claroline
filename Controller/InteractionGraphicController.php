@@ -80,7 +80,7 @@ class InteractionGraphicController extends Controller
         $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
         $formHandler = new InteractionGraphicHandler(
             $form, $this->get('request'), $this->getDoctrine()->getManager(),
-            $this->container->get('ujm.exo_exercise'),
+            $this->container->get('ujm.exo_exercise'), $catSer,
             $user, $exercise, $this->get('translator')
         );
 
@@ -155,13 +155,18 @@ class InteractionGraphicController extends Controller
         $interactionGraph = $em->getRepository('UJMExoBundle:InteractionGraphic')
             ->findOneByQuestion($attr->get('interaction')->getId());
 
+        $picture = $em->getRepository('UJMExoBundle:Picture')
+            ->findOneBy(array('id' => $interactionGraph->getPicture()));
+
         $position = $em->getRepository('UJMExoBundle:Coords')->findBy(
             array('interactionGraphic' => $interactionGraph->getId())
         );
 
         if ($attr->get('user')->getId() != $interactionGraph->getQuestion()->getUser()->getId()) {
-            $docID = $interactionGraph->getDocument()->getId();
+            $docID = $interactionGraph->getPicture()->getId();
         }
+
+        $catSer->ctrlCategory($interactionGraph->getQuestion());
 
         $editForm = $this->createForm(
             new InteractionGraphicType($attr->get('user'), $attr->get('catID'), $docID), $interactionGraph
@@ -169,13 +174,14 @@ class InteractionGraphicController extends Controller
 
         $linkedCategory = $catSer->getLinkedCategories();
 
-        $variables['entity'] = $interactionGraph;
+        $variables['entityInterGraph'] = $interactionGraph;
         $variables['edit_form'] = $editForm->createView();
         $variables['nbResponses'] = $graphSer->getNbReponses($attr->get('interaction'));
         $variables['linkedCategory'] = $linkedCategory;
         $variables['position'] = $position;
         $variables['exoID'] = $attr->get('exoID');
         $variables['locker'] = $catSer->getLockCategory();
+        $variables['entityPicture'] = $picture;
 
         if ($attr->get('exoID') != -1) {
             $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($attr->get('exoID'));
@@ -211,7 +217,7 @@ class InteractionGraphicController extends Controller
 
         if ($user->getId() != $entity->getQuestion()->getUser()->getId()) {
             $catID = $entity->getQuestion()->getCategory()->getId();
-            $docID = $entity->getDocument()->getId();
+            $docID = $entity->getPicture()->getId();
         }
 
         $editForm = $this->createForm(
@@ -224,8 +230,8 @@ class InteractionGraphicController extends Controller
 
         $formHandler = new InteractionGraphicHandler(
             $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
-            $this->container->get('ujm.exo_exercise'),
-            $this->container->get('security.token_storage')->getToken()->getUser(),
+            $this->container->get('ujm.exo_exercise'), $this->container->get('ujm.exo_category'),
+            $this->container->get('security.token_storage')->getToken()->getUser(), -1,
             $this->get('translator')
         );
 
@@ -268,7 +274,7 @@ class InteractionGraphicController extends Controller
         $interactionGraphic = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($id);
         $coords = $em->getRepository('UJMExoBundle:Coords')->findBy(array('interactionGraphic' => $id));
         //Deleting of relations, if there the question is shared
-        $sharesQuestion = $em->getRepository('UJMExoBundle:Share')->findBy(array('question' => $interactionGraphic->getQuestion()->getId()));       
+        $sharesQuestion = $em->getRepository('UJMExoBundle:Share')->findBy(array('question' => $interactionGraphic->getQuestion()->getId()));
         foreach ($sharesQuestion as $share){
             $em->remove($share);
         }
@@ -292,7 +298,7 @@ class InteractionGraphicController extends Controller
     }
 
     /**
-     * Display the twig view to add a new picture to the user's document.
+     * Display the twig view to add a new picture to the user's Picture.
      *
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -320,7 +326,7 @@ class InteractionGraphicController extends Controller
             if ($label) {
                 $repository = $this->getDoctrine()
                     ->getManager()
-                    ->getRepository('UJMExoBundle:Document');
+                    ->getRepository('UJMExoBundle:Picture');
 
                 $pic = $repository->findOneBy(array('label' => $label));
                 $suffix = substr($pic->getUrl(), 9); // Get the end of the src of the picture

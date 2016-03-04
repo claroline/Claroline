@@ -125,4 +125,30 @@ class ResponseRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    /**
+     * Get the score total for a paper.
+     *
+     *
+     * @param int $paperID id paper
+     *
+     * Return int
+     */
+    public function getScoreExercise($paperId)
+    {
+        //doesn't take long open question not marked
+        $dql = '
+            SELECT sum(r.mark) as score
+            FROM UJM\ExoBundle\Entity\Response r
+            WHERE r.paper= ?1
+            AND r.mark >= 0
+        ';
+
+        $query = $this->_em->createQuery($dql)
+                      ->setParameters(array(1 => $paperId));
+
+        $res = $query->getOneOrNullResult();
+
+        return $res['score'];
+    }
 }

@@ -15,6 +15,7 @@ abstract class QuestionHandler
     protected $request;
     protected $em;
     protected $exoServ;
+    protected $catServ;
     protected $user;
     protected $exercise;
     protected $isClone = false;
@@ -28,16 +29,18 @@ abstract class QuestionHandler
      * @param \Symfony\Component\HttpFoundation\Request        $request
      * @param Doctrine EntityManager                           $em
      * @param \UJM\ExoBundle\Services\classes\exerciseServices $exoServ
+     * @param \UJM\ExoBundle\Services\classes\CategoryService  $catServ
      * @param \Claroline\CoreBundle\Entity\User                $user
      * @param UJM\ExoBundle\Entity\Exercise                    $exercise   instance of Exercise if the Interaction is created or modified since an exercise if since the bank $exercise=-1
      * @param Translation                                      $translator
      */
-    public function __construct(Form $form = null, Request $request = null, EntityManager $em, $exoServ, User $user, $exercise = -1, TranslatorInterface $translator = null)
+    public function __construct(Form $form = null, Request $request = null, EntityManager $em, $exoServ, $catServ, User $user, $exercise = -1, TranslatorInterface $translator = null)
     {
         $this->form = $form;
         $this->request = $request;
         $this->em = $em;
         $this->exoServ = $exoServ;
+        $this->catServ = $catServ;
         $this->user = $user;
         $this->exercise = $exercise;
         $this->translator = $translator;
@@ -180,12 +183,7 @@ abstract class QuestionHandler
             }
         }
         if ($checkCategory == false) {
-            $newCategory = new Category();
-            $newCategory->setValue($default);
-            $newCategory->setLocker(1);
-            $newCategory->setUser($this->user);
-            $this->em->persist($newCategory);
-            $this->em->flush();
+            $newCategory = $this->createCategoryDefault($default);
             $data->setCategory($newCategory);
         }
     }
@@ -197,7 +195,7 @@ abstract class QuestionHandler
      */
     protected function addAnExercise($inter)
     {
-        $this->exoServ->addQuestionInExercise($inter, $this->exercise);
+        $this->exoServ->addQuestionInExercise($inter->getQuestion(), $this->exercise);
     }
 
     /**
@@ -247,8 +245,37 @@ abstract class QuestionHandler
         $title = $copy->getQuestion()->getTitle();
         $copy->getQuestion()
              ->setTitle($title.' #');
+        $this->ctrlCat($copy);
 
         $this->isClone = true;
         $this->onSuccessAdd($copy);
+    }
+
+    /**
+     * Control if the user is the owner of the category
+     * If no, the default category of user will be used -> clone of a shared question
+     *
+     * @param object type of InteractionQCM or InteractionGraphic or .... $inter
+     */
+    protected function ctrlCat($inter)
+    {
+        $this->catServ->ctrlCategory($inter->getQuestion());
+    }
+
+    /**
+     * Create the default category for the user
+     *
+     * @param string $default name of default's category
+     * @return \UJM\ExoBundle\Entity\Category
+     */
+    private function createCategoryDefault ($default) {
+        $newCategory = new Category();
+        $newCategory->setValue($default);
+        $newCategory->setLocker(1);
+        $newCategory->setUser($this->user);
+        $this->em->persist($newCategory);
+        $this->em->flush();
+
+        return $newCategory;
     }
 }

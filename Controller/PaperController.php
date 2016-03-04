@@ -102,8 +102,8 @@ class PaperController extends Controller
         $badgesInfoUser = $badgeExoSer->badgesInfoUser(
                 $user->getId(), $exercise->getResourceNode()->getId(), $this->container->getParameter('locale'));
 
-        $nbQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')
-                ->getCountQuestion($exoID);
+        $nbQuestions = $em->getRepository('UJMExoBundle:StepQuestion')
+                ->getCountQuestion($exercise);
 
         return $this->render(
                         'UJMExoBundle:Paper:index.html.twig', array(

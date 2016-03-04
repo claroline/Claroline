@@ -31,8 +31,8 @@ class Graphic extends Interaction
         $interG = $em->getRepository('UJMExoBundle:InteractionGraphic')
             ->find($graphId);
 
-        $doc = $em->getRepository('UJMExoBundle:Document')
-            ->findOneBy(array('id' => $interG->getDocument()));
+        $doc = $em->getRepository('UJMExoBundle:Picture')
+            ->findOneBy(array('id' => $interG->getPicture()));
 
         $point = $this->mark($answers, $request, $rightCoords, $coords);
 

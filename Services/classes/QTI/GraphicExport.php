@@ -12,6 +12,7 @@ class GraphicExport extends QtiExport
 {
     private $interactiongraph;
     private $selectPointInteraction;
+    private $picture;
 
     /**
      * Implements the abstract method.
@@ -30,6 +31,11 @@ class GraphicExport extends QtiExport
                                 ->getManager()
                                 ->getRepository('UJMExoBundle:InteractionGraphic')
                                 ->findOneByQuestion($question);
+
+        $this->picture = $this->doctrine
+                        ->getManager()
+                        ->getRepository('UJMExoBundle:Picture')
+                        ->findOneBy(array('id' => $this->interactiongraph->getPicture()));
 
         if (count($this->interactiongraph->getCoords()) > 1) {
             $cardinality = 'multiple';
@@ -128,7 +134,7 @@ class GraphicExport extends QtiExport
      */
     private function selectPointInteractionTag()
     {
-        $taburl = explode('/', $this->interactiongraph->getDocument()->getUrl());
+        $taburl = explode('/', $this->interactiongraph->getPicture()->getUrl());
         $pictureName = end($taburl);
         $this->selectPointInteraction = $this->document->createElement('selectPointInteraction');
         $this->selectPointInteraction->setAttribute('responseIdentifier', 'RESPONSE');
@@ -136,15 +142,15 @@ class GraphicExport extends QtiExport
                 count($this->interactiongraph->getCoords()));
 
         $object = $this->document->CreateElement('object');
-        $mimetype = $this->interactiongraph->getDocument()->getType();
+        $mimetype = $this->interactiongraph->getPicture()->getType();
         if (strpos($mimetype, 'image/') === false) {
             $mimetype = 'image/'.$mimetype;
         }
         $object->setAttribute('type', $mimetype);
-        $object->setAttribute('width', $this->interactiongraph->getWidth());
-        $object->setAttribute('height', $this->interactiongraph->getHeight());
+        $object->setAttribute('width', $this->picture->getWidth());
+        $object->setAttribute('height', $this->picture->getHeight());
         $object->setAttribute('data', $pictureName);
-        $objecttxt = $this->document->CreateTextNode($this->interactiongraph->getDocument()->getLabel());
+        $objecttxt = $this->document->CreateTextNode($this->interactiongraph->getPicture()->getLabel());
         $object->appendChild($objecttxt);
         $this->selectPointInteraction->appendChild($object);
 
@@ -173,7 +179,7 @@ class GraphicExport extends QtiExport
      */
     private function getPicture()
     {
-        $picture = $this->interactiongraph->getDocument();
+        $picture = $this->interactiongraph->getPicture();
         $src = $picture->getUrl();
         $taburl = explode('/', $src);
         $pictureName = end($taburl);

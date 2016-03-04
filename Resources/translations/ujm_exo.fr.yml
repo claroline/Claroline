@@ -15,6 +15,7 @@ all_question: Toutes les questions
 already: Cette question est déjà partagée avec cet utilisateur
 already_answered: Vous avez déjà répondu à cet exercice
 already_exist: Ce nom existe déjà.
+anonymous : Anonyme
 answer_coched: Aucune réponse attendue n\'est cochée
 answer_zone: Zone de réponse
 attempt_info1: Vous avez droit à
@@ -42,6 +43,7 @@ calculation_measure_difficulty: Il se calcul avec le nombre de candidats ayant r
 category: Catégorie
 case_sensitive: Respecter la casse
 cercle: Cercle
+certificatif : Certificatif
 change: Changer
 change_name: Changer le nom du document
 change_order: Pour changer l'ordre des questions, déplacez-les en utilisant le glisser/déposer
@@ -78,7 +80,7 @@ display_all_list: Afficher la liste complète
 display_all_on_this_page: Tout afficher sur cette page
 display_pagination: Afficher la pagination
 docimology: Docimologie
-doc_manage: Gestion de mes documents
+pic_manage: Gestion de mes documents
 document: Document
 drop_category: Supprimer cette catégorie
 duplicate: Dupliquer
@@ -119,6 +121,7 @@ finish: Terminer
 for_type_of: pour une question de type
 frequency: Fréquence
 from: A partir du
+formative : Formatif
 
 # G
 graphic: Graphique
@@ -206,7 +209,7 @@ next: Suivant
 no: Non
 no_answer: Pas de réponse
 no_answer_zone: Vous n\'avez mis aucune zone de réponse
-no_doc_found: Pas de document trouvé
+no_pic_found: Pas de document trouvé
 no_finish: Non terminé
 no_img: Vous devez télécharger une image
 no_img_select: Vous devez sélectionner une image
@@ -319,13 +322,14 @@ size: Taille
 start_again: Recommencer
 start_date: Date de début
 sort: Trier les documents
-
+summative : Sommatif
 
 # T
 temporary_mark: Note temporaire
 test_exit: Sortie du test
 title: Titre
 type: Type
+type_exo : Type de l'exercice
 type_qcm: Type du QCM
 type_question: Type de la question
 
@@ -340,7 +344,7 @@ users: Utilisateurs
 validate: Valider
 
 # W
-warning: Êtes-vous sûr de vouloir supprimer ce document
+warning: Êtes-vous sûr de vouloir supprimer cette image
 warning_change_type_q: Attention vous risquez de perdre vos données saisies, continuer
 warning_one_word: Vous avez choisi une question à un mot. Attention, il a des espaces dans votre réponse.
 weight_choice: Attribuer les points par réponse
