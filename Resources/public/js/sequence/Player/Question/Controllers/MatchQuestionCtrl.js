@@ -149,178 +149,6 @@
                 }.bind(this));
             };
             
-            this.checkAnswerValidity = function (label) {
-                if (!this.orphanAnswersAreChecked) {
-                    var hasSolution;
-                    for (var i=0; i<this.question.secondSet.length; i++) {
-                        hasSolution = false;
-                        for (var j=0; j<this.solutions.length; j++) {
-                            if (this.question.secondSet[i].id === this.solutions[j].secondId) {
-                                hasSolution = true;
-                            }
-                        }
-                        if (!hasSolution) {
-                            this.orphanAnswers.push(this.question.secondSet[i]);
-                        }
-                    }
-                    this.orphanAnswersAreChecked = true;
-                }
-                
-                var valid = false;
-                for (var i=0; i<this.connections.length; i++) {
-                    if (this.connections[i].target === label.id) {
-                        for (var j=0; j<this.solutions.length; j++) {
-                            if (this.solutions[j].secondId === label.id) {
-                                if (this.solutions[j].firstId === this.connections[i].source) {
-                                    valid = true;
-                                }
-                            }
-                        }
-                    }
-                }
-                var valid2 = false;
-                for (var i=0; i<this.orphanAnswers.length; i++) {
-                    if (this.orphanAnswers[i].id === label.id) {
-                        valid2 = true;
-                        for (var j=0; j<this.connections.length; j++) {
-                            if (this.orphanAnswers[i].id === this.connections[j].target) {
-                                valid2 = false;
-                            }
-                        }
-                    }
-                }
-                return valid || valid2;
-            };
-            
-            this.checkAnswerValidity = function (label) {
-                if (!this.orphanAnswersAreChecked) {
-                    var hasSolution;
-                    for (var i=0; i<this.question.secondSet.length; i++) {
-                        hasSolution = false;
-                        for (var j=0; j<this.solutions.length; j++) {
-                            if (this.question.secondSet[i].id === this.solutions[j].secondId) {
-                                hasSolution = true;
-                            }
-                        }
-                        if (!hasSolution) {
-                            this.orphanAnswers.push(this.question.secondSet[i]);
-                        }
-                    }
-                    this.orphanAnswersAreChecked = true;
-                }
-                
-                var valid = false;
-                for (var i=0; i<this.connections.length; i++) {
-                    if (this.connections[i].target === label.id) {
-                        for (var j=0; j<this.solutions.length; j++) {
-                            if (this.solutions[j].secondId === label.id) {
-                                if (this.solutions[j].firstId === this.connections[i].source) {
-                                    valid = true;
-                                }
-                            }
-                        }
-                    }
-                }
-                var valid2 = false;
-                for (var i=0; i<this.orphanAnswers.length; i++) {
-                    if (this.orphanAnswers[i].id === label.id) {
-                        valid2 = true;
-                        for (var j=0; j<this.connections.length; j++) {
-                            if (this.orphanAnswers[i].id === this.connections[j].target) {
-                                valid2 = false;
-                            }
-                        }
-                    }
-                }
-                return valid || valid2;
-            };
-            
-            this.checkAnswerValidity = function (label) {
-                if (!this.orphanAnswersAreChecked) {
-                    var hasSolution;
-                    for (var i=0; i<this.question.secondSet.length; i++) {
-                        hasSolution = false;
-                        for (var j=0; j<this.solutions.length; j++) {
-                            if (this.question.secondSet[i].id === this.solutions[j].secondId) {
-                                hasSolution = true;
-                            }
-                        }
-                        if (!hasSolution) {
-                            this.orphanAnswers.push(this.question.secondSet[i]);
-                        }
-                    }
-                    this.orphanAnswersAreChecked = true;
-                }
-                
-                var valid = false;
-                for (var i=0; i<this.connections.length; i++) {
-                    if (this.connections[i].target === label.id) {
-                        for (var j=0; j<this.solutions.length; j++) {
-                            if (this.solutions[j].secondId === label.id) {
-                                if (this.solutions[j].firstId === this.connections[i].source) {
-                                    valid = true;
-                                }
-                            }
-                        }
-                    }
-                }
-                var valid2 = false;
-                for (var i=0; i<this.orphanAnswers.length; i++) {
-                    if (this.orphanAnswers[i].id === label.id) {
-                        valid2 = true;
-                        for (var j=0; j<this.connections.length; j++) {
-                            if (this.orphanAnswers[i].id === this.connections[j].target) {
-                                valid2 = false;
-                            }
-                        }
-                    }
-                }
-                return valid || valid2;
-            };
-            
-            this.checkAnswerValidity = function (label) {
-                if (!this.orphanAnswersAreChecked) {
-                    var hasSolution;
-                    for (var i=0; i<this.question.secondSet.length; i++) {
-                        hasSolution = false;
-                        for (var j=0; j<this.solutions.length; j++) {
-                            if (this.question.secondSet[i].id === this.solutions[j].secondId) {
-                                hasSolution = true;
-                            }
-                        }
-                        if (!hasSolution) {
-                            this.orphanAnswers.push(this.question.secondSet[i]);
-                        }
-                    }
-                    this.orphanAnswersAreChecked = true;
-                }
-                
-                var valid = false;
-                for (var i=0; i<this.connections.length; i++) {
-                    if (this.connections[i].target === label.id) {
-                        for (var j=0; j<this.solutions.length; j++) {
-                            if (this.solutions[j].secondId === label.id) {
-                                if (this.solutions[j].firstId === this.connections[i].source) {
-                                    valid = true;
-                                }
-                            }
-                        }
-                    }
-                }
-                var valid2 = false;
-                for (var i=0; i<this.orphanAnswers.length; i++) {
-                    if (this.orphanAnswers[i].id === label.id) {
-                        valid2 = true;
-                        for (var j=0; j<this.connections.length; j++) {
-                            if (this.orphanAnswers[i].id === this.connections[j].target) {
-                                valid2 = false;
-                            }
-                        }
-                    }
-                }
-                return valid || valid2;
-            };
-            
             this.hideFeedback = function () {
                 this.feedbackIsVisible = false;
                 if (!this.question.toBind) {
@@ -433,6 +261,56 @@
              * @param {type} label
              * @returns {Array}
              */
+            this.getStudentAnswersWithIcons = function (label) {
+                var answers_to_check;
+                if (this.question.toBind) {
+                    answers_to_check = this.connections;
+                }
+                else {
+                    answers_to_check = this.dropped;
+                }
+                var answers = [];
+                for (var i=0; i<answers_to_check.length; i++) {
+                    if (answers_to_check[i].target === label.id) {
+                        for (var j=0; j<this.question.firstSet.length; j++) {
+                            if (this.question.firstSet[j].id === answers_to_check[i].source) {
+                                answers.push(this.question.firstSet[j].data);
+                            }
+                        }
+                    }
+                }
+                var correctAnswers = [];
+                for (var i=0; i<this.solutions.length; i++) {
+                    if (this.solutions[i].secondId === label.id) {
+                        for (var j=0; j<this.question.firstSet.length; j++) {
+                            if (this.question.firstSet[j].id === this.solutions[i].firstId) {
+                                correctAnswers.push(this.question.firstSet[j].data);
+                            }
+                        }
+                    }
+                }
+                
+                for (var i=0; i<answers.length; i++) {
+                    var selected = false;
+                    for (var j=0; j<correctAnswers.length; j++) {
+                        if (correctAnswers[j] === answers[i]) {
+                            answers[i] = answers[i] + " <i class='feedback-icon fa fa-check color-success'></i>";
+                            selected = true;
+                        }
+                    }
+                    if (!selected) {
+                        answers[i] = answers[i] + " <i class='feedback-icon fa fa-close color-danger'></i>";
+                    }
+                }
+                
+                return answers;
+            };
+            
+            /**
+             * Get the student's answers for this label
+             * @param {type} label
+             * @returns {Array}
+             */
             this.getStudentAnswers = function (label) {
                 var answers_to_check;
                 if (this.question.toBind) {
@@ -460,17 +338,39 @@
              * @returns {Array}
              */
             this.getCorrectAnswers = function (label) {
-                var answers = [];
+                var correctAnswers = [];
+                var answersToShow = [];
                 for (var i=0; i<this.solutions.length; i++) {
                     if (this.solutions[i].secondId === label.id) {
                         for (var j=0; j<this.question.firstSet.length; j++) {
                             if (this.question.firstSet[j].id === this.solutions[i].firstId) {
-                                answers.push(this.question.firstSet[j].data);
+                                correctAnswers.push(this.question.firstSet[j].data);
                             }
                         }
                     }
                 }
-                return answers;
+                
+                /**
+                 * -----------------------------------------------------------------
+                 * Reste un souci dans la liste des réponses correctes, à corriger
+                 * -----------------------------------------------------------------
+                 */
+                
+                var studentAnswers = this.getStudentAnswers(label);
+                
+                for (var i=0; i<correctAnswers.length; i++) {
+                    var selected = false;
+                    for (var j=0; j<studentAnswers.length; j++) {
+                        if (correctAnswers[i] === studentAnswers[j]) {
+                            selected = true;
+                        }
+                    }
+                    if (selected) {
+                        answersToShow.push(correctAnswers[i]);
+                    }
+                }
+                
+                return answersToShow;
             };
             
             this.getCurrentItemFeedBack = function (label) {
