@@ -179,11 +179,6 @@ class DropController extends DropzoneBaseController
 
         }
 
-
-
-
-
-
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,

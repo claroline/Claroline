@@ -22,8 +22,8 @@ class DocumentType extends AbstractType
                          );
 
             $builder->add('document', 'tinymce', array(
-                            'data' => 'Votre texte ici',
-                            'required' => true,
+                          'data' => 'Votre texte ici',
+                          'required' => true,
             ));
         } else if ($options['documentType'] == 'file') {
             $this->setName('innova_collecticiel_document_file_form_file');

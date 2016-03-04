@@ -469,6 +469,123 @@ $(document).ready(function () {
 
     });
 
-});
+    // Pour changer et traduire le message "Veuillez renseigner ce champ."
+    $('#submitTitle').on('click', function(event) {
 
+        var text = document.getElementById('innova_collecticiel_document_file_form_text').value;
+alert("submitTitle")
+alert(text);
+alert(text.length);
+
+        // Récupération de la zone traduite
+        var translation = document.getElementById('translation_id').value;
+
+
+        if (text.length == 0) {
+            // Afficher la zone traduite
+alert("ici");
+            document.getElementById("innova_collecticiel_document_file_form_text").setCustomValidity(translation);
+//            document.getElementById('innova_collecticiel_document_file_form_text').focus();
+        }
+        else {
+            var doc = document.getElementById('innova_collecticiel_document_file_form_document').value;
+
+    alert("innova_collecticiel_document_file_form_document")
+    alert(doc);
+    alert(doc.length);
+
+            if (doc.length == 0) {
+                // Afficher la zone traduite
+    alert("ici2");
+//                tinyMCE.get("innova_collecticiel_document_file_form_document").getBody().focus();
+                document.getElementById("innova_collecticiel_document_file_form_document").setCustomValidity(translation);
+                $("#innova_collecticiel_document_file_form_document").tinymce().focus();
+            }
+
+            
+        }
+
+
+        // var $elem = $("#email");
+        // var email = $elem.val();
+
+        // //the ajax call returns true if the email exists
+        // $.get( "ajax/checkUniqueEmail", function(data) {
+        //     if(data === "true"){
+        //         $elem.setCustomValidity("This email already exists.");
+        //     }else{
+        //         $elem.setCustomValidity("")
+        //     }
+        //     //then we submit the form
+        //     $("#form").submit();
+        // });
+    });
+
+
+
+
+    // Pour changer et traduire le message "Veuillez renseigner ce champ."
+    $('#innova_collecticiel_document_file_form_document').on('click', function(event) {
+
+        var doc = document.getElementById('innova_collecticiel_document_file_form_document').value;
+
+alert("innova_collecticiel_document_file_form_document ZZZ")
+alert(doc);
+alert(doc.length);
+        // Récupération de la zone traduite
+        var translation = document.getElementById('translation_id').value;
+
+ 
+
+
+        // var $elem = $("#email");
+        // var email = $elem.val();
+
+        // //the ajax call returns true if the email exists
+        // $.get( "ajax/checkUniqueEmail", function(data) {
+        //     if(data === "true"){
+        //         $elem.setCustomValidity("This email already exists.");
+        //     }else{
+        //         $elem.setCustomValidity("")
+        //     }
+        //     //then we submit the form
+        //     $("#form").submit();
+        // });
+    });
+
+
+
+    // Pour changer et traduire le message "Veuillez renseigner ce champ."
+    $('#innova_collecticiel_document_file_form_document_ifr').on('click', function(event) {
+alert("placeholder document1");
+    });
+
+    // Pour changer et traduire le message "Veuillez renseigner ce champ."
+    $('#tinyMCEForm').on('click', function(event) {
+alert("placeholder document2");
+    });
+
+    // Pour changer et traduire le message "Veuillez renseigner ce champ."
+//    $('#innovaDocument').on('click', function(event) {
+//alert("placeholder document3");
+//                $("#innova_collecticiel_document_file_form_document").tinymce().focus();
+//                tinyMCE.get("innova_collecticiel_document_file_form_document").getBody().focus();
+
+//    });
+
+    // Pour changer et traduire le message "Veuillez renseigner ce champ."
+    $('#tinymce').on('click', function(event) {
+alert("placeholder document4");
+    });
+
+    // Pour changer et traduire le message "Veuillez renseigner ce champ."
+    $('#titi').on('click', function(event) {
+alert("placeholder document5");
+    });
+
+
+    $('#innovaDocument').find('textarea').val('Some default Text');
+
+
+});
 
