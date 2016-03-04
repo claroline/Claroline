@@ -79,7 +79,10 @@ class InteractionHoleController extends Controller {
 
         $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
         $formHandler = new InteractionHoleHandler(
-                $form, $this->get('request'), $this->getDoctrine()->getManager(), $this->container->get('ujm.exo_exercise'), $this->container->get('security.token_storage')->getToken()->getUser(), $exercise, $this->get('translator')
+                $form, $this->get('request'), $this->getDoctrine()->getManager(),
+                $this->container->get('ujm.exo_exercise'), $catSer,
+                $this->container->get('security.token_storage')->getToken()->getUser(),
+                $exercise, $this->get('translator')
         );
 
         $formHandler->setValidator($this->get('validator'));
@@ -126,7 +129,7 @@ class InteractionHoleController extends Controller {
         $formWithError = substr($formWithError, strrpos($formWithError, 'GMT') + 3);
 
         return $this->render(
-                        'UJMExoBundle:Question:new.html.twig', array(
+                     'UJMExoBundle:Question:new.html.twig', array(
                     'formWithError' => $formWithError,
                     'exoID' => $exoID,
                     'linkedCategory' => $catSer->getLinkedCategories(),
@@ -147,6 +150,8 @@ class InteractionHoleController extends Controller {
 
         $interactionHole = $em->getRepository('UJMExoBundle:InteractionHole')
                 ->findOneByQuestion($attr->get('interaction')->getId());
+
+        $catSer->ctrlCategory($interactionHole->getQuestion());
 
         $editForm = $this->createForm(
                 new InteractionHoleType($attr->get('user'), $attr->get('catID')), $interactionHole
@@ -197,7 +202,10 @@ class InteractionHoleController extends Controller {
                 ), $interHole
         );
         $formHandler = new InteractionHoleHandler(
-                $editForm, $this->get('request'), $this->getDoctrine()->getManager(), $this->container->get('ujm.exo_exercise'), $this->container->get('security.token_storage')->getToken()->getUser(), $exoID, $this->get('translator')
+                $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
+                $this->container->get('ujm.exo_exercise'), $this->container->get('ujm.exo_category'),
+                $this->container->get('security.token_storage')->getToken()->getUser(),
+                $exoID, $this->get('translator')
         );
 
         $formHandler->setValidator($this->get('validator'));

@@ -15,6 +15,7 @@ abstract class QuestionHandler
     protected $request;
     protected $em;
     protected $exoServ;
+    protected $catServ;
     protected $user;
     protected $exercise;
     protected $isClone = false;
@@ -28,16 +29,18 @@ abstract class QuestionHandler
      * @param \Symfony\Component\HttpFoundation\Request        $request
      * @param Doctrine EntityManager                           $em
      * @param \UJM\ExoBundle\Services\classes\exerciseServices $exoServ
+     * @param \UJM\ExoBundle\Services\classes\CategoryService  $catServ
      * @param \Claroline\CoreBundle\Entity\User                $user
      * @param UJM\ExoBundle\Entity\Exercise                    $exercise   instance of Exercise if the Interaction is created or modified since an exercise if since the bank $exercise=-1
      * @param Translation                                      $translator
      */
-    public function __construct(Form $form = null, Request $request = null, EntityManager $em, $exoServ, User $user, $exercise = -1, TranslatorInterface $translator = null)
+    public function __construct(Form $form = null, Request $request = null, EntityManager $em, $exoServ, $catServ, User $user, $exercise = -1, TranslatorInterface $translator = null)
     {
         $this->form = $form;
         $this->request = $request;
         $this->em = $em;
         $this->exoServ = $exoServ;
+        $this->catServ = $catServ;
         $this->user = $user;
         $this->exercise = $exercise;
         $this->translator = $translator;
@@ -250,24 +253,13 @@ abstract class QuestionHandler
 
     /**
      * Control if the user is the owner of the category
-     * If no, the default category of user will be used
+     * If no, the default category of user will be used -> clone of a shared question
      *
      * @param object type of InteractionQCM or InteractionGraphic or .... $inter
      */
     protected function ctrlCat($inter)
     {
-        $category = $inter->getQuestion()->getCategory();
-        $ownerCategory = $category->getUser();
-
-        if ($ownerCategory != $this->user) {
-            $userDefaultCategory = $this->em->getRepository('UJMExoBundle:Category')
-                    ->findOneBy(array('user' => $this->user, 'locker' => true));
-            if (!$userDefaultCategory) {
-                $default = $this->translator->trans('default', array(), 'ujm_exo');
-                $userDefaultCategory = $this->createCategoryDefault($default);
-            }
-            $inter->getQuestion()->setCategory($userDefaultCategory);
-        }
+        $this->catServ->ctrlCategory($inter->getQuestion());
     }
 
     /**

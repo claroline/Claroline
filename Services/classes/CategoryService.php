@@ -77,4 +77,28 @@ class CategoryService
 
         return $linkedCategory;
     }
+
+    /**
+     * Control if the user is the owner of the category
+     * If no, the default category of user will be used
+     *
+     * @param \UJM\ExoBundle\Entity\Question $question
+     */
+    public function ctrlCategory($question)
+    {
+        $em = $this->doctrine->getManager();
+        $user = $this->tokenStorage->getToken()->getUser()->getId();
+        $category = $question->getCategory();
+        $ownerCategory = $category->getUser()->getId();
+
+        if ($ownerCategory != $user) {
+            $userDefaultCategory = $em->getRepository('UJMExoBundle:Category')
+                    ->findOneBy(array('user' => $user, 'locker' => true));
+            if (!$userDefaultCategory) {
+                $default = $this->translator->trans('default', array(), 'ujm_exo');
+                $userDefaultCategory = $this->createCategoryDefault($default);
+            }
+            $question->setCategory($userDefaultCategory);
+        }
+    }
 }
