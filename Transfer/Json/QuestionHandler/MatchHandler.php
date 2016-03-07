@@ -223,6 +223,11 @@ class MatchHandler implements QuestionHandlerInterface {
             return $secondSetData;
         }, $labels);
 
+        $scoreTotal = 0;
+        foreach ($labels as $label) {
+            $scoreTotal = $scoreTotal + $label->getScoreRightResponse();
+        }
+        $exportData->scoreTotal = $scoreTotal;
 
         if ($withSolution) {
 

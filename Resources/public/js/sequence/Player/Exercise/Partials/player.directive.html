@@ -9,6 +9,9 @@
             <span data-ng-if="exercisePlayerCtrl.exercise.meta.maxAttempts > 0">{{ 'sequence_attempts_infos'|trans:{"1" : exercisePlayerCtrl.exercise.meta.maxAttempts}:'ujm_sequence'}}</span>
             <span>{{ 'sequence_nb_attempts'|trans:{"1" : exercisePlayerCtrl.paper.number}:'ujm_sequence' }}</span>
             <span data-ng-if="exercisePlayerCtrl.exercise.meta.maxAttempts > 0">/ {{exercisePlayerCtrl.exercise.meta.maxAttempts}}</span>
+            <span data-ng-if="exercisePlayerCtrl.checkIfFeedbackIsAvailable()"> - {{ 'sequence_score'|trans:{}:'ujm_sequence' }}: </span>
+            <span data-ng-if="exercisePlayerCtrl.checkIfFeedbackIsAvailable() && !exercisePlayerCtrl.feedbackIsShown">...</span>
+            <span data-ng-if="exercisePlayerCtrl.checkIfFeedbackIsAvailable() && exercisePlayerCtrl.feedbackIsShown">{{ exercisePlayerCtrl.getCurrentScore() }}/{{ exercisePlayerCtrl.getTotalScore() }}</span>
         </span>
     </div>
     <div class="panel-body">

@@ -61,6 +61,31 @@
                     this.validateStep('goto', this.exercise.steps.indexOf(step));
                 }
             };
+            
+            this.getTotalScore = function () {
+                var totalScore = 0;
+                for (var i=0; i<this.exercise.steps[this.currentStepIndex].items.length; i++) {
+                    totalScore += this.exercise.steps[this.currentStepIndex].items[i].scoreTotal;
+                }
+                return totalScore;
+            };
+            
+            this.getCurrentScore = function () {
+                var studentData = PlayerDataSharing.getStudentData();
+                /*console.log("getCurrentScore");
+                console.log(studentData);*/
+                console.log(studentData.question);
+                if (studentData.question.typeOpen === "long") {
+                    return "-";
+                }
+                else {
+                    for (var i=0; i<studentData.paper.questions.length; i++) {
+                        if (studentData.paper.questions[i].id === studentData.question.id.toString()) {
+                            return studentData.paper.questions[i].score;
+                        }
+                    }
+                }
+            };
 
             /**
              * save the current step in paper js object
@@ -172,6 +197,7 @@
                     this.feedbackIsShown = true;
                 }.bind(this));
                 $scope.$broadcast('show-feedback');
+                console.log(studentData);
             };
             
             this.hideFeedback = function () {

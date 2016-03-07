@@ -87,6 +87,7 @@ sequence_nb_attempts: Essai N° %1%
 sequence_interrupt_sequence_confirm: Êtes vous sûr de vouloir interrompre l'exercice ?
 sequence_end_sequence_confirm: Êtes vous sûr de vouloir terminer l'exercice ? <br/> Vous ne pourrez plus modifier vos réponses.
 sequence_play_leave_confirm: Êtes vous sûr de vouloir quitter l'application ?
+sequence_score: Score
 
 # v
 validate: Valider

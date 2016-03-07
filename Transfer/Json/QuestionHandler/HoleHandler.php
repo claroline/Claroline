@@ -135,7 +135,19 @@ class HoleHandler implements QuestionHandlerInterface
         $holeQuestion = $repo->findOneBy(['question' => $question]);
         $holes = $holeQuestion->getHoles()->toArray();
         $text = $holeQuestion->getHtmlWithoutValue();
-
+        
+        $scoreTotal = 0;
+        foreach ($holes as $hole) {
+            $maxScore = 0;
+            foreach ($hole->getWordResponses() as $wd) {
+                if ($wd->getScore() > $maxScore) {
+                    $maxScore = $wd->getScore();
+                }
+            }
+            $scoreTotal = $scoreTotal + $maxScore;
+        }
+        
+        $exportData->scoreTotal = $scoreTotal;
         $exportData->text = $text;
         if ($withSolution) {
             $exportData->solution = $holeQuestion->getHtml();
