@@ -272,9 +272,10 @@ class ExerciseManager
 
         return array_map(function ($question) use ($withSolutions, $exoStep , $exercise) {
 
-            $stepID = $exoStep->findStepByExoQuestion($exercise, $question);
+            $stepQuestion = $exoStep->findStepByExoQuestion($exercise, $question);
+            $stepId = $stepQuestion->getStep()->getId();
             return [
-                'id' => $stepID,
+                'id' => $stepId,
                 'items' => [$this->questionManager->exportQuestion($question, $withSolutions)]
             ];
         }, $questionRepo->findByExercise($exercise));
