@@ -16,8 +16,8 @@ class ReturnReceiptTypeCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('claroline:fixtures:load')
-            ->setDescription('Load needed ReturnReceipt datas')
+            ->setName('claroline:fixtures:innova_collecticiel_load')
+            ->setDescription('Load needed ReturnReceipt datas for Collecticiel')
         ;
     }
 
@@ -25,34 +25,37 @@ class ReturnReceiptTypeCommand extends ContainerAwareCommand
     {
             $start = time();
             $em = $this->getContainer()->get('doctrine')->getEntityManager('default');
-//             $em = $this->getDoctrine()->getManager();
-// //            $repository = $em->getRepository('InnovaCollecticielBundle:Criterion');
 
-//             /* RETURN RECEIPT TYPE */
-            $returnreceipttypes = array(
+            /* RETURN RECEIPT TYPE ARRAY */
+            $returnreceipttypesArray = array(
                 array("0", "NO RETURN RECEIPT"),
                 array("1", "DOUBLOON"), 
                 array("2", "DOCUMENT RECEIVED"),
                 array("3", "DOCUMENT UNREADABLE"),
                 array("4", "INCOMPLETE DOCUMENT"),
-                array("5", "ERROR DOCUMENT"),
-                array("6", "INCOMPLETE DOCUMENT"),
+                array("5", "ERROR DOCUMENT")
                 )
             ;
-            foreach ($returnreceipttypes as $returnreceipttype) {
-            $output->writeln($returnreceipttype[0]);
-                if (!$returnreceipttype = $em->getRepository('InnovaCollecticielBundle:ReturnReceiptType')->findById($returnreceipttype[0])) {
 
-            $output->writeln("ici");
-            $output->writeln($returnreceipttype[1]);
-            $output->writeln("--");
+            /* TRAITEMENT */
+            foreach ($returnreceipttypesArray as $returnreceipttype) {
 
-                    $returnReceiptType = new ReturnReceiptType();
+                // RECUPERATION DU LIBELLE
+                $typeName = $returnreceipttype[1];
 
-//                    $returnReceiptType->setName($returnreceipttype[0]);
-                    $returnReceiptType->setTypeName($returnreceipttype[1]);
-                    $em->persist($returnReceiptType);
-                    $output->writeln("Add new Return Receipt Type (".$returnreceipttype[1].").");
+                if (!$returnreceipttype = $em->getRepository('InnovaCollecticielBundle:ReturnReceiptType')->find($returnreceipttype[0])) {
+                    /* CREATION */
+                    $returnReceiptTypeAdd = new ReturnReceiptType();
+                    $returnReceiptTypeAdd->setTypeName($typeName);
+
+                    $em->persist($returnReceiptTypeAdd);
+                    $output->writeln("Add new Return Receipt Type (" . $returnReceiptTypeAdd->getTypeName() . ")");
+                }
+                else {
+                    /* MISE A JOUR */
+                    $returnreceipttype->setTypeName($typeName);
+                    $em->persist($returnreceipttype);
+                    $output->writeln("Update Return Receipt Type (" . $returnreceipttype->getTypeName() . ")");
                 }
             }
             $em->flush();
