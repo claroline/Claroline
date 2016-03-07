@@ -265,11 +265,16 @@ class ExerciseManager
      */
     private function exportSteps(Exercise $exercise, $withSolutions = true)
     {
+
+        $exoStep = $this->om->getRepository('UJMExoBundle:StepQuestion');
+
         $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
 
-        return array_map(function ($question) use ($withSolutions) {
+        return array_map(function ($question) use ($withSolutions, $exoStep , $exercise) {
+
+            $stepID = $exoStep->findStepByExoQuestion($exercise, $question);
             return [
-                'id' => '(unknown)',
+                'id' => $stepID,
                 'items' => [$this->questionManager->exportQuestion($question, $withSolutions)]
             ];
         }, $questionRepo->findByExercise($exercise));
