@@ -155,7 +155,6 @@ export default class UserController {
         )
     }
 
-
     _initPwdCallback(data) {
         for (let i = 0; i < this.selected.length; i++) {
             this.alerts.push({
