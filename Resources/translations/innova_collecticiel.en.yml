@@ -434,3 +434,5 @@ Do you want to cancel your request for comment : 'Do you want to cancel this req
 Cancel request for review: 'Cancel request for review'
 Do you want to cancel your request for review : 'Do you want to cancel this request for review ?'
 Please complete this field : 'Please complete this field'
+This field is required : 'The field ''Text'' is required'
+Please complete text : 'Please complete the field ''Text'' '

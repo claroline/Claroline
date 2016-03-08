@@ -19,15 +19,15 @@ class DocumentType extends AbstractType
 
             $builder->add('title', 'text', array(
                           'required' => true)
-                         );
-
+                        );
             $builder->add('document', 'tinymce', array(
-                          'data' => 'Votre texte ici',
-                          'required' => true,
-            ));
+                          'required' => true
+                        ));
+
         } else if ($options['documentType'] == 'file') {
             $this->setName('innova_collecticiel_document_file_form_file');
             $builder->add('document', 'file', array('required' => true, 'label' => 'file document'));
+
         } else if ($options['documentType'] == 'resource') {
             $this->setName('innova_collecticiel_document_file_form_resource');
             $builder->add(
@@ -39,6 +39,7 @@ class DocumentType extends AbstractType
                     'label_attr' => array('style' => 'display: none;')
                 )
             );
+
         } else {
             $this->setName('innova_collecticiel_document_file_form_url');
             $builder->add('document', 'url', array(

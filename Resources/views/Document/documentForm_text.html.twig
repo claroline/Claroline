@@ -16,16 +16,22 @@
         <div class='col-md-8'>
             <div class='input-group col-md-8'>
                 {{ form_widget(form.title,{'label_col_size': ' ', 'attr': {'placeholder': (documentType~'_placeholder')|trans({}, 'innova_collecticiel')}, 'label_attr': {'class': 'sr-only'},'id':'innova_collecticiel_document_file_form_text' }) }}
-            </div>
-
-            <div class="input-group" id="innovaDocument">
-                {{ form_widget(form.document,{'label_col_size': ' ', 'attr': {}, 'label_attr': {'class': 'sr-only'},'id':'innova_collecticiel_document_file_form_document' }) }}  
                 <span class='input-group-btn'>
                     <button type="submit" id="submitTitle" class="btn btn-default">
                         {{ 'Add'|trans({}, 'innova_collecticiel') }}
                         <input type="hidden" value="{{ 'Please complete this field'|trans({}, 'innova_collecticiel') }}" id="translation_id">
                     </button>
                 </span>
+            </div>
+
+            <div class='input-group col-md-8'>
+                <p>{{ 'This field is required'|trans({}, 'innova_collecticiel') }}</p>
+            </div>
+
+
+            <div class="input-group" id="innovaDocument">
+                {{ form_widget(form.document,{'label_col_size': ' ', 'attr': {}, 'label_attr': {'class': 'sr-only'},'id':'innova_collecticiel_document_file_form_document' }) }}  
+                <input type="hidden" value="{{ 'Please complete text'|trans({}, 'innova_collecticiel') }}" id="translation_doc_id">
             </div>
         </div>
     </div>

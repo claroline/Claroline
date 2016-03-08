@@ -434,3 +434,5 @@ Do you want to cancel your request for comment : 'Voulez-vous annuler cette dema
 Cancel request for review: 'Annuler la demande d''évaluation'
 Do you want to cancel your request for review : 'Voulez-vous annuler cette demande d''évaluation ?'
 Please complete this field : 'Veuillez renseigner ce champ'
+This field is required : 'Le champ ''Texte'' ci-dessous est obligatoire'
+Please complete text : 'Veuillez renseigner le champ ''Texte'' '
