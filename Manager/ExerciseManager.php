@@ -257,7 +257,7 @@ class ExerciseManager
     }
 
     /**
-     * @todo step id
+     * @export exercise with steps with questions
      *
      * @param Exercise  $exercise
      * @param bool      $withSolutions
@@ -266,18 +266,20 @@ class ExerciseManager
     private function exportSteps(Exercise $exercise, $withSolutions = true)
     {
 
-        $exoStep = $this->om->getRepository('UJMExoBundle:StepQuestion');
-
+        $questions = array();
+        $steps = $exercise->getSteps();
+        
         $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
-
-        return array_map(function ($question) use ($withSolutions, $exoStep , $exercise) {
-
-            $stepQuestion = $exoStep->findStepByExoQuestion($exercise, $question);
-            $stepId = $stepQuestion->getStep()->getId();
-            return [
-                'id' => $stepId,
-                'items' => [$this->questionManager->exportQuestion($question, $withSolutions)]
-            ];
-        }, $questionRepo->findByExercise($exercise));
+            
+        foreach ($steps as $step) {
+           $questions[] = array_map(function ($question) use ($withSolutions, $step) {
+               return  [
+                    'id' => $step->getId(),
+                    'items' => [$this->questionManager->exportQuestion($question, $withSolutions)]
+                ];
+            }, $questionRepo->findByStep($step));
+           
+        }
+        return $questions;
     }
 }
