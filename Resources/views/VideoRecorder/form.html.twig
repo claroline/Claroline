@@ -17,13 +17,14 @@
                 <h4 class="modal-title">{{ 'resource_modal_title'|trans({}, 'innova_video_recorder') }}</h4>
             </div>
             <div class="modal-body">
+                <!-- Error(s) row -->
                 <div class="row" id="form-error-msg-row" style="display: none;">
                     <div class="col-md-12 text-center">
                         <div class="alert alert-danger" role="alert">
                             <span class="fa fa-exclamation-circle"></span>
-                            <span id="form-error-msg">{{ 'resource_creation_error'|trans({}, 'innova_video_recorder') }}</span>
+                            <span id="form-error-msg"></span>
                             <hr/>
-                            <span id="form-error-download-msg">{{ 'resource_creation_error_download'|trans({}, 'innova_video_recorder') }}</span>
+                            <span id="form-error-download-msg" style="display:none;">{{ 'resource_creation_error_download'|trans({}, 'innova_video_recorder') }}</span>
                             <hr/>
                             <button type="button" title="{{ 'download_video'|trans({}, 'innova_video_recorder') }}" role="button" class="btn btn-danger fa fa-download" id="btn-video-download" onclick="downloadVideo()" style="display: none;"></button>
                         </div>
@@ -33,7 +34,7 @@
                     <div id="videoRecorderRow" class="row">
                         <div class="col-md-12 text-center">
                             <div class="btn-group">
-                                <button type="button" role="button" class="btn btn-danger fa fa-circle" id="video-record-start" title="Commencer l'enregistrement" onclick="record()"></button>
+                                <button type="button" role="button" class="btn btn-danger fa fa-circle" id="video-record-start" title="Commencer l'enregistrement" disabled="disabled" onclick="record()"></button>
                                 <button type="button" role="button" class="btn btn-default fa fa-stop" id="video-record-stop" title="Arrêter l'enregistrement" disabled="disabled" onclick="stopRecording()"></button>
                             </div>
                             <canvas class="pull-right" id="analyser" title="Mic level" width="34px" height="25px"></canvas>
@@ -55,7 +56,7 @@
                             <div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <video controls></video>
+                                        <video id="preview"></video>
                                         <audio style="display:none;"></audio>
                                     </div>
                                 </div>
@@ -67,7 +68,9 @@
             <div class="modal-footer">
                 <div id="progress"></div>
                 <button type="button" role="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
-                <button type="button" role="button" onclick="uploadVideo()" id="submitButton" disabled="disabled" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+                <button type="button" role="button" onclick="uploadVideo()" id="submitButton" disabled="disabled" class="btn btn-primary">
+                  {{ 'ok'|trans({}, 'platform') }}
+                </button>
             </div>
         </div>
     </form>
@@ -78,8 +81,8 @@
     <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain':'innova_video_recorder' }) }}"></script>
 
     {% javascripts debug=false filter='jsmin' output='vendor/innova/video-recorder/js/innova-video-recorder.js'
-  '@InnovaVideoRecorderBundle/Resources/public/js/libs/*'
-  '@InnovaVideoRecorderBundle/Resources/public/js/video_recorder.js'
+      '@InnovaVideoRecorderBundle/Resources/public/js/libs/*'
+      '@InnovaVideoRecorderBundle/Resources/public/js/video_recorder.js'
     %}
 
     <script src="{{ asset_url }}"></script>

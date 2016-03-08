@@ -1,11 +1,10 @@
 "use strict";
 
-//var mediaSource = new MediaSource();
-//mediaSource.addEventListener('sourceopen', handleSourceOpen, false);
+var isFirefox = !!navigator.mediaDevices.getUserMedia;
+console.log(isFirefox ? 'firefox':'not firefox');
+
 var mediaRecorder;
 var recordedBlobs; // array of chunk video blobs
-var sourceBuffer;
-var mediaStream;
 
 // audio input volume visualisation
 var audioContext = new window.AudioContext();
@@ -23,9 +22,8 @@ var meter;
 var recordEndTimeOut = 1000;
 var videoPlayer = document.querySelector('video');
 
+navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mediaDevices.getUserMedia;
 
-
-navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 var constraints = {
   audio: true,
   video: true
@@ -48,6 +46,8 @@ $('.modal').on('shown.bs.modal', function() {
     });
   });
 
+  videoPlayer.controls = false;
+
 });
 
 $('.modal').on('hide.bs.modal', function() {
@@ -55,101 +55,76 @@ $('.modal').on('hide.bs.modal', function() {
   resetData();
 });
 
-
+// store stream chunks
 function handleDataAvailable(event) {
-
   if (event.data && event.data.size > 0) {
-    //console.log('yep');
     recordedBlobs.push(event.data);
   }
 }
 
-/*
-function handleStop(event) {
-  console.log('Recorder stopped: ', event);
+navigator.getUserMedia(constraints, successCallback, errorCallback);
+
+function successCallback(stream) {
+  console.log('getUserMedia() got stream: ', stream);
+  window.stream = stream;
+  $('#video-record-start').prop('disabled', '');
+  if (window.URL) {
+    videoPlayer.src = window.URL.createObjectURL(stream);
+  } else {
+    videoPlayer.src = stream;
+  }
+
+  videoPlayer.muted = true;
+  videoPlayer.play();
 }
-*/
-/*function handleSourceOpen(event) {
-  console.log('MediaSource opened');
-  sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vp8"');
-  console.log('Source buffer: ', sourceBuffer);
-}*/
+
+function errorCallback(error) {
+  var msg = 'navigator.getUserMedia error.';
+  showError(msg, false);
+  console.log(msg, error);
+}
 
 
 function record() {
-  //navigator.getUserMedia(constraints, successCallback, errorCallback);
+
+  $('#video-record-start').prop('disabled', 'disabled');
+  $('#video-record-stop').prop('disabled', '');
+
+  var options = {
+    mimeType: 'video/webm',
+    audioBitsPerSecond: 128000,
+    videoBitsPerSecond: 1024000
+  };
 
   recordedBlobs = [];
-  navigator.getUserMedia(
-    constraints,
-    function(stream) {
+  try {
+    mediaRecorder = new MediaRecorder(window.stream, options);
+  } catch (e) {
+    var msg = 'Unable to create MediaRecorder with options Object.';
+    showError(msg, false);
+    console.log(msg, e);
+  }
 
-      console.log('getUserMedia() got stream: ', stream);
-      window.stream = stream;
-      mediaStream = stream;
+  mediaRecorder.ondataavailable = handleDataAvailable;
+  mediaRecorder.start(10); // collect 10ms of data
+  console.log('MediaRecorder started', mediaRecorder);
 
-      $('#video-record-start').prop('disabled', 'disabled');
-      $('#video-record-stop').prop('disabled', '');
+  videoPlayer.muted = true;
+  if (window.URL) {
+    videoPlayer.src = window.URL.createObjectURL(stream);
+  } else {
+    videoPlayer.src = stream;
+  }
 
-      var options = {
-        mimeType: 'video/webm'
-      };
-
-    //  mediaRecorder = new MediaRecorder(stream, options);
-
-      try {
-        mediaRecorder = new MediaRecorder(stream, options);
-      } catch (e0) {
-        console.log('Unable to create MediaRecorder with options Object: ', e0);
-        try {
-          options = {
-            mimeType: 'video/webm,codecs=vp9'
-          };
-          mediaRecorder = new MediaRecorder(stream, options);
-        } catch (e1) {
-          console.log('Unable to create MediaRecorder with options Object: ', e1);
-          try {
-            options = 'video/vp8'; // Chrome 47
-            mediaRecorder = new MediaRecorder(stream, options);
-          } catch (e2) {
-            alert('MediaRecorder is not supported by this browser.\n\n' +
-              'Try Firefox 29 or later, or Chrome 47 or later, with Enable experimental Web Platform features enabled from chrome://flags.');
-            console.error('Exception while creating MediaRecorder:', e2);
-            return;
-          }
-        }
-      }
-
-      //mediaRecorder.onstop = handleStop;
-      mediaRecorder.ondataavailable = handleDataAvailable;
-      mediaRecorder.start(10); // collect 10ms of data
-      console.log('MediaRecorder started', mediaRecorder);
-
-      videoPlayer.muted = true;
-      if (window.URL) {
-        videoPlayer.src = window.URL.createObjectURL(stream);
-      } else {
-        videoPlayer.src = stream;
-      }
-
-      videoPlayer.play();
-      gotStream(stream);
-    },
-    function(error) {
-      console.log(error);
-    });
+  videoPlayer.play();
+  gotStream(stream);
 }
 
 function resetData() {
   cancelAnalyserUpdates();
 
-  if(mediaStream){
-    mediaStream = null;
-  }
   recordedBlobs = null;
-  mediaSource = null;
   mediaRecorder = null;
-  sourceBuffer = null;
   audioContext = null;
   audioInput = null;
   realAudioInput = null;
@@ -157,54 +132,44 @@ function resetData() {
   rafID = null;
   analyserContext = null;
   analyserNode = null;
-  isRecording = false;
 }
 
 function stopRecording() {
 
-  mediaRecorder.stop();
-  $('#video-record-start').prop('disabled', '');
-  $('#video-record-stop').prop('disabled', 'disabled');
-  $('#submitButton').prop('disabled', false);
-
-  /*if(window.stream){
-    window.stream.stop();
-  }*/
-
-  if(mediaStream){
-    mediaStream.stop();
-  }
-
-  loadRecordedStream();
-
-
-}
-
-function loadRecordedStream() {
   videoPlayer.pause();
-  videoPlayer.muted = false;
-  var superBuffer = new Blob(recordedBlobs, {
-    type: 'video/webm'
-  });
-  videoPlayer.src = window.URL.createObjectURL(superBuffer);
 
-  videoPlayer.onended = function() {
-    var blob = new Blob(recordedBlobs, {
+  window.setTimeout(function () {
+    mediaRecorder.stop();
+    $('#video-record-start').prop('disabled', '');
+    $('#video-record-stop').prop('disabled', 'disabled');
+    $('#submitButton').prop('disabled', false);
+
+    var superBuffer = new Blob(recordedBlobs, {
       type: 'video/webm'
     });
-    videoPlayer.src = URL.createObjectURL(blob);
-  };
+    videoPlayer.src = window.URL.createObjectURL(superBuffer);
+    videoPlayer.muted = false;
+    videoPlayer.controls = true;
+
+    videoPlayer.onended = function() {
+      var blob = new Blob(recordedBlobs, {
+        type: 'video/webm'
+      });
+      videoPlayer.src = URL.createObjectURL(blob);
+    };
+  }, recordEndTimeOut);
+
 }
-
-
 
 
 // use with claro new Resource API
 function uploadVideo() {
   $('#video-record-start').prop('disabled', 'disabled');
   $('#video-record-stop').prop('disabled', 'disabled');
+
   var formData = new FormData();
-  formData.append('nav', 'firefox');
+  var nav = isFirefox ? 'firefox' : 'chrome';
+  formData.append('nav', nav);
   var video = new Blob(recordedBlobs, {
     type: 'video/webm'
   });
@@ -224,27 +189,22 @@ function xhr(url, data, progress, callback) {
   $('#submitButton').text(message);
   $('#submitButton').attr('disabled', true);
 
+  $('#submitButton').append('&nbsp;<i id="spinner" class="fa fa-spinner fa-spin"></i>');
+
   var request = new XMLHttpRequest();
   request.onreadystatechange = function() {
     if (request.readyState === 4 && request.status === 200) {
       console.log('xhr end with success');
       resetData();
+
       // use reload or generate route...
-    //  location.reload();
+      location.reload();
 
     } else if (request.status === 500) {
       console.log('xhr error');
-      var errorMessage = Translator.trans('resource_creation_error', {}, 'innova_video_recorder');
-      $('#form-error-msg-row').show();
-      // allow user to save the recorded file on his device... only if firefox ? (in chrome user would have to donwload 2 files and merge them)
-      if (isFirefox) {
-        $('#btn-video-download').show();
-      } else {
-        $('#form-error-download-msg').hide();
-      }
-      // change form view
-      $('#form-content').hide();
-      $('#submitButton').hide();
+      $('#spinner').remove();
+      var msg = Translator.trans('resource_creation_error', {}, 'innova_video_recorder');
+      showError(msg, true);
     }
   };
 
@@ -254,27 +214,40 @@ function xhr(url, data, progress, callback) {
 
   request.open('POST', url, true);
   request.send(data);
+}
 
+function showError(msg, canDownload = false) {
+
+  $('#form-error-msg').text(msg);
+  $('#form-error-msg-row').show();
+  // allow user to save the recorded file on his device...
+  if (canDownload) {
+    $('#form-error-download-msg').show();
+    $('#btn-video-download').show();
+  }
+  // change form view
+  $('#form-content').hide();
+  $('#submitButton').hide();
 }
 
 
-function download() {
-  var blob = new Blob(recordedBlobs, {type: 'video/webm'});
+function downloadVideo() {
+  var blob = new Blob(recordedBlobs, {
+    type: 'video/webm'
+  });
   var url = window.URL.createObjectURL(blob);
   var a = document.createElement('a');
   a.style.display = 'none';
   a.href = url;
-  a.download = 'test.webm';
+
+  var fileName = $("#resource-name-input").val();
+  a.download = fileName + '.webm';
   document.body.appendChild(a);
   a.click();
   setTimeout(function() {
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
   }, 100);
-}
-
-function downloadVideo() {
-  videoRecorder.save();
 }
 
 function gotStream(stream) {

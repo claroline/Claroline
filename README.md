@@ -5,25 +5,40 @@ This Bundle is a plugin intended to be used with [Claroline Connect LMS](https:/
 It allows the user to record video via an available video input device (such as a webcam and microphone) and create a *Claroline File* from the recorded video/audio blob.
 
 ## Requirements
-This plugin uses
-- [WebRTC / RecordRTC](https://www.webrtc-experiment.com/RecordRTC/)
-- [libav-tools](https://libav.org/) to convert recorded blobs (audio + video) to webm format if Chrome is used for recordings
+
+*This plugin uses*
+
+- MediaRecorder API [Firefox infos](https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder_API) - [Chrome infos](https://developers.google.com/web/updates/2016/01/mediarecorder)
+- [libav-tools](https://libav.org/) to (re)convert recorded blobs (audio + video) to WEBM [1]
+
+>[1] In Claroline videos are served via a
+```
+Symfony HttpFoundation BinaryFileResponse
+```
+If we **do not** (re)encode the recorded source, video does not replay properly and video player time slider is ineffective...
+
+*WebBrowser minimal requirement*
+
+- To use MediaRecorder in Chrome 47 and 48, enable experimental Web Platform features from the chrome://flags page.
+- Audio recording work in Firefox and in Chrome 49 and above; Chrome 47 and 48 only support video recording.
+- Everything work on Firefox 29 or later
 
 ## Installation
 
-Install with composer : ```$ composer require innova/video-recorder-bundle```
+Install with composer :
 
-Install plugin : ```$  php app/console claroline:plugin:install InnovaVideoRecorderBundle```
+```
+$ composer require innova/video-recorder-bundle
+```
+
+Install plugin :
+```
+$  php app/console claroline:plugin:install InnovaVideoRecorderBundle
+```
 
 ## Limitations
 
-- RecordRTC can record a single stream (video + audio into webm) at once only in Firefox (audio and video are well synced)
-- Chrome get two streams. A video stream and an audio stream so we need to merge the two streams in one file.
-- Firefox downloaded video has a chopped sound and **can be properly read in web browser only**... see [this](https://github.com/muaz-khan/RecordRTC/issues/62)
-- Most of time Video / Audio sync issues in Chrome (in preview and merged file). Audio is late.
-- It seems that if firefox is opened with a RecordRTC instance running, it will not work in Chrome... And the opposite is true
-- Recorded File size with Firefox can be big (10s ~= 3Mo)
-- The time needed to create the Claroline resource can be long (even with a good network)
+Firefox downloaded video has a chopped sound and can be properly read **in web browser only**
 
 ## Authors
 
