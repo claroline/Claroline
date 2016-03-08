@@ -1,6 +1,6 @@
 /**
  * Paper details directive controller
- * 
+ *
  */
 (function () {
     'use strict';
@@ -201,20 +201,26 @@
             this.getQuestionScore = function () {
                 var availableScore = 0.0;
                 var studentScore = 0.0;
-                
+
                 var currentLabelId = '';
+                var $tabLabelGraduate = [];
                 for(var i = 0; i < this.question.solutions.length; i++){
-                    if(currentLabelId !== this.question.solutions[i].secondId){
-                        availableScore += this.question.solutions[i].score ? this.question.solutions[i].score : 0;
-                    }                   
-                    currentLabelId = this.question.solutions[i].secondId;
+                    for(var u = 0; u < $tabLabelGraduate.length; u++){
+                        if($tabLabelGraduate[u] !== this.question.solutions[i].secondId){
+                            if(currentLabelId !== this.question.solutions[i].secondId){
+                                availableScore += this.question.solutions[i].score ? this.question.solutions[i].score : 0;
+                            }
+                            currentLabelId = this.question.solutions[i].secondId;
+                        }
+                    }
+                    $tabLabelGraduate.push(this.question.solutions[i].secondId);
                 }
                 for (var j = 0; j < this.paper.questions.length; j++){
                     if(this.paper.questions[j].id === this.question.id.toString()){
                         studentScore = this.paper.questions[j].score;
                     }
                 }
-                
+
                 this.score = Translator.trans('label_exercise_question_score', {}, 'ujm_sequence') + ': ' + studentScore.toString() + '/' + availableScore.toString();
             };
 

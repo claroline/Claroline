@@ -18,11 +18,21 @@
                     var result = '';
                     // do not add same association score twice
                     var currentLabelId = '';
-                    for (var i = 0; i < question.solutions.length; i++) {
-                        if (currentLabelId !== question.solutions[i].secondId) {
-                            availableScore += question.solutions[i].score ? question.solutions[i].score : 0;
+                    var $tabLabelGraduate = [];
+                    for(var i = 0; i < question.solutions.length; i++){
+
+                        for(var u = 0; u < $tabLabelGraduate.length; u++){
+
+                            if($tabLabelGraduate[u] !== question.solutions[i].secondId){
+
+                                if(currentLabelId !== question.solutions[i].secondId){
+
+                                    availableScore += question.solutions[i].score ? question.solutions[i].score : 0;
+                                }
+                                currentLabelId = question.solutions[i].secondId;
+                            }
                         }
-                        currentLabelId = question.solutions[i].secondId;
+                        $tabLabelGraduate.push(question.solutions[i].secondId);
                     }
                     for (var j = 0; j < paper.questions.length; j++) {
                         if (paper.questions[j].id === question.id.toString()) {
@@ -166,7 +176,7 @@
                     var deferred = $q.defer();
                     $http
                             .put(
-                                    //finish_paper    
+                                    //finish_paper
                                     Routing.generate('exercise_save_open_score', {questionId: questionId, paperId: paperId, score: score})
                                     )
                             .success(function (response) {
