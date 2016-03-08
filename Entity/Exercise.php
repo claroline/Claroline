@@ -107,6 +107,7 @@ class Exercise extends AbstractResource
      *     mappedBy="exercise",
      *     cascade={"remove"}
      * )
+     * @ORM\OrderBy({"order" = "ASC"})
      */
     private $steps;
 

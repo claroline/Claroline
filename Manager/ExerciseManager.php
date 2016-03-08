@@ -257,7 +257,7 @@ class ExerciseManager
     }
 
     /**
-     * @export exercise with steps with questions
+     * Export exercise with steps with questions
      *
      * @param Exercise  $exercise
      * @param bool      $withSolutions
@@ -268,18 +268,19 @@ class ExerciseManager
 
         $questions = array();
         $steps = $exercise->getSteps();
-        
+
         $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
-            
+
         foreach ($steps as $step) {
-           $questions[] = array_map(function ($question) use ($withSolutions, $step) {
-               return  [
+            foreach ($questionRepo->findByStep($step) As $question) {
+                $questions[] =  [
                     'id' => $step->getId(),
                     'items' => [$this->questionManager->exportQuestion($question, $withSolutions)]
                 ];
-            }, $questionRepo->findByStep($step));
-           
+            }
+
         }
         return $questions;
+
     }
 }
