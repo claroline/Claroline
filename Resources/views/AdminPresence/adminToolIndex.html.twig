@@ -235,8 +235,9 @@
 
 {% block stylesheets %}
        {{ parent() }}
-       
-        <link rel='stylesheet' type='text/css' href='{{  asset('bundles/frontend/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css') }}'/>
+        <link rel='stylesheet' type='text/css' href='{{ asset('packages/fullcalendar/dist/fullcalendar.min.css') }}'/>
+        <link rel='stylesheet' type='text/css' href='{{ asset('packages/fullcalendar/dist/fullcalendar.print.css') }}' media='print' />
+        <link rel='stylesheet' type='text/css' href='{{  asset('packages/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css') }}'/>
 {% endblock %}
 
 {% block javascripts %}
@@ -260,9 +261,8 @@
         
         
     </script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/moment.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js') }}"></script>
-    <script type='text/javascript' src='{{ asset('bundles/frontend/moment-with-locales.min.js') }}'></script> 
+    <script type="text/javascript" src="{{ asset('packages/moment/min/moment-with-locales.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('packages/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js') }}"></script>
     <script>
     $(function(){
         $('#form_color').colorpicker();

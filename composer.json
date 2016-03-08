@@ -11,7 +11,6 @@
         "claroline/cursus-bundle": "~6.0"
     },
     "autoload": {
-        "psr-0": { "FormaLibre\\Presence": "" }
-    },
-    "target-dir": "FormaLibre/PresenceBundle"
+        "psr-4": { "FormaLibre\\Presence\\": "" }
+    }
 }
