@@ -27,6 +27,7 @@
     "bootstrap": "3.3.6",
     "bootstrap-additions": "0.3.1",
     "bootstrap-datepicker": "1.6.0",
+    "eonasdan-bootstrap-datetimepicker": "4.15.35",
     "bootstrap-daterangepicker": "2.1.17",
     "bootstrapaccessibilityplugin": "1.0.4",
     "claroline-tinymce-accordion": "https://github.com/iCAPLyon1/tinymceAccordionPlugin.git#192df9058a",
