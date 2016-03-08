@@ -39,7 +39,7 @@
                 </div>
             </div>
         </div>
-        <div data-ng-if="openQuestionCtrl.question.typeOpen !== 'long' && openQuestionCtrl.feedbackIsVisible" >
+        <div data-ng-if="openQuestionCtrl.question.typeOpen !== 'long' && openQuestionCtrl.feedbackIsVisible && openQuestionCtrl.getFoundSolutions().length > 0" >
             <h3 class="panel-title">{{ 'keys_words'|trans:{}:'ujm_sequence' }}</h3>
             <table class="table table-striped table-bordered table-condensed">
                 <tr>

@@ -72,9 +72,6 @@
             
             this.getCurrentScore = function () {
                 var studentData = PlayerDataSharing.getStudentData();
-                /*console.log("getCurrentScore");
-                console.log(studentData);*/
-                console.log(studentData.question);
                 if (studentData.question.typeOpen === "long") {
                     return "-";
                 }
@@ -197,7 +194,6 @@
                     this.feedbackIsShown = true;
                 }.bind(this));
                 $scope.$broadcast('show-feedback');
-                console.log(studentData);
             };
             
             this.hideFeedback = function () {

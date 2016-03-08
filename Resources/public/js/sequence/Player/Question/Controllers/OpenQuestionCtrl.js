@@ -102,8 +102,26 @@
                 promise.then(function (result) {
                     this.feedbackIsVisible = true;
                     this.solutions = result.solutions;
+                    this.setScore();
                     this.questionFeedback = result.feedback;
                 }.bind(this));
+            };
+            
+            this.setScore = function () {
+                var score = 0;
+                for (var i=0; i<this.solutions.length; i++) {
+                    if (this.solutions[i].caseSensitive) {
+                        if (this.currentQuestionPaperData.answer.indexOf(this.solutions[i].word) > -1) {
+                            score = score + this.solutions[i].score;
+                        }
+                    }
+                    else {
+                        if (this.currentQuestionPaperData.answer.search(new RegExp(this.solutions[i].word, "i")) > -1) {
+                            score = score + this.solutions[i].score;
+                        }
+                    }
+                }
+                PlayerDataSharing.setQuestionScore(score, this.question.id);
             };
             
             this.hideFeedback = function () {

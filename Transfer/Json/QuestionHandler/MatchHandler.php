@@ -224,8 +224,11 @@ class MatchHandler implements QuestionHandlerInterface {
         }, $labels);
 
         $scoreTotal = 0;
-        foreach ($labels as $label) {
-            $scoreTotal = $scoreTotal + $label->getScoreRightResponse();
+        foreach ($proposals as $proposal) {
+            $associatedLabels = $proposal->getAssociatedLabel();
+            foreach ($associatedLabels as $label) {
+                $scoreTotal = $scoreTotal + $label->getScoreRightResponse();
+            }
         }
         $exportData->scoreTotal = $scoreTotal;
 

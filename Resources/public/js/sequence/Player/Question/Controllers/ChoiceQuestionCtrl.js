@@ -245,8 +245,24 @@
                 promise.then(function (result) {
                     this.feedbackIsVisible = true;
                     this.solutions = result.solutions;
+                    this.setScore();
                     this.questionFeedback = result.feedback;
                 }.bind(this));
+            };
+            
+            this.setScore = function () {
+                console.log(this.solutions);
+                console.log(this.currentQuestionPaperData);
+                console.log(this.question);
+                var score = 0;
+                for (var i=0; i<this.solutions.length; i++) {
+                    for (var j=0; j<this.currentQuestionPaperData.answer.length; j++) {
+                        if (this.currentQuestionPaperData.answer[j] === this.solutions[i].id) {
+                            score = score + this.solutions[i].score;
+                        }
+                    }
+                }
+                PlayerDataSharing.setQuestionScore(score, this.question.id);
             };
             
             this.hideFeedback = function () {

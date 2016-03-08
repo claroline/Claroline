@@ -218,6 +218,7 @@
                 promise.then(function (result) {
                     this.feedbackIsVisible = true;
                     this.solutions = result.solutions;
+                    this.setScore();
                     this.questionFeedback = result.feedback;
                     this.setFeedbacks();
                 }.bind(this));
@@ -225,6 +226,24 @@
                 $('.blank').each(function () {
                     $(this).prop('disabled', true);
                 });
+            };
+            
+            this.setScore = function () {
+                var score = 0;
+                for (var i=0; i<this.solutions.length; i++) {
+                    // Calculer le score ici
+                    // et l'updater dans le current truc
+                    for (var j=0; j<this.solutions[i].wordResponses.length; j++) {
+                        var currentAnswer = this.currentQuestionPaperData.answer[parseInt(this.solutions[i].position)];
+                        if (this.solutions[i].selector && this.solutions[i].wordResponses[j].id === currentAnswer) {
+                            score = score + this.solutions[i].wordResponses[j].score;
+                        }
+                        if (!this.solutions[i].selector && this.solutions[i].wordResponses[j].response === currentAnswer) {
+                            score = score + this.solutions[i].wordResponses[j].score;
+                        }
+                    }
+                }
+                PlayerDataSharing.setQuestionScore(score, this.question.id);
             };
             
             this.setFeedbacks = function () {

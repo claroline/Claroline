@@ -138,6 +138,7 @@
                 promise.then(function (result) {
                     this.feedbackIsVisible = true;
                     this.solutions = result.solutions;
+                    this.setScore();
                     this.questionFeedback = result.feedback;
                     if (!this.question.toBind) {
                         $('.draggable').draggable("disable");
@@ -147,6 +148,27 @@
                         //$('.endPoints').draggable("disable");
                     }
                 }.bind(this));
+            };
+            
+            this.setScore = function () {
+                var score = 0;
+                for (var i=0; i<this.solutions.length; i++) {
+                    if (this.question.toBind) {
+                        for (var j = 0; j < this.connections.length; j++) {
+                            if (this.connections[j] !== '' && this.connections[j].source === this.solutions[i].firstId && this.connections[j].target === this.solutions[i].secondId) {
+                                score = score + this.solutions[i].score;
+                            }
+                        }
+
+                    } else { // toDrag
+                        for (var j = 0; j < this.dropped.length; j++) {
+                            if (this.dropped[j] !== '' && this.dropped[j].source === this.solutions[i].firstId && this.dropped[j].target === this.solutions[i].secondId) {
+                                score = score + this.solutions[i].score;
+                            }
+                        }
+                    }
+                }
+                PlayerDataSharing.setQuestionScore(score, this.question.id);
             };
             
             this.hideFeedback = function () {

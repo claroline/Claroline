@@ -90,6 +90,13 @@
                         paper: this.paper,
                         answers: this.currentQuestionPaperData.answer
                     };
+                },
+                setQuestionScore: function (score, questionId) {
+                    for (var i=0; i<this.paper.questions.length; i++) {
+                        if (this.paper.questions[i].id === questionId.toString()) {
+                            this.paper.questions[i].score = score;
+                        }
+                    }
                 }
             };
         }
