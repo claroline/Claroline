@@ -11,6 +11,6 @@
         "claroline/agenda-bundle": "~6.0"
     },
     "autoload": {
-        "psr-4": { "FormaLibre\\ReservationBundle": "" }
+        "psr-4": { "FormaLibre\\ReservationBundle\\": "" }
     }
 }
