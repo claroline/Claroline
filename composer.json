@@ -5,12 +5,12 @@
     "type": "claroline-plugin",
     "license": "GPL-3.0+",
     "require": {
-        "php": ">=5.4.1",
+        "php": ">=5.5",
         "claroline/core-bundle": "~6.0",
         "claroline/agenda-bundle": "~6.0",
         "claroline/cursus-bundle": "~6.0"
     },
     "autoload": {
-        "psr-4": { "FormaLibre\\Presence\\": "" }
+        "psr-4": { "FormaLibre\\PresenceBundle\\": "" }
     }
 }
