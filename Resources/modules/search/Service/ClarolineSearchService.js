@@ -19,8 +19,9 @@ export default class ClarolineSearchService {
 
     $get($http) {
         return {
-            find: (route, searches, page, limit) => {
+            find: (route, searches, page, limit, additionalParameters = {}) => {
                 let params = this.enablePager ? {'page': page, 'limit': limit}: {}
+                params = angular.extend(params, additionalParameters)
                 let qs = '?'
 
                 for (let i = 0; i < searches.length; i++) {

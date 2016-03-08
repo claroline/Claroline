@@ -41,9 +41,9 @@ class ResourceRightsRepository extends EntityRepository
 
         $index = 0;
 
-        foreach ($roles as $role) {
+        foreach ($roles as $key => $role) {
             $dql .= $index !== 0 ? ' OR ' : '';
-            $dql .= "resource.id = {$resource->getId()} AND role.name = '{$role}'";
+            $dql .= "resource.id = {$resource->getId()} AND role.name = :role{$key}";
             ++$index;
         }
 
@@ -51,6 +51,11 @@ class ResourceRightsRepository extends EntityRepository
         $dql .= " OR  resource.id = {$resource->getId()} and role.name = 'ROLE_ANONYMOUS'";
 
         $query = $this->_em->createQuery($dql);
+
+        foreach ($roles as $key => $role) {
+            $query->setParameter("role{$key}", $role);
+        }
+
         $results = $query->getResult();
         $mask = 0;
 

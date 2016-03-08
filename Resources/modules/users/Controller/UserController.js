@@ -10,13 +10,8 @@ export default class UserController {
         this.selected = []
         this.alerts = []
         this.fields = []
-        this.connectedUser = {}
         this.managedOrganizations = []
         
-        this.$http.get(Routing.generate('claroline_core_api_user_api_connecteduser', {cache: true})).then(d => {
-            this.connectedUser = d.data
-        })
-
         const columns = [
             {name: this.translate('username'), prop: "username", isCheckboxColumn: true, headerCheckbox: true},
             {name: this.translate('first_name'), prop: "firstName"},
