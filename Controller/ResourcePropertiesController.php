@@ -17,7 +17,7 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\ResourceIconType;
 use Claroline\CoreBundle\Form\ResourceNameType;
 use Claroline\CoreBundle\Form\ResourcePropertiesType;
-use Claroline\CoreBundle\Library\Security\Collection\Resource\ResourceCollection;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
