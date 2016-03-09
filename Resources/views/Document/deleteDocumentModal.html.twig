@@ -2,24 +2,22 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h3 id="myModalLabel">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 id="myModalLabel">
                     {{ 'Delete a document'|trans({}, 'innova_collecticiel') }}
-                </h3>
+                </h4>
             </div>
             <div class="modal-body">
                 {{ 'Are you sure to want to delete this document'|trans({}, 'innova_collecticiel') }}
                 {% include "InnovaCollecticielBundle:Document:deleteDocumentForm.html.twig" %}
             </div>
             <div class="modal-footer">
-                <div class="btn-group">
                     <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}
                     </button>
                     <button id="form-submit" class="btn btn-danger"
                             data-document_adminInnova="99">
                         {{ 'Delete'|trans({}, 'innova_collecticiel') }}
                     </button>
-                </div>
             </div>
         </div>
     </div>
