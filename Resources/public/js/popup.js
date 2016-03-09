@@ -472,34 +472,36 @@ $(document).ready(function () {
     // Pour changer et traduire le message "Veuillez renseigner ce champ."
     $('#submitTitle').on('click', function(event) {
 
-        var text = document.getElementById('innova_collecticiel_document_file_form_text').value;
+        var text = null;
+        
+        // Input
+        text = document.getElementById('innova_collecticiel_document_file_form_text').value;
 
         // Récupération de la zone traduite
         var translation = document.getElementById('translation_id').value;
-        var translation_doc_id = document.getElementById('translation_doc_id').value;
 
         if (text.length == 0) {
+
             // Afficher la zone traduite
             document.getElementById("innova_collecticiel_document_file_form_text").setCustomValidity(translation);
-            document.getElementById('innova_collecticiel_document_file_form_text').focus();
-        }
-        else {
-            var doc = tinyMCE.get('innova_collecticiel_document_file_form_document').getContent();
+            return true;
 
-            if (doc.length == 0) {
-                // Afficher la zone traduite
-//                tinyMCE.get("innova_collecticiel_document_file_form_document").getBody().focus();
-                document.getElementById("innova_collecticiel_document_file_form_document").setCustomValidity(translation_doc_id);
-                document.getElementById("innova_collecticiel_document_file_form_document").focus();
-//                $("#innova_collecticiel_document_file_form_document").focus();
-//                tinyMCE.get('innova_collecticiel_document_file_form_document').focus();
-//    $('#innovaDocument').focus();
-
-            }
-
-            
+        } else {
+             console.log("text non vide");  
+             document.getElementById("innova_collecticiel_document_file_form_text").setCustomValidity('');
         }
 
+        // Textarea
+        var doc = tinyMCE.get('innova_collecticiel_document_file_form_document').getContent();
+        var translation_doc_id = document.getElementById('translation_doc_id').value;
+
+        if (doc.length == 0) {
+            // Afficher la zone traduite
+            document.getElementById("innova_collecticiel_document_file_form_document").setCustomValidity(translation_doc_id);
+        } else {
+            document.getElementById("innova_collecticiel_document_file_form_document").setCustomValidity('');
+        }
+        
     });
 
     // Pour changer et traduire le message "Veuillez renseigner ce champ."
@@ -509,6 +511,19 @@ $(document).ready(function () {
         // Récupération de la zone traduite
         var translation = document.getElementById('translation_id').value;
 
+        // var $elem = $("#email");
+        // var email = $elem.val();
+
+        // //the ajax call returns true if the email exists
+        // $.get( "ajax/checkUniqueEmail", function(data) {
+        //     if(data === "true"){
+        //         $elem.setCustomValidity("This email already exists.");
+        //     }else{
+        //         $elem.setCustomValidity("")
+        //     }
+        //     //then we submit the form
+        //     $("#form").submit();
+        // });
     });
 
     // Pour changer et traduire le message "Veuillez renseigner ce champ."
@@ -517,6 +532,8 @@ $(document).ready(function () {
 //                $("#innova_collecticiel_document_file_form_document").tinymce().focus();
 //                tinyMCE.get("innova_collecticiel_document_file_form_document").getBody().focus();
 //    });
+
+
 
 //    $('#innovaDocument').find('textarea').val('Some default Text');
 
