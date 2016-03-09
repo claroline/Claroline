@@ -1,0 +1,3 @@
+claro_flashcard:
+    resource: "@ClarolineFlashCardBundle/Controller/FlashCardController.php"
+    type: annotation

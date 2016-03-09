@@ -1,0 +1,8 @@
+plugin:
+  has_options: false
+
+  resources:
+    - class: Claroline\FlashCardBundle\Entity\FlashCard
+      name: claroline_flashcard
+
+
