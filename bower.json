@@ -7,7 +7,7 @@
     "angular-animate": "1.4.9",
     "angular-bootstrap": "1.1.2",
     "angular-breadcrumb": "0.4.1",
-    "angular-data-table": "https://github.com/ngodfraind/angular-data-table.git#023d6183cf6c6a3bd6454c64eee755a9c552ab49",
+    "angular-data-table": "https://github.com/ngodfraind/angular-data-table.git#f002e3436360c62f1b13c14a803bd029ef5c37c1",
     "angular-daterangepicker": "0.2.2",
     "angular-gridster": "0.13.5",
     "angular-motion": "0.4.3",
