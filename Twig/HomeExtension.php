@@ -105,7 +105,7 @@ class HomeExtension extends \Twig_Extension
             }
 
             if ($i > 0) {
-                $unit = $i === 1 ? $translation["singular"][$format]: $translation["plural"][$format];
+                $unit = (int) $i === 1 ? $translation["singular"][$format]: $translation["plural"][$format];
 
                 return $this->container->get("translator")->transChoice(
                     'time_ago',
