@@ -25,7 +25,7 @@
             </div>
 
             <div class='input-group col-md-8'>
-                <p>{{ 'This field is required'|trans({}, 'innova_collecticiel') }}</p>
+                <p><strong>{{ 'This field is required'|trans({}, 'innova_collecticiel') }}</strong></p>
             </div>
 
 
@@ -41,12 +41,12 @@
     <script type='text/javascript'>
         $('document').ready(function () {
             var myTextWidth = $("#innova_collecticiel_document_file_form_text").width();
-            if (myTextWidth == 100) {
-                var myDocumentWidth = (myTextWidth-43.85)*$(window).width()/100;
+
+            if (myTextWidth != 100) {
+                myTextWidth = 100;
             }
-            else {
-                var myDocumentWidth = myTextWidth;
-            }
+
+            var myDocumentWidth = (myTextWidth-43.85)*$(window).width()/100;
             $("#innovaDocument").width(myDocumentWidth);
         })
     </script>
