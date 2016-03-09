@@ -400,17 +400,6 @@ class DatabaseWriter
         }
 
         if (isset($resource['icon'])) {
-            $ds = DIRECTORY_SEPARATOR;
-
-            $webBundleDir = "{$this->kernelRootDir}{$ds}..{$ds}web{$ds}bundles";
-            $webPluginDir = "{$webBundleDir}{$ds}{$pluginBundle->getAssetsFolder()}";
-            $webPluginImgDir = "{$webPluginDir}{$ds}images";
-            $webPluginIcoDir = "{$webPluginImgDir}{$ds}icons";
-            $this->fileSystem->mkdir(array($webBundleDir, $webPluginDir, $webPluginImgDir, $webPluginIcoDir));
-            $this->fileSystem->copy(
-                "{$pluginBundle->getImgFolder()}{$ds}{$resource['icon']}",
-                "{$webPluginIcoDir}{$ds}{$resource['icon']}"
-            );
             $resourceIcon->setRelativeUrl("bundles/{$pluginBundle->getAssetsFolder()}/images/icons/{$resource['icon']}");
         } else {
             $defaultIcon = $this->em
