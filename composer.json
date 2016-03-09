@@ -34,7 +34,6 @@
         "icap/socialmedia-bundle": "~6.0",
         "icap/website-bundle": "~6.0",
         "icap/wiki-bundle": "~6.0",
-        "icap/oauth-bundle": "~6.0",
         "innova/path-bundle": "~6.0",
         "ujm/exo-bundle": "~6.0"
     },

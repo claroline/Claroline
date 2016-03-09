@@ -282,16 +282,16 @@
         },
         {
             "name": "claroline/core-bundle",
-            "version": "6.8.0",
+            "version": "6.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/CoreBundle.git",
-                "reference": "3c56f475cd3c747d575f13ebc7e4aca6aaea8e40"
+                "reference": "649c0a601e1459c331d2320f56ddc24f7cbd6d63"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/CoreBundle/zipball/3c56f475cd3c747d575f13ebc7e4aca6aaea8e40",
-                "reference": "3c56f475cd3c747d575f13ebc7e4aca6aaea8e40",
+                "url": "https://api.github.com/repos/claroline/CoreBundle/zipball/649c0a601e1459c331d2320f56ddc24f7cbd6d63",
+                "reference": "649c0a601e1459c331d2320f56ddc24f7cbd6d63",
                 "shasum": ""
             },
             "require": {
@@ -367,7 +367,7 @@
                 "Claroline",
                 "core"
             ],
-            "time": "2016-02-26 13:51:14"
+            "time": "2016-03-09 14:24:37"
         },
         {
             "name": "claroline/cursus-bundle",
@@ -1225,25 +1225,25 @@
         },
         {
             "name": "composer/composer",
-            "version": "1.0.0-alpha11",
+            "version": "1.0.0-beta1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "cd9054ce2abd1d06ed0eb1244eba1b2c2af633b6"
+                "reference": "5cb2b522637a941d608c58bd522f3b2a7bda4a1c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/cd9054ce2abd1d06ed0eb1244eba1b2c2af633b6",
-                "reference": "cd9054ce2abd1d06ed0eb1244eba1b2c2af633b6",
+                "url": "https://api.github.com/repos/composer/composer/zipball/5cb2b522637a941d608c58bd522f3b2a7bda4a1c",
+                "reference": "5cb2b522637a941d608c58bd522f3b2a7bda4a1c",
                 "shasum": ""
             },
             "require": {
                 "composer/semver": "^1.0",
                 "composer/spdx-licenses": "^1.0",
-                "justinrainbow/json-schema": "^1.4.4",
+                "justinrainbow/json-schema": "^1.6",
                 "php": "^5.3.2 || ^7.0",
                 "seld/cli-prompt": "^1.0",
-                "seld/jsonlint": "^1.0",
+                "seld/jsonlint": "^1.4",
                 "seld/phar-utils": "^1.0",
                 "symfony/console": "^2.5 || ^3.0",
                 "symfony/filesystem": "^2.5 || ^3.0",
@@ -1256,7 +1256,8 @@
             },
             "suggest": {
                 "ext-openssl": "Enabling the openssl extension allows you to access https URLs for repositories and packages",
-                "ext-zip": "Enabling the zip extension allows you to unzip archives, and allows gzip compression of all internet traffic"
+                "ext-zip": "Enabling the zip extension allows you to unzip archives",
+                "ext-zlib": "Allow gzip compression of HTTP requests"
             },
             "bin": [
                 "bin/composer"
@@ -1295,7 +1296,7 @@
                 "dependency",
                 "package"
             ],
-            "time": "2015-11-14 16:21:07"
+            "time": "2016-03-03 15:15:10"
         },
         {
             "name": "composer/semver",
@@ -2414,29 +2415,28 @@
         },
         {
             "name": "formalibre/presence-bundle",
-            "version": "6.1.2",
-            "target-dir": "FormaLibre/PresenceBundle",
+            "version": "6.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FormaLibre/PresenceBundle.git",
-                "reference": "532ce17e2b9e57e2bf6c7b1fe9f2c515cbf294ed"
+                "reference": "5487ceda556ef040e25f33fe3cfff03bcee42fbf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FormaLibre/PresenceBundle/zipball/532ce17e2b9e57e2bf6c7b1fe9f2c515cbf294ed",
-                "reference": "532ce17e2b9e57e2bf6c7b1fe9f2c515cbf294ed",
+                "url": "https://api.github.com/repos/FormaLibre/PresenceBundle/zipball/5487ceda556ef040e25f33fe3cfff03bcee42fbf",
+                "reference": "5487ceda556ef040e25f33fe3cfff03bcee42fbf",
                 "shasum": ""
             },
             "require": {
                 "claroline/agenda-bundle": "~6.0",
                 "claroline/core-bundle": "~6.0",
                 "claroline/cursus-bundle": "~6.0",
-                "php": ">=5.4.1"
+                "php": ">=5.5"
             },
             "type": "claroline-plugin",
             "autoload": {
-                "psr-0": {
-                    "FormaLibre\\Presence": ""
+                "psr-4": {
+                    "FormaLibre\\PresenceBundle\\": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -2448,21 +2448,20 @@
                 "Claroline",
                 "plugin"
             ],
-            "time": "2015-10-22 08:45:32"
+            "time": "2016-03-08 10:16:41"
         },
         {
             "name": "formalibre/reservation-bundle",
-            "version": "6.0.4",
-            "target-dir": "FormaLibre/ReservationBundle",
+            "version": "6.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FormaLibre/ReservationBundle.git",
-                "reference": "cd5cd8ad7f03a5c76479d48aa053af6b6d264257"
+                "reference": "255dd780b8194cd2fe17beb4998ace6eebc23ce1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FormaLibre/ReservationBundle/zipball/cd5cd8ad7f03a5c76479d48aa053af6b6d264257",
-                "reference": "cd5cd8ad7f03a5c76479d48aa053af6b6d264257",
+                "url": "https://api.github.com/repos/FormaLibre/ReservationBundle/zipball/255dd780b8194cd2fe17beb4998ace6eebc23ce1",
+                "reference": "255dd780b8194cd2fe17beb4998ace6eebc23ce1",
                 "shasum": ""
             },
             "require": {
@@ -2473,8 +2472,8 @@
             },
             "type": "claroline-plugin",
             "autoload": {
-                "psr-0": {
-                    "FormaLibre\\ReservationBundle": ""
+                "psr-4": {
+                    "FormaLibre\\ReservationBundle\\": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -2486,7 +2485,7 @@
                 "Claroline",
                 "plugin"
             ],
-            "time": "2015-09-28 13:39:52"
+            "time": "2016-03-08 10:57:46"
         },
         {
             "name": "formalibre/support-bundle",
@@ -2710,17 +2709,17 @@
         },
         {
             "name": "friendsofsymfony/rest-bundle",
-            "version": "1.7.7",
+            "version": "1.7.8",
             "target-dir": "FOS/RestBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfSymfony/FOSRestBundle.git",
-                "reference": "c79b7e5df96e5581591ceb6a026bd4e5f9346de0"
+                "reference": "691e7c52d7cf9df266c6404180eda1e47cc64f59"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSRestBundle/zipball/c79b7e5df96e5581591ceb6a026bd4e5f9346de0",
-                "reference": "c79b7e5df96e5581591ceb6a026bd4e5f9346de0",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSRestBundle/zipball/691e7c52d7cf9df266c6404180eda1e47cc64f59",
+                "reference": "691e7c52d7cf9df266c6404180eda1e47cc64f59",
                 "shasum": ""
             },
             "require": {
@@ -2733,15 +2732,16 @@
                 "willdurand/negotiation": "~1.2"
             },
             "conflict": {
-                "jms/serializer": "<0.12",
+                "jms/serializer": "<0.13",
                 "jms/serializer-bundle": "<0.11",
+                "sensio/framework-extra-bundle": ">=3.0.13",
                 "symfony/validator": ">=2.5.0,<2.5.5"
             },
             "require-dev": {
                 "jms/serializer": "~0.13|~1.0",
-                "jms/serializer-bundle": "~0.12|~1.0",
+                "jms/serializer-bundle": "~0.11|~1.0",
                 "phpoption/phpoption": "~1.1.0",
-                "sensio/framework-extra-bundle": "~2.0|~3.0",
+                "sensio/framework-extra-bundle": "~2.0|~3.0,<3.0.13",
                 "sllh/php-cs-fixer-styleci-bridge": "^1.3",
                 "symfony/browser-kit": "~2.3|~3.0",
                 "symfony/dependency-injection": "~2.3|~3.0",
@@ -2753,8 +2753,8 @@
                 "symfony/yaml": "~2.3|~3.0"
             },
             "suggest": {
-                "jms/serializer-bundle": "Add support for advanced serialization capabilities, recommended, requires ~0.12||~1.0",
-                "sensio/framework-extra-bundle": "Add support for route annotations and the view response listener, requires ~3.0",
+                "jms/serializer-bundle": "Add support for advanced serialization capabilities, recommended, requires ~0.12|~1.0",
+                "sensio/framework-extra-bundle": "Add support for route annotations and the view response listener, requires ~2.0|~3.0",
                 "symfony/serializer": "Add support for basic serialization capabilities and xml decoding, requires ~2.3",
                 "symfony/validator": "Add support for validation capabilities in the ParamFetcher, requires ~2.3"
             },
@@ -2792,7 +2792,7 @@
             "keywords": [
                 "rest"
             ],
-            "time": "2015-12-29 16:02:50"
+            "time": "2016-03-03 17:30:37"
         },
         {
             "name": "gedmo/doctrine-extensions",
@@ -3274,16 +3274,16 @@
         },
         {
             "name": "hwi/oauth-bundle",
-            "version": "0.4.0",
+            "version": "0.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hwi/HWIOAuthBundle.git",
-                "reference": "86b5a876224b8a26707813aa94d3637886aa2041"
+                "reference": "ae741802c8e99d8fa52de927fd483d0299911293"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hwi/HWIOAuthBundle/zipball/86b5a876224b8a26707813aa94d3637886aa2041",
-                "reference": "86b5a876224b8a26707813aa94d3637886aa2041",
+                "url": "https://api.github.com/repos/hwi/HWIOAuthBundle/zipball/ae741802c8e99d8fa52de927fd483d0299911293",
+                "reference": "ae741802c8e99d8fa52de927fd483d0299911293",
                 "shasum": ""
             },
             "require": {
@@ -3301,7 +3301,7 @@
             "require-dev": {
                 "doctrine/orm": "~2.3",
                 "friendsofsymfony/user-bundle": "~1.3|~2.0",
-                "phpunit/phpunit": "~4.8",
+                "phpunit/phpunit": "~4.8|~5.0",
                 "symfony/phpunit-bridge": "~2.7",
                 "symfony/property-access": "~2.3",
                 "symfony/twig-bundle": "~2.3",
@@ -3410,25 +3410,26 @@
                 "yandex",
                 "youtube"
             ],
-            "time": "2015-12-04 12:33:38"
+            "time": "2016-03-08 08:00:04"
         },
         {
             "name": "icap/badge-bundle",
-            "version": "v6.4.1",
+            "version": "v6.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iCAPLyon1/BadgeBundle.git",
-                "reference": "365041da8fdf78b3158d6f15ee3d7b16b1fa285f"
+                "reference": "f3dd829adeed8f4f8ea6b66dcb3d59abdaa04876"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/BadgeBundle/zipball/365041da8fdf78b3158d6f15ee3d7b16b1fa285f",
-                "reference": "365041da8fdf78b3158d6f15ee3d7b16b1fa285f",
+                "url": "https://api.github.com/repos/iCAPLyon1/BadgeBundle/zipball/f3dd829adeed8f4f8ea6b66dcb3d59abdaa04876",
+                "reference": "f3dd829adeed8f4f8ea6b66dcb3d59abdaa04876",
                 "shasum": ""
             },
             "require": {
                 "claroline/core-bundle": "~6.0",
                 "icap/notification-bundle": "~6.0",
+                "icap/portfolio-bundle": "~6.0",
                 "php": ">=5.4.1"
             },
             "type": "claroline-plugin",
@@ -3455,7 +3456,7 @@
                 "badge",
                 "plugin"
             ],
-            "time": "2016-02-17 15:56:07"
+            "time": "2016-03-07 13:29:27"
         },
         {
             "name": "icap/blog-bundle",
@@ -3674,22 +3675,21 @@
         },
         {
             "name": "icap/portfolio-bundle",
-            "version": "v6.3.0",
+            "version": "v6.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iCAPLyon1/PortfolioBundle.git",
-                "reference": "3eea8caf3a3ef6bcb9e1b798217524a8d5215380"
+                "reference": "04369e72311076461cc88804b59fc37c4f5d193f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/PortfolioBundle/zipball/3eea8caf3a3ef6bcb9e1b798217524a8d5215380",
-                "reference": "3eea8caf3a3ef6bcb9e1b798217524a8d5215380",
+                "url": "https://api.github.com/repos/iCAPLyon1/PortfolioBundle/zipball/04369e72311076461cc88804b59fc37c4f5d193f",
+                "reference": "04369e72311076461cc88804b59fc37c4f5d193f",
                 "shasum": ""
             },
             "require": {
                 "claroline/core-bundle": "~6.0",
                 "claroline/team-bundle": "~6.0",
-                "icap/badge-bundle": "~6.0",
                 "innova/angular-js-bundle": "~5.0",
                 "innova/angular-ui-resource-picker-bundle": "~6.0",
                 "innova/angular-ui-tinymce-bundle": "5.*",
@@ -3714,7 +3714,7 @@
                 "Claroline",
                 "portfolio"
             ],
-            "time": "2016-02-17 15:16:43"
+            "time": "2016-03-04 09:27:18"
         },
         {
             "name": "icap/socialmedia-bundle",
@@ -3941,6 +3941,62 @@
             "time": "2015-06-09 14:59:11"
         },
         {
+            "name": "innova/angular-ui-bootstrap-bundle",
+            "version": "5.0.0",
+            "target-dir": "Innova/AngularUIBootstrapBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/InnovaLangues/AngularUIBootsrapBundle.git",
+                "reference": "77877fde891c9f390ea1e14d0ffd658a441fd12c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/InnovaLangues/AngularUIBootsrapBundle/zipball/77877fde891c9f390ea1e14d0ffd658a441fd12c",
+                "reference": "77877fde891c9f390ea1e14d0ffd658a441fd12c",
+                "shasum": ""
+            },
+            "require": {
+                "innova/angular-js-bundle": "~5.0",
+                "php": ">=5.3.0",
+                "symfony/symfony": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Innova\\AngularUIBootstrapBundle": "."
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Arnaud Bey",
+                    "email": "arnaud.bey@u-grenoble3.fr"
+                },
+                {
+                    "name": "Axel Penin",
+                    "email": "axel.penin@u-grenoble3.fr"
+                },
+                {
+                    "name": "Eric Vincent",
+                    "email": "eric.vincent@u-grenoble3.fr"
+                },
+                {
+                    "name": "Donovan Tengblad",
+                    "email": "donovan.tengblad@u-grenoble3.fr"
+                }
+            ],
+            "description": "Symfony 2 bundle which provides Angular UI Twitter Bootstrap.",
+            "homepage": "http://github.com/InnovaLangues/AngularUIBootstrapBundle",
+            "keywords": [
+                "Symfony2",
+                "angular-ui"
+            ],
+            "time": "2015-05-12 12:46:47"
+        },
+        {
             "name": "innova/angular-ui-pageslide-bundle",
             "version": "5.0.1",
             "target-dir": "Innova/AngularUIPageslideBundle",
@@ -4057,6 +4113,65 @@
             "time": "2015-05-22 14:02:35"
         },
         {
+            "name": "innova/angular-ui-sortable-bundle",
+            "version": "5.0.0",
+            "target-dir": "Innova/AngularUISortableBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/InnovaLangues/AngularUISortableBundle.git",
+                "reference": "2260e6b91701d6e975a14f0868955aa1df22db2d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/InnovaLangues/AngularUISortableBundle/zipball/2260e6b91701d6e975a14f0868955aa1df22db2d",
+                "reference": "2260e6b91701d6e975a14f0868955aa1df22db2d",
+                "shasum": ""
+            },
+            "require": {
+                "innova/angular-js-bundle": "~5.0",
+                "php": ">=5.3.0",
+                "symfony/symfony": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Innova\\AngularUISortableBundle": "."
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Arnaud Bey",
+                    "email": "arnaud.bey@u-grenoble3.fr"
+                },
+                {
+                    "name": "Axel Penin",
+                    "email": "axel.penin@u-grenoble3.fr"
+                },
+                {
+                    "name": "Eric Vincent",
+                    "email": "eric.vincent@u-grenoble3.fr"
+                },
+                {
+                    "name": "Donovan Tengblad",
+                    "email": "donovan.tengblad@u-grenoble3.fr"
+                }
+            ],
+            "description": "AngularJS UI Sortable Symfony 2 bundle",
+            "homepage": "http://github.com/InnovaLangues/AngularUISortableBundle",
+            "keywords": [
+                "Symfony2",
+                "angular",
+                "jquery",
+                "jquery-ui",
+                "sortable"
+            ],
+            "time": "2015-05-26 09:00:32"
+        },
+        {
             "name": "innova/angular-ui-tinymce-bundle",
             "version": "5.1.1",
             "target-dir": "Innova/AngularUITinyMCEBundle",
@@ -4114,17 +4229,75 @@
             "time": "2015-09-03 13:13:32"
         },
         {
-            "name": "innova/path-bundle",
-            "version": "v6.1.6",
+            "name": "innova/angular-ui-translation-bundle",
+            "version": "5.0.1",
+            "target-dir": "Innova/AngularUITranslationBundle",
             "source": {
                 "type": "git",
-                "url": "https://github.com/InnovaLangues/PathBundle.git",
-                "reference": "6a4bd36542c080c388a0bd9898eecca9d30237ba"
+                "url": "https://github.com/InnovaLangues/AngularUITranslationBundle.git",
+                "reference": "306a572a1b44126d3e94421d975de1a714a16fbf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/InnovaLangues/PathBundle/zipball/6a4bd36542c080c388a0bd9898eecca9d30237ba",
-                "reference": "6a4bd36542c080c388a0bd9898eecca9d30237ba",
+                "url": "https://api.github.com/repos/InnovaLangues/AngularUITranslationBundle/zipball/306a572a1b44126d3e94421d975de1a714a16fbf",
+                "reference": "306a572a1b44126d3e94421d975de1a714a16fbf",
+                "shasum": ""
+            },
+            "require": {
+                "innova/angular-js-bundle": "~5.0",
+                "php": ">=5.3.0",
+                "symfony/symfony": "2.*",
+                "willdurand/js-translation-bundle": "~2.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Innova\\AngularUITranslationBundle": "."
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Arnaud Bey",
+                    "email": "arnaud.bey@u-grenoble3.fr"
+                },
+                {
+                    "name": "Axel Penin",
+                    "email": "axel.penin@u-grenoble3.fr"
+                },
+                {
+                    "name": "Eric Vincent",
+                    "email": "eric.vincent@u-grenoble3.fr"
+                },
+                {
+                    "name": "Donovan Tengblad",
+                    "email": "donovan.tengblad@u-grenoble3.fr"
+                }
+            ],
+            "description": "Provides a new Angular JS filter which can access to Symfony 2 translations.",
+            "homepage": "http://github.com/InnovaLangues/AngularUITranslationBundle",
+            "keywords": [
+                "Symfony2",
+                "angular",
+                "translation"
+            ],
+            "time": "2015-10-14 10:04:29"
+        },
+        {
+            "name": "innova/path-bundle",
+            "version": "v6.1.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/InnovaLangues/PathBundle.git",
+                "reference": "d3cf5f9b93c760f1fd368d80f89ef6dc7df0eac8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/InnovaLangues/PathBundle/zipball/d3cf5f9b93c760f1fd368d80f89ef6dc7df0eac8",
+                "reference": "d3cf5f9b93c760f1fd368d80f89ef6dc7df0eac8",
                 "shasum": ""
             },
             "require": {
@@ -4167,7 +4340,7 @@
                 "Claroline",
                 "path"
             ],
-            "time": "2016-02-15 08:54:13"
+            "time": "2016-03-01 09:44:31"
         },
         {
             "name": "jdorn/sql-formatter",
@@ -4807,6 +4980,24 @@
             "time": "2016-01-25 21:17:05"
         },
         {
+            "name": "json-quiz/json-quiz",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/json-quiz/json-quiz.git",
+                "reference": "15da51bdac43dcaf68811272ef22ea4d5d54ddc8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/15da51bdac43dcaf68811272ef22ea4d5d54ddc8",
+                "reference": "15da51bdac43dcaf68811272ef22ea4d5d54ddc8",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "time": "2016-02-12 10:44:18"
+        },
+        {
             "name": "justinrainbow/json-schema",
             "version": "1.6.1",
             "source": {
@@ -4978,7 +5169,7 @@
                     "email": "stof@notk.org"
                 },
                 {
-                    "name": "Knplabs",
+                    "name": "KnpLabs",
                     "homepage": "http://knplabs.com"
                 },
                 {
@@ -5211,16 +5402,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.17.2",
+            "version": "1.18.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "bee7f0dc9c3e0b69a6039697533dca1e845c8c24"
+                "reference": "e19b764b5c855580e8ffa7e615f72c10fd2f99cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/bee7f0dc9c3e0b69a6039697533dca1e845c8c24",
-                "reference": "bee7f0dc9c3e0b69a6039697533dca1e845c8c24",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/e19b764b5c855580e8ffa7e615f72c10fd2f99cc",
+                "reference": "e19b764b5c855580e8ffa7e615f72c10fd2f99cc",
                 "shasum": ""
             },
             "require": {
@@ -5249,6 +5440,7 @@
                 "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
                 "ext-mongo": "Allow sending log messages to a MongoDB server",
                 "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
+                "mongodb/mongodb": "Allow sending log messages to a MongoDB server via PHP Driver",
                 "php-console/php-console": "Allow sending log messages to Google Chrome",
                 "raven/raven": "Allow sending log messages to a Sentry server",
                 "rollbar/rollbar": "Allow sending log messages to Rollbar",
@@ -5258,7 +5450,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.16.x-dev"
+                    "dev-master": "2.0.x-dev"
                 }
             },
             "autoload": {
@@ -5284,7 +5476,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2015-10-14 12:51:02"
+            "time": "2016-03-01 18:00:40"
         },
         {
             "name": "mrclay/minify",
@@ -5589,16 +5781,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v1.2.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "b0e69d10852716b2ccbdff69c75c477637220790"
+                "reference": "f078eba3bcf140fd69b5fcc3ea5ac809abf729dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/b0e69d10852716b2ccbdff69c75c477637220790",
-                "reference": "b0e69d10852716b2ccbdff69c75c477637220790",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/f078eba3bcf140fd69b5fcc3ea5ac809abf729dc",
+                "reference": "f078eba3bcf140fd69b5fcc3ea5ac809abf729dc",
                 "shasum": ""
             },
             "require": {
@@ -5633,7 +5825,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2016-02-06 03:52:05"
+            "time": "2016-02-29 17:25:04"
         },
         {
             "name": "phpcollection/phpcollection",
@@ -6356,20 +6548,20 @@
         },
         {
             "name": "symfony/monolog-bundle",
-            "version": "v2.8.2",
+            "version": "v2.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/monolog-bundle.git",
-                "reference": "84785c4d44801c4dd82829fa2e1820cacfe2c46f"
+                "reference": "27c2e3eaec7a0ba3462f99ea92678cbfc7b146e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/monolog-bundle/zipball/84785c4d44801c4dd82829fa2e1820cacfe2c46f",
-                "reference": "84785c4d44801c4dd82829fa2e1820cacfe2c46f",
+                "url": "https://api.github.com/repos/symfony/monolog-bundle/zipball/27c2e3eaec7a0ba3462f99ea92678cbfc7b146e4",
+                "reference": "27c2e3eaec7a0ba3462f99ea92678cbfc7b146e4",
                 "shasum": ""
             },
             "require": {
-                "monolog/monolog": "~1.8",
+                "monolog/monolog": "~1.12",
                 "php": ">=5.3.2",
                 "symfony/config": "~2.3|~3.0",
                 "symfony/dependency-injection": "~2.3|~3.0",
@@ -6383,7 +6575,7 @@
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8.x-dev"
+                    "dev-master": "2.9.x-dev"
                 }
             },
             "autoload": {
@@ -6411,7 +6603,7 @@
                 "log",
                 "logging"
             ],
-            "time": "2015-11-17 10:02:29"
+            "time": "2016-03-01 17:53:42"
         },
         {
             "name": "symfony/polyfill-apcu",
@@ -6767,35 +6959,45 @@
         },
         {
             "name": "ujm/exo-bundle",
-            "version": "6.0.0",
-            "target-dir": "UJM/ExoBundle",
+            "version": "6.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/UJM-dev/ExoBundle.git",
-                "reference": "cd3d6626467bc70071fe084661ca3090a723ae60"
+                "reference": "c67dcbe4ae5490e618ff312746ebac3d645c6a84"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/UJM-dev/ExoBundle/zipball/cd3d6626467bc70071fe084661ca3090a723ae60",
-                "reference": "cd3d6626467bc70071fe084661ca3090a723ae60",
+                "url": "https://api.github.com/repos/UJM-dev/ExoBundle/zipball/c67dcbe4ae5490e618ff312746ebac3d645c6a84",
+                "reference": "c67dcbe4ae5490e618ff312746ebac3d645c6a84",
                 "shasum": ""
             },
             "require": {
-                "claroline/core-bundle": "~6.0",
-                "icap/badge-bundle": "~6.0"
+                "claroline/core-bundle": "^6.6.4",
+                "doctrine/orm": "~2.5",
+                "icap/badge-bundle": "~6.0",
+                "innova/angular-js-bundle": "~5.1",
+                "innova/angular-ui-bootstrap-bundle": "~5.0",
+                "innova/angular-ui-pageslide-bundle": "~5.0",
+                "innova/angular-ui-resource-picker-bundle": "~6.0",
+                "innova/angular-ui-sortable-bundle": "~5.0",
+                "innova/angular-ui-tinymce-bundle": "~5.0",
+                "innova/angular-ui-translation-bundle": "~5.0",
+                "json-quiz/json-quiz": "dev-master",
+                "php": ">=5.5",
+                "stefk/jval": "dev-master"
+            },
+            "require-dev": {
+                "claroline/dev-bundle": "dev-master"
             },
             "type": "claroline-plugin",
-            "extra": {
-                "dbVersion": "20150717103127"
-            },
             "autoload": {
-                "psr-0": {
-                    "UJM\\ExoBundle": ""
+                "psr-4": {
+                    "UJM\\ExoBundle\\": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "description": "Exercise tool for Claroline-Connect",
-            "time": "2015-08-24 08:51:06"
+            "description": "Exercise tool for Claroline Connect",
+            "time": "2016-03-02 08:01:05"
         },
         {
             "name": "werkint/jsmin",
