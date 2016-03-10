@@ -71,7 +71,7 @@
     </td>
     {# {% endif %} #}
 
-    <td class="{{ classArray }} centered  centering-columns-study">
+    <td class="{{ classArray }} centered centering-columns-study">
         <div class="btn-group ">
            {# Variable qui va compter le nombre de commentaires #}
            {# Affichage d'un bouton si pas de commentaires #}
@@ -95,8 +95,12 @@
     {# #187 : ajout de la colonne "Accusé de réception", demande de JJQ #}
     {% if dropzone.returnreceipt == 1  %}
         <td class="{{ classArray }} centered centering-columnsAR-study" id="is-validate-{{ document.id }}">
-            {# Pour affichage de la valeur de l'accusé de réception #}
-            {% render(controller('InnovaCollecticielBundle:Document:renderReturnReceipt', {'documentId': document.id, 'dropzoneId': dropzone.id})) %} 
+            {# Pour affichage de la valeur de l'accusé de réception
+            {% render(controller('InnovaCollecticielBundle:Document:renderReturnReceipt',
+            {'documentId': document.id, 'dropzoneId': dropzone.id})) #}
+            {% include 'InnovaCollecticielBundle:Document:renderReturnReceipt.html.twig'
+            with {'value': returnReceiptArray[document.id]} 
+            %}
         </td>
     {% endif %}
 
@@ -112,7 +116,7 @@
                     <i class="fa fa-trash" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Delete'|trans({},'innova_collecticiel') }}"></i>
                 </a>
                 {# Cas 2 #}
-                <a href="" class="btn btn-default cancel_button" style="display:none;" id="cancel_{{ document.id }}"
+                <a data-target="#validate-cancel-modal" data-toggle="modal" class="btn btn-default cancel_button" style="display:none;" id="cancel_{{ document.id }}"
                 data-document_id="{{ document.id }}" data-document_adminInnova="1">
                     {# Ajout de l'icône "annuler" #}
                     <i class="fa fa-undo" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Cancel'|trans({},'innova_collecticiel') }}"></i>
@@ -129,6 +133,8 @@
                 <input type="hidden" value="{{document.sender.id}}" id="document_sender_{{document.id}}">
                 <input type="hidden" value="{{document.drop.user.id}}" id="document_drop_user_{{document.id}}">
                 <input type="hidden" value="1" id="adminInnova_{{document.id}}">
+                <input type="hidden" value="{{returnReceiptArray[document.id]}}" id="return_receipt_{{document.id}}">
+                <input type="hidden" value="{{teacherCommentDocArray[document.id]}}" id="teacher_comment_{{document.id}}">
             </td>
         {% endif %}
     {% else %}
@@ -143,7 +149,7 @@
                     <i class="fa fa-trash" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Delete'|trans({},'innova_collecticiel') }}"></i>
                 </a>
                 {# Cas 2 #}
-                <a href="" class="btn btn-default cancel_button" style="display:none;" id="cancel_{{ document.id }}"
+                <a data-target="#validate-cancel-modal" data-toggle="modal" class="btn btn-default cancel_button" style="display:none;" id="cancel_{{ document.id }}"
                 data-document_id="{{ document.id }}" data-document_adminInnova="0">
                     {# Ajout de l'icône "annuler" #}
                     <i class="fa fa-undo" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Cancel'|trans({},'innova_collecticiel') }}"></i>
@@ -160,8 +166,48 @@
                 <input type="hidden" value="{{document.sender.id}}" id="document_sender_{{document.id}}">
                 <input type="hidden" value="{{document.drop.user.id}}" id="document_drop_user_{{document.id}}">
                 <input type="hidden" value="0" id="adminInnova_{{document.id}}">
+                <input type="hidden" value="{{returnReceiptArray[document.id]}}" id="return_receipt_{{document.id}}">
+                <input type="hidden" value="{{teacherCommentDocArray[document.id]}}" id="teacher_comment_{{document.id}}">
                 </td>
             {% endif %}
         {% endif %}
     {% endif %}
 </tr>
+
+{# Déclaration de la modal pour confirmation de la validation #}
+<div class="modal fade" id="validate-cancel-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">
+                {# Version commentaire #}
+                {% if dropzone.evaluation != 1  %}
+                    {{ 'Cancel request for comment'|trans({}, 'innova_collecticiel') }}
+                {# Version évaluation #}
+                {% else %}
+                    {{ 'Cancel request for review'|trans({}, 'innova_collecticiel') }}
+                {% endif %}
+                </h4>
+            </div>
+            <div class="modal-body">
+                {# Version commentaire #}
+                {% if dropzone.evaluation != 1  %}
+                    {{ 'Do you want to cancel your request for comment'|trans({}, 'innova_collecticiel') }}
+                {# Version évaluation #}
+                {% else %}
+                    {{ 'Do you want to cancel your request for review'|trans({}, 'innova_collecticiel') }}
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</button>
+                <button data-document_id="titi"
+                        data-document_sender_id="99" 
+                        data-document_comment_length="99"
+                        data-document_docDropUser_id="99" 
+                        data-document_adminInnova="99" 
+                id="modal_confirm-cancel" data-method="VALIDATE" type="button" class="btn btn-primary rest" href="#">{{ 'Ok'|trans({}, 'innova_collecticiel') }}</button>
+            </div>
+        </div>
+    </div>
+</div>

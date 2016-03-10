@@ -39,12 +39,20 @@ $(document).ready(function () {
         var senderId = document.getElementById('document_sender_' + documentId).value;
         var docDropUserId = document.getElementById('document_drop_user_' + documentId).value;
         var adminInnova = document.getElementById('adminInnova_' + documentId).value;
+        var returnReceiptId = document.getElementById('return_receipt_' + documentId).value;
+        var teacherComment = document.getElementById('teacher_comment_' + documentId).value;
 
         //
         // Afficher les tests ici qui permettront de rafraîchir les données.
         //
         // Reprise ici dans tests déclarés avant dans le fichier documentItem.
         //
+
+        // delete : bouton et action "suppresion"
+        // cancel : bouton et action "annulation"
+        // lock : bouton et action "on ne peut rien faire"
+
+        // Enseignant
         if (adminInnova == true) {
             if (isValidate == false || senderId != docDropUserId) {
                 var selector = "#delete_" + documentId;
@@ -55,8 +63,17 @@ $(document).ready(function () {
             else {
                 var selector = "#lock_" + documentId;
             }
+
+            // #247 : l'élève ou l'enseignant ne peuvent rien faire s'il y a un commentaire enseignant sur le document
+            // ou s'il y a un AR autre que 0.
+            if (returnReceiptId > 0 || teacherComment > 0) {
+                var selector = "#lock_" + documentId;
+            }
+
         }
+        // Etudiant
         if (adminInnova == false) {
+            // #241 : l'élève ne peut rien faire s'il y a un AR sur le document.
             if (isValidate == false || (adminInnova == true && senderId != docDropUserId)) {
                 var selector = "#delete_" + documentId;
             }
@@ -66,6 +83,13 @@ $(document).ready(function () {
             else {
                 var selector = "#lock_" + documentId;
             }
+
+            // #247 : l'élève ou l'enseignant ne peuvent rien faire s'il y a un commentaire enseignant sur le document
+            // ou s'il y a un AR autre que 0.
+            if (returnReceiptId > 0 || teacherComment > 0) {
+                var selector = "#lock_" + documentId;
+            }
+
         }
         $(selector).css({'display': 'inline'});
 
@@ -343,15 +367,25 @@ $(document).ready(function () {
     });
 
     // InnovaERV
-    // Ajout pour le traitement de la demande de commentaire : mise Ã  jour de la table Document
+    // Ajout pour le traitement de la demande de commentaire : mise à jour de la table Document
     // Mise Ã  jour de la colonne "validate"
     $('.document_validate').on('click', function(event) {
     });
     
     // InnovaERV
-    // Appel lors de la suppression d'un document
-    $('a.cancel_button').on('click', function(event) {
+    // Ajout pour le traitement de la case à cocher lors de la soumission de documents
+    $('#validate-cancel-modal').on('show.bs.modal', function (event) {
 
+        var button     = $(event.relatedTarget); // Button that triggered the modal
+        var documentId = button.data('document_id'); // Extract info from data-* attributes
+
+        var modal = $(this);
+        modal.find('#modal_confirm-cancel').attr("data-document_id", documentId); //TODO change this to use data() instead of attr()
+    });
+
+    // InnovaERV
+    // Appel lors de la suppression d'un document
+    $('#modal_confirm-cancel').on('click', function(event) {
         event.preventDefault();
         var docId = $(this).attr("data-document_id");
 
@@ -378,6 +412,10 @@ $(document).ready(function () {
                 }
             }
         );
+
+        // Fermeture de la modal
+        $('#validate-cancel-modal').modal('hide');
+
     });
 
     // InnovaERV : sélection et déselection dans la liste des demandes adressées.
@@ -431,6 +469,72 @@ $(document).ready(function () {
 
     });
 
+    // Pour changer et traduire le message "Veuillez renseigner ce champ."
+    $('#submitTitle').on('click', function(event) {
+
+        var text = null;
+        
+        // Input
+        text = document.getElementById('innova_collecticiel_document_file_form_text').value;
+
+        // Récupération de la zone traduite
+        var translation = document.getElementById('translation_id').value;
+
+        if (text.length == 0) {
+
+            // Afficher la zone traduite
+            document.getElementById("innova_collecticiel_document_file_form_text").setCustomValidity(translation);
+            return true;
+
+        } else {
+             console.log("text non vide");  
+             document.getElementById("innova_collecticiel_document_file_form_text").setCustomValidity('');
+        }
+
+        // Textarea
+        var doc = tinyMCE.get('innova_collecticiel_document_file_form_document').getContent();
+        var translation_doc_id = document.getElementById('translation_doc_id').value;
+
+        if (doc.length == 0) {
+            // Afficher la zone traduite
+            document.getElementById("innova_collecticiel_document_file_form_document").setCustomValidity(translation_doc_id);
+        } else {
+            document.getElementById("innova_collecticiel_document_file_form_document").setCustomValidity('');
+        }
+        
+    });
+
+    // Pour changer et traduire le message "Veuillez renseigner ce champ."
+    $('#innova_collecticiel_document_file_form_document').on('click', function(event) {
+
+        var doc = document.getElementById('innova_collecticiel_document_file_form_document').value;
+        // Récupération de la zone traduite
+        var translation = document.getElementById('translation_id').value;
+
+        // var $elem = $("#email");
+        // var email = $elem.val();
+
+        // //the ajax call returns true if the email exists
+        // $.get( "ajax/checkUniqueEmail", function(data) {
+        //     if(data === "true"){
+        //         $elem.setCustomValidity("This email already exists.");
+        //     }else{
+        //         $elem.setCustomValidity("")
+        //     }
+        //     //then we submit the form
+        //     $("#form").submit();
+        // });
+    });
+
+    // Pour changer et traduire le message "Veuillez renseigner ce champ."
+//    $('#innovaDocument').on('click', function(event) {
+//alert("placeholder document3");
+//                $("#innova_collecticiel_document_file_form_document").tinymce().focus();
+//                tinyMCE.get("innova_collecticiel_document_file_form_document").getBody().focus();
+//    });
+
+
+
+//    $('#innovaDocument').find('textarea').val('Some default Text');
+
 });
-
-

@@ -1,7 +1,7 @@
 {% form_theme form "InnovaCollecticielBundle::form_theme_bootstrap3.html.twig" %}
 
 <form class="form-inline" method="POST"
-      action="{{ path('innova_collecticiel_document', {'resourceId': dropzone.id, 'documentType': documentType, 'dropId': drop.id}) }}" {{ form_enctype(form) }}>
+action="{{ path('innova_collecticiel_document', {'resourceId': dropzone.id, 'documentType': documentType, 'dropId': drop.id}) }}" {{ form_enctype(form) }}>
 
     {% block document_header %}
         <div class="row">

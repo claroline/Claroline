@@ -128,6 +128,57 @@ class DropController extends DropzoneBaseController
       
         $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
 
+        $returnReceiptArray = array();
+        // Tableau donnant pour chaque document le premier enseignant qui a commenté
+        $teacherCommentDocArray = array();
+
+        // Pour avoir l'accusé de réception (ou pas) de chaque document
+        foreach ($drop->getDocuments() as $document) {
+            // Récupération de l'accusé de réceptoin
+            $returnReceiptType = $this->getDoctrine()
+            ->getRepository('InnovaCollecticielBundle:ReturnReceipt')
+            ->doneReturnReceiptForOneDocument($document);
+
+            if (!empty($returnReceiptType)) {
+                // Récupération de la valeur de l'accusé de réceptoin
+                $returnReceiptArray[$document->getId()] = $returnReceiptType[0]->getReturnReceiptType()->getId();
+            }
+            else
+            {
+                $returnReceiptArray[$document->getId()] = 0;
+            }
+
+            // Récupération du premier enseignant qui a commenté ce document
+            $teacherCommentDocArray[$document->getId()]= 0;
+            $userComments = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Comment')
+            ->teacherCommentDocArray($document);
+            // Traitement du tableau
+            $foundAdminComment = false;
+            for ($indice = 0; $indice<count($userComments); $indice++)
+            {
+                $ResourceNode = $dropzone->getResourceNode();
+                $workspace = $ResourceNode->getWorkspace();
+                // getting the  Manager role
+                $this->role_manager =  $this->get('claroline.manager.role_manager');
+                $role = $this->role_manager->getWorkspaceRolesForUser($userComments[$indice]->getUser(), $workspace);
+
+                // Traitement du tableau
+                for ($indiceRole = 0; $indiceRole<count($role); $indiceRole++)
+                {
+                    $roleName = $role[$indiceRole]->getName();
+                    if (strpos('_' . $roleName, 'ROLE_WS_MANAGER') === 1)
+                    {
+                        if ($foundAdminComment == false)
+                        {
+                            $teacherCommentDocArray[$document->getId()]= 1;
+                            $foundAdminComment = true;
+                        }
+                    }
+                }
+            }
+
+        }
+
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
@@ -143,7 +194,9 @@ class DropController extends DropzoneBaseController
             'adminInnova' => $canEdit,
             'userNbTextToRead' => $userNbTextToRead,
             'activeRoute' => $activeRoute,
-            'collecticielOpenOrNot' => $collecticielOpenOrNot
+            'collecticielOpenOrNot' => $collecticielOpenOrNot,
+            'returnReceiptArray' => $returnReceiptArray,
+            'teacherCommentDocArray' => $teacherCommentDocArray
         );
     }
 
@@ -576,7 +629,7 @@ class DropController extends DropzoneBaseController
             $totalValideAndNotAdminDocs = $totalValideAndNotAdminDocs + $countValideAndNotAdminDocs;
 
 
-            // Nombre d'AR pour cet utilisateur et pour ce dropzone / Repo : ReturnReceiputtwment
+            // Nombre d'AR pour cet utilisateur et pour ce dropzone / Repo : ReturnReceipt
             $countReturnReceiptForUserAndDropzone = $this->getDoctrine()
                                 ->getRepository('InnovaCollecticielBundle:ReturnReceipt')
                                 ->countTextToReadAll($this->get('security.token_storage')->getToken()->getUser(),
@@ -637,6 +690,7 @@ class DropController extends DropzoneBaseController
 
         }
 
+        // Calcul du nombre de documents sans accusé de réception
         $alertNbDocumentWithoutReturnReceipt = $totalValideAndNotAdminDocs - $countReturnReceiptForDropzone;
 
         $adapter = new DoctrineORMAdapter($dropsQuery);
@@ -671,6 +725,74 @@ class DropController extends DropzoneBaseController
 
         $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
 
+        //
+        // Partie pour calculer les compteurs
+        //
+
+        // Tableau donnant pour chaque document le premier enseignant qui a commenté
+        $teacherCommentDocArray = array();
+
+        // Calcul du nombre d'AR en attente en prenant la même boucle que l'affichage de la liste.
+        $alertNbDocumentWithoutReturnReceipt=0;
+        foreach ($pager->getcurrentPageResults() as $drop) {
+            foreach ($drop->getDocuments() as $document) {
+
+                // Récupération de l'accusé de réception
+                $returnReceiptType = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:ReturnReceipt')
+                ->doneReturnReceiptForADocument($dropzone, $document);
+
+                // Initialisation de la variable car un document peut ne pas avoir d'accusé de réception.
+                $id = 0;
+
+                if (!empty($returnReceiptType)) {
+                    // Récupération de la valeur de l'accusé de réceptoin
+                    $id = $returnReceiptType[0]->getReturnReceiptType()->getId();
+                    if ($id == 0) {
+                        $alertNbDocumentWithoutReturnReceipt++;
+                    }
+                }
+                else
+                {
+                    $alertNbDocumentWithoutReturnReceipt++;
+                }
+
+
+                // Récupération du premier enseignant qui a commenté ce document
+                $userComments = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Comment')
+                ->teacherCommentDocArray($document);
+                // Traitement du tableau
+                $foundAdminComment = false;
+                for ($indice = 0; $indice<count($userComments); $indice++)
+                {
+                    $ResourceNode = $dropzone->getResourceNode();
+                    $workspace = $ResourceNode->getWorkspace();
+                    // getting the  Manager role
+                    $this->role_manager =  $this->get('claroline.manager.role_manager');
+                    $role = $this->role_manager->getWorkspaceRolesForUser($userComments[$indice]->getUser(), $workspace);
+
+                    // Traitement du tableau
+                    for ($indiceRole = 0; $indiceRole<count($role); $indiceRole++)
+                    {
+                        $roleName = $role[$indiceRole]->getName();
+                        if (strpos('_' . $roleName, 'ROLE_WS_MANAGER') === 1)
+                        {
+                            if ($foundAdminComment == false)
+                            {
+                                $teacherCommentDocArray[$document->getId()]=
+                                $userComments[$indice]->getUser()->getFirstName() .
+                                " " . $userComments[$indice]->getUser()->getLastName();
+                                $foundAdminComment = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        //
+        // Fin partie pour calculer les compteurs
+        //
+
         $dataToView = $this->addDropsStats($dropzone, array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
@@ -683,7 +805,8 @@ class DropController extends DropzoneBaseController
             'collecticielOpenOrNot' => $collecticielOpenOrNot,
             'haveReturnReceiptOrNotArray' => $haveReturnReceiptOrNotArray,
             'alertNbDocumentWithoutReturnReceipt' => $alertNbDocumentWithoutReturnReceipt,
-            'haveCommentOrNotArray' => $haveCommentOrNotArray
+            'haveCommentOrNotArray' => $haveCommentOrNotArray,
+            'teacherCommentDocArray' => $teacherCommentDocArray
         ));
 
         return $dataToView;

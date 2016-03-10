@@ -155,3 +155,17 @@ input.form-control {
   position: absolute;
   margin-top: -45px;
  }
+
+/* #274 : Changement de place pour le message "Ce collecticiel est fermé" */
+.closed-collecticiel {
+  float: right;
+  padding: 10px;
+  font-size:15px;
+  margin-top:-30px;
+  margin-right:-10px
+}
+
+/* #271 : Afficher les liens en noir */
+.blackLink {
+  color:black;  
+}

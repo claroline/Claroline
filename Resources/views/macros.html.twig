@@ -1,4 +1,8 @@
-{% macro displayDocumentsList(drop, dropzone, width, mode, documentListText, adminInnova, collecticielOpenOrNot ) %}
+{% macro displayDocumentsList
+(drop, dropzone, width, mode, documentListText, adminInnova,
+collecticielOpenOrNot, returnReceiptArray, teacherCommentDocArray
+)
+%}
     <div class="row">
         <div class="col-md-{{ width }}">
             {% if documentListText is not null %}
@@ -39,15 +43,13 @@
                                 <i class="fa fa-calendar-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Date hour'|trans({},'innova_collecticiel') }}"></i>
                             </th>
                             {# #146 : on affiche cette colonne même en tant qu'enseignant, demande de JJQ #}
-                            {#  {% if not adminInnova %} #}
                             <th class="centered">
-                                {% if dropzone.evaluation != 1  %}
+                                {% if dropzone.evaluation != 1 %}
                                     <i class="fa fa-arrow-right" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Comment transmission'|trans({},'innova_collecticiel') }}"></i>
                                 {% else %}
                                     <i class="fa fa-arrow-right" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Evaluation transmission'|trans({},'innova_collecticiel') }}"></i>
                                 {% endif %}
                             </th>
-                            {#  {% endif %} #}
                             <th class="centered">
                                 <i class="fa fa-commenting-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Comment evaluation'|trans({},'innova_collecticiel') }}"></i>
                             </th>
@@ -68,7 +70,12 @@
                     </thead>
                     <tbody>
                         {% for index, document in drop.documents %}
-                            {% include 'InnovaCollecticielBundle:Document:documentItem.html.twig' %}
+                            {% include 'InnovaCollecticielBundle:Document:documentItem.html.twig'
+                            with {
+                                    'returnReceiptArray': returnReceiptArray,
+                                    'teacherCommentDocArray': teacherCommentDocArray
+                                 }
+                            %}
                         {% endfor %}
                     </tbody>
                 </table>
