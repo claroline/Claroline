@@ -16,6 +16,7 @@ app/config/is_installed.php
 app/config/operations.xml*
 app/config/parameters.yml
 app/config/platform_options.yml
+app/config/tmp_files.yml
 app/config/previous-installed.json
 app/logs/*
 app/SymfonyRequirements.php

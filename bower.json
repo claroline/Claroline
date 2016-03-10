@@ -3,5 +3,8 @@
   "description": "Claroline frontend dependencies",
   "dependencies": {
     "claroline-core": "./vendor/claroline/core-bundle"
+  },
+  "resolutions": {
+    "angular": ">=1.4.0"
   }
 }
