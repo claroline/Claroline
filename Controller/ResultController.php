@@ -16,6 +16,7 @@ use Claroline\ResultBundle\Entity\Result;
 use Claroline\ResultBundle\Manager\ResultManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -63,6 +64,15 @@ class ResultController
             throw new AccessDeniedException();
         }
 
-        return ['result' => $result];
+        return ['_resource' => $result];
+    }
+
+    /**
+     * @param Request   $request
+     * @param Result    $result
+     */
+    public function addUserAction(Request $request, Result $result)
+    {
+
     }
 }

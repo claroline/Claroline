@@ -1,0 +1,18 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true" data-ng-click="vm.onCancel()">&times;</span>
+  </button>
+  <h3 class="modal-title">I'm a modal!</h3>
+</div>
+<div class="modal-body">
+  {{ vm.currentResult.name }}
+  {{ vm.currentResult.mark }}
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" type="button" data-ng-click="vm.onSubmitResult()">
+    OK
+  </button>
+  <button class="btn btn-default" type="button" data-ng-click="vm.onCancel()">
+    Cancel
+  </button>
+</div>

@@ -1,0 +1,25 @@
+<table class="table table-condensed table-bordered">
+  <thead>
+    <tr>
+      <th>NAME</th>
+        <th>MARK</th>
+        <th colspan="2"></th>
+      </tr>
+  </thead>
+  <tbody>
+    <tr data-ng-repeat="result in vm.results">
+      <td>{{ result.name }}</td>
+      <td>{{ result.mark }}</td>
+      <td>
+        <button data-ng-click="vm.onEdit(result)" aria-label="Edit">
+          <i class="fa fa-edit"></i>
+        </button>
+      </td>
+      <td>
+        <button data-ng-click="vm.onRemove(result)" aria-label="Delete">
+          <i class="fa fa-remove"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>

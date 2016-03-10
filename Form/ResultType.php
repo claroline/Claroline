@@ -26,8 +26,10 @@ class ResultType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', 'text', ['constraints' => new NotBlank()])
-            ->add('date', 'text');
+            ->add('name', 'text', [
+                'label' => 'title',
+                'constraints' => new NotBlank()
+            ]);
     }
 
     public function getName()
