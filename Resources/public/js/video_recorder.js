@@ -1,8 +1,8 @@
 "use strict";
 
 var isFirefox = !!navigator.mediaDevices.getUserMedia;
-console.log(isFirefox ? 'firefox':'not firefox');
-
+console.log(isFirefox ? 'firefox':'chrome');
+var isDebug = true;
 var mediaRecorder;
 var recordedBlobs; // array of chunk video blobs
 
@@ -61,7 +61,7 @@ function handleDataAvailable(event) {
     recordedBlobs.push(event.data);
   }
 }
-
+/*
 navigator.getUserMedia(constraints, successCallback, errorCallback);
 
 function successCallback(stream) {
@@ -118,10 +118,83 @@ function record() {
 
   videoPlayer.play();
   gotStream(stream);
+}*/
+
+
+function record() {
+
+  $('#video-record-start').prop('disabled', 'disabled');
+  $('#video-record-stop').prop('disabled', '');
+
+  navigator.getUserMedia(
+    constraints,
+    // success
+    function(stream){
+      console.log('getUserMedia() got stream: ', stream);
+      window.stream = stream;
+      window.setTimeout(function () {
+        recordStream();
+      }, 100);
+
+      viewAudioStream();
+    },
+    // error
+    function(error){
+      var msg = 'navigator.getUserMedia error.';
+      showError(msg, false);
+      if(isDebug){
+        console.log(msg, error);
+      }
+    }
+  );
+}
+
+
+function recordStream (){
+  var options = {
+    mimeType: 'video/webm',
+    audioBitsPerSecond: 128000,
+    videoBitsPerSecond: 1024000
+  };
+
+  recordedBlobs = [];
+  try {
+    mediaRecorder = new MediaRecorder(window.stream, options);
+  } catch (e) {
+    var msg = 'Unable to create MediaRecorder with options Object.';
+    showError(msg, false);
+    if(isDebug){
+      console.log(msg, e);
+    }
+  }
+
+  mediaRecorder.ondataavailable = handleDataAvailable;
+  mediaRecorder.start(10); // collect 10ms of data
+  if(isDebug){
+    console.log('MediaRecorder started', mediaRecorder);
+  }
+
+
+  if (window.URL) {
+    videoPlayer.src = window.URL.createObjectURL(window.stream);
+  } else {
+    videoPlayer.src = window.stream;
+  }
+  videoPlayer.muted = true;
+  videoPlayer.play();
 }
 
 function resetData() {
   cancelAnalyserUpdates();
+
+  if (window.stream) {
+    window.stream.getAudioTracks().forEach(function(track) {
+      track.stop();
+    });
+    window.stream.getVideoTracks().forEach(function(track) {
+      track.stop();
+    });
+  }
 
   recordedBlobs = null;
   mediaRecorder = null;
@@ -138,16 +211,20 @@ function stopRecording() {
 
   videoPlayer.pause();
 
-  window.setTimeout(function () {
+  window.setTimeout(function() {
     mediaRecorder.stop();
     $('#video-record-start').prop('disabled', '');
     $('#video-record-stop').prop('disabled', 'disabled');
     $('#submitButton').prop('disabled', false);
-
+    if(isDebug){
+      console.log(recordedBlobs);
+    }
     var superBuffer = new Blob(recordedBlobs, {
       type: 'video/webm'
     });
-    videoPlayer.src = window.URL.createObjectURL(superBuffer);
+
+
+    videoPlayer.src = window.URL ? window.URL.createObjectURL(superBuffer) : superBuffer;
     videoPlayer.muted = false;
     videoPlayer.controls = true;
 
@@ -155,7 +232,7 @@ function stopRecording() {
       var blob = new Blob(recordedBlobs, {
         type: 'video/webm'
       });
-      videoPlayer.src = URL.createObjectURL(blob);
+      videoPlayer.src = window.URL ? window.URL.createObjectURL(blob) : blob;
     };
   }, recordEndTimeOut);
 
@@ -194,14 +271,18 @@ function xhr(url, data, progress, callback) {
   var request = new XMLHttpRequest();
   request.onreadystatechange = function() {
     if (request.readyState === 4 && request.status === 200) {
-      console.log('xhr end with success');
+      if(isDebug){
+        console.log('xhr end with success');
+      }
       resetData();
 
       // use reload or generate route...
       location.reload();
 
     } else if (request.status === 500) {
-      console.log('xhr error');
+      if(isDebug){
+        console.log('xhr error');
+      }
       $('#spinner').remove();
       var msg = Translator.trans('resource_creation_error', {}, 'innova_video_recorder');
       showError(msg, true);
@@ -250,17 +331,17 @@ function downloadVideo() {
   }, 100);
 }
 
-function gotStream(stream) {
+function viewAudioStream() {
   inputPoint = audioContext.createGain();
   // Create an AudioNode from the stream.
-  realAudioInput = audioContext.createMediaStreamSource(stream);
+  realAudioInput = audioContext.createMediaStreamSource(window.stream);
 
   meter = createAudioMeter(audioContext);
   realAudioInput.connect(meter);
-  drawLoop();
+  draw();
 }
 
-function drawLoop(time) {
+function draw() {
 
   if (!analyserContext) {
     var canvas = document.getElementById("analyser");
@@ -280,7 +361,7 @@ function drawLoop(time) {
   analyserContext.fillRect(0, 0, meter.volume * canvasWidth * 1.4, canvasHeight);
 
   // set up the next visual callback
-  rafID = window.requestAnimationFrame(drawLoop);
+  rafID = window.requestAnimationFrame(draw);
 }
 
 function cancelAnalyserUpdates() {

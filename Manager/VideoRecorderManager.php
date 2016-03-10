@@ -102,7 +102,7 @@ class VideoRecorderManager
           $sourceFilePath =  $this->tempUploadDir . DIRECTORY_SEPARATOR .$tempVideoFileName;
           $tempEncodedFilePath = $this->tempUploadDir . DIRECTORY_SEPARATOR . $finalFileName;
           // create avconv cmd
-          $cmd = 'avconv -i '. $sourceFilePath . ' -c:v copy -c:a opus -ac 1 ' . $tempEncodedFilePath;
+          $cmd = 'avconv -i '. $sourceFilePath . ' -codec:v copy -codec:a opus -ac 1 ' . $tempEncodedFilePath;
 
           $output;
           $returnVar;
