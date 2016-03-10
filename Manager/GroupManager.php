@@ -497,14 +497,77 @@ class GroupManager
     }
 
     /**
-     * @deprecated use getAll() instead
+     * Serialize a group array.
+     *
+     * @param Group[] $groups
+     *
+     * @return array
      */
+    public function convertGroupsToArray(array $groups)
+    {
+        $content = array();
+        $i = 0;
+        foreach ($groups as $group) {
+            $content[$i]['id'] = $group->getId();
+            $content[$i]['name'] = $group->getName();
+            $rolesString = '';
+            $roles = $group->getEntityRoles();
+            $rolesCount = count($roles);
+            $j = 0;
+            foreach ($roles as $role) {
+                $rolesString .= "{$this->translator->trans($role->getTranslationKey(), array(), 'platform')}";
+                if ($j < $rolesCount - 1) {
+                    $rolesString .= ' ,';
+                }
+                $j++;
+            }
+            $content[$i]['roles'] = $rolesString;
+            $i++;
+        }
+        return $content;
+    }
+    /**
+     * @param integer $page
+     * @param int $max
+     *
+     * @return \PagerFanta\PagerFanta
+     */
+    public function getAllGroups($page, $max = 50)
+    {
+        $query = $this->groupRepo->findAll(false);
+        return $this->pagerFactory->createPager($query, $page, $max);
+    }
+    /**
+     * @param integer $page
+     * @param string $search
+     * @param int $max
+     *
+     * @return \PagerFanta\PagerFanta
+     */
+    public function getAllGroupsBySearch($page, $search, $max = 50)
+    {
+        $query = $this->groupRepo->findAllGroupsBySearch($search);
+        return $this->pagerFactory->createPagerFromArray($query, $page, $max);
+    }
+    /**
+     * @param string[] $names
+     *
+     * @return Group[]
+     */
+    public function getGroupsByNames(array $names)
+    {
+        if (count($names) > 0) {
+            return $this->groupRepo->findGroupsByNames($names);
+        }
+        return array();
+    }
+
     public function getAllGroupsWithoutPager(
         $orderedBy = 'id',
         $order = 'ASC',
         $executeQuery = true
     )
     {
-        return $this->getAll();
+        return $this->groupRepo->findAllGroups($orderedBy, $order, $executeQuery);
     }
 }
