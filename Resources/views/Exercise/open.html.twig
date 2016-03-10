@@ -31,31 +31,35 @@
     {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm-exo-app.js'
         '@UJMExoBundle/Resources/public/js/anonymous-wrapper-start.js'
 
-        '@UJMExoBundle/Resources/public/js/sequence/*'
-        '@UJMExoBundle/Resources/public/js/sequence/Player/Exercise/*'
-        '@UJMExoBundle/Resources/public/js/sequence/Player/Exercise/Controllers/*'
-        '@UJMExoBundle/Resources/public/js/sequence/Player/Exercise/Directives/*'
-        '@UJMExoBundle/Resources/public/js/sequence/Player/Exercise/Services/*'
+        '@UJMExoBundle/Resources/public/js/angular/*'
+
+        '@UJMExoBundle/Resources/public/js/angular/Common/*'
+        '@UJMExoBundle/Resources/public/js/angular/Common/Filters/*'
+        '@UJMExoBundle/Resources/public/js/angular/Common/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/angular/Exercise/*'
+        '@UJMExoBundle/Resources/public/js/angular/Exercise/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/angular/Exercise/Directives/*'
+        '@UJMExoBundle/Resources/public/js/angular/Exercise/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/angular/Correction/*'
+        '@UJMExoBundle/Resources/public/js/angular/Correction/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/angular/Correction/Directives/*'
+        '@UJMExoBundle/Resources/public/js/angular/Correction/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/angular/Paper/*'
+        '@UJMExoBundle/Resources/public/js/angular/Paper/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/angular/Paper/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/angular/Question/*'
+        '@UJMExoBundle/Resources/public/js/angular/Question/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/angular/Question/Controllers/Type/*'
+        '@UJMExoBundle/Resources/public/js/angular/Question/Directives/*'
+        '@UJMExoBundle/Resources/public/js/angular/Question/Directives/Type/*'
+        '@UJMExoBundle/Resources/public/js/angular/Question/Services/*'
 
         '@UJMExoBundle/Resources/public/js/anonymous-wrapper-end.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
-
-
-    {#'@UJMExoBundle/Resources/public/js/sequence/Common/*'
-    '@UJMExoBundle/Resources/public/js/sequence/Common/Services/*'
-
-    '@UJMExoBundle/Resources/public/js/sequence/Player/Shared/*'
-    '@UJMExoBundle/Resources/public/js/sequence/Player/Shared/Services/*'
-
-    '@UJMExoBundle/Resources/public/js/sequence/Player/Exercise/*'
-    '@UJMExoBundle/Resources/public/js/sequence/Player/Exercise/Controllers/*'
-    '@UJMExoBundle/Resources/public/js/sequence/Player/Exercise/Directives/*'
-    '@UJMExoBundle/Resources/public/js/sequence/Player/Exercise/Services/*'
-
-    '@UJMExoBundle/Resources/public/js/sequence/Player/Question/*'
-    '@UJMExoBundle/Resources/public/js/sequence/Player/Question/Controllers/*'
-    '@UJMExoBundle/Resources/public/js/sequence/Player/Question/Directives/*'
-    '@UJMExoBundle/Resources/public/js/sequence/Player/Question/Services/*'#}
 {% endblock %}

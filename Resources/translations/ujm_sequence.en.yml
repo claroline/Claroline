@@ -6,6 +6,7 @@ btn_end_sequence_label: End exercise
 btn_interrupt_sequence_label: Interrupt
 btn_prev_step_label: Go to previous step
 btn_next_step_label: Go to next step
+btn_retry_step: Retry step
 btn_validate_step: Validate step
 btn_toggle_all_paper_question_panels: Show / Hide all questions
 
@@ -28,6 +29,7 @@ keys_words: Keys words
 
 # l
 link_exercice_home: Exercise home
+link_exercise_continue: Continue
 link_exercise_retry: Retry
 link_exercise_play: Answer
 link_exercise_docimology: Docimology
@@ -84,6 +86,7 @@ sequence_nb_attempts: Attempt N° %1%
 sequence_interrupt_sequence_confirm: Are you sure you want to go to interrupt the exercise ?
 sequence_end_sequence_confirm: Are you sure you want to go to finish the exercise ? <br/> Yon won't be able to edit your answers.
 sequence_play_leave_confirm: Are you sure you want to leave the application ?
+sequence_score: Score
 
 # v
 validate: Validate

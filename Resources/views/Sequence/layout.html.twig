@@ -62,8 +62,7 @@
         {# Make Twig variables accessibles by AngularJS #}
         var AngularApp = {};
 
-        /*AngularApp.webDir = "{{ asset('') }}";*/
-        AngularApp.webDir        = "{{ path('claro_index') }}".split('/').slice(0, -2).join('/') + "/";
+        AngularApp.webDir = "{{ path('claro_index') }}".split('/').slice(0, -2).join('/') + "/";
         AngularApp.locale = "{{ app.request.locale ~ '_' ~ app.request.locale|upper }}";
     </script>
 {% endblock %}

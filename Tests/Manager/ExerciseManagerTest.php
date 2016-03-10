@@ -15,8 +15,6 @@ class ExerciseManagerTest extends \PHPUnit_Framework_TestCase
     private $validator;
     /** @var ExerciseManager */
     private $manager;
-    /** @var string */
-    private $formatDir;
 
     protected function setUp()
     {
@@ -24,7 +22,6 @@ class ExerciseManagerTest extends \PHPUnit_Framework_TestCase
         $this->validator = $this->mock('UJM\ExoBundle\Transfer\Json\Validator');
         $questionManager = $this->mock('UJM\ExoBundle\Manager\QuestionManager');
         $this->manager = new ExerciseManager($this->om, $this->validator, $questionManager);
-        $this->formatDir = realpath(__DIR__ . '/../../../../json-quiz/json-quiz/format');
     }
 
     /**
@@ -142,9 +139,7 @@ class ExerciseManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSchemaRoundTrip($dataFilename)
     {
-        $this->markTestIncomplete('Should not use a mock for this one');
-        $data = file_get_contents("{$this->formatDir}/quiz/examples/valid/{$dataFilename}");
-        $this->manager->importExercise($data);
+        $this->markTestIncomplete('Not implemented, should not use a mock');
     }
 
     private function mock($class)
