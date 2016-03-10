@@ -63,7 +63,7 @@ class SequenceController extends Controller
     {
         $message = $request->get('message');
         $code = $request->get('code');
-        die($message);
+
         switch ($code){
             case '403':
                 throw new AccessDeniedHttpException($message);
