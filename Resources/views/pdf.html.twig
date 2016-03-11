@@ -23,7 +23,11 @@
                             <button class="btn btn-primary" onclick="goPrevious()"><i class="fa fa-backward"></i></button>
                             <button class="btn btn-primary" onclick="goNext()"><i class="fa fa-forward"></i></button>
                         </span>
-                        <span class="text-center form-control input-group-btn">{{ 'Page' | trans({}, 'widget')}}: <span class="page_num"></span> / <span class="page_count"></span></span>
+
+                        <span class="text-center form-control">
+                            {{ 'Page' | trans({}, 'widget')}}: <span class="page_num"></span> / <span class="page_count"></span>
+                        </span>
+
                         <span class="input-group-btn">
                             <button class="btn btn-primary" onclick="zoomIn()"><i class="fa fa-search-plus"></i></button>
                             <button class="btn btn-primary" onclick="zoomOut()"><i class="fa fa-search-minus"></i></button>
@@ -47,7 +51,8 @@
 {% endblock %}
 {% block javascripts %}
         {{ parent() }}
-        <script type="text/javascript" src="{{ asset('bundles/clarolinepdfplayer/js/pdf.js') }}"></script>
+        <link rel="stylesheet" href="{{ asset('packages/pdfjs-dist/web/pdf_viewer.css') }}" media="screen" />
+        <script type="text/javascript" src="{{ asset('packages/pdfjs-dist/build/pdf.combined.js') }}"></script>
         <script type="text/javascript">
 
         var url = '{{ path ("claro_pdf", {"node": pdf.getResourceNode.getId()}) }}';
@@ -55,10 +60,10 @@
         PDFJS.disableWorker = true;
 
         var pdfDoc = null,
-                pageNum = 1,
-                scale = 1,
-                canvas = document.getElementById('the-canvas'),
-                ctx = canvas.getContext('2d');
+            pageNum = 1,
+            scale = 1,
+            canvas = document.getElementById('the-canvas'),
+            ctx = canvas.getContext('2d');
 
         function renderPage(num) {
             // Using promise to fetch the page
@@ -95,20 +100,20 @@
         }
 
         function zoomIn(){
-                scale*=1.1;
-                renderPdf(url);
+            scale*=1.1;
+            renderPdf(url);
         }
 
         function zoomOut(){
-                scale*=0.9
-                renderPdf(url);
+            scale*=0.9
+            renderPdf(url);
         }
 
         function renderPdf(url){
-                PDFJS.getDocument(url).then(function getPdf(_pdfDoc) {
-                    pdfDoc = _pdfDoc;
-                    renderPage(pageNum);
-                });
+            PDFJS.getDocument(url).then(function getPdf(_pdfDoc) {
+                pdfDoc = _pdfDoc;
+                renderPage(pageNum);
+            });
         }
 
         renderPdf(url);
