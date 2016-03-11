@@ -4,7 +4,7 @@
             <h3 class="panel-title"><b>{{ 'exercise'|trans:{}:'ujm_exo' }} :</b> {{ exerciseCtrl.exercise.meta.title }}</h3>
         </div>
 
-        <nav class="navbar navbar-default navbar-static-top">
+        <nav class="navbar navbar-default navbar-static-top" data-ng-if="!exerciseCtrl.currentView.hideMenu">
             <div class="container-fluid">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#exercise-navbar" aria-expanded="false">
@@ -19,22 +19,22 @@
                     <!-- Administration links -->
                     <ul class="nav navbar-nav" data-ng-if="exerciseCtrl.editEnabled">
                         <!-- Information about the Exercise -->
-                        <li class="active">
+                        <li data-ng-class="{ active: 'overview' === exerciseCtrl.currentView.tab }">
                             <a href="#/">
                                 <span class="fa fa-info"></span> {{ 'overview' | trans:{}:'ujm_exo' }}
                             </a>
                         </li>
 
                         <!-- Edit Exercise parameters -->
-                        <li>
+                        <li data-ng-class="{ active: 'parameters' === exerciseCtrl.currentView.tab }">
                             <a href="#/edit">
                                 <span class="fa fa-pencil"></span> {{ 'parameters' | trans:{}:'ujm_exo' }}
                             </a>
                         </li>
 
                         <!-- Edit Questions -->
-                        <li>
-                            <a href="#/questions">
+                        <li data-ng-class="{ active: 'steps' === exerciseCtrl.currentView.tab }">
+                            <a href="#/steps">
                                 <span class="fa fa-question"></span> {{ 'questions' | trans:{}:'ujm_exo' }}
                             </a>
                         </li>
@@ -54,19 +54,17 @@
                         </li>
                     </ul>
 
+                    <!-- Play the Exercise -->
+                    <a data-ng-if="exerciseCtrl.composeEnabled" href="#/play" role="button" class="btn btn-primary navbar-btn navbar-right">
+                        <span class="fa fa-check-square-o"></span> {{ 'compose' | trans:{}:'ujm_exo' }}
+                    </a>
+
                     <ul class="nav navbar-nav navbar-right">
                         <!-- Display results of the Exercise -->
-                        <li>
-                            <a href="#">
+                        <li data-ng-class="{ active: 'papers' === exerciseCtrl.currentView.tab }">
+                            <a href="#/papers">
                                 <span class="fa fa-list"></span> {{ 'result' | trans:{}:'ujm_exo' }}
                             </a>
-                        </li>
-
-                        <!-- Play the Exercise -->
-                        <li>
-                            <button type="button" class="btn btn-primary navbar-btn">
-                                <span class="fa fa-check-square-o"></span> {{ 'compose' | trans:{}:'ujm_exo' }}
-                            </button>
                         </li>
                     </ul>
                 </div><!-- /.navbar-collapse -->

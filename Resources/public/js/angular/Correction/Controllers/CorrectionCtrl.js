@@ -1,30 +1,22 @@
 /**
  * Paper details directive controller
- * 
  */
 angular.module('Correction').controller('CorrectionCtrl', [
     'CommonService',
     'CorrectionService',
     function (CommonService, CorrectionService) {
-
         this.paper = {};
-        this.exercise = {};
         this.questions = {};
-        this.user = {};
 
         this.context = '';
 
         this.questionPanelsState = 'opened'; // all panels are open
         this.globalNote = 0.0;
-        this.displayRetryExerciseLink = false;
 
-        this.init = function (paper, questions, exercise, user) {
-            this.exercise = exercise;
+        this.init = function (paper, questions) {
             this.paper = paper;
-            this.user = user;
             this.questions = questions;
             this.globalNote = 0;//CommonService.getPaperScore(this.paper, this.questions);
-            this.showHideRetryLink();
         };
 
         /**
@@ -55,20 +47,23 @@ angular.module('Correction').controller('CorrectionCtrl', [
 
         this.toggleDetails = function (id) {
             $('#question-body-' + id).toggle();
+
             if (angular.element('#question-toggle-' + id).hasClass('fa-chevron-down')) {
                 angular.element('#question-toggle-' + id).removeClass('fa-chevron-down').addClass('fa-chevron-right');
             } else if (angular.element('#question-toggle-' + id).hasClass('fa-chevron-right')) {
                 angular.element('#question-toggle-' + id).removeClass('fa-chevron-right').addClass('fa-chevron-down');
             }
+
             // check if all panels are in the same state to correctly handle show / hide all panels
-            var countOpend = 0;
+            var countOpened = 0;
             $('.question-panel').each(function () {
                 if ($('#question-toggle-' + id).hasClass('fa-chevron-down')) {
-                    countOpend++;
+                    countOpened++;
                 }
             });
+
             // if one or more panels are open then the show/hide all panel button should close all panels
-            this.questionPanelsState = countOpend > 0 ? 'opened':'closed';
+            this.questionPanelsState = countOpened > 0 ? 'opened' : 'closed';
         };
 
 
@@ -90,7 +85,7 @@ angular.module('Correction').controller('CorrectionCtrl', [
          * when rendering each question hint check if student used it
          * @param {type} question
          * @param {type} hint
-         * @returns {undefined}
+         * @returns {boolean}
          */
         this.hintIsUsed = function (question, hint) {
             for (var i = 0; i < this.paper.questions.length; i++) {
@@ -103,23 +98,6 @@ angular.module('Correction').controller('CorrectionCtrl', [
                 }
             }
             return false;
-        };
-
-        /**
-         * Checks if current user can replay the exercise
-         * Basicaly if user is admin he will always have access to the button
-         * @returns {Boolean}
-         */
-        this.showHideRetryLink = function () {
-
-            if (this.user.admin || this.exercise.meta.maxAttempts === 0) {
-                this.displayRetryExerciseLink = true;
-            } else {
-                var promise = CommonService.countFinishedPaper(this.exercise.id);
-                promise.then(function (result) {
-                    this.displayRetryExerciseLink = result < this.exercise.meta.maxAttempts;
-                }.bind(this));
-            }
         };
 
         this.generateUrl = function (witch, _id) {
@@ -147,8 +125,8 @@ angular.module('Correction').controller('CorrectionCtrl', [
                     }
                 }
             }
-            return 'Not implemented for this type of question';
 
+            return 'Not implemented for this type of question';
         };
     }
 ]);

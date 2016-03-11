@@ -6,43 +6,22 @@ angular.module('Common').factory('DataSharing', [
     '$filter',
     '$q',
     function DataSharing($http, $filter, $q) {
-
-        this.exercise = {};
         this.paper = {};
-        this.user = {};
 
+        this.currentQuestion = {};
         this.currentQuestionPaperData = {};
 
         return {
-            /**
-             * Set the player exercise
-             * @param {object} sequence
-             * @returns {object}
-             */
-            setExercise: function (exercise) {
-                this.exercise = exercise;
-
-                return this.exercise;
-            },
-            getExercise: function () {
-                return this.exercise;
-            },
             setPaper: function (paper) {
                 this.paper = paper;
 
                 return this.paper;
             },
+
             getPaper: function () {
                 return this.paper;
             },
-            setUser: function (user) {
-                this.user = user;
 
-                return this.user;
-            },
-            getUser: function () {
-                return this.user;
-            },
             /**
              * Set the current paper data and return paper anwser(s) and used hints for the current question
              * @param {object} question
@@ -60,17 +39,24 @@ angular.module('Common').factory('DataSharing', [
                         return this.currentQuestionPaperData;
                     }
                 }
+
                 // if no info found, initiate object
                 this.currentQuestionPaperData = {
                     id: question.id.toString(),
                     answer: [],
                     hints: []
                 };
+
                 this.paper.questions.push(this.currentQuestionPaperData);
 
                 return this.currentQuestionPaperData;
             },
-            // set / update the student data
+
+            /**
+             * Set / Update student data
+             * @param question
+             * @param currentQuestionPaperData
+             */
             setStudentData: function (question, currentQuestionPaperData) {
                 this.currentQuestion = question;
                 // this will automatically update the paper object... Or not was working with choices question
@@ -86,13 +72,15 @@ angular.module('Common').factory('DataSharing', [
                     // see if we'll need to do the same with hints...
                 }
             },
+
             getStudentData: function () {
-                return{
+                return {
                     question: this.currentQuestion,
                     paper: this.paper,
                     answers: this.currentQuestionPaperData.answer
                 };
             },
+
             setQuestionScore: function (score, questionId) {
                 for (var i=0; i<this.paper.questions.length; i++) {
                     if (this.paper.questions[i].id === questionId.toString()) {

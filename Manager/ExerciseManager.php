@@ -160,9 +160,9 @@ class ExerciseManager
      */
     public function importExercise($data)
     {
-        $quiz = json_decode($data);
+        $exercise = json_decode($data);
 
-        $errors = $this->validator->validateExercise($quiz);
+        $errors = $this->validator->validateExercise($exercise);
 
         if (count($errors) > 0) {
             throw new ValidationException('Exercise is not valid', $errors);

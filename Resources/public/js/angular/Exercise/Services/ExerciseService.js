@@ -16,10 +16,16 @@ ExerciseService.$inject = [ '$http', '$q' ];
 ExerciseService.prototype.exercise = null;
 
 /**
- * Is the Current Exercise already published ?
+ * Is the current User can edit the Exercise ?
  * @type {boolean}
  */
 ExerciseService.prototype.editEnabled = false;
+
+/**
+ * Is the current User can do the Exercise ?
+ * @type {boolean}
+ */
+ExerciseService.prototype.composeEnabled = false;
 
 /**
  * Get the current Exercise
@@ -41,6 +47,14 @@ ExerciseService.prototype.setExercise = function setExercise(exercise) {
 };
 
 /**
+ * Get steps of an Exercise
+ * @returns {Array}
+ */
+ExerciseService.prototype.getSteps = function getSteps() {
+    return (this.exercise && this.exercise.steps) ? this.exercise.steps : [];
+};
+
+/**
  * Is edit enabled ?
  * @returns {boolean}
  */
@@ -59,12 +73,36 @@ ExerciseService.prototype.setEditEnabled = function setEditEnabled(editEnabled) 
     return this;
 };
 
+/**
+ * Is compose enabled ?
+ * @returns {boolean}
+ */
+ExerciseService.prototype.isComposeEnabled = function isComposeEnabled() {
+    return this.composeEnabled;
+};
+
+/**
+ * Set compose enabled
+ * @param   {boolean} composeEnabled
+ * @returns {ExerciseService}
+ */
+ExerciseService.prototype.setComposeEnabled = function setComposeEnabled(composeEnabled) {
+    this.composeEnabled = composeEnabled;
+
+    return this;
+};
+
+/**
+ * Save modifications of the Exercise
+ * @param exercise
+ * @returns {Promise}
+ */
 ExerciseService.prototype.save = function save(exercise) {
     var deferred = this.$q.defer();
 
     this.$http
         .put(
-            Routing.generate('exercise_update', {id: id}),
+            Routing.generate('exercise_update', { id: exercise.id }),
             exercise
         )
         .success(function onSuccess(response) {
@@ -82,13 +120,14 @@ ExerciseService.prototype.save = function save(exercise) {
  * @returns {promise}
  */
 ExerciseService.prototype.start = function start() {
-    // Backup CODE
     var deferred = this.$q.defer();
 
     this.$http.post(
-            Routing.generate('exercise_new_attempt', {id: id})
+            Routing.generate('exercise_new_attempt', { id: this.exercise.id })
         ).success(function(response){
-            deferred.resolve(response);
+            if (response && response.paper) {
+                deferred.resolve(response.paper);
+            }
         }).error(function(data, status){
             deferred.reject([]);
             var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService get exercise error';
@@ -106,11 +145,12 @@ ExerciseService.prototype.start = function start() {
  * @returns {promise}
  */
 ExerciseService.prototype.end = function end(studentPaper) {
+    // Backup CODE
     var deferred = this.$q.defer();
 
     this.$http
         .put(
-            Routing.generate('exercise_finish_paper', {id: studentPaper.id})
+            Routing.generate('exercise_finish_paper', { id: studentPaper.id })
         )
         // Success callback
         .success(function (response) {
@@ -148,10 +188,11 @@ ExerciseService.prototype.unpublish = function unpublish() {
 /**
  * Save the answer given to a question
  * @param {number} paperId
- * @param {object} answer
+ * @param {object} studentData
  * @returns promise
  */
 ExerciseService.prototype.submitAnswer = function submitAnswer(paperId, studentData) {
+    // Backup CODE
     var deferred = this.$q.defer();
 
     this.$http
@@ -172,7 +213,7 @@ ExerciseService.prototype.submitAnswer = function submitAnswer(paperId, studentD
         });
 
     return deferred.promise;
-}
+};
 
 // Register service into AngularJS
 angular

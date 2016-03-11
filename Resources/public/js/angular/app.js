@@ -16,6 +16,7 @@ angular
 
         // Exercise modules
         'Common',
+        'Step',
         'Exercise',
         'Question',
         'Paper',
@@ -53,7 +54,11 @@ angular
                                 return ExerciseService.isEditEnabled();
                             }
                         ]
-                    }
+                    },
+
+                    // Active tab
+                    hideMenu: false,
+                    tab: 'overview'
                 })
 
                 // Edit Exercise parameters
@@ -69,121 +74,114 @@ angular
                                 return ExerciseService.getExercise();
                             }
                         ]
-                    }
+                    },
+
+                    // Active tab
+                    hideMenu: false,
+                    tab: 'parameters'
                 })
 
                 // Display the list of Questions
-                .when('/questions', {
-                    templateUrl : AngularApp.webDir + 'bundles/ujmexo/js/angular/Question/list.html',
-                    controller  : 'StepEditCtrl',
-                    controllerAs: 'stepEditCtrl'
+                .when('/steps', {
+                    templateUrl : AngularApp.webDir + 'bundles/ujmexo/js/angular/Step/Partials/list.html',
+                    controller  : 'StepListCtrl',
+                    controllerAs: 'stepListCtrl',
+                    resolve: {
+                        // Get the list of Steps from the Exercise
+                        steps: [
+                            'ExerciseService',
+                            function stepsResolve(ExerciseService) {
+                                return ExerciseService.getSteps();
+                            }
+                        ]
+                    },
+
+                    // Active tab
+                    tab: 'steps'
                 })
 
                 // Display Papers list
-                .when('/papers/:eid', {
-                    templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Paper/Partials/papers.list.html',
+                .when('/papers', {
+                    templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Paper/Partials/list.html',
                     controller: 'PaperListCtrl',
                     controllerAs: 'paperListCtrl',
                     resolve: {
-                        /**
-                         * Get the paper details
-                         */
                         papersPromise: [
-                            '$route',
                             'PaperService',
-                            function getPapers($route, PaperService) {
-
-                                var promise = null;
-                                if ($route.current.params && $route.current.params.eid) {
-                                    promise = PaperService.getAll($route.current.params.eid);
-                                }
-                                return promise;
+                            function papersResolve(PaperService) {
+                                return PaperService.getAll();
                             }
                         ],
-                        paperExercise: [
-                            '$route',
-                            'PaperService',
-                            function getSequence($route, PaperService) {
-
-                                var promise = null;
-                                if ($route.current.params && $route.current.params.eid) {
-                                    promise = PaperService.getSequence($route.current.params.eid);
-
-                                }
-                                return promise;
-                            }
-                        ],
-                        user: [
-                            '$route',
-                            'PaperService',
-                            function getConnectedUserInfos($route, PaperService) {
-
-                                var promise = null;
-                                if ($route.current.params && $route.current.params.eid) {
-                                    promise = PaperService.getConnectedUser($route.current.params.eid);
-                                }
-                                return promise;
+                        exercise: [
+                            'ExerciseService',
+                            function exerciseResolve(ExerciseService) {
+                                return ExerciseService.getExercise();
                             }
                         ]
-                    }
+                    },
+
+                    // Active tab
+                    hideMenu: false,
+                    tab: 'papers'
                 })
 
                 // Display a Paper
-                .when('/papers/:eid/:pid', {
-                    templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Paper/Partials/paper.show.html',
-                    controller: 'PaperDetailsCtrl',
-                    controllerAs: 'paperDetailsCtrl',
+                .when('/papers/:id', {
+                    templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Paper/Partials/show.html',
+                    controller: 'PaperShowCtrl',
+                    controllerAs: 'paperShowCtrl',
                     resolve: {
-                        /**
-                         * Get the paper details
-                         */
                         paperPromise: [
                             '$route',
-                            'CorrectionService',
-                            function getPaper($route, CorrectionService) {
-
+                            'PaperService',
+                            function paperResolve($route, PaperService) {
                                 var promise = null;
-                                if ($route.current.params && $route.current.params.eid && $route.current.params.pid) {
-                                    promise = CorrectionService.getOne($route.current.params.eid, $route.current.params.pid);
+                                if ($route.current.params && $route.current.params.id) {
+                                    promise = PaperService.get($route.current.params.id);
                                 }
+
                                 return promise;
                             }
                         ],
-                        paperExercise: [
-                            '$route',
-                            'PaperService',
-                            function getSequence($route, PaperService) {
-
-                                var promise = null;
-                                if ($route.current.params && $route.current.params.eid) {
-                                    promise = PaperService.getSequence($route.current.params.eid);
-                                }
-                                return promise;
-                            }
-                        ],
-                        user: [
-                            '$route',
-                            'PaperService',
-                            function getConnectedUserInfos($route, PaperService) {
-
-                                var promise = null;
-                                if ($route.current.params && $route.current.params.eid) {
-                                    promise = PaperService.getConnectedUser($route.current.params.eid);
-                                }
-                                return promise;
+                        exercise: [
+                            'ExerciseService',
+                            function exerciseResolve(ExerciseService) {
+                                return ExerciseService.getExercise();
                             }
                         ]
-                    }
+                    },
+
+                    // Active tab
+                    hideMenu: false,
+                    tab: 'papers'
                 })
 
                 // Respond to Exercise
                 .when('/play', {
-                    templateUrl : AngularApp.webDir + 'bundles/ujmexo/js/angular/Exercise/player.html',
+                    templateUrl : AngularApp.webDir + 'bundles/ujmexo/js/angular/Exercise/Partials/player.html',
                     controller  : 'ExercisePlayerCtrl',
-                    controllerAs: 'exercisePlayerCtrl'
+                    controllerAs: 'exercisePlayerCtrl',
+                    resolve: {
+                        exercise: [
+                            'ExerciseService',
+                            function exerciseResolve(ExerciseService) {
+                                return ExerciseService.getExercise();
+                            }
+                        ],
+                        paper: [
+                            'ExerciseService',
+                            function paperResolve(ExerciseService) {
+                                // Start a new Attempt and retrieve the Paper if maxAttempt is not reach
+                                return ExerciseService.start();
+                            }
+                        ]
+                    },
+
+                    // Hide management menu in player
+                    hideMenu: true
                 })
 
-                // Otherwize redirect User on Overview
+                // Otherwise redirect User on Overview
                 .otherwise({
                     redirectTo: '/'
                 });

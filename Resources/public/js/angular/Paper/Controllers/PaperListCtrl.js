@@ -1,18 +1,14 @@
 angular.module('Paper').controller('PaperListCtrl', [
-    '$route',
     '$filter',
     'CommonService',
-    'paperExercise',
+    'exercise',
     'PaperService',
-    'user',
     'papersPromise',
-    function ($route, $filter, CommonService, paperExercise, PaperService, user, papersPromise) {
+    function ($filter, CommonService, exercise, PaperService, papersPromise) {
 
         this.papers = papersPromise.papers;
         this.questions = papersPromise.questions;
-        this.exercise = paperExercise;
-        this.user = user;
-        this.displayRetryExerciseLink = false;
+        this.exercise = exercise;
         this.displayManualCorrectionMessage = false;
 
         // table data
@@ -58,19 +54,6 @@ angular.module('Paper').controller('PaperListCtrl', [
             this.showPagination = !this.showPagination;
             if (!this.showPagination) {
                 this.config.itemsPerPage = this.papers.length;
-            }
-        };
-
-        /**
-         * Checks if current user can replay the exercise
-         * Basicaly if user is admin he will always have access to the button
-         * @returns {Boolean}
-         */
-        this.showHideRetryLink = function () {
-            if (this.user.admin || this.exercise.meta.maxAttempts === 0) {
-                this.displayRetryExerciseLink = true;
-            } else {
-                this.displayRetryExerciseLink = this.papers.length < this.exercise.meta.maxAttempts;//PaperService.userCanReplayExercise(this.exercise.meta.maxAttempts, this.papers);
             }
         };
 
@@ -151,8 +134,6 @@ angular.module('Paper').controller('PaperListCtrl', [
         };
 
         this.setTableData();
-        this.showHideRetryLink();
-
         this.needManualCorrection();
     }
 ]);

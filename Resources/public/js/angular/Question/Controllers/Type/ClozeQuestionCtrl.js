@@ -4,8 +4,7 @@ angular.module('Question').controller('ClozeQuestionCtrl', [
     'CommonService',
     'DataSharing',
     'QuestionService',
-    '$timeout',
-    function ($ngBootbox, $scope, CommonService, DataSharing, QuestionService, $timeout) {
+    function ($ngBootbox, $scope, CommonService, DataSharing, QuestionService) {
 
         this.question = {};
         this.formatedClozeText = '';

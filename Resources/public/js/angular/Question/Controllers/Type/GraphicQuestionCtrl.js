@@ -4,8 +4,7 @@ angular.module('Question').controller('GraphicQuestionCtrl', [
     'CommonService',
     'QuestionService',
     'DataSharing',
-    'ExerciseService',
-    function ($ngBootbox, $scope, CommonService, QuestionService, DataSharing, ExerciseService) {
+    function ($ngBootbox, $scope, CommonService, QuestionService, DataSharing) {
         this.question = {};
         // keep coord(s)
         this.coords = []; // student answers

@@ -10,7 +10,6 @@ var ExerciseParametersCtrl = function ExerciseEditCtrl(ExerciseService, exercise
     // Create a copy of the exercise
     angular.copy(exercise, this.exercise);
 
-
     // Initialize TinyMCE
     var tinymce = window.tinymce;
     tinymce.claroline.init    = tinymce.claroline.init || {};

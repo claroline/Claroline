@@ -6,31 +6,12 @@ angular.module('Common').factory('CommonService', [
     '$filter',
     '$q',
     function CommonService($http, $filter, $q) {
-
-        this.sequence = {};
         this.paper = {};
-        this.user = {};
         this.currentQuestion = {};
         this.currentAnswer = {};
         this.currentQuestionPaperData = {};
 
         return {
-            /**
-             * Set the current sequence
-             * Used for sharing data between directives
-             * @param {type} sequence
-             * @returns {undefined}
-             */
-            setSequence: function (sequence) {
-                this.sequence = sequence;
-                return this.sequence;
-            },
-            getSequence: function () {
-                return this.sequence;
-            },
-            getSequenceMeta: function () {
-                return this.sequence.meta;
-            },
             /**
              * @param {object} object a javascript object with meta property
              * @returns null or string
@@ -41,21 +22,7 @@ angular.module('Common').factory('CommonService', [
                 }
                 return object.meta.licence || object.meta.created || object.meta.modified || (object.meta.description && object.meta.description !== '');
             },
-            // set / update the student data
-            /*setStudentData: function (question, currentQuestionPaperData) {
-                this.currentQuestion = question;
-                // this will automatically update the paper object
-                if (currentQuestionPaperData) {
-                    this.currentQuestionPaperData = currentQuestionPaperData;
-                }
-            },
-            getStudentData: function () {
-                return{
-                    question: this.currentQuestion,
-                    paper: this.paper,
-                    answers: this.currentQuestionPaperData.answer
-                };
-            },*/
+
             setPaper: function (paper) {
                 this.paper = paper;
                 return this.paper;
@@ -63,53 +30,7 @@ angular.module('Common').factory('CommonService', [
             getPaper: function () {
                 return this.paper;
             },
-            setUser: function (user) {
-                this.user = user;
-                return this.user;
-            },
-            getUser: function () {
-                return this.user;
-            },
-            /**
-             * Set the current paper data and return paper anwser(s) and used hints for the current question
-             * @param {object} question
-             * @returns {object}
-             */
-            /*setCurrentQuestionPaperData: function (question) {
-                // search for an existing answer to the question in paper
-                for (var i = 0; i < this.paper.questions.length; i++) {
-                    if (this.paper.questions[i].id === question.id.toString()) {
-                        this.currentQuestionPaperData = this.paper.questions[i];
-                        return this.currentQuestionPaperData;
-                    }
-                }
-                // if no info found, initiate object
-                this.currentQuestionPaperData = {
-                    id: question.id.toString(),
-                    answer: [],
-                    hints: []
-                };
-                this.paper.questions.push(this.currentQuestionPaperData);
-                return this.currentQuestionPaperData;
-            },*/
-            countFinishedPaper:function(id){
-                var deferred = $q.defer();
-                $http
-                        .get(
-                            Routing.generate('exercise_papers_count', {id:id})
-                        )
-                        .success(function (response){
-                            deferred.resolve(response);
-                        })
-                        .error(function(data, status){
-                            deferred.reject([]);
-                            var msg = data && data.error && data.error.message ? data.error.message : 'Common count finished error';
-                            var code = data && data.error && data.error.code ? data.error.code : 403;
-                            var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});
-                            $window.location = url;
-                        });
-                return deferred.promise;
-            },
+
             /**
              * Calculate the global score for a paper
              * @param {type} paper
@@ -214,7 +135,6 @@ angular.module('Common').factory('CommonService', [
                     default:
                         return "never";
                 }
-
             },
             /**
              * @param {object} object a javascript object with type property

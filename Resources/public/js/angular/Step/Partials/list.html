@@ -1,0 +1,14 @@
+<div class="steps">
+    <div class="panel-body">
+        <ul>
+            <li data-ng-repeat="step in stepListCtrl.steps">
+                {{ step.id }}
+            </li>
+        </ul>
+
+        <div class="alert alert-info" data-ng-if="0 === stepListCtrl.steps.length">
+            <span class="fa fa-warning"></span>
+            {{ 'no_question_found'|trans:{}:'ujm_exo' }} ...
+        </div>
+    </div>
+</div>

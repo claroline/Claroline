@@ -22,24 +22,17 @@ class ExerciseController extends Controller
      * @EXT\Route("/{id}/edit", name="ujm_exercise_edit")
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @deprecated Templates will be rendered by AngularJS
      */
     public function editAction(Exercise $exercise)
     {
         $this->checkAccess($exercise);
-
         $workspace = $exercise->getResourceNode()->getWorkspace();
-
         $exoAdmin = $this->container->get('ujm.exo_exercise')->isExerciseAdmin($exercise);
-
         if ($exoAdmin === true) {
             if (!$exercise) {
                 throw $this->createNotFoundException('Unable to find Exercise entity.');
             }
-
             $editForm = $this->createForm(new ExerciseType(), $exercise);
-
             return $this->render(
                 'UJMExoBundle:Exercise:edit.html.twig',
                 array(
@@ -53,7 +46,6 @@ class ExerciseController extends Controller
             return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $exercise->getid()]));
         }
     }
-
     /**
      * Edits an existing Exercise entity.
      *
@@ -62,32 +54,26 @@ class ExerciseController extends Controller
      * @EXT\Method("POST")
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @deprecated Templates will be rendered by AngularJS
      */
     public function updateAction(Exercise $exercise)
     {
         if (!$exercise) {
             throw $this->createNotFoundException('Unable to find Exercise entity.');
         }
-
         $editForm = $this->createForm(new ExerciseType(), $exercise);
-
         $formHandler = new ExerciseHandler(
             $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('security.token_storage')->getToken()->getUser(), 'update'
         );
-
         if ($formHandler->process()) {
             return $this->redirect(
                 $this->generateUrl(
                     'claro_resource_open', array(
-                    'resourceType' => $exercise->getResourceNode()->getResourceType()->getName(),
-                    'node' => $exercise->getResourceNode()->getId(), )
+                        'resourceType' => $exercise->getResourceNode()->getResourceType()->getName(),
+                        'node' => $exercise->getResourceNode()->getId(), )
                 )
             );
         }
-
         return $this->render(
             'UJMExoBundle:Exercise:edit.html.twig',
             array(
@@ -98,7 +84,8 @@ class ExerciseController extends Controller
     }
 
     /**
-     * Displays an exercise.
+     * Opens an exercise.
+     * @param Exercise $exercise
      *
      * @EXT\Route(
      *     "/{id}",
@@ -131,13 +118,14 @@ class ExerciseController extends Controller
         $nbQuestions = $em->getRepository('UJMExoBundle:StepQuestion')->getCountQuestion($exercise);
         $nbPapers    = $em->getRepository('UJMExoBundle:Paper')->countPapers($exerciseId);
 
+        //$exerciseJson = '{"id":1,"meta":{"authors":["Axel Penin"],"type":"3","created":"2016-03-10 10:57:05","title":"Full Exercise","description":null,"pick":0,"random":false,"maxAttempts":0,"dispButtonInterrupt":true,"markMode":"1","correctionMode":"1","correctionDate":"2016-03-10 10:57:05"},"steps":[{"id":"(unknown)","items":[{"id":1,"type":"application\/x.choice+json","title":"Quelle est la couleur du cheval blanc d\'Henry IV ?","description":null,"invite":"<p>Quelle est la couleur du cheval blanc d\'Henry IV ?<\/p>","random":false,"multiple":false,"choices":[{"id":"1","type":"text\/html","data":"Blanc"},{"id":"2","type":"text\/html","data":"Bleu"},{"id":"3","type":"text\/html","data":"Vous pouvez r\u00e9p\u00e9ter la question ?"},{"id":"4","type":"text\/html","data":"Ne se prononce pas"}]}]},{"id":"(unknown)","items":[{"id":2,"type":"application\/x.cloze+json","title":"Compl\u00e9tez les paroles du 1er couplet de la contin","description":null,"invite":"<p>Compl&eacute;tez les paroles du 1er couplet de la contine \"Au clair de la lune\"<\/p>","text":"<p>Au clair de la <input id=\"1\" class=\"blank\" autocomplete=\"off\" name=\"blank_1\" size=\"15\" type=\"text\" value=\"\" \/>, <br \/> Mon ami <input id=\"2\" class=\"blank\" autocomplete=\"off\" name=\"blank_2\" size=\"15\" type=\"text\" value=\"\" \/>, <br \/> Pr&ecirc;te-moi ta plume <br \/> Pour <input id=\"4\" class=\"blank\" autocomplete=\"off\" name=\"blank_4\" size=\"15\" type=\"text\" value=\"\" \/> un mot. <br \/> Ma <input id=\"3\" class=\"blank\" autocomplete=\"off\" name=\"blank_3\" size=\"15\" type=\"text\" value=\"\" \/> est morte, <br \/> Je n&acute;ai plus de <input id=\"5\" class=\"blank\" autocomplete=\"off\" name=\"blank_5\" size=\"15\" type=\"text\" value=\"\" \/>, <br \/> Ouvre-moi ta porte, <br \/> Pour l&acute;amour de Dieu.<\/p>","holes":[{"id":"1","type":"text\/html","selector":false,"position":"1","wordResponses":[{"id":"1","response":"lune","score":1,"feedback":null}]},{"id":"2","type":"text\/html","selector":false,"position":"2","wordResponses":[{"id":"2","response":"Pierrot","score":1,"feedback":null}]},{"id":"3","type":"text\/html","selector":false,"position":"3","wordResponses":[{"id":"3","response":"chandelle","score":1,"feedback":null}]},{"id":"4","type":"text\/html","selector":false,"position":"4","wordResponses":[{"id":"4","response":"\u00e9crire","score":1,"feedback":null}]},{"id":"5","type":"text\/html","selector":false,"position":"5","wordResponses":[{"id":"5","response":"feu","score":2,"feedback":null}]}]}]},{"id":"(unknown)","items":[{"id":4,"type":"application\/x.short+json","title":"Expliquez le sens de la vie.","description":null,"invite":"<p>Expliquez le sens de la vie.<\/p>","scoreMaxLongResp":5,"typeOpen":"long"}]},{"id":"(unknown)","items":[{"id":5,"type":"application\/x.match+json","title":"Associez chaque groupe au style de musique qu\'ils ","description":null,"invite":"<p>Associez chaque groupe au style de musique qu\'ils composent.<\/p>","random":true,"toBind":true,"firstSet":[{"id":"3","type":"text\/plain","data":"Gorgoroth"},{"id":"4","type":"text\/plain","data":"Hiss from the moat"},{"id":"2","type":"text\/plain","data":"Kampfar"},{"id":"1","type":"text\/plain","data":"Behemoth"}],"secondSet":[{"id":"3","type":"text\/plain","data":"Pagan"},{"id":"4","type":"text\/plain","data":"Death Metal"},{"id":"2","type":"text\/plain","data":"Blackened Death"},{"id":"1","type":"text\/plain","data":"Black Metal"}]}]},{"id":"(unknown)","items":[{"id":6,"type":"application\/x.graphic+json","title":"Retrouvez J\u00e9sus dans l\'image","description":null,"invite":"<p>Retrouvez J&eacute;sus dans l\'image<\/p>","width":567,"height":353,"document":{"id":1,"label":"La C\u00e8ne","url":".\/uploads\/ujmexo\/users_documents\/Elorfin\/images\/image038.jpg"},"coords":[{"id":"1"}]}]}]}';
+
         // Display the Summary of the Exercise
         return $this->render('UJMExoBundle:Exercise:open.html.twig', [
             // Used to build the Claroline Breadcrumbs
             '_resource'        => $exercise,
             'workspace'        => $exercise->getResourceNode()->getWorkspace(),
 
-            'allowedToCompose' => $isAllowedToCompose,
             'nbQuestion'       => $nbQuestions['nbq'],
             'nbUserPaper'      => $nbUserPaper,
             'nbPapers'         => $nbPapers,
@@ -145,8 +133,53 @@ class ExerciseController extends Controller
             // Angular JS data
             'exercise'         => $this->get('ujm.exo.exercise_manager')->exportExercise($exercise, false),
             'editEnabled'      => $isExoAdmin,
+            'composeEnabled'   => $isAllowedToCompose,
         ]);
     }
+
+    /**
+     * Displays an exercise.
+     *
+     * @EXT\Route(
+     *     "/{id}",
+     *     name="ujm_exercise_open",
+     *     requirements={"id"="\d+"},
+     *     options={"expose"=true}
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    /*public function openAction(Exercise $exercise)
+    {
+        $this->checkAccess($exercise);
+        $em = $this->getDoctrine()->getManager();
+        $exerciseSer = $this->container->get('ujm.exo_exercise');
+        $userId = $exerciseSer->getUserId();
+        $exerciseId = $exercise->getId();
+        $isExoAdmin = $exerciseSer->isExerciseAdmin($exercise);
+        $isAllowedToOpen = $exerciseSer->allowToOpen($exercise);
+        $isAllowedToCompose = $isExoAdmin
+            || $isAllowedToOpen
+            && $exerciseSer->controlMaxAttemps($exercise, $userId, $isExoAdmin);
+        if ($isAllowedToOpen && $userId !== 'anonymous') {
+            $nbUserPaper = $exerciseSer->getNbPaper($userId, $exerciseId);
+        } else {
+            $nbUserPaper = 0;
+        }
+        $nbQuestions = $em->getRepository('UJMExoBundle:StepQuestion')->getCountQuestion($exercise);
+        $nbPapers = $em->getRepository('UJMExoBundle:Paper')->countPapers($exerciseId);
+        return $this->render(
+            'UJMExoBundle:Exercise:show.html.twig',
+            [
+                '_resource' => $exercise,
+                'exercise' => $exercise,
+                'allowedToCompose' => $isAllowedToCompose,
+                'nbQuestion' => $nbQuestions['nbq'],
+                'nbUserPaper' => $nbUserPaper,
+                'nbPapers' => $nbPapers,
+            ]
+        );
+    }*/
 
     /**
      * Publishes an exercise.

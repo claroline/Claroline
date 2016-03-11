@@ -12,10 +12,12 @@
 {% block content %}
     {# Initialize AngularJS application #}
    <div data-ng-app="ExerciseApp" data-ng-cloak="">
+       {# TODO : restore json_encode when API will be OK #}
        <exercise
            data-exercise="{{ exercise | json_encode | raw | escape }}"
            data-nb-papers ="{{ nbPapers }}"
            data-edit-enabled="{{ editEnabled }}"
+           data-compose-enabled="{{ composeEnabled }}"
            data-published="{{ _resource.resourceNode.published }}">
        </exercise>
    </div>
@@ -42,14 +44,8 @@
         '@UJMExoBundle/Resources/public/js/angular/Exercise/Directives/*'
         '@UJMExoBundle/Resources/public/js/angular/Exercise/Services/*'
 
-        '@UJMExoBundle/Resources/public/js/angular/Correction/*'
-        '@UJMExoBundle/Resources/public/js/angular/Correction/Controllers/*'
-        '@UJMExoBundle/Resources/public/js/angular/Correction/Directives/*'
-        '@UJMExoBundle/Resources/public/js/angular/Correction/Services/*'
-
-        '@UJMExoBundle/Resources/public/js/angular/Paper/*'
-        '@UJMExoBundle/Resources/public/js/angular/Paper/Controllers/*'
-        '@UJMExoBundle/Resources/public/js/angular/Paper/Services/*'
+        '@UJMExoBundle/Resources/public/js/angular/Step/*'
+        '@UJMExoBundle/Resources/public/js/angular/Step/Controllers/*'
 
         '@UJMExoBundle/Resources/public/js/angular/Question/*'
         '@UJMExoBundle/Resources/public/js/angular/Question/Controllers/*'
@@ -57,6 +53,15 @@
         '@UJMExoBundle/Resources/public/js/angular/Question/Directives/*'
         '@UJMExoBundle/Resources/public/js/angular/Question/Directives/Type/*'
         '@UJMExoBundle/Resources/public/js/angular/Question/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/angular/Paper/*'
+        '@UJMExoBundle/Resources/public/js/angular/Paper/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/angular/Paper/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/angular/Correction/*'
+        '@UJMExoBundle/Resources/public/js/angular/Correction/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/angular/Correction/Directives/*'
+        '@UJMExoBundle/Resources/public/js/angular/Correction/Services/*'
 
         '@UJMExoBundle/Resources/public/js/anonymous-wrapper-end.js'
     %}
