@@ -1,5 +1,5 @@
 import confirmTemplate from './confirm.partial.html'
-import createTemplate from './add.partial.html'
+import createTemplate from './create.partial.html'
 import editTemplate from './edit.partial.html'
 import errorTemplate from './error.partial.html'
 
@@ -53,7 +53,7 @@ export default class ListComponent {
     }
   }
 
-  onSubmitNew (form) {
+  onSubmitCreate (form) {
     if (form.$valid) {
       this._service.createMark(this.createdMark, () => {
         this.errorMessage = 'CREATION FAILED'
