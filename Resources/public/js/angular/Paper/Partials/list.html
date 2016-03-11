@@ -42,25 +42,25 @@
     </div>
 
     <!-- List of Papers -->
-    <table data-ng-if="paperListCtrl.filtered.length > 0" data-at-table data-at-list="paperListCtrl.filtered" data-at-paginated data-at-config="paperListCtrl.config" class="table table-striped table-centered">
+    <table data-ng-if="paperListCtrl.filtered.length > 0" at-table at-list="paperListCtrl.filtered" at-paginated at-config="paperListCtrl.config" class="table table-striped table-centered">
         <thead></thead>
         <tbody>
             <tr>
-                <td data-at-implicit data-at-attribute="user" data-at-sortable data-at-title="{{ 'paper_list_table_user'|trans:{}:'ujm_sequence' }}"></td>
-                <td data-at-implicit data-at-attribute="number" data-at-sortable data-at-title="{{ 'paper_list_table_paper_number'|trans:{}:'ujm_sequence' }}"></td>
-                <td data-at-implicit data-at-attribute="start" data-at-sortable data-at-initial-sorting="asc" data-at-title="{{ 'paper_list_table_start_date'|trans:{}:'ujm_sequence' }}"></td>
-                <td data-at-implicit data-at-attribute="end" data-at-sortable data-at-title="{{ 'paper_list_table_end_date'|trans:{}:'ujm_sequence' }}"></td>
-                <td data-at-implicit data-at-attribute="interruptLabel" data-at-sortable data-at-title="{{ 'paper_list_table_interrupted'|trans:{}:'ujm_sequence' }}"></td>
-                <td data-at-attribute="id" data-at-title="{{ 'paper_list_table_action'|trans:{}:'ujm_sequence' }}">
-                    <a data-ng-if="paperListCtrl.checkCorrectionAvailability(item)" href="#/{{paperListCtrl.exercise.id}}/{{item.id}}">{{ 'paper_list_table_action'|trans:{}:'ujm_sequence' }}</a>
+                <td at-implicit at-attribute="user" at-sortable at-title="{{ 'paper_list_table_user'|trans:{}:'ujm_sequence' }}"></td>
+                <td at-implicit at-attribute="number" at-sortable at-title="{{ 'paper_list_table_paper_number'|trans:{}:'ujm_sequence' }}"></td>
+                <td at-implicit at-attribute="start" at-sortable at-initial-sorting="asc" at-title="{{ 'paper_list_table_start_date'|trans:{}:'ujm_sequence' }}"></td>
+                <td at-implicit at-attribute="end" at-sortable at-title="{{ 'paper_list_table_end_date'|trans:{}:'ujm_sequence' }}"></td>
+                <td at-implicit at-attribute="interruptLabel" at-sortable at-title="{{ 'paper_list_table_interrupted'|trans:{}:'ujm_sequence' }}"></td>
+                <td at-attribute="id" at-title="{{ 'paper_list_table_action'|trans:{}:'ujm_sequence' }}">
+                    <a data-ng-if="paperListCtrl.checkCorrectionAvailability(item)" href="#/papers/{{item.id}}">{{ 'paper_list_table_action'|trans:{}:'ujm_sequence' }}</a>
                     <span data-ng-if="!paperListCtrl.checkCorrectionAvailability(item)">{{ 'paper_list_table_action_not_available'|trans:{}:'ujm_sequence' }}</span>
                 </td>
-                <td data-at-implicit data-at-attribute="score" data-at-sortable data-at-title="{{ 'paper_list_table_score'|trans:{}:'ujm_sequence' }}"></td>
+                <td at-implicit at-attribute="score" at-sortable at-title="{{ 'paper_list_table_score'|trans:{}:'ujm_sequence' }}"></td>
             </tr>
         </tbody>
     </table>
 
     <div class="panel-footer" data-ng-if="paperListCtrl.filtered.length > 0 && paperListCtrl.showPagination">
-        <at-pagination data-at-config="paperListCtrl.config" data-at-list="paperListCtrl.filtered"></at-pagination>
+        <at-pagination at-config="paperListCtrl.config" at-list="paperListCtrl.filtered"></at-pagination>
     </div>
 </div>

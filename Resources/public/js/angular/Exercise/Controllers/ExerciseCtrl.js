@@ -1,6 +1,8 @@
 /**
  * Exercise Controller
  * Base controller for Exercises
+ * @param {ExerciseService} ExerciseService
+ * @param {object}          $route
  * @constructor
  */
 var ExerciseCtrl = function ExerciseCtrl(ExerciseService, $route) {

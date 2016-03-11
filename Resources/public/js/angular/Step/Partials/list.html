@@ -1,10 +1,44 @@
 <div class="steps">
     <div class="panel-body">
-        <ul>
-            <li data-ng-repeat="step in stepListCtrl.steps">
-                {{ step.id }}
-            </li>
-        </ul>
+        <!-- List all Steps -->
+        <div class="panel panel-default" data-ng-repeat="step in stepListCtrl.steps">
+            <div class="panel-heading">
+                <h3 class="panel-title">Step {{ $index + 1 }}</h3>
+            </div>
+
+            <!-- List items of the Step -->
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">{{ 'category' | trans:{}:'ujm_exo' }}</th>
+                        <th scope="col">{{ 'title' | trans:{}:'ujm_exo' }}</th>
+                        <th scope="col">{{ 'type' | trans:{}:'ujm_exo' }}</th>
+                        <th scope="col">{{ 'question' | trans:{}:'ujm_exo' }}</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr data-ng-repeat="item in step.items">
+                        <td></td>
+                        <td>{{ item.title }}</td>
+                        <td>{{ item.type }}</td>
+                        <td data-ng-bind-html="item.invite"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="panel-footer">
+                <button type="button" class="btn btn-default" data-ng-click="stepListCtrl.addItem(step)">
+                    <span class="fa fa-plus"></span>
+                    Add item
+                </button>
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-primary" data-ng-click="stepListCtrl.addStep()">
+            <span class="fa fa-plus"></span>
+            Add step
+        </button>
 
         <div class="alert alert-info" data-ng-if="0 === stepListCtrl.steps.length">
             <span class="fa fa-warning"></span>
