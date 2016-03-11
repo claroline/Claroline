@@ -11,113 +11,16 @@
 {% block title %}{{ pdf.getResourceNode().getName() ~ ' - ' ~ parent() | striptags | raw }}{% endblock %}
 
 {% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ pdf.getResourceNode().getName() }}</h3>
-    </div>
-    <div class="panel-body">
-        {% block controls %}
-            <div class="row">
-                <div class="col-md-6 col-md-offset-3">
-                    <div class="input-group">
-                        <span class="input-group-btn">
-                            <button class="btn btn-primary" onclick="goPrevious()"><i class="fa fa-backward"></i></button>
-                            <button class="btn btn-primary" onclick="goNext()"><i class="fa fa-forward"></i></button>
-                        </span>
-
-                        <span class="text-center form-control">
-                            {{ 'Page' | trans({}, 'widget')}}: <span class="page_num"></span> / <span class="page_count"></span>
-                        </span>
-
-                        <span class="input-group-btn">
-                            <button class="btn btn-primary" onclick="zoomIn()"><i class="fa fa-search-plus"></i></button>
-                            <button class="btn btn-primary" onclick="zoomOut()"><i class="fa fa-search-minus"></i></button>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        {% endblock controls %}
-        <hr>
-        <div style="overflow:auto; border:1px solid #ddd">
-            <canvas id="the-canvas"></canvas>
-        </div>
-        <hr>
-        {{ block('controls') }}
-    </div>
-    <div class="panel-footer">
-        <a class="btn btn-primary" href="{{ path('claro_resource_download') }}?ids[]={{pdf.getResourceNode().getId()}}">
-            <i class="fa fa-download"></i> {{ 'download'|trans({}, 'platform') }}
-        </a>
+    <div ng-app="PdfViewer">
+        <pdfviewer></pdfviewer>
     </div>
 {% endblock %}
 {% block javascripts %}
-        {{ parent() }}
-        <link rel="stylesheet" href="{{ asset('packages/pdfjs-dist/web/pdf_viewer.css') }}" media="screen" />
-        <script type="text/javascript" src="{{ asset('packages/pdfjs-dist/build/pdf.combined.js') }}"></script>
-        <script type="text/javascript">
-
-        var url = '{{ path ("claro_pdf", {"node": pdf.getResourceNode.getId()}) }}';
-
-        PDFJS.disableWorker = true;
-
-        var pdfDoc = null,
-            pageNum = 1,
-            scale = 1,
-            canvas = document.getElementById('the-canvas'),
-            ctx = canvas.getContext('2d');
-
-        function renderPage(num) {
-            // Using promise to fetch the page
-            pdfDoc.getPage(num).then(function(page) {
-                var viewport = page.getViewport(scale);
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
-
-                // Render PDF page into canvas context
-                var renderContext = {
-                    canvasContext: ctx,
-                    viewport: viewport
-                };
-                page.render(renderContext);
-            });
-
-            // Update page counters
-            $('.page_num').html(pageNum);
-            $('.page_count').html(pdfDoc.numPages);
-        }
-
-        function goPrevious() {
-            if (pageNum <= 1)
-                return;
-            pageNum--;
-            renderPage(pageNum);
-        }
-
-        function goNext() {
-            if (pageNum >= pdfDoc.numPages)
-                return;
-            pageNum++;
-            renderPage(pageNum);
-        }
-
-        function zoomIn(){
-            scale*=1.1;
-            renderPdf(url);
-        }
-
-        function zoomOut(){
-            scale*=0.9
-            renderPdf(url);
-        }
-
-        function renderPdf(url){
-            PDFJS.getDocument(url).then(function getPdf(_pdfDoc) {
-                pdfDoc = _pdfDoc;
-                renderPage(pageNum);
-            });
-        }
-
-        renderPdf(url);
-
-        </script>
+    {{ parent() }}
+    <script type="text/javascript">
+        var AngularApp = {};
+        AngularApp.nodeId = {{ pdf.getResourceNode.getId() }};
+    </script>
+    <script type="text/javascript" src="{{ hotAsset('dist/claroline-pdf-player-pdf-viewer.js') }}" ></script>
 {% endblock %}
 

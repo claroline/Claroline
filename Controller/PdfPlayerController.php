@@ -22,7 +22,8 @@ class PdfPlayerController extends Controller
     /**
      * @Route(
      *     "/pdf/{node}",
-     *     name="claro_pdf"
+     *     name="claro_pdf",
+     *     options = {"expose"=true}
      * )
      */
     public function fileAction(ResourceNode $node)
