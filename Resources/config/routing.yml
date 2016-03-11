@@ -374,6 +374,9 @@ claro_resources_api:
     resource: "@ClarolineCoreBundle/Controller/API/Resource/ResourceController.php"
     type: rest
     prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
 
 claro_contact:
     resource: "@ClarolineCoreBundle/Controller/ContactController.php"

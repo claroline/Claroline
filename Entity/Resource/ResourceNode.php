@@ -35,7 +35,7 @@ class ResourceNode
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api"})
+     * @Groups({"api_resource_node"})
      */
     protected $id;
 
@@ -89,7 +89,7 @@ class ResourceNode
      * @Gedmo\TreePathSource
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api"})
+     * @Groups({"api_resource_node"})
      */
     protected $name;
 

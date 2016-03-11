@@ -26,10 +26,14 @@ use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use JMS\Serializer\SerializationContext;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 // Post Route Definition
 use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
 
+/**
+ * @NamePrefix("api_")
+ */
 class ResourceController extends FOSRestController
 {
     /**
@@ -65,7 +69,7 @@ class ResourceController extends FOSRestController
      * POST Route annotation because it'll use 'PATCH' by default.
      * php app/console router:debug submit_resource_form for routing informations
      * @Post("/resources/{resourceType}/parent/{parent}/encoding/{encoding}/submit")
-     * @View(serializerGroups={"api"})
+     * @View(serializerGroups={"api_resource_node"})
      * Set $parent to 0 for personal workspace !
      * Encoding should be 'none' by default.
      * The form fields must be like 'file_form[name] file_form[file]' and so on...
@@ -140,5 +144,13 @@ class ResourceController extends FOSRestController
         }
 
         return $nodes;
+    }
+
+    /**
+     * @View(serializerGroups={"api_resource_node"})
+     */
+    public function getResourceNodeAction(ResourceNode $resourceNode) 
+    {
+        return $resourceNode;
     }
 }
