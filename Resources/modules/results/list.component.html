@@ -9,13 +9,14 @@
         </tr>
     </thead>
     <tbody>
-      <tr data-ng-repeat="result in vm.result">
+      <tr data-ng-repeat="result in vm.results">
         <td>{{ result.name }}</td>
         <td>{{ result.mark }}</td>
         <td>
           <a href="#"
              aria-label="Edit"
              onclick="return false"
+             data-ng-if="result.markId"
              data-ng-click="vm.onEdit(result)">
             <i class="fa fa-edit"></i>
           </a>
@@ -24,6 +25,7 @@
           <a href="#"
              aria-label="Delete"
              onclick="return false"
+             data-ng-if="result.markId"
              data-ng-click="vm.onRemove(result)">
             <i class="fa fa-remove"></i>
           </a>
@@ -42,6 +44,6 @@
 <div class="panel-footer">
   <button class="btn btn-primary"
           data-ng-click="vm.onCreate()">
-      ADD MARK
+    ADD MARK
   </button>
 </div>

@@ -30,7 +30,8 @@ class MarkRepository extends EntityRepository
             SELECT
                 u.id,
                 CONCAT(u.firstName, \' \', u.lastName) AS name,
-                m.value AS mark
+                m.value AS mark,
+                m.id AS markId
             FROM Claroline\ResultBundle\Entity\Mark m
             JOIN m.user u
             WHERE m.result = :result
@@ -56,7 +57,8 @@ class MarkRepository extends EntityRepository
             SELECT
                 u.id,
                 CONCAT(u.firstName, \' \', u.lastName) AS name,
-                m.value AS mark
+                m.value AS mark,
+                m.id AS markId
             FROM Claroline\ResultBundle\Entity\Mark m
             JOIN m.user u
             WHERE m.result = :result

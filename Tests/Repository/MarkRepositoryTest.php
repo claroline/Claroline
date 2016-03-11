@@ -41,8 +41,8 @@ class MarkRepositoryTest extends TransactionalTestCase
         $result1 = $this->persist->result('eval 1', $bob);
         $result2 = $this->persist->result('eval 2', $bob);
 
-        $this->persist->mark($result1, $bill, '12');
-        $this->persist->mark($result1, $jane, '14');
+        $mark1 = $this->persist->mark($result1, $bill, '12');
+        $mark2 = $this->persist->mark($result1, $jane, '14');
         $this->persist->mark($result2, $jane, '15');
 
         $this->om->flush();
@@ -51,12 +51,14 @@ class MarkRepositoryTest extends TransactionalTestCase
             [
                 'id' => $bill->getId(),
                 'name' => 'bill bill',
-                'mark' => '12'
+                'mark' => '12',
+                'markId' => $mark1->getId()
             ],
             [
                 'id' => $jane->getId(),
                 'name' => 'jane jane',
-                'mark' => '14'
+                'mark' => '14',
+                'markId' => $mark2->getId()
             ]
         ];
         $actual = $this->repo->findByResult($result1);
@@ -73,8 +75,8 @@ class MarkRepositoryTest extends TransactionalTestCase
         $result2 = $this->persist->result('eval 2', $bob);
 
         $this->persist->mark($result1, $bill, '12');
-        $this->persist->mark($result1, $jane, '14');
         $this->persist->mark($result2, $jane, '15');
+        $mark = $this->persist->mark($result1, $jane, '14');
 
         $this->om->flush();
 
@@ -82,7 +84,8 @@ class MarkRepositoryTest extends TransactionalTestCase
             [
                 'id' => $jane->getId(),
                 'name' => 'jane jane',
-                'mark' => '14'
+                'mark' => '14',
+                'markId' => $mark->getId()
             ]
         ];
         $actual = $this->repo->findByResultAndUser($result1, $jane);

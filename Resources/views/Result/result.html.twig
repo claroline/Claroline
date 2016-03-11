@@ -16,6 +16,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
+        window.resultId = {{ _resource.getId() }}
         window.resultMarks = {{ marks|json_encode|raw }}
         window.workspaceUsers = {{ users|json_encode|raw }}
     </script>

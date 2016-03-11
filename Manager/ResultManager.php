@@ -14,6 +14,7 @@ namespace Claroline\ResultBundle\Manager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\ResultBundle\Entity\Mark;
 use Claroline\ResultBundle\Entity\Result;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
@@ -131,15 +132,46 @@ class ResultManager
      */
     public function getUsers(Result $result, $canEdit)
     {
-        return [];
+        if (!$canEdit) {
+            return [];
+        }
 
-//        $results = $this->om->getRepository('ClarolineResultBundle:Result')
-//
-//        $repo = $this->om->getRepository('ClarolineCoreBundle:User');
-//
-//
-//        return $canEdit ?
-//            $repo->findUsersByWorkspace($result->getResourceNode()->getWorkspace()) :
-//            [];
+        $repo = $this->om->getRepository('ClarolineCoreBundle:User');
+        $users = $repo->findUsersByWorkspace($result->getResourceNode()->getWorkspace());
+
+        return array_map(function ($user) {
+            return [
+                'id' => $user->getId(),
+                'name' => "{$user->getFirstName()} {$user->getLastName()}"
+            ];
+        }, $users);
+    }
+
+    /**
+     * Creates a new mark.
+     *
+     * @param Result    $result
+     * @param User      $user
+     * @param string    $mark
+     * @return mark
+     */
+    public function createMark(Result $result, User $user, $mark)
+    {
+        $mark = new Mark($result, $user, $mark);
+        $this->om->persist($mark);
+        $this->om->flush();
+
+        return $mark;
+    }
+
+    /**
+     * Deletes a mark.
+     *
+     * @param Mark $mark
+     */
+    public function deleteMark(Mark $mark)
+    {
+        $this->om->remove($mark);
+        $this->om->flush();
     }
 }

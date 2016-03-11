@@ -1,36 +1,41 @@
 export default class ResultsService {
   constructor ($http) {
-    this.$http = $http;
+    this.$http = $http
+    this._resultId = ResultsService._getGlobal('resultId')
+    this._marks = ResultsService._getGlobal('resultMarks')
+    this._users = ResultsService._getGlobal('workspaceUsers')
   }
 
   getResults () {
-    if (!window.resultMarks) {
-      throw new Error(
-        'Expected marks to be exposed in a window.resultMarks variable'
-      );
-    }
-
-    return window.resultMarks
-
-    //return [
-    //  { name: 'John Doe', mark: '12' },
-    //  { name: 'Lisa Boom', mark: '9' },
-    //  { name: 'Mark Foo', mark: '14' }
-    //]
+    return this._marks
   }
 
   getUsers () {
-    if (!window.workspaceUsers) {
+    return this._users
+  }
+
+  createMark (userId, mark) {
+    const url = Routing.generate('claro_create_mark', {
+      id: this._resultId,
+      userId
+    })
+
+    return this.$http.post(url, { mark })
+  }
+
+  deleteMark (id) {
+    return this.$http.delete(
+      Routing.generate('claro_delete_mark', { id })
+    )
+  }
+
+  static _getGlobal (name) {
+    if (typeof window[name] === 'undefined') {
       throw new Error(
-        'Expected users to be exposed in a window.workspaceUsers variable'
-      );
+        `Expected ${name} to be exposed in a window.${name} variable`
+      )
     }
 
-    //return window.workspaceUsers
-
-    return [
-      { id: 1, name: 'John Doe' },
-      { id: 2, name: 'Lisa Boom' }
-    ]
+    return window[name]
   }
 }

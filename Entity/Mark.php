@@ -79,4 +79,12 @@ class Mark
     {
         return $this->user;
     }
+
+    /**
+     * @return Result
+     */
+    public function getResult()
+    {
+        return $this->result;
+    }
 }

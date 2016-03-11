@@ -13,11 +13,14 @@ namespace Claroline\ResultBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\Handler\FormHandler;
+use Claroline\ResultBundle\Entity\Mark;
 use Claroline\ResultBundle\Entity\Result;
 use Claroline\ResultBundle\Manager\ResultManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -53,7 +56,7 @@ class ResultController
     }
 
     /**
-     * @EXT\Route("/{id}", name="claroline_open_result")
+     * @EXT\Route("/{id}", name="claro_open_result")
      * @EXT\ParamConverter("user", converter="current_user")
      * @EXT\Template
      *
@@ -76,11 +79,50 @@ class ResultController
     }
 
     /**
+     * @EXT\Route("/{id}/users/{userId}", name="claro_create_mark")
+     * @EXT\ParamConverter("user", options={"id"= "userId"})
+     * @EXT\Method("POST")
+     *
      * @param Request   $request
      * @param Result    $result
+     * @param User      $user
+     * @return JsonResponse
      */
-    public function addUserAction(Request $request, Result $result)
+    public function createMarkAction(Request $request, Result $result, User $user)
     {
+        if (!$this->checker->isGranted('EDIT', $result)) {
+            throw new AccessDeniedHttpException();
+        }
 
+        $mark = $request->request->get('mark', false);
+        $response = new JsonResponse();
+
+        if ($mark !== false) {
+            $mark = $this->manager->createMark($result, $user, $mark);
+            $response->setData($mark->getId());
+        } else {
+            $response->setData('Field "mark" is missing');
+            $response->setStatusCode(400);
+        }
+
+        return $response;
+    }
+
+    /**
+     * @EXT\Route("/marks/{id}", name="claro_delete_mark")
+     * @EXT\Method("DELETE")
+     *
+     * @param Mark $mark
+     * @return JsonResponse
+     */
+    public function deleteMarkAction(Mark $mark)
+    {
+        if (!$this->checker->isGranted('EDIT', $mark->getResult())) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $this->manager->deleteMark($mark);
+
+        return new JsonResponse('', 204);
     }
 }

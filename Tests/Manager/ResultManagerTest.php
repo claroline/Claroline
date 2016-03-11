@@ -70,12 +70,14 @@ class ResultManagerTest extends TransactionalTestCase
             [
                 'id' => $bill->getId(),
                 'name' => 'bill bill',
-                'mark' => 12
+                'mark' => 12,
+                'markId' => $billMark->getId()
             ],
             [
                 'id' => $jane->getId(),
                 'name' => 'jane jane',
-                'mark' => 14
+                'mark' => 14,
+                'markId' => $janeMark->getId()
             ]
         ];
         $actual = $this->manager->getMarks($result, $bob, true);

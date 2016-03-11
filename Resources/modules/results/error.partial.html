@@ -1,0 +1,14 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true" data-ng-click="vm.onCancel()">&times;</span>
+  </button>
+  <h3 class="modal-title">ERROR</h3>
+</div>
+<div class="modal-body">
+  {{ vm.errorMessage }}
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" type="submit" data-ng-click="vm.onCancel()">
+    OK
+  </button>
+</div>
