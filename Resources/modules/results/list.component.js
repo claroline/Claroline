@@ -12,64 +12,72 @@ export default class ListComponent {
     this.errorMessage = null
     this._deletedResult = null
     this._service = service
-    this._modal = modal
+    this._modalFactory = modal
     this._modalInstance = null
   }
 
-  onCreate () {
-    this._modalInstance = this._modal.open(createTemplate)
+  displayCreationForm () {
+    this._modal(createTemplate)
   }
 
-  onEdit (result) {
+  createResult (form) {
+    if (form.$valid) {
+      this._service.createMark(this.createdMark, () => {
+        this._modal(errorTemplate, 'CREATION FAILED')
+      })
+      this._resetForm(form)
+      this._closeModal()
+    }
+  }
+
+  displayEditionForm (result) {
     this.editedMark.original = result
     this.editedMark.newValue = result.mark
-    this._modalInstance = this._modal.open(editTemplate)
+    this._modal(editTemplate)
   }
 
-  onDelete (result) {
-    this._deletedResult = result
-    this._modalInstance = this._modal.open(confirmTemplate)
-  }
-
-  onSubmitDelete () {
-    this._service.deleteMark(this._deletedResult, () => {
-      this.errorMessage = 'SUPPRESSION FAILED'
-      this._modalInstance = this._modal.open(errorTemplate)
-    })
-    this._modalInstance.close()
-  }
-
-  onSubmitEdit (form) {
+  editResult (form) {
     if (form.$valid) {
+      this._closeModal()
       this._service.editMark(
         this.editedMark.original,
         this.editedMark.newValue,
-        () => {
-          this.errorMessage = 'EDITION FAILED'
-          this._modalInstance = this._modal.open(errorTemplate)
-        }
+        () => this._modal(errorTemplate, 'EDITION FAILED')
       )
-      this._modalInstance.close()
     }
   }
 
-  onSubmitCreate (form) {
-    if (form.$valid) {
-      this._service.createMark(this.createdMark, () => {
-        this.errorMessage = 'CREATION FAILED'
-        this._modalInstance = this._modal.open(errorTemplate)
-      })
-      this._resetForm(form)
-      this._modalInstance.close()
-    }
+  confirmDeletion (result) {
+    this._deletedResult = result
+    this._modal(confirmTemplate)
   }
 
-  onCancel (form) {
+  deleteResult () {
+    this._service.deleteMark(
+      this._deletedResult,
+      () => this._modal(errorTemplate, 'SUPPRESSION FAILED')
+    )
+    this._closeModal()
+  }
+
+  cancel (form) {
     if (form) {
       this._resetForm(form)
     }
 
     this._modalInstance.dismiss()
+  }
+
+  _modal (template, errorMessage) {
+    if (errorMessage) {
+      this.errorMessage = errorMessage
+    }
+
+    this._modalInstance = this._modalFactory.open(template)
+  }
+
+  _closeModal () {
+    this._modalInstance.close()
   }
 
   _resetForm (form) {

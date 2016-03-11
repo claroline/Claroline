@@ -1,9 +1,9 @@
 <form name="createForm" novalidate>
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-      <span aria-hidden="true" data-ng-click="vm.onCancel(createForm)">&times;</span>
+      <span aria-hidden="true" data-ng-click="vm.cancel(createForm)">&times;</span>
     </button>
-    <h3 class="modal-title">ADDING A MARK</h3>
+    <h3 class="modal-title">ADDING A RESULT</h3>
   </div>
   <div class="modal-body">
     <div class="form-group"
@@ -45,12 +45,12 @@
     <button type="submit"
             class="btn btn-primary"
             data-ng-disabled="!createForm.$valid"
-            data-ng-click="vm.onSubmitCreate(createForm)">
+            data-ng-click="vm.createResult(createForm)">
       OK
     </button>
     <button type="button"
             class="btn btn-default"
-            data-ng-click="vm.onCancel(createForm)">
+            data-ng-click="vm.cancel(createForm)">
       CANCEL
     </button>
   </div>

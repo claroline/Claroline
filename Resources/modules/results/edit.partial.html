@@ -1,7 +1,7 @@
 <form name="markForm" novalidate>
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-      <span aria-hidden="true" data-ng-click="vm.onCancel()">&times;</span>
+      <span aria-hidden="true" data-ng-click="vm.cancel()">&times;</span>
     </button>
     <h3 class="modal-title">EDITING A MARK</h3>
   </div>
@@ -25,12 +25,12 @@
     <button type="submit"
             class="btn btn-primary"
             data-ng-disabled="!markForm.$valid"
-            data-ng-click="vm.onSubmitEdit(markForm)">
+            data-ng-click="vm.editResult(markForm)">
       OK
     </button>
     <button type="button"
             class="btn btn-default"
-            data-ng-click="vm.onCancel()">
+            data-ng-click="vm.cancel()">
       Cancel
     </button>
   </div>

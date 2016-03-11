@@ -17,7 +17,7 @@
              aria-label="Edit"
              onclick="return false"
              data-ng-if="result.markId"
-             data-ng-click="vm.onEdit(result)">
+             data-ng-click="vm.displayEditionForm(result)">
             <i class="fa fa-edit"></i>
           </a>
         </td>
@@ -26,7 +26,7 @@
              aria-label="Delete"
              onclick="return false"
              data-ng-if="result.markId"
-             data-ng-click="vm.onDelete(result)">
+             data-ng-click="vm.confirmDeletion(result)">
             <i class="fa fa-remove"></i>
           </a>
         </td>
@@ -43,7 +43,7 @@
 
 <div class="panel-footer">
   <button class="btn btn-primary"
-          data-ng-click="vm.onCreate()">
-    ADD MARK
+          data-ng-click="vm.displayCreationForm()">
+    ADD RESULT
   </button>
 </div>
