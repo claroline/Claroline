@@ -49,6 +49,7 @@
     "mjolnic-bootstrap-colorpicker": "2.3.0",
     "moment": "2.11.2",
     "ng-file-upload": "11.2.3",
+    "pdfjs-dist": "1.4.133",
     "select2": "3.5.4",
     "system.js": "0.19.20",
     "tablesorter": "#774576308e",
