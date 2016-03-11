@@ -1,0 +1,14 @@
+{% if pager.haveToPaginate %}
+    <div class="pull-right">
+        {{ pagerfanta(
+        pager,
+        'twitter_bootstrap_translated',
+        {
+            'proximity' : 1,
+            'routeName': 'icap_notification_view',
+            'routeParams': {'category': category}
+        }
+        ) }}
+    </div>
+{% endif %}
+<div class="clearfix"></div>

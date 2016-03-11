@@ -28,3 +28,13 @@ max_per_page: Items per page
 purge_enabled: Remove notifications automatically
 purge_after_days: Remove after (days)
 purge_explain_text: "*by activating this option, notification history will automatically be deleted according to the value below"
+mark_all_viewed: Mark all as read
+filter_by_category: Filter by type
+badge: Badge
+wiki: Wiki
+blog: Blog
+lesson: Lesson
+socialmedia: Social media
+website: Website
+forum: Forum
+

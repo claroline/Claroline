@@ -3,11 +3,12 @@
 namespace Icap\NotificationBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Icap\NotificationBundle\Entity\NotificationUserParameters;
 
 class NotificationViewerRepository extends EntityRepository
 {
-    public function findUserNotificationsQuery($viewerId, $visibleTypes)
+    public function findUserNotificationsQuery($viewerId, $visibleTypes, $category = null)
     {
         $queryBuilder = $this->createQueryBuilder('notificationViewer');
         $queryBuilder
@@ -16,6 +17,7 @@ class NotificationViewerRepository extends EntityRepository
             ->orderBy('notification.creationDate', 'DESC')
             ->setParameter("viewerId", $viewerId);
         $this->addVisibleTypesRestriction($queryBuilder, $visibleTypes);
+        $this->addCategoryRestriction($queryBuilder, $category);
 
         return $queryBuilder->getQuery();
     }
@@ -27,6 +29,18 @@ class NotificationViewerRepository extends EntityRepository
             ->update()
             ->set('notificationViewer.status', true)
             ->andWhere($queryBuilder->expr()->in('notificationViewer.id', $notificationViewIds));
+
+        $queryBuilder->getQuery()->execute();
+    }
+
+    public function markAllAsViewed($userId)
+    {
+        $queryBuilder = $this->createQueryBuilder("notificationViewer");
+        $queryBuilder
+            ->update()
+            ->set('notificationViewer.status', true)
+            ->andWhere('notificationViewer.viewerId = :viewerId')
+            ->setParameter('viewerId', $userId);
 
         $queryBuilder->getQuery()->execute();
     }
@@ -60,6 +74,20 @@ class NotificationViewerRepository extends EntityRepository
                             )
                     );
                 }
+            }
+        }
+    }
+
+    private function addCategoryRestriction(QueryBuilder $qb, $category)
+    {
+        if ($category != null) {
+            if ($category != "system") {
+                $qb->andWhere("notification.iconKey = :category")
+                    ->setParameter("category", $category);
+            } else {
+                $qb->andWhere(
+                  $qb->expr()->isNull("notification.iconKey")
+                );
             }
         }
     }

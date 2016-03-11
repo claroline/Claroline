@@ -1,3 +1,10 @@
+.panel-notification .button-container{
+    margin: 20px 0;
+}
+.panel-notification .button-container div.category-list{
+    display:inline-block;
+}
+
 .notification-list-container {
     padding: 0 10px;
 }
@@ -38,7 +45,7 @@
     width: 80%;
 }
 
-.notification-list-container li.list-group-item span.notification-icon {
+ul li span.notification-icon {
     width: 16px;
     text-align: center;
     color: #fff;
@@ -48,7 +55,7 @@
     display: inline-block;
 }
 
-.notification-list-container li.list-group-item span.notification-icon.default-notification-icon {
+ul li span.notification-icon.default-notification-icon {
     background-color: #dadedf;
     color: #686E72;
 }

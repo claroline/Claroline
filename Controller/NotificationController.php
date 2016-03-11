@@ -15,19 +15,21 @@ class NotificationController extends Controller
 {
     /**
      * @Route(
-     *    "/list/{page}",
+     *    "/list/{page}/{markViewed}",
      *    requirements = {
-     *        "page" = "\d+"
+     *        "page" = "\d+",
+     *        "markViewed" = "0|1"
      *    },
      *    defaults = {
-     *        "page" = 1
+     *        "page" = 1,
+     *        "markViewed" = 0
      *    },
      *    name="icap_notification_view"
      * )
      * @Template()
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
-    public function listAction(Request $request, $user, $page)
+    public function listAction(Request $request, $user, $page, $markViewed)
     {
         $notificationManager = $this->getNotificationManager();
         $systemName = $notificationManager->getPlatformName();
@@ -44,8 +46,13 @@ class NotificationController extends Controller
                 $result
             );
         } else {
-            $result = $notificationManager->getPaginatedNotifications($user->getId(), $page);
+            $category = $request->get("category");
+            if ($markViewed == true) {
+                $notificationManager->markAllNotificationsAsViewed($user->getId());
+            }
+            $result = $notificationManager->getPaginatedNotifications($user->getId(), $page, $category);
             $result['systemName'] = $systemName;
+            $result['category'] = $category;
 
             return $result;
         }

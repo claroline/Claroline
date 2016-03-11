@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\NotificationBundle\Entity;
+namespace Icap\NotificationBundle\Library;
 
 class ColorChooser
 {
@@ -86,16 +86,15 @@ class ColorChooser
         'y',
         'z'
     );
-    protected $nameArray = array();
     protected $needleArray = array();
-    protected $nameToColorArray = array();
+    protected $colorOjectArray = array();
 
     public function getColorForName($name)
     {
         $name = strtolower($name);
 
-        if (in_array($name, $this->nameArray)) {
-            return $this->nameToColorArray[$name];
+        if (array_key_exists($name, $this->colorOjectArray)) {
+            return $this->colorOjectArray[$name]->color;
         } else {
             //Initially, we take as a needle the first letter of the name
             $needle = $name[0];
@@ -107,21 +106,11 @@ class ColorChooser
 
             //Stock needle in needle array
             array_push($this->needleArray, $needle);
-            array_push($this->nameArray, $name);
             $colorForNeedle = $this->getColorForNeedle($needle);
-            $this->nameToColorArray[$name] = $colorForNeedle;
+            $this->colorOjectArray[$name] = (object) array("color" => $colorForNeedle, "key" => $needle, "name" => $name);
 
             return $colorForNeedle;
         }
-    }
-
-    public function setNameArray($nameArray)
-    {
-        foreach ($nameArray as $name) {
-            $this->getColorForName($name);
-        }
-
-        return $this;
     }
 
     public function setAlphabet($alphabet)
@@ -154,6 +143,11 @@ class ColorChooser
         }
 
         return $this;
+    }
+
+    public function getColorObjectArray()
+    {
+        return $this->colorOjectArray;
     }
 
     private function getColorForNeedle($needle)

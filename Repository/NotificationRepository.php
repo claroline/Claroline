@@ -16,4 +16,16 @@ class NotificationRepository extends EntityRepository
 
         $qb->getQuery()->execute();
     }
+
+    public function findAllDistinctIconKeys()
+    {
+        $qb = $this->createQueryBuilder("notification");
+            $qb
+                ->select("notification.iconKey")
+                ->where($qb->expr()->isNotNull("notification.iconKey"))
+                ->orderBy("notification.iconKey")
+                ->distinct();
+
+        return $qb->getQuery()->getResult();
+    }
 }

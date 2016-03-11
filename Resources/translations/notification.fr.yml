@@ -28,3 +28,12 @@ max_per_page: Eléments par page
 purge_enabled: Effacement automatique
 purge_after_days: Effacer après (jours)
 purge_explain_text: "*en activant cette option, l'historique des notification sera effacé automatiquement en fonction de la valeur ci-dessous"
+mark_all_viewed: Tout marquer comme lu
+filter_by_category: Filtrer par type
+badge: Badge
+wiki: Wiki
+blog: Blog
+lesson: Cours
+socialmedia: Médias sociaux
+website: Site web
+forum: Forum
