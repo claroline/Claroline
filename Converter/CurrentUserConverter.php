@@ -49,7 +49,9 @@ class CurrentUserConverter implements ParamConverterInterface
             throw new InvalidConfigurationException(InvalidConfigurationException::MISSING_NAME);
         }
 
-        if (($user = $this->tokenStorage->getToken()->getUser()) instanceof User) {
+        $token = $this->tokenStorage->getToken();
+
+        if ($token && ($user = $token->getUser()) instanceof User) {
             $request->attributes->set($parameter, $user);
 
             return true;
