@@ -90,10 +90,7 @@ class ResultController
      */
     public function createMarkAction(Request $request, Result $result, User $user)
     {
-        if (!$this->checker->isGranted('EDIT', $result)) {
-            throw new AccessDeniedHttpException();
-        }
-
+        $this->assertCanEdit($result);
         $mark = $request->request->get('mark', false);
         $response = new JsonResponse();
 
@@ -117,12 +114,41 @@ class ResultController
      */
     public function deleteMarkAction(Mark $mark)
     {
-        if (!$this->checker->isGranted('EDIT', $mark->getResult())) {
-            throw new AccessDeniedHttpException();
-        }
-
+        $this->assertCanEdit($mark->getResult());
         $this->manager->deleteMark($mark);
 
         return new JsonResponse('', 204);
+    }
+
+    /**
+     * @EXT\Route("/marks/{id}", name="claro_edit_mark")
+     * @EXT\Method("PUT")
+     *
+     * @param Request   $request
+     * @param Mark      $mark
+     * @return JsonResponse
+     */
+    public function editMarkAction(Request $request, Mark $mark)
+    {
+        $this->assertCanEdit($mark->getResult());
+        $newValue = $request->request->get('value', false);
+        $response = new JsonResponse();
+
+        if ($newValue !== false) {
+            $this->manager->updateMark($mark, $newValue);
+            $response->setStatusCode(204);
+        } else {
+            $response->setData('Field "value" is missing');
+            $response->setStatusCode(400);
+        }
+
+        return $response;
+    }
+
+    private function assertCanEdit(Result $result)
+    {
+        if (!$this->checker->isGranted('EDIT', $result)) {
+            throw new AccessDeniedHttpException();
+        }
     }
 }

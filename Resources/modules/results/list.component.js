@@ -1,3 +1,4 @@
+import confirmTemplate from './confirm.partial.html'
 import createTemplate from './add.partial.html'
 import editTemplate from './edit.partial.html'
 import errorTemplate from './error.partial.html'
@@ -7,9 +8,11 @@ export default class ListComponent {
     this.results = service.getResults()
     this.users = service.getUsers()
     this.editedResult = null
+    this.editedMark = null
     this.selectedUserName = null
     this.selectedUserMark = null
     this.errorMessage = null
+    this._deletedResult = null
     this._service = service
     this._modal = modal
     this._modalInstance = null
@@ -21,18 +24,34 @@ export default class ListComponent {
 
   onEdit (result) {
     this.editedResult = result
+    this.editedMark = result.mark
     this._modalInstance = this._modal.open(editTemplate)
   }
 
-  onRemove (result) {
-    this._removeResult(result)
-    this._service
-      .deleteMark(result.markId)
-      .then(null, () => this._rollbackSuppression(result))
+  onDelete (result) {
+    this._deletedResult = result
+    this._modalInstance = this._modal.open(confirmTemplate)
   }
 
-  onSubmitEdit () {
+  onSubmitDelete () {
+    this._deleteResult(this._deletedResult)
+    this._service
+      .deleteMark(this._deletedResult.markId)
+      .then(null, () => this._rollbackSuppression(this._deletedResult))
     this._modalInstance.close()
+  }
+
+  onSubmitEdit (form) {
+    if (form.$valid) {
+      const originalMark = this.editedResult.mark
+      this.editedResult.mark = this.editedMark
+
+      this._service
+        .editMark(this.editedResult.markId, this.editedMark)
+        .then(null, () => this.editedResult.mark = originalMark)
+
+      this._modalInstance.close()
+    }
   }
 
   onSubmitNew (form) {
@@ -62,21 +81,23 @@ export default class ListComponent {
   }
 
   _resetForm (form) {
+    this.deletedResult = null
     this.editedResult = null
+    this.editedMark = null
     this.selectedUserName = null
     this.selectedUserMark = null
     form.$setPristine()
     form.$setUntouched()
   }
 
-  _removeResult (result) {
+  _deleteResult (result) {
     this.results.splice(this.results.indexOf(result), 1)
   }
 
   _rollbackCreation(result) {
     this.errorMessage = 'CREATION FAILED'
     this._modalInstance = this._modal.open(errorTemplate)
-    this._removeResult(result)
+    this._deleteResult(result)
   }
 
   _rollbackSuppression(result) {

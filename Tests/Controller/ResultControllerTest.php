@@ -127,4 +127,45 @@ class ResultControllerTest extends TransactionalTestCase
         $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(0, count($this->om->getRepository('ClarolineResultBundle:Mark')->findAll()));
     }
+
+    public function testEditMarkNotAllowed()
+    {
+        $john = $this->persist->user('john');
+        $jane = $this->persist->user('jane');
+        $result = $this->persist->result('Result 1', $john);
+        $mark = $this->persist->mark($result, $jane, '16');
+        $this->om->flush();
+
+        $this->request('PUT', "/results/marks/{$mark->getId()}", $jane, [
+            'value' => '19'
+        ]);
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals('16', $mark->getValue());
+    }
+
+    public function testEditMarkNoValue()
+    {
+        $john = $this->persist->user('john');
+        $result = $this->persist->result('Result 1', $john);
+        $mark = $this->persist->mark($result, $john, '11');
+        $this->om->flush();
+
+        $this->request('PUT', "/results/marks/{$mark->getId()}", $john);
+        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals('11', $mark->getValue());
+    }
+
+    public function testEditMark()
+    {
+        $john = $this->persist->user('john');
+        $result = $this->persist->result('Result 1', $john);
+        $mark = $this->persist->mark($result, $john, '14');
+        $this->om->flush();
+
+        $this->request('PUT', "/results/marks/{$mark->getId()}", $john, [
+            'value' => '18'
+        ]);
+        $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals('18', $mark->getValue());
+    }
 }

@@ -174,4 +174,16 @@ class ResultManager
         $this->om->remove($mark);
         $this->om->flush();
     }
+
+    /**
+     * Updates a mark.
+     *
+     * @param Mark      $mark
+     * @param string    $value
+     */
+    public function updateMark(Mark $mark, $value)
+    {
+        $mark->setValue($value);
+        $this->om->flush();
+    }
 }

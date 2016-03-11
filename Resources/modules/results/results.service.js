@@ -29,6 +29,13 @@ export default class ResultsService {
     )
   }
 
+  editMark (id, newValue) {
+    return this.$http.put(
+      Routing.generate('claro_edit_mark', { id }),
+      { value: newValue }
+    )
+  }
+
   static _getGlobal (name) {
     if (typeof window[name] === 'undefined') {
       throw new Error(
