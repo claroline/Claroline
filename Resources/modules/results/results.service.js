@@ -14,26 +14,56 @@ export default class ResultsService {
     return this._users
   }
 
-  createMark (userId, mark) {
+  createMark (props, onFail) {
+    const user = this._users.find(user => user.name === props.user)
+    const result = { name: props.user, mark: props.mark }
     const url = Routing.generate('claro_create_mark', {
       id: this._resultId,
-      userId
+      userId: user.id
     })
 
-    return this.$http.post(url, { mark })
+    this._marks.push(result);
+
+    this.$http
+      .post(url, { mark: props.mark })
+      .then(
+        response => result.markId = response.data,
+        () => {
+          this._deleteMark(result)
+          onFail()
+        }
+      )
   }
 
-  deleteMark (id) {
-    return this.$http.delete(
-      Routing.generate('claro_delete_mark', { id })
-    )
+  deleteMark (mark, onFail) {
+    const url = Routing.generate('claro_delete_mark', {
+      id: mark.markId
+    })
+
+    this._deleteMark(mark)
+
+    this.$http
+      .delete(url)
+      .then(null, () => {
+        this._marks.push(mark)
+        onFail()
+      })
   }
 
-  editMark (id, newValue) {
-    return this.$http.put(
-      Routing.generate('claro_edit_mark', { id }),
-      { value: newValue }
-    )
+  editMark (originalMark, newValue, onFail) {
+    const originalValue = originalMark.mark
+    const url = Routing.generate('claro_edit_mark', {
+      id: originalMark.markId
+    })
+
+    originalMark.mark = newValue
+
+    this.$http
+      .put(url, { value: newValue })
+      .then(null, () => {
+        originalMark.mark = originalValue
+        onFail()
+      })
   }
 
   static _getGlobal (name) {
@@ -44,5 +74,9 @@ export default class ResultsService {
     }
 
     return window[name]
+  }
+
+  _deleteMark (mark) {
+    this._marks.splice(this._marks.indexOf(mark), 1)
   }
 }

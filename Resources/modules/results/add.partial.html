@@ -13,7 +13,7 @@
              type="text"
              name="user"
              class="form-control"
-             data-ng-model="vm.selectedUserName"
+             data-ng-model="vm.createdMark.user"
              data-uib-typeahead="user.name for user in vm.users | filter:$viewValue | limitTo:8"
              data-valid-user
              required />
@@ -33,7 +33,7 @@
              type="text"
              name="mark"
              class="form-control"
-             data-ng-model="vm.selectedUserMark"
+             data-ng-model="vm.createdMark.mark"
              required />
       <p class="help-block"
          data-ng-if="(addForm.$submitted || addForm.mark.$dirty) && addForm.mark.$error.required">
