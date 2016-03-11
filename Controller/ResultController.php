@@ -11,6 +11,7 @@
 
 namespace Claroline\ResultBundle\Controller;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\Handler\FormHandler;
 use Claroline\ResultBundle\Entity\Result;
 use Claroline\ResultBundle\Manager\ResultManager;
@@ -53,18 +54,25 @@ class ResultController
 
     /**
      * @EXT\Route("/{id}", name="claroline_open_result")
+     * @EXT\ParamConverter("user", converter="current_user")
      * @EXT\Template
      *
      * @param Result $result
      * @return array
      */
-    public function resultAction(Result $result)
+    public function resultAction(Result $result, User $user)
     {
         if (!$this->checker->isGranted('OPEN', $result)) {
             throw new AccessDeniedException();
         }
 
-        return ['_resource' => $result];
+        $canEdit = $this->checker->isGranted('EDIT', $result);
+
+        return [
+            '_resource' => $result,
+            'marks' => $this->manager->getMarks($result, $user, $canEdit),
+            'users' => $this->manager->getUsers($result, $canEdit)
+        ];
     }
 
     /**

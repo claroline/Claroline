@@ -9,15 +9,15 @@
 {% block title %}{{ _resource.getResourceNode().getName()|striptags|raw }}{% endblock %}
 
 {% block section_content %}
-    <div class="panel-heading">
-        {{ _resource.getResourceNode().getName() }}
-    </div>
-    <div class="panel-body" data-ng-app="ResultModule">
-        <div data-results></div>
-    </div>
+    <div class="panel-heading">{{ _resource.getResourceNode().getName() }}</div>
+    <div data-results data-ng-app="ResultModule"></div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+    <script>
+        window.resultMarks = {{ marks|json_encode|raw }}
+        window.workspaceUsers = {{ users|json_encode|raw }}
+    </script>
     <script src="{{ hotAsset('dist/claroline-result-list.js') }}"></script>
 {% endblock %}

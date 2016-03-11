@@ -93,11 +93,53 @@ class ResultManager
     public function getResultFormContent(FormView $view)
     {
          return $this->templating->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
-            [
-                'form' => $view,
-                'resourceType' => 'claroline_result'
-            ]
+             'ClarolineCoreBundle:Resource:createForm.html.twig',
+             [
+                 'form' => $view,
+                 'resourceType' => 'claroline_result'
+             ]
          );
+    }
+
+    /**
+     * Returns an array representation of the marks associated with a
+     * result. If the user passed in has the permission to edit the result,
+     * all the marks are returned, otherwise only his mark is returned.
+     *
+     * @param Result    $result
+     * @param User      $user
+     * @param bool      $canEdit
+     * @return array
+     */
+    public function getMarks(Result $result, User $user, $canEdit)
+    {
+        $repo = $this->om->getRepository('ClarolineResultBundle:Mark');
+
+        return $canEdit ?
+            $repo->findByResult($result) :
+            $repo->findByResultAndUser($result, $user);
+    }
+
+    /**
+     * Returns an array representation of the members of the workspace
+     * in which the given result lives. If the edit flag is set to false,
+     * an empty array is returned.
+     *
+     * @param Result    $result
+     * @param bool      $canEdit
+     * @return array
+     */
+    public function getUsers(Result $result, $canEdit)
+    {
+        return [];
+
+//        $results = $this->om->getRepository('ClarolineResultBundle:Result')
+//
+//        $repo = $this->om->getRepository('ClarolineCoreBundle:User');
+//
+//
+//        return $canEdit ?
+//            $repo->findUsersByWorkspace($result->getResourceNode()->getWorkspace()) :
+//            [];
     }
 }

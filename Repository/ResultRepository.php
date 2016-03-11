@@ -42,8 +42,8 @@ class ResultRepository extends EntityRepository
 
         $query = $this->_em->createQuery($dql);
         $query->setParameters([
-            ':workspace' => $workspace,
-            ':user' => $user
+            'workspace' => $workspace,
+            'user' => $user
         ]);
 
         return $query->getArrayResult();

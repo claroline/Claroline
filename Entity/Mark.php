@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="claro_result_mark")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\ResultBundle\Repository\MarkRepository"))
  */
 class Mark
 {
@@ -39,11 +39,19 @@ class Mark
     private $user;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Result", inversedBy="marks")
+     * @ORM\JoinColumn(onDelete="CASCADE")
+     */
+    private $result;
+
+    /**
+     * @param Result    $result
      * @param User      $user
      * @param string    $value
      */
-    public function __construct(User $user, $value)
+    public function __construct(Result $result, User $user, $value)
     {
+        $this->result = $result;
         $this->user = $user;
         $this->value = $value;
     }

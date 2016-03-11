@@ -1,0 +1,57 @@
+<form name="addForm" novalidate>
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true" data-ng-click="vm.onCancel(addForm)">&times;</span>
+    </button>
+    <h3 class="modal-title">ADDING A MARK</h3>
+  </div>
+  <div class="modal-body">
+    <div class="form-group"
+         data-ng-class="{ 'has-error': (addForm.$submitted || addForm.user.$dirty) && !addForm.user.$valid }">
+      <label for="mark-user">USER</label>
+      <input id="mark-user"
+             type="text"
+             name="user"
+             class="form-control"
+             data-ng-model="vm.selectedUser"
+             data-uib-typeahead="user.name for user in vm.users | filter:$viewValue | limitTo:8"
+             data-valid-user
+             required />
+      <p class="help-block"
+         data-ng-if="(addForm.$submitted || addForm.user.$dirty) && addForm.user.$error.required">
+          USER REQUIRED
+      </p>
+      <p class="help-block"
+         data-ng-if="(addForm.$submitted || addForm.user.$dirty) && addForm.user.$error.validUser">
+          USER UNKNOWN
+      </p>
+    </div>
+    <div class="form-group"
+         data-ng-class="{ 'has-error': (addForm.$submitted || addForm.mark.$dirty) && !addForm.mark.$valid }">
+      <label for="mark-value">MARK</label>
+      <input id="mark-value"
+             type="text"
+             name="mark"
+             class="form-control"
+             data-ng-model="vm.selectedUserMark"
+             required />
+      <p class="help-block"
+         data-ng-if="(addForm.$submitted || addForm.mark.$dirty) && addForm.mark.$error.required">
+          MARK REQUIRED
+      </p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit"
+            class="btn btn-primary"
+            data-ng-disabled="!addForm.$valid"
+            data-ng-click="vm.onSubmitNew(addForm)">
+      OK
+    </button>
+    <button type="button"
+            class="btn btn-default"
+            data-ng-click="vm.onCancel(addForm)">
+      CANCEL
+    </button>
+  </div>
+</form>

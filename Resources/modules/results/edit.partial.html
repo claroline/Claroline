@@ -2,14 +2,13 @@
   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
     <span aria-hidden="true" data-ng-click="vm.onCancel()">&times;</span>
   </button>
-  <h3 class="modal-title">I'm a modal!</h3>
+  <h3 class="modal-title">EDITING A MARK</h3>
 </div>
 <div class="modal-body">
-  {{ vm.currentResult.name }}
-  {{ vm.currentResult.mark }}
+  {{ vm.editedResult.mark }}
 </div>
 <div class="modal-footer">
-  <button class="btn btn-primary" type="button" data-ng-click="vm.onSubmitResult()">
+  <button class="btn btn-primary" type="submit" data-ng-click="vm.onSubmitEdit()">
     OK
   </button>
   <button class="btn btn-default" type="button" data-ng-click="vm.onCancel()">

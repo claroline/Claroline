@@ -1,0 +1,47 @@
+<div class="panel-body" >
+  <table class="table table-condensed table-bordered"
+         data-ng-if="vm.results.length > 0">
+    <thead>
+      <tr>
+        <th>NAME</th>
+          <th>MARK</th>
+          <th colspan="2"></th>
+        </tr>
+    </thead>
+    <tbody>
+      <tr data-ng-repeat="result in vm.result">
+        <td>{{ result.name }}</td>
+        <td>{{ result.mark }}</td>
+        <td>
+          <a href="#"
+             aria-label="Edit"
+             onclick="return false"
+             data-ng-click="vm.onEdit(result)">
+            <i class="fa fa-edit"></i>
+          </a>
+        </td>
+        <td>
+          <a href="#"
+             aria-label="Delete"
+             onclick="return false"
+             data-ng-click="vm.onRemove(result)">
+            <i class="fa fa-remove"></i>
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-info"
+       data-ng-if="vm.results.length == 0">
+    <i class="fa fa-info-circle"></i>
+    NO MARKS YET
+  </div>
+</div>
+
+<div class="panel-footer">
+  <button class="btn btn-primary"
+          data-ng-click="vm.onCreate()">
+      ADD MARK
+  </button>
+</div>

@@ -52,4 +52,33 @@ class ResultManagerTest extends TransactionalTestCase
         $content = $this->manager->getWidgetContent($bob->getPersonalWorkspace(), $bob);
         $this->assertNotEmpty($content);
     }
+
+    public function testGetMarksWithAndWithoutFullAccess()
+    {
+        $bob = $this->persist->user('bob');
+        $bill = $this->persist->user('bill');
+        $jane = $this->persist->user('jane');
+
+        $result = $this->persist->result('eval 1', $bob);
+
+        $billMark = $this->persist->mark($result, $bill, 12);
+        $janeMark = $this->persist->mark($result, $jane, 14);
+
+        $this->om->flush();
+
+        $expected = [
+            [
+                'id' => $bill->getId(),
+                'name' => 'bill bill',
+                'mark' => 12
+            ],
+            [
+                'id' => $jane->getId(),
+                'name' => 'jane jane',
+                'mark' => 14
+            ]
+        ];
+        $actual = $this->manager->getMarks($result, $bob, true);
+        $this->assertEquals($expected, $actual);
+    }
 }

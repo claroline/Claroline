@@ -34,7 +34,10 @@ class ResultControllerTest extends TransactionalTestCase
 
     public function testOpenNonExistentResult()
     {
-        $this->request('GET', '/results/1');
+        $john = $this->persist->user('john');
+        $this->om->flush();
+
+        $this->request('GET', '/results/1', $john);
         $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
     }
 
