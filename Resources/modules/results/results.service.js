@@ -51,6 +51,10 @@ export default class ResultsService {
   }
 
   editMark (originalMark, newValue, onFail) {
+    if (originalMark.mark === newValue) {
+      return
+    }
+
     const originalValue = originalMark.mark
     const url = Routing.generate('claro_edit_mark', {
       id: originalMark.markId
