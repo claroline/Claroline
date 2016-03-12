@@ -23,7 +23,7 @@ export default class ListComponent {
   createResult (form) {
     if (form.$valid) {
       this._service.createMark(this.createdMark, () => {
-        this._modal(errorTemplate, 'CREATION FAILED')
+        this._modal(errorTemplate, 'errors.mark.creation_failure')
       })
       this._resetForm(form)
       this._closeModal()
@@ -42,7 +42,7 @@ export default class ListComponent {
       this._service.editMark(
         this.editedMark.original,
         this.editedMark.newValue,
-        () => this._modal(errorTemplate, 'EDITION FAILED')
+        () => this._modal(errorTemplate, 'errors.mark_edition_failure')
       )
     }
   }
@@ -55,7 +55,7 @@ export default class ListComponent {
   deleteResult () {
     this._service.deleteMark(
       this._deletedResult,
-      () => this._modal(errorTemplate, 'SUPPRESSION FAILED')
+      () => this._modal(errorTemplate, 'errors.mark_suppression_failure')
     )
     this._closeModal()
   }

@@ -3,10 +3,10 @@
          data-ng-if="vm.results.length > 0">
     <thead>
       <tr>
-        <th>NAME</th>
-          <th>MARK</th>
-          <th colspan="2"></th>
-        </tr>
+        <th>{{ 'name'|trans }}</th>
+        <th>{{ 'mark'|trans:'results' }}</th>
+        <th colspan="2"></th>
+      </tr>
     </thead>
     <tbody>
       <tr data-ng-repeat="result in vm.results">
@@ -14,8 +14,9 @@
         <td>{{ result.mark }}</td>
         <td>
           <a href="#"
-             aria-label="Edit"
+             aria-label="{{ 'edit'|trans }}"
              onclick="return false"
+             data-uib-tooltip="{{ 'edit'|trans }}"
              data-ng-if="result.markId"
              data-ng-click="vm.displayEditionForm(result)">
             <i class="fa fa-edit"></i>
@@ -23,8 +24,9 @@
         </td>
         <td>
           <a href="#"
-             aria-label="Delete"
+             aria-label="{{ 'delete'|trans }}"
              onclick="return false"
+             data-uib-tooltip="{{ 'delete'|trans }}"
              data-ng-if="result.markId"
              data-ng-click="vm.confirmDeletion(result)">
             <i class="fa fa-remove"></i>
@@ -37,13 +39,13 @@
   <div class="alert alert-info"
        data-ng-if="vm.results.length == 0">
     <i class="fa fa-info-circle"></i>
-    NO MARKS YET
+    {{ 'marks.empty'|trans:'results' }}
   </div>
 </div>
 
 <div class="panel-footer">
   <button class="btn btn-primary"
           data-ng-click="vm.displayCreationForm()">
-    ADD RESULT
+    {{ 'marks.add'|trans:'results' }}
   </button>
 </div>

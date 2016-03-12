@@ -1,0 +1,13 @@
+mark: Résultat
+marks:
+  add: Ajouter un résultat
+  confirm_delete: Étes-vous certain(e) de vouloir supprimer ce résulat ?
+  delete: Supprimer un résultat
+  edit: Modifier un résultat
+  empty: Aucun résult n'est encore associé à cette évaluation. Vous pouvez ajouter un résultat en cliquant sur le bouton "Ajouter un résultat" ci-dessous.
+errors:
+  title: Erreur
+  mark_creation_failure: Une erreur s'est produite durant la création du résultat. Veuillez réessayer ultérieurement.
+  mark_edition_failure: Une erreur s'est produite durant la modification du résultat. Veuillez réessayer ultérieurement.
+  mark_suppression_failure: Une erreur s'est produite durant la suppression du résultat. Veuillez réessayer ultérieurement.
+  unknown_user: Cet utilisateur n'est pas membre de cet espace.  

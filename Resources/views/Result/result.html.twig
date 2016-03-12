@@ -15,6 +15,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'results' }) }}"></script>
     <script>
         window.resultId = {{ _resource.getId() }}
         window.resultMarks = {{ marks|json_encode|raw }}

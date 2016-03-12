@@ -1,14 +1,17 @@
 <form name="markForm" novalidate>
   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <button type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="{{ 'close'|trans }}">
       <span aria-hidden="true" data-ng-click="vm.cancel()">&times;</span>
     </button>
-    <h3 class="modal-title">EDITING A MARK</h3>
+    <h3 class="modal-title">{{ 'marks.edit'|trans:'results' }}</h3>
   </div>
   <div class="modal-body">
     <div class="form-group"
          data-ng-class="{ 'has-error': (markForm.$submitted || markForm.value.$dirty) && !markForm.value.$valid }">
-      <label for="mark-value">MARK</label>
+      <label for="mark-value">{{ 'mark'|trans:'results' }}</label>
       <input id="mark-value"
              type="text"
              name="value"
@@ -17,7 +20,7 @@
              required />
       <p class="help-block"
          data-ng-if="(markForm.$submitted || markForm.value.$dirty) && markForm.value.$error.required">
-          MARK REQUIRED
+         {{ 'This value should not be blank.'|trans:'validators' }}
       </p>
     </div>
   </div>
@@ -26,12 +29,12 @@
             class="btn btn-primary"
             data-ng-disabled="!markForm.$valid"
             data-ng-click="vm.editResult(markForm)">
-      OK
+      {{ 'edit'|trans }}
     </button>
     <button type="button"
             class="btn btn-default"
             data-ng-click="vm.cancel()">
-      Cancel
+      {{ 'cancel'|trans }}
     </button>
   </div>
 </form>

@@ -34,3 +34,6 @@ angular.module('ResultModule', ['ui.bootstrap'])
         scope.$parent.vm.users.some(user => user.name === modelValue)
     }
   }))
+  .filter('trans', () => (string, domain = 'platform') =>
+    Translator.trans(string, domain)
+  )

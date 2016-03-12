@@ -1,14 +1,17 @@
 <form name="createForm" novalidate>
   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <button type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="{{ 'close'|trans }}">
       <span aria-hidden="true" data-ng-click="vm.cancel(createForm)">&times;</span>
     </button>
-    <h3 class="modal-title">ADDING A RESULT</h3>
+    <h3 class="modal-title">{{ 'marks.add'|trans:'results' }}</h3>
   </div>
   <div class="modal-body">
     <div class="form-group"
          data-ng-class="{ 'has-error': (createForm.$submitted || createForm.user.$dirty) && !createForm.user.$valid }">
-      <label for="mark-user">USER</label>
+      <label for="mark-user">{{ 'user'|trans }}</label>
       <input id="mark-user"
              type="text"
              name="user"
@@ -19,16 +22,16 @@
              required />
       <p class="help-block"
          data-ng-if="(createForm.$submitted || createForm.user.$dirty) && createForm.user.$error.required">
-          USER REQUIRED
+          {{ 'This value should not be blank.'|trans:'validators' }}
       </p>
       <p class="help-block"
          data-ng-if="(createForm.$submitted || createForm.user.$dirty) && createForm.user.$error.validUser">
-          USER UNKNOWN
+          {{ 'errors.unknown_user'|trans:'results' }}
       </p>
     </div>
     <div class="form-group"
          data-ng-class="{ 'has-error': (createForm.$submitted || createForm.mark.$dirty) && !createForm.mark.$valid }">
-      <label for="mark-value">MARK</label>
+      <label for="mark-value">{{ 'mark'|trans:'results' }}</label>
       <input id="mark-value"
              type="text"
              name="mark"
@@ -37,7 +40,7 @@
              required />
       <p class="help-block"
          data-ng-if="(createForm.$submitted || createForm.mark.$dirty) && createForm.mark.$error.required">
-          MARK REQUIRED
+          {{ 'This value should not be blank.'|trans:'validators' }}
       </p>
     </div>
   </div>
@@ -46,12 +49,12 @@
             class="btn btn-primary"
             data-ng-disabled="!createForm.$valid"
             data-ng-click="vm.createResult(createForm)">
-      OK
+      {{ 'create'|trans }}
     </button>
     <button type="button"
             class="btn btn-default"
             data-ng-click="vm.cancel(createForm)">
-      CANCEL
+      {{ 'cancel'|trans }}
     </button>
   </div>
 </form>
