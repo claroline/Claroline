@@ -22,11 +22,11 @@
              required />
       <p class="help-block"
          data-ng-if="(createForm.$submitted || createForm.user.$dirty) && createForm.user.$error.required">
-          {{ 'This value should not be blank.'|trans:'validators' }}
+        {{ 'errors.not_blank'|trans:'results' }}
       </p>
       <p class="help-block"
          data-ng-if="(createForm.$submitted || createForm.user.$dirty) && createForm.user.$error.validUser">
-          {{ 'errors.unknown_user'|trans:'results' }}
+        {{ 'errors.unknown_user'|trans:'results' }}
       </p>
     </div>
     <div class="form-group"
@@ -40,7 +40,7 @@
              required />
       <p class="help-block"
          data-ng-if="(createForm.$submitted || createForm.mark.$dirty) && createForm.mark.$error.required">
-          {{ 'This value should not be blank.'|trans:'validators' }}
+        {{ 'errors.not_blank'|trans:'results' }}
       </p>
     </div>
   </div>

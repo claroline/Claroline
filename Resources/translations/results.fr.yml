@@ -10,4 +10,5 @@ errors:
   mark_creation_failure: Une erreur s'est produite durant la création du résultat. Veuillez réessayer ultérieurement.
   mark_edition_failure: Une erreur s'est produite durant la modification du résultat. Veuillez réessayer ultérieurement.
   mark_suppression_failure: Une erreur s'est produite durant la suppression du résultat. Veuillez réessayer ultérieurement.
-  unknown_user: Cet utilisateur n'est pas membre de cet espace.  
+  not_blank: Cette valeur ne peut pas être vide.
+  unknown_user: Cet utilisateur n'est pas membre de cet espace.

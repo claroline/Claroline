@@ -20,7 +20,7 @@
              required />
       <p class="help-block"
          data-ng-if="(markForm.$submitted || markForm.value.$dirty) && markForm.value.$error.required">
-         {{ 'This value should not be blank.'|trans:'validators' }}
+        {{ 'errors.not_blank'|trans:'results' }}
       </p>
     </div>
   </div>
