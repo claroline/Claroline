@@ -12,20 +12,22 @@
       <tr data-ng-repeat="result in vm.results">
         <td>{{ result.name }}</td>
         <td>{{ result.mark }}</td>
-        <td>
+        <td style="text-align: center">
           <a href="#"
              aria-label="{{ 'edit'|trans }}"
              onclick="return false"
+             style="outline: 0"
              data-uib-tooltip="{{ 'edit'|trans }}"
              data-ng-if="result.markId"
              data-ng-click="vm.displayEditionForm(result)">
             <i class="fa fa-edit"></i>
           </a>
         </td>
-        <td>
+        <td style="text-align: center">
           <a href="#"
              aria-label="{{ 'delete'|trans }}"
              onclick="return false"
+             style="outline: 0"
              data-uib-tooltip="{{ 'delete'|trans }}"
              data-ng-if="result.markId"
              data-ng-click="vm.confirmDeletion(result)">
