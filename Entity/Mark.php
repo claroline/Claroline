@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="claro_result_mark")
  * @ORM\Entity(repositoryClass="Claroline\ResultBundle\Repository\MarkRepository"))
  */
-class Mark
+class Mark implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -94,5 +94,14 @@ class Mark
     public function getResult()
     {
         return $this->result;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'user' => "{$this->user->getFirstName()} {$user->getLastName()}",
+            'value'=> $this->value
+        ];
     }
 }

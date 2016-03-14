@@ -85,18 +85,31 @@ class ResultManagerTest extends TransactionalTestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testImportExpectsNonEmptyFile()
+    {
+        $john = $this->persist->user('john');;
+        $result = $this->persist->result('Result 1', $john);
+        $this->persist->workspaceUser($john->getPersonalWorkspace(), $john);
+        $this->om->flush();
+
+        $data = $this->manager->importMarksFromCsv($result, $this->stubCsv('empty'));
+        $this->assertEquals(1, count($data['errors']));
+        $this->assertEquals(ResultManager::ERROR_EMPTY_CSV, $data['errors'][0]['code']);
+    }
+
     public function testImportExpectsThreeValues()
     {
-        $john = $this->persist->user('john');
+        $john = $this->persist->user('john');;
         $result = $this->persist->result('Result 1', $john);
+        $this->persist->workspaceUser($john->getPersonalWorkspace(), $john);
         $this->om->flush();
 
         $data = $this->manager->importMarksFromCsv($result, $this->stubCsv('missing-values'));
         $this->assertEquals(2, count($data['errors']));
         $this->assertEquals(ResultManager::ERROR_MISSING_VALUES, $data['errors'][0]['code']);
-        $this->assertEquals(2, $data['errors'][0]['line']);
+        $this->assertEquals(1, $data['errors'][0]['line']);
         $this->assertEquals(ResultManager::ERROR_MISSING_VALUES, $data['errors'][1]['code']);
-        $this->assertEquals(4, $data['errors'][1]['line']);
+        $this->assertEquals(3, $data['errors'][1]['line']);
     }
 
     public function testImportExpectsNonEmptyValues()
@@ -121,7 +134,30 @@ class ResultManagerTest extends TransactionalTestCase
         $result = $this->persist->result('Result 1', $john);
         $this->om->flush();
 
-        $data = $this->manager->importMarksFromCsv($result, $this->stubCsv('valid'));
+        $data = $this->manager->importMarksFromCsv($result, $this->stubCsv('valid-1'));
+        $this->assertEquals(1, count($data['errors']));
+        $this->assertEquals(ResultManager::ERROR_EXTRA_USERS, $data['errors'][0]['code']);
+        $this->assertEquals(2, $data['errors'][0]['line']);
+    }
+
+    public function testImportMarks()
+    {
+        $john = $this->persist->user('john');
+        $jane = $this->persist->user('jane');
+        $bob = $this->persist->user('bob');
+        $this->persist->workspaceUser($john->getPersonalWorkspace(), $john);
+        $this->persist->workspaceUser($john->getPersonalWorkspace(), $jane);
+        $this->persist->workspaceUser($john->getPersonalWorkspace(), $bob);
+        $result = $this->persist->result('Result 1', $john);
+        $this->om->flush();
+
+        $data = $this->manager->importMarksFromCsv($result, $this->stubCsv('valid-2'));
+        $this->assertEquals(0, count($data['errors']));
+        $this->assertEquals(3, count($data['marks']));
+
+        $marks = $this->om->getRepository('ClarolineResultBundle:Mark')->findAll();
+        $this->assertEquals(3, count($marks));
+        $this->assertEquals($data['marks'], $marks);
     }
 
     private function stubCsv($name, $extension = '.csv')

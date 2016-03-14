@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class ResultManager
 {
+    const ERROR_EMPTY_CSV = 0;
     const ERROR_MISSING_VALUES = 1;
     const ERROR_EMPTY_VALUES = 2;
     const ERROR_EXTRA_USERS = 3;
@@ -197,46 +198,64 @@ class ResultManager
         $repo = $this->om->getRepository('ClarolineCoreBundle:User');
         $users = $repo->findUsersByWorkspace($result->getResourceNode()->getWorkspace());
 
-        $result = [
+        $data = [
             'marks' => [],
             'errors' => []
         ];
 
-        // TEST NOT EMPTY
+        $lines = file($csvFile->getPathname());
+
+        if (count($lines) === 0) {
+            $data['errors'][] = [
+                'code' => self::ERROR_EMPTY_CSV,
+                'message' => 'errors.csv_empty',
+                'line' => null
+            ];
+
+            return $data;
+        }
 
         foreach (file($csvFile->getPathname()) as $index => $line) {
             $values = array_map('trim', str_getcsv($line));
             $lineNumber = $index + 1;
 
             if (count($values) < 3) {
-                $result['errors'][] = [
+                $data['errors'][] = [
                     'code' => self::ERROR_MISSING_VALUES,
                     'message' => 'errors.csv_missing_values',
                     'line' => $lineNumber
                 ];
-            }
-
-            if (in_array('', $values)) {
-                $result['errors'][] = [
+            } elseif (in_array('', $values)) {
+                $data['errors'][] = [
                     'code' => self::ERROR_EMPTY_VALUES,
                     'message' => 'errors.csv_empty_values',
                     'line' => $lineNumber
                 ];
-            }
+            } else {
+                $matchedUser = false;
 
-            foreach ($users as $user) {
-                if ($user->getFirstName() === $values[0] && $user->getLastName() === $values[1]) {
-                    continue 2;
+                foreach ($users as $user) {
+                    if ($user->getFirstName() === $values[0] && $user->getLastName() === $values[1]) {
+                        $matchedUser = $user;
+                        break;
+                    }
+                }
+
+                if (!$matchedUser) {
+                    $data['errors'][] = [
+                        'code' => self::ERROR_EXTRA_USERS,
+                        'message' => 'errors.csv_extra_users',
+                        'line' => $lineNumber
+                    ];
+                } else {
+                    $mark = new Mark($result, $user, $values[2]);
+                    $this->om->persist($mark);
+                    $this->om->flush();
+                    $data['marks'][] = $mark;
                 }
             }
-
-            $result['errors'][] = [
-                'code' => self::ERROR_EXTRA_USERS,
-                'message' => 'errors.csv_extra_users',
-                'line' => $lineNumber
-            ];
         }
 
-        return $result;
+        return $data;
     }
 }
