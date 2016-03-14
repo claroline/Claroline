@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ResultBundle\Entity\Result;
 use Claroline\ResultBundle\Testing\Persister;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ResultManagerTest extends TransactionalTestCase
 {
@@ -82,5 +83,52 @@ class ResultManagerTest extends TransactionalTestCase
         ];
         $actual = $this->manager->getMarks($result, $bob, true);
         $this->assertEquals($expected, $actual);
+    }
+
+    public function testImportExpectsThreeValues()
+    {
+        $john = $this->persist->user('john');
+        $result = $this->persist->result('Result 1', $john);
+        $this->om->flush();
+
+        $data = $this->manager->importMarksFromCsv($result, $this->stubCsv('missing-values'));
+        $this->assertEquals(2, count($data['errors']));
+        $this->assertEquals(ResultManager::ERROR_MISSING_VALUES, $data['errors'][0]['code']);
+        $this->assertEquals(2, $data['errors'][0]['line']);
+        $this->assertEquals(ResultManager::ERROR_MISSING_VALUES, $data['errors'][1]['code']);
+        $this->assertEquals(4, $data['errors'][1]['line']);
+    }
+
+    public function testImportExpectsNonEmptyValues()
+    {
+        $john = $this->persist->user('john');
+        $result = $this->persist->result('Result 1', $john);
+        $this->om->flush();
+
+        $data = $this->manager->importMarksFromCsv($result, $this->stubCsv('empty-values'));
+
+        $this->assertEquals(1, count($data['errors']));
+        $this->assertEquals(ResultManager::ERROR_EMPTY_VALUES, $data['errors'][0]['code']);
+        $this->assertEquals(1, $data['errors'][0]['line']);
+    }
+
+    public function testImportExpectsWorkspaceUsers()
+    {
+        $john = $this->persist->user('john');
+        $bob = $this->persist->user('bob');
+        $this->persist->workspaceUser($john->getPersonalWorkspace(), $john);
+        $this->persist->workspaceUser($john->getPersonalWorkspace(), $bob);
+        $result = $this->persist->result('Result 1', $john);
+        $this->om->flush();
+
+        $data = $this->manager->importMarksFromCsv($result, $this->stubCsv('valid'));
+    }
+
+    private function stubCsv($name, $extension = '.csv')
+    {
+        $path = __DIR__ . '/../Stub/csv/'. $name . $extension;
+        $file = new UploadedFile($path, $name);
+
+        return $file;
     }
 }

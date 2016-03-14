@@ -145,6 +145,31 @@ class ResultController
         return $response;
     }
 
+    /**
+     * @EXT\Route("/{id}/marks/import", name="claro_import_marks")
+     * @EXT\Method("POST")
+     *
+     * @param Result    $result
+     * @param Request   $request
+     * @return JsonResponse
+     */
+    public function importAction(Request $request, Result $result)
+    {
+        $this->assertCanEdit($result);
+        $file = $request->files->get('file', false);
+        $response = new JsonResponse();
+
+        if ($file === false) {
+            $response->setData('Field "file" is missing');
+            $response->setStatusCode(400);
+        } else {
+            $this->manager->importMarksFromCsv($file);
+            $response->setData(get_class($file));
+        }
+
+        return $response;
+    }
+
     private function assertCanEdit(Result $result)
     {
         if (!$this->checker->isGranted('EDIT', $result)) {

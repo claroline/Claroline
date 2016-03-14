@@ -1,0 +1,41 @@
+<form name="importForm" enctype="multipart/form-data" novalidate>
+  <div class="modal-header">
+    <button type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="{{ 'close'|trans }}">
+      <span aria-hidden="true" data-ng-click="vm.cancel(importForm)">&times;</span>
+    </button>
+    <h3 class="modal-title">{{ 'marks.import'|trans:'results' }}</h3>
+  </div>
+  <div class="modal-body">
+    <div class="form-group"
+         data-ng-class="{ 'has-error': (importForm.$submitted || importForm.file.$dirty) && !importForm.file.$valid }">
+      <label for="mark-file">{{ 'file'|trans }}</label>
+      <input id="mark-file"
+             type="file"
+             name="file"
+             class="form-control"
+             data-ngf-select
+             data-ng-model="vm.importFile"
+             required />
+      <p class="help-block"
+         data-ng-if="(importForm.$submitted || importForm.file.$dirty) && importForm.file.$error.required">
+        {{ 'errors.not_blank'|trans:'results' }}
+      </p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit"
+            class="btn btn-primary"
+            data-ng-disabled="!importForm.$valid"
+            data-ng-click="vm.importResults(importForm)">
+      {{ 'import'|trans }}
+    </button>
+    <button type="button"
+            class="btn btn-default"
+            data-ng-click="vm.cancel(importForm)">
+      {{ 'cancel'|trans }}
+    </button>
+  </div>
+</form>

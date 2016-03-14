@@ -1,6 +1,7 @@
 export default class ResultsService {
-  constructor ($http) {
+  constructor ($http, uploader) {
     this.$http = $http
+    this.uploader = uploader
     this._resultId = ResultsService._getGlobal('resultId')
     this._marks = ResultsService._getGlobal('resultMarks')
     this._users = ResultsService._getGlobal('workspaceUsers')
@@ -68,6 +69,23 @@ export default class ResultsService {
         originalMark.mark = originalValue
         onFail()
       })
+  }
+
+  importMarks (file, onFail) {
+    const url = Routing.generate('claro_import_marks', {
+      id: this._resultId 
+    })
+    this.uploader
+      .upload({ url, data: { file } })
+      .then(function (resp) {
+            console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
+        }, function (resp) {
+            console.log('Error status: ' + resp.status);
+            onFail()
+        }, function (evt) {
+            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+            console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+        });
   }
 
   static _getGlobal (name) {

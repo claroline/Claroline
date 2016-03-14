@@ -1,12 +1,18 @@
 import angular from 'angular/index'
 import {} from 'angular-bootstrap'
+import {} from 'ng-file-upload'
 import listTemplate from './list.component.html'
 import controller from './list.component.js'
 import service from './results.service.js'
 
-angular.module('ResultModule', ['ui.bootstrap'])
+angular
+  .module('ResultModule', [
+    'ui.bootstrap',
+    'ngFileUpload'
+  ])
   .service('resultService', [
     '$http',
+    'Upload',
     service
   ])
   .factory('resultModal', [

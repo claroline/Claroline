@@ -2,6 +2,7 @@ import confirmTemplate from './confirm.partial.html'
 import createTemplate from './create.partial.html'
 import editTemplate from './edit.partial.html'
 import errorTemplate from './error.partial.html'
+import importTemplate from './import.partial.html'
 
 export default class ListComponent {
   constructor (service, modal) {
@@ -9,6 +10,7 @@ export default class ListComponent {
     this.users = service.getUsers()
     this.editedMark = {}
     this.createdMark = {}
+    this.importFile = null
     this.errorMessage = null
     this._deletedResult = null
     this._service = service
@@ -47,6 +49,18 @@ export default class ListComponent {
     }
   }
 
+  displayImportForm () {
+    this._modal(importTemplate)
+  }
+
+  importResults(form) {
+    this._service.importMarks(this.importFile, () =>
+      this._modal(errorTemplate, 'ERROR UPLOAD')
+    )
+    this._resetForm(form)
+    this._closeModal()
+  }
+
   confirmDeletion (result) {
     this._deletedResult = result
     this._modal(confirmTemplate)
@@ -83,6 +97,7 @@ export default class ListComponent {
   _resetForm (form) {
     this.createdMark = {}
     this.editedMark = {}
+    this.importFile = null
     this._deletedResult = null
     form.$setPristine()
     form.$setUntouched()

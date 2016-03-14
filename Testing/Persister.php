@@ -62,6 +62,20 @@ class Persister
         return $user;
     }
 
+    public function workspaceUser(Workspace $workspace, User $user)
+    {
+        $role = new Role();
+        $role->setName("ROLE_WS_{$workspace->getName()}_{$user->getUsername()}");
+        $role->setTranslationKey($role->getName());
+        $role->setWorkspace($workspace);
+        $user->addRole($role);
+
+        $this->om->persist($role);
+        $this->om->persist($user);
+
+        return $user;
+    }
+
     public function result($title, User $creator)
     {
         $result = new Result();
