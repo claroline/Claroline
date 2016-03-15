@@ -163,8 +163,14 @@ class ResultController
             $response->setData('Field "file" is missing');
             $response->setStatusCode(400);
         } else {
-            $this->manager->importMarksFromCsv($file);
-            $response->setData(get_class($file));
+            $data = $this->manager->importMarksFromCsv($result, $file);
+
+            if (count($data['errors']) > 0) {
+                $response->setStatusCode(400);
+                $response->setData($data['errors']);
+            } else {
+                $response->setData($data['marks']);
+            }
         }
 
         return $response;

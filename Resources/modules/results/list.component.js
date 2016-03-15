@@ -12,6 +12,7 @@ export default class ListComponent {
     this.createdMark = {}
     this.importFile = null
     this.errorMessage = null
+    this.errors = []
     this._deletedResult = null
     this._service = service
     this._modalFactory = modal
@@ -54,8 +55,8 @@ export default class ListComponent {
   }
 
   importResults(form) {
-    this._service.importMarks(this.importFile, () =>
-      this._modal(errorTemplate, 'ERROR UPLOAD')
+    this._service.importMarks(this.importFile, errors =>
+      this._modal(errorTemplate, 'errors.mark_import_failure', errors)
     )
     this._resetForm(form)
     this._closeModal()
@@ -82,9 +83,13 @@ export default class ListComponent {
     this._modalInstance.dismiss()
   }
 
-  _modal (template, errorMessage) {
+  _modal (template, errorMessage, errors) {
     if (errorMessage) {
       this.errorMessage = errorMessage
+    }
+
+    if (errors) {
+      this.errors = errors
     }
 
     this._modalInstance = this._modalFactory.open(template)
@@ -98,6 +103,8 @@ export default class ListComponent {
     this.createdMark = {}
     this.editedMark = {}
     this.importFile = null
+    this.errorMessage = null
+    this.errors = []
     this._deletedResult = null
     form.$setPristine()
     form.$setUntouched()

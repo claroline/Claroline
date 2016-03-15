@@ -73,19 +73,18 @@ export default class ResultsService {
 
   importMarks (file, onFail) {
     const url = Routing.generate('claro_import_marks', {
-      id: this._resultId 
+      id: this._resultId
     })
     this.uploader
       .upload({ url, data: { file } })
-      .then(function (resp) {
-            console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
-        }, function (resp) {
-            console.log('Error status: ' + resp.status);
-            onFail()
-        }, function (evt) {
-            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-            console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
-        });
+      .then(
+        response => this._marks.push(...response.data),
+        response => onFail(response.data),
+        event => {
+          const progress = parseInt(100.0 * event.loaded / event.total)
+          console.log(`progress: ${progress}% ${event.config.data.file.name}`)
+        }
+      )
   }
 
   static _getGlobal (name) {

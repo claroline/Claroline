@@ -9,6 +9,10 @@
     <h3 class="modal-title">{{ 'marks.import'|trans:'results' }}</h3>
   </div>
   <div class="modal-body">
+    <div class="alert alert-info">
+      <i class="fa fa-info-circle"></i>
+      {{ 'marks.import_info'|trans:'results' }}
+    </div>
     <div class="form-group"
          data-ng-class="{ 'has-error': (importForm.$submitted || importForm.file.$dirty) && !importForm.file.$valid }">
       <label for="mark-file">{{ 'file'|trans }}</label>

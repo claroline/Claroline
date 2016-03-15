@@ -11,6 +11,14 @@
   <div class="alert alert-danger">
     <i class="fa fa-warning"></i>
     {{ vm.errorMessage|trans:'results' }}
+    <ul>
+      <li data-ng-repeat="error in vm.errors">
+        {{ error.message|trans:'result' }}
+        <span data-ng-if="error.line">
+          ({{ 'errors.line'|trans:'result' }} {{ error.line }})
+        </span>
+      </li>
+    </ul>
   </div>
 </div>
 <div class="modal-footer">

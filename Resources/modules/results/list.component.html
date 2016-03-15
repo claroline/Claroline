@@ -9,7 +9,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr data-ng-repeat="result in vm.results">
+      <tr data-ng-repeat="result in vm.results track by result.markId">
         <td>{{ result.name }}</td>
         <td>{{ result.mark }}</td>
         <td style="text-align: center">

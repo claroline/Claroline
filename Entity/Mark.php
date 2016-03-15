@@ -98,10 +98,13 @@ class Mark implements \JsonSerializable
 
     public function jsonSerialize()
     {
+        // NOTE: this serialization format matches the data format used in MarkRepository
+
         return [
-            'id' => $this->id,
-            'user' => "{$this->user->getFirstName()} {$user->getLastName()}",
-            'value'=> $this->value
+            'id' => $this->user->getId(),
+            'name' => "{$this->user->getFirstName()} {$this->user->getLastName()}",
+            'mark'=> $this->value,
+            'markId' => $this->id
         ];
     }
 }
