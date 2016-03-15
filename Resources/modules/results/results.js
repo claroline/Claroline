@@ -1,3 +1,5 @@
+/*global Translator*/
+
 import angular from 'angular/index'
 import {} from 'angular-bootstrap'
 import {} from 'ng-file-upload'

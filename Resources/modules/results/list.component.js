@@ -54,7 +54,7 @@ export default class ListComponent {
     this._modal(importTemplate)
   }
 
-  importResults(form) {
+  importResults (form) {
     this._service.importMarks(this.importFile, errors =>
       this._modal(errorTemplate, 'errors.mark_import_failure', errors)
     )

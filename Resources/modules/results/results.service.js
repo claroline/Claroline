@@ -1,3 +1,5 @@
+/*global Routing*/
+
 export default class ResultsService {
   constructor ($http, uploader) {
     this.$http = $http
@@ -23,12 +25,12 @@ export default class ResultsService {
       userId: user.id
     })
 
-    this._marks.push(result);
+    this._marks.push(result)
 
     this.$http
       .post(url, { mark: props.mark })
       .then(
-        response => result.markId = response.data,
+        response => { result.markId = response.data },
         () => {
           this._deleteMark(result)
           onFail()
