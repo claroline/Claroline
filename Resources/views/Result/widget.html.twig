@@ -1,1 +1,12 @@
-RESULT WIDGET
+<table class="table table-bordered tabled-condensed">
+  {% for result in results %}
+  <tr>
+    <td>{{ result.title }}</td>
+    <td style="text-align: center">{{ result.mark }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% if results|length == 0 %}
+  <em>{{ 'no_marks'|trans({}, 'widget') }}</em>
+{% endif %}

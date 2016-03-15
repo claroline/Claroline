@@ -1,0 +1,57 @@
+<div class="panel-body" >
+  <table class="table table-condensed table-bordered"
+         data-ng-if="vm.results.length > 0">
+    <thead>
+      <tr>
+        <th>{{ 'name'|trans }}</th>
+        <th>{{ 'mark'|trans:'results' }}</th>
+        <th colspan="2"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-ng-repeat="result in vm.results track by result.markId">
+        <td>{{ result.name }}</td>
+        <td>{{ result.mark }}</td>
+        <td style="text-align: center">
+          <a href="#"
+             aria-label="{{ 'edit'|trans }}"
+             onclick="return false"
+             style="outline: 0"
+             data-uib-tooltip="{{ 'edit'|trans }}"
+             data-ng-if="result.markId"
+             data-ng-click="vm.displayEditionForm(result)">
+            <i class="fa fa-edit"></i>
+          </a>
+        </td>
+        <td style="text-align: center">
+          <a href="#"
+             aria-label="{{ 'delete'|trans }}"
+             onclick="return false"
+             style="outline: 0"
+             data-uib-tooltip="{{ 'delete'|trans }}"
+             data-ng-if="result.markId"
+             data-ng-click="vm.confirmDeletion(result)">
+            <i class="fa fa-remove"></i>
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-info"
+       data-ng-if="vm.results.length == 0">
+    <i class="fa fa-info-circle"></i>
+    {{ 'marks.empty'|trans:'results' }}
+  </div>
+</div>
+
+<div class="panel-footer">
+  <button class="btn btn-primary"
+          data-ng-click="vm.displayCreationForm()">
+    {{ 'marks.add'|trans:'results' }}
+  </button>
+  <button class="btn btn-primary"
+          data-ng-click="vm.displayImportForm()">
+    {{ 'marks.import'|trans:'results' }}
+  </button>
+</div>

@@ -16,9 +16,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="claro_result_mark")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\ResultBundle\Repository\MarkRepository"))
  */
-class Mark
+class Mark implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -39,11 +39,19 @@ class Mark
     private $user;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Result", inversedBy="marks")
+     * @ORM\JoinColumn(onDelete="CASCADE")
+     */
+    private $result;
+
+    /**
+     * @param Result    $result
      * @param User      $user
      * @param string    $value
      */
-    public function __construct(User $user, $value)
+    public function __construct(Result $result, User $user, $value)
     {
+        $this->result = $result;
         $this->user = $user;
         $this->value = $value;
     }
@@ -54,6 +62,14 @@ class Mark
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param string $value
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
     }
 
     /**
@@ -70,5 +86,25 @@ class Mark
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * @return Result
+     */
+    public function getResult()
+    {
+        return $this->result;
+    }
+
+    public function jsonSerialize()
+    {
+        // NOTE: this serialization format matches the data format used in MarkRepository
+
+        return [
+            'id' => $this->user->getId(),
+            'name' => "{$this->user->getFirstName()} {$this->user->getLastName()}",
+            'mark'=> $this->value,
+            'markId' => $this->id
+        ];
     }
 }

@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "standard": "^6.0.8"
+  },
+  "scripts": {
+    "lint": "standard Resources/modules/**/*.js"
+  }
+}

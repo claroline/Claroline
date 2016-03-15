@@ -29,7 +29,7 @@ class Result extends AbstractResource
     private $date;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Mark")
+     * @ORM\OneToMany(targetEntity="Mark", mappedBy="result")
      */
     private $marks;
 

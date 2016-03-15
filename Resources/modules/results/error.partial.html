@@ -1,0 +1,28 @@
+<div class="modal-header">
+  <button type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="{{ 'close'|trans }}">
+    <span aria-hidden="true" data-ng-click="vm.cancel()">&times;</span>
+  </button>
+  <h3 class="modal-title">{{ 'errors.title'|trans:'results' }}</h3>
+</div>
+<div class="modal-body">
+  <div class="alert alert-danger">
+    <i class="fa fa-warning"></i>
+    {{ vm.errorMessage|trans:'results' }}
+    <ul>
+      <li data-ng-repeat="error in vm.errors">
+        {{ error.message|trans:'result' }}
+        <span data-ng-if="error.line">
+          ({{ 'errors.line'|trans:'result' }} {{ error.line }})
+        </span>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" type="submit" data-ng-click="vm.cancel()">
+    {{ 'close'|trans }}
+  </button>
+</div>

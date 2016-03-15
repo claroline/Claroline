@@ -13,6 +13,7 @@ namespace Claroline\ResultBundle\Testing;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -42,9 +43,10 @@ class Persister
         $this->om->persist($user);
 
         if (!$this->userRole) {
-            $this->userRole = $this->om
-                ->getRepository('ClarolineCoreBundle:Role')
-                ->findOneByName('ROLE_USER');
+            $this->userRole = new Role();
+            $this->userRole->setName('ROLE_USER');
+            $this->userRole->setTranslationKey('user');
+            $this->om->persist($this->userRole);
         }
 
         $user->addRole($this->userRole);
@@ -56,6 +58,20 @@ class Persister
         $this->om->persist($workspace);
 
         $user->setPersonalWorkspace($workspace);
+
+        return $user;
+    }
+
+    public function workspaceUser(Workspace $workspace, User $user)
+    {
+        $role = new Role();
+        $role->setName("ROLE_WS_{$workspace->getName()}_{$user->getUsername()}");
+        $role->setTranslationKey($role->getName());
+        $role->setWorkspace($workspace);
+        $user->addRole($role);
+
+        $this->om->persist($role);
+        $this->om->persist($user);
 
         return $user;
     }
@@ -88,8 +104,7 @@ class Persister
 
     public function mark(Result $result, User $user, $value)
     {
-        $mark = new Mark($user, $value);
-        $result->addMark($mark);
+        $mark = new Mark($result, $user, $value);
 
         $this->om->persist($mark);
 

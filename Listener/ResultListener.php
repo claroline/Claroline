@@ -17,13 +17,13 @@ use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Form\Handler\FormHandler;
+use Claroline\ResultBundle\Entity\Result;
 use Claroline\ResultBundle\Manager\ResultManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContext;
 
@@ -85,7 +85,8 @@ class ResultListener
      */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
-        $event->setResponseContent($this->formHandler->getView('claroline_form_result'));
+        $view = $this->formHandler->getView('claroline_form_result');
+        $event->setResponseContent($this->manager->getResultFormContent($view));
         $event->stopPropagation();
     }
 
@@ -96,23 +97,27 @@ class ResultListener
      */
     public function onCreate(CreateResourceEvent $event)
     {
-        if ($this->formHandler->isValid('claroline_form_result', $this->request)) {
+        if ($this->formHandler->isValid('claroline_form_result', $this->request, new Result())) {
             $event->setResources([$this->manager->create($this->formHandler->getData())]);
         } else {
-            $event->setErrorFormContent($this->formHandler->getView());
+            $view = $this->formHandler->getView();
+            $event->setErrorFormContent($this->manager->getResultFormContent($view));
         }
 
         $event->stopPropagation();
     }
 
     /**
-     * @DI\Observe("create_claroline_open")
+     * @DI\Observe("open_claroline_result")
      *
      * @param OpenResourceEvent $event
      */
     public function onOpen(OpenResourceEvent $event)
     {
-        $subRequest = $this->request->duplicate([], null, ['_controller' => 'ClarolineResultBundle:Result:result']);
+        $subRequest = $this->request->duplicate([], null, [
+            '_controller' => 'ClarolineResultBundle:Result:result',
+            'id' => $event->getResource()->getId()
+        ]);
         $event->setResponse($this->kernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST));
         $event->stopPropagation();
     }

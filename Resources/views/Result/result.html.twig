@@ -1,1 +1,25 @@
-<h1>{{ result.getResourceNode().getName() }}</h1>
+{% set layout = 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% if isDesktop() %}
+    {% set layout = 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+{% endif %}
+
+{% extends layout %}
+
+{% block title %}{{ _resource.getResourceNode().getName()|striptags|raw }}{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">{{ _resource.getResourceNode().getName() }}</div>
+    <div data-results data-ng-app="ResultModule"></div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'results' }) }}"></script>
+    <script>
+        window.resultId = {{ _resource.getId() }}
+        window.resultMarks = {{ marks|json_encode|raw }}
+        window.workspaceUsers = {{ users|json_encode|raw }}
+    </script>
+    <script src="{{ hotAsset('dist/claroline-result-list.js') }}"></script>
+{% endblock %}
