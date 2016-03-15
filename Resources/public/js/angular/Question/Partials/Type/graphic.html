@@ -52,6 +52,14 @@
                 </div>
             </div>
         </div>
+        
+        <div data-ng-if="graphicQuestionCtrl.feedbackIsVisible">
+            <div class="row" data-ng-if="graphicQuestionCtrl.questionFeedback">
+                <div class="col-md-12">
+                    <label class="alert alert-info" data-ng-bind-html="graphicQuestionCtrl.questionFeedback | unsafe"></label>
+                </div>
+            </div>
+        </div>
 
         <div data-ng-if="graphicQuestionCtrl.feedbackIsVisible">
             <div class="row" data-ng-if="graphicQuestionCtrl.questionFeedback">
