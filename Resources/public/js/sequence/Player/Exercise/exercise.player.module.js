@@ -14,7 +14,8 @@
         'ngBootbox',
         'Common',
         'PlayerSharedServices',
-        'Question'
+        'Question',
+        'ngStorage'
     ];
     // exercise player module
     var ExercisePlayerApp = angular.module('ExercisePlayerApp', dependencies);

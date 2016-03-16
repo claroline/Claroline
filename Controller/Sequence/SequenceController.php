@@ -36,6 +36,8 @@ class SequenceController extends Controller
         $exo = json_encode($apiData['exercise']);
         $paper = json_encode($apiData['paper']);
         
+        $duration = "27";
+        
         $u = array(
             'id' => $user->getId(),
             'name' => $user->getFirstName() . ' ' . $user->getLastName(),
@@ -48,7 +50,8 @@ class SequenceController extends Controller
                     'exercise' => $exo,
                     'paper' => $paper,
                     'user' => json_encode($u),
-                    'currentStepIndex' => 0
+                    'currentStepIndex' => 0,
+                    'duration' => $duration
             )
         );
     }   

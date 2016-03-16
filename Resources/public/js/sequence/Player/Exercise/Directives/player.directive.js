@@ -14,10 +14,11 @@
                     paper: '=',
                     exercise: '=',
                     user: '=',
-                    currentStepIndex: '='
+                    currentStepIndex: '=',
+                    duration: '='
                 },
                 link: function (scope, element, attr, exercisePlayerCtrl) {
-                    exercisePlayerCtrl.init(scope.paper, scope.exercise, scope.user, scope.currentStepIndex);
+                    exercisePlayerCtrl.init(scope.paper, scope.exercise, scope.user, scope.currentStepIndex, scope.duration);
                 }
             };
         }

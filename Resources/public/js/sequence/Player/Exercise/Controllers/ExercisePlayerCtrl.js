@@ -7,7 +7,9 @@
         'ExerciseService',
         'CommonService',
         'PlayerDataSharing',
-        function ($window, $scope, ExerciseService, CommonService, PlayerDataSharing) {
+        '$timeout',
+        '$localStorage',
+        function ($window, $scope, ExerciseService, CommonService, PlayerDataSharing, $timeout, $localStorage) {
 
             this.exercise = {};
             this.paper = {};
@@ -18,14 +20,43 @@
             this.isFirstStep = true;
             this.feedbackIsShown = false;
             this.currentStepIndex = 0;
+            this.duration = 0;
+
+            $scope.$storage = $localStorage.$default({
+                counter: 0
+            });
+
+            $scope.onTimeout = function(){
+                $scope.$storage.counter =  $scope.$storage.counter + 1;
+                mytimeout = $timeout($scope.onTimeout,1000);
+                if ($scope.$storage.counter == $scope.$storage.durationExo) { //$scope.counter == 7) {
+                  $scope.affiche_message();
+              }
+            }
+            var mytimeout = $timeout($scope.onTimeout,1000);
+
+            $scope.stop = function(){
+                $timeout.cancel(mytimeout);
+            }
+
+            $scope.start = function(){
+                $scope.$storage.counter = 0;
+                mytimeout = $timeout($scope.onTimeout,1000);
+            }
+
+            $scope.affiche_message = function(){
+               alert("temps écoulé !");
+            }
+
 
             // init directive with appropriate data
-            this.init = function (paper, exercise, user, currentStepIndex) {
+            this.init = function (paper, exercise, user, currentStepIndex, duration) {
                 this.exercise = PlayerDataSharing.setExercise(exercise);
                 this.paper = PlayerDataSharing.setPaper(paper);
                 this.user = PlayerDataSharing.setUser(user);
                 this.currentStepIndex = currentStepIndex;
                 this.setCurrentStep(this.currentStepIndex);
+                $scope.$storage.durationExo = duration;
             };
 
             /**

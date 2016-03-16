@@ -14,6 +14,12 @@
     <div class="panel-body">
         <div class="row">
             <div class="col-md-12">
+                
+    <button ng-click="stop()">Stop</button>    
+    <button ng-click="start()">Restart</button>  
+    
+    ~ {{exercisePlayerCtrl.$storage.counter}} ~
+    
                 <div class="step-container" data-ng-repeat="item in exercisePlayerCtrl.exercise.steps[exercisePlayerCtrl.currentStepIndex].items">
                     <!-- switch on item type -->
                     <div data-ng-switch="item.type">
