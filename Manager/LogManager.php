@@ -657,7 +657,7 @@ class LogManager
         $userSearch = null;
 
         if (array_key_exists('filter', $data)) {
-            $decodeFilter = json_decode(urldecode($data['filter']));
+            $decodeFilter = json_decode(urldecode($data['filter']), true);
             if ($decodeFilter !== null) {
                 $action = $decodeFilter->action;
                 $range = $dateRangeToTextTransformer->reverseTransform($decodeFilter->range);
