@@ -39,8 +39,8 @@ var StepEditCtrl = function StepEditCtrl(step, inheritedResources, PathService, 
 
     this.tinymceOptions.plugins = plugins;
     this.tinymceOptions.toolbar1 = toolbar;
-
-    this.tinymceOptions.format = 'text';
+    this.tinymceOptions.trusted = true;
+    this.tinymceOptions.format = 'html';
 
     /**
      * Activity resource picker config
