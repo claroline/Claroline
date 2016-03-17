@@ -42,10 +42,11 @@
             </div>
 
             <!-- Block to display when a structure is set -->
-            <div class="path-summary-tree" data-ng-if="pathSummaryEditCtrl.structure.length !== 0" data-ui-tree="pathSummaryEditCtrl.treeOptions">
-                <ol class="tree" data-ui-tree-nodes="" data-ng-model="pathSummaryEditCtrl.structure" data-nodrop="">
-                    <li data-ui-tree-node="" data-ng-repeat="step in pathSummaryEditCtrl.structure" data-ng-include="pathSummaryEditCtrl.webDir + 'bundles/innovapath/js/PathSummary/Partial/edit-item.html'"></li>
-                </ol>
+            <div ui-tree="pathSummaryEditCtrl.treeOptions" class="path-summary-tree" data-ng-if="pathSummaryEditCtrl.structure.length !== 0">
+                <ol ui-tree-nodes data-ng-model="pathSummaryEditCtrl.structure">
+                  <li ui-tree-node ng-repeat="step in pathSummaryEditCtrl.structure" data-ng-include="pathSummaryEditCtrl.webDir + 'bundles/innovapath/js/PathSummary/Partial/edit-item.html'"></li>
+                  </li>
+               </ol>
             </div>
         </div>
     </div>

@@ -1,5 +1,5 @@
 <!-- Item row -->
-<div data-ui-tree-handle="" class="tree-item" data-ng-class="{ 'active-step': pathSummaryEditCtrl.current.stepId == step.id || (!pathSummaryEditCtrl.current.stepId && 0 == step.lvl) }"
+<div ui-tree-handle class="tree-item" data-ng-class="{ 'active-step': pathSummaryEditCtrl.current.stepId == step.id || (!pathSummaryEditCtrl.current.stepId && 0 == step.lvl) }"
      data-ng-mouseenter="showButtons = step.id"
      data-ng-mouseleave="showButtons = null">
 
@@ -56,6 +56,6 @@
     </span>
 </div>
 
-<ol class="step-children lvl lvl-{{ step.lvl }} lvl-border" data-ui-tree-nodes="" data-ng-model="step.children" data-ng-hide="collapsed">
-    <li data-ui-tree-node="" data-ng-repeat="step in step.children" data-ng-include="pathSummaryEditCtrl.webDir + 'bundles/innovapath/js/PathSummary/Partial/edit-item.html'"></li>
+<ol ui-tree-nodes class="step-children lvl lvl-{{ step.lvl }} lvl-border" data-ng-model="step.children" data-ng-hide="collapsed">
+    <li ui-tree-node data-ng-repeat="step in step.children" data-ng-include="pathSummaryEditCtrl.webDir + 'bundles/innovapath/js/PathSummary/Partial/edit-item.html'"></li>
 </ol>
