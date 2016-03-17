@@ -33,7 +33,7 @@ var PathSummaryEditCtrl = function PathSummaryEditCtrl($routeParams, PathService
             this.pathService.reorderSteps(this.structure);
         }.bind(this)
     };
-    return this;
+
 };
 
 // Extends the base controller
