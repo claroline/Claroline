@@ -124,24 +124,8 @@ class ExoImporter extends Importer implements ConfigurationInterface
         $qtiRepos = $this->container->get('ujm.exo_qti_repository');
         $qtiRepos->createDirQTI($exoTitle, $this->new);
         $this->new = false;
-        $qtiServ = $this->container->get('ujm.exo_qti');
 
-        $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
-        $questions = $questionRepo->findByExercise($object);
-        $this->createQuestionsDirectory($qtiRepos, $questions);
-        $qdirs = $qtiServ->sortPathOfQuestions($qtiRepos);
-
-        $i = 'a';
-        foreach ($qdirs as $dir) {
-            $iterator = new \DirectoryIterator($dir);
-            foreach ($iterator as $element) {
-                if (!$element->isDot() && $element->isFile()) {
-                    $localPath = 'qti/'.$exoTitle.'/question_'.$i.'/'.$element->getFileName();
-                    $files[$localPath] = $element->getPathName();
-                }
-            }
-            $i .= 'a';
-        }
+        $steps = $this->getStepsToExport($object, $qtiRepos, $exoTitle, $files);
 
         $version = '1';
         $path = 'qti/'.$exoTitle;
@@ -150,6 +134,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
             'path' => $path,
             'version' => $version,
             'title' => $object->getTitle(),
+            'steps' => $steps,
         )));
 
         return $data;
@@ -196,21 +181,68 @@ class ExoImporter extends Importer implements ConfigurationInterface
      *
      * @param UJM\ExoBundle\Services\classes\QTI\qtiRepository $qtiRepos
      * @param collection of  UJM\ExoBundle\Entity\Question  $interactions
+     * @param Integer $numStep order the step in the exercise
      */
-    private function createQuestionsDirectory($qtiRepos, $questions)
+    private function createQuestionsDirectory($qtiRepos, $questions, $numStep)
     {
         @mkdir($qtiRepos->getUserDir().'questions');
         $i = 'a';
         foreach ($questions as $question) {
             $qtiRepos->export($question);
-            @mkdir($qtiRepos->getUserDir().'questions/'.'question_'.$i);
+            @mkdir($qtiRepos->getUserDir().'questions/'.$numStep.'_question_'.$i);
             $iterator = new \DirectoryIterator($qtiRepos->getUserDir());
             foreach ($iterator as $element) {
                 if (!$element->isDot() && $element->isFile()) {
-                    rename($qtiRepos->getUserDir().$element->getFilename(), $qtiRepos->getUserDir().'questions/'.'question_'.$i.'/'.$element->getFilename());
+                    rename($qtiRepos->getUserDir().$element->getFilename(), $qtiRepos->getUserDir().'questions/'.$numStep.'_question_'.$i.'/'.$element->getFilename());
                 }
             }
             $i .= 'a';
         }
+    }
+
+    /**
+     * return steps of an exercise in an array
+     *
+     * @param Object Exercise $ojbect
+     * @param UJM\ExoBundle\Services\classes\QTI\qtiRepository $qtiRepos
+     * @param String $exoTitle
+     * @return array
+     */
+    private function getStepsToExport($object, $qtiRepos, $exoTitle, array &$files)
+    {
+        $qtiServ = $this->container->get('ujm.exo_qti');
+
+        $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
+
+        $steps = array();
+        foreach ($object->getSteps() as $step) {
+            $s = array(
+                    'Text' => $step->getText(),
+                    'order' => $step->getOrder(),
+                    'shuffle' => $step->getShuffle(),
+                    'nbQuestion' => $step->getNbQuestion(),
+                    'keepSameQuestion' => $step->getKeepSameQuestion(),
+                    'duration' => $step->getDuration(),
+                    'maxAttempts' => $step->getMaxAttempts()
+                    );
+            $steps[] = $s;
+            $questions = $questionRepo->findByStep($step);
+            $this->createQuestionsDirectory($qtiRepos, $questions, $step->getOrder());
+            $qdirs = $qtiServ->sortPathOfQuestions($qtiRepos);
+
+            $i = 'a';
+            foreach ($qdirs as $dir) {
+                $iterator = new \DirectoryIterator($dir);
+                foreach ($iterator as $element) {
+                    if (!$element->isDot() && $element->isFile()) {
+                        $localPath = 'qti/'.$exoTitle.'/'.$step->getOrder().'_question_'.$i.'/'.$element->getFileName();
+                        $files[$localPath] = $element->getPathName();
+                    }
+                }
+                $i .= 'a';
+            }
+        }
+
+        return $steps;
     }
 }

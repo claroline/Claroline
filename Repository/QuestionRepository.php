@@ -48,7 +48,7 @@ class QuestionRepository extends EntityRepository
             ->join('q.stepQuestions', 'sq')
             ->join('sq.step', 's')
             ->where('s.exercise = :exercise')
-            ->orderBy('sq.ordre')
+            ->orderBy('s.order, sq.ordre')
             ->setParameter(':exercise', $exercise)
             ->getQuery()
             ->getResult();
