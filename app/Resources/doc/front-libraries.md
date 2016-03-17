@@ -25,7 +25,6 @@
 # DUPLICATES
 - angular-ui-router
 - angular-route
-
 - angular-daterangepicker
 - bootstrap-datepicker
 - eonasdan-bootstrap-datetimepicker (version différente)
@@ -35,10 +34,11 @@
 - moment
 
 
-# TENDANCIEUX
+# DEBATABLE
 - angular-breadcrumb (fonctionne uniquement si on a UIRouter)
 - ng-file-upload (upload de fichiers en AJAX, utilisé dans WebsiteBundle)
 - fileapi (upload de fichier en AJAX) **Peut-être accompli avec FormData**
+
 
 # TO REMOVE
 - angular-resource
@@ -46,6 +46,7 @@
 - system.js
 - bootstrapaccessibilityplugin (ajoute des fonctionnalités d'accessibilité dans les components Bootstrap / Non utilisé)
 - jquery.cookie (Non utilisé)
+
 
 # TO REMOVE WITH REFACTORING
 - backbone (gestionnaire de ressource va disparaitre au profit d'angular)
@@ -88,7 +89,7 @@
 # TO REMOVE WITH VERIFICATION
 - bootstrap-additions (réécrit / ajoute des élément de Bootstrap / Utilisé dans Website)
 
-# A NOUS
+# OURS
 - angular-ui-resource-picker
 - angular-ui-translation
 - claroline-tinymce-accordion": "https://github.com/iCAPLyon1/tinymceAccordionPlugin.git#192df9058a", (util ? maintenu ?)
