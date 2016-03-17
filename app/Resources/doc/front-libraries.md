@@ -17,11 +17,13 @@
 - mjolnic-bootstrap-colorpicker (couleur de fond des WS / Widgets)
 - angular-touch (développé par Google / évènement des touchscreens)
 
+
 # COSMETIC
 - angular-animate
 - select2 (remplace les select par une alternative jQuery)
 - angular-motion
  
+
 # DUPLICATES
 - angular-ui-router
 - angular-route
@@ -61,6 +63,7 @@
 
 - jqPlot (graphiques de la Docimology de ExoBundle)
 => Trouver une librairie de graphique plus complète
+=> Etudier FVANCOP/ChartNew (fork de ChartJS). Voir l'intégration avec AngularJS
 
 - gridstack (système de grille)
 => En cours de remplacement dans les Widgets par angular-gridster
