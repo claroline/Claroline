@@ -92,5 +92,5 @@
 - angular-ui-resource-picker
 - angular-ui-translation
 - claroline-tinymce-accordion": "https://github.com/iCAPLyon1/tinymceAccordionPlugin.git#192df9058a", (util ? maintenu ?)
-- claroline-tinymce-mention": "https://github.com/iCAPLyon1/tinymceMentionPlugin.git#f251a65c23", (Qu'est ce que c'est)
+- claroline-tinymce-mention": "https://github.com/iCAPLyon1/tinymceMentionPlugin.git#f251a65c23", (Qu'est ce que c'est ?)
 - angular-data-table (fonctionnalités pour les tableaux / bugs corrigés par Nico dans un fork / encore buggué)
