@@ -85,7 +85,7 @@ document: Document
 drop_category: Supprimer cette catégorie
 duplicate: Dupliquer
 duplicate_this_question: <input type ="text" name='nbq' value='0' size='2' /> fois cette question (10 maximum autorisé)
-duration: Durée
+duration: Durée (en seconde)
 
 # E
 edit: Editer
