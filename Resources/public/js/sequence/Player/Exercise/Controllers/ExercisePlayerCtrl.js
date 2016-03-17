@@ -30,17 +30,13 @@
                     $scope.$storage.counter =  $scope.$storage.counter + 1;
                     mytimeout = $timeout($scope.onTimeout,1000);
                     if ($scope.$storage.counter == $scope.$storage.durationExo) {
-                        $scope.$storage.$reset({
-                           counter: 0
-                        });
-                        $timeout.cancel(mytimeout);
                         $scope.exercisePlayerCtrl.validateStep('end');
                     }
                 };
 
-                var mytimeout = $timeout($scope.onTimeout,1000); 
+                var mytimeout = $timeout($scope.onTimeout,1000);
             }
-            
+
 
             // init directive with appropriate data
             this.init = function (paper, exercise, user, currentStepIndex, duration) {
@@ -141,6 +137,12 @@
                 if (action && (action === 'forward' || action === 'backward' || action === 'goto')) {
                     this.setCurrentStep(this.currentStepIndex);
                 } else if (action && action === 'end') {
+
+                    $scope.$storage.$reset({
+                        counter: 0
+                    });
+                    $timeout.cancel(mytimeout);
+
                     var endPromise = ExerciseService.endSequence(paper);
                     endPromise.then(function (result) {
                         if (this.checkCorrectionAvailability()) {
