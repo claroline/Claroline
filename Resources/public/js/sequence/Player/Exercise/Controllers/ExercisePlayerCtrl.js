@@ -25,18 +25,15 @@
                 counter: 0
             });
 
-            if ($scope.$storage.durationExo != 0) {
-                $scope.onTimeout = function(){
-                    $scope.$storage.counter =  $scope.$storage.counter + 1;
-                    mytimeout = $timeout($scope.onTimeout,1000);
-                    if ($scope.$storage.counter == $scope.$storage.durationExo) {
-                        $scope.exercisePlayerCtrl.validateStep('end');
-                    }
-                };
+            $scope.onTimeout = function(){
+                $scope.$storage.counter =  $scope.$storage.counter + 1;
+                mytimeout = $timeout($scope.onTimeout,1000);
+                if ($scope.$storage.counter == $scope.$storage.durationExo) {
+                    $scope.exercisePlayerCtrl.validateStep('end');
+                }
+            };
 
-                var mytimeout = $timeout($scope.onTimeout,1000);
-            }
-
+            var mytimeout = $timeout($scope.onTimeout,1000);
 
             // init directive with appropriate data
             this.init = function (paper, exercise, user, currentStepIndex, duration) {
