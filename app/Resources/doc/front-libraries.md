@@ -19,7 +19,7 @@
 
 # COSMETIC
 - angular-animate
-- select2 (remplace les <select> par une alternative jQuery)
+- select2 (remplace les select par une alternative jQuery)
 - angular-motion
  
 # DUPLICATES
@@ -38,8 +38,7 @@
 # TENDANCIEUX
 - angular-breadcrumb (fonctionne uniquement si on a UIRouter)
 - ng-file-upload (upload de fichiers en AJAX, utilisé dans WebsiteBundle)
-- fileapi (upload de fichier en AJAX)
-=> Peut-être accompli avec FormData
+- fileapi (upload de fichier en AJAX) **Peut-être accompli avec FormData**
 
 # TO REMOVE
 - angular-resource
@@ -84,6 +83,8 @@
 - toastr (système de notification basé sur celui d'Android / Utilisé dans Portfolio)
 => doublon avec les Alerts bootstrap
 
+- angular-strap (Doublon d'Angular Bootstrap / Utilisé dans PortfolioBundle, WebsiteBundle)
+
 # TO REMOVE WITH VERIFICATION
 - bootstrap-additions (réécrit / ajoute des élément de Bootstrap / Utilisé dans Website)
 
@@ -93,8 +94,3 @@
 - claroline-tinymce-accordion": "https://github.com/iCAPLyon1/tinymceAccordionPlugin.git#192df9058a", (util ? maintenu ?)
 - claroline-tinymce-mention": "https://github.com/iCAPLyon1/tinymceMentionPlugin.git#f251a65c23", (Qu'est ce que c'est)
 - angular-data-table (fonctionnalités pour les tableaux / bugs corrigés par Nico dans un fork / encore buggué)
-
-
-A TRIER
-- angular-strap (Doublon d'Angular Bootstrap)
-
