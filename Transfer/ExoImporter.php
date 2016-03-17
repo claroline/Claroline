@@ -187,13 +187,14 @@ class ExoImporter extends Importer implements ConfigurationInterface
     {
         @mkdir($qtiRepos->getUserDir().'questions');
         $i = 'a';
+        @mkdir($qtiRepos->getUserDir().'questions/'.$numStep);
         foreach ($questions as $question) {
             $qtiRepos->export($question);
-            @mkdir($qtiRepos->getUserDir().'questions/'.$numStep.'_question_'.$i);
+            @mkdir($qtiRepos->getUserDir().'questions/'.$numStep.'/'.$numStep.'_question_'.$i);
             $iterator = new \DirectoryIterator($qtiRepos->getUserDir());
             foreach ($iterator as $element) {
                 if (!$element->isDot() && $element->isFile()) {
-                    rename($qtiRepos->getUserDir().$element->getFilename(), $qtiRepos->getUserDir().'questions/'.$numStep.'_question_'.$i.'/'.$element->getFilename());
+                    rename($qtiRepos->getUserDir().$element->getFilename(), $qtiRepos->getUserDir().'questions/'.$numStep.'/'.$numStep.'_question_'.$i.'/'.$element->getFilename());
                 }
             }
             $i .= 'a';
@@ -228,14 +229,14 @@ class ExoImporter extends Importer implements ConfigurationInterface
             $steps[] = $s;
             $questions = $questionRepo->findByStep($step);
             $this->createQuestionsDirectory($qtiRepos, $questions, $step->getOrder());
-            $qdirs = $qtiServ->sortPathOfQuestions($qtiRepos);
+            $qdirs = $qtiServ->sortPathOfQuestions($qtiRepos, $step->getOrder());
 
             $i = 'a';
             foreach ($qdirs as $dir) {
                 $iterator = new \DirectoryIterator($dir);
                 foreach ($iterator as $element) {
                     if (!$element->isDot() && $element->isFile()) {
-                        $localPath = 'qti/'.$exoTitle.'/'.$step->getOrder().'_question_'.$i.'/'.$element->getFileName();
+                        $localPath = 'qti/'.$exoTitle.'/'.$step->getOrder().'/'.$step->getOrder().'_question_'.$i.'/'.$element->getFileName();
                         $files[$localPath] = $element->getPathName();
                     }
                 }
