@@ -1,7 +1,7 @@
 # Distribution
 Official distribution of Claroline Connect LMS
 
-All plugins for the official distribution :
+> [Installation instruction](https://github.com/claroline/Claroline/blob/master/README.md)
 
 # Base Bundle
 
