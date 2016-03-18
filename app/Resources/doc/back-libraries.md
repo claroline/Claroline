@@ -57,4 +57,4 @@
 - knplabs/knp-menu-bundle
 - gregwar/captcha-bundle
 - cocur/slugify => utiliser les slug de DoctrineExtension
-- zenstruck/form-bundle (support Bootstrap pour les formulaires)
+- zenstruck/form-bundle (support Bootstrap pour les formulaires / Utilisé dans le BadgeBundle)
