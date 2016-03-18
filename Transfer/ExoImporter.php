@@ -18,6 +18,7 @@ use Symfony\Component\Config\Definition\Processor;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Entity\Step;
 use UJM\ExoBundle\Entity\Subscription;
 
 /**
@@ -59,18 +60,46 @@ class ExoImporter extends Importer implements ConfigurationInterface
     public function addExoDescription($rootNode)
     {
         $rootNode
-            ->prototype('array')
-                ->children()
-                    ->arrayNode('file')
+            ->children()
+                // exercise properties
+                ->arrayNode('exercise')
+                    ->children()
+                        ->scalarNode('path')->isRequired()->end()
+                        ->scalarNode('version')->end()
+                        ->scalarNode('title')->end()
+                        ->scalarNode('description')->end()
+                        ->booleanNode('shuffle')->end()
+                        ->scalarNode('nbQuestion')->end()
+                        ->booleanNode('keepSameQuestion')->end()
+                        ->scalarNode('duration')->end()
+                        ->booleanNode('doPrint')->end()
+                        ->scalarNode('maxAttempts')->end()
+                        ->scalarNode('correctionMode')->end()
+                        ->scalarNode('dateCorrection')->end()
+                        ->scalarNode('markMode')->end()
+                        ->booleanNode('dispButtonInterrupt')->end()
+                        ->booleanNode('lockAttempt')->end()
+                        ->booleanNode('anonymous')->end()
+                        ->scalarNode('type')->end()
+                    ->end()
+                ->end()
+
+                // Steps
+                ->arrayNode('steps')
+                    ->prototype('array')
                         ->children()
-                            ->scalarNode('path')->isRequired()->end()
-                            ->scalarNode('version')->end()
-                            ->scalarNode('title')->end()
+                            ->scalarNode('text')->end()
+                            ->scalarNode('order')->end()
+                            ->booleanNode('shuffle')->end()
+                            ->scalarNode('nbQuestion')->end()
+                            ->scalarNode('keepSameQuestion')->end()
+                            ->scalarNode('duration')->end()
+                            ->scalarNode('maxAttempts')->end()
                         ->end()
                     ->end()
                 ->end()
-                ->end()
-            ->end();
+            ->end()
+        ;
     }
 
     public function validate(array $data)
@@ -84,32 +113,36 @@ class ExoImporter extends Importer implements ConfigurationInterface
         $this->om->startFlushSuite();
         //this is the root of the unzipped archive
         $rootPath = $this->getRootPath();
-        $exoPath = $data['data'][0]['file']['path'];
-        $exoTitle = $data['data'][0]['file']['title'];
+        $exoPath = $data['data']['exercise']['path'];
 
         $qtiRepos = $this->container->get('ujm.exo_qti_repository');
         $qtiRepos->razValues();
-        $newExercise = $this->createExo($exoTitle, $qtiRepos->getQtiUser());
+        $newExercise = $this->createExo($data['data']['exercise'], $qtiRepos->getQtiUser());
 
         if (file_exists($rootPath.'/'.$exoPath)) {
-            $questions = opendir($rootPath.'/'.$exoPath);
-            $questionFiles = array();
-            while (($question = readdir($questions)) !== false) {
-                if ($question != '.' && $question != '..') {
-                    $questionFiles[] = $rootPath.'/'.$exoPath.'/'.$question;
-                }
+            // ***************** a deplacer dans une fonction *****************
+            foreach ($data['data']['steps'] as $step) {
+                $this->createStep($step, $newExercise);
+//                $questions = opendir($rootPath.'/'.$exoPath);
+//                $questionFiles = array();
+//                while (($question = readdir($questions)) !== false) {
+//                    if ($question != '.' && $question != '..') {
+//                        $questionFiles[] = $rootPath.'/'.$exoPath.'/'.$question;
+//                    }
+//                }
+//                sort($questionFiles);
+//                foreach ($questionFiles as $question) {
+//                    $qtiRepos->createDirQTI();
+//                    $files = opendir($question);
+//                    while (($file = readdir($files)) !== false) {
+//                        if ($file != '.' && $file != '..') {
+//                            copy($question.'/'.$file, $qtiRepos->getUserDir().$file);
+//                        }
+//                    }
+//                    $qtiRepos->scanFilesToImport($newExercise);
+//                }
             }
-            sort($questionFiles);
-            foreach ($questionFiles as $question) {
-                $qtiRepos->createDirQTI();
-                $files = opendir($question);
-                while (($file = readdir($files)) !== false) {
-                    if ($file != '.' && $file != '..') {
-                        copy($question.'/'.$file, $qtiRepos->getUserDir().$file);
-                    }
-                }
-                $qtiRepos->scanFilesToImport($newExercise);
-            }
+            //******************************************************************
         }
         $this->om->endFlushSuite();
         $this->om->forceFlush();
@@ -130,12 +163,31 @@ class ExoImporter extends Importer implements ConfigurationInterface
         $version = '1';
         $path = 'qti/'.$exoTitle;
 
-        $data = array(array('file' => array(
-            'path' => $path,
-            'version' => $version,
-            'title' => $object->getTitle(),
-            'steps' => $steps,
-        )));
+//        $data = array(array('file' => array(
+//            'path' => $path,
+//            'version' => $version,
+//            'title' => $object->getTitle(),
+//        )));
+        $data['exercise'] = array(
+                                'path' => $path,
+                                'version' => $version,
+                                'title' => $object->getTitle(),
+                                'description' => $object->getDescription(),
+                                'shuffle' => $object->getShuffle(),
+                                'nbQuestion' => $object->getNbQuestion(),
+                                'keepSameQuestion' => $object->getKeepSameQuestion(),
+                                'duration' => $object->getDuration(),
+                                'doPrint' => $object->getDoprint(),
+                                'maxAttempts' => $object->getMaxAttempts(),
+                                'correctionMode' => $object->getCorrectionMode(),
+                                'dateCorrection' => $object->getDateCorrection(),
+                                'markMode' => $object->getMarkMode(),
+                                'dispButtonInterrupt' => $object->getDispButtonInterrupt(),
+                                'lockAttempt' => $object->getLockAttempt(),
+                                'anonymous' => $object->getAnonymous(),
+                                'type' => $object->getType(),
+                            );
+        $data['steps'] = $steps;
 
         return $data;
     }
@@ -150,19 +202,28 @@ class ExoImporter extends Importer implements ConfigurationInterface
     /**
      * create the exercise.
      *
-     * @param String      $title
+     * @param array $exercise properties of the exercise
      * @param Object User $user
      */
-    private function createExo($title, $user)
+    private function createExo(array $exercise, $user)
     {
         $newExercise = new Exercise();
-        $newExercise->setTitle($title);
-        $newExercise->setNbQuestion(0);
-        $newExercise->setDuration(0);
-        $newExercise->setMaxAttempts(0);
-        $newExercise->setDateCorrection(new \Datetime());
-        $newExercise->setCorrectionMode('1');
-        $newExercise->setMarkMode('1');
+        $newExercise->setTitle($exercise['title']);
+        $newExercise->setDescription($exercise['description']);
+        $newExercise->setShuffle($exercise['shuffle']);
+        $newExercise->setNbQuestion($exercise['nbQuestion']);
+        $newExercise->setKeepSameQuestion($exercise['keepSameQuestion']);
+        $newExercise->setDuration($exercise['duration']);
+        $newExercise->setDoprint($exercise['doPrint']);
+        $newExercise->setMaxAttempts($exercise['maxAttempts']);
+        $newExercise->setDateCorrection($exercise['dateCorrection']);
+        $newExercise->setCorrectionMode($exercise['correctionMode']);
+        $newExercise->setMarkMode($exercise['markMode']);
+        $newExercise->setDispButtonInterrupt($exercise['dispButtonInterrupt']);
+        $newExercise->setLockAttempt($exercise['lockAttempt']);
+        $newExercise->setAnonymous($exercise['anonymous']);
+        $newExercise->setType($exercise['type']);
+
         $this->om->persist($newExercise);
         $this->om->flush();
 
@@ -174,6 +235,29 @@ class ExoImporter extends Importer implements ConfigurationInterface
         $this->om->flush();
 
         return $newExercise;
+    }
+
+    /**
+     * create the exercise.
+     *
+     * @param array $step properties of the step
+     * @param UJM\ExoBundle\Entity\Exercise $exercise
+     * @return UJM\ExoBundle\Entity\Step
+     */
+    private function createStep(array $step, $exercise)
+    {
+        $newStep = new Step();
+        $newStep->setText($step['text']);
+        $newStep->setOrder($step['order']);
+        $newStep->setShuffle($step['shuffle']);
+        $newStep->setNbQuestion($step['nbQuestion']);
+        $newStep->setKeepSameQuestion($step['keepSameQuestion']);
+        $newStep->setDuration($step['duration']);
+        $newStep->setMaxAttempts($step['maxAttempts']);
+        $newStep->setExercise($exercise);
+
+        $this->om->persist($newStep);
+        $this->om->flush();
     }
 
     /**
@@ -218,7 +302,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
         $steps = array();
         foreach ($object->getSteps() as $step) {
             $s = array(
-                    'Text' => $step->getText(),
+                    'text' => $step->getText(),
                     'order' => $step->getOrder(),
                     'shuffle' => $step->getShuffle(),
                     'nbQuestion' => $step->getNbQuestion(),
