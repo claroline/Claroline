@@ -18,6 +18,7 @@
 - fullcalendar
 - mjolnic-bootstrap-colorpicker (couleur de fond des WS / Widgets)
 - angular-touch (développé par Google / évènement des touchscreens)
+- angular-resource (utilisé dans PortfolioBundle / WebsiteBundle)
 
 
 ## OURS
@@ -97,7 +98,6 @@
 
 
 ## TO REMOVE
-- angular-resource
 - fluidvids
 - system.js
 - bootstrapaccessibilityplugin (ajoute des fonctionnalités d'accessibilité dans les components Bootstrap / Non utilisé)
