@@ -40,8 +40,6 @@
 - friendsofsymfony/rest-bundle
 => Util surtout pour la serialisation automatique via JMS (sinon la serialisation est plus lourde)
 => Proposition : Ecrire notre propre annotation pour faire ça
-- idci/exporter-bundle (transforme les Entités en CSV, ICS, JSON)
-=> Peut-être doublon avec JMS
 
 
 ## TO REMOVE WITH REFACTORING
@@ -58,3 +56,5 @@
 - gregwar/captcha-bundle
 - cocur/slugify => utiliser les slug de DoctrineExtension
 - zenstruck/form-bundle (support Bootstrap pour les formulaires / Utilisé dans le BadgeBundle)
+- idci/exporter-bundle (transforme les Entités en CSV, ICS, JSON)
+=> Peut-être doublon avec JMS
