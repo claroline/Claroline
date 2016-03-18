@@ -120,29 +120,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
         $newExercise = $this->createExo($data['data']['exercise'], $qtiRepos->getQtiUser());
 
         if (file_exists($rootPath.'/'.$exoPath)) {
-            // ***************** a deplacer dans une fonction *****************
-            foreach ($data['data']['steps'] as $step) {
-                $this->createStep($step, $newExercise);
-//                $questions = opendir($rootPath.'/'.$exoPath);
-//                $questionFiles = array();
-//                while (($question = readdir($questions)) !== false) {
-//                    if ($question != '.' && $question != '..') {
-//                        $questionFiles[] = $rootPath.'/'.$exoPath.'/'.$question;
-//                    }
-//                }
-//                sort($questionFiles);
-//                foreach ($questionFiles as $question) {
-//                    $qtiRepos->createDirQTI();
-//                    $files = opendir($question);
-//                    while (($file = readdir($files)) !== false) {
-//                        if ($file != '.' && $file != '..') {
-//                            copy($question.'/'.$file, $qtiRepos->getUserDir().$file);
-//                        }
-//                    }
-//                    $qtiRepos->scanFilesToImport($newExercise);
-//                }
-            }
-            //******************************************************************
+            $this->createQuestion($data['data']['steps'], $newExercise, $rootPath.'/'.$exoPath, $qtiRepos);
         }
         $this->om->endFlushSuite();
         $this->om->forceFlush();
@@ -258,6 +236,41 @@ class ExoImporter extends Importer implements ConfigurationInterface
 
         $this->om->persist($newStep);
         $this->om->flush();
+
+        return $newStep;
+    }
+
+    /**
+     * create the exercise.
+     *
+     * @param UJM\ExoBundle\Entity\Step[] $steps
+     * @param UJM\ExoBundle\Entity\Exercise $exercise
+     * @param String $exoPath
+     * @param UJM\ExoBundle\Services\classes\QTI\QtiRepository $qtiRepos
+     */
+    private function createQuestion($steps, $exercise, $exoPath, $qtiRepos)
+    {
+        foreach ($steps as $step) {
+            $newStep = $this->createStep($step, $exercise);
+            $questions = opendir($exoPath.'/'.$step['order']);
+            $questionFiles = array();
+            while (($question = readdir($questions)) !== false) {
+                if ($question != '.' && $question != '..') {
+                    $questionFiles[] = $exoPath.'/'.$step['order'].'/'.$question;
+                }
+            }
+            sort($questionFiles);
+            foreach ($questionFiles as $question) {
+                $qtiRepos->createDirQTI();
+                $files = opendir($question);
+                while (($file = readdir($files)) !== false) {
+                    if ($file != '.' && $file != '..') {
+                        copy($question.'/'.$file, $qtiRepos->getUserDir().$file);
+                    }
+                }
+                $qtiRepos->scanFilesToImport($newStep);
+            }
+        }
     }
 
     /**
