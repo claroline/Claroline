@@ -16,7 +16,7 @@
 - angular-ui-tree (Path / Organization / Cursus)
 - angular-ui-select (Sélecteur avancé avec Recherche/Filtre / Module de recherche dans le CoreBundle)
 - fullcalendar
-- mjolnic-bootstrap-colorpicker (couleur de fond des WS / Widgets)
+- angular-bootstrap-colorpicker
 - angular-touch (développé par Google / évènement des touchscreens)
 - angular-resource (utilisé dans PortfolioBundle / WebsiteBundle)
 
@@ -92,6 +92,8 @@
 
 - angular-strap (Doublon d'Angular Bootstrap / Utilisé dans PortfolioBundle, WebsiteBundle)
 
+- mjolnic-bootstrap-colorpicker (couleur de fond des WS / Widgets)
+=> utilisé angular-bootstrap-colorpicker
 
 ## TO REMOVE WITH VERIFICATION
 - bootstrap-additions (réécrit / ajoute des élément de Bootstrap / Utilisé dans Website)
