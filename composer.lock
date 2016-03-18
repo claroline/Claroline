@@ -282,16 +282,16 @@
         },
         {
             "name": "claroline/core-bundle",
-            "version": "6.8.2",
+            "version": "6.8.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/CoreBundle.git",
-                "reference": "b0624092973893c97e9c88d9f90b2b698bbec349"
+                "reference": "895b20d102956b0ee8a8faf8fd366cd7f1c2a2a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/CoreBundle/zipball/b0624092973893c97e9c88d9f90b2b698bbec349",
-                "reference": "b0624092973893c97e9c88d9f90b2b698bbec349",
+                "url": "https://api.github.com/repos/claroline/CoreBundle/zipball/895b20d102956b0ee8a8faf8fd366cd7f1c2a2a7",
+                "reference": "895b20d102956b0ee8a8faf8fd366cd7f1c2a2a7",
                 "shasum": ""
             },
             "require": {
@@ -367,7 +367,7 @@
                 "Claroline",
                 "core"
             ],
-            "time": "2016-03-09 16:40:36"
+            "time": "2016-03-16 09:02:31"
         },
         {
             "name": "claroline/cursus-bundle",
@@ -465,16 +465,16 @@
         },
         {
             "name": "claroline/front-end-bundle",
-            "version": "7.0.2",
+            "version": "7.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/FrontEndBundle.git",
-                "reference": "0d27b8d786cde3d065fb1a77997919179aba5009"
+                "reference": "fdf74165b4b05b04bea8293963dc844dd104f9ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/FrontEndBundle/zipball/0d27b8d786cde3d065fb1a77997919179aba5009",
-                "reference": "0d27b8d786cde3d065fb1a77997919179aba5009",
+                "url": "https://api.github.com/repos/claroline/FrontEndBundle/zipball/fdf74165b4b05b04bea8293963dc844dd104f9ae",
+                "reference": "fdf74165b4b05b04bea8293963dc844dd104f9ae",
                 "shasum": ""
             },
             "require": {
@@ -493,7 +493,7 @@
                 "GPL-3.0+"
             ],
             "description": "Front-end dependencies bundle for Claroline 2.0",
-            "time": "2016-02-09 09:56:51"
+            "time": "2016-03-08 10:43:02"
         },
         {
             "name": "claroline/image-player-bundle",
@@ -723,20 +723,20 @@
         },
         {
             "name": "claroline/pdf-player-bundle",
-            "version": "6.0.2",
+            "version": "6.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/PdfPlayerBundle.git",
-                "reference": "b225ab711054c7c1756eb3ca0e31ef070b9bb418"
+                "reference": "48d4b4ad13a18b4c81f35b8fb85bd3ba7a91ab64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/PdfPlayerBundle/zipball/b225ab711054c7c1756eb3ca0e31ef070b9bb418",
-                "reference": "b225ab711054c7c1756eb3ca0e31ef070b9bb418",
+                "url": "https://api.github.com/repos/claroline/PdfPlayerBundle/zipball/48d4b4ad13a18b4c81f35b8fb85bd3ba7a91ab64",
+                "reference": "48d4b4ad13a18b4c81f35b8fb85bd3ba7a91ab64",
                 "shasum": ""
             },
             "require": {
-                "claroline/core-bundle": "~6.0",
+                "claroline/core-bundle": ">=6.8.3, <7.0",
                 "php": ">=5.5"
             },
             "type": "claroline-plugin",
@@ -763,7 +763,7 @@
                 "PDF player",
                 "plugin"
             ],
-            "time": "2016-02-03 15:44:09"
+            "time": "2016-03-11 15:58:34"
         },
         {
             "name": "claroline/rss-reader-bundle",
@@ -2266,16 +2266,16 @@
         },
         {
             "name": "doctrine/migrations",
-            "version": "v1.4.0",
+            "version": "1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/migrations.git",
-                "reference": "abc571dadd45df42f19baac7a0a1a371216dd93d"
+                "reference": "0d0ff5da10c5d30846da32060bd9e357abf70a05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/migrations/zipball/abc571dadd45df42f19baac7a0a1a371216dd93d",
-                "reference": "abc571dadd45df42f19baac7a0a1a371216dd93d",
+                "url": "https://api.github.com/repos/doctrine/migrations/zipball/0d0ff5da10c5d30846da32060bd9e357abf70a05",
+                "reference": "0d0ff5da10c5d30846da32060bd9e357abf70a05",
                 "shasum": ""
             },
             "require": {
@@ -2335,7 +2335,7 @@
                 "database",
                 "migrations"
             ],
-            "time": "2016-02-23 15:28:39"
+            "time": "2016-03-14 12:29:11"
         },
         {
             "name": "doctrine/orm",
@@ -2415,16 +2415,16 @@
         },
         {
             "name": "formalibre/presence-bundle",
-            "version": "6.1.3",
+            "version": "6.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FormaLibre/PresenceBundle.git",
-                "reference": "5487ceda556ef040e25f33fe3cfff03bcee42fbf"
+                "reference": "1fb80633d42e1cb79dea467419479c4d50d556a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FormaLibre/PresenceBundle/zipball/5487ceda556ef040e25f33fe3cfff03bcee42fbf",
-                "reference": "5487ceda556ef040e25f33fe3cfff03bcee42fbf",
+                "url": "https://api.github.com/repos/FormaLibre/PresenceBundle/zipball/1fb80633d42e1cb79dea467419479c4d50d556a3",
+                "reference": "1fb80633d42e1cb79dea467419479c4d50d556a3",
                 "shasum": ""
             },
             "require": {
@@ -2448,7 +2448,7 @@
                 "Claroline",
                 "plugin"
             ],
-            "time": "2016-03-08 10:16:41"
+            "time": "2016-03-14 08:58:33"
         },
         {
             "name": "formalibre/reservation-bundle",
@@ -4327,16 +4327,16 @@
         },
         {
             "name": "innova/path-bundle",
-            "version": "v6.1.7",
+            "version": "v6.1.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/InnovaLangues/PathBundle.git",
-                "reference": "d3cf5f9b93c760f1fd368d80f89ef6dc7df0eac8"
+                "reference": "69c938422a37fe44ba6483839001677b18889a27"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/InnovaLangues/PathBundle/zipball/d3cf5f9b93c760f1fd368d80f89ef6dc7df0eac8",
-                "reference": "d3cf5f9b93c760f1fd368d80f89ef6dc7df0eac8",
+                "url": "https://api.github.com/repos/InnovaLangues/PathBundle/zipball/69c938422a37fe44ba6483839001677b18889a27",
+                "reference": "69c938422a37fe44ba6483839001677b18889a27",
                 "shasum": ""
             },
             "require": {
@@ -4379,7 +4379,7 @@
                 "Claroline",
                 "path"
             ],
-            "time": "2016-03-01 09:44:31"
+            "time": "2016-03-18 08:17:59"
         },
         {
             "name": "jdorn/sql-formatter",
@@ -4984,12 +4984,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/johngrogg/ics-parser.git",
-                "reference": "8b52811027ec4dcba17b1ef5d8d8aa2ef978185e"
+                "reference": "3b56078196a1251913b1a99094e47da7c1051910"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/johngrogg/ics-parser/zipball/8b52811027ec4dcba17b1ef5d8d8aa2ef978185e",
-                "reference": "8b52811027ec4dcba17b1ef5d8d8aa2ef978185e",
+                "url": "https://api.github.com/repos/johngrogg/ics-parser/zipball/3b56078196a1251913b1a99094e47da7c1051910",
+                "reference": "3b56078196a1251913b1a99094e47da7c1051910",
                 "shasum": ""
             },
             "type": "library",
@@ -5016,7 +5016,7 @@
                 "ical",
                 "ics"
             ],
-            "time": "2016-01-25 21:17:05"
+            "time": "2016-03-10 17:27:22"
         },
         {
             "name": "json-quiz/json-quiz",
@@ -5441,16 +5441,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.18.0",
+            "version": "1.18.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "e19b764b5c855580e8ffa7e615f72c10fd2f99cc"
+                "reference": "a5f2734e8c16f3aa21b3da09715d10e15b4d2d45"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/e19b764b5c855580e8ffa7e615f72c10fd2f99cc",
-                "reference": "e19b764b5c855580e8ffa7e615f72c10fd2f99cc",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/a5f2734e8c16f3aa21b3da09715d10e15b4d2d45",
+                "reference": "a5f2734e8c16f3aa21b3da09715d10e15b4d2d45",
                 "shasum": ""
             },
             "require": {
@@ -5515,20 +5515,20 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2016-03-01 18:00:40"
+            "time": "2016-03-13 16:08:35"
         },
         {
             "name": "mrclay/minify",
-            "version": "2.2.1",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mrclay/minify.git",
-                "reference": "3c11ba8232a2155a1a29552aafc528be5fb0a662"
+                "reference": "f4cb31135d288f951bb0af1f23a03d4c00ba9446"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mrclay/minify/zipball/3c11ba8232a2155a1a29552aafc528be5fb0a662",
-                "reference": "3c11ba8232a2155a1a29552aafc528be5fb0a662",
+                "url": "https://api.github.com/repos/mrclay/minify/zipball/f4cb31135d288f951bb0af1f23a03d4c00ba9446",
+                "reference": "f4cb31135d288f951bb0af1f23a03d4c00ba9446",
                 "shasum": ""
             },
             "require": {
@@ -5560,7 +5560,7 @@
             ],
             "description": "Minify is a PHP5 app that helps you follow several rules for client-side performance. It combines multiple CSS or Javascript files, removes unnecessary whitespace and comments, and serves them with gzip encoding and optimal client-side cache headers",
             "homepage": "http://code.google.com/p/minify/",
-            "time": "2014-10-30 22:58:02"
+            "time": "2016-03-08 11:49:57"
         },
         {
             "name": "natxet/CssMin",
@@ -5820,16 +5820,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v1.2.1",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "f078eba3bcf140fd69b5fcc3ea5ac809abf729dc"
+                "reference": "ff76e1a660669bb56ba74ba0583fd8d41417bf39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/f078eba3bcf140fd69b5fcc3ea5ac809abf729dc",
-                "reference": "f078eba3bcf140fd69b5fcc3ea5ac809abf729dc",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/ff76e1a660669bb56ba74ba0583fd8d41417bf39",
+                "reference": "ff76e1a660669bb56ba74ba0583fd8d41417bf39",
                 "shasum": ""
             },
             "require": {
@@ -5864,7 +5864,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2016-02-29 17:25:04"
+            "time": "2016-03-17 16:11:57"
         },
         {
             "name": "phpcollection/phpcollection",
@@ -6517,16 +6517,16 @@
         },
         {
             "name": "symfony/assetic-bundle",
-            "version": "v2.7.1",
+            "version": "v2.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/assetic-bundle.git",
-                "reference": "d885ec8451d5a7b077bda81bb19ac9fbff9cdc76"
+                "reference": "aa5b4f8b712f38745928fa845ddb73300bb2af6d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/assetic-bundle/zipball/d885ec8451d5a7b077bda81bb19ac9fbff9cdc76",
-                "reference": "d885ec8451d5a7b077bda81bb19ac9fbff9cdc76",
+                "url": "https://api.github.com/repos/symfony/assetic-bundle/zipball/aa5b4f8b712f38745928fa845ddb73300bb2af6d",
+                "reference": "aa5b4f8b712f38745928fa845ddb73300bb2af6d",
                 "shasum": ""
             },
             "require": {
@@ -6583,20 +6583,20 @@
                 "compression",
                 "minification"
             ],
-            "time": "2015-11-17 09:45:47"
+            "time": "2015-12-28 13:12:39"
         },
         {
             "name": "symfony/monolog-bundle",
-            "version": "v2.9.0",
+            "version": "v2.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/monolog-bundle.git",
-                "reference": "27c2e3eaec7a0ba3462f99ea92678cbfc7b146e4"
+                "reference": "82fd8f36e2cccbe94faf237403c48052d4d4b77e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/monolog-bundle/zipball/27c2e3eaec7a0ba3462f99ea92678cbfc7b146e4",
-                "reference": "27c2e3eaec7a0ba3462f99ea92678cbfc7b146e4",
+                "url": "https://api.github.com/repos/symfony/monolog-bundle/zipball/82fd8f36e2cccbe94faf237403c48052d4d4b77e",
+                "reference": "82fd8f36e2cccbe94faf237403c48052d4d4b77e",
                 "shasum": ""
             },
             "require": {
@@ -6608,6 +6608,7 @@
                 "symfony/monolog-bridge": "~2.3|~3.0"
             },
             "require-dev": {
+                "phpunit/phpunit": "^4.8",
                 "symfony/console": "~2.3|~3.0",
                 "symfony/yaml": "~2.3|~3.0"
             },
@@ -6642,7 +6643,7 @@
                 "log",
                 "logging"
             ],
-            "time": "2016-03-01 17:53:42"
+            "time": "2016-03-13 15:55:56"
         },
         {
             "name": "symfony/polyfill-apcu",
@@ -6995,16 +6996,16 @@
         },
         {
             "name": "ujm/exo-bundle",
-            "version": "6.1.0",
+            "version": "6.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/UJM-dev/ExoBundle.git",
-                "reference": "c67dcbe4ae5490e618ff312746ebac3d645c6a84"
+                "reference": "9269caa3e62621eaee1d450344445534270b37e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/UJM-dev/ExoBundle/zipball/c67dcbe4ae5490e618ff312746ebac3d645c6a84",
-                "reference": "c67dcbe4ae5490e618ff312746ebac3d645c6a84",
+                "url": "https://api.github.com/repos/UJM-dev/ExoBundle/zipball/9269caa3e62621eaee1d450344445534270b37e3",
+                "reference": "9269caa3e62621eaee1d450344445534270b37e3",
                 "shasum": ""
             },
             "require": {
@@ -7033,7 +7034,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "description": "Exercise tool for Claroline Connect",
-            "time": "2016-03-02 08:01:05"
+            "time": "2016-03-18 08:32:48"
         },
         {
             "name": "werkint/jsmin",
@@ -8095,16 +8096,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.8.23",
+            "version": "4.8.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "6e351261f9cd33daf205a131a1ba61c6d33bd483"
+                "reference": "a1066c562c52900a142a0e2bbf0582994671385e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/6e351261f9cd33daf205a131a1ba61c6d33bd483",
-                "reference": "6e351261f9cd33daf205a131a1ba61c6d33bd483",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/a1066c562c52900a142a0e2bbf0582994671385e",
+                "reference": "a1066c562c52900a142a0e2bbf0582994671385e",
                 "shasum": ""
             },
             "require": {
@@ -8163,7 +8164,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2016-02-11 14:56:33"
+            "time": "2016-03-14 06:16:08"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
