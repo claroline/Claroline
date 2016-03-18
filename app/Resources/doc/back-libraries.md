@@ -1,4 +1,6 @@
-# MANDATORY
+# BackEnd libraries
+
+## MANDATORY
 - friendsofsymfony/jsrouting-bundle
 - doctrine/dbal
 - doctrine/doctrine-bundle
@@ -20,7 +22,13 @@
 - besimple/sso-auth-bundle
 
 
-# OURS
+## DEV DEPENDENCIES
+- sensio/generator-bundle
+- sensio/distribution-bundle
+- nelmio/api-doc-bundle
+
+
+## OURS
 - claroline/bundle-recorder
 - claroline/front-end-bundle
 - claroline/installation-bundle
@@ -28,7 +36,7 @@
 - claroline/migration-bundle
 
 
-# DEBATABLE
+## DEBATABLE
 - friendsofsymfony/rest-bundle
 => Util surtout pour la serialisation automatique via JMS (sinon la serialisation est plus lourde)
 => Proposition : Ecrire notre propre annotation pour faire ça
@@ -36,7 +44,7 @@
 => Peut-être doublon avec JMS
 
 
-# TO REMOVE WITH REFACTORING
+## TO REMOVE WITH REFACTORING
 - leafo/lessphp : remplacé par le compilateur NodeJS
 - mrclay/minify : minification des JS / remplacé par Webpack
 - werkint/jsmin
@@ -50,9 +58,3 @@
 - gregwar/captcha-bundle
 - cocur/slugify => utiliser les slug de DoctrineExtension
 - zenstruck/form-bundle (support Bootstrap pour les formulaires)
-
-
-# DEV DEPENDENCIES
-- sensio/generator-bundle
-- sensio/distribution-bundle
-- nelmio/api-doc-bundle
