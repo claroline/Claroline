@@ -61,7 +61,7 @@
             {% set inter = interG %}
             {% include "UJMExoBundle:Partial:correction/graphic.html.twig" %}              
             <div id="Answer" style="position: relative;">
-                <img class="AnswerImage" src="{{asset (doc.url)}}" width="{{ interG.width }}" height="{{ interG.height }}"
+                <img class="AnswerImage" src="{{asset (doc.url)}}" width="{{ interG.picture.width }}" height="{{ interG.picture.height }}"
                      alt="AnswerImage" id="AnswerImage1"/>
 
                 {% set i = 0 %}{% set allInfo = '' %}{% set allInfoTab = '' %}
