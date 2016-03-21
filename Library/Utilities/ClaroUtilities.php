@@ -249,8 +249,8 @@ class ClaroUtilities
 
     public function formatCsvOutput($data)
     {
-        $data = str_replace("\r", PHP_EOL, $data);
         $data = str_replace("\r\n", PHP_EOL, $data);
+        $data = str_replace("\r", PHP_EOL, $data);
         $data = str_replace("\n", PHP_EOL, $data);
 
         return $data;
