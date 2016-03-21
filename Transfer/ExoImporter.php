@@ -116,7 +116,6 @@ class ExoImporter extends Importer implements ConfigurationInterface
         $exoPath = $data['data']['exercise']['path'];
 
         $qtiRepos = $this->container->get('ujm.exo_qti_repository');
-        $qtiRepos->razValues();
         $newExercise = $this->createExo($data['data']['exercise'], $qtiRepos->getQtiUser());
 
         if (file_exists($rootPath.'/'.$exoPath)) {
@@ -124,7 +123,6 @@ class ExoImporter extends Importer implements ConfigurationInterface
         }
         $this->om->endFlushSuite();
         $this->om->forceFlush();
-        $qtiRepos->assocExerciseQuestion(true);
 
         return $newExercise;
     }
@@ -194,7 +192,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
         $newExercise->setDuration($exercise['duration']);
         $newExercise->setDoprint($exercise['doPrint']);
         $newExercise->setMaxAttempts($exercise['maxAttempts']);
-        $newExercise->setDateCorrection($exercise['dateCorrection']);
+        $newExercise->setDateCorrection(new \Datetime());
         $newExercise->setCorrectionMode($exercise['correctionMode']);
         $newExercise->setMarkMode($exercise['markMode']);
         $newExercise->setDispButtonInterrupt($exercise['dispButtonInterrupt']);
@@ -241,7 +239,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
     }
 
     /**
-     * create the exercise.
+     * create the step and the question.
      *
      * @param UJM\ExoBundle\Entity\Step[] $steps
      * @param UJM\ExoBundle\Entity\Exercise $exercise
@@ -251,6 +249,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
     private function createQuestion($steps, $exercise, $exoPath, $qtiRepos)
     {
         foreach ($steps as $step) {
+            $qtiRepos->razValues();
             $newStep = $this->createStep($step, $exercise);
             $questions = opendir($exoPath.'/'.$step['order']);
             $questionFiles = array();
@@ -270,6 +269,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
                 }
                 $qtiRepos->scanFilesToImport($newStep);
             }
+            $qtiRepos->assocExerciseQuestion(true);
         }
     }
 
