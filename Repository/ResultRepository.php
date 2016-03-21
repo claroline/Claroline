@@ -30,7 +30,8 @@ class ResultRepository extends EntityRepository
         $dql = '
             SELECT
                 n.name AS title,
-                m.value AS mark
+                m.value AS mark,
+                r.total AS total
             FROM Claroline\ResultBundle\Entity\Result r
             JOIN r.resourceNode n
             JOIN n.workspace w

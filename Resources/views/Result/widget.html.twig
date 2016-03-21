@@ -1,8 +1,16 @@
-<table class="table table-bordered tabled-condensed">
+<table class="table table-bordered table-condensed">
+  <thead>
+    <tr>
+      <th>{{ 'title'|trans({}, 'platform') }}</th>
+      <th>{{ 'mark'|trans({}, 'results') }}</th>
+      <th>{{ 'total'|trans({}, 'platform') }}</th>
+    </tr>
+  </thead>
   {% for result in results %}
   <tr>
     <td>{{ result.title }}</td>
     <td style="text-align: center">{{ result.mark }}</td>
+    <td style="text-align: center">{{ result.total }}</td>
   </tr>
   {% endfor %}
 </table>
