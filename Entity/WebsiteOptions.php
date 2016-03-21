@@ -1012,8 +1012,8 @@ class WebsiteOptions{
         $ds = DIRECTORY_SEPARATOR;
 
         $uploadRootDir = sprintf(
-            '%s%s..%s..%s..%s..%s..%s..%sweb%s%s',
-            __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir()
+            '%s%s..%s..%s..%s..%sweb%s%s',
+            __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir()
         );
         if (!file_exists($uploadRootDir)) {
             mkdir($uploadRootDir, 0777, true);
