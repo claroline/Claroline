@@ -12,9 +12,9 @@ import ngTouch from 'angular-touch'
 import ngAnimate from 'angular-animate'
 import ngSanitize from 'angular-sanitize'
 import ngStrap from 'angular-strap'
-import ngStrapTpl from 'angular-strap.tpl'
-import ViewAppConfig from 'ViewAppConfig'
-import MainController from 'MainController'
+import ngStrapTpl from 'angular-strap/dist/angular-strap.tpl'
+import ViewAppConfig from './view.app.config'
+import MainController from './main.controller'
 import FlexnavModule from '../components/flexnav/flexnav.module'
 
 angular

@@ -12,6 +12,7 @@
 namespace Icap\WebsiteBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Icap\WebsiteBundle\Entity\Website;
 use Icap\WebsiteBundle\Entity\WebsiteOptions;
@@ -24,9 +25,9 @@ use Symfony\Component\Routing\Router;
  */
 class WebsiteManager {
     /**
-     * @var \Doctrine\ORM\EntityManagerInterface;
+     * @var ObjectManager;
      */
-    private $em;
+    private $om;
 
     /**
      * @var \Icap\WebsiteBundle\Repository\WebsitePageRepository
@@ -44,17 +45,17 @@ class WebsiteManager {
 
     /**
      * @DI\InjectParams({
-     *      "em"        = @DI\Inject("doctrine.orm.entity_manager"),
+     *      "om"        = @DI\Inject("claroline.persistence.object_manager"),
      *      "router"    = @DI\Inject("router")
      * })
      */
-    public function __construct(EntityManagerInterface $em, Router $router)
+    public function __construct(ObjectManager $om, Router $router)
     {
-        $this->em = $em;
+        $this->om = $om;
         $this->router = $router;
-        $this->websitePageRepository = $this->em->getRepository('IcapWebsiteBundle:WebsitePage');
-        $this->websiteOptionsRepository = $this->em->getRepository('IcapWebsiteBundle:WebsiteOptions');
-        $this->userRepository = $this->em->getRepository('ClarolineCoreBundle:User');
+        $this->websitePageRepository = $this->om->getRepository('IcapWebsiteBundle:WebsitePage');
+        $this->websiteOptionsRepository = $this->om->getRepository('IcapWebsiteBundle:WebsiteOptions');
+        $this->userRepository = $this->om->getRepository('ClarolineCoreBundle:User');
     }
 
     /**
@@ -72,18 +73,14 @@ class WebsiteManager {
         $newWebsitePagesMap = array();
 
         $newWebsite = new Website();
-        $newWebsiteOptions = new WebsiteOptions();
-        $newWebsiteOptions->setWebsite($newWebsite);
-        $newWebsite->setOptions($newWebsiteOptions);
-
         foreach ($websitePages as $websitePage) {
             $newWebsitePage = new WebsitePage();
             $newWebsitePage->setWebsite($newWebsite);
             $newWebsitePage->importFromArray($websitePage->exportToArray());
             if ($websitePage->isRoot()) {
                 $newWebsite->setRoot($newWebsitePage);
-                $this->em->persist($newWebsite);
-                $this->websitePageRepository->persistAsFirstChild($newWebsitePage);
+                $this->om->persist($newWebsite);
+                //$this->websitePageRepository->persistAsFirstChild($newWebsitePage);
             } else {
                 $newWebsitePageParent = $newWebsitePagesMap[$websitePage->getParent()->getId()];
                 $newWebsitePage->setParent($newWebsitePageParent);
@@ -95,8 +92,8 @@ class WebsiteManager {
 
             $newWebsitePagesMap[$websitePage->getId()] = $newWebsitePage;
         }
-        $this->em->flush();
-        $newWebsiteOptions->importFromArray(
+        $this->om->flush();
+        $newWebsite->getOptions()->importFromArray(
             $orgOptions->exportToArray(),
             rtrim($orgOptions->getUploadRootDir(), DIRECTORY_SEPARATOR)
         );

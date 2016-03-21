@@ -48,7 +48,7 @@ class WebsitePageType extends AbstractType
                 'entity',
                 array(
                     'class' =>  'ClarolineCoreBundle:Resource\ResourceNode',
-                    'property' => 'id'
+                    'choice_label' => 'id'
                 )
             )
             ->add(

@@ -1,64 +1,51 @@
-(function () {
-  'use strict';
+HttpInterceptor.construct.$inject = [ '$q', '$injector', 'requestHandler' ]
 
-  angular
-    .module('blocks.httpInterceptor')
-    .factory('httpInterceptor', httpInterceptor);
+export default class HttpInterceptor {
+  construct ($q, $injector, requestHandler) {
+    this.$q = $q
+    this.$injector = $injector
+    this.requestHandler = requestHandler
+    this.$http = this.$http || $injector.get('$http')
+  }
 
-  httpInterceptor.$inject = [ '$q', '$injector', 'requestHandler' ];
+  request (config) {
+    // Start request loading
+    this.requestHandler.requestStarted()
 
-  function httpInterceptor($q, $injector, requestHandler) {
-    var $http;
-    var service = {
-      'request': request,
-      'requestError': requestError,
-      'response': response,
-      'responseError': responseError
-    };
+    return config
+  }
 
-    return service;
+  requestError (rejection) {
+    // End request loading
+    if (this.$http.pendingRequests.length < 1) {
+      this.requestHandler.requestEnded()
+    }
+    // Show globar error message
+    this.requestHandler.requestError(rejection)
 
-    function request(config) {
-      //Start request loading
-      requestHandler.requestStarted();
+    return this.$q.reject(rejection)
+  }
 
-      return config;
-    };
+  response (response) {
+    // End request loading
+    if (this.$http.pendingRequests.length < 1) {
+      this.requestHandler.requestEnded()
+    }
+    // Show global success message
+    this.requestHandler.requestSuccess(response)
 
-    function requestError(rejection) {
-      //End request loading
-      $http = $http || $injector.get('$http');
-      if ($http.pendingRequests.length < 1) {
-        requestHandler.requestEnded();
-      }
-      //Show globar error message
-      requestHandler.requestError(rejection);
+    return response || this.$q.when(response)
+  }
 
-      return $q.reject(rejection);
-    };
+  responseError (rejection) {
+    // End request loading
+    if (this.$http.pendingRequests.length < 1) {
+      this.requestHandler.requestEnded()
+    }
+    // Show global error message
+    this.requestHandler.requestError(rejection)
 
-    function response(response) {
-      //End request loading
-      $http = $http || $injector.get('$http');
-      if ($http.pendingRequests.length < 1) {
-        requestHandler.requestEnded();
-      }
-      //Show global success message
-      requestHandler.requestSuccess(response);
+    return this.$q.reject(rejection)
+  }
 
-      return response || $q.when(response);
-    };
-
-    function responseError(rejection) {
-      //End request loading
-      $http = $http || $injector.get('$http');
-      if ($http.pendingRequests.length < 1) {
-        requestHandler.requestEnded();
-      }
-      //Show global error message
-      requestHandler.requestError(rejection);
-
-      return $q.reject(rejection);
-    };
-  };
-})();
+}

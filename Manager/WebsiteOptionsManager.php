@@ -23,7 +23,7 @@ use Symfony\Component\Form\Form;
  * Class WebsiteOptionsManager
  * @package Icap\WebsiteBundle\Manager
  *
- * @DI\Service("icap_website.manager.options")
+ * @DI\Service("icap.website.options.manager")
  */
 class WebsiteOptionsManager {
     /**
@@ -37,7 +37,7 @@ class WebsiteOptionsManager {
     protected $entityManager;
 
     /**
-     * @var \JMS\Seriealizer\Serializer
+     * @var \JMS\Serializer\Serializer
      */
     protected $serializer;
 

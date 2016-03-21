@@ -1,8 +1,9 @@
 {
   "webpack": {
     "entry": {
-      "view-app": "view-app/app",
-      "edit-app": "edit-app/app"
+      "view-app-horizontal": "modules/view-app/app.horizontal",
+      "view-app-vertical":  "modules/view-app/app.vertical",
+      "edit-app": "modules/edit-app/app"
     }
   }
 }

@@ -1,5 +1,5 @@
 {% macro getVendorScripts() %}
-    {% javascripts debug=false filter='jsmin' output='js/website/view.vendor.js'
+    {#{% javascripts debug=false filter='jsmin' output='js/website/view.vendor.js'
     '@FrontEndBundle/Resources/public/angular/angular.min.js'
     '@FrontEndBundle/Resources/public/angular-resource/angular-resource.min.js'
     '@FrontEndBundle/Resources/public/angular-route/angular-route.min.js'
@@ -10,11 +10,11 @@
     '@FrontEndBundle/Resources/public/angular-strap/dist/angular-strap.tpl.min.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    {% endjavascripts %}#}
 {% endmacro %}
 
 {% macro getAppScripts(orientation) %}
-    {% javascripts debug=false filter='jsmin' output='js/website/view.app.js'
+    {#{% javascripts debug=false filter='jsmin' output='js/website/view.app.js'
     '@IcapWebsiteBundle/Resources/public/js/components/utilities/utilities.module.js'
     '@IcapWebsiteBundle/Resources/public/js/components/utilities/utilities.service.js'
     '@IcapWebsiteBundle/Resources/public/js/components/utilities/iframeHeightOnLoad.directive.js'
@@ -44,6 +44,11 @@
         {% endjavascripts %}
     {% else %}
         <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/vendor/angular-ui/multi-level-push-menu/pushmenu.js') }}"></script>
+    {% endif %}#}
+    {% if orientation == 'horizontal' %}
+        <script src="{{ hotAsset("dist/icap-website-view-app-horizontal.js") }}"></script>
+    {% else %}
+        <script src="{{ hotAsset("dist/icap-website-view-app-vertical.js") }}"></script>
     {% endif %}
 {% endmacro %}
 

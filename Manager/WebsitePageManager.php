@@ -8,6 +8,7 @@
 
 namespace Icap\WebsiteBundle\Manager;
 
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Icap\WebsiteBundle\Form\WebsitePageType;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\Serializer\SerializationContext;
@@ -23,7 +24,7 @@ use Symfony\Component\Form\FormFactory;
  * Class WebsitePageManager
  * @package Icap\WebsiteBundle\Manager
  *
- * @DI\Service("icap_website.manager.page")
+ * @DI\Service("icap.website.page.manager")
  */
 class WebsitePageManager {
     /**
@@ -37,9 +38,9 @@ class WebsitePageManager {
     protected $formFactory;
 
     /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var ObjectManager
      */
-    protected $entityManager;
+    protected $objectManager;
 
     /**
      * @var \JMS\Seriealizer\Serializer
@@ -52,21 +53,21 @@ class WebsitePageManager {
      * @DI\InjectParams({
      *      "pageRepository" = @DI\Inject("icap_website.repository.page"),
      *      "formFactory" = @DI\Inject("form.factory"),
-     *      "entityManager" = @DI\Inject("doctrine.orm.entity_manager"),
+     *      "objectManager" = @DI\Inject("claroline.persistence.object_manager"),
      *      "serializer"    = @DI\Inject("jms_serializer")
      * })
      */
     public function __construct (
         WebsitePageRepository $pageRepository,
         FormFactory $formFactory,
-        EntityManager $entityManager,
+        ObjectManager $objectManager,
         Serializer $serializer
     )
     {
         $this->pageRepository = $pageRepository;
         $this->pageRepository->setChildrenIndex("children");
         $this->formFactory = $formFactory;
-        $this->entityManager = $entityManager;
+        $this->objectManager = $objectManager;
         $this->serializer = $serializer;
     }
 
@@ -114,8 +115,8 @@ class WebsitePageManager {
             if ($method == "POST" && $website->getHomePage() === null) {
                 $this->setHomepage($website, $page);
             } else {
-                $this->entityManager->persist($page);
-                $this->entityManager->flush();
+                $this->objectManager->persist($page);
+                $this->objectManager->flush();
             }
             $serializationContext = new SerializationContext();
             $serializationContext->setSerializeNull(true);
@@ -135,7 +136,7 @@ class WebsitePageManager {
 
         if ($oldHomepage !== null) {
             $oldHomepage->setIsHomepage(false);
-            $this->entityManager->persist($oldHomepage);
+            $this->objectManager->persist($oldHomepage);
         }
         $this->setHomepage($website, $page);
     }
@@ -144,9 +145,9 @@ class WebsitePageManager {
         $website->setHomePage($page);
         $page->setIsHomepage(true);
 
-        $this->entityManager->persist($page);
-        $this->entityManager->persist($website);
-        $this->entityManager->flush();
+        $this->objectManager->persist($page);
+        $this->objectManager->persist($website);
+        $this->objectManager->flush();
     }
 
     public function handleMovePage(Website $website, array $pageIds)
@@ -165,20 +166,20 @@ class WebsitePageManager {
         $this->movePage($page, $newParentPage, $previousSiblingPage);
     }
 
-    public function movePage($page, $newParentPage, $previousSiblingPage) {
+    public function movePage($page, $newParentPage, $previousSiblingPage = null) {
         if ($previousSiblingPage !== null) {
             $this->pageRepository->persistAsNextSiblingOf($page, $previousSiblingPage);
         }
         else {
             $this->pageRepository->persistAsFirstChildOf($page, $newParentPage);
         }
-        $this->entityManager->flush();
+        $this->objectManager->flush();
     }
 
     public function deletePage(WebsitePage $page)
     {
-        $this->entityManager->remove($page);
-        $this->entityManager->flush();
+        $this->objectManager->remove($page);
+        $this->objectManager->flush();
     }
 
     /**

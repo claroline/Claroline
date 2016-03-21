@@ -396,7 +396,7 @@ class WebsitePage{
     }
 
     /**
-     * @return mixed
+     * @return WebsitePage
      */
     public function getParent()
     {
@@ -412,7 +412,7 @@ class WebsitePage{
     }
 
     /**
-     * @param mixed $parent
+     * @param WebsitePage $parent
      */
     public function setParent(WebsitePage $parent)
     {

@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Icap\WebsiteBundle\Entity\Website;
 
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
-use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 
 
 class Controller extends BaseController{
@@ -103,7 +103,7 @@ class Controller extends BaseController{
      */
     protected function getWebsitePageManager()
     {
-        return $this->get('icap_website.manager.page');
+        return $this->get('icap.website.page.manager');
     }
 
     /**
@@ -119,6 +119,6 @@ class Controller extends BaseController{
      */
     protected function getWebsiteOptionsManager()
     {
-        return $this->get('icap_website.manager.options');
+        return $this->get('icap.website.options.manager');
     }
 }
