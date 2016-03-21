@@ -1788,7 +1788,7 @@ class SurveyController extends Controller
                         case 'open_ended':
                             $openEndedQuestion = $this->surveyManager
                                 ->getOpenEndedAnswerByQuestionAnswer($answer);
-                            $line[$position] = $openEndedQuestion->getContent();
+                            $line[$position] = is_null($openEndedQuestion) ? '-' : $openEndedQuestion->getContent();
                             break;
                         case 'multiple_choice_single':
                         case 'multiple_choice_multiple':
