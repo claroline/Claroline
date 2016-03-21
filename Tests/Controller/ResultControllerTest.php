@@ -83,7 +83,19 @@ class ResultControllerTest extends TransactionalTestCase
         $this->om->flush();
 
         $this->request('POST', "/results/{$result->getId()}/users/{$john->getId()}", $john);
-        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(422, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testCreateMarkInvalidMark()
+    {
+        $john = $this->persist->user('john');
+        $result = $this->persist->result('Result 1', $john);
+        $this->om->flush();
+
+        $this->request('POST', "/results/{$result->getId()}/users/{$john->getId()}", $john, [
+            'mark' => 123
+        ]);
+        $this->assertEquals(422, $this->client->getResponse()->getStatusCode());
     }
 
     public function testCreateMark()
@@ -93,7 +105,7 @@ class ResultControllerTest extends TransactionalTestCase
         $this->om->flush();
 
         $this->request('POST', "/results/{$result->getId()}/users/{$john->getId()}", $john, [
-            'mark' => '12'
+            'mark' => 12
         ]);
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
@@ -101,7 +113,7 @@ class ResultControllerTest extends TransactionalTestCase
         $this->assertEquals(1, count($marks));
         $this->assertEquals($john, $marks[0]->getUser());
         $this->assertEquals($result, $marks[0]->getResult());
-        $this->assertEquals('12', $marks[0]->getValue());
+        $this->assertEquals(12, $marks[0]->getValue());
     }
 
     public function testDeleteMarkNotAllowed()
@@ -109,7 +121,7 @@ class ResultControllerTest extends TransactionalTestCase
         $john = $this->persist->user('john');
         $jane = $this->persist->user('jane');
         $result = $this->persist->result('Result 1', $john);
-        $mark = $this->persist->mark($result, $jane, '16');
+        $mark = $this->persist->mark($result, $jane, 16);
         $this->om->flush();
 
         $this->request('DELETE', "/results/marks/{$mark->getId()}", $jane);
@@ -120,7 +132,7 @@ class ResultControllerTest extends TransactionalTestCase
     {
         $john = $this->persist->user('john');
         $result = $this->persist->result('Result 1', $john);
-        $mark = $this->persist->mark($result, $john, '16');
+        $mark = $this->persist->mark($result, $john, 16);
         $this->om->flush();
 
         $this->request('DELETE', "/results/marks/{$mark->getId()}", $john);
@@ -133,39 +145,52 @@ class ResultControllerTest extends TransactionalTestCase
         $john = $this->persist->user('john');
         $jane = $this->persist->user('jane');
         $result = $this->persist->result('Result 1', $john);
-        $mark = $this->persist->mark($result, $jane, '16');
+        $mark = $this->persist->mark($result, $jane, 16);
         $this->om->flush();
 
         $this->request('PUT', "/results/marks/{$mark->getId()}", $jane, [
-            'value' => '19'
+            'value' => 19
         ]);
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals('16', $mark->getValue());
+        $this->assertEquals(16, $mark->getValue());
     }
 
     public function testEditMarkNoValue()
     {
         $john = $this->persist->user('john');
         $result = $this->persist->result('Result 1', $john);
-        $mark = $this->persist->mark($result, $john, '11');
+        $mark = $this->persist->mark($result, $john, 11);
         $this->om->flush();
 
         $this->request('PUT', "/results/marks/{$mark->getId()}", $john);
-        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals('11', $mark->getValue());
+        $this->assertEquals(422, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(11, $mark->getValue());
     }
 
     public function testEditMark()
     {
         $john = $this->persist->user('john');
         $result = $this->persist->result('Result 1', $john);
-        $mark = $this->persist->mark($result, $john, '14');
+        $mark = $this->persist->mark($result, $john, 14);
         $this->om->flush();
 
         $this->request('PUT', "/results/marks/{$mark->getId()}", $john, [
-            'value' => '18'
+            'value' => 18
         ]);
         $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals('18', $mark->getValue());
+        $this->assertEquals(18, $mark->getValue());
+    }
+
+    public function testEditMarkInvalidMark()
+    {
+        $john = $this->persist->user('john');
+        $result = $this->persist->result('Result 1', $john);
+        $mark = $this->persist->mark($result, $john, 14);
+        $this->om->flush();
+
+        $this->request('PUT', "/results/marks/{$mark->getId()}", $john, [
+            'mark' => 123
+        ]);
+        $this->assertEquals(422, $this->client->getResponse()->getStatusCode());
     }
 }

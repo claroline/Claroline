@@ -12,7 +12,7 @@
     <i class="fa fa-warning"></i>
     {{ vm.errorMessage|trans:'results' }}
     <ul>
-      <li data-ng-repeat="error in vm.errors">
+      <li data-ng-repeat="error in vm.errors track by error.line">
         {{ error.message|trans:'result' }}
         <span data-ng-if="error.line">
           ({{ 'errors.line'|trans:'result' }} {{ error.line }})

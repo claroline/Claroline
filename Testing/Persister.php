@@ -76,9 +76,10 @@ class Persister
         return $user;
     }
 
-    public function result($title, User $creator)
+    public function result($title, User $creator, $total = 20)
     {
         $result = new Result();
+        $result->setTotal($total);
 
         if (!$this->resultType) {
             $this->resultType = new ResourceType();

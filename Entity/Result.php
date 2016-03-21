@@ -22,8 +22,6 @@ use Doctrine\ORM\Mapping as ORM;
 class Result extends AbstractResource
 {
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $date;
@@ -33,9 +31,15 @@ class Result extends AbstractResource
      */
     private $marks;
 
-    public function __construct(\DateTime $date = null)
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $total;
+
+    public function __construct(\DateTime $date = null, $total = null)
     {
         $this->date = $date;
+        $this->total = $total;
         $this->marks = new ArrayCollection();
     }
 
@@ -65,5 +69,21 @@ class Result extends AbstractResource
     public function getMarks()
     {
         return $this->marks;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotal()
+    {
+        return $this->total;
+    }
+
+    /**
+     * @param int
+     */
+    public function setTotal($total)
+    {
+        $this->total = $total;
     }
 }

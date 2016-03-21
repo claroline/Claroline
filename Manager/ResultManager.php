@@ -28,8 +28,9 @@ class ResultManager
 {
     const ERROR_EMPTY_CSV = 0;
     const ERROR_MISSING_VALUES = 1;
-    const ERROR_EMPTY_VALUES = 2;
-    const ERROR_EXTRA_USERS = 3;
+    const ERROR_INVALID_MARK = 2;
+    const ERROR_EMPTY_VALUES = 3;
+    const ERROR_EXTRA_USERS = 4;
 
     private $om;
     private $templating;
@@ -154,6 +155,21 @@ class ResultManager
     }
 
     /**
+     * Returns whether a mark is valid.
+     *
+     * @param Result    $result
+     * @param mixed     $mark
+     * @return bool
+     */
+    public function isValidMark(Result $result, $mark)
+    {
+        $total = $result->getTotal();
+        $intMark = (int) $mark;
+
+        return is_numeric($mark) && is_int($intMark) && $intMark <= $total;
+    }
+
+    /**
      * Creates a new mark.
      *
      * @param Result    $result
@@ -229,6 +245,12 @@ class ResultManager
                 $data['errors'][] = [
                     'code' => self::ERROR_EMPTY_VALUES,
                     'message' => 'errors.csv_empty_values',
+                    'line' => $lineNumber
+                ];
+            } elseif (!$this->isValidMark($result, $values[2])) {
+                $data['errors'][] = [
+                    'code' => self::ERROR_INVALID_MARK,
+                    'message' => 'errors.invalid_mark',
                     'line' => $lineNumber
                 ];
             } else {

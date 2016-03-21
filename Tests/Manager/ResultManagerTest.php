@@ -38,7 +38,7 @@ class ResultManagerTest extends TransactionalTestCase
     public function testCreateAndDelete()
     {
         $repo = $this->om->getRepository('ClarolineResultBundle:Result');
-        $result = $this->manager->create(new Result());
+        $result = $this->manager->create(new Result(null, 20));
         $results = $repo->findAll();
         $this->assertEquals(1, count($results));
         $this->assertEquals($result, $results[0]);
@@ -123,6 +123,21 @@ class ResultManagerTest extends TransactionalTestCase
         $this->assertEquals(1, count($data['errors']));
         $this->assertEquals(ResultManager::ERROR_EMPTY_VALUES, $data['errors'][0]['code']);
         $this->assertEquals(1, $data['errors'][0]['line']);
+    }
+
+    public function testImportExpectsValidMarks()
+    {
+        $john = $this->persist->user('john');
+        $this->persist->workspaceUser($john->getPersonalWorkspace(), $john);
+        $result = $this->persist->result('Result 1', $john);
+        $this->om->flush();
+
+        $data = $this->manager->importMarksFromCsv($result, $this->stubCsv('invalid-marks'));
+        $this->assertEquals(2, count($data['errors']));
+        $this->assertEquals(ResultManager::ERROR_INVALID_MARK, $data['errors'][0]['code']);
+        $this->assertEquals(1, $data['errors'][0]['line']);
+        $this->assertEquals(ResultManager::ERROR_INVALID_MARK, $data['errors'][1]['code']);
+        $this->assertEquals(3, $data['errors'][1]['line']);
     }
 
     public function testImportExpectsWorkspaceUsers()

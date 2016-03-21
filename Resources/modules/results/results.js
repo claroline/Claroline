@@ -34,14 +34,21 @@ angular
     controller: 'resultCtrl',
     template: listTemplate
   }))
-  .directive('validUser', () => ({
+  .directive('validUser', ['resultService', service => ({
     require: 'ngModel',
     link: (scope, elm, attrs, ctrl) => {
       ctrl.$validators.validUser = modelValue =>
         ctrl.$isEmpty(modelValue) ||
-        scope.$parent.vm.users.some(user => user.name === modelValue)
+        service.getUsers().some(user => user.name === modelValue)
     }
-  }))
+  })])
+  .directive('validMark', ['resultService', service => ({
+    require: 'ngModel',
+    link: (scope, elm, attrs, ctrl) => {
+      ctrl.$validators.validMark = modelValue =>
+        ctrl.$isEmpty(modelValue) || service.getMaximumMark() >= modelValue
+    }
+  })])
   .filter('trans', () => (string, domain = 'platform') =>
     Translator.trans(string, domain)
   )

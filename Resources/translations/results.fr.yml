@@ -12,6 +12,7 @@ errors:
   csv_empty_values: Une ou plusieurs valeurs sont vides
   csv_extra_users: Utilisateur inconnu ou non membre de cet espace
   csv_missing_values: Une ou plusieurs valeurs sont manquantes
+  invalid_mark: Cette cote n'est pas valide.
   line: ligne
   title: Erreur
   mark_creation_failure: Une erreur s'est produite durant la création du résultat. Veuillez réessayer ultérieurement.
@@ -20,3 +21,4 @@ errors:
   mark_suppression_failure: Une erreur s'est produite durant la suppression du résultat. Veuillez réessayer ultérieurement.
   not_blank: Cette valeur ne peut pas être vide.
   unknown_user: Cet utilisateur n'est pas membre de cet espace.
+maximum_mark: Cote maximale

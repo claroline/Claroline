@@ -16,6 +16,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Range;
 
 /**
  * @DI\Service("claroline_form_result")
@@ -29,6 +30,13 @@ class ResultType extends AbstractType
             ->add('name', 'text', [
                 'label' => 'title',
                 'constraints' => new NotBlank()
+            ])
+            ->add('total', 'integer', [
+                'label' => 'maximum_mark',
+                'translation_domain' => 'results',
+                'constraints' => [new NotBlank(), new Range(['min' => 1])],
+                'attr' => ['min' => 1],
+                'data' => 20
             ]);
     }
 

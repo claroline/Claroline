@@ -17,10 +17,15 @@
              name="value"
              class="form-control"
              data-ng-model="vm.editedMark.newValue"
+             data-valid-mark
              required />
       <p class="help-block"
          data-ng-if="(markForm.$submitted || markForm.value.$dirty) && markForm.value.$error.required">
         {{ 'errors.not_blank'|trans:'results' }}
+      </p>
+      <p class="help-block"
+         data-ng-if="(markForm.$submitted || markForm.value.$dirty) && markForm.value.$error.validMark">
+        {{ 'errors.invalid_mark'|trans:'results' }}
       </p>
     </div>
   </div>

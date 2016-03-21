@@ -37,10 +37,15 @@
              name="mark"
              class="form-control"
              data-ng-model="vm.createdMark.mark"
+             data-valid-mark
              required />
       <p class="help-block"
          data-ng-if="(createForm.$submitted || createForm.mark.$dirty) && createForm.mark.$error.required">
         {{ 'errors.not_blank'|trans:'results' }}
+      </p>
+      <p class="help-block"
+         data-ng-if="(createForm.$submitted || createForm.mark.$dirty) && createForm.mark.$error.validMark">
+        {{ 'errors.invalid_mark'|trans:'results' }}
       </p>
     </div>
   </div>

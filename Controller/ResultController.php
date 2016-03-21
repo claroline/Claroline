@@ -95,11 +95,16 @@ class ResultController
         $response = new JsonResponse();
 
         if ($mark !== false) {
-            $mark = $this->manager->createMark($result, $user, $mark);
-            $response->setData($mark->getId());
+            if (!$this->manager->isValidMark($result, $mark)) {
+                $response->setData('Mark is not valid');
+                $response->setStatusCode(422);
+            } else {
+                $mark = $this->manager->createMark($result, $user, $mark);
+                $response->setData($mark->getId());
+            }
         } else {
             $response->setData('Field "mark" is missing');
-            $response->setStatusCode(400);
+            $response->setStatusCode(422);
         }
 
         return $response;
@@ -135,11 +140,16 @@ class ResultController
         $response = new JsonResponse();
 
         if ($newValue !== false) {
-            $this->manager->updateMark($mark, $newValue);
-            $response->setStatusCode(204);
+            if (!$this->manager->isValidMark($mark->getResult(), $newValue)) {
+                $response->setData('Mark is not valid');
+                $response->setStatusCode(422);
+            } else {
+                $this->manager->updateMark($mark, $newValue);
+                $response->setStatusCode(204);
+            }
         } else {
             $response->setData('Field "value" is missing');
-            $response->setStatusCode(400);
+            $response->setStatusCode(422);
         }
 
         return $response;
@@ -161,12 +171,12 @@ class ResultController
 
         if ($file === false) {
             $response->setData('Field "file" is missing');
-            $response->setStatusCode(400);
+            $response->setStatusCode(422);
         } else {
             $data = $this->manager->importMarksFromCsv($result, $file);
 
             if (count($data['errors']) > 0) {
-                $response->setStatusCode(400);
+                $response->setStatusCode(422);
                 $response->setData($data['errors']);
             } else {
                 $response->setData($data['marks']);

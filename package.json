@@ -1,8 +1,10 @@
 {
   "devDependencies": {
+    "mocha": "^2.4.5",
     "standard": "^6.0.8"
   },
   "scripts": {
-    "lint": "standard Resources/modules/**/*.js"
+    "lint": "standard Resources/modules/**/*.js",
+    "test": "mocha Resources/tests/**/*_test.js --compilers js:babel-core/register"
   }
 }

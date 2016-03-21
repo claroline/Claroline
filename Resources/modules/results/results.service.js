@@ -5,6 +5,7 @@ export default class ResultsService {
     this.$http = $http
     this.uploader = uploader
     this._resultId = ResultsService._getGlobal('resultId')
+    this._resultMax = ResultsService._getGlobal('resultMax')
     this._marks = ResultsService._getGlobal('resultMarks')
     this._users = ResultsService._getGlobal('workspaceUsers')
   }
@@ -15,6 +16,10 @@ export default class ResultsService {
 
   getUsers () {
     return this._users
+  }
+
+  getMaximumMark() {
+    return this._resultMax
   }
 
   createMark (props, onFail) {

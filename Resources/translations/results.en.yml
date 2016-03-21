@@ -12,6 +12,7 @@ errors:
   csv_empty_values: One or more values are empty
   csv_extra_users: User is unknown or isn't a member of this workspace
   csv_missing_values: One or more missing values
+  invalid_mark: This mark is not valid.
   line: line
   title: Error
   mark_creation_failure: An error occurred during the creation of the result. Please try again later.
@@ -20,3 +21,4 @@ errors:
   mark_suppression_failure: An error occurred during the deletion of the result. Please try again later.
   not_blank: This value should not be blank.
   unknown_user: This user is not a member of this workspace.
+maximum_mark: Maximum mark
