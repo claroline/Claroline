@@ -5,6 +5,7 @@
       <tr>
         <th>{{ 'name'|trans }}</th>
         <th>{{ 'mark'|trans:'results' }}</th>
+        <th>{{ 'total'|trans }}</th>
         <th colspan="2"></th>
       </tr>
     </thead>
@@ -12,6 +13,7 @@
       <tr data-ng-repeat="result in vm.results track by result.markId">
         <td>{{ result.name }}</td>
         <td>{{ result.mark }}</td>
+        <td>{{ vm.max }}</td>
         <td style="text-align: center">
           <a href="#"
              aria-label="{{ 'edit'|trans }}"

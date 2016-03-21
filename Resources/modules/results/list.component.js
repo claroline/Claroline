@@ -8,6 +8,7 @@ export default class ListComponent {
   constructor (service, modal) {
     this.results = service.getResults()
     this.users = service.getUsers()
+    this.max = service.getMaximumMark()
     this.editedMark = {}
     this.createdMark = {}
     this.importFile = null
