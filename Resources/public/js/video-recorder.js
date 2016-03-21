@@ -1,5 +1,7 @@
 "use strict";
 
+import * as VolumeMeter from './libs/volume-meter';
+
 var isFirefox = !!navigator.mediaDevices.getUserMedia;
 console.log(isFirefox ? 'firefox':'chrome');
 var isDebug = true;
@@ -336,7 +338,7 @@ function viewAudioStream() {
   // Create an AudioNode from the stream.
   realAudioInput = audioContext.createMediaStreamSource(window.stream);
 
-  meter = createAudioMeter(audioContext);
+  meter = VolumeMeter.createAudioMeter(audioContext);
   realAudioInput.connect(meter);
   draw();
 }

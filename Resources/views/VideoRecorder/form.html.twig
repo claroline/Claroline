@@ -76,16 +76,8 @@
     </form>
 </div>
 
+
 {% block javascripts %}
-
     <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain':'innova_video_recorder' }) }}"></script>
-
-    {% javascripts debug=false filter='jsmin' output='vendor/innova/video-recorder/js/innova-video-recorder.js'
-      '@InnovaVideoRecorderBundle/Resources/public/js/libs/*'
-      '@InnovaVideoRecorderBundle/Resources/public/js/video_recorder.js'
-    %}
-
-    <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
+    <script src="{{ hotAsset('dist/innova-video-recorder-player.js') }}"></script>
 {% endblock %}

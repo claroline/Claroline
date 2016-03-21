@@ -104,10 +104,6 @@ class VideoRecorderListener
      */
     public function onDelete(DeleteResourceEvent $event)
     {
-        /* $workspaceCode = $event->getResource()
-          ->getResourceNode()
-          ->getWorkspace()
-          ->getCode(); */
         $pathName = $this->container->getParameter('claroline.param.files_directory') .
                 DIRECTORY_SEPARATOR .
                 $event->getResource()->getHashName();
