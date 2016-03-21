@@ -6,7 +6,7 @@
         <th>{{ 'name'|trans }}</th>
         <th>{{ 'mark'|trans:'results' }}</th>
         <th>{{ 'total'|trans }}</th>
-        <th colspan="2"></th>
+        <th colspan="2" data-ng-if="!vm.isReadOnly"></th>
       </tr>
     </thead>
     <tbody>
@@ -14,7 +14,7 @@
         <td>{{ result.name }}</td>
         <td>{{ result.mark }}</td>
         <td>{{ vm.max }}</td>
-        <td style="text-align: center">
+        <td style="text-align: center" data-ng-if="!vm.isReadOnly">
           <a href="#"
              aria-label="{{ 'edit'|trans }}"
              onclick="return false"
@@ -25,7 +25,7 @@
             <i class="fa fa-edit"></i>
           </a>
         </td>
-        <td style="text-align: center">
+        <td style="text-align: center" data-ng-if="!vm.isReadOnly">
           <a href="#"
              aria-label="{{ 'delete'|trans }}"
              onclick="return false"
@@ -47,7 +47,7 @@
   </div>
 </div>
 
-<div class="panel-footer">
+<div class="panel-footer" data-ng-if="!vm.isReadOnly">
   <button class="btn btn-primary"
           data-ng-click="vm.displayCreationForm()">
     {{ 'marks.add'|trans:'results' }}

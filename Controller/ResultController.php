@@ -74,7 +74,8 @@ class ResultController
         return [
             '_resource' => $result,
             'marks' => $this->manager->getMarks($result, $user, $canEdit),
-            'users' => $this->manager->getUsers($result, $canEdit)
+            'users' => $this->manager->getUsers($result, $canEdit),
+            'canEdit' => $canEdit
         ];
     }
 

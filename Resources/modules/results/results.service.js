@@ -8,6 +8,7 @@ export default class ResultsService {
     this._resultMax = ResultsService._getGlobal('resultMax')
     this._marks = ResultsService._getGlobal('resultMarks')
     this._users = ResultsService._getGlobal('workspaceUsers')
+    this._isReadOnly = ResultsService._getGlobal('isReadOnly')
   }
 
   getResults () {
@@ -20,6 +21,10 @@ export default class ResultsService {
 
   getMaximumMark() {
     return this._resultMax
+  }
+
+  isReadOnly() {
+    return this._isReadOnly
   }
 
   createMark (props, onFail) {

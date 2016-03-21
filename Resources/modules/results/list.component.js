@@ -9,6 +9,7 @@ export default class ListComponent {
     this.results = service.getResults()
     this.users = service.getUsers()
     this.max = service.getMaximumMark()
+    this.isReadOnly = service.isReadOnly()
     this.editedMark = {}
     this.createdMark = {}
     this.importFile = null
