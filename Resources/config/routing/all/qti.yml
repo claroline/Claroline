@@ -16,6 +16,9 @@ ujm_qti_export_exercise_questions:
 ujm_qti_export:
     pattern:  /export/{id}
     defaults: { _controller: UJMExoBundle:Qti:export }
+    options:  { expose: true }
+
 ujm_qti_import:
     pattern:  /import
     defaults: { _controller: UJMExoBundle:Qti:import }
+    options:  { expose: true }

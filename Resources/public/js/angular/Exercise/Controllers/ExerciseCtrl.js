@@ -14,19 +14,11 @@ var ExerciseCtrl = function ExerciseCtrl(ExerciseService, $route) {
     // Force reload of the route (as ng-view is deeper in the directive tree, route resolution is deferred and it causes issues)
     $route.reload();
 
-    this.currentView = $route.current;
-
-    console.log($route);
+    this.$route = $route;
 };
 
 // Set up dependency injection
 ExerciseCtrl.$inject = [ 'ExerciseService', '$route' ];
-
-/**
- * Current displayed view (aka route) of the Exercise (e.g. overview, edit parameters, questions)
- * @type {null}
- */
-ExerciseCtrl.prototype.currentView = {};
 
 /**
  * Current Exercise

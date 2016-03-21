@@ -9,4 +9,3 @@ UnsafeFilter.$inject = [ '$sce' ];
 angular
     .module('Common')
     .filter('unsafe', UnsafeFilter);
-

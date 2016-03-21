@@ -7,22 +7,49 @@
             </div>
 
             <!-- List items of the Step -->
-            <table class="table table-striped">
+            <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
-                        <th scope="col">{{ 'category' | trans:{}:'ujm_exo' }}</th>
-                        <th scope="col">{{ 'title' | trans:{}:'ujm_exo' }}</th>
-                        <th scope="col">{{ 'type' | trans:{}:'ujm_exo' }}</th>
-                        <th scope="col">{{ 'question' | trans:{}:'ujm_exo' }}</th>
+                        <!--<th scope="col">{{ 'category' | trans:{}:'ujm_exo' }}</th>-->
+                        <th scope="col" class="col-md-2">{{ 'type' | trans:{}:'ujm_exo' }}</th>
+                        <th scope="col" class="col-md-3">{{ 'title' | trans:{}:'ujm_exo' }}</th>
+                        <th scope="col" class="col-md-5">{{ 'question' | trans:{}:'ujm_exo' }}</th>
+                        <th scope="col" class="col-md-2">{{ 'actions' | trans:{}:'ujm_exo' }}</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     <tr data-ng-repeat="item in step.items">
-                        <td></td>
-                        <td>{{ item.title }}</td>
+                        <!--<td></td>-->
                         <td>{{ item.type }}</td>
-                        <td data-ng-bind-html="item.invite"></td>
+                        <td>{{ item.title }}</td>
+                        <td class="text-center" data-ng-bind-html="item.invite"></td>
+                        <td>
+                            <!-- Edit Item button -->
+                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans:{}:'ujm_exo' }}" href="{{ 'ujm_question_edit' | path:{ id: item.id, exoID: stepListCtrl.exerciseId } }}">
+                                <span class="fa fa-pencil"></span>
+                                <span class="sr-only">{{ 'edit' | trans:{}:'ujm_exo' }}</span>
+                            </a>
+
+                            <!-- Duplicate Item button -->
+                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans:{}:'ujm_exo' }}" href="{{ 'ujm_question_duplicate' | path:{ questionId: item.id, exoID: stepListCtrl.exerciseId } }}">
+                                <span class="fa fa-repeat"></span>
+                                <span class="sr-only">{{ 'duplicate' | trans:{}:'ujm_exo' }}</span>
+                            </a>
+
+                            <!-- Export Item button -->
+                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'Export' | trans:{}:'ujm_exo' }}" href="{{ 'ujm_qti_export' | path:{ id: item.id } }}">
+                                <span class="fa fa-save"></span>
+                                <span class="sr-only">{{ 'Export' | trans:{}:'ujm_exo' }}</span>
+                            </a>
+
+                            <!-- Delete Item button -->
+                            <button type="button" class="btn btn-danger" data-toggle="tooltip" title="{{ 'delete' | trans:{}:'ujm_exo' }}"
+                               data-ng-bootbox-confirm="{{ 'delete_of_my_exercise'|trans:{}:'ujm_exo'}}" data-ng-bootbox-confirm-action="exercisePlayerCtrl.removeStep(step)">
+                                <span class="fa fa-trash-o"></span>
+                                <span class="sr-only">{{ 'delete' | trans:{}:'ujm_exo' }}</span>
+                            </button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -32,17 +59,22 @@
                     <span class="fa fa-plus"></span>
                     Add item
                 </button>
+
+                <button type="button" class="btn btn-danger">
+                    <span class="fa fa-trash-o"></span>
+                    Delete Step
+                </button>
             </div>
+        </div>
+
+        <div class="alert alert-info" data-ng-if="0 === stepListCtrl.steps.length">
+            <span class="fa fa-warning"></span>
+            {{ 'no_question_found'|trans:{}:'ujm_exo' }} ...
         </div>
 
         <button type="button" class="btn btn-primary" data-ng-click="stepListCtrl.addStep()">
             <span class="fa fa-plus"></span>
             Add step
         </button>
-
-        <div class="alert alert-info" data-ng-if="0 === stepListCtrl.steps.length">
-            <span class="fa fa-warning"></span>
-            {{ 'no_question_found'|trans:{}:'ujm_exo' }} ...
-        </div>
     </div>
 </div>

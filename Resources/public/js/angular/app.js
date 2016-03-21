@@ -87,6 +87,15 @@ angular
                     controller  : 'StepListCtrl',
                     controllerAs: 'stepListCtrl',
                     resolve: {
+                        exerciseId: [
+                            'ExerciseService',
+                            function exerciseIdResolve(ExerciseService) {
+                                var exercise = ExerciseService.getExercise();
+
+                                return exercise ? exercise.id : null;
+                            }
+                        ],
+
                         // Get the list of Steps from the Exercise
                         steps: [
                             'ExerciseService',

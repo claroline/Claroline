@@ -1,14 +1,19 @@
 /**
  * List of steps of an Exercise
- * @param {Array} steps
+ * @param {Array}           steps
+ * @param {ExerciseService} ExerciseService
  * @constructor
  */
-var StepListCtrl = function StepListCtrl(steps) {
-    this.steps = steps;
+var StepListCtrl = function StepListCtrl(exerciseId, steps, ExerciseService) {
+    this.steps           = steps;
+    this.exerciseId      = exerciseId;
+    this.ExerciseService = ExerciseService;
 };
 
 // Set p up dependency injection
-StepListCtrl.$inject = [ 'steps' ];
+StepListCtrl.$inject = [ 'exerciseId', 'steps', 'ExerciseService' ];
+
+StepListCtrl.prototype.exerciseId = null;
 
 /**
  * List of Steps of the Exercise
@@ -20,11 +25,11 @@ StepListCtrl.prototype.steps = [];
  * Add a new Step
  */
 StepListCtrl.prototype.addStep = function addStep() {
-    // Initialize a new Step
-    this.steps.push({
-        id: null,
-        items: []
-    });
+    this.ExerciseService.addStep();
+};
+
+StepListCtrl.prototype.removeStep = function removeStep(step) {
+
 };
 
 /**
@@ -33,6 +38,10 @@ StepListCtrl.prototype.addStep = function addStep() {
  */
 StepListCtrl.prototype.addItem = function addItem(step) {
 
+};
+
+StepListCtrl.prototype.removeItem = function removeItem(item) {
+    // {{ 'ujm_question_delete' | path:{ id: item.id } }}
 };
 
 // Register controller into Angular JS

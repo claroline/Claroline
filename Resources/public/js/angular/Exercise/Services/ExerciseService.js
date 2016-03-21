@@ -170,6 +170,21 @@ ExerciseService.prototype.end = function end(studentPaper) {
 };
 
 /**
+ * Add a new Step to the Exercise
+ */
+ExerciseService.prototype.addStep = function addStep() {
+    if (!this.exercise.steps) {
+        this.exercise.steps = [];
+    }
+
+    // Initialize a new Step
+    this.exercise.steps.push({
+        id: null,
+        items: []
+    });
+};
+
+/**
  * Publish the current Exercise
  * @returns {ExerciseService}
  */

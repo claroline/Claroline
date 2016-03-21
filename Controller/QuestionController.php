@@ -223,7 +223,7 @@ class QuestionController extends Controller {
     /**
      * Finds and displays a Question entity.
      *
-     * @EXT\Route("/show/{id}/{exoID}", name="ujm_question_show", defaults={"exoID"= -1})
+     * @EXT\Route("/show/{id}/{exoID}", name="ujm_question_show", defaults={"exoID"= -1}, options={"expose"=true})
      *
      * @param int $id    id Question
      * @param int $exoID id Exercise if the user is in an exercise, -1 if the user is in the question bank
@@ -266,11 +266,14 @@ class QuestionController extends Controller {
     /**
      * Displays a form to create a new Question entity with interaction.
      *
-     * @EXT\Route("/new/{exoID}/{pageToGo}/{maxPage}/{nbItem}", name="ujm_question_new",
-     *              defaults={"exoID"= -1, "pageToGo"= 1, "maxPage"= 10, "nbItem"= 1})
+     * @EXT\Route(
+     *     "/new/{exoID}/{pageToGo}/{maxPage}/{nbItem}",
+     *     name="ujm_question_new",
+     *     defaults={"exoID"= -1, "pageToGo"= 1, "maxPage"= 10, "nbItem"= 1},
+     *     options={"expose"=true}
+     * )
      *
      * @param int $exoID id Exercise if the user is in an exercise, -1 if the user is in the question bank
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function newAction($exoID) {
@@ -328,7 +331,12 @@ class QuestionController extends Controller {
     /**
      * Displays a form to edit an existing Question entity.
      *
-     * @EXT\Route("/{id}/edit/{exoID}", name="ujm_question_edit", defaults={"exoID"= -1})
+     * @EXT\Route(
+     *     "/{id}/edit/{exoID}",
+     *     name="ujm_question_edit",
+     *     defaults={"exoID"= -1},
+     *     options={"expose"=true}
+     * )
      *
      * @param int $id    id Question
      * @param int $exoID id Exercise if the user is in an exercise, -1 if the user is in the question bank
@@ -364,8 +372,12 @@ class QuestionController extends Controller {
     /**
      * Deletes a Question entity.
      *
-     * @EXT\Route("/{id}/delete/{pageNow}/{maxPage}/{nbItem}/{lastPage}", name="ujm_question_delete",
-     *              defaults={"pageNow"= 1, "maxPage"= 10, "nbItem"= 1, "lastPage"= 1})
+     * @EXT\Route(
+     *     "/{id}/delete/{pageNow}/{maxPage}/{nbItem}/{lastPage}",
+     *     name="ujm_question_delete",
+     *     defaults={"pageNow"= 1, "maxPage"= 10, "nbItem"= 1, "lastPage"= 1},
+     *     options={"expose"=true}
+     * )
      *
      * @param int $id       id Question
      * @param int $pageNow  actual page for the pagination
@@ -431,7 +443,11 @@ class QuestionController extends Controller {
     /**
      * To share Question.
      *
-     * @EXT\Route("/share/{questionID}", name="ujm_question_share")
+     * @EXT\Route(
+     *     "/share/{questionID}",
+     *     name="ujm_question_share",
+     *     options={"expose"=true}
+     * )
      *
      * @param int $questionID id of question
      *
@@ -1108,7 +1124,12 @@ class QuestionController extends Controller {
     /**
      * To duplicate a question.
      *
-     * @EXT\Route("/duplicate/{questionId}/{exoID}", name="ujm_question_duplicate", defaults={"exoID"= -1})
+     * @EXT\Route(
+     *     "/duplicate/{questionId}/{exoID}",
+     *     name="ujm_question_duplicate",
+     *     defaults={"exoID"= -1},
+     *     options={"expose"= true}
+     * )
      *
      * @param int $questionId   id Question
      * @param int $exoID        id Exercise if the user is in an exercise, -1 if the user is in the question bank

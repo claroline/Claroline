@@ -4,7 +4,7 @@
             <h3 class="panel-title"><b>{{ 'exercise'|trans:{}:'ujm_exo' }} :</b> {{ exerciseCtrl.exercise.meta.title }}</h3>
         </div>
 
-        <nav class="navbar navbar-default navbar-static-top" data-ng-if="!exerciseCtrl.currentView.hideMenu">
+        <nav class="navbar navbar-default navbar-static-top" data-ng-if="!exerciseCtrl.$route.current.hideMenu">
             <div class="container-fluid">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#exercise-navbar" aria-expanded="false">
@@ -19,21 +19,21 @@
                     <!-- Administration links -->
                     <ul class="nav navbar-nav" data-ng-if="exerciseCtrl.editEnabled">
                         <!-- Information about the Exercise -->
-                        <li data-ng-class="{ active: 'overview' === exerciseCtrl.currentView.tab }">
+                        <li data-ng-class="{ active: 'overview' === exerciseCtrl.$route.current.tab }">
                             <a href="#/">
                                 <span class="fa fa-info"></span> {{ 'overview' | trans:{}:'ujm_exo' }}
                             </a>
                         </li>
 
                         <!-- Edit Exercise parameters -->
-                        <li data-ng-class="{ active: 'parameters' === exerciseCtrl.currentView.tab }">
+                        <li data-ng-class="{ active: 'parameters' === exerciseCtrl.$route.current.tab }">
                             <a href="#/edit">
                                 <span class="fa fa-pencil"></span> {{ 'parameters' | trans:{}:'ujm_exo' }}
                             </a>
                         </li>
 
                         <!-- Edit Questions -->
-                        <li data-ng-class="{ active: 'steps' === exerciseCtrl.currentView.tab }">
+                        <li data-ng-class="{ active: 'steps' === exerciseCtrl.$route.current.tab }">
                             <a href="#/steps">
                                 <span class="fa fa-question"></span> {{ 'questions' | trans:{}:'ujm_exo' }}
                             </a>
