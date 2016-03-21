@@ -1,20 +1,20 @@
-<table class="table table-bordered table-condensed">
-  <thead>
+{% if results|length > 0 %}
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>{{ 'title'|trans({}, 'platform') }}</th>
+        <th>{{ 'mark'|trans({}, 'results') }}</th>
+        <th>{{ 'total'|trans({}, 'platform') }}</th>
+      </tr>
+    </thead>
+    {% for result in results %}
     <tr>
-      <th>{{ 'title'|trans({}, 'platform') }}</th>
-      <th>{{ 'mark'|trans({}, 'results') }}</th>
-      <th>{{ 'total'|trans({}, 'platform') }}</th>
+      <td>{{ result.title }}</td>
+      <td style="text-align: center">{{ result.mark }}</td>
+      <td style="text-align: center">{{ result.total }}</td>
     </tr>
-  </thead>
-  {% for result in results %}
-  <tr>
-    <td>{{ result.title }}</td>
-    <td style="text-align: center">{{ result.mark }}</td>
-    <td style="text-align: center">{{ result.total }}</td>
-  </tr>
-  {% endfor %}
-</table>
-
-{% if results|length == 0 %}
+    {% endfor %}
+  </table>
+{% else %}
   <em>{{ 'no_marks'|trans({}, 'widget') }}</em>
 {% endif %}
