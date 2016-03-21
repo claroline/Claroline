@@ -58,7 +58,7 @@ class StepQuestionRepository extends EntityRepository
      */
     public function findExoByOrder(Exercise $exo)
     {
-        return $query = $this->createQueryBuilder('sq')               
+        return $query = $this->createQueryBuilder('sq')
                 ->join('sq.step', 's')
                 ->where('s.exercise = :exercise')
                 ->setParameter(':exercise', $exo)
@@ -68,7 +68,6 @@ class StepQuestionRepository extends EntityRepository
     }
     
      /**
-     * Temporary : Waiting step manager
      * 
      * Get StepQuestion with the question and exercise
      *

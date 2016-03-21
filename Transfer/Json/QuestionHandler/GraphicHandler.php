@@ -272,9 +272,10 @@ class GraphicHandler implements QuestionHandlerInterface {
         $mark = 0;
         foreach ($coords as $coord) {
             $values = $coord->getValue();
-
-            $valueX = floatval($values[0]);
-            $valueY = floatval($values[1]);
+            
+            $explodeValues = explode(',', $values);
+            $valueX = $explodeValues[0];
+            $valueY = $explodeValues[1];
             $size = $coord->getSize(); // double
             // search into given answers for a correct one
             // original in Services->Interactions->Graphic->mark()
@@ -283,7 +284,7 @@ class GraphicHandler implements QuestionHandlerInterface {
                         ($answer['x'] <= ($valueX + $size)) // $answer['x'] + 8 < $xr + $valid... Why + 8 ?
                         && $answer['x'] >= $valueX // ($xa + 8) > ($xr)
                         && ($answer['y'] <= ($valueY + $size)) // + 8 ?
-                        && $answer['y'] <= $valueY // + 8 ?
+                        && $answer['y'] >= $valueY // + 8 ?
                         && !in_array($coord->getValue(), $done) // Avoid getting points twice for one answer
                     )
                     {

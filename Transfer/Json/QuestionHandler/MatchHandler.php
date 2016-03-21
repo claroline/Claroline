@@ -360,8 +360,14 @@ class MatchHandler implements QuestionHandlerInterface {
         $labels = $interaction->getLabels();
         // at least one label must have a score
         $score = 0;
+        $tabLabelGraduate = array();
         foreach ($labels as $label) {
-            $score += $label->getScoreRightResponse();
+            foreach($tabLabelGraduate as $labelPast) {
+                if ($labelPast !== $label) {
+                    $score += $label->getScoreRightResponse();
+                }
+            }
+            array_push($tabLabelGraduate, $label);
         }
         if ($score === 0) {
             throw new \Exception('Global score not implemented yet');

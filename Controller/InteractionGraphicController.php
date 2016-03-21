@@ -80,7 +80,7 @@ class InteractionGraphicController extends Controller
         $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
         $formHandler = new InteractionGraphicHandler(
             $form, $this->get('request'), $this->getDoctrine()->getManager(),
-            $this->container->get('ujm.exo_exercise'),
+            $this->container->get('ujm.exo_exercise'), $catSer,
             $user, $exercise, $this->get('translator')
         );
 
@@ -166,6 +166,8 @@ class InteractionGraphicController extends Controller
             $docID = $interactionGraph->getPicture()->getId();
         }
 
+        $catSer->ctrlCategory($interactionGraph->getQuestion());
+
         $editForm = $this->createForm(
             new InteractionGraphicType($attr->get('user'), $attr->get('catID'), $docID), $interactionGraph
                 );
@@ -228,8 +230,8 @@ class InteractionGraphicController extends Controller
 
         $formHandler = new InteractionGraphicHandler(
             $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
-            $this->container->get('ujm.exo_exercise'),
-            $this->container->get('security.token_storage')->getToken()->getUser(),
+            $this->container->get('ujm.exo_exercise'), $this->container->get('ujm.exo_category'),
+            $this->container->get('security.token_storage')->getToken()->getUser(), -1,
             $this->get('translator')
         );
 

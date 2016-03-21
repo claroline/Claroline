@@ -1145,7 +1145,10 @@ class QuestionController extends Controller {
                     ->findOneByQuestion($question);
 
             $interXHandler = new $handlerType(
-                    null, null, $this->getDoctrine()->getManager(), $this->container->get('ujm.exo_exercise'), $this->container->get('security.token_storage')->getToken()->getUser(), $exercise, $this->get('translator')
+                    null, null, $this->getDoctrine()->getManager(),
+                    $this->container->get('ujm.exo_exercise'), $this->container->get('ujm.exo_category'),
+                    $this->container->get('security.token_storage')->getToken()->getUser(),
+                    $exercise, $this->get('translator')
             );
 
             $interXHandler->singleDuplicateInter($interactionX);

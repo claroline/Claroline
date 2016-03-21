@@ -136,10 +136,12 @@ class ResponseRepository extends EntityRepository
      */
     public function getScoreExercise($paperId)
     {
+        //doesn't take long open question not marked
         $dql = '
             SELECT sum(r.mark) as score
             FROM UJM\ExoBundle\Entity\Response r
             WHERE r.paper= ?1
+            AND r.mark >= 0
         ';
 
         $query = $this->_em->createQuery($dql)
