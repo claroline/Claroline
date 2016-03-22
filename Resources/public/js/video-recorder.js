@@ -1,36 +1,35 @@
 "use strict";
 
 import * as VolumeMeter from './libs/volume-meter';
-//import * as WebRtcAdapter from './libs/webrtc-adapter';
 
-var isFirefox = !!navigator.mediaDevices.getUserMedia;
+const isFirefox = !!navigator.mediaDevices.getUserMedia;
 
-var isDebug = true;
+const isDebug = false;
 if(isDebug){
   console.log(isFirefox ? 'firefox':'chrome');
 }
-var mediaRecorder;
-var recordedBlobs; // array of chunk video blobs
+let mediaRecorder;
+let recordedBlobs; // array of chunk video blobs
 
 // audio input volume visualisation
-var audioContext = new window.AudioContext();
-var audioInput = null,
+let audioContext = new window.AudioContext();
+let audioInput = null,
   realAudioInput = null,
   inputPoint = null;
-var rafID = null;
-var analyserContext = null;
-var analyserNode = null;
-var canvasWidth, canvasHeight;
-var gradient;
-var meter;
+let rafID = null;
+let analyserContext = null;
+let analyserNode = null;
+let canvasWidth, canvasHeight;
+let gradient;
+let meter; // audio vu-meter
 
 // avoid the recorded file to be chunked by setting a slight timeout
-var recordEndTimeOut = 1000;
-var videoPlayer = document.querySelector('video');
+const recordEndTimeOut = 1000;
+const videoPlayer = document.querySelector('video');
 
 //navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mediaDevices.getUserMedia;
 
-var constraints = {
+const constraints = {
   audio: true,
   video: true
 };
@@ -84,10 +83,10 @@ function handleDataAvailable(event) {
 
 // getUserMedia() polyfill
 // see here https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
-var promisifiedOldGUM = function(constraints, successCallback, errorCallback) {
+const promisifiedOldGUM = function(constraints, successCallback, errorCallback) {
 
   // First get ahold of getUserMedia, if present
-  var getUserMedia = (navigator.getUserMedia ||
+  let getUserMedia = (navigator.getUserMedia ||
       navigator.webkitGetUserMedia ||
       navigator.mozGetUserMedia);
 
@@ -119,7 +118,6 @@ if(navigator.mediaDevices.getUserMedia === undefined) {
 
 
 function record() {
-
   $('#video-record-start').prop('disabled', 'disabled');
   $('#video-record-stop').prop('disabled', '');
   //navigator.mediaDevices.getUserMedia
@@ -129,48 +127,30 @@ function record() {
   ).catch(
     gumError
   );
-
-  /*if(isFirefox){
-    navigator.mediaDevices.getUserMedia(
-      constraints
-    ).then(
-      gumSuccess
-    ).catch(
-      gumError
-    );
-  } else {
-    navigator.webkitGetUserMedia(
-      constraints,
-      // success
-      successCallback,
-      // error
-      errorCallback
-    );
-  }*/
-
 }
 
+// getUserMedia Success Callback
 function gumSuccess(stream){
-  console.log('success');
   if (isDebug) {
+    console.log('success');
     console.log('getUserMedia() got stream: ', stream);
   }
   window.stream = stream;
   recordStream();
-  viewAudioStream();
+  createVolumeMeter();
 }
 
+// getUserMedia Error Callback
 function gumError(error){
-  var msg = 'navigator.getUserMedia error.';
+  const msg = 'navigator.getUserMedia error.';
   showError(msg, false);
   if (isDebug) {
     console.log(msg, error);
   }
 }
 
-
 function recordStream() {
-  var options = {
+  const options = {
     mimeType: 'video/webm',
     audioBitsPerSecond: 128000,
     videoBitsPerSecond: 1024000
@@ -180,7 +160,7 @@ function recordStream() {
   try {
     mediaRecorder = new MediaRecorder(window.stream, options);
   } catch (e) {
-    var msg = 'Unable to create MediaRecorder with options Object.';
+    const msg = 'Unable to create MediaRecorder with options Object.';
     showError(msg, false);
     if (isDebug) {
       console.log(msg, e);
@@ -192,7 +172,6 @@ function recordStream() {
   if (isDebug) {
     console.log('MediaRecorder started', mediaRecorder);
   }
-
 
   if (window.URL) {
     videoPlayer.src = window.URL.createObjectURL(window.stream);
@@ -238,7 +217,7 @@ function stopRecording() {
     if (isDebug) {
       console.log(recordedBlobs);
     }
-    var superBuffer = new Blob(recordedBlobs, {
+    let superBuffer = new Blob(recordedBlobs, {
       type: 'video/webm'
     });
 
@@ -248,7 +227,7 @@ function stopRecording() {
     videoPlayer.controls = true;
 
     videoPlayer.onended = function() {
-      var blob = new Blob(recordedBlobs, {
+      let blob = new Blob(recordedBlobs, {
         type: 'video/webm'
       });
       videoPlayer.src = window.URL ? window.URL.createObjectURL(blob) : blob;
@@ -263,31 +242,31 @@ function uploadVideo() {
   $('#video-record-start').prop('disabled', 'disabled');
   $('#video-record-stop').prop('disabled', 'disabled');
 
-  var formData = new FormData();
-  var nav = isFirefox ? 'firefox' : 'chrome';
+  let formData = new FormData();
+  const nav = isFirefox ? 'firefox' : 'chrome';
   formData.append('nav', nav);
-  var video = new Blob(recordedBlobs, {
+  let video = new Blob(recordedBlobs, {
     type: 'video/webm'
   });
   formData.append('video', video);
 
-  var fileName = $("#resource-name-input").val();
+  const fileName = $("#resource-name-input").val();
   formData.append('fileName', fileName);
 
-  var route = $('#arForm').attr('action');
+  const route = $('#arForm').attr('action');
   xhr(route, formData, null, function(fileURL) {});
 }
 
 function xhr(url, data, progress, callback) {
 
-  var message = Translator.trans('creating_resource', {}, 'innova_video_recorder');
+  const message = Translator.trans('creating_resource', {}, 'innova_video_recorder');
   // tell the user that his action has been taken into account
   $('#submitButton').text(message);
   $('#submitButton').attr('disabled', true);
 
   $('#submitButton').append('&nbsp;<i id="spinner" class="fa fa-spinner fa-spin"></i>');
 
-  var request = new XMLHttpRequest();
+  let request = new XMLHttpRequest();
   request.onreadystatechange = function() {
     if (request.readyState === 4 && request.status === 200) {
       if (isDebug) {
@@ -303,7 +282,7 @@ function xhr(url, data, progress, callback) {
         console.log('xhr error');
       }
       $('#spinner').remove();
-      var msg = Translator.trans('resource_creation_error', {}, 'innova_video_recorder');
+      const msg = Translator.trans('resource_creation_error', {}, 'innova_video_recorder');
       showError(msg, true);
     }
   };
@@ -332,15 +311,15 @@ function showError(msg, canDownload = false) {
 
 
 function downloadVideo() {
-  var blob = new Blob(recordedBlobs, {
+  let blob = new Blob(recordedBlobs, {
     type: 'video/webm'
   });
-  var url = window.URL.createObjectURL(blob);
-  var a = document.createElement('a');
+  const url = window.URL.createObjectURL(blob);
+  let a = document.createElement('a');
   a.style.display = 'none';
   a.href = url;
 
-  var fileName = $("#resource-name-input").val();
+  let fileName = $("#resource-name-input").val();
   a.download = fileName + '.webm';
   document.body.appendChild(a);
   a.click();
@@ -350,7 +329,7 @@ function downloadVideo() {
   }, 100);
 }
 
-function viewAudioStream() {
+function createVolumeMeter() {
   inputPoint = audioContext.createGain();
   // Create an AudioNode from the stream.
   realAudioInput = audioContext.createMediaStreamSource(window.stream);
@@ -363,7 +342,7 @@ function viewAudioStream() {
 function draw() {
 
   if (!analyserContext) {
-    var canvas = document.getElementById("analyser");
+    const canvas = document.getElementById("analyser");
     canvasWidth = canvas.width;
     canvasHeight = canvas.height;
     analyserContext = canvas.getContext('2d');
