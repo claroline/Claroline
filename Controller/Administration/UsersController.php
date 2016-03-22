@@ -14,7 +14,8 @@ namespace Claroline\CoreBundle\Controller\Administration;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\UserAdminAction;
+use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Action\AdditionalAction;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Administration\ProfilePicsImportType;
 use Claroline\CoreBundle\Form\ImportUserType;
@@ -598,14 +599,29 @@ class UsersController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/{user}/admin/{action}",
+     *     "/{user}/admin/action/{action}",
      *     name="admin_user_action",
      *     options={"expose"=true}
      * )
      */
-    public function executeAdminAction(User $user, $action)
+    public function executeUserAdminAction(User $user, AdditionalAction $action)
     {
-        $event = $this->eventDispatcher->dispatch('admin_user_action_' . $action, 'AdminUserAction', array('user' => $user));
+        $event = $this->eventDispatcher->dispatch($action->getType() . '_' . $action->getAction(), 'AdminUserAction', array('user' => $user));
+
+        return $event->getResponse();
+    }
+
+    /**
+     * This method should be moved
+     * @EXT\Route(
+     *     "/{group}/admin/action/{action}",
+     *     name="admin_group_action",
+     *     options={"expose"=true}
+     * )
+     */
+    public function executeGroupAdminAction(Group $group, AdditionalAction $action)
+    {
+        $event = $this->eventDispatcher->dispatch($action->getType() . '_' . $action->getAction(), 'AdminGroupAction', array('group' => $group));
 
         return $event->getResponse();
     }

@@ -37,7 +37,6 @@ class Updater060800 extends Updater
         $this->createOrganizationTool();
         $this->removePackageTool();
         $this->removeBundleTable();
-        $this->container->get('claroline.manager.administration_manager')->addDefaultUserAdminActions();
     }
 
     private function createOrganizationTool()
@@ -50,7 +49,7 @@ class Updater060800 extends Updater
             $this->om->persist($entity);
             $this->om->flush();
         }
-   
+
         $this->orgaManager->createDefault();
         $this->userManager->bindUserToOrganization();
     }

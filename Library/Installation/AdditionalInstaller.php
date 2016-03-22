@@ -242,12 +242,12 @@ class AdditionalInstaller extends BaseInstaller
                 $updater = new Updater\Updater060700($this->container, $this->logger);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
+            case version_compare($currentVersion, '6.7.4', '<='):
+                    $updater = new Updater\Updater060704($this->container);
+                    $updater->setLogger($this->logger);
+                    $updater->postUpdate();
             case version_compare($currentVersion, '6.8.0', '<'):
                 $updater = new Updater\Updater060800($this->container, $this->logger);
-                $updater->setLogger($this->logger);
-                $updater->postUpdate();
-            case version_compare($currentVersion, '6.7.4', '<='):
-                $updater = new Updater\UpdaterWidget060704($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
         }
@@ -258,6 +258,10 @@ class AdditionalInstaller extends BaseInstaller
         $resourceIconsUpdater = new Updater\ResourceIconsUpdater($this->container);
         $resourceIconsUpdater->setLogger($this->logger);
         $resourceIconsUpdater->postUpdate();
+
+        $additionalActionUpdater = new Updater\AdditionalActionUpdater($this->container, $this->logger);
+        $additionalActionUpdater->setLogger($this->logger);
+        $additionalActionUpdater->postUpdate();
     }
 
     private function setLocale()

@@ -9,21 +9,24 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Entity;
+namespace Claroline\CoreBundle\Entity\Action;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 
 /**
- * @ORM\Table(name="claro_user_admin_action")
+ * Additonal actions wich will be able to trigger events.
+ *
+ * @ORM\Table(name="claro_additonal_action")
  * @ORM\Entity()
  */
-class UserAdminAction
+class AdditionalAction
 {
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
+     * @Groups({"api"})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
@@ -34,7 +37,7 @@ class UserAdminAction
      * @ORM\Column()
      * @Groups({"api"})
      */
-    protected $toolName;
+    protected $action;
 
     /**
      * @var string
@@ -49,7 +52,13 @@ class UserAdminAction
      */
     protected $class;
 
-
+    /**
+     * @var string
+     *
+     * @ORM\Column()
+     * @Groups({"api"})
+     */
+    protected $type;
 
     public function getId()
     {
@@ -61,14 +70,14 @@ class UserAdminAction
         $this->id = $id;
     }
 
-    public function setToolName($toolName)
+    public function setAction($action)
     {
-        $this->toolName = $toolName;
+        $this->action = $action;
     }
 
-    public function getToolName()
+    public function getAction()
     {
-        return $this->toolName;
+        return $this->action;
     }
 
     public function setDisplayedName($displayedName)
@@ -89,5 +98,15 @@ class UserAdminAction
     public function getClass()
     {
         return $this->class;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    public function getType()
+    {
+        return $this->type;
     }
 }

@@ -11,7 +11,7 @@ export default class UserController {
         this.alerts = []
         this.fields = []
         this.managedOrganizations = []
-        
+
         const columns = [
             {name: this.translate('username'), prop: "username", isCheckboxColumn: true, headerCheckbox: true},
             {name: this.translate('first_name'), prop: "firstName"},
@@ -22,13 +22,13 @@ export default class UserController {
                 cellRenderer: scope => {
                     let tr = this.translate('show_as');
 
-                    let content = 
-                    `<a class='btn btn-default' 
-                        href='${Routing.generate('claro_desktop_open', {'_switch': scope.$row.username})}' 
-                        data-toggle='tooltip' 
-                        data-placement='bottom' 
-                        title='' 
-                        data-original-title='${tr}' 
+                    let content =
+                    `<a class='btn btn-default'
+                        href='${Routing.generate('claro_desktop_open', {'_switch': scope.$row.username})}'
+                        data-toggle='tooltip'
+                        data-placement='bottom'
+                        title=''
+                        data-original-title='${tr}'
                         role='button'>
                         <i class='fa fa-eye'></i>
                     </a>`
@@ -36,7 +36,7 @@ export default class UserController {
                     content = this.userActions.reduce((content, action) => {
                         const route = Routing.generate('admin_user_action', {
                             'user': scope.$row.id,
-                            'action': action['tool_name']
+                            'action': action['id']
                         });
                         return content + `<a class='btn btn-default' href='${route}'><i class='fa ${action.class}'></i></a>`
                     }, content)

@@ -26,7 +26,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Tool\Tool;
-use Claroline\CoreBundle\Entity\UserAdminAction;
+use Claroline\CoreBundle\Entity\Action\AdditionalAction;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
@@ -220,8 +220,8 @@ class DatabaseWriter
             $this->createAdminTool($adminTool, $plugin);
         }
 
-        foreach ($processedConfiguration['admin_user_action'] as $userAction) {
-            $this->createAdminUserAction($userAction, $plugin);
+        foreach ($processedConfiguration['additonal_action'] as $action) {
+            $this->createAdditonalAction($action, $plugin);
         }
     }
 
@@ -337,12 +337,13 @@ class DatabaseWriter
         $this->persistWidget($widgetConfiguration, $plugin, $pluginBundle, $widget);
     }
 
-    private function createAdminUserAction(array $action, PluginBundle $pluginBundle)
+    private function createAdditonalAction(array $action, PluginBundle $pluginBundle)
     {
-        $aa = new UserAdminAction();
+        $aa = new AdditionalAction();
         $aa->setClass($action['class']);
-        $aa->setToolName($action['tool_name']);
+        $aa->setAction($action['action']);
         $aa->setDisplayedName($action['displayed_name']);
+        $aa->setType($action['type']);
 
         $this->em->flush();
     }
