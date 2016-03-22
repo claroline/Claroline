@@ -471,7 +471,7 @@ class WorkspaceManager
                     }
 
                     if ($conf->getTool()->getName() === $toolName &&
-                        in_array($conf->getRole()->getName(), $userRoleNames) &&
+                        in_array($conf->getRole()->getName(), $workspace->getCreator()->getRoles()) &&
                         ($conf->getMask() & 1)) {
                         $canOpen = true;
                     }
