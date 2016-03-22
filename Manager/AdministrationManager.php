@@ -13,13 +13,17 @@ namespace Claroline\CoreBundle\Manager;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\UserAdminAction;
+use Claroline\CoreBundle\Entity\Action\AdditionalAction;
+use Claroline\BundleRecorder\Log\LoggableTrait;
+use Psr\Log\LoggerInterface;
 
 /**
  * @DI\Service("claroline.manager.administration_manager")
  */
 class AdministrationManager
 {
+    use LoggableTrait;
+
     private $om;
     private $repo;
 
@@ -33,28 +37,40 @@ class AdministrationManager
     )
     {
         $this->om = $om;
-        $this->repo = $this->om->getRepository('Claroline\CoreBundle\Entity\UserAdminAction');
+        $this->repo = $this->om->getRepository('Claroline\CoreBundle\Entity\Action\AdditionalAction');
     }
 
-    public function addDefaultUserAdminActions()
+    public function addDefaultAdditionalActions()
     {
-        $adminActions = array(
-            array('edit', 'fa-pencil', 'edit'),
-            array('show_workspaces', 'fa-book', 'show_workspaces')
+        $actions = array(
+            array('edit', 'fa-pencil', 'edit', 'admin_user_action'),
+            array('show_workspaces', 'fa-book', 'show_workspaces', 'admin_user_action')
         );
 
-        foreach ($adminActions as $adminAction) {
+        foreach ($actions as $action) {
 
-            if (!$this->repo->findOneByToolName($adminAction[0])) {
-                $aa = new UserAdminAction();
-                $aa->setToolName($adminAction[0]);
-                $aa->setClass($adminAction[1]);
-                $aa->setDisplayedName($adminAction[2]);
+            if (count($this->repo->findBy(array('action' => $action[0], 'type' => $action[3]))) === 0) {
+                $this->log("Adding action {$action[0]} {$action[3]}...");
+                $aa = new AdditionalAction();
+                $aa->setAction($action[0]);
+                $aa->setClass($action[1]);
+                $aa->setDisplayedName($action[2]);
+                $aa->setType($action[3]);
 
                 $this->om->persist($aa);
             }
         }
 
         $this->om->flush();
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    public function getLogger()
+    {
+        return $this->logger;
     }
 }

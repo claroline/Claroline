@@ -22,12 +22,14 @@ use FOS\RestBundle\Controller\Annotations\View;
 use Claroline\CoreBundle\Form\GroupType;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Action\AdditionalAction;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\CoreBundle\Form\User\GroupSettingsType;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Library\Security\Collection\GroupCollection;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 /**
  * @NamePrefix("api_")
@@ -112,7 +114,7 @@ class GroupController extends FOSRestController
         if ($form->isValid()) {
             $group = $form->getData();
             $newRoles = $form['platformRoles']->getData();
-            
+
             $this->groupManager->insertGroup($group);
             $this->groupManager->setPlatformRoles($group, $newRoles);
             $httpCode = 200;
@@ -126,8 +128,8 @@ class GroupController extends FOSRestController
 
 
         return $this->apiManager->handleFormView(
-            'ClarolineCoreBundle:API:User\createGroupForm.html.twig', 
-            $form, 
+            'ClarolineCoreBundle:API:User\createGroupForm.html.twig',
+            $form,
             $options
         );
     }
@@ -148,7 +150,7 @@ class GroupController extends FOSRestController
         $groupType = new GroupSettingsType($oldRoles, true, 'egfm');
         $groupType->enableApi();
         $form = $this->formFactory->create($groupType, $group);
-        $form->submit($this->request);        
+        $form->submit($this->request);
         $httpCode = 400;
 
         if ($form->isValid()) {
@@ -168,8 +170,8 @@ class GroupController extends FOSRestController
 
 
         return $this->apiManager->handleFormView(
-            'ClarolineCoreBundle:API:User\editGroupForm.html.twig', 
-            $form, 
+            'ClarolineCoreBundle:API:User\editGroupForm.html.twig',
+            $form,
             $options
         );
     }
@@ -305,7 +307,7 @@ class GroupController extends FOSRestController
         return $this->apiManager->handleFormView('ClarolineCoreBundle:API:User\editGroupForm.html.twig', $form, $options);
     }
 
-    private function isAdmin() 
+    private function isAdmin()
     {
         return $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN');
     }
@@ -322,7 +324,7 @@ class GroupController extends FOSRestController
 
     private function throwExceptionIfNotGranted($action, $groups)
     {
-        $collection = is_array($groups) ? new GroupCollection($groups): new GroupCollection(array($groups));  
+        $collection = is_array($groups) ? new GroupCollection($groups): new GroupCollection(array($groups));
         $isGranted = $this->isGroupGranted($action, $collection);
 
         if (!$isGranted) {
@@ -332,6 +334,18 @@ class GroupController extends FOSRestController
                 $groupList .= "[{$group->getName()}]";
             }
             throw new AccessDeniedException("You can't do the action [{$action}] on the user list {$groupList}");
-        } 
+        }
+    }
+    
+    /**
+     * @View()
+     * @ApiDoc(
+     *     description="Returns the list of actions an admin can do on a group",
+     *     views = {"groups"}
+     * )
+     */
+    public function getGroupAdminActionsAction()
+    {
+        return $this->om->getRepository('Claroline\CoreBundle\Entity\Action\AdditionalAction')->findByType('admin_group_action');
     }
 }

@@ -318,7 +318,7 @@ class UserController extends FOSRestController
         $this->throwExceptionIfNotGranted('edit', $user);
         $this->roleManager->dissociateRole($user, $role);
 
-        return $user;    
+        return $user;
     }
 
     /**
@@ -362,7 +362,7 @@ class UserController extends FOSRestController
      */
     public function getUserAdminActionsAction()
     {
-        return $this->om->getRepository('Claroline\CoreBundle\Entity\UserAdminAction')->findAll();
+        return $this->om->getRepository('Claroline\CoreBundle\Entity\Action\AdditionalAction')->findByType('admin_user_action');
     }
 
     /**
@@ -416,7 +416,7 @@ class UserController extends FOSRestController
         return $users;
     }
 
-    private function isAdmin() 
+    private function isAdmin()
     {
         return $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN');
     }
@@ -433,7 +433,7 @@ class UserController extends FOSRestController
 
     private function throwExceptionIfNotGranted($action, $users)
     {
-        $collection = is_array($users) ? new UserCollection($users): new UserCollection(array($users));  
+        $collection = is_array($users) ? new UserCollection($users): new UserCollection(array($users));
         $isGranted = $this->isUserGranted($action, $collection);
 
         if (!$isGranted) {
@@ -443,6 +443,6 @@ class UserController extends FOSRestController
                 $userlist .= "[{$user->getUsername()}]";
             }
             throw new AccessDeniedException("You can't do the action [{$action}] on the user list {$userlist}");
-        } 
+        }
     }
 }

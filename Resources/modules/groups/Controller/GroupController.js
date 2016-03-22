@@ -13,27 +13,26 @@ export default class GroupController {
         this.selected = []
         this.alerts = []
         this.groups = undefined
+        this.groupActions = []
 
         const columns = [
             {name: this.translate('name'), prop: "name", isCheckboxColumn: true, headerCheckbox: true},
             {
                 name: this.translate('actions'),
-                cellRenderer: function(scope) {
-                    //commented code doesn't work. Idk why.
-                    /*
+                cellRenderer: (scope) => {
                     const groupId = scope.$row.id;
-                    const actions = 
-                        `<a ui-sref="users.groups.users({groupId: '${groupId}')"><i class="fa fa-users"></i> </a>
-                         <a class="pointer" ng-click="gc.clickEdit($row)"><i class="fa fa-cog"></i></a>`
+                    let content = '<a class="btn btn-default pointer" ui-sref="users.groups.users({groupId: ' + groupId + '})"><i class="fa fa-users"></i> </a>'
+                    content += '<a class="btn btn-default pointer" ng-click="gc.clickEdit($row)"><i class="fa fa-cog"></i></a>'
 
-                    return actions;*/
+                    content = this.groupActions.reduce((content, action) => {
+                        const route = Routing.generate('admin_group_action', {
+                            'group': scope.$row.id,
+                            'action': action['id']
+                        });
+                        return content + `<a class='btn btn-default' href='${route}'><i class='fa ${action.class}'></i></a>`
+                    }, content)
 
-                    var groupId = scope.$row.id;
-                    var users = '<a ui-sref="users.groups.users({groupId: ' + groupId + '})"><i class="fa fa-users"></i> </a>';
-                    var edit =  '<a class="pointer" ng-click="gc.clickEdit($row)"><i class="fa fa-cog"></i></a>';
-                    var actions = users + edit;
-
-                    return actions;
+                    return content;
                 }
             }
         ];
@@ -56,8 +55,11 @@ export default class GroupController {
         $http.get(Routing.generate('api_get_group_searchable_fields'))
             .then(d => this.fields = d.data)
 
-        this._deleteCallback = this._deleteCallback.bind(this) 
-        this._onSearch = this._onSearch.bind(this) 
+        $http.get(Routing.generate('api_get_group_admin_actions'))
+            .then(d => this.groupActions = d.data)
+
+        this._deleteCallback = this._deleteCallback.bind(this)
+        this._onSearch = this._onSearch.bind(this)
     }
 
     translate(key, data = {}) {

@@ -16,7 +16,7 @@ use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class UpdaterWidget060704 extends Updater
+class Updater060704 extends Updater
 {
     private $container;
 
