@@ -1,10 +1,14 @@
 "use strict";
 
 import * as VolumeMeter from './libs/volume-meter';
+//import * as WebRtcAdapter from './libs/webrtc-adapter';
 
 var isFirefox = !!navigator.mediaDevices.getUserMedia;
-console.log(isFirefox ? 'firefox':'chrome');
+
 var isDebug = true;
+if(isDebug){
+  console.log(isFirefox ? 'firefox':'chrome');
+}
 var mediaRecorder;
 var recordedBlobs; // array of chunk video blobs
 
@@ -24,7 +28,7 @@ var meter;
 var recordEndTimeOut = 1000;
 var videoPlayer = document.querySelector('video');
 
-navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mediaDevices.getUserMedia;
+//navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mediaDevices.getUserMedia;
 
 var constraints = {
   audio: true,
@@ -34,6 +38,11 @@ var constraints = {
 
 $('.modal').on('shown.bs.modal', function() {
   console.log('modal shown');
+
+  /*===============================*/
+  /*====== Register Events ========*/
+  /*===============================*/
+
   // file name check and change
   $("#resource-name-input").on("change paste keyup", function() {
     if ($(this).val() === '') { // name is blank
@@ -47,6 +56,15 @@ $('.modal').on('shown.bs.modal', function() {
       return val.replace(' ', '_');
     });
   });
+
+  $('#video-record-start').on('click', record);
+  $('#video-record-stop').on('click', stopRecording);
+  $('#btn-video-download').on('click', downloadVideo);
+  $('#submitButton').on('click', uploadVideo);
+
+  /*===============================*/
+  /*===== Init Dom Components =====*/
+  /*===============================*/
 
   videoPlayer.controls = false;
 
@@ -63,35 +81,95 @@ function handleDataAvailable(event) {
     recordedBlobs.push(event.data);
   }
 }
-/*
-navigator.getUserMedia(constraints, successCallback, errorCallback);
 
-function successCallback(stream) {
-  console.log('getUserMedia() got stream: ', stream);
-  window.stream = stream;
-  $('#video-record-start').prop('disabled', '');
-  if (window.URL) {
-    videoPlayer.src = window.URL.createObjectURL(stream);
-  } else {
-    videoPlayer.src = stream;
+// getUserMedia() polyfill
+// see here https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
+var promisifiedOldGUM = function(constraints, successCallback, errorCallback) {
+
+  // First get ahold of getUserMedia, if present
+  var getUserMedia = (navigator.getUserMedia ||
+      navigator.webkitGetUserMedia ||
+      navigator.mozGetUserMedia);
+
+  // Some browsers just don't implement it - return a rejected promise with an error
+  // to keep a consistent interface
+  if(!getUserMedia) {
+    return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
   }
 
-  videoPlayer.muted = true;
-  videoPlayer.play();
+  // Otherwise, wrap the call to the old navigator.getUserMedia with a Promise
+  return new Promise(function(successCallback, errorCallback) {
+    getUserMedia.call(navigator, constraints, successCallback, errorCallback);
+  });
+
 }
 
-function errorCallback(error) {
+// Older browsers might not implement mediaDevices at all, so we set an empty object first
+if(navigator.mediaDevices === undefined) {
+  navigator.mediaDevices = {};
+}
+
+
+// Some browsers partially implement mediaDevices. We can't just assign an object
+// with getUserMedia as it would overwrite existing properties.
+// Here, we will just add the getUserMedia property if it's missing.
+if(navigator.mediaDevices.getUserMedia === undefined) {
+  navigator.mediaDevices.getUserMedia = promisifiedOldGUM;
+}
+
+
+function record() {
+
+  $('#video-record-start').prop('disabled', 'disabled');
+  $('#video-record-stop').prop('disabled', '');
+  //navigator.mediaDevices.getUserMedia
+  navigator.mediaDevices.getUserMedia(constraints)
+  .then(
+    gumSuccess
+  ).catch(
+    gumError
+  );
+
+  /*if(isFirefox){
+    navigator.mediaDevices.getUserMedia(
+      constraints
+    ).then(
+      gumSuccess
+    ).catch(
+      gumError
+    );
+  } else {
+    navigator.webkitGetUserMedia(
+      constraints,
+      // success
+      successCallback,
+      // error
+      errorCallback
+    );
+  }*/
+
+}
+
+function gumSuccess(stream){
+  console.log('success');
+  if (isDebug) {
+    console.log('getUserMedia() got stream: ', stream);
+  }
+  window.stream = stream;
+  recordStream();
+  viewAudioStream();
+}
+
+function gumError(error){
   var msg = 'navigator.getUserMedia error.';
   showError(msg, false);
-  console.log(msg, error);
+  if (isDebug) {
+    console.log(msg, error);
+  }
 }
 
 
-function record() {
-
-  $('#video-record-start').prop('disabled', 'disabled');
-  $('#video-record-stop').prop('disabled', '');
-
+function recordStream() {
   var options = {
     mimeType: 'video/webm',
     audioBitsPerSecond: 128000,
@@ -104,75 +182,14 @@ function record() {
   } catch (e) {
     var msg = 'Unable to create MediaRecorder with options Object.';
     showError(msg, false);
-    console.log(msg, e);
-  }
-
-  mediaRecorder.ondataavailable = handleDataAvailable;
-  mediaRecorder.start(10); // collect 10ms of data
-  console.log('MediaRecorder started', mediaRecorder);
-
-  videoPlayer.muted = true;
-  if (window.URL) {
-    videoPlayer.src = window.URL.createObjectURL(stream);
-  } else {
-    videoPlayer.src = stream;
-  }
-
-  videoPlayer.play();
-  gotStream(stream);
-}*/
-
-
-function record() {
-
-  $('#video-record-start').prop('disabled', 'disabled');
-  $('#video-record-stop').prop('disabled', '');
-
-  navigator.getUserMedia(
-    constraints,
-    // success
-    function(stream){
-      console.log('getUserMedia() got stream: ', stream);
-      window.stream = stream;
-      window.setTimeout(function () {
-        recordStream();
-      }, 100);
-
-      viewAudioStream();
-    },
-    // error
-    function(error){
-      var msg = 'navigator.getUserMedia error.';
-      showError(msg, false);
-      if(isDebug){
-        console.log(msg, error);
-      }
-    }
-  );
-}
-
-
-function recordStream (){
-  var options = {
-    mimeType: 'video/webm',
-    audioBitsPerSecond: 128000,
-    videoBitsPerSecond: 1024000
-  };
-
-  recordedBlobs = [];
-  try {
-    mediaRecorder = new MediaRecorder(window.stream, options);
-  } catch (e) {
-    var msg = 'Unable to create MediaRecorder with options Object.';
-    showError(msg, false);
-    if(isDebug){
+    if (isDebug) {
       console.log(msg, e);
     }
   }
 
   mediaRecorder.ondataavailable = handleDataAvailable;
   mediaRecorder.start(10); // collect 10ms of data
-  if(isDebug){
+  if (isDebug) {
     console.log('MediaRecorder started', mediaRecorder);
   }
 
@@ -218,7 +235,7 @@ function stopRecording() {
     $('#video-record-start').prop('disabled', '');
     $('#video-record-stop').prop('disabled', 'disabled');
     $('#submitButton').prop('disabled', false);
-    if(isDebug){
+    if (isDebug) {
       console.log(recordedBlobs);
     }
     var superBuffer = new Blob(recordedBlobs, {
@@ -273,7 +290,7 @@ function xhr(url, data, progress, callback) {
   var request = new XMLHttpRequest();
   request.onreadystatechange = function() {
     if (request.readyState === 4 && request.status === 200) {
-      if(isDebug){
+      if (isDebug) {
         console.log('xhr end with success');
       }
       resetData();
@@ -282,7 +299,7 @@ function xhr(url, data, progress, callback) {
       location.reload();
 
     } else if (request.status === 500) {
-      if(isDebug){
+      if (isDebug) {
         console.log('xhr error');
       }
       $('#spinner').remove();

@@ -90,7 +90,7 @@ reattachMediaStream = function(to, from) {
 if (typeof window === 'undefined' || !window.navigator) {
   webrtcUtils.log('This does not appear to be a browser');
   webrtcDetectedBrowser = 'not a browser';
-} else if (navigator.mozGetUserMedia) {
+} else if (navigator.mediaDevices.getUserMedia) {
   webrtcUtils.log('This appears to be Firefox');
 
   webrtcDetectedBrowser = 'firefox';
@@ -207,7 +207,7 @@ if (typeof window === 'undefined' || !window.navigator) {
       }
       webrtcUtils.log('ff37: ' + JSON.stringify(constraints));
     }
-    return navigator.mozGetUserMedia(constraints, onSuccess, onError);
+    return navigator.mediaDevices.getUserMedia(constraints, onSuccess, onError);
   };
 
   navigator.getUserMedia = getUserMedia;
