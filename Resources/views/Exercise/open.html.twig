@@ -1,0 +1,68 @@
+{% extends "UJMExoBundle:Sequence:layout.html.twig" %}
+
+{# Title of the Page #}
+{% block title %} {{ 'exercise' | trans({}, 'ujm_exo') }} : {{ _resource.title }} {% endblock %}
+
+{# Breadcrumbs #}
+{% block breadcrumb %}
+    {{ parent() }}
+{% endblock %}
+
+{# Content of the Page #}
+{% block content %}
+    {# Initialize AngularJS application #}
+   <div data-ng-app="ExerciseApp" data-ng-cloak="">
+       <exercise
+           data-exercise="{{ exercise | json_encode | raw | escape }}"
+           data-nb-papers ="{{ nbPapers }}"
+           data-edit-enabled="{{ editEnabled }}"
+           data-compose-enabled="{{ composeEnabled }}">
+       </exercise>
+   </div>
+{% endblock %}
+
+{% block javascripts %}
+    {# Load Claroline JS #}
+    {{ parent() }}
+
+    {# Translations #}
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'ujm_exo' }) }}"></script>
+
+    {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm-exo-app.js'
+        '@UJMExoBundle/Resources/public/js/anonymous-wrapper-start.js'
+
+        '@UJMExoBundle/Resources/public/js/angular/*'
+
+        '@UJMExoBundle/Resources/public/js/angular/Common/*'
+        '@UJMExoBundle/Resources/public/js/angular/Common/Filters/*'
+        '@UJMExoBundle/Resources/public/js/angular/Common/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/angular/Exercise/*'
+        '@UJMExoBundle/Resources/public/js/angular/Exercise/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/angular/Exercise/Directives/*'
+        '@UJMExoBundle/Resources/public/js/angular/Exercise/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/angular/Step/*'
+        '@UJMExoBundle/Resources/public/js/angular/Step/Controllers/*'
+
+        '@UJMExoBundle/Resources/public/js/angular/Question/*'
+        '@UJMExoBundle/Resources/public/js/angular/Question/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/angular/Question/Controllers/Type/*'
+        '@UJMExoBundle/Resources/public/js/angular/Question/Directives/*'
+        '@UJMExoBundle/Resources/public/js/angular/Question/Directives/Type/*'
+        '@UJMExoBundle/Resources/public/js/angular/Question/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/angular/Paper/*'
+        '@UJMExoBundle/Resources/public/js/angular/Paper/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/angular/Paper/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/angular/Correction/*'
+        '@UJMExoBundle/Resources/public/js/angular/Correction/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/angular/Correction/Directives/*'
+        '@UJMExoBundle/Resources/public/js/angular/Correction/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/anonymous-wrapper-end.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

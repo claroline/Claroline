@@ -37,7 +37,6 @@ class PaperController extends Controller
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         //$id = $user->getId();
         $seted = isset($user);
-        die($seted);
          
         $u = array(
             'id' => $user->getId(),

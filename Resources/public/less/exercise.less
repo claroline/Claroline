@@ -1,0 +1,66 @@
+// Bootstrap path
+@vendorPath: "../../../../../claroline/front-end-bundle/Resources/public/bootstrap/less";
+
+// Bootstrap variables
+@import "@{vendorPath}/variables.less";
+
+.exercise-container {
+    .navbar {
+        margin-bottom: 0 !important;
+
+        .navbar-right {
+            margin-right: 0;
+        }
+    }
+
+    .overview {
+        .table {
+            /*border: none;*/
+            margin-bottom: 0;
+        }
+
+        /*.table-bordered,
+        .table-bordered > tbody > tr > td,
+        .table-bordered > tbody > tr > th,
+        .table-bordered > tfoot > tr > td,
+        .table-bordered > tfoot > tr > th,
+        .table-bordered > thead > tr > td,
+        .table-bordered > thead > tr > th {
+            border-left: none;
+            border-right: none;
+        }*/
+
+        .toggle-exercise-info {
+            cursor: pointer;
+        }
+    }
+
+    .parameters {
+        .panel {
+            .panel-heading {
+                /* Panels can be collapsed by clicking on heading => change cursor to help User */
+                cursor: pointer;
+
+                /* Use a custom Angular accordion system */
+                border-bottom: none;
+
+                + .panel-body {
+                    border-top: 1px solid @panel-inner-border;
+                }
+            }
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
+.papers {
+    .table {
+        margin-bottom: 0;
+    }
+    .pagination {
+        margin: 0 !important;
+    }
+}

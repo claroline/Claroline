@@ -223,7 +223,7 @@ class QuestionController extends Controller {
     /**
      * Finds and displays a Question entity.
      *
-     * @EXT\Route("/show/{id}/{exoID}", name="ujm_question_show", defaults={"exoID"= -1})
+     * @EXT\Route("/show/{id}/{exoID}", name="ujm_question_show", defaults={"exoID"= -1}, options={"expose"=true})
      *
      * @param int $id    id Question
      * @param int $exoID id Exercise if the user is in an exercise, -1 if the user is in the question bank
@@ -266,17 +266,22 @@ class QuestionController extends Controller {
     /**
      * Displays a form to create a new Question entity with interaction.
      *
-     * @EXT\Route("/new/{exoID}/{pageToGo}/{maxPage}/{nbItem}", name="ujm_question_new",
-     *              defaults={"exoID"= -1, "pageToGo"= 1, "maxPage"= 10, "nbItem"= 1})
+     * @EXT\Route(
+     *     "/new/{exoID}/{stepID}/{pageToGo}/{maxPage}/{nbItem}",
+     *     name="ujm_question_new",
+     *     defaults={"exoID"= -1, "stepID"= -1, "pageToGo"= 1, "maxPage"= 10, "nbItem"= 1},
+     *     options={"expose"=true}
+     * )
      *
      * @param int $exoID id Exercise if the user is in an exercise, -1 if the user is in the question bank
-     *
+     * @param int $stepID
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function newAction($exoID) {
+    public function newAction($exoID, $stepID) {
         $catSer = $this->container->get('ujm.exo_category');
         $variables = array(
             'exoID' => $exoID,
+            'stepID' => $stepID,
             'linkedCategory' => $catSer->getLinkedCategories(),
             'locker' => $catSer->getLockCategory(),
         );
@@ -328,7 +333,12 @@ class QuestionController extends Controller {
     /**
      * Displays a form to edit an existing Question entity.
      *
-     * @EXT\Route("/{id}/edit/{exoID}", name="ujm_question_edit", defaults={"exoID"= -1})
+     * @EXT\Route(
+     *     "/{id}/edit/{exoID}",
+     *     name="ujm_question_edit",
+     *     defaults={"exoID"= -1},
+     *     options={"expose"=true}
+     * )
      *
      * @param int $id    id Question
      * @param int $exoID id Exercise if the user is in an exercise, -1 if the user is in the question bank
@@ -364,8 +374,12 @@ class QuestionController extends Controller {
     /**
      * Deletes a Question entity.
      *
-     * @EXT\Route("/{id}/delete/{pageNow}/{maxPage}/{nbItem}/{lastPage}", name="ujm_question_delete",
-     *              defaults={"pageNow"= 1, "maxPage"= 10, "nbItem"= 1, "lastPage"= 1})
+     * @EXT\Route(
+     *     "/{id}/delete/{pageNow}/{maxPage}/{nbItem}/{lastPage}",
+     *     name="ujm_question_delete",
+     *     defaults={"pageNow"= 1, "maxPage"= 10, "nbItem"= 1, "lastPage"= 1},
+     *     options={"expose"=true}
+     * )
      *
      * @param int $id       id Question
      * @param int $pageNow  actual page for the pagination
@@ -421,9 +435,13 @@ class QuestionController extends Controller {
         if ($request->isXmlHttpRequest()) {
             $valType = $request->request->get('indice_type');
             $exoID = $request->request->get('exercise');
+            $stepID = $request->request->get('step');
 
             return $this->forward(
-                            'UJMExoBundle:' . $valType . ':new', array('exoID' => $exoID)
+                'UJMExoBundle:' . $valType . ':new', array(
+                    'exoID' => $exoID,
+                    'stepID' => $stepID,
+                )
             );
         }
     }
@@ -431,7 +449,11 @@ class QuestionController extends Controller {
     /**
      * To share Question.
      *
-     * @EXT\Route("/share/{questionID}", name="ujm_question_share")
+     * @EXT\Route(
+     *     "/share/{questionID}",
+     *     name="ujm_question_share",
+     *     options={"expose"=true}
+     * )
      *
      * @param int $questionID id of question
      *
@@ -1108,7 +1130,12 @@ class QuestionController extends Controller {
     /**
      * To duplicate a question.
      *
-     * @EXT\Route("/duplicate/{questionId}/{exoID}", name="ujm_question_duplicate", defaults={"exoID"= -1})
+     * @EXT\Route(
+     *     "/duplicate/{questionId}/{exoID}",
+     *     name="ujm_question_duplicate",
+     *     defaults={"exoID"= -1},
+     *     options={"expose"= true}
+     * )
      *
      * @param int $questionId   id Question
      * @param int $exoID        id Exercise if the user is in an exercise, -1 if the user is in the question bank
@@ -1158,15 +1185,13 @@ class QuestionController extends Controller {
 
             if ($exoID == -1) {
                 return $this->redirect(
-                                $this->generateUrl('ujm_question_index', array(
-                                    'categoryToFind' => base64_encode($categoryToFind), 'titleToFind' => base64_encode($titleToFind),)
-                                )
+                    $this->generateUrl('ujm_question_index', array(
+                        'categoryToFind' => base64_encode($categoryToFind), 'titleToFind' => base64_encode($titleToFind),)
+                    )
                 );
             } else {
                 return $this->redirect(
-                                $this->generateUrl('ujm_exercise_questions', array(
-                                    'id' => $exoID, 'categoryToFind' => $categoryToFind, 'titleToFind' => $titleToFind,)
-                                )
+                    $this->generateUrl('ujm_exercise_open', [ 'id' => $exoID ]) . '#/steps'
                 );
             }
         } else {

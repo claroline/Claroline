@@ -5,8 +5,9 @@
     {{ parent() }}
 
     {# Exercise Player styles #}
-    {% stylesheets debug=false filter='lessphp, cssmin' output='bundles/ujmexo/css/ujm-sequence.css'
+    {% stylesheets debug=false filter='less, cssmin' output='vendor/ujmexo/ujm-exo.css'
         '@UJMExoBundle/Resources/public/less/ujm-sequence.less'
+        '@UJMExoBundle/Resources/public/less/exercise.less'
         '@UJMExoBundle/Resources/public/less/loading-bar.css'
         '@UJMExoBundle/Resources/public/less/matching-angular.css'
     %}
@@ -27,21 +28,19 @@
 
     {# Angular JS #}
     {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm-exo-angular-js.js'
-        '@InnovaAngularJSBundle/Resources/public/js/angular.min.js'
-        '@InnovaAngularJSBundle/Resources/public/js/angular-sanitize.min.js'
-        '@InnovaAngularJSBundle/Resources/public/js/angular-route.min.js'
-        '@InnovaAngularJSBundle/Resources/public/js/angular-resource.min.js'
-        '@InnovaAngularJSBundle/Resources/public/js/angular-touch.min.js'
+        '@FrontEndBundle/Resources/public/angular/angular.min.js'
+        '@FrontEndBundle/Resources/public/angular-sanitize/angular-sanitize.min.js'
+        '@FrontEndBundle/Resources/public/angular-route/angular-route.min.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
     {# Angular UI #}
     {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm-exo-angular-ui.js'
-        '@InnovaAngularUIBootstrapBundle/Resources/public/js/*'
-        '@InnovaAngularUITinyMCEBundle/Resources/public/js/*'
-        '@InnovaAngularUITranslationBundle/Resources/public/js/*'
-        '@InnovaAngularUIResourcePickerBundle/Resources/public/js/*'
+        '@FrontEndBundle/Resources/public/angular-bootstrap/ui-bootstrap-tpls.min.js'
+        '@FrontEndBundle/Resources/public/angular-ui-tinymce/src/tinymce.js'
+        '@FrontEndBundle/Resources/public/angular-ui-translation/angular-translation.js'
+        '@FrontEndBundle/Resources/public/angular-ui-resource-picker/angular-resource-picker.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -63,9 +62,7 @@
         {# Make Twig variables accessibles by AngularJS #}
         var AngularApp = {};
 
-        AngularApp.webDir        = "{{ asset('') }}";
-        AngularApp.locale        = "{{ app.request.locale ~ '_' ~ app.request.locale|upper }}";
-
-        
+        AngularApp.webDir = "{{ path('claro_index') }}".split('/').slice(0, -2).join('/') + "/";
+        AngularApp.locale = "{{ app.request.locale ~ '_' ~ app.request.locale|upper }}";
     </script>
 {% endblock %}

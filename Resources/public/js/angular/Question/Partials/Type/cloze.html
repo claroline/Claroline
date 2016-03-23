@@ -1,0 +1,50 @@
+<div class="row">
+    <div class="col-md-12">
+        <h4>{{question.title}}</h4>
+        <hr/>
+        <div class="row">
+            <div class="col-md-12">
+                <div data-ng-bind-html="question.invite | unsafe"></div>   
+            </div>
+        </div>
+        <hr/>
+        <div class="row" data-ng-if="clozeQuestionCtrl.question.description">
+            <div class="col-md-12">
+             {{question.description}}   
+            </div>
+        <hr/>
+        </div>
+        <!-- Question cloze text row -->
+        <div data-ng-if="clozeQuestionCtrl.question.text" class="question-row">
+            <div class="form-inline choice-item-col">
+                <div class="form-group">
+                    <h4 ng-bind-html="question.invite"></h4>
+                    <div data-ng-bind-html="clozeQuestionCtrl.formatedClozeText | unsafe"></div>
+                </div>
+            </div>
+        </div>
+        <div data-ng-if="clozeQuestionCtrl.feedbackIsVisible">
+            <div class="row" data-ng-if="clozeQuestionCtrl.questionFeedback">
+                <div class="col-md-12">
+                    <label class="alert alert-info" data-ng-bind-html="clozeQuestionCtrl.questionFeedback | unsafe"></label>
+                </div>
+            </div>
+        </div>
+        <div data-ng-if="clozeQuestionCtrl.question.hints">
+            <hr/>
+            <!-- Question hints row -->
+            <div class="form-inline">
+                <div class="form-group">
+                    <div data-ng-repeat="hint in clozeQuestionCtrl.question.hints" style="margin-bottom: 10px;">                        
+                        <div data-ng-if="!clozeQuestionCtrl.hintIsUsed(hint.id)">
+                            <button type="button" role="button" class="btn btn-default fa fa-eye" title="{{ 'question_hint_show_title'|trans:{}:'ujm_sequence' }}" data-ng-click="clozeQuestionCtrl.showHint(hint.id)" id="hint-{{hint.id}}"> {{ 'question_hint_label'|trans:{}:'ujm_sequence' }} {{$index + 1}}</button>
+                        </div>
+                    </div>
+                    <div data-ng-repeat="used in clozeQuestionCtrl.usedHints" id="visible-hints">
+                        <h4>{{used}}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

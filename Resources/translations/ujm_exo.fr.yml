@@ -142,6 +142,7 @@ hole_creation: Création d'une question à trous
 hole_edition: Edition d'une question à trous
 hole_selector: Proposer une liste
 home_exercise: Accueil de l'exercice
+hide_additional_info: Masquer les informations supplémentaires
 
 # I
 infiny: Infini
@@ -228,7 +229,8 @@ no_user_found: Pas d'utilisateur trouvé
 n_question: Question n°
 number_proposal: Numéro de la proposition
 number_of_papers: Nombre de copies
-number_questions_draw: Nombre de questions à tirer (0 pour toutes)
+number_questions_draw: Nombre de questions à tirer
+number_questions_draw_help: Tapez 0 pour tirer toutes les questions
 numerical: Numérique
 num_paper: Numéro de la copie
 
@@ -240,12 +242,13 @@ open_creation: Création d'une question ouverte
 open_edition: Edition d'une question ouverte
 orders: Consignes
 orthography: Autoriser les fautes d'orthographe
+overview: Vue d'ensemble
 
 # P
 paper: Passage
 paper_legend: Copies nécessitant une correction manuelle
 paper_list: Liste des copies
-parameters: Paramètres
+metadata: Paramètres
 partially: Partiellement correcte
 penalty: Pénalité
 percentage: Pourcentage
@@ -307,6 +310,7 @@ search_question: Chercher des questions
 search_user_paper: Rechercher les copies de l'utilisateur
 see_shared_with: Question partagée avec des utilisateurs
 select: Sélectionner
+select_type: selectionner le type de l'Exercice
 selection: => Pour répondre, utiliser la technique du glisser/déposer.
 self: Vous ne pouvez pas partager une question avec vous-même
 shape: Forme
@@ -323,6 +327,7 @@ start_again: Recommencer
 start_date: Date de début
 sort: Trier les documents
 summative : Sommatif
+show_additional_info: Afficher les informations supplémentaires
 
 # T
 temporary_mark: Note temporaire
