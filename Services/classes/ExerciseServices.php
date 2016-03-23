@@ -73,22 +73,22 @@ class ExerciseServices
      * Get max score possible for an exercise.
      *
      *
-     * @param int $exoID id Exercise
+     * @param UJM\ExoBundle\Entity\Exercise $exercise
      *
      * @return float
      */
-    public function getExerciseTotalScore($exoID)
+    public function getExerciseTotalScore($exercise)
     {
         $exoTotalScore = 0;
 
-        $eqs = $this->om
-                    ->getRepository('UJMExoBundle:ExerciseQuestion')
-                    ->findBy(array('exercise' => $exoID));
+        $questions = $this->om
+                    ->getRepository('UJMExoBundle:Question')
+                    ->findByExercise($exercise);
 
-        foreach ($eqs as $eq) {
-            $typeInter = $eq->getQuestion()->getType();
+        foreach ($questions as $question) {
+            $typeInter = $question->getType();
             $interSer = $this->container->get('ujm.exo_'.$typeInter);
-            $interactionX = $interSer->getInteractionX($eq->getQuestion()->getId());
+            $interactionX = $interSer->getInteractionX($question->getId());
             $scoreMax = $interSer->maxScore($interactionX);
             $exoTotalScore += $scoreMax;
         }
