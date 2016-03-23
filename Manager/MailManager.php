@@ -319,7 +319,7 @@ class MailManager
             foreach ($matches as $match) {
                 $url = $match[2];
 
-                if (strpos($url, 'http:') === false) {
+                if (strpos($url, 'http:') === false && strpos($url, 'https:') === false) {
                     $newUrl = $request->getSchemeAndHttpHost() . $url;
                     $body = str_replace($url, $newUrl, $body);
                 }
