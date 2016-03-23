@@ -7,7 +7,9 @@
         'ExerciseService',
         'CommonService',
         'PlayerDataSharing',
-        function ($window, $scope, ExerciseService, CommonService, PlayerDataSharing) {
+        '$timeout',
+        '$localStorage',
+        function ($window, $scope, ExerciseService, CommonService, PlayerDataSharing, $timeout, $localStorage) {
 
             this.exercise = {};
             this.paper = {};
@@ -19,13 +21,28 @@
             this.feedbackIsShown = false;
             this.currentStepIndex = 0;
 
+            $scope.$storage = $localStorage.$default({
+                counter: 0
+            });
+
+            $scope.onTimeout = function(){
+                $scope.$storage.counter =  $scope.$storage.counter + 1;
+                mytimeout = $timeout($scope.onTimeout,1000);
+                if ($scope.$storage.counter == $scope.$storage.durationExo) {
+                    $scope.exercisePlayerCtrl.validateStep('end');
+                }
+            };
+
+            var mytimeout = $timeout($scope.onTimeout,1000);
+
             // init directive with appropriate data
-            this.init = function (paper, exercise, user, currentStepIndex) {
+            this.init = function (paper, exercise, user, currentStepIndex, duration) {
                 this.exercise = PlayerDataSharing.setExercise(exercise);
                 this.paper = PlayerDataSharing.setPaper(paper);
                 this.user = PlayerDataSharing.setUser(user);
                 this.currentStepIndex = currentStepIndex;
                 this.setCurrentStep(this.currentStepIndex);
+                $scope.$storage.durationExo = duration;
             };
 
             /**
@@ -70,12 +87,12 @@
              * @param {Number} index (nullable) the step index when using direct access
              */
             this.validateStep = function (action, index) {
-                
+
                 // manualy disable tooltips...
                 $('.tooltip').each(function () {
                     $(this).hide();
                 });
-                
+
                 // get next step index
                 this.currentStepIndex = this.getNextStepIndex(this.currentStepIndex, action, index);
 
@@ -83,15 +100,15 @@
                 var studentData = PlayerDataSharing.getStudentData();
                 // save the given answer (even if empty !)
                 var submitPromise = ExerciseService.submitAnswer(this.paper.id, studentData);
-                submitPromise.then(function (result) {                    
+                submitPromise.then(function (result) {
                     // then navigate to desired step / end / terminate exercise
                     this.handleStepNavigation(action, studentData.paper);
-                    
+
                 }.bind(this));
             };
 
             /**
-             * 
+             *
              * @param {number} current current index
              * @param {string} action
              * @param {number} index the index to reach (when the drop box is used)
@@ -108,7 +125,7 @@
             };
 
             /**
-             * Navigate to desired step or end exercise and redirect to appropriate view 
+             * Navigate to desired step or end exercise and redirect to appropriate view
              * @param {string} action
              * @param {object} paper
              */
@@ -117,9 +134,15 @@
                 if (action && (action === 'forward' || action === 'backward' || action === 'goto')) {
                     this.setCurrentStep(this.currentStepIndex);
                 } else if (action && action === 'end') {
+
+                    $scope.$storage.$reset({
+                        counter: 0
+                    });
+                    $timeout.cancel(mytimeout);
+
                     var endPromise = ExerciseService.endSequence(paper);
                     endPromise.then(function (result) {
-                        if (this.checkCorrectionAvailability()) {                      
+                        if (this.checkCorrectionAvailability()) {
                             // go to paper correction view
                             var url = CommonService.generateUrl('paper-list', this.exercise.id) + '#/' + this.exercise.id + '/' + paper.id;
                             $window.location = url;

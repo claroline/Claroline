@@ -252,7 +252,8 @@ class ExerciseManager
             'correctionMode' => $exercise->getCorrectionMode(),
             'correctionDate' => $exercise->getDateCorrection()->format('Y-m-d H:i:s'),
             'startDate' => $startDate,
-            'endDate' => $endDate
+            'endDate' => $endDate,
+            'duration' => $exercise->getDuration()
         ];
     }
 

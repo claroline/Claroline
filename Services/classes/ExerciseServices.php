@@ -227,6 +227,37 @@ class ExerciseServices
     }
 
     /**
+     * Add a question in a step
+     *
+     *
+     * @param UJM\ExoBundle\Entity\Question $question
+     * @param UJM\ExoBundle\Entity\Step $step
+     * @param Integer $order
+     */
+    public function addQuestionInStep($question, $step, $order)
+    {
+        if ($step != null) {
+            if ($this->isExerciseAdmin($step->getExercise())) {
+                $sq = new StepQuestion($step, $question);
+
+                if ($order == -1) {
+                    $dql = 'SELECT max(sq.ordre) FROM UJM\ExoBundle\Entity\StepQuestion sq '
+                          .'WHERE sq.step='.$step->getId();
+                    $query = $this->doctrine->getManager()->createQuery($dql);
+                    $maxOrdre = $query->getResult();
+
+                    $sq->setOrdre((int) $maxOrdre[0][1] + 1);
+                } else {
+                    $sq->setOrdre($order);
+                }
+
+                $this->om->persist($sq);
+                $this->om->flush();
+            }
+        }
+    }
+
+    /**
      * To know if an user is allowed to open an exercise.
      *
      *

@@ -48,7 +48,8 @@ class SequenceController extends Controller
                     'exercise' => $exo,
                     'paper' => $paper,
                     'user' => json_encode($u),
-                    'currentStepIndex' => 0
+                    'currentStepIndex' => 0,
+                    'duration' => $exercise->getDuration()
             )
         );
     }   
