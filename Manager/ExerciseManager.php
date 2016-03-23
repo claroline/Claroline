@@ -168,7 +168,7 @@ class ExerciseManager
                       ->getRepository('UJMExoBundle:Step')
                       ->findByExercise($exercise);
 
-
+        
         return $steps;
     }
 
@@ -267,12 +267,13 @@ class ExerciseManager
     {
 
         $questions = array();
-        $steps = $exercise->getSteps();
+        // $steps = $exercise->getSteps();
+        $steps = $this->pickSteps($exercise);
 
         $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
 
         foreach ($steps as $step) {
-            foreach ($questionRepo->findByStep($step) As $question) {
+            foreach ($questionRepo->findByStep($step) as $question) {
                 $questions[] =  [
                     'id' => $step->getId(),
                     'items' => [$this->questionManager->exportQuestion($question, $withSolutions)]

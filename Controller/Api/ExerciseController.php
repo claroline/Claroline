@@ -104,13 +104,13 @@ class ExerciseController
     public function attemptAction(User $user, Exercise $exercise)
     {
         $this->assertHasPermission('OPEN', $exercise);
-        
+
         // if not admin of the resource check if exercise max attempts is reached
         if (!$this->isAdmin($exercise)) {
 
             $max = $exercise->getMaxAttempts();
             $nbFinishedPapers = $this->paperManager->countUserFinishedPapers($exercise, $user);
-            
+
             if($max > 0 && $nbFinishedPapers >= $max){
                 throw new AccessDeniedHttpException('max attempts reached');
             }
@@ -150,15 +150,15 @@ class ExerciseController
 
         return new JsonResponse('', 204);
     }
-    
+
     /**
      * Saves the score of an open long answer.
-     * 
+     *
      * @EXT\Route("/papers/{paperId}/question/{questionId}/score/{score}", name="exercise_save_open_score")
      * @EXT\Method("PUT")
      * @EXT\ParamConverter("paper", class="UJMExoBundle:Paper", options={"mapping": {"paperId": "id"}})
      * @EXT\ParamConverter("question", class="UJMExoBundle:Question", options={"mapping": {"questionId": "id"}})
-     * 
+     *
      * @param Question $question
      * @param Paper $paper
      * @param int $score
@@ -166,7 +166,7 @@ class ExerciseController
     public function saveOpenLongScore(Question $question, Paper $paper, $score)
     {
         $this->paperManager->recordOpenScore($question, $paper, $score);
-        
+
         return new JsonResponse('', 204);
     }
 
@@ -187,7 +187,6 @@ class ExerciseController
     public function hintAction(User $user, Paper $paper, Hint $hint)
     {
         $this->assertHasPaperAccess($user, $paper);
-
         if (!$this->paperManager->hasHint($paper, $hint)) {
             return new JsonResponse('Hint and paper are not related', 422);
         }
@@ -228,8 +227,8 @@ class ExerciseController
      * @return JsonResponse
      */
     public function papersAction(User $user, Exercise $exercise)
-    {        
-        if($this->isAdmin($exercise)){          
+    {
+        if($this->isAdmin($exercise)){
             return new JsonResponse($this->paperManager->exportExercisePapers($exercise));
         }
         return new JsonResponse($this->paperManager->exportUserPapers($exercise, $user));
@@ -251,7 +250,7 @@ class ExerciseController
     }
 
     /**
-     * Return a question solutions, global feedback, choices / proposals and for each proposal the feedback 
+     * Return a question solutions, global feedback, choices / proposals and for each proposal the feedback
      * @EXT\Route("/question/{id}", name="get_question_solutions")
      * @EXT\ParamConverter("user", converter="current_user")
      */

@@ -176,7 +176,7 @@ class PaperManager
     {
         $response = $this->om->getRepository('UJMExoBundle:Response')
             ->findOneBy(['paper' => $paper, 'question' => $question]);
-        
+
         $response->setMark($score);
 
         $scorePaper = $paper->getScore();
@@ -198,10 +198,10 @@ class PaperManager
      */
     public function hasHint(Paper $paper, Hint $hint)
     {
-        $link = $this->om->getRepository('UJMExoBundle:ExerciseQuestion')->findOneBy([
-            'question' => $hint->getQuestion(),
-            'exercise' => $paper->getExercise()
-        ]);
+        $link = $this->om->getRepository('UJMExoBundle:StepQuestion')->findStepByExoQuestion(
+            $paper->getExercise(),
+            $hint->getQuestion()
+        );
 
         return $link !== null;
     }

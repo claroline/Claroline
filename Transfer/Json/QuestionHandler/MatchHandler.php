@@ -113,7 +113,7 @@ class MatchHandler implements QuestionHandlerInterface {
         // this importQuestion method seems to be used only in test context...
         $interaction = new InteractionMatching();
 
-        // handle proposals   
+        // handle proposals
         $persistedProposals = array(); // do not add twice the same label!!
         // for each firstSet in data (= proposal)
         for ($i = 0, $max = count($importData->firstSet); $i < $max; ++$i) {
@@ -143,7 +143,7 @@ class MatchHandler implements QuestionHandlerInterface {
             $label = new Label();
             $label->setValue($importData->secondSet[$j]->data);
             $label->setOrdre($j);
-            // check if current label is in the solution                    
+            // check if current label is in the solution
             foreach ($importData->solutions as $solution) {
                 // label is in solution get score from solution
                 if ($solution->secondId === $importData->secondSet[$j]->id) {
@@ -342,51 +342,58 @@ class MatchHandler implements QuestionHandlerInterface {
      *
      * {@inheritdoc}
      */
-    public function storeAnswerAndMark(Question $question, Response $response, $data) {
+     public function storeAnswerAndMark(Question $question, Response $response, $data) {
 
-        $interaction = $this->om->getRepository('UJMExoBundle:InteractionMatching')
-                ->findOneByQuestion($question);
+         $interaction = $this->om->getRepository('UJMExoBundle:InteractionMatching')
+                 ->findOneByQuestion($question);
 
-        $labels = $interaction->getLabels();
-        // at least one label must have a score
-        $score = 0;
-        $tabLabelGraduate = array();
-        foreach ($labels as $label) {
-            foreach($tabLabelGraduate as $labelPast) {
-                if ($labelPast !== $label) {
-                    $score += $label->getScoreRightResponse();
-                }
-            }
-            array_push($tabLabelGraduate, $label);
-        }
-        if ($score === 0) {
-            throw new \Exception('Global score not implemented yet');
-        }
+         $labels = $interaction->getLabels();
+         // at least one label must have a score
+         $score = 0;
+         $tabLabelGraduate = array(); // store labels already considered in calculating the score
+         foreach ($labels as $label) {
+             // if first label
+             if(count($tabLabelGraduate) === 0){
+               $score += $label->getScoreRightResponse();
+             } else if (count($tabLabelGraduate) > 0){
+               foreach($tabLabelGraduate as $labelPast) { // nothing in the array
+                   if ($labelPast !== $label) {
+                       $score += $label->getScoreRightResponse();
+                   }
+               }
+             }
 
-        // calculate response score
-        $mark = 0;
-        $targetIds = array();
-        foreach ($data as $answer) {
-            if ($answer !== '') {
-                $set = explode(',', $answer);
-                array_push($targetIds, $set[1]);
-            }
-        }
+             // add the labels already considered
+             array_push($tabLabelGraduate, $label);
+         }
+         if ($score === 0) {
+             throw new \Exception('Global score not implemented yet');
+         }
 
-        foreach ($labels as $label) {
-            // if student used the label in his answer
-            if (in_array((string) $label->getId(), $targetIds)) {
-                $mark += $label->getScoreRightResponse();
-            }
-        }
+         // calculate response score
+         $mark = 0;
+         $targetIds = array();
+         foreach ($data as $answer) {
+             if ($answer !== '') {
+                 $set = explode(',', $answer);
+                 array_push($targetIds, $set[1]);
+             }
+         }
 
-        if ($mark < 0) {
-            $mark = 0;
-        }
+         foreach ($labels as $label) {
+             // if student used the label in his answer
+             if (in_array((string) $label->getId(), $targetIds)) {
+                 $mark += $label->getScoreRightResponse();
+             }
+         }
 
-        $result = count($data) > 0 ? implode(';', $data) : '';
-        $response->setResponse($result);
-        $response->setMark($mark);
-    }
+         if ($mark < 0) {
+             $mark = 0;
+         }
+
+         $result = count($data) > 0 ? implode(';', $data) : '';
+         $response->setResponse($result);
+         $response->setMark($mark);
+     }
 
 }
