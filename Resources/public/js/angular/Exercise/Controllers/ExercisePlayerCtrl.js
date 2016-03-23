@@ -189,18 +189,18 @@ ExercisePlayerCtrl.prototype.handleStepNavigation = function (action, paper) {
         endPromise.then(function (result) {
             if (this.checkCorrectionAvailability()) {
                 // go to paper correction view
-                var url = this.CommonService.generateUrl('paper-list', this.exercise.id) + '#/' + this.exercise.id + '/' + paper.id;
+                var url = Routing.generate('ujm_exercise_open', {id: this.exercise.id}) + '#/papers/' + paper.id;
                 this.$window.location = url;
             }
             else {
                 // go to exercise home page
-                var url = this.CommonService.generateUrl('exercise-home', this.exercise.id);
+                var url = Routing.generate('ujm_exercise_open', {id: this.exercise.id});
                 this.$window.location = url;
             }
         }.bind(this));
     } else if (action && action === 'interrupt') {
         // go to exercise home page
-        var url = this.CommonService.generateUrl('exercise-home', this.exercise.id);
+        var url = Routing.generate('ujm_exercise_open', {id: this.exercise.id});
         this.$window.location = url;
     } else {
         var url = Routing.generate('ujm_sequence_error', {message: 'action not allowed', code: '400'});

@@ -29,19 +29,12 @@ StepListCtrl.prototype.addStep = function addStep() {
 };
 
 StepListCtrl.prototype.removeStep = function removeStep(step) {
-
+    this.ExerciseService.removeStep(step);
 };
 
-/**
- * Add a new item to the Step
- * @param {Object} step
- */
-StepListCtrl.prototype.addItem = function addItem(step) {
 
-};
-
-StepListCtrl.prototype.removeItem = function removeItem(item) {
-    // {{ 'ujm_question_delete' | path:{ id: item.id } }}
+StepListCtrl.prototype.removeItem = function removeItem(step, item) {
+    this.ExerciseService.removeItem(step, item);
 };
 
 // Register controller into Angular JS

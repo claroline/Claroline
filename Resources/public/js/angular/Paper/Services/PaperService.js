@@ -55,6 +55,26 @@ angular.module('Paper').factory('PaperService', [
                     });
 
                 return deferred.promise;
+            },
+
+            /**
+             * Delete all papers of an Exercise
+             */
+            deleteAll: function deleteAll(papers) {
+                var exercise = ExerciseService.getExercise();
+
+                var deferred = $q.defer();
+                $http
+                    .delete(Routing.generate('ujm_exercise_delete_papers', { id: exercise.id }))
+                    .success(function (response) {
+                        papers.splice(0, papers.length); // Empty the Papers list
+                        deferred.resolve(response);
+                    })
+                    .error(function (data, status) {
+                        deferred.reject([]);
+                    });
+
+                return deferred.promise;
             }
         };
     }

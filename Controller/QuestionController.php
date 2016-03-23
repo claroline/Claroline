@@ -267,19 +267,21 @@ class QuestionController extends Controller {
      * Displays a form to create a new Question entity with interaction.
      *
      * @EXT\Route(
-     *     "/new/{exoID}/{pageToGo}/{maxPage}/{nbItem}",
+     *     "/new/{exoID}/{stepID}/{pageToGo}/{maxPage}/{nbItem}",
      *     name="ujm_question_new",
-     *     defaults={"exoID"= -1, "pageToGo"= 1, "maxPage"= 10, "nbItem"= 1},
+     *     defaults={"exoID"= -1, "stepID"= -1, "pageToGo"= 1, "maxPage"= 10, "nbItem"= 1},
      *     options={"expose"=true}
      * )
      *
      * @param int $exoID id Exercise if the user is in an exercise, -1 if the user is in the question bank
+     * @param int $stepID
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function newAction($exoID) {
+    public function newAction($exoID, $stepID) {
         $catSer = $this->container->get('ujm.exo_category');
         $variables = array(
             'exoID' => $exoID,
+            'stepID' => $stepID,
             'linkedCategory' => $catSer->getLinkedCategories(),
             'locker' => $catSer->getLockCategory(),
         );
@@ -433,9 +435,13 @@ class QuestionController extends Controller {
         if ($request->isXmlHttpRequest()) {
             $valType = $request->request->get('indice_type');
             $exoID = $request->request->get('exercise');
+            $stepID = $request->request->get('step');
 
             return $this->forward(
-                            'UJMExoBundle:' . $valType . ':new', array('exoID' => $exoID)
+                'UJMExoBundle:' . $valType . ':new', array(
+                    'exoID' => $exoID,
+                    'stepID' => $stepID,
+                )
             );
         }
     }
@@ -1179,15 +1185,13 @@ class QuestionController extends Controller {
 
             if ($exoID == -1) {
                 return $this->redirect(
-                                $this->generateUrl('ujm_question_index', array(
-                                    'categoryToFind' => base64_encode($categoryToFind), 'titleToFind' => base64_encode($titleToFind),)
-                                )
+                    $this->generateUrl('ujm_question_index', array(
+                        'categoryToFind' => base64_encode($categoryToFind), 'titleToFind' => base64_encode($titleToFind),)
+                    )
                 );
             } else {
                 return $this->redirect(
-                                $this->generateUrl('ujm_exercise_questions', array(
-                                    'id' => $exoID, 'categoryToFind' => $categoryToFind, 'titleToFind' => $titleToFind,)
-                                )
+                    $this->generateUrl('ujm_exercise_open', [ 'id' => $exoID ]) . '#/steps'
                 );
             }
         } else {

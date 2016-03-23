@@ -31,7 +31,7 @@
 {% if _resource is defined %}
     {% block resourceBreadcrumb %}
         <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
-        <li><a href="{{ path('ujm_exercise_questions', { 'id': exoID }) }}">{{ 'my_questions' | trans({}, 'ujm_exo') }}</a></li>
+        <li><a href="{{ path('ujm_exercise_open', {'id': exoID}) }}#/steps">{{ 'my_questions' | trans({}, 'ujm_exo') }}</a></li>
         <li class="active">{{ 'question_creation' | trans({}, 'ujm_exo') }}</li>
     {% endblock %}
 {% endif %}
@@ -57,7 +57,7 @@
                 <i class="fa fa-arrow-left"></i> {{ 'back_to_the_list' | trans({}, 'ujm_exo') }}
             </a>
         {% else %}
-            <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': exoID }) }}">
+            <a class="btn btn-primary" href="{{ path('ujm_exercise_open', {'id': exoID}) }}#/steps">
                 <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
             </a>
         {% endif %}
@@ -68,7 +68,7 @@
                 <div class="form-group row">
                 <label class="col-md-3 control-label" for="menu_type_question">{{ 'kind_question' | trans({}, 'ujm_exo') }}?&nbsp;&nbsp;</label>
                 <div class="col-md-9">
-                    <select class="form-control" name="menu_type_question" id="menu_type_question" onchange="cherche_type('{{ 'warning_change_type_q' | trans({}, 'ujm_exo') }} ?', '{{ exoID }}', '{{ path('ujm_question_display_form_type')}}' )">
+                    <select class="form-control" name="menu_type_question" id="menu_type_question" onchange="cherche_type('{{ 'warning_change_type_q' | trans({}, 'ujm_exo') }} ?', '{{ exoID }}', '{{ stepID }}' , '{{ path('ujm_question_display_form_type')}}' )">
                         <option selected="selected" disabled>{{ 'choose_type' | trans({}, 'ujm_exo') }}</option>
                         {% for type in interactionType %}
                             {% for value in type %}

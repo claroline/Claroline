@@ -1,4 +1,10 @@
 <div class="overview">
+    <div class="panel-body" data-ng-if="!exerciseOverviewCtrl.exercise.meta.published && !exerciseOverviewCtrl.exercise.meta.publishedOnce">
+        <div class="alert alert-info">
+            {{ 'info_exercise_never_published'|trans:{}:'ujm_exo' }}
+        </div>
+    </div>
+
     <table class="table table-striped">
         <!-- Display exercise general information -->
         <tbody>
@@ -11,7 +17,10 @@
             <!-- Description of the Exercise -->
             <tr>
                 <th class="text-right col-md-4" scope="row">{{ 'description'|trans:{}:'ujm_exo' }}</th>
-                <td class="text-center col-md-8">{{ exerciseOverviewCtrl.exercise.meta.description || '-' }}</td>
+                <td class="text-center col-md-8">
+                    <span data-ng-if="exerciseOverviewCtrl.exercise.meta.description" data-ng-bind-html="exerciseOverviewCtrl.exercise.meta.description"></span>
+                    <span data-ng-if="!exerciseOverviewCtrl.exercise.meta.description">-</span>
+                </td>
             </tr>
 
             <!-- Start date -->
@@ -39,6 +48,12 @@
                 </td>
             </tr>
 
+            <!-- Creation date -->
+            <tr>
+                <th class="text-right col-md-4" scope="row">{{ 'creation_date' | trans:{}:'ujm_exo' }}</th>
+                <td class="text-center col-md-8">{{ exerciseOverviewCtrl.exercise.meta.created | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+            </tr>
+
             <!-- Shuffle question order -->
             <tr>
                 <th class="text-right col-md-4" scope="row">{{ 'random_questions' | trans:{}:'ujm_exo' }}</th>
@@ -53,6 +68,70 @@
                 <td class="text-center col-md-8" data-ng-switch="exerciseOverviewCtrl.exercise.meta.pick">
                     <span data-ng-switch-when="0">{{ 'all_question'|trans:{}:'ujm_exo' }}</span>
                     <span data-ng-switch-default="">{{ exerciseOverviewCtrl.exercise.meta.pick }}</span>
+                </td>
+            </tr>
+
+            <!-- Keep same question -->
+            <tr>
+                <th class="text-right col-md-4" scope="row">{{ 'keep_same_question' | trans:{}:'ujm_exo' }}</th>
+                <td class="text-center col-md-8">
+                    <span class="fa" data-ng-class="{ 'fa-check-circle': exerciseOverviewCtrl.exercise.meta.pick, 'fa-times-circle': !exerciseOverviewCtrl.exercise.meta.pick }"></span>
+                </td>
+            </tr>
+
+            <!-- When correction will be available ? -->
+            <tr>
+                <th class="text-right col-md-4" scope="row">{{ 'availability_of_correction' | trans:{}:'ujm_exo' }}</th>
+                <td class="text-center col-md-8" data-ng-switch="exerciseOverviewCtrl.exercise.meta.correctionMode">
+                    <span data-ng-switch-when="1">{{ 'at_the_end_of_assessment'|trans:{}:'ujm_exo' }}</span>
+                    <span data-ng-switch-when="2">{{ 'after_the_last_attempt'|trans:{}:'ujm_exo' }}</span>
+                    <span data-ng-switch-when="3">{{ 'from'|trans:{}:'ujm_exo' }} <b>{{ exerciseOverviewCtrl.exercise.meta.correctionDate | date:'dd/MM/yyyy HH:mm:ss' }}</b></span>
+                    <span data-ng-switch-when="4">{{ 'never'|trans:{}:'ujm_exo' }}</span>
+                </td>
+            </tr>
+
+            <!-- When score will be available ? -->
+            <tr>
+                <th class="text-right col-md-4" scope="row">{{ 'availability_of_score' | trans:{}:'ujm_exo' }}</th>
+                <td class="text-center col-md-8" data-ng-switch="exerciseOverviewCtrl.exercise.meta.markMode">
+                    <span data-ng-switch-when="1">{{ 'at_the_same_time_that_the_correction'|trans:{}:'ujm_exo' }}</span>
+                    <span data-ng-switch-when="2">{{ 'at_the_end_of_assessment'|trans:{}:'ujm_exo' }}</span>
+                </td>
+            </tr>
+
+            <!-- Anonymous allowed ? -->
+            <tr>
+                <th class="text-right col-md-4" scope="row">{{ 'anonymous' | trans:{}:'ujm_exo' }}</th>
+                <td class="text-center col-md-8">
+                    <span class="fa" data-ng-class="{ 'fa-check-circle': exerciseOverviewCtrl.exercise.meta.anonymous, 'fa-times-circle': !exerciseOverviewCtrl.exercise.meta.anonymous }"></span>
+                </td>
+            </tr>
+
+            <!-- Duration -->
+            <tr>
+                <th class="text-right col-md-4" scope="row">{{ 'duration' | trans:{}:'ujm_exo' }}</th>
+                <td class="text-center col-md-8">{{ exerciseOverviewCtrl.exercise.meta.duration || '-' }}</td>
+            </tr>
+
+            <!-- Display interrupt button ? -->
+            <tr>
+                <th class="text-right col-md-4" scope="row">{{ 'test_exit' | trans:{}:'ujm_exo' }}</th>
+                <td class="text-center col-md-8">
+                    <span class="fa" data-ng-class="{ 'fa-check-circle': exerciseOverviewCtrl.exercise.meta.dispButtonInterrupt, 'fa-times-circle': !exerciseOverviewCtrl.exercise.meta.dispButtonInterrupt }"></span>
+                </td>
+            </tr>
+
+            <!-- Maximum attempts -->
+            <tr>
+                <th class="text-right col-md-4" scope="row">{{ 'maximum_tries' | trans:{}:'ujm_exo' }}</th>
+                <td class="text-center col-md-8">{{ exerciseOverviewCtrl.exercise.meta.maxAttempts || '-' }}</td>
+            </tr>
+
+            <!-- Lock attempt -->
+            <tr data-ng-if="0 < exerciseOverviewCtrl.exercise.meta.maxAttempts">
+                <th class="text-right col-md-4" scope="row">{{ 'lock_attempt' | trans:{}:'ujm_exo' }}</th>
+                <td class="text-center col-md-8">
+                    <span class="fa" data-ng-class="{ 'fa-check-circle': exerciseOverviewCtrl.exercise.meta.lockAttempt, 'fa-times-circle': !exerciseOverviewCtrl.exercise.meta.lockAttempt }"></span>
                 </td>
             </tr>
         </tbody>

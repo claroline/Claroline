@@ -48,6 +48,11 @@ class QuestionType extends AbstractType
                     },
                 )
             )
+            ->add(
+                'stepID', 'hidden', array(
+                    'mapped' => false,
+                )
+            )
             ->add('description', 'textarea', array(
                     'label' => 'question_description',
                     'required' => false,

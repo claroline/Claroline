@@ -32,20 +32,6 @@ angular.module('Paper').controller('PaperListCtrl', [
 
         };
 
-        this.generateUrl = function (witch, _id) {
-            switch (witch) {
-                case 'papers-docimolgy':
-                    var nbPapers = this.papers.length;
-                    return Routing.generate('ujm_exercise_docimology', {id: _id, nbPapers: nbPapers});
-                    break;
-                case 'papers-csv-export':
-                    return Routing.generate('ujm_paper_export_results', {exerciseId: _id});
-                    break;
-                default:
-                    return CommonService.generateUrl(witch, _id);
-            }
-        };
-
         this.updateFilteredList = function () {
             this.filtered = $filter("filter")(this.papers, this.query);
         };
@@ -131,6 +117,13 @@ angular.module('Paper').controller('PaperListCtrl', [
                     this.interrupted = false;
                 }
             }
+        };
+
+        /**
+         * Delete all Papers of the Exercise
+         */
+        this.deletePapers = function deletePapers() {
+            PaperService.deleteAll(this.papers);
         };
 
         this.setTableData();

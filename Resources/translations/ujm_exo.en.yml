@@ -247,7 +247,7 @@ overview: Overview
 paper: Paper
 paper_legend: Papers which need manual correction
 paper_list: Paper list
-parameters: Parameters
+metadata: Parameters
 partially: Partially correct
 penalty: Penalty
 percentage: Percentage
@@ -309,6 +309,7 @@ search_question: Search questions
 search_user_paper: Search papers of user
 see_shared_with: Question shared with users
 select: Select
+select_type: select the type of the Exercise
 selection: => To answer, use drag and drop.
 self: You can't shared this question with yourself
 shape: Shape

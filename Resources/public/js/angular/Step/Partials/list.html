@@ -45,7 +45,7 @@
 
                             <!-- Delete Item button -->
                             <button type="button" class="btn btn-danger" data-toggle="tooltip" title="{{ 'delete' | trans:{}:'ujm_exo' }}"
-                               data-ng-bootbox-confirm="{{ 'delete_of_my_exercise'|trans:{}:'ujm_exo'}}" data-ng-bootbox-confirm-action="exercisePlayerCtrl.removeStep(step)">
+                               data-ng-bootbox-confirm="{{ 'delete_of_my_exercise'|trans:{}:'ujm_exo'}}" data-ng-bootbox-confirm-action="stepListCtrl.removeItem(step, item)">
                                 <span class="fa fa-trash-o"></span>
                                 <span class="sr-only">{{ 'delete' | trans:{}:'ujm_exo' }}</span>
                             </button>
@@ -55,12 +55,13 @@
             </table>
 
             <div class="panel-footer">
-                <button type="button" class="btn btn-default" data-ng-click="stepListCtrl.addItem(step)">
+                <a role="button" href="{{ 'ujm_question_new' | path:{ exoID: stepListCtrl.exerciseId, stepID: step.id } }}" class="btn btn-default">
                     <span class="fa fa-plus"></span>
                     Add item
-                </button>
+                </a>
 
-                <button type="button" class="btn btn-danger">
+                <button type="button" class="btn btn-danger"
+                    data-ng-bootbox-confirm="{{ 'delete_of_my_exercise'|trans:{}:'ujm_exo'}}" data-ng-bootbox-confirm-action="stepListCtrl.removeStep(step)">
                     <span class="fa fa-trash-o"></span>
                     Delete Step
                 </button>

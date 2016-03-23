@@ -32,9 +32,10 @@ abstract class QuestionHandler
      * @param \UJM\ExoBundle\Services\classes\CategoryService  $catServ
      * @param \Claroline\CoreBundle\Entity\User                $user
      * @param UJM\ExoBundle\Entity\Exercise                    $exercise   instance of Exercise if the Interaction is created or modified since an exercise if since the bank $exercise=-1
+     * @param UJM\ExoBundle\Entity\Step
      * @param Translation                                      $translator
      */
-    public function __construct(Form $form = null, Request $request = null, EntityManager $em, $exoServ, $catServ, User $user, $exercise = -1, TranslatorInterface $translator = null)
+    public function __construct(Form $form = null, Request $request = null, EntityManager $em, $exoServ, $catServ, User $user, $exercise = -1, $step = -1, TranslatorInterface $translator = null)
     {
         $this->form = $form;
         $this->request = $request;
@@ -43,6 +44,7 @@ abstract class QuestionHandler
         $this->catServ = $catServ;
         $this->user = $user;
         $this->exercise = $exercise;
+        $this->step = $step;
         $this->translator = $translator;
     }
 
@@ -195,7 +197,21 @@ abstract class QuestionHandler
      */
     protected function addAnExercise($inter)
     {
-        $this->exoServ->addQuestionInExercise($inter->getQuestion(), $this->exercise);
+        $this->exoServ->addQuestionInExercise($inter->getQuestion(), $this->exercise, $this->step);
+    }
+
+    /**
+     * Link interaction to a Step if created from an Exercise
+     * @param $inter
+     */
+    protected function addStep($inter)
+    {
+        $data = $this->form->getData()->getStepID();
+        var_dump($data);
+        die();
+        if (-1 !== $data) {
+
+        }
     }
 
     /**

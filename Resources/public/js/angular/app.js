@@ -63,9 +63,9 @@ angular
 
                 // Edit Exercise parameters
                 .when('/edit', {
-                    templateUrl : AngularApp.webDir + 'bundles/ujmexo/js/angular/Exercise/Partials/parameters.html',
-                    controller  : 'ExerciseParametersCtrl',
-                    controllerAs: 'exerciseParametersCtrl',
+                    templateUrl : AngularApp.webDir + 'bundles/ujmexo/js/angular/Exercise/Partials/metadata.html',
+                    controller  : 'ExerciseMetadataCtrl',
+                    controllerAs: 'exerciseMetadataCtrl',
                     resolve: {
                         // Get the Exercise to Edit
                         exercise: [
@@ -78,7 +78,7 @@ angular
 
                     // Active tab
                     hideMenu: false,
-                    tab: 'parameters'
+                    tab: 'metadata'
                 })
 
                 // Display the list of Questions

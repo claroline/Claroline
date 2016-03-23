@@ -100,10 +100,6 @@ angular.module('Correction').controller('CorrectionCtrl', [
             return false;
         };
 
-        this.generateUrl = function (witch, _id) {
-            return CommonService.generateUrl(witch, _id);
-        };
-
         /**
          * compute the score for each question
          * @param {Object} question

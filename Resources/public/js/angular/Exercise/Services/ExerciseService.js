@@ -93,7 +93,7 @@ ExerciseService.prototype.setComposeEnabled = function setComposeEnabled(compose
 };
 
 /**
- * Save modifications of the Exercise
+ * Save modifications of the metadata of the Exercise
  * @param exercise
  * @returns {Promise}
  */
@@ -102,13 +102,17 @@ ExerciseService.prototype.save = function save(exercise) {
 
     this.$http
         .put(
-            Routing.generate('exercise_update', { id: exercise.id }),
-            exercise
+            Routing.generate('ujm_exercise_update_meta', { id: exercise.id }),
+            exercise.meta
         )
         .success(function onSuccess(response) {
+            // TODO : display message
+
             deferred.resolve(response);
         })
         .error(function onError(response, status) {
+            // TODO : display message
+
             deferred.reject(response);
         });
 
@@ -125,10 +129,14 @@ ExerciseService.prototype.start = function start() {
     this.$http.post(
             Routing.generate('exercise_new_attempt', { id: this.exercise.id })
         ).success(function(response){
+            // TODO : display message
+
             if (response && response.paper) {
                 deferred.resolve(response.paper);
             }
         }).error(function(data, status){
+            // TODO : display message
+
             deferred.reject([]);
             var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService get exercise error';
             var code = data && data.error && data.error.code ? data.error.code : 403;
@@ -154,10 +162,14 @@ ExerciseService.prototype.end = function end(studentPaper) {
         )
         // Success callback
         .success(function (response) {
+            // TODO : display message
+
             deferred.resolve(response);
         })
         // Error callback
         .error(function (data, status) {
+            // TODO : display message
+
             deferred.reject([]);
 
             var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService end sequence error';
@@ -178,10 +190,113 @@ ExerciseService.prototype.addStep = function addStep() {
     }
 
     // Initialize a new Step
-    this.exercise.steps.push({
+    var step = {
         id: null,
         items: []
-    });
+    };
+
+    // Add to the steps list
+    this.exercise.steps.push(step);
+
+    // Send step to the server
+    var deferred = this.$q.defer();
+    this.$http
+        .post(
+            Routing.generate('ujm_exercise_step_add', { id: this.exercise.id }),
+            step
+        )
+        // Success callback
+        .success(function (response) {
+            // Get the information of the Step
+            step.id = response.id;
+
+            // TODO : display success message
+
+            deferred.resolve(response);
+        })
+        // Error callback
+        .error(function (data, status) {
+            // Remove step
+            var pos = this.exercise.steps.indexOf(step);
+            if (-1 !== pos) {
+                this.exercise.steps.splice(pos, 1);
+            }
+
+            // TODO : display error message
+
+            deferred.reject({});
+        }.bind(this));
+
+    return deferred.promise;
+};
+
+ExerciseService.prototype.removeStep = function removeStep(step) {
+    // Store a copy of the item if something goes wrong
+    var stepBack = angular.copy(step, {});
+
+    // Remove item from Step
+    var pos = this.exercise.steps.indexOf(step);
+    if (-1 !== pos) {
+        this.exercise.steps.splice(pos, 1);
+    }
+
+    var deferred = this.$q.defer();
+    this.$http
+        .delete(
+            Routing.generate('ujm_exercise_step_delete', { id: this.exercise.id, sid: step.id })
+        )
+        // Success callback
+        .success(function (response) {
+            // TODO : display success message
+
+            deferred.resolve(response);
+        })
+        // Error callback
+        .error(function (data, status) {
+            // Restore item
+            // TODO : push step at the correct position
+            this.exercise.steps.push(stepBack);
+
+            // TODO : display error message
+
+            deferred.reject({});
+        }.bind(this));
+
+    return deferred.promise;
+};
+
+ExerciseService.prototype.removeItem = function removeItem(step, item) {
+    // Store a copy of the item if something goes wrong
+    var itemBack = angular.copy(item, {});
+
+    // Remove item from Step
+    var pos = step.items.indexOf(item);
+    if (-1 !== pos) {
+        step.items.splice(pos, 1);
+    }
+
+    var deferred = this.$q.defer();
+    this.$http
+        .delete(
+            Routing.generate('ujm_exercise_question_delete', { id: this.exercise.id, qid: item.id })
+        )
+        // Success callback
+        .success(function (response) {
+            // TODO : display success message
+
+            deferred.resolve(response);
+        })
+        // Error callback
+        .error(function (data, status) {
+            // Restore item
+            step.items.push(itemBack);
+
+            // TODO : display error message
+
+            deferred.reject({});
+        }.bind(this));
+
+    return deferred.promise;
 };
 
 /**
@@ -189,7 +304,36 @@ ExerciseService.prototype.addStep = function addStep() {
  * @returns {ExerciseService}
  */
 ExerciseService.prototype.publish = function publish() {
-    return this;
+    var deferred = this.$q.defer();
+
+    // We anticipate the success of the publishing (that's just a boolean change on boolean flag)
+    var publishedOnceBackup = this.exercise.meta.publishedOnce;
+
+    this.exercise.meta.published     = true;
+    this.exercise.meta.publishedOnce = true;
+
+    this.$http
+        .post(
+            Routing.generate('ujm_exercise_publish', { id: this.exercise.id })
+        )
+        // Success callback
+        .success(function (response) {
+            // TODO : display success message
+
+            deferred.resolve(response);
+        })
+        // Error callback
+        .error(function (data, status) {
+            // Remove published flags
+            this.exercise.meta.published     = false;
+            this.exercise.meta.publishedOnce = publishedOnceBackup;
+
+            // TODO : display error message
+
+            deferred.reject({});
+        }.bind(this));
+
+    return deferred.promise;
 };
 
 /**
@@ -197,7 +341,32 @@ ExerciseService.prototype.publish = function publish() {
  * @returns {ExerciseService}
  */
 ExerciseService.prototype.unpublish = function unpublish() {
-    return this;
+    var deferred = this.$q.defer();
+
+    // We anticipate the success of the publishing (that's just a boolean change on boolean flag)
+    this.exercise.meta.published = false;
+
+    this.$http
+        .post(
+            Routing.generate('ujm_exercise_unpublish', { id: this.exercise.id })
+        )
+        // Success callback
+        .success(function (response) {
+            // TODO : display success message
+
+            deferred.resolve(response);
+        })
+        // Error callback
+        .error(function (data, status) {
+            // Remove published flags
+            this.exercise.meta.published = true;
+
+            // TODO : display error message
+
+            deferred.reject({});
+        }.bind(this));
+
+    return deferred.promise;
 };
 
 /**
@@ -216,10 +385,14 @@ ExerciseService.prototype.submitAnswer = function submitAnswer(paperId, studentD
         )
         // Success callback
         .success(function (response) {
+            // TODO : display message
+
             deferred.resolve(response);
         })
         // Error callback
         .error(function (data, status) {
+            // TODO : display message
+
             deferred.reject([]);
             var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService submit answer error';
             var code = data && data.error && data.error.code ? data.error.code : 403;

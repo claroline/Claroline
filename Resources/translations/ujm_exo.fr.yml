@@ -248,7 +248,7 @@ overview: Vue d'ensemble
 paper: Passage
 paper_legend: Copies nécessitant une correction manuelle
 paper_list: Liste des copies
-parameters: Paramètres
+metadata: Paramètres
 partially: Partiellement correcte
 penalty: Pénalité
 percentage: Pourcentage
@@ -310,6 +310,7 @@ search_question: Chercher des questions
 search_user_paper: Rechercher les copies de l'utilisateur
 see_shared_with: Question partagée avec des utilisateurs
 select: Sélectionner
+select_type: selectionner le type de l'Exercice
 selection: => Pour répondre, utiliser la technique du glisser/déposer.
 self: Vous ne pouvez pas partager une question avec vous-même
 shape: Forme

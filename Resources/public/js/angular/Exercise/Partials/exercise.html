@@ -25,29 +25,53 @@
                             </a>
                         </li>
 
-                        <!-- Edit Exercise parameters -->
-                        <li data-ng-class="{ active: 'parameters' === exerciseCtrl.$route.current.tab }">
+                        <!-- Edit Exercise metadata -->
+                        <li data-ng-class="{ active: 'metadata' === exerciseCtrl.$route.current.tab }">
                             <a href="#/edit">
-                                <span class="fa fa-pencil"></span> {{ 'parameters' | trans:{}:'ujm_exo' }}
+                                <span class="fa fa-pencil"></span> {{ 'metadata' | trans:{}:'ujm_exo' }}
                             </a>
                         </li>
 
-                        <!-- Edit Questions -->
-                        <li data-ng-class="{ active: 'steps' === exerciseCtrl.$route.current.tab }">
-                            <a href="#/steps">
-                                <span class="fa fa-question"></span> {{ 'questions' | trans:{}:'ujm_exo' }}
+                        <!-- Questions -->
+                        <li data-uib-dropdown="" data-ng-class="{ active: 'steps' === exerciseCtrl.$route.current.tab }">
+                            <a href="" data-uib-dropdown-toggle role="button" aria-haspopup="true" aria-expanded="false">
+                                <span class="fa fa-question"></span>
+                                {{ 'questions' | trans:{}:'ujm_exo' }}
+                                <span class="caret"></span>
                             </a>
+                            <ul data-uib-dropdown-menu="">
+                                <!-- List of Exercise questions -->
+                                <li>
+                                    <a href="#/steps">
+                                        <span class="fa fa-fw fa-list"></span> {{ 'exercice_linked_question' | trans:{}:'ujm_exo' }}
+                                    </a>
+                                </li>
+
+                                <!-- Import Questions -->
+                                <li>
+                                    <a href="{{ 'ujm_exercise_import_question' | path:{ id: exerciseCtrl.exercise.meta.id } }}">
+                                        <span class="fa fa-fw fa-download"></span> {{ 'import_questions' | trans:{}:'ujm_exo' }}
+                                    </a>
+                                </li>
+
+                                <!-- Export Questions -->
+                                <li>
+                                    <a href="{{ 'ujm_qti_export_exercise_questions' | path:{ exoID: exerciseCtrl.exercise.meta.id, exoName: exerciseCtrl.exercise.meta.title } }}">
+                                        <span class="fa fa-fw fa-save"></span> {{ 'export_qti_exercise' | trans:{}:'ujm_exo' }}
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
 
                         <!-- Publish Exercise -->
-                        <li data-ng-if="!exerciseCtrl.published">
+                        <li data-ng-if="!exerciseCtrl.exercise.meta.published">
                             <a href="" role="button" data-ng-click="exerciseCtrl.publish()">
                                 <span class="fa fa-check"></span> {{ 'publish' | trans:{}:'ujm_exo' }}
                             </a>
                         </li>
 
                         <!-- Unpublish Exercise (Only if there is no submitted paper on it) -->
-                        <li data-ng-if="exerciseCtrl.published && 0 == exerciseCtrl.nbPapers">
+                        <li data-ng-if="exerciseCtrl.exercise.meta.published && 0 == exerciseCtrl.nbPapers">
                             <a href="" role="button" data-ng-click="exerciseCtrl.unpublish()">
                                 <span class="fa fa-times"></span> {{ 'unpublish' | trans:{}:'ujm_exo' }}
                             </a>
@@ -55,13 +79,13 @@
                     </ul>
 
                     <!-- Play the Exercise -->
-                    <a data-ng-if="exerciseCtrl.composeEnabled" href="#/play" role="button" class="btn btn-primary navbar-btn navbar-right">
+                    <a data-ng-if="exerciseCtrl.composeEnabled && exerciseCtrl.exercise.steps.length > 0" href="#/play" role="button" class="btn btn-primary navbar-btn navbar-right">
                         <span class="fa fa-check-square-o"></span> {{ 'compose' | trans:{}:'ujm_exo' }}
                     </a>
 
                     <ul class="nav navbar-nav navbar-right">
                         <!-- Display results of the Exercise -->
-                        <li data-ng-class="{ active: 'papers' === exerciseCtrl.currentView.tab }">
+                        <li data-ng-class="{ active: 'papers' === exerciseCtrl.$route.current.tab }">
                             <a href="#/papers">
                                 <span class="fa fa-list"></span> {{ 'result' | trans:{}:'ujm_exo' }}
                             </a>

@@ -75,8 +75,6 @@ class ExerciseManager
     }
 
     /**
-     * @todo optimize request number using repository method(s)
-     *
      * Deletes all the papers associated with an exercise.
      *
      * @todo optimize request number using repository method(s)
@@ -130,7 +128,8 @@ class ExerciseManager
         $steps = $this->pickSteps($exercise);
         $finalQuestions = array();
 
-        foreach ($steps as $step) {$questions = array();
+        foreach ($steps as $step) {
+            $questions = array();
             $originalQuestions = $questions = $this->om
                 ->getRepository('UJMExoBundle:Question')
                 ->findByStep($step);
@@ -168,7 +167,6 @@ class ExerciseManager
                       ->getRepository('UJMExoBundle:Step')
                       ->findByExercise($exercise);
 
-
         return $steps;
     }
 
@@ -182,9 +180,9 @@ class ExerciseManager
      */
     public function importExercise($data)
     {
-        $exercise = json_decode($data);
+        $exerciseData = json_decode($data);
 
-        $errors = $this->validator->validateExercise($exercise);
+        $errors = $this->validator->validateExercise($exerciseData);
 
         if (count($errors) > 0) {
             throw new ValidationException('Exercise is not valid', $errors);
@@ -211,7 +209,6 @@ class ExerciseManager
      * Exports an exercise in a JSON-encodable format.
      *
      * @param Exercise  $exercise
-     * @param bool      $withSolutions
      * @return array
      */
     public function exportExerciseMinimal(Exercise $exercise)
@@ -220,6 +217,40 @@ class ExerciseManager
             'id' => $exercise->getId(),
             'meta' => $this->exportMetadata($exercise)
         ];
+    }
+
+    /**
+     * Update the Exercise metadata
+     * @param Exercise $exercise
+     * @param \stdClass $metadata
+     * @throws ValidationException
+     */
+    public function updateMetadata(Exercise $exercise, \stdClass $metadata)
+    {
+        $errors = $this->validator->validateMetadata($metadata);
+
+        if (count($errors) > 0) {
+            throw new ValidationException('Exercise metadata are not valid', $errors);
+        }
+
+        $exercise->setTitle($metadata->title);
+        $exercise->setDescription($metadata->description);
+        $exercise->setType($metadata->type);
+        $exercise->setNbQuestion($metadata->pick);
+        $exercise->setShuffle($metadata->random);
+        $exercise->setKeepSameQuestion($metadata->keepSameQuestions);
+        $exercise->setMaxAttempts($metadata->maxAttempts);
+        $exercise->setLockAttempt($metadata->lockAttempt);
+        $exercise->setDispButtonInterrupt($metadata->dispButtonInterrupt);
+        $exercise->setMarkMode($metadata->markMode);
+        $exercise->setCorrectionMode($metadata->correctionMode);
+        $exercise->setAnonymous($metadata->anonymous);
+        $exercise->setDuration($metadata->duration);
+        /*$exercise->setDateCorrection($metadata->correctionDate);*/
+
+        // Save to DB
+        $this->om->persist($exercise);
+        $this->om->flush();
     }
 
     /**
@@ -239,15 +270,21 @@ class ExerciseManager
         $endDate   = $node->getAccessibleUntil() ? $node->getAccessibleUntil()->format('Y-m-d H:i:s') : null;
 
         return [
-            'authors' => [$authorName],
+            'authors' => [
+                [ 'name' => $authorName ],
+            ],
             'created' => $node->getCreationDate()->format('Y-m-d H:i:s'),
             'title' => $exercise->getTitle(),
             'description' => $exercise->getDescription(),
             'type' => $exercise->getType(),
             'pick' => $exercise->getNbQuestion(),
             'random' => $exercise->getShuffle(),
+            'keepSameQuestions' => $exercise->getKeepSameQuestion(),
             'maxAttempts' => $exercise->getMaxAttempts(),
+            'lockAttempt' => $exercise->getLockAttempt(),
             'dispButtonInterrupt' => $exercise->getDispButtonInterrupt(),
+            'anonymous' => $exercise->getAnonymous(),
+            'duration' => $exercise->getDuration(),
             'markMode' => $exercise->getMarkMode(),
             'correctionMode' => $exercise->getCorrectionMode(),
             'correctionDate' => $exercise->getDateCorrection()->format('Y-m-d H:i:s'),
@@ -265,24 +302,26 @@ class ExerciseManager
      * @param bool      $withSolutions
      * @return array
      */
-    private function exportSteps(Exercise $exercise, $withSolutions = true)
+    public function exportSteps(Exercise $exercise, $withSolutions = true)
     {
-
-        $questions = array();
+        $stepList = array();
         $steps = $exercise->getSteps();
 
         $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
 
         foreach ($steps as $step) {
-            foreach ($questionRepo->findByStep($step) As $question) {
-                $questions[] =  [
-                    'id' => $step->getId(),
-                    'items' => [$this->questionManager->exportQuestion($question, $withSolutions)]
-                ];
+            $currentStep = [
+                'id'    => $step->getId(),
+                'items' => [],
+            ];
+
+            foreach ($questionRepo->findByStep($step) as $question) {
+                $currentStep['items'][] = $this->questionManager->exportQuestion($question, $withSolutions);
             }
 
+            $stepList[] = $currentStep;
         }
-        return $questions;
 
+        return $stepList;
     }
 }

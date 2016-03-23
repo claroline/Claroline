@@ -16,8 +16,7 @@
            data-exercise="{{ exercise | json_encode | raw | escape }}"
            data-nb-papers ="{{ nbPapers }}"
            data-edit-enabled="{{ editEnabled }}"
-           data-compose-enabled="{{ composeEnabled }}"
-           data-published="{{ _resource.resourceNode.published }}">
+           data-compose-enabled="{{ composeEnabled }}">
        </exercise>
    </div>
 {% endblock %}

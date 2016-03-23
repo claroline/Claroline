@@ -6,10 +6,12 @@
  * @constructor
  */
 var ExerciseCtrl = function ExerciseCtrl(ExerciseService, $route) {
+    this.ExerciseService = ExerciseService;
+
     // Share current Exercise with the whole application
-    ExerciseService.setExercise(this.exercise);
-    ExerciseService.setEditEnabled(this.editEnabled);
-    ExerciseService.setComposeEnabled(this.composeEnabled);
+    this.ExerciseService.setExercise(this.exercise);
+    this.ExerciseService.setEditEnabled(this.editEnabled);
+    this.ExerciseService.setComposeEnabled(this.composeEnabled);
 
     // Force reload of the route (as ng-view is deeper in the directive tree, route resolution is deferred and it causes issues)
     $route.reload();
@@ -33,12 +35,6 @@ ExerciseCtrl.prototype.exercise = null;
 ExerciseCtrl.prototype.nbPapers = 0;
 
 /**
- * Is the Current Exercise already published ?
- * @type {boolean}
- */
-ExerciseCtrl.prototype.published = false;
-
-/**
  * If the current User has the rights to administrate the Exercise,
  * we display him tools to do it
  * @type {boolean}
@@ -56,14 +52,14 @@ ExerciseCtrl.prototype.composeEnabled = false;
  * Publish the Current exercise
  */
 ExerciseCtrl.prototype.publish = function publish() {
-    console.log('Exercise will be published');
+    this.ExerciseService.publish();
 };
 
 /**
  * Unpublish the Current exercise
  */
 ExerciseCtrl.prototype.unpublish = function unpublish() {
-    console.log('Exercise will be unpublished');
+    this.ExerciseService.unpublish();
 };
 
 // Register controller into AngularJS

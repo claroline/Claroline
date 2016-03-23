@@ -33,6 +33,12 @@
             </div>
         </div>
 
+        <!-- Button to delete test papers (when the Exercise is not published and has never been) -->
+        <button type="button" class="btn btn-danger" data-ng-click="paperListCtrl.deletePapers()" data-ng-if="paperListCtrl.filtered.length > 0 && !paperListCtrl.exercise.meta.published && !paperListCtrl.exercise.meta.publishedOnce">
+            <span class="fa fa-trash-o"></span>
+            {{ 'delete_papers' | trans:{}:'ujm_exo' }}
+        </button>
+
         <div class="row center-text" data-ng-if="paperListCtrl.filtered.length === 0">
             <hr/>
             <div class="col-md-12">

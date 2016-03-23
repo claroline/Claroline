@@ -1,10 +1,10 @@
 /**
- * Exercise Parameters Controller
+ * Exercise Metadata Controller
  * Manages edition of the parameters of the Exercise
  * @param {Object} exercise - The exercise to Edit
  * @constructor
  */
-var ExerciseParametersCtrl = function ExerciseEditCtrl(ExerciseService, exercise) {
+var ExerciseMetadataCtrl = function ExerciseMetadataCtrl(ExerciseService, exercise) {
     this.exerciseService = ExerciseService;
 
     // Create a copy of the exercise
@@ -39,32 +39,32 @@ var ExerciseParametersCtrl = function ExerciseEditCtrl(ExerciseService, exercise
     this.tinymceOptions.plugins = plugins;
     this.tinymceOptions.toolbar1 = toolbar;
 
-    this.tinymceOptions.format = 'text';
+    this.tinymceOptions.format = 'html';
 };
 
 // Set up dependency injection
-ExerciseParametersCtrl.$inject = [ 'ExerciseService', 'exercise' ];
+ExerciseMetadataCtrl.$inject = [ 'ExerciseService', 'exercise' ];
 
 /**
  * Tiny MCE options
  * @type {object}
  */
-ExerciseParametersCtrl.prototype.tinymceOptions = {};
+ExerciseMetadataCtrl.prototype.tinymceOptions = {};
 
 /**
  * A copy of the Exercise to edit (to not override Exercise data if User cancel the edition)
  * @type {Object}
  */
-ExerciseParametersCtrl.prototype.exercise = {};
+ExerciseMetadataCtrl.prototype.exercise = {};
 
 /**
  * Save modifications of the Exercise
  */
-ExerciseParametersCtrl.prototype.save = function save() {
+ExerciseMetadataCtrl.prototype.save = function save() {
     this.exerciseService.save(this.exercise);
 };
 
 // Register controller into AngularJS
 angular
     .module('Exercise')
-    .controller('ExerciseParametersCtrl', ExerciseParametersCtrl);
+    .controller('ExerciseMetadataCtrl', ExerciseMetadataCtrl);

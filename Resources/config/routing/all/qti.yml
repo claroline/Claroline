@@ -12,6 +12,7 @@ ujm_qti_import_form:
 ujm_qti_export_exercise_questions:
     pattern: /ExportQuestionExercise
     defaults: { _controller: "UJMExoBundle:Qti:exportQuestionsExercise" }
+    options:  { expose: true }
 
 ujm_qti_export:
     pattern:  /export/{id}
