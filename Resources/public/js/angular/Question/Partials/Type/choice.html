@@ -4,10 +4,6 @@
             <span>{{choiceQuestionCtrl.question.title}}</span>            
         </h4>
         <div class="btn-group  pull-right">
-            <!--
-            <button role="button" id="btn-show-feedback-{{choiceQuestionCtrl.question.id}}" data-ng-show="choiceQuestionCtrl.canSeeFeedback" data-ng-click="choiceQuestionCtrl.showFeedback()" data-container="body" data-toggle="tooltip" title="{{ 'btn_feedback_display'|trans:{}:'ujm_sequence' }}" type="button" data-ng-click="exerciseCtrl.showFeedback()" class="btn btn-default fa fa-comment">    
-            </button>
-            -->
             <a class="btn btn-default fa fa-chevron-down" id="question-toggle-{{choiceQuestionCtrl.question.id}}" data-ng-click="choiceQuestionCtrl.toggleDetails(question.id)"></a>
         </div>
     </div>

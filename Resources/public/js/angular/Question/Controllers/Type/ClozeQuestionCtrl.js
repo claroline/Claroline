@@ -303,6 +303,8 @@ angular.module('Question').controller('ClozeQuestionCtrl', [
             $('.blank').each(function () {
                 $(this).prop('disabled', false);
             });
+
+            this.lockInputs();
         };
 
         /**
