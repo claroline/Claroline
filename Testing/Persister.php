@@ -16,7 +16,6 @@ use UJM\ExoBundle\Entity\Choice;
 use UJM\ExoBundle\Entity\Proposal;
 use UJM\ExoBundle\Entity\Label;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\ExerciseQuestion;
 use UJM\ExoBundle\Entity\Hint;
 use UJM\ExoBundle\Entity\InteractionOpen;
 use UJM\ExoBundle\Entity\InteractionQCM;
