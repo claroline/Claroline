@@ -1,5 +1,7 @@
+import RemoveByCsvModalController from './RemoveByCsvModalController'
+
 export default class UserController {
-    constructor($http, ClarolineSearchService, ClarolineAPIService) {
+    constructor($http, ClarolineSearchService, ClarolineAPIService, $uibModal) {
         this.ClarolineAPIService = ClarolineAPIService
         this.$http = $http
         this.ClarolineSearchService = ClarolineSearchService
@@ -11,6 +13,7 @@ export default class UserController {
         this.alerts = []
         this.fields = []
         this.managedOrganizations = []
+        this.$uibModal = $uibModal
 
         const columns = [
             {name: this.translate('username'), prop: "username", isCheckboxColumn: true, headerCheckbox: true},
@@ -46,6 +49,11 @@ export default class UserController {
             }
         ];
 
+        let availableColumns = angular.copy(columns)
+        //removing username from the selection
+        availableColumns.splice(0, 1)
+        //availableColumns.push({name: "guid", prop: "guid"})
+
         this.dataTableOptions = {
             scrollbarV: false,
             columnMode: 'force',
@@ -55,10 +63,12 @@ export default class UserController {
             checkboxSelection: true,
             selectable: true,
             columns: columns,
+            sizes: [10, 20, 50, 100],
             paging: {
                 externalPaging: true,
                 size: 10
-            }
+            },
+            availableColumns: availableColumns
         };
 
         $http.get(Routing.generate('api_get_user_admin_actions'))
@@ -121,11 +131,11 @@ export default class UserController {
     initPassword() {
         const url = Routing.generate('api_users_password_initialize') + '?' + this.generateQsForSelected();
 
-        let users = '';
+        let users = ''
 
         for (let i = 0; i < this.selected.length; i++) {
             users +=  this.selected[i].username
-            if (i < this.selected.length - 1) users += ', ';
+            if (i < this.selected.length - 1) users += ', '
         }
 
         this.ClarolineAPIService.confirm(
@@ -138,6 +148,18 @@ export default class UserController {
 
     closeAlert(index) {
         this.alerts.splice(index, 1);
+    }
+
+    csvRemove() {
+        const modalInstance = this.$uibModal.open({
+            template: require('../Partial/csv_remove.html'),
+            controller: 'RemoveByCsvModalController',
+            controllerAs: 'rbcmc'
+        })
+
+        modalInstance.result.then(result => {
+            this.paging(0, this.dataTableOptions.paging.size)
+        })
     }
 
     _onSearch(searches) {

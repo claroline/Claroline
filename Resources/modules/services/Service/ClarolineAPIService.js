@@ -48,18 +48,15 @@ export default class ClarolineAPIService {
 
     //replace element in array whose id is element.id
     replaceById(element, elements) {
-        console.log(elements);
         var index = null;
-        console.log(element.id)
         for (let i = 0; i < elements.length; i++) {
-            console.log(elements[i].id)
             //lazy comparison. I don't want to cast anything
             if (element.id == elements[i].id) {
                 index = i;
                 break;
             }
         }
-        
+
         if (index !== null) {
             elements[index] = element;
         }

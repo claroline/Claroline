@@ -38,6 +38,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use FOS\RestBundle\Controller\Annotations\Post;
 
 /**
  * @NamePrefix("api_")
@@ -414,6 +415,23 @@ class UserController extends FOSRestController
         $this->groupManager->removeUsersFromGroup($group, $users);
 
         return $users;
+    }
+
+    /**
+     * @View(serializerGroups={"api_user"})
+     * @ApiDoc(
+     *     description="Removes user by csv",
+     *     views = {"user"}
+     * )
+     * @Post("/users/csv/remove")
+     */
+    public function csvRemoveUserAction()
+    {
+        $this->throwsExceptionIfNotAdmin();
+        //pleaaaaaaaase find me my lord
+        $csvFile = null;
+
+        $this->userManager->csvRemove($this->request->files->get('csv'));
     }
 
     private function isAdmin()

@@ -86,7 +86,7 @@ class UserManager
      *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
      *     "uploadsDirectory"       = @DI\Inject("%claroline.param.uploads_directory%"),
      *     "transfertManager"       = @DI\Inject("claroline.manager.transfert_manager"),
-     *     "container"              = @DI\Inject("service_container"), 
+     *     "container"              = @DI\Inject("service_container"),
      *     "organizationManager"    = @DI\Inject("claroline.manager.organization.organization_manager")
      * })
      */
@@ -138,10 +138,10 @@ class UserManager
      * @return \Claroline\CoreBundle\Entity\User
      */
     public function createUser(
-        User $user, 
+        User $user,
         $sendMail = true,
-        $rolesToAdd = array(), 
-        $model = null, 
+        $rolesToAdd = array(),
+        $model = null,
         $publicUrl = null,
         $organizations = array()
     )
@@ -195,10 +195,10 @@ class UserManager
                 $this->mailManager->sendCreationMessage($user);
             }
         }
-        
+
         $this->container->get('claroline.event.event_dispatcher')
             ->dispatch('user_created_event', 'UserCreated', array('user' => $user));
-            
+
         $this->objectManager->endFlushSuite();
 
         return $user;
@@ -216,6 +216,28 @@ class UserManager
         $this->objectManager->flush();
 
         return $user;
+    }
+
+    /**
+     * Removes users from a csv file.
+     */
+    public function csvRemove($file)
+    {
+        $data = file_get_contents($file);
+        $data = $this->container->get('claroline.utilities.misc')->formatCsvOutput($data);
+        $usernames = str_getcsv($data, PHP_EOL);
+        $this->objectManager->startFlushSuite();
+        $i = 0;
+
+        foreach ($usernames as $username) {
+            $user = $this->getUserByUsername($username);
+            $this->deleteUser($user);
+            $i++;
+
+            if ($i % 50 === 0) $this->objectManager->forceFlush();
+        }
+
+        $this->objectManager->endFlushSuite();
     }
 
     /**
@@ -481,7 +503,7 @@ class UserManager
      * @param array $users
      *
      * @return array
-     * @deprecated 
+     * @deprecated
      */
     public function convertUsersToArray(array $users)
     {
@@ -1435,7 +1457,7 @@ class UserManager
 
         //Admin can see everything, but the others... well they can only see their own organizations.
         if (!$this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
-            
+
             $currentUser = $this->container->get('security.token_storage')->getToken()->getUser();
             $qb->leftJoin('u.organizations', 'uo');
             $qb->leftJoin('uo.administrators', 'ua');

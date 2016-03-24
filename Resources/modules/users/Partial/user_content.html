@@ -11,6 +11,7 @@
 
                 <li role="separator" class="divider"></li>
                 <li><a href="{{ 'claro_admin_user_creation_form'|path:{} }}"> {{ 'new'|trans:{}:'platform' }} </a></li>
+                <li><a href="#" ng-click="uc.csvRemove()"> {{ 'csv_delete'|trans:{}:'platform '}} </a></li>
                 <li><a href="{{ 'claro_admin_import_users_form'|path:{} }}"> {{ 'import'|trans:{}:'platform'}} </a></li>
                 <li><a ui-sref="users.groups.list"> {{ 'manage_group'|trans:{}:'platform' }} </a></li>
 

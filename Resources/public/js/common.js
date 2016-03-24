@@ -108,7 +108,6 @@
      * $('input').upload(
      *     home.path + 'resource/create/file/' + workspace,
      *     function (res) {
-     *         console.log('done', res);
      *     },
      *     function (progress) {
      *         $('.progress-bar').css('width', Math.round((progress.loaded * 100) / progress.totalSize) + '%')

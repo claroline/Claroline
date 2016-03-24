@@ -7,6 +7,8 @@ import UIRouter from 'angular-ui-router'
 import breadcrumbs from 'angular-breadcrumb'
 
 import UserController from './Controller/UserController'
+import RemoveByCsvModalController from './Controller/RemoveByCsvModalController'
+import UserAPIService from './Service/UserAPIService'
 import GroupManager from '../groups/module'
 import clarolineSearch from '../search/module'
 import clarolineAPI from '../services/module'
@@ -23,5 +25,7 @@ angular.module('UsersManager', [
     'ui.router',
     'GroupsManager',
     'ncy-angular-breadcrumb'
-]) .controller('UserController', ['$http', 'ClarolineSearchService', 'ClarolineAPIService', UserController])
+]) .controller('UserController', ['$http', 'ClarolineSearchService', 'ClarolineAPIService', '$uibModal', UserController])
+   .controller('RemoveByCsvModalController', RemoveByCsvModalController)
+   .service('UserAPIService', UserAPIService)
    .config(Routing)
