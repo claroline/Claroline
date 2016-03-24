@@ -15,7 +15,7 @@
 
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
-    <li><a href="{{ path('ujm_exercise_questions', {'id': exoID}) }}">{{ 'my_questions' | trans({}, 'ujm_exo') }}</a></li>
+    <li><a href="{{ path('ujm_exercise_open', {'id': exoID}) }}#/steps">{{ 'my_questions' | trans({}, 'ujm_exo') }}</a></li>
     <li class="active">{{ 'list_question' | trans({}, 'ujm_exo') }}</li>
     {% endblock %}
 
@@ -26,7 +26,7 @@
         <h3 class="panel-title">{{ 'list_question' | trans({}, 'ujm_exo') }}</h3>
     </div>
     <div class="panel-body">
-        <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id':  exoID }) }}">
+        <a class="btn btn-primary" href="{{ path('ujm_exercise_open', {'id': exoID}) }}#/steps">
             <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_question_new', { 'exoID': exoID }) }}">

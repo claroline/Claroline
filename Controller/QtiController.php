@@ -46,7 +46,7 @@ class QtiController extends Controller
         } else {
             $qtiRepos->assocExerciseQuestion(false);
 
-            return $this->redirect($this->generateUrl('ujm_exercise_questions', array('id' => $exoID)));
+            return $this->redirect($this->generateUrl('ujm_exercise_open', [ 'id' => $exoID ]) . '#/steps');
         }
     }
 

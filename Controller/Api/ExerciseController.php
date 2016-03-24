@@ -116,6 +116,7 @@ class ExerciseController
             }
         }
         $data = $this->paperManager->openPaper($exercise, $user, false);
+
         return new JsonResponse($data);
     }
 
