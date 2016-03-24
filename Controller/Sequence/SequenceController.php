@@ -12,6 +12,7 @@ use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Symfony\Component\HttpFoundation\JsonResponse;
 /**
  * Description of SequenceController.
+ * @deprecated
  */
 class SequenceController extends Controller
 {
@@ -20,6 +21,7 @@ class SequenceController extends Controller
      * This view instaciate the angular player directive
      * @Route("/play/{id}", requirements={"id" = "\d+"}, name="ujm_exercise_play", options={"expose"=true})
      * @Method("GET")
+     * @deprecated
      */
     public function playAction(Exercise $exercise)
     {
@@ -64,7 +66,7 @@ class SequenceController extends Controller
     {
         $message = $request->get('message');
         $code = $request->get('code');
-        die($message);
+
         switch ($code){
             case '403':
                 throw new AccessDeniedHttpException($message);

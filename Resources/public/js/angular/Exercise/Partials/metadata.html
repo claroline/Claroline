@@ -1,0 +1,205 @@
+<div class="parameters">
+    <form class="form-horizontal">
+        <div class="panel-body">
+            <!-- Type -->
+            <label for="exercise-type" class="control-label sr-only">-- {{ 'select_type'|trans:{}:'ujm_exo' }} --</label>
+            <select class="form-control" id="exercise-type" data-ng-model="exerciseMetadataCtrl.exercise.meta.type">
+                <option value="">{{ 'type'|trans:{}:'ujm_exo' }}</option>
+                <option value="1">{{ 'summative' | trans:{}:'ujm_exo' }}</option>
+                <option value="2">{{ 'evaluative' | trans:{}:'ujm_exo' }}</option>
+                <option value="3">{{ 'formative' | trans:{}:'ujm_exo' }}</option>
+            </select>
+            <hr/>
+
+            <!-- Definition of the exercise -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title" data-ng-click="collapsePanelDefinition = !collapsePanelDefinition">
+                        <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': collapsePanelDefinition, 'fa-caret-down': !collapsePanelDefinition }"></span>
+                        {{ 'exercise_definition'|trans:{}:'ujm_exo' }}
+                    </h4>
+                </div>
+
+                <div class="panel-body" data-ng-show="!collapsePanelDefinition">
+                    <!-- Title -->
+                    <div class="form-group">
+                        <label for="exercise-title" class="control-label col-md-4">{{ 'title'|trans:{}:'ujm_exo' }}</label>
+                        <div class="col-md-8">
+                            <input type="text" id="exercise-title" class="form-control" data-ng-model="exerciseMetadataCtrl.exercise.meta.title" />
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-group">
+                        <label for="exercise-description" class="control-label col-md-4">{{ 'description'|trans:{}:'ujm_exo' }}</label>
+                        <div class="col-md-8">
+                            <textarea data-ui-tinymce="exerciseMetadataCtrl.tinymceOptions" data-before-unload="off" id="exercise-description" class="form-control" data-ng-model="exerciseMetadataCtrl.exercise.meta.description"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Questions -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title" data-ng-click="collapsePanelQuestions = !collapsePanelQuestions">
+                        <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': collapsePanelQuestions, 'fa-caret-down': !collapsePanelQuestions }"></span>
+                        {{ 'questions'|trans:{}:'ujm_exo' }}
+                    </h4>
+                </div>
+
+                <div class="panel-body" data-ng-show="!collapsePanelQuestions">
+                    <!-- Random order of Questions -->
+                    <div class="form-group">
+                        <label for="exercise-random" class="control-label col-md-4">{{ 'random_questions' | trans:{}:'ujm_exo' }}</label>
+                        <div class="col-md-8">
+                            <div class="checkbox">
+                                <input type="checkbox" id="exercise-random" data-ng-model="exerciseMetadataCtrl.exercise.meta.random" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Number of Questions to use in the Exercise -->
+                    <div class="form-group">
+                        <label for="exercise-pick" class="control-label col-md-4">{{ 'number_questions_draw' | trans:{}:'ujm_exo' }}</label>
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <input type="text" class="form-control" id="exercise-pick" data-ng-model="exerciseMetadataCtrl.exercise.meta.pick" />
+                                </div>
+                            </div>
+
+                            <span class="help-block">
+                                <span class="fa fa-info-circle"></span>
+                                {{ 'number_questions_draw_help' | trans:{}:'ujm_exo' }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Keep same questions ? -->
+                    <div class="form-group" data-ng-if="0 < exerciseMetadataCtrl.exercise.meta.pick">
+                        <label for="exercise-keep" class="control-label col-md-4">{{ 'keep_same_question' | trans:{}:'ujm_exo' }}</label>
+                        <div class="col-md-8">
+                            <div class="checkbox">
+                                <input type="checkbox" id="exercise-keep" data-ng-model="exerciseMetadataCtrl.exercise.meta.keepSameQuestion" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- End of Assessment -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title" data-ng-click="collapsePanelAssessment = !collapsePanelAssessment">
+                        <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': collapsePanelAssessment, 'fa-caret-down': !collapsePanelAssessment }"></span>
+                        {{ 'at_the_end_of_assessment'|trans:{}:'ujm_exo' }}
+                    </h4>
+                </div>
+
+                <div class="panel-body" data-ng-show="!collapsePanelAssessment">
+                    <!-- When correction will be available ? -->
+                    <div class="form-group">
+                        <label for="exercise-correction-mode" class="control-label col-md-4">{{ 'availability_of_correction' | trans:{}:'ujm_exo' }}</label>
+                        <div class="col-md-8">
+                            <select class="form-control" id="exercise-correction-mode" data-ng-model="exerciseParametersCtrl.exercise.meta.correctionMode">
+                                <option value="1">{{ 'at_the_end_of_assessment' | trans:{}:'ujm_exo' }}</option>
+                                <option value="2">{{ 'after_the_last_attempt' | trans:{}:'ujm_exo' }}</option>
+                                <option value="3">{{ 'from' | trans:{}:'ujm_exo' }}</option>
+                                <option value="4">{{ 'never' | trans:{}:'ujm_exo' }}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Date of availability -->
+                    <div class="form-group" data-ng-if="3 == exerciseParametersCtrl.exercise.meta.correctionMode">
+                        <label for="exercise-correction-date" class="control-label col-md-4">{{ 'correction_date'| trans:{}:'ujm_exo' }}</label>
+                        <div class="col-md-8">
+                            <input type="text" id="exercise-correction-date" class="form-control" data-ng-model="exerciseMetadataCtrl.exercise.meta.correctionDate" />
+                        </div>
+                    </div>
+
+                    <!-- When score will be available ? -->
+                    <div class="form-group">
+                        <label for="exercise-mark-mode" class="control-label col-md-4">{{ 'availability_of_score'|trans:{}:'ujm_exo' }}</label>
+                        <div class="col-md-8">
+                            <select class="form-control" id="exercise-mark-mode" data-ng-model="exerciseParametersCtrl.exercise.meta.markMode">
+                                <option value="1">{{ 'at_the_same_time_that_the_correction' | trans:{}:'ujm_exo' }}</option>
+                                <option value="2">{{ 'at_the_end_of_assessment' | trans:{}:'ujm_exo' }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Passage -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title" data-ng-click="collapsePanelPaper = !collapsePanelPaper">
+                        <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': collapsePanelPaper, 'fa-caret-down': !collapsePanelPaper }"></span>
+                        {{ 'paper'|trans:{}:'ujm_exo' }}
+                    </h4>
+                </div>
+
+                <div class="panel-body" data-ng-show="!collapsePanelPaper">
+                    <!-- Anonymous allowed ? -->
+                    <div class="form-group">
+                        <label for="exercise-anonymous" class="control-label col-md-4">{{ 'anonymous' | trans:{}:'ujm_exo' }}</label>
+                        <div class="col-md-8">
+                            <div class="checkbox">
+                                <input type="checkbox" id="exercise-anonymous" data-ng-model="exerciseMetadataCtrl.exercise.meta.anonymous" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Duration -->
+                    <div class="form-group">
+                        <label for="exercise-duration" class="control-label col-md-4">{{ 'duration' | trans:{}:'ujm_exo' }}</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" id="exercise-duration" data-ng-model="exerciseMetadataCtrl.exercise.meta.duration" />
+                        </div>
+                    </div>
+
+                    <!-- Display interrupt button ? -->
+                    <div class="form-group">
+                        <label for="exercise-interrupt-btn" class="control-label col-md-4">{{ 'test_exit' | trans:{}:'ujm_exo' }}</label>
+                        <div class="col-md-8">
+                            <div class="checkbox">
+                                <input type="checkbox" id="exercise-interrupt-btn" data-ng-model="exerciseMetadataCtrl.exercise.meta.dispButtonInterrupt" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Maximum attempts -->
+                    <div class="form-group">
+                        <label for="exercise-max-attempts" class="control-label col-md-4">{{ 'maximum_tries' | trans:{}:'ujm_exo' }}</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" id="exercise-max-attempts" data-ng-model="exerciseMetadataCtrl.exercise.meta.maxAttempts" />
+                        </div>
+                    </div>
+
+                    <!-- Lock attempt -->
+                    <div class="form-group" data-ng-if="0 < exerciseMetadataCtrl.exercise.meta.maxAttempts">
+                        <label for="exercise-lock-attempt" class="control-label col-md-4">{{ 'lock_attempt' | trans:{}:'ujm_exo' }}</label>
+                        <div class="col-md-8">
+                            <div class="checkbox">
+                                <input type="checkbox" id="exercise-lock-attempt" data-ng-model="exerciseMetadataCtrl.exercise.meta.lockAttempt" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary" data-ng-click="exerciseMetadataCtrl.save()">
+                <span class="fa fa-floppy-o"></span>
+                {{ 'save' | trans:{}:'ujm_exo' }}
+            </button>
+
+            <a href="#/" class="btn btn-default">
+                {{ 'cancel' | trans:{}:'platform' }}
+            </a>
+        </div>
+    </form>
+</div>

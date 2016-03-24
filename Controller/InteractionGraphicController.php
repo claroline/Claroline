@@ -52,9 +52,10 @@ class InteractionGraphicController extends Controller
 
         return $this->container->get('templating')->renderResponse(
            'UJMExoBundle:InteractionGraphic:new.html.twig', array(
-           'exoID' => $attr->get('exoID'),
-           'entity' => $entity,
-           'form' => $form->createView(),
+               'exoID' => $attr->get('exoID'),
+               'stepID' => $attr->get('stepID'),
+               'entity' => $entity,
+               'form' => $form->createView(),
            )
        );
     }
@@ -73,15 +74,17 @@ class InteractionGraphicController extends Controller
         $form = $this->createForm(new InteractionGraphicType($user), $interGraph);
 
         $exoID = $this->container->get('request')->request->get('exercise');
+        $stepID = $this->container->get('request')->request->get('step');
 
         //Get the lock category
         $catSer = $this->container->get('ujm.exo_category');
 
         $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
+        $step = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Step')->find($stepID);
         $formHandler = new InteractionGraphicHandler(
             $form, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('ujm.exo_exercise'), $catSer,
-            $user, $exercise, $this->get('translator')
+            $user, $exercise, $step, $this->get('translator')
         );
 
         $graphicHandler = $formHandler->processAdd();
@@ -100,14 +103,7 @@ class InteractionGraphicController extends Controller
                 );
             } else {
                 return $this->redirect(
-                    $this->generateUrl(
-                        'ujm_exercise_questions',
-                        array(
-                            'id' => $exoID,
-                            'categoryToFind' => $categoryToFind,
-                            'titleToFind' => $titleToFind,
-                        )
-                    )
+                    $this->generateUrl('ujm_exercise_open', [ 'id' => $exoID ]) . '#/steps'
                 );
             }
         }
@@ -124,6 +120,7 @@ class InteractionGraphicController extends Controller
             'form' => $form->createView(),
             'error' => true,
             'exoID' => $exoID,
+            'stepID' => $stepID,
             )
         );
         $interactionType = $this->container->get('ujm.exo_question')->getTypes();
@@ -133,6 +130,7 @@ class InteractionGraphicController extends Controller
                 'UJMExoBundle:Question:new.html.twig', array(
                 'formWithError' => $formWithError,
                 'exoID' => $exoID,
+                'stepID' => $stepID,
                 'linkedCategory' => $catSer->getLinkedCategories(),
                 'locker' => $catSer->getLockCategory(),
                 'interactionType' => $interactionType,
@@ -240,12 +238,7 @@ class InteractionGraphicController extends Controller
                 return $this->redirect($this->generateUrl('ujm_question_index'));
             } else {
                 return $this->redirect(
-                    $this->generateUrl(
-                        'ujm_exercise_questions',
-                        array(
-                            'id' => $exoID,
-                        )
-                    )
+                    $this->generateUrl('ujm_exercise_open', [ 'id' => $exoID ]) . '#/steps'
                 );
             }
         }
