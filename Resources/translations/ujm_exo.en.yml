@@ -231,6 +231,7 @@ number_of_papers: Number of papers
 number_questions_draw: Number of questions to draw (0 for all)
 number_questions_draw_help: Type 0 to draw all questions
 numerical: Numerical
+numerical_response: Numerical response (value or interval)
 num_paper: Paper's number
 
 # O
