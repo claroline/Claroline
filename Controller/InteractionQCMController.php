@@ -62,6 +62,7 @@ class InteractionQCMController extends Controller
         return $this->container->get('templating')->renderResponse(
            'UJMExoBundle:InteractionQCM:new.html.twig', array(
            'exoID' => $attr->get('exoID'),
+           'stepID' => $attr->get('stepID'),
            'entity' => $entity,
            'typeQCM' => json_encode($typeQCM),
            'form' => $form->createView(),
