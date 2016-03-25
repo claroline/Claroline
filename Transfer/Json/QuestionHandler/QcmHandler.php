@@ -165,6 +165,12 @@ class QcmHandler implements QuestionHandlerInterface
 
             return $choiceData;
         }, $choices);
+        
+        $scoreTotal = 0;
+        foreach ($choices as $choice) {
+            $scoreTotal = $scoreTotal + $choice->getWeight();
+        }
+        $exportData->scoreTotal = $scoreTotal;
 
         if ($withSolution) {
             $exportData->solutions = array_map(function ($choice) {

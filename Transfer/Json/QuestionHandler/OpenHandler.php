@@ -110,6 +110,8 @@ class OpenHandler implements QuestionHandlerInterface {
     public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true, $forPaperList = false) {
         $repo = $this->om->getRepository('UJMExoBundle:InteractionOpen');
         $openQuestion = $repo->findOneBy(['question' => $question]);
+        
+        $exportData->scoreTotal = 5;
 
         if ($withSolution) {
             $responses = $openQuestion->getWordResponses();
@@ -126,10 +128,37 @@ class OpenHandler implements QuestionHandlerInterface {
         }
         if ($openQuestion->getTypeOpenQuestion()->getValue() === "long") {
             $exportData->scoreMaxLongResp = $openQuestion->getScoreMaxLongResp();
+            $exportData->scoreTotal = $openQuestion->getScoreMaxLongResp();
+        }
+        else {
+            $scoreTotal = 0;
+            foreach ($openQuestion->getWordResponses()->toArray() as $response) {
+                $scoreTotal = $scoreTotal + $response->getScore();
+            }
+            $exportData->scoreTotal = $scoreTotal;
         }
 
         $exportData->typeOpen = $openQuestion->getTypeOpenQuestion()->getValue();
 
+        return $exportData;
+    }
+
+    public function convertQuestionAnswers(Question $question, \stdClass $exportData) {
+        $repo = $this->om->getRepository('UJMExoBundle:InteractionOpen');
+        $openQuestion = $repo->findOneBy(['question' => $question]);
+        
+        $responses = $openQuestion->getWordResponses();
+
+        $exportData->solutions = array_map(function ($wr) {
+            $responseData = new \stdClass();
+            $responseData->id = (string) $wr->getId();
+            $responseData->word = $wr->getResponse();
+            $responseData->caseSensitive = $wr->getCaseSensitive();
+            $responseData->score = $wr->getScore();
+            $responseData->feedback = $wr->getFeedback();
+            return $responseData;
+        }, $responses->toArray());
+        
         return $exportData;
     }
 

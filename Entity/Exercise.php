@@ -441,4 +441,34 @@ class Exercise extends AbstractResource
     {
         return $this->steps;
     }
+
+    /**
+     * Add a step to the Exercise
+     * @param Step $step
+     * @return $this
+     */
+    public function addStep(Step $step)
+    {
+        if (!$this->steps->contains($step)) {
+            $this->steps->add($step);
+
+            $step->setExercise($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a Step from the Exercise
+     * @param Step $step
+     * @return $this
+     */
+    public function removeStep(Step $step)
+    {
+        if ($this->steps->contains($step)) {
+            $this->steps->removeElement($step);
+        }
+
+        return $this;
+    }
 }

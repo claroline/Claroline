@@ -3,6 +3,22 @@
  * Player styles
  */
 
+.color-primary{
+    color: #337AB7;
+}
+.color-success{
+    color: #5CB85C;
+}
+.color-info{
+    color: #5BC0DE;
+}
+.color-warning{
+    color: #F0AD4E;
+}
+.color-danger{
+    color: #D9534F;
+}
+
 // define nothing for now... used in play.html.twig
 .player-container{
     //
@@ -32,6 +48,9 @@
                         padding-bottom: 20px;  
                     }
                 }
+                .feedback-icon {
+                    margin-right: 3px;
+                }
                 .bordered{
                     border-bottom: 1px solid #F89406;
                     /*padding-bottom: 20px;  */
@@ -43,8 +62,12 @@
                             min-width:10%;
                         }
                         td.choice-content{
-                            max-width:80%;
-                            min-width:80%;
+                            max-width:60%;
+                            min-width:60%;
+                        }
+                        td.choice-feedback-comment{
+                            max-width:20%;
+                            min-width:20%;
                         }
                         td.choice-feedback{
                             max-width:10%;
@@ -90,8 +113,12 @@
                             min-width:10%;
                         }
                         td.choice-content{
-                            max-width:80%;
-                            min-width:80%;
+                            max-width:60%;
+                            min-width:60%;
+                        }
+                        td.choice-feedback-comment{
+                            max-width:20%;
+                            min-width:20%;
                         }
                         td.choice-feedback{
                             max-width:10%;

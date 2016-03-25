@@ -23,6 +23,8 @@
         </div>
 
         <div class="panel-footer">
+            <input type="hidden" name="exercise" value="{{ exoID }}" />
+            <input type="hidden" name="step" value="{{ stepID }}" />
             <button type="submit"  id="button_submit" class="btn btn-primary">{{ 'create' | trans({}, 'ujm_exo') }}</button>
         </div>
     </form>

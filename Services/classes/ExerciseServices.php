@@ -214,14 +214,25 @@ class ExerciseServices
      *
      * @param UJM\ExoBundle\Entity\Question $question
      * @param UJM\ExoBundle\Entity\Exercise $exercise instance of Exercise
+     * @param UJM\ExoBundle\Entity\Step     $step
      * @param Doctrine EntityManager        $em
      */
-    public function addQuestionInExercise($question, $exercise)
+    public function addQuestionInExercise($question, $exercise, $step)
     {
-        if ($exercise != null) {
+        if (null != $exercise) {
             if ($this->isExerciseAdmin($exercise)) {
-                //$this->setExerciseQuestion($exercise, $inter);
-                $this->createStepForOneQuestion($exercise,$question, 1);
+                if (null == $step) {
+                    // Create a new Step to add the Question
+                    $this->createStepForOneQuestion($exercise,$question, 1);
+                } else {
+                    // Add the question to the existing Step
+                    $em = $this->doctrine->getManager();
+
+                    $sq = new StepQuestion($step, $question);
+                    $sq->setOrdre($step->getNbQuestion() + 1);
+                    $em->persist($sq);
+                    $em->flush();
+                }
             }
         }
     }

@@ -1,0 +1,100 @@
+<div class="exercise-container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><b>{{ 'exercise'|trans:{}:'ujm_exo' }} :</b> {{ exerciseCtrl.exercise.meta.title }}</h3>
+        </div>
+
+        <nav class="navbar navbar-default navbar-static-top" data-ng-if="!exerciseCtrl.$route.current.hideMenu">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#exercise-navbar" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="exercise-navbar">
+                    <!-- Administration links -->
+                    <ul class="nav navbar-nav" data-ng-if="exerciseCtrl.editEnabled">
+                        <!-- Information about the Exercise -->
+                        <li data-ng-class="{ active: 'overview' === exerciseCtrl.$route.current.tab }">
+                            <a href="#/">
+                                <span class="fa fa-info"></span> {{ 'overview' | trans:{}:'ujm_exo' }}
+                            </a>
+                        </li>
+
+                        <!-- Edit Exercise metadata -->
+                        <li data-ng-class="{ active: 'metadata' === exerciseCtrl.$route.current.tab }">
+                            <a href="#/edit">
+                                <span class="fa fa-pencil"></span> {{ 'metadata' | trans:{}:'ujm_exo' }}
+                            </a>
+                        </li>
+
+                        <!-- Questions -->
+                        <li data-uib-dropdown="" data-ng-class="{ active: 'steps' === exerciseCtrl.$route.current.tab }">
+                            <a href="" data-uib-dropdown-toggle role="button" aria-haspopup="true" aria-expanded="false">
+                                <span class="fa fa-question"></span>
+                                {{ 'questions' | trans:{}:'ujm_exo' }}
+                                <span class="caret"></span>
+                            </a>
+                            <ul data-uib-dropdown-menu="">
+                                <!-- List of Exercise questions -->
+                                <li>
+                                    <a href="#/steps">
+                                        <span class="fa fa-fw fa-list"></span> {{ 'exercice_linked_question' | trans:{}:'ujm_exo' }}
+                                    </a>
+                                </li>
+
+                                <!-- Import Questions -->
+                                <li>
+                                    <a href="{{ 'ujm_exercise_import_question' | path:{ id: exerciseCtrl.exercise.meta.id } }}">
+                                        <span class="fa fa-fw fa-download"></span> {{ 'import_questions' | trans:{}:'ujm_exo' }}
+                                    </a>
+                                </li>
+
+                                <!-- Export Questions -->
+                                <li>
+                                    <a href="{{ 'ujm_qti_export_exercise_questions' | path:{ exoID: exerciseCtrl.exercise.meta.id, exoName: exerciseCtrl.exercise.meta.title } }}">
+                                        <span class="fa fa-fw fa-save"></span> {{ 'export_qti_exercise' | trans:{}:'ujm_exo' }}
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Publish Exercise -->
+                        <li data-ng-if="!exerciseCtrl.exercise.meta.published">
+                            <a href="" role="button" data-ng-click="exerciseCtrl.publish()">
+                                <span class="fa fa-check"></span> {{ 'publish' | trans:{}:'ujm_exo' }}
+                            </a>
+                        </li>
+
+                        <!-- Unpublish Exercise (Only if there is no submitted paper on it) -->
+                        <li data-ng-if="exerciseCtrl.exercise.meta.published && 0 == exerciseCtrl.nbPapers">
+                            <a href="" role="button" data-ng-click="exerciseCtrl.unpublish()">
+                                <span class="fa fa-times"></span> {{ 'unpublish' | trans:{}:'ujm_exo' }}
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Play the Exercise -->
+                    <a data-ng-if="exerciseCtrl.composeEnabled && exerciseCtrl.exercise.steps.length > 0" href="#/play" role="button" class="btn btn-primary navbar-btn navbar-right">
+                        <span class="fa fa-check-square-o"></span> {{ 'compose' | trans:{}:'ujm_exo' }}
+                    </a>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <!-- Display results of the Exercise -->
+                        <li data-ng-class="{ active: 'papers' === exerciseCtrl.$route.current.tab }">
+                            <a href="#/papers">
+                                <span class="fa fa-list"></span> {{ 'result' | trans:{}:'ujm_exo' }}
+                            </a>
+                        </li>
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav>
+
+        <div data-ng-view=""></div>
+    </div>
+</div>
