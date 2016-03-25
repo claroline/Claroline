@@ -67,7 +67,7 @@ class CourseSession
     protected $workspace;
 
     /**
-     * @ORM\OneToOne(
+     * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Role"
      * )
      * @ORM\JoinColumn(name="learner_role_id", nullable=true, onDelete="SET NULL")
@@ -75,7 +75,7 @@ class CourseSession
     protected $learnerRole;
 
     /**
-     * @ORM\OneToOne(
+     * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Role"
      * )
      * @ORM\JoinColumn(name="tutor_role_id", nullable=true, onDelete="SET NULL")
