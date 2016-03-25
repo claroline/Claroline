@@ -117,8 +117,8 @@ angular.module('Question').controller('OpenQuestionCtrl', [
                     if ((this.solutions[i].caseSensitive && this.answer.indexOf(this.solutions[i].word) > -1) || this.answer.search(new RegExp(this.solutions[i].word, "i")) > -1) {
                         indexOf = this.answer.indexOf(this.solutions[i].word);
                         firstPart = this.answer.slice(0, indexOf);
-                        feedbackedWord = "<span class='color-info'>" + this.solutions[i].word + "</span>";
-                        check = "<i class='fa fa-check color-success' data-toggle='tooltip' title='" + this.solutions[i].word + "' ></i>";
+                        feedbackedWord = "<span class='color-info feedback-fields'>" + this.solutions[i].word + "</span>";
+                        check = "<i class='fa fa-check color-success feedback-fields' data-toggle='tooltip' title='" + this.solutions[i].word + "' ></i>";
                         lastPart = this.answer.slice(indexOf + this.solutions[i].word.length, this.answer.length);
                         whole = firstPart + feedbackedWord + check + lastPart;
                         this.answer = whole;
@@ -146,6 +146,11 @@ angular.module('Question').controller('OpenQuestionCtrl', [
 
         this.hideFeedback = function () {
             this.feedbackIsVisible = false;
+            this.removeFeedbackFields();
+        };
+        
+        this.removeFeedbackFields = function () {
+            this.answer = this.answer.replace(/(<([^>]+)>)/ig,"");
         };
 
         this.getFoundSolutions = function () {
