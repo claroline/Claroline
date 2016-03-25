@@ -18,6 +18,7 @@ angular.module('Question').controller('ChoiceQuestionCtrl', [
         this.feedbackIsVisible = false;
         this.solutions = {};
         this.questionFeedback = '';
+        this.givenAnswers = [];
 
         this.init = function (question, canSeeFeedback) {
             // those data are updated by view and sent to common service as soon as they change
@@ -38,6 +39,30 @@ angular.module('Question').controller('ChoiceQuestionCtrl', [
                 // init previously given answer
                 this.checkChoices(this.question.multiple);
             }
+            for (var i=0; i<this.currentQuestionPaperData.answer.length; i++) {
+                this.givenAnswers.push(this.currentQuestionPaperData.answer[i]);
+            }
+        };
+
+        this.lockChoice = function (choice) {
+            var lock = false;
+            for (var i=0; i<this.givenAnswers.length; i++) {
+                if (choice.id === this.givenAnswers[i] && choice.rightResponse) {
+                    lock = true;
+                }
+            }
+            return lock || this.feedbackIsVisible;
+        };
+
+        this.lockChoices = function () {
+            var lock = false;
+            for (var i=0; i<this.question.choices.length; i++) {
+                if (this.givenAnswers[0] === this.question.choices[i].id && this.question.choices[i].rightResponse) {
+                    lock = true;
+                }
+            }
+
+            return lock || this.feedbackIsVisible;
         };
 
         /**
@@ -50,13 +75,16 @@ angular.module('Question').controller('ChoiceQuestionCtrl', [
          *  2 = false (unexpected answer checked by user OR valid answer not checked by user)
          */
         this.choiceIsValid = function (choice) {
+            console.log("choice is valid");
+            console.log(choice);
+            console.log(this.question);
             var isValid = 0;
             var sdata = DataSharing.getStudentData();
             // if there is any answer in student data
             if (sdata.answers.length > 0) {
-                for (var i = 0; i < this.solutions.length; i++) {
+                for (var i = 0; i < this.question.choices.length; i++) {
                     // search for valid solutions (score > 0)
-                    if (this.solutions[i].id === choice.id && this.solutions[i].score > 0) {
+                    if (this.question.choices[i].id === choice.id && this.question.choices[i].rightResponse) {
                         var found = false;
                         // search for expected answer checked by student
                         for (var j = 0; j < sdata.answers.length; j++) {
@@ -69,7 +97,7 @@ angular.module('Question').controller('ChoiceQuestionCtrl', [
                         if(!found){
                             isValid = 0;
                         }
-                    } else if (this.solutions[i].id === choice.id && this.solutions[i].score <= 0) {
+                    } else if (this.question.choices[i].id === choice.id && !this.question.choices[i].rightResponse) {
                         // search for unexpected answer checked by student
                         for (var j = 0; j < sdata.answers.length; j++) {
                             if (sdata.answers[j] === choice.id) {
@@ -79,8 +107,8 @@ angular.module('Question').controller('ChoiceQuestionCtrl', [
                     }
                 }
             } else {
-                for (var i = 0; i < this.solutions.length; i++) {
-                    if (this.solutions[i].id === choice.id && this.solutions[i].score > 0) {
+                for (var i = 0; i < this.question.choices.length; i++) {
+                    if (this.question.choices[i].id === choice.id && this.question.choices[i].rightReponse) {
                         // expected answer not checked by student
                         isValid = 0;
                     }
@@ -93,9 +121,9 @@ angular.module('Question').controller('ChoiceQuestionCtrl', [
             var sdata = DataSharing.getStudentData();
             for (var j = 0; j < sdata.answers.length; j++) {
                 if (sdata.answers[j] === choice.id) {
-                    for (var i = 0; i < this.solutions.length; i++) {
-                        if (this.solutions[i].id === choice.id) {
-                            return this.solutions[i].feedback;
+                    for (var i = 0; i < this.question.choices.length; i++) {
+                        if (this.question.choices[i].id === choice.id) {
+                            return this.question.choices[i].feedback;
                         }
                     }
                 }
@@ -127,13 +155,13 @@ angular.module('Question').controller('ChoiceQuestionCtrl', [
         this.showHint = function (id) {
             var penalty = QuestionService.getHintPenalty(this.question.hints, id);
             $ngBootbox.confirm(Translator.trans('question_show_hint_confirm', {1: penalty}, 'ujm_sequence'))
-                    .then(function () {
-                        this.getHintData(id);
-                        this.currentQuestionPaperData.hints.push(id);
-                        this.updateStudentData();
-                        // hide hint button
-                        angular.element('#hint-' + id).hide();
-                    }.bind(this));
+                .then(function () {
+                    this.getHintData(id);
+                    this.currentQuestionPaperData.hints.push(id);
+                    this.updateStudentData();
+                    // hide hint button
+                    angular.element('#hint-' + id).hide();
+                }.bind(this));
         };
 
         this.getHintData = function (id) {
@@ -248,9 +276,6 @@ angular.module('Question').controller('ChoiceQuestionCtrl', [
         };
 
         this.setScore = function () {
-            console.log(this.solutions);
-            console.log(this.currentQuestionPaperData);
-            console.log(this.question);
             var score = 0;
             for (var i=0; i<this.solutions.length; i++) {
                 for (var j=0; j<this.currentQuestionPaperData.answer.length; j++) {

@@ -198,7 +198,6 @@ class ExerciseController extends Controller
         $services = $this->container->get('ujm.exo_exercise');
         $questionSer = $this->container->get('ujm.exo_question');
         $paginationSer = $this->container->get('ujm.exo_pagination');
-        $exoAdmin = $services->isExerciseAdmin($exercise);
 
         // To paginate the result :
         $request = $this->get('request'); // Get the request which contains the following parameters :
@@ -218,70 +217,67 @@ class ExerciseController extends Controller
             $pagerShared = $page;
         }
 
-        if ($exoAdmin === true) {   
-            if ($QuestionsExo == true) {
+        if ($QuestionsExo == 'true') {
 
-                $listQExo= $questionSer->getListQuestionExo($idExo,$user,$exercise);
-                $allActions = $questionSer->getActionsAllQuestions($listQExo, $user->getId());
-                
-                $actionQ = $allActions[0];
-                $questionWithResponse = $allActions[1];
-                $alreadyShared = $allActions[2];
-                $sharedWithMe = $allActions[3];
-                $shareRight = $allActions[4];       
-            } else {                                  
-                $userQuestions = $this->getDoctrine()
-                    ->getManager()
-                    ->getRepository('UJMExoBundle:Question')
-                    ->findByUserNotInExercise($user, $exercise);
+            $listQExo= $questionSer->getListQuestionExo($idExo,$user,$exercise);
+            $allActions = $questionSer->getActionsAllQuestions($listQExo, $user->getId());
 
-                $shared = $em->getRepository('UJMExoBundle:Share')
-                        ->getUserInteractionSharedImport($exercise->getId(), $user->getId(), $em);
-
-                $max=$paginationSer->getMaxByDisplayAll($shared,$displayAll,$userQuestions);
-                $sharedWithMe = $questionSer->getQuestionShare($shared);
-                $doublePagination = $paginationSer->doublePagination($userQuestions, $sharedWithMe, $max, $pagerMy, $pagerShared);
-
-                $interactionsPager = $doublePagination[0];
-                $pagerfantaMy = $doublePagination[1];
-
-                $sharedWithMePager = $doublePagination[2];
-                $pagerfantaShared = $doublePagination[3];
-
-                $pageGoNow=$paginationSer->getPageGoNow($nbItem,$maxPage,$pageToGo,$pageGoNow);
-            }
-
-            $listExo = $this->getDoctrine()
-                        ->getManager()
-                        ->getRepository('UJMExoBundle:Exercise')
-                        ->getExerciseAdmin($user->getId());
-
-            if ($QuestionsExo == false) {
-                $vars['pagerMy'] = $pagerfantaMy;
-                $vars['pagerShared'] = $pagerfantaShared;
-                $vars['interactions'] = $interactionsPager;
-                $vars['sharedWithMe'] = $sharedWithMePager;
-                $vars['pageToGo'] = $pageGoNow;
-            } else {
-                $vars['interactions'] = $listQExo;
-                $vars['actionQ'] = $actionQ;
-                $vars['pageToGo'] = 1;
-            }
-            $vars['questionWithResponse'] = $questionWithResponse;
-            $vars['alreadyShared'] = $alreadyShared;
-            $vars['shareRight'] = $shareRight;
-            $vars['displayAll'] = $displayAll;
-            $vars['listExo'] = $listExo;
-            $vars['exoID'] = $exercise->getId();
-            $vars['QuestionsExo'] = $QuestionsExo;
-            $vars['workspace'] = $workspace;
-            $vars['_resource'] = $exercise;
-            $vars['idExo'] = $idExo;
-
-            return $this->render('UJMExoBundle:Question:import.html.twig', $vars);
+            $actionQ = $allActions[0];
+            $questionWithResponse = $allActions[1];
+            $alreadyShared = $allActions[2];
+            $sharedWithMe = $allActions[3];
+            $shareRight = $allActions[4];
         } else {
-            return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $exercise->getId()]));
+            $userQuestions = $this->getDoctrine()
+                ->getManager()
+                ->getRepository('UJMExoBundle:Question')
+                ->findByUserNotInExercise($user, $exercise);
+
+            $shared = $em->getRepository('UJMExoBundle:Share')
+                    ->getUserInteractionSharedImport($exercise->getId(), $user->getId(), $em);
+
+            $max=$paginationSer->getMaxByDisplayAll($shared,$displayAll,$userQuestions);
+            $sharedWithMe = $questionSer->getQuestionShare($shared);
+            $doublePagination = $paginationSer->doublePagination($userQuestions, $sharedWithMe, $max, $pagerMy, $pagerShared);
+
+            $interactionsPager = $doublePagination[0];
+            $pagerfantaMy = $doublePagination[1];
+
+            $sharedWithMePager = $doublePagination[2];
+            $pagerfantaShared = $doublePagination[3];
+
+            $pageGoNow=$paginationSer->getPageGoNow($nbItem,$maxPage,$pageToGo,$pageGoNow);
         }
+
+        $listExo = $this->getDoctrine()
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:Exercise')
+                    ->getExerciseAdmin($user->getId());
+
+        if ($QuestionsExo == 'false') {
+            $vars['pagerMy'] = $pagerfantaMy;
+            $vars['pagerShared'] = $pagerfantaShared;
+            $vars['interactions'] = $interactionsPager;
+            $vars['sharedWithMe'] = $sharedWithMePager;
+            $vars['pageToGo'] = $pageGoNow;
+        } else {
+            $vars['interactions'] = $listQExo;
+            $vars['actionQ'] = $actionQ;
+            $vars['pageToGo'] = 1;
+        }
+
+        $vars['questionWithResponse'] = $questionWithResponse;
+        $vars['alreadyShared'] = $alreadyShared;
+        $vars['shareRight'] = $shareRight;
+        $vars['displayAll'] = $displayAll;
+        $vars['listExo'] = $listExo;
+        $vars['exoID'] = $exercise->getId();
+        $vars['QuestionsExo'] = $QuestionsExo;
+        $vars['workspace'] = $workspace;
+        $vars['_resource'] = $exercise;
+        $vars['idExo'] = $idExo;
+
+        return $this->render('UJMExoBundle:Question:import.html.twig', $vars);
     }
 
     /**
