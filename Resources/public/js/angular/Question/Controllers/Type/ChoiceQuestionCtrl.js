@@ -75,9 +75,6 @@ angular.module('Question').controller('ChoiceQuestionCtrl', [
          *  2 = false (unexpected answer checked by user OR valid answer not checked by user)
          */
         this.choiceIsValid = function (choice) {
-            console.log("choice is valid");
-            console.log(choice);
-            console.log(this.question);
             var isValid = 0;
             var sdata = DataSharing.getStudentData();
             // if there is any answer in student data
@@ -276,6 +273,9 @@ angular.module('Question').controller('ChoiceQuestionCtrl', [
         };
 
         this.setScore = function () {
+            console.log(this.solutions);
+            console.log(this.currentQuestionPaperData);
+            console.log(this.question);
             var score = 0;
             for (var i=0; i<this.solutions.length; i++) {
                 for (var j=0; j<this.currentQuestionPaperData.answer.length; j++) {
