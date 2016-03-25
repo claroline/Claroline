@@ -15,7 +15,9 @@ angular.module('Question').controller('GraphicQuestionCtrl', [
         // instant feedback data
         this.canSeeFeedback = false;
         this.feedbackIsVisible = false;
+        this.questionFeedback = "";
 
+        this.notFoundZones = [];
 
         this.init = function (question, canSeeFeedback) {
             // those data are updated by view and sent to common service as soon as they change
@@ -79,6 +81,20 @@ angular.module('Question').controller('GraphicQuestionCtrl', [
                     $('#crosshair_' + this.coords[i].id).css('z-index', i + 1);
                 }
             }
+            
+            this.setSolution();
+        };
+        
+        this.setSolution = function () {
+            var promise = QuestionService.getQuestionSolutions(this.question.id);
+            promise.then(function (result) {
+                this.solutions = result.solutions;
+                for (var i=0; i<this.solutions.length; i++) {
+                    this.notFoundZones.push(this.solutions[i]);
+                }
+                this.questionFeedback = result.feedback;
+                this.showRightAnswerZones();
+            }.bind(this));
         };
 
         this.initDragAndDrop = function () {
@@ -102,10 +118,10 @@ angular.module('Question').controller('GraphicQuestionCtrl', [
                     // get dragged element id
                     var draggedId = $(this).attr('id').replace('crosshair_', '');
                     // get dragged coordonates with offset instead of position
-                   var coordX = $(this).offset().left - $('#document-img').offset().left;
-                   var coordY = $(this).offset().top - $('#document-img').offset().top;
-                   // var coordX = $(this).offset().left - $('#document-img').offset().left;
-                   // var coordY = $(this).offset().top - $('#document-img').offset().top;
+                    var coordX = $(this).offset().left - $('#document-img').offset().left;
+                    var coordY = $(this).offset().top - $('#document-img').offset().top;
+                    // var coordX = $(this).offset().left - $('#document-img').offset().left;
+                    // var coordY = $(this).offset().top - $('#document-img').offset().top;
 
                     // update this.coords
                     for (var i = 0; i < self.coords.length; i++) {
@@ -171,13 +187,13 @@ angular.module('Question').controller('GraphicQuestionCtrl', [
         this.showHint = function (id) {
             var penalty = QuestionService.getHintPenalty(this.question.hints, id);
             $ngBootbox.confirm(Translator.trans('question_show_hint_confirm', {1: penalty}, 'ujm_sequence'))
-                    .then(function () {
-                        this.getHintData(id);
-                        this.currentQuestionPaperData.hints.push(id);
-                        this.updateStudentData();
-                        // hide hint button
-                        angular.element('#hint-' + id).hide();
-                    }.bind(this));
+                .then(function () {
+                    this.getHintData(id);
+                    this.currentQuestionPaperData.hints.push(id);
+                    this.updateStudentData();
+                    // hide hint button
+                    angular.element('#hint-' + id).hide();
+                }.bind(this));
         };
 
         this.getHintData = function (id) {
@@ -187,6 +203,128 @@ angular.module('Question').controller('GraphicQuestionCtrl', [
                 this.usedHints.push(result);
 
             }.bind(this));
+        };
+
+        /**
+         * Listen to show-feedback event (broadcasted by ExercisePlayerCtrl)
+         */
+        $scope.$on('show-feedback', function (event, data) {
+            this.showFeedback();
+        }.bind(this));
+        
+        
+        this.showFeedback = function () {
+            // get question answers and feedback ONLY IF NEEDED
+            /*var promise = QuestionService.getQuestionSolutions(this.question.id);
+             promise.then(function (result) {*/
+            this.feedbackIsVisible = true;
+            this.disableDraggable();
+            this.showRightAnswerZones();
+            this.setWrongFeedback();
+            //}.bind(this));
+        };
+        
+        this.showRightAnswerZones = function () {
+            var pointX = 0;
+            var pointY = 0;
+            var startX = 0;
+            var startY = 0;
+            var start;
+            var centerX = 0;
+            var centerY = 0;
+            
+            for (var i=0; i<this.solutions.length; i++) {
+                for (var j=0; j<$(".crosshair").length; j++) {
+                    var firstElementId = $(".crosshair")[j].id;
+                    var firstElementNumId = firstElementId.replace("crosshair_", "");
+                    var topElementsHeight = $("#" + firstElementId).parent().parent().parent().prop("offsetHeight");
+                    pointX = $("#" + firstElementId).prop("x");
+                    pointY = $("#" + firstElementId).prop("y") - topElementsHeight;
+                    start = this.solutions[i].value.split(",");
+                    startX = parseFloat(start[0]) +26;
+                    startY = parseFloat(start[1]) +12;
+                    centerX = startX + this.solutions[i].size/2;
+                    centerY = startY + this.solutions[i].size/2;
+                    var endX = startX + this.solutions[i].size;
+                    var endY = startY + this.solutions[i].size;
+                    
+                    var distance = Math.sqrt((centerX-pointX)*(centerX-pointX) + (centerY-pointY)*(centerY-pointY));
+                    distance = Math.round(distance);
+
+                    if (((this.solutions[i].size >= distance*2 && this.solutions[i].shape === "circle") || (this.solutions[i].shape === "square" && pointX > startX && pointX < endX && pointY > startY && pointY < endY)) && this.notFoundZones.indexOf(this.solutions[i]) !== -1) {
+                        var rightPointY = pointY + topElementsHeight;
+                        $("#" + firstElementId).replaceWith("<i id='crosshair_valid_" + firstElementNumId + "' class='color-success fa fa-check' data-toggle='tooltip' style='top: " + rightPointY + "px; left: " + pointX + "px; position: absolute; z-index: 3;' title='" + this.solutions[i].feedback + "' ></i>");
+
+                        var solution = this.solutions[i];
+                        var elem = document.createElement('div');
+                        var style = '';
+                        style += 'position:absolute;';
+                        style += 'border:1px solid #eee;';
+                        style += 'opacity:0.6;';
+                        style += 'height:' + solution.size.toString() + 'px;';
+                        style += 'width:' + solution.size.toString() + 'px;';
+
+                        if (solution.shape === "circle") {
+                            style += 'border-radius:50%;';
+                        }
+
+                        style += 'top:' + startY.toString() + 'px;';
+                        style += 'left:' + startX.toString() + 'px;';
+                        style += 'background-color:' + solution.color + ';';
+                        elem.setAttribute('style', style);
+                        var className = "answerField";
+                        elem.setAttribute('class', className);
+                        document.getElementsByClassName('droppable-container')[0].appendChild(elem);
+
+                        this.notFoundZones.splice(this.notFoundZones.indexOf(this.solutions[i]), 1);
+                    }
+                }
+            }
+        };
+        
+        this.setWrongFeedback = function () {
+            var elements = $(".crosshair");
+            for (var i=0; i<elements.length; i++) {
+                var id = elements[i].id;
+                var numId = id.replace("crosshair_", "");
+                var rightPointY = $("#" + id).prop("y");
+                var pointX = $("#" + id).prop("x");
+                $("#" + id).replaceWith("<i id='crosshair_invalid_" + numId + "' class='color-danger fa fa-close crosshair_invalid' data-toggle='tooltip' style='top: " + rightPointY + "px; left: " + pointX + "px; position: absolute; z-index: 3;' title='" + this.solutions[i].feedback + "' ></i>");
+            }
+        };
+        
+        this.disableDraggable = function () {
+            for (var i=0; i<this.question.coords.length; i++) {
+                $("#crosshair_" + this.question.coords[i].id).draggable('disable');
+            }
+        };
+        
+        this.enableDraggable = function () {
+            for (var i=0; i<this.question.coords.length; i++) {
+                $("#crosshair_" + this.question.coords[i].id).draggable();
+                $("#crosshair_" + this.question.coords[i].id).draggable('enable');
+            }
+        };
+
+        $scope.$on('hide-feedback', function (event, data) {
+            this.hideFeedback();
+        }.bind(this));
+
+        this.hideFeedback = function () {
+            this.feedbackIsVisible = false;
+            this.hideWrongFeedbacks();
+            this.enableDraggable();
+        };
+        
+        this.hideWrongFeedbacks = function () {
+            var elements = $(".crosshair_invalid");
+            for (var i=0; i<elements.length; i++) {
+                var former_id = elements[i].id;
+                var id = elements[i].id.replace("_invalid", "");
+                var top = $("#" + former_id).css('top');
+                var left = $("#" + former_id).css('left');
+                $("#" + former_id).replaceWith("<img id='" + id + "' class='crosshair draggable ui-draggable ui-draggable-handle' data-ng-src='" + this.getAssetsDir() + "bundles/ujmexo/images/graphic/answer.png' src='" + this.getAssetsDir() + "bundles/ujmexo/images/graphic/answer.png' style='top:" + top + "; position: relative; left: " + left + "; z-index: 1;'/>");
+            }
         };
 
         /**
