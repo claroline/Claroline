@@ -49,14 +49,14 @@
 
                                 <!-- Import Questions -->
                                 <li>
-                                    <a href="{{ 'ujm_exercise_import_question' | path:{ id: exerciseCtrl.exercise.meta.id } }}">
+                                    <a href="{{ 'ujm_exercise_import_question' | path:{ id: exerciseCtrl.exercise.id, idExo: exerciseCtrl.exercise.id } }}">
                                         <span class="fa fa-fw fa-download"></span> {{ 'import_questions' | trans:{}:'ujm_exo' }}
                                     </a>
                                 </li>
 
                                 <!-- Export Questions -->
                                 <li>
-                                    <a href="{{ 'ujm_qti_export_exercise_questions' | path:{ exoID: exerciseCtrl.exercise.meta.id, exoName: exerciseCtrl.exercise.meta.title } }}">
+                                    <a href="{{ 'ujm_qti_export_exercise_questions' | path:{ exoID: exerciseCtrl.exercise.id, exoName: exerciseCtrl.exercise.meta.title } }}">
                                         <span class="fa fa-fw fa-save"></span> {{ 'export_qti_exercise' | trans:{}:'ujm_exo' }}
                                     </a>
                                 </li>

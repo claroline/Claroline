@@ -1,7 +1,0 @@
-ujm_paper_list:
-    pattern:  /list/{exoID}/{page}/{all}
-    defaults: { _controller: UJMExoBundle:Paper:index, page: 1, all: 0 }
-
-ujm_paper_show:
-    pattern:  /{id}/show/{p}
-    defaults: { _controller: UJMExoBundle:Paper:show, p: -2 }
