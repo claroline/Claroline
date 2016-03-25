@@ -108,8 +108,11 @@ ExerciseService.prototype.save = function save(exercise) {
         .success(function onSuccess(response) {
             // TODO : display message
 
+            // Inject updated data into the Exercise
+            angular.merge(this.exercise.meta, response.meta);
+
             deferred.resolve(response);
-        })
+        }.bind(this))
         .error(function onError(response, status) {
             // TODO : display message
 

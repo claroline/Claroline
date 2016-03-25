@@ -5,6 +5,11 @@
  */
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
+/**
+ * @DI\Service("ujm.exo.matching_service")
+ */
 class Matching extends Interaction
 {
     /**
@@ -252,7 +257,12 @@ class Matching extends Interaction
      */
     private function getTabResponseIndex($response)
     {
-        $tabResponse = explode(';', substr($response, 0, -1));
+        // in attempte of angular for the question bank
+        if(is_array($response)){
+            $tabResponse = $response;
+        } else {
+            $tabResponse = explode(';', substr($response, 0, -1));
+        }
         $tabResponseIndex = array();
 
         //array of responses of user indexed by labelId

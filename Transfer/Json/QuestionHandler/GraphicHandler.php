@@ -149,20 +149,20 @@ class GraphicHandler implements QuestionHandlerInterface {
     public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true, $forPaperList = false) {
         $repo = $this->om->getRepository('UJMExoBundle:InteractionGraphic');
         $graphic = $repo->findOneBy(['question' => $question]);
-        
+
         $coords = $graphic->getCoords()->toArray();
-        
+
         $picture = $this->om->getRepository('UJMExoBundle:Picture')->findOneBy(array('id' => $graphic->getPicture()));
-        
+
         $exportData->width = $picture->getWidth();
         $exportData->height = $picture->getHeight();
-        
-        $document = new \stdClass();        
+
+        $document = new \stdClass();
         $document->id = $picture->getId();
         $document->label = $picture->getLabel();
-        $document->url = $picture->getUrl();        
+        $document->url = $picture->getUrl();
         $exportData->document = $document;
-                
+
         $exportData->coords = array_map(function ($coord) {
             $coordData = new \stdClass();
             $coordData->id = (string) $coord->getId();
@@ -201,7 +201,7 @@ class GraphicHandler implements QuestionHandlerInterface {
             $solutionData->shape = $coord->getShape();
             $solutionData->color = $coord->getColor();
             $solutionData->size = $coord->getSize();
-            $solutionData->score = $coord->getScore();
+            $solutionData->score = $coord->getScoreCoords();
             if ($coord->getFeedback()) {
                 $solutionData->feedback = $coord->getFeedback();
             }
@@ -240,7 +240,7 @@ class GraphicHandler implements QuestionHandlerInterface {
     public function storeAnswerAndMark(Question $question, Response $response, $data) {
         // a response is recorded like this : 471 - 335.9999694824219;583 - 125;
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionGraphic')
-                ->findOneByQuestion($question);
+            ->findOneByQuestion($question);
         $coords = $interaction->getCoords();
         $score = 0;
         foreach ($coords as $coord) {
@@ -272,7 +272,7 @@ class GraphicHandler implements QuestionHandlerInterface {
         $mark = 0;
         foreach ($coords as $coord) {
             $values = $coord->getValue();
-            
+
             $explodeValues = explode(',', $values);
             $valueX = $explodeValues[0];
             $valueY = $explodeValues[1];
@@ -281,16 +281,16 @@ class GraphicHandler implements QuestionHandlerInterface {
             // original in Services->Interactions->Graphic->mark()
             foreach ($answers as $answer) {
                 if (
-                        ($answer['x'] <= ($valueX + $size)) // $answer['x'] + 8 < $xr + $valid... Why + 8 ?
-                        && $answer['x'] >= $valueX // ($xa + 8) > ($xr)
-                        && ($answer['y'] <= ($valueY + $size)) // + 8 ?
-                        && $answer['y'] >= $valueY // + 8 ?
-                        && !in_array($coord->getValue(), $done) // Avoid getting points twice for one answer
-                    )
-                    {
-                    
-                        $mark += $coord->getScoreCoords();
-                        array_push($done,$coord->getValue());                   
+                    ($answer['x'] <= ($valueX + $size)) // $answer['x'] + 8 < $xr + $valid... Why + 8 ?
+                    && $answer['x'] >= $valueX // ($xa + 8) > ($xr)
+                    && ($answer['y'] <= ($valueY + $size)) // + 8 ?
+                    && $answer['y'] >= $valueY // + 8 ?
+                    && !in_array($coord->getValue(), $done) // Avoid getting points twice for one answer
+                )
+                {
+
+                    $mark += $coord->getScoreCoords();
+                    array_push($done,$coord->getValue());
                 }
             }
         }

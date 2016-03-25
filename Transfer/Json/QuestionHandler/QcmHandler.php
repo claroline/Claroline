@@ -153,19 +153,21 @@ class QcmHandler implements QuestionHandlerInterface
         if($exportData->random && !$forPaperList){
             $qcm->shuffleChoices();
         }
-        
+
         $choices = $qcm->getChoices()->toArray();
 
-        $exportData->multiple = $qcm->getTypeQCM()->getCode() === 1;    
+        $exportData->multiple = $qcm->getTypeQCM()->getCode() === 1;
         $exportData->choices = array_map(function ($choice) {
             $choiceData = new \stdClass();
             $choiceData->id = (string) $choice->getId();
             $choiceData->type = 'text/html';
             $choiceData->data = $choice->getLabel();
+            $choiceData->rightResponse = $choice->getRightResponse();
+            $choiceData->feedback = $choice->getFeedback();
 
             return $choiceData;
         }, $choices);
-        
+
         $scoreTotal = 0;
         foreach ($choices as $choice) {
             $scoreTotal = $scoreTotal + $choice->getWeight();
@@ -188,23 +190,23 @@ class QcmHandler implements QuestionHandlerInterface
 
         return $exportData;
     }
-    
+
     public function convertQuestionAnswers(Question $question, \stdClass $exportData){
         $repo = $this->om->getRepository('UJMExoBundle:InteractionQCM');
         $qcm = $repo->findOneBy(['question' => $question]);
-        
+
         $choices = $qcm->getChoices()->toArray();
         $exportData->solutions = array_map(function ($choice) {
-                $solutionData = new \stdClass();
-                $solutionData->id = (string) $choice->getId();
-                $solutionData->score = $choice->getWeight();
+            $solutionData = new \stdClass();
+            $solutionData->id = (string) $choice->getId();
+            $solutionData->score = $choice->getWeight();
 
-                if ($choice->getFeedback()) {
-                    $solutionData->feedback = $choice->getFeedback();
-                }
+            if ($choice->getFeedback()) {
+                $solutionData->feedback = $choice->getFeedback();
+            }
 
-                return $solutionData;
-            }, $choices);
+            return $solutionData;
+        }, $choices);
         return $exportData;
     }
 
@@ -228,7 +230,7 @@ class QcmHandler implements QuestionHandlerInterface
         if (!is_array($data)) {
             return ['Answer data must be an array, ' . gettype($data) . ' given'];
         }
-        
+
         $count = 0;
 
         if (0 === $count = count($data)) {
@@ -252,7 +254,7 @@ class QcmHandler implements QuestionHandlerInterface
                 return ['Answer array identifiers must reference question choices'];
             }
         }
-        
+
         if ($interaction->getTypeQCM()->getCode() === 2 && $count > 1) {
             return ['This question does not allow multiple answers'];
         }

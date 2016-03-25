@@ -10,6 +10,7 @@ use UJM\ExoBundle\Entity\InteractionMatching;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("ujm.exo.match_handler")
@@ -18,16 +19,20 @@ use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
 class MatchHandler implements QuestionHandlerInterface {
 
     private $om;
-
+    private $container;
+    
     /**
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "container"       = @DI\Inject("service_container")
      * })
-     *
+     * 
      * @param ObjectManager $om
+     * @param ContainerInterface $container
      */
-    public function __construct(ObjectManager $om) {
+    public function __construct(ObjectManager $om, ContainerInterface $container) {
         $this->om = $om;
+        $this->container = $container;
     }
 
     /**
@@ -360,8 +365,8 @@ class MatchHandler implements QuestionHandlerInterface {
          $labels = $interaction->getLabels();
          // at least one label must have a score
          $score = 0;
-         $tabLabelGraduate = array(); // store labels already considered in calculating the score
-         foreach ($labels as $label) {
+        $tabLabelGraduate = array(); // store labels already considered in calculating the score
+        foreach ($labels as $label) {
              // if first label
              if(count($tabLabelGraduate) === 0){
                $score += $label->getScoreRightResponse();
@@ -376,34 +381,25 @@ class MatchHandler implements QuestionHandlerInterface {
              // add the labels already considered
              array_push($tabLabelGraduate, $label);
          }
-         if ($score === 0) {
-             throw new \Exception('Global score not implemented yet');
-         }
+        if ($score === 0) {
+            throw new \Exception('Global score not implemented yet');
+        }
+        
+        $serviceMatching = $this->container->get("ujm.exo.matching_service");
+        
+        $tabsResponses = $serviceMatching->initTabResponseMatching($data, $interaction);
+        $tabRightResponse = $tabsResponses[1];
+        $tabResponseIndex = $tabsResponses[0];
 
-         // calculate response score
-         $mark = 0;
-         $targetIds = array();
-         foreach ($data as $answer) {
-             if ($answer !== '') {
-                 $set = explode(',', $answer);
-                 array_push($targetIds, $set[1]);
-             }
-         }
+        $mark = $serviceMatching->mark($interaction, 0, $tabRightResponse, $tabResponseIndex);
 
-         foreach ($labels as $label) {
-             // if student used the label in his answer
-             if (in_array((string) $label->getId(), $targetIds)) {
-                 $mark += $label->getScoreRightResponse();
-             }
-         }
+        if ($mark < 0) {
+            $mark = 0;
+        }
 
-         if ($mark < 0) {
-             $mark = 0;
-         }
-
-         $result = count($data) > 0 ? implode(';', $data) : '';
-         $response->setResponse($result);
-         $response->setMark($mark);
+        $result = count($data) > 0 ? implode(';', $data) : '';
+        $response->setResponse($result);
+        $response->setMark($mark);
      }
 
 }
