@@ -1,0 +1,67 @@
+{% set interInfo = getInterTwig(interactions[p].id, 'InteractionGraphic') %}
+{% set inter =  interInfo['question'] %}
+{% set coords =  getCoordsGraphTwig(inter.id) %}
+{% set maxScore = 0 %}
+
+
+
+{% if (display == 'all') %}
+
+<div class="panel-body">
+    {% include "UJMExoBundle:Partial:correction/graphic.html.twig" %}
+</div>
+</div>
+<div style="margin-left: 30px;">
+    <div id="Answer" style="position: relative;">
+        <img class="AnswerImage" src="{{asset (inter.picture.url)}}" width="{{ inter.width }}" height="{{ inter.height }}"
+             alt="AnswerImage" id="AnswerImage{{ inter.question.id }}"/>
+
+        {% set repco = responses[p].response|split(';') %}
+        {% set x = 0 %}
+
+        {% for c in coords %}
+
+            {% set maxScore = maxScore + coords[x].scoreCoords %}
+            {% set numb = coords[x].value|split(',') %}
+            {% if repco[x] is defined %}
+                {% set repcoX = repco[x]|split('-') %}
+            {% endif %}
+
+            <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" id="{{ inter.question.id }}ra{{ x }}"
+                 alt="RightAnswer{{ x }}" width="{{ coords[x].size }}" style="z-index: 2;"/>
+
+            <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" id="{{ inter.question.id }}cursor{{ x }}"
+                 alt="AnswerZone{{ x }}" style="z-index: 7;"/>
+
+            <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphicOverview.js') }}"></script>
+
+            {% if repcoX[0] is defined and repcoX[0] != '' %}
+                {% set abscissa   = repcoX[0] %}
+                {% set ordoninate = repcoX[1] %}
+            {% else %}
+                {% set abscissa   = 'a' %}
+                {% set ordoninate = 'a' %}
+            {% endif %}
+
+            <script type="text/javascript">
+                    whichImg('{{coords[x].shape}}', '{{coords[x].color}}', {{x}}, '{{ numb[0] }}', '{{ numb[1] }}',
+                    '{{abscissa}}', '{{ordoninate}}', '{{ asset('bundles/ujmexo/images/graphic/') }}',
+                    '{{ coords[x].size }}', '{{inter.question.id}}')
+            </script>
+
+            {% set x = x + 1 %}
+        {% endfor %}
+    </div>
+     </div>
+    <div style="margin: 10px" class="panel-body">
+    {% include "UJMExoBundle:Partial:correction/interactionScore.html.twig" %}
+
+{% else %}
+    {% set x = 0 %}
+
+    {% for c in coords %}
+        {% set maxScore = maxScore + coords[x].scoreCoords %}
+        {% set x = x + 1 %}
+    {% endfor %}
+
+{% endif %}
