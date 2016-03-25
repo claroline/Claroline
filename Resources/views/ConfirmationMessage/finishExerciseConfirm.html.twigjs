@@ -1,5 +1,0 @@
-{% twig_js name="finishExerciseConfirm" %}
-
-{# no transchoice filter in twigjs... #}
-
-{{ 'alert_ending'|trans({}, 'ujm_exo') }}

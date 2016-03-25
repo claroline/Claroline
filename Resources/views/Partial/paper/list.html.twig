@@ -1,0 +1,101 @@
+<table class="table table-striped table-bordered table-condensed records_list" id="UserArray">
+    <thead>
+        <tr style="background-color: lightsteelblue;">
+            <th class="classic" onclick="SortQuestions('user', 'UserArray');"
+                onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
+                onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
+                <i class="fa fa-chevron-up" id="upU"  style="display: none;"></i>
+                <i class="fa fa-chevron-down" id="downU"  style="display: none;"></i>
+                {{ 'user' | trans({}, 'ujm_exo') }}
+            </th>
+            <th class="classic" onclick="SortQuestions('numPaper', 'UserArray');"
+                onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
+                onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
+                <i class="fa fa-chevron-up" id="upN"  style="display: none;"></i>
+                <i class="fa fa-chevron-down" id="downN"  style="display: none;"></i>
+                {{ 'num_paper' | trans({}, 'ujm_exo') }}
+            </th>
+            <th class="classic" onclick="SortQuestions('startDate', 'UserArray');"
+                onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
+                onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
+                <i class="fa fa-chevron-up" id="upS"  style="display: none;"></i>
+                <i class="fa fa-chevron-down" id="downS"  style="display: none;"></i>
+                {{ 'start_date' | trans({}, 'ujm_exo') }}
+            </th>
+            <th class="classic" onclick="SortQuestions('endDate', 'UserArray');"
+                onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
+                onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
+                <i class="fa fa-chevron-up" id="upE"  style="display: none;"></i>
+                <i class="fa fa-chevron-down" id="downE"  style="display: none;"></i>
+                {{ 'end_date' | trans({}, 'ujm_exo') }}
+            </th>
+            <th class="classic">{{ 'is_interupt' | trans({}, 'ujm_exo') }}</th>
+            {% if display != 'none' %}
+                <th class="classic">{{ 'actions' | trans({}, 'ujm_exo') }}</th>
+
+            <th class="classic" onclick="SortQuestions('mark', 'UserArray');"
+                onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
+                onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
+                <i class="fa fa-chevron-up" id="upM"  style="display: none;"></i>
+                <i class="fa fa-chevron-down" id="downM"  style="display: none;"></i>
+                {{ 'score' | trans({}, 'ujm_exo') }}
+            </th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+
+    {% set format = 'd/m/Y \\- H\\hi\\ms\\s' %} <!-- Y-m-d H:i:s  /!\ if alter format, alter sorting -->
+
+    {% for paper in papers %}
+        <tr>
+            <td class="classic">
+                {% if paper.user is not null %}
+                    {{ paper.user.firstname }} {{ paper.user.lastName }}
+                {% else %}
+                    {{ 'anonymous'|trans({}, 'ujm_exo') }}
+                {% endif %}
+            </td>
+            <td class="classic">
+                {{ paper.numpaper }}
+            </td>
+            <td class="classic">
+                {% if paper.start %}{{ paper.start|date(format) }}{% else %}-{% endif %}
+            </td>
+            <td class="classic">
+                {% if paper.end %}{{ paper.end|date(format) }}{% else %}-{% endif %}
+            </td>
+            <td class="classic">
+                 {% if paper.interupt %}
+                    {{ 'yes'|trans({}, 'ujm_exo') }}
+                {% else %}
+                    {{ 'no'|trans({}, 'ujm_exo') }}
+                 {% endif %}
+            </td>
+            {% if display != 'none' %}
+                <td class="classic">
+                    <ul class="list-unstyled">
+                        <li>
+                            {% if ((paper.end) or (isAdmin == 1)) %}
+                                <a class="btn btn-default" data-toggle="tooltip" title="{{ 'show'|trans({}, 'ujm_exo') }}" href="{{ path('ujm_paper_show', { 'id': paper.id }) }}">
+                                    <i class="fa fa-eye"></i>
+                                 </a>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </td>
+
+                {% set scoreFinal = arrayMarkPapers[paper.id].scorePaper / arrayMarkPapers[paper.id].maxExoScore %}
+                {% set scoreFinal = scoreFinal * 20 %}
+                {% set scoreFinal = roundUpOrDown(scoreFinal) %}
+
+                {% if arrayMarkPapers[paper.id].scoreTemp == true %}
+                    <td class="classic" style="color: red;"> {{ scoreFinal }} / 20</td>
+                {% else %}
+                    <td class="classic"> {{ scoreFinal }} / 20</td>
+                {% endif %}
+             {% endif %}
+         </tr>
+    {% endfor %}
+    </tbody>
+</table>
