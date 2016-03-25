@@ -73,7 +73,7 @@ class VideoRecorderManager
           $fs->mkdir($targetDir);
         }
 
-        $isFirefox = $postData['nav'] === 'firefox';
+        $isFirefox = isset($postData['nav']) && $postData['nav'] === 'firefox';
         $extension = 'webm';
         $encodingExt = 'webm';
         $mimeType = 'video/' . $extension;;
@@ -138,7 +138,7 @@ class VideoRecorderManager
         return array('file' => $file, 'errors' => []);
     }
 
-    private function getBaseFileHashName($uniqueBaseName, Workspace $workspace = null)
+    public function getBaseFileHashName($uniqueBaseName, Workspace $workspace = null)
     {
         $hashName = '';
         if (!is_null($workspace)) {
@@ -156,7 +156,7 @@ class VideoRecorderManager
      * @param Bool $isFirefox
      * @param UploadedFile $audio the audio blob sent by webrtc if chrome has been used
      */
-    private function validateParams($postData, UploadedFile $video)
+    public function validateParams($postData, UploadedFile $video)
     {
 
         if(!array_key_exists('fileName', $postData) || !isset($postData['fileName']) || $postData['fileName'] === ''){
