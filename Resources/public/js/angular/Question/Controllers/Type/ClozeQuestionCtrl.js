@@ -32,6 +32,30 @@ angular.module('Question').controller('ClozeQuestionCtrl', [
             }
         };
 
+        this.lockInputs = function () {
+            for (var i=0; i<this.currentQuestionPaperData.answer.length; i++) {
+                var element = $("<i></i>");
+                element.attr("data-toggle", "tooltip");
+                for (var j=0; j<this.question.holes.length; j++) {
+                    if (this.question.holes[j].id === i.toString()) {
+                        for (var k=0; k<this.question.holes[j].wordResponses.length; k++) {
+                            if (this.question.holes[j].wordResponses[k].response === this.currentQuestionPaperData.answer[i] && !this.question.holes[j].selector && this.question.holes[j].wordResponses[k].score > 0) {
+                                $("#"+i).prop('disabled', true);
+                                element.prop("title", this.question.holes[j].wordResponses[k].feedback);
+                                element.addClass("feedback-icon fa fa-check color-success");
+                            }
+                            else if (this.question.holes[j].wordResponses[k].id === this.currentQuestionPaperData.answer[i] && this.question.holes[j].selector && this.question.holes[j].wordResponses[k].score > 0) {
+                                $("#"+i).prop('disabled', true);
+                                element.prop("title", this.question.holes[j].wordResponses[k].feedback);
+                                element.addClass("feedback-icon fa fa-check color-success");
+                            }
+                        }
+                    }
+                }
+                element.insertAfter(document.getElementById(i));
+            }
+        };
+
         /**
          * set answers already given if any
          * @param {type} id
@@ -45,6 +69,7 @@ angular.module('Question').controller('ClozeQuestionCtrl', [
                 array_answers[key] = answers[key];
             });
             this.currentQuestionPaperData.answer = array_answers;
+            this.lockInputs();
             DataSharing.setStudentData(this.question, this.currentQuestionPaperData);
         };
 
@@ -108,13 +133,13 @@ angular.module('Question').controller('ClozeQuestionCtrl', [
         this.showHint = function (id) {
             var penalty = QuestionService.getHintPenalty(this.question.hints, id);
             $ngBootbox.confirm(Translator.trans('question_show_hint_confirm', {1: penalty}, 'ujm_sequence'))
-                    .then(function () {
-                        this.getHintData(id);
-                        this.currentQuestionPaperData.hints.push(id);
-                        this.updateStudentData();
-                        // hide button
-                        angular.element('#hint-' + id).hide();
-                    }.bind(this));
+                .then(function () {
+                    this.getHintData(id);
+                    this.currentQuestionPaperData.hints.push(id);
+                    this.updateStudentData();
+                    // hide button
+                    angular.element('#hint-' + id).hide();
+                }.bind(this));
         };
 
         this.getHintData = function (id) {
@@ -210,6 +235,7 @@ angular.module('Question').controller('ClozeQuestionCtrl', [
 
         this.showFeedback = function () {
             // get question answers and feedback ONLY IF NEEDED
+            $(".feedback-icon").remove();
             var promise = QuestionService.getQuestionSolutions(this.question.id);
             promise.then(function (result) {
                 this.feedbackIsVisible = true;
@@ -303,6 +329,7 @@ angular.module('Question').controller('ClozeQuestionCtrl', [
             $('.blank').each(function () {
                 $(this).prop('disabled', false);
             });
+            this.lockInputs();
         };
 
         /**

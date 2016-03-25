@@ -43,10 +43,6 @@ all_hint:
     resource: "routing/all/hint.yml"
     prefix:   /all/hint
 
-all_paper:
-    resource: "routing/all/paper.yml"
-    prefix:   /all/paper
-
 all_qti:
     resource: "routing/all/qti.yml"
     prefix:   /all/qti
@@ -55,12 +51,6 @@ sequence:
     resource: "@UJMExoBundle/Controller/Sequence/SequenceController.php"
     type: annotation
     prefix: /
-    
-sequence_correction:
-    resource: "@UJMExoBundle/Controller/Sequence/PaperController.php"
-    type: annotation
-    prefix: /papers
-  
 
 ujm_exercise:
     resource: "@UJMExoBundle/Controller/ExerciseController.php"
