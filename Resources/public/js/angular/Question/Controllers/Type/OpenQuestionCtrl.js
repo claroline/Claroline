@@ -101,7 +101,30 @@ angular.module('Question').controller('OpenQuestionCtrl', [
                 this.solutions = result.solutions;
                 this.setScore();
                 this.questionFeedback = result.feedback;
+                this.setFeedback();
             }.bind(this));
+        };
+        
+        this.setFeedback = function () {
+            var whole;
+            var firstPart;
+            var feedbackedWord;
+            var check;
+            var lastPart;
+            var indexOf;
+            if (this.question.typeOpen !== "long") {
+                for (var i=0; i<this.solutions.length; i++) {
+                    if ((this.solutions[i].caseSensitive && this.answer.indexOf(this.solutions[i].word) > -1) || this.answer.search(new RegExp(this.solutions[i].word, "i")) > -1) {
+                        indexOf = this.answer.indexOf(this.solutions[i].word);
+                        firstPart = this.answer.slice(0, indexOf);
+                        feedbackedWord = "<span class='color-info'>" + this.solutions[i].word + "</span>";
+                        check = "<i class='fa fa-check color-success' data-toggle='tooltip' title='" + this.solutions[i].word + "' ></i>";
+                        lastPart = this.answer.slice(indexOf + this.solutions[i].word.length, this.answer.length);
+                        whole = firstPart + feedbackedWord + check + lastPart;
+                        this.answer = whole;
+                    }
+                }
+            }
         };
 
         this.setScore = function () {
