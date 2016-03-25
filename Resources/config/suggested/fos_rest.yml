@@ -1,17 +1,35 @@
 # app/config/config.yml
 fos_rest:
+    body_converter:
+        enabled: true
     disable_csrf_role: ROLE_API
     param_fetcher_listener: true
     body_listener: true
     format_listener: true
     view:
         view_response_listener: 'force'
+        mime_types:
+            csv: ['text/plain', 'text/csv']
         formats:
             json: true
-            xml: true
-            html: true
+            xml:  true
+            csv:  true
     format_listener:
         rules:
-            priorities: ['json']
-            fallback_format: json
-            prefer_extension: true
+            -
+                path: '^.*/api/.*\.csv$'
+                priorities: [csv, json]
+                fallback_format: csv
+                prefer_extension: true
+    service:
+        view_handler: claroline.view_handler
+
+
+services:
+    claroline.view_handler.csv.class:
+        class: Claroline\CoreBundle\Library\View\CsvViewHandler
+
+    claroline.view_handler:
+        parent: fos_rest.view_handler.default
+        calls:
+            - ['registerHandler', [ 'csv', [@claroline.view_handler.csv.class, 'createResponse'] ] ]

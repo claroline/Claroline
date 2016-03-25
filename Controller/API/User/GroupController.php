@@ -30,6 +30,7 @@ use Claroline\CoreBundle\Form\User\GroupSettingsType;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Library\Security\Collection\GroupCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use FOS\RestBundle\Controller\Annotations\Get;
 
 /**
  * @NamePrefix("api_")
@@ -307,6 +308,38 @@ class GroupController extends FOSRestController
         return $this->apiManager->handleFormView('ClarolineCoreBundle:API:User\editGroupForm.html.twig', $form, $options);
     }
 
+    /**
+     * @Get("/export/group/{group}/{format}")
+     *
+     * @return Response
+     */
+    public function export($format)
+    {
+        $exporter = $this->container->get('claroline.exporter.' . $format);
+        $exporterManager = $this->container->get('claroline.manager.exporter_manager');
+        $file = $exporterManager->export('Claroline\CoreBundle\Entity\User', $exporter);
+        $response = new StreamedResponse();
+
+        $response->setCallBack(
+            function () use ($file) {
+                readfile($file);
+            }
+        );
+
+        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename=users.' . $format);
+
+        switch ($format) {
+            case 'csv': $response->headers->set('Content-Type', 'text/csv'); break;
+            case 'xls': $response->headers->set('Content-Type', 'application/vnd.ms-excel'); break;
+        }
+
+        $response->headers->set('Connection', 'close');
+
+        return $response;
+    }
+
     private function isAdmin()
     {
         return $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN');
@@ -336,7 +369,7 @@ class GroupController extends FOSRestController
             throw new AccessDeniedException("You can't do the action [{$action}] on the user list {$groupList}");
         }
     }
-    
+
     /**
      * @View()
      * @ApiDoc(
