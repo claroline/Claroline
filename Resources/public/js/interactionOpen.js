@@ -34,6 +34,9 @@ function insertStyle(tOpen, deleteTrans, edition, comment, keyWordTrans, respons
     });
 
     $("#ujm_exobundle_interactionopentype_typeopenquestion option[value='2']").prop('selected', true);
+
+    //todo delete to implement numerical questions
+    $("#ujm_exobundle_interactionopentype_typeopenquestion option[value='1']").remove();
 }
 
 function formWordResponseEdit(nbResponses) {
