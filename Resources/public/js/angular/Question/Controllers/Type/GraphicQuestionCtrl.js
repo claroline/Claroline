@@ -59,7 +59,7 @@ angular.module('Question').controller('GraphicQuestionCtrl', [
 
         this.initPreviousAnswers = function () {
             for (var i = 0; i < this.coords.length; i++) {
-                // console.log('yep');
+               // console.log('yep');
                 // ensure that we are not in default values
                 if (this.coords[i].x !== 'a' && this.coords[i].y !== 'a') {
                     // crosshair
@@ -81,10 +81,10 @@ angular.module('Question').controller('GraphicQuestionCtrl', [
                     $('#crosshair_' + this.coords[i].id).css('z-index', i + 1);
                 }
             }
-
+            
             this.setSolution();
         };
-
+        
         this.setSolution = function () {
             var promise = QuestionService.getQuestionSolutions(this.question.id);
             promise.then(function (result) {
@@ -211,8 +211,8 @@ angular.module('Question').controller('GraphicQuestionCtrl', [
         $scope.$on('show-feedback', function (event, data) {
             this.showFeedback();
         }.bind(this));
-
-
+        
+        
         this.showFeedback = function () {
             // get question answers and feedback ONLY IF NEEDED
             /*var promise = QuestionService.getQuestionSolutions(this.question.id);
@@ -223,15 +223,8 @@ angular.module('Question').controller('GraphicQuestionCtrl', [
             this.setWrongFeedback();
             //}.bind(this));
         };
-
+        
         this.showRightAnswerZones = function () {
-
-            /**
-             * Create an array of already found/not found zones
-             * And then, prevent that a pointer gets checked if
-             * it is in a zone already found
-             */
-
             var pointX = 0;
             var pointY = 0;
             var startX = 0;
@@ -239,7 +232,7 @@ angular.module('Question').controller('GraphicQuestionCtrl', [
             var start;
             var centerX = 0;
             var centerY = 0;
-
+            
             for (var i=0; i<this.solutions.length; i++) {
                 for (var j=0; j<$(".crosshair").length; j++) {
                     var firstElementId = $(".crosshair")[j].id;
@@ -254,7 +247,7 @@ angular.module('Question').controller('GraphicQuestionCtrl', [
                     centerY = startY + this.solutions[i].size/2;
                     var endX = startX + this.solutions[i].size;
                     var endY = startY + this.solutions[i].size;
-
+                    
                     var distance = Math.sqrt((centerX-pointX)*(centerX-pointX) + (centerY-pointY)*(centerY-pointY));
                     distance = Math.round(distance);
 
@@ -288,7 +281,7 @@ angular.module('Question').controller('GraphicQuestionCtrl', [
                 }
             }
         };
-
+        
         this.setWrongFeedback = function () {
             var elements = $(".crosshair");
             for (var i=0; i<elements.length; i++) {
@@ -299,13 +292,13 @@ angular.module('Question').controller('GraphicQuestionCtrl', [
                 $("#" + id).replaceWith("<i id='crosshair_invalid_" + numId + "' class='color-danger fa fa-close crosshair_invalid' data-toggle='tooltip' style='top: " + rightPointY + "px; left: " + pointX + "px; position: absolute; z-index: 3;' title='" + this.solutions[i].feedback + "' ></i>");
             }
         };
-
+        
         this.disableDraggable = function () {
             for (var i=0; i<this.question.coords.length; i++) {
                 $("#crosshair_" + this.question.coords[i].id).draggable('disable');
             }
         };
-
+        
         this.enableDraggable = function () {
             for (var i=0; i<this.question.coords.length; i++) {
                 $("#crosshair_" + this.question.coords[i].id).draggable();
@@ -322,7 +315,7 @@ angular.module('Question').controller('GraphicQuestionCtrl', [
             this.hideWrongFeedbacks();
             this.enableDraggable();
         };
-
+        
         this.hideWrongFeedbacks = function () {
             var elements = $(".crosshair_invalid");
             for (var i=0; i<elements.length; i++) {

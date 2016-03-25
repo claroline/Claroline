@@ -37,7 +37,7 @@ angular.module('Question').controller('ClozeQuestionCtrl', [
                 var element = $("<i></i>");
                 element.attr("data-toggle", "tooltip");
                 for (var j=0; j<this.question.holes.length; j++) {
-                    if (this.question.holes[j].id === i.toString()) {
+                    if (parseInt(this.question.holes[j].position) === i) {
                         for (var k=0; k<this.question.holes[j].wordResponses.length; k++) {
                             if (this.question.holes[j].wordResponses[k].response === this.currentQuestionPaperData.answer[i] && !this.question.holes[j].selector && this.question.holes[j].wordResponses[k].score > 0) {
                                 $("#"+i).prop('disabled', true);
