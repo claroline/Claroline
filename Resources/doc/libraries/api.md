@@ -1,4 +1,4 @@
-# BackEnd libraries
+# API libraries
 
 ## MANDATORY
 - friendsofsymfony/jsrouting-bundle
