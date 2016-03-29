@@ -10,6 +10,8 @@ Structure
 ---------
 
 - [Overview][2]
+- Best Practices
+    - [Front-end development][16]
 - [Core architecture][3]
     - [Event tracking][11]
     - [Third-party application][14]
@@ -37,3 +39,4 @@ Structure
 [13]: sections/plugins/logs.md
 [14]: sections/third-party-application.md
 [15]: sections/plugins/resource-actions.md
+[16]: best-practices/front-end.md
