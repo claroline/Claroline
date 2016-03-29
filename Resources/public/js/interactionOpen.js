@@ -33,7 +33,7 @@ function insertStyle(tOpen, deleteTrans, edition, comment, keyWordTrans, respons
         return false;
     });
 
-    $("#ujm_exobundle_interactionopentype_typeopenquestion option[value='2']").prop('selected', true);
+    //$("#ujm_exobundle_interactionopentype_typeopenquestion option[value='2']").prop('selected', true);
 
     //todo delete to implement numerical questions
     $("#ujm_exobundle_interactionopentype_typeopenquestion option[value='1']").remove();
