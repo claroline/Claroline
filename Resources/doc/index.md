@@ -10,6 +10,9 @@ Structure
 ---------
 
 - [Overview][2]
+- Third-party libraries
+    - [API libraries][17]
+    - [Front-end libraries][18]
 - Best Practices
     - [Front-end development][16]
 - [Core architecture][3]
@@ -40,3 +43,5 @@ Structure
 [14]: sections/third-party-application.md
 [15]: sections/plugins/resource-actions.md
 [16]: best-practices/front-end.md
+[17]: libraries/api.md
+[18]: libraries/front-end.md
