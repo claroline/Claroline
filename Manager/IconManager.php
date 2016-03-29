@@ -374,7 +374,7 @@ class IconManager
             array('res_gif.png', 'image/gif'),
             array('res_tiff.png', 'image/tiff'),
             array('res_tiff.png', 'image/x-tiff'),
-            
+
             //videos
             array('res_mp4.png', 'video/mp4'),
             array('res_mpeg.png', 'video/mpeg'),
@@ -450,9 +450,9 @@ class IconManager
 
             //ods
             array('res_ods.png', 'application/vnd.oasis.opendocument.spreadsheet'),
-            
+
             //array('res_pps.png') alias for powerpoint
-            //array('res_psp.png') couldn't find mime type 
+            //array('res_psp.png') couldn't find mime type
 
             array('res_rtf.png', 'application/rtf'),
             array('res_rtf.png', 'application/x-rtf'),
