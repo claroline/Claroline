@@ -14,9 +14,10 @@ namespace Claroline\FlashCardBundle\Manager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\ResultBundle\Entity\Result;
+use Claroline\FlashCardBundle\Entity\FlashCard;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Symfony\Component\Form\FormView;
 
 /**
  * @DI\Service("claroline.flashcard.flashcard_manager")
@@ -64,5 +65,22 @@ class FlashCardManager
     {
         $this->om->remove($flashcard);
         $this->om->flush();
+    }
+
+    /**
+     * Returns the content of the result resource form.
+     * 
+     * @param FormView $view
+     * @return string
+     **/
+    public function getFlashCardFormContent(FormView $view)
+    {
+        return $this->templating->render(
+            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            [
+                'form' => $view,
+                'resourceType' => 'claroline_flashcard'
+            ]
+        );
     }
 }
