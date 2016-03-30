@@ -1,3 +1,5 @@
+import { ImportMembersModalController } from './ImportMembersModalController'
+
 export default class UserListController {
     constructor($http, ClarolineSearchService, $stateParams, GroupAPIService, ClarolineAPIService, $uibModal) {
         this.$http = $http
@@ -9,7 +11,7 @@ export default class UserListController {
 
         this.groupId = $stateParams.groupId;
         this.group = [];
-        this.users = [];
+        this.users = undefined;
         this.search = '';
         this.savedSearch = [];
         this.selected = [];
@@ -25,21 +27,6 @@ export default class UserListController {
             {name: this.translate('email'), prop: "mail"}
         ];
 
-        this.dataTableOptions = {
-            scrollbarV: true,
-            columnMode: 'force',
-            headerHeight: 50,
-            footerHeight: 50,
-            selectable: true,
-            multiSelect: true,
-            checkboxSelection: true,
-            columns: columns,
-            paging: {
-                externalPaging: true,
-                size: 10
-            }
-        };
-
         this.GroupAPIService.find(this.groupId).then(d => {
             this.group = d.data;
         })
@@ -54,7 +41,23 @@ export default class UserListController {
             }
         });
 
-        this._addToGroupCallback = this._addToGroupCallback.bind(this) 
+        this.dataTableOptions = {
+            scrollbarV: false,
+            columnMode: 'force',
+            headerHeight: 50,
+            footerHeight: 50,
+            selectable: true,
+            multiSelect: true,
+            checkboxSelection: true,
+            columns: columns,
+            paging: {
+                externalPaging: true,
+                size: 10
+            },
+            sizes: [10, 20 , 50]
+        };
+
+        this._addToGroupCallback = this._addToGroupCallback.bind(this)
         this._removeFromGroupCallback = this._removeFromGroupCallback.bind(this)
         this._pickerCallback = this._pickerCallback.bind(this)
         this._onSearch = this._onSearch.bind(this)
@@ -76,7 +79,7 @@ export default class UserListController {
         }
 
         return searches;
-    }   
+    }
 
     clickDelete() {
         var url = Routing.generate('api_remove_users_from_group',  {'group': this.groupId}) + '?' + this.ClarolineAPIService.generateQueryString(this.selected, 'userIds');
@@ -97,7 +100,7 @@ export default class UserListController {
 
     paging(offset, size) {
         this.savedSearch = this.mergeSearches(this.savedSearch, this.baseSearch);
-        this.ClarolineSearchService.find('api_get_search_users', this.savedSearch, offset, size).then(d => {
+        this.ClarolineSearchService.find('api_search_users', this.savedSearch, offset, size).then(d => {
             var users = d.data.users;
 
             //I know it's terrible... but I have no other choice with this table.
@@ -124,6 +127,21 @@ export default class UserListController {
 
         userPicker.configure(options, this._pickerCallback);
         userPicker.open();
+    }
+
+    importMembers() {
+        const modalInstance = this.$uibModal.open({
+            template: require('../Partial/group_import.html'),
+            controller: 'ImportMembersModalController',
+            controllerAs: 'immc',
+            resolve: {
+                group: () => { return this.group }
+            }
+        })
+
+        modalInstance.result.then(result => {
+            this.paging(0, this.dataTableOptions.paging.size)
+        })
     }
 
     closeAlert(index) {
@@ -158,7 +176,6 @@ export default class UserListController {
     }
 
     _pickerCallback(data) {
-        alert
         var userIds = [];
         var users = '';
 
@@ -179,23 +196,10 @@ export default class UserListController {
     }
 
     _onSearch(searches) {
-        searches = this.mergeSearches(searches, this.baseSearch);
-        this.savedSearch = searches;
-        ClarolineSearchService.find('api_get_search_users', searches, this.dataTableOptions.paging.offset, this.dataTableOptions.paging.size).then(d => {
-            this.users = d.data.users;
-            this.dataTableOptions.paging.count = d.data.total;
+        searches = this.mergeSearches(searches, this.baseSearch)
+        this.ClarolineSearchService.find('api_search_users', searches, 0, this.dataTableOptions.paging.size).then(d => {
+            this.users = d.data.users
+            this.dataTableOptions.paging.count = d.data.total
         })
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-

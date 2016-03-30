@@ -140,7 +140,7 @@ class GroupManager
     public function addUsersToGroup(Group $group, array $users)
     {
         $addedUsers = array();
-        
+
         if(!$this->validateAddUsersToGroup($users, $group)) {
             throw new Exception\AddRoleException();
         }
@@ -203,7 +203,8 @@ class GroupManager
     public function importUsers(Group $group, array $users)
     {
         $toImport = $this->userRepo->findByUsernames($users);
-        $this->addUsersToGroup($group, $toImport);
+
+        return $this->addUsersToGroup($group, $toImport);
     }
 
     /**
@@ -464,7 +465,7 @@ class GroupManager
 
         //Admin can see everything, but the others... well they can only see their own organizations.
         if (!$this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
-            
+
             $currentUser = $this->container->get('security.token_storage')->getToken()->getUser();
             $qb->join('g.organizations', 'go');
             $qb->join('go.administrators', 'ga');
@@ -569,5 +570,27 @@ class GroupManager
     )
     {
         return $this->groupRepo->findAllGroups($orderedBy, $order, $executeQuery);
+    }
+
+    public function importMembers($data)
+    {
+        $data = $this->container->get('claroline.utilities.misc')->formatCsvOutput($data);
+        $lines = str_getcsv($data, PHP_EOL);
+
+        foreach ($lines as $line) {
+            $users[] = str_getcsv($line, ';');
+        }
+
+        if ($this->validateAddUsersToGroup($users, $group)) {
+            $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
+            $max = $roleUser->getMaxUsers();
+            $total = $this->container->get('claroline.manager.user_manager')->countUsersByRoleIncludingGroup($roleUser);
+
+            if ($total + count($users) > $max) {
+                return array('form' => $form->createView(), 'error' => true, 'group' => $group);
+            }
+
+            return $this->importUsers($group, $users);
+        }
     }
 }

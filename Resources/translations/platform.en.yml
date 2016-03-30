@@ -211,8 +211,9 @@ creation: Creation
 creation_date: 'Creation date'
 creator: Creator
 csv_export: 'Csv export'
-csv_group_import_infos: 'CSV file informations'
-csv_group_import_infos_format: 'Format: username list separated by a carriage return'
+csv_select: 'Select csv to upload:'
+csv_format_info: 'CSV file informations'
+csv_format_user_list: 'Format: username list separated by a carriage return'
 csv_users_import_infos: 'CSV file informations'
 csv_users_import_infos_format: Format
 csv_users_import_infos_format_a: 'User informations must be defined in one line and separated by semicolon'
@@ -1229,3 +1230,4 @@ administrators: Administrators
 edit_organization: Edit organization
 coordinates: Coordinates
 address: Address
+csv_delete: Csv suppression

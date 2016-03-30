@@ -31,6 +31,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Library\Security\Collection\GroupCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Post;
 
 /**
  * @NamePrefix("api_")
@@ -309,35 +310,18 @@ class GroupController extends FOSRestController
     }
 
     /**
-     * @Get("/export/group/{group}/{format}")
+     * @Post("/groups/{group}/import/members", name="group_members_import", options={ "method_prefix" = false })
+     * @View(serializerGroups={"api_group"})
+     *
+     * @param Group $group
      *
      * @return Response
      */
-    public function export($format)
+    public function importMembersAction(Group $group)
     {
-        $exporter = $this->container->get('claroline.exporter.' . $format);
-        $exporterManager = $this->container->get('claroline.manager.exporter_manager');
-        $file = $exporterManager->export('Claroline\CoreBundle\Entity\User', $exporter);
-        $response = new StreamedResponse();
+        $this->throwsExceptionIfNotAdmin();
 
-        $response->setCallBack(
-            function () use ($file) {
-                readfile($file);
-            }
-        );
-
-        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
-        $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename=users.' . $format);
-
-        switch ($format) {
-            case 'csv': $response->headers->set('Content-Type', 'text/csv'); break;
-            case 'xls': $response->headers->set('Content-Type', 'application/vnd.ms-excel'); break;
-        }
-
-        $response->headers->set('Connection', 'close');
-
-        return $response;
+        return $this->groupManager->importMembers($this->request->files->get('csv'));
     }
 
     private function isAdmin()

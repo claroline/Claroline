@@ -5,14 +5,13 @@ export default class UserAPIService {
     }
 
     removeFromCsv(formData) {
-        console.log(formData)
         return this.$http.post(
             Routing.generate('api_csv_remove_user'),
             formData,
             {
-            transformRequest: angular.identity,
-            headers: {'Content-Type': undefined}
-        }
+                transformRequest: angular.identity,
+                headers: {'Content-Type': undefined}
+            }
         )
     }
 }

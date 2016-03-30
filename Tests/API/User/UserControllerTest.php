@@ -30,7 +30,7 @@ class UserControllerTest extends TransactionalTestCase
     private $userOrga;
     /** @var Role*/
     private $teacherRole;
-    /** @var Role*/ 
+    /** @var Role*/
     private $baseRole;
 
     protected function setUp()
@@ -55,7 +55,7 @@ class UserControllerTest extends TransactionalTestCase
         $this->persister->flush();
     }
 
-    //@url: /api/users.{_format}  
+    //@url: /api/users.{_format}
     //@route: api_get_users
     public function testGetUsersAction()
     {
@@ -66,7 +66,7 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals(4, count(json_decode($data, true)));
     }
 
-    //@url: /api/users.{_format}  
+    //@url: /api/users.{_format}
     //@route: api_get_users
     public function testGetUsersActionIsSecured()
     {
@@ -75,11 +75,10 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
-    //@url: /api/searches/{page}/users/{limit}.{_format}
-    //@route: api_get_search_users
-    public function testGetSearchUsersAction()
+    //@route: api_search_users
+    public function testSearchUsersAction()
     {
-        $url = '/api/searches/0/users/10.json';
+        $url = '/api/users/page/0/limit/10/search';
         //ADMINISTRATOR USAGE !
         $this->logIn($this->admin);
 
@@ -115,7 +114,7 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals(0, count($data['users']));
     }
 
-    //@url: /api/user/searchable/fields.{_format} 
+    //@url: /api/user/searchable/fields.{_format}
     //@route: api_get_user_searchable_fields
     public function testGetUsersSearchableFieldsAction()
     {
@@ -126,7 +125,7 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals(7, count($data));
     }
 
-    //@url: /api/users.{_format} 
+    //@url: /api/users.{_format}
     //@route: api_post_user
     public function testPostUserAction()
     {
@@ -152,14 +151,14 @@ class UserControllerTest extends TransactionalTestCase
     }
 
     //check we can only add we manage
-    //@url: /api/users.{_format} 
+    //@url: /api/users.{_format}
     //@route: api_post_user
     public function testPostUserActionIsProtected()
     {
         $this->markTestIncomplete('This test has not been implemented yet.');
     }
 
-    //@url: /api/users.{_format} 
+    //@url: /api/users.{_format}
     //@route: api_put_user
     public function testPutUserAction()
     {
@@ -178,7 +177,7 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals('toto', $data['username']);
     }
 
-    //@url: /api/users.{_format} 
+    //@url: /api/users.{_format}
     //@route: api_put_user
     public function testPutUserActionIsProtected()
     {
@@ -210,7 +209,7 @@ class UserControllerTest extends TransactionalTestCase
     }
 
     //@route: api_get_user
-    //@url: /api/users/{user}.{_format} 
+    //@url: /api/users/{user}.{_format}
     public function getUserAction()
     {
         $this->logIn($this->admin);
@@ -221,7 +220,7 @@ class UserControllerTest extends TransactionalTestCase
     }
 
     //@route: api_get_user
-    //@url: /api/users/{user}.{_format} 
+    //@url: /api/users/{user}.{_format}
     public function testGetUserActionIsProtected()
     {
         $this->logIn($this->adminOrga);
@@ -239,7 +238,7 @@ class UserControllerTest extends TransactionalTestCase
         $this->client->request('DELETE', "/api/users/{$this->userOrga->getId()}.json");
 
         //count the amount of users now...
-        $url = '/api/searches/0/users/10.json';
+        $url = '/api/users/page/0/limit/10/search';
         $this->client->request('GET', $url);
         $data = $this->client->getResponse()->getContent();
         $data = json_decode($data, true);
@@ -256,7 +255,7 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
 
         //count the amount of users now...
-        $url = '/api/searches/0/users/10.json';
+        $url = '/api/users/page/0/limit/10/search';
         $this->client->request('GET', $url);
         $data = $this->client->getResponse()->getContent();
         $data = json_decode($data, true);
@@ -264,14 +263,14 @@ class UserControllerTest extends TransactionalTestCase
     }
 
     //@route: api_delete_users
-    //@url: /api/users.{_format}   
+    //@url: /api/users.{_format}
     public function testDeleteUsersAction()
     {
         $this->logIn($this->adminOrga);
         $this->client->request('DELETE', "/api/users.json?userIds[]={$this->userOrga->getId()}");
 
         //count the amount of users now...
-        $url = '/api/searches/0/users/10.json';
+        $url = '/api/users/page/0/limit/10/search';
         $this->client->request('GET', $url);
         $data = $this->client->getResponse()->getContent();
         $data = json_decode($data, true);
@@ -279,7 +278,7 @@ class UserControllerTest extends TransactionalTestCase
     }
 
     //@route: api_delete_users
-    //@url: /api/users.{_format}   
+    //@url: /api/users.{_format}
     public function testDeleteUsersActionIsProtected()
     {
         $this->logIn($this->john);
@@ -309,9 +308,9 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
-    
+
     //@route: api_remove_user_role
-    //@url: /api/users/{user}/roles/{role}/remove.{_format} 
+    //@url: /api/users/{user}/roles/{role}/remove.{_format}
     //MAYBE CHANGE THIS TO DELETE BECAUSE THIS SHOULD NOT BE A GET
     public function testRemoveUserRoleAction()
     {
@@ -324,7 +323,7 @@ class UserControllerTest extends TransactionalTestCase
     }
 
     //@route: api_remove_user_role
-    //@url: /api/users/{user}/roles/{role}/remove.{_format} 
+    //@url: /api/users/{user}/roles/{role}/remove.{_format}
     public function testRemoveUserRoleActionIsProtected()
     {
         $this->logIn($this->userOrga);
@@ -333,7 +332,7 @@ class UserControllerTest extends TransactionalTestCase
     }
 
     //@route: api_add_user_group
-    //@url: /api/users/{user}/groups/{group}/add.{_format} 
+    //@url: /api/users/{user}/groups/{group}/add.{_format}
     public function testAddUserGroupAction()
     {
         $this->markTestSkipped('This test has not been implemented yet.');
@@ -341,11 +340,11 @@ class UserControllerTest extends TransactionalTestCase
 
 
     //@route: api_add_user_group
-    //@url: /api/users/{user}/groups/{group}/add.{_format} 
+    //@url: /api/users/{user}/groups/{group}/add.{_format}
     public function testAddUserGroupActionIsProtected()
     {
         $this->markTestSkipped('This test has not been implemented yet.');
-    }    
+    }
 
 
     //@route: api_remove_user_group
@@ -362,9 +361,9 @@ class UserControllerTest extends TransactionalTestCase
         $this->markTestSkipped('This test has not been implemented yet.');
     }
 
-    
+
     //@route: api_get_user_admin_actions
-    //@url: /api/user/admin/actions.{_format} 
+    //@url: /api/user/admin/actions.{_format}
     public function testGetUserAdminActionsAction()
     {
         $this->logIn($this->admin);
@@ -396,14 +395,14 @@ class UserControllerTest extends TransactionalTestCase
     }
 
     //@route: api_add_users_to_group
-    //@url: /api/users/{group}/to/group/add.{_format} 
+    //@url: /api/users/{group}/to/group/add.{_format}
     public function testAddUsersToGroupAction()
     {
         $this->markTestIncomplete('This test has not been implemented yet.');
     }
 
     //@route: api_add_users_to_group
-    //@url: /api/users/{group}/to/group/add.{_format} 
+    //@url: /api/users/{group}/to/group/add.{_format}
     public function testAddUsersToGroupActionIsProtected()
     {
         $this->markTestIncomplete('This test has not been implemented yet.');

@@ -39,6 +39,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\Get;
 
 /**
  * @NamePrefix("api_")
@@ -113,6 +114,7 @@ class UserController extends FOSRestController
      *     description="Returns the users list",
      *     views = {"user"}
      * )
+     * @Get("/users/page/{page}/limit/{limit}/search", name="search_users", options={ "method_prefix" = false })
      */
     public function getSearchUsersAction($page, $limit)
     {
@@ -141,6 +143,7 @@ class UserController extends FOSRestController
      *     description="Returns the searchable user fields",
      *     views = {"user"}
      * )
+     * @Get("/users/fields")
      */
     public function getUserSearchableFieldsAction()
     {
@@ -428,8 +431,6 @@ class UserController extends FOSRestController
     public function csvRemoveUserAction()
     {
         $this->throwsExceptionIfNotAdmin();
-        //pleaaaaaaaase find me my lord
-        $csvFile = null;
 
         $this->userManager->csvRemove($this->request->files->get('csv'));
     }

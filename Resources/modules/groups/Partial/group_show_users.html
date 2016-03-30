@@ -9,6 +9,11 @@
             <ul class="dropdown-menu">
                 <li><a class="pointer" ng-click="ulc.addUser()"> {{ 'add'|trans:{}:'platform' }} </a></li>
                 <li><a class="pointer" ng-click="ulc.clickDelete()"> {{ 'delete'|trans:{}:'platform' }} </a></li>
+                <li role="separator" class="divider"></li>
+                <li><a class="pointer" ng-click="ulc.importMembers()">{{ 'import_users'|trans:{}:'platform' }}</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="{{ 'api_search_users'|path:{'_format': 'xls', 'page': 0, 'limit': 9999} }}?group_id[]={{ ulc.group.id }}"> {{ 'excel_export'|trans:{}:'platform' }} </a></li>
+                <li><a href="{{ 'api_search_users'|path:{'_format': 'csv', 'page': 0, 'limit': 9999} }}?group_id[]={{ ulc.group.id }}"> {{ 'csv_export'|trans:{}:'platform' }} </a></li>
             </ul>
         </div>
     </div>
@@ -16,7 +21,7 @@
     <div align="center" class="action-bar">
         <div class="panel-body">
             <clarolinesearch on-search="ulc._onSearch" fields="ulc.fields"></clarolinesearch>
-        </div>   
+        </div>
     </div>
     <div>
         <dtable options="ulc.dataTableOptions" rows="ulc.users" class="material" on-page="ulc.paging(offset, size)" selected="ulc.selected"></dtable>

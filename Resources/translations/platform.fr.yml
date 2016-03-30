@@ -211,8 +211,9 @@ creation: Création
 creation_date: 'Date de création'
 creator: Créateur
 csv_export: 'Export csv'
-csv_group_import_infos: 'Informations sur le format du fichier CSV'
-csv_group_import_infos_format: 'Format: liste de nom d''utilisateurs séparés par un retour à la ligne.'
+csv_select: 'Sélectionnez un fichier csv:'
+csv_format_info: 'Informations sur le format du fichier CSV'
+csv_format_user_list: 'Format: liste de nom d''utilisateurs séparés par un retour à la ligne.'
 csv_users_import_infos: 'Informations sur le format du fichier CSV'
 csv_users_import_infos_format: Format
 csv_users_import_infos_format_a: 'Les données d''un utilisateur doivent être définies sur une ligne et séparées par un point virgule.'
@@ -1250,3 +1251,4 @@ group_name: Nom du groupe
 profile_edition: Modification du profil
 claro_admin_personal_workspace_resource_rights: Gestion des ressources de l'espace personnel
 organization_name: Nom de l'organisation
+csv_delete: Suppression par csv

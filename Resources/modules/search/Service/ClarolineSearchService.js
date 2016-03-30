@@ -6,7 +6,7 @@ export default class ClarolineSearchService {
 
     mergeObject(obj1, obj2) {
 
-        for (let attrname in obj2) { 
+        for (let attrname in obj2) {
             obj1[attrname] = obj2[attrname]
         }
 
@@ -23,7 +23,6 @@ export default class ClarolineSearchService {
                 let params = this.enablePager ? {'page': page, 'limit': limit}: {}
                 params = angular.extend(params, additionalParameters)
                 let qs = '?'
-
                 for (let i = 0; i < searches.length; i++) {
                     qs += searches[i].field +'[]=' + searches[i].value + '&'
                 }

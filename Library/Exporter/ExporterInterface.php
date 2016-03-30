@@ -11,6 +11,10 @@
 
 namespace Claroline\CoreBundle\Library\Exporter;
 
+/**
+ * @deprecated
+ * This is now supported by the view layer of the fos_rest bundle
+ */
 interface ExporterInterface
 {
     public function export(array $titles, array $data);
