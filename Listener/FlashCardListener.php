@@ -109,14 +109,14 @@ class FlashCardListener
     }
 
     /**
-     * @DI\Observe("open_claroline_result")
+     * @DI\Observe("open_claroline_flashcard")
      *
      * @param OpenResourceEvent $event
      */
     public function onOpen(OpenResourceEvent $event)
     {
         $subRequest = $this->request->duplicate([], null, [
-            '_controller' => 'ClarolineResultBundle:Result:result',
+            '_controller' => 'ClarolineFlashCardBundle:FlashCard:flashcard',
             'id' => $event->getResource()->getId()
         ]);
         $event->setResponse($this->kernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST));
@@ -124,39 +124,13 @@ class FlashCardListener
     }
 
     /**
-     * @DI\Observe("create_claroline_delete")
+     * @DI\Observe("delete_claroline_flashcard")
      *
      * @param DeleteResourceEvent $event
      */
     public function onDelete(DeleteResourceEvent $event)
     {
         $this->manager->delete($event->getResource());
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("widget_claroline_result")
-     *
-     * @param DisplayWidgetEvent $event
-     */
-    public function onDisplayWidget(DisplayWidgetEvent $event)
-    {
-        $user = $this->security->getToken() ?
-            $this->security->getToken()->getUser() :
-            null;
-
-        if (!$user) {
-            throw new \LogicException('Result widget needs an authenticated user');
-        }
-
-        $workspace = $event->getInstance()->getWorkspace();
-
-        if (!$this->security->isGranted('OPEN', $workspace)) {
-            throw new AccessDeniedException();
-        }
-
-        $content = $this->manager->getWidgetContent($workspace, $user);
-        $event->setContent($content);
         $event->stopPropagation();
     }
 }

@@ -12,8 +12,8 @@
 namespace Claroline\FlashCardBundle\Controller;
 
 use Claroline\CoreBundle\Form\Handler\FormHandler;
-use Claroline\ResultBundle\Entity\Result;
-use Claroline\ResultBundle\Manager\ResultManager;
+use Claroline\FlashCardBundle\Entity\FlashCard;
+use Claroline\FlashCardBundle\Manager\FlashCardManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -51,7 +51,7 @@ class FlashCardController
     }
 
     /**
-     * @EXT\Route("/{id}", name="claroline_open_flashcard")
+     * @EXT\Route("/{fc}", name="claroline_open_flashcard")
      * @EXT\Template
      *
      * @param FlashCard $fc
@@ -63,6 +63,6 @@ class FlashCardController
             throw new AccessDeniedException();
         }
 
-        return ['flashcard' => $fc];
+        return ['flashcard' => $fc, '_resource' => $fc];
     }
 }
