@@ -27,4 +27,15 @@ export default class GroupAPIService {
     find(groupId) {
         return this.$http.get(Routing.generate('api_get_group', {'group': groupId}));
     }
+
+    importMembers(formData, group) {
+        return this.$http.post(
+            Routing.generate('api_group_members_import', {group: group.id}),
+            formData,
+            {
+                transformRequest: angular.identity,
+                headers: {'Content-Type': undefined}
+            }
+        )
+    }
 }

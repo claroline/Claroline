@@ -49,7 +49,8 @@ export default class GroupController {
             paging: {
                 externalPaging: true,
                 size: 10
-            }
+            },
+            sizes: [10, 20, 50]
         };
 
         $http.get(Routing.generate('api_get_group_searchable_fields'))

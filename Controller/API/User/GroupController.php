@@ -30,6 +30,8 @@ use Claroline\CoreBundle\Form\User\GroupSettingsType;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Library\Security\Collection\GroupCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Post;
 
 /**
  * @NamePrefix("api_")
@@ -307,6 +309,21 @@ class GroupController extends FOSRestController
         return $this->apiManager->handleFormView('ClarolineCoreBundle:API:User\editGroupForm.html.twig', $form, $options);
     }
 
+    /**
+     * @Post("/groups/{group}/import/members", name="group_members_import", options={ "method_prefix" = false })
+     * @View(serializerGroups={"api_user"})
+     *
+     * @param Group $group
+     *
+     * @return Response
+     */
+    public function importMembersAction(Group $group)
+    {
+        $this->throwsExceptionIfNotAdmin();
+
+        return $this->groupManager->importMembers(file_get_contents($this->request->files->get('csv')), $group);
+    }
+
     private function isAdmin()
     {
         return $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN');
@@ -336,7 +353,7 @@ class GroupController extends FOSRestController
             throw new AccessDeniedException("You can't do the action [{$action}] on the user list {$groupList}");
         }
     }
-    
+
     /**
      * @View()
      * @ApiDoc(
