@@ -41,6 +41,12 @@ $  php app/console claroline:plugin:install InnovaVideoRecorderBundle
 - Firefox downloaded video has a chopped sound and can be properly read **in web browser only**
 - Only one process/browser can access the camera/mic device at a time.
 
+## Requests
+
+Go to [Claroline](https://github.com/claroline/Claroline/issues) if you want to ask for new features.
+
+Go to [Claroline Support](https://github.com/claroline/ClaroSupport/issues) if you encounter some bugs.
+
 ## Authors
 
 * Donovan Tengblad (purplefish32)
