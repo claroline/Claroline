@@ -210,6 +210,7 @@ creating: Creating
 creation: Creation
 creation_date: 'Creation date'
 creator: Creator
+csv_delete: Csv suppression
 csv_export: 'Csv export'
 csv_select: 'Select csv to upload:'
 csv_format_info: 'CSV file informations'

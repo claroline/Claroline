@@ -572,7 +572,7 @@ class GroupManager
         return $this->groupRepo->findAllGroups($orderedBy, $order, $executeQuery);
     }
 
-    public function importMembers($data)
+    public function importMembers($data, $group)
     {
         $data = $this->container->get('claroline.utilities.misc')->formatCsvOutput($data);
         $lines = str_getcsv($data, PHP_EOL);

@@ -8,7 +8,6 @@ export default class ImportMembersModalController {
 
     submit() {
         const formData = new FormData(document.getElementById('csv-group-members-form'))
-        console.log(formData)
         this.GroupAPIService.importMembers(formData, this.group).then(
             d => this.$uibModalInstance.close(d.data),
             d => {

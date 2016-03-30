@@ -212,6 +212,7 @@ creation_date: 'Date de création'
 creator: Créateur
 csv_export: 'Export csv'
 csv_select: 'Sélectionnez un fichier csv:'
+csv_delete: Suppression par csv
 csv_format_info: 'Informations sur le format du fichier CSV'
 csv_format_user_list: 'Format: liste de nom d''utilisateurs séparés par un retour à la ligne.'
 csv_users_import_infos: 'Informations sur le format du fichier CSV'

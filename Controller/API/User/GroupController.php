@@ -311,7 +311,7 @@ class GroupController extends FOSRestController
 
     /**
      * @Post("/groups/{group}/import/members", name="group_members_import", options={ "method_prefix" = false })
-     * @View(serializerGroups={"api_group"})
+     * @View(serializerGroups={"api_user"})
      *
      * @param Group $group
      *
@@ -321,7 +321,7 @@ class GroupController extends FOSRestController
     {
         $this->throwsExceptionIfNotAdmin();
 
-        return $this->groupManager->importMembers($this->request->files->get('csv'));
+        return $this->groupManager->importMembers(file_get_contents($this->request->files->get('csv')), $group);
     }
 
     private function isAdmin()

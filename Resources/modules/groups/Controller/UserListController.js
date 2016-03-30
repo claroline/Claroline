@@ -168,7 +168,7 @@ export default class UserListController {
         for (var i = 0; i < this.selected.length; i++) {
             this.alerts.push({
                 type: 'success',
-                msg: this.translate('user_removed', {'username': this.selected[i].username})
+                msg: this.translate('user_removed', {'user': this.selected[i].username})
             });
         }
 
