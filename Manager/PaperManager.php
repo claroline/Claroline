@@ -99,6 +99,8 @@ class PaperManager
         $paper->setUser($user);
         $paper->setNumPaper($paperNum);
         $paper->setOrdreQuestion($order);
+        $paper->setAnonymous($exercise->getAnonymous());
+
 
         $this->om->persist($paper);
         $this->om->flush();
@@ -334,7 +336,7 @@ class PaperManager
 
         $showUser = $user->getFirstName() . ' ' . $user->getLastName();
 
-        if ($paper->getExercise()->getAnonymous()) {
+        if ($paper->getAnonymous()) {
             $showUser = $this->translator->trans('anonymous', array(), 'ujm_exo');
         }
 
