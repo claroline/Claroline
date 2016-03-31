@@ -34,20 +34,23 @@ class ResultManager
 
     private $om;
     private $templating;
+    private $container;
 
     /**
      * @DI\InjectParams({
      *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "templating" = @DI\Inject("templating")
+     *     "templating" = @DI\Inject("templating"),
+     *     "container"  = @DI\Inject("service_container")
      * })
      *
      * @param ObjectManager     $om
      * @param EngineInterface   $templating
      */
-    public function __construct(ObjectManager $om, EngineInterface $templating)
+    public function __construct(ObjectManager $om, EngineInterface $templating, $container)
     {
         $this->om = $om;
         $this->templating = $templating;
+        $this->container = $container;
     }
 
     /**
@@ -144,7 +147,8 @@ class ResultManager
         }
 
         $repo = $this->om->getRepository('ClarolineCoreBundle:User');
-        $users = $repo->findUsersByWorkspace($result->getResourceNode()->getWorkspace());
+        $roles = $result->getResourceNode()->getWorkspace()->getRoles()->toArray();
+        $users = $repo->findUsersByRolesIncludingGroups($roles);
 
         return array_map(function ($user) {
             return [
@@ -163,10 +167,7 @@ class ResultManager
      */
     public function isValidMark(Result $result, $mark)
     {
-        $total = $result->getTotal();
-        $intMark = (int) $mark;
-
-        return is_numeric($mark) && is_int($intMark) && $intMark <= $total;
+        return  (float) str_replace(',', '.', $mark) <= $result->getTotal();
     }
 
     /**
@@ -212,14 +213,17 @@ class ResultManager
     public function importMarksFromCsv(Result $result, UploadedFile $csvFile)
     {
         $repo = $this->om->getRepository('ClarolineCoreBundle:User');
-        $users = $repo->findUsersByWorkspace($result->getResourceNode()->getWorkspace());
+        $roles = $result->getResourceNode()->getWorkspace()->getRoles()->toArray();
+        $users = $repo->findUsersByRolesIncludingGroups($roles);
 
         $data = [
             'marks' => [],
             'errors' => []
         ];
 
-        $lines = file($csvFile->getPathname());
+        $fileData = file_get_contents($csvFile);
+        $fileData = $this->container->get('claroline.utilities.misc')->formatCsvOutput($fileData);
+        $lines = str_getcsv($fileData, PHP_EOL);
 
         if (count($lines) === 0) {
             $data['errors'][] = [
@@ -232,7 +236,7 @@ class ResultManager
         }
 
         foreach (file($csvFile->getPathname()) as $index => $line) {
-            $values = array_map('trim', str_getcsv($line));
+            $values = array_map('trim', str_getcsv($line, ';'));
             $lineNumber = $index + 1;
 
             if (count($values) < 3) {

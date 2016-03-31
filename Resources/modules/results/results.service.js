@@ -23,6 +23,11 @@ export default class ResultsService {
     return this._resultMax
   }
 
+  //we'll also support ',' as a decimal point because it's what we mainly use as french speakers.
+  formatMark(mark) {
+    return parseInt(mark.replace('.', ','))
+  }
+
   isReadOnly() {
     return this._isReadOnly
   }

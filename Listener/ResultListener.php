@@ -123,7 +123,7 @@ class ResultListener
     }
 
     /**
-     * @DI\Observe("create_claroline_delete")
+     * @DI\Observe("delete_claroline_result")
      *
      * @param DeleteResourceEvent $event
      */
