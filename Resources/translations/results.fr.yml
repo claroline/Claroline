@@ -6,7 +6,7 @@ marks:
   edit: Modifier un résultat
   empty: Aucun résultat n'est associé à cette évaluation. Vous pouvez ajouter un résultat ou importer une série de résulats en cliquant un des boutons ci-dessous.
   import: Importer
-  import_info: Pour importer des résultats, attachez un fichier CSV dans lequel chaque ligne comprend les trois valeurs suivantes (séparées par des virgules) : prénom de l'utilisateur, nom de l'utilisateur, cote ou grade obtenu. Notez que les utilisateurs référencés dans ce fichier doivent être membres de cet espace d'activités.
+  import_info: Pour importer des résultats, attachez un fichier CSV dans lequel chaque ligne comprend les trois valeurs suivantes (séparées par des point-virgules) : prénom de l'utilisateur, nom de l'utilisateur, cote ou grade obtenu. Notez que les utilisateurs référencés dans ce fichier doivent être membres de cet espace d'activités.
 errors:
   csv_empty: Le fichier fourni est vide.
   csv_empty_values: Une ou plusieurs valeurs sont vides

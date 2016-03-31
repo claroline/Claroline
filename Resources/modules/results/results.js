@@ -46,7 +46,7 @@ angular
     require: 'ngModel',
     link: (scope, elm, attrs, ctrl) => {
       ctrl.$validators.validMark = modelValue =>
-        ctrl.$isEmpty(modelValue) || service.getMaximumMark() >= modelValue
+        ctrl.$isEmpty(modelValue) || service.getMaximumMark() >= service.formatMark(modelValue)
     }
   })])
   .filter('trans', () => (string, domain = 'platform') =>
