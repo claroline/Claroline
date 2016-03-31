@@ -19,6 +19,9 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Claroline\CoreBundle\Event\DisplayToolEvent;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * @DI\Service()
@@ -29,26 +32,34 @@ class MessageListener
     private $router;
     private $tokenStorage;
     private $translator;
+    private $request;
+    private $httpKernel;
 
     /**
      * @DI\InjectParams({
      *     "messageManager"  = @DI\Inject("claroline.manager.message_manager"),
      *     "router"          = @DI\Inject("router"),
      *     "tokenStorage"    = @DI\Inject("security.token_storage"),
-     *     "translator"      = @DI\Inject("translator")
+     *     "translator"      = @DI\Inject("translator"),
+     *     "httpKernel"      = @DI\Inject("http_kernel"),
+     *     "requestStack"    = @DI\Inject("request_stack")
      * })
      */
     public function __construct(
         MessageManager $messageManager,
         UrlGeneratorInterface $router,
         TokenStorageInterface $tokenStorage,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        RequestStack $requestStack,
+        HttpKernelInterface $httpKernel
     )
     {
         $this->messageManager = $messageManager;
         $this->router = $router;
         $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
+        $this->request = $requestStack->getCurrentRequest();
+        $this->httpKernel = $httpKernel;
     }
 
     /**
@@ -161,5 +172,22 @@ class MessageListener
         )->setExtra('icon', 'fa fa-envelope-o');
 
         return $menu;
+    }
+
+    /**
+     * @DI\Observe("open_tool_desktop_message")
+     *
+     * @param DisplayToolEvent $event
+     */
+    public function onOpenDesktopTool(DisplayToolEvent $event)
+    {
+        $params = array();
+        $params['_controller'] = 'ClarolineMessageBundle:Message:listReceived';
+        $params['page'] = 1;
+        $params['search'] = '';
+        $subRequest = $this->request->duplicate(array(), null, $params);
+        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $event->setContent($response->getContent());
+        $event->stopPropagation();
     }
 }
