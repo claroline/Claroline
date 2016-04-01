@@ -14,6 +14,7 @@ export default class ListComponent {
     this.createdMark = {}
     this.importFile = null
     this.errorMessage = null
+    this.importType = 'fullname'
     this.errors = []
     this._deletedResult = null
     this._service = service
@@ -57,7 +58,7 @@ export default class ListComponent {
   }
 
   importResults (form) {
-    this._service.importMarks(this.importFile, errors =>
+    this._service.importMarks(this.importFile, this.importType, errors =>
       this._modal(errorTemplate, 'errors.mark_import_failure', errors)
     )
     this._resetForm(form)

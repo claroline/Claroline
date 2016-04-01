@@ -157,14 +157,18 @@ class ResultController
     }
 
     /**
-     * @EXT\Route("/{id}/marks/import", name="claro_import_marks")
+     * @EXT\Route(
+     *     "/{id}/marks/import/{type}",
+     *     name="claro_import_marks",
+     *     defaults={"type"="fullname"},
+     * )
      * @EXT\Method("POST")
      *
      * @param Result    $result
      * @param Request   $request
      * @return JsonResponse
      */
-    public function importAction(Request $request, Result $result)
+    public function importAction(Request $request, Result $result, $type)
     {
         $this->assertCanEdit($result);
         $file = $request->files->get('file', false);
@@ -174,7 +178,7 @@ class ResultController
             $response->setData('Field "file" is missing');
             $response->setStatusCode(422);
         } else {
-            $data = $this->manager->importMarksFromCsv($result, $file);
+            $data = $this->manager->importMarksFromCsv($result, $file, $type);
 
             if (count($data['errors']) > 0) {
                 $response->setStatusCode(422);
