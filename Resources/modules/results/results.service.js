@@ -88,9 +88,10 @@ export default class ResultsService {
       })
   }
 
-  importMarks (file, onFail) {
+  importMarks (file, type, onFail) {
     const url = Routing.generate('claro_import_marks', {
-      id: this._resultId
+      id: this._resultId,
+      type: type
     })
     this.uploader
       .upload({ url, data: { file } })

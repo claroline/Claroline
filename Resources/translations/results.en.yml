@@ -1,4 +1,5 @@
 mark: Result
+full_name: Full name
 marks:
   add: Add a result
   confirm_delete: Are you sure you want to delete this result?
@@ -6,7 +7,10 @@ marks:
   edit: Edit a result
   empty: No result is associated with this evaluation. You can add a result or import a result set using one of the buttons below.
   import: Import
-  import_info: To import results, attach a CSV file in which each line contains the following three values (separated by commas): user first name, user last name, mark or grade. Note that users referenced in the file must be members of this workspace.
+  import_type: Import type
+  import_fullname: To import results, attach a CSV file in which each line contains the following three values (separated by semicolons): user first name, user last name, mark or grade. Note that users referenced in the file must be members of this workspace.
+  import_code: To import results, attach a CSV file in which each line contains the following two values (separated by semicolons): administrative code, mark or grade. Note that users referenced in the file must be members of this workspace.
+  import_username: To import results, attach a CSV file in which each line contains the following two values (separated by semicolons): username, mark or grade. Note that users referenced in the file must be members of this workspace.
 errors:
   csv_empty: The file is empty.
   csv_empty_values: One or more values are empty

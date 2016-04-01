@@ -20,6 +20,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("claroline.result.result_manager")
@@ -46,7 +47,11 @@ class ResultManager
      * @param ObjectManager     $om
      * @param EngineInterface   $templating
      */
-    public function __construct(ObjectManager $om, EngineInterface $templating, $container)
+    public function __construct(
+        ObjectManager $om,
+        EngineInterface $templating,
+        ContainerInterface $container
+    )
     {
         $this->om = $om;
         $this->templating = $templating;
@@ -210,7 +215,7 @@ class ResultManager
         $this->om->flush();
     }
 
-    public function importMarksFromCsv(Result $result, UploadedFile $csvFile)
+    public function importMarksFromCsv(Result $result, UploadedFile $csvFile, $importType)
     {
         $repo = $this->om->getRepository('ClarolineCoreBundle:User');
         $roles = $result->getResourceNode()->getWorkspace()->getRoles()->toArray();
@@ -235,11 +240,13 @@ class ResultManager
             return $data;
         }
 
+        $countRowEl = $importType === 'fullname' ? 3: 2;
+
         foreach (file($csvFile->getPathname()) as $index => $line) {
             $values = array_map('trim', str_getcsv($line, ';'));
             $lineNumber = $index + 1;
 
-            if (count($values) < 3) {
+            if (count($values) < $countRowEl) {
                 $data['errors'][] = [
                     'code' => self::ERROR_MISSING_VALUES,
                     'message' => 'errors.csv_missing_values',
@@ -251,7 +258,7 @@ class ResultManager
                     'message' => 'errors.csv_empty_values',
                     'line' => $lineNumber
                 ];
-            } elseif (!$this->isValidMark($result, $values[2])) {
+            } elseif (!$this->isValidMark($result, $values[$countRowEl - 1])) {
                 $data['errors'][] = [
                     'code' => self::ERROR_INVALID_MARK,
                     'message' => 'errors.invalid_mark',
@@ -261,9 +268,22 @@ class ResultManager
                 $matchedUser = false;
 
                 foreach ($users as $user) {
-                    if ($user->getFirstName() === $values[0] && $user->getLastName() === $values[1]) {
-                        $matchedUser = $user;
-                        break;
+                    switch($importType) {
+                        case 'fullname':
+                            if ($user->getFirstName() === $values[0] && $user->getLastName() === $values[1]) {
+                                $matchedUser = $user;
+                                break 2;
+                            }
+                        case 'code':
+                            if ($user->getAdministrativeCode() === $values[0]) {
+                                $matchedUser = $user;
+                                break 2;
+                            }
+                        case 'username':
+                            if ($user->getUsername() === $values[0]) {
+                                $matchedUser = $user;
+                                break 2;
+                            }
                     }
                 }
 
@@ -274,7 +294,7 @@ class ResultManager
                         'line' => $lineNumber
                     ];
                 } else {
-                    $mark = new Mark($result, $user, $values[2]);
+                    $mark = new Mark($result, $user, $values[$countRowEl - 1]);
                     $this->om->persist($mark);
                     $this->om->flush();
                     $data['marks'][] = $mark;
