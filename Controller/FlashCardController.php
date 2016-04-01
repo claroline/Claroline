@@ -63,6 +63,6 @@ class FlashCardController
             throw new AccessDeniedException();
         }
 
-        return ['flashcard' => $fc, '_resource' => $fc];
+        return ['_resource' => $fc];
     }
 }
