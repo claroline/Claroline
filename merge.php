@@ -1,19 +1,19 @@
 <?php
 
-$vendors = [
+$vendors = [/*
   'Claroline' => [
     'ActivityToolBundle',
     'AnnouncementBundle',
     'AgendaBundle',
-    //'BundleRecorder',
-    //'CoreBundle',
+    'BundleRecorder',
+    'CoreBundle',
     'CursusBundle',
     'ForumBundle',
     'ImagePlayerBundle',
-    //'InstallationBundle',
-    //'KernelBundle',
+    'InstallationBundle',
+    'KernelBundle',
     'MessageBundle',
-    //'MigrationBundle',
+    'MigrationBundle',
     'PdfPlayerBundle',
     'RssReaderBundle',
     'ScormBundle',
@@ -23,20 +23,20 @@ $vendors = [
     'LdapBundle',
     'TextPlayerBundle',
     'VideoPlayerBundle',
-    //'WebInstaller',
+    'WebInstaller',
     'WebResourceBundle'
   ],
   'FormaLibre' => [
     'PresenceBundle',
     'ReservationBundle',
     'SupportBundle'
-  ]/*,
-  'hevinci' => [
+  ],
+  'HeVinci' => [
     'CompetencyBundle',
     'FavouriteBundle',
     'UrlBundle'
   ],
-  'icaplyon1' => [
+  'iCAPLyon1' => [
     'BadgeBundle',
     'BlogBundle',
     'DropzoneBundle',
@@ -47,7 +47,7 @@ $vendors = [
     'WikiBundle',
     'OauthBundle'
   ],
-  'innovalangues' => [
+  'InnovaLangues' => [
     'PathBundle'
   ],
   'ujm-dev' => [
