@@ -1,0 +1,12 @@
+plugin:
+    has_options: true
+
+    admin_tools:
+        - name: formalibre_support_management_tool
+          class: exclamation-triangle
+
+    tools:
+        - name: formalibre_support_tool
+          is_displayable_in_workspace: false
+          is_displayable_in_desktop: true
+          class: exclamation-triangle

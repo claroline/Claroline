@@ -1,0 +1,29 @@
+<div id="modal-ticket-edit-form" class="modal-dialog" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3 class="modal-title">
+                {{ 'ticket_edition'|trans({}, 'support') }}
+            </h3>
+        </div>
+        <div class="modal-body">
+            <form id="ticket-edit-form"
+                  action="{{ path('formalibre_ticket_edit_modal', {'ticket': ticket.getId()}) }}"
+                  method="POST"
+                  {{ form_enctype(form) }}
+            > 
+                {{ form_widget(form) }}
+            </form>
+        </div>
+        <div class="modal-footer">
+            <span class="btn btn-default" data-dismiss="modal">
+                {{ 'cancel'|trans({},'platform') }}
+            </span>
+            <button type="submit" id='edit-btn' class="btn btn-primary">
+                {{ 'ok'|trans({},'platform') }}
+            </button>
+        </div>
+    </div>
+</div>

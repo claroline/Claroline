@@ -1,0 +1,4 @@
+formalibre_support_bundle:
+    resource: "@FormaLibreSupportBundle/Controller/"
+    type:     annotation
+    prefix:   /

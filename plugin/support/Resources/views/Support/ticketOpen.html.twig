@@ -1,0 +1,155 @@
+{% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+
+{% block title %}
+    {{ 
+        'formalibre_support_tool'|trans({}, 'tools')  ~
+        ' - ' ~
+        ticket.getTitle()
+    }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.desktopBreadcrumbs([
+            {
+                'name': 'formalibre_support_tool'|trans({}, 'tools'),
+                'href': path('formalibre_support_index')
+            },
+            {
+                'name': ticket.getTitle(),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading" id="ticket-open-head">
+        {% if ticket.getInterventions()|length == 0 %}
+            <i class="fa fa-edit pull-right pointer-hand"
+               id="ticket-edit-btn"
+               data-ticket-id="{{ ticket.getId() }}"
+            >
+            </i>
+        {% endif %}
+        <h3 class="panel-title">
+            #{{ ticket.getNum() }} -
+            {{ ticket.getTitle() }}
+        </h3>
+    </div>
+    <div class="panel-body">
+        <p>
+            <b>{{ 'mail'|trans({}, 'platform') }} :</b>
+            {{ ticket.getContactMail() }}
+        </p>
+        <p>
+            <b>{{ 'phone'|trans({}, 'platform') }} :</b>
+            {{ ticket.getContactPhone() }}
+        </p>
+        <b>{{ 'description'|trans({}, 'platform') }}</b>
+        <div class="well well-sm">
+            {{ ticket.getDescription()|raw }}
+        </div>
+        <hr>
+        <h3>{{ 'comments'|trans({}, 'support') }}</h3>
+        {% set comments = ticket.getComments() %}
+        
+        {% if comments|length > 0 %}
+            <br>
+                    
+            {% for comment in comments %}
+                {% set commentUser = comment.getUser() %}
+                <div class="media">
+
+                    {% if comment.getIsAdmin() %}
+                        <div class="media-body col-md-10 col-sm-10">
+                            <div class="pull-right">
+                                {{ comment.getContent()|raw }}
+                            </div>
+                        </div>
+                        <div class="media-left col-md-2 col-sm-2 text-center comment-media-right">
+                            
+                            {% if commentUser.getPicture() != '' %}
+                                <img src="{{ asset('uploads/pictures/') ~  commentUser.getPicture() }}"
+                                     class="media-object comment-picture"
+                                     alt="{{ commentUser.getLastName() ~ ' ' ~ commentUser.getFirstName() }}"
+                                >
+                                {{ commentUser.getFirstName() }}
+                                {{ commentUser.getLastName() }}
+                                <br>
+                                {{ comment.getCreationDate()|intl_date_format }}
+                            {% else %}
+                                <h1 class="profile_picture_placeholder">
+                                    <i class="fa fa-user"></i>
+                                </h1>
+                                {{ commentUser.getFirstName() }}
+                                {{ commentUser.getLastName() }}
+                                <br>
+                                {{ comment.getCreationDate()|intl_date_format }}
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <div class="media-left col-md-2 col-sm-2 text-center comment-media-left">
+                            
+                            {% if commentUser.getPicture() != '' %}
+                                <img src="{{ asset('uploads/pictures/') ~  commentUser.getPicture() }}"
+                                     class="media-object comment-picture"
+                                     alt="{{ commentUser.getLastName() ~ ' ' ~ commentUser.getFirstName() }}"
+                                >
+                                {{ commentUser.getFirstName() }}
+                                {{ commentUser.getLastName() }}
+                                <br>
+                                {{ comment.getCreationDate()|intl_date_format }}
+                            {% else %}
+                                <h1 class="profile_picture_placeholder">
+                                    <i class="fa fa-user"></i>
+                                </h1>
+                                {{ commentUser.getFirstName() }}
+                                {{ commentUser.getLastName() }}
+                                <br>
+                                {{ comment.getCreationDate()|intl_date_format }}
+                            {% endif %}
+                        </div>
+                        <div class="media-body col-md-10 col-sm-10">
+                            <div>
+                                {{ comment.getContent()|raw }}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                {% if not loop.last %}
+                    <hr class="comment-separator">
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info">
+                {{ 'no_comment'|trans({}, 'support') }}
+            </div>
+        {% endif %}
+        <br>
+        <div id="ticket-comment-form-box">
+            {% render(controller("FormaLibreSupportBundle:Support:ticketCommentCreateForm", {'ticket': ticket.getId()})) %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript"
+            src="{{ url('bazinga_jstranslation_js', { 'domain': 'support' }) }}"
+    >
+    </script>
+    <script src='{{ asset('bundles/formalibresupport/js/ticketOpen.js') }}'
+            type="text/javascript"
+    >
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' 
+          type='text/css' 
+          href='{{ asset('bundles/formalibresupport/css/comments.css')}}'
+    >
+{% endblock %}
