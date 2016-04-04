@@ -1,0 +1,22 @@
+{
+    "name": "claroline/bundle-recorder",
+    "description": "Claroline bundle recorder",
+    "keywords": ["Claroline", "Bundle recorder"],
+    "homepage": "http://www.claroline.net",
+    "license": "GPL-3.0+",
+    "authors": [
+        {
+            "name": "Claroline development team",
+            "email": "dev@claroline.net",
+            "homepage": "http://github.com/claroline"
+        }
+    ],
+    "require": {
+        "php": ">=5.5",
+        "composer/composer": "*",
+        "psr/log": "1.0.*@dev"
+    },
+    "autoload": {
+        "psr-4": { "Claroline\\BundleRecorder\\": "" }
+    }
+}
