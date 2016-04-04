@@ -1,0 +1,40 @@
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
+
+{% set tag = 'video' %}
+{% set source = path ('claro_stream_video', {'node': video.getResourceNode().getId(), 'name': video.getResourceNode().getName()}) %}
+{% if "audio" in video.getResourceNode().getMimeType() %}
+    {% set tag = 'audio' %}
+{% endif %}
+
+{% block title %}{{ video.getResourceNode().getName() ~ ' - ' ~ parent() | striptags | raw }}{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ video.getResourceNode().getName() }}</h3>
+    </div>
+    
+    <div class="panel-body">
+        {% include "ClarolineVideoPlayerBundle::" ~ player ~ 'player.html.twig' with {'tag': tag, 'video': video, 'source': source} %}
+    </div>
+    <div class="panel-footer">
+        <a class="btn btn-primary" href="{{ path('claro_resource_download') }}?ids[]={{ video.getResourceNode().getId() }}">
+            <i class="fa fa-download"></i> {{ 'download'|trans({}, 'platform') }}
+        </a>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% include "ClarolineVideoPlayerBundle::" ~ player ~ 'player.css.twig' %} 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% include "ClarolineVideoPlayerBundle::" ~ player ~ 'player.js.twig' %} 
+{% endblock %}
