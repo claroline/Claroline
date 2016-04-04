@@ -17,6 +17,7 @@ angular.module('Question').controller('MatchQuestionCtrl', [
         this.usedHints = [];
         this.orphanAnswers = [];
         this.orphanAnswersAreChecked = false;
+        this.savedAnswers = [];
 
         // when in formative mode
         this.solutions = {};
@@ -36,6 +37,13 @@ angular.module('Question').controller('MatchQuestionCtrl', [
                     this.getHintData(this.currentQuestionPaperData.hints[i]);
                 }
             }
+            
+            this.savedAnswers = [];
+            for (var i=0; i<this.dropped.length; i++) {
+                this.savedAnswers.push(this.dropped[i]);
+            }
+            
+            this.solutions = this.question.solutions;
         };
 
         /**
@@ -45,10 +53,7 @@ angular.module('Question').controller('MatchQuestionCtrl', [
             var hasSolution;
             for (var i=0; i<this.question.secondSet.length; i++) {
                 hasSolution = false;
-                console.log(this.solutions);
                 for (var j=0; j<this.solutions.length; j++) {
-                    console.log(this.question.secondSet[i].id);
-                    console.log(this.solutions[j].secondId);
                     if (this.question.secondSet[i].id === this.solutions[j].secondId) {
                         hasSolution = true;
                     }
@@ -57,7 +62,6 @@ angular.module('Question').controller('MatchQuestionCtrl', [
                     this.orphanAnswers.push(this.question.secondSet[i]);
                 }
             }
-            console.log(this.orphanAnswers);
         };
 
         /**
@@ -130,6 +134,11 @@ angular.module('Question').controller('MatchQuestionCtrl', [
         };
 
         this.showFeedback = function () {
+            this.savedAnswers = [];
+            for (var i=0; i<this.dropped.length; i++) {
+                this.savedAnswers.push(this.dropped[i]);
+            }
+            
             // get question answers and feedback ONLY IF NEEDED
             var promise = QuestionService.getQuestionSolutions(this.question.id);
             promise.then(function (result) {
@@ -178,6 +187,15 @@ angular.module('Question').controller('MatchQuestionCtrl', [
                     $('#draggable_' + this.dropped[i].source).draggable("disable");
                     $('#draggable_' + this.dropped[i].source).fadeTo(100, 0.3);
                 }
+            }
+        };
+        
+        this.answerIsSaved = function (item) {
+            if (this.savedAnswers.indexOf(item) === -1) {
+                return false;
+            }
+            else {
+                return true;
             }
         };
 
@@ -399,6 +417,24 @@ angular.module('Question').controller('MatchQuestionCtrl', [
                 }
             }
         };
+        
+        this.dropIsValid = function (item) {
+            for (var i=0; i<this.solutions.length; i++) {
+                if (item.source === this.solutions[i].firstId && item.target === this.solutions[i].secondId) {
+                    return 1;
+                }
+            }
+            
+            return 2;
+        };
+        
+        this.getDropFeedback = function (item) {
+            for (var i=0; i<this.solutions.length; i++) {
+                if (item.source === this.solutions[i].firstId && item.target === this.solutions[i].secondId) {
+                    return this.solutions[i].feedback;
+                }
+            }
+        };
 
         /**
          * Listen to show-feedback event (broadcasted by ExercisePlayerCtrl)
@@ -550,6 +586,7 @@ angular.module('Question').controller('MatchQuestionCtrl', [
                             label: label
                         };
                         this.dropped.push(item);
+                        this.savedAnswers.push(item);
                     }
                 }
             }
