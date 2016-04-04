@@ -52,17 +52,56 @@ function extractPackageInfo(rootDir) {
     const newDef = {
       name: def.name,
       path,
-      assets: false
+      assets: false,
+      meta: false
     }
     var data
 
-    try {
-      data = fs.readFileSync(`${path}/assets.json`, 'utf8')
-      newDef.assets = JSON.parse(data)
-    } catch (err) {}
+    if (isMetaPackage(path)) {
+      assets = getMetaEntries(path)
+      newDef.assets = assets
+      newDef.meta = true
+    } else {
+      try {
+        data = fs.readFileSync(`${path}/assets.json`, 'utf8')
+        newDef.assets = JSON.parse(data)
+      } catch (err) {}
+    }
 
     return newDef
   }
+}
+
+function getMetaEntries(targetDir) {
+  var data
+  var metadata = { webpack: { entry: {} } }
+  const src = ['main', 'plugin']
+
+  src.filter(dir => fs.existsSync(targetDir + '/' + dir)).forEach(function(el) {
+    var dir = targetDir + '/' + el
+    var bundles = fs.readdirSync(dir)
+    bundles.forEach(function(bundle) {
+      try {
+        data = JSON.parse(fs.readFileSync(`${dir}/${bundle}/assets.json`, 'utf8'))
+        Object.keys(data.webpack.entry).forEach(entry => {
+          var parts = dir.split("/");
+          var lastDir = parts[parts.length - 1];
+          metadata.webpack.entry[entry] = {
+            name: data.webpack.entry[entry],
+            prefix: `${dir}/${bundle}`,
+            dir: lastDir,
+            bundle: bundle
+          }
+        })
+      } catch(err) {}
+    })
+  })
+
+  return metadata
+}
+
+function isMetaPackage(rootDir) {
+  return fs.existsSync(rootDir + '/main')
 }
 
 module.exports = collectPackages
