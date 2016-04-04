@@ -1,0 +1,9 @@
+{% if hasActiveNotifications is empty %}
+    <a href="{{ path('icap_notification_resource_enable', {'resourceId': resourceId, 'resourceClass': resourceClass}) }}"
+       class="btn btn-primary" title="{{ 'enable_notifications_info'|trans({}, 'notification') }}"><i
+                class="fa fa-bell"></i> {{ "enable_notifications"|trans({},'notification') }}</a>
+{% else %}
+    <a href="{{ path('icap_notification_resource_disable', {'resourceId': resourceId, 'resourceClass': resourceClass}) }}"
+       class="btn btn-default" title="{{ 'disable_notifications_info'|trans({}, 'notification') }}"><i
+                class="fa fa-bell"></i> {{ "disable_notifications"|trans({}, 'notification') }}</a>
+{% endif %}

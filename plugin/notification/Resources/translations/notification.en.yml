@@ -1,0 +1,40 @@
+enable_notifications: Follow this resource
+enable_notifications_info: get notified of changes on this resource
+disable_notifications: Stop following this resource
+disable_notifications_info: stop being notified of changes on this resource
+
+now: Now
+few_seconds_ago: "Few seconds ago"
+yesterday: "Yesterday"
+seconds_ago: "{0} 0 seconds ago|{1} 1 second ago|]1,Inf] %count% seconds ago"
+minutes_ago: "{0} 0 minutes ago|{1} 1 minute ago|]1,Inf] %count% minutes ago"
+hours_ago: "{0} 0 hours ago|{1} 1 hour ago|]1,Inf] %count% hours ago"
+days_ago: "{0} 0 days ago|{1} 1 day ago|]1,Inf] %count% days ago"
+date_format: "m/d/Y \\a\\t H:i"
+day_format: "%month% %day%"
+hour_format: " \\a\\t H:i"
+months: "January, February, March, April, May, June, July, August, September, October, November, December"
+days: "Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday"
+see_more: "See more"
+zero_notifications: "There are no notifications"
+notifications_title: "Notifications list"
+
+notification_user_configuration: Notification parameters
+notification_configuration: Notification configuration
+rss_visible: Rss feed
+rss_url_regenerate: Regenerate RSS URL
+dropdown_items: Items in dropdown list
+max_per_page: Items per page
+purge_enabled: Remove notifications automatically
+purge_after_days: Remove after (days)
+purge_explain_text: "*by activating this option, notification history will automatically be deleted according to the value below"
+mark_all_viewed: Mark all as read
+filter_by_category: Filter by type
+badge: Badge
+wiki: Wiki
+blog: Blog
+lesson: Lesson
+socialmedia: Social media
+website: Website
+forum: Forum
+

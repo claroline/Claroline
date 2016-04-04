@@ -1,0 +1,4 @@
+icap_notification:
+    resource: "@IcapNotificationBundle/Controller/"
+    type:     annotation
+    prefix:   /

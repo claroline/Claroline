@@ -1,0 +1,43 @@
+<li class="notification-item list-group-item {% if status is empty %} not-viewed-notification {% endif %}">
+    <div class="row-fluid">
+        {% set user = null %}
+        {% if avatarUrlPrefix is not defined %}
+            {% set avatarUrlPrefix = "" %}
+        {% endif %}
+        {% set resource = null %}
+        {% if notification.details is not empty %}
+            {% if notification.details.doer is defined %}
+                {% set user = notification.details.doer %}
+            {% endif %}
+            {% if notification.details.resource is defined %}
+                {% set resource = notification.details.resource %}
+            {% endif %}
+        {% endif %}
+        <div class="dropdown-notification-avatar">
+            {% if user is not empty and user.avatar is not empty %}
+                <img
+                        class="img-polaroid img-responsive"
+                        src="{{ avatarUrlPrefix ~ user.avatar }}"
+                        onError="this.onerror=null;this.src='{{ asset('bundles/icapnotification/images/default-avatar.png') }}';">
+            {% else %}
+                <img class="img-polaroid img-responsive"
+                     src="{{ asset('bundles/icapnotification/images/default-avatar.png') }}">
+            {% endif %}
+        </div>
+        <div class="dropdown-notification-text">
+            <div class="notification-text">
+                {% block notificationText %}
+                    {{ notification | notificationMessage(user, resource, systemName)|raw }}
+                {% endblock %}
+            </div>
+            <div class="notification-info">
+                <span class="notification-icon {% if notification.iconColor is empty %} default-notification-icon " {% else %} " style="background-color: {{ notification.iconColor }} " {% endif %}
+                >
+                {% if notification.getIconLetter() is empty %} {{ systemName|first }} {% else %} {{ notification.getIconLetter() }} {% endif %}
+                </span>
+                <span class="notification-widget-date">{{ notification.creationDate|smartDate }}</span>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</li>

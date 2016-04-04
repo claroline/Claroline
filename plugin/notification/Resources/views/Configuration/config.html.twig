@@ -1,0 +1,56 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% set title = 'notification_configuration' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ title | trans({}, 'notification') | striptags | raw }}{% endblock %}
+
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'notification_configuration'|trans({}, 'notification'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ title|trans({}, 'notification') }}</h3>
+    </div>
+    {{ macros.flashBox() }}
+    <div class="panel-body">
+        <form id="notification-plugin-configuration-form" action="{{ path("icap_notification_configuration_save") }}" method="post">
+            {{ form_errors(form) }}
+            <div class="row">
+                <div class="col-md-10">
+                    {{ form_row(form.dropdownItems) }}
+                    {{ form_row(form.maxPerPage) }}
+                    <div class="form-group row">
+                        {{ form_label(form.purgeEnabled) }}
+                        <div class="col-md-9">
+                            {{ form_widget(form.purgeEnabled) }}
+                            <span class="text-muted">{{ 'purge_explain_text'|trans({}, 'notification') }}</span>
+                        </div>
+                    </div>
+                    {{ form_rest(form) }}
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" id="edit-tools-btn" href="{{ path('claro_admin_index') }}" class="btn btn-primary">
+                    {{ 'edit'|trans({}, 'platform') }}
+                </button>
+                <a class="btn btn-default" href="{{ path('claro_admin_index') }}">
+                    {{ 'cancel'|trans({}, 'platform') }}
+                </a>
+            </div>
+        </form>
+    </div>
+{% endblock %}
