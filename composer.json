@@ -92,7 +92,7 @@
             "Claroline\\LdapBundle\\": "plugin/ldap",
             "Claroline\\MessageBundle\\": "plugin/message",
             "Icap\\NotificationBundle\\": "plugin/notification",
-            "Claroline\\PdfBundle\\": "plugin/pdf-player",
+            "Claroline\\PdfPlayerBundle\\": "plugin/pdf-player",
             "FormaLibre\\PresenceBundle\\": "plugin/presence",
             "FormaLibre\\ReservationBundle\\": "plugin/reservation",
             "Claroline\\RssReaderBundle\\": "plugin/rss-reader",
