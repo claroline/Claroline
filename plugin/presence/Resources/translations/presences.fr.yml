@@ -1,0 +1,83 @@
+modifier_une_periode: Modifier une période
+date_debut: Date de début
+date_fin: Date de fin
+heure_ouverture: Heure d'ouverture
+heure_fermeture: Heure de fermeture
+actual_periode:  Période en cours ?
+modifier: Modifier
+modifier_statut: Modifier le statut
+choix_nom: Choisissez un nom
+choix_couleur: Choisissez une couleur
+mise_evidence: Mise en évidence du statut
+periode_relevee: Période de relevé
+aucune_periode: Aucune période existante/selectionnée
+jour: Jour(s)
+num_tranche: N° de la tranche horaire
+nom_tranche: Nom de la tranche horaire
+heure_debut: Heure de début
+heure_fin: Heure de fin
+ajouter: Ajouter
+modifier_tranche: Modifier une tranche horaire
+supprimer: Supprimer
+config_periode: Configuration de la période
+date_debut: Date de début
+date_fin: Date de fin
+heure_ouverture: H. d'ouverture
+heure_fermeture: H. de fermeture
+actual_periode: Il s'agit de la période courante
+config_statut: Configuration des statuts
+statut: Statut
+couleur: Couleur
+evidence: Mis en évidence
+actions: Actions
+conseil1: Nous déconseillons de mettre plus de trois statuts en évidence.
+config_droits: Configuration des droits
+roles: Rôles
+accueil: Accueil
+archives: Archives
+valider: Valider
+date: Date
+tranche: Tranche N°
+session: Session
+student_name: Nom de l'étudiant
+student_firstname: Prénom de l'étudiant
+prof_appel: Responsable de l'appel
+comment: Commentaire(s)
+NC: non communiqué
+access_error: Vous n'avez pas le droit d'accèder à cette page. Si c'est une erreur, merci de contacter l'administrateur de la plateforme.
+choix_groupe: Choisissez un groupe
+appel: Vous souhaitez faire l'appel pour la
+tranche_du: tranche horaire du 
+modifier_presence: Modifier présence
+le: Le
+de: de
+a: à
+releve: Relevé
+pour_groupe: Pour le groupe
+confirmer: Confirmer
+before: Présences du jour
+prenom: Prénom
+nom: Nom
+tromb: Trombinoscope
+valider_presences: Valider les présences
+supprimer_presence: Supprimer la présence
+confirm_supp_presence: Etes-vous certain de vouloir effacer cette présence ?
+releve_pres: Relever les présences
+bonjour: Bonjour
+date_pres: nous sommes le 
+semaine: Semaine
+tes_presences: Vos présences
+date: Date
+tranche: Tranche
+no_archives:   Il n'y a pas d'archives vous concernant pour le moment.
+
+
+
+
+
+
+
+
+
+
+

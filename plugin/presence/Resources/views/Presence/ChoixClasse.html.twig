@@ -1,0 +1,33 @@
+<div class="modal-dialog"
+     role="dialog"
+     aria-labelledby="modalLabel"
+     aria-hidden="true"
+ >
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3 class="modal-title">
+                {{"choix_groupe"|trans({},"presences")}}
+            </h3>
+        </div>
+        <div class="modal-body">
+            
+            {{"Appel"|trans({},"presences")}} <a  href="{{path("formalibre_presence_tool_index")}}" role="button">{{period.getNumPeriod()}} {{"tranche_du"|trans({},"presences")}} {{date|date('d-m-y')}}</a>
+            
+            <form action="{{ path('formalibre_choix_classe', {'period': period.getId(), 'date':date|date('d-m-y')}) }}" method="post" {{ form_enctype(form) }}>
+                <br /><br />
+                <div class="col-md-2">
+                {{form_label(form.selection)}}
+                </div>
+                <div class="col-md-6">
+                {{form_widget(form.selection)}}
+                </div>
+               <input type="submit" class="btn btn-primary" />
+               <br /><br />
+           </form>
+
+        </div>
+    </div>
+</div>

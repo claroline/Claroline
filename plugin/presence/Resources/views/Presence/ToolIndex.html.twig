@@ -1,0 +1,217 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% set duration ='00:50:00' %}
+
+{% if schoolYearBeginHour|date('i')<30%}
+    {% set startday =schoolYearBeginHour|date('H')~':00:00'%}
+{% else %}
+    {% set theHour =schoolYearBeginHour|date('H') %}
+    {% set oneHourMore = theHour+1%}
+    {% set startday =oneHourMore~':00:00'%}
+{% endif %}    
+
+{% if schoolYearEndHour|date('i')<30%}
+    {% set endday =schoolYearEndHour|date('H')~':00:00'%}
+{% else %}
+    {% set theHour =schoolYearEndHour|date('H') %}
+    {% set oneHourMore = theHour+1%}
+    {% set endday =oneHourMore~':00:00'%}
+{% endif %} 
+
+
+{% block section_content %} 
+
+    <div class="panel panel-default">
+        <div class="panel-body">   
+            <div>
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a href="{{path("formalibre_presence_tool_index")}}">Accueil</a></li>
+                    {% if canViewArchives %}
+                        <li role="presentation"><a href="{{path("formalibre_presence_archives")}}">Archives</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+                        
+            
+            {% if canCheckPresences %}
+                <div style="text-align: center;">
+                    <H1>{{"releve_pres"|trans({},"presences")}}:</H1>
+                </div>
+                <br />
+                {{"bonjour"|trans({},"presences")}} {{user.getUsername()}}, {{"date_pres"|trans({},"presences")}} {{ "now"|date("d-m-Y W") }} il est {{ "now"|date("H:i") }}
+                <br /><br />
+                {{"semaine"|trans({},"presences")}} n°: {{ "now"|date("W") }}
+                <br /><br /><br />
+                <div id='calendar'></div>
+            {% endif %}
+            
+            {% if canViewPersonalArchives and presences is not empty%} 
+                <div style="text-align: center;">
+                    <H1>{{"tes_presences"|trans({},"presences")}}:</H1>
+                </div>
+                <br />
+               {{"bonjour"|trans({},"presences")}} {{user.getUsername()}}, {{"date_pres"|trans({},"presences")}} {{ "now"|date("d-m-Y W") }} il est {{ "now"|date("H:i") }}
+                <br /><br />
+                {{"semaine"|trans({},"presences")}} n°: {{ "now"|date("W") }}
+
+                <br /><br /><br />
+                <table id="archivesList" style="text-align: center;" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;">{{"date"|trans({},"presences")}}</th>
+                            <th style="text-align: center;">{{"tranche"|trans({},"presences")}}</th>
+                                {#<th>Cours</th>#}
+                                <th style="text-align: center;">{{"group"|trans({},"presences")}}</th>
+                                <th style="text-align: center;">{{"student_name"|trans({},"presences")}}</th>
+                                <th style="text-align: center;">{{"student_firstname"|trans({},"presences")}}</th>
+                                <th style="text-align: center;">{{"statut"|trans({},"presences")}}</th>
+                                <th style="text-align: center;">{{"prof_appel"|trans({},"presences")}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for presence in presences%}
+                                {% if presence.getUserStudent.getId==user.getId%}
+                                    <tr>
+                                        <td>{{presence.getDate()|date("y/m/d")}}</td>
+                                        <td>{{presence.getPeriod.getNumPeriod()}}</td>
+                    {#                   <td>{{presence.getPeriod.getName()}}</td>#}
+                                        <td>{{presence.getGroup.getName()}}</td>
+                                        <td>{{presence.getUserStudent.getLastName()}}</td>
+                                        <td>{{presence.getUserStudent.getFirstName()}}</td>
+                                        {% if presence.getStatus() is null %}
+                                            <td>{{"NC"|trans({},"presences")}}</td>
+                                        {% else %}
+                                        <td>{{presence.getStatus.getStatusName()}}</td>
+                                        {% endif %}
+                                        <td>{{presence.getUserTeacher.getFirstName()}} {{presence.getUserTeacher.getLastName()}}</td>
+                                    </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
+            {% else%}
+                 {{"no_archives"|trans({},"presences")}}
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
+
+   
+{% block stylesheets %}
+{{ parent() }}
+<link rel='stylesheet' type='text/css' href='{{ asset('packages/fullcalendar/dist/fullcalendar.min.css') }}'/>
+<link rel='stylesheet' type='text/css' href='{{ asset('packages/fullcalendar/dist/fullcalendar.print.css') }}' media='print' />
+<style>
+    .fc-day-grid-event > .fc-content {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
+    .is-task {
+        padding-right: 3px;
+    }
+</style>
+{% endblock %}
+
+ {% block javascripts %}
+     {{ parent() }}
+            
+    <script type="text/javascript" src="{{ asset('packages/moment/min/moment-with-locales.min.js') }}"></script>
+    <script type='text/javascript' src='{{ asset('packages/fullcalendar/dist/fullcalendar.min.js') }}' ></script>
+    <script type='text/javascript' src='{{ asset('bundles/clarolineagenda/js/calendar.js') }}'></script>
+<script>
+
+    $(document).ready(function() {
+
+            $('#calendar').fullCalendar({
+                    header: {
+                            left: 'prev,today,next',
+                            center: 'title',
+                            right: ''
+                    },
+                    defaultView: 'agendaWeek',
+                    lang: 'fr',
+                    weekends: true,
+                    editable: false,
+                    contentHeight:"auto",
+                    firstDay:1,
+                    defaultTimedEventDuration:'{{duration}}',
+                    forceEventDuration:true,
+                    timeFormat:'H(:mm)',
+                    columnFormat: 'dddd D/M',
+                    titleFormat:'MMMM YYYY',
+                    minTime:'{{startday}}',
+                    maxTime:'{{endday}}',
+                    //slotDuration:'{{duration}}',
+                    eventLimit: true, // allow "more" link when too many events
+
+                     events: [
+                            {% for item in periods %}
+                               {
+                               id: {{ item.getId }},
+                               title: '{{ item.getName()}}',
+                               start: '{{item.getDay()|date('Y-m-d')}}T{{item.getBeginHour()|date('H:i:s')}}',
+                               end: '{{item.getDay()|date('Y-m-d')}}T{{item.getEndHour()|date('H:i:s')}}',
+                               url:'{{path("formalibre_choix_classe", {"period":item.getId(),"date":item.getDay()|date('Y-m-d')})}}',
+                                       
+
+        
+                                }
+                              {% if loop.last %}{% else %},{% endif %}{% endfor %}
+
+                        ],
+                     eventClick: function(calEvent, jsEvent, view) {
+                         jsEvent.preventDefault();
+                        window.Claroline.Modal.displayForm(
+                            calEvent.url,
+                            function() {},
+                            function() {}
+                        );
+                
+                     }
+            });
+
+    });
+
+</script>
+
+<script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/jquery.dataTables.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/dataTables.bootstrap.min.js') }}"></script>
+    
+
+    <!-- outils -->
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/buttons.html5.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/buttons.print.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/dataTables.buttons.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/buttons.bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/jszip.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/pdfmake.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/vfs_fonts.js') }}"></script>
+    <script>    
+        $(document).ready(function() {
+            $('#archivesList').DataTable( {
+
+                dom: 'Bftp',
+                buttons: true,
+               "pageLength": 50,
+                "language": {
+                    "lengthMenu": "Afficher _MENU_ presences par page",
+                    "zeroRecords": "Rien trouvé - Désolé",
+                    "info": "Affichage de la page _PAGE_ sur _PAGES_",
+                    "infoEmpty": "Pas de présence valide",
+                    "infoFiltered": "(filtered from _MAX_ total records)",
+                    "search":"Trier les présences"
+                }
+            } );
+        } );
+        
+        
+        
+    </script>
+
+{% endblock javascripts %}
+

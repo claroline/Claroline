@@ -1,0 +1,180 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block section_content %} 
+
+<div class="panel panel-default">
+    <div class="panel-body">   
+        {% if canViewArchives%}
+            <div>
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs">
+                      <li role="presentation"><a href="{{path("formalibre_presence_tool_index")}}" >{{"accueil"|trans({},"presences")}}</a></li>
+                      <li role="presentation" class="active"><a href="{{path("formalibre_presence_archives")}}"  >{{"archives"|trans({},"presences")}}</a></li>
+                    </ul>
+            </div>
+                    
+            </br>
+            
+            <div style="text-align: center;">
+                    <H1>{{"archives"|trans({},"presences")}}:</H1>
+            </div>
+            {{macros.flashBox()}}
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>{{"periode_relevee"|trans({},"presences")}} : {{schoolYearName}}</h4>
+                </div>
+            </div>
+            <form method="post" {{ form_enctype(schoolYearSelection) }} 
+                  action="{{path("formalibre_presence_archives")}}">
+                <div class="row">
+                    <div class="col-md-2">
+                        {{form_widget(schoolYearSelection.selection)}}
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" 
+                           class="btn btn-primary"
+                           name="schoolYearSelection[valider]">
+                          {{"valider"|trans({},"presences")}} 
+                        </button>
+                    </div>
+                </div>
+            </form>        
+            </br></br>
+
+            <table id="archivesList" style="text-align: center;" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;">{{"date"|trans({},"presences")}}</th>
+                            <th style="text-align: center;">{{"tranche"|trans({},"presences")}}</th>
+                                {#<th>Cours</th>#}
+                                <th style="text-align: center;">{{"session"|trans({},"presences")}}</th>
+                                <th style="text-align: center;">{{"student_name"|trans({},"presences")}}</th>
+                                <th style="text-align: center;">{{"student_firstname"|trans({},"presences")}}</th>
+                                <th style="text-align: center;">{{"statut"|trans({},"presences")}}</th>
+                                <th style="text-align: center;">{{"prof_appel"|trans({},"presences")}}</th>
+                                <th style="text-align: center;">{{"comment"|trans({},"presences")}}</th>
+                                {% if canEditArchives%}
+                                    <th style="text-align: center;">{{"actions"|trans({},"presences")}}</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for presence in presences%}
+                                <tr>
+                                    <td>{{presence.getPeriod.getDay()|date("d/m/y")}}</td>
+                                    <td>{{presence.getPeriod.getNumPeriod()}}</td>
+                {#                    <td>{{presence.getPeriod.getName()}}</td>#}
+                                    <td>{{presence.getCourseSession.getShortNameWithCourse}}</td>
+                                    <td>{{presence.getUserStudent.getLastName()}}</td>
+                                    <td>{{presence.getUserStudent.getFirstName()}}</td>
+                                    {% if presence.getStatus() is null %}
+                                        <td>{{"NC"|trans({},"presences")}}</td>
+                                    {% else %}
+                                    <td>{{presence.getStatus.getStatusName()}}</td>
+                                    {% endif %}
+                                    <td>{{presence.getUserTeacher.getFirstName()}} {{presence.getUserTeacher.getLastName()}}</td>
+                                    <td>{{presence.getComment()}}</td>
+                                    {% if canEditArchives%}
+                                        <td>
+                                            <span class="btn btn-default modifier-presence-btn"
+                                                                       data-presence-id="{{presence.getId()}}"
+                                                                       data-toggle="tooltip" 
+                                                                       data-placement="bottom" 
+                                                                       title="" 
+                                                                       data-original-title="Modifier" 
+                                                                       role="button">
+                                                <i class="fa fa-pencil"></i>
+                                            </span>
+                                             <a class="btn btn-default supprimer-presence-btn"
+                                                                       data-presence-id="{{presence.getId()}}"
+                                                                       data-toggle="tooltip" 
+                                                                       data-placement="bottom" 
+                                                                       title="" 
+                                                                       data-original-title="Supprimer" 
+                                                                       role="button">
+                                                <i class="fa fa-times"></i>
+                                            </a>
+                                        </td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                            </tr>
+                        </tbody>
+                    </table>
+            {% else %}
+                </br></br>
+                </br></br>
+                {{"acces_error"|trans({},"presences")}}
+                </br></br>
+                </br></br>
+            {% endif %}        
+         </div>
+    </div>
+{% endblock %}   
+{% block javascripts %}
+    
+    {{ parent() }}
+
+    <!-- DataTables -->
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/jquery.dataTables.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/dataTables.bootstrap.min.js') }}"></script>
+    
+
+    <!-- outils -->
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/buttons.html5.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/buttons.print.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/dataTables.buttons.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/buttons.bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/jszip.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/pdfmake.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/vfs_fonts.js') }}"></script>
+    <script>    
+        $(document).ready(function() {
+            $('#archivesList').DataTable( {
+
+                dom: 'Bftp',
+                buttons: true,
+               "pageLength": 50,
+                "language": {
+                    "lengthMenu": "Nombre d'étudiants par page _MENU_",
+                    "zeroRecords": "Rien trouvé - Désolé",
+                    "info": "Affichage de la page _PAGE_ sur _PAGES_",
+                    "infoEmpty": "Pas de présence valide",
+                    "infoFiltered": "(filtered from _MAX_ total records)",
+                    "search":"Trier les présences"
+                }
+            } );
+        } );
+        
+        
+        
+    </script>
+    <script>
+    $(".modifier-presence-btn").on("click",function(){
+       var presenceId=$(this).data("presence-id");
+        window.Claroline.Modal.displayForm(
+                            Routing.generate("formalibre_presence_modif",{"id":presenceId}),
+                            function() {
+                                window.location.reload();
+                            },
+                            function() {}
+                                );
+   
+    });    
+    
+    $(".supprimer-presence-btn").on("click",function(){
+       var presenceId=$(this).data("presence-id");
+        window.Claroline.Modal.displayForm(
+                            Routing.generate("formalibre_presence_supp",{"id":presenceId}),
+                            function() {
+                                window.location.reload();
+                            },
+                            function() {}
+                                );
+   
+    });  
+                
+    </script>
+
+{% endblock javascripts %}
+   
