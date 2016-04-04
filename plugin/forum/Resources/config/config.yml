@@ -1,0 +1,26 @@
+plugin:
+  has_options: false
+  icon: res_forum.png
+
+  resources:
+    - class: Claroline\ForumBundle\Entity\Forum
+      name: claroline_forum
+      is_exportable: true
+      icon: res_forum.png
+      actions:
+          # The name of the action is the translation key that will be used to display
+          #  the action in the list of available actions for your resource.
+          #  The name will be passed to you by the Event manager.
+        - name: post
+        - name: moderate
+      default_rights:
+        - name: open
+        - name: post
+      activity_rules:
+        - action: resource-read
+        - action: resource-claroline_forum-create_message
+
+  widgets:
+     - name: claroline_forum_widget
+       is_configurable: true
+

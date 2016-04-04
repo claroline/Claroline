@@ -1,0 +1,260 @@
+{% extends "ClarolineForumBundle::layout.html.twig" %}
+
+{% macro renderPager(subjectId, pager, max) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_forum_messages',
+                'routeParams': {'subject': subjectId, 'max': max},
+            }
+        )
+    }}
+{% endmacro %}
+
+{% macro renderOptions(options, selectedOption) %}
+    {% for option in options %}
+        <option {{ option == selectedOption ? 'selected' : '' }}>{{ option }}</option>
+    {% endfor %}
+{% endmacro %}
+
+{% from _self import renderPager %}
+{% from _self import renderOptions %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolineforum/css/forum.css')}}'>
+{% endblock %}
+
+{% block title %}{{ _resource.getResourceNode().getName() ~ '(' ~ subject.getTitle() ~ ')' ~ ' - ' ~ parent() | striptags | raw  }}{% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('claro_forum_categories', { 'forum': category.getForum().getId() }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
+    <li><a href="{{ path('claro_forum_subjects', { 'category': category.getId() }) }}">{{ category.getName() }}</a></li>
+    <li class="active">{{ subject.getTitle() }}</li>
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            [{{ 'subject'|trans({}, 'forum') }}] {{ subject.getTitle() }}
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-12">
+                <a title="{{ 'forum_back_to_subjects'|trans({}, 'forum') }}" class="btn btn-default" href="{{ path('claro_forum_subjects', { 'category': category.getId() }) }}">
+                    <i class="fa fa-chevron-left"></i> {{ 'forum_back_to_subjects'|trans({}, 'forum') }}
+                </a>
+            </div>
+            <div class="col-md-9">
+                {{ renderPager(subject.getId(), pager, max) }}
+            </div>
+            <div class="col-md-3">
+                <div class="input-group margin-md">
+                    <select class="form-control input-md" id="max-select">
+                        {{ renderOptions([20, 50, 100, 200, 500], max is defined ? max : 20) }}
+                    </select>
+                    <span class="input-group-addon">{{ 'messages_per_page'|trans({}, 'forum') }}</span>
+                </div>
+            </div>
+        </div>
+        <table id="messages_table" class="table table-striped table-bordered table-condensed">
+            <thead>
+                <tr>
+                    <th>{{ 'author'|trans({}, 'forum') }}</th>
+                    <th>{{ 'posts'|trans({}, 'forum') }}</th>
+                </tr>
+            </thead>
+            <tbody id='table-message-body'>
+            {% for message in pager.currentPageResults %}
+                {% set creator = message.getCreator() %}
+                <tr class="row-message">
+                    <td width="125px">
+                        <div class="text-center">
+                            {% if creator.getPicture() != "" %}
+                                 <img src="{{ asset('uploads/pictures/') ~ creator.getPicture() }}"
+                                      class="img-circle"
+                                      width="70px"
+                                      height="70px"
+                                 >
+                            {% else %}
+                                <h1><i class="fa fa-user col-md-12"></i><h1>
+                            {% endif %}
+                        </div>
+                        <div>
+                            {% if creator.isEnabled() %}
+                                <a href="{{ path('claro_public_profile_view', {'publicUrl': creator.getPublicUrl()}) }}">
+                            {% endif %}
+
+                            {{ message.getAuthor() }}
+
+                            {% if creator.isEnabled() %}
+                                </a>
+                            {% endif %}
+                        </div>
+                        <div>
+                            {{ message.getCreationDate()|intl_date_format() }}
+                        </div>
+                    </td>
+                    <td>
+                        <p>{{ message.getContent()|raw }}</p>
+                        <p class="text-muted">{{ message.getCreationDate()| timeAgo }}</p>
+                        <hr>
+                        <div class="pull-right clearfix">
+                            {% if canPost and not subject.isClosed() %}
+                                <a class="btn btn-default" href="{{ path('claro_forum_quote_message_form', {'message': message.getId()}) }}">
+                                    <i class="fa fa-pencil"></i> {{ 'quote'|trans({}, 'forum') }}
+                                </a>
+                            {% endif %}
+                            {% if canPost and not subject.isClosed() %}
+                                <a class="btn btn-default" href="{{ path('claro_forum_reply_message_form', {'message': message.getId()}) }}">
+                                    <i class="fa fa-pencil"></i> {{ 'reply'|trans({}, 'forum') }}
+                                </a>
+                            {% endif %}
+                            {% if isModerator or app.security.token.user == creator %}
+                                <a class="btn btn-default" href="{{ path('claro_forum_edit_message_form', {'message': message.getId()}) }}">
+                                    <i class="fa fa-pencil"></i> {{ 'edit'|trans({}, 'platform') }}
+                                </a>
+                            {% endif %}
+                            {% if isModerator %}
+                                <a id="move-message" class="btn btn-default" href="{{ path('claro_message_move_form', {'message': message.getId()}) }}">
+                                    <i class="fa fa-arrow-right"></i> {{ 'move'|trans({}, 'platform') }}
+                                </a>
+                                <a id="delete-message" class="btn btn-default" href="{{ path('claro_forum_delete_message', {'message': message.getId()}) }}">
+                                    <i class="fa fa-trash-o"></i> {{ 'delete'|trans({}, 'platform') }}
+                                </a>
+                            {% endif %}
+                        </div>
+                     </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div>
+            {{ renderPager(subject.getId(), pager, max) }}
+
+            {% if canPost %}
+                <btn id='fast-reply-btn' class='btn btn-primary pull-right {% if has_role('ROLE_ANONYMOUS') %} disabled {% endif %}'>
+                    {{ 'fast_reply'|trans({}, 'forum')}}
+                </btn>
+            {% endif %}
+        </div>
+        {% if canPost %}
+            {% if has_role('ROLE_ANONYMOUS') %}
+                <div class='pull-right alert alert-warning'> {{ 'please_connect_to_answer'|trans({}, 'forum') }}
+            {% endif %}
+            <div class="fast-reply" style="display: none;">
+                <h4><i class="fa fa-reply"></i> {{ 'new_message' | trans({}, 'forum') }}</h4>
+                <div>
+                {% if not subject.isClosed() %}
+                    <textarea class="forum-answer claroline-tiny-mce hide"></textarea>
+                    {# something may be wrong here because _token doesn't always exists #}
+                    {% if form._token is defined %} {{ form_widget(form._token) }} {% endif %}
+                {% endif %}
+                </div>
+            </br>
+                <div class="pull-right">
+                    <a class="btn btn-default" href='{{ path('claro_forum_subjects', { 'category': category.getId() }) }}'>
+                   {{ 'back'|trans({}, 'platform') }}
+                    </a>
+                    <a id="submit-message" class="btn btn-primary">
+                        <i class="fa fa-reply"></i> {{ 'send' | trans({}, 'platform') }}
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        (function () {
+            $('#max-select').on('change', function () {
+                window.location.href = Routing.generate(
+                    'claro_forum_messages',
+                    {'subject': {{ subject.getId()}}, 'max': $(this).val()}
+                );
+            });
+        })();
+    </script>
+
+    {% if canPost %}
+        <script>
+            (function () {
+                'use strict';
+                $('body').on('click', '#submit-message', function () {
+                    var content = $('textarea.claroline-tiny-mce').val();
+                    var token = $('#forum_message_form__token').val();
+
+                    if (content != undefined && content != '') {
+                        tinymce.claroline.disableBeforeUnload = true;
+                        var home = window.Claroline.Home;
+                        var modal = window.Claroline.Modal;
+                        $.post(home.path + 'forum/create/message/{{ subject.getId() }}',
+                            {
+                                'forum_message_form[_token]': token,
+                                'forum_message_form[content]': content
+                            }
+                        )
+                        .done(
+                            function () {
+                                window.location.reload();
+                            }
+                        )
+                        .error(
+                            function () {
+                                modal.error();
+                            }
+                        );
+                    }
+                });
+            })();
+        </script>
+    {% endif %}
+
+    {% if isModerator %}
+        <script>
+            function createValidationBox() {
+                var html = Twig.render(
+                    ModalWindow,
+                    {'footer': Twig.render(ValidationFooter), 'isHidden': true, 'modalId': 'confirm-modal', 'body': Twig.render(removeMessageConfirm, {'nbItems': 1})}
+                );
+                $('body').append(html);
+            }
+
+            createValidationBox();
+            var tmpRoute = '';
+            var tmpEl = undefined;
+
+            $('body').on('click', '#delete-message', function(event) {
+                event.preventDefault();
+                $('#confirm-modal').modal('show');
+                tmpRoute = event.currentTarget.href;
+                tmpEl = event.currentTarget;
+            });
+
+            $('body').on('click', '#modal-valid-button', function(event) {
+                $('#confirm-modal').modal('hide');
+                $.ajax({
+                    url: tmpRoute,
+                    success: function () {
+                        $(tmpEl)[0].parentElement.parentElement.parentElement.remove();
+                    }
+                });
+            });
+        </script>
+    {% endif %}
+
+    {% if canPost %}
+        <script>
+            (function () {
+                $('body').on('click', '#fast-reply-btn', function() {
+                    $('.fast-reply').show();
+                });
+            })();
+        </script>
+    {% endif %}
+{% endblock %}

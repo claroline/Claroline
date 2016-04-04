@@ -1,0 +1,183 @@
+{% extends "ClarolineForumBundle::layout.html.twig" %}
+
+{% from _self import renderPager %}
+
+{% block title %}{{ _resource.getResourceNode().getName() ~ ' - ' ~ parent() | striptags | raw  }}{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ _resource.getResourceNode().getName() }}</h3>
+    </div>
+    <div class="panel-body">
+        <div class="navbar row">
+            <div>
+                <div class="col-md-8">
+                    {% if is_mailer_available() %}
+                        {% if isModerator %}
+                            <div id="top-div" class="well">
+                                {{ 'notifications_explanation'|trans({}, 'forum') }}
+                            </div>
+                        {% else %}
+                            {% if hasSubscribed %}
+                                <a class="btn btn-primary" href="{{ path('claro_forum_unsubscribe', {'forum': _resource.getId()}) }}">
+                                    {{ 'unsubscribe_mail_list'|trans({}, 'forum') }}
+                                </a>
+                            {% else %}
+                                <a class="btn btn-primary" href="{{ path('claro_forum_subscribe', {'forum': _resource.getId()}) }}">
+                                    {{ 'subscribe_mail_list'|trans({}, 'forum') }}
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                    {% render controller(
+                        'IcapNotificationBundle:FollowerResource:renderForm',
+                        {'resourceId': _resource.resourceNode.id, 'resourceClass': _resource.resourceNode.class}
+                    ) %}
+                </div>
+                <div class="col-md-4">
+                     <div class="input-group">
+                       <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ search }}">
+                        <span class="input-group-btn">
+                            <button class="filter btn btn-default" type="button" id="search-button">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="bottom-div" class="panel">
+            {% if isModerator %}
+                <a class="btn btn-primary" href="{{ path('claro_forum_form_category_creation', {'forum': _resource.getId()}) }}">
+                    <i class="fa fa-plus"></i> {{ 'new_category'|trans({}, 'forum') }}
+                </a>
+
+                {% if is_mailer_available() %}
+
+                    {% if _resource.getActivateNotifications() %}
+                        <a class="btn btn-primary"
+                           href="{{ path('claro_forum_disable_global_notifications', {'forum': _resource.getId()}) }}">
+                            {{ 'disable_global_notifications'|trans({}, 'forum') }}
+                        </a>
+                    {% else %}
+                        <a class="btn btn-primary"
+                           href="{{ path('claro_forum_activate_global_notifications', {'forum': _resource.getId()}) }}">
+                            {{ 'activate_global_notifications'|trans({}, 'forum') }}
+                        </a>
+                    {% endif %}
+
+                    {% if hasSubscribed %}
+                        <a class="btn btn-primary" href="{{ path('claro_forum_unsubscribe', {'forum': _resource.getId()}) }}">
+                            {{ 'unsubscribe_mail_list'|trans({}, 'forum') }}
+                        </a>
+                    {% else %}
+                        <a class="btn btn-primary" href="{{ path('claro_forum_subscribe', {'forum': _resource.getId()}) }}">
+                            {{ 'subscribe_mail_list'|trans({}, 'forum') }}
+                        </a>
+                    {% endif %}
+                {% endif %}
+
+            {% endif %}
+        </div>
+        <div class="table-responsive">
+            <table id="subjects_table" class="table table-striped table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <th>{{ 'category'|trans({}, 'forum') }}</th>
+                        <th>{{ 'subjects'|trans({}, 'forum') }} </th>
+                        <th>{{ 'last_message'|trans({}, 'forum') }}</th>
+                        {% if isModerator %}
+                            <th></th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody id="table-subjects-body">
+                {% for category in categories %}
+                    <tr class='row-category'>
+                        <td>
+                            <a class="link-category"
+                                href="{{ path('claro_forum_subjects', {'category': category['id']} ) }}"
+                            >
+                                {{ category['name'] }}
+                            </a>
+                            {% if isModerator %}
+                                <a class="pull-right" href="{{ path('claro_forum_edit_category_form', {'category': category['id']}) }}">
+                                    <i class="fa fa-pencil"></i> {{ 'edit' | trans({}, 'platform') }}
+                                </a>
+                           {% endif %}
+                            <br>
+                        <td>
+                            {{ category['count_subjects'] }}
+                        </td>
+                        <td>
+                            {{ category['last_message_author'] }}
+                            <br/>
+                            {% if  category['last_message_created'] %}
+                                 {{ category['last_message_created']|timeAgo() }}
+                            {% endif %}
+                        </td>
+                        {% if isModerator %}
+                            <td>
+                                <a id="delete-category" href="{{ path('claro_forum_delete_category', {'category': category['id']}) }}">
+                                    <i class="fa fa-trash-o"></i> {{ 'delete' | trans({}, 'platform') }}
+                                </a>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts debug=false vars=["locale"]
+        "@ClarolineForumBundle/Resources/views/removeCategoryConfirm.html.twigjs"
+        filter="twig_js"
+    %}<script language="javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script>
+        $('#search-button').on('click', function(event) {
+            event.preventDefault();
+            var search = document.getElementById('search-items-txt').value;
+            if (search !== '') {
+                var route = Routing.generate('claro_forum_search', {'forum': {{ _resource.getId()}}, 'search': document.getElementById('search-items-txt').value});
+                window.location.href = route;
+            }
+        });
+    </script>
+        {% if isModerator %}
+            <script>
+               function createValidationBox() {
+                    var html = Twig.render(
+                        ModalWindow,
+                        {'footer': Twig.render(ValidationFooter), 'isHidden': true, 'modalId': 'confirm-modal', 'body': Twig.render(removeCategoryConfirm, {'nbItems': 1})}
+                    );
+                    $('body').append(html);
+                }
+
+                createValidationBox();
+                var tmpRoute = '';
+                var tmpEl = undefined;
+
+                $('body').on('click', '#delete-category', function(event) {
+                    event.preventDefault();
+                    $('#confirm-modal').modal('show');
+                    tmpRoute = event.currentTarget.href;
+                    tmpEl = event.currentTarget;
+                });
+
+                $('body').on('click', '#modal-valid-button', function(event) {
+                    $('#confirm-modal').modal('hide');
+                    $.ajax({
+                        url: tmpRoute,
+                        success: function () {
+                            $(tmpEl)[0].parentElement.parentElement.remove();
+                        }
+                    });
+                });
+            </script>
+    {% endif %}
+{% endblock %}

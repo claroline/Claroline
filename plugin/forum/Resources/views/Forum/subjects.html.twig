@@ -1,0 +1,235 @@
+{% extends "ClarolineForumBundle::layout.html.twig" %}
+
+{% macro renderPager(categoryId, pager, max) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_forum_subjects',
+                'routeParams': {'category': categoryId, 'max': max}
+            }
+        )
+    }}
+{% endmacro %}
+
+{% macro renderOptions(options, selectedOption) %}
+    {% for option in options %}
+        <option {{ option == selectedOption ? 'selected' : '' }}>{{ option }}</option>
+    {% endfor %}
+{% endmacro %}
+
+{% from _self import renderPager %}
+{% from _self import renderOptions %}
+
+{% block title %}{{ _resource.getResourceNode().getName() ~ ' - ' ~ parent() | striptags | raw  }}{% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('claro_forum_categories', { 'forum': category.getForum().getId() }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
+    <li class="active"> {{ category.getName() }} </li>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolineforum/css/forum.css')}}'>
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            [{{ 'category'|trans({}, 'forum') }}] {{ category.getName() }}
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div class="navbar row">
+            <div class="col-md-9">
+                <a class="btn btn-default" href="{{ path('claro_forum_categories', { 'forum': category.getForum().getId() }) }}">
+                    <i class="fa fa-chevron-left"></i> {{ 'forum_back_to_categories'|trans({}, 'forum') }}
+                </a>
+                {% if canCreateSubject %}
+                    <a class="btn btn-primary" href="{{ path('claro_forum_form_subject_creation', {'category': category.getId()}) }}">
+                        <i class="fa fa-plus"></i> {{ 'new_subject'|trans({}, 'forum') }}
+                    </a>
+                {% endif %}
+            </div>
+            <div class="col-md-3 pull-right">
+                <div class="input-group">
+                    <select class="form-control input-md" id="max-select">
+                        {{ renderOptions([20, 50, 100, 200, 500], max is defined ? max : 20) }}
+                    </select>
+                    <span class="input-group-addon">{{ 'subjets_per_page'|trans({}, 'forum') }}</span>
+                </div>
+            </div>
+        </div>
+        <div id="subjects-table-container" class="table-responsive">
+            <table class="table table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>{{ 'subject'|trans({}, 'forum') }}</th>
+                        <th>{{ 'responses'|trans({}, 'forum') }}</th>
+                        <th>{{ 'last_message'|trans({}, 'forum') }}</th>
+                        {% if isModerator %}
+                            <th></th>
+                            <th></th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody id="table-subjects-body">
+                {% for subject in pager.currentPageResults %}
+                    <tr class='row-subject' {% if subject['isSticked'] == true %}style="background-color: #EEEEEE"{% endif %}>
+                        <td>
+                            {% if isModerator %}
+                                {% if subject['isSticked'] == true %}
+                                    <a href="{{ path('claro_subject_unstick', {'subject': subject['id']}) }}">
+                                        <i class="fa fa-unlink"></i> {{ 'unstick' | trans({}, 'forum') }}
+                                    </a>
+                                {% else %}
+                                    <a href="{{ path('claro_subject_stick', {'subject': subject['id']}) }}">
+                                        <i class="fa fa-paperclip"></i> {{ 'stick' | trans({}, 'forum') }}
+                                    </a>
+                                {% endif %}
+                                {% if subject['is_closed'] == true %}
+									<a href="{{ path('claro_subject_open', {'subject': subject['id']}) }}">
+                                        <i class="fa fa-eye-slash"></i> {{ 'open' | trans({}, 'platform') }}
+                                    </a>
+                                {% else %}
+                                    <a href="{{ path('claro_subject_close', {'subject': subject['id']}) }}">
+                                        <i class="fa fa-eye"></i> {{ 'close' | trans({}, 'platform') }}
+                                    </a>
+                                {% endif %}
+                            {% else %}
+                                {% if subject['isSticked'] == true %}
+                                    <i class="fa fa-paperclip"></i> {{ 'stuck' | trans({}, 'forum') }}
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a class="link-subject"
+                                href="{{ path('claro_forum_messages', {'subject': subject['id'] }) }}"
+                            >
+                                <b>{{ subject['title'] }}</b>
+                            </a>
+                            {% if isModerator or (app.user.id is defined and app.user.id == subject['subject_creator_id']) %}
+                                <a class="pull-right" href="{{ path('claro_forum_edit_subject_form', {'subjectId': subject['id'] }) }}">
+                                    <i class="fa fa-pencil"></i> {{ 'edit' | trans({}, 'platform') }}
+                                </a>
+                           {% endif %}
+                            <br>
+                            {{ 'started_by' | trans({}, 'forum') }}
+                            {{ subject['subject_author'] }},
+                            {{ subject['subject_created']|intl_date_format() }}
+                        </td>
+                        <td>
+                            {{ subject['count_messages'] - 1 }}
+                        </td>
+                        <td>
+                            {% if lastMessages[subject['id']] is defined and lastMessages[subject['id']] is not empty %}
+                                {% set isNew = not isAnon and
+                                    (
+                                        (lastAccessDates[subject['id']] is not defined) or
+                                        (lastMessages[subject['id']].getModificationDate()|date('U') > lastAccessDates[subject['id']]|date('U'))
+                                    )
+                                %}
+
+                                {% if isNew %}
+                                    <b>
+                                {% endif %}
+                                {{ lastMessages[subject['id']].getAuthor() }}
+                                <br>
+                                {{ lastMessages[subject['id']].getModificationDate()|intl_date_format() }}
+
+                                {% if isNew %}
+                                    </b>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                        {% if isModerator %}
+                            <td>
+                                {% if _resource.categories|length > 1 %}
+                                    <div class="dropdown">
+                                        <a id="dLabel-{{ subject.id }}" role="button" data-toggle="dropdown" data-target="#" href="#">
+                                        {{ 'move_to' | trans({}, 'forum') }} <span class="caret"></span>
+                                        </a>
+                                        <ul class="dropdown-menu move-subject-dropdown" role="menu" aria-labelledby="dLabel-{{ subject.id }}">
+                                            {% for cat in _resource.categories %}
+                                                {% if cat != category %}
+                                                <li>
+                                                    <a title="{{cat.name}}" href="{{ path('claro_subject_move', {'subject': subject.id, 'newCategory': cat.id }) }}">
+                                                        {{ cat.name | truncate(30) }}
+                                                    </a>
+                                                </li>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a id="delete-subject" href="{{ path('claro_forum_delete_subject', {'subject': subject['id']}) }}">
+                                    <i class="fa fa-trash-o"></i> {{ 'delete' | trans({}, 'platform') }}
+                                </a>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div>
+            {{ renderPager(category.getId(), pager, max) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+        debug=false
+        vars=["locale"]
+        "@ClarolineForumBundle/Resources/views/removeSubjectConfirm.html.twigjs"
+        filter="twig_js"
+    %}
+        <script language="javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {% if isModerator %}
+        <script>
+            function createValidationBox() {
+                var html = Twig.render(
+                    ModalWindow,
+                    {'footer': Twig.render(ValidationFooter), 'isHidden': true, 'modalId': 'confirm-modal', 'body': Twig.render(removeSubjectConfirm, {'nbItems': 1})}
+                );
+                $('body').append(html);
+            }
+
+            createValidationBox();
+            var tmpRoute = '';
+            var tmpEl = undefined;
+
+            $('body').on('click', '#delete-subject', function (event) {
+                event.preventDefault();
+                $('#confirm-modal').modal('show');
+                tmpRoute = event.currentTarget.href;
+                tmpEl = event.currentTarget;
+            });
+
+            $('body').on('click', '#modal-valid-button', function () {
+                $('#confirm-modal').modal('hide');
+                $.ajax({
+                    url: tmpRoute,
+                    success: function () {
+                        $(tmpEl)[0].parentElement.parentElement.remove();
+                    }
+                });
+            });
+            $('#max-select').on('change', function () {
+                window.location.href = Routing.generate(
+                    'claro_forum_subjects',
+                    {'category': {{ category.getId()}}, 'max': $(this).val()}
+                );
+            });
+        </script>
+    {% endif %}
+{% endblock %}

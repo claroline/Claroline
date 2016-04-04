@@ -1,0 +1,28 @@
+{% set nbMessages = messages|length %}
+{% if nbMessages > 0 %}
+    <div id="desktop-widget-pager">
+
+        <ul class="list-group">
+            {% for message in messages %}
+                <li class="list-group-item">
+                    <div class="list-group-item-text">
+                        <a class="link-subject"
+                           href="{{ path('claro_forum_messages', {'subject': message.getSubject().getId() }) }}"
+                        >
+                            {{ message.getSubject().getTitle() }}
+                        </a>
+                        <p>{{ message.getContent()|raw }}</p>
+                        <p class="text-muted">
+                            {{ 'forum_last_message_owner'|trans({}, 'widget') }}
+                            {{ message.getAuthor() }}
+                            {{ message.getCreationDate()| timeAgo }}
+                        </p>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+
+    </div>
+{% else %}
+    {{ 'no_forum_widget_message'|trans({}, 'widget') }}
+{% endif %}

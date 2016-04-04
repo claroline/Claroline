@@ -1,0 +1,64 @@
+log_resource-claroline_forum-close_subject_filter: Subject closing
+log_resource-claroline_forum-create_category_shortname: Category creation
+log_resource-claroline_forum-create_category_filter: Category creation
+log_resource-claroline_forum-create_category_sentence: has created a category in the forum %resource%
+log_resource-claroline_forum-create_message_shortname: Message creation
+log_resource-claroline_forum-create_message_filter: Message creation
+log_resource-claroline_forum-create_message_sentence: has created a message in the forum %resource%
+log_resource-claroline_forum-create_subject_shortname: Subject creation
+log_resource-claroline_forum-create_subject_filter: Subject creation
+log_resource-claroline_forum-create_subject_sentence: has created a subject in the forum %resource%
+log_resource-claroline_forum-delete_category_shortname: Category deletion
+log_resource-claroline_forum-delete_category_filter: Category deletion
+log_resource-claroline_forum-delete_category_sentence: has deleted a category in the forum %resource%
+log_resource-claroline_forum-delete_message_shortname: Message deletion
+log_resource-claroline_forum-delete_message_filter: Message deletion
+log_resource-claroline_forum-delete_message_sentence: has deleted a message in the forum %resource%
+log_resource-claroline_forum-delete_subject_shortname: Subject deletion
+log_resource-claroline_forum-delete_subject_filter: Subject deletion
+log_resource-claroline_forum-delete_subject_sentence: has deleted a subject in the forum %resource%
+log_resource-claroline_forum-edit_category_shortname: Category edition
+log_resource-claroline_forum-edit_category_filter: Category edition
+log_resource-claroline_forum-edit_category_sentence: has edited a category in the forum %resource%
+log_resource-claroline_forum-edit_message_shortname: Message edition
+log_resource-claroline_forum-edit_message_filter: Message edition
+log_resource-claroline_forum-edit_message_sentence: has edited a message in the forum %resource%
+log_resource-claroline_forum-edit_subject_shortname: Subject edition
+log_resource-claroline_forum-edit_subject_filter: Subject edition
+log_resource-claroline_forum-edit_subject_sentence: has edited a subject in the forum %resource%
+log_resource-claroline_forum-move_message_shortname: Message move
+log_resource-claroline_forum-move_message_filter: Message move
+log_resource-claroline_forum-move_message_sentence: has moved a message in the forum %resource%
+log_resource-claroline_forum-move_subject_shortname: Subject move
+log_resource-claroline_forum-move_subject_filter: Subject move
+log_resource-claroline_forum-move_subject_sentence: has moved a subject in the forum %resource%
+log_resource-claroline_forum-open_subject_filter: Subject opening
+log_resource-claroline_forum-stick_subject_shortname: Subject sticking
+log_resource-claroline_forum-stick_subject_filter: Subject sticking
+log_resource-claroline_forum-stick_subject_sentence: has sticked a subject in the forum %resource%
+log_resource-claroline_forum-unstick_subject_shortname: Subject unsticking
+log_resource-claroline_forum-unstick_subject_filter: Subject unsticking
+log_resource-claroline_forum-unstick_subject_sentence: has unsticked a subject in the forum %resource%
+log_resource-claroline_forum-subscribe_shortname: Subject subscription
+log_resource-claroline_forum-subscribe_filter: Subject subscription
+log_resource-claroline_forum-subscribe_sentence: has subscribed to a subject in the forum %resource%
+log_resource-claroline_forum-unsubscribe_shortname: Subject unsubscription
+log_resource-claroline_forum-unsubscribe_filter: Subject unsubscription
+log_resource-claroline_forum-unsubscribe_sentence: has unsubscribed to a subject in the forum %resource%
+log_resource-claroline_forum-close_subject_title: Forum subject closing
+log_resource-claroline_forum-create_category_title: Forum category creation
+log_resource-claroline_forum-create_message_title: Forum message creation
+log_resource-claroline_forum-create_subject_title: Forum subject creation
+log_resource-claroline_forum-delete_category_title: Forum category removal
+log_resource-claroline_forum-delete_message_title: Forum message removal
+log_resource-claroline_forum-delete_subject_title: Forum subject removal
+log_resource-claroline_forum-edit_category_title: Forum category edition
+log_resource-claroline_forum-edit_message_title: Forum message edition
+log_resource-claroline_forum-edit_subject_title: Forum subject edition
+log_resource-claroline_forum-move_message_title: Forum message moving
+log_resource-claroline_forum-move_subject_title: Forum subject moving
+log_resource-claroline_forum-open_subject_title: Forum subject opening
+log_resource-claroline_forum-stick_subject_title: Forum subject sticking
+log_resource-claroline_forum-subscribe_title: Forum subject subscription
+log_resource-claroline_forum-unstick_subject_title: Forum subject unsticking
+log_resource-claroline_forum-unsubscribe_title: Forum subject unsubscription
