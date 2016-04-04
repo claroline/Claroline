@@ -1,7 +1,7 @@
 
 <div class="panel panel-default">
     <div class="panel-heading clearfix">
-        <h3 class="panel-title pull-left">
+        <h3 class="panel-title pull-left"> 
             {{exercisePlayerCtrl.exercise.meta.title}} - {{ 'sequence_step'|trans:{}:'ujm_sequence' }} {{exercisePlayerCtrl.getCurrentStepNumber()}} / {{exercisePlayerCtrl.exercise.steps.length}}
         </h3>
         <span class="pull-right">
@@ -14,26 +14,18 @@
     <div class="panel-body">
         <div class="row">
             <div class="col-md-12">
-
-                <div class="alert alert-warning" role="alert" ng-show="$storage.durationExo != 0">
-                    Temps restant :
-                    <span ng-show="$storage.hours != 0">{{ $storage.hours }}h</span>
-                    <span ng-show="$storage.minutes != 0">{{ $storage.minutes }}m</span>
-                    <span ng-show="$storage.minutes < 2 && $storage.hours == 0">{{ $storage.secondes }}s</span>
-                </div>
-
                 <div class="step-container" data-ng-repeat="item in exercisePlayerCtrl.exercise.steps[exercisePlayerCtrl.currentStepIndex].items">
                     <!-- switch on item type -->
                     <div data-ng-switch="item.type">
                         <div data-ng-switch-when="application/x.choice+json" class="choice-directive-container">
-                            <choice-question data-can-see-feedback="exercisePlayerCtrl.checkIfFeedbackIsAvailable()" data-question="item"></choice-question>
-                        </div>
+                            <choice-question data-can-see-feedback="exercisePlayerCtrl.checkIfFeedbackIsAvailable()" data-question="item"></choice-question>                           
+                        </div>                       
                         <div data-ng-switch-when="application/x.match+json" class="match-directive-container">
                             <match-question data-can-see-feedback="exercisePlayerCtrl.checkIfFeedbackIsAvailable()" data-question="item"></match-question>
                         </div>
                         <div data-ng-switch-when="application/x.cloze+json" class="cloze-directive-container">
                             <cloze-question data-step="stepShowCtrl.currentStep" data-question="item"></cloze-question>
-                        </div>
+                        </div> 
                         <div data-ng-switch-when="application/x.short+json" class="short-directive-container">
                             <open-question data-step="stepShowCtrl.currentStep" data-question="item"></open-question>
                         </div>
@@ -52,20 +44,20 @@
             <div class="col-md-12">
                 <!-- NEXT / PREV -->
                 <div class="btn-group" role="group">
-                    <button role="button" data-ng-disabled="exercisePlayerCtrl.currentStepIndex === 0" data-container="body" data-toggle="tooltip" title="{{ 'btn_prev_step_label'|trans:{}:'ujm_sequence' }}" type="button" data-ng-click="exercisePlayerCtrl.validateStep('backward')" class="btn btn-default">
+                    <button role="button" data-ng-disabled="exercisePlayerCtrl.currentStepIndex === 0" data-container="body" data-toggle="tooltip" title="{{ 'btn_prev_step_label'|trans:{}:'ujm_sequence' }}" type="button" data-ng-click="exercisePlayerCtrl.validateStep('backward')" class="btn btn-default">    
                         <i class="fa fa-arrow-circle-left"></i>
                     </button>
-                    <button role="button" data-ng-show="exercisePlayerCtrl.checkIfFeedbackIsAvailable()" data-container="body" data-toggle="tooltip" type="button" data-ng-click="exercisePlayerCtrl.showFeedback()" class="btn btn-default">
+                    <button role="button" data-ng-show="exercisePlayerCtrl.checkIfFeedbackIsAvailable()" data-container="body" data-toggle="tooltip" type="button" data-ng-click="exercisePlayerCtrl.showFeedback()" class="btn btn-default">    
                         <i class="fa fa-check"> {{ 'btn_validate_step'|trans:{}:'ujm_sequence' }}</i>
-                    </button>
+                    </button> 
                     <!--
-                    <button role="button" data-ng-disabled="exercisePlayerCtrl.getCurrentStepNumber() === exercisePlayerCtrl.exercise.steps.length" data-container="body" data-toggle="tooltip" title="{{ 'btn_next_step_label'|trans:{}:'ujm_sequence' }}" type="button" data-ng-click="exercisePlayerCtrl.validateStep('forward')" class="btn btn-default fa fa-arrow-circle-right">
+                    <button role="button" data-ng-disabled="exercisePlayerCtrl.getCurrentStepNumber() === exercisePlayerCtrl.exercise.steps.length" data-container="body" data-toggle="tooltip" title="{{ 'btn_next_step_label'|trans:{}:'ujm_sequence' }}" type="button" data-ng-click="exercisePlayerCtrl.validateStep('forward')" class="btn btn-default fa fa-arrow-circle-right">    
                     </button>
                     -->
-                    <button role="button" data-ng-disabled="exercisePlayerCtrl.getCurrentStepNumber() === exercisePlayerCtrl.exercise.steps.length || (exercisePlayerCtrl.feedbackIsShown && exercisePlayerCtrl.checkIfFeedbackIsAvailable())" data-container="body" data-toggle="tooltip" title="{{ 'btn_next_step_label'|trans:{}:'ujm_sequence' }}" type="button" data-ng-click="exercisePlayerCtrl.validateStep('forward')" class="btn btn-default">
+                    <button role="button" data-ng-disabled="exercisePlayerCtrl.getCurrentStepNumber() === exercisePlayerCtrl.exercise.steps.length || (exercisePlayerCtrl.feedbackIsShown && exercisePlayerCtrl.checkIfFeedbackIsAvailable())" data-container="body" data-toggle="tooltip" title="{{ 'btn_next_step_label'|trans:{}:'ujm_sequence' }}" type="button" data-ng-click="exercisePlayerCtrl.validateStep('forward')" class="btn btn-default">    
                         <i class="fa fa-arrow-circle-right"></i>
                     </button>
-
+                    
                 </div>
                 <!-- JUMP TO -->
                 <div class="btn-group">

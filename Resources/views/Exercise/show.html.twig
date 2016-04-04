@@ -170,7 +170,7 @@
                                 <th class="classic">{{ 'creation_date' | trans({}, 'ujm_exo') }}</th>
                                 <td class="classic">{{resource.getCreationDate()|date('d/m/Y \\- H\\hi\\ms\\s') }}</td>
                             </tr>
-                            <tr class="hiddencells">
+                            <tr style="display: none;">
                                 <th class="classic">{{ 'duration' | trans({}, 'ujm_exo') }}</th>
                                 <td class="classic">
                                     {% if exercise.duration != 0 %}

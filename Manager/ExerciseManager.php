@@ -130,13 +130,13 @@ class ExerciseManager
         $originalQuestions = $questions = $this->om
             ->getRepository('UJMExoBundle:Question')
             ->findByExercise($exercise);
-        $questionCount = count($questions);
+        $questionCount = count($questions); 
 
         if ($exercise->getShuffle() && $questionCount > 1) {
             while ($questions === $originalQuestions) {
                 shuffle($questions); // shuffle until we have a new order
             }
-        }
+        }       
 
         if (($questionToPick = $exercise->getNbQuestion()) > 0) {
             while ($questionToPick > 0) {
@@ -146,7 +146,7 @@ class ExerciseManager
                 $questionToPick--;
             }
         }
-
+        
         return $questions;
     }
 
@@ -184,7 +184,7 @@ class ExerciseManager
             'steps' => $this->exportSteps($exercise, $withSolutions),
         ];
     }
-
+    
     /**
      * Exports an exercise in a JSON-encodable format.
      *
@@ -230,8 +230,7 @@ class ExerciseManager
             'correctionMode' => $exercise->getCorrectionMode(),
             'correctionDate' => $exercise->getDateCorrection()->format('Y-m-d H:i:s'),
             'startDate' => $startDate,
-            'endDate' => $endDate,
-            'duration' => $exercise->getDuration()
+            'endDate' => $endDate
         ];
     }
 
@@ -244,7 +243,7 @@ class ExerciseManager
      */
     private function exportSteps(Exercise $exercise, $withSolutions = true)
     {
-        $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
+        $questionRepo = $this->om->getRepository('UJMExoBundle:Question'); 
 
         return array_map(function ($question) use ($withSolutions) {
             return [
