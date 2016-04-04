@@ -11,6 +11,7 @@ use Claroline\CoreBundle\Entity\Resource\File;
 use Symfony\Component\HttpFoundation\File\File as sFile;
 use Symfony\Component\Filesystem\Filesystem;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Innova\VideoRecorderBundle\Entity\VideoRecorderConfiguration;
 
 /**
  * @DI\Service("innova.video_recorder.manager")
@@ -168,6 +169,21 @@ class VideoRecorderManager
         }
 
         return true;
+    }
+
+    public function updateConfiguration(VideoRecorderConfiguration $config, $postData)
+    {
+        $om = $this->container->get('claroline.persistence.object_manager');
+        $config->setMaxRecordingTime($postData['max_recording_time']);
+        $om->persist($config);
+        $om->flush();
+    }
+
+    public function getConfig()
+    {
+        $config = $this->container->get('doctrine.orm.entity_manager')->getRepository('InnovaVideoRecorderBundle:VideoRecorderConfiguration')->findAll()[0];
+
+        return $config;
     }
 
 }

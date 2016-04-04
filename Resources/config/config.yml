@@ -1,9 +1,12 @@
 plugin:
-  has_options: false
-  icon: video_recorder.png
+
+  tools:
+    - name: innova_video_recorder_tool
+      class: film
+      is_displayable_in_workspace: false
+      is_displayable_in_desktop: true
 
   resources:
     - class: Claroline\CoreBundle\Entity\Resource\File
       name: innova_video_recorder
       is_exportable: false
-      icon: video_recorder.png

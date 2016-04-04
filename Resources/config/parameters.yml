@@ -1,4 +1,0 @@
-# Parameters
-parameters:
-    # Listeners
-    innova_video_recorder.listener.video_recorder.class:    Innova\VideoRecorderBundle\EventListener\Resource\VideoRecorderListener

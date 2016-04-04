@@ -1,4 +1,4 @@
 innova_video_recorder:
     resource: "@InnovaVideoRecorderBundle/Controller/VideoRecorderController.php"
-    prefix: /api
-    type: rest
+    prefix: /
+    type: annotation
