@@ -93,7 +93,7 @@
                                         <i data-ng-if="matchQuestionCtrl.feedbackIsVisible || (matchQuestionCtrl.dropIsValid(item) === 1 && matchQuestionCtrl.answerIsSaved(item))" data-toggle="tooltip" data-ng-class="{'color-success fa fa-check' : matchQuestionCtrl.dropIsValid(item) === 1, 'color-danger fa fa-close': matchQuestionCtrl.dropIsValid(item) === 2}" title="{{matchQuestionCtrl.getDropFeedback(item)}}"></i>
                                     </div>
                                     <div class="col-sm-2">
-                                         <button data-ng-disabled="matchQuestionCtrl.feedbackIsVisible || matchQuestionCtrl.dropIsValid(item) === 1 && matchQuestionCtrl.answerIsSaved(item)" class="btn btn-danger fa fa-trash" data-ng-click="matchQuestionCtrl.removeDropped(item.source, proposal.id)"></button>
+                                        <button data-ng-disabled="matchQuestionCtrl.feedbackIsVisible || matchQuestionCtrl.dropIsValid(item) === 1 && matchQuestionCtrl.answerIsSaved(item)" class="btn btn-danger fa fa-trash" data-ng-click="matchQuestionCtrl.removeDropped(item.source, proposal.id)"></button>
                                     </div>
                                 </div>
                             </li>
@@ -109,67 +109,6 @@
                 </div>
             </div>
         </div>
-        
-        <table data-ng-if="matchQuestionCtrl.feedbackIsVisible" class="table table-striped">
-            <thead>
-                <tr>
-                    <th class="center-text">{{ 'paper_details_table_choice'|trans:{}:'ujm_sequence' }}</th>
-                    <th class="center-text">{{ 'paper_details_table_expected_answer'|trans:{}:'ujm_sequence' }}</th>
-                    <th class="center-text">{{ 'paper_details_table_comment'|trans:{}:'ujm_sequence' }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr data-ng-repeat="label in matchQuestionCtrl.question.secondSet">
-                    <!-- student answer -->
-                    <td class="center-text">
-                        <div class="panel" data-ng-class="matchQuestionCtrl.checkAnswerValidity(label) ? 'panel-success':'panel-danger'">
-                            <div class="panel-heading clearfix">
-                                <h4 class="panel-title pull-left">
-                                     <div data-ng-bind-html="label.data | unsafe"></div>
-                                </h4>
-                            </div>
-                            <div class="panel-body">
-                                <ul>
-                                    <li data-ng-repeat="item in matchQuestionCtrl.getStudentAnswersWithIcons(label)">
-                                        <div data-ng-bind-html="item | unsafe"></div>
-                                         <!--
-                                         KEEP THIS FOR THE TIME WHEN WE WOULD BE ABLE TO KNOW PROPOSAL / LABEL TYPE (ie HTML vs Text)
-                                        <span data-ng-class="correctionMatchCtrl.checkProposalValidity(item.id) ? '':'wrong-label'">{{item.data}}</span>
-                                         -->
-                                    </li>
-                                    <li data-ng-if="item.length == 0" data-ng-repeat="item in matchQuestionCtrl.getStudentAnswers(label)">
-                                        -
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </td>
-                    <!-- expected answer -->
-                    <td class="center-text">
-                        <div class="panel panel-default">
-                            <div class="panel-heading clearfix">
-                                <h4 class="panel-title pull-left">
-                                   <div data-ng-bind-html="label.data | unsafe"></div>
-                                </h4>                       
-                            </div>
-                            <div class="panel-body">
-                                <ul>
-                                    <li data-ng-repeat="item in matchQuestionCtrl.getCorrectAnswers(label)">
-
-                                        <div data-ng-bind-html="item | unsafe"></div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </td>
-                    <!-- specific feedback -->
-                    <td class="center-text">
-                        <span>{{matchQuestionCtrl.getCurrentItemFeedBack(label)}}</span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
 
         <!-- HINTS -->
         <div data-ng-if="matchQuestionCtrl.question.hints">

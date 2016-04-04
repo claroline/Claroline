@@ -37,6 +37,13 @@ angular.module('Question').controller('MatchQuestionCtrl', [
                     this.getHintData(this.currentQuestionPaperData.hints[i]);
                 }
             }
+            
+            this.savedAnswers = [];
+            for (var i=0; i<this.dropped.length; i++) {
+                this.savedAnswers.push(this.dropped[i]);
+            }
+            
+            this.solutions = this.question.solutions;
         };
 
         /**
@@ -417,8 +424,6 @@ angular.module('Question').controller('MatchQuestionCtrl', [
                     return 1;
                 }
             }
-            // UNFINISHED
-            
             
             return 2;
         };
@@ -581,6 +586,7 @@ angular.module('Question').controller('MatchQuestionCtrl', [
                             label: label
                         };
                         this.dropped.push(item);
+                        this.savedAnswers.push(item);
                     }
                 }
             }
