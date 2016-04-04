@@ -133,12 +133,19 @@
     var appRun = [
         '$rootScope',
         '$location',
-        function appRun($rootScope, $location) {
-            $rootScope.$on("$routeChangeError", function handleRouteChangeError(evt, current, previous, rejection) {
+        '$anchorScroll',
+        function appRun($rootScope, $location, $anchorScroll) {
+            // Redirect to root step if the requested step is not found
+            $rootScope.$on('$routeChangeError', function handleRouteChangeError(evt, current, previous, rejection) {
                 // If step not found, redirect user to rhe Root step
                 if ('step_not_found' == rejection) {
                     $location.path('/');
                 }
+            });
+
+            // Automatically scroll to the Step content
+            $rootScope.$on('$routeChangeSuccess', function handleRouteChangeSuccess() {
+                $anchorScroll('scroll-to-onload');
             });
         }
     ];
