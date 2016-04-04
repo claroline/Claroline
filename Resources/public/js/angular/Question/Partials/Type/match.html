@@ -86,8 +86,11 @@
                         <ul class="dragDropped">
                             <li data-ng-repeat="item in matchQuestionCtrl.dropped" id="dropped_{{item.source}}" data-ng-if="item.target === proposal.id">
                                 <div class="row dropped-item-row">
-                                    <div class="col-sm-10" data-ng-bind-html="item.label | unsafe">
+                                    <div class="col-sm-9" data-ng-bind-html="item.label | unsafe">
                                         
+                                    </div>
+                                    <div class="col-md-1">
+                                        <i data-ng-if="matchQuestionCtrl.feedbackIsVisible || matchQuestionCtrl.dropIsValid(item) === 1" data-toggle="tooltip" data-ng-class="{'color-success fa fa-check' : matchQuestionCtrl.dropIsValid(item) === 1, 'color-danger fa fa-close': matchQuestionCtrl.dropIsValid(item) === 2}" title="{{matchQuestionCtrl.getDropFeedback(item)}}"></i>
                                     </div>
                                     <div class="col-sm-2">
                                          <button data-ng-disabled="matchQuestionCtrl.feedbackIsVisible" class="btn btn-danger fa fa-trash" data-ng-click="matchQuestionCtrl.removeDropped(item.source, proposal.id)"></button>
