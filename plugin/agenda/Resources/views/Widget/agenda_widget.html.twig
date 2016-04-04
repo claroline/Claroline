@@ -1,0 +1,15 @@
+{% for event in listEvents %}
+    {% include "ClarolineAgendaBundle:Widget:event_widget.html.twig" %}
+{% else %}
+    <em>{{ 'no_event_found'|trans({}, 'agenda') }}</em>
+{% endfor %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function (){
+            $('.info-of-event').popover({
+                html: true
+            });
+        });
+    </script>
+{% endblock javascripts %}

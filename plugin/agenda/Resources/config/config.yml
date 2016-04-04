@@ -1,0 +1,12 @@
+plugin:
+  has_options: false
+  tools:
+    - name: agenda_
+      is_displayable_in_workspace: true
+      is_displayable_in_desktop: true
+      class: calendar
+  widgets:
+    - name: agenda_
+      is_configurable: false
+    - name : agenda_task
+      is_configurable: false

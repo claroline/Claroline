@@ -1,0 +1,192 @@
+{% if workspace is defined %}
+    {% set calendarExtends = 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+{% else %}
+    {% set calendarExtends = 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+{% endif %}
+
+{% extends calendarExtends %}
+
+{% set calendarPath = 'bundles/frontend/fullcalendar/dist/' %}
+
+{% block title %}
+    {% if workspace is defined %}
+        {{ parent() ~ ' - ' ~ "agenda" | trans({}, "tools") | striptags | raw }}
+    {% else %}
+        {{ parent() ~ ' - ' ~ "agenda" | trans({}, "tools") | striptags | raw }}
+    {% endif %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.min.css') }}'/>
+    <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.print.css') }}' media='print' />
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}'>
+    <style>
+        .fc-day-grid-event > .fc-content {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+        .is-task {
+            padding-right: 3px;
+        }
+    </style>
+{% endblock %}
+{% block breadcrumb %}
+    {% if workspace is defined %}
+        {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+                [
+                    {
+                        'name': 'agenda'|trans({}, 'tools'),
+                        'href': ''
+                    }
+                ]
+            )
+        }}
+    {% else %}
+        {{
+            macros.desktopBreadcrumbs([
+                {
+                    'name': 'agenda'|trans({}, 'tools'),
+                    'href': ''
+                }
+            ])
+        }}
+    {% endif %}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'agenda'|trans({}, 'tools') }}</h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div id="events"></div>
+            <div id='calendar' class="col-md-9"></div>
+
+            <div class="col-md-3">
+                <div class="panel text-center">
+                    {% if workspace is defined %}
+                        <a href="{{ path('claro_workspace_agenda_export',{workspace: workspace.getId()}) }}" class="btn btn-default btn-xs"  role="button">
+                            {{ 'export'|trans({}, 'agenda') }}
+                        </a>
+                    {% else %}
+                        <a href="{{ path('claro_desktop_agenda_export') }}" class="btn btn-default btn-xs" role="button">
+                            {{ 'export'|trans({}, 'agenda') }}
+                        </a>
+                    {% endif %}
+
+                    {% if canCreate is defined and canCreate and workspace is defined %}
+                        <a id="import-ics-btn" href="{{ path('claro_workspace_agenda_import_form', {'workspace': workspace.getId()}) }}"
+                           class="btn btn-default btn-xs"
+                           role="button"
+                                >
+                            {{ 'import_agenda_file'|trans({}, 'agenda') }}
+                        </a>
+                    {% elseif workspace is not defined %}
+                        <a id="import-ics-btn" href="{{ path('claro_agenda_import_form') }}"
+                           class="btn btn-default btn-xs"
+                           role="button">
+                            {{ 'import_agenda_file'|trans({}, 'agenda') }}
+                        </a>
+                    {% endif %}
+                </div>
+
+                <div class="panel panel-default">
+                    {% if filters is defined and filters | length > 1 %}
+                        <div data-toggle="collapse" data-target="#panel-owners" class="panel-heading">{{'filter_ws'|trans({}, 'agenda')}}</div>
+                        <div id="panel-owners" class="panel-body list-group in" style="padding:0">
+                            <div id="selectWorkspace">
+                                {% for wsId, filterName in filters %}
+                                    <li class="list-group-item">
+                                        <input
+                                            id="ws-{{ wsId }}"
+                                            type="checkbox"
+                                            name="{{ filterName}}"
+                                            class="filter"
+                                            value="{{ wsId }}"
+                                        />
+                                        <label for="ws-{{ wsId }}">{{ filterName }}</label>
+                                    </li>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div data-toggle="collapse" data-target="#panel-tasks" class="panel-heading">{{'filter_tasks'|trans({}, 'agenda')}}</div>
+                    <div id="panel-tasks" class="panel-body list-group in" style="padding:0">
+                        <div id="selectTask">
+                            <div class="list-group-item">
+                                <input
+                                        id="no-filter-tasks"
+                                        type="radio"
+                                        name="tasks"
+                                        class="filter-tasks"
+                                        value="no-filter-tasks"
+                                        checked
+                                        />
+                                <label for="no-filter-tasks">{{ 'no_filter_tasks'|trans({}, 'agenda') }}</label>
+                            </div>
+                            <div class="list-group-item">
+                                <input
+                                        id="hide-tasks"
+                                        type="radio"
+                                        name="tasks"
+                                        class="filter-tasks"
+                                        value="hide-tasks"
+                                        />
+                                <label for="hide-tasks">{{ 'hide_tasks'|trans({}, 'agenda') }}</label>
+                            </div>
+                            <div class="list-group-item">
+                                <input
+                                        id="hide-events"
+                                        type="radio"
+                                        name="tasks"
+                                        class="filter-tasks"
+                                        value="hide-events"
+                                        />
+                                <label for="hide-events">{{ 'show_task_only'|trans({}, 'agenda') }}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">{{ 'form.priority'|trans({}, 'agenda') }}</div>
+                    <div class="panel-body list-group" style="padding:0">
+                        <div class="list-group-item" style="color:#FF0000">  {{ 'high'|trans({}, 'agenda') }} </div>
+                        <div class="list-group-item" style="color:#01A9DB"> {{ 'medium'|trans({}, 'agenda') }} </div>
+                        <div class="list-group-item" style="color:#848484"> {{ 'low'|trans({}, 'agenda') }} </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts debug=false filter='twig_js, jsmin' vars=["locale"] "@ClarolineAgendaBundle/Resources/views/Agenda/eventContent.html.twig" %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'agenda' }) }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/moment/min/moment-with-locales.min.js') }}"></script>
+    <script type='text/javascript' src='{{ asset(calendarPath ~ 'fullcalendar.min.js') }}' ></script>
+    <script type='text/javascript' src='{{ asset('bundles/clarolineagenda/js/calendar.js') }}'></script>
+    <script type='text/javascript'>
+        {% if workspace is not defined %}
+            $(function () {
+                Claroline.Calendar.initialize('desktop', "undefined", '{{ editableWorkspaces|json_encode|raw }}');
+            });
+        {% else %}
+            $(function () {
+                Claroline.Calendar.initialize('workspace', {{ workspace.getId() }}, '{{ editableWorkspaces|json_encode|raw }}');
+            });
+        {% endif %}
+    </script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery-ui/ui/minified/draggable.min.js') }}"> </script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery-ui/ui/minified/resizable.min.js') }}"> </script>
+{% endblock javascripts %}

@@ -1,0 +1,73 @@
+<div data-event-id="{{ event.id }}" class="event-or-task">
+    <div style="width:17px; float: left">
+        {% if event.isTask %}
+            {% set workspaceId = event.workspace is null ? 0 : event.workspace.id %}
+            {% if  editableWorkspaces[workspaceId] %}
+                <span class="fa fa-square-o mark-task-as-done" style="cursor:pointer" title="{{ 'mark_task_as_done'|trans({}, 'widget') }}"></span>
+            {% else %}
+                <span class="fa fa-lock" title="{{ 'cant_modify_task'|trans({}, 'widget') }}"></span>
+            {% endif %}
+        {% else %}
+            <span class="fa fa-calendar"></span>
+        {% endif %}
+    </div>
+
+    <div style="overflow: hidden">
+        {% set dateRange = (event.getStartInDateTime()|date('U') - date('now')|date('U')) %}
+        {% if event.getStartInDateTime()|date('d/m/Y') == date('+1 day')|date('d/m/Y') %}
+            {{ 'tomorrow'|trans({}, 'agenda') }},
+        {% elseif event.getStartInDateTime()|date('d/m/Y') == date('now')|date('d/m/Y') %}
+            {{ 'today_widget'|trans({}, 'agenda') }},
+        {% elseif dateRange <= 0 %}
+            {% if event.isTask %}
+                {% if  (dateRange/86400)|abs|round(0, 'ceil') == 1 %}
+                    {{ 'yesterday'|trans({}, 'widget') }},
+                {% else %}
+                    {{ 'x_days_ago'|trans({
+                        '%nbDays%': (dateRange/86400)|abs|round
+                    }, 'widget') }},
+                {% endif %}
+            {% else %}
+                {{ 'now'|trans({}, 'agenda') }},
+            {% endif %}
+        {% elseif dateRange < 518400 %}
+            {{ 'in_x_days'|trans({
+                '%nbDays%': (dateRange/86400)|round(0, 'ceil')
+            }, 'agenda') }},
+        {% else %}
+            {{ ('day.' ~ event.getStartInDateTime()|date('l')|lower())|trans({}, 'agenda') }}
+            {{ event.getStartInDateTime()|date('d/m/Y') }},
+        {% endif %}
+
+        <a href="#"
+           class="{{ event.isTask ? 'info-of-task' : 'info-of-event' }}"
+           tabindex="0"
+           role="button"
+           data-placement="top"
+           data-toggle="popover"
+           title="{{ event.title }}"
+           data-container="body"
+           data-content="{% include "ClarolineAgendaBundle:Widget:popover.html.twig" %}">
+            {{ event.title }}
+        </a>,
+
+        {% if event.allDay %}
+            {% set time = 'all_day'|trans({}, 'agenda') %}
+        {% else %}
+            {% set time = 'at'|trans({}, 'agenda') ~ ' '%}
+            {% if event.getStartInDateTime()|date('H\\hi') == '00h00' %}
+                {% set time = time ~ 'midnight'|trans({}, 'agenda') %}
+            {% elseif event.getStartInDateTime()|date('H\\hi') == '12h00' %}
+                {% set time = time ~ 'noon'|trans({}, 'agenda') %}
+            {% else %}
+                {% set time = time ~ event.getStartInDateTime()|date('H\\hi') %}
+            {% endif %}
+        {% endif %}
+
+        {% if isDesktop and event.workspace is not null %}
+            {{ time }} (<a href="{{ path('claro_workspace_open', {'workspaceId': event.workspace.id}) }}">{{ event.workspace.name }}</a>).
+        {% else %}
+            {{ time }}.
+        {% endif %}
+    </div>
+</div>

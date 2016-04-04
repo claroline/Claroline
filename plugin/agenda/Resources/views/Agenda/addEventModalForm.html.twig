@@ -1,0 +1,21 @@
+<div id="modal-event-form" class="modal-dialog" role="dialog" aria-labelledby="agendaModalLabel" aria-hidden="true">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 id="agendaModalLabel"> {{ 'add_event'|trans({}, 'agenda') }}</h4>
+        </div>
+        <form method="post"
+              action="{{ action }}"
+              id="form-event" {{ form_enctype(form) }}
+              role="form"
+        >
+            <div class="modal-body">
+                {{ form_widget(form) }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{'cancel'|trans({}, 'agenda') }}</button>
+                <button type="submit" class="btn btn-primary">{{ 'add_event'|trans({}, 'agenda') }}</button>
+            </div>
+        </form>
+    </div>
+</div>
