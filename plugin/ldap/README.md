@@ -1,4 +1,0 @@
-LdapBundle
-==========
-
-LDAP Bundle

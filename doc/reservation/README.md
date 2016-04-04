@@ -4,11 +4,6 @@ This is a plugin for the platform Claroline which adds an reservation agenda tha
 
 It's using the AgendaBundle so you can also see your reservations in the Desktop agenda.
 
-## Installation
-This bundle requires claroline/core-bundle and claroline/agenda-bundle to work.
-
-`composer require claroline/reservation-bundle "dev-master"`
-
 ## How to use
 ### Create resources types and resources
 Before booking an item, you have to create the resources types and the resources.
