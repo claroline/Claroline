@@ -4,6 +4,7 @@ $vendors = [
   'Claroline' => [
     'ActivityToolBundle',
     'AnnouncementBundle',
+    'AgendaBundle',
     //'BundleRecorder',
     //'CoreBundle',
     'CursusBundle',
@@ -18,6 +19,9 @@ $vendors = [
     'ScormBundle',
     'SurveyBundle',
     'TeamBundle',
+    'TagBundle',
+    'LdapBundle',
+    'TextPlayerBundle',
     'VideoPlayerBundle',
     //'WebInstaller',
     'WebResourceBundle'
@@ -50,13 +54,6 @@ $vendors = [
     'ExoBundle'
   ]*/
 ];
-
-$remotes = array_map(function ($line) {
-  $parts = explode("\t", $line);
-  $remote = array_shift($parts);
-
-  return $remote;
-}, cmd('git remote -v'));
 
 foreach ($vendors as $vendor => $packages) {
   foreach ($packages as $package) {
