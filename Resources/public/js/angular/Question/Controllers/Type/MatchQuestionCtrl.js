@@ -399,6 +399,26 @@ angular.module('Question').controller('MatchQuestionCtrl', [
                 }
             }
         };
+        
+        this.dropIsValid = function (item) {
+            for (var i=0; i<this.solutions.length; i++) {
+                if (item.source === this.solutions[i].firstId && item.target === this.solutions[i].secondId) {
+                    return 1;
+                }
+            }
+            // UNFINISHED
+            
+            
+            return 2;
+        };
+        
+        this.getDropFeedback = function (item) {
+            for (var i=0; i<this.solutions.length; i++) {
+                if (item.source === this.solutions[i].firstId && item.target === this.solutions[i].secondId) {
+                    return this.solutions[i].feedback;
+                }
+            }
+        };
 
         /**
          * Listen to show-feedback event (broadcasted by ExercisePlayerCtrl)
