@@ -5,6 +5,8 @@ add_choice: Ajouter un choix
 add_label: Ajouter un label
 add_new_picture: Ajouter une nouvelle image
 add_proposal: Ajouter une proposition
+add_question: Ajouter une question
+add_step: Ajouter une étape
 add_zone_answer: Ajouter une zone de réponse
 advanced_edition: Edition avancée
 after_the_last_attempt: Après le dernier essai
@@ -75,6 +77,7 @@ delete: Supprimer
 delete_of_my_bank: Supprimer de ma banque
 delete_of_my_exercise: Supprimer de mon exercice
 delete_papers: Supprimer les copies
+delete_question: Supprimer l'étape
 description: Description
 display_all_list: Afficher la liste complète
 display_all_on_this_page: Tout afficher sur cette page
@@ -328,6 +331,7 @@ start_date: Date de début
 sort: Trier les documents
 summative : Sommatif
 show_additional_info: Afficher les informations supplémentaires
+step: Etape
 
 # T
 temporary_mark: Note temporaire
