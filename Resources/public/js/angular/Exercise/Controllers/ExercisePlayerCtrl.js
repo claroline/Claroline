@@ -152,6 +152,10 @@ ExercisePlayerCtrl.prototype.validateStep = function (action, index) {
 
     // data set by question directive
     var studentData = this.DataSharing.getStudentData();
+    // TODO : améliorer
+    if (3 != this.exercise.meta.type) {
+        var submitPromise = this.ExerciseService.submitAnswer(this.paper.id, studentData);
+    }
 
     // navigate to desired step / end / terminate exercise
     this.handleStepNavigation(action, studentData.paper);
