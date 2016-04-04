@@ -1,0 +1,82 @@
+{% set calendarExtends = 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+
+{% extends calendarExtends %}
+
+{% set calendarPath = 'packages/fullcalendar/dist/' %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ "formalibre_reservation_agenda" | trans({}, "tools") | striptags | raw }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.min.css') }}'/>
+    <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.print.css') }}' media='print' />
+    <link 
+        rel='stylesheet' 
+        type='text/css' 
+        href="{{ asset('packages/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}"
+    />
+    <style>
+        .resources-filter > a, .resources-filter > div {
+            text-indent: 20px;
+        }
+    </style>
+{% endblock %}
+{% block breadcrumb %}
+        {{
+        macros.desktopBreadcrumbs([
+        {
+            'name': 'formalibre_reservation_agenda'|trans({}, 'tools'),
+            'href': ''
+        }
+        ])
+        }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'formalibre_reservation_agenda'|trans({}, 'tools') }}</h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div id='calendar' class="col-md-9"></div>
+
+            <div class="col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        {{ 'filter.by_resource'|trans({}, 'reservation') }}
+                    </div>
+                    <div class="list-group filters-list">
+                        {% for resourceType in resourcesType %}
+                            <a href="#" class="list-group-item list-group-item-text" data-resource-type-id="{{ resourceType.getId() }}">{{ resourceType.getName() }}</a>
+                            <div class="resources-filter">
+                                {% for resource in resourceType.getResources() %}
+                                    <a href="#" class="list-group-item" style="color: {{ resource.getColor() }}" data-resource-id="{{ resource.getId() }}">{{ resource.getName() }}</a>
+                                {% else %}
+                                    <div class="list-group-item">{{ 'filter.no_resource_found'|trans({}, 'reservation') }}</div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="list-group-item list-group-item-text">{{ 'filter.no_resource_type_found'|trans({}, 'reservation') }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts debug=false filter='twig_js, jsmin' vars=["locale"]
+    "@FormaLibreReservationBundle/Resources/views/Tool/reservationContent.html.twig"
+    %}<script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'reservation' }) }}"></script>
+    <script type="text/javascript" src="{{ asset('packages/moment/min/moment-with-locales.min.js') }}"></script>
+    <script type='text/javascript' src='{{ asset(calendarPath ~ 'fullcalendar.min.js') }}' ></script>
+    <script type='text/javascript' src='{{ asset('bundles/formalibrereservation/js/calendar.js') }}'></script>
+    <script type="text/javascript" src="{{ asset('packages/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('packages/jquery-ui/ui/minified/draggable.min.js') }}"> </script>
+    <script type="text/javascript" src="{{ asset('packages/jquery-ui/ui/minified/resizable.min.js') }}"> </script>
+{% endblock javascripts %}

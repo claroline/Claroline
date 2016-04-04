@@ -1,0 +1,15 @@
+valid_date_range_required: La date de fin ne peut pas précéder ou être égale à la date de début
+valid_max_duration_required: Le temps maximal de réservation de cette ressource est dépassé.
+valid_duration_format_required: Format invalide de la durée de réservation. Doit être sous la forme hh:mm.
+number_reservations_exceeded: Nombre des réservations dépassées avec cette ressource. Veuillez changer la date ou la ressource que vous voulez réserver.
+bad_file_extension: L'extension du fichier est invalide. Veuillez sélectionner un fichier dans un format csv.
+invalid_number_of_column: La ligne %lineNb% du fichier ne possèdent pas 7 colonnes.
+invalid_column_headers: Le nom de la colonne %columnName% n'est pas présent dans le fichier.
+invalid_number_characters_resource_type: La chaine de la colonne resource_type doit avoir minimum 2 et maximum 50 caractères. Ligne %lineNb%.
+invalid_number_characters_name: La chaine de la colonne name doit avoir minimum 2 et maximum 50 caractères. Ligne %lineNb%.
+invalid_type_for_max_time_reservation: La colonne max_time_reservation doit être au format hh:mm ou hh:mm:ss. Ligne %lineNb%.
+invalid_number_characters_localisation: La chaine de la colonne localisation doit avoir maximum 255 caractères. Ligne %lineNb%.
+invalid_number_quantity: La valeur dans la colonne quantity doit être de 1 minimum. Ligne %lineNb%.
+invalid_color_format: La valeur de la couleur de la colonne color doit être au format hex. Ligne %lineNb%.
+resource_already_exists_for_resource_type: Le nom de la ressource existe déjà pour ce type de ressource. Ligne %lineNb%.
+double_resource_for_one_resource_type: La ligne %lineNb1% et la ligne %lineNb2% contiennent le même type de ressources pour la même ressource. Veuillez différencier les noms des ressources.
