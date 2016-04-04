@@ -30,7 +30,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    
+
 {#    <link rel="stylesheet" href="{{ asset('vendor/angular-ui.css')}}"> </link>#}
     <link rel="stylesheet"  href="{{ asset('bundles/frontend/angular-ui-tree/dist/angular-ui-tree.min.css') }}" />
     <link rel="stylesheet"  href="{{ asset('bundles/frontend/angular-data-table/release/dataTable.css') }}" />
@@ -41,5 +41,5 @@
     {{ parent() }}
     <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'tools' }) }}"></script>
     <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'cursus' }) }}"></script>
-    <script type="text/javascript" src="{{ asset('dist/claroline-cursus-registration.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('dist/claroline-distribution-plugin-cursus-registration.js') }}"></script>
 {% endblock %}
