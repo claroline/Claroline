@@ -1,0 +1,25 @@
+<div id="import-modal" class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>{{ 'rename'|trans({}, 'platform') }} </h3>
+        </div>
+        {% form_theme form 'ClarolineCoreBundle::form_theme_translate_tools_value.html.twig' %}
+        <form
+            id="edit-tool-name"
+            role="form"
+            class="form-horizontal"
+            action="{{ path('claro_workspace_order_tool_edit', {
+                'workspace': workspace.getId(),
+                'workspaceOrderTool': wot.getId()})
+            }}" method="post" {{ form_enctype(form) }}>
+            <div class="panel-body">
+                {{ form_widget(form) }}
+                <div class="panel-footer">
+                    <button type="submit" class="btn btn-primary">OK</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{'cancel'|trans({}, 'platform') }}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

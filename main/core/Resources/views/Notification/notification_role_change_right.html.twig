@@ -1,0 +1,8 @@
+{% if notification.details.resource.id is defined %}
+    {% set path = path('claro_resource_open', {'node': notification.details.resource.id, 'resourceType': notification.details.resource.resourceType}) %}
+    {% set resource = '<a href="' ~ path ~ '">' ~ notification.details.resource.name ~ '</a>' %}
+{% else %}
+    {# old notifications do not store the resource id in their details field #}
+    {% set resource = notification.details.resource.name %}
+{% endif %}
+{{ notification.actionKey|trans({'%resource%': resource, '%workspace%': notification.details.workspace.name}, 'notification') | raw }}

@@ -1,0 +1,88 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'analytics_top' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style type="text/css">
+       #top_criteria.form-inline div {
+            display: inline-block;
+            *display: inline;
+            *zoom: 1;
+            margin-bottom: 5px;
+            margin-top: 5px;
+            margin-right: 10px;
+        }
+        #top_criteria.form-inline div label {
+            margin-right: 5px;
+        }
+        #top_criteria.form-inline {
+            margin-bottom: 5px;
+        }
+    </style>
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'admin_analytics'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'admin_analytics'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="panel-body" id="workspace-list-div">
+        {% include 'ClarolineCoreBundle:Administration\\Analytics:analytics_navbar.html.twig'%}
+        <div class="margin clearfix">
+            <form  role="form" id="top_criteria" action="{{ path('claro_admin_analytics_top') }}" method="POST">
+                {{ form_widget(form_criteria) }}
+                <div class="form-group"><input type="submit" value="{{ 'Show'|trans({}, 'platform') }}" class="btn btn-primary"/></div>
+            </form>
+        </div>
+        <div class="margin clearfix">
+            <div class="results_list">
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table id="top_analytics_table" class="table table-condensed table-hover table-bordered">
+                {% if list_data is not empty %}
+                    <thead>
+                        <tr>
+                        {% for key, col in list_data[0] %}
+                            {% if key != 'id' %}
+                                <th>{{ key|trans({}, 'platform') }}</th>
+                            {% endif %}
+                        {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for row in list_data %}
+                        <tr>
+                            {% for key, col in row %}
+                                {% if key != 'id' %}
+                                    <td>{{ col }}</td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                {% else %}
+                    <div class="alert alert-info">{{ 'admin_analytics_no_data'|trans({}, 'platform') }}</div>
+                {% endif %}
+            </table>
+        </div>
+    </div>
+{% endblock %}

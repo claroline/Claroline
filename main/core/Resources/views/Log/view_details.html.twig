@@ -1,0 +1,36 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block content %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                {% block logDetailsTitle %}
+                    {{ ('log_'~log.getAction()~'_title')|trans({}, 'log')}}
+                {% endblock %}
+            </h3>
+        </div>
+        <div class="panel-body">
+            <p>
+                {% block logDetailsSubtitle %}
+                    {% set isDesktop = isDesktop is defined and isDesktop == true %}
+                    {% include 'ClarolineCoreBundle:Log:view_list_item.html.twig' with {'isDesktop': isDesktop} %}
+                {% endblock %}
+            </p>
+        </div>
+        {% block logDetailsContext %}
+            <div class="list-group">
+                <div class="list-group-item">
+                    <strong>{{'log_context'|trans({}, 'log')}}</strong>
+                    {% include 'ClarolineCoreBundle:Log:view_details_doer.html.twig' %}
+                    {% include 'ClarolineCoreBundle:Log:view_details_role.html.twig' %}
+                    {% include 'ClarolineCoreBundle:Log:view_details_receiver_user.html.twig' %}
+                    {% include 'ClarolineCoreBundle:Log:view_details_receiver_group.html.twig' %}
+                    {% include 'ClarolineCoreBundle:Log:view_details_resource.html.twig' %}
+                    {% include 'ClarolineCoreBundle:Log:view_details_owner.html.twig' %}
+                    {% include 'ClarolineCoreBundle:Log:view_details_workspace.html.twig' %}
+                    {% include 'ClarolineCoreBundle:Log:view_details_action_' ~ log.getAction()|replace({'-': '_'}) ~ '.html.twig' ignore missing %}
+                </div>
+            </div>
+        {% endblock %}
+    </div>
+{% endblock %}

@@ -1,0 +1,39 @@
+<div class="row">
+    <aside class="col-md-2 profile_aside" role="complementary">
+        <div class="avatar">
+            {% if user.getPicture() != "" %}
+                <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}"
+                     class="profile_picture img-circle"
+                     alt="{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}"
+                     width="150px"
+                     height="150px"
+                >
+            {% else %}
+                <h1 class="profile_picture_placeholder"><i class="fa fa-user"></i></h1>
+            {% endif %}
+        </div>
+        <div class="informations">
+            <p class="text-center text-muted">
+                {{ 'registered'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}
+            </p>
+        </div>
+    </aside>
+    <div class="col-md-6 profile_informations">
+        <h2>{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</h2>
+        <p><span class="fa fa-envelope"> <a href="mailto:{{ user.getmail() }}" title="{{ user.getmail() }}">{{ user.getmail() }}</a></span></p>
+        {% if user.getPhone() is not null %}
+            <p><span class="fa fa-phone"></span> {{ user.getPhone() }}</p>
+        {% endif %}
+        {% for link in links %}
+            <p><a href="{{ link.url }}">{{ link.name|trans({}, 'resource') }}</a></p>
+        {% endfor %}
+        {% if '' != user.getDescription() %}
+            <div class="description_block">
+                <p class="lead">Description de {{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</p>
+                <div class="description">
+                    {{ user.getDescription() |raw }}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>

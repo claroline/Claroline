@@ -1,0 +1,6 @@
+{% twig_js name="GroupModelRow" %}
+
+<tr id="group-{{ group.id }}">
+    <td> {{ group.name }}</td>
+    <td> <a class="delete-group" href="{{ path('ws_model_remove_group', {'model': model.id, 'group': group.id}) }}"> {{ 'delete'|trans({}, 'platform') }}</a></td>
+</tr>

@@ -1,0 +1,23 @@
+{% extends "ClarolineCoreBundle::layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'term_of_service' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block content %}
+    <div class='panel panel-default'>
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ 'term_of_service'|trans({}, 'platform') }}</h3>
+        </div>
+        <form role="form" action="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}"
+              method="post" id="terms_of_service_form">
+            <div class="panel-body">
+                 {{ form_widget(form) }}
+            </div>
+            <div class="panel-footer">
+                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+                <a href="{{ path('claro_security_logout') }}" class="btn btn-default" role="button">
+                    {{ 'cancel'|trans({}, 'platform') }}
+                </a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

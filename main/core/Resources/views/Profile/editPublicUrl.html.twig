@@ -1,0 +1,59 @@
+{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+
+{% block title %}{{ user.getLastName() ~ ' ' ~ user.getFirstName() | striptags | raw }}{% endblock %}
+
+{% block content %}
+    {{ macros.flashBox() }}
+    <div class="panel panel-default panel-user">
+        <div class="panel-heading relative">
+            <a href="{{ path('claro_profile_view') }}" title="{{ 'back_to_profile'|trans({}, 'platform') }}" class="pull-right"><span class="fa fa-reply"></span> {{ 'back_to_profile'|trans({}, 'platform') }}</a>
+            <h3 class="panel-title">
+                {{ 'tune_your_public_profile_url'|trans({}, 'platform') }}
+            </h3>
+        </div>
+        <form role="form" action="{{ path('claro_user_public_url_edit') }}" data-ajax-action="{{ path('claro_user_public_url_check') }}" method="post" class="form-horizontal" role="form" id="public_profile_url" {{ form_enctype(form) }}>
+            <div class="panel-body">
+                <p>
+                    {{ 'your_current_url'|trans({}, 'platform') }} <strong><a href="{{ path('claro_public_profile_view', {'publicUrl': user.publicUrl}) }}" title="{{ 'public_profile'|trans({}, 'platform') }}">{{ path('claro_public_profile_view', {'publicUrl': user.publicUrl}) }}</a></strong>.
+                </p>
+                <p class="alert alert-warning">
+                    {{ 'public_profile_url_tuning_only_once'|trans({}, 'platform') }}.
+                </p>
+
+                {{ form_errors(form) }}
+                {{ form_errors(form.public_url) }}
+                <div class="form-group public_profile_url">
+                    <label class="col-md-3 control-label">{{ path('claro_profile_view') }}</label>
+                    <div class="col-md-4">
+                        {{ form_widget(form.public_url) }}
+                        <input type="hidden" value="{{ currentPublicUrl }}" id="current_public_profile_url">
+                        <div class="feedback">
+                            <img src="{{ asset('bundles/clarolinecore/images/loading.gif') }}" alt="Loading" class="loading hidden">
+                            <span class="fa fa-check"></span>
+                            <span class="fa fa-times hidden"></span>
+                        </div>
+                        <small class="help-block">
+                            {{ 'public_url_help'|trans({}, 'platform') }}
+                        </small>
+                    </div>
+                    <div class="col-md-1">
+
+                    </div>
+                </div>
+
+                {{ form_rest(form) }}
+            </div>
+            <div class="panel-footer">
+                <button type="submit" class="btn btn-primary" id="tune_button" disabled="disabled">{{ 'tune'|trans({}, 'platform') }}</button>
+                <a href="{{ path('claro_profile_view') }}" class="btn btn-default" role="button">
+                    {{ 'cancel' | trans({}, 'platform') }}
+                </a>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/user/public_url.js') }}'></script>
+{% endblock %}

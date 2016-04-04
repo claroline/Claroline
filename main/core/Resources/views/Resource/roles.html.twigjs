@@ -1,0 +1,23 @@
+{% twig_js name="resourceRightsRoles" %}
+
+{% for key, workspace in workspaces %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapse-{{ key }}">
+                <h3 class="panel-title">
+                    {{ key }}
+                </h3>
+            </a>
+        </div>
+        <div id="collapse-{{ key }}" class="list-group collapse">
+            {% for roleName, role in workspace %}
+                {# only display non manager role #}
+                {% if 'ROLE_WS_MANAGER' not in roleName %}
+                    <a class="role-item list-group-item" href="{{ path('claro_resource_right_form', {'role':role.id, 'node':nodeId}) }}">
+                        {{ role.translation_key }}
+                    </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+{% endfor %}

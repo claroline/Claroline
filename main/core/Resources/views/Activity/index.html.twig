@@ -1,0 +1,128 @@
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
+
+{% block title %}{{ _resource.resourceNode.name ~ ' - ' ~ "activity" | trans({}, "resource") | striptags | raw }}{% endblock %}
+
+{% block section_content %}
+    <div class="panel-body">
+        <div id="activity-btn-group" class="float-right-top margin-right-md">
+
+            {% if evaluation.getStatus() == 'completed' or evaluation.getStatus() == 'passed' %}
+                {% set buttonType = 'btn-success' %}
+                {% set status = 'success' %}
+            {% elseif evaluation.getStatus() == 'incomplete' or evaluation.getStatus() == 'failed' %}
+                {% set buttonType = 'btn-danger' %}
+                {% set status = 'failed' %}
+            {% else %}
+                {% set buttonType = 'btn-default' %}
+                {% set status = 'undefined' %}
+            {% endif %}
+
+            <div id="display-activity-evaluation-btn"
+                class="btn {{ buttonType }} {% if status == 'undefined' %}disabled{% endif %}"
+                data-activity-params-id="{{ activityParams.getId() }}"
+                {% if status == 'success' or status == 'failed' %}
+                    data-container="#activity-btn-group"
+                    data-toggle="tooltip"
+                    data-placement="left"
+                    title="{{ evaluation.getStatus()|trans({}, 'platform') }}"
+                {% endif %}
+            >
+                <i class="fa fa-bars"></i>
+            </div>
+            {% if is_granted('edit', _resource) %}
+                <a href="{{ path('claro_activity_edit', {'resource':  _resource.getId() }) }}" class="btn btn-primary">
+                    <i class="fa fa-pencil"></i>
+                </a>
+            {% endif %}
+        </div>
+
+        <ul class="activity-tabs nav nav-tabs margin-bottom-md">
+            <li class="active activity-primary"><a class="pointer-hand" data-id="activity-primary">{{ _resource.getTitle() }}</a></li>
+            {% for resource in _resource.getParameters().getSecondaryResources() %}
+                <li class="activity-tab-{{ resource.getId() }}">
+                    <a class="pointer-hand" data-id="resource-{{ resource.getId() }}">
+                        {{ resource.getName() }}
+                        {% if is_granted('edit', _resource) %}
+                            <div class="dropdown">
+                                <i class="fa fa-chevron-down pointer-hand" data-toggle="dropdown"></i>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li role="presentation">
+                                        <i role="menuitem"
+                                           class="activity-remove-resource fa fa-trash-o"
+                                           data-resource="{{ resource.getId() }}"
+                                           data-activity="{{ _resource.getId() }}"
+                                        >
+                                            {{ 'remove' | trans({}, 'platform') }}
+                                        </i>
+                                    </li>
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </a>
+                </li>
+            {% endfor %}
+            {% if is_granted('edit', _resource) %}
+                <li>
+                    <a class="add-resource pointer-hand" data-id="{{ _resource.getId() }}">
+                        <i class="fa fa-plus"></i> {{ 'add_resource' | trans({}, 'platform') }}
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+        <div class="activities">
+            <div id="activity-primary">
+                {% if is_granted('edit', _resource) and not _resource.getPrimaryResource() is empty %}
+                    <button class="remove-primary-resource btn btn-default pull-right" data-id="{{ _resource.getId() }}">
+                        <i class="fa fa-trash-o"></i> {{ 'activity_remove_primary_resource' | trans({}, 'platform') }}
+                    </button>
+                {% endif %}
+                {% if not _resource.getDescription() is empty %}
+                    <div>{{ _resource.getDescription() | raw }}</div>
+                {% endif %}
+                {% if not _resource.getPrimaryResource() is empty %}
+                    <hr>
+                    <iframe class="activity-iframe" src="{{ path('claro_resource_open', { 'resourceType': _resource.getPrimaryResource().getResourceType().getName(), 'node': _resource.getPrimaryResource().getId() }) }}"></iframe>
+                {% endif %}
+            </div>
+            {% for resource in _resource.getParameters().getSecondaryResources() %}
+                <div class="hide" id="resource-{{ resource.getId() }}">
+                    <iframe class="activity-iframe" src="{{ path('claro_resource_open', { 'resourceType': resource.getResourceType().getName(), 'node': resource.getId() }) }}"></iframe>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div id="activity-evaluation-modal-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 id="form-modal-title">{{ 'evaluation' | trans({}, 'platform') }}</h3>
+                </div>
+                <div id="activity-evaluation-modal-body" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                        class="btn btn-default"
+                        data-dismiss="modal"
+                    >{{ 'close'|trans({}, 'platform') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/clarolinecore/js/activity/activity.js') }}"></script>
+    {% if is_granted('edit', _resource) %}
+        <script src="{{ asset('bundles/clarolinecore/js/activity/edit.js') }}"></script>
+    {% endif %}
+{% endblock %}

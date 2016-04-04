@@ -1,0 +1,87 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% if config.getParameter('name') != "" %}
+    {% set pagetitle = config.getParameter('name') %}
+{% else %}
+    {% set pagetitle = 'Claroline Connect' %}
+{% endif %}
+
+{% block title %}
+    {% if  type is defined and type == 'menu' %}
+        {{ pagetitle ~ ' - ' ~ 'Menu' | trans({}, 'home') }}
+    {% elseif type is defined and type == '_pages' %}
+        {{ pagetitle ~ ' - ' ~ 'content_pages' | trans({}, 'home') }}
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+
+{% block leftbar %}
+    {% if is_granted('ROLE_HOME_MANAGER') %}
+        <div class="list-group menu">
+            <div class="list-group-item disabled">{{ "content_administration" | trans({}, "home") }}</div>
+            <a class="list-group-item {% if path('claro_index') == app.request.requesturi %} active{% endif %}"
+                href="{{ path("claro_index") }}">
+                <i class="fa fa-home"></i> {{ 'home' | trans({}, "platform") }}
+            </a>
+            <a class="list-group-item{{ "/type/menu" | compareRoute(" active") }}"
+                href="{{ path("claro_get_content_by_type", { "type": "menu"}) }}">
+                <i class="fa fa-list"></i> {{ 'Menus' | trans({}, "home") }}
+            </a>
+            <a class="list-group-item relative{{ "/types" | compareRoute(" active") }}"²
+                href="{{ path("claroline_types_manager") }}">
+                <i class="fa fa-file"></i> {{ 'pages' | trans({}, "home") }}
+            </a>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="visible-xs spacing-right">
+        {{ block("leftbar") }}
+    </div>
+
+    {% if region['header'] is defined %}
+        <div class="content-12 region-header clearfix">
+            {{  region['header'] | raw }}
+        </div>
+    {% endif %}
+    <div>
+        {% if region['left'] is defined %}
+            <div class="content-3">
+                    {{ region['left'] | raw }}
+            </div>
+        {% endif %}
+
+        <div class="{% if region['left'] is defined and
+            region['right'] is defined %}content-6{% elseif region['left'] is defined or
+            region['right'] is defined %}content-9{% else %}content-12{% endif %}">
+            {% if region['content'] is defined %}
+                {{ region['content'] | raw }}
+            {% endif %}
+
+            {{ content | raw }}
+        </div>
+
+        {% if region['right'] is defined %}
+            <div class="content-3">
+                {{ region['right'] | raw }}
+            </div>
+        {% endif %}
+    </div>
+    {% if region['footer'] is defined %}
+        <div class='content-12'>
+            {{  region['footer'] | raw }}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+        <script type="text/javascript" src="{{ asset('packages/fluidvids/dist/fluidvids.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/home/height.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/home/readmore.js') }}"></script>
+        {% if is_granted('ROLE_HOME_MANAGER') %}
+            <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/home/content.js') }}"></script>
+        {% endif %}
+{% endblock %}

@@ -1,0 +1,32 @@
+<style type="text/css">
+    .log_list_item_head {
+        font-size: 13px;
+        font-weight: bold;
+    }
+</style>
+
+{% if isDesktop %}
+    <div class="col-md-2 log_list_item_head">
+        {{'workspace'|trans({},'log')}}
+    </div>
+{% endif %}
+
+<div class="col-md-2 log_list_item_head">
+    {{'date'|trans({}, 'platform')}}
+</div>
+
+<div class="col-md-2 log_list_item_head">
+    {{'action'|trans({}, 'platform')}}
+</div>
+
+<div class="col-md-2 log_list_item_head">
+    {{'user'|trans({}, 'platform')}}
+</div>
+
+{% if isDesktop %}
+    <div class='col-md-4 log_list_item_head'>
+{% else %}
+    <div class='col-md-6 log_list_item_head'>
+{% endif %}
+    {{'action'|trans({}, 'platform')}}
+</div>

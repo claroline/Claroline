@@ -1,0 +1,22 @@
+{% extends "ClarolineCoreBundle:API:modal.html.twig" %}
+
+{% block header %}
+    {{ 'edit_group'|trans({}, 'platform') }}
+{% endblock %}
+{% block form %}
+    {% form_theme form 'ClarolineCoreBundle::form_theme_angular.html.twig' %}
+    <form role="form"
+            class="form-horizontal"
+            ng-submit="egfm.submit($scope)"
+            method="post" {{ form_enctype(form) }}
+        >
+        <div class="modal-body">
+            <div ng-model='egfm.{{ form.vars.model }}.id' ng-init='egfm.{{ form.vars.model }}.id="{{ group.id|ng_escape }}"'></div>
+            {{ form_widget(form) }}
+        </div>
+        <div class="modal-footer">
+            <button id="edit-location-btn" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
+            <div class="btn btn-default" data-dismiss="modal" ng-click="$close()">{{ 'cancel'|trans({}, 'platform') }}</div>
+        </div>
+    </form>
+{% endblock %}

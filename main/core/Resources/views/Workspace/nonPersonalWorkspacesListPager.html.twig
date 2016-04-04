@@ -1,0 +1,56 @@
+{% macro renderPager(pager, max, search) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_all_non_personal_workspaces_list_pager',
+                'routeParams': {
+                    'max': max,
+                    'search': search
+                }
+            }
+        )
+    }}
+{% endmacro %}
+
+{% from _self import renderPager %}
+
+{% set nbPages = nonPersonalWs.getNbPages() %}
+
+{% if nbPages > 1 %}
+    {{ renderPager(nonPersonalWs, max, search) }}
+{% endif %}
+
+{% set accesses = get_workspaces_accesses(nonPersonalWs.currentPageResults) %}
+
+{% for workspace in nonPersonalWs.currentPageResults %}
+    <a class="list-group-item row-workspace row-workspace-id-{{ workspace.getId() }}"
+        {% set granted = accesses[workspace.getId()] is defined and accesses[workspace.getId()] == true %}
+
+        {% if granted %}
+            href="{{ path('claro_workspace_open',
+            {'workspaceId': workspace.getId()}) }}"
+            id="link-home-{{ workspace.getId() }}"
+        {% endif %}
+    >
+        {% if not granted %}
+            <span class="text-muted">
+        {% endif %}
+
+        <i class="fa fa-book"></i>
+        {{ workspace.getName() }}
+        <span><small>({{ workspace.getCode() }})</small></span>
+
+        {% if not granted %}
+            </span>
+        {% endif %}
+    </a>
+{% endfor %}
+
+{% set nbPages = nonPersonalWs.getNbPages() %}
+
+{% if nbPages > 1 %}
+    {{ renderPager(nonPersonalWs, max, search) }}
+{% endif %}

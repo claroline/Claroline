@@ -1,0 +1,35 @@
+<div id="modal-template-select-form"
+     class="modal-dialog" 
+     role="dialog" 
+     aria-labelledby="modalLabel" 
+     aria-hidden="true"
+>
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3 class="modal-title">
+                {{ 'select_a_template'|trans({}, 'platform') }}
+            </h3>
+        </div>
+        <div class="modal-body">
+            <form id="template-select-form"
+                  action="{{ path('claro_content_change_template', {'type': type.getId()}) }}"
+                  method="POST"
+                  {{ form_enctype(form) }}
+            > 
+                {% form_theme form 'ClarolineCoreBundle::form_theme_no_label.html.twig' %}
+                {{ form_widget(form) }}
+            </form>
+        </div>
+        <div class="modal-footer">
+            <span class="btn btn-default" data-dismiss="modal">
+                {{ 'cancel'|trans({},'platform') }}
+            </span>
+            <button type="submit" id='select-btn' class="btn btn-primary">
+                {{ 'ok'|trans({},'platform') }}
+            </button>
+        </div>
+    </div>
+</div>

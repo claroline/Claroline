@@ -1,0 +1,7 @@
+{% extends 'ClarolineCoreBundle:Exception:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ '404' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block message %}
+    {{ '404' | trans({}, 'platform') }}
+{% endblock %}

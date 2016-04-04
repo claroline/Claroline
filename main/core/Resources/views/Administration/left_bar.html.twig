@@ -1,0 +1,9 @@
+<div class="list-group menu">
+    <div class="list-group-item disabled pouet">{{ 'administration'|trans({}, 'platform') }}</div>
+    {% for tool in tools %}
+        <a class="list-group-item {% if 'claro_admin_open_tool' | activeRoute({'toolName': tool.getName() }) %}active{% endif %}" href="{{ path('claro_admin_open_tool', {'toolName': tool.getName() }) }}">
+            <i class="fa fa-{{ tool.getClass() }}"></i>
+            {{ tool.getName()|trans({}, 'tools') }}
+        </a>
+    {% endfor %}
+</div>

@@ -1,0 +1,103 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block title %}
+    {% spaceless %}
+        {% if workspace is defined %}
+            {{ workspace.getName() }}
+        {% else %}
+            {% if _resource is defined %}
+                {% if _resource.getWorkspace() %} 
+                    {{ _resource.getWorkspace.getName() }} -
+                {% endif %}
+                {{ _resource.getResourceNode().getName() | striptags | raw }}
+            {% endif %}
+        {% endif %}
+    {% endspaceless %}
+{% endblock %}
+
+{% block breadcrumb %}
+    <div id="resource-breadcrumb">
+        {% if _resource is defined %}
+            <div id="twig-resource-attributes"
+                 data-resource-id="{{ _resource.getId() }}"
+                 data-resource-name="{{ _resource.getName() }}"
+            >
+            </div>
+            {% set node = app.session.get('current_resource_node') %}
+            {% if node is not null %}
+                {% set workspace = node.getWorkspace() %}
+            {% else %}
+                {% set workspace = _resource.getResourceNode().getWorkspace() %}
+            {% endif %}
+            <ul class="breadcrumb">
+                {% if not has_role('ROLE_ANONYMOUS') and workspace is defined and workspace != null %}
+                        {# we're finding wich is the workspace we want to display here #}
+                        <a href="{{ path('claro_workspace_open_tool', {'toolName': 'home', 'workspaceId': workspace.getId() }) }}">
+                            {{ workspace.getName() ~ ' (' ~ workspace.getCode() ~ ') ' }}
+                        </a>
+                    </li>
+                    {% render(controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
+                        {'node': _resource.getResourceNode(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}))
+                    %}
+                {% endif %}
+
+                {% block resourceBreadcrumb %}
+                    <li class="active">{{ _resource.getResourceNode().getName() }}</li>
+                {% endblock %}
+            </ul>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block leftbar %}
+    {% if _resource is defined %}
+        {# we're finding wich is the workspace we want to display here #}
+        {% set node = app.session.get('current_resource_node') %}
+        {% if node is not null %}
+            {% set workspace = node.getWorkspace() %}
+        {% else %}
+            {% set workspace = _resource.getResourceNode().getWorkspace() %}
+        {% endif %}
+    {% endif %}
+    {% if workspace is defined and workspace != null %}
+        {% if is_granted('OPEN', workspace) %}
+            {% render(controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspace': workspace, '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})) %}
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="visible-xs">
+        {{ block("leftbar") }}
+    </div>
+
+    <div class="section-content">
+        <div class="panel panel-default">
+            {% block section_content %}{% endblock %}
+        </div>
+        {% block section_after_content %}{% endblock %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        window.Workspace = {};
+        {% if _resource is defined %}
+            window.Workspace.id = {{ _resource.getResourceNode().getWorkspace().getId() }};
+        {% else %}
+            window.Workspace.id = null;
+        {% endif %}
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style type="text/css">
+        {% if workspace is defined and workspace.backgroundColor is not null %}
+            body {
+                background-color: {{ workspace.getOptions().getDetails()['background_color'] }};
+            }
+        {% endif %}
+    </style>
+{% endblock %}

@@ -1,0 +1,16 @@
+idci_exporter:
+    entities:
+        user:
+            class: 'Claroline\CoreBundle\Entity\User'
+            formats:
+                jsonp:
+                    transformer:
+                        options:
+                            template_name_format: 'export.json.twig'
+        group:
+            class: 'Claroline\CoreBundle\Entity\Group'
+            formats:
+                jsonp:
+                    transformer:
+                        options:
+                            template_name_format: 'export.json.twig'

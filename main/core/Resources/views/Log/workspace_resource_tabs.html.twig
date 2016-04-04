@@ -1,0 +1,12 @@
+{% if workspace is defined %}
+    {% set globalUrl = path('claro_workspace_logs_show', {'workspaceId': workspace.id}) %}
+    {% set userUrl = path('claro_workspace_logs_by_user_show', {'workspaceId': workspace.id}) %}
+{% elseif _resource is defined %}
+    {% set globalUrl = path('claro_resource_logs', {'node': _resource.resourceNode.id}) %}
+    {% set userUrl = path('claro_resource_logs_by_user', {'node': _resource.resourceNode.id}) %}
+{% endif %}
+
+<ul class="nav nav-tabs">
+    <li role="presentation" {% if activeTab == "global" %}class="active"{% endif %}><a href="{{ globalUrl }}">{{ 'global_tracking'|trans({}, 'log') }}</a></li>
+    <li role="presentation" {% if activeTab == "user" %}class="active"{% endif %}><a href="{{ userUrl }}">{{ 'user_tracking'|trans({}, 'log') }}</a></li>
+</ul>

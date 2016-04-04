@@ -1,0 +1,72 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'analytics_resources' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style type="text/css">
+        span.small {font-size: 14px;}
+    </style>
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'admin_analytics'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'admin_analytics'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="panel-body" id="workspace-list-div">
+        {% include 'ClarolineCoreBundle:Administration\\Analytics:analytics_navbar.html.twig'%}
+
+        <div class="margin">
+            <h1>{{ wsCount }} <span class="small"><i class="fa fa-book"></i> {{'workspaces'|trans({}, 'platform')}}</span></h1>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                {% include 'ClarolineCoreBundle:Log:resource_by_type_chart.html.twig' %}
+            </div>
+            <div class="col-md-6">
+                <div id="analytics-resources-list" class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-list"></i>
+                        {{'resources_usage_list'|trans({}, 'platform')}}
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-condensed">
+                            <tr><th>{{'resource'|trans({}, 'platform')}}</th><th>#</th></tr>
+                            {% for resource in resourceCount %}
+                                <tr><td>{{resource.name|trans({}, 'resource')}}</td><td>{{resource.total}}</td></tr>
+                            {% endfor %}
+                            {% if otherItems|length > 0 %}
+                            <tr><th>Autres</th><th>#</th></tr>
+                                {% for otherItem in otherItems %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ path('claro_admin_analytics_other_details', {item: otherItem.item}) }}"
+                                           title="{{ ('analytics_other_details_' ~ otherItem.item)|trans({}, 'analytics') }}">{{ otherItem.label }}</a>
+                                    </td>
+                                    <td>{{ otherItem.value }}</td>
+                                </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

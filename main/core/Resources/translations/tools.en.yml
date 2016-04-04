@@ -1,0 +1,23 @@
+agenda: agenda
+analytics: Dashboard
+desktop_and_home: 'Desktop and home'
+desktop_tools: 'Desktop tools'
+home: Home
+home_tabs: 'Home tabs'
+learning_outcomes: 'Learning outcomes'
+learning_profil: 'Learning profile'
+logs: Logs
+my_contacts: 'My contacts'
+parameters: Settings
+platform_analytics: 'Platform analytics'
+platform_logs: 'Platform logs'
+platform_parameters: 'Platform parameters'
+platform_plugins: 'Platform plugins'
+registration_to_workspace: 'Registration to workspaces'
+resource_manager: Resources
+roles_management: 'Roles management'
+user_management: 'Users management'
+users: Users
+widgets_management: 'Widgets management'
+workspace_management: 'Workspaces management'
+organization_management: 'Organization management'

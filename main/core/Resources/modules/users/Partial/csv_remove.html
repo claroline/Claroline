@@ -1,0 +1,20 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="$close()">&times;</button>
+        <h4> {{ 'csv_delete'|trans:{}:'platform' }} </h4>
+    </div>
+    <form id="csv-remove-form" method="post" enctype="multipart/form-data" ng-submit="rbcmc.submit()">
+    <div class="modal-body">
+        <div class="well">
+            <div> {{ 'csv_format_user_list'|trans:{}:'platform' }} </div>
+        </div>
+        <div>
+            {{ 'csv_select'|trans:{}:'platform' }}
+            <input type="file" name="csv" id="user_delete_csv" class="form-control">
+        </div>
+    </div>
+    <div class="modal-footer">
+        <input type="submit" name="submit" class="btn btn-primary pull-left">
+    </div>
+    </form>
+</div>

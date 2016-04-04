@@ -1,0 +1,25 @@
+# This file gathers container configuration that must be loaded at the application level
+
+parameters:
+    security.authentication.listener.anonymous.class: Claroline\CoreBundle\Listener\AnonymousAuthenticationListener
+    security.logout.handler.session.class: Claroline\CoreBundle\Library\Security\LogoutHandler
+    templating.locator.class: Claroline\CoreBundle\Library\Templating\Loader\TemplateLocator
+    twig.controller.exception.class : Claroline\CoreBundle\Controller\CustomExceptionController
+
+services:
+    templating.locator:
+        class: '%templating.locator.class%'
+        arguments:
+            - "@file_locator"
+            - "@claroline.manager.theme_manager"
+            - %kernel.root_dir%/Resources
+
+    claroline.captcha_extension:
+        arguments:
+            - "@service_container"
+        class: Claroline\CoreBundle\Form\Extension\CaptchaExtension
+        tags:
+            - { name: form.type_extension, alias: form }
+
+framework:
+    test: true

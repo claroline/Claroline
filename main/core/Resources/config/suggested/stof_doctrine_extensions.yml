@@ -1,0 +1,13 @@
+stof_doctrine_extensions:
+    orm:
+        default:
+            tree: true
+            blameable: true
+            timestampable: true
+            sluggable: true
+            translatable: true
+            softdeleteable: true
+
+    class:
+        translatable: Claroline\CoreBundle\Listener\LocaleListener
+        timestampable: Claroline\CoreBundle\Listener\TimestampableListener

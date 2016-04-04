@@ -1,0 +1,67 @@
+<?php
+
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Claroline\CoreBundle\Form\Factory;
+
+use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+
+class FormFactoryTest extends MockeryTestCase
+{
+    private $formFactory;
+    private $factory;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->formFactory = $this->mock('Symfony\Component\Form\FormFactoryInterface');
+        $this->factory = new FormFactory($this->formFactory);
+        $rFactory = new \ReflectionClass($this->factory);
+        $rTypes = $rFactory->getProperty('types');
+        $rTypes->setAccessible(true);
+        $rTypes->setValue(
+            null,
+            array(
+                'fooType' => array(
+                    'formType' => 'DOMDocument',
+                    'entity' => 'stdClass'
+                )
+            )
+        );
+    }
+
+    public function testCreateThrowsAnExceptionOnUnknownFormType()
+    {
+        $this->setExpectedException('Claroline\CoreBundle\Form\Factory\UnknownTypeException');
+        $this->factory->create('unknown_type');
+    }
+
+    public function testCreateWithDefaults()
+    {
+        $this->formFactory->shouldReceive('create')
+            ->once()
+            ->with(anInstanceOf('DOMDocument'), anInstanceOf('stdClass'))
+            ->andReturn('someFormInstance');
+        $this->assertEquals('someFormInstance', $this->factory->create('fooType'));
+    }
+
+    public function testCreateUsesTheEntityPassedInIfAny()
+    {
+        $entity = new \stdClass();
+        $this->formFactory->shouldReceive('create')
+            ->once()
+            ->with(anInstanceOf('DOMDocument'), $entity)
+            ->andReturn('someFormInstance');
+        $this->assertEquals(
+            'someFormInstance',
+            $this->factory->create('fooType', array(), $entity)
+        );
+    }
+}

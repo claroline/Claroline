@@ -1,0 +1,165 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'user_visit' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style type="text/css">
+        .line-chart{
+            height: 150px;
+            width: 90%;
+            margin: 0 5%;
+        }
+        .count_by_day_chart_legend {
+            text-align: center;
+            font-size: 11px;
+            color: #777;
+        }
+        #connections_criteria.form-inline div {
+            display: inline-block;
+            *display: inline;
+            *zoom: 1;
+            margin-bottom: 5px;
+            margin-top: 5px;
+            margin-right: 10px;
+        }
+        #connections_criteria.form-inline div label {
+            margin-right: 5px;
+        }
+        #connections_criteria.form-inline {
+            margin-bottom: 5px;
+        }
+        span.small {font-size: 14px;}
+    </style>
+    <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'admin_analytics'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'admin_analytics'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="panel-body" id="workspace-list-div">
+        {% include 'ClarolineCoreBundle:Administration\\Analytics:analytics_navbar.html.twig'%}
+        <div class="margin">
+            <h1>{{activeUsers}} <span class="small">{{'users_connected_once'|trans({}, 'platform')}}</span></h1>
+        </div>
+
+        <div class="margin clearfix">
+            <form role="form" id="connections_criteria" action="{{ path('claro_admin_analytics_connections') }}" method="POST">
+                {{ form_widget(form_criteria) }}
+                <div class="form-group"> <input type="submit" value="{{ 'show_actions'|trans({}, 'platform') }}" class="btn btn-primary"/> </div>
+            </form>
+        </div>
+
+        <div class="margin">
+            <h3>{{'users_visits'|trans({}, 'platform')}}</h3>
+            <div id="connections-line-chart" class="line-chart"></div>
+            <br/>
+            <div class="count_by_day_chart_legend"><i class="fa fa-hand-o-up"></i> <em>{{ 'graph_draw_area'|trans({}, 'platform') }}</em></div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript" src="{{ asset('packages/jqPlot/src/jquery.jqplot.js') }}"></script>
+    {% javascripts debug=false filter='jsmin' output='js/corebundle/jqplot.analytics-connections.min.js'
+    'bundles/clarolinecore/js/jqplot/jqplot.colors.js'
+    'packages/jqPlot/src/plugins/jqplot.highlighter.js'
+    'packages/jqPlot/src/plugins/jqplot.cursor.js'
+    'packages/jqPlot/src/plugins/jqplot.canvasTextRenderer.js'
+    'packages/jqPlot/src/plugins/jqplot.dateAxisRenderer.js'
+    'packages/jqPlot/src/plugins/jqplot.canvasAxisTickRenderer.js'
+    'packages/jqPlot/src/plugins/jqplot.canvasAxisLabelRenderer.js'
+    %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script type="text/javascript">
+        var chartData = {{ connections|json_encode|raw }};
+        var bg_color = "transparent";
+
+        $(document).ready(function(){
+            if (chartData.length>0) {
+                var actionsPlot = $.jqplot(
+                    'connections-line-chart',
+                    [chartData],
+                    {
+                        title: {show: false},
+                        grid: {
+                            drawBorder: true,
+                            borderWidth: 1.0,
+                            shadow: false,
+                            background: bg_color
+                        },
+                        axesDefaults: {
+                            labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                            tickRenderer: $.jqplot.CanvasAxisTickRenderer
+                        },
+                        axes: {
+                            xaxis: {
+                                renderer: $.jqplot.DateAxisRenderer,
+                                tickOptions: {
+                                    formatString:'{{ 'jqplot_date_output_format'|trans({}, 'platform') }}',
+                                    showGridline: false,
+                                    showMark: true,
+                                    angle: -20,
+                                    fontSize: '10px'
+                                },
+                                numberTicks:10
+                            },
+                            yaxis: {
+                                min:0,
+                                showTickMarks: true,
+                                numberTicks: 5
+                            }
+                        },
+                        highlighter: {
+                            show: true,
+                            sizeAdjust: 1,
+                            tooltipOffset:12,
+                            tooltipLocation:'n',
+                            tooltipAxes:'xy',
+                            formatString:'%s <br/> %d',
+                            tooltipFadeSpeed:'fast'
+                        },
+                        cursor: {
+                            show: true,
+                            zoom: true,
+                            showTooltip: false
+                        },
+                        seriesDefaults: {
+                            showMarker:((chartData.length<10)?true:false),
+                            markerOptions:{shadow:false},
+                            shadow:false,
+                            showLine:true,
+                            useNegativeColors: false,
+                            fill: true,
+                            lineWidth: 1.5,
+                            fillAndStroke: true,
+                            fillAlpha: 0.12,
+                            rendererOptions:{highlightMouseOver: true, highlightMouseDown: true}
+                        }
+                    }
+                );
+            }
+        });
+    </script>
+
+{% endblock %}

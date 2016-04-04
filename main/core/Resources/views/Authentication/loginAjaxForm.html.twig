@@ -1,0 +1,22 @@
+<div class="modal-dialog">
+    <form role="form" id="login-form" class="modal-content" action="{{ path('claro_security_login_check') }}" method="post">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">{{ 'login' | trans({}, 'platform') }}</h4>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="control-label" for="username">{{ 'username_or_email' | trans({}, 'platform') }} :</label>
+                <input class="form-control" placeholder="{{ 'username_or_email' | trans({}, 'platform') }}"  autofocs type="text" id="username" name="_username" required="required"/>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="username">{{ 'password' | trans({}, 'platform') }} :</label>
+                <input class="form-control" placeholder="{{ 'password' | trans({}, 'platform') }}" type="password" id="password" name="_password" required="required" />
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel' | trans({}, 'platform') }}</button>
+            <button type="submit" class="btn btn-primary">{{ 'login'|trans({}, 'platform') }}</button>
+        </div>
+    </form>
+</div>

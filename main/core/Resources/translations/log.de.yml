@@ -1,0 +1,182 @@
+'Show actions for': 'Afficher les actions suivantes :'
+all: Tous
+'for user': 'Filtrer sur l''utilisateur :'
+group: Groupe
+log_add_user: 'Ajout d''un utilisateur'
+log_change_right: 'Changement de droit'
+log_change_set: 'Liste des propriétés modifiées'
+log_context: 'Contexte :'
+log_copy: Copie
+log_copy_source: 'Source de la copie'
+log_create: Création
+log_default_user: 'Claroline Connect'
+log_delete: Suppression
+log_doer: 'Auteur de l''action'
+log_export: Téléchargement
+log_filter_actions: 'Afficher les actions'
+log_group-add_user_filter: 'Ajout d''un utilisateur à un groupe'
+log_group-add_user_sentence: 'a ajouté %receiver_user% au groupe %receiver_group%'
+log_group-add_user_shortname: Ajout
+log_group-add_user_title: 'Ajout d''un utilisateur à un groupe'
+log_group-create_filter: 'Création d''un groupe'
+log_group-create_sentence: 'a créé le groupe %receiver_group%'
+log_group-create_shortname: Création
+log_group-create_title: 'Création d''un groupe'
+log_group-delete_filter: 'Suppression d''un groupe'
+log_group-delete_sentence: 'a supprimé le groupe %receiver_group%'
+log_group-delete_shortname: Suppression
+log_group-delete_title: 'Suppression d''un groupe'
+log_group-remove_user_filter: 'Utilisateur retiré d''un groupe'
+log_group-remove_user_sentence: 'a retiré %receiver_user% du groupe %receiver_group%'
+log_group-remove_user_shortname: Retrait
+log_group-remove_user_title: 'Utilisateur retiré d''un groupe'
+log_group-update_filter: 'Mise à jour d''un groupe'
+log_group-update_sentence: 'a modifié le groupe %receiver_group%'
+log_group-update_shortname: Modification
+log_group-update_title: 'Mise à jour d''un groupe'
+log_has_not_changed: 'N''a pas changé'
+log_hidden_workspace_widget_config_amount: 'Nombre d''actions'
+log_himself: 'L''auteur lui-même'
+log_login: Connexion
+log_move: Déplacement
+log_new_values: 'Nouvelles valeurs'
+log_no_actions_found: 'Aucune action trouvée'
+log_old_folder: 'Ancien dossier parent'
+log_old_values: 'Anciennes valeurs'
+log_old_workspace: 'Ancien espace d''activités'
+log_owner: 'Propriétaire de la ressource ciblée'
+log_platform_roles: 'Rôles plateforme'
+log_read: Lecture
+log_receiver_group: 'Groupe cible de l''action'
+log_receiver_user: 'Utilisateur cible de l''action'
+log_remove_user: 'Retrait d''un utilisateur'
+log_resource: 'Ressource cible de l''action'
+log_resource-copy_filter: 'Copie d''une ressource'
+log_resource-copy_sentence: 'a copié %resource%'
+log_resource-copy_shortname: Copie
+log_resource-copy_title: 'Copie d''une ressource'
+log_resource-create_filter: 'Création d''une ressource'
+log_resource-create_sentence: 'a créé %resource%'
+log_resource-create_shortname: Création
+log_resource-create_title: 'Création d''une ressource'
+log_resource-custom_action_filter: 'Action spéciale sur une ressource'
+log_resource-delete_filter: 'Suppression d''une ressource'
+log_resource-delete_sentence: 'a supprimé %resource%'
+log_resource-delete_shortname: Suppression
+log_resource-delete_title: 'Suppression d''une ressource'
+log_resource-export_filter: 'Téléchargement d''une ressource'
+log_resource-export_sentence: 'a téléchargé %resource%'
+log_resource-export_shortname: Download
+log_resource-export_title: 'Téléchargement d''une ressource'
+log_resource-move_filter: 'Déplacement d''une ressource'
+log_resource-move_sentence: 'a déplacé %resource%'
+log_resource-move_shortname: Déplacement
+log_resource-move_title: 'Déplacement d''une ressource'
+log_resource-read_filter: 'Ouverture d''une ressource'
+log_resource-read_sentence: 'a ouvert %resource%'
+log_resource-read_shortname: Ouverture
+log_resource-read_title: 'Ouverture d''une ressource'
+log_resource-shortcut_filter: 'Création d''un raccourci'
+log_resource-shortcut_sentence: 'a créé le raccourci %resource%'
+log_resource-shortcut_shortname: Raccourci
+log_resource-shortcut_title: 'Création d''un raccourci'
+log_resource-update_filter: 'Mise à jour d''une ressource'
+log_resource-update_rename_filter: 'Renommage d''une ressource'
+log_resource-update_rename_sentence: 'a renommé %resource%'
+log_resource-update_rename_shortname: Renommage
+log_resource-update_rename_title: 'Renommage d''une ressource'
+log_resource-update_sentence: 'a modifié %resource%'
+log_resource-update_shortname: Modification
+log_resource-update_title: 'Mise à jour d''une ressource'
+log_resource_owner: 'Propriétaire de la ressource'
+log_role: 'Rôle cible de l''action'
+log_role-subscribe_group_filter: 'Attribution d''un rôle à un groupe'
+log_role-subscribe_user_filter: 'Attribution d''un rôle à un utilisateur'
+log_see_details: 'voir le détail'
+log_shortcut: Raccourci
+log_subscribe_group: 'Inscription groupe'
+log_subscribe_user: 'Inscription utilisateur'
+log_unsubscribe_group: 'Désinscription groupe'
+log_unsubscribe_user: 'Désinscription utilisateur'
+log_update: 'Mise à jour'
+log_user-create_filter: 'Création d''un utilisateur'
+log_user-create_sentence: 'a créé le compte %receiver_user%'
+log_user-create_shortname: Création
+log_user-create_title: 'Création d''un utilisateur'
+log_user-delete_filter: 'Suppression d''un utilisateur'
+log_user-delete_sentence: 'a supprimé le compte %receiver_user%'
+log_user-delete_shortname: Suppression
+log_user-delete_title: 'Suppression d''un utilisateur'
+log_user-login_filter: 'Connexion d''un utilisateur'
+log_user-login_sentence: 's''est connecté'
+log_user-login_shortname: Connexion
+log_user-login_title: 'Connexion d''un utilisateur'
+log_user-update_filter: 'Mise à jour d''un utilisateur'
+log_user-update_sentence: 'a modifié le compte %receiver_user%'
+log_user-update_shortname: Modification
+log_user-update_title: 'Mise à jour d''un utilisateur'
+log_widget_config_amount: 'Nombre de lignes'
+log_widget_config_restrictions: 'Actions à afficher'
+log_workspace-create_filter: Création
+log_workspace-create_sentence: 'a créé l''espace d''activités %workspace%'
+log_workspace-create_shortname: Création
+log_workspace-create_title: 'Création d''un espace d''activités'
+log_workspace-delete_filter: Suppression
+log_workspace-delete_sentence: 'a supprimé l''espace d''activités %workspace%'
+log_workspace-delete_shortname: Suppression
+log_workspace-delete_title: 'Suppression d''un espace d''activités'
+log_workspace-enter_filter: 'Accès à un espace d''activités'
+log_workspace-enter_sentence: 'a accédé à l''espace d''activités %workspace%'
+log_workspace-enter_shortname: Ouverture
+log_workspace-enter_title: 'Accès à un espace d''activités'
+log_workspace-role-change_right_filter: 'Changement des droits pour un rôle'
+log_workspace-role-change_right_sentence: 'a modifié les droits du rôle %role% pour %resource%'
+log_workspace-role-change_right_shortname: 'Changement de droits'
+log_workspace-role-change_right_title: 'Changement des droits pour un rôle (espace d''activités)'
+log_workspace-role-create_filter: 'Création d''un rôle'
+log_workspace-role-create_sentence: 'a créé un rôle dans %workspace%'
+log_workspace-role-create_shortname: Création
+log_workspace-role-create_title: 'Création d''un rôle (espace d''activités)'
+log_workspace-role-delete_filter: 'Suppression d''un rôle'
+log_workspace-role-delete_sentence: 'a supprimé un rôle dans %workspace%'
+log_workspace-role-delete_shortname: Suppression
+log_workspace-role-delete_title: 'Suppression d''un rôle (espace d''activités)'
+log_workspace-role-subscribe_group_filter: 'Attribution d''un rôle à un groupe'
+log_workspace-role-subscribe_group_sentence: 'a attribué le rôle %role% au groupe %receiver_group% dans %workspace%'
+log_workspace-role-subscribe_group_shortname: Attribution
+log_workspace-role-subscribe_group_title: 'Attribution d''un rôle à un groupe (espace d''activités)'
+log_workspace-role-subscribe_user_filter: 'Attribution d''un rôle à un utilisateur'
+log_workspace-role-subscribe_user_sentence: 'a attribué le rôle %role% à %receiver_user% dans %workspace%'
+log_workspace-role-subscribe_user_shortname: Attribution
+log_workspace-role-subscribe_user_title: 'Attribution d''un rôle à un utilisateur (espace d''activités)'
+log_workspace-role-unsubscribe_group_filter: 'Suppression d''un rôle pour un groupe'
+log_workspace-role-unsubscribe_group_sentence: 'a supprimé le rôle %role% pour le groupe %receiver_group% %workspace%'
+log_workspace-role-unsubscribe_group_shortname: Suppression
+log_workspace-role-unsubscribe_group_title: ' pour un groupe (espace d''activités)'
+log_workspace-role-unsubscribe_user_filter: 'Suppression d''un rôle pour un utilisateur'
+log_workspace-role-unsubscribe_user_sentence: 'a supprimé le rôle %role% pour %receiver_user% dans %workspace%'
+log_workspace-role-unsubscribe_user_shortname: Suppression
+log_workspace-role-unsubscribe_user_title: 'Suppression d''un rôle pour un utilisateur (espace d''activités)'
+log_workspace-role-update_filter: 'Mise à jour d''un rôle'
+log_workspace-role-update_sentence: 'a modifié un rôle dans %workspace%'
+log_workspace-role-update_shortname: Modification
+log_workspace-role-update_title: 'Mise à jour d''un rôle (espace d''activités)'
+log_workspace-tool-read_filter: 'Ouverture d''un outil'
+log_workspace-tool-read_sentence: 'a ouvert l''outil %tool% dans %workspace%'
+log_workspace-tool-read_shortname: Ouverture
+log_workspace-tool-read_title: 'Ouverture d''un outil dans un espace d''activités'
+log_workspace-update_filter: 'Mise à jour'
+log_workspace-update_shortname: Modification
+log_workspace-update_title: 'Mise à jour d''un espace d''activités'
+log_workspace_read: 'Accessions à l''espace d''activités'
+log_workspace_roles: 'Rôles espace d''activités'
+log_workspace_source: 'Espace d''activités source'
+resource: Ressource
+role: Rôle
+user: Utilisateur
+workspace: 'Espace d''activités'
+global_tracking: global_tracking
+user_tracking: user_tracking
+user_list: user_list
+actions_per_day_chart: actions_per_day_chart
+download_csv_list: download_csv_list

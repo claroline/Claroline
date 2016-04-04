@@ -1,0 +1,24 @@
+{% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
+
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+
+<form role="form" id="form_log_update_desktop_widget" method="POST"
+    action="{{ path('claro_log_update_desktop_widget_config', {'widgetInstance': instance.getId()})}}"
+
+    class="form-horizontal"
+    {{ form_enctype(form) }}>
+
+    <div class="panel-body">
+        <legend>{{ 'widget_workspace_pick'|trans({}, 'platform') }}</legend>
+        {{ form_widget(form._token) }}
+        {{ form_widget(form) }}
+    </div>
+
+    {{ macros.flashBox() }}
+    <div class="panel-footer">
+        <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+        <a href="#">
+            <button type="button" class="btn btn-default claro-widget-form-cancel">{{ 'cancel'|trans({}, 'platform') }}</button>
+        </a>
+    </div>
+</form>

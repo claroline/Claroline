@@ -1,0 +1,59 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'parameters' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+{{
+    macros.breadcrumbs([
+        {
+            'icon': 'fa fa-cog',
+            'name': 'administration'|trans({}, 'platform'),
+            'href': path('claro_admin_parameters_index')
+        },
+        {
+            'name': 'parameters'|trans({}, 'platform'),
+            'href': ''
+        }
+    ])
+}}
+{% endblock %}
+
+{% block section_content %}
+
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'parameters'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="list-group">
+        {{ macros.flashBox() }}
+        <a class="list-group-item" href="{{ path('claro_admin_parameters_general') }}">
+            {{ 'general'|trans({}, 'platform') }}
+        </a>
+        <a class="list-group-item" href="{{ path('claro_admin_parameters_appearance') }}">
+            {{ 'appearance'|trans({}, 'platform') }}
+        </a>
+        <a class="list-group-item" href="{{ path('claro_admin_edit_terms_of_service') }}">
+            {{ 'term_of_service' | trans({}, 'platform') }}
+        </a>
+        <a class="list-group-item" href="{{ path('claro_admin_parameters_mail_index') }}">
+            {{ 'mail'|trans({}, 'platform') }}
+        </a>
+        <a class="list-group-item" href="{{ path('claro_admin_parameters_indexing') }}">
+            {{ 'indexing'|trans({}, 'platform') }}
+        </a>
+        <a class="list-group-item" href="{{ path('claro_admin_session') }}">
+            {{ 'session'|trans({}, 'platform') }}
+        </a>
+        <a class="list-group-item" href="{{ path('claro_admin_parameters_oauth_index') }}">
+            {{ 'oauth'|trans({}, 'platform') }}
+        </a>
+        <a class="list-group-item" href="{{ path('claro_admin_parameters_maintenance') }}">
+            {{ 'maintenance'|trans({}, 'platform') }}
+        </a>
+        <a class="list-group-item" href="{{ path('claro_admin_security_token_list') }}">
+            {{ 'security_tokens_management'|trans({}, 'platform') }}
+        </a>
+        <a class="list-group-item" href="{{ path('claro_admin_i18n_form') }}">
+            {{ 'i18n'|trans({}, 'platform') }}
+        </a>
+    </div>
+{% endblock %}

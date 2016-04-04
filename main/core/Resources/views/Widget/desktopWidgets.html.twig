@@ -1,0 +1,119 @@
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+{{ macros.flashBox() }}
+
+<div id="widgets-hometab-datas-box"
+    data-hometab-id="{{ homeTabId }}"
+    data-init-widgets-position="{% if initWidgetsPosition %}1{% else %}0{% endif %}"
+></div>
+
+<div class="panel-group"
+     {% if not isWorkspace %}id="widgets-section"{% endif %}
+>
+    <div class="grid-stack"
+         {% if not isWorkspace %}id="widgets-list-panel"{% endif %}
+    >
+        
+        {% for widgetDatas in widgetsDatas %}
+            {% set widgetHomeTabConfig = widgetDatas['config'] %}
+            {% set whtcId = widgetHomeTabConfig.getId() %}
+            {% set widgetDisplayConfig = widgetDatas['widgetDisplayConfig'] %}
+            {% set widgetColor = widgetDisplayConfig.getColor() %}
+            {% set widgetInstance = widgetHomeTabConfig.getWidgetInstance() %}
+            {% set widget = widgetInstance.getWidget() %}
+        
+            {% if widgetHomeTabConfig.isVisible() %}
+                <div class="grid-stack-item"
+                     id="widget-element-{{ whtcId }}"
+                     {% if widgetDisplayConfig.getRow() != -1 and widgetDisplayConfig.getColumn() != -1 %}
+                         data-gs-x="{{ widgetDisplayConfig.getColumn() }}"
+                         data-gs-y="{{ widgetDisplayConfig.getRow() }}"
+                     {% else %}
+                         data-gs-auto-position="true"
+                     {% endif %}
+                     data-gs-width="{{ widgetDisplayConfig.getWidth() }}"
+                     data-gs-height="{{ widgetDisplayConfig.getHeight() }}"
+                     data-widget-display-config-id="{{ widgetDisplayConfig.getId() }}"
+                     data-gs-no-move="true"
+                     {% if widgetHomeTabConfig.isLocked() or not editionMode or isHomeLocked %}
+                         data-gs-no-resize="true"
+                     {% endif %}
+                >
+                    <div class="grid-stack-item-content panel panel-default"
+                         id="widget-element-content-{{ whtcId }}"
+                        {% if widgetColor is not empty %}
+                             style="border-color: {{ widgetColor }};"
+                        {% endif %}
+                    >
+                        <div class="panel-heading widget-instance-content-header"
+                             id="widget-element-header-{{ whtcId }}"
+                             {% if widgetColor is not empty %}
+                                 style="background-color: {{ widgetColor }};"
+                             {% endif %}
+                        >
+                            <h3 class="panel-title">
+
+                                {% if not widgetHomeTabConfig.isLocked() and not isLockedHomeTab and not isHomeLocked and editionMode %}
+                                    <span class="pull-right">
+                                        <i class="fa fa-times close {% if widgetHomeTabConfig.getType() == 'desktop' %}close-widget-btn{% else %}hide-widget-btn{% endif %}"
+                                           data-widget-hometab-config-id="{{ whtcId }}"
+                                        ></i>
+
+                                        {% if widgetHomeTabConfig.getType() == 'desktop' %}
+                                            <span class="close">&nbsp;</span>
+                                            <i class="fa fa-cog close edit-widget-btn"
+                                               data-widget-hometab-config-id="{{ whtcId }}"
+                                               data-widget-instance-id="{{ widgetInstance.getId() }}"
+                                               data-widget-display-config-id="{{ widgetDisplayConfig.getId() }}"
+                                            ></i>
+                                        {% endif %}
+
+                                        {% if not widgetInstance.isAdmin() and widget.isConfigurable() %}
+                                            <span class="close">&nbsp;</span>
+                                            <i class="fa fa-pencil close edit-widget-content-btn"
+                                               data-widget-instance-id="{{ widgetInstance.getId() }}"
+                                               data-widget-instance-name="{{ widgetInstance.getName() }}"
+                                            ></i>
+                                        {% endif %}
+                                    </span>
+                                {% endif %}
+                                <span id="widget-element-title-{{ whtcId }}">
+                                   {{ widgetInstance.getName()|raw }}
+                                </span>
+                            </h3>
+                        </div>
+                        <div id="widget-instance-content-{{ widgetInstance.getId() }}"
+                             class="panel-body widget-instance-content-body"
+                        >
+                            {{ widgetDatas.content|raw }}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    {% if isVisibleHomeTab and not isLockedHomeTab and not isHomeLocked and editionMode %}
+        <hr>
+        <span id="create-widget-instance" class="btn btn-primary">
+            <i class="fa fa-plus-circle">
+            </i>
+            {{ 'add_widget_to_home_tab'|trans({}, 'platform') }}
+        </span>
+    {% endif %}
+</div>
+
+<div id="widget-content-config-modal-box" class="modal fade" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h3 id="widget-content-config-modal-title">
+                </h3>
+            </div>
+            <div id="widget-content-config-modal-body" class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>

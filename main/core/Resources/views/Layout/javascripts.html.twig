@@ -1,0 +1,171 @@
+<script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/iframe/iframe.js') }}'></script>
+{% javascripts debug=false filter='jsmin' output='vendor/twitter/bootstrap/js/bootstrap.js'
+    '../vendor/claroline/front-end-bundle/Resources/public/bootstrap/js/transition.js'
+    '../vendor/claroline/front-end-bundle/Resources/public/bootstrap/js/alert.js'
+    '../vendor/claroline/front-end-bundle/Resources/public/bootstrap/js/button.js'
+    '../vendor/claroline/front-end-bundle/Resources/public/bootstrap/js/carousel.js'
+    '../vendor/claroline/front-end-bundle/Resources/public/bootstrap/js/collapse.js'
+    '../vendor/claroline/front-end-bundle/Resources/public/bootstrap/js/dropdown.js'
+    '../vendor/claroline/front-end-bundle/Resources/public/bootstrap/js/modal.js'
+    '../vendor/claroline/front-end-bundle/Resources/public/bootstrap/js/scrollspy.js'
+    '../vendor/claroline/front-end-bundle/Resources/public/bootstrap/js/tab.js'
+    '../vendor/claroline/front-end-bundle/Resources/public/bootstrap/js/tooltip.js'
+    '../vendor/claroline/front-end-bundle/Resources/public/bootstrap/js/popover.js'
+    '../vendor/claroline/front-end-bundle/Resources/public/bootstrap/js/affix.js'
+    '../vendor/claroline/core-bundle/Resources/public/js/sidebar.js'
+    '../vendor/claroline/core-bundle/Resources/public/js/topbar.js'
+    '../vendor/claroline/core-bundle/Resources/public/js/checkbox-dropdown.js'
+    %}<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+{% javascripts debug=false  output='vendor/jms/twig-js/twig.js'
+    '../vendor/jms/twig-js/twig.js'
+    %}<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+{% javascripts debug=false filter='twig_js, jsmin' vars=["locale"]
+    "@ClarolineCoreBundle/Resources/views/Resource/breadcrumbs.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Resource/actions.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Resource/filters.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Resource/listElement.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Resource/thumbnail.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Resource/results.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Resource/roles.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Resource/tabs.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Resource/treenode.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Resource/deleteConfirm.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Resource/userRightsRow.html.twig"
+    "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Modal/validationFooter.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Modal/errorFooter.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/confirmAddRole.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeGroupConfirm.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeUserConfirm.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeMessageConfirm.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/restoreMessageConfirm.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/resetPasswordConfirm.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/addUserConfirm.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Tool/workspace/roles/roleUserLabel.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Tool/workspace/roles/roleGroupLabel.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeWorkspacesConfirm.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/noRoleSelected.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Administration/Facet/facetTab.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Administration/Facet/facetTabInnerHtml.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Administration/Facet/facetPane.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Administration/Facet/fieldElement.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Administration/Facet/fieldElementInnerHtml.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Administration/Facet/panelElement.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Administration/Roles/renderRoleRow.html.twig"
+    "@ClarolineCoreBundle/Resources/views/Tool/workspace/parameters/model/modelRow.html.twig"
+    "@ClarolineCoreBundle/Resources/views/Tool/workspace/parameters/model/userRow.html.twig"
+    "@ClarolineCoreBundle/Resources/views/Tool/workspace/parameters/model/groupRow.html.twig"
+    "@ClarolineCoreBundle/Resources/views/Tool/workspace/parameters/model/resourceElement.html.twig"
+    "@ClarolineCoreBundle/Resources/views/Tool/workspace/parameters/model/tabElement.html.twig"
+    %}<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
+{# TODO: remove this when custom js builds are available #}
+{% javascripts debug=false filter='jsmin' output='vendor/jquery/ui/jqueryui.js'
+    'packages/jquery-ui/ui/core.js'
+    'packages/jquery-ui/ui/widget.js'
+    'packages/jquery-ui/ui/mouse.js'
+    'packages/jquery-ui/ui/sortable.js'
+%}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
+
+{% javascripts debug=false
+    'bundles/bazingajstranslation/js/translator.min.js'
+    'js/translations/resource/*.js'
+    'js/translations/home/*.js'
+    'js/translations/platform/*.js'
+    %}<script src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
+<script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+<script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+<script type="text/javascript" src="{{ asset('packages/bootstrap-datepicker/dist/js/bootstrap-datepicker.js') }}"></script>
+{% if 'en' != app.request.locale %}
+    <script type="text/javascript" src="{{ asset('packages/bootstrap-datepicker/js/locales/bootstrap-datepicker.' ~ app.request.locale ~ '.js') }}"></script>
+{% endif %}
+
+<script type="text/javascript" src="{{ asset('packages/underscore/underscore.js') }}"></script>
+<script type="text/javascript" src="{{ asset('packages/backbone/backbone.js') }}"></script>
+
+{% javascripts debug=false filter='jsmin' output='vendor/claroline/js/libraries.js'
+    'bundles/clarolinecore/js/common.js'
+    'bundles/clarolinecore/js/modal.js'
+    'bundles/clarolinecore/js/simplerights.js'
+    'bundles/clarolinecore/js/resource/manager/views/resource/actions.js'
+    'bundles/clarolinecore/js/resource/manager/views/resource/breadcrumbs.js'
+    'bundles/clarolinecore/js/resource/manager/views/resource/confirm.js'
+    'bundles/clarolinecore/js/resource/manager/views/resource/filters.js'
+    'bundles/clarolinecore/js/resource/manager/views/resource/form.js'
+    'bundles/clarolinecore/js/resource/manager/views/resource/rights.js'
+    'bundles/clarolinecore/js/resource/manager/views/resource/nodes.js'
+    'bundles/clarolinecore/js/resource/manager/views/resource/thumbnail.js'
+    'bundles/clarolinecore/js/resource/manager/views/resource/listElement.js'
+    'bundles/clarolinecore/js/resource/manager/views/resources.js'
+    'bundles/clarolinecore/js/resource/manager/views/master.js'
+    'bundles/clarolinecore/js/resource/manager/views/tabs.js'
+    'bundles/clarolinecore/js/resource/manager/views/widgets.js'
+    'bundles/clarolinecore/js/resource/manager/views/treelist.js'
+    'bundles/clarolinecore/js/resource/manager/views/treenode.js'
+    'bundles/clarolinecore/js/resource/manager/views/tabpanes.js'
+    'bundles/clarolinecore/js/resource/manager/router.js'
+    'bundles/clarolinecore/js/resource/manager/server.js'
+    'bundles/clarolinecore/js/resource/manager/manager.js'
+    'bundles/clarolinecore/js/home/home.js'
+    'bundles/clarolinecore/js/locale.js'
+    'bundles/clarolinecore/js/resourceinput.js'
+    'bundles/clarolinecore/js/utilities.js'
+    'bundles/clarolinecore/js/startup.js'
+    'bundles/clarolinecore/js/user/user_picker.js'
+%}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
+{# Angular JS #}
+{% javascripts debug=false filter='jsmin' output='vendor/angular.js'
+    'packages/angular/angular.min.js'
+    'packages/angular-route/angular-route.min.js'
+%}
+{% endjavascripts %}
+
+{# Angular UI #}
+{% javascripts debug=false filter='jsmin' output='vendor/angular-ui.js'
+    'packages/angular-ui-tree/dist/angular-ui-tree.js'
+    'packages/angular-ui-select/dist/select.min.js'
+    'packages/angular-data-table/release/dataTable.helpers.min.js'
+    'packages/angular-breadcrumb/dist/angular-breadcrumb.min.js'
+    'packages/angular-ui-router/release/angular-ui-router.min.js'
+    'packages/angular-sanitize/angular-sanitize.min.js'
+%}
+{% endjavascripts %}
+
+<script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js') }}"></script><!-- this is not duplicated file -->
+<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/tinymce.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/resource_picker_button.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/resource_picker.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/resource_upload_button.js') }}"></script>
+<script type="text/javascript">
+    $('body').tooltip({
+        selector: '[data-toggle=tooltip]'
+    });
+</script>
+{{ render(controller('ClarolineCoreBundle:Layout:injectJavascript', {})) }}
+<script type="text/javascript">
+    $('.maintenance-popover').popover();
+</script>
+
+<script type="text/javascript">
+    $('#hide-email-confirmation').on('click', function(event) {
+        $.ajax({
+            url: Routing.generate('claro_security_validate_email_hide'),
+            type: 'GET',
+            success: function (datas) {
+                $('.alert-email-confirm').hide();
+            }
+        });
+    });
+</script>

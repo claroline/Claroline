@@ -1,0 +1,12 @@
+plugin:
+  has_options: true
+
+  widgets:
+    - name: claroline_testwidget1
+      is_configurable: true
+    - name: claroline_testwidget2
+      is_configurable: true
+    - name: claroline_testwidget3
+      is_configurable: true
+    - name: claroline_testwidget4
+      is_configurable: false

@@ -1,0 +1,46 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'home' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+    macros.breadcrumbs([
+    {
+    'icon': 'fa fa-cog',
+    'name': 'administration'|trans({}, 'platform'),
+    'href': path('claro_admin_index')
+    },
+    {
+    'name': 'parameters'|trans({}, 'platform'),
+    'href': path('claro_admin_index')
+    },
+    {
+    'name': 'session'|trans({}, 'platform'),
+    'href': ''
+    }
+    ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'session'|trans({}, 'platform') }}</h3>
+    </div>
+    <form role="form" class="form-horizontal" action="{{path('claro_admin_session_submit')}}" method="post" {{ form_enctype(form) }} id="form_settings" enctype='multipart/form-data'>
+        <div class="panel-body">
+            {{ form_widget(form) }}
+        </div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            <a href="{{ path('claro_admin_index') }}">
+                <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+            </a>
+        </div>
+    </form>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/administration/session.js') }}"></script>
+{% endblock%}
+

@@ -1,0 +1,7 @@
+plugin:
+  has_options: true
+
+  resources:
+    - name: ResourceX
+      class: Invalid\UnexpectedResourceIcon\Entity\ResourceX
+      icon: icn.gif

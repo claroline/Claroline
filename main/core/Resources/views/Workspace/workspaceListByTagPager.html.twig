@@ -1,0 +1,50 @@
+{% macro renderPager(pager, workspaceTagId) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_workspace_list_pager',
+                'routeParams': {'workspaceTagId': workspaceTagId}
+            }
+        )
+    }}
+{% endmacro %}
+
+{% from _self import renderPager %}
+
+{% set nbPages = relations.getNbPages() %}
+
+{% if nbPages > 1 %}
+    {{ renderPager(relations, workspaceTagId) }}
+{% endif %}
+
+{% for relation in relations.currentPageResults() %}
+    {% set workspace = relation.getWorkspace() %}
+    <a class="list-group-item row-workspace row-workspace-id-{{ workspace.getId() }}"
+        {% set granted = has_access_to_workspace(workspace.getId()) %}
+        {% if granted %}
+            href="{{ path('claro_workspace_open',
+            {'workspaceId': workspace.getId()}) }}"
+            id="link-home-{{ workspace.getId() }}"
+
+        {% endif %}
+    >
+        {% if not granted %}
+            <span class="text-muted">
+        {% endif %}
+
+        <i class="fa fa-book"></i>
+        {{ workspace.getName() }}
+        <span><small>({{ workspace.getCode() }})</small></span>
+
+        {% if not granted %}
+            </span>
+        {% endif %}
+    </a>
+{% endfor %}
+
+{% if nbPages > 1 %}
+    {{ renderPager(relations, workspaceTagId) }}
+{% endif %}

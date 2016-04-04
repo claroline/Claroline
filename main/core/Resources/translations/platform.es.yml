@@ -1,0 +1,1149 @@
+6_parameters_min_msg: 'El archivo csv  debe incluir, al menos, 6 elementos por línea.'
+7_parameters_min_msg: 'El archivo csv  debe incluir, al menos, 7 elementos por línea.'
+accept: Aceptar
+accessible_from: 'Accesible desde'
+accessible_until: accessible_until
+account_created: 'Cuenta creada.'
+account_duration_label: 'Duración de la vida de una cuentas (días)'
+account_general_statistics: 'Estadísticas generales de la cuenta'
+action: Acción
+action_list: 'Lista de acciones'
+actions: Acciones
+actions_per_day: 'Acciones por día'
+activate_account: activate_account
+activate_account_click: activate_account_click
+activate_maintenance_mode: activate_maintenance_mode
+activate_notifications: 'Activar notificaciones'
+activate_pdf_export: 'Activar exportación a PDF'
+activate_personal_workspace_creation: 'Activar la creación de espacios personales.'
+active_widgets: 'Widgets activos'
+activities: Actividades
+activity_already: 'Este recurso ya está en la actividad'
+activity_remove_primary_resource: 'Retirar el recurso principal'
+activity_resource_not_allowed: 'No puede agregar un recurso de este tipo'
+activity_resource_remove: '¿Está seguro que desea remover este recurso de la actividad?'
+activity_rule_configuration_for_auto_evaluation: 'Configuración de la regla para la evaluación automática'
+activity_rule_form_action_explanation: 'La evaluación automática se basa en las acciones realizadas en el recurso asociado.'
+activity_rule_form_activeFrom: 'Realizada  entre el'
+activity_rule_form_activeFrom_explanation: 'Sólo serán tratadas las acciones realizadas después de esta fecha. Todas las acciones anteriores serán tratadas si esta fecha no es definida.'
+activity_rule_form_activeUntil: 'y el'
+activity_rule_form_activeUntil_explanation: 'Sólo serán tratadas las acciones realizadas antes de esta fecha. Todas las acciones posteriores serán tratadas si esta fecha no es definida.'
+activity_rule_form_badge: 'Badge requerido'
+activity_rule_form_badge_explanation: 'El badge que debe ser conseguido para aprobar.'
+activity_rule_form_isResultVisible: 'Mostrar el resultado'
+activity_rule_form_isResultVisible_explanation: 'Permitir al usuario conocer el resultado que debe ser obtenido.'
+activity_rule_form_occurrence_explanation: 'El número de veces que la acción debe ser realizada para aprobar.'
+activity_rule_form_result_explanation: 'El resultado que debe ser obtenido para aprobar.'
+activity_where_classroom: Aula
+activity_who_collaborative: Colaboración
+activity_who_individual: Individual
+actualize: Actualizar
+add: Agregar
+add_a_logo: 'Agregar un logo'
+add_category: 'Agregar categoría'
+add_contact_to_category: 'Añadir el contacto a una categoría'
+add_contacts: 'Agregar contactos'
+add_field_to_facet: 'Agregar un campo a una faceta'
+add_field_to_panel: add_field_to_panel
+add_filter: 'Agregar un filtro'
+add_group: 'Agregar grupo'
+add_group_s_confirm_message: 'Grupos agregados'
+add_groups: 'Agregar grupos'
+add_panel_to_facet: add_panel_to_facet
+add_resource: 'Agregar recurso'
+add_role: 'Agregar rol'
+add_role_to_groups: 'Agregar un campo a %count% grupo(s)'
+add_role_to_users: 'Agregar un campo a %count% usuario(s)'
+add_roles_confirm_message: 'Esta seguro que desea agregar los siguientes roles a los %count% elementos selecionados'
+add_subcategory: 'Agregar subcategoría'
+add_tab: add_tab
+add_tag: 'Agregar etiqueta'
+add_tag_to_workspace: 'Agregar etiqueta a un espacio de trabajo'
+add_user: 'Agregar usuario'
+add_user_s_confirm_message: 'Usuarios agregados'
+add_users: 'Agregar Usuarios'
+add_widget_to_home_tab: 'Agregar un widget a esta pestaña'
+add_workspace: 'Agregar un espacio de trabajo'
+admin: Administrador
+admin_analytics: 'Análisis de la plataforma'
+admin_analytics_no_data: admin_analytics_no_data
+admin_desktop_and_home_tabs_configuration: 'Configuración del escritorio y de las pestañas'
+admin_home_tabs_configuration: 'Configuración de las pestañas de inicio'
+admin_logs: 'Registros de la plataforma'
+admin_third_party_application: 'Aplicaciones terceras'
+admin_workspace_tag_form_name: Nombre
+administration: Administración
+administrative_code: 'Código administrativo'
+administrativeCode: 'Código administrativo'
+advanced: Avanzado
+advanced_parameters: advanced_parameters
+agreeing: 'Al estar de acuerdo para enviar los datos, podrá disfrutar de un mejor servicio que contribuirá a mejorar la plataforma Claroline Connect que usted está instalando.'
+all: Todos
+all_available_workspaces: 'Todos los espacios de trabajo disponibles'
+all_my_contacts: 'Todos mis contactos'
+all_my_workspaces: 'Todos mis espacios de trabajo'
+all_public_personal_workspaces: 'Todos los espacios personales publicos'
+all_public_workspaces: 'Todos los espacios de trabajo públicos'
+all_roles: 'Todos los roles'
+all_visible_users: 'Todos los usuarios visibles'
+all_workspaces: 'Todos los espacios de trabajo'
+already_existing_user: 'El usuario ya existe'
+already_exists: already_exists
+already_exists_in_workspace: already_exists_in_workspace
+an_error_occured_message: 'Ha ocurrido un error. Por favor contacte el administrador.'
+analytics_connections: Conexiones
+analytics_home: Inicio
+analytics_resources: Recursos
+analytics_top: Principal
+anonymous: Anónimo
+answer: Respuesta
+anywhere: Dondequiera
+appearance: Apariencia
+apply: Aplicar
+apply_recursively_to_directories: 'Aplicar cambios a las subcarpetas actuales'
+at_least_one_category_has_to_be_selected: 'Debe seleccionar al menos una categoría'
+attempt: Intento
+attempts: Intentos
+auth_mode: 'Modo de autenticación'
+authentication: Autenticación
+authentication_invalid: 'El origen de autentificación %authentication% de la linea %line% no es valido'
+authentication_source: 'origen de autentificación'
+author: Autor
+automatic: Automático
+available: available
+available_widgets: 'Widgets disponibles'
+available_workspaces: 'Espacios de trabajo disponibles'
+back: Atrás
+back_to_activities_list: 'Volver a la lista de actividades'
+back_to_profile: back_to_profile
+background_color: 'Color del fondo de pantalla'
+backup_reminder: backup_reminder
+bad_request: 'La solicitud no es correcta. Si usted llegó a esta página a través de un enlace interno, por favor informe del problema al administrador de la plataforma.'
+base_informations: base_informations
+best_score: 'Mejor puntaje'
+by: Por
+by_user: 'Por usuarios'
+by_workspace: 'Por espacio de trabajo'
+canCopy: 'Derecho a copiar'
+canCreate: 'Crear %type%'
+canDelete: 'Derecho a borrar'
+canEdit: 'Derecho editar'
+canExport: 'Derecho a exportar'
+canOpen: 'Derecho a abrir'
+can_edit_permission: can_edit_permission
+cancel: Cancelar
+cannot_change_password: 'Usted no puede cambiar su contraseña'
+cannot_delete_unique_manager: 'No puede suprimir el único administrador.'
+cannot_unsubscribe_from_workspace: 'No se puede desinscribir del espacio de trabajo'
+captcha: captcha
+categories: categorías
+categories_organization: 'Organización de categorías'
+categorize: 'Clasificar por categorías'
+category: Categoría
+category_creation: 'Creación de una categoría'
+category_edition: 'Modificación de categoría'
+category_explanations_1: 'Cada categoría debe tener un nombre único.'
+category_explanations_2: 'Seleccione una categoría para la gestión de sus subcategorías.'
+category_root: 'Categorías de la raíz'
+category_structure: 'Estructura de las categorías'
+change_view: 'Cambiar la visualización'
+choose_from_resource_manager: 'O escoja un archivo existente en el administrador de recursos'
+choose_logo: 'Escoger un logo'
+choose_resource_form_type: 'Tipo de recurso'
+claroline_bundle_missing: claroline_bundle_missing
+classify_my_workspaces: 'Clasificar mis espacios de trabajo'
+classify_workspaces: 'Clasificar espacios de trabajo'
+classroom: Aula
+click_to_view_modify_profile: click_to_view_modify_profile
+client_ip: 'Dirección IP del cliente '
+client_name: 'Nombre del cliente '
+close: Cerrar
+closed_account: 'Cuenta cerrada.'
+code: Código
+code_found_at: 'El código %code% ha sido encontrado en las líneas %lines%'
+collaborative: Colaboración
+collaborator: Colaborador
+collapse: collapse
+color: Color
+comment: comment
+communication: Comunicación
+completed: Completado
+configuration: Configuración
+configure: Configurar
+confirm_send_data: 'Sugerimos confirmar su acuerdo para enviar datos:'
+connections: Conexiones
+contact: Contacto
+contacts_per_page: 'Contactos por página'
+content: Contenido
+cookie_lifetime: 'Duración de la cookie'
+copiable: Copiable
+copies: copies
+copy: Copiar
+count_resources: count_resources
+create: Crear
+create_account: 'Crear la cuenta'
+create_and_update: 'Crear y actualizar'
+create_category: 'Crear una categoría'
+create_client: create_client
+create_facet: 'Crear una faceta'
+create_field: 'Crear un campo'
+create_group: 'Crear un grupo'
+create_learning_outcomes: create_learning_outcomes
+create_model: create_model
+create_new_admin_tag: 'Crear una etiqueta de administrador'
+create_new_home_tab: 'Crear una pestaña'
+create_new_tag: 'Crear una etiqueta'
+create_new_user_account: 'Nuevo usuario'
+create_only: 'Crear sólo'
+create_pane: create_pane
+create_resource: 'Crear un nuevo recurso'
+create_role: 'Crear un rol'
+create_security_token: 'Crear un token de seguridad '
+create_subcategory: 'Crear una subcategoría'
+create_user: 'Crear un usuario'
+create_users: 'Crear el usarios'
+create_widget_instance: 'Crear un widget'
+create_workspace: 'Crear un espacio de trabajo'
+created_by: created_by
+creating: creating
+creation: Creación
+creation_date: 'Fecha de creación'
+creator: Creador
+csv_export: 'Csv exportación'
+csv_group_import_infos: 'Informaciones del archivo CSV'
+csv_group_import_infos_format: 'Formato: Lista de nombre de usuario separado por un salto de línea.'
+csv_users_import_infos: 'Informaciones del archivo CSV'
+csv_users_import_infos_format: Formato
+csv_users_import_infos_format_a: 'Las informaciones del usuario deben estar definidas en una sola linea, separados por punto y coma'
+csv_users_import_infos_format_b: 'Tenga en cuenta que no debe agregar un encabezado de archivo'
+csv_users_import_infos_optional: Original
+csv_users_import_infos_required: Obligatorio
+csv_users_import_infos_ws_role_a: 'Los roles predefinidos por la plataforma son "Colaborador" y "Administrador" pero los valores a utilizar en el archivo CSV son "collaborator" y "manager" respectivamente'
+csv_users_import_infos_ws_role_b: 'Si estos roles son modificados, el nuevo nombre introducido debe ser utilizado en el archivo CSV'
+curl_facebook_application_validation_error: 'La extinción Curl no esta presente.'
+current_category: 'Categoría actual'
+cut: Cortar
+dashboard: Dashboard
+data_col: 'Identificador de la columna en la base de datos'
+database: 'Base de datos'
+database_connection_failed: 'Error en la conexión a la base de datos.'
+date: Fecha
+date_agenda_display_format_for_form: MM-dd-yyyy
+date_form_datepicker_format: dd-mm-yyyy
+date_form_datepicker_php: m-d-Y
+date_form_format: dd/MM/yyyy
+date_form_placeholder: dd/mm/aaaa
+date_format: d/m/Y
+date_range.apply: Aplicar
+date_range.clear: Reinicializar
+date_range.custom_range: 'Rango personalizado'
+date_range.day_names: '["Do","Lu","Ma","Mi","Ju","Vi","Sa"]'
+date_range.first_day: '0'
+date_range.format: m/d/Y
+date_range.format.with_hours: 'm/d/Y H:i:s'
+date_range.from: de
+date_range.js_format: DD/MM/YYYY
+date_range.last_month: 'Último mes'
+date_range.last_school_year: 'Último año escolar'
+date_range.last_seven_days: 'Últimos 7 días'
+date_range.last_thirty_days: 'Últimos 30 días'
+date_range.last_week: 'Semana pasada'
+date_range.last_year: 'Año pasado'
+date_range.month_names: '["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"]'
+date_range.separator: '-'
+date_range.this_month: 'Este mes'
+date_range.this_school_year: 'Este año escolar'
+date_range.this_week: 'Esta semana'
+date_range.this_year: 'Este año'
+date_range.to: a
+date_range.today: Hoy
+date_range.week: S
+date_range.yesterday: Ayer
+db_table: 'Tabla de la base de datos'
+decline: Rechazar
+default_language: 'Idioma por defecto'
+default_role: default_role
+deletable: 'Suprimir tabla'
+delete: Suprimir
+delete_category: 'Suprimir categoría'
+delete_category_confirm_message: '¿Realmente deseas eliminar esta categoría?'
+delete_category_confirm_title: 'Supresión de categoría'
+delete_client: delete_client
+delete_client_message: delete_client_message
+delete_contact: 'Suprimir el contacto'
+delete_contact_confirm_message: '¿Está seguro que desea suprimir este contacto?'
+delete_friend_pending: delete_friend_pending
+delete_friend_pending_message: delete_friend_pending_message
+delete_home_tab: 'Suprimir pestaña'
+delete_learning_outcomes: delete_learning_outcomes
+delete_learning_outcomes_confirm_message: delete_learning_outcomes_confirm_message
+delete_platform_friend: delete_platform_friend
+delete_platform_friend_message: delete_platform_friend_message
+description: Descripción
+desktop: Escritorio
+desktop_and_home: 'Escritorio e inicio'
+desktop_home_tab_creation: 'Creación de pestañas en el escritorio'
+desktop_home_tab_edition: 'Modificación de de pestañas en el escritorio'
+desktop_home_tabs: 'Pestañas del escritorio'
+desktop_parameters: 'Parámetros del escritorio'
+desktop_tools: 'Herramientas del escritorio'
+destination: destination
+directory: Carpeta
+display: Mostrar
+display_at_registration: display_at_registration
+display_captcha: 'Monstrar captcha a los anonimos'
+display_options: 'Opciones de visualización'
+displayable_in_workspace_list: visualizable
+distinguished_name: 'Nombre distinguido (DN)'
+does_not_exist: does_not_exist
+does_not_exist_in_workspace: does_not_exist_in_workspace
+done_on: 'Hecho en'
+down: Abajo
+download: Descargar
+downloads: Descargas
+drag_file_here: 'Arrastre el archivo aquí'
+drop_file: 'Arrastre el archivo'
+dsn: dsn
+duration: Duración
+edit: Editar
+edit_facet: 'Editar faceta'
+edit_field: 'Editar campo'
+edit_password: edit_password
+edit_password_error: edit_password_error
+edit_password_error_current: edit_password_error_current
+edit_password_message: edit_password_message
+edit_password_success: edit_password_success
+edit_profile: edit_profile
+edit_profile_error: edit_profile_error
+edit_profile_error_right: edit_profile_error_right
+edit_profile_success: edit_profile_success
+edit_public_profile: edit_public_profile
+edit_public_profile_preferences_error: edit_public_profile_preferences_error
+edit_public_profile_preferences_success: edit_public_profile_preferences_success
+edit_rights_success: 'La modificación de los derechos de acceso a sido realizada con éxito'
+edit_root_directory_icon: 'Modificar el icono del directorio raíz'
+edit_security_token: 'Editar el token de seguridad'
+edit_your_profile_error: edit_your_profile_error
+edit_your_profile_success: edit_your_profile_success
+editable: Editable
+editable_facet_form_explanation: 'El campo "Editable" permite de especificar si el elemento debe ser visible o no por el usuario.'
+email: 'Correo electrónico'
+email_found_at: 'El coreo electrónico %email% fue encontrado en la linea: %lines%'
+empty_file: 'Archivo vacío'
+encryption: Cifrado
+end_date: 'Fecha de cierre'
+end_maintenance: 'Terminar el modo de mantenimiento'
+enter_tag_name_message: 'Por favor ingrese el nombre de la etiqueta'
+entries_per_day: 'Entradas por día'
+error: Error
+error_occured: 'Ha ocurrido un error'
+evaluation: Evaluación
+evaluation-automatic: Automático
+evaluation-manual: Manual
+evaluation_edition: Evaluación
+evaluation_type: 'Tipo de evaluación'
+excel_export: 'Excel exportación'
+expiration_date: expiration_date
+export: Exportar
+exportable: Exportable
+ext_php_missing: ext_php_missing
+external_pdo_database: 'Base de datos externa (PDO)'
+facebook: Facebook
+facebook_application_validation_error: 'Las credenciales proporcionadas no son válidos.'
+facet_management: facet_management
+facets: Facetas
+fail_add_user_group_message: 'Estos usuarios no han podido ser agregados al grupo (control del límite usuarios por función).'
+failed: Fallido
+fast_answer: 'Respuesta rápida'
+fb_client_id: 'Id de la aplicación'
+fb_client_secret: 'secret de la aplicación'
+file: Archivos
+files: Archivos
+filter: Filtro
+filter_actions: 'Acciones de filtrado'
+filters: Filtros
+find_workspaces: 'Espacios de trabajo publicos'
+firstName: Nombre
+first_name: Apellido
+footer: 'Pie de página'
+for_period: 'para el período'
+forgot_password: '¿Ha olvidado su contraseña?'
+form_role: Rol
+friend_platform: friend_platform
+from: De
+from_message: De
+fullscreen_text_editor: 'Usted puede usar la versión de pantalla completa del editor de texto para incluir HTML'
+general: General
+general_parameters: 'Parámetros generales'
+general_parameters_portfolio_url_help: general_parameters_portfolio_url_help
+general_parameters_updated_success: general_parameters_updated_success
+general_tab_form_explanation: 'Este formulario permite especificar que información se ve por rol en el perfil público.'
+generate_token: 'Generar un token aleatorio'
+generate_url: 'Dirección de subscripción publica'
+generate_url_subscription: 'Subscripción de un usuario a un espacio de trabajo'
+generate_url_subscription_anonyme: 'Subscripción de un anónimo a un espacio de trabajo'
+generate_url_subscription_fail: 'Usted debe marcar "activar primero la casilla de inscripción para generar la URL"'
+get_mail_notifications: 'Me gustaría ser notificado por correo electrónico a %adress%.'
+google_tag_validation: 'Etiqueta HTML de validación de Google'
+grant_access: 'Conceder acceso'
+grant_type: grant_type
+graph_draw_area: 'Dibuje un área en el gráfico para ampliar, haga doble clic para cancelar'
+group: Grupos
+group_configuration: 'Configuración de un grupo'
+group_creation: 'Creación de un grupo'
+group_parameter: 'Parámetros de un grupo'
+groups: Grupos
+groups_list: 'Lista de grupos'
+groups_per_page: 'Grupos por página'
+groups_registration_in_workspace: 'Inscripción de un grupo a un espacio de trabajo'
+has_been_created: 'ha sido creado'
+has_been_created_in_workspace: has_been_created_in_workspace
+has_been_deleted: has_been_deleted
+has_been_deleted_in_workspace: has_been_deleted_in_workspace
+has_been_emptied: has_been_emptied
+has_been_put_in_category: 'ha sido agregado en una categoría'
+has_been_registered_in_workspace: has_been_registered_in_workspace
+has_been_registered_to_group: has_been_registered_to_group
+has_been_suscribed_with_role: 'ha sido inscrito en un rol'
+has_been_suscribed_with_role_group: 'ha sido inscrito con un rol'
+has_been_unregistered_from_group: has_been_unregistered_from_group
+has_been_unregistered_from_role: has_been_unregistered_from_role
+has_been_unregistered_from_workspace: has_been_unregistered_from_workspace
+has_been_updated: 'ha sido actualizado'
+has_not_been_imported: 'No se ha importado'
+has_not_been_imported_into_the_group: 'no ha sido importado en un grupo'
+height: Altura
+help_url: 'URL de ayuda'
+hide: Ocultar
+hide_breadcrumb: 'Ocultar hilo de Ariadna'
+hide_tools_menu: 'Ocultar el menú de herramientas (excepto para los administradores)'
+history: Historial
+home: Inicio
+home_lock: 'Bloquear escritorio'
+home_manager: 'Gestionario de inicio'
+home_parameters: Parámetros
+home_tab: Pestañas
+home_tab_bookmark_confirm_message: 'This Home tab will be available in your desktop'
+home_tab_bookmark_confirm_title: 'Pin Home tab on desktop'
+home_tab_bookmark_delete_confirm_message: 'Do you really want to unpin this Home tab from desktop ?'
+home_tab_bookmark_delete_confirm_title: 'Unpin Home tab from desktop'
+home_tab_creation: 'Creación de pestañas'
+home_tab_delete_confirm_message: '¿Está seguro que desea suprimir esta pestaña?'
+home_tab_delete_confirm_title: 'Suprimir pestaña'
+home_tab_edition: 'Editar pestaña'
+home_tab_roles_explanation: home_tab_roles_explanation
+home_tab_widgets: 'Pestañas widgets'
+home_tab_widgets_configuration: 'Configuración de los widgets de una pestaña'
+home_tabs: Pestañas
+home_tabs_configuration: 'Configuración de las pestañas'
+host: Host
+icon: 'Icono de la plataforma'
+id: Id
+id_col: 'Datos de la columna de la base de datos'
+identical_group_name: identical_group_name
+identical_role_name: identical_role_name
+import: Importar
+import_profile_pics: import_profile_pics
+import_profile_pics_explanation: import_profile_pics_explanation
+import_roles: 'Importar roles'
+import_user_file_file: 'importar de un archivo CSV'
+import_users: 'Importar usuarios'
+in_workspace: in_workspace
+incomplete: Incompleto
+indexing: Indexación
+individual: Individual
+informations: Informaciones
+infos_sending_acceptance: 'Aceptación del envío de información '
+infos_sending_bar_msg: 'Haga clic en esta barra para obtener más información '
+infos_sending_has_not_been_accepted: 'El envío de información no fue aceptado '
+initialize: Inicializar
+inscription_mail: 'Inscripción de correo electrónico'
+install: install
+install_update_cant_be_undone: install_update_cant_be_undone
+installed: installed
+instructions: Instrucciones
+internal_error: 'Error interno del servidor. Por favor, póngase en contacto con el administrador.'
+internal_portfolio: internal_portfolio
+invalid_action: invalid_action
+invalid_auth_mode: 'Cifrado no válido'
+invalid_csv_file: 'Archivo CSV no valido'
+invalid_driver: 'Este controlador no es válido'
+invalid_email: 'Este correo electrónico no es valido'
+invalid_encryption: 'Modo de autenticación no válido'
+invalid_file: 'Archivo no valido'
+invalid_form: 'El formulario no es valido'
+invalid_syntax: invalid_syntax
+invalid_transport: 'Transporte no válido'
+invalid_url: 'Esta URL no es válida'
+ip_address: 'Dirección IP'
+irreversible_action: 'Esta acción es irreversible'
+is_already_in_category: 'ya está en la categoría'
+is_already_in_use: is_already_in_use
+is_mail_displayed: is_mail_displayed
+is_not_writable: is_not_writable
+is_not_writable_recursive: is_not_writable_recursive
+jqplot_date_output_format: '%m/%d/%Y'
+keep_me_logged_in: 'Mantenerme conectado'
+language: Idioma
+language_select: 'Seleccione un idioma'
+lastName: Apellido
+last_30_days_activity: 'Actividad de los últimos 30 días'
+last_action: '{1} ultima acción|[1,Inf] ultima %logAmount% acción'
+last_attempt_date: 'Fecha del último intento'
+last_manager_error_message: 'No es posible eliminar todos los administradores.'
+last_name: Apellido
+layout: disposición
+learning_outcomes: learning_outcomes
+learning_outcomes_creation: learning_outcomes_creation
+learning_place: 'Lugar de aprendizaje'
+learning_profil: 'Perfil de aprendizaje'
+leave_this_page: 'Si usted cierra esta página, usted puede perder los cambios.'
+left: Izquierda
+license: Licencia
+limit: Límite
+line_number: 'Linea %line%:'
+line_per_page: 'Resultados por página'
+link: Enlace
+link_outdated: 'Este enlace ya no es valido'
+link_workspace: 'Vincular el espacio de trabajo'
+links: links
+list_groups: 'Lista de grupos'
+list_users: 'Lista de usuarios'
+list_view: list_view
+list_workspaces: 'Lista de espacios de trabajo'
+lock: Bloquear
+locked: Bloqueado
+login: Conexión
+login_failure: 'La conexión ha fallado. Compruebe si su nombre de usuario y la contraseña son correctos.'
+logout: 'Cerrar sesión'
+logs: Rastreo
+logs_error_location: logs_error_location
+mail: Correo
+mail_click: 'Haga clic en este enlace para restablecer tu contraseña'
+mail_config_problem: 'Por favor, póngase en contacto con el administrador de la plataforma para reiniciar su contraseña.'
+mail_invalid: 'Formato de correo electrónico invalido'
+mail_layout: mail_layout
+mail_layout_message_override: 'Usted puede definir aquí el modelo usado cuando se envía un correo'
+mail_login: 'Su identificación de conexión'
+mail_message: 'Usted recibido este mensaje porque usted pidió una nueva contraseña. Por favor, haga clic en el enlace de abajo para restablecerla. Si usted no pidió restablecer su contraseña, por favor ignore este mensaje.'
+mail_not_available: 'La función de correo electrónico no está disponible.'
+mail_not_exist: 'Este correo electrónico no existe'
+mail_sent: 'Un correo electrónico ha sido enviado, Por favor compruebe su bandeja de entrada y o en el Spam'
+maintenance: mantenimiento
+maintenance_mode_enabled: 'El modo mantenimiento esta activo'
+maintenance_mode_message: 'El acceso a la plataforma está desactivado para los usuarios. Usted puede volver a activarlo en la sección de mantenimiento de los parámetros de la administración.'
+make_my_public_profil_visible: make_my_public_profil_visible
+make_public_profile_visible_to_everybody: make_public_profile_visible_to_everybody
+make_public_profile_visible_to_nobody: make_public_profile_visible_to_nobody
+make_public_profile_visible_to_platform_user: make_public_profile_visible_to_platform_user
+manage_public_profile_preferences: manage_public_profile_preferences
+manage_rights: 'Administrar los derechos'
+manage_tools: 'Gestión de las herramientas'
+manager: Administrar
+manual: Manual
+manual_evaluation_explanation: 'Evaluación manual del administrador del espacio de trabajo'
+max_amount_resources: max_amount_resources
+max_attempts: 'Numero de intentos permitidos'
+max_second_duration: 'Tiempo limite establecido (en segundo)'
+max_size_is: 'El tamaño máximo es %size%'
+max_storage_size: max_storage_size
+media_most_viewed: 'Recurso más visto'
+menu_bar: 'Barra de menú'
+menu_bar_configuration: 'Configuración de la barra de menú'
+message: Mensaje
+message_form_content: Contenido
+message_form_object: Asunto
+message_form_to: A
+messages: Mensajes
+messages_confirm_delete: '¿Está seguro que desea suprimir este archivo?'
+messages_confirm_permanent_delete: '¿Está seguro que desea suprimir permanentemente estos mensajes?'
+messages_confirm_restore: '¿Está seguro que desea restaurar estos mensajes?'
+messages_received: 'Mensajes recibidos'
+messages_received_removed: 'Mensajes recibidos suprimidos'
+messages_removed: 'Mensajes suprimidos'
+messages_sent: 'Mensajes enviados'
+messages_sent_removed: 'Mensajes enviados suprimidos'
+meta_tag_paste: 'Pegue aquí la meta etiqueta proporcionada por Google Webmaster'
+method_of_work: 'Modo de trabajo'
+misc: Diverso
+missing_%content%: 'La variable %content% falta en la lengua "%language%".'
+missing_%password%: 'La variable %password% falta en la lengua "%language%".'
+missing_%username%: 'La variable %username% falta en la lengua "%language%".'
+mixed: Mezclado
+mode: Modo
+model: Modelo
+models: models
+month.April: Abril
+month.August: Agosto
+month.December: Diciembre
+month.February: Febrero
+month.January: Enero
+month.July: Julio
+month.June: Junio
+month.March: Marzo
+month.May: Mayo
+month.November: Noviembre
+month.October: Octubre
+month.September: Septiembre
+move: Mover
+my_account: 'Mi cuenta'
+my_agenda: 'Mi agenda'
+my_applications: 'Mis aplicaciones'
+my_contacts: 'Mis contactos'
+my_favourite_workspaces: 'Mis espacios de trabajo favoritos'
+my_notes: 'Mis notas'
+my_portfolio: 'Mi portafolio'
+my_profile: 'Mi perfil'
+my_public_documents: 'Mis documentos públicos'
+my_resources: 'Mis recursos'
+my_workspace: 'Mi espacio de trabajo'
+my_workspaces: 'Mis espacios de trabajo'
+name: Nombre
+name_required: 'nombre obligatorio'
+new: Nuevo
+new_folder_in_current_ws: new_folder_in_current_ws
+new_message: 'Nuevo mensaje'
+new_message_alert: 'Usted tiene %count% nuevo(s) mensaje(s)'
+new_password: 'Nueva contraseña'
+new_role_message: 'Usted a recivido el rol %name%'
+new_role_message_object: 'Sus derechos de acceso en la plataforma han cambiado'
+'no': 'No'
+no_action_found: 'No hay acciones.'
+no_activity_in_workspace: 'No hay actividad'
+no_category: 'No hay categorías'
+no_contact: 'No hay contacto'
+no_email: 'No se ha encontrado el correo electrónico, comprube la ortografía'
+no_filter: 'No hay filtro'
+no_group: 'No hay grupo'
+no_home_tab: 'No hay pestañas'
+no_learning_outcomes: no_learning_outcomes
+no_message: 'No hay mensajes'
+no_model: no_model
+no_resources_in_workspace: no_resources_in_workspace
+no_role_selected_message: no_role_selected_message
+no_search_results: 'Su búsqueda no ha producido ningún resultado.'
+no_tag: 'No hay etiqueta'
+no_user: 'No hay usuarios'
+no_workspace: 'No hay espacio de trabajo'
+non_personal_workspaces_only: 'Solamente los espacios de trabajo no personales'
+none: Ninguno
+not_allowed_message: 'Usted no puede realizar esta acción.'
+not_attempted: 'No intentado'
+not_blank_expected: 'Este valor no debe estar vacío'
+not_managed_by_claroline_repository: 'Estado indisponible'
+note: Note
+notification_activated: 'Notificaciones activas.'
+notification_deactivated: 'Notificaciones desacivadas.'
+notifications: Notificaciones
+number: Numero
+number_of_attempts: 'Número de intentos'
+number_of_attempts_explanation: 'El significado del número de intentos puede variar dependiendo de la actividad. No se trata necesariamente del número de veces que la actividad ha sido realizada.'
+oauth: OAuth
+oauth_client_list: oauth_client_list
+object: Asunto
+occurrence: Ocurrencia
+ok: Ok
+only_for_workspace_creation: 'Sólo en la creación de un espacio de trabajo'
+open: Abrir
+open_resource_when_opening_ws: 'Abrir un recurso en la apertura del espacio de trabajo'
+operation_done: 'Operación terminada.'
+options: Opciones
+or: O
+order: Ordenar
+organize_admin_tags: 'Organizar las etiquetas de administrador'
+organize_categories: 'Organizar categorías'
+organize_private_tags: 'Organizar etiquetas privadas'
+others: others
+over_max_length: 'Este valor es muy largo'
+owner: Propietario
+owner_s: Propietario(s)
+parameters: Parámetros
+parameters_save_error: parameters_save_error
+parameters_save_success: parameters_save_success
+passed: Logrado
+passing_score: 'Puntaje para aprobar'
+password: Contraseña
+password_mismatch: 'Las contraseñas no coinciden'
+password_ok: 'Su contraseña ha cambiado, ahora pude conectarse'
+paste: Pegar
+path: Ruta
+pdf_export: Exportación a PDF
+pending: pending
+pending_friends: pending_friends
+pending_users_list: pending_users_list
+permissions: Permisos
+personal_data: 'No se recuperarán datos personales. Los datos técnicos y estadísticos recogidos serán utilizados sólo en relación con el proyecto Claroline Connect y no serán difundidos de otra manera.'
+personal_workspace: 'Espacio de trabajo personal - '
+personal_workspace_management: personal_workspace_management
+personal_workspace_tools_management: personal_workspace_tools_management
+personal_workspaces_only: 'Solamente los espacios de trabajo personales'
+phone: Teléfono
+picture: picture
+picture_profile: 'Foto de perfil'
+placeholder_first_name_message: 'Esta variable es opcional y será reemplazada por el nombre del autor'
+placeholder_last_name_message: 'Esta variable es opcional y será reemplazada por el apellido del autor'
+placeholder_mail_content_message: 'Esta variable es requerido y será reemplazada por el correo electrónico actual'
+placeholder_platform_mail_content_message: 'Esta variable es requerido y será reemplazada por el correo electrónico actual'
+placeholder_platform_name_message: 'Esta variable es opcional y será reemplazada por el nombre de la plataforma'
+platform_appearance: 'Apariencia de la plataforma'
+platform_expiration_date: 'Fecha de vencimiento de la plataforma'
+platform_icon: platform_icon
+platform_init_date: 'Fecha de activación de la plataforma'
+platform_parameters: 'Parámetros de la plataforma'
+platform_plugins: 'Plugins de la plataforma'
+platform_refresh: platform_refresh
+platform_refresh_confirm: platform_refresh_confirm
+platform_role: 'Roles de la plataforma'
+platform_widgets: 'Widgets de la plataforma'
+please_validate_your_account: please_validate_your_account
+please_wait: 'Por favor espere...'
+port: Puerto
+portfolio_url: portfolio_url
+position: posición
+positive_number_expected: 'Este valor debería ser un número positivo'
+powered_by: 'Desarrollado por'
+preferences: Preferencias
+preview: Prévisualizar
+private: Privado
+profil_edition: profil_edition
+profile_management: 'Gestión de perfiles'
+profile_properties_management: profile_properties_management
+properties: propiedades
+property: property
+public: Publico
+public_profile: public_profile
+public_profile_preferences_allow_mail_sending: public_profile_preferences_allow_mail_sending
+public_profile_preferences_allow_message_sending: public_profile_preferences_allow_message_sending
+public_profile_undiscoverable: public_profile_undiscoverable
+public_profile_undiscoverable_anonymously: public_profile_undiscoverable_anonymously
+public_profile_undiscoverable_anonymously_text: public_profile_undiscoverable_anonymously_text
+public_profile_undiscoverable_text: public_profile_undiscoverable_text
+public_profile_url_tuning_only_once: public_profile_url_tuning_only_once
+public_registration: 'Inscripción publica'
+public_unregistration: 'Desinscripción publica'
+public_url_help: public_url_help
+public_workspace_empty: 'No hay espacios de trabajo públicos.'
+public_workspaces: 'Espacios de trabajo públicos'
+publish: Publicado
+publish_resource: 'Publicar el recurso'
+published: Publicado
+put_back_permissions_after_update: put_back_permissions_after_update
+receiver: Destinatarios
+recent_all_workspace_activities_overview: 'Resumen de todas las actividades recientes en %workspaceName%'
+recursive_dir_action: 'Aplicar en el contenido de la carpeta y la subcarpeta'
+redirect_after_login: 'Redirigir a la ultima página visitada'
+redirect_uri: redirect_uri
+refresh: refresh
+refresh_explanation: refresh_explanation
+register: Inscribirse
+register_to_a_public_workspace: 'Inscribirse a un espacio de trabajo publico'
+register_to_a_workspace: 'Inscribirse a un espacio de trabajo'
+registered: Inscrito
+registered_groups: 'Grupos inscritos'
+registered_user_amount: registered_user_amount
+registered_users: 'Usuarios inscritos'
+registration: Inscripción
+registration_mail_content_override: 'Usted puede definir el contenido del correo electrónico de inscripción aquí'
+registration_to_workspaces: 'Inscripción a un espacio de trabajo'
+registration_validation: registration_validation
+remove: Retirar
+remove_contact_from_category: 'Retirar el contacto de la categoría'
+remove_contact_from_category_confirm_message: '¿Está seguro de querer eliminar este contacto de esta categoría?'
+remove_facet: 'Eliminar una faceta'
+remove_facet_confirm: '¿Está seguro que desea suprimir la faceta %name%?'
+remove_field: 'Eliminar una campo'
+remove_field_confirm: '¿Está seguro que desea suprimir el campo %name%?'
+remove_group_confirm_message: '¿Está seguro que desea suprimir este grupo?'
+remove_group_from_model: remove_group_from_model
+remove_group_from_model_confirm: remove_group_from_model_confirm
+remove_group_s_confirm_message: '¿Está seguro que desea suprimir estos %count% grupos?'
+remove_message_confirm_message: '¿Está seguro que desea suprimir este mensaje?'
+remove_message_s_confirm_message: '¿Está seguro que desea suprimir estos %count% mensajes?'
+remove_model: remove_model
+remove_model_confirm: remove_model_confirm
+remove_resource_from_model: remove_resource_from_model
+remove_resource_from_model_comfirm: remove_resource_from_model_comfirm
+remove_role: 'Eliminiar un rol.'
+remove_role_confirm: '¿Está seguro que desea suprimir el rol %name%?'
+remove_subcategory: 'Suprimir subcategoría'
+remove_user_confirm_message: '¿Está seguro que desea suprimir este usuario?'
+remove_user_from_model: remove_user_from_model
+remove_user_from_model_confirm: remove_user_from_model_confirm
+remove_user_s_confirm_message: '¿Está seguro que desea suprimir estos %count% usuarios?'
+remove_workspace_confirm: remove_workspace_confirm
+remove_workspace_from_category_confirm_message: '¿Está seguro que desea retirar este espacio de trabajo de la categoría?'
+remove_workspace_from_category_confirm_title: 'Suprimir espacio de trabajo de una categoría'
+remove_workspace_from_selection: 'eliminar espacio de trabajo de la selección'
+remove_workspace_role_warning: '¿Está seguro que desea suprimir este rol? Si este rol está asociado a los usuarios, estos perderán sus derechos de acceso proporcionada por dicho rol.'
+remove_workspaces_confirm: remove_workspaces_confirm
+rename: Renombrar
+rename_category: 'Renombrar categoría'
+rename_tool: 'Renombrar herramienta'
+rename_widget_instance: 'Renombrar widget'
+repeat_password: 'Repita la contraseña'
+replace_first_name_display_message: 'va a mostrar el nombre del usuario'
+'replace_last_name_display_message''': 'replace_last_name_display_message'''
+replace_password_display: 'va a mostrar la contraseña'
+replace_platform_name_display_message: 'va a ser remplazado por el nombre de su plataforma'
+replace_username_display_message: 'va a mostrar el nombre de usuario'
+requirement_failed_for_install: requirement_failed_for_install
+requirement_failed_for_update: requirement_failed_for_update
+reset: Reinicializar
+reset_password: 'Reinicializar contraseña'
+reset_password_message: '¿Está seguro que desea reinicializar su contraseña?'
+reset_password_txt: 'Usted pidió la reinicialización de su contraseña. Si usted no la pidió, por favor ignore este mensaje.'
+reset_pwd_form_password: reset_pwd_form_password
+resetting_your_password: 'Reinicialización de su contraseña'
+resource: Recurso
+resource_action_denied_message: 'La acción %action% no puede realizarse en ''%path%'': acceso denegado.'
+resource_creation_denied: 'Usted no tiene el permiso de crear en la carpeta ''%path'': acceso denegado'
+resource_creation_wrong_type: 'Usted no tiene el permiso de crear un tipo %type% en la carpeta ''%path%'': acceso denegado'
+resource_delete: '¿Está seguro que desea suprimir este recurso?'
+resource_limit_exceeded: resource_limit_exceeded
+resource_picker: 'Selector de recursos'
+resource_to_open: 'Recurso a abrir'
+resource_type: 'Tipo de recurso'
+resources: Recursos
+resources_delete: '¿Está seguro que desea suprimir estos recursos?'
+resources_import: 'Importación de recursos'
+resources_most_downloaded: 'Los recursos más descargados'
+resources_rights: 'Derechos de acceso a un recurso'
+resources_rights_management: 'Gestión de acceso a un recurso'
+resources_usage_list: 'Lista de uso de un recurso'
+resources_usage_ratio: 'Relación de uso de un recurso'
+restore: Restaurar
+restore_messages_confirm_message: 'Restaurar mensaje(s)'
+results: Resultados
+results_for_search_on: 'Resultados para la búsqueda de'
+right: Derecha
+rights: 'Derechos de acceso'
+rights_management: 'Gestión de derechos de acceso'
+role: Rol
+role_creation: 'Rol de creación'
+role_edition: 'Rol de edición'
+role_limit_reached: 'Ha llegado al limite de usuarios de tipo %translationKey%.'
+role_list: 'Lista de roles'
+role_name_changed_success: 'El nombre del rola ha sido actualizado con éxito.'
+role_name_type_form_translationKey: Nombre
+roles: Roles
+roles_facet_form_explanation: 'Este formulario permite especificar que roles pueden ver la faceta en el perfil público.'
+roles_fields_form_explanation: 'Este formulario permite especificar que roles pueden ver y editar el campo en el perfil público.'
+roles_management: 'Gestión de roles'
+save: Guardar
+save_as_template: 'Guardar como una plantilla'
+save_workspace_as_template: 'Guardar el espacio de trabajo como una plantilla'
+saved_changes: 'Sus cambios han sido guardados'
+score: Puntaje
+search: Buscar
+search_group: 'Buscar un grupo'
+search_user: 'Buscar un usuario'
+search_workspace: 'Buscar un espacio de trabajo'
+security_token: 'Token de seguridad'
+security_token_delete_confirm_message: '¿Realmente desea eliminar este token de seguridad? '
+security_token_delete_confirm_title: 'Eliminar token de seguridad'
+security_token_list: 'Lista de tokens de seguridad '
+security_tokens_management: 'Gestión de tokens de seguridad'
+see: Ver
+see_all: 'Ver totdos'
+see_more: 'Ver más'
+see_public_profile: see_public_profile
+select_a_filter_type: 'Seleccione un tipo de filtro'
+select_a_group: 'Seleccione un grupo'
+select_a_role: 'Seleccione un role'
+select_a_template: 'Seleccione un modelo'
+select_a_workspace: 'Seleccione un espacio de trabajo'
+select_all: 'Seleccionar todo'
+select_category: 'Seleccionar una categoría'
+select_contacts_title: 'Seleccionar receptores'
+select_groups_for_registration_to_workspace: 'Seleccionar grupos a inscribir'
+select_roles_to_assign: 'Seleccionar roles a asignar'
+select_users_for_registration_to_workspace: 'Seleccionar usuario a inscribir'
+select_users_to_add_to_your_contacts: 'Seleccione los usuarios que desea agregar a sus contactos'
+select_workspace_to_link: 'Seleccione una espacio de trabajo a vincular'
+select_workspaces_for_registration: 'Seleccionar espacio de trabajo a inscribir'
+selected_users: 'Usuarios seleccionados'
+selected_workspaces_for_registration: 'Espacio de trabajo seleccionado para la inscripción'
+selected_workspaces_will_be_put_in_it: 'Los espacios de trabajo seleccionados serán puestos allí'
+self_registration: Auto-Inscripción
+send: Enviar
+send_mail: 'Enviar un correo electrónico'
+send_mail_at_workspace_registration: 'Enviar un email al registrarse un usuario a un espacio de trabajo'
+send_message: 'Enviar un mensaje'
+send_message_to_workspace: 'Enviar un mensaje a los usuarios de un espacio de trabajo.'
+send_message_to_workspace_info: send_message_to_workspace_info
+server: Servidor
+session: Sesión
+session_db_cannot_perform_operations: 'Error en la lectura o escritura de la tabla especificada. Por favor, compruebe que el usuario de base de datos tiene permisos suficientes y que no hay ninguna restricción especial en esta tabla.'
+session_db_id_col_must_be_pk: 'Id de la columna (y solo esta columna) debe ser la llave primaria.'
+session_db_invalid_type_data_col: 'La columna de datos debe ser de tipo "texto" (ejemplo "LONGTEXT").'
+session_db_invalid_type_id_col: 'El Id de la columna debe de ser de tipo "cadena" (ejemplo "VARCHAR").'
+session_db_invalid_type_time_col: 'La columna de tiempo debe ser de tipo "entero" (ejemplo "INT").'
+session_db_no_data_col: 'La columna de datos no existe.'
+session_db_no_id_col: 'La columna Id no existe.'
+session_db_no_table: 'La tabla especificada no existe.'
+session_db_no_time_col: 'La columna de tiempo no existe.'
+session_id: 'Id de la sesión'
+session_lifetime: 'Duración de la sesión'
+settings: Configuración
+sharable: Compartible
+share: Compartir
+show: Show
+show_actions: 'Ver las acciones'
+show_all_my_contacts: 'Mostrar "Todos mis contactos"'
+show_all_visible_users: 'Mostrar "Todos los usuarios visibles"'
+show_as: 'Mostrar como'
+show_as_admin: 'Mostrar como administrador'
+show_as_user: 'Mostrar como usuario'
+show_help_button: 'Mostrar el botón de ayuda'
+show_mail: 'Mostrar la dirección de correo electrónico'
+show_name_in_top_bar: 'Mostrar el nombre de la plataforma en la barra superior'
+show_phone: 'Mostrar el núnero de teléfono '
+show_picture: 'Mostrar la foto'
+show_profile: 'Mostrar perfil'
+show_profile_for_anonymous: 'Profil public access for anonymous.'
+show_register_button_in_login_page: 'Mostrar el botón de inscripción en la página de inicio de sesión'
+show_username: 'Mostrar el nombre de usuario'
+simple: Simple
+size: Tamaño
+start_date: 'Fecha de inicio'
+start_maintenance: 'Lanzar el modo de mantenimiento'
+statistics: Estadísticos
+statistics_data: 'número de espacios de trabajo y usuarios'
+status: Estado
+steal_session: steal_session
+storage_limit_exceeded: storage_limit_exceeded
+storage_type: 'Tipo de almacenamiento'
+storage_used: storage_used
+subcategories: subcategorías
+subscribe_groups: 'Inscribir grupos'
+subscribe_selected_groups: 'Inscribir los grupos seleccionados'
+subscribe_selected_users: 'Inscribir los usuarios seleccionados'
+subscribe_users: 'Inscribir usuarios'
+subscription: Inscripción
+success_rate: 'Tasa de aprobación'
+successfull_workspace_creation: 'El espacio de trabajo %nombre% ha sido creado con éxito.'
+support_email: 'Correo electrónico de soporte'
+switch: Switch
+tab: tab
+tabs: tabs
+tag: Etiqueta
+tag_children_list: 'Lista de hijos de la etiqueta'
+tag_potential_children_list: 'Lista de hijos potenciales de la etiqueta'
+tags_add_remove_children_to: 'Agregar/Suprimir hijos de'
+tags_hierarchy: 'Jerarquía de las etiquetas'
+tags_list: 'Lista de etiquetas'
+tags_management: 'Gestión de etiquetas'
+tags_organization: 'Organización de las etiquetas'
+teacher: Profesor
+technical: Técnicos
+technical_data: 'URL, versión, idioma principal, IP y correo electrónico de soporte'
+term_of_service: 'Condiciones de servicio'
+term_of_service_activation_message: 'Activar las Condiciones del servicio de la plataforma'
+terms_enabled_but_empty: 'Las condiciones de servicio sólo se pueden habilitar si el texto está proporcionado al menos una lengua.'
+terms_of_service_acceptance: 'Acepto los Condiciones del servicio'
+test_repository_activated: test_repository_activated
+text: Texto
+the_following_users_were_not_imported: 'Los siguientes usuarios no han sido importados.'
+the_workspace: 'Espacio de trabajo'
+theme: Tema
+this_page_requires_authentication: 'Esta página requiere autenticación. Por favor, iniciar sesión.'
+this_resource_is_not_published: 'Este recurso no esta publicado'
+time_col: 'Columna de tiempo en la base de datos'
+tinymce_all_buttons: 'Todas las herramientas'
+tips: tips
+title: Título
+to: A
+to_anonymous: 'A usuarios anónimos'
+to_everyone: 'A todos'
+to_message: A
+to_platform_users: 'A usuarios de la plataforma'
+to_publish: Publicar
+to_workspace_members: 'A miembros de este espacio de trabajo'
+today: Hoy
+token: Token
+tool: Herramienta
+tool_admin_disabled: tool_admin_disabled
+tool_can_be_edited: 'La herramienta puede ser modificada'
+tool_cannot_be_edited: 'La herramienta no puede ser modificada'
+tool_is_not_visible_and_cannot_be_opened: 'La herramienta no es visible y no puede ser utilizada'
+tool_is_visible_and_can_be_opened: 'La herramienta es visible y puede ser utilizada'
+tool_parameters: 'Parámetros de la herramienta'
+tool_roles_create_directory: 'La opción "Crear una carpeta" le permite crear una carpeta automáticamente al crear un grupo.'
+tools: Herramientas
+tools_rights_configuration: 'Configuración de acceso de las Herramientas'
+top: Principal
+top_extension: 'Principales tipo de extensiones que tienen más archivos'
+top_media_views: 'Principal media más vista'
+top_resources_downloads: 'Principal recurso más descargado'
+top_resources_views: 'Principal recurso más visto'
+top_users_connections: 'Principales usuarios que más se conectan a la plataforma'
+top_users_workspaces_enrolled: 'Principales usuarios que más tienen acceso a un espacio de trabajo'
+top_users_workspaces_owners: 'Principales usuarios que mas poseen un espacio de trabajo'
+top_workspaces_connections: 'Espacio de trabajo más visitado'
+top_workspaces_resources: 'Principales espacios de trabajo que más tienen recursos'
+total: Total
+total_time: 'Tempo total'
+traffic: Frecuentación
+transport: Transporte
+trash: Basura
+tune: tune
+tune_public_url_error: tune_public_url_error
+tune_public_url_success: tune_public_url_success
+tune_your_public_profile: tune_your_public_profile
+tune_your_public_profile_url: tune_your_public_profile_url
+type: Tipo
+type_s: Tipo(s)
+unable_to_start_gmail: 'La conexión con el servicio SMTP de Gmail no se puede establecer. Por favor, compruebe que las credenciales que ha proporcionado son correctas.'
+unable_to_start_sendmail: 'Sendmail o Postfix no se han podido iniciar. Por favor, compruebe que uno de ellos está instalado y correctamente configurado.'
+unable_to_start_smtp: 'La conexión con el servidor SMTP no puede ser establecida. Por favor, compruebe que los parámetros que ha proporcionado son correctos.'
+unable_to_start_transport: 'El transporte de correo no se puede iniciar. Por favor, compruebe que los parámetros que ha proporcionado son correctos.'
+unauthorized: 'Usted no esta autorizado a ver esta página.'
+unavailable_platform: 'La plataforma no está disponible.'
+unavailable_role: 'El rol %translationKey% no es utilizable'
+uncompress_file: 'Descomprimir el archivo si es posible'
+under_min_length: 'Este valor es muy corto'
+unique_connections: 'Nb único Cnx.'
+unknown: Desconocido
+unpublish: Despublicar
+unpublished: 'No publicado'
+unregister: Desinscribir
+unregister_from_a_workspace: 'Desinscribir de un espacio de trabajo'
+unregister_group_confirm_message: '¿Está seguro que desea desinscribir este grupo?'
+unregister_group_s_confirm_message: '¿Está seguro que desea desinscribir estos %count% grupos?'
+unregister_user_confirm_message: '¿Está seguro que desea desinscribir este usuario?'
+unregister_user_s_confirm_message: '¿Está seguro que desea desinscribir estos %count% usuarios?'
+unregistered: 'No inscritos'
+unregistered_groups: 'Grupos no inscritos'
+unregistered_users: 'Usuarios no inscritos'
+unwritable_file_exception: 'Nose puede escribir en el archivo %path%.'
+up: Arriva
+up_to_date: up_to_date
+update: update
+update_available: update_available
+update_impossible: 'Actualización imposible'
+updated_by: updated_by
+upgrade: Modernización
+upload: Subir
+upload_denied: 'Permiso denegado'
+upload_fail: 'Subir un archivo'
+upload_file: 'Subir un archivo'
+url_invalid: 'El código no es correcto, no intente cambiar la URL'
+use_stable_repo: use_stable_repo
+use_test_repo: use_test_repo
+user: Usuario
+user_accounts: 'Cuentas de usuario'
+user_creation: 'Creación de un usuario'
+user_creation_success: 'El usuario se ha creado con éxito.'
+user_info: user_info
+user_limit_reached: 'Ha llegado al limite de creación de usuarios.'
+user_limit_success_update: 'El número máximo de usuarios por rol ha sido actualizado con éxito.'
+user_limit_too_low: 'Ya hay %total% %role%(s). El limite %newMax% es muy bajo.'
+user_menu: 'Menú usuario'
+user_menu_configuration: 'Configuración del menú usuario'
+user_options_form_desktopBackgroundColor: 'Color de fondo del escritorio'
+user_parameters: 'Parámetros del usuario'
+user_picker: user_picker
+user_profile: user_profile
+user_public_profile_not_visible: user_public_profile_not_visible
+user_removed: 'Usuario suprimido'
+user_selector: 'Selector de usuarios'
+user_visit: 'Visitas del usuario'
+username: 'Nombre de usuario'
+username_and_email_from_two_different_users: username_and_email_from_two_different_users
+username_found_at: 'El nombre de usuario %username% fue encontrado en la linea: %lines%'
+username_or_email: 'Nombre de usuario o correo electrónico'
+users: Usuario
+users_cannot_be_registered_to_group: users_cannot_be_registered_to_group
+users_connected_once: 'Usuarios que se han conectado al menos una vez'
+users_from_group_registration: 'Inscripción de uduarios del grupo'
+users_import: 'Importar usuarios'
+users_list: 'Lista de usuarios'
+users_management: 'Gestión de usuarios'
+users_minimum_requirement_msg: 'La validación de usuarios tiene los siguientes requisitos: 3 caracteres de nombre de usuario, contraseña de mínimo 4 caracteres, correo electrónico válido.'
+users_per_page: 'usuarios por página'
+users_registration_in_workspace: 'Usuarios inscritos en un espacio de trabajo'
+users_visits: 'Conexiones del Usuarios'
+validate: Validar
+validation: Validación
+variable_available_message: 'Usted puede usar las siguientes variables en su formulario'
+verification: 'Repita su contraseña'
+verify_your_password: 'Vuelva a repetir su contraseña'
+view: ver
+view_category_hierarchy: 'Mostrar la jerarquía de la categoría'
+views: Mostrar
+visibility: visibilidad
+visible: Visible
+visible_facet_form_explanation: 'El campo "Visible" permite de especificar si el elemento debe ser visible o no por el usuario.'
+visitor: Visitante
+warning_user_impersonation: 'Usted esta conectado como %user%.'
+warning_workspace_impersonation: 'Usted esta conectado como %role% del espacio de trabajo %workspace%.'
+warnings: warnings
+widget: Widget
+widget_configuration: 'Configuración del Widget'
+widget_creation_roles: 'Roles que pueden crear el widget en su escritorio'
+widget_home_tab_delete_confirm_message: '¿Está seguro que desea retirar este widget de esta pestaña?'
+widget_home_tab_delete_confirm_title: 'Retirar widgets de esta pestaña'
+widget_settings: 'Configuración del Widget'
+widget_visible_actions: 'Escoger una acción visible en el widget'
+widget_workspace_pick: 'Escoger un espacio de trabajo visible en el widget'
+widgets: Widgets
+widgets_configuration: 'Configuración del Widget'
+width: Ancho
+with_role: with_role
+with_tutor: Tutelado
+workspace: 'Espacio de trabajo'
+workspace.create: 'Crear un espacio de trabajo'
+workspace.name_not_blank: 'El nombre del espacio de trabajo es obligatorio.'
+workspace_activity_overview: 'Resumen de las actividades recientes en %workspaceName%'
+workspace_administration: Administración
+workspace_classification: 'Clasificación de espacio de trabajo'
+workspace_code_invalid: 'El código %code% ha sido utilizado en la línea %line%'
+workspace_creator: workspace_creator
+workspace_delete: 'Suprimir el espacio de trabajo'
+workspace_delete_confirm_message: '¿Está seguro que desea suprimir este espacio de trabajo?'
+workspace_delete_confirm_title: 'Confirmar la supresión'
+workspace_delete_success_message: workspace_delete_success_message
+workspace_display: Visualización
+workspace_home_tab_creation: 'Creación de una pestaña en el inicio de un espacio de trabajo'
+workspace_home_tab_edition: 'Edición de una pestaña en el inicio de un espacio de trabajo'
+workspace_home_tabs: 'Pestaña de un espacio de trabajo'
+workspace_import: 'Importar de un espacio de trabajo'
+workspace_list: 'Lista de espacios de trabajo'
+workspace_management: workspace_management
+workspace_management_date_null: workspace_management_date_null
+workspace_max_users: workspace_max_users
+workspace_model_invalid: 'El modelo %model% no existe en la línea %line%'
+workspace_order_tool_edit_form_name: Nombre
+workspace_queue_cancel_confirm_message: '¿Está seguro que desea anular esta demanda de inscripción a este espacio de trabajo?'
+workspace_queue_cancel_confirm_title: 'Anular la demanda de inscripción'
+workspace_registration_confirm_title: '¿Está seguro que desea inscribirse a este espacio de trabajo?'
+workspace_registration_message: 'Usted ha sido inscrito al espacio de trabajo %workspace_name%'
+workspace_registration_message_object: 'Inscripción al espacio de trabajo'
+workspace_remove_from_category_confirm_message: '¿Está seguro que desea retirar este espacio de trabajo de la categoría?'
+workspace_remove_from_category_confirm_title: 'Retirar espacio de trabajo de la categoría'
+workspace_resource: Recursos
+workspace_role_type_form_requireDir: 'Crear una carpeta'
+workspace_role_type_form_translationKey: Nombre
+workspace_tag_form_name: Nombre
+workspace_tag_remove_confirm_message: '¿Está seguro que desea suprimir esta categoría?'
+workspace_tag_remove_confirm_title: 'Suprimir categoría'
+workspace_template_form_name: Nombre
+workspace_tools: Herramientas
+workspace_unregistration_confirm_title: '¿Está seguro que desea desinscribirse de un espacio de trabajo?'
+workspace_user_invalid: 'El usuario %username% no existe en la línea %line%.'
+workspace_welcome: Bienvenido
+workspaces: 'Espacio de trabajo'
+workspaces_included_in_category: 'Espacios de trabajo incluidos en esta categoría'
+workspaces_management: 'Gestión de espacios de trabajo'
+workspaces_per_page: 'Espacios de trabajo por página'
+wrong_captcha: wrong_captcha
+ws_creator: 'Creador de espacios de trabajo'
+ws_most_viewed: 'Espacio de trabajo mas visto'
+'yes': Si
+yesterday_activity: 'Actividades de ayer'
+your_current_url: your_current_url
+your_platform_id: your_platform_id
+your_profile_is_n_complete: your_profile_is_n_complete
+your_username: 'Su nombre de usuario es '
+your_workspace_activity_overview: 'Resumen de todas las actividades recientes de su espacio e trabajo'
+404: 'Page Not found'

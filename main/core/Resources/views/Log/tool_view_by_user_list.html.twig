@@ -1,0 +1,75 @@
+<style type="text/css">
+    #logFilter label {font-weight: normal;}
+    #logFilter div.row {padding-bottom: 3px;}
+    small.logs-csv-link {font-size: 70%;}
+</style>
+<div class="panel-body logs-container">
+    {% if _resource is defined %}
+        {% set csv_path = 'claro_resource_logs_by_user_csv' %}
+        {% include 'ClarolineCoreBundle:Log:workspace_resource_tabs.html.twig' with {'_resource':_resource, 'activeTab': 'user'} %}
+    {% elseif workspace is defined %}
+        {% set csv_path = 'claro_workspace_logs_by_user_csv' %}
+        {% include 'ClarolineCoreBundle:Log:workspace_resource_tabs.html.twig' with {'workspace':workspace, 'activeTab': 'user'} %}
+    {% endif %}
+    <div class="logs-form-container" style="margin: 20px 0;">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <legend>
+                    {{ 'filter_actions'|trans({}, 'platform') }}
+                </legend>
+                <form role="form" id="logFilter" action="{{ filterFormAction }}" method="GET" class="form-inline">
+                    {{ form_errors(filterForm) }}
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            {{ form_label(filterForm.action) }}
+                            {{ form_errors(filterForm.action) }}
+                            <div class="{{ filterForm.action.vars.theme_options.control_width }}">
+                                {{ form_widget(filterForm.action) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            {{ form_label(filterForm.range) }}
+                            {{ form_errors(filterForm.range) }}
+                            <div class="{{ filterForm.range.vars.theme_options.control_width }}">
+                                {{ form_widget(filterForm.range) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            {{ form_label(filterForm.user) }}
+                            {{ form_errors(filterForm.user) }}
+                            <div class="{{ filterForm.user.vars.theme_options.control_width }}">
+                                {{ form_widget(filterForm.user) }}
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    {{ form_rest(filterForm) }}
+                    <input type="submit" value="{{ 'log_filter_actions'|trans({}, 'log') }}" class="btn btn-primary"/>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% if 0 < pager.nbResults %}
+        <legend>
+            {{ 'user_list'|trans({}, 'log') }} <small class="logs-csv-link">[<a href="{{ path(csv_path, routeParams) }}" title="{{ 'download_csv_list'|trans({}, 'log') }}"><i class="fa fa-download"></i> CSV</a>]</small>
+        </legend>
+
+        <div class="text-center">
+            {% if pager.haveToPaginate %}
+                {{ pagination }}
+            {% endif %}
+        </div>
+
+        {% include 'ClarolineCoreBundle:Log:view_user_list.html.twig' with {'logs': pager.currentPageResults, 'isDesktop': isDesktop} %}
+
+        <div class="text-center">
+            {% if pager.haveToPaginate %}
+                {{ pagination }}
+            {% endif %}
+        </div>
+    {% endif %}
+</div>

@@ -1,0 +1,35 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block title %}{{ "workspaces" | trans({}, "platform") | striptags | raw }}{% endblock %}
+
+{% block leftbar %}
+    {% if is_granted('ROLE_USER') %}
+       <div class="list-group menu">
+            <div class="list-group-item disabled">{{ 'workspaces' | trans({}, "platform")}}</div>
+            <a class="list-group-item{{ "/workspaces/" | activeLink  }}" href="{{ path('claro_workspace_list') }}">
+                <i class="fa fa-book"></i>
+                {{ 'all_public_workspaces'|trans({}, 'platform') }}
+            </a>
+            <a class="list-group-item {{ "/workspaces/user" | activeLink  }}" href="{{ path('claro_workspace_by_user') }}">
+                <i class="fa fa-book"></i>
+                {{ 'my_workspaces'|trans({}, 'platform') }}
+            </a>
+            {% if is_granted('ADMIN') %}
+                <a class="list-group-item {{ "/workspaces/new/form" | activeLink  }}" href="{{ path('claro_workspace_creation_form') }}">
+                    <i class="fa fa-pencil"></i>
+                    {{ 'create_workspace'|trans({}, 'platform') }}
+                </a>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="visible-xs">
+        {{ block("leftbar") }}
+    </div>
+    <div class="panel panel-default">
+        {% block section_content %}
+        {% endblock %}
+    </div>
+{% endblock %}

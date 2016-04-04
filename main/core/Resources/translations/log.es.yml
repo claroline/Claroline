@@ -1,0 +1,182 @@
+'Show actions for': 'Mostrar acciones de'
+all: Todos
+'for user': 'Para el usuario'
+group: grupo
+log_add_user: 'Agregar usuario'
+log_change_right: 'Cambiar los derechos'
+log_change_set: 'Lista de modificación de propiedades'
+log_context: 'Contexto:'
+log_copy: copiar
+log_copy_source: 'Copiarla fuente'
+log_create: Crear
+log_default_user: 'Claroline Connect'
+log_delete: Suprimir
+log_doer: Agente
+log_export: Descargar
+log_filter_actions: 'Mostrar acciones'
+log_group-add_user_filter: 'Agregar usuario a un grupo'
+log_group-add_user_sentence: 'Ha agregado %receiver_user% al grupo %receiver_group%'
+log_group-add_user_shortname: Agregando
+log_group-add_user_title: 'Agregar usuario a un grupo'
+log_group-create_filter: 'Creación de un grupo'
+log_group-create_sentence: 'Ha creado el grupo %receiver_group%'
+log_group-create_shortname: Creación
+log_group-create_title: 'Grupo creado'
+log_group-delete_filter: 'Grupo suprimido'
+log_group-delete_sentence: 'ha suprimido el grupo %receiver_group%'
+log_group-delete_shortname: Suprimir
+log_group-delete_title: 'Suprimir grupo'
+log_group-remove_user_filter: 'Suprimiendo usuario del grupo'
+log_group-remove_user_sentence: 'ha suprimido %receiver_user% del grupo %receiver_group%'
+log_group-remove_user_shortname: suprimido
+log_group-remove_user_title: 'Suprimiendo usuario del grupo'
+log_group-update_filter: 'Edición del grupo'
+log_group-update_sentence: 'ha editado el grupo %receiver_group%'
+log_group-update_shortname: Edición
+log_group-update_title: 'Edición del grupo'
+log_has_not_changed: 'No ha cambiado'
+log_hidden_workspace_widget_config_amount: Cantidad
+log_himself: 'El agente a si mismo'
+log_login: Conexión
+log_move: Mover
+log_new_values: 'Nuevos valores'
+log_no_actions_found: 'No se ha encontrado una acción'
+log_old_folder: 'Carpeta padre antigua'
+log_old_values: 'Valores antiguos'
+log_old_workspace: 'Espacio de trabajo antiguo'
+log_owner: Propietario
+log_platform_roles: 'Roles de la plataforma'
+log_read: Leer
+log_receiver_group: 'Acción del grupo'
+log_receiver_user: 'Acciones del usuario'
+log_remove_user: 'Suprimir usuario'
+log_resource: 'Acción de un recurso'
+log_resource-copy_filter: 'Copiar recurso'
+log_resource-copy_sentence: 'ha copiado %resource%'
+log_resource-copy_shortname: copiar
+log_resource-copy_title: 'Copiar recurso'
+log_resource-create_filter: 'Creación de un recurso'
+log_resource-create_sentence: 'ha creado %resource%'
+log_resource-create_shortname: Creación
+log_resource-create_title: 'Creación de un recurso'
+log_resource-custom_action_filter: log_resource-custom_action_filter
+log_resource-delete_filter: 'Supresión de un recurso'
+log_resource-delete_sentence: 'ha suprimido %resource%'
+log_resource-delete_shortname: Suprimir
+log_resource-delete_title: 'Supresión de un recurso'
+log_resource-export_filter: 'Descarga de un recurso'
+log_resource-export_sentence: 'ha descargado %resource%'
+log_resource-export_shortname: Descarga
+log_resource-export_title: 'Descarga de un recurso'
+log_resource-move_filter: 'Recuso movido'
+log_resource-move_sentence: 'ha movido %resource%'
+log_resource-move_shortname: Mover
+log_resource-move_title: 'Recurso movido'
+log_resource-read_filter: 'Recurso abierto'
+log_resource-read_sentence: 'ha abierto %resource%'
+log_resource-read_shortname: Abrir
+log_resource-read_title: 'Recurso abierto'
+log_resource-shortcut_filter: 'Recurso atajo'
+log_resource-shortcut_sentence: 'ha creado un atajo de %resource%'
+log_resource-shortcut_shortname: Atajo
+log_resource-shortcut_title: 'Recurso atajo'
+log_resource-update_filter: 'Modificación de un recurso'
+log_resource-update_rename_filter: 'Renombrar un recurso'
+log_resource-update_rename_sentence: 'ha renombrado %resource%'
+log_resource-update_rename_shortname: Renombrar
+log_resource-update_rename_title: 'Renombrar un recurso'
+log_resource-update_sentence: 'ha modificado %resource%'
+log_resource-update_shortname: Modificar
+log_resource-update_title: 'Modificación de un recurso'
+log_resource_owner: 'Propietario del recurso'
+log_role: 'Acción de un rol'
+log_role-subscribe_group_filter: log_role-subscribe_group_filter
+log_role-subscribe_user_filter: log_role-subscribe_user_filter
+log_see_details: 'Ver detalles'
+log_shortcut: Atajo
+log_subscribe_group: 'Inscripción a un grupo'
+log_subscribe_user: 'Inscripción de un usuario'
+log_unsubscribe_group: 'Desinscribir un grupo'
+log_unsubscribe_user: 'Desinscribir un usuario'
+log_update: Modificar
+log_user-create_filter: 'Crear un usuario'
+log_user-create_sentence: 'ha creado %receiver_user%'
+log_user-create_shortname: Creación
+log_user-create_title: 'Creación de un usuario'
+log_user-delete_filter: 'Supresión de un usuario'
+log_user-delete_sentence: 'ha suprimido el usuario %receiver_user%'
+log_user-delete_shortname: Suprimir
+log_user-delete_title: 'Suprimir un usuario'
+log_user-login_filter: 'Conexión de un usuario'
+log_user-login_sentence: 'Se ha conectado'
+log_user-login_shortname: Conexión
+log_user-login_title: 'Conexión de un usuario'
+log_user-update_filter: 'Modificación de un usuario'
+log_user-update_sentence: 'ha modificado el usuario %receiver_user%'
+log_user-update_shortname: Modificar
+log_user-update_title: 'Modificación de un usuario'
+log_widget_config_amount: 'numero de linea'
+log_widget_config_restrictions: 'Mostrar acción'
+log_workspace-create_filter: 'Creación de un espacio de trabajo'
+log_workspace-create_sentence: 'ha creado el espacio de trabajo %workspace%'
+log_workspace-create_shortname: Creación
+log_workspace-create_title: 'Creación de un espacio de trabajo'
+log_workspace-delete_filter: 'Supresión de un espacio de trabajo'
+log_workspace-delete_sentence: 'ha suprimido el espacio de trabajo %workspace%'
+log_workspace-delete_shortname: Suprimir
+log_workspace-delete_title: 'Supresión de un espacio de trabajo'
+log_workspace-enter_filter: log_workspace-enter_filter
+log_workspace-enter_sentence: 'ha visitado del espacio de trabajo %workspace%'
+log_workspace-enter_shortname: Abrir
+log_workspace-enter_title: 'Visita del espacio de trabajo'
+log_workspace-role-change_right_filter: 'Cambiar los derechos de acceso a un rol de un espacio de trabajo'
+log_workspace-role-change_right_sentence: 'ha modificado los derechos de acceso al rol %role% para %resource%'
+log_workspace-role-change_right_shortname: 'Modificación de derechos de acceso'
+log_workspace-role-change_right_title: 'Cambiar los derechos de acceso a un rol de un espacio de trabajo'
+log_workspace-role-create_filter: 'Crear un rol para un espacio de trabajo'
+log_workspace-role-create_sentence: log_workspace-role-create_sentence
+log_workspace-role-create_shortname: Creación
+log_workspace-role-create_title: 'Crear un rol para un espacio de trabajo'
+log_workspace-role-delete_filter: 'Suprimir un rol de un espacio de trabajo'
+log_workspace-role-delete_sentence: 'ha suprimido un rol en el espacio de trabajo %workspace%'
+log_workspace-role-delete_shortname: Supresión
+log_workspace-role-delete_title: 'Suprimir un rol de un espacio de trabajo'
+log_workspace-role-subscribe_group_filter: 'Inscribir un grupo a un rol de un espacio de trabajo'
+log_workspace-role-subscribe_group_sentence: 'ha inscrito %receiver_group% al rol %role% de %workspace%'
+log_workspace-role-subscribe_group_shortname: Inscripción
+log_workspace-role-subscribe_group_title: 'Inscribir un grupo a un rol de un espacio de trabajo'
+log_workspace-role-subscribe_user_filter: 'Inscribir un usuario a un rol de un espacio de trabajo'
+log_workspace-role-subscribe_user_sentence: 'ha inscrito %receiver_user% al rol %role% en %workspace%'
+log_workspace-role-subscribe_user_shortname: Inscribir
+log_workspace-role-subscribe_user_title: 'Inscribir un usuario a un rol de un espacio de trabajo'
+log_workspace-role-unsubscribe_group_filter: 'Desinscribir un grupo de un rol de un espacio de trabajo'
+log_workspace-role-unsubscribe_group_sentence: 'ha desinscrito %receiver_group% al rol %role% en %workspace%'
+log_workspace-role-unsubscribe_group_shortname: Desinscribir
+log_workspace-role-unsubscribe_group_title: 'Desinscribir un grupo de un rol de un espacio de trabajo'
+log_workspace-role-unsubscribe_user_filter: 'Desinscribir un usuario de un rol de un espacio de trabajo'
+log_workspace-role-unsubscribe_user_sentence: 'ha desinscrito %receiver_user% al rol %role% en %workspace%'
+log_workspace-role-unsubscribe_user_shortname: Desinscribir
+log_workspace-role-unsubscribe_user_title: 'Desinscribir un usuario de un rol de un espacio de trabajo'
+log_workspace-role-update_filter: 'Modificar un rol de un espacio de trabajo'
+log_workspace-role-update_sentence: 'ha modificado un rol del espacio de trabajo %workspace%'
+log_workspace-role-update_shortname: Modificación
+log_workspace-role-update_title: 'Modificar un rol de un espacio de trabajo'
+log_workspace-tool-read_filter: log_workspace-tool-read_filter
+log_workspace-tool-read_sentence: log_workspace-tool-read_sentence
+log_workspace-tool-read_shortname: log_workspace-tool-read_shortname
+log_workspace-tool-read_title: log_workspace-tool-read_title
+log_workspace-update_filter: 'Modificar un espacio de trabajo'
+log_workspace-update_shortname: Modificación
+log_workspace-update_title: 'Modificar un espacio de trabajo'
+log_workspace_read: 'Entradas de espacio de trabajo'
+log_workspace_roles: 'Rol del espacio de trabajo'
+log_workspace_source: 'Fuentes del espacio de trabajo'
+resource: Recurso
+role: Rol
+user: Usuario
+workspace: 'Espacio de trabajo'
+global_tracking: global_tracking
+user_tracking: user_tracking
+user_list: user_list
+actions_per_day_chart: actions_per_day_chart
+download_csv_list: download_csv_list

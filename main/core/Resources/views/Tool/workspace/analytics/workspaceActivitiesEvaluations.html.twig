@@ -1,0 +1,218 @@
+{% extends 'ClarolineCoreBundle:Tool/workspace/analytics:analyticsTabs.html.twig' %}
+
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'dashboard'|trans({}, 'platform'),
+                    'href': path('claro_workspace_analytics_resources', { 'workspaceId': workspace.getId() })
+                },
+                {
+                    'name': 'activities'|trans({}, 'platform'),
+                    'href': ''
+                }
+            ]
+        )
+    }}
+{% endblock %}
+
+{% block analytics %}
+    <div id="activities-evaluations">
+        {% if activities|length > 0 %}
+            <div class="col-md-12">
+                <b>{{ 'success_rate'|trans({}, 'platform') }} :</b>
+            </div>
+            <div class="col-md-4">
+                <div class="progress">
+                    <span class="progress-bar progress-bar-success"
+                        role="progressbar"
+                        aria-valuenow="{{ progress }}"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                        style="width: {{ progress }}%;"
+                    >
+                        {{ progress }} %
+                    </span>
+                </div>
+            </div>
+            <br>
+            <br>
+            <br>
+
+            <div class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <th>
+                            {{ 'title'|trans({}, 'platform') }}
+                        </th>
+                        <th class="center-text">
+                            {{ 'status'|trans({}, 'platform') }}
+                        </th>
+                        <th class="center-text">
+                            {{ 'total_time'|trans({}, 'platform') }}
+                        </th>
+                        <th class="center-text">
+                            {{ 'best_score'|trans({}, 'platform') }}
+                        </th>
+                        <th class="center-text"
+                            data-container="#activities-evaluations"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            title="{{ 'number_of_attempts_explanation'|trans({}, 'platform') }}"
+                        >
+                            {{ 'number_of_attempts'|trans({}, 'platform') }}
+                        </th>
+                        <th class="center-text"
+                            data-container="#activities-evaluations"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            title="{{ 'manual_evaluation_explanation'|trans({}, 'platform') }}"
+                        >
+                            {{ 'evaluation'|trans({}, 'platform') }}
+                        </th>
+                        <th class="center-text">
+                            {{ 'comment'|trans({}, 'platform') }}
+                        </th>
+                    </tr>
+                    {% for activity in activities %}
+                    <tr>
+                        <td>{{ activity.getTitle() }}</td>
+
+                        {% if evaluations[activity.getId()] is defined %}
+                            {% set eval = evaluations[activity.getId()] %}
+                            <td class="center-text">
+                                {% if eval.getStatus() is not empty %}
+                                    {{ eval.getStatus()|trans({}, 'platform') }}
+                                {% elseif (activity.getParameters().getEvaluationType() is not empty) and
+                                    (activity.getParameters().getEvaluationType() == 'automatic')
+                                %}
+                                    {{ 'not_attempted'|trans({}, 'platform') }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="center-text">
+                                {% if eval.getAttemptsDuration() is not empty %}
+                                    {{ eval.getAttemptsDuration() }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="center-text"
+
+                                {% if rulesScores[activity.getId()] is defined %}
+                                    {% set ruleScore = rulesScores[activity.getId()] %}
+                                    data-container="#activities-evaluations"
+                                    data-toggle="tooltip"
+                                    data-placement="top"
+                                    title="{{ 'passing_score'|trans({}, 'platform') ~ ' : ' ~ ruleScore }}"
+                                {% endif %}
+                            >
+                                {% if eval.getNumScore() is not empty %}
+                                    {{ eval.getNumScore() }}
+                                    {% if eval.getScoreMax() is not empty %}
+                                        / {{ eval.getScoreMax() }}
+                                    {% endif %}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="center-text">
+                                {% if eval.getAttemptsCount() is not empty %}
+                                    {% set nbAttempts = eval.getAttemptsCount() %}
+                                    {% if nbAttempts > 0 %}
+                                        <a class="display-past-evaluations-link"
+                                            href="{{ path(
+                                                'claro_workspace_activities_past_evaluations_show',
+                                                {
+                                                    'workspaceId': workspace.getId(),
+                                                    'userId': eval.getUser().getId(),
+                                                    'activityParametersId': eval.getActivityParameters().getId(),
+                                                    'displayType': 'activity'
+                                                }
+                                            ) }}">
+                                            {{ nbAttempts }}
+                                        </a>
+                                    {% else %}
+                                        0
+                                    {% endif %}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="center-text">
+                                {% if eval.getScore() is not empty %}
+                                    {{ eval.getScore() }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="center-text">
+                                {% if eval.getComment() is not empty %}
+                                    <i class="fa fa-comment-o pointer-hand display-comment"
+                                        data-container="#activities-evaluations"
+                                        data-toggle="popover"
+                                        data-placement="left"
+                                        data-content="{{ eval.getComment() }}"
+                                    ></i>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        {% else %}
+                            <td class="center-text">
+                                {{ 'not_attempted'|trans({}, 'platform') }}
+                            </td>
+                            <td class="center-text">-</td>
+                            <td class="center-text">-</td>
+                            <td class="center-text">-</td>
+                            <td class="center-text">-</td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% else %}
+            {{ 'no_activity_in_workspace'|trans({}, 'platform') }}
+        {% endif %}
+    </div>
+
+    <div id="activity-past-evaluations-modal-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 id="form-modal-title">{{ 'attempts' | trans({}, 'platform') }}</h3>
+                </div>
+                <div id="activity-past-evaluations-modal-body" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                        class="btn btn-default"
+                        data-dismiss="modal">
+                        {{ 'close'|trans({}, 'platform') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/clarolinecore/js/tool/workspace/analytics/workspaceActivitiesEvaluations.js') }}">
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style type="text/css">
+        .progress{
+            border-style: solid;
+            border-width: 1px;
+            border-color: #7A7A7A;
+        }
+    </style>
+{% endblock %}

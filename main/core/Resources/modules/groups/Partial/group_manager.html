@@ -1,0 +1,26 @@
+<!-- this could cause double loading -->
+<div>
+    <uib-alert ng-repeat="alert in gc.alerts" type="{{ alert.type }}" close="gc.closeAlert($index)">{{ alert.msg }}</uib-alert>
+    <div>
+        <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-cog"></i> <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="pointer" ng-click="gc.clickNew()"> {{ 'new'|trans:{}:'platform' }} </a></li>
+                <li><a class="pointer" ng-click="gc.clickDelete()"> {{ 'delete'|trans:{}:'platform' }} </a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div align="center" class="action-bar">
+        <div class="panel-body">
+            <clarolinesearch on-search="gc._onSearch" fields="gc.fields"></clarolinesearch>
+        </div>   
+    </div>
+
+    <div>
+        <dtable options="gc.dataTableOptions" rows="gc.groups" class="material" on-page="gc.paging(offset, size)" selected="gc.selected"></dtable>
+    </div>
+
+</div>

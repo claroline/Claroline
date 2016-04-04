@@ -1,0 +1,100 @@
+{% macro renderPager(search, pager, max, order) %}
+    {% if search == '' %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_admin_workspaces_management',
+                    'routeParams': {'max': max, 'order': order}
+                }
+            )
+        }}
+    {% else %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_admin_workspaces_management_search',
+                    'routeParams': {'search': search, 'max': max, 'order': order}
+                }
+            )
+        }}
+    {% endif %}
+{% endmacro %}
+
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'workspaces_management' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_parameters_index')
+            },
+            {
+                'name': 'workspaces_management'|trans({}, 'platform'),
+                'href': path('claro_admin_workspaces_management', {})
+            },
+            {
+            'name': 'workspace_import'|trans({}, 'platform'),
+            'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="well">
+        <p>
+            <b>{{ 'csv_users_import_infos'|trans({}, 'platform') }}</b>
+        </p>
+        <p>{{ 'csv_users_import_infos_format'|trans({}, 'platform') }} :</p>
+        <ul>
+            <li>{{ 'csv_workspaces_import_infos_format_a'|trans({}, 'platform') }}</li>
+            <li>
+                {{ 'order'|trans({}, 'platform') }} :
+                {{ 'name'|trans({}, 'platform') }},
+                {{ 'code'|trans({}, 'platform') }},
+                {{ 'is_visible'|trans({}, 'platform') }},
+                {{ 'self_registration'|trans({}, 'platform') }},
+                {{ 'registration_validation'|trans({}, 'platform') }},
+                {{ 'self_unregistration'|trans({}, 'platform') }},
+                {{ 'creator'|trans({}, 'platform') }},
+                {{ 'model'|trans({}, 'platform') }}
+            </li>
+            <li>{{ 'csv_users_import_infos_format_b'|trans({}, 'platform') }}</li>
+        </ul>
+        <p>{{ 'csv_users_import_infos_required'|trans({}, 'platform') }} :</p>
+        <ul>
+            <li>{{ 'name'|trans({}, 'platform') }}</li>
+            <li>{{ 'code'|trans({}, 'platform') }}</li>
+            <li>{{ 'is_visible'|trans({}, 'platform') }} ({{ '0_or_1'|trans({}, 'platform') }})</li>
+            <li>{{ 'self_registration'|trans({}, 'platform') }} ({{ '0_or_1'|trans({}, 'platform') }})</li>
+            <li>{{ 'registration_validation'|trans({}, 'platform') }} ({{ '0_or_1'|trans({}, 'platform') }})</li>
+            <li>{{ 'self_unregistration'|trans({}, 'platform') }} ({{ '0_or_1'|trans({}, 'platform') }})</li>
+        </ul>
+        <p>{{ 'csv_users_import_infos_optional'|trans({}, 'platform') }} :</p>
+        <ul>
+            <li>{{ 'creator'|trans({}, 'platform') }} ({{ 'username'|trans({}, 'platform') }})</li>
+            <li>{{ 'model'|trans({}, 'platform') }} ({{ 'name'|trans({}, 'platform') }})</li>
+        </ul>
+    </div>
+        <form role="form" class="form-horizontal" id="ws_import_form" action="{{ path('claro_admin_workspace_import', {}) }}" method="post" {{ form_enctype(form) }}>
+        <div class="panel-body">
+            {{ form_widget(form) }}
+        </div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            <a class="btn btn-default" href="{{ path('claro_admin_workspaces_management', {}) }}" role="button">
+                {{ 'cancel'|trans({}, 'platform') }}
+            </a>
+        </div>
+    </form>
+{% endblock %}

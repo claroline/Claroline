@@ -1,0 +1,71 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'appearance' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'appearance'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'platform_appearance'|trans({}, 'platform') }}</h3>
+    </div>
+    <form role="form" class="form-horizontal" action="{{path('claro_admin_parameters_appearance')}}" method="post" {{ form_enctype(form_appearance) }} id="form_settings" enctype='multipart/form-data'>
+        <div class="panel-body">
+            {{ form_widget(form_appearance) }}
+            <div class="form-group row">
+                <div class="col-md-9 col-md-offset-3">
+                    <a href="{{ path("claro_admin_theme_list") }}"><i class="fa fa-pencil-square-o"></i> {{ 'theme_management' | trans({}, 'theme') }}</a>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="control-label col-md-3">{{ "choose_logo" | trans({}, "platform") }}</label>
+                <div class="col-md-9 logos">
+                    <div style="height:80px" class="alert {% if config.getParameter('logo') == "" %}alert-info{% else %}alert-warning{% endif %} content-4 pointer-hand logo" data-logo="null">
+                        <p style="height:35px;font-size:18px">{{ "none" | trans({}, "platform") }}</p>
+                    </div>
+                    {% for logo in logos %}
+                        <div style="height:80px" class="alert {% if config.getParameter('logo') == logo %}alert-info{% else %}alert-warning{% endif %} content-4 pointer-hand logo" data-logo="{{ logo }}">
+                            <button type="button" class="close" aria-hidden="true">&times;</button>
+                            <img src="{{ getAssetPath() ~ '/uploads/logos/' ~ logo }}" height="35" alt="Logo {{loop.index}}">
+                        </div>
+                    {% endfor %}
+                    <input type="hidden" name="selectlogo" {% if config.getParameter('logo') != "" %}value="{{ config.getParameter('logo') }}"{% endif %}>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="control-label col-md-3">{{ "add_a_logo" | trans({}, "platform") }}</label>
+                <div class="col-md-9">
+                    <input type="file" class="form-control" name="logo">
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            <a href="{{ path('claro_admin_index') }}">
+                <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+            </a>
+        </div>
+    </form>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/administration/logos.js') }}"></script>
+{% endblock%}

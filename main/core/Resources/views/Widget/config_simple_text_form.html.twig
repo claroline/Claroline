@@ -1,0 +1,18 @@
+{% form_theme form 'ClarolineCoreBundle::form_theme_no_label.html.twig' %}
+
+<form role="form"
+      class="form-horizontal"
+      action="{{ path('claro_simple_text_update_config', {'widget': config.getId()}) }}"
+      method="post"
+      novalidate
+    >
+    <div class="panel-body">
+        {{ form_widget(form) | replace('/id=[^"]*"', '') | raw }}
+    </div>
+    <div class="panel-footer">
+    <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+        <a href="#">
+            <button type="button" class="btn btn-default claro-widget-form-cancel">{{ 'cancel'|trans({}, 'platform') }}</button>
+        </a>
+    </div>
+</form>

@@ -1,0 +1,255 @@
+{% macro renderPager(search, pager) %}
+    {% if search == '' %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_manage_workspace_tag'
+                }
+            )
+        }}
+    {% else %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_manage_workspace_tag_search',
+                    'routeParams': {'search': search}
+                }
+            )
+        }}
+    {% endif %}
+{% endmacro %}
+
+{% macro showTagHierarchy(tagsList, tagsHierarchy) %}
+    <div>
+        <ul>
+        {% for tag in tagsList %}
+        {% set tagId = tag.getId() %}
+        {% set tagName = tag.getName() %}
+            <li class="hierarchy-tag-parent">
+                <span class="tag-hierarchy-element pointer-hand tag-hierarchy-element-{{ tagId }}"
+                    tag-id="{{ tagId }}"
+                    tag-name="{{ tagName }}"
+                >
+                    {{ tagName }}
+                    <i class="tag-checked-icon fa fa-check hide" style="color: green;"></i>
+                    <input
+                        type="checkbox"
+                        class="tag-chk hide"
+                        value="{{ tagId }}"
+                    >
+                </span>
+                {% if ( tagsHierarchy[tagId] is defined and tagsHierarchy[tagId]|length > 0 ) %}
+                    {{ _self.showTagHierarchy(tagsHierarchy[tagId], tagsHierarchy) }}
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+{% endmacro %}
+
+{% from _self import showTagHierarchy %}
+{% from _self import renderPager %}
+
+{% extends 'ClarolineCoreBundle:WorkspaceTag:layout.html.twig' %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-book',
+                'name': 'workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_list')
+            },
+            {
+                'name': 'my_workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_by_user', {'userId': user.getId()})
+            },
+            {
+                'name': 'workspace_classification'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+
+<div class="panel-heading">
+    <h3 class="panel-title">{{ 'workspace_classification'|trans({}, 'platform') }}</h3>
+</div>
+
+<div id="workspace-organization-div" class="panel-body">
+    <div>
+        {{ macros.flashBox() }}
+    </div>
+
+    {% set nbPages = workspaces.getNbPages() %}
+
+    <button
+        type="button"
+        class="btn btn-default"
+        id="categorize-btn"
+        disabled="disabled"
+    >
+        {{ 'categorize'|trans({}, 'platform') }}
+    </button>
+    <a href="{{ path('claro_workspace_tag_organize') }}">
+        <button type="button" class="btn btn-default">
+            {{ 'organize_categories'|trans({}, 'platform') }}
+        </button>
+    </a>
+    <div class="input-group col-md-4 pull-right">
+        <input class="form-control"
+            type="text"
+            id="search-workspace-txt"
+            placeholder="{{ 'search_workspace'|trans({}, 'platform') }}"
+            value={{ search }}
+        >
+        <span class="input-group-btn">
+            <button
+                class="filter btn btn-default"
+                type="button"
+                id="search-workspace-button"
+            >
+                <i class="fa fa-search"></i>
+            </button>
+        </span>
+    </div>
+    <br>
+    <br>
+    <br>
+
+    {% if nbPages > 1 %}
+        {{ renderPager(search, workspaces) }}
+    {% endif %}
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <tr>
+                <th></th>
+                <th>{{ 'workspace'|trans({}, 'platform') }}</th>
+                <th>{{ 'categories'|trans({}, 'platform') }}</th>
+            </tr>
+            {% if workspaces is empty %}
+                <tr>
+                    <td colspan="3" class="text-center">
+                        {{ 'no_workspace'|trans({}, 'platform') }}
+                    </td>
+                </tr>
+            {% else %}
+                {% for workspace in workspaces %}
+                    <tr class="tag-workspace-category-row">
+                        <td>
+                            <input
+                                type="checkbox"
+                                class="workspace-chk"
+                                value="{{ workspace.getId() }}"
+                            >
+                        </td>
+                        <td class="tag-workspace-col">
+                            {{ workspace.getName() }}
+                            <span><small>({{ workspace.getCode() }})</small></span>
+                        </td>
+                        <td class="tag-category-col">
+                            {% for workspaceTag in workspacesTags[workspace.getId()] %}
+                                <span class="workspace-tag-element"
+                                    workspace-id="{{ workspace.getId() }}"
+                                    workspace-tag-id="{{ workspaceTag.getTag().getId() }}"
+                                >
+                                    <span class="label label-danger">
+                                        {{ workspaceTag.getTag().getName() }}
+                                        &nbsp;
+                                        <i class="fa fa-times-circle remove-tag-button pointer-hand"></i>
+                                    </span>
+                                    &nbsp;
+                                </span>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </table>
+    </div>
+    {% if nbPages > 1 %}
+        {{ renderPager(search, workspaces) }}
+    {% endif %}
+</div>
+
+<div id="remove-workspace-tag-validation-box" class="modal fade" role="dialog" aria-hidden="true">
+    <div class="buttonmodal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>{{ 'remove_workspace_from_category_confirm_title'|trans({}, 'platform') }}</h3>
+            </div>
+            <div class="modal-body">
+                <p>{{ 'remove_workspace_from_category_confirm_message'|trans({}, 'platform') }}</p>
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="submit"
+                    id="remove-workspace-tag-confirm-ok"
+                    class="btn btn-primary"
+                >{{ 'ok'|trans({}, 'platform') }}</button>
+                <button
+                    type="button"
+                    class="btn btn-default"
+                    data-dismiss="modal"
+                >{{ 'cancel'|trans({}, 'platform') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="tag-hierarchy-modal-box" class="modal fade" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>
+                    {{ 'select_category'|trans({}, 'platform') }}
+                </h3>
+                <h4>
+                    {{ 'selected_workspaces_will_be_put_in_it'|trans({}, 'platform') }}
+                </h4>
+            </div>
+            <div id="tag-hierarchy-modal-body" class="modal-body">
+                <div id="one-tag-alert" class="alert alert-danger hide">
+                    {{ 'at_least_one_category_has_to_be_selected'|trans({}, 'platform') }}
+                </div>
+
+                {% if rootTags|length > 0 %}
+                    {{ showTagHierarchy(rootTags, hierarchy) }}
+                {% else %}
+                    {{ 'no_category'|trans({}, 'platform') }}
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+                <button type="submit"
+                    id="category-validate-btn"
+                    class="btn btn-primary"
+                >{{ 'validate'|trans({}, 'platform') }}</button>
+                <button type="button"
+                    class="btn btn-default"
+                    data-dismiss="modal"
+                >{{ 'close'|trans({}, 'platform') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script
+        src="{{ asset('bundles/clarolinecore/js/workspace/manageWorkspaceTag.js') }}"
+        type="text/javascript"
+    >
+    </script>
+{% endblock %}

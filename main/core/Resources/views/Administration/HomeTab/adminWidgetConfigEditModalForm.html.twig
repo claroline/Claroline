@@ -1,0 +1,45 @@
+<div id="modal-admin-widget-config-edit-form"
+     class="modal-dialog"
+     role="dialog"
+     aria-labelledby="modalLabel"
+     aria-hidden="true"
+ >
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3 class="modal-title">
+                {{ 'widget_configuration'|trans({}, 'platform') }}
+            </h3>
+        </div>
+        <div class="modal-body">
+            <form id="admin-widget-config-edit-form"
+                  action="{{
+                      path(
+                          'claro_admin_widget_config_edit',
+                          {
+                              'widgetInstance': widgetInstance.getId(),
+                              'widgetHomeTabConfig': widgetHomeTabConfig.getId(),
+                              'widgetDisplayConfig': widgetDisplayConfig.getId(),
+                              'homeTabType': homeTabType
+                          }
+                      )
+                  }}"
+                  method="POST"
+            >
+                {{ form_widget(instanceForm) }}
+                {{ form_widget(widgetHomeTabConfigForm) }}
+                {{ form_widget(displayConfigForm) }}
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+                {{ 'cancel'|trans({},'platform') }}
+            </button>
+            <button type="submit" id='edit-btn' class="btn btn-primary" type="submit">
+                {{ 'ok'|trans({},'platform') }}
+            </button>
+        </div>
+    </div>
+</div>

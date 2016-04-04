@@ -1,0 +1,22 @@
+{% extends "ClarolineCoreBundle:Administration\\Oauth:clientModalForm.html.twig" %}
+
+{% block header %}
+    {{ 'edit_client'|trans({}, 'platform') }}
+{% endblock %}
+
+{% block form %}
+    <form role="form"
+        class="form-horizontal"
+        action="{{ path('claro_admin_oauth_client_edit', {'client': client.getId() }) }}"
+        method="post" {{ form_enctype(form) }}
+        id="form_client_update"
+    >
+        <div class="modal-body">
+            {{ form_widget(form) }}
+        </div>
+        <div class="modal-footer">
+            <button type="submit" id="submit-panel-creation-form" class="btn btn-primary" aria-hidden="true">{{ 'create'|trans({}, 'platform') }}</button>
+            <div class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ 'cancel'|trans({}, 'platform') }}</div>
+        </div>
+    </form>
+{% endblock %}

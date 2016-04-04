@@ -1,0 +1,26 @@
+actions: Actions
+app_want_access_to_your_account: 'The application ''%clientName%'' would like to connect to your account.'
+application_revoked_error_message: 'An error occured while revoking access for the application ''%application%''.'
+application_revoked_success_message: 'Access for application ''%application%'' revoked with success.'
+authorization_code_grant_type: 'Authorization code'
+client_credentials_grant_type: 'Client credentials'
+grant_types: Grant-types
+name: Name
+no_app_connect_to_platform: 'No application has access to the platform.'
+no_app_connect_to_your_account: 'No application linked to your account.'
+no_grant_types: 'No grant-type.'
+no_redirect_urls: 'No address.'
+oauth_app_ask_access: 'Access demand to the platform'
+oauth_application_acceptance: 'Access confirmation'
+password_grant_type: Password
+refresh_token_grant_type: 'Refresh token'
+revoke: Revoke
+revoke_access: 'Revoke access'
+thrid_party_application_delete_confirm_message: 'Are you sure you want to revoke access to the platform for third-party application <strong>%application%</strong>?'
+thrid_party_application_delete_confirm_title: 'Revoking access to the platform'
+thrid_party_application_delete_error_message: 'An error occured while revoking access to the platform for third-party application ''%application%'''
+thrid_party_application_delete_success_message: 'Access to the platform has been revoked for third-party application ''%application%''.'
+token_grant_type: Token
+urls: Urls
+user_application_revoke_confirm_message: 'Are you sure you want to revoke access to application <strong>%application%</strong>?'
+user_application_revoke_confirm_title: 'Revoke an application'

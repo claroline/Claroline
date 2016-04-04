@@ -1,0 +1,170 @@
+{% macro showTag(tagsList, tagWorkspaces, hierarchy, index, displayable, listworkspacePending) %}
+
+    {% for tag in tagsList %}
+        {% set workspaceTagId = tag.getId() %}
+
+        {% if displayable[workspaceTagId] %}
+            {% set currentIndex = index ~ "-" ~ workspaceTagId %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <a  class="accordion-toggle"
+                        data-toggle="collapse"
+                        href="#collapse-{{ currentIndex }}"
+                    >
+                        <i class="fa fa-align-justify"></i>
+                        {{ tag.getName() }}
+                        <i class="fa fa-chevron-down pull-right"></i>
+                    </a>
+                </div>
+                <div id="collapse-{{ currentIndex }}" class="panel-body collapse">
+
+                    {% if hierarchy[workspaceTagId] is defined and hierarchy[workspaceTagId]|length > 0 %}
+                        {{ _self.showTag(hierarchy[workspaceTagId], tagWorkspaces, hierarchy, currentIndex, displayable, listworkspacePending) }}
+                    {% endif %}
+
+                    {% if tagWorkspaces[workspaceTagId] is defined %}
+                        {% set relations = tagWorkspaces[workspaceTagId] %}
+                        <div id="workspace-list-pager-{{ currentIndex }}" class="workspace-list-pager">
+                            {% include 'ClarolineCoreBundle:Workspace:workspaceListWithSelfRegByTagPager.html.twig' %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+{% from _self import showTag %}
+
+{% extends 'ClarolineCoreBundle:WorkspaceTag:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ "register_to_a_public_workspace" | trans({}, "platform") | striptags | raw }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/workspace/workspace-list.css')}}'>
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-book',
+                'name': 'workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_list')
+            },
+            {
+                'name': 'register_to_a_public_workspace'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'register_to_a_public_workspace'|trans({}, 'platform') }}</h3>
+    </div>
+    
+    <div id="workspace-list-div" class="panel-body">
+        
+        {% if search != '' %}
+            <div class="alert alert-info">
+                {{ 'results_for_search_on'|trans({}, 'platform') }} :
+                "{{ search }}"
+            </div>
+        {% endif %}
+        <div class="row">
+            <div class="input-group col-md-4 pull-right">
+                <input class="form-control"
+                       type="text"
+                       id="search-workspace-input"
+                       placeholder="{{ 'search'|trans({}, 'platform') }}"
+                       value={{search}}
+                >
+                <span class="input-group-btn">
+                    <button class="filter btn btn-default" type="button" id="search-workspace-btn">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
+            </div>
+        </div>
+        <br>
+        
+        {% if workspaces is empty %}
+            {{ 'public_workspace_empty' | trans({}, 'platform') }}
+        {% else %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <a  class="accordion-toggle"
+                        data-toggle="collapse"
+                        data-parent="#accordion-all"
+                        href="#collapse-all"
+                    >
+                        <i class="fa fa-align-justify"></i>
+                        {{ 'all_available_workspaces'|trans({}, 'platform') }}
+                        <i class="fa fa-chevron-down pull-right"></i>
+                    </a>
+                </div>
+                <div id="collapse-all" class="panel-body collapse {% if tags|length == 0 %}in{% endif %}">
+                    {% include 'ClarolineCoreBundle:Workspace:workspaceCompleteListWithSelfRegPager.html.twig' %}
+                </div>
+            </div>
+        {% endif %}
+
+        {{ showTag(rootTags, tagWorkspaces, hierarchy,"0", displayable, listworkspacePending) }}
+    </div>
+
+    <div id="twig-self-registration-user-id" data-user-id="{{ user.getId() }}">
+    </div>
+
+    <div id="confirm-registration-validation-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>{{ 'workspace_registration_confirm_title'|trans({}, 'platform') }}</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="registration-confirm-message">
+                        {{ 'workspace_registration_confirm_message'|trans({}, 'platform') }}
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="registration-confirm-ok" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="confirm-queue-removal-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>{{ 'workspace_queue_cancel_confirm_title'|trans({}, 'platform') }}</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="registration-confirm-message">
+                        {{ 'workspace_queue_cancel_confirm_message'|trans({}, 'platform') }}
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="workspace-queue-cancel-confirm-ok" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script
+        src='{{ asset('bundles/clarolinecore/js/workspace/self_registration.js') }}'
+        type="text/javascript">
+    </script>
+{% endblock %}

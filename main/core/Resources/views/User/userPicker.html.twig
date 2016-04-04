@@ -1,0 +1,165 @@
+<div class="modal-dialog user-picker-modal" id="user-picker-modal-{{ pickerName }}">
+    <div id="user-picker-modal-content" class="modal-content">
+        <div class='modal-header'>
+            <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-hidden="true"
+            >
+                &times;
+            </button>
+            <h4 class="modal-title">
+                {{ pickerTitle|raw }}
+            </h4>
+        </div>
+        <div class='modal-body' id="user-picker-body">
+            <div class="panel-group" role="tablist" aria-multiselectable="true">
+                
+                {% if showFilters == 1 %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <span data-toggle="collapse"
+                                      href="#collapse-filters-box"
+                                      class="pointer-hand"
+                                >
+                                    {{ 'filters'|trans({}, 'platform') }}
+                                </span>
+                                &nbsp;
+                                <span class="badge" id="filters-box-badge">
+                                    0
+                                </span>
+                            </h4>
+                        </div>
+                        <div id="collapse-filters-box"
+                             class="panel-collapse collapse"
+                        >
+                            <div class="panel-body">
+                                <div class="alert alert-warning" id="picker-no-filter-alert">
+                                    {{ 'no_filter'|trans({}, 'platform') }}
+                                </div>
+                                <ul class="col-md-12 list-inline" id="filters-list-box">
+                                </ul>
+                                <hr>
+                                <div id="filter-creation-box">
+                                    <div class="col-md-12 margin-bottom-sm" id="box-filter-level-1">
+                                        <select class="form-control" id="filter-level-1">
+                                            <option value="none">
+                                                --- {{ 'select_a_filter_type'|trans({}, 'platform') }} ---
+                                            </option>
+                                            <option value="group">
+                                                {{ 'group'|trans({}, 'platform') }}
+                                            </option>
+                                            
+                                            {% if isAdmin %}
+                                                <option value="role">
+                                                    {{ 'role'|trans({}, 'platform') }}
+                                                </option>
+                                            {% endif %}
+                                            <option value="workspace">
+                                                {{ 'workspace'|trans({}, 'platform') }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-12 margin-bottom-sm hidden" id="box-filter-level-2">
+                                        <select class="form-control" id="filter-level-2">
+                                            <option value="none">
+                                                {{ 'none'|trans({}, 'platform') }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-12 margin-bottom-sm hidden" id="box-filter-level-3">
+                                        <select class="form-control" id="filter-level-3">
+                                            <option value="none">
+                                                {{ 'none'|trans({}, 'platform') }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-12 hidden" id="box-filter-create-btn">
+                                        <span class="btn btn-primary" id="filter-create-btn">
+                                            {{ 'add_filter'|trans({}, 'platform') }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <span data-toggle="collapse"
+                                  href="#collapse-users-box"
+                                  class="pointer-hand"
+                            >
+                                {{ 'selected_users'|trans({}, 'platform') }}
+                            </span>
+                            &nbsp;
+                            <span class="badge" id="selected-users-box-badge">
+                                0
+                            </span>
+                        </h4>
+                    </div>
+                    <div id="collapse-users-box"
+                         class="panel-collapse collapse"
+                    >
+                        <div class="panel-body">
+                            <div class="alert alert-warning" id="picker-no-user-alert">
+                                {{ 'no_user'|trans({}, 'platform') }}
+                            </div>
+                            <ul class="list-inline" id="selected-users-list-box">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+                
+            <div id="user-picker-users-list">
+                {{ render(
+                    controller(
+                        'ClarolineCoreBundle:User:usersListForUserPicker',
+                        {
+                            'mode': mode,
+                            'showAllUsers': showAllUsers,
+                            'showId': showId,
+                            'showPicture': showPicture,
+                            'showUsername': showUsername,
+                            'showMail': showMail,
+                            'showCode': showCode,
+                            'showGroups': showGroups,
+                            'showPlatformRoles': showPlatformRoles,
+                            'attachName': attachName
+                        },
+                        {
+                            'excludedUserIds': excludedUsersIds,
+                            'forcedUserIds': forcedUsersIds,
+                            'forcedGroupIds': forcedGroupsIds,
+                            'forcedRoleIds': forcedRolesIds,
+                            'forcedWorkspaceIds': forcedWorkspacesIds,
+                            'shownWorkspaceIds': shownWorkspacesIds
+                        }
+                    )) 
+                }}
+            </div>
+        </div>
+            
+        <div class="modal-footer">
+            <button type="button"
+                    id="user-picker-close-modal-btn"
+                    class="btn btn-default"
+                    data-dismiss="modal"
+            >
+                {{ 'cancel'|trans({}, 'platform') }}
+            </button>
+            <button class="btn btn-primary submit">
+                {{ 'ok'|trans({}, 'platform') }}
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="user-picker-main-datas-box"
+     data-selected-users-names="{% for u in selectedUsers %}{{ u.getFirstName() }} {{ u.getLastName() }}{% if showUsername == 1 %} ({{ u.getUsername() }}){% endif %}{% if not loop.last %};;;{% endif %}{% endfor %}"
+</div>

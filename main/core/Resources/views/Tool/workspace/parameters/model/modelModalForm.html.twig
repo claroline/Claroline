@@ -1,0 +1,24 @@
+<div id="model-modal" class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>{{ title|trans({}, 'platform') }} </h3>
+        </div>
+        <form method="post"
+              action="{{ action }}"
+                {{ form_enctype(form) }}
+              class="form-inline"
+              role="form"
+              id="model-form"
+                >
+            <div class="modal-body">
+                <div class="form-group">
+                    {{ form_widget(form) }}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">{{'ok'|trans({}, 'platform') }}</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{'cancel'|trans({}, 'platform') }}</button>
+            </div>
+        </form>
+    </div>
+</div>

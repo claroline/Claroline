@@ -1,0 +1,9 @@
+{% twig_js name="removeUserConfirm" %}
+
+{# no transchoice filter in twigjs... #}
+
+{% if nbItems == 1 %}
+    {{ 'remove_user_confirm_message'|trans({}, 'platform') }}
+{% else %}
+    {{ 'remove_user_s_confirm_message'|trans({'count': nbItems}, 'platform') }}
+{% endif %}

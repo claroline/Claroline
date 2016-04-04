@@ -1,0 +1,417 @@
+{% macro renderPager(pager, search, max, orderedBy, order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName) %}
+    {% if search is empty %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_users_list_for_user_picker',
+                    'routeParams': {
+                        'max': max,
+                        'orderedBy': orderedBy,
+                        'order': order,
+                        'mode': mode,
+                        'showAllUsers': showAllUsers,
+                        'showId': showId,
+                        'showPicture': showPicture,
+                        'showUsername': showUsername,
+                        'showMail': showMail,
+                        'showCode': showCode,
+                        'showGroups': showGroups,
+                        'showPlatformRoles': showPlatformRoles,
+                        'attachName': attachName
+                    }
+                }
+            )
+        }}
+    {% else %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_searched_users_list_for_user_picker',
+                    'routeParams': {
+                        'search': search,
+                        'max': max,
+                        'orderedBy': orderedBy,
+                        'order': order,
+                        'mode': mode,
+                        'showAllUsers': showAllUsers,
+                        'showId': showId,
+                        'showPicture': showPicture,
+                        'showUsername': showUsername,
+                        'showMail': showMail,
+                        'showCode': showCode,
+                        'showGroups': showGroups,
+                        'showPlatformRoles': showPlatformRoles,
+                        'attachName': attachName
+                    }
+                }
+            )
+        }}
+    {% endif %}
+{% endmacro %}
+
+{% macro sortUrl(search, max, orderedBy, order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName) %}
+    {% if order == 'ASC' %}
+        {% set newOrder = 'DESC' %}
+    {% else %}
+        {% set newOrder = 'ASC' %}
+    {% endif %}
+
+    {% if search is empty %}
+        {{
+            path(
+                'claro_users_list_for_user_picker',
+                {
+                    'max': max,
+                    'orderedBy': orderedBy,
+                    'order': newOrder,
+                    'mode': mode,
+                    'showAllUsers': showAllUsers,
+                    'showId': showId,
+                    'showPicture': showPicture,
+                    'showUsername': showUsername,
+                    'showMail': showMail,
+                    'showCode': showCode,
+                    'showGroups': showGroups,
+                    'showPlatformRoles': showPlatformRoles,
+                    'attachName': attachName
+                }
+            )
+        }}
+    {% else %}
+        {{ 
+            path(
+                'claro_searched_users_list_for_user_picker',
+                {
+                    'search': search,
+                    'max': max,
+                    'orderedBy': orderedBy,
+                    'order': newOrder,
+                    'mode': mode,
+                    'showAllUsers': showAllUsers,
+                    'showId': showId,
+                    'showPicture': showPicture,
+                    'showUsername': showUsername,
+                    'showMail': showMail,
+                    'showCode': showCode,
+                    'showGroups': showGroups,
+                    'showPlatformRoles': showPlatformRoles,
+                    'attachName': attachName
+                }
+            ) 
+        }}
+    {% endif %}
+{% endmacro %}
+
+{% from _self import renderPager %}
+{% from _self import sortUrl %}
+{% from "ClarolineCoreBundle::macros.html.twig" import maxResultsSelectBox %}
+        
+{% if search != '' %}
+    <div class="alert alert-info">
+        {{ 'results_for_search_on'|trans({}, 'platform') }} :
+        "{{ search }}"
+    </div>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="input-group margin-bottom-md">
+            <input class="form-control search-user"
+                   type="text"
+                   id="search-user-input"
+                   placeholder="{{ 'search'|trans({}, 'platform') }}"
+                   value="{{ search }}"
+            >
+            <span class="input-group-btn">
+                <button class="filter btn btn-default search-user-btn"
+                        type="button"
+                        id="search-user-btn"
+                >
+                    <i class="fa fa-search"></i>
+                </button>
+            </span>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="input-group margin-bottom-md pull-right">
+            {{ maxResultsSelectBox(max, "$('#max-results-button').trigger('click');", 'users_per_page') }}
+        </div>
+    </div>
+</div>
+
+{% if users.getNbPages() > 1 %}
+    {{ renderPager(users, search, max, orderedBy, order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName) }}
+{% endif %}
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="text-center">
+                    {% if mode == 'multiple' %}
+                        <input type="checkbox" id="picker-all-users-chk">
+                    {% endif %}
+                </th>
+                
+                {% if showId == '1' %}
+                    <th>
+                        <a href="{{ sortUrl(search, max, 'id', order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName)|trim }}">
+                            {{ 'id'|trans({}, 'platform') }}
+                        </a>
+                    </th>
+                {% endif %}
+                
+                {% if showPicture == '1' %}
+                    <th>
+                        <a href="{{ sortUrl(search, max, 'picture', order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName)|trim }}">
+                            {{ 'picture'|trans({}, 'platform') }}
+                        </a>
+                    </th>
+                {% endif %}
+                    
+                {% if attachName == '1' %}
+                    <th>
+                        <a href="{{ sortUrl(search, max, 'lastName', order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName)|trim }}">
+                            {{ 'name'|trans({}, 'platform') }}
+                        </a>
+                    </th>
+                {% else %}
+                    <th>
+                        <a href="{{ sortUrl(search, max, 'firstName', order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName)|trim }}">
+                            {{ 'firstName'|trans({}, 'platform') }}
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{{ sortUrl(search, max, 'lastName', order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName)|trim }}">
+                            {{ 'lastName'|trans({}, 'platform') }}
+                        </a>
+                    </th>
+                {% endif %}
+                
+                {% if showUsername == '1' %}
+                    <th>
+                        <a href="{{ sortUrl(search, max, 'username', order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName)|trim }}">
+                            {{ 'username'|trans({}, 'platform') }}
+                        </a>
+                    </th>
+                {% endif %}
+                
+                {% if showMail == '1' %}
+                    <th>
+                        <a href="{{ sortUrl(search, max, 'mail', order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName)|trim }}">
+                            {{ 'mail'|trans({}, 'platform') }}
+                        </a>
+                    </th>
+                {% endif %}
+                
+                {% if showCode == '1' %}
+                    <th>
+                        <a href="{{ sortUrl(search, max, 'administrativeCode', order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName)|trim }}">
+                            {{ 'code'|trans({}, 'platform') }}
+                        </a>
+                    </th>
+                {% endif %}
+                
+                {% if showGroups == '1' %}
+                    <th>
+                        {{ 'groups'|trans({}, 'platform') }}
+                    </th>
+                {% endif %}
+                
+                {% if showPlatformRoles == '1' or shownWorkspaceIds|length > 0 %}
+                    <th>
+                        {{ 'roles'|trans({}, 'platform') }}
+                    </th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+
+            {% for user in users %}
+                {% set userId = user.getId() %}
+                <tr>
+                    <td class="text-center">
+                        {% if mode == 'multiple' %}
+                            <input type="checkbox"
+                                   class="picker-user-chk"
+                                   id="picker-user-chk-{{ userId }}"
+                                   value="{{ userId }}"
+                                   data-user-first-name="{{ user.getFirstName() }}"
+                                   data-user-last-name="{{ user.getLastName() }}"
+                                   {% if showUsername == '1' %}
+                                       data-user-username="{{ user.getUsername() }}"
+                                   {% endif %}
+                            >
+                        {% elseif mode == 'single' %}
+                            <input type="radio"
+                                   name="picker-user-radio"
+                                   class="picker-user-chk"
+                                   id="picker-user-chk-{{ userId }}"
+                                   value="{{ userId }}"
+                                   data-user-first-name="{{ user.getFirstName() }}"
+                                   data-user-last-name="{{ user.getLastName() }}"
+                                   {% if showUsername == '1' %}
+                                       data-user-username="{{ user.getUsername() }}"
+                                   {% endif %}
+                            >
+                        {% endif %}
+                    </td>
+                
+                    {% if showId == 1 %}
+                        <td>
+                            <span class="picker-user-select pointer-hand"
+                                  data-user-id="{{ userId }}"
+                            >
+                                {{ user.getId() }}
+                            </span>
+                        </td>
+                    {% endif %}
+                
+                    {% if showPicture == 1 %}
+                        <td class="text-center">
+                            <span class="picker-user-select pointer-hand"
+                                  data-user-id="{{ userId }}"
+                            >
+                                {% if user.getPicture() != '' %}
+                                    <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}"
+                                         class="profile_picture img-circle"
+                                         alt="{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}"
+                                         width="50px"
+                                         height="50px"
+                                    >
+                                {% else %}
+                                    <h2 class="profile_picture_placeholder">
+                                        <i class="fa fa-user"></i>
+                                    </h2>
+                                {% endif %}
+                            </span>
+                        </td>
+                    {% endif %}
+                    
+                    {% if attachName == '1' %}
+                        <td>
+                            <span class="picker-user-select pointer-hand"
+                                  data-user-id="{{ userId }}"
+                            >
+                                {{ user.getFirstName() }} {{ user.getLastName() }}
+                            </span>
+                        </td>
+                    {% else %}
+                        <td>
+                            <span class="picker-user-select pointer-hand"
+                                  data-user-id="{{ userId }}"
+                            >
+                                {{ user.getFirstName() }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="picker-user-select pointer-hand"
+                                  data-user-id="{{ userId }}"
+                            >
+                                {{ user.getLastName() }}
+                            </span>
+                        </td>
+                    {% endif %}
+                
+                    {% if showUsername == 1 %}
+                        <td>
+                            <span class="picker-user-select pointer-hand"
+                                  data-user-id="{{ userId }}"
+                            >
+                                {{ user.getUsername() }}
+                            </span>
+                        </td>
+                    {% endif %}
+                
+                    {% if showMail == 1 %}
+                        <td>
+                            <span class="picker-user-select pointer-hand"
+                                  data-user-id="{{ userId }}"
+                            >
+                                {% if profilePreferences['mail'] %}
+                                    {{ user.getMail() }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </span>
+                        </td>
+                    {% endif %}
+
+                    {% if showCode == 1 %}
+                        <td>
+                            <span class="picker-user-select pointer-hand"
+                                  data-user-id="{{ userId }}"
+                            >
+                                {{ user.getAdministrativeCode() }}
+                            </span>
+                        </td>
+                    {% endif %}
+
+                    {% if showGroups == 1 %}
+                        <td>
+                            <span class="picker-user-select pointer-hand"
+                                  data-user-id="{{ userId }}"
+                            >
+                                {% set groups = user.getGroups() %}
+                                {% for group in groups %}
+                                    <span class="label label-info margin-right-sm">
+                                        {{ group.getName() }}
+                                    </span>
+                                {% endfor %}
+                            </span>
+                        </td>
+                    {% endif %}
+
+                    {% if showPlatformRoles == '1' or shownWorkspaceIds|length > 0 %}
+                        <td>
+                            <span class="picker-user-select pointer-hand"
+                                  data-user-id="{{ userId }}"
+                            >
+                                {% set roles = user.getEntityRoles() %}
+                                {% set multiWorkspace = shownWorkspaceIds|length > 1 %}
+                                
+                                {% for role in roles %}
+                                    {% if role.getType() == 1 and showPlatformRoles == '1' %}
+                                        <span class="label label-success margin-right-sm">
+                                            {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                        </span>
+                                    {% elseif role.getType() == 2 and shownWorkspaceIds|length > 0 %}
+                                        {% set workspace = role.getWorkspace() %}
+                                        {% set workspaceId = workspace.getId() %}
+                                
+                                        {% if workspaceId in shownWorkspaceIds %}
+                                            <span class="label label-success margin-right-sm">
+                                                {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                                {% if multiWorkspace %}
+                                                    ({{ workspace.getName() }}
+                                                    [{{ workspace.getCode() }}])
+                                                {% endif %}
+                                            </span>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </span>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if users.getNbPages() > 1 %}
+    {{ renderPager(users, search, max, orderedBy, order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName) }}
+{% endif %}
+
+<div id="user-picker-datas-box"
+     data-search="{{ search }}"
+     data-page="{{ page }}"
+     data-max="{{ max }}"
+     data-ordered-by="{{ orderedBy }}"
+     data-order="{{ order }}"
+</div>

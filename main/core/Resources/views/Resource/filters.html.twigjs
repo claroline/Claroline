@@ -1,0 +1,40 @@
+{% twig_js name="ResourceManagerFilters" %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label>{{ 'type_s'|trans({}, 'platform') }} :</label>
+            {% if resourceTypes|length > 0 %}
+            <select class="node-types form-control" multiple="multiple">
+                {% for resourceType, attributes in resourceTypes %}
+                <option value="{{ resourceType }}">{{ attributes.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-4">
+        <label>{{ 'from'|trans({}, 'platform') }} :</label>
+        <input type="text"
+        class="datepicker
+        date-from form-control"
+        data-date-language="{{ language }}"
+        data-date-clear-btn="true"
+        data-date="0000-00-00"
+        data-date-format="yyyy-mm-dd"/>
+    </div>
+
+    <div class="col-md-4">
+        <label>{{ 'to'|trans({}, 'platform') }} :</label>
+        <input type="text"
+        class="datepicker
+        date-to form-control"
+        data-date-language="{{ language }}"
+        data-date-clear-btn="true"
+        data-date="0000-00-00"
+        data-date-format="yyyy-mm-dd"/>
+    </div>
+
+    <div class="filters-arrow-border"></div>
+    <div class="filters-arrow"></div>
+</div>

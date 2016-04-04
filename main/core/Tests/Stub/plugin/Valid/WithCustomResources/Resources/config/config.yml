@@ -1,0 +1,9 @@
+plugin:
+  has_options: true
+
+  resources:
+    - class: Valid\WithCustomResources\Entity\ResourceA
+      name: ResourceA
+
+    - class: Valid\WithCustomResources\Entity\ResourceB
+      name: ResourceB

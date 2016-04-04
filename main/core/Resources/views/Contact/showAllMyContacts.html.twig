@@ -1,0 +1,172 @@
+{% macro renderPager(pager, max, orderedBy, order) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_contact_show_all_my_contacts',
+                'routeParams': {
+                    'max': max,
+                    'orderedBy': orderedBy,
+                    'order': order
+                }
+            }
+        )
+    }}
+{% endmacro %}
+
+{% macro sortUrl(max, orderedBy, order) %}
+    {% if order == 'ASC' %}
+        {% set newOrder = 'DESC' %}
+    {% else %}
+        {% set newOrder = 'ASC' %}
+    {% endif %}
+
+    {{
+        path(
+            'claro_contact_show_all_my_contacts',
+            {
+                'max': max,
+                'orderedBy': orderedBy,
+                'order': newOrder
+            }
+        )
+    }}
+{% endmacro %}
+
+{% from _self import renderPager %}
+{% from _self import sortUrl %}
+{% from "ClarolineCoreBundle::macros.html.twig" import maxResultsSelectBox %}
+
+{% if contacts|length > 0 %}
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="input-group margin-bottom-md pull-left">
+                {% if contacts.getNbPages() > 1 %}
+                    {{ renderPager(contacts, max, orderedBy, order) }}
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="input-group pull-right" style="margin: 20px 0">
+                {{ maxResultsSelectBox(max, "$('#max-results-button').trigger('click');", 'contacts_per_page') }}
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table">
+            <tr>
+                {% if options['show_picture'] is not defined or options['show_picture'] %}
+                    <th>{{ 'picture'|trans({}, 'platform') }}</th>
+                {% endif %}
+                <th>
+                    <a href="{{ sortUrl(max, 'firstName', order)|trim }}">
+                        {{ 'firstName'|trans({}, 'platform') }}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ sortUrl(max, 'lastName', order)|trim }}">
+                        {{ 'lastName'|trans({}, 'platform') }}
+                    </a>
+                </th>
+
+                {% if options['show_username'] is not defined or options['show_username'] %}
+                    <th>
+                        <a href="{{ sortUrl(max, 'username', order)|trim }}">
+                            {{ 'username'|trans({}, 'platform') }}
+                        </a>
+                    </th>
+                {% endif %}
+
+                {% if options['show_mail'] is not defined or options['show_mail'] %}
+                    <th>
+                        <a href="{{ sortUrl(max, 'mail', order)|trim }}">
+                            {{ 'mail'|trans({}, 'platform') }}
+                        </a>
+                    </th>
+                {% endif %}
+
+                {% if options['show_phone'] is not defined or options['show_phone'] %}
+                    <th>
+                        <a href="{{ sortUrl(max, 'phone', order)|trim }}">
+                            {{ 'phone'|trans({}, 'platform') }}
+                        </a>
+                    </th>
+                {% endif %}
+                <th>
+                    {{ 'actions'|trans({}, 'platform') }}
+                </th>
+            </tr>
+
+            {% for contact in contacts %}
+                <tr class="contact-row-{{ contact.getId() }}">
+                    {% if options['show_picture'] is not defined or options['show_picture'] %}
+                        <td>
+                            {% if contact.getPicture() != '' %}
+                                <img src="{{ asset('uploads/pictures/') ~  contact.getPicture() }}"
+                                     class="profile_picture img-circle"
+                                     alt="{{ contact.getLastName() ~ ' ' ~ contact.getFirstName() }}"
+                                     width="50px"
+                                     height="50px"
+                                >
+                            {% else %}
+                                <h1 class="profile_picture_placeholder">
+                                    <i class="fa fa-user"></i>
+                                </h1>
+                            {% endif %}
+                        </td>
+                    {% endif %}
+                    <td>{{ contact.getFirstName() }}</td>
+                    <td>{{ contact.getLastName() }}</td>
+
+                    {% if options['show_username'] is not defined or options['show_username'] %}
+                        <td>{{ contact.getUsername() }}</td>
+                    {% endif %}
+
+                    {% if options['show_mail'] is not defined or options['show_mail'] %}
+                        <td>{{ contact.getMail() }}</td>
+                    {% endif %}
+
+                    {% if options['show_phone'] is not defined or options['show_phone'] %}
+                        <td>{{ contact.getPhone() }}</td>
+                    {% endif %}
+                    <td>
+                        <div class="btn-toolbar">
+                            <div class="btn-group">
+                                <span class="btn btn-default add-contact-to-category "
+                                      data-contact-id="{{ contact.getId() }}"
+                                      data-toggle="tooltip"
+                                      data-placement="left"
+                                      title="{{ 'add_contact_to_category'|trans({}, 'platform') }}"
+                                >
+                                    <i class="fa fa-bars"></i>
+                                </span>
+                                <span class="btn btn-danger delete-contact"
+                                      data-contact-id="{{ contact.getId() }}"
+                                      data-toggle="tooltip"
+                                      data-placement="left"
+                                      title="{{ 'delete_contact'|trans({}, 'platform') }}"
+                                >
+                                    <i class="fa fa-times-circle"></i>
+                                </span>
+                            </div>
+                            {% set menu = knp_menu_get('ClarolineCoreBundle:Builder:contactActionsMenu', [], {'user': contact} ) %}
+                            {{ knp_menu_render(menu, {}, 'contact_additional_actions') }}
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    {% if contacts.getNbPages() > 1 %}
+        {{ renderPager(contacts, max, orderedBy, order) }}
+    {% endif %}
+{% else %}
+    <div class="alert alert-warning">
+        {{ 'no_contact'|trans({}, 'platform') }}
+    </div>
+{% endif %}

@@ -1,0 +1,23 @@
+activity: Activité
+administrate: Administrer
+compose: Composer
+copy: Copier
+delete: Supprimer
+directory: Répertoire
+download: Télécharger
+edit: Editer
+edit-properties: 'Editer les propriétés'
+edit-rights: 'Editer les droits'
+empty: Vide
+export: Exporter
+file: Fichier
+insert: Insérer
+open: Ouvrir
+open-tracking: 'Voir le suivi de l''objet'
+rename: Renommer
+resource_copy_warning: 'Une erreur est survenue lors de la copie de la ressource <%resourceName%>'
+resource_name_form_name: 'Nom de la ressource'
+resource_shortcut: Raccourcis
+text: Texte
+update_file: 'Mettre à jour le fichier'
+write: Ecrire

@@ -1,0 +1,36 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4>{{ "upload" | trans({}, "platform")}}</h4>
+        </div>
+        <div class="modal-body text-center">
+            <p>{{ 'upload_file' | trans({}, 'platform') }}:</p>
+            <form role="form" enctype="multipart/form-data">
+                <input
+                    type="file"
+                    name='file_form[file]'
+                    id='file_form_file'
+                    style='position:absolute;top:-1000px;'
+                >
+                {% if form.destination is defined %} {{ form_row(form.destination) }} {% endif %}
+            </form>
+            <button type="button" class="btn btn-primary btn-lg filePicker">
+                <i class='fa fa-file'></i>
+            </button>
+            <div class="progress margin-top-md hide">
+                <div role="progressbar" class="progress-bar" data-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <span class="sr-only">0%</span>
+                </div>
+            </div>
+            <hr>
+            <p>{{ 'choose_from_resource_manager' | trans({}, 'platform') }}:</p>
+            <button type="button" data-dismiss="modal" class="btn btn-primary btn-lg resourcePicker">
+                <i class="fa fa-folder-open"></i>
+            </button>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{{ "cancel" | trans({}, "platform")}}</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,123 @@
+{% macro showTag(tagsList, tagWorkspaces, hierarchy, index, displayable) %}
+{% for tag in tagsList %}
+    {% set workspaceTagId = tag.getId() %}
+    {% if displayable[workspaceTagId] %}
+        {% set currentIndex = index ~ "-" ~ workspaceTagId %}
+        {% set workspace = tag.getWorkspace() %}
+        {% if workspace is not null %}
+            {% set workspaceId = workspace.getId() %}
+            {% set workspaceName = workspace.getName() %}
+            {% set workspaceCode = workspace.getCode() %}
+        {% endif %}
+        <div class="panel panel-default panel-root" current-index="{{ currentIndex }}">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <a  class="accordion-toggle"
+                        data-toggle="collapse"
+                        href="#collapse-{{ currentIndex }}"
+                    >
+                        <i class="fa fa-align-justify"></i>
+                        {{ tag.getName() }}
+                        {% if workspace is not null %}
+                            <span style="color:#B29EA1">
+                                [
+                                <i class="fa fa-book"></i>
+                                {{ workspaceName }}
+                                <small>({{ workspaceCode }})</small>
+                                ]
+                            </span>
+                        {% endif %}
+                    <input
+                        class="chk-workspaces-{{currentIndex}} accordion-checkbox chk-workspace
+                            {% if workspace is not null %}workspace-linked{% endif %} pull-right"
+                        type="checkbox"
+                        value="{{currentIndex}}"
+                        {% if workspace is not null %}workspace-id="{{ workspaceId }}"{% endif %}
+                    >
+                 </div>
+                </a>
+            </div>
+            <div id="collapse-{{ currentIndex }}" class="panel-body collapse">
+                {% if (hierarchy[workspaceTagId] is defined and hierarchy[workspaceTagId]|length > 0 ) %}
+                    {{ _self.showTag(hierarchy[workspaceTagId], tagWorkspaces, hierarchy, currentIndex, displayable) }}
+                {% endif %}
+                {% if (tagWorkspaces[workspaceTagId] is defined and tagWorkspaces[workspaceTagId]|length > 0) %}
+                    {% set relations = tagWorkspaces[workspaceTagId] %}
+                    <div id="workspace-list-pager-{{ currentIndex }}" class="workspace-list-pager">
+                        {% include 'ClarolineCoreBundle:Workspace:workspaceListByTagRegistrationPager.html.twig' %}
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}
+{% endmacro %}
+
+{% from _self import showTag %}
+
+<div class="panel-group">
+    
+    {% if nonPersonalWs|length == 0 and personalWs|length == 0  %}
+        <div class="alert alert-warning">
+            {{ 'no_workspace'|trans({}, 'platform') }}
+        </div>
+    {% else %}
+    
+        {% if nonPersonalWs|length > 0 %}
+            <div class="panel panel-default" id="accordion-all-non-personal">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <a  class="accordion-toggle"
+                            data-toggle="collapse"
+                            data-parent="#accordion-all-non-personal"
+                            href="#collapse-all-non-personal"
+                        >
+                            <i class="fa fa-align-justify"></i>
+                            {{ 'all_public_workspaces'|trans({}, 'platform') }}
+                            <input
+                                class="accordion-checkbox pull-right"
+                                type="checkbox"
+                                value="all-non-personal"
+                            >
+                        </a>
+                    </div>
+                </div>
+                <div id="collapse-all-non-personal" class="collapse {% if tags|length == 0 %}in{% endif %}">
+                    <div id="workspace-list-pager-all" class="workspace-list-pager">
+                        {% include 'ClarolineCoreBundle:Workspace:nonPersonalWorkspacesListRegistrationPager.html.twig' %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if personalWs|length > 0 %}
+            <div class="panel panel-default" id="accordion-all-personal">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <a  class="accordion-toggle"
+                            data-toggle="collapse"
+                            data-parent="#accordion-all-personal"
+                            href="#collapse-all-personal"
+                        >
+                            <i class="fa fa-align-justify"></i>
+                            {{ 'all_public_personal_workspaces'|trans({}, 'platform') }}
+                            <input
+                                class="accordion-checkbox pull-right"
+                                type="checkbox"
+                                value="all-personal"
+                            >
+                        </a>
+                    </div>
+                </div>
+                <div id="collapse-all-personal" class="collapse {% if tags|length == 0 %}in{% endif %}">
+                    <div id="workspace-list-pager-all" class="workspace-list-pager">
+                        {% include 'ClarolineCoreBundle:Workspace:personalWorkspacesListRegistrationPager.html.twig' %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+    
+    {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable) }}
+</div>

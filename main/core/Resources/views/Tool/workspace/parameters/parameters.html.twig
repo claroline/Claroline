@@ -1,0 +1,49 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ "parameters" | trans({}, "platform") | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'parameters'|trans({}, 'platform'),
+                    'href': ''
+                }
+            ]
+        )
+    }}
+{% endblock %}
+{% block section_content %}
+
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'parameters'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="list-group">
+        <a class="list-group-item" href="{{ path('claro_workspace_edit_form', {'workspace': workspace.getId()}) }}">
+            {{ 'general'|trans({}, 'platform') }}
+        </a>
+        <a class="list-group-item" href="{{ path('claro_workspace_tools_roles', {'workspace': workspace.getId()}) }}">
+            {{ 'tools'|trans({}, 'platform') }}
+        </a>
+        <a class="list-group-item" href="{{ path('claro_workspace_model_index', {'workspace': workspace.getId()}) }}">
+            {{ 'models'|trans({}, 'platform') }}
+        </a>
+        {% for tool in tools %}
+            {% set displayTool = true %}
+            {% if tool.getName() == 'resource_manager' and canOpenResRights == false %}
+                {% set displayTool = false %}
+            {% endif %}
+
+            {% if displayTool == true %}
+                <a class="list-group-item" href="{{ path('claro_workspace_tool_config', {'tool': tool.getId(), 'workspace': workspace.getId()}) }}">
+                    {{ tool.getName()|trans({}, 'tools') }}
+                </a>
+            {% endif %}
+        {% endfor %}
+        <a class="list-group-item" href="{{ path('claro_workspace_display_edit_form', {'workspace': workspace.getId()}) }}">
+            {{ 'workspace_display'|trans({}, 'platform') }}
+        </a>
+    </div>
+{% endblock %}

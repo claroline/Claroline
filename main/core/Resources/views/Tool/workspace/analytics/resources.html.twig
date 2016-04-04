@@ -1,0 +1,63 @@
+{% extends 'ClarolineCoreBundle:Tool/workspace/analytics:analyticsTabs.html.twig' %}
+
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'dashboard'|trans({}, 'platform'),
+                    'href': path('claro_workspace_analytics_resources', { 'workspaceId': workspace.getId() })
+                },
+                {
+                    'name': 'resources'|trans({}, 'platform'),
+                    'href': ''
+                }
+            ]
+        )
+    }}
+{% endblock %}
+
+{% block analytics %}
+    <div class="logs-container">
+        {% if 0 < resourceCount|length %}
+            <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
+
+            <script type="text/javascript" src="{{ asset('packages/jqPlot/src/jquery.jqplot.js') }}"></script>
+            {% javascripts debug=false filter='jsmin' output='js/corebundle/jqplot.resources.min.js'
+            'bundles/clarolinecore/js/jqplot/jqplot.colors.js'
+            'packages/jqPlot/src/plugins/jqplot.highlighter.js'
+            'packages/jqPlot/src/plugins/jqplot.cursor.js'
+            'packages/jqPlot/src/plugins/jqplot.canvasTextRenderer.js'
+            'packages/jqPlot/src/plugins/jqplot.dateAxisRenderer.js'
+            'packages/jqPlot/src/plugins/jqplot.canvasAxisTickRenderer.js'
+            'packages/jqPlot/src/plugins/jqplot.canvasAxisLabelRenderer.js'
+            %}
+            <script src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+            <div class="row">
+                <div class="col-md-6">
+                    {% include 'ClarolineCoreBundle:Log:resource_by_type_chart.html.twig' with {'filesImported' : true, 'resourceCount' : resourceCount, 'chartHeight' : 400, 'numberRows' : 4} %}
+                </div>
+                <div class="col-md-6">
+                    <div id="analytics-resources-list" class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-list"></i>
+                            {{'resources_usage_list'|trans({}, 'platform')}}
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-condensed">
+                                <tr><th>{{'resource'|trans({}, 'platform')}}</th><th>#</th></tr>
+                                {% for resource in resourceCount %}
+                                    <tr><td>{{resource.name|trans({}, 'resource')}}</td><td>{{resource.total}}</td></tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            {{ 'no_resources_in_workspace'|trans({}, 'platform') }}
+        {% endif %}
+    </div>
+{% endblock %}

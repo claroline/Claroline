@@ -1,0 +1,29 @@
+{% if not father is defined %}{% set father = null %}{% endif %}
+{% if not region is defined %}{% set region = null %}{% endif %}
+{% if not collapse is defined %}{% set collapse = false %}{% endif %}
+{% if content != null %}
+    <div class="content-element  {{ size }}" data-id="{{ content.id }}" data-type="{{ type }}">
+        <div class="panel panel-default relative">
+            {% render(controller("ClarolineCoreBundle:Home:menu", { 'id': content.id, 'size': size, 'type': type, 'father': father, 'region': region, 'collapse': collapse })) %}
+            {% if content.title != "" %}
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ content.title }}</h3>
+                </div>
+            {% endif %}
+            <div class="panel-body">
+                <div{% if collapse %} class="read-more"{% endif %}>
+                    {% if content.content is defined and content.content != "" %}
+                        <div class="text">{{ content.content | raw }}</div>
+                        {% if collapse %}
+                            <div class="text-gradient"></div>
+                            <button class="show-more hide btn btn-primary btn-sm" type="button">
+                                <i class="fa fa-plus"></i> {{ 'read_more' | trans({}, 'home') }}
+                            </button>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                {% if region is empty %}<i class="text-muted">{{ content.created | timeAgo }}</i>{% endif %}
+            </div>
+        </div>
+    </div>
+{% endif %}

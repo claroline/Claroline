@@ -1,0 +1,37 @@
+{% set directoryId = app.session.get('pickerDirectoryId', '0') %}
+{% set currentUsername = 'anon.' %}
+{% set currentUserId = 'anon.' %}
+{% if app.user %}
+    {% set currentUsername = app.user.getUsername() %}
+    {% set currentUserId   = app.user.getId() %}
+{% endif %}
+
+{
+    "currentUsername": "{{ currentUsername }}",
+    "currentUserId": "{{ currentUserId }}",
+    "webPath": "{{ getAssetPath() }}",
+    "language": "{{ app.request.locale }}",
+    "zoom": "{{ app.session.get('zoom') }}",
+    "pickerDirectoryId": "{{ directoryId }}",
+    "preFetchedDirectory": {{ render(controller('ClarolineCoreBundle:Resource:openDirectory', { 'nodeId': directoryId}))|raw }},
+    "resourceTypes": {
+        {% for resourceType in resourceTypes %}
+            "{{ resourceType.getName() }}": {
+                "name": "{{ resourceType.getName()|trans({}, 'resource') }}",
+                "actions": {
+                    {% for action in resourceType.getActions() %}
+                        "{{ action.getName() }}": {
+                            "name": "{{ action.getName() }}",
+                            "route": "{{ path('claro_resource_action', {'resourceType': resourceType.getName(), 'action': action.getName(), 'node': '_nodeId' }) }}",
+                            "async": {% if action.isAsync() %} 1 {% else %} 0 {% endif %},
+                            "mask": {{ action.getValue() }},
+                            "isCustom": {% if action.isCustom() %} "yes" {% else %} "no" {% endif %},
+                            "isForm": {% if action.isForm() %} true {% else %} false {% endif %}
+                        }
+                        {% if loop.last != true %},{% endif %}
+                    {% endfor %}
+                }
+            }{% if loop.last != true %},{% endif %}
+        {% endfor %}
+    }
+}

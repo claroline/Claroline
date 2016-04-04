@@ -1,0 +1,27 @@
+<div class="creator">
+    <div class="content-12">
+        <div class="input-group">
+            <input
+                type="text"
+                maxlength="200"
+                placeholder="{{ 'new_content_page' | trans({}, 'home') }}..."
+                class="content-title form-control"
+                {% if content is defined %}value="{{ content.title }}"{% endif %}
+                >
+            <span class="input-group-btn">
+              <a class="btn btn-primary create-type" role="button">{{ 'create' | trans({}, 'translation') }}</a>
+            </span>
+        </div>
+        <br>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">{{ 'content_pages' | trans({}, 'home') }}</h3>
+            </div>
+            <div class="panel-body">
+                {% for type in types %}
+                    {% include 'ClarolineCoreBundle:Home:type.html.twig' with {'type' : type } %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>

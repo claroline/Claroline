@@ -1,0 +1,62 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'desktop_tools' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'desktop_tools'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ "desktop_tools" | trans({}, 'platform') }}
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table id="tool-table" class="table table-striped table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <th width="30%">{{ 'name'|trans({}, 'platform') }}</th>
+                        <th>{{'name'|trans({}, 'platform') }}</th>
+                    </tr>
+                </thead>
+                <tbody id="widget-table-body">
+                    {% for key,value in tools  %}
+                        {% form_theme forms[key] 'ClarolineCoreBundle::form_theme_translate_tools_value.html.twig' %}
+                        <tr class='row-tool-config' data-tool-id={{ tools[key].getId () }}>
+                            <td>{{ tools[key].getName()|lower|trans({}, 'tools') }}</td>
+                            <td>
+                                <form role="form"
+                                      method="post" action="{{ path('claro_admin_tool_modify', {'id': tools[key].getId() }) }}"
+                                      method="post" {{ form_enctype(forms[key]) }}
+                                      class="form-inline"
+                                >
+                                    <div class="input-group">
+                                        {{ form_widget(forms[key].displayName) }}
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default" type="submit">{{ 'save'|trans({}, 'platform') }}</button>
+                                        </span>
+                                    </div>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+               </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,60 @@
+<div id="modal-workspace-home-tab-edit-form"
+     class="modal-dialog"
+     role="dialog"
+     aria-labelledby="modalLabel"
+     aria-hidden="true"
+ >
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3 class="modal-title">
+                {{ 'home_tab_edition'|trans({}, 'platform') }}
+            </h3>
+        </div>
+        <div class="modal-body">
+            <form id="workspace-home-tab-edit-form"
+                  action="{{ path(
+                      'claro_workspace_home_tab_edit',
+                      {
+                          'workspace': workspace.getId(),
+                          'homeTab': homeTab.getId(),
+                          'homeTabConfig': homeTabConfig.getId()
+                      }
+                  ) }}"
+                  method="POST"
+            > 
+                {{ form_row(homeTabForm.name) }}
+                {{ form_widget(homeTabConfigForm) }}
+                <div>
+                    <a data-toggle="collapse"
+                       class="margin-bottom-md"
+                       href="#advanced-parameters"
+                       aria-expanded="false"
+                       aria-controls="collapseTwo"
+                    >
+                        {{ 'advanced_parameters'|trans({}, 'platform') }}
+                        <i class="fa fa-chevron-down"></i>
+                    </a>
+                    <div id="advanced-parameters" class="collapse">
+                        <br>
+                        <div class="alert alert-default">
+                            {{ 'home_tab_roles_explanation'|trans({}, 'platform')|raw }}
+                        </div>
+                        {{ form_rest(homeTabForm) }}
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+                {{ 'cancel'|trans({},'platform') }}
+            </button>
+            <button type="submit" id='edit-btn' class="btn btn-primary">
+                {{ 'ok'|trans({},'platform') }}
+            </button>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,56 @@
+<div class='panel panel-default'>
+    <div class="panel-heading">
+        <h3 class='panel-title'>
+            {{ role.getWorkspace().getName() }}
+            ({{ 'role'|trans({}, 'platform') }} {{ role.getTranslationKey()|trans({}, 'platform') }})
+        </h3>
+    </div>
+    <form role="form" novalidate="novalidate"
+          action="{{ path('claro_resource_rights_edit', {'node':resourceRights.getResourceNode().getId()}) }}"
+          method="post"
+          class="form-right-node"
+          id="node-right-form">
+        <div class="panel-body table-responsive">
+            {% set roleId = resourceRights.getRole().getId() %}
+            <input type="hidden" name="role_row[{{ roleId }}]" value="{{ roleId }}"/>
+            <div class="table-responsive">
+                <table class="table table-bordered table-condensed  padding-button-none">
+                    <thead>
+                        {% for decoder in resourceRights.getResourceNode().getResourceType().getMaskDecoders() %}
+                            <th>{{ decoder.getName()|trans({}, 'resource') }}</th>
+                        {% endfor %}
+                        {% if isDir %}
+                            <th>{{ 'create'|trans({}, 'platform') }}</th>
+                        {% endif %}
+                    </thead>
+                    <tbody>
+                        {% for decoder in resourceRights.getResourceNode().getResourceType().getMaskDecoders() %}
+                            <td>
+                                <input type="checkbox"
+                                       name="roles[{{ roleId }}][{{ decoder.getName() }}]"
+                                       type="checkbox" {% if resourceRights.getMask() b-and decoder.getValue() %} checked {% endif %}
+                                />
+                            </td>
+                        {% endfor %}
+                        {% if isDir %}
+                            <td>
+                                <a data-node-id="{{ node.getId() }}"
+                                   class="res-creation-options"
+                                   href="{{ path('claro_resource_right_creation_form', {'node': resourceRights.getResourceNode().getId(), 'role': resourceRights.getRole().getId() }) }}">
+                                    {{ 'options'|trans({}, 'platform') }}
+                                </a>
+                            </td>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            {% if isDir %}
+                <input name="isRecursive" type="checkbox"/> {{ 'recursive_dir_action'|trans({}, 'platform')}}
+            {% endif %}
+        </div>
+        <div class="text-right panel-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
+            <button id="submit-right-form-button" type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+        </div>
+    </form>
+</div>

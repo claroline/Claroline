@@ -1,0 +1,40 @@
+# This file contains the core container parameters. Most of them may be overwritten
+# in test environment (see app/config/config_test.yml)
+
+parameters:
+    claroline.param.bundle_sources: "%kernel.root_dir%/config/downloaded.json"
+    claroline.param.files_directory: "%kernel.root_dir%/../files"
+    claroline.param.vendor_directory: "%kernel.root_dir%/../vendor"
+    claroline.param.claroline_log: "%kernel.root_dir%/logs/claroline_debug.log"
+    claroline.param.root_directory: "%kernel.root_dir%/.."
+    claroline.param.web_directory: "%claroline.param.root_directory%/web"
+    claroline.param.web_js_directory: "%claroline.param.web_directory%/js"
+    claroline.param.web_bundles_directory: "%claroline.param.web_directory%/bundles"
+    claroline.param.thumbnails_directory: "%claroline.param.uploads_directory%/thumbnails"
+    claroline.param.uploads_directory: "%claroline.param.web_dir%/uploads"
+    claroline.param.logos_directory: "%claroline.param.uploads_directory%/logos"
+    claroline.param.relative_thumbnail_base_path: "uploads/thumbnails"
+    claroline.param.templates_directory: "%claroline.param.files_directory%/templates/"
+    claroline.param.default_template: "%kernel.root_dir%/../vendor/claroline/core-bundle/Resources/template/default.zip"
+    claroline.param.personal_template: "%kernel.root_dir%/../vendor/claroline/core-bundle/Resources/template/personal.zip"
+    claroline.param.plugin_skel_directory: "%kernel.root_dir%/../vendor/claroline/core-bundle/Resources/bundle-creator/skel"
+    claroline.param.plugin_template_resource_directory: "%kernel.root_dir%/../vendor/claroline/core-bundle/Resources/bundle-creator/optional/resource"
+    claroline.param.plugin_template_tool_directory: "%kernel.root_dir%/../vendor/claroline/core-bundle/Resources/bundle-creator/optional/tool"
+    claroline.param.plugin_template_admin_tool_directory: "%kernel.root_dir%/../vendor/claroline/core-bundle/Resources/bundle-creator/optional/admin_tool"
+    claroline.param.plugin_template_widget_directory: "%kernel.root_dir%/../vendor/claroline/core-bundle/Resources/bundle-creator/optional/widget"
+    claroline.param.plugin_template_theme_directory: "%kernel.root_dir%/../vendor/claroline/core-bundle/Resources/bundle-creator/optional/theme"
+    claroline.param.plugin_template_player_directory: "%kernel.root_dir%/../vendor/claroline/core-bundle/Resources/bundle-creator/optional/player"
+    claroline.param.plugin_template_external_authentication_directory: "%kernel.root_dir%/../vendor/claroline/core-bundle/Resources/bundle-creator/optional/external_authentication"
+    claroline.param.authentication_directory: "%kernel.root_dir%/config/Authentication"
+    claroline.param.platform_config_handler_class: Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler
+    claroline.param.platform_options_file: %kernel.root_dir%/config/platform_options.yml
+    claroline.param.locked_platform_options_file: %kernel.root_dir%/config/locked_platform_options.yml
+    claroline.param.web_dir: "%kernel.root_dir%/../web"
+    claroline.param.platform_generated_archive_path: %kernel.root_dir%/config/tmp_files
+    #todo: add .param. in the pathaname
+    claroline.composer_log_file: "%kernel.root_dir%/logs/composer.log"
+    claroline.ip_white_list_file: "%kernel.root_dir%/config/ip_white_list.yml"
+    claroline.cache_dir: "%kernel.root_dir%/cache"
+    claroline.param.home_custom_template_directory: "%kernel.root_dir%/Resources/ClarolineCoreBundle/views/Home/templates/custom"
+    claroline.ip_range_white_list_file: "%kernel.root_dir%/config/white_list_ip_range.yml"
+    claroline.param.oauth_master_platforms: "%kernel.root_dir%/config/masters.yml"

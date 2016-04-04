@@ -1,0 +1,31 @@
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
+
+{% block title %}{{ file.getResourceNode().getName() ~ ' - ' ~ parent() | striptags | raw }}{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title"> {{ 'update_file'|trans({}, 'resource') }} </h3>
+    </div>
+    <form role="form" novalidate="novalidate"
+      action="{{ path('update_file', {'file': file.getId()}) }}"
+      method="post" {{ form_enctype(form) }}
+      id="change-file-form"
+    >
+        <div class="panel-body">
+                {{ form_widget(form) }}
+                {{ form_rest(form) }}
+
+        </div>
+        <div class="panel-footer">
+            {% set returnUrl = app.request.headers.get('referer') %}
+            <a href="{{ returnUrl }}" type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</a>
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+        </div>
+    </form>
+{% endblock %}

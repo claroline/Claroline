@@ -1,0 +1,23 @@
+<div class="impersonalitation {% if isImpersonated %}spaced{% endif %}">
+    <div class="spacer"></div>
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav">
+                <li><a>
+                    {% if isImpersonated %}
+                        {{ 'warning_user_impersonation'|trans({'%user%': app.user.firstname ~ ' ' ~ app.user.lastname}, 'platform') }}
+                    {% else %}
+                        {{ 'warning_workspace_impersonation'|trans({'%role%': role|trans({}, 'platform'), '%workspace%': workspace}, 'platform') }}
+                    {% endif %}
+                </a><li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="{% if isImpersonated %}{{ path('claro_desktop_open', {'_switch': '_exit'}) }}{% else %}?view_as=exit{% endif %}">
+                        &times;
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

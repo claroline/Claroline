@@ -1,0 +1,27 @@
+<ul class="nav nav-pills">
+    <li id="all-my-workspaces-btn">
+        <a href="">
+            {{ 'all_my_workspaces'|trans({}, 'platform') }}
+        </a>
+    </li>
+    <li id="favourite-workspaces-btn">
+        <a href="">
+            {{ 'my_favourite_workspaces'|trans({}, 'platform') }}
+        </a>
+    </li>
+</ul>
+<br>
+
+<div id="workspaces-list-element">
+    {% render(controller(
+        'ClarolineCoreBundle:Widget\\MyWorkspacesWidget:displayMyWorkspacesWidget',
+        {'mode': 0}
+    )) %}
+</div>
+
+{% block javascripts %}
+    <script
+        src='{{ asset('bundles/clarolinecore/js/widget/desktopWidgetMyWorkspaces.js') }}'
+        type="text/javascript">
+    </script>
+{% endblock %}

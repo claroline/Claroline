@@ -1,0 +1,76 @@
+{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ "resources" | trans({}, "platform") | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.desktopBreadcrumbs([
+            {
+                'name': 'resources'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+{% block section_content %}
+    <div id="data-attributes" data-max-post-size="{{ maxPostSize }}"></div>
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'resources' | trans({}, 'platform') }}<span></span></h3>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function() {
+            Claroline.ResourceManager.createFullManager({
+                "parentElement": $('div.section-content .panel'),
+                "breadcrumbElement": $('ul.breadcrumb'),
+                "isWorkspace": false,
+                "webPath": "{{ getAssetPath() }}",
+                "language": "{{ app.request.locale }}",
+                "zoom": "{{ resourceZoom }}",
+                "pickerDirectoryId": "{{ app.session.get('pickerDirectoryId', '0') }}",
+                "preFetchedDirectory": {{ render(controller('ClarolineCoreBundle:Resource:openDirectory'))|raw }},
+                "resourceTypes": {
+                    {% for resourceType in resourceTypes %}
+                    "{{ resourceType.getName() }}": {
+                        "name": "{{ resourceType.getName()|trans({}, 'resource') }}",
+                        "actions": {
+                            {% for action in resourceType.getActions() %}
+                                {% if isMenuActionImplemented(resourceType, action.getName()) %}
+                                    "{{ action.getName() }}": {
+                                        "name": "{{ action.getName() }}",
+                                        "route": "{{ path('claro_resource_action', {'resourceType': resourceType.getName(), 'action': action.getName(), 'node': '_nodeId' }) }}",
+                                        "async": {% if action.isAsync() %} 1 {% else %} 0 {% endif %},
+                                        "mask": {{ action.getValue() }},
+                                        "isCustom": {% if action.isCustom() %} "yes" {% else %} "no" {% endif %},
+                                        "isForm": {% if action.isForm() %} true {% else %} false {% endif %}
+                                    } {% if resourceActions|length >= 0 or loop.last != true %},{% endif %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% for action in resourceActions %}
+                                {% if isMenuActionImplemented(null, action.getName()) %}
+                                    "{{ action.getName() }}": {
+                                        "name": "{{ action.getName() }}",
+                                        "route": "{{ path('claro_resource_action', {'resourceType': resourceType.getName(), 'action': 'test', 'node': '_nodeId' }) }}",
+                                        "async": {% if action.isAsync() %} 1 {% else %} 0 {% endif %},
+                                        "mask": {{ action.getValue() }},
+                                        "isCustom": {% if action.isCustom() %} "yes" {% else %} "no" {% endif %},
+                                        "isForm": {% if action.isForm() %} true {% else %} false {% endif %}
+                                    } {% if loop.last != true %},{% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        }
+                    } {% if loop.last != true %}, {% endif %}
+                    {% endfor %}
+                }
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        var FileAPI = { debug: false, pingUrl: false }
+    </script>
+    <script type="text/javascript" src='{{ asset('packages/fileapi/dist/FileAPI.html5.min.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/resource/dragndrop.js') }}'></script>
+{% endblock %}

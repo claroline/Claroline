@@ -1,0 +1,185 @@
+'Show actions for': 'Show actions for'
+all: All
+'for user': 'For user'
+group: Group
+log_add_user: 'Add user'
+log_change_right: 'Change rights'
+log_change_set: 'List of modified properties'
+log_context: 'Context:'
+log_copy: Copy
+log_copy_source: 'Copy source'
+log_create: Create
+log_default_user: 'Claroline Connect'
+log_delete: Delete
+log_doer: Doer
+log_export: Download
+log_filter_actions: 'Show actions'
+log_group-add_user_filter: 'Adding user to group'
+log_group-add_user_sentence: 'has added %receiver_user% to group %receiver_group%'
+log_group-add_user_shortname: Adding
+log_group-add_user_title: 'Adding user to group'
+log_group-create_filter: 'Group creation'
+log_group-create_sentence: 'has created group %receiver_group%'
+log_group-create_shortname: Creation
+log_group-create_title: 'Group creation'
+log_group-delete_filter: 'Group deletion'
+log_group-delete_sentence: 'has deleted group %receiver_group%'
+log_group-delete_shortname: Delete
+log_group-delete_title: 'Group deletion'
+log_group-remove_user_filter: 'Removing user from group'
+log_group-remove_user_sentence: 'has removed %receiver_user% from group %receiver_group%'
+log_group-remove_user_shortname: Removing
+log_group-remove_user_title: 'Removing user from group'
+log_group-update_filter: 'Group update'
+log_group-update_sentence: 'has updated group %receiver_group%'
+log_group-update_shortname: Update
+log_group-update_title: 'Group update'
+log_has_not_changed: 'Has not changed'
+log_hidden_workspace_widget_config_amount: Amount
+log_himself: 'The doer himself'
+log_login: Login
+log_move: Move
+log_new_values: 'New values'
+log_no_actions_found: 'No action found'
+log_old_folder: 'Old parent folder'
+log_old_values: 'Old values'
+log_old_workspace: 'Old workspace'
+log_owner: 'Owner of target'
+log_platform_roles: 'Platform roles'
+log_read: Read
+log_receiver_group: 'Action target group'
+log_receiver_user: 'Action target user'
+log_remove_user: 'Remove user'
+log_resource: 'Action target resource'
+log_resource-copy_filter: 'Resource copy'
+log_resource-copy_sentence: 'has copied %resource%'
+log_resource-copy_shortname: Copy
+log_resource-copy_title: 'Resource copy'
+log_resource-create_filter: 'Resource creation'
+log_resource-create_sentence: 'has created %resource%'
+log_resource-create_shortname: Creation
+log_resource-create_title: 'Resource creation'
+log_resource-custom_action_filter: 'Resource custom action'
+log_resource-delete_filter: 'Resource deletion'
+log_resource-delete_sentence: 'has deleted %resource%'
+log_resource-delete_shortname: Delete
+log_resource-delete_title: 'Resource deletion'
+log_resource-export_filter: 'Resource download'
+log_resource-export_sentence: 'has downloaded %resource%'
+log_resource-export_shortname: Download
+log_resource-export_title: 'Resource download'
+log_resource-move_filter: 'Resource moving'
+log_resource-move_sentence: 'has moved %resource%'
+log_resource-move_shortname: Move
+log_resource-move_title: 'Resource moving'
+log_resource-read_filter: 'Resource opening'
+log_resource-read_sentence: 'has opened %resource%'
+log_resource-read_shortname: Open
+log_resource-read_title: 'Resource opening'
+log_resource-shortcut_filter: 'Resource shortcut'
+log_resource-shortcut_sentence: 'has created shortcut %resource%'
+log_resource-shortcut_shortname: Shortcut
+log_resource-shortcut_title: 'Resource shortcut'
+log_resource-update_filter: 'Resource update'
+log_resource-update_rename_filter: 'Resource rename'
+log_resource-update_rename_sentence: 'has renamed %resource%'
+log_resource-update_rename_shortname: Rename
+log_resource-update_rename_title: 'Resource rename'
+log_resource-update_sentence: 'has updated %resource%'
+log_resource-update_shortname: Update
+log_resource-update_title: 'Resource update'
+log_resource_owner: 'Owner of resource'
+log_role: 'Action target role'
+log_role-subscribe_group_filter: 'Assigning a role to a group'
+log_role-subscribe_user_filter: 'Assigning a role to a user'
+log_see_details: 'see details'
+log_shortcut: Shortcut
+log_subscribe_group: 'Subscribe group'
+log_subscribe_user: 'Subscribe user'
+log_unsubscribe_group: 'Unsubscribe group'
+log_unsubscribe_user: 'Unsubscribe user'
+log_update: Update
+log_user-create_filter: 'User creation'
+log_user-create_sentence: 'has created account %receiver_user%'
+log_user-create_shortname: Creation
+log_user-create_title: 'User creation'
+log_user-delete_filter: 'User delete'
+log_user-delete_sentence: 'has deleted account %receiver_user%'
+log_user-delete_shortname: Delete
+log_user-delete_title: 'User delete'
+log_user-login_filter: 'User login'
+log_user-login_sentence: 'has logged in'
+log_user-login_shortname: Login
+log_user-login_title: 'User login'
+log_user-update_filter: 'User update'
+log_user-update_sentence: 'has updated account %receiver_user%'
+log_user-update_shortname: Update
+log_user-update_title: 'User update'
+log_widget_config_amount: 'Number of lines'
+log_widget_config_restrictions: 'Actions to display'
+log_workspace-create_filter: 'Workspace creation'
+log_workspace-create_sentence: 'has created workspace %workspace%'
+log_workspace-create_shortname: Creation
+log_workspace-create_title: 'Workspace creation'
+log_workspace-delete_filter: 'Workspace deletion'
+log_workspace-delete_sentence: 'has deleted workspace %workspace%'
+log_workspace-delete_shortname: Delete
+log_workspace-delete_title: 'Workspace deletion'
+log_workspace-enter_filter: 'Workspace entry'
+log_workspace-enter_sentence: 'accessed workspace %workspace%'
+log_workspace-enter_shortname: Open
+log_workspace-enter_title: 'Access a workspace'
+log_workspace-role-change_right_filter: 'Change rights for a workspace role'
+log_workspace-role-change_right_sentence: 'has updated the rights of role %role% for %resource%'
+log_workspace-role-change_right_shortname: 'Change rights'
+log_workspace-role-change_right_title: 'Change rights for a workspace role'
+log_workspace-role-create_filter: 'Create a role for a workspace'
+log_workspace-role-create_sentence: log_workspace-role-create_sentence
+log_workspace-role-create_shortname: Creation
+log_workspace-role-create_title: 'Create a role for a workspace'
+log_workspace-role-delete_filter: 'Delete a role for a workspace'
+log_workspace-role-delete_sentence: 'has deleted a role for workspace %workspace%'
+log_workspace-role-delete_shortname: Delete
+log_workspace-role-delete_title: 'Delete a role for a workspace'
+log_workspace-role-subscribe_group_filter: 'Assign a workspace role to a group'
+log_workspace-role-subscribe_group_sentence: 'has assigned role %role% to %receiver_group% in %workspace%'
+log_workspace-role-subscribe_group_shortname: Assign
+log_workspace-role-subscribe_group_title: 'Assign a workspace role to a group'
+log_workspace-role-subscribe_user_filter: 'Assign a workspace role to a user'
+log_workspace-role-subscribe_user_sentence: 'has subscribed %receiver_user% to role %role% in %workspace%'
+log_workspace-role-subscribe_user_shortname: Assign
+log_workspace-role-subscribe_user_title: 'Assign a workspace role to a user'
+log_workspace-role-unsubscribe_group_filter: 'Unassign a workspace role from a group'
+log_workspace-role-unsubscribe_group_sentence: 'has unassigned role %role% in %workspace% from %receiver_group%'
+log_workspace-role-unsubscribe_group_shortname: Unassign
+log_workspace-role-unsubscribe_group_title: 'Unassign a workspace role from a group'
+log_workspace-role-unsubscribe_user_filter: 'Unassign a workspace role from a user'
+log_workspace-role-unsubscribe_user_sentence: 'has unassigned  %receiver_user%  '
+log_workspace-role-unsubscribe_user_shortname: Unassign
+log_workspace-role-unsubscribe_user_title: 'Unassign a workspace role from a user'
+log_workspace-role-update_filter: 'Update a role for a workspace'
+log_workspace-role-update_sentence: 'has updated a role for workspace %workspace%'
+log_workspace-role-update_shortname: Update
+log_workspace-role-update_title: 'Update a role for a workspace'
+log_workspace-tool-read_filter: log_workspace-tool-read_filter
+log_workspace-tool-read_sentence: log_workspace-tool-read_sentence
+log_workspace-tool-read_shortname: log_workspace-tool-read_shortname
+log_workspace-tool-read_title: log_workspace-tool-read_title
+log_workspace-update_filter: 'Workspace update'
+log_workspace-update_shortname: Update
+log_workspace-update_title: 'Workspace update'
+log_workspace_read: 'Workspace access'
+log_workspace_roles: 'Workspace roles'
+log_workspace_source: 'Source workspace'
+resource: Resource
+role: Role
+user: User
+workspace: Workspace
+log_resource-custom_action_update_file_shortname: Update
+log_resource-custom_action_update_file_sentence: The file was updated.
+global_tracking: Global tracking
+user_tracking: Tracking by user
+user_list: User list
+actions_per_day_chart: Actions per day chart
+click_to_choose: Click to display action list
+download_csv_list: Download list into CSV file

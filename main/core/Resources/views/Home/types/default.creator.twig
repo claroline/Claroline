@@ -1,0 +1,21 @@
+<div class="creator content-12" data-type="{{ type }}" {% if content is defined %}data-id="{{ content.id }}"{% endif %}>
+    <form role="form" action="{{ path('claroline_content_create') }}" method="post">
+        {{ form_widget(form | first) }}
+        <div class="panel panel-default">
+            <div class="navbar navbar-default navbar-static-top">
+                <ul class="nav navbar-nav">
+                    <li><a class="pointer-hand addlink"><i class="fa fa-link"></i> {{ 'add_a_link' | trans({}, 'home') }}</a></li>
+                    <li class="divider-vertical"></li>
+                </ul>
+                <div class="navbar-form pull-right">
+                    {% if content is defined %}
+                        <a class="cancel-button btn btn-default">{{ 'cancel' | trans({}, 'platform') }}</a>
+                        <a class="edit-button btn btn-primary">{{ 'save' | trans({}, 'platform') }}</a>
+                    {% else %}
+                        <a class="creator-button btn btn-primary">{{ 'create' | trans({}, 'platform') }}</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,79 @@
+{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+
+{% block title %}{{ 'my_profile'|trans({}, 'platform') ~ ' - ' ~ user.getLastName() ~ ' ' ~ user.getFirstName() | striptags | raw }}{% endblock %}
+
+{% set canEdit = (app.user is not null and user.getId() == app.user.getId()) or is_granted('ROLE_ADMIN') %}
+
+{% block content %}
+    {{ macros.flashBox() }}
+    <div class="panel panel-default panel-user">
+        <div class="panel-heading relative">
+            {% if canEdit %}
+                <div class="dropdown float-right-top">
+                    <a data-toggle="dropdown" href="#" class="btn btn-xs btn-primary" role="button">
+                        {{ 'actions' | trans({}, 'platform') }} <span class="fa fa-gear"></span> <i class="caret"></i>
+                    </a>
+                    <ul class="dropdown-menu pull-right" role="menu">
+                        <li role="presentation" >
+                            <a role="menuitem" href="{{ path('claro_user_profile_edit') }}">
+                                {{ 'edit_profile'|trans({}, 'platform') }}
+                            </a>
+                        </li>
+                        <li role="presentation" >
+                            <a role="menuitem" href="{{ path('claro_user_password_edit', {'user': user.getId()}) }}">
+                                {{ 'edit_password'|trans({}, 'platform') }}
+                            </a>
+                        </li>
+                        {# this should avoid some errors when the public url wasn't properly generated #}
+                        {%  if user.publicUrl != '' %}
+                            <li role="presentation" >
+                                <a role="menuitem" href="{{ path('claro_public_profile_view', {'publicUrl': user.publicUrl}) }}">
+                                    {{ 'see_public_profile'|trans({}, 'platform') }}
+                                </a>
+                            </li>
+                        {% endif %}
+                        {% if false == user.hasTunedPublicUrl %}
+                            <li role="presentation" >
+                                <a role="menuitem" href="{{ path('claro_user_public_url_edit') }}">
+                                    {{ 'tune_your_public_profile_url'|trans({}, 'platform') }}
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% endif %}
+            <h3 class="panel-title">
+                {{ 'user_profile'|trans({}, 'platform') }}
+            </h3>
+        </div>
+        <div class="panel-body">
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a href="#general-profile" data-toggle="tab">{{ 'general'|trans({}, 'platform') }}</a>
+                </li>
+                {% for facet in facets %}
+                    <li>
+                        <a href="#facet-{{ facet.id }}" data-toggle="tab">{{ facet.name }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+            <div id="facet-pane" class="tab-content">
+                <div class="tab-pane active" id="general-profile">
+                    <div class="panel-body">
+                        {% include "ClarolineCoreBundle:Profile:privateProfileGeneralTab.html.twig" with {'user': user, 'profileLinks': links} %}
+                    </div>
+                </div>
+                {% for facet in facets %}
+                    {% include "ClarolineCoreBundle:Profile:facetPane.html.twig"
+                    with {'facet': facet, 'fieldFacetValues': fieldFacetValues, 'fieldFacets': fieldFacets}
+                    %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/profile/profile.js') }}"></script>
+{% endblock %}

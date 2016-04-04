@@ -1,0 +1,77 @@
+{% twig_js name="RowFormAdminRoleList" %}
+
+<tr id="tr-role-{{ role.id }}">
+    <td>
+        <div class="col-xs-10">
+            <input
+                class="form-control change-name-field"
+                name="name-{{ role.id }}"
+                type="text"
+                value="{{ role.translationKey|trans({}, 'platform') }}"
+            >
+            </input>
+        </div>
+        <button
+            class="btn edit-role-name-btn"
+            data-role-id="{{ role.id }}"
+        >
+            <i class="fa fa-pencil"></i>
+        </button>
+    </td>
+    <td>
+        {{ count }}
+    </td>
+    <td>
+        <input
+            class="pws-chk"
+            type="checkbox"
+            data-role-id="{{ role.getId() }}"
+            {% if role.isPersonalWorkspaceCreationEnabled() %}
+                checked
+            {% endif %}
+        >
+        </input>
+    </td>
+    <td class="td-role-limit">
+        {{ role.maxUsers }}
+    </td>
+    <td>
+        <div class="col-xs-10">
+            <input
+                class="form-control increase-user-field"
+                name="increase-{{ role.id }}"
+                type="number"
+                value="0"
+            >
+            </input>
+        </div>
+        <button
+                class="btn increase-user-btn"
+                data-role-id="{{ role.id }}"
+                >
+            <i class="fa fa-plus"></i>
+        </button>
+    </td>
+    <td>
+        <div
+            id="init-role-{{ role.id }}-btn"
+            class="btn btn-primary initialize-role-btn"
+            data-role-id="{{ role.id }}"
+            >
+            {{ 'initialize'|trans({}, 'platform') }}
+        </div>
+    </td>
+    <td>
+        <div
+            id="delete-role-{{ role.id }}-btn"
+            class="btn btn-primary delete-role-btn"
+            data-role-id="{{ role.id }}"
+            data-role-name="{{ role.translationKey|trans({}, 'platform') }}"
+            {% if role.isReadOnly %}
+                disabled
+            {% endif %}
+        >
+            {{ 'delete'|trans({}, 'platform') }}
+        </div>
+    </td>
+</tr>

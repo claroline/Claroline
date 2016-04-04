@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="{{ app.request.locale|default('fr') }}">
+    <head>
+        {% set description = getContent('platformDescription') %}
+        {% block meta %}
+            {% if not description is empty %}
+                <meta name="Description" content="{{ description.content | striptags }}">
+            {% endif %}
+            <meta charset="utf-8">
+            {# The following line is needed for unit testing as the DOMDocument
+               used by the SF's crawler doesn't recognize the HTML5 charset meta tag.
+               https://github.com/symfony/symfony/issues/3881  #}
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+            <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% endblock %}
+
+        {% if config.getParameter('name') != "" %}
+                {% set pagetitle = config.getParameter('name') %}
+            {% else %}
+                {% set pagetitle = 'Claroline Connect' %}
+        {% endif %}
+        <title>{% spaceless %}
+            {% block title %}
+                {{ pagetitle | striptags | raw }}
+                {% if not description is empty and description.content != "" %}
+                    - {{ description.content | striptags | raw }}
+                {% endif %}
+            {% endblock %}
+        {% endspaceless %}</title>
+        {% block stylesheets %}{% endblock %}
+
+        {% block favicon %}
+            <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
+        {% endblock %}
+
+        {% block javascripts_header %}
+        {% endblock %}
+    </head>
+    <body>
+        <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> to experience this site.</p><![endif]-->
+        {% block layout %}{% endblock %}
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>

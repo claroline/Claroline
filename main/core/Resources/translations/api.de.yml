@@ -1,0 +1,26 @@
+actions: Actions
+app_want_access_to_your_account: 'L''application ''%clientName%'' souhaite avoir accès à votre compte.'
+application_revoked_error_message: 'Erreur lors de la révocation de l''accès pour l''application ''%application%''.'
+application_revoked_success_message: 'Accès pour l''application ''%application%'' révoqué avec succès.'
+authorization_code_grant_type: 'Code d''autorisation'
+client_credentials_grant_type: 'Identifiants client'
+grant_types: 'Type d''accès'
+name: Nom
+no_app_connect_to_platform: 'Aucune application n''a accès à la plateforme.'
+no_app_connect_to_your_account: 'Aucune application liée à votre compte.'
+no_grant_types: 'Aucun type d''accès.'
+no_redirect_urls: 'Aucune adresse.'
+oauth_app_ask_access: 'Demande d''accès à la plateforme'
+oauth_application_acceptance: 'Confirmation d''accès'
+password_grant_type: 'Mot de passe'
+refresh_token_grant_type: 'Rafraîchissement du jeton'
+revoke: Révoquer
+revoke_access: 'Révoquer l''accès'
+thrid_party_application_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer l''accès à la plateforme pour l''application tierce <strong>%application%</strong> ?'
+thrid_party_application_delete_confirm_title: 'Suppression d''accès à la plateforme'
+thrid_party_application_delete_error_message: 'Erreur lors de la suppression de l''accès à la plateforme pour l''application tierce ''%application%'''
+thrid_party_application_delete_success_message: 'L''accès à la plateforme a bien été supprimé pour l''application tierce ''%application%''.'
+token_grant_type: Jeton
+urls: Adresses
+user_application_revoke_confirm_message: 'Etes-vous sûr de vouloir révoquer l''accès de l''application <strong>%application%</strong> ?'
+user_application_revoke_confirm_title: 'Révocation d''une application'

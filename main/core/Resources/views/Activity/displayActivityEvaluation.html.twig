@@ -1,0 +1,176 @@
+<div id="activity-evaluation-display-element">
+    <div class="table-responsive">
+        <table class="table">
+            <tr>
+                <th class="center-text">{{ 'status'|trans({}, 'platform') }}</th>
+                <th class="center-text">{{ 'total_time'|trans({}, 'platform') }}</th>
+                <th class="center-text"
+                    {% if (ruleScore is not empty) and isResultVisible %}
+                        data-container="#activity-evaluation-display-element"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="{{ 'passing_score'|trans({}, 'platform') ~ ' : ' ~ ruleScore }}"
+                    {% endif %}
+                >
+                    {{ 'best_score'|trans({}, 'platform') }}
+                </th>
+                <th class="center-text"
+                    data-container="#activity-evaluation-display-element"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="{{ 'number_of_attempts_explanation'|trans({}, 'platform') }}"
+                >
+                    {{ 'number_of_attempts'|trans({}, 'platform') }}
+                </th>
+                <th class="center-text"
+                    data-container="#activity-evaluation-display-element"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="{{ 'manual_evaluation_explanation'|trans({}, 'platform') }}"
+                >
+                    {{ 'evaluation'|trans({}, 'platform') }}
+                </th>
+                <th class="center-text">{{ 'comment'|trans({}, 'platform') }}</th>
+            </tr>
+            <tr>
+                <td class="center-text">
+                    {% if evaluation.getStatus() is not empty %}
+                        {{ evaluation.getStatus()|trans({}, 'platform') }}
+                    {% elseif (activityParameters.getEvaluationType() is not empty) and
+                        (activityParameters.getEvaluationType() == 'automatic')
+                    %}
+                        {{ 'not_attempted'|trans({}, 'platform') }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td class="center-text">
+                    {% if evaluation.getAttemptsDuration() is not empty %}
+                        {{ evaluation.getAttemptsDuration() }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td class="center-text">
+                    {% if evaluation.getNumScore() is not empty %}
+                        {{ evaluation.getNumScore() }}
+                        {% if evaluation.getScoreMax() is not empty %}
+                            / {{ evaluation.getScoreMax() }}
+                        {% endif %}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td class="center-text">
+                    {% if evaluation.getAttemptsCount() is not empty %}
+                        {{ evaluation.getAttemptsCount() }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td class="center-text">
+                    {% if evaluation.getScore() is not empty %}
+                        {{ evaluation.getScore() }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td class="center-text">
+                    {% if evaluation.getComment() is not empty %}
+                        <i class="fa fa-comment-o pointer-hand display-comment"
+                            data-container="#activity-evaluation-display-element"
+                            data-toggle="popover"
+                            data-placement="left"
+                            data-content="{{ evaluation.getComment() }}"
+                        ></i>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+    {% if pastEvals|length > 0 %}
+        <hr>
+        <h4>{{ 'attempts' | trans({}, 'platform') }}</h4>
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <th class="center-text">{{ 'date'|trans({}, 'platform') }}</th>
+                    <th class="center-text">{{ 'status'|trans({}, 'platform') }}</th>
+                    <th class="center-text">{{ 'duration'|trans({}, 'platform') }}</th>
+                    <th class="center-text"
+                        {% if (ruleScore is not empty) and isResultVisible %}
+                            data-container="#activity-evaluation-display-element"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            title="{{ 'passing_score'|trans({}, 'platform') ~ ' : ' ~ ruleScore }}"
+                        {% endif %}
+                    >
+                        {{ 'score'|trans({}, 'platform') }}
+                    </th>
+                    <th class="center-text"
+                        data-container="#activity-evaluation-display-element"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="{{ 'manual_evaluation_explanation'|trans({}, 'platform') }}"
+                    >
+                        {{ 'evaluation'|trans({}, 'platform') }}
+                    </th>
+                    <th class="center-text">{{ 'comment'|trans({}, 'platform') }}</th>
+                </tr>
+                
+                {% for eval in pastEvals %}
+                    <tr>
+                        <td class="center-text">{{ eval.getDate()|intl_date_format }}</td>
+                        <td class="center-text">{{ eval.getStatus()|trans({}, 'platform') }}</td>
+                        <td class="center-text">
+                            {% if eval.getDuration() is not empty %}
+                                {{ eval.getDuration() }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td class="center-text">
+                            {% if eval.getNumScore() is not empty %}
+                                {{ eval.getNumScore() }}
+                                {% if eval.getScoreMax() is not empty %}
+                                    / {{ eval.getScoreMax() }}
+                                {% endif %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td class="center-text">
+                            {% if eval.getScore() is not empty %}
+                                {{ eval.getScore() }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td class="center-text">
+                            {% if eval.getComment() is not empty %}
+                                <i class="fa fa-comment-o pointer-hand display-comment"
+                                    data-container="#activity-evaluation-display-element"
+                                    data-toggle="popover"
+                                    data-placement="left"
+                                    data-content="{{ eval.getComment() }}"
+                                ></i>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% endif %}
+    
+</div>
+
+{% block javascripts %}
+    <script>
+        $('.display-comment').popover();
+    </script>
+{% endblock %}

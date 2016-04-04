@@ -1,0 +1,15 @@
+{% twig_js name="ResourceDeleteConfirmMessage" %}
+
+<div>
+    {% if nodes|length > 1%}
+        {{ 'resources_delete'|trans({}, 'platform') }}
+    {% else %}
+        {{ 'resource_delete'|trans({}, 'platform') }}
+    {% endif %}
+
+    <ul>
+        {% for key, node in nodes %}
+            <li>  {{ nodes[key][3] }} </li>
+        {% endfor %}
+    </ul>
+</div>

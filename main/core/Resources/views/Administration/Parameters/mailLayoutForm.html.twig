@@ -1,0 +1,66 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'mail' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'mail'|trans({}, 'platform'),
+                'href': path('claro_admin_parameters_mail_index')
+            },
+            {
+                'name': 'layout'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'layout'|trans({}, 'platform') }}</h3>
+    </div>
+    <form role="form" class="form-horizontal" action="{{ path('claro_admin_edit_mail_layout') }}"
+          method="post" {{ form_enctype(form) }} id="form_settings" enctype='multipart/form-data'>
+        <div class="panel-body">
+            <div class="alert alert-warning">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                {{ 'mail_layout_message_override' | trans({}, 'platform') }}.<br>
+                <br>
+                {{ 'variable_available_message' | trans({}, 'platform') }}:<br>
+                <br>
+                <ul>
+                    <li><strong>%content%</strong> {{ 'placeholder_mail_content_message' | trans({}, 'platform') }}.
+                    <li><strong>%platform_name%</strong> {{ 'placeholder_platform_name_message' | trans({}, 'platform') }}.
+                    <li><strong>%first_name%</strong> {{ 'placeholder_first_name_message' | trans({}, 'platform') }}.
+                    <li><strong>%last_name%</strong> {{ 'placeholder_last_name_message' | trans({}, 'platform') }}.
+                </ul>
+                <br>
+                {{ 'fullscreen_text_editor' | trans({}, 'platform') }}.
+            </div>
+            {% form_theme form 'ClarolineCoreBundle::form_theme_no_label.html.twig' %}
+            {{ form_widget(form) }}
+        </div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            <a href="{{ path('claro_admin_parameters_mail_index') }}">
+            <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+            </a>
+        </div>
+    </form>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/administration/mail.js') }}"></script>
+{% endblock%}
