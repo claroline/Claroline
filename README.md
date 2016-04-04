@@ -39,6 +39,12 @@ Publish only Paths which are in this Workspace.
 
 Publish a specific Path.
 
+## Requests
+
+Go to [Claroline](https://github.com/claroline/Claroline/issues) if you want to ask for new features.
+
+Go to [Claroline Support](https://github.com/claroline/ClaroSupport/issues) if you encounter some bugs.
+
 ## Authors
 
 * Donovan Tengblad (purplefish32)
@@ -46,5 +52,3 @@ Publish a specific Path.
 * Arnaud Bey (arnaudbey)
 * Eric Vincent (ericvincenterv)
 * Nicolas Dufour (eldoniel)
-
-#Conditions

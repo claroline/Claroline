@@ -255,7 +255,10 @@ class Step implements \JsonSerializable
     {
         if ($parent != $this->parent) {
             $this->parent = $parent;
-            $parent->addChild($this);
+
+            if (null !== $parent) {
+                $parent->addChild($this);
+            }
         }
 
         return $this;
