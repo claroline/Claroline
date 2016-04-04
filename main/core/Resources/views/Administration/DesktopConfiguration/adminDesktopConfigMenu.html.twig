@@ -1,0 +1,50 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ 'desktop_and_home' | trans({}, 'tools') | striptags | raw }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'desktop_and_home'|trans({}, 'tools'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'admin_desktop_and_home_tabs_configuration'|trans({}, 'platform') }}
+        </h3>
+    </div>
+
+    <div class="list-group menu">
+        <a class="list-group-item"
+           href="{{ path('claro_admin_desktop_tools_configuration', {'type': 0}) }}"
+        >
+            <span>{{ 'menu_bar'|trans({}, 'platform') }}</span>
+        </a>
+        <a class="list-group-item"
+           href="{{ path('claro_admin_desktop_tools_configuration', {'type': 1}) }}"
+        >
+            <span>{{ 'user_menu'|trans({}, 'platform') }}</span>
+        </a>
+        <a class="list-group-item" href="{{ path('claro_admin_home_tabs_configuration', {'homeTabType': 'desktop'}) }}">
+            <span>{{ 'desktop_home_tabs'|trans({}, 'platform') }}</span>
+        </a>
+        <a class="list-group-item" href="{{ path('claro_admin_desktop_home_lock_management') }}">
+            <span>{{ 'home_lock'|trans({}, 'platform') }}</span>
+        </a>
+    </div>
+
+{% endblock %}

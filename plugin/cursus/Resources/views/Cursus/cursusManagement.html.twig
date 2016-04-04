@@ -1,0 +1,235 @@
+{% macro showCursus(cursus, hierarchy) %}
+    {% set cursusId = cursus.getId() %}
+    {% set cursusTitle = cursus.getTitle() %}
+    {% set details = cursus.getDetails() %}
+    {% set course = cursus.getCourse() %}
+
+    {% if course is empty %}
+        <div class="cursus-element" data-cursus-id="{{ cursusId }}">
+            
+            {% if details['color'] is defined and details['color'] is not empty %}
+                <i class="fa fa-circle" style="color: {{ details['color'] }}"></i>
+                &nbsp;
+            {% endif %}
+            <span class="pointer-hand view-cursus-btn"
+                  data-cursus-id="{{ cursusId }}"
+                  data-cursus-title="{{ cursusTitle }}"
+                  data-toggle="collapse"
+                  href="#collapse-{{ cursusId }}"
+            >
+                {{ cursusTitle }}
+            </span>
+            &nbsp;
+            <span class="dropdown">
+                <i class="cursus-option-btn fa fa-cog pointer-hand"
+                   id="option-btn-{{ cursusId }}"
+                   data-cursus-id="{{ cursusId }}"
+                   data-toggle="dropdown"
+                ></i>
+                <ul class="dropdown-menu"
+                    role="menu"
+                    aria-labelledby="option-btn-{{ cursusId }}"
+                    style="white-space: nowrap"
+                >
+                    <li role="presentation">
+                        <a role="menuitem"
+                           tabindex="-1"
+                           class="pointer-hand edit-cursus-btn"
+                           data-cursus-id="{{ cursusId }}"
+                        >
+                            <i class="fa fa-edit"></i>
+                            {{ 'edit'|trans({}, 'platform') }}
+                        </a>
+                    </li>
+                    <li role="presentation" class="divider"></li>
+                    <li role="presentation">
+                        <a role="menuitem"
+                           tabindex="-1"
+                           class="pointer-hand create-cursus-child-btn"
+                           data-cursus-id="{{ cursusId }}"
+                        >
+                            <i class="fa fa-sitemap"></i>
+                            {{ 'create_cursus_child'|trans({}, 'cursus') }}
+                        </a>
+                    </li>
+                    <li role="presentation" class="divider"></li>
+                    <li role="presentation">
+                        <a role="menuitem"
+                           tabindex="-1"
+                           class="pointer-hand create-course-to-cursus-btn"
+                           data-cursus-id="{{ cursusId }}"
+                           data-cursus-title="{{ cursus.getTitle() }}"
+                        >
+                            <i class="fa fa-plus-circle"></i>
+                            {{ 'create_course'|trans({}, 'cursus') }}
+                        </a>
+                    </li>
+                    <li role="presentation">
+                        <a role="menuitem"
+                           tabindex="-1"
+                           class="pointer-hand add-course-to-cursus-btn"
+                           data-cursus-id="{{ cursusId }}"
+                           data-cursus-title="{{ cursus.getTitle() }}"
+                        >
+                            <i class="fa fa-plus-square"></i>
+                            {{ 'add_course_to_cursus'|trans({}, 'cursus') }}
+                        </a>
+                    </li>
+                    <li role="presentation" class="divider"></li>
+                    <li role="presentation">
+                        <a role="menuitem"
+                           tabindex="-1"
+                           class="pointer-hand delete-cursus-btn"
+                           data-cursus-id="{{ cursusId }}"
+                        >
+                            <i class="fa fa-trash"></i>
+                            {{ 'delete'|trans({}, 'platform') }}
+                        </a>
+                    </li>
+                </ul>
+            </span>
+
+            {% if hierarchy[cursusId] is defined %}
+                &nbsp;
+                <i class="fa fa-caret-down pointer-hand"
+                   data-toggle="collapse"
+                   href="#collapse-{{ cursusId }}"
+                >
+                </i>
+            {% endif %}
+        </div>
+    {% else %}
+        <span>
+            <a href="{{ path('claro_cursus_course_management', {'course': course.getId(), 'cursusId': cursus.getRoot()}) }}">
+                <span class="label label-primary">
+                    {{ course.getTitle() }}
+                    <small>
+                        [{{ course.getCode() }}]
+                    </small>
+                </span>
+            </a>
+            <span class="label label-danger pointer-hand remove-course-btn"
+                  data-cursus-id="{{ cursusId }}"
+            >
+                <i class="fa fa-trash"></i>
+            </span>
+        </span>
+    {% endif %}
+
+    {% if hierarchy[cursusId] is defined %}
+        <ul id="collapse-{{ cursusId }}"
+            class="collapse in cursus-children"
+            data-cursus-id="{{ cursusId }}"
+        >
+        {% for child in hierarchy[cursusId] %}
+            <li id="cursus-row-{{ child.getId() }}"
+                data-cursus-id="{{ child.getId() }}">
+                {{ _self.showCursus(child, hierarchy) }}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <ul id="collapse-{{ cursusId }}"
+            class="collapse in cursus-children"
+            data-cursus-id="{{ cursusId }}"
+        >
+        </ul>
+    {% endif %}
+{% endmacro %}
+
+{% from _self import showCursus %}
+
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% set cursusTitle = cursus.getTitle() %}
+{% block title %}
+    {{ parent() ~ ' - ' ~ 'claroline_cursus_tool' | trans({}, 'tools') | striptags | raw ~ ' - ' ~ cursusTitle }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'claroline_cursus_tool'|trans({}, 'tools'),
+                'href': path('claro_cursus_management_tool_menu')
+            },
+            {
+                'name': displayedWords['cursus'],
+                'href': path('claro_cursus_tool_index')
+            },
+            {
+                'name': cursusTitle,
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            [{{ displayedWords['cursus'] }}]
+            {{ cursusTitle }}
+        </h3>
+    </div>
+    <div id="cursus-management-body" class="panel-body">
+        {{ macros.flashBox() }}
+        <div id="cursus-hierarchy">
+            {{ showCursus(cursus, hierarchy) }}
+        </div>
+    </div>
+
+    <div id="view-cursus-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <h3 id="view-cursus-header" class="modal-header">
+                </h3>
+                <div id="view-cursus-body" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <input type="button"
+                           class="btn btn-default"
+                           data-dismiss="modal"
+                           value="{{ 'close'|trans({}, 'platform') }}"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-courses-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <h3 id="view-courses-header" class="modal-header">
+                </h3>
+                <div id="view-courses-body" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <input type="button"
+                           id="view-courses-modal-close-btn"
+                           class="btn btn-default"
+                           data-dismiss="modal"
+                           value="{{ 'close'|trans({}, 'platform') }}"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript"
+            src="{{ url('bazinga_jstranslation_js', { 'domain': 'cursus' }) }}"
+    >
+    </script>
+    <script src='{{ asset('bundles/clarolinecursus/js/cursusManagement.js') }}'
+            type="text/javascript"
+    >
+    </script>
+{% endblock %}

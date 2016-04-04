@@ -1,0 +1,42 @@
+{% extends 'ClarolineCoreBundle::form_theme.html.twig' %}
+
+{% block resourcePicker_widget %}
+    {% spaceless %}
+        {{ block('form_widget') }}
+        {% set inputGroupMode = display_view_button or display_browse_button or display_download_button %}
+        {% if inputGroupMode %}
+        <div class="input-group">
+            {% endif %}
+            <input class="form-control" type="text" placeholder="{{ 'add_resource'|trans({}, 'platform') }}" style="cursor: pointer;">
+            {% if inputGroupMode %}
+            <span class="input-group-btn">
+            {% if display_view_button %}
+                <a  class="btn btn-default disabled resource-view" title="Voir" data-toggle="tooltip" target="_blank" href="" style="margin: 0px;">
+                    <span class="fa fa-external-link"></span>
+                </a>
+            {% endif %}
+            {% if display_browse_button %}
+                <button type="button" class="btn btn-default resource-browse" title="Ressources" data-toggle="tooltip" style="margin: 0px;">
+                    <span class="fa fa-folder-open"></span>
+                </button>
+            {% endif %}
+            {% if display_download_button %}
+                <button type="button" class="btn btn-default resource-download" title="Téléchargement" data-toggle="tooltip" style="margin: 0px;">
+                    <span class="fa fa-file"></span>
+                </button>
+            {% endif %}
+            </span>
+        </div>
+        {% endif %}
+
+        <script type="text/javascript">
+            (function($) {
+                "use strict";
+
+                $(function() {
+                    window.Claroline.ResourcePicker.initialize("{{ id }}");
+                });
+            })(jQuery);
+        </script>
+    {% endspaceless %}
+{% endblock %}

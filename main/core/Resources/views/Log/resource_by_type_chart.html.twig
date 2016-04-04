@@ -1,0 +1,88 @@
+<style type="text/css">
+    .pie-chart{
+        {% if chartHeight is not defined or chartHeight is empty %}
+        height:600px;
+        {% else %}
+        height: {{ chartHeight }}px;
+        {% endif %}
+    }
+</style>
+<link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
+
+{% if filesImported is not defined or filesImported is empty %}
+    <script type="text/javascript" src="{{ asset('packages/jqPlot/src/jquery.jqplot.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/jqplot/jqplot.colors.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('packages/jqPlot/src/plugins/jqplot.pieRenderer.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('packages/jqPlot/src/plugins/jqplot.canvasTextRenderer.js') }}"></script>
+{% else %}
+    <script type="text/javascript" src="{{ asset('packages/jqPlot/src/plugins/jqplot.pieRenderer.js') }}"></script>
+{% endif %}
+
+<div id="analytics-resources-piechart" class="panel panel-default">
+    <div class="panel-heading">
+        <i class="fa fa-pie-chart"></i>
+        {{'resources_usage_ratio'|trans({}, 'platform')}}
+    </div>
+    <div id="collapse-piechart" class="panel-body">
+        <div id="container-piechart">
+            <div id="resources-pie-chart" class="pie-chart"></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var pieChartData = [];
+
+    {% for resource in resourceCount %}
+        pieChartData.push(["{{resource.name|trans({}, 'resource')}}",{{resource.total}}]);
+    {% endfor %}
+
+    var bg_color = 'transparent';
+    var numberRows = 7;
+
+    {% if numberRows is defined and numberRows is not empty %}
+        numberRows = {{ numberRows }};
+    {% endif %}
+
+    $(document).ready(function(){
+        if (pieChartData.length>0) {
+            $.jqplot(
+                'resources-pie-chart',
+                [pieChartData],
+                {
+                    grid: {
+                        drawBorder: false,
+                        shadow: false,
+                        background: bg_color,
+                        useNegativeColors: false
+                    },
+                    seriesDefaults: {
+                        show: true,
+                        showMarker: true,
+                        renderer: $.jqplot.PieRenderer,
+                        rendererOptions: {
+                            showDataLabels: true,
+                            dataLabelThreshold: 2,
+                            dataLabels: 'percent',
+                            sliceMargin: 0.3,
+                            dataLabelFormatString: '%.1f%%',
+                            highlightMouseOver: false
+                        },
+                        shadow: false
+                    },
+                    legend: {
+                        location: 's',
+                        border: 'none',
+                        renderer: $.jqplot.CanvasTextRenderer,
+                        show: true,
+                        showMarker: true,
+                        rendererOptions: {
+                            numberRows: numberRows
+                        },
+                        backgroundColor: bg_color,
+                        placement: 'outsideGrid'
+                    }
+                }
+            );
+        }
+    });
+</script>

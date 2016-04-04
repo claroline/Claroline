@@ -1,0 +1,10 @@
+{% extends 'ClarolineCoreBundle:Resource:multipleRightsPage.html.twig' %}
+
+{% block createCell %}
+    <td>
+        <a data-node-id="{{ node.getId() }}"
+           href="{{ path('claro_workspace_resource_rights_creation_form', {'workspace': workspace.getId(), 'role': permissions.getRole().getId() }) }}">
+            {{ 'options' | trans({}, 'platform') }}
+        </a>
+    </td>
+{% endblock %}

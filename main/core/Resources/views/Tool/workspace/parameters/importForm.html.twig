@@ -1,0 +1,42 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ "general" | trans({}, "platform") | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'parameters'|trans({}, 'platform'),
+                    'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
+                },
+                {
+                    'name': 'general'|trans({}, 'platform'),
+                    'href': ''
+                },
+                {
+                    'name': 'import'|trans({}, 'platform'),
+                    'href': ''
+                }
+            ]
+        )
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'import'|trans({}, 'platform') }}</h3>
+    </div>
+    <form role="form" class="form-horizontal" id="ws_import_form" action="{{ path('claro_workspace_partial_import_submit', {'workspace': workspace.getId()}) }}" method="post" {{ form_enctype(form) }}>
+        <div class="panel-body">
+            {{ form_widget(form) }}
+        </div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            <a class="btn btn-default" href="{{ path('claro_workspace_list') }}" role="button">
+                {{ 'cancel'|trans({}, 'platform') }}
+            </a>
+        </div>
+    </form>
+{% endblock %}

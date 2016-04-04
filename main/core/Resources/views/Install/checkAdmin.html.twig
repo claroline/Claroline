@@ -1,0 +1,46 @@
+{% extends 'ClarolineCoreBundle:Install:layout.html.twig' %}
+{% block content %}
+<div class="col-md-3">
+         <h3> Progression</h3>
+        <ol class="nav nav-list">
+         {%block naviguation %}
+            {{ parent() }}
+        {%endblock %}
+           </ol>
+            <p>  Progression</p>
+            <div class="progress">
+              <div class="bar" style="width: 90%;"></div>
+            </div>
+    </div>
+             <div class="col-md-6">
+                 <h3>{{ 'step_3'|trans({}, 'install') }}</h3>
+                  {%block data %}
+<form role="form" action="{{ path('claro_checkAdminForm') }}" method="post" >
+{{ form_widget(form) }}
+<input type="submit" value="{{ 'next'|trans({}, 'install') }}" class="btn btn-primary"/>
+</form>
+
+<a href="{{ path('claro_showDbForm', {'lg':version} ) }}" class="btn btn-default" role="button"> {{ 'back'|trans({},'install') }} </a>
+
+{%endblock data %}
+        </div>
+            <div class="col-md-2">
+                <h3> {{ 'hint'|trans({}, 'install') }}</h3>
+                <div class="action">
+                   <div class="well">{{'hint_4'|trans({},'install')}} </div>
+                    </div>
+                </div>
+            <div class="col-md-12">
+                 {% if app.session.getFlashes() is defined %}
+       <div class="alert alert-danger">
+        {% for key, flash in app.session.getFlashes() %}
+        {{ flash }} <br />
+        {% endfor %}
+         {{ form_errors(form) }}
+    </div>
+                    {%endif%}
+        </div>
+
+   </div>
+
+{% endblock %}

@@ -1,0 +1,167 @@
+{% macro showTag(tagsList, tagWorkspaces, hierarchy, index, displayable) %}
+
+    {% for tag in tagsList %}
+        {% set workspaceTagId = tag.getId() %}
+        {% if displayable[workspaceTagId] %}
+            {% set currentIndex = index ~ "-" ~ workspaceTagId %}
+            {% set workspace = tag.getWorkspace() %}
+            {% if workspace is not null %}
+                {% set workspaceId = workspace.getId() %}
+                {% set workspaceName = workspace.getName() %}
+                {% set workspaceCode = workspace.getCode() %}
+            {% endif %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <a  class="accordion-toggle"
+                        data-toggle="collapse"
+                        href="#collapse-{{ currentIndex }}"
+                    >
+                        <i class="fa fa-align-justify"></i>
+                        {{ tag.getName() }}
+                        {% if workspace is not null %}
+                            {% set granted = has_access_to_workspace(workspaceId) %}
+                            <span class="pull-right {% if granted %}linked-workspace{%else%}text-muted{% endif %}"
+                                style="color:{% if granted %}#555555{%else%}#999999{% endif %}"
+                                workspace-id="{{ workspaceId }}"
+                            >
+                                [
+                                <i class="fa fa-book"></i>
+                                {{ workspaceName }}
+                                <small>({{ workspaceCode }})</small>
+                                ]
+                            </span>
+                        {% endif %}
+                    </a>
+                </div>
+                <div id="collapse-{{ currentIndex }}" class="panel-body collapse">
+                    {% if (hierarchy[workspaceTagId] is defined and hierarchy[workspaceTagId]|length > 0 ) %}
+                        {{ _self.showTag(hierarchy[workspaceTagId], tagWorkspaces, hierarchy, currentIndex, displayable) }}
+                    {% endif %}
+
+                    {% if tagWorkspaces[workspaceTagId] is defined %}
+                        {% set relations = tagWorkspaces[workspaceTagId] %}
+                        <div id="workspace-list-pager-{{ currentIndex }}" class="workspace-list-pager">
+                            {% include 'ClarolineCoreBundle:Workspace:workspaceListByTagPager.html.twig' %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+{% from _self import showTag %}
+
+{% extends 'ClarolineCoreBundle:WorkspaceTag:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ "all_public_workspaces" | trans({}, "platform") | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-book',
+                'name': 'workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_list')
+            },
+            {
+                'name': 'all_public_workspaces'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'workspaces'|trans({}, 'platform') }}</h3>
+    </div>
+    {{ macros.flashBox() }}
+    <div id="workspace-list-div" class="panel-body">
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('claro_manage_admin_workspace_tag') }}" class="btn btn-default" role="button">
+                {{ 'classify_workspaces'|trans({}, 'platform') }}
+            </a>
+        {% endif %}
+
+        {% if is_granted('ROLE_USER') %}
+            <a href="{{ path('claro_list_workspaces_with_self_registration') }}" class="btn btn-default" role="button">
+                {{ 'register_to_a_workspace'|trans({}, 'platform') }}
+            </a>
+        {% endif %}
+        <hr/>
+        
+        {% if search != '' %}
+            <div class="alert alert-info">
+                {{ 'results_for_search_on'|trans({}, 'platform') }} :
+                "{{ search }}"
+            </div>
+        {% endif %}
+        <div class="row">
+            <div class="input-group col-md-4 pull-right">
+                <input class="form-control"
+                       type="text"
+                       id="search-workspace-input"
+                       placeholder="{{ 'search'|trans({}, 'platform') }}"
+                       value={{search}}
+                >
+                <span class="input-group-btn">
+                    <button class="filter btn btn-default" type="button" id="search-workspace-btn">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
+            </div>
+        </div>
+        <br>
+
+        {% if nonPersonalWs|length == 0 and personalWs|length == 0 %}
+            <div class="alert alert-warning">
+                {{ 'no_workspace'|trans({}, 'platform') }}
+            </div>
+        {% else %}
+        
+            {% if nonPersonalWs|length > 0 %}
+                <div class="panel panel-default" id="accordion-all-non-personal">
+                    <div class="panel-heading">
+                        <a  class="accordion-toggle"
+                            data-toggle="collapse"
+                            data-parent="#accordion-all-non-personal"
+                            href="#collapse-all-non-personal"
+                        >
+                            <i class="fa fa-align-justify"></i>
+                            {{ 'all_public_workspaces'|trans({}, 'platform') }}
+                        </a>
+                    </div>
+                    <div id="collapse-all-non-personal" class="list-group collapse {% if tags|length == 0 %}in{% endif %}">
+                        {% include 'ClarolineCoreBundle:Workspace:nonPersonalWorkspacesListPager.html.twig' %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if personalWs|length > 0 %}
+                <div class="panel panel-default" id="accordion-all-personal">
+                    <div class="panel-heading">
+                        <a  class="accordion-toggle"
+                            data-toggle="collapse"
+                            data-parent="#accordion-all-personal"
+                            href="#collapse-all-personal"
+                        >
+                            <i class="fa fa-align-justify"></i>
+                            {{ 'all_public_personal_workspaces'|trans({}, 'platform') }}
+                        </a>
+                    </div>
+                    <div id="collapse-all-personal" class="list-group collapse {% if tags|length == 0 %}in{% endif %}">
+                        {% include 'ClarolineCoreBundle:Workspace:personalWorkspacesListPager.html.twig' %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable) }}
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/clarolinecore/js/workspace/workspace_list.js') }}" type="text/javascript">
+    </script>
+{% endblock %}

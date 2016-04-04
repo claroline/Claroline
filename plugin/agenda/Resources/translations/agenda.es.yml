@@ -1,0 +1,85 @@
+add_event: 'agregar un evento'
+isTask: Tarea
+cancel: 'Anular'
+close: 'Cerrar'
+confirm: 'Confirmar la modificación?'
+date_invalid: 'Ha ocurrido un error. Por favor, compruebe que su evento no termina antes de que empiece'
+day_: 'Día'
+day:
+    mon: 'Lun'
+    monday: 'Lunes'
+    tue: 'Mar'
+    tuesday: 'Martes'
+    wed: 'Mié'
+    wednesday: 'Miércoles'
+    thu: 'Jue'
+    thursday: 'Jueves'
+    fri: 'Vi'
+    friday: 'Viernes'
+    sat: 'Sáb'
+    saturday: 'Sábado'
+    sun: 'Dom'
+    sunday: 'Domingo'
+date_agenda_display_format: MM-DD-YYYY
+date_agenda_display_format_for_form: MM-dd-yyyy
+end: 'Fin'
+end_date: 'Fecha de finalización'
+error: 'Se ha producido un error inesperado, por favor intente de nuevo'
+export: 'Exportar eventos'
+form:
+    all_day: todo el dia
+    description: Descripción
+    end: Fecha de finalización
+    task: Tâche
+    priority: Prioridad
+    priority_hight: Alta
+    start: Fecha de inicio
+    title: Titulo
+    author: Creado por
+high: 'Alta'
+import_agenda_file: 'Importar'
+length: 'Duracón'
+low: 'Baja'
+medium: 'Media'
+modify: 'Modificar evento'
+month_: mes
+month:
+    jan: 'Ene'
+    january: 'Enero'
+    feb: 'Feb'
+    february: 'Febrero'
+    mar: 'Mar'
+    march: 'Marzo'
+    apr: 'Abr'
+    april: 'Abril'
+    may: 'Mayo'
+    jun: 'Jun'
+    june: 'Junio'
+    jul: 'Jul'
+    july: 'Julio'
+    aug: 'Ago'
+    august: 'Agosto'
+    sept: 'Sept'
+    september: 'Septiembre'
+    oct: 'Oct'
+    october: 'Octubre'
+    nov: 'Nov'
+    november: 'Noviembre'
+    dec: 'Dic'
+    december: 'Diciembre'
+next: '>'
+nextYear: '>>'
+no_event_found: 'Ningún evento encontrado'
+no_description: 'Sin descripción'
+prev: '<'
+prevYear: '<<'
+remove_event: Eliminar un evento
+remove_event_confirm: ¿Está seguro que desea eliminar este evento?
+start_date: 'Fecha de inicio'
+tasks: 'Tareas'
+title: 'El título no puede estar vacío'
+today: 'Hoy'
+update: 'Modificar'
+update_event: Actualizar un evento
+week: 'semana'
+workspace: 'Espacio de trabajo'

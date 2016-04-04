@@ -1,0 +1,6 @@
+create_new_theme: Créer un nouveau thème
+delete_theme_confirm: Êtes-vous sûr de vouloir supprimer ce thème ?
+new_theme: Nouveau thème
+stylesheet: Feuille de style
+theme_dir_not_writable: Il est impossible d'écrire dans le répertoire "web/themes". Aucun thème personnalisé ne peut être créé ou supprimé. Veuillez résoudre ce problème en changeant les permissions de ce répertoire.
+theme_management: Gestion des thèmes

@@ -1,0 +1,128 @@
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
+
+{% block title %}{{ _resource.resourceNode.name ~ ' - ' ~ "edit" | trans({}, "platform") | striptags | raw }}{% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li>
+        <a href="{{ path('claro_resource_open', { 'resourceType': _resource.getResourceNode().getResourceType().getName(), 'node': _resource.getResourceNode().getId() }) }}">
+            {{ _resource.getResourceNode().getName() }}
+        </a>
+    </li>
+    <li class="active">{{ 'edit' | trans({}, 'platform') }}</li>
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <div class="panel-title">{{ _resource.getTitle() }} ({{ 'edit' | trans({}, 'platform') }})</div>
+    </div>
+    <form role="form" action="{{ path('claro_activity_edit', {'resource': _resource.getId() }) }}" method="POST">
+        <div class="panel-body">
+            {{ form_widget(form) }}
+            <hr>
+            <div class="form-group row">
+                {{ form_label(formParams.evaluation_type) }}
+                <span class="col-md-3">
+                    {{ form_widget(formParams.evaluation_type) }}
+                </span>
+            </div>
+            <div class="hidden">
+                {{ form_rest(formParams) }}
+            </div>
+            
+            <div id="activity-rule-form-div" class="hidden" data-rule-default-starting-date="{{ defaultRuleStartingDate }}">
+                <hr>
+                <h3>{{ 'activity_rule_configuration_for_auto_evaluation' | trans({}, 'platform') }}</h3>
+                <br>
+                <div class="form-group row">
+                    <span class="col-md-3 white-space"
+                        data-container="#activity-rule-form-div"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="{{ 'activity_rule_form_action_explanation'|trans({}, 'platform') }}"
+                    >
+                        {{ form_label(formRule.action) }}
+                    </span>
+                    <span class="col-md-6">{{ form_widget(formRule.action) }}</span>
+                </div>
+                <div class="form-group row">
+                    <span class="col-md-3 white-space"
+                        data-container="#activity-rule-form-div"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="{{ 'activity_rule_form_occurrence_explanation'|trans({}, 'platform') }}"
+                    >
+                        {{ form_label(formRule.occurrence) }}
+                    </span>
+                    <span class="col-md-2">{{ form_widget(formRule.occurrence) }}</span>
+                </div>
+                <div class="form-group row">
+                    <span class="col-md-3 white-space"
+                        data-container="#activity-rule-form-div"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="{{ 'activity_rule_form_result_explanation'|trans({}, 'platform') }}"
+                    >
+                        {{ form_label(formRule.result) }}
+                    </span>
+                    <span class="col-md-2">{{ form_widget(formRule.result) }}</span>
+                    <span class="col-md-1">{{ form_label(formRule.resultMax) }}</span>
+                    <span class="col-md-2">{{ form_widget(formRule.resultMax) }}</span>
+                </div>
+                <div class="form-group row">
+                    <span class="col-md-3 white-space"
+                        data-container="#activity-rule-form-div"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="{{ 'activity_rule_form_isResultVisible_explanation'|trans({}, 'platform') }}"
+                    >
+                        {{ form_label(formRule.isResultVisible) }}
+                    </span>
+                    <span class="col-md-6">{{ form_widget(formRule.isResultVisible) }}</span>
+                </div>
+                <div class="form-group row">
+                    <span class="col-md-3 white-space"
+                        data-container="#activity-rule-form-div"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="{{ 'activity_rule_form_activeFrom_explanation'|trans({}, 'platform') }}"
+                    >
+                        {{ form_label(formRule.activeFrom) }}
+                    </span>
+                    <span class="col-md-3">{{ form_widget(formRule.activeFrom) }}</span>
+                    <span class="col-md-1 white-space"
+                        data-container="#activity-rule-form-div"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="{{ 'activity_rule_form_activeUntil_explanation'|trans({}, 'platform') }}"
+                    >
+                        {{ form_label(formRule.activeUntil) }}
+                    </span>
+                    <span class="col-md-3">{{ form_widget(formRule.activeUntil) }}</span>
+                </div>
+                {{ form_widget(formRule) }}
+            </div>
+        </div>
+        <div class="panel-footer text-right">
+            <a class="btn btn-default" href="{{ path('claro_resource_open', { 'resourceType': _resource.getResourceNode().getResourceType().getName(), 'node': _resource.getResourceNode().getId() }) }}">
+                {{ 'cancel' | trans({}, 'platform') }}
+            </a>
+            <button class="btn btn-primary" type="submit">{{ 'ok' | trans({}, 'platform') }}</button>
+        </div>
+    </form>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script
+        src="{{ asset('bundles/clarolinecore/js/activity/editActivityParameters.js') }}"
+        type="text/javascript"
+    >
+    </script>
+{% endblock %}
+

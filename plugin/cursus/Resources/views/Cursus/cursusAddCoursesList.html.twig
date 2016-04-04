@@ -1,0 +1,161 @@
+{% macro renderPager(pager, cursus, search, orderedBy, order, max) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_cursus_add_courses_users_list',
+                'routeParams': {
+                    'cursus': cursus.getId(),
+                    'search': search,
+                    'orderedBy': orderedBy,
+                    'order': order,
+                    'max': max
+                }
+            }
+        )
+    }}
+{% endmacro %}
+
+{% macro sortUrl(cursus, search, orderedBy, order, max) %}
+    {% if order == 'ASC' %}
+        {% set newOrder = 'DESC' %}
+    {% else %}
+        {% set newOrder = 'ASC' %}
+    {% endif %}
+    {{ 
+        path(
+            'claro_cursus_add_courses_users_list',
+            {
+                'cursus': cursus.getId(), 
+                'search': search,
+                'orderedBy': orderedBy,
+                'order': newOrder,
+                'max': max
+            }
+        )
+    }}
+{% endmacro %}
+
+{% from _self import renderPager %}
+{% from _self import sortUrl %}
+
+{% if search != '' %}
+    <div class="alert alert-info">
+        {{ 'results_for_search_on'|trans({}, 'platform') }} :
+        "{{ search }}"
+    </div>
+{% endif %}
+
+<div class="input-group col-md-6 pull-right">
+    <input class="form-control search-user"
+           type="text"
+           id="search-course-input"
+           placeholder="{{ 'search'|trans({}, 'platform') }}"
+           value="{{ search }}"
+           data-cursus-id="{{ cursus.getId() }}"
+           data-ordered-by="{{ orderedBy }}"
+           data-order="{{ order }}"
+           data-max="{{ max }}"
+    >
+    <span class="input-group-btn">
+        <button class="filter btn btn-default search-course-btn"
+                type="button"
+                id="search-course-btn"
+                data-cursus-id="{{ cursus.getId() }}"
+                data-ordered-by="{{ orderedBy }}"
+                data-order="{{ order }}"
+                data-max="{{ max }}"
+        >
+            <i class="fa fa-search"></i>
+        </button>
+    </span>
+</div>
+<br>
+<br>
+<br>
+
+{% if courses|length == 0 %}
+    <div class="alert alert-warning">
+        {{ 'no_course'|trans({}, 'cursus') }}
+    </div>
+{% else %}
+    <div id="courses-list-table" class="table-responsive">
+        <table class="table table-striped table-bordered table-condensed">
+            <tr>
+                <th>
+                    <a href="{{ sortUrl(cursus, search, 'title', order, max) }}">
+                        {{ 'title'|trans({}, 'platform') }}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ sortUrl(cursus, search, 'code', order, max) }}">
+                        {{ 'code'|trans({}, 'platform') }}
+                    </a>
+                </th>
+                <th class="text-center">
+                    <a href="{{ sortUrl(cursus, search, 'description', order, max) }}">
+                        {{ 'description'|trans({}, 'platform') }}
+                    </a>
+                </th>
+                <th class="text-center">
+                    <a href="{{ sortUrl(cursus, search, 'publicRegistration', order, max) }}">
+                        {{ 'public_registration'|trans({}, 'platform') }}
+                    </a>
+                </th>
+                <th></th>
+            </tr>
+            
+            {% for course in courses %}
+                <tr id="row-course-{{ course.getId() }}">
+                    <td>
+                        {{ course.getTitle() }}
+                    </td>
+                    <td>
+                        {{ course.getCode() }}
+                    </td>
+                    <td class="text-center">
+                        {% if course.getDescription() is not empty %}
+                            <i class="fa fa-eye pointer-hand course-description-btn"
+                               data-container="#courses-list-table"
+                               data-toggle="popover"
+                               data-placement="top"
+                               data-html="true"
+                               data-content="{{ course.getDescription()|raw }}"
+                            >
+                            </i>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {% if course.getPublicRegistration() %}
+                            <i class="fa fa-check-circle" style="color: #5CB85C"></i>
+                        {% else %}
+                            <i class="fa fa-times-circle" style="color: #D9534F"></i>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="btn btn-success btn-sm pointer-hand add-course-btn"
+                              data-cursus-id="{{ cursus.getId() }}"
+                              data-course-id="{{ course.getId() }}"
+                        >
+                            {{ 'add_course'|trans({}, 'cursus') }}
+                        </span>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+        
+    {% if courses.getNbPages() > 1 %}
+        {{ renderPager(courses, cursus, search, orderedBy, order, max) }}
+    {% endif %}
+{% endif %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        $('.course-description-btn').popover();
+    </script>
+{% endblock %}

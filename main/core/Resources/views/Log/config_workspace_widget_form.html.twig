@@ -1,0 +1,43 @@
+{% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
+
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+
+{% block stylesheets %}
+    {#{{ parent() }}#}
+    <style type="text/css">
+        #form_log_update_workspace_widget .control-group {
+            margin-bottom: 0px;
+        }
+
+        #form_log_update_workspace_widget .control-group:last-child {
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+    </style>
+{% endblock %}
+
+{{ macros.flashBox() }}
+
+<form
+    role="form"
+    id="form_log_update_workspace_widget"
+    method="POST"
+    action="{{ path('claro_log_update_workspace_widget_config', {'widgetInstance': instance.getId()}) }}"
+    class="form-horizontal"
+    {{ form_enctype(form) }}>
+
+    <div class="panel-body">
+        <legend>{{ 'widget_visible_actions'|trans({}, 'platform') }}</legend>
+
+        {{ form_widget(form._token) }}
+        {{ form_widget(form) }}
+    </div>
+
+    <div class="panel-footer">
+        <button type="submit" class="btn btn-primary">{{ 'configure'|trans({}, 'platform') }}</button>
+
+        <a href="#">
+            <button type="button" class="btn btn-default claro-widget-form-cancel">{{ 'cancel'|trans({}, 'platform') }}</button>
+        </a>
+    </div>
+</form>

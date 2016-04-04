@@ -1,0 +1,33 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'import' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block section_content %}
+    <form role="form" class="form-horizontal" action="{{ path('import_profile_pics') }}" method="post" {{ form_enctype(form) }} >
+        <div class="panel-body">
+            {{
+                macros.breadcrumbs([
+                    {
+                        'name': 'users_management'|trans({}, 'platform'),
+                        'href': path('claro_admin_users_index')
+                    },
+                    {
+                        'name':'import_profile_pics'|trans({}, 'platform'),
+                        'href':''
+                    }
+                ])
+            }}
+            <div class="well">
+                {{ 'import_profile_pics_explanation'|trans({}, 'platform')}}
+            </div>
+
+            {{ form_widget(form) }}
+        </div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            <a href="{{ path('claro_admin_users_index') }}" class="btn btn-default" role="button">
+                {{ 'cancel'|trans({}, 'platform') }}
+            </a>
+        </div>
+    </form>
+{% endblock %}

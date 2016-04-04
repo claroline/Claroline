@@ -1,0 +1,21 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">{{ "content_regions" | trans({}, "home") }}</h4>
+        </div>
+        <div class="modal-body" data-id="{{ id }}">
+            <div class="row">
+                <div class="col-md-12"><div class="panel panel-default{% if region == 'header' %} active{% endif %}" data-region="header">{% if region == 'header' %}<i class='fa fa-times-circle'></i> {% endif %}{{ 'header' | trans({}, "home") }}</div></div>
+            </div>
+            <div class="row">
+                <div class="col-md-4"><div class="panel panel-default{% if region == 'left' %} active{% endif %}" data-region="left">{% if region == 'left' %}<i class='fa fa-times-circle'></i> {% endif %}{{ 'left_direction' | trans({}, "home") }}</div></div>
+                <div class="col-md-4"><div class="panel panel-default{% if region == 'content' %} active{% endif %}" data-region="content">{% if region == 'content' %}<i class='fa fa-times-circle'></i> {% endif %}{{ 'content' | trans({}, "platform") }}</div></div>
+                <div class="col-md-4"><div class="panel panel-default{% if region == 'right' %} active{% endif %}" data-region="right">{% if region == 'right' %}<i class='fa fa-times-circle'></i> {% endif %}{{ 'right_direction' | trans({}, "home") }}</div></div>
+            </div>
+            <div class="row">
+                <div class="col-md-12"><div class="panel panel-default{% if region == 'footer' %} active{% endif %}" data-region="footer">{% if region == 'footer' %}<i class='fa fa-times-circle'></i> {% endif %}{{ 'footer' | trans({}, "platform") }}</div></div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,4 @@
+claro_message_bundle:
+    resource: "@ClarolineMessageBundle/Controller/"
+    prefix:   message
+    type:     annotation

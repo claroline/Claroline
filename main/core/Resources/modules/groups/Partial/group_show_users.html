@@ -1,0 +1,29 @@
+<div>
+    <h3> {{ ulc.group.name }} </h3>
+    <uib-alert ng-repeat="alert in ulc.alerts" type="{{ alert.type }}" close="ulc.closeAlert($index)">{{ alert.msg }}</uib-alert>
+    <div>
+        <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-cog"></i> <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="pointer" ng-click="ulc.addUser()"> {{ 'add'|trans:{}:'platform' }} </a></li>
+                <li><a class="pointer" ng-click="ulc.clickDelete()"> {{ 'delete'|trans:{}:'platform' }} </a></li>
+                <li role="separator" class="divider"></li>
+                <li><a class="pointer" ng-click="ulc.importMembers()">{{ 'import_users'|trans:{}:'platform' }}</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="{{ 'api_search_users'|path:{'_format': 'xls', 'page': 0, 'limit': 9999} }}?group_id[]={{ ulc.group.id }}"> {{ 'excel_export'|trans:{}:'platform' }} </a></li>
+                <li><a href="{{ 'api_search_users'|path:{'_format': 'csv', 'page': 0, 'limit': 9999} }}?group_id[]={{ ulc.group.id }}"> {{ 'csv_export'|trans:{}:'platform' }} </a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div align="center" class="action-bar">
+        <div class="panel-body">
+            <clarolinesearch on-search="ulc._onSearch" fields="ulc.fields"></clarolinesearch>
+        </div>
+    </div>
+    <div>
+        <dtable options="ulc.dataTableOptions" rows="ulc.users" class="material" on-page="ulc.paging(offset, size)" selected="ulc.selected"></dtable>
+    </div>
+</div>

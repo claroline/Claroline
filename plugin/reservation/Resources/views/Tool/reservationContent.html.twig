@@ -1,0 +1,16 @@
+{% twig_js name="ReservationContent" %}
+
+<div>{{ 'agenda.form.start_date'|trans({}, 'reservation') }}: {{ event.start.string }}</div>
+<div>{{ 'agenda.form.end_date'|trans({}, 'reservation') }}: {{ event.end.string }}</div>
+<div>{{ 'agenda.popover.author'|trans({}, 'reservation') }}: {{ event.owner }}</div>
+{% if event.comment is not empty %}
+    <div>{{ 'agenda.form.comment'|trans({}, 'reservation') }}: {{ event.comment }}</div>
+{% endif %}
+<div>{{ 'agenda.form.resource_type'|trans({}, 'reservation') }}: {{ event.resourceTypeName }}</div>
+
+{% if event.description is not empty %}
+    {{ 'agenda.form.description'|trans({}, 'reservation') }} :
+    <div style="max-height: 150px; overflow-y: auto;">
+        {{ event.description|raw }}
+    </div>
+{% endif %}

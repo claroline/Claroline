@@ -1,0 +1,14 @@
+{% set session = queue.getSession() %}
+{% set course = session.getCourse() %}
+<div>
+    {{ 'session_request_confirm_msg'|trans({'%sessionName%': session.getName(), '%courseTitle%': course.getTitle(), '%courseCode%': course.getCode()}, 'cursus') }}
+</div>
+<br>
+<div>
+    {{ 'click_on_link_below_to_confirm_request'|trans({}, 'cursus') }}
+</div>
+<br>
+<a href="{{ link }}">
+    {{ link }}
+</a>
+<br>

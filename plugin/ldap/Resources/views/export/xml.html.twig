@@ -1,0 +1,15 @@
+{% macro td(users, server, index, id) %}<{{id}}>{% if server[id] is defined and server[id] != '' and users[index] is defined and users[index][server[id]] is defined %}{{ users[index][server[id]][0] }}{% endif %}</{{ id }}>{% endmacro %}
+{% import _self as item %}
+<users>
+{% for i in 1..(users.count - 1) %}
+    <user>
+        {{ item.td(users, server, i, 'userName') }}
+        {{ item.td(users, server, i, 'firstName') }}
+        {{ item.td(users, server, i, 'lastName') }}
+        {{ item.td(users, server, i, 'email') }}
+        {{ item.td(users, server, i, 'password') }}
+        {{ item.td(users, server, i, 'code') }}
+        {{ item.td(users, server, i, 'locale') }}
+    </user>
+{% endfor %}
+</users>

@@ -1,0 +1,64 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block title %}{{ 'desktop' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    <div id="resource-breadcrumb">
+        {% if _resource is defined %}
+            <div id="twig-resource-attributes"
+                 data-resource-id="{{ _resource.getId() }}"
+                 data-resource-name="{{ _resource.getName() }}"
+                    >
+            </div>
+            <ul class="breadcrumb">
+                <li><a href="{{ path('claro_desktop_open') }}"><i class="fa fa-home"></i> {{ 'desktop'|trans({}, 'platform') }}</a></li>
+                <li><a href="{{ path('claro_desktop_open_tool', {'toolName': 'resource_manager'}) }}">{{ 'resources'|trans({}, 'platform') }}</a></li>
+                {% render(controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
+                {'node': _resource.getResourceNode(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}))
+                %}
+                {% block resourceBreadcrumb %}
+                    <li class="active">{{ _resource.getResourceNode().getName() }}</li>
+                {% endblock %}
+            </ul>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="visible-xs">
+        {{ block("leftbar") }}
+    </div>
+    <div class="section-content">
+        <div class="panel panel-default">
+            {% block section_content %}{% endblock %}
+        </div>
+    </div>
+    {% block section_after_content %}{% endblock %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        window.Workspace = {};
+        {% if _resource is defined %}
+        window.Workspace.id = {{ _resource.getResourceNode().getWorkspace().getId() }};
+        {% else %}
+        window.Workspace.id = null;
+        {% endif %}
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style type="text/css">
+        {% if app.user and
+              app.user.getOptions() is not empty and
+              app.user.getOptions().getDesktopBackgroundColor() is not empty
+        %}
+            body {
+                background-color: {{ app.user.getOptions().getDesktopBackgroundColor() }};
+            }
+        {% endif %}
+    </style>
+{% endblock %}

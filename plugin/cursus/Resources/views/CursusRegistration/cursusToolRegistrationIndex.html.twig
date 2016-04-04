@@ -1,0 +1,45 @@
+{#{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}#}
+{% extends "ClarolineCursusBundle:CursusRegistration:layout.html.twig" %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ 'claroline_cursus_tool_registration' | trans({}, 'tools') | striptags | raw }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'claroline_cursus_tool_registration'|trans({}, 'tools'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div id="cursus-registration-panel" ng-app="CursusRegistrationModule">
+        <div class="panel panel-default" ui-view>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+{#    <link rel="stylesheet" href="{{ asset('vendor/angular-ui.css')}}"> </link>#}
+    <link rel="stylesheet"  href="{{ asset('bundles/frontend/angular-ui-tree/dist/angular-ui-tree.min.css') }}" />
+    <link rel="stylesheet"  href="{{ asset('bundles/frontend/angular-data-table/release/dataTable.css') }}" />
+    <link rel="stylesheet"  href="{{ asset('bundles/frontend/angular-data-table/release/material.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'tools' }) }}"></script>
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'cursus' }) }}"></script>
+    <script type="text/javascript" src="{{ asset('dist/claroline-distribution-plugin-cursus-registration.js') }}"></script>
+{% endblock %}

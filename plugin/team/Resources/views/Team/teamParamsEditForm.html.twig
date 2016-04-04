@@ -1,0 +1,52 @@
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ 'default_parameters' | trans({}, 'team') | striptags | raw }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'claroline_team_tool'|trans({}, 'tools'),
+                    'href': path('claro_team_manager_menu', {'workspace': workspace.getId()})
+                },
+                {
+                    'name': 'default_parameters'|trans({}, 'team'),
+                    'href': ''
+                }
+            ]
+        )
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'default_parameters'|trans({}, 'team') }}</h3>
+    </div>
+    <form role="form"
+          class="form-horizontal"
+          action="{{ path('claro_team_parameters_edit', {'params': params.getId()}) }}"
+          method="post"
+          {{ form_enctype(form) }}
+          id="form_settings"
+          novalidate
+    >
+        <div class="panel-body">
+            {{ form_widget(form) }}
+        </div>
+        <br>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">
+                {{ 'ok'|trans({}, 'platform') }}
+            </button>
+            <a href="{{ path('claro_team_manager_menu', {'workspace': workspace.getId()}) }}"
+               class="btn btn-default"
+            >
+                {{ 'cancel'|trans({}, 'platform') }}
+            </a>
+        </div>
+    </form>
+{% endblock %}

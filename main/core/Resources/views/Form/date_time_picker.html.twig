@@ -1,0 +1,122 @@
+{% extends 'ZenstruckFormBundle:Twitter:form_bootstrap3_layout.html.twig' %}
+
+{% block custom_widget_attributes %}
+    {% spaceless %}
+        name="{{ full_name }}"{% if read_only %} readonly="readonly"{% endif %}{% if disabled %} disabled="disabled"{% endif %}{% if required %} required="required"{% endif %}{% if max_length %} maxlength="{{ max_length }}"{% endif %}{% if pattern %} pattern="{{ pattern }}"{% endif %}
+        {% for attrname, attrvalue in attr %}{% if attrname in ['placeholder', 'title'] %}{{ attrname }}="{{ attrvalue|trans({}, translation_domain) }}" {% else %}{{ attrname }}="{{ attrvalue }}" {% endif %}{% endfor %}
+    {% endspaceless %}
+{% endblock custom_widget_attributes %}
+
+
+{% block datetimepicker_row %}
+    <div class="{% if errors|length > 0 %}has-error{% endif %}">
+        {% spaceless %}
+            {{ form_errors(form,{}) }}
+            {{ form_label(form,{}) }}
+            {{ form_widget(form,{})  }}
+        {% endspaceless %}
+    </div>
+{% endblock %}
+
+
+
+{% block datetimepicker_widget %}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' clarolineDateTimePicker')|trim}) %}
+    <div class="form-inline">
+        {% if component %}
+            <div class="input-group  date col-md-4">
+                {{ form_widget(form.date, {'id' : id ~ '_date','attr':{'class':'input-small','placeholder': 'date_form_placeholder'|trans({},'platform')},}) }}
+                <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+            </div>
+            <div class="input-group   col-md-offset-1 col-sm-3 ">
+                {{ form_widget(form.time, {'id' : id ~ '_time','attr':{'class':'input-small','placeholder':'--:--','pattern':'[0-9]{2}:[0-9]{2}'} } ) }}
+                <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+            </div>
+        {% else %}
+            {{ form_widget(form.date, {'id' : id ~ '_date','attr':{'class':'input-small','placeholder': 'date_form_placeholder'|trans({},'platform')},}) }}
+            {{ form_widget(form.time, {'id' : id ~ '_time','attr':{'class':'input-small','placeholder':'--:--','pattern':'[0-9]{2}:[0-9]{2}'} } ) }}
+        {%  endif %}
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            if(!IsInputTypeSupported('date'))
+            {
+                $("#{{ form.vars['id'] }}_date").datepicker({{ options|json_encode()|raw }});
+            }
+
+            if(!IsInputTypeSupported('time'))
+            {
+                $("#{{ form.vars['id'] }}_time").keyup(function(e)
+                {
+                    // do nothing if this is a delete or suppr key.
+                    if(e.keyCode != 8 && e.keyCode != 46 ) {
+                        var time; // will be the returned value
+                        var val = $(this).val(); // value of the input
+                        var sep =':'; // hours separator
+                        var lg = $(this).val().length; // length of the input value
+                        var hours = val.substr(0,2); // supposed hours
+                        var min = val.substr(3,2); // supposed minutes.
+                        var default_val = '00'; // default value when something is wrong.
+
+                        if(val == '') {
+                            // if empty, set the default value
+                            time  =default_val+sep+default_val;
+                        } else {
+                            // if hours are not a correct Integer, set the default value
+                            if(isNaN(parseInt(hours))) {
+                                hours = default_val;
+                            }
+                            // if minutes exist but are not a correct Integer, set the default value
+                            if(min != '' && isNaN(parseInt(min))){
+                                min = default_val;
+                            }
+                            // if hours are not in the correct range, set the default.
+                            if( hours < 0 || hours > 23) {
+                                hours = default_val;
+                            }
+                            // if mins are not in the correct range, set the default
+                            if(min < 0 || min > 59) {
+                                min = default_val;
+                            }
+                            // if there is no minute or separator.
+                            if(lg < 2) {
+                                sep = '';
+                                min = '';
+                            }
+                            //setting a correct time value.
+                            time = hours+sep+min;
+                        }
+                        // push the value in the input.
+                        $(this).val(time);
+                    }
+                });
+            }
+        });
+
+        /**
+         *  Check if browser support the type of input.
+         * @param typeName
+         * @returns {boolean}
+         * @constructor
+         */
+        function IsInputTypeSupported(typeName) {
+            // Create element
+            var input = document.createElement("input");
+            // attempt to set the specified type
+            input.setAttribute("type", typeName);
+            // If the "type" property equals "text"
+            // then that input type is not supported
+            // by the browser
+            var val = (input.type !== "text");
+            // Delete "input" variable to
+            // clear up its resources
+            delete input;
+            // Return the detected value
+            return val;
+        }
+
+    </script>
+
+
+{% endblock %}

@@ -1,0 +1,28 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4>{{ "move_content" | trans({}, "home") }}</h4>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-sm-4">
+                    <label for="pages">{{ "select_page" | trans({}, "home") }}</label>
+                </div>
+                <div class="col-sm-8">
+                    <select id="pages" class="form-control">
+                        <option></option>
+                        {% for page in pages%}
+                            {% if page.getName != 'menu' and page.getName != currentType %}
+                                <option>{{ page.getName() }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{{ "cancel" | trans({}, "platform") }}</button>
+        </div>
+    </div>
+</div>

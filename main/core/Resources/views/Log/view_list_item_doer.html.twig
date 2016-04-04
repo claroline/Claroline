@@ -1,0 +1,26 @@
+<strong>
+
+    {% if log.getDetails().doer is defined %}
+        <strong>
+            {% if log.getDoer() != null %}
+                {% if _resource is defined %}
+                    {% set path = path('claro_resource_logs', {node:_resource.resourceNode.id}) %}
+                {% elseif workspace is defined %}
+                    {% set path = path('claro_workspace_logs_show', {workspaceId: workspace.id}) %}
+                {% else %}
+                    {% set path = path('claro_admin_logs_show') %}
+                {% endif %}
+                {% set query_params = app.request.query.all|merge({'user': log.getDoer().getFirstName()~' '~log.getDoer().getLastName()}) %}
+                <a href="{{  path~'?'~query_params|url_encode }}">
+                    {{ log.getDetails().doer.firstName }} {{ log.getDetails().doer.lastName }}
+                </a>
+            {% else %}
+                <em>{{ log.getDetails().doer.firstName }} {{ log.getDetails().doer.lastName }}</em>
+            {% endif %}
+        </strong>
+    {% elseif log.getDoerType == 'platform' %}
+        {{ ('log_default_user')|trans({}, 'log') }}
+    {% elseif log.getDoerType == 'anonymous' %}
+        {{ ('anonymous')|trans({}, 'platform') }}
+    {% endif %}
+</strong>

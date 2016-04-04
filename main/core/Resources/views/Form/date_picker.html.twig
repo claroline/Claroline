@@ -1,0 +1,26 @@
+{% extends 'ZenstruckFormBundle:Twitter:form_bootstrap3_layout.html.twig' %}
+
+{% block custom_widget_attributes %}
+{% spaceless %}
+    name="{{ full_name }}"{% if read_only %} readonly="readonly"{% endif %}{% if disabled %} disabled="disabled"{% endif %}{% if required %} required="required"{% endif %}{% if max_length %} maxlength="{{ max_length }}"{% endif %}{% if pattern %} pattern="{{ pattern }}"{% endif %}
+    {% for attrname, attrvalue in attr %}{% if attrname in ['placeholder', 'title'] %}{{ attrname }}="{{ attrvalue|trans({}, translation_domain) }}" {% else %}{{ attrname }}="{{ attrvalue }}" {% endif %}{% endfor %}
+{% endspaceless %}
+{% endblock custom_widget_attributes %}
+
+{% block datepicker_widget %}
+    {% spaceless %}
+        {% if component %}
+        <div class="input-group date" id="{{ id }}">
+            <input type="text" class="input-sm form-control" {{ block('custom_widget_attributes') }}{% if value is not empty %} value="{{ value }}" {% endif %}>
+            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+        </div>
+        {% else %}
+        <input type="text" class="input-sm form-control" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+        {% endif %}
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $("#{{ form.vars['id'] }}").datepicker({{ options|json_encode()|raw }});
+            });
+        </script>
+    {% endspaceless %}
+{% endblock %}

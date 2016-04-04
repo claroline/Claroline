@@ -1,0 +1,5 @@
+{% twig_js name="FieldElementInnerHtml" %}
+
+<a class="edit-field-facet" href="#">{{ field.name }} ({{ field.typeTranslationKey|trans({}, 'platform') }})</a> -
+<a class="role-field-facet" href="#"> {{ "roles"|trans({}, 'platform') }} </a>
+<a class="close remove-field-facet" href="#" aria-hidden="true">&times;</a>

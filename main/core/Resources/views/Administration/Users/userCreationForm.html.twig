@@ -1,0 +1,48 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'add_user' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+{% block section_content %}
+    <form role="form" class="form-horizontal" action="{{ path('claro_admin_create_user') }}" method="post" {{ form_enctype(form_complete_user) }} id="form_complete_user" autocomplete="off">
+        <div class="panel-body">
+            {{
+                macros.breadcrumbs([
+                    {
+                        'name': 'users_management'|trans({}, 'platform'),
+                        'href': path('claro_admin_users_index')
+                    },
+                    {
+                        'name': 'add_user'|trans({}, 'platform'),
+                        'href':''
+                    }
+                ])
+            }}
+            {% if error is not empty %}
+                <div class="alert alert-warning"> {{ error|trans({}, 'platform') }} </div>
+            {% endif %}
+            {% for role in unavailableRoles %}
+                {% if role.getName() == 'ROLE_USER' %}
+                    <div class="alert alert-danger"> {{ 'user_limit_reached'|trans({}, 'platform') }}</div>
+                {% else %}
+                    <div class="alert alert-warning"> {{ 'role_limit_reached'|trans({'%translationKey%': role.getTranslationKey()|trans({}, 'platform')}, 'platform') }}</div>
+                {% endif %}
+            {% endfor %}
+            {{ form_widget(form_complete_user) }}
+        </div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            <a class="btn btn-default" href="{{ path('claro_admin_users_index') }}" role="button">
+                {{ 'cancel'|trans({}, 'platform') }}
+            </a>
+        </div>
+    </form>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        //disable unavailable checkboxes
+        {% for role in unavailableRoles %}
+            $('#profile_form_creation_platformRoles_' + {{ role.getId() }}).attr('disabled', true);
+        {% endfor %}
+    </script>
+{% endblock %}

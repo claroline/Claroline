@@ -1,0 +1,390 @@
+claro_security_login_check:
+    pattern: /login_check
+    options: { expose: true }
+
+claro_security_logout:
+    pattern: /logout
+
+claro_oauth_authorize:
+    resource: "@ClarolineCoreBundle/Controller/OauthController.php"
+    type: annotation
+
+claro_index:
+    resource: "@ClarolineCoreBundle/Controller/HomeController.php"
+    type: annotation
+
+claro_locale:
+    resource: "@ClarolineCoreBundle/Controller/LocaleController.php"
+    type: annotation
+
+claro_theme:
+    resource: "@ClarolineCoreBundle/Controller/ThemeController.php"
+    type: annotation
+
+claro_theme_confirm:
+    pattern: /admin/theme/confirm
+    options: { expose: true }
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'ClarolineCoreBundle:Theme:confirm.html.twig'
+
+claro_content_typeerror:
+    pattern: /content/typeerror
+    options: { expose: true }
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'ClarolineCoreBundle:Home:typeerror.html.twig'
+
+claro_content_confirm:
+    pattern: /content/confirm
+    options: { expose: true }
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'ClarolineCoreBundle:Home:confirm.html.twig'
+
+claro_content_link:
+    pattern: /content/link
+    options: { expose: true }
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'ClarolineCoreBundle:Home:link.html.twig'
+
+claro_authentication:
+    resource: "@ClarolineCoreBundle/Controller/AuthenticationController.php"
+    type: annotation
+
+claro_log:
+    resource: "@ClarolineCoreBundle/Controller/Log/LogController.php"
+    prefix: log
+    type: annotation
+
+claro_log_admin:
+    resource: "@ClarolineCoreBundle/Controller/Log/AdministrationController.php"
+    prefix: admin
+    type: annotation
+
+claro_log_workspace:
+    resource: "@ClarolineCoreBundle/Controller/Log/Tool/WorkspaceController.php"
+    prefix: workspaces
+    type: annotation
+
+claro_profile:
+    resource: "@ClarolineCoreBundle/Controller/ProfileController.php"
+    prefix: profile
+    type: annotation
+
+claro_registration:
+    resource: "@ClarolineCoreBundle/Controller/RegistrationController.php"
+    type: annotation
+    prefix: register
+
+claro_desktop:
+    resource: "@ClarolineCoreBundle/Controller/DesktopController.php"
+    prefix: desktop
+    type: annotation
+
+claro_desktop_tool_home:
+    resource: "@ClarolineCoreBundle/Controller/Tool/HomeController.php"
+    prefix: tool/home
+    type: annotation
+
+claro_desktop_tool_properties:
+    resource: "@ClarolineCoreBundle/Controller/Tool/DesktopParametersController.php"
+    prefix: desktop/tool/properties
+    type: annotation
+
+claro_workspace:
+    resource: "@ClarolineCoreBundle/Controller/WorkspaceController.php"
+    prefix: workspaces
+    type: annotation
+
+claro_workspace_tag:
+    resource: "@ClarolineCoreBundle/Controller/WorkspaceTagController.php"
+    prefix: workspaces
+    type: annotation
+
+claro_workspace_tool_properties:
+    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceParametersController.php"
+    prefix: workspaces/tool/properties
+    type: annotation
+
+claro_workspace_tool_tools_properties:
+    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceToolsParametersController.php"
+    prefix: workspaces/tool/properties
+    type: annotation
+
+claro_workspace_roles:
+    resource: "@ClarolineCoreBundle/Controller/Tool/RolesController.php"
+    prefix: workspaces/tools/roles/
+    type: annotation
+
+claro_workspace_model:
+    resource: "@ClarolineCoreBundle/Controller/Tool/ModelController.php"
+    prefix: workspaces/tools/model/
+    type: annotation
+
+claro_workspace_analytics:
+    prefix: workspace/analytics
+    resource: "@ClarolineCoreBundle/Controller/WorkspaceAnalyticsController.php"
+    type: annotation
+
+claro_admin:
+    resource: "@ClarolineCoreBundle/Controller/AdministrationController.php"
+    prefix: admin
+    type: annotation
+
+claro_admin_desktop_configuration:
+    resource: "@ClarolineCoreBundle/Controller/Administration/DesktopConfigurationController.php"
+    prefix: admin
+    type: annotation
+
+claro_admin_home_tab:
+    resource: "@ClarolineCoreBundle/Controller/Administration/HomeTabController.php"
+    prefix: admin
+    type: annotation
+
+claro_admin_tool_config:
+    resource: "@ClarolineCoreBundle/Controller/Administration/ToolsController.php"
+    prefix: admin/tools
+    type: annotation
+
+claro_resource:
+    resource: "@ClarolineCoreBundle/Controller/ResourceController.php"
+    prefix: resource
+    type: annotation
+
+claro_resource_parameters:
+    resource: "@ClarolineCoreBundle/Controller/ResourcePropertiesController.php"
+    prefix: resource
+    type: annotation
+
+claro_resource_rights:
+    resource: "@ClarolineCoreBundle/Controller/ResourceRightsController.php"
+    prefix: resource
+    type: annotation
+
+claro_tool_resoure_manager:
+    resource: "@ClarolineCoreBundle/Controller/Tool/ResourceManagerController.php"
+    prefix: resource
+    type: annotation
+
+claro_text:
+    resource: "@ClarolineCoreBundle/Controller/TextController.php"
+    prefix: text
+    type: annotation
+
+claro_widget:
+    resource: "@ClarolineCoreBundle/Controller/Widget"
+    prefix: widget
+    type: annotation
+
+claro_mail:
+    resource: "@ClarolineCoreBundle/Controller/MailController.php"
+    prefix: mail
+    type: annotation
+
+claro_activity:
+    resource: "@ClarolineCoreBundle/Controller/ActivityController.php"
+    prefix: activity/
+    type: annotation
+
+claro_activity_remove_resource_confirm:
+    pattern: /activity/remove
+    options: { expose: true }
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'ClarolineCoreBundle:Activity:remove.html.twig'
+
+fos_js_routing:
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+
+claro_file:
+    resource: "@ClarolineCoreBundle/Controller/FileController.php"
+    type: annotation
+    prefix: file
+
+claro_user:
+    resource: "@ClarolineCoreBundle/Controller/UserController.php"
+    type: annotation
+    prefix: user
+
+claro_admin_parameters:
+    prefix: admin/parameters
+    resource: "@ClarolineCoreBundle/Controller/Administration/ParametersController.php"
+    type: annotation
+
+claro_admin_workspaces:
+    prefix: admin/workspaces
+    resource: "@ClarolineCoreBundle/Controller/Administration/WorkspacesController.php"
+    type: annotation
+
+claro_admin_roles:
+    prefix: admin/roles
+    resource: "@ClarolineCoreBundle/Controller/Administration/RolesController.php"
+    type: annotation
+
+claro_admin_users:
+    prefix: admin/users
+    resource: "@ClarolineCoreBundle/Controller/Administration/UsersController.php"
+    type: annotation
+    options: { expose: true }
+
+claro_admin_logs:
+    prefix: admin/logs
+    resource: "@ClarolineCoreBundle/Controller/Administration/LogsController.php"
+    type: annotation
+
+claro_admin_analytics:
+    prefix: admin/analytics
+    resource: "@ClarolineCoreBundle/Controller/Administration/AnalyticsController.php"
+    type: annotation
+
+claro_admin_workspace_registration:
+    prefix: admin/workspace/registration
+    resource: "@ClarolineCoreBundle/Controller/Administration/WorkspaceRegistrationController.php"
+    type: annotation
+
+claro_admin_facet:
+    resource: "@ClarolineCoreBundle/Controller/Administration/FacetController.php"
+    prefix: admin/facet
+    type: annotation
+    options:
+        expose: true
+
+claro_admin_oauth:
+    resource: "@ClarolineCoreBundle/Controller/Administration/OauthController.php"
+    prefix: admin/oauth
+    type: annotation
+
+claro_admin_organization:
+    resource: "@ClarolineCoreBundle/Controller/Administration/OrganizationController.php"
+    prefix: admin/organization
+    type: annotation
+
+claro_admin_i18n:
+    resource: "@ClarolineCoreBundle/Controller/Administration/InternationalizationController.php"
+    prefix: admin/i18n
+    type: annotation
+
+claro_api:
+    resource: "@ClarolineCoreBundle/Controller/API/User/ApiController.php"
+    prefix: api
+    type: annotation
+    options:
+        expose: true
+
+claro_user_api:
+    resource: "@ClarolineCoreBundle/Controller/API/User/UserController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+
+claro_workspace_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Admin/WorkspaceController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_group_api:
+    resource: "@ClarolineCoreBundle/Controller/API/User/GroupController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_organization_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Organization/OrganizationController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_location_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Organization/LocationController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_parameters_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Admin/ParametersController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_year_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Calendar/YearController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_leave_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Calendar/LeaveController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_period_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Calendar/PeriodController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_schedule_template_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Calendar/ScheduleTemplateController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_time_slot_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Calendar/TimeSlotController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_event_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Calendar/EventController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_resources_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Resource/ResourceController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_contact:
+    resource: "@ClarolineCoreBundle/Controller/ContactController.php"
+    prefix: contact
+    type: annotation
+
+claro_admin_widget:
+    prefix: admin/widget
+    resource: "@ClarolineCoreBundle/Controller/Administration/WidgetController.php"
+    type: annotation
+

@@ -1,0 +1,117 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% form_theme form_settings _self %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'general' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+            'name': 'general'|trans({}, 'platform'),
+            'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'general'|trans({}, 'platform') }}</h3>
+    </div>
+    <form role="form" class="form-horizontal general_parameters_form" action="{{path('claro_admin_parameters_general')}}" method="post" {{ form_enctype(form_settings) }} id="form_settings" enctype='multipart/form-data'>
+        {{ macros.flashBox() }}
+        <div class="panel-body">
+            {{ form_errors(form_settings) }}
+
+            {{ form_row(form_settings.name) }}
+            {{ form_row(form_settings.description) }}
+            {{ form_row(form_settings.support_email) }}
+            {{ form_row(form_settings.selfRegistration) }}
+            {{ form_row(form_settings.registerButtonAtLogin) }}
+            {{ form_row(form_settings.defaultRole) }}
+            {{ form_row(form_settings.localeLanguage) }}
+            {{ form_row(form_settings.formCaptcha) }}
+            {{ form_row(form_settings.redirect_after_login) }}
+            {{ form_row(form_settings.account_duration) }}
+            {{ form_row(form_settings.platform_init_date) }}
+            {{ form_row(form_settings.platform_limit_date) }}
+            {{ form_row(form_settings.anonymous_public_profile) }}
+
+            {% set value = form_settings.vars.value.portfolioUrl %}
+            <div class="form-group row portfolio_url_row">
+                {{ form_label(form_settings.portfolio_url) }}
+                <div class="col-md-9">
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="portfolioUrlOptions" id="portfolioUrlOptions1" value="0" {% if value is empty %} checked="checked"{% endif %}>
+                            {{ 'internal_portfolio'|trans({}, 'platform') }}
+                        </label>
+                    </div>
+                    <div class="radio portfolio_url">
+                        <input type="radio" name="portfolioUrlOptions" id="portfolioUrlOptions2" value="1" {% if value is not empty %} checked="checked"{% endif %}>
+                        <div class="col-md-6 portfolio_url_field">
+                            {{ form_widget(form_settings.portfolio_url) }}
+                        </div>
+                        <p class="portfolio_url_help"><small>{{ 'general_parameters_portfolio_url_help'|trans({}, 'platform') }}</small></p>
+                    </div>
+                </div>
+            </div>
+            {{ form_rest(form_settings) }}
+        </div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            <a href="{{ path('claro_admin_index') }}">
+                <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+            </a>
+        </div>
+    </form>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet"
+          href="{{ asset('packages/jquery-ui/themes/base/jquery-ui.min.css') }}"
+          type="text/css"
+    />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        (function($) {
+            "use strict";
+
+            $(function() {
+                var portfolioUrlRadio = $(".portfolio_url input[type=radio]");
+                var portfolioUrlField = $(".portfolio_url_field input");
+
+                portfolioUrlField.on('keyup', function (event) {
+                    if ('' !== $(this).val()) {
+                        portfolioUrlRadio.prop("checked", true);
+                    }
+                });
+            });
+        })(jQuery);
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('packages/jquery-ui/jquery-ui.min.js') }}"
+    >
+    </script>
+    <script type="text/javascript">
+        var tagsList = [{% for tag in tags %}"{{ tag|raw }}"{% if not loop.last %}, {% endif %}{% endfor %}];
+
+        $('#platform_parameters_form_defaultWorkspaceTag').autocomplete({
+            source: tagsList
+        });
+    </script>
+{% endblock %}

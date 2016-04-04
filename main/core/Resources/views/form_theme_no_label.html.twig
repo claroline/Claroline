@@ -1,0 +1,22 @@
+{% extends 'ClarolineCoreBundle::form_theme.html.twig' %}
+
+{% block form_label %}
+    {% spaceless %}
+    {% endspaceless %}
+{% endblock form_label %}
+
+{% block form_row %}
+    {% spaceless %}
+        <div class="form-group row{% if errors|length > 0 %} has-error{% endif %}">
+            {{ form_label(form, label|default(null)) }}
+            {% set ctrl_width = 'col-md-12' %}
+            <div class="{{ ctrl_width }}">
+                {{ form_widget(form) }}
+                {{ form_errors(form) }}
+                {% if help is defined and help %}
+                    <div class="help-block">{{ help }}</div>
+                {% endif %}
+            </div>
+        </div>
+    {% endspaceless %}
+{% endblock form_row %}

@@ -1,0 +1,92 @@
+properties:
+    name: Anglais
+    code: EN
+    visible: true
+    self_registration: true
+    self_unregistration: false
+    owner: 'ezs'
+
+members:
+    import:
+      - path: users01.yml
+      - path: groups01.yml
+    owner:
+        first_name: ffdgdf
+        last_name: sdfsd
+        username: 'ezs'
+        password: enclair
+        mail: invalid@mailiswrong
+        code: OWNER
+        roles:
+          - name: 'ROLE_1'
+          - name: 'ROLE_2'
+          - name: 'ROLE_3'
+    users:
+        - user:
+            first_name: ffdgdf
+            last_name: sdfsd
+            username: user1
+            password: enclair
+            mail: mail1@gmail.com
+            code: USER01
+            roles:
+              - name: 'ROLE_1'
+              - name: 'ROLE_2'
+              - name: 'ROLE_3'
+        - user:
+            first_name: d
+            last_name: ddsd
+            username: user1
+            password: enclair
+            mail: mail2@gmail.com
+            code: USER02
+
+    groups:
+        - group:
+            name: blabla
+            users:
+              - username: 'user1'
+              - username: 'user2'
+              - username: 'user3'
+            roles:
+              - name: 'ROLE_1'
+              - name: 'ROLE_2'
+              - name: 'ROLE_3'
+
+import:
+  - path: roles01.yml
+  - path: tools.yml
+
+roles:
+    - role:
+        name: 'ROLE_1'
+        translation: 'totottoo'
+        is_base_role: true
+    - role:
+        name: 'role1'
+        translation: 'totottoo'
+        is_base_role: false
+
+tools:
+    - tool:
+        type: 'home'
+        translation: 'accueil'
+        import:
+          - path: 'tools/home.yml'
+        roles:
+          - name: anonymous
+          - name: visitor
+          - name: collaborator
+          - name: manager
+    - tool:
+        type: 'agenda'
+        roles:
+           - name: visitor
+        translation: 'agenda'
+    - tool:
+        type: 'badges'
+    - tool:
+        type: 'resource_manager'
+        import:
+          - path: 'tools/resource_manager.yml'
+

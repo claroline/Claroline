@@ -1,0 +1,28 @@
+ul.move-subject-dropdown {
+    max-height: 200px;
+    overflow: auto;
+}
+
+#subjects-table-container {
+    overflow: visible;
+}
+
+.original-poster {
+    font-style: italic;
+    margin-bottom: 16px;
+}
+
+
+#claroline_forum_last_message_widget_config_display_my_last_messages .col-md-6 {
+    float: none;
+    font-weight: normal;
+}
+
+.control-label.col-md-6.required[for="claroline_forum_last_message_widget_config_display_my_last_messages"] {
+    float: none;
+    font-weight: normal;
+}
+
+#claroline_forum_last_message_widget_config_display_my_last_messages{
+    vertical-align:top;
+}

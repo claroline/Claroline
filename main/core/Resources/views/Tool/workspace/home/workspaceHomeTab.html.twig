@@ -1,0 +1,19 @@
+{% extends 'ClarolineCoreBundle:Tool\\workspace\\home:workspaceHomeLayout.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+
+{% block homeTab %}
+    {% if isHomeTab %}
+        {% set valid = 1 %}
+    {% else %}
+        {% set valid = 0 %}
+    {% endif %}
+    <div class="welcome-home">
+        {% render(controller(
+            "ClarolineCoreBundle:Workspace:displayWorkspaceWidgets",
+            {'workspace': workspace.getId(), 'homeTabId': tabId, 'valid': valid}
+        )) %}
+    </div>
+{% endblock %}

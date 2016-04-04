@@ -1,0 +1,6 @@
+plugin:
+  has_options: true
+
+  resources:
+    - class: Invalid\UnloadableResourceClass1\Entity\ResourceXYJ
+      name: resourceX

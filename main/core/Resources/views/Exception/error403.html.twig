@@ -1,0 +1,7 @@
+{% extends 'ClarolineCoreBundle:Exception:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'unauthorized' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block message %}
+    {{'unauthorized' | trans({}, 'platform') }}
+{% endblock %}

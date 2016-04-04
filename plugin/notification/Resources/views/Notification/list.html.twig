@@ -1,0 +1,75 @@
+{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+
+{% block content %}
+    <div class="panel panel-notification">
+        <div class="panel-body">
+            <div class="notifications-header-text page-header">
+                <h1>{{ 'notifications_title'|trans({},'notification') }}</h1>
+            </div>
+            {% if pager.getNbResults() > 0 or category != null %}
+                <div class="button-container pull-left">
+                    <a class="btn btn-default" href="{{ path('icap_notification_view', {'markViewed': true, 'page': pager.getCurrentPage()}) }}">{{ 'mark_all_viewed'|trans({}, 'notification') }}</a>
+                    <div class="dropdown category-list">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            {{ "filter_by_category"|trans({}, "notification") }}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li {% if category == null %} class="active" {% endif %}>
+                                <a href="{{ path("icap_notification_view") }}">
+                                    <span>{{ 'all'|trans({}, "platform") }}</span>
+                                </a>
+                            </li>
+                            <li {% if category == "system" %} class="active" {% endif %}>
+                                <a href="{{ path("icap_notification_view", {'category':'system'}) }}">
+                                    <span class="notification-icon default-notification-icon">
+                                        {{ systemName|first }}
+                                    </span>
+                                    <span>
+                                        {{ systemName }}
+                                    </span>
+                                </a>
+                            </li>
+                            {% for color in colors %}
+                                <li {% if category == color.name %} class="active" {% endif %}>
+                                <a href="{{ path("icap_notification_view", {'category': color.name}) }}">
+                                    <span class="notification-icon" style="background-color: {{ color.color }}">
+                                        {{ color.key }}
+                                    </span>
+                                    <span>
+                                        {{ color.name|trans({}, "notification") }}
+                                    </span>
+                                </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% include  "IcapNotificationBundle:Templates:pagination.html.twig" with {'pager' : pager, 'category' : category} %}
+
+            {% block notification_widget %}
+                {% if pager.getNbResults() > 0 %}
+                    <div class="notification-list-container">
+                        <ul id="notification-list" class="list-group">
+                            {% include "IcapNotificationBundle:Templates:notificationList.html.twig" with {'pager' : pager, 'systemName' : systemName, 'notificationViews' : notificationViews } %}
+                        </ul>
+                    </div>
+                {% else %}
+                    <div class="zero-notifications-found">{{ 'zero_notifications'|trans({},'notification') }}</div>
+                {% endif %}
+
+            {% endblock %}
+
+            {% include  "IcapNotificationBundle:Templates:pagination.html.twig" with {'pager' : pager, 'category' : category} %}
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/icapnotification/css/style.css') }}'/>
+{% endblock %}

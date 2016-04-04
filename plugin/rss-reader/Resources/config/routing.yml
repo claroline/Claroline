@@ -1,0 +1,4 @@
+claro_rss:
+    resource: "@ClarolineRssReaderBundle/Controller/RssReaderController.php"
+    type:     annotation
+    prefix:   /

@@ -1,0 +1,121 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+
+    {% if config.getParameter('theme') != '' %}
+        <link rel="stylesheet" href="{{ getAssetPath() ~ '/themes/' ~ config.getParameter('theme') ~ '/bootstrap.css' }}" screen="media" />
+    {% endif %}
+
+    <link rel="stylesheet" href="{{ asset('packages/font-awesome/css/font-awesome.min.css') }}" screen="media" />
+{% endblock %}
+
+{% block javascripts_header %}
+    {{ parent() }}
+    <script type="text/javascript" src='{{ asset('packages/jquery/dist/jquery.min.js') }}'></script>
+{% endblock %}
+
+{% block favicon %}
+    <link rel="shortcut icon" href="{{ asset('bundles/clarolinecore/images/ico/favicon.ico') }}"/>
+    <link rel="apple-touch-icon" href="{{ asset('bundles/clarolinecore/images/ico/apple-touch-icon.png')}}"/>
+{% endblock %}
+
+{% block layout %}
+    <div id="wrap">
+        <div class="please-wait">
+            <h4><span class="label label-warning"> {{ 'please_wait'|trans({}, 'platform') }} </span></h4>
+        </div>
+        <div id="top_bar" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    {% if config.getParameter('logo') != '' %}
+                        <a class="navbar-brand logo" href="{{ path('claro_index') }}">
+                            <img src="{{ getAssetPath() ~ '/uploads/logos/' ~ config.getParameter('logo') }}" height="35"
+                                {% if config.getParameter('name') != "" %}alt="{{ config.getParameter('name') }}"{% endif %}>
+                        </a>
+                    {% endif %}
+                    {% if config.getParameter('name') != '' and config.getParameter('nameActive') %}
+                        <a class="navbar-brand" href="{{ path('claro_index') }}">
+                            {{ config.getParameter('name') }}
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    {% block breadcrumb %}{% endblock %}
+                </div>
+            </div>
+            <div class="row content">
+                <div class="col-md-12">
+
+                        <div class="col-md-6 col-md-offset-3">
+                            <div class="alert alert-danger">
+                                {% block message %}
+                                {% endblock %}
+                            </div>
+
+                            {% if app.user %}
+                                <div class="text-center">
+                                    {%
+                                        set menu = knp_menu_get(
+                                            'ClarolineCoreBundle:Builder:exceptionActionsMenu',
+                                            [],
+                                            {
+                                                'user': app.user,
+                                                'message': exception.getMessage(),
+                                                'exception_class': exception.getClass(),
+                                                'file': exception.getFile(),
+                                                'line': exception.getLine(),
+                                                'url': app.request.uri,
+                                                'referer': app.request.headers.get('referer')
+                                            }
+                                        )
+                                    %}
+                                    {{ knp_menu_render(menu, {}, 'exception_actions') }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                </div>
+            </div>
+        </div>
+        <div id="push"></div>
+    </div>
+    {% block footer %}
+        {% render(controller('ClarolineCoreBundle:Layout:footer')) %}
+    {% endblock%}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('vendor/twitter/bootstrap/js/bootstrap.js') }}"></script>
+    {% javascripts debug=false  output='vendor/jms/twig-js/twig.js'
+        '../vendor/jms/twig-js/twig.js'
+        %}<script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script>
+        $('.exception-action-btn').on('click', function () {
+            var url = $(this).data('url');
+            var displayMode = $(this).data('display-mode');
+
+            if (displayMode === 'modal_form') {
+                window.Claroline.Modal.displayForm(
+                    url,
+                    function () {},
+                    function() {}
+                );
+
+            } else {
+                window.location = url;
+            }
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,46 @@
+<div id="modal-course-session-create-form"
+     class="modal-dialog"
+>
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3 class="modal-title">
+                {{ 'session_creation'|trans({}, 'cursus') }}
+            </h3>
+        </div>
+        <div class="modal-body">
+            <form id="course-session-create-form"
+                  action="{{ path('claro_cursus_course_session_create', {'course': course.getId()}) }}"
+                  method="POST"
+                  {{ form_enctype(form) }}
+            > 
+                {{ form_row(form.name) }}
+                {{ form_row(form.start_date) }}
+                {{ form_row(form.end_date) }}
+                <a data-toggle="collapse"
+                   href="#advanced-parameters-box"
+                   aria-expanded="false"
+                   class="pull-right"
+                >
+                    {{ 'advanced_parameters'|trans({}, 'platform') }}
+                    <i class="fa fa-caret-down"></i>
+                </a>
+                <br>
+                <div class="collapse" id="advanced-parameters-box">
+                    <br>
+                    {{ form_rest(form) }}
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <span class="btn btn-default" data-dismiss="modal">
+                {{ 'cancel'|trans({},'platform') }}
+            </span>
+            <button type="submit" id='create-btn' class="btn btn-primary">
+                {{ 'ok'|trans({},'platform') }}
+            </button>
+        </div>
+    </div>
+</div>

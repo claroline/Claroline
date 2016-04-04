@@ -1,0 +1,73 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block title %}{{ 'register' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block content %}
+    {{ macros.flashBox() }}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ 'register'|trans({}, 'platform') }}</h3>
+        </div>
+        <form role="form" class="form-horizontal" id="user_registration_form"
+              action="{{ path('claro_registration_register_user') }}"
+              method="post" {{ form_enctype(form) }}>
+            <div class="panel-body">
+
+                {# step one: find wich div to build #}
+                {% set array = [] %}
+
+                {% for key, el in form %}
+                    {% if el.vars.attr.facet is defined %}
+                        {% set array = array|merge([el.vars.attr.facet]) %}
+                    {% endif %}
+                {% endfor %}
+
+                {% set div = [] %}
+
+                {# the array is now unique #}
+                {% for name in array %}
+                   {% if name not in div %}
+                   {% set div = div|merge([name]) %}
+                   {% endif %}
+                {% endfor %}
+
+                {% if div|length > 0 %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading"> {{ 'user_info'|trans({}, 'platform') }}</div>
+                        <div class="panel-body">
+                            {% for key, el in form %}
+                                {% if el.vars.attr.facet is not defined %}
+                                    {{ form_row(el) }}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% for divName in div %}
+                        <div class="panel panel-default {{ divName }}">
+                            <div class="panel-heading"> {{ divName|trans({}, 'platform') }}</div>
+                            <div class="panel-body">
+                                {% for key, el in form %}
+                                    {% if el.vars.attr.facet is defined %}
+                                        {% if el.vars.attr.facet == divName %}
+                                            {{ form_row(el) }}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                    {{ form_rest(form) }}
+                {% else %}
+                    {{ form_widget(form) }}
+                {% endif %}
+
+            </div>
+            <div class="panel-footer">
+                <button type="submit" class="btn btn-primary">{{ 'create_account'|trans({}, 'platform') }}</button>
+                <a href="{{ path('claro_index') }}" title="{{ 'cancel'|trans({}, 'platform') }}">
+                    <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+                </a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

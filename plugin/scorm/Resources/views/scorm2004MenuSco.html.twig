@@ -1,0 +1,151 @@
+{% macro renderMenu(scos) %}
+    <ul>
+    {% for sco in scos %}
+
+        {% if sco.getIsBlock() %}
+            {% set scoChildren = sco.getScoChildren() %}
+            <li><b>{{ sco.getTitle() }}</b></li>
+
+            {% if scoChildren is not null %}
+                {{ _self.renderMenu(scoChildren) }}
+            {% endif %}
+
+        {% else %}
+            <li sco-id="{{sco.getId()}}">
+                <a href="{{ path('claro_render_scorm_2004_sco', {'scoId': sco.getId()}) }}"
+                   class="sco-menu-link">
+                    {{ sco.getTitle() }}
+                </a>
+            </li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% from _self import renderMenu %}
+
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/clarolinescorm/js/iframe.js') }}" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+        window.Claroline.Iframe.resize('scorm-frame');
+        $(window).resize(function() {
+            window.Claroline.Iframe.resize('scorm-frame');
+        });
+        var trackingDetails = {{ scoTrackingDetails|raw }};
+    </script>
+    <script src="{{ asset('bundles/clarolinescorm/js/scorm_2004_api.js') }}" type="text/javascript">
+    </script>
+    {{ parent() }}
+    <script type="text/javascript">
+        function runPrefixedMethod(obj, method) {
+            var pfx = ['webkit', 'moz', 'ms', 'o', ''];
+            var p = 0, m = null, t = null;
+
+            while (p < pfx.length && !obj[m]) {
+                m = method;
+
+                if (pfx[p] == '') {
+                    m = m.substr(0,1).toLowerCase() + m.substr(1);
+                }
+
+                m = pfx[p] + m;
+
+                if ('undefined' !== (t = typeof obj[m])) {
+                    pfx = [pfx[p]];
+
+                    return t === 'function' ? obj[m]() : obj[m];
+                }
+
+                p++;
+            }
+        }
+
+        function enterFullScreen() {
+            if (runPrefixedMethod(document, 'FullScreen') || runPrefixedMethod(document, 'IsFullScreen')) {
+                runPrefixedMethod(document, 'CancelFullScreen');
+            }
+            else {
+                runPrefixedMethod(document.getElementById('scorm-frame'), 'RequestFullScreen');
+            }
+        }
+
+        $('#menu-display-btn').on('click', function () {
+            if ($('#menu-box').hasClass('hidden')) {
+                $('#content-box').removeClass('col-md-12');
+                $('#content-box').addClass('col-md-9');
+                $('#menu-box').removeClass('hidden');
+            } else {
+                $('#menu-box').addClass('hidden');
+                $('#content-box').removeClass('col-md-9');
+                $('#content-box').addClass('col-md-12');
+            }
+        });
+    </script>
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title"> {{ currentSco.getTitle() }} </h3>
+    </div>
+    <div class="panel-body">
+        <i id="menu-display-btn" class="btn btn-default fa fa-list pull-left"></i>
+        <div class="text-right">
+            <a class="btn btn-primary pointer-hand" onClick="javascript:enterFullScreen()">
+                <i class="fa fa-expand"></i>
+            </a>
+        </div>
+        <br>
+        <div class="row">
+            <div id="menu-box" class="col-md-3 menu-style hidden">
+                <div id="scorm-menu">
+                    {{ renderMenu(scos) }}
+                    <br>
+                    <div class="center-text">
+                        <a href="{{ path('claro_render_scorm_2004_resource', {'scormId': resource.getId(), 'mode': 1}) }}"
+                           class="btn btn-default">
+                            {{ 'quit'|trans({}, 'resource') }}
+                        </a>
+                    </div>
+                    <br>
+                </div>
+            </div>
+            <div id="content-box" class="col-md-12">
+                <div class="full-size">
+                    <div id="twig-scorm-data"
+                         data-sco-id="{{scoTracking.getSco().getId()}}">
+                    </div>
+                    <iframe id="scorm-frame"
+                            class="full-size"
+                            src="{{ asset(scormUrl) }}"
+                            frameborder="0"
+                    >
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        .menu-style {
+            height: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+            border-right: 10px solid #DEDCDA;
+            margin-left: 0px;
+            padding-left: 0px;
+        }
+        .full-size {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+{% endblock %}

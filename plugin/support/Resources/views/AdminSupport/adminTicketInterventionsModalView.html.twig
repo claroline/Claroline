@@ -1,0 +1,83 @@
+<div class="modal-dialog" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3 class="modal-title">
+                {{ 'interventions'|trans({}, 'support') }}
+                <small>
+                    [{{ ticket.getTitle() }}]
+                </small>
+            </h3>
+        </div>
+        <div class="modal-body">
+            {% set interventions = ticket.getInterventions() %}
+            
+            {% if interventions|length > 0 %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>{{ 'start_date'|trans({}, 'platform') }}</th>
+                            <th>{{ 'end_date'|trans({}, 'platform') }}</th>
+                            <th>{{ 'duration'|trans({}, 'platform') }}</th>
+                            <th>{{ 'intervenant'|trans({}, 'support') }}</th>
+                            <th>{{ 'status'|trans({}, 'platform') }}</th>
+                        </tr>
+                        
+                        {% for intervention in interventions %}
+                            {% set user = intervention.getUser() %}
+                            {% set status = intervention.getStatus() %}
+                            <tr>
+                                <td>
+                                    {{ intervention.getStartDate()|intl_date_format }}
+                                </td>
+                                <td>
+                                    {% if intervention.getEndDate() is empty %}
+                                        -
+                                    {% else %}
+                                        {{ intervention.getEndDate()|intl_date_format }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if intervention.getDuration() is empty %}
+                                        -
+                                    {% else %}
+                                        {{ intervention.getDuration() }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{ user.getFirstName() }}
+                                    {{ user.getLastName() }}
+                                </td>
+                                <td>
+                                    {% if status is empty %}
+                                        -
+                                    {% else %}
+                                        <span class="label label-success"
+                                              data-toggle="tooltip"
+                                              data-container="body" 
+                                              data-placement="left"
+                                              title="{{ status.getName()|trans({}, 'support') }}"
+                                        >
+                                            {{ status.getCode() }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    {{ 'no_intervention'|trans({}, 'support') }}
+                </div>
+            {% endif %}
+        </div>
+        <div class="modal-footer">
+            <span class="btn btn-default pull-right" data-dismiss="modal">
+                {{ 'close'|trans({}, 'platform') }}
+            </span>
+        </div>
+    </div>
+</div>

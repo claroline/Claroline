@@ -1,0 +1,382 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+
+{% block section_content %}
+    <div class="panel panel-default">
+        <div class="panel-body"> 
+            
+            <div>
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs">
+                  <li role="presentation" class="active"><a href="{{path("formalibre_presence_admin_tool_index")}}">Configurations</a></li>
+                  <li role="presentation"><a href="{{path("formalibre_presence_horaire")}}">Horaire Type</a></li>
+                </ul>
+            </div>
+            
+            <br /><br />
+            <h3>{{"config_periode"|trans({},"presences")}}</h3>
+            <form method="post" {{ form_enctype(NewSchoolYearForm) }} action="{{path("formalibre_presence_admin_add_school_year")}}">
+                <div class="row">
+                    <div class="col-md-2">
+                        {{"choix_nom"|trans({},"presences")}}:
+                        {{form_widget(NewSchoolYearForm.name)}}
+                    </div>    
+                    <div class="col-md-1">
+                        {{"date_debut"|trans({},"presences")}}:
+                        <span data-toggle="tooltip"
+                              data-placement="top"
+                              data-title="Indiquer le premier jour d'ouverture de l'établissement">
+                            {{form_widget(NewSchoolYearForm.beginDate)}}
+                        </span>
+                    </div> 
+                    <div class="col-md-1">
+                        {{"date_fin"|trans({},"presences")}}:
+                        <span data-toggle="tooltip"
+                              data-placement="top"
+                              data-title="Indiquer le dernier jour d'ouverture de l'établissement">
+                            {{form_widget(NewSchoolYearForm.endDate)}}
+                        </span>
+                    </div> 
+                    <div class="col-md-1">
+                        {{"heure_ouverture"|trans({},"presences")}}:
+                        <span data-toggle="tooltip"
+                              data-placement="top"
+                              data-title="Indiquer l'heure d'ouverture de l'établissement">
+                            {{form_widget(NewSchoolYearForm.beginHour)}}
+                        </span>
+                    </div> 
+                    <div class="col-md-1">
+                        {{"heure_ouverture"|trans({},"presences")}}:
+                       <span data-toggle="tooltip"
+                              data-placement="top"
+                              data-title="Indiquer l'heure de fermeture de l'établissement">
+                            {{form_widget(NewSchoolYearForm.endHour)}}
+                        </span>
+                    </div> 
+                     <div class="col-md-2">
+                        {{"actual_periode"|trans({},"presences")}}
+                        {{form_widget(NewSchoolYearForm.actual)}}
+                    </div> 
+                    <div class="col-md-2">
+                        <button type="submit" 
+                                   class="btn btn-primary"
+                                   name="NewSchoolYearForm[valider2]">
+                              {{"ajouter"|trans({},"presences")}}
+                        </button>
+                    </div> 
+                </div>
+            </form>
+                    </br><br />        
+            <div class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <th style='text-align:center;'>Nom</th>
+                        <th style='text-align:center;'>Date de début</th>
+                        <th style='text-align:center;'>Date de fin</th>
+                        <th style='text-align:center;'>Début de journée</th>
+                        <th style='text-align:center;'>Fin de journée</th>
+                        <th style='text-align:center;'>Periode courante ?</th>
+                        <th style='text-align:center;'>Actions</th>
+                    </tr>
+                    {% for oneSchoolYear in allSchoolYear %}
+                        <tr style='text-align:center;{% if oneSchoolYear.getSchoolYearActual()==1%}background-color: lightcyan;{% endif %}'>
+                            <td>{{oneSchoolYear.getSchoolYearName()}}</td>
+                            <td>{{oneSchoolYear.getSchoolYearBegin()|date('d-m-Y')}}</td>
+                            <td>{{oneSchoolYear.getSchoolYearEnd()|date('d-m-Y')}}</td>
+                            <td>{{oneSchoolYear.getSchoolDayBeginHour()|date('H:i')}}</td>
+                            <td>{{oneSchoolYear.getSchoolDayEndHour()|date('H:i')}}</td>
+                            <td>
+                                {% if oneSchoolYear.getSchoolYearActual()==1%}
+                                    <i class="fa fa-check"></i>
+                                {% else %}
+                                    <i class="fa fa-close"></i>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="btn btn-default modifier-schoolYear-btn"
+                                                           data-school-year-id="{{oneSchoolYear.getId()}}"
+                                                           data-toggle="tooltip" 
+                                                           data-placement="bottom" 
+                                                           title="" 
+                                                           data-original-title="Modifier" 
+                                                           role="button">
+                                    <i class="fa fa-pencil"></i>
+                                </span>
+                                 <a class="btn btn-default supprimer-schoolYear-btn"
+                                                           data-school-year-id="{{oneSchoolYear.getId()}}"
+                                                           data-toggle="tooltip" 
+                                                           data-placement="bottom" 
+                                                           title="" 
+                                                           data-original-title="Supprimer" 
+                                                           role="button">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <br /><br />
+            <h3>{{"config_statut"|trans({},"presences")}}</h3>
+            <br />
+            <form method="post" {{ form_enctype(NewStatusForm) }} action="{{path("formalibre_presence_admin_tool_index")}}">
+                <div class="row">
+                    <div class="col-md-3">
+                        {{"choix_nom"|trans({},"presences")}}
+                        {{form_widget(NewStatusForm.name)}}
+                    </div>    
+                    <div class="col-md-3">
+                        {{"choix_couleur"|trans({},"presences")}}
+                        {{form_widget(NewStatusForm.color)}}
+                    </div> 
+                    <div class="col-md-2">
+                        {{"mise_evidence"|trans({},"presences")}}
+                        {{form_widget(NewStatusForm.principalStatus)}}
+                    </div> 
+                    <div class="col-md-3">
+                        <button type="submit" 
+                                   class="btn btn-primary"
+                                   name="NewStatusForm[valider]">
+                              {{"ajouter"|trans({},"presences")}}
+                        </button>
+                    </div> 
+                </div>
+            </form>
+            </br><br />        
+            <div class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <th style='text-align:center;'>{{"statut"|trans({},"presences")}}</th>
+                        <th style='text-align:center;'>{{"couleur"|trans({},"presences")}}</th>
+                        <th style='text-align:center;'>{{"evidence"|trans({},"presences")}}</th>
+                        <th style='text-align:center;'>{{"actions"|trans({},"presences")}}</th>
+                    </tr>
+                    {% for onestatus in listStatus %}
+                        <tr style='text-align:center;'>
+                            <td>{{onestatus.getStatusName()}}</td>
+                            <td>
+                                <div style="color:{{onestatus.StatusColor}};">
+                                    {{onestatus.StatusColor}}
+                                </div>
+                            </td>
+                            <td>
+                                {% if onestatus.getStatusBydefault()==1%}
+                                    <i class="fa fa-check"></i>
+                                {% else %}
+                                    <i class="fa fa-close"></i>
+                                {% endif %}
+                            <td>
+                                <span class="btn btn-default modifier-status-btn"
+                                                           data-status-id="{{onestatus.getId()}}"
+                                                           data-toggle="tooltip" 
+                                                           data-placement="bottom" 
+                                                           title="" 
+                                                           data-original-title="Modifier" 
+                                                           role="button">
+                                    <i class="fa fa-pencil"></i>
+                                </span>
+                                 <a class="btn btn-default supprimer-status-btn"
+                                                           data-status-id="{{onestatus.getId()}}"
+                                                           data-toggle="tooltip" 
+                                                           data-placement="bottom" 
+                                                           title="" 
+                                                           data-original-title="Supprimer" 
+                                                           role="button">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+               <i class="fa fa-info"></i> - {{"conseil1"|trans({},"presences")}}Nous déconseillons de mettre plus de trois status en évidence.
+            </div>
+            <br /><br />
+            <h3>{{"config_droits"|trans({},"presences")}}</h3>
+            <div class="table-responsive">
+                <table class="table">
+                    
+                    <tr>
+                        <th>{{"roles"|trans({},"presences")}}</th>
+                        {% for onename in rightName%}
+                            <th>
+                                {{onename}}
+                            </th>
+                        {% endfor %}
+                    </tr>
+                    {% for right in rightsValue%}
+                        {% set role=right['right'].getRole()%}
+                        {% if role.getName()!= 'ROLE_ADMIN'%}
+                        <tr>
+                            <td>{{role.getTranslationKey()|trans({},"platform")}}</td>
+                            {% for onename in rightNameId%}
+                                <td>
+                                    <input 
+                                        data-right-id="{{right['right'].getId()}}"
+                                        data-one-name="{{onename}}"
+                                        class="rightCheckbox"
+                                        type="checkbox" 
+                                           {% if right[onename] %}
+                                               checked
+                                           {% endif %}>
+                                </td>
+                                
+                            {% endfor %}
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                    
+                </table>
+            </div>
+        </div>
+    </div>
+                  
+                  
+{% endblock %}
+
+{% block stylesheets %}
+       {{ parent() }}
+        <link rel='stylesheet' type='text/css' href='{{  asset('packages/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css') }}'/>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    
+    <script>
+        
+        $(".rightCheckbox").on("change",function(){
+      
+            var rightId=$(this).data("right-id");
+            var name=$(this).data("one-name");
+            
+            $.ajax({
+                url: Routing.generate('formalibre_presence_admin_right',{'right':rightId,'rightValue':name}),
+                type:'POST'
+            })
+          
+            
+            
+        });
+        
+        
+    </script>
+    <script type="text/javascript" src="{{ asset('packages/moment/min/moment-with-locales.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('packages/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js') }}"></script>
+    <script>
+    $(function(){
+        $('#form_color').colorpicker();
+    });
+    </script>
+    <script>
+    $(".modifier-status-btn").on("click",function(){
+       var statusId=$(this).data("status-id");
+        window.Claroline.Modal.displayForm(
+                            Routing.generate("formalibre_status_modif",{"theStatus":statusId}),
+                            function() {
+                                window.location.reload();
+                            },
+                            function() {}
+                                );
+   
+    });      
+        $(".supprimer-status-btn").on("click",function(){
+            var statusId=$(this).data("status-id");         
+            window.Claroline.Modal.confirmRequest(
+                            Routing.generate("formalibre_status_supprimer",{"theStatus":statusId}),
+                            function() {
+                                window.location.reload();
+                            },
+                            statusId,
+                            "Etes-vous certain de vouloir supprimer ce status ?",
+                            "Supression status"
+                                );
+                   
+        });
+                
+    </script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script>
+        $(function () {
+            $('#form_beginHour').datetimepicker({
+                format: 'HH:mm',
+                locale:'fr',
+                 icons: {
+            time: "fa fa-clock-o",
+            date: "fa fa-calendar",
+            up: "fa fa-arrow-up",
+            down: "fa fa-arrow-down"
+        }
+            });
+        });
+        $(function () {
+            $('#form_endHour').datetimepicker({
+                format: 'HH:mm',
+                locale:'fr',
+                 icons: {
+            time: "fa fa-clock-o",
+            date: "fa fa-calendar",
+            up: "fa fa-arrow-up",
+            down: "fa fa-arrow-down"
+        }
+            });
+        });
+         $(function () {
+            $('#form_beginDate').datetimepicker({
+                format: 'D-M-YYYY',
+                locale:'fr',
+                 icons: {
+            time: "fa fa-clock-o",
+            date: "fa fa-calendar",
+            up: "fa fa-arrow-up",
+            down: "fa fa-arrow-down",
+            next: "fa fa-arrow-right",
+            previous:"fa fa-arrow-left"
+        }
+            });
+        });
+        $(function () {
+            $('#form_endDate').datetimepicker({
+                format: 'D-M-YYYY',
+                locale:'fr',
+                 icons: {
+            time: "fa fa-clock-o",
+            date: "fa fa-calendar",
+            up: "fa fa-arrow-up",
+            down: "fa fa-arrow-down",
+            next: "fa fa-arrow-right",
+            previous:"fa fa-arrow-left"
+        }
+            });
+        });
+    </script>
+    <script>
+    $(".modifier-schoolYear-btn").on("click",function(){
+       var schoolYearId=$(this).data("school-year-id");
+        window.Claroline.Modal.displayForm(
+                            Routing.generate("formalibre_school_year_modif",{"theSchoolYear":schoolYearId}),
+                            function() {
+                                window.location.reload();
+                            },
+                            function() {}
+                                );
+   
+    });    
+    
+    $(".supprimer-schoolYear-btn").on("click",function(){
+       var schoolYearId=$(this).data("school-year-id");
+       console.log(schoolYearId);
+        window.Claroline.Modal.confirmRequest(
+                            Routing.generate("formalibre_school_year_supprimer",{"theSchoolYear":schoolYearId}),
+                            function() {
+                                window.location.reload();
+                            },
+                            schoolYearId,
+                            "Etes-vous certain de vouloir supprimer cette année ? Cela effacera également les presences liées à cette année.",
+                            "Supression année"
+                                );
+   
+    });  
+                
+    </script>
+        
+
+{% endblock javascripts %}

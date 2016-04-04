@@ -1,0 +1,142 @@
+add_new_resource_type: Ajouter un nouveau type de ressources
+add_resource: Ajouter une ressource
+agenda:
+  add_reservation: Ajouter une réservation
+  day_: Jour
+  day:
+    mon: Lun
+    monday: Lundi
+    tue: Mar
+    tuesday: Mardi
+    wed: Mer
+    wednesday: Mercredi
+    thu: Jeu
+    thursday: Jeudi
+    fri: Ven
+    friday: Vendredi
+    sat: Sam
+    saturday: Samedi
+    sun: Dim
+    sunday: Dimanche
+  form:
+    comment: Commentaire
+    description: Description
+    duration: Durée de réservation
+    end_date: Date de fin
+    localisation: Localisation
+    max_time_reservation: Temps max de réservation
+    max_255_characters: Maximum 255 caractères
+    resource: Ressource
+    resource_type: Type de ressource
+    select_resource_pls: -- Veuillez sélectionner une ressource --
+    start_date: Date de début
+  modify_reservation: Modifier une réservation
+  month_: Mois
+  month:
+    jan: Janv
+    january: Janvier
+    feb: Févr
+    february: Février
+    mar: Mars
+    march: Mars
+    apr: Avr
+    april: Avril
+    may: Mai
+    jun: Juin
+    june: Juin
+    jul: Juil
+    july: Juillet
+    aug: Août
+    august: Août
+    sept: Sept
+    september: Septembre
+    oct: Oct
+    october: Octobre
+    nov: Nov
+    november: Novembre
+    dec: Déc
+    december: Décembre
+  popover:
+    author: Créé par
+  resource:
+    admin: Admin
+    admin_info: Peut créer, modifier et supprimer n'importe quelles réservations.
+    book: Réserver
+    book_info: Peut créer des réservations, les modifier et les supprimer.
+    cannot_see: Pas accès
+    cannot_see_info: Ne peut ni voir, ni modifier les réservations.
+    rights_info: Les droits d'accès varient pour chaque ressource.
+    see: Visionner
+    see_info: Peut uniquement voir les réservations.
+  today: Aujourd'hui
+  week: Semaine
+  week_number_title: S
+confirm_reservation_deletion_content: Êtes-vous sûr de vouloir supprimer cette réservation ?
+confirm_reservation_deletion_title: Suppression d'une réservation
+confirm_resource_type_deletion_title: Suppression d'un type de ressources
+confirm_resource_type_deletion_content: Êtes-vous sûr de vouloir supprimer ce type de ressources ? Cette action supprimera toutes les ressources appartenant à ce type de ressources ainsi que les éventuelles réservations en cours de chaque ressource.
+confirm_resource_deletion_title: Suppression d'une ressource
+confirm_resource_deletion_content: Êtes-vous sûr de vouloir supprimer cette ressource ? Cette action supprimera également toutes les réservations liées à cette ressource.
+delete_resource: Supprimer la ressource
+delete_resource_type: Supprimer ce type de ressources
+error_: Erreur
+error:
+  empty_input: Le champs ne doit pas être vide.
+  resource_type_already_exists: Ce type de ressource existe déjà.
+  number_reservations_exceeded: Nombre des réservations dépassées avec cette ressource. Veuillez changer la date à laquelle vous voulez réserver cette ressource.
+  max_time_reservation_exceeded: Vous avez dépassé le temps maximum de réservation de cette ressource.
+export_resources: Exporter les ressources
+filter:
+  by_resource: Filtrer par ressource
+  no_resource_found: Aucune ressource trouvée
+  no_resource_type_found: Aucun type de ressources trouvés
+form:
+  change_resource_type_name_title: Modification du nom
+  change_resource_type_name: Modifier le nom
+  color: Couleur
+  description: Description
+  localisation: Localisation
+  maxTime: Temps maximum de réservation
+  maxTimeOfReservation: Temps maximum par réservation (facultatif)
+  name: Nom
+  quantity: Quantité
+  information_about_quantity_modification: La modification de la quantité de ressources disponibles affectera uniquement les futures réservations.
+import_: Importer
+import:
+  resources: Importer des ressources
+  resources_submit: Importer les ressources
+  resources_title: Importer des ressources
+  resources_info: |
+    Veuillez sélectionner un fichier au format csv utilisant la virgule comme caractère de séparation et les guillemets pour entourer les champs textes complexes. La première ligne du fichier doit contenir le nom des 7 colonnes (cf. exemple ci-dessous):
+    - le nom du type de ressources (min 2 et max 50 caractères)
+    - le nom de la ressource (min 2 et max 50 caractères)
+    - le temps maximum de réservation au format hh:mm ou hh:mm:ss (optionnel)
+    - la description (optionnel)
+    - la localisation (optionnel)
+    - la quantité (minimum 1)
+    - la couleur de la ressource (optionnel).
+
+    Si le type de ressource n'existe pas, il sera automatiquement créé.
+  file: Fichier des ressources
+  tv: Télévision
+  tv_localisation: Salle des prof
+modify_resource_type_name: Modifier le nom
+modify_resource: Modifier une ressource
+no_resources_type_yet: Il n'y a pas encore de ressources pour les réservations.
+no_resources_in_resource_type: Il n'y a pas encore de ressources dans cette catégorie.
+picker:
+  close: Fermer
+  go_to_today: Aujourd'hui
+  locale: fr
+  select_month: Sélectionnez un mois
+  prev_month: Mois précédent
+  next_month: Mois suivant
+  select_year: Sélectionnez une année
+  prev_year: Année précédente
+  next_year: Année suivante
+  select_decade: Sélectionnez une décade
+  prev_decade: Décade précédente
+  next_decade: Décade suivante
+  prev_century: Siècle précédent
+  next_century: Siècle suivant
+reservation: Réservation

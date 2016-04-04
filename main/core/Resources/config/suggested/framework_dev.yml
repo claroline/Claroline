@@ -1,0 +1,8 @@
+imports:
+    - { resource: framework_prod.yml }
+
+framework:
+    profiler:
+        only_exceptions: false
+    session:
+        save_path: %kernel.root_dir%/sessions

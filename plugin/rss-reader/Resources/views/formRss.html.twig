@@ -1,0 +1,15 @@
+{% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
+<form class="form-horizontal" id="rss-reader-form"
+      action="{{ path('claro_rss_config_update', {'widget': config.getId()}) }} "
+      method="post" {{ form_enctype(form) }}
+>
+    <div class="panel-body">
+        {{ form_widget(form) }}
+    </div>
+    <div class="panel-footer">
+    <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+        <a href="#">
+            <button type="button" class="btn btn-default claro-widget-form-cancel">{{ 'cancel'|trans({}, 'platform') }}</button>
+        </a>
+    </div>
+</form>

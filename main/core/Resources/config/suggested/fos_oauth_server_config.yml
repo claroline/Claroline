@@ -1,0 +1,16 @@
+fos_oauth_server:
+    db_driver:           orm
+    client_class:        Claroline\CoreBundle\Entity\Oauth\Client
+    access_token_class:  Claroline\CoreBundle\Entity\Oauth\AccessToken
+    refresh_token_class: Claroline\CoreBundle\Entity\Oauth\RefreshToken
+    auth_code_class:     Claroline\CoreBundle\Entity\Oauth\AuthCode
+    service:
+        user_provider: security.user.provider.concrete.user_db
+        options:
+            access_token_lifetime: 3600
+            refresh_token_lifetime: 1209600
+            auth_code_lifetime: 30
+            #enforce_redirect: true
+            #That way we can have a security token with either role_admin or role_user
+            #There is no implementation for the rest atm
+            supported_scopes: user admin

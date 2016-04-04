@@ -1,0 +1,43 @@
+{% if not father is defined %}{% set father = null %}{% endif%}
+{% if not region is defined %}{% set region = null %}{% endif%}
+{% if content != null %}
+
+    {% if father is not defined or (father is defined and father is empty) %}
+        <div class="content-element relative {{ size }}" data-id="{{ content.id }}" data-type="{{ type }}">
+            {% if region is defined and (region == "header" or region == "footer") %}
+                <ul class="nav nav-pills relative{% if is_granted('ROLE_HOME_MANAGER') %} admin{% endif %}">
+                    {% render(controller("ClarolineCoreBundle:Home:type", { 'type': type, 'father': content.id, 'region': region })) %}
+                    {% render(controller("ClarolineCoreBundle:Home:menu", { 'id': content.id, 'size': size, 'type': type, 'region': region  })) %}
+                </ul>
+            {% else %}
+                <div class="list-group menu">
+                    <div class="relative">
+                        <a class="list-group-item disabled" {% if content.content is defined and content.content != "" %} href="{{ content.content | homeLink }}"{% endif %}>
+                            {% if content.title is defined and content.title != "" %}{{ content.title }}{% else %}&nbsp;{% endif %}
+                        </a>
+                        {% render(controller("ClarolineCoreBundle:Home:menu", { 'id': content.id, 'size': size, 'type': type, 'father': father, 'region': region  })) %}
+                    </div>
+                    {% render(controller("ClarolineCoreBundle:Home:type", { 'type': type, 'father': content.id, 'region': region })) %}
+                </div>
+            {% endif %}
+        </div>
+    {% else %}
+        {% if region is defined and (region == "header" or region == "footer") %}
+            <li class="content-element relative{{ content.content | activeLink }}"
+                data-id="{{ content.id }}"
+                data-type="{{ type }}"
+                data-father="{{ father }}">
+                <a {% if content.content is defined and content.content != "" %} href="{{ content.content | homeLink }}"{% endif %}>{{ content.title }}</a>
+            </li>
+        {% else %}
+            <div class="content-element relative list-group-item{{ content.content | activeLink }} {% if is_granted('ROLE_HOME_MANAGER') %} move{% endif %}"
+                data-id="{{ content.id }}"
+                data-type="{{ type }}"
+                data-father="{{ father }}">
+                <a {% if content.content is defined and content.content != "" %} href="{{ content.content | homeLink }}"{% endif %}>{{ content.title }}</a>
+                {% render(controller("ClarolineCoreBundle:Home:menu", { 'id': content.id, 'size': size, 'type': type, 'father': father, 'region': region  })) %}
+            </div>
+        {% endif %}
+    {% endif %}
+
+{% endif %}

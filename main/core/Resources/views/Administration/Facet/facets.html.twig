@@ -1,0 +1,129 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'users_management' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block section_content %}
+    <div class="panel-body">
+        {{
+            macros.breadcrumbs([
+                {
+                    'name': 'users_management'|trans({}, 'platform'),
+                    'href': path('claro_admin_users_index')
+                },
+                {
+                    'name': 'profile_management'|trans({}, 'platform'),
+                    'href': path('claro_admin_facet_index')
+                },
+                {
+                    'name': 'facet_management'|trans({}, 'platform'),
+                    'href': ''
+                }
+            ])
+        }}
+        <ul class="nav nav-tabs">
+            <li id="general-tab-btn" class="active">
+                <a href="#general-tab" data-toggle="tab">
+                    {{ "general"|trans({}, 'platform') }}
+                </a>
+            </li>
+            {% for facet in facets %}
+                {% include "ClarolineCoreBundle:Administration\\Facet:facetTab.html.twigjs" with {'facet': facet} %}
+            {% endfor %}
+            <li id="add-facet-btn">
+                <a class="pointer-hand">
+                    <i class="fa fa-plus"></i>
+                </a>
+            </li>
+        </ul>
+
+        <div id="facet-pane" class="tab-content">
+            <div class="tab-pane active" id="general-tab">
+                <div class="panel-heading"></div>
+                <div class="panel-body">
+                    <form
+                        action="{{ path('claro_admin_facet_general_edit') }}"
+                        method="post"
+                        id="form-facet-general"
+                    >
+                        <div class="well">
+                            {{ 'general_tab_form_explanation'|trans({}, 'platform') }}
+                        </div>
+                        <table class="table table-striped table-bordered table-condensed">
+                            <thead>
+                            <tr>
+                                <th> {{ 'role'|trans({}, 'platform') }} </th>
+                                <th> {{ 'base_informations'|trans({}, 'platform') }} </th>
+                                <th> {{ 'mail'|trans({}, 'platform') }} </th>
+                                <th> {{ 'phone'|trans({}, 'platform') }} </th>
+                                <th> {{ 'public_profile_preferences_allow_message_sending'|trans({}, 'platform') }} </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {% for platformRole in platformRoles %}
+                                    {% set found = false %}
+                                    {% set currentPreference = null %}
+                                    {% for profilePreference in profilePreferences %}
+                                        {% if profilePreference.getRole().getId() == platformRole.getId() %}
+                                            {% set currentPreference = profilePreference %}
+                                            {% set found = true %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    <tr>
+                                        <td> {{ platformRole.getTranslationKey|trans({}, 'platform') }}</td>
+                                        <td>
+                                            <input name="basedata-role-{{ platformRole.getId() }}" type="checkbox"
+                                               {% if found == true and currentPreference.getBaseData() == true %}
+                                                   checked
+                                               {% endif %}
+                                            >
+                                            </input>
+                                        </td>
+                                        <td>
+                                            <input name="mail-role-{{ platformRole.getId() }}" type="checkbox"
+                                                {% if found == true and currentPreference.getMail() == true %}
+                                                    checked
+                                                {% endif %}
+                                            >
+                                            </input>
+                                        </td>
+                                        <td>
+                                            <input name="phone-role-{{ platformRole.getId() }}" type="checkbox"
+                                                {% if found == true and currentPreference.getPhone() == true %}
+                                                    checked
+                                                {% endif %}
+                                            >
+                                            </input>
+                                        </td>
+                                        <td>
+                                            <input name="sendmessage-role-{{ platformRole.getId() }}" type="checkbox"
+                                                {% if found == true and currentPreference.getSendMessage() == true %}
+                                                    checked
+                                                {% endif %}
+                                            >
+                                            </input>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <button id="edit-general-facet-btn"
+                                type="submit"
+                                class="btn btn-primary">
+                            {{ 'edit'|trans({}, 'platform') }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% for facet in facets %}
+                {% include "ClarolineCoreBundle:Administration\\Facet:facetPane.html.twigjs" with {'facet': facet} %}
+            {% endfor %}
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/administration/facet.js') }}"></script>
+{% endblock %}

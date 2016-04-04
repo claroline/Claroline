@@ -1,0 +1,64 @@
+{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-briefcase',
+                'name': 'desktop'|trans({}, 'platform'),
+                'href': path('claro_desktop_open')
+            },
+            {
+                'name': 'claroline_activity_tool'|trans({}, 'tools'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'claroline_activity_tool'|trans({}, 'tools') }}</h3>
+    </div>
+
+    <div class="panel-body">
+        {% set nbWorkspaces = workspaceInfos|length %}
+        {% for workspaceInfo in workspaceInfos %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="accordion-toggle" data-toggle="collapse" href="#collapse-{{ workspaceInfo.code }}">
+                        <span class="icon-book"></span> {{ workspaceInfo.name }}
+                        <span class="workspace-code">({{ workspaceInfo.code }})</span>
+                    </a>
+                </h4>
+            </div>
+
+            <table id="collapse-{{ workspaceInfo.code }}" class="table-responsive table table-striped {% if nbWorkspaces == 1 %}in{% endif %}">
+                <thead>
+                    <tr>
+                        <th nowrap scope="col">{{ 'name'|trans({}, 'platform') }}</th>
+                        <th nowrap scope="col">{{ 'start_date'|trans({}, 'tools') }}</th>
+                        <th nowrap scope="col">{{ 'end_date'|trans({}, 'tools') }}</th>
+                        <th nowrap scope="col">{{ 'status'|trans({}, 'platform') }}</th>
+                    </tr>
+                <thead>
+                <tbody>
+                    {% for nodeId in workspaceInfo['nodes'] %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('claro_resource_open', {'node': nodeId , 'resourceType': 'activity'}) }}">
+                                {{ resourceInfos[nodeId]['name'] }}
+                            </a>
+                        </td>
+                        <td>{{ activityInfos[nodeId]['startDate'] }}</td>
+                        <td>{{ activityInfos[nodeId]['endDate'] }}</td>
+                        <td>{{ activityInfos[nodeId]['status']|trans({}, 'platform') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

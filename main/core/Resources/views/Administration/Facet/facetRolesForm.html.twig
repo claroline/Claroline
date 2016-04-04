@@ -1,0 +1,57 @@
+{% extends "ClarolineCoreBundle:Administration\\Facet:facetModalForm.html.twig" %}
+
+{% block header %}
+    {{ 'roles_management'|trans({}, 'platform') }}
+{% endblock %}
+
+{% block explanation %}
+    <div class="well">
+        {{ 'roles_facet_form_explanation'|trans({}, 'platform') }}
+    </div>
+{% endblock %}
+
+{% block form %}
+    <form
+        role="form"
+        class="form-horizontal"
+        action="{{ path('claro_admin_facet_role_edit', {'facet': facet.getId()}) }}"
+        method="post"
+        id="form-facet-roles"
+    >
+        <div class="modal-body">
+            <table class="table table-striped table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <th> {{ 'role'|trans({}, 'platform') }} ({{ facet.getName() }})</th>
+                        <th> {{ 'show'|trans({}, 'platform') }} </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for platformRole in platformRoles %}
+                        <tr>
+                            <td> {{ platformRole.getTranslationKey|trans({}, 'platform') }}</td>
+                            <td>
+                                <input type="checkbox" name="role-{{ platformRole.getId() }}"
+                                   {% for role in roles %}
+                                       {% if role.getId() == platformRole.getId() %}
+                                           checked
+                                       {% endif %}
+                                   {% endfor %}
+                                >
+                                </input>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button id="submit-role-form" class="btn btn-primary" aria-hidden="true">
+                {{ 'edit'|trans({}, 'platform') }}
+            </button>
+            <div class="btn btn-default" data-dismiss="modal" aria-hidden="true">
+                {{ 'cancel'|trans({}, 'platform') }}
+            </div>
+        </div>
+    </form>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'ClarolineCoreBundle:Tool/workspace/analytics:analyticsTabs.html.twig' %}
+
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'dashboard'|trans({}, 'platform'),
+                    'href': path('claro_workspace_analytics_resources', { 'workspaceId': workspace.getId() })
+                },
+                {
+                    'name': 'traffic'|trans({}, 'platform'),
+                    'href': ''
+                }
+            ]
+        )
+    }}
+{% endblock %}
+
+{% block analytics %}
+    <div class="logs-container">
+        {% if 0 < chartData|length %}
+            {% include 'ClarolineCoreBundle:Log:count_by_day_chart.html.twig' with {'actionName' : 'entries_per_day'} %}
+            <br/><br/>
+        {% endif %}
+    </div>
+{% endblock %}

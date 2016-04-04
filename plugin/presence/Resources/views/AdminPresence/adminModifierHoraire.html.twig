@@ -1,0 +1,98 @@
+<div class="modal-dialog"
+     role="dialog"
+     aria-labelledby="modalLabel"
+     aria-hidden="true"
+     id="modifier-modal"
+ >
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3 class="modal-title">
+                 {{"modifier_tranche"|trans({},"presences")}}
+            </h3>
+        </div>
+        <div class="modal-body">
+
+            <form id="ModifHoraireForm" 
+                  method="post" {{ form_enctype(ModifPeriodForm) }} 
+                  action="{{path("formalibre_presence_modifier_horaire",{"period":period.getId()})}}">   
+              
+                       {{"num_tranche"|trans({},"presences")}}:{{form_widget(ModifPeriodForm.numberMod,{ 'attr': {'value': period.getNumPeriod()} } )}}
+                        {{"nom_tranche"|trans({},"presences")}}{{form_widget(ModifPeriodForm.nameMod,{ 'attr': {'value': period.getName()} } )}}
+                        {{"heure_debut"|trans({},"presences")}}:{{form_widget(ModifPeriodForm.startMod,{ 'attr': {'value':period.getBeginHour()|date('H:i')} } )}}
+                        {{"heure_fin"|trans({},"presences")}}:{{form_widget(ModifPeriodForm.endMod,{ 'attr': {'value': period.getEndHour()|date('H:i')} } )}}
+                        {{form_widget(ModifPeriodForm.dayName,{ 'attr': {'value': period.getDayName} } )}}
+                       
+                        <br />
+                        <div class="row">
+                             <div class="row">
+                            <button class="btn btn-primary col-md-4 col-md-offset-1" 
+                                    type="submit" 
+                                    name="form[modifier]">Modifier la tranche
+                            </button> 
+                            <button class="btn btn-danger col-md-4 col-md-offset-2" 
+                                    id="supprimer-btn"
+                                    data-dismiss="modal"
+                                    data-period-id="{{period.getId()}}">
+                             {{"supprimer"|trans({},"presences")}}
+                            </button> 
+                         
+                        </div>
+                          
+                        </div>
+                    </div>
+                    <br />
+                </div>
+            </form>
+         
+
+        </div>
+    </div>
+</div>
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script>
+        $(function () {
+            $('#form_startMod').datetimepicker({
+                format: 'LT',
+                 icons: {
+            time: "fa fa-clock-o",
+            date: "fa fa-calendar",
+            up: "fa fa-arrow-up",
+            down: "fa fa-arrow-down"
+        }
+            });
+        });
+        $(function () {
+            $('#form_endMod').datetimepicker({
+                format: 'LT',
+                 icons: {
+            time: "fa fa-clock-o",
+            date: "fa fa-calendar",
+            up: "fa fa-arrow-up",
+            down: "fa fa-arrow-down"
+        }
+            });
+        });
+    </script>
+     <script>
+             
+        $("#supprimer-btn").on("click",function(){
+            var periodId=$(this).data("period-id");
+            window.Claroline.Modal.confirmRequest(
+                Routing.generate("formalibre_period_supprimer",{"period":periodId}),
+                function() {
+                    window.location.reload();
+                },
+                periodId,
+                "Etes-vous certain de vouloir supprimer cette tranche horaire ? Cela effacera également toutes les présences liées.",
+                "Supression tranche horaire"
+                    );
+   
+    });  
+                     
+    </script>
+
+{% endblock %}

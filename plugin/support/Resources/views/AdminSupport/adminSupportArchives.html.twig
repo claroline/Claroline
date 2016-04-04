@@ -1,0 +1,198 @@
+{% macro renderPager(pager, typeId, search, orderedBy, order, max) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'formalibre_admin_support_archives',
+                'routeParams': {
+                    'type': typeId,
+                    'search': search,
+                    'orderedBy': orderedBy,
+                    'order': order,
+                    'max': max
+                }
+            }
+        )
+    }}
+{% endmacro %}
+
+{% macro sortUrl(typeId, search, orderedBy, order, max) %}
+    {% if order == 'ASC' %}
+        {% set newOrder = 'DESC' %}
+    {% else %}
+        {% set newOrder = 'ASC' %}
+    {% endif %}
+
+    {{ 
+        path(
+            'formalibre_admin_support_archives',
+            {
+                'type': typeId,
+                'search': search,
+                'orderedBy': orderedBy,
+                'order': newOrder,
+                'max': max
+            }
+        )
+    }}
+{% endmacro %}
+
+{% from _self import renderPager %}
+{% from _self import sortUrl %}
+
+{% extends 'FormaLibreSupportBundle:AdminSupport:adminSupportMenu.html.twig' %}
+
+{% block adminSupport %}
+    {% if tickets|length > 0 %}
+    
+        {% if tickets.getNbPages() > 1 %}
+            {{ renderPager(tickets, type.getId(), search, orderedBy, order, max) }}
+        {% endif %}
+        <div class="table-responsive" id="archived-tickets-tab">
+            <table class="table">
+                <tr>
+                    <th>
+                        <a href="{{ sortUrl(type.getId(),search, 'title', order, max) }}">
+                            {{ 'title'|trans({}, 'platform') }}
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{{ sortUrl(type.getId(), search, 'user', order, max) }}">
+                            {{ 'contact'|trans({}, 'platform') }}
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{{ sortUrl(type.getId(), search, 'creationDate', order, max) }}">
+                            {{ 'creation_date'|trans({}, 'platform') }}
+                        </a>
+                    </th>
+                    <th>
+                    </th>
+                    <th>
+                    </th>
+                </tr>
+
+                {% for ticket in tickets %}
+                    {% set ticketId = ticket.getId() %}
+                    {% set ticketDescription = ticket.getDescription() %}
+                    {% set comments = ticket.getComments() %}
+                    {% set interventions = ticket.getInterventions() %}
+                    <tr id="row-ticket-{{ ticketId }}">
+                        <td>
+                            <a href="{{ path('formalibre_admin_ticket_open', {'ticket': ticketId}) }}">
+                                <b>
+                                    {{ ticket.getTitle() }}
+                                </b>
+                            </a>
+                            <i class="fa fa-info-circle pointer-hand"
+                               data-toggle="tooltip"
+                               data-container="body"
+                               data-placement="right"
+                               data-html="true"
+                               title="{{ ticketDescription }}"
+                            >
+                            </i>
+                        </td>
+                        <td>
+                            {% set user = ticket.getUser() %}
+                            {{ user.getFirstName() }}
+                            {{ user.getLastName() }}
+                            <br>
+                            <i class="fa fa-envelope-o"></i> :
+                            {{ ticket.getContactMail() }}
+                            <br>
+                            <i class="fa fa-phone"></i> :
+                            {{ ticket.getContactPhone() }}
+                        </td>
+                        <td>
+                            {{ ticket.getCreationDate()|intl_date_format }}
+                        </td>
+                        <td class="text-center">
+                            <span class="view-comments-btn pointer-hand"
+                                  data-ticket-id="{{ ticketId }}"
+                                  {% if comments|length > 0 %}
+                                      {% set lastComment = comments|last %}
+                                      {% set lastCommenter = lastComment.getUser() %}
+                                      data-toggle="tooltip"
+                                      data-container="body" 
+                                      data-placement="left"
+                                      data-html="true"
+                                      title="{{ lastCommenter.getFirstName() }} {{ lastCommenter.getLastName() }} :<br>{{ lastComment.getContent()|raw }}"
+                                  {% endif %}
+                            >
+                                <i class="fa fa-comments-o"></i>
+                                {{ comments|length }}
+                            </span>
+
+                            {% if interventions|length > 0 %}
+                                {% set lastIntervention = interventions|last %}
+                                {% set lastIntervenant = lastIntervention.getUser() %}
+
+                                {% if lastStatus[ticketId] is defined %}
+                                    {% set status = lastStatus[ticketId] %}
+                                    <br>
+                                    <span class="label label-success"
+                                          data-toggle="tooltip"
+                                          data-container="body" 
+                                          data-placement="left"
+                                          title="{{ status.getName()|trans({}, 'support') }}"
+                                    >
+                                        {{ status.getCode() }}
+                                    </span>
+                                {% endif %}
+                                <br>
+                                <span class="view-interventions-btn pointer-hand"
+                                      data-ticket-id="{{ ticketId }}"
+                                      data-toggle="tooltip"
+                                      data-container="body" 
+                                      data-placement="left"
+                                      data-html="true"
+                                      {% if lastIntervention.getEndDate() is empty %}
+                                          title="{{ 'ongoing_intervention'|trans({}, 'support') }} [{{ lastIntervenant.getFirstName() }} {{ lastIntervenant.getLastName() }}]"
+                                      {% elseif lastIntervention.getInternalComment() is not empty %}
+                                          title="{{ lastIntervenant.getFirstName() }} {{ lastIntervenant.getLastName() }} :<br>{{ lastIntervention.getInternalComment()|raw }}"
+                                      {% endif %}
+                                >
+                                    <i class="fa fa-wrench"></i>
+                                    {{ interventions|length }}
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group">
+                                <button class="btn btn-danger delete-ticket-btn btn-sm"
+                                        data-ticket-id="{{ ticketId }}"
+                                >
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        {% if tickets.getNbPages() > 1 %}
+            {{ renderPager(tickets, type.getId(), search, orderedBy, order, max) }}
+        {% endif %}
+    
+    {% else %}
+        <div class="alert alert-info">
+            {{ 'no_ticket'|trans({}, 'support') }}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript"
+            src="{{ url('bazinga_jstranslation_js', { 'domain': 'support' }) }}"
+    >
+    </script>
+    <script src='{{ asset('bundles/formalibresupport/js/adminSupportArchives.js') }}'
+            type="text/javascript"
+    >
+    </script>
+{% endblock %}

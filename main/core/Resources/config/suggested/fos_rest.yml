@@ -1,0 +1,45 @@
+# app/config/config.yml
+fos_rest:
+    body_converter:
+        enabled: true
+    disable_csrf_role: ROLE_API
+    param_fetcher_listener: true
+    body_listener: true
+    format_listener: true
+    view:
+        view_response_listener: 'force'
+        mime_types:
+            csv: ['text/plain', 'text/csv']
+            xls: ['text/plain', 'application/excel']
+        formats:
+            json: true
+            xml:  true
+            csv:  true
+            xls:  true
+    format_listener:
+        rules:
+            -
+                path: '^.*/api/.*\.csv$'
+                priorities: [csv, json]
+                fallback_format: csv
+                prefer_extension: true
+            -
+                path: '^.*/api/.*\.xls$'
+                priorities: [xls, json]
+                fallback_format: xls
+                prefer_extension: true
+    service:
+        view_handler: claroline.view_handler
+
+services:
+    claroline.view_handler.exporter.class:
+        class: Claroline\CoreBundle\Library\View\ExporterViewHandler
+
+    claroline.view_handler:
+        parent: fos_rest.view_handler.default
+        calls:
+            - ['registerHandler', [ 'csv', [@claroline.view_handler.exporter.class, 'createResponse'] ] ]
+            - ['registerHandler', [ 'xls', [@claroline.view_handler.exporter.class, 'createResponse'] ] ]
+
+parameters:
+    fos_rest.view_handler.default.class: Claroline\CoreBundle\Library\View\ViewHandler

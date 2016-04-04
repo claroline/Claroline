@@ -1,0 +1,7 @@
+{% extends 'ClarolineCoreBundle:Exception:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'internal_error' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block message %}
+    {{'internal_error'|trans({}, 'platform')}}
+{% endblock %}

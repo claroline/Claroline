@@ -1,0 +1,117 @@
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
+
+{% block title %}{{ resource.getResourceNode().getName() ~ ' - ' ~ parent()|striptags|raw }}{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title"> {{ resource.getResourceNode().getName() }} </h3>
+    </div>
+    <div class="panel-body">
+        {% if not path is empty %}
+            <div class="text-right">
+                <a class="btn btn-primary pointer-hand" onClick="javascript:enterFullScreen()">
+                    <i class="fa fa-expand"></i>
+                </a>
+            </div>
+            <div class="full-size">
+                {# SRC attribute is set in JS to be able to resize screen using iFrame height #}
+                <iframe id="web-resource-frame" class="full-size" src="" frameborder="0"></iframe>
+            </div>
+        {% else %}
+            <div class="alert alert-danger">
+                {{ 'an_error_occured_message' | trans({}, 'platform') }}
+            </div>
+        {% endif %}
+    </div>
+    <div class="panel-footer">
+        <a class="btn btn-primary"
+           href="{{ path('claro_resource_download') }}?ids[]={{ _resource.getResourceNode().getId() }}">
+            <i class="fa fa-download"></i> {{ 'download'|trans({}, 'platform') }}
+        </a>
+    </div>
+    <style>
+        .full-size {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+{% endblock %}
+{% block javascripts_header %}
+    {{ parent() }}
+    <script type="text/javascript">
+        function runPrefixedMethod(obj, method) {
+            var pfx = ['webkit', 'moz', 'ms', 'o', ''];
+            var p = 0, m = null, t = null;
+
+            while (p < pfx.length && !obj[m]) {
+                m = method;
+
+                if (pfx[p] == '') {
+                    m = m.substr(0,1).toLowerCase() + m.substr(1);
+                }
+
+                m = pfx[p] + m;
+
+                if ('undefined' !== (t = typeof obj[m])) {
+                    pfx = [pfx[p]];
+
+                    return t === 'function' ? obj[m]() : obj[m];
+                }
+
+                p++;
+            }
+        }
+
+        function enterFullScreen() {
+            if (runPrefixedMethod(document, 'FullScreen') || runPrefixedMethod(document, 'IsFullScreen')) {
+                runPrefixedMethod(document, 'CancelFullScreen');
+            }
+            else {
+                runPrefixedMethod(document.getElementById('web-resource-frame'), 'RequestFullScreen');
+            }
+        }
+    </script>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var $frame = $('iframe#web-resource-frame');
+
+            // Resize IFrame on load
+            $frame.load(function () {
+                resizeIframe($(this));
+
+                // Observe DOM modifications to resize IFrame to fit content
+                var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+                var observer = new MutationObserver(function (mutations, observer) {
+                    resizeIframe($frame);
+                });
+
+                observer.observe($frame.get(0).contentDocument.body, {
+                    subtree: true,
+                    childList: true
+                });
+            }).attr('src', '{{ asset("uploads/webresource/" ~ path) }}');
+
+            // Resize IFrame on window resize
+            $(window).on('resize', function () {
+                resizeIframe($frame);
+            });
+        });
+
+        function resizeIframe(frame) {
+            var height = frame.contents().height();
+            console.log(height);
+            frame.animate({ height: height }, 100, function() {});
+        }
+    </script>
+{% endblock %}

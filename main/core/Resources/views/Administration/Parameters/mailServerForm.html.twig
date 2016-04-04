@@ -1,0 +1,54 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'server' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'mail'|trans({}, 'platform'),
+                'href': path('claro_admin_parameters_mail_index')
+            },
+            {
+                'name': 'server'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'server'|trans({}, 'platform') }}</h3>
+    </div>
+    {{ macros.flashBox() }}
+    {% form_theme form_mail 'ClarolineCoreBundle::form_theme_no_translations.html.twig' %}
+    <form role="form" class="form-horizontal" action="{{ path('claro_admin_edit_parameters_mail_server') }}" method="post" {{ form_enctype(form_mail) }} id="form_settings" enctype='multipart/form-data'>
+        <div class="panel-body">
+            {{ form_widget(form_mail) }}
+        </div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            <a href="{{ path('claro_admin_reset_mail_server') }}">
+                <button type="button" class="btn btn-primary">{{ 'reset'|trans({}, 'platform') }}</button>
+            </a>
+            <a href="{{ path('claro_admin_index') }}">
+                <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+            </a>
+        </div>
+    </form>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/administration/mail.js') }}"></script>
+{% endblock%}

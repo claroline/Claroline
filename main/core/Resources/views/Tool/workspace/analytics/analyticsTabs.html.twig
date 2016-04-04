@@ -1,0 +1,29 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ "analytics" | trans({}, "tools") }}{% endblock %}
+
+{% block section_content %}
+    <div class="panel-body">
+        <ul class="nav nav-tabs">
+            <li {% if analyticsTab == 'traffic' %}class="active"{% endif %}>
+                <a href="{{ path('claro_workspace_analytics_traffic', {'workspaceId': workspace.getId()}) }}">
+                    {{ 'traffic'|trans({}, 'platform') }}
+                </a>
+            </li>
+            <li {% if analyticsTab == 'activities' %}class="active"{% endif %}>
+                <a href="{{ path('claro_workspace_activities_evaluations_show', {'workspaceId': workspace.getId()}) }}">
+                    {{ 'activities'|trans({}, 'platform') }}
+                </a>
+            </li>
+            <li {% if analyticsTab == 'resources' %}class="active"{% endif %}>
+                <a href="{{ path('claro_workspace_analytics_resources', {'workspaceId': workspace.getId()}) }}">
+                    {{ 'resources'|trans({}, 'platform') }}
+                </a>
+            </li>
+        </ul>
+        <br>
+
+        {% block analytics %}{% endblock %}
+
+    </div>
+{% endblock %}

@@ -1,0 +1,14 @@
+<div>
+    <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-cog"></i> <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="pointer" id="addLocation" ng-click="lc.createForm()"> {{ 'new'|trans:{}:'platform' }} </a></li>
+        </ul>
+    </div>
+    <div class="panel panel-body">
+        <dtable options="lc.dataTableOptions" rows="lc.locations" class="material">
+        </dtable>
+    </div>
+</div>

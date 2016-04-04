@@ -1,0 +1,67 @@
+{% extends "ClarolineCoreBundle:Layout:topBarItems.html.twig" %}
+
+{% block topBar %}
+    <div id="top_bar" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                {% if config.getParameter('logo') != '' %}
+                    <a class="navbar-brand logo" href="{{ path('claro_index') }}" title="{{ 'home' | trans({}, "platform") }}">
+                        <img src="{{ getAssetPath() ~ '/uploads/logos/' ~ config.getParameter('logo') }}" height="35"
+                            {% if config.getParameter('name') != "" %}alt="{{ config.getParameter('name') }}"{% endif %}>
+                    </a>
+                {% endif %}
+                {% if config.getParameter('name') != '' and config.getParameter('nameActive') %}
+                    <a class="navbar-brand" href="{{ path('claro_index') }}">
+                        {{ config.getParameter('name') }}
+                    </a>
+                {% endif %}
+            </div>
+            <div class="navbar-collapse collapse">
+                {% if not isLogged and homeMenu is defined and not homeMenu is empty %}
+                    {% if headerLocale %}
+                        <div class="navbar-form navbar-right clearfix">
+                            <button class="pull-right locale-select btn btn-default">{{ app.request.locale | upper }}</button>
+                        </div>
+                    {% endif %}
+                    <ul class="nav navbar-nav navbar-right">
+                        {% for item in homeMenu %}
+                            {% if item.content.title is defined %}
+                                <li>
+                                    <a{% if item.content.content is defined %} href="{{ item.content.content | homeLink }}" title="{{ item.content.getTitle() }}"{% endif %} >
+                                        {{ item.content.getTitle() }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <ul class="nav navbar-nav">
+                        {% if isLogged %}{{ block('leftSide') }}{% endif %}
+                    </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        {{ block('rightSide') }}
+                        {% if isLogged %}
+                            {{ block('logged') }}
+                        {% else %}
+                            {{ block('login') }}
+                        {% endif %}
+
+                        {% if showHelpButton %}
+                            <li>
+                                <a href="{{ helpUrl }}">
+                                    <i class="fa fa-question-circle"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

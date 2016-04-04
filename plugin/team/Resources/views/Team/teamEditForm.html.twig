@@ -1,0 +1,30 @@
+<div id="modal-team-edit-form" class="modal-dialog" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3 class="modal-title">
+                {{ 'team_edition'|trans({}, 'team') }}
+            </h3>
+        </div>
+        <div class="modal-body">
+            <form id="team-edit-form"
+                  action="{{ path('claro_team_edit', {'team': team.getId()}) }}"
+                  method="POST"
+                  {{ form_enctype(form) }}
+                  novalidate
+            > 
+                {{ form_widget(form) }}
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button  type="button" class="btn btn-default" data-dismiss="modal">
+                {{ 'cancel'|trans({},'platform') }}
+            </button>
+            <button type="submit" id='confirm-edit-btn' class="btn btn-primary">
+                {{ 'ok'|trans({},'platform') }}
+            </button>
+        </div>
+    </div>
+</div>

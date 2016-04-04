@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+    <channel>
+        <title>{{ "notifications"|trans({}, 'platform') }}</title>
+        {% if error is defined %}
+        <description>{{ error|trans({}, 'notification') }}</description>
+        {% else %}
+        {% if pager.getNbResults() > 0 %}
+            {% for notificationViewer in pager %}
+                {% set notification = notificationViewer.notification %}
+                <item>
+                {% if notificationViews[notificationViewer.id] is defined %}
+                    <title>{{ notificationViews[notificationViewer.id]|striptags("<strong><span>")|rssMessage }}</title>
+                {% else %}
+                    {% set user = null %}
+                    {% set resource = null %}
+                    {% if notification.details is not empty %}
+                        {% if notification.details.doer is defined %}
+                            {% set user = notification.details.doer %}
+                        {% endif %}
+                        {% if notification.details.resource is defined %}
+                            {% set resource = notification.details.resource %}
+                        {% endif %}
+                    {% endif %}
+                    <title>{{ notification | notificationMessage(user, resource, systemName)}}</title>
+                {% endif %}
+                    <pubDate>{{ notification.creationDate|smartDate }}</pubDate>
+                </item>
+            {% endfor %}
+        {% else %}
+            <description>{{ 'zero_notifications'|trans({}, 'notification') }}</description>
+        {% endif %}
+        {% endif %}
+
+    </channel>
+</rss>
+
+

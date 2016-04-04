@@ -1,0 +1,24 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block content %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ "send_mail" | trans({}, "platform" )}}</h3>
+        </div>
+        {% form_theme form 'ClarolineCoreBundle::form_theme_vertical.html.twig' %}
+        <form role="form"
+            novalidate="novalidate"
+            action="{{path('claro_mail_send', {'userId': userId})}}"
+            method="post" {{ form_enctype(form) }}
+            id="generic-form"
+            >
+            <div class="panel-body">
+                {{ form_widget(form) }}
+                {{ form_rest(form) }}
+            </div>
+            <div class="panel-footer">
+                <button type="submit" class="btn btn-primary">{{ 'send'|trans({}, 'platform') }}</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% macro item(params) %}
+    <li role="presentation" {% if params.id is defined and params.id is not empty %} id="{{ params.id }}" {% endif %}class="{% if params.dropdown is defined and params.dropdown is not empty %}dropdown{% endif %}{{ params.route | default(' ') | compareRoute(' active') | raw }}">
+        <a  role="menuitem"
+            {% if params.dropdown is defined and params.dropdown is not empty %}class="pointer-hand dropdown-toggle" data-toggle="dropdown"{% endif %}
+            href="{% if params.href is defined and params.href is not empty %}{{ params.href }}{% endif %}"
+            {% if params.title is not defined and params.name is defined and params.name is not empty %}title="{{ params.name | trans({}, 'platform') }}"{% endif %}
+            {% if params.title is defined and params.title is not empty %}title="{{ params.title}}"{% endif %}
+                >
+            {% if params.icon is defined and params.icon is not empty %}<i class="fa fa-{{ params.icon }}"></i> {% endif %}
+            <span {% if params.breakhide is defined %}class="break-hide"{% endif %}>
+                {% if params.name is defined %} {{ params.name | trans({}, 'platform') }} {% endif %}
+            </span>
+            {% if params.badge is defined and params.badge is not empty %}<span class="badge">{{ params.badge }}</span>{% endif %}
+            {% if (params.dropdown is defined and params.dropdown is not empty) and (params.hideArrow is not defined or params.hideArrow is empty) %}<i class="caret"></i>{% endif %}
+        </a>
+        {% if params.dropdown is defined and params.dropdown is not empty %}
+        {{ params.dropdown | raw }}
+        {% endif %}
+    </li>
+{% endmacro %}
+
+{% block topBar %}
+
+    {% block leftSide %}
+        {{ knp_menu_render('ClarolineCoreBundle:Builder:topBarLeftMenu', {}, 'top_bar_left') }}
+    {% endblock leftSide %}
+
+    {% block rightSide %}
+        {% import _self as topbar %}
+
+        {% if adminTools|length > 0 %}
+            {{ topbar.item({'name':'administration', 'dropdown':block('dropdownAdministration')}) }}
+        {% endif %}
+
+        {% if isInAWorkspace %}
+            {% set workspacesName = currentWorkspace.getName() | length > 16 ? currentWorkspace.getName() | slice(0, 16) ~ '...' : currentWorkspace.getName() %}
+        {% else %}
+            {% set workspacesName =  '' %}
+        {% endif %}
+        {{ topbar.item({'name':workspacesName, 'icon':'book', 'route':'/workspaces/', 'dropdown':block('dropdownWorkspace')}) }}
+    {% endblock rightSide %}
+
+    {% block login %}
+        {% import _self as topbar %}
+        {% if register_target is not empty %}
+            {{ topbar.item({'name':'register', 'href': register_target, 'icon':'user-plus'}) }}
+        {% endif %}
+        {{ topbar.item({'name':'login', 'href': login_target, 'icon':'user', 'title':'login' | trans({}, 'platform') ~ ' Claroline Connect'}) }}
+    {% endblock login %}
+
+    {% block logged %}
+        {% import _self as topbar %}
+        {% set username = app.user.firstName ~ ' ' ~ app.user.lastName %}
+        {% set user = username | length > 16 ? username | slice(0, 16) ~ '...' : username %}
+        {{ topbar.item({'name':user, 'icon':'user', 'route':'/profile', 'dropdown':block('dropdownLogged')}) }}
+    {% endblock logged %}
+
+    {% block dropdownAdministration %}
+        {% import _self as topbar %}
+        <ul class="dropdown-menu" role="menu">
+            {% for tool in adminTools %}
+                {{
+                    topbar.item({
+                        'name': tool.getName()|trans({}, 'tools'),
+                        'href': path('claro_admin_open_tool', {'toolName': tool.getName() }),
+                        'icon': tool.getClass()
+                    })
+                }}
+            {% endfor %}
+        </ul>
+    {% endblock dropdownAdministration %}
+
+    {% block dropdownWorkspace %}
+        <ul class="dropdown-menu" role="menu">
+        {% import _self as topbar %}
+        {% if isLogged %}
+            {% if not workspaces is empty %}
+                <li role="presentation" class="dropdown-header">{{ 'history'|trans({}, 'platform') }}</li>
+                {% for workspace in workspaces %}
+                    {{ topbar.item({'name':workspace.getName() ~ ' (' ~ workspace.getCode() ~ ')', 'href':path('claro_workspace_open', {'workspaceId': workspace.getId()})}) }}
+                {% endfor %}
+                <li role="presentation" class="divider"></li>
+            {% endif %}
+            {{ topbar.item({'name':'my_workspaces', 'href':path('claro_workspace_by_user'), 'icon':'book'}) }}
+            {{ topbar.item({'name':'find_workspaces', 'href':path('claro_workspace_list'), 'icon':'book'}) }}
+            {% if is_granted('ROLE_WS_CREATOR') %}
+                <li role="presentation" class="divider"></li>
+                {{ topbar.item({'name':'create_workspace', 'href':path('claro_workspace_creation_form'), 'icon':'pencil'}) }}
+            {% endif %}
+        {% else %}
+            {{ topbar.item({'name':'find_workspaces', 'href':path('claro_workspace_list'), 'icon':'book'}) }}
+        {% endif %}
+        </ul>
+    {% endblock dropdownWorkspace %}
+
+    {% block dropdownLogged %}
+        {{ knp_menu_render('ClarolineCoreBundle:Builder:topBarRightMenu', {}, 'top_bar_right') }}
+    {% endblock dropdownLogged %}
+
+{% endblock topBar %}

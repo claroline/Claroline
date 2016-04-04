@@ -1,0 +1,4 @@
+claro_survey:
+    resource: "@ClarolineSurveyBundle/Controller/SurveyController.php"
+    type:     annotation
+    prefix:   /

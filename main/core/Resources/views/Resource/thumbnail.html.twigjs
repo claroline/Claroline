@@ -1,0 +1,71 @@
+{% twig_js name="ResourceManagerThumbnail" %}
+
+<div class='checkbox checkbox-left'>
+    <input type="checkbox"
+        class="node-chk-{{ viewName }}"
+        value="{{ node.id }}"
+        data-node-name="{{ node.name }}"
+        data-type="{{ node.type }}"
+        data-mime-type="{{ node.mime_type }}"
+        data-path="{{ node.path_for_display }}"
+        data-allow-select="{{ isSelectionAllowed}}"
+        data-mask="{{ node.mask }}"
+        {% if isSelectionAllowed == false %}style="visibility: collapse;"{% endif %}
+        />
+</div>
+
+<div class="clickable-node node-element{% if not node.published %} unpublished{% endif %}" id="node-element-{{ node.id }}"
+    style="background-image: url('{{ webRoot }}/{{ node.large_icon }}');"
+    data-id="{{ node.id }}"
+    data-type="{{ node.type }}"
+    data-mime-type="{{ node.mime_type }}"
+>
+</div>
+{% if hasMenu == true %}
+    <div class="dropdown" rel="tooltip" title="{{ node.name }}">
+        <a class="dropdown-toggle name dropdown-thumbnail" role="button" data-toggle="dropdown" href="#">
+            <div class="node-name{% if not node.published %} text-muted{% endif %}">
+                {% if node.new == true %} <b> {% endif %}
+                {{ node.displayableName|raw }}
+                {% if node.new == true %} </b> {% endif %}
+            <i class="fa fa-caret-down"></i></div>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+            {% for action, attributes in actions %}
+                {% set perm = attributes.mask b-and node.mask  %}
+                {% set showAction = true %}
+                {% if attributes.name == 'edit-rights' and node.enableRightsEdition == false %}
+                    {% set showAction = false %}
+                {% endif %}
+                {% if showAction == true %}
+                    {% if perm > 0 %}
+                    <li role="presentation">
+                        <a
+                            role="menuitem"
+                            href="#"
+                            class="node-menu-action"
+                            data-action="{{ action }}"
+                            data-node-name="{{ node.name }}"
+                            data-is-custom="{{ attributes.isCustom }}"
+                            data-id="{{ node.id }}" tabindex="-1" href="#"
+                            {% if attributes.isForm %}
+                                data-action-type="display-form"
+                            {% endif %}
+                        >
+                            {{ attributes.name|trans({}, 'resource') }}
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="disabled">
+                        <a>
+                            {{ attributes.name|trans({}, 'resource') }}
+                        </a>
+                    </li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+{% else %}
+    <div class="node-name">{{ node.displayableName|raw }}&nbsp;&nbsp;&nbsp;</div>
+{% endif %}

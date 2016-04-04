@@ -1,0 +1,10 @@
+<a href="{% spaceless %}
+    {% if extension ==  'directory' %}
+        {{ path('claro_workspace_open_tool', {'toolName': 'resource_manager', 'workspaceId': node.getWorkspace().getId()}) }}#resources/{{ node.getId() }}
+    {% else %}
+        {{ path('claro_resource_open', {'resourceType': node.getResourceType().getName(), 'node' : node.getId()}) }}
+    {% endif%}"
+    {% if openInNewTab == true %}
+        target="_blank"
+    {% endif %}
+{% endspaceless %}>{{ node.getName() }}</a>

@@ -1,0 +1,18 @@
+{% twig_js name="FacetPane" %}
+
+<div class="tab-pane" id="facet-pane-{{ facet.id}}">
+    <div class="panel-heading"></div>
+    <div class="panel-body">
+        <div class="panel-group" id="facet-panel-group-{{ facet.id }}" role="tablelist" aria-multiselectable="true">
+            <ul class="sortable-panel" id="sortable-panel-{{ facet.id }}" data-facet-id={{ facet.id }}>
+                {% for panel in facet.getPanelFacets() %}
+                    {% include "ClarolineCoreBundle:Administration\\Facet:panelElement.html.twigjs" with {'panel': panel, 'facet': facet} %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div data-facet-id="{{ facet.id }}" class="panel-footer pointer-hand text-center add-panel-to-facet">
+        <i class="fa fa-plus-circle" data-facet-id="{{ facet.id }}"></i>
+        {{ 'add_panel_to_facet'|trans({}, 'platform') }}
+    </div>
+</div>

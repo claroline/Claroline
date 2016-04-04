@@ -1,0 +1,44 @@
+Collapse: Collapse
+add_a_link: 'Add a link'
+add_link_here: 'Add a link here'
+confirm_delete_content_message: 'Are you sure you want to delete this content ?'
+content_administration: 'Content Administration'
+content_pages: 'Content pages'
+content_regions: 'Content regions'
+content_size: 'Size of content'
+create_content: 'Create a content'
+days_ago: '%count% day ago|%count% days ago'
+edit_in_page: edit_in_page
+for_unlogged_users: 'For not logged users'
+header: Header
+header_menu_available: 'When header menu is available'
+hours_ago: '%count% hour ago|%count% hours ago'
+interactive_content_add: 'You can add interactive content such as videos or presentations from websites like'
+irreversible_action: 'This action is irreversible'
+left_direction: Left
+link_address: 'Link address'
+link_notice: 'Note that you can add a link simply by pasting it on the content body'
+link_title: 'Link title'
+menu_settings: 'Menu settings'
+menu_title: 'Menu title'
+minutes_ago: '%count% minute ago|%count% minutes ago'
+months_ago: '%count% month ago|%count% months ago'
+move_content: 'Move content'
+new_content_page: 'New content page'
+optional_title: 'Optional title'
+'page_already_exists''': 'page_already_exists'''
+pages: Pages
+read_more: 'Read more'
+region: Region
+right_direction: Right
+seconds_ago: '%count% second ago|%count% seconds ago'
+select_page: 'Select a page'
+set_as_header_in_home_page: 'Set this menu as header menu in the home page'
+show_connection_button_at_footer: 'Show the connection button at the footer of home page'
+show_language_button_in_header: 'Show the language button in the header menu'
+show_workspace_menu_at_footer: 'Show the workspace menu at the footer of home page'
+try_again_message: try_again_message
+unpublish_link: 'Click here in order to change the settings'
+unpublish_page: 'This web page is unpublished!'
+weeks_ago: '%count% week ago|%count% weeks ago'
+years_ago: '%count% year ago|%count% years ago'

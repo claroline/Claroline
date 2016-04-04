@@ -1,0 +1,21 @@
+{% set action = path('claro_admin_ldap_form') %}
+{% if name is defined and not name is empty %}
+    {% set action = path('claro_admin_ldap_form', {'name': name}) %}
+{% endif %}
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title">{{ 'LDAP settings'|trans({}, 'ldap') }}</h4>
+        </div>
+        <form class="form-horizontal" action="{{ action }}" method="post" {{ form_enctype(form) }} id="form_settings">
+            <div class="modal-body">
+                {{ form_widget(form) }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
+                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            </div>
+        </form>
+    </div>
+</div>

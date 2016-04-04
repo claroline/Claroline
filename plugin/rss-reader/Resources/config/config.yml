@@ -1,0 +1,8 @@
+plugin:
+  has_options: false
+  icon: res_rss.png
+
+  widgets:
+    - name: claroline_rssreader
+      is_configurable: true
+      is_exportable: true

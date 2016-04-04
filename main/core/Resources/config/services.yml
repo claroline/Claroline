@@ -1,0 +1,49 @@
+# This file contains only services that cannot be defined using annotations.
+
+services:
+
+    # array injection with annotations is not supported
+    claroline.plugin.validator:
+        class: Claroline\CoreBundle\Library\Installation\Plugin\Validator
+        arguments:
+            - routing: "@claroline.plugin.routing_checker"
+              config: "@claroline.plugin.config_checker"
+
+    # vendor classes used as service arguments
+    claroline.symfony_yaml:
+        class: Symfony\Component\Yaml\Parser
+        public: false
+
+    # doctrine repositories
+    claroline.repository.log:
+        class: Claroline\CoreBundle\Repository\Log\LogRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - Claroline\CoreBundle\Entity\Log\Log
+
+    claroline.repository.user:
+        class: Claroline\CoreBundle\Repository\UserRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - Claroline\CoreBundle\Entity\User
+
+    # pseudo-services used for dynamic parameter injection
+    # (see Claroline\CoreBundle\DependencyInjection\Compiler\DynamicConfigPass
+    claroline.session.storage_options:
+        class: stdClass
+        factory: ["@claroline.session.storage_options_factory", getOptions]
+
+    #notification listeners
+    claroline.listener.core.notification_listener:
+        class: Claroline\CoreBundle\Listener\Notification\NotificationListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: create_notification_item_workspace-role-change_right, method: onCreateNotificationItem }
+            - { name: kernel.event_listener, event: create_notification_item_workspace-role-subscribe_user, method: onCreateNotificationItem }
+            - { name: kernel.event_listener, event: create_notification_item_workspace-role-subscribe_group, method: onCreateNotificationItem }
+            - { name: kernel.event_listener, event: create_notification_item_role-subscribe_user, method: onCreateNotificationItem }
+            - { name: kernel.event_listener, event: create_notification_item_role-subscribe_group, method: onCreateNotificationItem }
+            - { name: kernel.event_listener, event: create_notification_item_resource-create, method: onCreateNotificationItem }
+            - { name: kernel.event_listener, event: create_notification_item_role-subscribe-queue, method: onCreateNotificationItem }
+            - { name: kernel.event_listener, event: create_notification_item_resource-text-update, method: onCreateNotificationItem }

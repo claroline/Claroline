@@ -1,0 +1,40 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'admin_logs' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'admin_logs'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    {% set filterFormAction = path('claro_admin_logs_show') %}
+    {% set pagination %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_admin_logs_show_paginated',
+                    'routeParams': {'filter': filter}
+                }
+            )
+        }}
+    {% endset %}
+
+    {% set isDesktop = isDesktop is defined ? isDesktop : false %}
+
+    {% include 'ClarolineCoreBundle:Log:tool_view_list.html.twig' with {'filterFormAction': filterFormAction, 'pagination': pagination, 'isDesktop': isDesktop} %}
+{% endblock %}

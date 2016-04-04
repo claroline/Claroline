@@ -1,0 +1,64 @@
+log_resource-claroline_forum-close_subject_filter: Fermeture de sujet
+log_resource-claroline_forum-create_category_shortname: Création de catégorie
+log_resource-claroline_forum-create_category_filter: Création de catégorie
+log_resource-claroline_forum-create_category_sentence: a créé une catégorie dans le forum %resource%
+log_resource-claroline_forum-create_message_shortname: Création de message
+log_resource-claroline_forum-create_message_filter: Création de message
+log_resource-claroline_forum-create_message_sentence: a créé un message dans le forum %resource%
+log_resource-claroline_forum-create_subject_shortname: Création de sujet
+log_resource-claroline_forum-create_subject_filter: Création de sujet
+log_resource-claroline_forum-create_subject_sentence: a créé un sujet dans le forum %resource%
+log_resource-claroline_forum-delete_category_shortname: Suppression de catégorie
+log_resource-claroline_forum-delete_category_filter: Suppression de catégorie
+log_resource-claroline_forum-delete_category_sentence: a supprimé une catégorie dans le forum %resource%
+log_resource-claroline_forum-delete_message_shortname: Suppression de message
+log_resource-claroline_forum-delete_message_filter: Suppression de message
+log_resource-claroline_forum-delete_message_sentence: a supprimé un message dans le forum %resource%
+log_resource-claroline_forum-delete_subject_shortname: Suppression de sujet
+log_resource-claroline_forum-delete_subject_filter: Suppression de sujet
+log_resource-claroline_forum-delete_subject_sentence: a supprimé un sujet dans le forum %resource%
+log_resource-claroline_forum-edit_category_shortname: Édition de catégorie
+log_resource-claroline_forum-edit_category_filter: Édition de catégorie
+log_resource-claroline_forum-edit_category_sentence: a édité une catégorie dans le forum %resource%
+log_resource-claroline_forum-edit_message_shortname: Édition de message
+log_resource-claroline_forum-edit_message_filter: Édition de message
+log_resource-claroline_forum-edit_message_sentence: a édité un message dans le forum %resource%
+log_resource-claroline_forum-edit_subject_shortname: Édition de sujet
+log_resource-claroline_forum-edit_subject_filter: Édition de sujet
+log_resource-claroline_forum-edit_subject_sentence: a édité un sujet dans le forum %resource%
+log_resource-claroline_forum-move_message_shortname: Déplacement de message
+log_resource-claroline_forum-move_message_filter: Déplacement de message
+log_resource-claroline_forum-move_message_sentence: a déplacé un message dans le forum %resource%
+log_resource-claroline_forum-move_subject_shortname: Déplacement de sujet
+log_resource-claroline_forum-move_subject_filter: Déplacement de sujet
+log_resource-claroline_forum-move_subject_sentence: a déplacé un sujet dans le forum %resource%
+log_resource-claroline_forum-open_subject_filter: Ouverture de sujet
+log_resource-claroline_forum-stick_subject_shortname: Épinglement de sujet
+log_resource-claroline_forum-stick_subject_filter: Épinglement de sujet
+log_resource-claroline_forum-stick_subject_sentence: a épinglé un sujet dans le forum %resource%
+log_resource-claroline_forum-unstick_subject_shortname: Désépinglement de sujet
+log_resource-claroline_forum-unstick_subject_filter: Désépinglement de sujet
+log_resource-claroline_forum-unstick_subject_sentence: a désépinglé un sujet dans le forum %resource%
+log_resource-claroline_forum-subscribe_shortname: Affiliation à un sujet de forum
+log_resource-claroline_forum-subscribe_filter: Affiliation à un sujet de forum
+log_resource-claroline_forum-subscribe_sentence: s'est affilié à un sujet dans le forum %resource%
+log_resource-claroline_forum-unsubscribe_shortname: Désaffiliation d'un sujet de forum
+log_resource-claroline_forum-unsubscribe_filter: Désaffiliation d'un sujet de forum
+log_resource-claroline_forum-unsubscribe_sentence: s'est désaffilié d'un sujet dans le forum %resource%
+log_resource-claroline_forum-close_subject_title: Fermeture d'un sujet de forum
+log_resource-claroline_forum-create_category_title: Création d'une catégorie de forum
+log_resource-claroline_forum-create_message_title: Création d'un message de forum
+log_resource-claroline_forum-create_subject_title: Suppression d'un sujet de forum
+log_resource-claroline_forum-delete_category_title: Suppression d'une catégorie de forum
+log_resource-claroline_forum-delete_message_title: Suppression d'un message de forum
+log_resource-claroline_forum-delete_subject_title: Suppression d'un sujet de forum
+log_resource-claroline_forum-edit_category_title: Modification d'une catégorie de forum
+log_resource-claroline_forum-edit_message_title: Modification d'un message de forum
+log_resource-claroline_forum-edit_subject_title: Modification d'un sujet de forum
+log_resource-claroline_forum-move_message_title: Déplacement d'un message de forum
+log_resource-claroline_forum-move_subject_title: Déplacement d'un sujet de forum
+log_resource-claroline_forum-open_subject_title: Ouverture d'un sujet de forum
+log_resource-claroline_forum-stick_subject_title: Épinglement d'un sujet de forum
+log_resource-claroline_forum-subscribe_title: Affiliation à un sujet de forum
+log_resource-claroline_forum-unstick_subject_title: Désépinglement d'un sujet
+log_resource-claroline_forum-unsubscribe_title: Désaffiliation d'un sujet de forum

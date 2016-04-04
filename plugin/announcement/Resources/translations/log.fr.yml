@@ -1,0 +1,12 @@
+log_resource-claroline_announcement_aggregate-create_filter: Création d'une annonce
+log_resource-claroline_announcement_aggregate-create_sentence: a créé une annonce dans %resource%
+log_resource-claroline_announcement_aggregate-create_shortname: Création
+log_resource-claroline_announcement_aggregate-create_title: Création d'une annonce
+log_resource-claroline_announcement_aggregate-delete_filter: Suppression d'une annonce
+log_resource-claroline_announcement_aggregate-delete_sentence: a supprimé une annonce dans %resource%
+log_resource-claroline_announcement_aggregate-delete_shortname: Suppression
+log_resource-claroline_announcement_aggregate-delete_title: Suppression d'une annonce
+log_resource-claroline_announcement_aggregate-edit_filter: Modification d'une annonce
+log_resource-claroline_announcement_aggregate-edit_sentence: a modifié une annonce dans %resource%
+log_resource-claroline_announcement_aggregate-edit_shortname: Modification
+log_resource-claroline_announcement_aggregate-edit_title: Modification d'une annonce

@@ -1,0 +1,60 @@
+{% set layout = 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% if isDesktop() %}
+    {% set layout = 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+{% endif %}
+
+{% set _resource = survey %}
+{% set surveyId = survey.getId() %}
+
+{% extends layout %}
+
+{% block title %}
+    {{ survey.getResourceNode().getName() ~ ' - '  | striptags | raw ~ 'survey_results'|trans({}, 'survey') }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-body">
+        <div class="dropdown pull-right">
+            <i class="fa fa-cog pull-right pointer-hand dropdown-toggle"
+               id="dropdownMenu1"
+               data-toggle="dropdown"
+            ></i>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                <li role="presentation">
+                    <a role="menuitem"
+                       tabindex="-1"
+                       href="{{ path('claro_survey_results_export', {'survey': surveyId}) }}"
+                    >
+                        {{ 'export_all_results'|trans({}, 'survey') }}
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a role="menuitem"
+                       tabindex="-1"
+                       href="{{ path('claro_survey_question_results_export', {'survey': surveyId, 'question': currentQuestion.getId()}) }}"
+                    >
+                        {{ 'export_question_results'|trans({}, 'survey') }}
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        {% if questions|length > 0 %}
+        <ul class="nav nav-tabs">
+            
+            {% for question in questions %}
+                <li {% if currentQuestion is defined and currentQuestion.getId() == question.getId() %}class="active"{% endif %}>
+                    <a href="{{ path('claro_survey_results_show', {'survey': survey.getId(), 'question': question.getId()}) }}">
+                        {{ question.getTitle() }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <br>
+
+        {% block question_results %}{% endblock %}
+
+    </div>
+{% endblock %}

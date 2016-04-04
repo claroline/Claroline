@@ -1,0 +1,4 @@
+claro_ldap:
+    resource: "@ClarolineLdapBundle/Controller/LdapController.php"
+    type: annotation
+    prefix: /

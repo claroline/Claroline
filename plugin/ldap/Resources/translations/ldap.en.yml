@@ -1,0 +1,28 @@
+Add server: Add server
+Allow account creation at the firs login: Allow account creation at the firs login
+Export LDAP users: Export LDAP users
+LDAP settings: LDAP settings
+Save settings: Save settings
+Servers settings: Servers settings
+There are no configured servers: There are no configured servers
+There is not users settings: There is not users settings
+Users and groups settings: Users and groups settings
+Users and groups: Users and groups
+groups_settings: Groups settings
+ldap_already_exists: There is already a server with this name
+ldap_cant_connect: Unable to connect to server
+ldap_error_conexion: Could not connect to LDAP server
+ldap_group_class: Group class
+ldap_save_groups_settings_error: In order to save the settings, you must provide the name and the code
+ldap_save_users_settings_error: In order to save the settings, you must provide the username, name, last name, email and password
+ldap_user_class: User class
+users_settings: Users settings
+name: Name
+host: Host
+port: Port
+distinguished_name: DN
+username: Username
+password: Password
+protocol_version: Version
+append_dn: Concat dn
+auto_creation: Create user if missing

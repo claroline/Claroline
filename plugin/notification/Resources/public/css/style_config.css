@@ -1,0 +1,12 @@
+table#notification-parameters-types-table th a{
+    color: #428bca;
+}
+table#notification-parameters-types-table th a:hover,
+table#notification-parameters-types-table th a:focus{
+    color:#2a6496;
+}
+
+table#notification-parameters-types-table th a::after{
+    content: "";
+
+}

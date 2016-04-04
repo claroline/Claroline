@@ -1,0 +1,19 @@
+BEGIN:VCALENDAR
+{% for event in events %}
+PRODID:-BayBuk
+VERSION:2.0
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME: {{ event.getUser().getUsername() }}
+X-WR-TIMEZONE: {{ tzName }}
+BEGIN:VEVENT
+DTSTART: {{ event.getStartInDateTime().getTimestamp()|date('Ymd\\THi') }}00
+DTEND:{{ event.getEndInDateTime().getTimestamp()|date('Ymd\\THi') }}00
+CLASS:CLAROLINECONNECT
+DESCRIPTION: {{ event.getDescription() }}
+LOCATION:
+STATUS:CONFIRMED
+SUMMARY: {{ event.getTitle() }}
+END:VEVENT
+{% endfor %}
+END:VCALENDAR

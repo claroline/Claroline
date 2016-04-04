@@ -1,0 +1,6 @@
+plugin:
+    has_options: false
+
+    admin_tools:
+          - name: notification_configuration
+            class: bell

@@ -1,0 +1,18 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4>{{ "language_select" | trans({}, "platform")}}</h4>
+        </div>
+        <div class="modal-body">
+            {% for locale in locales %}
+                <span class="locale-select label label-default">{{ locale | upper }}</span>
+            {% endfor %}
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">
+                {{ "cancel" | trans({}, "platform")}}
+            </button>
+        </div>
+    </div>
+</div>

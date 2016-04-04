@@ -1,0 +1,95 @@
+{% macro renderPager(pager, workspaceTag, search) %}
+
+    {% if search == '' %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_workspace_tag_check_children_pager',
+                    'routeParams': {'workspaceTagId': workspaceTag.getId()}
+                }
+            )
+        }}
+    {% else %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_workspace_tag_check_children_pager_search',
+                    'routeParams': {'workspaceTagId': workspaceTag.getId(), 'search' : search}
+                }
+            )
+        }}
+    {% endif %}
+{% endmacro %}
+
+{% from _self import renderPager %}
+{% set nbPages = possibleChildren.getNbPages() %}
+
+<div>
+     <div class="input-group">
+        <input class="form-control"
+            type="text"
+            id="search-tag-txt"
+            placeholder="{{ 'search'|trans({}, 'platform') }}"
+            value={{ search }}
+        >
+        <span class="input-group-btn">
+            <button class="filter btn btn-default" type="button" id="search-tag-button">
+                <i class="fa fa-search"></i>
+            </button>
+        </span>
+    </div>
+    <br>
+
+    {% if nbPages > 1 %}
+        <tr>
+            <td>
+                {{ renderPager(possibleChildren, workspaceTag, search) }}
+            </td>
+        </tr>
+    {% endif %}
+
+    <div class="table-responsive">
+        <table class="table table-condensed table-hover">
+
+            {% if possibleChildren is empty %}
+                <tr>
+                    <td colspan="2" align="center">
+                        {{ 'no_category'|trans({}, 'platform') }}
+                    </td>
+                </tr>
+            {% else %}
+
+                {% for possibleChild in possibleChildren %}
+                {% set possibleChildId = possibleChild.getId() %}
+                    <tr class="possible-child-element"
+                        tag-id="{{ possibleChildId }}"
+                    >
+                        <td class="possible-child-tag-name">
+                            <label
+                                class="pointer-hand"
+                                for="tag-input-{{ possibleChildId }}"
+                                style="font-weight: normal;"
+                            >
+                                {{ possibleChild.getName() }}
+                            </label>
+                        </td>
+                        <td>
+                            <input id="tag-input-{{ possibleChildId }}"
+                                type="checkbox"
+                                name="tag-possible-child"
+                                class="chk-tag"
+                                value="{{ possibleChildId }}"
+                            >
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </table>
+    </div>
+</div>

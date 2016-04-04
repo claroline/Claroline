@@ -1,0 +1,7 @@
+{% if description is not empty %}
+    {{ description|raw }}
+{% else %}
+    <div class="alert alert-warning">
+        {{ 'no_description'|trans({}, 'cursus') }}
+    </div>
+{% endif %}

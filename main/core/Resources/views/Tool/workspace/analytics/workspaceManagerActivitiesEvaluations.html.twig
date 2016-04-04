@@ -1,0 +1,74 @@
+{% extends 'ClarolineCoreBundle:Tool/workspace/analytics:analyticsTabs.html.twig' %}
+
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'dashboard'|trans({}, 'platform'),
+                    'href': path('claro_workspace_analytics_resources', { 'workspaceId': workspace.getId() })
+                },
+                {
+                    'name': 'activities'|trans({}, 'platform'),
+                    'href': ''
+                }
+            ]
+        )
+    }}
+{% endblock %}
+
+{% block analytics %}
+    <div id="activities-evaluations">
+        {% if activities|length > 0 %}
+            <div class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <th>{{ 'title'|trans({}, 'platform') }}</th>
+                        <th class="text-center">{{ 'start_date'|trans({}, 'platform') }}</th>
+                        <th class="text-center">{{ 'end_date'|trans({}, 'platform') }}</th>
+                        <th class="text-center">{{ 'evaluation_type'|trans({}, 'platform') }}</th>
+                    </tr>
+                    {% for activity in activities %}
+                    {% set resourceNode = activity.getResourceNode() %}
+                    <tr>
+                        <td>
+                            <a href="{{ path(
+                                'claro_workspace_manager_activity_evaluations_show',
+                                {'activityId': activity.getId()})
+                            }}">
+                                {{ activity.getTitle() }}
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            {% if resourceNode.getAccessibleFrom() is not empty %}
+                                {{ resourceNode.getAccessibleFrom()|intl_date_format }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if resourceNode.getAccessibleUntil() is not empty %}
+                                {{ resourceNode.getAccessibleUntil()|intl_date_format }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if activity.getParameters() is not empty
+                                and activity.getParameters().getEvaluationType() is not empty %}
+
+                                {{ activity.getParameters().getEvaluationType()|trans({}, 'platform') }}
+                            {% else %}
+                                {{ 'evaluation-manual'|trans({}, 'platform') }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% else %}
+            {{ 'no_activity_in_workspace'|trans({}, 'platform') }}
+        {% endif %}
+    </div>
+{% endblock %}

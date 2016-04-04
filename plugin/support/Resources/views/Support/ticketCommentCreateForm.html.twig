@@ -1,0 +1,14 @@
+<div id="ticket-comment-create-form">
+    <h4>{{ 'add_a_comment'|trans({}, 'support') }}</h4>
+    <form id="comment-create-form"
+          action="{{ path('formalibre_ticket_comment_create', {'ticket': ticket.getId()}) }}"
+          method="POST"
+          {{ form_enctype(form) }}
+    > 
+        {% form_theme form 'ClarolineCoreBundle::form_theme_no_label.html.twig' %}
+        {{ form_widget(form) }}
+    </form>
+    <button type="submit" id="add-comment-btn" class="btn btn-primary pull-right">
+        {{ 'add_comment'|trans({}, 'support') }}
+    </button>
+</div>

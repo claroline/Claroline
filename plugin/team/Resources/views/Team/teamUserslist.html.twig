@@ -1,0 +1,40 @@
+<div>    
+    <label>
+        {{ 'team_manager'|trans({}, 'team') }}
+        :
+    </label>
+
+    {% if team.getTeamManager() is not empty %}
+        {% set manager = team.getTeamManager() %}
+        {{ manager.getFirstName() }}
+        {{ manager.getLastName() }}
+    {% else %}
+        [{{ 'none'|trans({}, 'platform') }}]
+    {% endif %}
+</div>
+<hr>
+
+{% if users|length > 0 %}
+    <h3>{{ 'users'|trans({}, 'platform') }}</h3>
+    <br>
+    <div class="table-responsive">
+        <table class="table">
+            <tr>
+                <th>{{ 'firstName'|trans({}, 'platform') }}</th>
+                <th>{{ 'lastName'|trans({}, 'platform') }}</th>
+                <th>{{ 'username'|trans({}, 'platform') }}</th>
+            </tr>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.getFirstName() }}</td>
+                <td>{{ user.getLastName() }}</td>
+                <td>{{ user.getUsername() }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
+{% else %}
+    <div class="alert alert-warning">
+        {{ 'no_user'|trans({}, 'platform') }}
+    </div>
+{% endif %}

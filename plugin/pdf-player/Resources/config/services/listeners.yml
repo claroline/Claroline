@@ -1,0 +1,7 @@
+services:
+  claroline.listener.pdf_player_listener:
+    class: Claroline\PdfPlayerBundle\Listener\PdfPlayerListener
+    calls:
+        - [setContainer, ["@service_container"]]
+    tags:
+        - { name: kernel.event_listener, event: play_file_application_pdf, method: onOpenPdf }

@@ -1,0 +1,22 @@
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'create_new_tag'|trans({}, 'platform') }}</h3>
+    </div>
+    <form role="form"
+          class="form-horizontal"
+          id="workspace_tag_form"
+          action="{{ path('claro_workspace_tag_create') }}"
+          method="post" {{ form_enctype(form) }}>
+        <div class="panel-body">
+            {{ form_widget(form) }}
+        </div>
+        <div class="panel-footer">
+            <button id="form-workspace-tag-ok-btn" type="submit" class="btn btn-primary">
+                {{ 'ok'|trans({}, 'platform') }}
+            </button>
+            <button id="form-cancel-btn" type="button" class="btn btn-default">
+                {{ 'cancel'|trans({}, 'platform') }}
+            </button>
+         </div>
+    </form>
+{% endblock %}

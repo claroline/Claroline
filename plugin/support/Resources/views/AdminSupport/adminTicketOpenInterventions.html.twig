@@ -1,0 +1,229 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% set type = ticket.getType() %}
+{% set comments = ticket.getComments() %}
+{% set interventions = ticket.getInterventions() %}
+
+{% block title %}
+    {{ 
+        parent() ~
+        ' - ' ~
+        ticket.getTitle()
+    }}
+{% endblock %}
+
+{% block breadcrumb %}
+    
+    {% if ticket.getLevel() == -1 %}
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'fa fa-cog',
+                    'name': 'administration'|trans({}, 'platform'),
+                    'href': path('claro_admin_index')
+                },
+                {
+                    'name': 'formalibre_support_management_tool'|trans({}, 'tools'),
+                    'href': path('formalibre_admin_support_index')
+                },
+                {
+                    'name': type.getName()|trans({}, 'support'),
+                    'href': path('formalibre_admin_support_new', {'type': type.getId()})
+                },
+                {
+                    'name': 'archives'|trans({}, 'support'),
+                    'href': path('formalibre_admin_support_archives', {'type': type.getId()})
+                },
+                {
+                    'name': ticket.getTitle(),
+                    'href': ''
+                }
+            ])
+        }}
+    {% else %}
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'fa fa-cog',
+                    'name': 'administration'|trans({}, 'platform'),
+                    'href': path('claro_admin_index')
+                },
+                {
+                    'name': 'formalibre_support_management_tool'|trans({}, 'tools'),
+                    'href': path('formalibre_admin_support_index')
+                },
+                {
+                    'name': type.getName()|trans({}, 'support'),
+                    'href': path('formalibre_admin_support_new', {'type': type.getId()})
+                },
+                {
+                    'name': ('l' ~ ticket.getLevel())|trans({}, 'support'),
+                    'href': path('formalibre_admin_support_level', {'type': type.getId(), 'level': ticket.getLevel()})
+                },
+                {
+                    'name': ticket.getTitle(),
+                    'href': ''
+                }
+            ])
+        }}
+    {% endif %}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ ticket.getTitle() }}
+        </h3>
+    </div>
+    <div class="panel-body">
+        
+        {% render(controller('FormaLibreSupportBundle:AdminSupport:adminTicketManagementInfo', {'ticket': ticket.getId()})) %}
+        <br>
+        
+        <ul class="nav nav-tabs">
+            <li role="presentation">
+                <a href="{{ path('formalibre_admin_ticket_open', {'ticket': ticket.getId()}) }}">
+                    {{ 'informations'|trans({}, 'platform') }}
+                </a>
+            </li>
+            <li role="presentation">
+                <a href="{{ path('formalibre_admin_ticket_open_comments', {'ticket': ticket.getId()}) }}">
+                    {{ 'comments'|trans({}, 'support') }}
+                    <span class="badge">{{ comments|length }}</span>
+                </a>
+            </li>
+            <li role="presentation" class="active">
+                <a href="#">
+                    {{ 'interventions'|trans({}, 'support') }}
+                    <span class="badge">{{ interventions|length }}</span>
+                </a>
+            </li>
+        </ul>
+        <br>
+        <br>    
+        <div id="interventions-box">
+            <b>{{ 'total_time'|trans({}, 'support') }} :</b>
+            {{ totalTime }}
+            {{ 'minute_short'|trans({}, 'support') }}
+            <br>
+            <br>
+            
+            {% if interventions|length > 0 %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th class="text-center">
+                                {{ 'time'|trans({}, 'support') }}
+                            </th>
+                            <th>
+                                {{ 'intervenant'|trans({}, 'support') }}
+                            </th>
+                            <th class="text-center">
+                                {{ 'status'|trans({}, 'platform') }}
+                            </th>
+                            <th class="text-center">
+                                {{ 'message'|trans({}, 'platform') }}
+                            </th>
+                            <th></th>
+                        </tr>
+                        
+                        {% for intervention in interventions %}
+                            {% set interventionId = intervention.getId() %}
+                            {% set endDate = intervention.getEndDate() %}
+                            {% set duration = intervention.getDuration() %}
+                            {% set intervenant = intervention.getUser() %}
+                            {% set status = intervention.getStatus() %}
+                            {% set externalComment = intervention.getExternalComment() %}
+                            {% set internalComment = intervention.getInternalComment() %}
+                            
+                            <tr id="row-intervention-{{ interventionId }}">
+                                <td class="text-center">
+                                    {{ intervention.getStartDate()|intl_date_format }}
+                                    <i class="fa fa-long-arrow-right"></i>
+                                    
+                                    {% if endDate is empty %}
+                                        ...
+                                    {% else %}
+                                        {{ endDate|intl_date_format }}
+                                    {% endif %}
+                                    
+                                    {% if duration is not empty %}
+                                        <br>
+                                        <i class="fa fa-clock-o"></i>
+                                        {{ duration }} {{ 'minute_short'|trans({}, 'support') }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{ intervenant.getFirstName() }}
+                                    {{ intervenant.getLastName() }}
+                                </td>
+                                <td class="text-center">
+                                    {% if status is not empty %}
+                                        <span class="label label-success"
+                                              data-toggle="tooltip"
+                                              data-container="body" 
+                                              data-placement="left"
+                                              title="{{ status.getName()|trans({}, 'support') }}"
+                                        >
+                                            {{ status.getCode() }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if externalComment is not empty %}
+                                        <b>{{ 'client_message'|trans({}, 'support') }}</b>
+                                        <br>
+                                        {{ externalComment|raw }}
+                                        
+                                        {% if externalComment is not empty %}
+                                            <hr>
+                                        {% endif %}
+                                    {% endif %}
+                                    
+                                    {% if internalComment is not empty %}
+                                        <b>{{ 'internal_message'|trans({}, 'support') }}</b>
+                                        <br>
+                                        {{ internalComment|raw }}
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group">
+                                        <a href="{{ path('formalibre_admin_ticket_intervention_edit_form', {'intervention': intervention.getId()}) }}"
+                                           class="btn btn-default btn-sm"
+                                        >
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <button class="btn btn-danger delete-intervention-btn btn-sm"
+                                                data-intervention-id="{{ interventionId }}"
+                                        >
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif %}
+            <hr>
+            <a href="{{ path('formalibre_admin_ticket_intervention_create_form', {'ticket': ticket.getId()}) }}"
+               class="btn btn-primary pull-right"
+            >
+                <i class="fa fa-plus"></i>
+                {{ 'add_an_intervention'|trans({}, 'support') }}
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript"
+            src="{{ url('bazinga_jstranslation_js', { 'domain': 'support' }) }}"
+    >
+    </script>
+    <script src='{{ asset('bundles/formalibresupport/js/adminTicketOpenInterventions.js') }}'
+            type="text/javascript"
+    >
+    </script>
+{% endblock %}

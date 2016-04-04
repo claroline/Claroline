@@ -1,0 +1,60 @@
+author: Author
+category: Category
+category_form_name: Category
+edit_message: Edit a message
+field_content_required: Content field is required.
+forum: Forum
+forum_back_to_categories: Back to forums
+forum_back_to_subjects: Back to subjects
+forum_category_edit: 'Edit category'
+forum_form_name: Name
+forum_message_form_content: Content
+forum_new_message: A new post was added to topic "%subject%" in forum "%forum% by %author%".
+forum_new_subject: A new topic was initiated in forum "%forum%".
+forum_options_form_messages: Posts per page
+forum_options_form_subjects: Topics per page
+forum_settings: Forum settings
+forum_subject_edit: 'Edit topic'
+forum_subject_form_title: Title
+forum_subject_form_message: Message
+forum_subject_form_message_content: Content
+forum_subject_title_form_title: Title
+last_message: Last post
+messages: Posts
+messages_per_page: Posts per page
+move_message: Move a post
+move_subject: Move a subject
+move_to: Move to
+new_category: New category
+new_message: New post
+new_subject: New topic
+notifications: Notifications
+posts: Posts
+remove_category_confirm_message: Are you sure you want to delete this category ?
+remove_subject_confirm_message: Are you sure you want to delete this post ?
+remove_subjects_confirm_message: Are you sure you want to delete these %count% topic(s) ?
+reply: Reply
+reply_message: Reply to a post
+started_by: Initiated by
+stick: Stick
+stuck: Stuck
+subject: Topic
+subjects: Topics
+subjets_per_page: Subjects per page
+subscribe_mail_list: Subscribe to notifications
+unstick: Unstick
+unsubscribe_mail_list: Unsubscribe from notifications
+yes: Yes
+no: No
+notifications_explanation: Global notifications will send a mail to each user who are granted this forum access each time a new message is created.
+activate_global_notifications: Activate global notifications
+disable_global_notifications: Disable global notifications
+responses: Replies
+answer_message: Reply
+posted_by: Posted by %author% the %date%
+fast_reply: Fast reply
+reply_to: Reply to %author%:
+quote: Quote
+title_option_form_last_messages: Just display the last messages which I have contributed
+title_form_last_messages: Display messages
+please_connect_to_answer: You need to be logged on to reply on this forum

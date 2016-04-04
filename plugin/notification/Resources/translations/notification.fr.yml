@@ -1,0 +1,39 @@
+enable_notifications: Suivre cette ressource
+enable_notifications_info: Étre notifié des nouveautés de cette ressource
+disable_notifications: Ne pas suivre cette ressource
+disable_notifications_info: Ne pas être notifié des nouveautés de cette ressource
+
+now: Maintenant
+few_seconds_ago: "Il y a quelques secondes"
+yesterday: "Hier"
+seconds_ago: "{0} Il y a 0 secondes|{1} Il y a 1 seconde|]1,Inf] Il y a %count% secondes"
+minutes_ago: "{0} Il y a 0 minutes|{1} Il y a 1 minute|]1,Inf] Il y a %count% minutes"
+hours_ago: "{0} Il y a 0 heures|{1} Il y a 1 heure|]1,Inf] Il y a %count% heures"
+days_ago: "{0} Il y a 0 jours|{1} Il y a 1 jour|]1,Inf] Il y a %count% jours"
+date_format: "d/m/Y \\à H:i"
+day_format: "%day% %month%"
+hour_format: " \\à H:i"
+months: "Janvier, Février, Mars, Avril, Mai, Juin, Juillet, Aout, Septembre, Octobre, Novembre, Décembre"
+days: "Lundi, Mardi, Mercredi, Jeudi, Vendredi, Samedi, Dimanche"
+see_more: "Voir plus"
+zero_notifications: "Aucune notification"
+notifications_title: "Liste des notifications"
+
+notification_user_configuration: Paramètres des notifications
+notification_configuration: Configuration des notifications
+rss_visible: Flux RSS
+rss_url_regenerate: Régénérer l'URL du flux RSS
+dropdown_items: Eléments dans la liste
+max_per_page: Eléments par page
+purge_enabled: Effacement automatique
+purge_after_days: Effacer après (jours)
+purge_explain_text: "*en activant cette option, l'historique des notification sera effacé automatiquement en fonction de la valeur ci-dessous"
+mark_all_viewed: Tout marquer comme lu
+filter_by_category: Filtrer par type
+badge: Badge
+wiki: Wiki
+blog: Blog
+lesson: Cours
+socialmedia: Médias sociaux
+website: Site web
+forum: Forum

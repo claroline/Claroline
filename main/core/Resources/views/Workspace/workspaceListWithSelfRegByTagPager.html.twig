@@ -1,0 +1,64 @@
+{% macro renderPager(pager, workspaceTagId) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_workspace_list_with_self_reg_pager',
+                'routeParams': {'workspaceTagId': workspaceTagId}
+            }
+        )
+    }}
+{% endmacro %}
+
+{% from _self import renderPager %}
+
+{% set nbPages = relations.getNbPages() %}
+
+{% if nbPages > 1 %}
+    {{ renderPager(relations, workspaceTagId) }}
+{% endif %}
+
+{% for relation in relations.currentPageResults() %}
+    {% set workspace = relation.getWorkspace() %}
+    {% set hasRole = has_role_in_workspace(workspace.getId(), app.security.getToken()) %}
+    <div class="list-group-item row-workspace row-workspace-id-{{ workspace.getId() }}">
+        <i class="fa fa-book"></i>
+        {{ workspace.getName() }}
+        <span><small>({{ workspace.getCode() }})</small></span>
+
+        {% if hasRole %}
+            <span class="pull-right label label-success">
+                {{ 'registered'|trans({}, 'platform') }}
+            </span>
+        {% else %}
+            {% if listworkspacePending[workspace.getId()] is defined  %}
+                <span class="pull-right pointer-hand label label-success">
+                    <i class="fa fa-share-square-o"></i>
+                    {{ 'pending'|trans({}, 'platform') }}
+                    <i class="pointer-hand fa fa-times-circle cancel-workspace-pending cancel-button-{{ workspace.getId() }}"
+                       data-workspace-id="{{ workspace.getId() }}"
+                       data-workspace-name="{{ workspace.getName() }}"
+                       data-workspace-code="{{ workspace.getCode() }}"
+                       data-workspace-validation="{% if workspace.getRegistrationValidation() %}validation{% else %}no-validation{% endif %}"
+                    ></i>
+                </span>
+            {% else %}
+                <span class="pull-right pointer-hand label label-primary register-user-to-workspace register-button-{{ workspace.getId() }}"
+                    data-workspace-id="{{ workspace.getId() }}"
+                    data-workspace-name="{{ workspace.getName() }}"
+                    data-workspace-code="{{ workspace.getCode() }}"
+                    data-workspace-validation="{% if workspace.getRegistrationValidation() %}validation{% else %}no-validation{% endif %}"
+                >
+                    <i class="fa fa-plus-circle"></i>
+                    {{ 'register'|trans({}, 'platform') }}
+                </span>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endfor %}
+
+{% if nbPages > 1 %}
+    {{ renderPager(relations, workspaceTagId) }}
+{% endif %}

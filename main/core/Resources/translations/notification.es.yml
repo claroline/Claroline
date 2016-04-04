@@ -1,0 +1,10 @@
+badge-award: Badges
+registration-decline: 'Denegación de inscripción'
+role-change_right: 'Acceso al recurso'
+role-subscribe: 'Nueva inscripción'
+role-subscribe_group: 'Se ha inscrito al rol ''%role%'''
+role-subscribe_user: 'Se ha inscrito al rol ''%role%'''
+workspace-registration-decline: 'ha rechazado su demanda de inscripción al espacio de trabajo'
+workspace-role-change_right: 'Ha accedido al recurso %resource% del espacio de trabajo %workspace%'
+workspace-role-subscribe_group: 'Se ha inscrito al rol ''%role%'' del espacio de trabajo %workspace%'
+workspace-role-subscribe_user: 'Se ha inscrito al rol ''%role%'' del espacio de trabajo %workspace%'

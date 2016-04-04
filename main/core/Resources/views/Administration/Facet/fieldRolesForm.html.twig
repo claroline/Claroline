@@ -1,0 +1,70 @@
+{% extends "ClarolineCoreBundle:Administration\\Facet:facetModalForm.html.twig" %}
+
+{% block header %}
+    {{ 'roles_management'|trans({}, 'platform') }}
+{% endblock %}
+
+{% block explanation %}
+    <div class="well">
+        {{ 'roles_fields_form_explanation'|trans({}, 'platform') }}
+    </div>
+{% endblock %}
+
+{% block form %}
+    <form
+            role="form"
+            class="form-horizontal"
+            action="{{ path('claro_admin_field_role_edit', {'field': field.getId()}) }}"
+            method="post"
+            id="form-field-roles"
+            >
+        <div class="modal-body">
+            <table class="table table-striped table-bordered table-condensed">
+                <thead>
+                <tr>
+                    <th> {{ 'role'|trans({}, 'platform') }} ({{ field.getName() }})</th>
+                    <th> {{ 'show'|trans({}, 'platform') }} </th>
+                    <th> {{ 'edit'|trans({}, 'platform') }} </th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for platformRole in platformRoles %}
+                    <tr>
+                        <td> {{ platformRole.getTranslationKey|trans({}, 'platform') }}</td>
+                        <td>
+                            <input type="checkbox" name="open-role-{{ platformRole.getId() }}"
+                               {% for fieldFacetRole in fieldFacetsRole %}
+                                   {% if fieldFacetRole.getRole().getId() == platformRole.getId()
+                                      and fieldFacetRole.canOpen() == true
+                                   %}
+                                       checked
+                                   {% endif %}
+                               {% endfor %}
+                            </input>
+                        </td>
+                        <td>
+                            <input type="checkbox" name="edit-role-{{ platformRole.getId() }}"
+                                {% for fieldFacetRole in fieldFacetsRole %}
+                                    {% if fieldFacetRole.getRole().getId() == platformRole.getId()
+                                        and fieldFacetRole.canEdit() == true
+                                    %}
+                                        checked
+                                    {% endif %}
+                                {% endfor %}
+                            </input>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button id="submit-role-form" class="btn btn-primary" aria-hidden="true">
+                {{ 'edit'|trans({}, 'platform') }}
+            </button>
+            <div class="btn btn-default" data-dismiss="modal" aria-hidden="true">
+                {{ 'cancel'|trans({}, 'platform') }}
+            </div>
+        </div>
+    </form>
+{% endblock %}

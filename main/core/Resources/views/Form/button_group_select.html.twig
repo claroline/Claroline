@@ -1,0 +1,26 @@
+{% extends 'ClarolineCoreBundle::form_theme.html.twig' %}
+
+{% block buttongroupselect_widget %}
+    {% spaceless %}
+        {{ block('choice_widget') }}
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var options = [];
+                var optionsHTML ="<div id='btngroup-{{ form.vars['id'] }}' class='btn-group'>";
+                var curValue = $("#{{ form.vars['id'] }}").val();
+                $("#{{ form.vars['id'] }} option").each(function(index, element){
+                    var activeClass = (curValue==$(this).attr("value"))?" active":"";
+                    optionsHTML += "<a class='btn"+activeClass+" btn-default button-group-select btn-sm' value='"+$(this).attr("value")+"' role='button'>"+$(this).text()+"</a>";
+                });
+                optionsHTML += "</div>";
+                $("#{{ form.vars['id'] }}").after(optionsHTML);
+                $("#{{ form.vars['id'] }}").hide();
+                $("#btngroup-{{ form.vars['id'] }} .button-group-select").click(function(){
+                    $("#btngroup-{{ form.vars['id'] }} .button-group-select").removeClass("active");
+                    $(this).addClass("active");
+                    $("#{{ form.vars['id'] }}").val($(this).attr("value"));
+                });
+            });
+        </script>
+    {% endspaceless %}
+{% endblock %}

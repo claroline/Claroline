@@ -1,0 +1,8 @@
+{% if log.getDetails().workspace is defined %}
+    <h4>{{ ('workspace')|trans({}, 'platform') }}</h4>
+
+    <dl class="dl-horizontal">
+        <dt>{{ ('name')|trans({}, 'platform') }}</dt>
+        <dd>{{ log.getDetails().workspace.name }}</dd>
+    </dl>
+{% endif %}

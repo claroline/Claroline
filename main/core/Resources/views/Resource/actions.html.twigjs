@@ -1,0 +1,119 @@
+{% twig_js name="ResourceManagerActions" %}
+{% if isPickerMode == false %}
+    <ul class="nav navbar-nav" role="toolbar">
+        {% if resourceTypes|length > 0 %}
+            <li class="dropdown">
+                <a class="dropdown-toggle{% if isCreateAllowed == false %} disabled{% endif %}" data-toggle="dropdown">
+                    <i class="fa fa-pencil-square-o"></i>
+                    {{ 'add'|trans({}, 'platform') }}
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu create" role="menu">
+                    {% for resourceType, name in creatableTypes %}
+                        <li role="presentation"><a role="menuitem" id='{{ resourceType }}'>{{ resourceType|trans({}, 'resource') }} </a></li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endif %}
+        <li>
+            <a class="cut disabled"  data-toggle="tooltip" data-placement="bottom" title="{{ 'cut'|trans({}, 'platform') }}">
+                <i class="fa fa-scissors"></i>
+            </a>
+        </li>
+        <li>
+            <a class="copy disabled" data-toggle="tooltip" data-placement="bottom" title="{{ 'copy'|trans({}, 'platform') }}">
+                <i class="fa fa-files-o"></i>
+            </a>
+        </li>
+        <li>
+           <a class="paste{% if isPasteAllowed == false %} disabled{% endif %}" data-toggle="tooltip" data-placement="bottom" title="{{ 'paste'|trans({}, 'platform') }}">
+                <i class="fa fa-clipboard"></i>
+            </a>
+        </li>
+        <li>
+            <a class="{% if isAddAllowed == false %}disabled{% else %}open-picker{% endif %}">
+               <i class="fa fa-folder-open"></i>
+           </a>
+        </li>
+        <li>
+            <a class="delete disabled" data-toggle="tooltip" data-placement="bottom" title="{{ 'delete'|trans({}, 'platform') }}">
+                <i class="fa fa-trash-o"></i>
+            </a>
+        </li>
+        <li>
+            <a class="download disabled" data-toggle="tooltip" data-placement="bottom" title="{{ 'download'|trans({}, 'platform') }}">
+                <i class="fa fa-download"></i>
+            </a>
+        </li>
+        <li>
+            <a class="{% if isAddAllowed == false %}disabled{% else %}import{% endif %}" data-toggle="tooltip" data-placement="bottom" title="{{ 'import'|trans({}, 'platform') }}">
+                <i class="fa fa-sign-in"></i>
+            </a>
+        </li>
+        <li>
+            <a class="export disabled" data-toggle="tooltip" data-placement="bottom" title="{{ 'export'|trans({}, 'platform') }}">
+                <i class="fa fa-sign-out"></i>
+            </a>
+        </li>
+        <li class="dropdown">
+            <a class="dropdown-toggle zoom{% if isSearchMode == true %} disabled{% endif %}" data-toggle="dropdown">
+                <i class="fa fa-search-plus"></i>
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu zoom" role="menu">
+                <li role="presentation" {% if zoom == 'zoom50' %} class="active"{% endif %}><a role="menuitem" id='zoom50'>50%</a></li>
+                <li role="presentation" {% if zoom == 'zoom75' %} class="active"{% endif %}><a role="menuitem" id='zoom75'>75%</a></li>
+                <li role="presentation" {% if zoom == 'zoom100' %} class="active"{% endif %}><a role="menuitem" id='zoom100'>100%</a></li>
+                <li role="presentation" {% if zoom == 'zoom125' %} class="active"{% endif %}><a role="menuitem" id='zoom125'>125%</a></li>
+                <li role="presentation" {% if zoom == 'zoom150' %} class="active"{% endif %}><a role="menuitem" id='zoom150'>150%</a></li>
+                <li role="presentation" {% if zoom == 'zoom200' %} class="active"{% endif %}><a role="menuitem" id='zoom200'>200%</a></li>
+            </ul>
+        </li>
+        <li>
+            <a>
+                <input type="checkbox" class="list-view" id="list-view-chk" data-view="{{ viewName }}" {% if listViewActivated == true %} checked {% endif %}>
+                </input>
+                <label for="list-view-chk" class="pointer-hand" style="font-weight: normal !important">
+                    {{ 'list_view'|trans({}, 'platform') }}
+                </label>
+            </a>
+        </li>
+        {% if isMultiSelectAllowed %}
+            <li>
+                <a>
+                    <input type="checkbox" class="select-all-nodes" id="select-all-nodes-chk" data-view="{{ viewName }}">
+                    </input>
+                    <label for="select-all-nodes-chk" class="pointer-hand" style="font-weight: normal !important">
+                        {{ 'select_all'|trans({}, 'platform') }}
+                    </label>
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+{% else %}
+    <ul class='nav navbar-nav' role="toolbar">
+        <li>
+            <a class="add {% if isAddAllowed == false or isPasteAllowed == false %}disabled{% endif %}">
+                <i class="fa fa-plus"></i>
+                {{ 'add'|trans({}, 'platform') }}
+            </a>
+        </li>
+        {% if isMultiSelectAllowed %}
+            <li>
+                <a><input type="checkbox" class="select-all-nodes" data-view="{{ viewName }}"></input> {{ 'select_all'|trans({}, 'platform') }}</a>
+            </li>
+        {% endif %}
+    </ul>
+{% endif %}
+
+<form class="navbar-form pull-right" role="search">
+    <div class="input-group"  style="width: 250px;">
+        <input class="name form-control" type="text" placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ searchedName }}">
+        <span class="input-group-btn">
+            <button class="filter btn btn-default" type="button">
+                <i class="fa fa-search"></i>
+            </button>
+            <button class="config-search-panel btn btn-default" type="button"><i class="fa fa-cog"></i></button>
+        </span>
+   </div>
+</form>

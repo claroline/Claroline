@@ -1,0 +1,51 @@
+{% macro renderPager(pager, max, search) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_all_non_personal_workspaces_list_registration_pager',
+                'routeParams': {
+                    'max': max,
+                    'search': search
+                }
+            }
+        )
+    }}
+{% endmacro %}
+
+{% from _self import renderPager %}
+
+{% set nbPages = nonPersonalWs.getNbPages() %}
+
+{% if nbPages > 1 %}
+    {{ renderPager(nonPersonalWs, max, search) }}
+{% endif %}
+<div class="table-responsive">
+    <table id="non-personal-workspace-table"  class="table table-striped table-condensed">
+        <tbody id="non-personal-workspace-table-body">
+            {% for workspace in nonPersonalWs %}
+                <tr id="{{ workspace.getId() }}" class="row-workspace">
+                    <td class="workspace-field"
+                        data-workspace-id="{{ workspace.getId() }}"
+                    >
+                        {{ workspace.getName() }}
+                        <span class="workspace-code">({{ workspace.getCode() }})</span>
+                    </td>
+                    <td align="right">
+                        <input
+                            type="checkbox"
+                            value="{{ workspace.getId() }}"
+                            class="chk-workspace-all-non-personal workspace-check"
+                            align="center">
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if nbPages > 1 %}
+    {{ renderPager(nonPersonalWs, max, search) }}
+{% endif %}

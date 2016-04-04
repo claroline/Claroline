@@ -1,0 +1,51 @@
+{% set layout = 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% if isDesktop() %}
+    {% set layout = 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+{% endif %}
+
+{% set _resource = survey %}
+{% set surveyId = survey.getId() %}
+
+{% extends layout %}
+
+{% block title %}
+    {{ survey.getResourceNode().getName() ~ ' - ' | striptags | raw ~ 'title_creation'|trans({}, 'survey') }}
+{% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li>
+        <a href="{{ path('claro_survey_index', {'survey': surveyId}) }}">
+            {{ _resource.getResourceNode().getName() }}
+        </a>
+    </li>
+    <li class="active">{{ 'title_creation' | trans({}, 'survey') }}</li>
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'title_creation'|trans({}, 'survey') }}</h3>
+    </div>
+    <form role="form"
+          class="form-horizontal"
+          action="{{ path('claro_survey_question_title_create', {'survey': surveyId}) }}"
+          method="post"
+          {{ form_enctype(form) }}
+          id="form_settings"
+          novalidate
+    >
+        <div class="panel-body">
+            {{ form_widget(form) }}
+        </div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">
+                {{ 'ok'|trans({}, 'platform') }}
+            </button>
+            <a href="{{ path('claro_survey_management', {'survey': surveyId}) }}">
+                <button type="button" class="btn btn-default">
+                    {{ 'cancel'|trans({}, 'platform') }}
+                </button>
+            </a>
+        </div>
+    </form>
+{% endblock %}

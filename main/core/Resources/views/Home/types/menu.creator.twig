@@ -1,0 +1,53 @@
+{% if father is defined %}
+    {% if  content is defined %}
+        <div class="creator{{ father }}">
+            <div>
+                <div class="creator-collapse">
+    {% else %}
+        <a class="list-group-item" data-toggle="collapse" href=".collapse{{ father }}">
+            <i class="fa fa-plus"></i> {{ "add_link_here" | trans({}, 'home') }}
+        </a>
+        <div class="creator{{ father }}">
+            <div class="collapse collapse{{ father }}">
+                <div class="creator-collapse">
+    {% endif %}
+                <div class="creator" data-type="{{ type }}" {% if content is defined %}data-id="{{ content.id }}"{% endif %} {% if father is defined %}data-father="{{ father }}"{% endif %}>
+                    <form role="form" action="{{ path('claroline_content_create') }}" method="post">
+                        {{ form_widget(form | first) }}
+                        <div class="panel panel-default" style="height:auto !important">
+                            <div class="navbar navbar-default navbar-static-top">
+                                <div class="navbar-form pull-right">
+                                    {% if content is defined %}
+                                    <a class="cancel-button btn btn-default">{{ 'cancel' | trans({}, 'platform') }}</a>
+                                    <a class="edit-button btn btn-primary">{{ 'save' | trans({}, 'platform') }}</a>
+                                    {% else %}
+                                    <a data-toggle="collapse" href=".collapse{{ father }}" class="btn btn-default" role="button">{{ 'cancel' | trans({}, 'platform') }}</a>
+                                    <a class="creator-button btn btn-primary">{{ 'create' | trans({}, 'platform') }}</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="creator creator-menu content-12" data-type="{{ type }}" {% if content is defined %}data-id="{{ content.id }}"{% endif %} {% if father is defined %}data-father="{{ father }}"{% endif %}>
+        <form role="form" action="{{ path('claroline_content_create') }}" method="post">
+            {{ form_widget(form | first) }}
+            <div class="panel panel-default" style="height:auto !important">
+                <div class="navbar navbar-default navbar-static-top">
+                    <div class="navbar-form pull-right">
+                        {% if content is defined %}
+                        <a class="cancel-button btn btn-default">{{ 'cancel' | trans({}, 'platform') }}</a>
+                        <a class="edit-button btn btn-primary">{{ 'save' | trans({}, 'platform') }}</a>
+                        {% else %}
+                        <a class="creator-button btn btn-primary">{{ 'create' | trans({}, 'platform') }}</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endif %}

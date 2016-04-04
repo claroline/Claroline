@@ -1,0 +1,12 @@
+log_resource-claroline_announcement_aggregate-create_filter: Announcement creation
+log_resource-claroline_announcement_aggregate-create_sentence: has created an announcement in %resource%
+log_resource-claroline_announcement_aggregate-create_shortname: Creation
+log_resource-claroline_announcement_aggregate-create_title: Announcement creation
+log_resource-claroline_announcement_aggregate-delete_filter: Announcement deletion
+log_resource-claroline_announcement_aggregate-delete_sentence: has deleted an announcement in %resource%
+log_resource-claroline_announcement_aggregate-delete_shortname: Deletion
+log_resource-claroline_announcement_aggregate-delete_title: Announcement deletion
+log_resource-claroline_announcement_aggregate-edit_filter: Announcement edition
+log_resource-claroline_announcement_aggregate-edit_sentence: has edited an announcement in %resource%
+log_resource-claroline_announcement_aggregate-edit_shortname: Edition
+log_resource-claroline_announcement_aggregate-edit_title: Announcement edition

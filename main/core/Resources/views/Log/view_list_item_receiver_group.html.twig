@@ -1,0 +1,13 @@
+{% if log.getDetails().receiverGroup is defined %}
+    <strong>
+        {% if is_granted('ROLE_ADMIN') and log.getReceiverGroup() != null %}
+            <a href="{{ path('claro_admin_user_of_group_list', {'groupId': log.getReceiverGroup().getId()}) }}">
+                {{ log.getDetails().receiverGroup.name }}
+            </a>
+        {% elseif log.getReceiverGroup() != null %}
+            {{ log.getDetails().receiverGroup.name }}
+        {% else %}
+            <em>{{ log.getDetails().receiverGroup.name }}</em>
+        {% endif %}
+    </strong>
+{% endif %}

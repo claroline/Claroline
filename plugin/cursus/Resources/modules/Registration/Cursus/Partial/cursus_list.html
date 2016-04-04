@@ -1,0 +1,42 @@
+<div>
+    <script type="text/ng-template" id="cursus_nodes_renderer.html">
+        <div class="cursus-element" ng-mouseenter="crc.hoveredCursusId = cursus.id" ng-mouseleave="crc.hoveredCursusId = 0" ng-if="!cursus.course">
+            <span class="pointer-hand"
+                  data-toggle="collapse"
+                  href="#collapse-{{ cursus.id }}"
+            >
+                {{ cursus.title }}
+            </span>
+            <span ng-if="cursus.blocking">
+                &nbsp;
+                <i class="fa fa-lock"></i>
+            </span>
+            <span ng-if="cursus.children.length > 0">
+                &nbsp;
+                <i class="fa fa-caret-down pointer-hand"
+                   data-toggle="collapse"
+                   href="#collapse-{{ cursus.id }}"
+                ></i>
+            </span>
+            <span ng-if="crc.hoveredCursusId == cursus.id">
+                &nbsp;
+                <a ui-sref="registration_cursus_management({cursusId: cursus.id})"
+                   class="fa fa-user"
+                >
+                </a>
+            </span>
+        </div>
+        <span ng-if="cursus.course">
+            <span class="label label-primary pointer-hand">
+                {{ cursus.title }}
+            </span>
+        </span>
+        <ul ng-if="cursus.children.length > 0" id="collapse-{{ cursus.id }}" class="collapse">
+            <li ng-repeat="cursus in cursus.children" ng-include="'cursus_nodes_renderer.html'">
+            </li>
+        </ul>
+        <hr ng-if="cursus.id == cursus.root">
+    </script>
+    <div ng-repeat="cursus in crc.cursusRoots" ng-include="'cursus_nodes_renderer.html'">
+    </div>
+</div>

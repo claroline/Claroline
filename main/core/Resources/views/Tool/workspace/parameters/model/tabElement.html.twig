@@ -1,0 +1,12 @@
+{% twig_js name="ModelTab" %}
+
+<div class="list-group-item tab-model">
+    {{ name }}
+    <a
+        class="delete-tabModel close"
+        href="{{ path('ws_model_tab_remove', {'model': modelId, 'homeTab': homeTabId}) }}"
+        aria-hidden="true"
+        >
+    &times;
+    </a>
+</div>

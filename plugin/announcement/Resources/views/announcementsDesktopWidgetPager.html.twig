@@ -1,0 +1,77 @@
+{% macro renderPager(pager) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_desktop_announcements_pager'
+            }
+        )
+    }}
+{% endmacro %}
+
+{% from _self import renderPager %}
+
+{% block javascripts %}
+    <script
+        src='{{ asset('bundles/clarolineannouncement/js/desktop_widget.js') }}'
+        type="text/javascript"
+    >
+    </script>
+{% endblock %}
+
+{% set nbAnnouncements = datas|length %}
+
+{% if nbAnnouncements > 0 %}
+    {% set nbPages = datas.getNbPages() %}
+
+    <div id="desktop-widget-pager">
+
+        {% if nbPages > 1 %}
+            {{ renderPager(datas) }}
+        {% endif %}
+        <ul class="list-group">
+
+            {% for data in datas %}
+                <li class="list-group-item">
+                    {% set title = data['announcement'].getTitle() %}
+
+                    {% if title is not null %}
+                        <h4 class="list-group-item-heading"><b>{{ title }}</b></h4>
+                    {% endif %}
+                    <div class="list-group-item-text">
+                        {{ data['announcement'].getContent()|raw }}
+                    </div>
+
+                    <div class="list-group-item-text text-muted">
+                        <small>
+                            {{ 'published_on'|trans({}, 'announcement') }}
+                            {{ data['announcement'].getPublicationDate().format('d-m-Y') }}
+                            {{ 'in_workspace'|trans({}, 'widget') }}
+                            <a href="{{
+                                path('claro_workspace_open',
+                                {'workspaceId': data['workspaceId'], 'toolName': 'home'})
+                            }}">
+                                {{ data['workspaceName'] }}
+                                <span class="workspace-code">({{ data['workspaceCode'] }})</span>
+                            </a>
+                            {% set announcer = data['announcement'].getAnnouncer() %}
+
+                            {% if announcer is not null %}
+                                {{ 'by'|trans({}, 'announcement') }}
+                                <b>{{ announcer }}</b>
+                            {% endif %}
+                        </small>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+
+        {% if nbPages > 1 %}
+            {{ renderPager(datas) }}
+        {% endif %}
+    </div>
+{% else %}
+    {{ 'no_announcement_widget_message'|trans({}, 'widget') }}
+{% endif %}

@@ -1,0 +1,24 @@
+activity: Activity
+administrate: Administrate
+compose: 'Draw up'
+copy: Copy
+delete: Delete
+directory: Directory
+download: Download
+edit: Edit
+edit-properties: 'Edit properties'
+edit-rights: 'Edit rights'
+empty: Empty
+export: Export
+file: File
+insert: Insert
+open: Open
+open-tracking: 'View tracking'
+rename: Rename
+resource_copy_warning: 'An error occured while copying resource <%resourceName%>'
+resource_name_form_name: resource_name_form_name
+resource_shortcut: Shortcut
+text: Text
+update_file: 'Update file'
+write: Write
+resource_type: 'Resource type'

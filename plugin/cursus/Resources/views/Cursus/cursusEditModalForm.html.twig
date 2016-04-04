@@ -1,0 +1,48 @@
+<div id="modal-cursus-edit-form" class="modal-dialog" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3 class="modal-title">
+                {{ 'cursus_edition'|trans({}, 'cursus') }}
+                [{{ cursus.getTitle() }}]
+            </h3>
+        </div>
+        <div class="modal-body">
+            <form id="cursus-edit-form"
+                  action="{{ path('claro_cursus_edit', {'cursus': cursus.getId()}) }}"
+                  method="POST"
+                  {{ form_enctype(form) }}
+            > 
+                {{ form_widget(form) }}
+            </form>
+        </div>
+        <div class="modal-footer">
+            <span class="btn btn-default" data-dismiss="modal">
+                {{ 'cancel'|trans({},'platform') }}
+            </span>
+            <button type="submit" id='edit-btn' class="btn btn-primary">
+                {{ 'ok'|trans({},'platform') }}
+            </button>
+        </div>
+    </div>
+</div>
+
+{% block javascripts %}
+    <script src='{{ asset('bundles/frontend/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js') }}'
+            type="text/javascript"
+    >
+    </script>
+    <script src="{{ asset('bundles/clarolinecursus/js/cursusForm.js') }}"
+            type="text/javascript"
+    >
+    </script>
+{% endblock %}
+    
+{% block stylesheets %}
+    <link rel='stylesheet'
+          type='text/css'
+          href='{{ asset('bundles/frontend/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css')}}'
+    >
+{% endblock %}

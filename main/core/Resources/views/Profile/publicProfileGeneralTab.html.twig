@@ -1,0 +1,54 @@
+<div class="row">
+    <aside class="col-md-2 profile_aside" role="complementary">
+        <div class="avatar">
+            {% if user.getPicture() != "" %}
+                <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}"
+                     class="profile_picture img-circle"
+                     alt="{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}"
+                     width="150px"
+                     height="150px"
+                >
+            {% else %}
+                <h1 class="profile_picture_placeholder"><i class="fa fa-user"></i></h1>
+            {% endif %}
+        </div>
+        <div class="informations">
+            <p class="text-center text-muted">
+                {{ 'registered'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}
+            </p>
+        </div>
+        {% if publicProfilePreferences['sendMail'] or publicProfilePreferences['sendMessage'] %}
+            <ul class="nav nav-pills nav-stacked contact_methods">
+                {% if publicProfilePreferences['sendMail'] and is_mailer_available() and is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <li>
+                        <a href="{{ path('claro_mail_form', {'userId':user.getId()}) }}">
+                            <i class="fa fa-envelope"></i> {{ 'send_mail'|trans({}, 'platform') }}
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        {% endif %}
+    </aside>
+    <div class="col-md-6 profile_informations">
+        <h2>{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</h2>
+        {% if publicProfilePreferences['mail'] %}
+            <p><span class="fa fa-envelope"> <a href="mailto:{{ user.getmail() }}" title="{{ user.getmail() }}">{{ user.getmail() }}</a></span></p>
+        {% endif %}
+        {% if publicProfilePreferences['phone'] %}
+            {% if user.getPhone() is not null %}
+                <p><span class="fa fa-phone-square"></span> {{ user.getPhone() }}</p>
+            {% endif %}
+        {% endif %}
+        {% for link in links %}
+            <p><a href="{{ link.url }}">{{ link.name|trans({}, 'resource') }}</a></p>
+        {% endfor %}
+        {% if '' != user.getDescription() and publicProfilePreferences['baseData'] %}
+            <div class="description_block">
+                <p class="lead">Description de {{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</p>
+                <div class="description">
+                    {{ user.getDescription() |raw }}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>

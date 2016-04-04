@@ -1,0 +1,23 @@
+{% if not father is defined %}{% set father = null %}{% endif%}
+{% if content != null %}
+
+    {% if is_granted('ROLE_HOME_MANAGER') and publish is defined and not publish %}
+        <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <strong><i class="fa fa-exclamation-triangle"></i> {{ 'unpublish_page' | trans({}, 'home') }}</strong>
+            <a class="alert-link" href="{{ path('claroline_types_manager') }}">{{ 'unpublish_link' | trans({}, 'home') }}</a>
+        </div>
+    {% endif %}
+    {% if region is not defined or (region is defined and region != 'header' and region != 'footer') %}
+        {% render(controller("ClarolineCoreBundle:Home:creator", { 'type': type, 'id': null, 'content': null, 'father': father })) %}
+    {% endif %}
+
+    {% if father is empty %}
+        <div class="contents">
+            {{ content | raw }}
+        </div>
+    {% else %}
+        {{ content | raw }}
+    {% endif %}
+
+{% endif %}

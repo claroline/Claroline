@@ -1,0 +1,149 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% set type = ticket.getType() %}
+{% set ticketUser = ticket.getUser() %}
+{% set comments = ticket.getComments() %}
+{% set interventions = ticket.getInterventions() %}
+
+{% block title %}
+    {{ 
+        parent() ~
+        ' - ' ~
+        ticket.getTitle()
+    }}
+{% endblock %}
+
+{% block breadcrumb %}
+    
+    {% if ticket.getLevel() == -1 %}
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'fa fa-cog',
+                    'name': 'administration'|trans({}, 'platform'),
+                    'href': path('claro_admin_index')
+                },
+                {
+                    'name': 'formalibre_support_management_tool'|trans({}, 'tools'),
+                    'href': path('formalibre_admin_support_index')
+                },
+                {
+                    'name': type.getName()|trans({}, 'support'),
+                    'href': path('formalibre_admin_support_new', {'type': type.getId()})
+                },
+                {
+                    'name': 'archives'|trans({}, 'support'),
+                    'href': path('formalibre_admin_support_archives', {'type': type.getId()})
+                },
+                {
+                    'name': ticket.getTitle(),
+                    'href': ''
+                }
+            ])
+        }}
+    {% else %}
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'fa fa-cog',
+                    'name': 'administration'|trans({}, 'platform'),
+                    'href': path('claro_admin_index')
+                },
+                {
+                    'name': 'formalibre_support_management_tool'|trans({}, 'tools'),
+                    'href': path('formalibre_admin_support_index')
+                },
+                {
+                    'name': type.getName()|trans({}, 'support'),
+                    'href': path('formalibre_admin_support_new', {'type': type.getId()})
+                },
+                {
+                    'name': ('l' ~ ticket.getLevel())|trans({}, 'support'),
+                    'href': path('formalibre_admin_support_level', {'type': type.getId(), 'level': ticket.getLevel()})
+                },
+                {
+                    'name': ticket.getTitle(),
+                    'href': ''
+                }
+            ])
+        }}
+    {% endif %}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ ticket.getTitle() }}
+        </h3>
+    </div>
+    <div class="panel-body">
+        
+        {% render(controller('FormaLibreSupportBundle:AdminSupport:adminTicketManagementInfo', {'ticket': ticket.getId()})) %}
+        <br>
+        
+        <ul class="nav nav-tabs">
+            <li role="presentation" class="active">
+                <a href="#">
+                    {{ 'informations'|trans({}, 'platform') }}
+                </a>
+            </li>
+            <li role="presentation">
+                <a href="{{ path('formalibre_admin_ticket_open_comments', {'ticket': ticket.getId()}) }}">
+                    {{ 'comments'|trans({}, 'support') }}
+                    <span class="badge">{{ comments|length }}</span>
+                </a>
+            </li>
+            <li role="presentation">
+                <a href="{{ path('formalibre_admin_ticket_open_interventions', {'ticket': ticket.getId()}) }}">
+                    {{ 'interventions'|trans({}, 'support') }}
+                    <span class="badge">{{ interventions|length }}</span>
+                </a>
+            </li>
+        </ul>
+        <br>
+        <br>
+        <div id="informations-box">
+            <div class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <th class="col-md-2">{{ 'creator'|trans({}, 'platform') }}</th>
+                        <td class="col-md-10">
+                            {{ ticketUser.getFirstName() }}
+                            {{ ticketUser.getLastName() }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="col-md-2">{{ 'contact'|trans({}, 'platform') }}</th>
+                        <td class="col-md-10">
+                            <i class="fa fa-envelope-o"></i> :
+                            {{ ticket.getContactMail() }}
+                            <br>
+                            <i class="fa fa-phone"></i> :
+                            {{ ticket.getContactPhone() }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="col-md-2">{{ 'creation_date'|trans({}, 'platform') }}</th>
+                        <td class="col-md-10">
+                            {{ ticket.getCreationDate()|intl_date_format }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="col-md-2">{{ 'description'|trans({}, 'platform') }}</th>
+                        <td class="col-md-10">
+                            {{ ticket.description()|raw }}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript"
+            src="{{ url('bazinga_jstranslation_js', { 'domain': 'support' }) }}"
+    >
+    </script>
+{% endblock %}

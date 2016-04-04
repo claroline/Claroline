@@ -1,0 +1,16 @@
+<script src="{{ asset('packages/video.js/dist/video.min.js') | raw }}"></script>
+<script>
+	videojs.options.flash.swf = "{{ asset('packages/video.js/dist/video-js.swf') | raw }}"
+</script>
+<script>
+	$(document).ready(function() {
+		player = videojs('video-js-to-play', {
+			techOrder: ['flash', 'html5'],
+			autoplay: false,
+			controls: true,
+			preload: "metadata"
+		}, function() {
+			//do some stuff here for now.
+		});
+	});
+</script>

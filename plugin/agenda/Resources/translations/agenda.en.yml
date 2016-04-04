@@ -1,0 +1,108 @@
+add_event: 'Add new event'
+isTask: Task
+all_day: the whole day
+at: at
+cancel: Cancel
+close: Close
+confirm: 'Confirm modification ?'
+date_invalid: 'An error occured. Please check that your event doesn''t end before it starts'
+day_: Day
+day:
+    mon: Mon
+    monday: Monday
+    tue: Tue
+    tuesday: Tuesday
+    wed: Wed
+    wednesday: Wednesday
+    thu: Thu
+    thursday: Thursday
+    fri: Fri
+    friday: Friday
+    sat: Sat
+    saturday: Saturday
+    sun: Sun
+    sunday: Sunday
+date_agenda_display_format: MM-DD-YYYY
+date_agenda_display_format_for_form: MM-dd-yyyy
+end: end
+end_date: 'End date'
+error: 'An unexpected error occurred, please try again'
+event: Event
+export: 'Export events'
+filter_user: Filter by user
+filter_tasks: Filter the tasks
+filter_ws: Filter by workspace
+form:
+    all_day: All day
+    description: Description
+    end: End date
+    task: Task
+    priority: Priority
+    priority_hight: Hight
+    start: Start date
+    title: Title
+    author: Author
+high: High
+hide_tasks: Hide all the tasks
+import_agenda_file: Import
+isAllDay: All day
+in_x_days: In %nbDays% days
+length: Length
+limit_date: Limit date
+low: Low
+medium: Medium
+midnight: midnight
+modify: Modify the event
+no_task_now: No task to do
+no_filter_tasks: No filter
+month_: Month
+month:
+    jan: Jan
+    january: January
+    feb: Feb
+    february: February
+    mar: Mar
+    march: March
+    apr: Apr
+    april: April
+    may: May
+    jun: Jun
+    june: June
+    jul: Jul
+    july: July
+    aug: Aug
+    august: August
+    sept: Sept
+    september: September
+    oct: Oct
+    october: October
+    nov: Nov
+    november: November
+    dec: Dec
+    december: December
+next: '>'
+nextYear: '>>'
+no_event_found: 'No event found'
+no_description: 'No description'
+no_task_found: No task found
+noon: noon
+now: Now
+prev: '<'
+prevYear: '<<'
+remove_event: Remove an event
+remove_event_confirm: Are you sure you want to remove this event ?
+start_date: 'Start date'
+show_task_only: Display only the tasks
+task: Task
+task_done: Task done !
+task_not_done: Task not done !
+tasks: Tasks
+title: 'Title can not be empty'
+today: Today
+today_widget: Today
+tomorrow: Tomorrow
+type: Type
+update: modify
+update_event: Update an event
+week: Week
+workspace: Workspace

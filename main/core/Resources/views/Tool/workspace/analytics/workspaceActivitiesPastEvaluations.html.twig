@@ -1,0 +1,103 @@
+{% if displayType == 'activity' %}
+    <div class="well">
+        <h3>{{ activity.getTitle() }}</h3>
+        <br>
+        <p>
+            <b>{{ 'description'|trans({}, 'platform') }}</b>
+        </p>
+        {{ activity.getDescription()|raw }}
+    </div>
+{% elseif displayType == 'user' %}
+    <h4>{{ user.getFirstName() ~ ' ' ~  user.getLastName()}}</h4>
+    <br>
+{% endif %}
+
+{% if pastEvals|length > 0 %}
+<div id="workspace-activities-past-evaluations-element" class="table-responsive">
+    <table class="table">
+        <tr>
+            {% if isWorkspaceManager %}
+                <th></th>
+            {% endif %}
+            <th class="center-text">{{ 'date' | trans({}, 'platform') }}</th>
+            <th class="center-text">{{ 'status' | trans({}, 'platform') }}</th>
+            <th class="center-text">{{ 'duration' | trans({}, 'platform') }}</th>
+            <th class="center-text"
+                {% if (ruleScore is not empty) and (isWorkspaceManager or isResultVisible) %}
+                    data-container="#workspace-activities-past-evaluations-element"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="{{ 'passing_score'|trans({}, 'platform') ~ ' : ' ~ ruleScore }}"
+                {% endif %}
+            >
+                {{ 'score' | trans({}, 'platform') }}
+            </th>
+            <th class="center-text"
+                data-container="#workspace-activities-past-evaluations-element"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="{{ 'manual_evaluation_explanation'|trans({}, 'platform') }}"
+            >
+                {{ 'evaluation' | trans({}, 'platform') }}
+            </th>
+            <th class="center-text">{{ 'comment' | trans({}, 'platform') }}</th>
+        </tr>
+
+        {% for eval in pastEvals %}
+        <tr>
+            {% if isWorkspaceManager %}
+            <td>
+                <i class="fa fa-edit past-evaluation-edit-button pointer-hand"
+                    data-past-evaluation-id="{{ eval.getId() }}">
+                </i>
+            </td>
+            {% endif %}
+            <td class="center-text">{{ eval.getDate()|intl_date_format }}</td>
+            <td class="center-text">{{ eval.getStatus() | trans({}, 'platform') }}</td>
+            <td class="center-text">
+                {% if eval.getDuration() is not empty %}
+                    {{ eval.getDuration() }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td class="center-text">
+                {% if eval.getNumScore() is not empty %}
+                    {{ eval.getNumScore() }}
+                    {% if eval.getScoreMax() is not empty %}
+                        / {{ eval.getScoreMax() }}
+                    {% endif %}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td class="center-text">
+                {% if eval.getScore() is not empty %}
+                    {{ eval.getScore() }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td class="center-text">
+                {% if eval.getComment() is not empty %}
+                    <i class="fa fa-comment-o pointer-hand display-comment"
+                        data-container="#workspace-activities-past-evaluations-element"
+                        data-toggle="popover"
+                        data-placement="left"
+                        data-content="{{ eval.getComment() }}"
+                    ></i>
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endif %}
+    
+{% block javascripts %}
+    <script>
+        $('.display-comment').popover();
+    </script>
+{% endblock %}

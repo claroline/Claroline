@@ -1,0 +1,57 @@
+{% set layout = 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% if isDesktop() %}
+    {% set layout = 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+{% endif %}
+
+{% set _resource = survey %}
+{% set surveyId = survey.getId() %}
+
+{% extends layout %}
+
+{% block title %}
+    {{ survey.getResourceNode().getName() ~ ' - ' | striptags | raw ~ 'parameters_edition'|trans({}, 'survey') }}
+{% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li>
+        <a href="{{ path('claro_survey_index', {'survey': surveyId}) }}">
+            {{ _resource.getResourceNode().getName() }}
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('claro_survey_parameters', {'survey': surveyId}) }}">
+            {{ 'parameters' | trans({}, 'survey') }}
+        </a>
+    </li>
+    <li class="active">{{ 'parameters_edition' | trans({}, 'survey') }}</li>
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'survey_parameters_edition'|trans({}, 'survey') }}</h3>
+    </div>
+    <form role="form"
+        class="form-horizontal"
+        action="{{ path('claro_survey_parameters_edit', {'survey': survey.getId()}) }}"
+        method="post"
+        {{ form_enctype(form) }}
+        id="form_settings"
+        novalidate
+    >
+        <div class="panel-body">
+            {{ form_widget(form) }}
+        </div>
+        <br>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">
+                {{ 'ok'|trans({}, 'platform') }}
+            </button>
+            <a href="{{ path('claro_survey_parameters', {'survey': surveyId}) }}">
+                <button type="button" class="btn btn-default">
+                    {{ 'cancel'|trans({}, 'platform') }}
+                </button>
+            </a>
+        </div>
+    </form>
+{% endblock %}

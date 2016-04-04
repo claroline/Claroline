@@ -1,0 +1,75 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'import' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block section_content %}
+    <form role="form" class="form-horizontal" action="{{ path('claro_admin_import_users') }}" method="post" {{ form_enctype(form) }} >
+        <div class="panel-body">
+            {{
+                macros.breadcrumbs([
+                    {
+                        'name': 'users_management'|trans({}, 'platform'),
+                        'href': path('claro_admin_users_index')
+                    },
+                    {
+                        'name':'import'|trans({}, 'platform'),
+                        'href':''
+                    }
+                ])
+            }}
+            <div>{{ macros.flashBox() }}</div>
+            {% if error is defined %}
+                {% if error %}
+                    <div class="alert alert-danger">
+                        {{ 'role_limit_reached'|trans({'%translationKey%': 'user'|trans({}, 'platform')}, 'platform') }}
+                    </div>
+                {% endif %}
+            {% endif %}
+            <div class="well">
+                <p>
+                    <b>{{ 'csv_users_import_infos'|trans({}, 'platform') }}</b>
+                </p>
+                <p>{{ 'csv_users_import_infos_format'|trans({}, 'platform') }} :</p>
+                <ul>
+                    <li>{{ 'csv_users_import_infos_format_a'|trans({}, 'platform') }}</li>
+                    <li>
+                        {{ 'order'|trans({}, 'platform') }} :
+                        {{ 'first_name'|trans({}, 'platform') }},
+                        {{ 'last_name'|trans({}, 'platform') }},
+                        {{ 'username'|trans({}, 'platform') }},
+                        {{ 'password'|trans({}, 'platform') }},
+                        {{ 'mail'|trans({}, 'platform') }},
+                        {{ 'administrative_code'|trans({}, 'platform') }},
+                        {{ 'phone'|trans({}, 'platform') }},
+                        {{ 'authentication_source'|trans({}, 'platform') }},
+                        {{ 'model'|trans({}, 'platform') }}
+                    </li>
+                    <li>{{ 'csv_users_import_infos_format_b'|trans({}, 'platform') }}</li>
+                </ul>
+                <p>{{ 'csv_users_import_infos_required'|trans({}, 'platform') }} :</p>
+                <ul>
+                    <li>{{ 'first_name'|trans({}, 'platform') }}</li>
+                    <li>{{ 'last_name'|trans({}, 'platform') }}</li>
+                    <li>{{ 'username'|trans({}, 'platform') }}</li>
+                    <li>{{ 'password'|trans({}, 'platform') }}</li>
+                    <li>{{ 'mail'|trans({}, 'platform') }}</li>
+                </ul>
+                <p>{{ 'csv_users_import_infos_optional'|trans({}, 'platform') }} :</p>
+                <ul>
+                    <li>{{ 'administrative_code'|trans({}, 'platform') }}</li>
+                    <li>{{ 'phone'|trans({}, 'platform') }}</li>
+                    <li>{{ 'authentication_source'|trans({}, 'platform') }}</li>
+                    <li>{{ 'model'|trans({}, 'platform') }}</li>
+                </ul>
+            </div>
+
+            {{ form_widget(form) }}
+        </div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            <a href="{{ path('claro_admin_users_index') }}" class="btn btn-default" role="button">
+                {{ 'cancel'|trans({}, 'platform') }}
+            </a>
+        </div>
+    </form>
+{% endblock %}

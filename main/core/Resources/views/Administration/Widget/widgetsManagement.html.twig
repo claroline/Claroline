@@ -1,0 +1,105 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}
+    {{ 
+        parent() ~
+        ' - ' ~
+        'widgets_management' | trans({}, 'tools') | striptags | raw 
+    }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'widgets_management'|trans({}, 'tools'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'widgets_management'|trans({}, 'tools') }}
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table" id="widgets-table">
+                <tr>
+                    <th>
+                        {{ 'name'|trans({}, 'platform') }}
+                    </th>
+                    <th class="text-center">
+                        {{ 'visibility'|trans({}, 'platform') }}
+                    </th>
+                    <th class="text-center">
+                        {{ 'width'|trans({}, 'platform') }}
+                    </th>
+                    <th class="text-center">
+                        {{ 'height'|trans({}, 'platform') }}
+                    </th>
+                    <th class="text-center">
+                        {{ 'widget_creation_roles'|trans({}, 'platform') }}
+                    </th>
+                </tr>
+                
+                {% for widget in widgets %}
+                    <tr>
+                        <td>
+                            <a href="" class="edit-widget-btn" data-widget-id="{{ widget.getId() }}">
+                                {{ widget.getName()|trans({}, 'widget') }}
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            
+                            {% if widget.isDisplayableInDesktop() and widget.isDisplayableInWorkspace() %}
+                                {{ 'desktop'|trans({}, 'platform') }}
+                                +
+                                {{ 'workspace'|trans({}, 'platform') }}
+                            {% elseif widget.isDisplayableInDesktop() %}
+                                {{ 'desktop'|trans({}, 'platform') }}
+                            {% elseif widget.isDisplayableInWorkspace() %}
+                                {{ 'workspace'|trans({}, 'platform') }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {{ widget.getDefaultWidth() }}
+                        </td>
+                        <td class="text-center">
+                            {{ widget.getDefaultHeight() }}
+                        </td>
+                        <td class="text-center">
+                            
+                            {% if widget.isDisplayableInDesktop() %}
+                                
+                                {% for role in widget.getRoles() %}
+                                    <span class="label label-success margin-right-sm margin-bottom-sm">
+                                        {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                    </span>
+                                {% endfor %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/clarolinecore/js/administration/widgetsManagement.js') }}" type="text/javascript">
+    </script>
+{% endblock %}

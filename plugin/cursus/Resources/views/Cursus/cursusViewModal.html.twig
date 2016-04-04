@@ -1,0 +1,16 @@
+<div class="table-responsive">
+    <table class="table">
+        <tr>
+            <th>{{ 'title'|trans({}, 'platform') }}</th>
+            <td>{{ cursus.getTitle() }}</td>
+        </tr>
+        <tr>
+            <th>{{ 'code'|trans({}, 'platform') }}</th>
+            <td>{{ cursus.getCode() }}</td>
+        </tr>
+        <tr>
+            <th>{{ 'description'|trans({}, 'platform') }}</th>
+            <td>{{ cursus.getDescription()|raw }}</td>
+        </tr>
+    </table>
+</div>

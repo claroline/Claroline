@@ -1,0 +1,28 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4>{{ 'add_a_link' | trans({}, "home") }}</h4>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="control-label">{{ "link_address" | trans({}, "home") }}:</label>
+                <input type="text" class="form-control">
+            </div>
+            <div class="alert alert-info">
+                {{ "link_notice" | trans({}, "home") }}.
+            </div>
+            <div class="alert alert-info">
+                {{ "interactive_content_add" | trans({}, "home") }}:
+                <a href="http://www.youtube.com/" target="_blank" class="alert-link"> YouTube</a>,
+                <a href="https://vimeo.com/" target="_blank" class="alert-link"> Vimeo</a>,
+                <a href="http://www.flickr.com/" target="_blank" class="alert-link"> Flickr</a>,
+                <a href="http://fr.slideshare.net/" target="_blank" class="alert-link"> SlideShare</a>.
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{{ "cancel" | trans({}, "platform") }}</button>
+            <button type="submit" class="btn btn-primary">{{ 'add_a_link' | trans({}, "home") }}</button>
+        </div>
+    </div>
+</div>

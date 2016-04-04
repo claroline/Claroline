@@ -1,0 +1,293 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'analytics_home' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style type="text/css">
+        .bar-chart{
+            height: 200px;
+            width: 90%;
+            margin: 0 5%;
+        }
+        table td.text-right{
+            text-align:right!important;
+        }
+        span.user-count-number{
+            font-size: 25px;
+        }
+        div#users-pie-chart{
+            min-height: 200px;
+        }
+        div.jqplot-pie-series.jqplot-data-label {font-size: 10px;}
+        table tr.odd td {background-color: #F9F9F9 }
+    </style>
+    <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'admin_analytics'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'admin_analytics'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="panel-body" id="workspace-list-div">
+        {% include 'ClarolineCoreBundle:Administration\\Analytics:analytics_navbar.html.twig'%}
+
+        <div class="">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-bar-chart-o"></i>
+                    {{'last_30_days_activity'|trans({}, 'platform')}}
+                </div>
+                <div id="analytics-barchart" class="panel-body">
+                    <div id="container-barchart">
+                        <div id="activity-bar-chart" class="bar-chart"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-user"></i>
+                    {{'account_general_statistics'|trans({}, 'platform')}}
+                </div>
+                <div id="analytics-userstats" class="panel-body">
+                    <div id="container-userstats" class="row">
+                        <div class="col-md-2">
+                            <span class="user-count-number">{{ usersCount['user_accounts'] }}</span><br/>
+                            <span class="user-count-label">{{ 'user_accounts'|trans({}, 'platform') }}</span>
+                        </div>
+                        {% for key, value in usersCount|reverse %}
+                            {% if(key != 'user_accounts') %}
+                            <div class="col-md-2">
+                                <span class="user-count-number">{{ value }}</span><br/>
+                                <span class="user-count-label">{{ key|trans({}, 'platform') }}</span>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                        <div class="col-md-4">
+                            <div id="users-pie-chart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>
+                {{'yesterday_activity'|trans({}, 'platform')}}
+            </h3>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-book"></i>
+                    {{'ws_most_viewed'|trans({}, 'platform')}}
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hovered">
+                        <tr><th>#</th><th>{{'name'|trans({}, 'platform')}}</th><th>{{'connections'|trans({}, 'platform')}}</th></tr>
+                        {% for ws in mostViewedWS %}
+                        <tr class="{{ cycle(['odd', 'even'], loop.index) }}"><td>{{loop.index}}</td><td>{{ws.name}} ({{ws.code}})</td><td>{{ws.actions}}</td></tr>
+                        {% endfor %}
+                        <tr><td colspan="3" class="text-right"><a href="{{ path('claro_admin_analytics_top', { 'topType': 'top_workspaces_connections' }) }}">{{'see_more'|trans({}, 'platform')}}...</a></td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-file"></i>
+                    {{'media_most_viewed'|trans({}, 'platform')}}
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hovered">
+                        <tr><th>#</th><th>{{'name'|trans({}, 'platform')}}</th><th>{{'views'|trans({}, 'platform')}}</th></tr>
+                        {% for media in mostViewedMedia %}
+                            <tr class="{{ cycle(['odd', 'even'], loop.index) }}"><td>{{loop.index}}</td><td>{{media.name}}</td><td>{{media.actions}}</td></tr>
+                        {% endfor %}
+                        <tr><td colspan="3" class="text-right"><a href="{{ path('claro_admin_analytics_top', { 'topType': 'top_media_views' }) }}">{{'see_more'|trans({}, 'platform')}}...</a></td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-arrow-circle-o-down"></i>
+                    {{'resources_most_downloaded'|trans({}, 'platform')}}
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hovered">
+                        <tr><th>#</th><th>{{'name'|trans({}, 'platform')}}</th><th>{{'downloads'|trans({}, 'platform')}}</th></tr>
+                        {% for resource in mostDownloadedResources %}
+                        <tr class="{{ cycle(['odd', 'even'], loop.index) }}"><td>{{loop.index}}</td><td>{{resource.name}}</td><td>{{resource.actions}}</td></tr>
+                        {% endfor %}
+                        <tr><td colspan="3" class="text-right"><a href="{{ path('claro_admin_analytics_top', { 'topType': 'top_resources_downloads' }) }}">{{'see_more'|trans({}, 'platform')}}...</a></td></tr>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript" src="{{ asset('packages/jqPlot/src/jquery.jqplot.js') }}"></script>
+    {% javascripts debug=false filter='jsmin' output='js/corebundle/jqplot.analytics.min.js'
+    'bundles/clarolinecore/js/jqplot/jqplot.colors.js'
+    'packages/jqPlot/src/plugins/jqplot.highlighter.js'
+    'packages/jqPlot/src/plugins/jqplot.pieRenderer.js'
+    'packages/jqPlot/src/plugins/jqplot.canvasTextRenderer.js'
+    'packages/jqPlot/src/plugins/jqplot.dateAxisRenderer.js'
+    'packages/jqPlot/src/plugins/jqplot.barRenderer.js'
+    'packages/jqPlot/src/plugins/jqplot.canvasAxisTickRenderer.js'
+    'packages/jqPlot/src/plugins/jqplot.canvasAxisLabelRenderer.js'
+    %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script type="text/javascript">
+        var chartData = {{ barChartData|json_encode|raw }};
+        var userPieChartData = [];
+        {% for key, value in usersCount|reverse %}
+            {% if(key != 'user_accounts') %}
+                userPieChartData.push(["{{key|trans({}, 'platform')}}",{{value}}]);
+            {% endif %}
+        {% endfor %}
+        var bg_color = "transparent";
+
+        $(document).ready(function(){
+            if (chartData.length>0) {
+                var actionsPlot = $.jqplot(
+                    'activity-bar-chart',
+                    [chartData],
+                    {
+                        title: {show: false},
+                        grid: {
+                            drawBorder: false,
+                            borderWidth: 1.0,
+                            shadow: false,
+                            background: bg_color
+                        },
+                        axesDefaults: {
+                            labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                            tickRenderer: $.jqplot.CanvasAxisTickRenderer
+                        },
+                        axes: {
+                            xaxis: {
+                                renderer: $.jqplot.DateAxisRenderer,
+                                pad:1.2,
+                                tickOptions: {
+                                    formatString:'%d %b',
+                                    showGridline: false,
+                                    showMark: true,
+                                    angle: 0,
+                                    fontSize: '11px'
+                                },
+                                numberTicks:7
+                            },
+                            yaxis: {
+                                min:0,
+                                showTickMarks: true,
+                                numberTicks: 7,
+                                tickOptions: {
+                                    fontSize: '11px'
+                                }
+                            }
+                        },
+                        highlighter: {
+                            show: true,
+                            showMarker:false,
+                            sizeAdjust: 0,
+                            tooltipOffset:10,
+                            tooltipLocation:'n',
+                            tooltipAxes:'xy',
+                            formatString:'%s <br/> %d',
+                            tooltipFadeSpeed:'fast'
+                        },
+                        cursor: {
+                            show: false,
+                            zoom: false,
+                            style:"pointer"
+                        },
+                        seriesDefaults: {
+                            showMarker:false,
+                            renderer:$.jqplot.BarRenderer,
+                            showLabel:false,
+                            pointLabels: { show: false },
+                            rendererOptions:{
+                                barPadding: 0,
+                                barMargin: 10,
+                                barDirection: 'vertical',
+                                barWidth: 20
+                            },
+                            shadow:false
+                        }
+                    }
+                );
+            }
+
+            if (userPieChartData.length>0) {
+                var usersPlot = $.jqplot(
+                        'users-pie-chart',
+                        [userPieChartData],
+                        {
+                            title: {show: false},
+                            grid: {
+                                drawBorder: false,
+                                shadow: false,
+                                background: bg_color,
+                                useNegativeColors: false
+                            },
+                            highlighter: {
+                                show: false
+                            },
+                            cursor: {
+                                show: false,
+                                zoom: false,
+                                showTooltip: false
+                            },
+                            seriesDefaults: {
+                                showMarker:true,
+                                renderer:$.jqplot.PieRenderer,
+                                rendererOptions:{
+                                    showDataLabels: true,
+                                    dataLabelThreshold: 2,
+                                    dataLabels: 'percent',
+                                    sliceMargin:0.3,
+                                    dataLabelFormatString: '%.1f%%',
+                                    highlightMouseOver:false
+                                },
+                                shadow:false
+                            },
+                            legend:{
+                                location: 'e',
+                                border:'none',
+                                renderer: $.jqplot.CavasTextRenderer,
+                                show:true,
+                                showMarker:true,
+                                rendererOptions:{
+                                    numberRows:7
+                                },
+                                backgroundColor:bg_color,
+                                placement:'outsideGrid'
+                            }
+                        }
+                );
+            }
+        });
+    </script>
+
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - LDAP settings' | trans({}, 'ldap') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration' | trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'parameters' | trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'LDAP' | trans({}, 'platform'),
+                'href': path('claro_admin_ldap')
+            },
+            {
+                'name': 'Servers settings' | trans({}, 'ldap'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'Servers settings'|trans({}, 'ldap') }}</h3>
+    </div>
+    <div class="panel-body ldap-settings">
+        {#<label>{{ 'Allow account creation at the first login' | trans({}, 'ldap') }}</label>
+        <input type="checkbox" id="userCreation"{% if userCreation %} checked="checked"{% endif%}>
+        <hr>#}
+        <div class="clearfix">
+            {% for server in servers %}
+                <div class="content-6 alert alert-default">
+                    <button type="button" class="close" data-name="{{ server.name }}">&times;</button>
+                    <a class="pointer-hand alert-link"><strong>{{ server.name }}</strong></a>
+                </div>
+            {% endfor %}
+        </div>
+        <a class="btn btn-primary"><i class="fa fa-plus"></i> {{ 'Add server' | trans({}, 'ldap') }}</a>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/clarolineldap/js/ldap.js') }}"></script>
+{% endblock %}

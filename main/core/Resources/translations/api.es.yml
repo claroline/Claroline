@@ -1,0 +1,26 @@
+actions: Acciones
+app_want_access_to_your_account: 'La aplicación ''%clientName%'' desearía conectarse a su cuenta.'
+application_revoked_error_message: 'Se produjo un error al revocar el acceso de la aplicación ''%application%''.'
+application_revoked_success_message: 'El acceso para la aplicación ''%application%'' a sido revocada con éxito'
+authorization_code_grant_type: 'Código de autorización'
+client_credentials_grant_type: 'Credenciales de cliente'
+grant_types: 'Otorgar tipos'
+name: Nombre
+no_app_connect_to_platform: 'Ninguna aplicación tiene acceso a la plataforma.'
+no_app_connect_to_your_account: 'No hay ninguna aplicación asociada a su cuenta.'
+no_grant_types: 'No hay tipos otorgados.'
+no_redirect_urls: 'Sin dirección.'
+oauth_app_ask_access: 'Petición de acceso a la plataforma'
+oauth_application_acceptance: 'Confirmación de acceso'
+password_grant_type: Contraseña
+refresh_token_grant_type: 'Actualizar el token'
+revoke: Revocar
+revoke_access: 'Revocar acceso'
+thrid_party_application_delete_confirm_message: '¿Está seguro que desea eliminar el acceso a la plataforma a la aplicación <strong>%application%</strong>?'
+thrid_party_application_delete_confirm_title: 'Acceso removido de la plataforma'
+thrid_party_application_delete_error_message: 'Ha ocurrido un error en la eliminación del acceso a la plataforma para la aplicación ''%application%'''
+thrid_party_application_delete_success_message: 'El acceso a la plataforma ha sido eliminado para la aplicación ''%application%''.'
+token_grant_type: Token
+urls: Direcciones
+user_application_revoke_confirm_message: '¿Está seguro de que desea revocar el acceso a la aplicación <strong>%application%</strong>?'
+user_application_revoke_confirm_title: 'Revocación de la aplicación'

@@ -1,0 +1,22 @@
+<div id="mode-element" data-mode="{{ mode }}">
+</div>
+
+{% if workspaces|length == 0 %}
+    {{ 'no_workspace'|trans({}, 'platform') }}
+{% else %}
+    {% for workspace in workspaces %}
+    <a class="col-md-6"
+        {% if has_access_to_workspace(workspace.getId()) %}
+            href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}"
+        {% endif %}
+    >
+        <i class="fa fa-book"></i>
+        {{ workspace.getName() }}
+        <span>
+            <small>
+                ({{ workspace.getCode() }})
+            </small>
+        </span>
+    </a>
+    {% endfor %}
+{% endif %}

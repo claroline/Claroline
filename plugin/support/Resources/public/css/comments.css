@@ -1,0 +1,16 @@
+.comment-picture {
+    width: 100px;
+    margin: auto;
+}
+
+.comment-separator {
+    border: solid #000000 1px;
+}
+
+.comment-media-left {
+    border-right: #bfb7b7 solid 1px;
+}
+
+.comment-media-right {
+    border-left: #bfb7b7 solid 1px;
+}

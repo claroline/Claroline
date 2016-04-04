@@ -1,0 +1,29 @@
+<div id="import-modal" class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>{{ 'import'|trans({}, 'platform') }} </h3>
+        </div>
+        <form method="post"
+              action="
+                {% if workspace is defined %}
+                    {{ path('claro_workspace_agenda_import', {workspace: workspace.getId()}) }}
+                {% else %}
+                    {{ path('claro_agenda_import') }}"
+                {% endif %}
+                {{ form_enctype(form) }}
+              class="form-inline"
+              role="form"
+              id="ics-import-form"
+        >
+            <div class="modal-body">
+                <div class="form-group">
+                    {{ form_widget(form) }}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">OK</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{'cancel'|trans({}, 'agenda') }}</button>
+            </div>
+        </form>
+    </div>
+</div>

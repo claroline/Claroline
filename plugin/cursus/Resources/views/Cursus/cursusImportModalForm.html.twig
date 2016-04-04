@@ -1,0 +1,34 @@
+<div id="modal-cursus-import-form" 
+     class="modal-dialog" 
+     role="dialog" 
+     aria-labelledby="modalLabel" 
+     aria-hidden="true"
+>
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3 class="modal-title">
+                {{ 'cursus_import'|trans({}, 'cursus') }}
+            </h3>
+        </div>
+        <div class="modal-body">
+            <form id="cursus-import-form"
+                  action="{{ path('claro_cursus_import') }}"
+                  method="POST"
+                  {{ form_enctype(form) }}
+            > 
+                {{ form_widget(form) }}
+            </form>
+        </div>
+        <div class="modal-footer">
+            <span class="btn btn-default" data-dismiss="modal">
+                {{ 'cancel'|trans({},'platform') }}
+            </span>
+            <button type="submit" id='import-btn' class="btn btn-primary">
+                {{ 'ok'|trans({},'platform') }}
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,4 @@
+claro_video_player:
+    resource: "@ClarolineVideoPlayerBundle/Controller/VideoPlayerController.php"
+    type:     annotation
+    prefix:   /

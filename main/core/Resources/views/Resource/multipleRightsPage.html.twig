@@ -1,0 +1,321 @@
+{% if not isModal is defined %}
+     {% set isModal = false %}
+{% endif %}
+
+{% macro showTag(tagsList, tagWorkspaces, hierarchy, index, displayable, workspaceRoles, resource, wsManagerRoleName) %}
+    {% for tag in tagsList %}
+        {% if displayable[tag.getId()] %}
+            {% set currentIndex = index ~ "-" ~ tag.getId() %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <a data-toggle="collapse" href="#collapse-{{ currentIndex }}">
+                            <i class="fa fa-align-justify"></i>
+                            {{ tag.getName() }}
+                            <i class="fa fa-chevron-down pull-right"></i>
+                        </a>
+                    </h3>
+                </div>
+                <div id="collapse-{{ currentIndex }}" class="panel-body collapse">
+                    {% if hierarchy %}
+                        {% if hierarchy[tag.getId()]|length > 0 %}
+                            {{ _self.showTag(hierarchy[tag.getId()], tagWorkspaces, hierarchy, currentIndex, displayable, workspaceRoles, resource, wsManagerRoleName) }}
+                        {% endif %}
+                    {% endif %}
+                    {% if tagWorkspaces[tag.getId()] is defined %}
+                        {% for relWorkspaceTag in tagWorkspaces[tag.getId()] %}
+                            <div class="panel panel-default">
+                                {% set workspace = relWorkspaceTag.getWorkspace() %}
+                                <div class="panel-heading">
+                                    <a data-toggle="collapse" href="#collapse-{{ currentIndex }}-{{ workspace.getCode() }}">
+                                        <h3 class="panel-title">
+                                            {{ workspace.getName() }}
+                                            <span class="workspace-code">({{ workspace.getCode() }})</span>
+                                        </h3>
+                                    </a>
+                                </div>
+                                <div id="collapse-{{ currentIndex }}-{{ workspace.getCode() }}" class="list-group collapse">
+                                    {% for role in workspaceRoles[workspace.getCode()] %}
+                                        {% if role.getName() != wsManagerRoleName %}
+                                            <a class="workspace-role-item list-group-item"
+                                               href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
+                                                {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+{% macro renderPager(pager, search, max, resource) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_all_workspaces_list_pager_for_resource_rights',
+                'routeParams': {'wsSearch': search, 'wsMax': max, 'resource': resource.getId() }
+            }
+        )
+    }}
+{% endmacro %}
+
+{% from _self import showTag %}
+{% from _self import renderPager %}
+
+{% set mode = 'panel' %}
+{% set wsManagerRoleName = 'ROLE_WS_MANAGER_' ~ currentWorkspace.getGuid() %}
+
+{% if isModal %}
+    {% set mode = 'modal' %}
+{% endif %}
+
+<div{% if isModal %} class="modal-dialog"{% endif %}>
+    <div id="rights-list" 
+        data-rights="{% for decoder in resource.getResourceType().getMaskDecoders() %} {{ decoder.getName() }} {% if not loop.last %},{% endif %} {% endfor %}" 
+        data-is-dir="{{ isDir }}"
+        data-node-id="{{ resource.getId() }}"
+    >
+    </div>
+    <form role="form" id="node-rights-form"
+          class="{% if mode == "modal" %}modal-content {% endif %}node-rights-form"
+          action="{{ path('claro_resource_rights_edit', {'node': resource.getId()}) }}"
+          method="post">
+        {% set workspace = resource.getWorkspace() %}
+        {% if isModal %}
+            <div class='modal-header'>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="{{ mode }}-title">{{ 'resources_rights_management' | trans({}, 'platform') }}</h4>
+            </div>
+        {% endif %}
+        <div class='{{ mode }}-body padding-bottom-none'>
+            <ul class="nav nav-tabs margin-bottom-md" id="rights-form-resource-nav-tabs">
+                <li class="active"><a href="#simple" data-toggle="tab">{{ 'simple'|trans({}, 'platform') }}</a></li>
+                <li><a href="#general" data-toggle="tab">{{ 'advanced'|trans({}, 'platform') }}</a></li>
+                <li><a href="#workspaces-list" data-toggle="tab">{{ 'by_workspace'|trans({}, 'platform') }}</a></li>
+                <li id="users-with-rights-list-tab">
+                    <a href="#users-with-rights-list" data-toggle="tab">
+                        {{ 'by_user'|trans({}, 'platform') }}
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="tab-content" id="rights-form-resource-tab-content">
+            {% if isDir %}
+                <div id="data" data-workspace-id="{{ workspace.getId() }}" data-node-id="{{ resource.getId() }}"></div>
+            {% endif %}
+            <div id="mask" class='hide'>
+                [{% for right in mask %}
+                    {% if right %}true{% else %}false{% endif %}{% if not loop.last %}, {% endif %}
+                {% endfor %}]
+            </div>
+
+{# ---------------------------- SIMPLE TAB --------------------------------- #}
+
+            <div class="tab-pane active" id="simple">
+                <div class="{{ mode }}-body padding-top-none">
+                    <h4>{{ 'grant_access'|trans({}, 'platform')}}:</h4>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-condensed">
+                            <tr>
+                                <td><label for="everyone">{{ 'to_everyone' | trans({}, 'platform')}}</label></td>
+                                <td><input id="everyone" type="checkbox"></td>
+                            </tr>
+                            <tr>
+                                <td><label for="workspace">{{ 'to_workspace_members' | trans({}, 'platform')}}</label></td>
+                                <td><input id="workspace" type="checkbox"></td>
+                            </tr>
+                            <tr>
+                                <td><label for="platform">{{ 'to_platform_users' | trans({}, 'platform')}}</label></td>
+                                <td><input id="platform" type="checkbox"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    {% if isDir %}
+                        <input id="recursive-option" name="isRecursive" type="checkbox"/> {{ 'recursive_dir_action'|trans({}, 'platform')}}
+                    {% endif %}
+                </div>
+                {% block formfooter %}
+                   <div class="text-right {{ mode }}-footer margin-top-none">
+                        {% if isModal %}
+                            <button type="button" class="btn btn-default" type="button" data-dismiss="modal">
+                                {{ 'cancel'|trans({}, 'platform') }}
+                            </button>
+                        {% else %}
+                            <a class='btn btn-default' href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}" role="button">
+                                {{ 'cancel'|trans({}, 'platform') }}
+                            </a>
+                        {% endif %}
+                        <button data-dismiss="modal" class="btn btn-primary" type="submit" id="submit-default-rights-form-button" >{{ 'ok'|trans({}, 'platform') }}</button>
+                    </div>
+                {% endblock %}
+            </div>
+
+{# ---------------------------- ADVANCED TAB --------------------------------- #}
+
+            <div class="tab-pane" id="general">
+                <div class="{{ mode }}-body padding-top-none {% if isModal %}padding-bottom-none{% endif %} table-responsive">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-condensed">
+                            <thead>
+                                <tr>
+                                    <th> {{ 'role'|trans({}, 'platform') }} </th>
+                                    {% for decoder in resource.getResourceType().getMaskDecoders() %}
+                                        <th> {{ decoder.getName()|trans({}, 'resource') }} </th>
+                                    {% endfor %}
+                                    {% if isDir %}
+                                        <th> {{ 'creation'|trans({}, 'platform') }} </th>
+                                    {% endif %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for resourceRight in resourceRights %}
+                                    {% set roleId = resourceRight.getRole().getId() %}
+                                    <tr class="role {{ resourceRight.getRole().getName() | lower | replace({'role_': ''}) }}">
+                                        <td>
+                                            {{ resourceRight.getRole().getTranslationKey()|trans({}, 'platform') }}
+                                            {% if resourceRight.getRole().getWorkspace() is not null %}
+                                                <em> ({{ resourceRight.getRole().getWorkspace().getCode() }}) </em>
+                                            {% endif %}
+                                            <input type="hidden" name="role_row[{{ roleId }}]" value="{{ roleId }}"/>
+                                        </td>
+                                        {% for decoder in resource.getResourceType().getMaskDecoders() %}
+                                            <td> <input name="roles[{{ roleId }}][{{ decoder.getName() }}]" type="checkbox" {% if resourceRight.getMask() b-and decoder.getValue() %} checked {% endif %}> </td>
+                                        {% endfor %}
+                                        {% if isDir %}
+                                            <td>
+                                                <a data-resource-id="{{ resource.getId() }}"
+                                                   class="res-creation-options"
+                                                   href="{{ path('claro_resource_right_creation_form', {'node': resourceRight.getResourceNode().getId(), 'role': resourceRight.getRole().getId() }) }}">
+                                                   <i class="fa fa-cog"></i> {{ 'options'|trans({}, 'platform') }}
+                                                </a>
+                                            </td>
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% if isDir %}
+                        <input id="advanced-recursive-option" name="isRecursive" type="checkbox"/> {{ 'recursive_dir_action'|trans({}, 'platform')}}
+                    {% endif %}
+                </div>
+                {{ block('formfooter') }}
+            </div>
+
+{# ---------------------------- WORKSPACE TAB --------------------------------- #}
+
+            <div class="{{ mode }}-body padding-top-none tab-pane" id="workspaces-list">
+                <div id="advanced-pane-content">
+                    <div class="panel panel-default" id="accordion-all">
+                        <div class="panel-heading">
+                            <a data-toggle="collapse" data-parent="#accordion-all" href="#collapse-all">
+                                <h3 class="panel-title">
+                                    <i class="fa fa-align-justify"></i>
+                                    {{ 'all_public_workspaces'|trans({}, 'platform') }}
+                                    <i class="fa fa-chevron-down pull-right"></i>
+                                </h3>
+                            </a>
+                        </div>
+                        <div id="collapse-all" class="panel-body collapse {% if tags|length == 0 %}in{% endif %}">
+                            <div id="all-workspaces-panel">
+                                <div id="workspaces-datas"
+                                     data-node-id="{{ resource.getId() }}"
+                                     data-search="{{ wsSearch }}"
+                                     data-max="{{ wsMax }}"
+                                >
+                                </div>
+
+                                {% if wsSearch != '' %}
+                                    <div class="alert alert-info">
+                                        {{ 'results_for_search_on'|trans({}, 'platform') }} :
+                                        "{{ wsSearch }}"
+                                    </div>
+                                {% endif %}
+                                <div class="margin-bottom-md">
+                                    <div class="input-group col-md-4 pull-right">
+                                        <input class="form-control search-workspaces-input"
+                                               type="text"
+                                               id="search-workspaces-input"
+                                               placeholder="{{ 'search'|trans({}, 'platform') }}"
+                                               value={{wsSearch}}
+                                        >
+                                        <span class="input-group-btn">
+                                            <button class="filter btn btn-default search-workspaces-btn" type="button" id="search-workspaces-btn">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <br>
+                                <br>
+
+                                {% if workspaces.getNbPages() > 1 %}
+                                     {{ renderPager(workspaces, wsSearch, wsMax, resource) }}
+                                {% endif %}
+
+                                {% for workspace in workspaces %}
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <a data-toggle="collapse" href="#collapse-all-{{ workspace.getCode() }}">
+                                                <h3 class="panel-title">
+                                                    {{ workspace.getName() }}
+                                                    <span class="workspace-code">({{ workspace.getCode() }})</span>
+                                                </h3>
+                                            </a>
+                                        </div>
+                                        <div id="collapse-all-{{ workspace.getCode() }}" class="list-group collapse">
+                                            {% for role in workspaceRoles[workspace.getCode()] %}
+
+                                                {% if role.getName() != wsManagerRoleName %}
+                                                    <a class="workspace-role-item list-group-item"
+                                                       href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
+                                                        {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                                    </a>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+
+                                {% if workspaces.getNbPages() > 1 %}
+                                     {{ renderPager(workspaces, wsSearch, wsMax, resource) }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable, workspaceRoles, resource, wsManagerRoleName) }}
+                </div>
+                <div id="form-rights-tag-wrapper"></div>
+            </div>
+
+{# ------------------------------ USER TAB ----------------------------------- #}
+
+            <div class="tab-pane" id="users-with-rights-list">
+                <div class="{{ mode }}-body padding-top-none {% if isModal %}padding-bottom-none{% endif %} table-responsive"
+                     id="users-with-rights-tab"
+                >
+                    {{
+                        render(
+                            controller(
+                                'ClarolineCoreBundle:ResourceRights:resourcesRightsUsersWithRightsForm',
+                                {
+                                    'node': resource,
+                                    'search': ''
+                                }
+                            )
+                        )
+                    }}
+                </div>
+                {{ block('formfooter') }}
+            </div>
+        </div>
+    </form>
+</div>

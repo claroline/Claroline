@@ -1,0 +1,133 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ 'cursus_plugin_configuration' | trans({}, 'cursus') | striptags | raw }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'packages'|trans({}, 'platform'),
+                'href': path('claro_admin_plugins')
+            },
+            {
+                'name': 'cursus_plugin_configuration'|trans({}, 'cursus'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'cursus_plugin_configuration'|trans({}, 'cursus') }}
+        </h3>
+    </div>
+    <form role="form"
+          class="form-horizontal"
+          action="{{ path('claro_cursus_plugin_configure') }}"
+          method="post"
+          {{ form_enctype(form) }}
+          enctype='multipart/form-data'
+    >
+        <div class="panel-body">
+            <div>
+                {{ macros.flashBox() }}
+            </div>
+
+            {% if defaultWords|length > 0 %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>{{ 'word'|trans({}, 'cursus') }}</th>
+                            <th>{{ 'displayed_word'|trans({}, 'cursus') }}</th>
+                        </tr>
+
+                        {% for word in defaultWords %}
+                            <tr>
+                                <td>{{ word }}</td>
+                                <td>
+                                    <div class="col-md-6">
+                                        <input id="input-{{ word }}"
+                                               class="form-control"
+                                               type="text"
+                                               value="{{ displayedWords[word] }}"
+                                        >
+                                    </div>
+                                    <span class="btn btn-primary displayed-word-change-btn"
+                                          data-word="{{ word }}"
+                                          data-input-id="input-{{ word }}"
+                                    >
+                                        {{ 'validate'|trans({}, 'platform') }}
+                                    </span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif %}
+            <hr>
+            {{ form_row(form.startDate) }}
+            {{ form_row(form.endDate) }}
+            <hr>
+            
+            <div class="alert alert-warning">
+                <button type="button"
+                        class="close"
+                        data-dismiss="alert"
+                        aria-hidden="true"
+                >
+                    &times;
+                </button>
+                {{ 'You can redefine the content of the registration mail here'|trans({}, 'platform') }}.<br>
+                <br>
+                {{ 'You can use the following variables in your form'|trans({}, 'platform') }}:<br>
+                <br>
+                <ul>
+                    <li>
+                        <strong>%course%</strong>
+                        {{ 'will_display_the_title_of_the_course'|trans({}, 'cursus') }}.
+                    </li>
+                    <li>
+                        <strong>%session%</strong>
+                        {{ 'will_display_the_name_of_the_session'|trans({}, 'cursus') }}.
+                    </li>
+                    <li>
+                        <strong>%start_date%</strong>
+                        {{ 'will_display_the_start_date_of_the_session'|trans({}, 'cursus') }}.
+                    </li>
+                    <li>
+                        <strong>%end_date%</strong>
+                        {{ 'will_display_the_end_date_of_the_session'|trans({}, 'cursus') }}.
+                    </li>
+                </ul>
+                <br>
+                {{ 'You can use the full screen version of the text editor to include HTML' | trans({}, 'platform') }}.
+            </div>
+            {% form_theme form 'ClarolineCoreBundle::form_theme_no_label.html.twig' %}
+            {{ form_widget(form) }}
+        </div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">
+                {{ 'ok'|trans({}, 'platform') }}
+            </button>
+            <a href="{{ path('claro_admin_plugins') }}" class="btn btn-default">
+                {{ 'cancel'|trans({}, 'platform') }}
+            </a>
+        </div>
+    </form>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src='{{ asset('bundles/clarolinecursus/js/displayedWordsConfiguration.js') }}'
+            type="text/javascript"
+    >
+    </script>
+{% endblock %}

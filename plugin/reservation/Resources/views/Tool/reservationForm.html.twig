@@ -1,0 +1,74 @@
+<div id="modal-event-form" class="modal-dialog" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4>{% if editMode %} {{ 'agenda.modify_reservation'|trans({}, 'reservation') }} {% else %}{{ 'agenda.add_reservation'|trans({}, 'reservation') }} {% endif %}</h4>
+        </div>
+        <form method="post"
+              action="{{ action }}"
+              id="form-reservation" {{ form_enctype(form) }}
+              role="form"
+                >
+            <div class="modal-body">
+                {{ form_widget(form) }}
+                <div class="col-md-offset-3">
+                    <div>
+                        <span class="bold">{{ 'agenda.form.description'|trans({}, 'reservation') }}: </span>
+                        <span id="reservation_form_resource_description">
+                            {% if reservation is not null and reservation.getResource() is not null %}
+                                {% if reservation.getResource().getDescription is not empty %}
+                                    {{ reservation.getResource().getDescription() }}
+                                {% else %}
+                                    {{ 'none'|trans({}, 'platform') }}
+                                {% endif %}
+                            {% else %}
+                                {{ 'none'|trans({}, 'platform') }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div>
+                        <span class="bold">{{ 'agenda.form.localisation'|trans({}, 'reservation') }}: </span>
+                        <span id="reservation_form_resource_localisation">
+                            {% if reservation is not null and reservation.getResource() is not null %}
+                                {% if reservation.getResource().getLocalisation() is not empty %}
+                                    {{ reservation.getResource().getLocalisation() }}
+                                {% else %}
+                                    {{ 'none'|trans({}, 'platform') }}
+                                {% endif %}
+                            {% else %}
+                                {{ 'none'|trans({}, 'platform') }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div>
+                        <span class="bold">{{ 'agenda.form.max_time_reservation'|trans({}, 'reservation') }}: </span>
+                        <span id="reservation_form_resource_max_time">
+                            {% if reservation is not null and reservation.getResource() is not null %}
+                                {% if reservation.getResource().getMaxTimeReservation() != '00:00:00' %}
+                                    {{ reservation.getResource().getMaxTimeReservation() }}
+                                {% else %}
+                                    {{ 'none'|trans({}, 'platform') }}
+                                {% endif %}
+                            {% else %}
+                                {{ 'none'|trans({}, 'platform') }}
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="btn btn-default" data-dismiss="modal">{{'cancel'|trans({}, 'platform') }}</div>
+                {% if editMode and canDelete %}
+                    <span class="btn btn-danger delete-reservation" data-dismiss="modal" data-reservation-id="{{ reservation.getId() }}" data-event-id="{{ reservation.getEvent().getId() }}">{{ 'delete_resource'|trans({}, 'reservation') }}</span>
+                {% endif %}
+                <button type="submit" class="btn btn-primary">
+                    {% if editMode %}
+                        {{ 'modify_resource'|trans({}, 'reservation') }}
+                    {% else %}
+                        {{ 'agenda.add_reservation'|trans({}, 'reservation') }}
+                    {% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

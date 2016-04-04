@@ -1,0 +1,85 @@
+<div class="tab-pane" id="facet-{{ facet.id }}">
+    <form
+        id="form-facet-{{ facet.id }}"
+        role="form"
+        class="form-horizontal"
+        method="post"
+        action="{{ path('claro_user_facet_edit', {'user': user.getId(), 'facet': facet.id}) }}"
+     >
+        <div class="panel-body">
+            <div class="panel-group" id="panel-facet-{{ facet['id'] }}" role="tablist" aria-multiselectable="true">
+                {% for panel in facet['panels'] %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab">
+                            <h4 class="panel-title">
+                                <a
+                                    data-toggle="collapse"
+                                    href="#panel-{{ panel.getId() }}"
+                                    aria-expanded="true"
+                                    aria-controls="panel-facet-{{ panel.getId() }}"
+                                >
+                                {{ panel.getName () }}
+                                </a>
+                            </h4>
+                        </div>
+                        <div
+                            id="panel-{{ panel.getId() }}"
+                            class="panel-collapse collapse {% if not panel.isDefaultCollapsed() %} in {% endif %}"
+                            role="tabpanel"
+                            aria-labelledby="panel-{{ panel.id }}"
+                        >
+                            <div class="panel-body">
+                                {% for field in panel.getFieldsFacet() %}
+                                    {% for fieldFacet in fieldFacets %}
+                                        {% if fieldFacet.id == field.getId() and fieldFacet.canOpen == true %}
+                                            <div class="form-group row">
+                                                <label class="control-label col-md-3" for="field-{{ field.getId() }}">
+                                                    {{ field.getName() }}
+                                                </label>
+                                                <div class="col-md-9">
+                                                    <input
+                                                        {% if fieldFacet.canEdit == false %} disabled {% endif %}
+                                                        id="field-{{ field.getId() }}"
+                                                        name="field-{{ field.getId() }}[{{ field.getName() }}]"
+                                                        {% if field.getInputType == 'date' %}
+                                                            type="text"
+                                                            class="datepicker form-control"
+                                                            data-date-language="{{ app.request.locale }}"
+                                                            data-date-clear-btn="true"
+                                                            data-date-format="{{ 'date_form_datepicker_format'|trans({}, 'platform') }}"
+                                                        {% else %}
+                                                            type="{{ field.getInputType() }}"
+                                                            class="form-control"
+                                                        {% endif %}
+                                                        {% for fieldFacetValue in fieldFacetValues %}
+                                                            {% if fieldFacetValue.getFieldFacet().getId() == field.getId() %}
+                                                                {% if field.getInputType == 'date' %}
+                                                                    value="{{ fieldFacetValue.getValue()|date('date_form_datepicker_php'|trans({}, 'platform')) }}"
+                                                                {% else %}
+                                                                    value="{{ fieldFacetValue.getValue() }}"
+                                                                {% endif %}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    >
+                                                    </input>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="panel-footer">
+            <button
+                    class="btn btn-primary submit-facet-edit-form"
+                    aria-hidden="true"
+                    >
+                {{ 'edit'|trans({}, 'platform') }}
+            </button>
+        </div>
+    </form>
+</div>

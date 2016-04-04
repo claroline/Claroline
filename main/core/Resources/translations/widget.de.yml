@@ -1,0 +1,7 @@
+core_resource_logger: 'Aperçu des activités récentes'
+my_workspaces: 'Mes espaces d''activités'
+my_profile: 'Mon profil'
+simple_text: Texte
+widget_configuration_copy_warning: 'Une erreur est survenue lors de la copie de la configuration du widget <%widgetInstanceName%>'
+widget_instance_form_name: Nom
+widget_instance_form_widget: Type

@@ -1,0 +1,73 @@
+{% if is_granted('ROLE_HOME_MANAGER') %}
+    <div class="content-menu float-right-top">
+        <button type="button" class="btn btn-link" data-toggle="dropdown">
+            <i class="fa fa-fw fa-chevron-down"></i>
+        </button>
+        <ul class="dropdown-menu pull-right" role="menu">
+            {% if father is defined and father is not empty  %}
+                <li role="presentation">
+                    <a role="menuitem" class="content-edit">
+                        <i class="fa fa-fw fa-pencil-square-o"></i> {{ 'edit' | trans({}, 'platform') }}
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a role="menuitem" class="content-delete">
+                        <i class="fa fa-fw fa-trash-o"></i> {{ 'delete' | trans({}, 'platform') }}
+                    </a>
+                </li>
+            {% else %}
+                {% if region is not defined or (region is defined and region is empty) and type is defined %}
+                    <li>
+                        <a class="content-size">
+                            <i class="fa fa-fw fa-arrows-h"></i> {{ 'size' | trans({}, 'platform') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a class="content-edit">
+                            <i class="fa fa-fw fa-pencil"></i> {{ 'edit' | trans({}, 'platform') }}
+                        </a>
+                    </li>
+                {% endif %}
+                {% if type != "home" %}
+                    <li role="presentation">
+                        <a role="menuitem" class="content-region">
+                            <i class="fa fa-fw fa-th-large"></i> {{ 'region' | trans({}, 'home') }}
+                        </a>
+                    </li>
+                {% endif %}
+                {% if region is not defined or (region is defined and region is empty) and type != "menu" %}
+                    <li role="presentation">
+                        <a role="menuitem" class="collapse-content">
+                            <i class="fa fa-fw fa-sort"></i> {{ 'Collapse' | trans({}, 'home') }}
+                            {% if collapse %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-fw fa-check"></i>{% endif %}
+                        </a>
+                    </li>
+                    <li role="presentation">
+                        <a role="menuitem" class="send-content">
+                            <i class="fa fa-fw fa-send"></i> {{ "move" | trans({}, 'platform') }}
+                        </a>
+                    </li>
+                {% endif %}
+                <li role="presentation">
+                    <a role="menuitem" class="content-delete">
+                        <i class="fa fa-fw fa-trash-o"></i> {{ 'delete' | trans({}, 'platform') }}
+                    </a>
+                </li>
+                {% if region is not defined or (region is defined and region is empty) and type == "menu" %}
+                    <li role="presentation">
+                        <a role="menuitem" href="{{ path('claroline_content_menu_settings', {'content': id}) }}">
+                            <i class="fa fa-fw fa-cog"></i> {{ "settings" | trans({}, 'platform') }}
+                        </a>
+                    </li>
+                {% endif %}
+                {% if region is defined and region is not empty and type is defined and type is not empty %}
+                    <li role="presentation">
+                        <a role="menuitem" href="{{ path('claro_get_content_by_type', {'type': type}) }}">
+                            <i class="fa fa-fw fa-pencil"></i> {{ 'edit_in_page' | trans({}, 'home') }}
+                        </a>
+                    </li>
+                {% endif %}
+            {% endif %}
+        </ul>
+    </div>
+{% endif %}

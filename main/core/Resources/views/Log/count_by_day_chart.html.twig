@@ -1,0 +1,110 @@
+<style type="text/css">
+    .line-chart {
+        height: 150px;
+        width: 80%;
+        margin: 0 10%;
+    }
+
+    .count_by_day_chart_legend {
+        text-align: center;
+        font-size: 11px;
+        color: #777;
+    }
+</style>
+{% if not app.request.isXmlHttpRequest() %}
+    <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
+
+    <script type="text/javascript" src="{{ asset('packages/jqPlot/src/jquery.jqplot.js') }}"></script>
+    {% javascripts debug=false filter='jsmin' output='js/corebundle/jqplot.count-by-day.min.js'
+    'bundles/clarolinecore/js/jqplot/jqplot.colors.js'
+    'packages/jqPlot/src/plugins/jqplot.highlighter.js'
+    'packages/jqPlot/src/plugins/jqplot.cursor.js'
+    'packages/jqPlot/src/plugins/jqplot.canvasTextRenderer.js'
+    'packages/jqPlot/src/plugins/jqplot.dateAxisRenderer.js'
+    'packages/jqPlot/src/plugins/jqplot.canvasAxisTickRenderer.js'
+    'packages/jqPlot/src/plugins/jqplot.canvasAxisLabelRenderer.js'
+    %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endif %}
+{% if actionName is not defined or actionName is empty or '-' not in actionName %}
+<legend>{{ 'actions_per_day'|trans({}, 'platform') }}</legend>
+{% else %}
+<legend>{{ ('log_'~actionName~'_filter')|trans({}, 'log') }}</legend>
+{% endif %}
+
+<div id="actions-line-chart" class="line-chart"></div>
+
+<br/>
+<div class="count_by_day_chart_legend"><i class="fa fa-hand-o-up"></i> <em>{{ 'graph_draw_area'|trans({}, 'platform') }}</em></div>
+
+<script type="text/javascript">
+    var chartData = {{ chartData|json_encode|raw }};
+    var bg_color = "transparent";
+
+    $(document).ready(function(){
+        if (chartData.length>0) {
+            var actionsPlot = $.jqplot(
+                'actions-line-chart',
+                [chartData],
+                {
+                    title: {show: false},
+                    grid: {
+                        drawBorder: true,
+                        borderWidth: 1.0,
+                        shadow: false,
+                        background: bg_color
+                    },
+                    axesDefaults: {
+                        labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                        tickRenderer: $.jqplot.CanvasAxisTickRenderer
+                    },
+                    axes: {
+                        xaxis: {
+                            renderer: $.jqplot.DateAxisRenderer,
+                            tickOptions: {
+                                formatString:'{{ 'jqplot_date_output_format'|trans({}, 'platform') }}',
+                                showGridline: false,
+                                showMark: true,
+                                angle: -20,
+                                fontSize: '10px'
+                            },
+                            numberTicks:10
+                        },
+                        yaxis: {
+                            min:0,
+                            showTickMarks: true,
+                            numberTicks: 5
+                        }
+                    },
+                    highlighter: {
+                        show: true,
+                        sizeAdjust: 1,
+                        tooltipOffset:12,
+                        tooltipLocation:'n',
+                        tooltipAxes:'xy',
+                        formatString:'%s <br/> %d',
+                        tooltipFadeSpeed:'fast'
+                    },
+                    cursor: {
+                        show: true,
+                        zoom: true,
+                        showTooltip: false
+                    },
+                    seriesDefaults: {
+                        showMarker:((chartData.length<10)?true:false),
+                        markerOptions:{shadow:false},
+                        shadow:false,
+                        showLine:true,
+                        useNegativeColors: false,
+                        fill: true,
+                        lineWidth: 1.5,
+                        fillAndStroke: true,
+                        fillAlpha: 0.12,
+                        rendererOptions:{highlightMouseOver: true, highlightMouseDown: true}
+                    }
+                }
+            );
+        }
+    });
+</script>

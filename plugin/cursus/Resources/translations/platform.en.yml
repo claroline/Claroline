@@ -1,0 +1,7 @@
+decline_registration: 'Decline registration'
+decline_registration_confirm_message: 'Are you sure you want to decline this user registration ?'
+next_session_registration_request: 'Request to be registered to the next session'
+next_session_registration_request_cancel: 'Cancel request to be registered to the next session'
+next_session_registration_request_cancel_message: 'Are you sure you want to cancel your request to be registered to the next session ?'
+next_session_registration_request_message: 'Are you sure you want to be registered to the next session ?'
+request_done: 'Request done'

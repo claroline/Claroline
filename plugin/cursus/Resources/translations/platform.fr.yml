@@ -1,0 +1,7 @@
+session_registration: 'Inscription à une session'
+session_self_registration_message: 'Êtes-vous sûr de vouloir vous inscrire à cette session ?'
+next_session_registration_request: 'Demander d''être inscrit à la prochaine session'
+next_session_registration_request_cancel: 'Annuler la demande d''inscription à la prochaine session'
+next_session_registration_request_cancel_message: 'Êtes-vous sûr de vouloir annuler votre demande d''inscription à la prochaine session ?'
+next_session_registration_request_message: 'Êtes-vous sûr de vouloir vous inscrire à la prochaine session ?'
+request_done: 'Demande effectuée'

@@ -1,0 +1,22 @@
+plugin:
+  has_options: true
+
+  admin_tools:
+    - name: claroline_cursus_tool
+      class: list-alt
+    - name: claroline_cursus_tool_registration
+      class: list-alt
+
+  widgets:
+    - name: claroline_cursus_courses_registration_widget
+      is_configurable: true
+      is_displayable_in_workspace: true
+      is_displayable_in_desktop: true
+      default_width: 12
+      default_height: 4
+    - name: claroline_cursus_my_courses
+      is_configurable: false
+      is_displayable_in_workspace: false
+      is_displayable_in_desktop: true
+      default_width: 12
+      default_height: 4

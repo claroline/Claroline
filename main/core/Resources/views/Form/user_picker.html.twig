@@ -1,0 +1,231 @@
+{% extends 'ClarolineCoreBundle::form_theme.html.twig' %}
+
+{% block userpicker_widget %}
+    {% spaceless %}
+        {% set timedPickerName = picker_name ~ '-' ~ 'now'|date('U') %}
+
+        {% if multiple %}
+            <input type="text"
+                   name="{{ full_name }}"
+                   id="user-picker-input-{{ timedPickerName }}"
+                   {# angularjs doesn't like hidden fields, so we use a text one with display: none; AND IT SUCKS #}
+                   style="display: none;"
+                   {% if model is defined %}
+                       ng-model="{{ alias }}.{{ model }}.{{ name }}"
+                   {% endif %}
+
+                   {% if value is not empty %}
+                       {% if value[0] is iterable %}
+                           value="{% for v in value %}{% if v['id'] is defined %}{{ v['id'] }}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}"
+                           {% if model is defined %}
+                               ng-init='{{ alias }}.{{ model }}.{{ name }}="{% for v in value %}{% if v['id'] is defined %}{{ v['id'] }}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}"'
+                           {% endif %}
+                       {% else %}
+                           value="{{ value[0] }}"
+                           {% if model is defined %}
+                               ng-init='{{ value[0] }}'
+                           {% endif %}
+                       {% endif %}
+                   {% endif %}
+            >
+        {% else %}
+            <input type="text"
+                   name="{{ full_name }}"
+                   id="user-picker-input-{{ timedPickerName }}"
+                   {# angularjs doesn't like hidden fields, so we use a text one with display: none; AND IT SUCKS #}
+                   style="display: none;"
+
+                   {% if model is defined %}
+                       ng-model="{{ alias }}.{{ model }}.{{ name }}"
+                       ng-init='{{ alias }}.{{ model }}.{{ name }}="{{ value|ng_escape }}"'
+                   {% endif %}
+
+                   {% if (value is not empty) and (value is iterable) and (value['id'] is defined) %}
+                       value="{{ value['id'] }}"
+                   {% else %}
+                       value="{{ value }}"
+                   {% endif %}
+            >
+        {% endif %}
+        <div class="input-group">
+            <input type="text"
+                   class="form-control user-picker user-picker-input user-picker-{{ timedPickerName }}"
+                       
+                   {% if value is not empty %}
+                       {% if multiple %}
+                   
+                           {% if value[0] is iterable %}
+                               value="{% for v in value %}{% if v['name'] is defined %}{{ v['name'] }}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}"
+                               data-status="OK"
+                           {% else %}
+                               data-value="{{ value[0] }}"
+                               data-status="id"
+                           {% endif %}
+                           data-multiple="multiple"
+                       {% elseif value['name'] is defined %}
+                           value="{{ value['name'] }}"
+                           data-status="OK"
+                           data-multiple="single"
+                       {% else %}
+                           data-value="{{ value }}"
+                           data-status="id"
+                           data-multiple="single"
+                       {% endif %}
+                   {% elseif selected_users|length > 0 %}
+                       value="{% for user in selected_users %}{{ user.getFirstName() }} {{ user.getLastName() }}{% if show_username %} ({{ user.getUsername() }}){% endif %}{% if not loop.last %},{% endif %}{% endfor %}"
+                   {% endif %}
+                   id="user-picker-input-view-{{ timedPickerName }}"
+                   placeholder="{{ 'add_user'|trans({}, 'platform') }}"
+            >
+            <span class="input-group-btn">
+                <span class="btn btn-default user-picker user-picker-{{ timedPickerName }}"
+                      type="button"
+                >
+                    <i class="fa fa-user"></i>
+                </span>
+            </span>
+        </div>
+
+        <script type="text/javascript">
+            {% set excludedUserIds = [] %}
+            {% set forcedUserIds = [] %}
+            {% set selectedUserIds = [] %}
+            {% set forcedGroupIds = [] %}
+            {% set forcedRoleIds = [] %}
+            {% set forcedWorkspaceIds = [] %}
+            {% set shownWorkspaceIds = [] %}
+
+            {% for user in blacklist %}
+                {% set excludedUserIds = excludedUserIds|merge([user.getId()]) %}
+            {% endfor %}
+
+            {% for user in whitelist %}
+                {% set forcedUserIds = forcedUserIds|merge([user.getId()]) %}
+            {% endfor %}
+
+            {% for user in selected_users %}
+                {% set selectedUserIds = selectedUserIds|merge([user.getId()]) %}
+            {% endfor %}
+
+            {% for group in forced_groups %}
+                {% set forcedGroupIds = forcedGroupIds|merge([group.getId()]) %}
+            {% endfor %}
+
+            {% for role in forced_roles %}
+                {% set forcedRoleIds = forcedRoleIds|merge([role.getId()]) %}
+            {% endfor %}
+
+            {% for workspace in forced_workspaces %}
+                {% set forcedWorkspaceIds = forcedWorkspaceIds|merge([workspace.getId()]) %}
+            {% endfor %}
+
+            {% for workspace in shown_workspaces %}
+                {% set shownWorkspaceIds = shownWorkspaceIds|merge([workspace.getId()]) %}
+            {% endfor %}
+
+            $('body').on('click', '.user-picker-{{ timedPickerName }}', function () {
+                var selectedUserIds = {{ selectedUserIds|json_encode }};
+                var inputValue = $('#user-picker-input-{{ timedPickerName }}').val();
+                var ids = inputValue.split(',');
+
+                if (ids.length > 0 && ids[0] !== '') {
+                    selectedUserIds = [];
+                    
+                    for (var i = 0; i < ids.length; i++) {
+                        var id = parseInt(ids[i]);
+                        
+                        if (selectedUserIds.indexOf(id) === -1) {
+                            selectedUserIds.push(id);
+                        }
+                    }
+                }
+                
+                var userPicker = new UserPicker();
+                var settings = {
+                    picker_name: "{{ timedPickerName }}",
+                    picker_title: "{{ picker_title }}",
+                    multiple: {% if multiple %}true{% else %}false{% endif %},
+                    show_all_users: {% if show_all_users %}true{% else %}false{% endif %},
+                    show_filters: {% if show_filters %}true{% else %}false{% endif %},
+                    show_id: {% if show_id %}true{% else %}false{% endif %},
+                    show_picture: {% if show_picture %}true{% else %}false{% endif %},
+                    show_username: {% if show_username %}true{% else %}false{% endif %},
+                    show_mail: {% if show_mail %}true{% else %}false{% endif %},
+                    show_code: {% if show_code %}true{% else %}false{% endif %},
+                    show_groups: {% if show_groups %}true{% else %}false{% endif %},
+                    show_platform_roles: {% if show_platform_roles %}true{% else %}false{% endif %},
+                    attach_name: {% if attach_name %}true{% else %}false{% endif %},
+                    blacklist: {{ excludedUserIds|json_encode }},
+                    whitelist: {{ forcedUserIds|json_encode }},
+                    selected_users: selectedUserIds,
+                    forced_groups: {{ forcedGroupIds|json_encode }},
+                    forced_roles: {{ forcedRoleIds|json_encode }},
+                    forced_workspaces: {{ forcedWorkspaceIds|json_encode }},
+                    shown_workspaces: {{ shownWorkspaceIds|json_encode }}
+                };
+                userPicker.configure(settings, null);
+                userPicker.open();
+            });
+        </script>
+
+        <script type="text/javascript">
+            (function () {
+                var input = $('#user-picker-input-view-{{ timedPickerName }}');
+                input.each(function () {
+                    var element = $(this);
+                    var value = '' + element.data('value');
+                    var multiple = element.data('multiple');
+                    var status = element.data('status');
+                    
+                    if (status === 'id') {
+                        
+                        if (multiple === 'single') {
+                            $.ajax({
+                                url: Routing.generate(
+                                    'claro_user_infos_request',
+                                    {'user': parseInt(value)}
+                                ),
+                                type: 'GET',
+                                success: function (datas) {
+                                    var name = datas['firstName'] + ' ' + datas['lastName'];
+                                    element.val(name);
+                                }
+                            });
+                        } else if (multiple === 'multiple') {
+                            var ids = value.split(',');
+                            
+                            if (ids.length > 0 && ids[0] !== '') {
+                                var userIds = [];
+                                
+                                for (var i = 0; i < ids.length; i++) {
+                                    userIds.push(parseInt(ids[i]));
+                                }
+                                var route = Routing.generate('claro_users_infos_request');
+                                var parameters = {};
+                                parameters.userIds = userIds;
+                                route += '?' + $.param(parameters);
+                                
+                                $.ajax({
+                                    url: route,
+                                    type: 'GET',
+                                    success: function (datas) {
+                                        var names = '';
+                                        
+                                        for (var j = 0; j < datas.length; j++) {
+                                            names += datas[j]['firstName'] + ' ' + datas[j]['lastName'];
+                                            
+                                            if (j < datas.length - 1) {
+                                                names += ',';
+                                            }
+                                        }
+                                        element.val(names);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+            })();
+        </script>
+    {% endspaceless %}
+{% endblock %}

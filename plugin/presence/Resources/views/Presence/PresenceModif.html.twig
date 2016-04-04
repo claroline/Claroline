@@ -1,0 +1,82 @@
+<div class="modal-dialog"
+     role="dialog"
+     aria-labelledby="modalLabel"
+     aria-hidden="true">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3 class="modal-title" style="text-align: center;">
+                {{"modifier_presence"|trans({},"presences")}}
+            </h3>
+        </div>
+        <div class="modal-body">
+            {% if canEditArchives%}
+                <div class="row">
+                    <div class="col-md-6">
+                        {{"le"|trans({},"presences")}} {{presence.getPeriod.getDay()|date('d-m-Y')}} 
+                        {{"de"|trans({},"presences")}} {{presence.getPeriod.getBeginHour()|date('H:i')}} 
+                        {{"à"|trans({},"presences")}} {{presence.getPeriod.getEndHour()|date('H:i')}}
+                    </div>
+                    <strong class="col-md-5 col-md-offset-1">
+                        {% if presence.getStatus() is null %}
+                           {{"statut"|trans({},"presences")}}: {{"NC"|trans({},"presences")}}
+                        {% else %}
+                            {{"statut"|trans({},"presences")}}: {{presence.getStatus.getStatusName()}}
+                        {% endif %}
+
+                    </strong>
+                </div></br></br>
+                <div class="row">
+                    <div class="col-md-3" style="text-align: center;">
+                        <img id="photo" 
+                             style="height:150px;" 
+                             class="img-thumbnail" 
+                             src="{{asset('uploads/pictures/') ~ presence.getUserStudent().getPicture()}}" 
+                             width="100" 
+                             alt="Photo de l'élève">
+                        {{presence.getUserStudent.getLastName()}}
+                        {{presence.getUserStudent.getFirstName()}}
+                     </div>
+                    <div class="col-md-8">
+                        <form id="ModifHoraireForm" 
+                              method="post" {{ form_enctype(ModifPresenceForm) }} 
+                              action="{{path("formalibre_presence_modif",{"id":presence.getId()})}}">
+                            {{"modifier_statut"|trans({},"presences")}}:
+                            {{form_widget(ModifPresenceForm.Status)}}
+                            {{"comment"|trans({},"presences")}}:
+                            {{form_widget(ModifPresenceForm.Comment)}}  
+                            </br> </br>
+                             <button type="submit" 
+                                   class="btn btn-primary"
+                                   style="float: right;"
+                                   id="CollReleve_Valider"
+                                   name="ModifHoraireForm[Save]">
+                              {{"modifier"|trans({},"presences")}}
+                           </button>
+                        </form>
+                    </div>
+                </div>
+                <div class="row"> </br></br>
+                    <div class="col-md-10">    
+                        {{"prof_appel"|trans({},"presences")}}:
+                        {{presence.getUserTeacher.getLastName()}}
+                        {{presence.getUserTeacher.getFirstName()}}
+                    </div>     
+                 </div>
+        {% else %}
+           {{"access_error"|trans({},"presences")}}
+        {% endif %}    
+        </div>
+    </div>
+</div>
+{% block javascripts %}    
+    <script>
+         
+       $(document).ready(function() {
+           document.getElementById("form_Comment").defaultValue = "{{presence.getComment()}}";
+                      
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,162 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% if config.getParameter('name') != "" %}
+    {% set pagetitle = config.getParameter('name') %}
+{% else %}
+    {% set pagetitle = 'Claroline Connect' %}
+{% endif %}
+
+{% block title %}{{ pagetitle ~ ' - ' ~ 'menu_settings' | trans({}, 'home') }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-home',
+                'name': 'home'|trans({}, 'platform'),
+                'href': path('claro_index')
+            },
+            {
+                'name': 'Menus'|trans({}, 'home'),
+                'href': path('claro_get_content_by_type', {'type': 'menu'})
+            },
+            {
+                'name': 'menu_settings' | trans({}, 'home'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block leftbar %}
+    {% if is_granted('ROLE_HOME_MANAGER') %}
+        <div class="list-group menu">
+            <div class="list-group-item disabled">{{ "content_administration" | trans({}, "home") }}</div>
+            <a class="list-group-item {% if path('claro_index') == app.request.requesturi %} active{% endif %}"
+                href="{{ path("claro_index") }}">
+                <i class="fa fa-home"></i> {{ 'home' | trans({}, "platform") }}
+            </a>
+            <a class="list-group-item{{ "/type/menu" | compareRoute(" active") }}"
+                href="{{ path("claro_get_content_by_type", { "type": "menu"}) }}">
+                <i class="fa fa-list"></i> {{ 'Menus' | trans({}, "home") }}
+            </a>
+            <a class="list-group-item relative{{ "/types" | compareRoute(" active") }}"²
+                href="{{ path("claroline_types_manager") }}">
+                <i class="fa fa-file"></i> {{ 'pages' | trans({}, "home") }}
+            </a>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="visible-xs spacing-right">
+        {{ block("leftbar") }}
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ 'menu_settings' | trans({}, 'home')  }} ({{ content.title }})</h3>
+        </div>
+        <div class="panel-body">
+            <div class="hide">
+                <input id="homeMenu" data-id="{{ content.getId() }}"
+                    {% if parameters is defined and parameters.homeMenu %}data-menu="{{ parameters.homeMenu }}"{% endif %}
+                    type="checkbox"{% if parameters is defined and parameters.homeMenu == content.getId() %} checked="checked"{% endif %}
+                >
+                <label for="homeMenu">{{ 'set_as_header_in_home_page' | trans({}, 'home') }}</label>
+                <i>({{ 'for_unlogged_users' | trans({}, 'home') }})</i>
+            </div>
+            <div class="gui-options hide">
+                <hr>
+                <h4 class="text-muted">{{ 'header_menu_available' | trans({}, 'home') }}</h4>
+                <br>
+                <div>
+                    <input id="preview-login" type="checkbox"{% if parameters is defined and parameters.footerLogin  and parameters.homeMenu == content.getId() %} checked="checked"{% endif %}>
+                    &nbsp;<label for="preview-login">{{ 'show_connection_button_at_footer' | trans({}, 'home') }}</label>
+                </div>
+                <div>
+                    <input id="preview-workspaces" type="checkbox"{% if parameters is defined and parameters.footerWorkspaces and parameters.homeMenu == content.getId() %} checked="checked"{% endif %}>
+                    &nbsp;<label for="preview-workspaces">{{ 'show_workspace_menu_at_footer' | trans({}, 'home') }}</label>
+                </div>
+                <div>
+                    <input id="preview-locale" type="checkbox"{% if parameters is defined and parameters.headerLocale and parameters.homeMenu == content.getId() %} checked="checked"{% endif %}>
+                    &nbsp;<label for="preview-locale">{{ 'show_language_button_in_header' | trans({}, 'home') }}</label>
+                </div>
+            </div>
+            <div class="gui-preview hide">
+            <hr>
+                <h4 class="text-muted">
+                    <i class="fa fa-eye"></i> {{ 'preview' | trans({}, 'platform') }}
+                </h4>
+                <br>
+                <div class="navbar navbar-inverse top-bar">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            {% if config.getParameter('logo') != '' %}
+                                <a class="navbar-brand logo" href="{{ path('claro_index') }}">
+                                    <img src="{{ getAssetPath() ~ '/uploads/logos/' ~ config.getParameter('logo') }}" height="35"
+                                        {% if config.getParameter('name') != "" %}alt="{{ config.getParameter('name') }}"{% endif %}>
+                                </a>
+                            {% endif %}
+                            {% if config.getParameter('name') != '' and config.getParameter('nameActive') %}
+                                <a class="navbar-brand" href="{{ path('claro_index') }}">
+                                    {{ config.getParameter('name') }}
+                                </a>
+                            {% endif %}
+                        </div>
+                        <div class="navbar-collapse collapse" style="width:100%;overflow:hidden">
+                            <div class="localeHeader hide navbar-form navbar-right clearfix">
+                                <button class="pull-right locale-select btn btn-default">{{ app.request.locale | upper }}</button>
+                            </div>
+                            <ul class="nav navbar-nav navbar-right">
+                                {% for item in menu %}
+                                    <li><a href="{{ item.content.getContent() | homeLink }}">{{ item.content.getTitle() }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="navbar navbar-default footer-preview">
+                    <div class="container-fluid">
+                        <p class="preview-login hide navbar-text">
+                            <a href="{{ path("claro_desktop_open") }}"><i class="fa fa-user"></i> {{ "login" | trans({}, "platform") }}</a> &nbsp;&nbsp;&nbsp;&nbsp;
+                        </p>
+                        <p class="preview-workspaces hide navbar-text">
+                            <a href="{{ path("claro_workspace_list") }}"><i class="fa fa-book"></i> {{ "workspaces" | trans({}, "platform") }}</a> &nbsp;&nbsp;&nbsp;&nbsp;
+                        </p>
+                        <p class="localeFooter navbar-text navbar-right">
+                            <span class="locale-select label label-default">{{ app.request.locale | upper }}</span>
+                        </p>
+                        {% if config.getParameter('footer') != '' %}
+                            <p class="navbar-text" id="footerMessage">
+                                {{ config.getParameter('footer') }}
+                            </p>
+                        {% endif %}
+                        <p class="navbar-text poweredBy">
+                            {{ 'powered_by' | trans({}, 'platform') }} <a href="http://www.claroline.net">Claroline</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer text-right">
+            <a class="btn btn-default" href="{{ path("claro_get_content_by_type", { "type": "menu"}) }}">{{ 'cancel' | trans({}, 'platform') }}</a>
+            <div class="btn btn-primary save-menu-settings hide">{{ 'save' | trans({}, 'platform') }}</div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+        {% if is_granted('ROLE_HOME_MANAGER') %}
+            <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/home/content.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/home/menuSettings.js') }}"></script>
+        {% endif %}
+{% endblock %}

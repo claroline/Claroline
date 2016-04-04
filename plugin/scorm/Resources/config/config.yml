@@ -1,0 +1,14 @@
+plugin:
+  has_options: false
+
+  resources:
+    - class: Claroline\ScormBundle\Entity\Scorm12Resource
+      name: claroline_scorm_12
+      icon: scorm_12_icon.png
+      activity_rules:
+        - action: resource-scorm_12-sco_result
+    - class: Claroline\ScormBundle\Entity\Scorm2004Resource
+      name: claroline_scorm_2004
+      icon: scorm_2004_icon.png
+      activity_rules:
+        - action: resource-scorm_2004-sco_result

@@ -1,0 +1,8 @@
+{
+  "webpack": {
+    "entry": {
+      "mod1": "modules/mod1/main",
+      "mod2": "modules/mod2/index"
+    }
+  }
+}

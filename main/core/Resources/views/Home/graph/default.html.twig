@@ -1,0 +1,27 @@
+{% spaceless %}
+    {% block content %}
+        {% if content["images"][0] is defined or content["image"] is defined %}
+            <a href="{{ content["url"] }}" target="_blank">
+                {% if content["image"] is defined %}
+                    <img src="{{ content["image"] }}" class="img-responsive" {% if content["title"] is defined %}alt="{{ content["title"] }}"{% endif %}>
+                {% else %}
+                    <img src="{{ content["images"][0] }}" class="img-responsive" {% if content["title"] is defined %}alt="{{ content["title"] }}"{% endif %}>
+                {% endif %}
+            </a>
+        {% endif %}
+    {% endblock %}
+    {% if content["title"] is defined or content["description"] is defined %}
+        <div class="clearfix">
+            {% block title %}
+                {% if content["title"] is defined %}
+                    <a href="{{ content["url"] }}" target="_blank">{{ content["title"] }}</a>
+                {% endif %}
+            {% endblock %}
+            {% block description %}
+                {% if content["description"] is defined %}
+                    {{ content["description"] }}
+                {% endif %}
+            {% endblock %}
+        </div>
+    {% endif %}
+{% endspaceless %}

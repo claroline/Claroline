@@ -1,0 +1,56 @@
+author: Autor
+category: Categoría
+category_form_name: Categoría
+edit_message: 'Editar un mensaje'
+field_content_required: 'Se requiere campo Contenido.'
+forum: Foro
+forum_back_to_categories: Volver a los foros
+forum_back_to_subjects: Volver a las temas
+forum_category_edit: 'Editar una categoría'
+forum_form_name: Nombre
+forum_message_form_content: Cotenido
+forum_new_message: 'Un nuevo mensaje fue agregada en tema "%subject%", en el foro "%forum% por %author%".'
+forum_options_form_messages: 'Mensajes por página'
+forum_options_form_subjects: 'Temas por página'
+forum_settings: 'Configuración del foro'
+forum_subject_edit: 'Editar tema'
+forum_subject_form_title: Título
+forum_subject_form_message: Mensaje
+forum_subject_form_message_content: 'Contenido'
+forum_subject_title_form_title: Título
+last_message: 'Ultimo mensaje'
+messages: Mensajes
+messages_per_page: 'Mensajes por página'
+move_message: 'Mover un mensaje'
+move_subject: 'Mover un tema'
+move_to: 'Mover a'
+new_category: 'Nueva categoría'
+new_message: Nuevo mensaje
+new_subject: 'Nuevo tema'
+notifications: Notificaciones
+posts: Respuestas
+remove_category_confirm_message: '¿Está seguro de que desea eliminar esta categoría?'
+remove_subject_confirm_message: '¿Está seguro que quiere borrar este mensaje?'
+remove_subjects_confirm_message: '¿Está seguro que desea eliminar %count% tema(s)?'
+reply: Responder
+reply_message: Responder al mensaje
+started_by: 'Iniciado por'
+stick: Anclar
+stuck: Anclado
+subject: Tema
+subjects: Temas
+subjets_per_page: 'Temas por pagina'
+subscribe_mail_list: 'Suscríbase a las notificaciones'
+unstick: Desanclar
+unsubscribe_mail_list: 'Desinscribirse a las notificaciones'
+yes: sí
+no: no
+notifications_explanation: Cuando se agrega un mensaje, la activación de las notificaciones globales conlleva el envío de un mail a los usuarios que tienen acceso al foro.
+activate_global_notifications: Activar las notificaciones globales
+disable_global_notifications: Anular las notificaciones globales
+responses: Respuestas
+answer_message: Respuesta
+posted_by: Iniciado por %author% el %date%
+fast_reply: Veloz respuesta
+reply_to: reply_to
+quote: quote

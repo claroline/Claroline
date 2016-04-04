@@ -1,0 +1,62 @@
+{% macro renderPager(search, pager) %}
+    {% if search == '' %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {}
+            )
+        }}
+    {% else %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {}
+            )
+        }}
+    {% endif %}
+{% endmacro %}
+
+{% from _self import renderPager %}
+
+{% if search is not empty %}
+    <div>
+        <small>
+            * {{ 'results_for_search_on'|trans({}, 'platform') }}
+            "{{ search }}"
+        </small>
+    </div>
+{% endif %}
+
+{% if workspaces is empty %}
+    {{ 'no_workspace'|trans({}, 'platform') }}
+{% else %}
+    {% set nbPages = workspaces.getNbPages() %}
+    <div id="contacts-list-page" class="contacts-list-page">
+
+        {% if nbPages > 1 %}
+            {{ renderPager(search, workspaces) }}
+        {% endif %}
+        <div class="table-responsive">
+            <div class="alert alert-info" role="alert">
+                {{ 'send_message_to_workspace_info'|trans({}, 'platform') }}
+            </div>
+            <table class="table table-bordered">
+                <tr>
+                    <th>{{ 'name'|trans({}, 'platform') }}</th>
+                    <th></th>
+                </tr>
+                {% for workspace in workspaces %}
+                    <tr>
+                        <td>{{ workspace.getName() }}</td>
+                        <td><input type="checkbox" class="contact-chk" contact-id="{{ workspace.getId() }}"></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        {% if nbPages > 1 %}
+            {{ renderPager(search, workspaces) }}
+        {% endif %}
+    </div>
+{% endif %}

@@ -1,0 +1,23 @@
+<div id="create-role-modal" class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4>{{ 'create_role'|trans({}, 'platform') }}</h4>
+        </div>
+        <form
+              id="create-role-form"
+              role="form"
+              class="form-horizontal"
+              action="{{ path('claro_admin_create_platform_role') }}"
+              method="post" {{ form_enctype(form) }}
+        >
+            <div class="modal-body">
+                {{ form_widget(form) }}
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ 'cancel'|trans({}, 'platform') }}</button>
+            </div>
+        </form>
+    </div>
+</div>

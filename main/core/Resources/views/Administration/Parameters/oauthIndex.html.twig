@@ -1,0 +1,36 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'oauth' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_parameters_index')
+            },
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_admin_parameters_index')
+            },
+            {
+                'name': 'oauth'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'oauth'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="panel-body">
+        <div class="list-group">
+            <a href="{{ path('claro_admin_oauth_clients') }}" class="list-group-item"> {{ 'client_list'|trans({}, 'platform') }}</a>
+            <a href="{{ path('claro_admin_oauth_claroline') }}" class="list-group-item">Claroline</a>
+            {{ knp_menu_render('ClarolineCoreBundle:Builder:externalAuthenticationMenu', {}, 'external_authentication_renderer') }}
+        </div>
+    </div>
+{% endblock %}

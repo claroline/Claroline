@@ -1,0 +1,156 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ 'claroline_cursus_tool' | trans({}, 'tools') | striptags | raw }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'claroline_cursus_tool'|trans({}, 'tools'),
+                'href': path('claro_cursus_management_tool_menu')
+            },
+            {
+                'name': displayedWords['cursus'],
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'claroline_cursus_tool'|trans({}, 'tools') }}
+        </h3>
+    </div>
+    <div class="panel-body">
+        {{ macros.flashBox() }}
+        <div>
+            {% if allRootCursus|length > 0 %}
+                <ul>
+                    {% for cursus in allRootCursus %}
+                        {% set cursusId = cursus.getId() %}
+                        {% set cursusTitle = cursus.getTitle() %}
+                        {% set details = cursus.getDetails() %}
+                    
+                        <li class="cursus-element"
+                            data-cursus-id="{{ cursusId }}"
+                        >
+                            {% if details['color'] is defined and details['color'] is not empty %}
+                                <i class="fa fa-circle" style="color: {{ details['color'] }}"></i>
+                                &nbsp;
+                            {% endif %}
+                            <a href="{{ path('claro_cursus_management', {'cursus': cursusId}) }}">
+                                {{ cursusTitle }}
+                            </a>
+                            &nbsp;
+                            <span class="dropdown">
+                                <i class="cursus-option-btn fa fa-cog pointer-hand"
+                                   id="option-btn-{{ cursusId }}"
+                                   data-cursus-id="{{ cursusId }}"
+                                   data-toggle="dropdown"
+                                ></i>
+                                <ul class="dropdown-menu"
+                                    role="menu"
+                                    aria-labelledby="option-btn-{{ cursusId }}"
+                                    style="white-space: nowrap"
+                                >
+                                    <li role="presentation">
+                                        <a role="menuitem"
+                                           tabindex="-1"
+                                           class="pointer-hand view-cursus-hierarchy-btn"
+                                           data-cursus-id="{{ cursusId }}"
+                                           data-cursus-title="{{ cursusTitle }}"
+                                        >
+                                            <i class="fa fa-eye"></i>
+                                            {{ 'view_structure'|trans({}, 'cursus') }}
+                                        </a>
+                                    </li>
+                                    <li role="presentation">
+                                        <a role="menuitem"
+                                           tabindex="-1"
+                                           class="pointer-hand edit-cursus-btn"
+                                           data-cursus-id="{{ cursusId }}"
+                                        >
+                                            <i class="fa fa-edit"></i>
+                                            {{ 'edit'|trans({}, 'platform') }}
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="divider"></li>
+                                    <li role="presentation">
+                                        <a role="menuitem"
+                                           tabindex="-1"
+                                           class="pointer-hand delete-cursus-btn"
+                                           data-cursus-id="{{ cursusId }}"
+                                        >
+                                            <i class="fa fa-trash"></i>
+                                            {{ 'delete'|trans({}, 'platform') }}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </span>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <br>
+            {% else %}
+                <div class="alert alert-warning">
+                    {{ displayedWords['cursus'] }} :
+                    {{ 'none'|trans({}, 'platform') }}
+                </div>
+            {% endif %}
+                
+            <div class="btn-group margin-top-sm" role="group">
+                <span id="cursus-create-btn" class="btn btn-primary">
+                    <i class="fa fa-plus-circle"></i>
+                    {{ 'create_cursus'|trans({'%cursusWord%': displayedWords['cursus']}, 'cursus') }}
+                </span>
+                <span id="import-cursus-btn" class="btn btn-default">
+                    <i class="fa fa-sign-in"></i>
+                    {{ 'import'|trans({}, 'platform') }}
+                </span>
+                <a href="{{ path('claro_cursus_export') }}" class="btn btn-default">
+                    <i class="fa fa-sign-out"></i>
+                    {{ 'export'|trans({}, 'platform') }}
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-cursus-hierarchy-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <h3 id="view-cursus-hierarchy-header" class="modal-header">
+                </h3>
+                <div id="view-cursus-hierarchy-body" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <input type="button"
+                           class="btn btn-default"
+                           data-dismiss="modal"
+                           value="{{ 'close'|trans({}, 'platform') }}"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript"
+            src="{{ url('bazinga_jstranslation_js', { 'domain': 'cursus' }) }}"
+    >
+    </script>
+    <script src='{{ asset('bundles/clarolinecursus/js/cursusToolIndex.js') }}'
+            type="text/javascript"
+    >
+    </script>
+{% endblock %}

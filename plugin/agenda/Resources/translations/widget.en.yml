@@ -1,0 +1,7 @@
+agenda_: Upcoming events
+agenda_task: Tasks to do
+x_days_ago: %nbDays% days ago
+yesterday: Yesterday
+mark_task_as_done: Mark this task as done
+mark_task_as_not_done: Mark this task as not done
+cant_modify_task: You cannot modify this task
