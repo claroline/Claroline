@@ -35,6 +35,7 @@ class MarkRepository extends EntityRepository
             FROM Claroline\ResultBundle\Entity\Mark m
             JOIN m.user u
             WHERE m.result = :result
+            ORDER BY u.lastName ASC
         ';
 
         $query = $this->_em->createQuery($dql);
@@ -63,6 +64,7 @@ class MarkRepository extends EntityRepository
             JOIN m.user u
             WHERE m.result = :result
             AND u = :user
+            ORDER BY u.lastName ASC
         ';
 
         $query = $this->_em->createQuery($dql);
