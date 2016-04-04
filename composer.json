@@ -4,7 +4,8 @@
     "license": "GPL-3.0+",
     "require": {
         "php": ">=5.5",
-        "claroline/distribution-bundle": "dev-master"
+        "claroline/distribution-bundle": "dev-master",
+        "claroline/front-end-bundle": "dev-7.x-test"
     },
     "require-dev": {
         "fabpot/php-cs-fixer": "^1.10",

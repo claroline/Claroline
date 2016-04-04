@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "682e47db8d3f29b580d8286548ed501d",
-    "content-hash": "75a861f18af68273deeaa3adca8b019a",
+    "hash": "e82ece19106c51c583a5325d14d0fecf",
+    "content-hash": "6613569e17ec611e0399b510d208846d",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -120,18 +120,21 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "b222e4ca7a9d754e290243c5a8480ae8195cf75d"
+                "reference": "4a5335a6e8db4d6d81fda58e3274e925947cfb41"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/b222e4ca7a9d754e290243c5a8480ae8195cf75d",
-                "reference": "b222e4ca7a9d754e290243c5a8480ae8195cf75d",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/4a5335a6e8db4d6d81fda58e3274e925947cfb41",
+                "reference": "4a5335a6e8db4d6d81fda58e3274e925947cfb41",
                 "shasum": ""
             },
             "require": {
                 "besimple/sso-auth-bundle": "*",
+                "claroline/front-end-bundle": "dev-7.x-test",
+                "claroline/video-js-bundle": "dev-7.x-test",
                 "cocur/slugify": "~1.0",
                 "composer/composer": "1.0.0-beta1",
+                "ddeboer/data-import": "~0.18",
                 "doctrine/data-fixtures": "dev-master",
                 "doctrine/dbal": "~2.4",
                 "doctrine/doctrine-bundle": "~1.0",
@@ -189,12 +192,33 @@
             "type": "claroline-core",
             "autoload": {
                 "psr-4": {
-                    "Claroline\\CoreBundle\\": "src/core/core/",
-                    "Claroline\\BundleRecorder\\": "src/core/recorder/",
-                    "Claroline\\InstallationBundle\\": "src/core/installation/",
-                    "Claroline\\MigrationBundle\\": "src/core/migration/",
-                    "Claroline\\KernelBundle\\": "src/core/kernel/",
-                    "Claroline\\WebInstaller\\": "src/core/web-installer/"
+                    "Claroline\\CoreBundle\\": "main/core/",
+                    "Claroline\\BundleRecorder\\": "main/recorder/",
+                    "Claroline\\InstallationBundle\\": "main/installation/",
+                    "Claroline\\MigrationBundle\\": "main/migration/",
+                    "Claroline\\KernelBundle\\": "main/kernel/",
+                    "Claroline\\WebInstaller\\": "main/web-installer/",
+                    "Claroline\\ActivityToolBundle\\": "plugin/activity-tool",
+                    "Claroline\\AgendaBundle\\": "plugin/agenda",
+                    "Claroline\\AnnouncementBundle\\": "plugin/announcement",
+                    "Claroline\\CursusBundle\\": "plugin/cursus",
+                    "Claroline\\ForumBundle\\": "plugin/forum",
+                    "Claroline\\ImagePlayerBundle\\": "plugin/image-player",
+                    "Claroline\\LdapBundle\\": "plugin/ldap",
+                    "Claroline\\MessageBundle\\": "plugin/message",
+                    "Icap\\NotificationBundle\\": "plugin/notification",
+                    "Claroline\\PdfBundle\\": "plugin/pdf-player",
+                    "FormaLibre\\PresenceBundle\\": "plugin/presence",
+                    "Claroline\\ReservationBundle\\": "plugin/reservation",
+                    "Claroline\\RssReaderBundle\\": "plugin/rss-reader",
+                    "Claroline\\ScormBundle\\": "plugin/scorm",
+                    "FormaLibre\\SupportBundle\\": "plugin/support",
+                    "Claroline\\SurveyBundle\\": "plugin/survey",
+                    "Claroline\\TagBundle\\": "plugin/tag",
+                    "Claroline\\TeamBundle\\": "plugin/team",
+                    "Claroline\\TextPlayerBundle\\": "plugin/text-player",
+                    "Claroline\\VideoPlayerBundle\\": "plugin/video-player",
+                    "Claroline\\WebResourceBundle\\": "plugin/web-resource"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -214,7 +238,71 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-03-30 15:47:34"
+            "time": "2016-04-04 09:07:07"
+        },
+        {
+            "name": "claroline/front-end-bundle",
+            "version": "dev-7.x-test",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/claroline/FrontEndBundle.git",
+                "reference": "2baad174be4bcb35c87f8f5df07127de1d23fa17"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/claroline/FrontEndBundle/zipball/2baad174be4bcb35c87f8f5df07127de1d23fa17",
+                "reference": "2baad174be4bcb35c87f8f5df07127de1d23fa17",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Claroline\\Bundle\\FrontEndBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0+"
+            ],
+            "description": "Front-end dependencies bundle for Claroline 2.0",
+            "time": "2016-04-01 14:34:48"
+        },
+        {
+            "name": "claroline/video-js-bundle",
+            "version": "dev-7.x-test",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/claroline/VideoJsBundle.git",
+                "reference": "175a2b6e8590a8a5b22a374fe24be50571f5f567"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/claroline/VideoJsBundle/zipball/175a2b6e8590a8a5b22a374fe24be50571f5f567",
+                "reference": "175a2b6e8590a8a5b22a374fe24be50571f5f567",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5"
+            },
+            "type": "claroline-plugin",
+            "autoload": {
+                "psr-4": {
+                    "Claroline\\VideoJsBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0+"
+            ],
+            "homepage": "http://www.claroline.net",
+            "keywords": [
+                "Claroline",
+                "plugin"
+            ],
+            "time": "2016-04-04 09:03:43"
         },
         {
             "name": "cocur/slugify",
@@ -503,6 +591,75 @@
             ],
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
             "time": "2014-12-30 15:22:37"
+        },
+        {
+            "name": "ddeboer/data-import",
+            "version": "0.18.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ddeboer/data-import.git",
+                "reference": "cbae2f570192b738c5cec835fbf583a75c52d535"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ddeboer/data-import/zipball/cbae2f570192b738c5cec835fbf583a75c52d535",
+                "reference": "cbae2f570192b738c5cec835fbf583a75c52d535",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "psr/log": "~1.0"
+            },
+            "require-dev": {
+                "doctrine/dbal": "*",
+                "doctrine/orm": "*",
+                "ext-iconv": "*",
+                "ext-mbstring": "*",
+                "ext-sqlite3": "*",
+                "phpoffice/phpexcel": "*",
+                "symfony/console": "~2.5.0",
+                "symfony/property-access": "*",
+                "symfony/validator": "~2.3.0"
+            },
+            "suggest": {
+                "doctrine/dbal": "If you want to use the DbalReader",
+                "ext-iconv": "For the CharsetValueConverter",
+                "ext-mbstring": "For the CharsetValueConverter",
+                "phpoffice/phpexcel": "If you want to use the ExcelReader",
+                "symfony/console": "If you want to use the ConsoleProgressWriter",
+                "symfony/property-access": "If you want to use the ObjectConverter",
+                "symfony/validator": "to use the ValidatorFilter"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Ddeboer\\DataImport": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "The community",
+                    "homepage": "https://github.com/ddeboer/data-import/graphs/contributors"
+                },
+                {
+                    "name": "David de Boer",
+                    "email": "david@ddeboer.nl"
+                }
+            ],
+            "description": "Import data from, and export data to, a range of file formats and media",
+            "keywords": [
+                "csv",
+                "data",
+                "doctrine",
+                "excel",
+                "export",
+                "import"
+            ],
+            "time": "2015-04-21 14:06:20"
         },
         {
             "name": "doctrine/annotations",
@@ -3083,16 +3240,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.18.1",
+            "version": "1.18.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "a5f2734e8c16f3aa21b3da09715d10e15b4d2d45"
+                "reference": "064b38c16790249488e7a8b987acf1c9d7383c09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/a5f2734e8c16f3aa21b3da09715d10e15b4d2d45",
-                "reference": "a5f2734e8c16f3aa21b3da09715d10e15b4d2d45",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/064b38c16790249488e7a8b987acf1c9d7383c09",
+                "reference": "064b38c16790249488e7a8b987acf1c9d7383c09",
                 "shasum": ""
             },
             "require": {
@@ -3107,13 +3264,13 @@
                 "doctrine/couchdb": "~1.0@dev",
                 "graylog2/gelf-php": "~1.0",
                 "jakub-onderka/php-parallel-lint": "0.9",
+                "php-amqplib/php-amqplib": "~2.4",
                 "php-console/php-console": "^3.1.3",
                 "phpunit/phpunit": "~4.5",
                 "phpunit/phpunit-mock-objects": "2.3.0",
                 "raven/raven": "^0.13",
                 "ruflin/elastica": ">=0.90 <3.0",
-                "swiftmailer/swiftmailer": "~5.3",
-                "videlalvaro/php-amqplib": "~2.4"
+                "swiftmailer/swiftmailer": "~5.3"
             },
             "suggest": {
                 "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
@@ -3122,11 +3279,11 @@
                 "ext-mongo": "Allow sending log messages to a MongoDB server",
                 "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
                 "mongodb/mongodb": "Allow sending log messages to a MongoDB server via PHP Driver",
+                "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
                 "php-console/php-console": "Allow sending log messages to Google Chrome",
                 "raven/raven": "Allow sending log messages to a Sentry server",
                 "rollbar/rollbar": "Allow sending log messages to Rollbar",
-                "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
-                "videlalvaro/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib"
+                "ruflin/elastica": "Allow sending log messages to an Elastic Search server"
             },
             "type": "library",
             "extra": {
@@ -3157,7 +3314,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2016-03-13 16:08:35"
+            "time": "2016-04-02 13:12:58"
         },
         {
             "name": "mrclay/minify",
@@ -6061,7 +6218,8 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "claroline/distribution-bundle": 20
+        "claroline/distribution-bundle": 20,
+        "claroline/front-end-bundle": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
