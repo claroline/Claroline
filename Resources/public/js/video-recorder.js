@@ -56,7 +56,7 @@ $('.modal').on('shown.bs.modal', function() {
     });
   });
 
-  $('#video-record-start').on('click', record);
+  $('#video-record-start').on('click', recordStream);
   $('#video-record-stop').on('click', stopRecording);
   $('#btn-video-download').on('click', downloadVideo);
   $('#submitButton').on('click', uploadVideo);
@@ -116,18 +116,13 @@ if(navigator.mediaDevices.getUserMedia === undefined) {
   navigator.mediaDevices.getUserMedia = promisifiedOldGUM;
 }
 
+navigator.mediaDevices.getUserMedia(constraints)
+.then(
+  gumSuccess
+).catch(
+  gumError
+);
 
-function record() {
-  $('#video-record-start').prop('disabled', 'disabled');
-  $('#video-record-stop').prop('disabled', '');
-  //navigator.mediaDevices.getUserMedia
-  navigator.mediaDevices.getUserMedia(constraints)
-  .then(
-    gumSuccess
-  ).catch(
-    gumError
-  );
-}
 
 // getUserMedia Success Callback
 function gumSuccess(stream){
@@ -136,7 +131,6 @@ function gumSuccess(stream){
     console.log('getUserMedia() got stream: ', stream);
   }
   window.stream = stream;
-  recordStream();
   createVolumeMeter();
 }
 
@@ -150,6 +144,9 @@ function gumError(error){
 }
 
 function recordStream() {
+  $('#video-record-start').prop('disabled', 'disabled');
+  $('#video-record-stop').prop('disabled', '');
+
   const options = {
     mimeType: 'video/webm',
     audioBitsPerSecond: 128000,
