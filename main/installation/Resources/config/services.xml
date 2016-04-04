@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="claroline.installation.bundle_file">%kernel.root_dir%/config/bundles.ini</parameter>
+        <parameter key="claroline.installation_manager.class">Claroline\InstallationBundle\Manager\InstallationManager</parameter>
+        <parameter key="claroline.installation_fixture_loader.class">Claroline\InstallationBundle\Fixtures\FixtureLoader</parameter>
+        <parameter key="claroline.symfony_fixture_loader.class">Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader</parameter>
+        <parameter key="claroline.doctrine_fixture_executor.class">Doctrine\Common\DataFixtures\Executor\ORMExecutor</parameter>
+    </parameters>
+
+    <services>
+        <service id="claroline.installation.manager" class="%claroline.installation_manager.class%">
+            <argument type="service" id="service_container" />
+            <argument type="service" id="claroline.migration.manager" />
+            <argument type="service" strict="false" id="claroline.installation.fixture_loader" />
+            <argument>%kernel.environment%</argument>
+        </service>
+
+        <service id="claroline.installation.fixture_loader" class="%claroline.installation_fixture_loader.class%" scope="prototype">
+            <argument type="service" id="service_container" />
+            <argument type="service" id="claroline.doctrine_fixture_executor" />
+        </service>
+
+        <service id="claroline.symfony_fixture_loader" class="%claroline.symfony_fixture_loader.class%" scope="prototype">
+            <argument type="service" id="service_container" />
+        </service>
+
+        <service id="claroline.doctrine_fixture_executor" class="%claroline.doctrine_fixture_executor.class%">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+        </service>
+    </services>
+
+</container>
