@@ -90,12 +90,12 @@
                                         
                                     </div>
                                     <div class="col-md-1">
-                                        <i data-ng-if="matchQuestionCtrl.feedbackIsVisible || matchQuestionCtrl.dropIsValid(item) === 1" data-toggle="tooltip" data-ng-class="{'color-success fa fa-check' : matchQuestionCtrl.dropIsValid(item) === 1, 'color-danger fa fa-close': matchQuestionCtrl.dropIsValid(item) === 2}" title="{{matchQuestionCtrl.getDropFeedback(item)}}"></i>
+                                        <i data-ng-if="matchQuestionCtrl.feedbackIsVisible || (matchQuestionCtrl.dropIsValid(item) === 1 && matchQuestionCtrl.answerIsSaved(item))" data-toggle="tooltip" data-ng-class="{'color-success fa fa-check' : matchQuestionCtrl.dropIsValid(item) === 1, 'color-danger fa fa-close': matchQuestionCtrl.dropIsValid(item) === 2}" title="{{matchQuestionCtrl.getDropFeedback(item)}}"></i>
                                     </div>
                                     <div class="col-sm-2">
-                                         <button data-ng-disabled="matchQuestionCtrl.feedbackIsVisible" class="btn btn-danger fa fa-trash" data-ng-click="matchQuestionCtrl.removeDropped(item.source, proposal.id)"></button>
+                                         <button data-ng-disabled="matchQuestionCtrl.feedbackIsVisible || matchQuestionCtrl.dropIsValid(item) === 1 && matchQuestionCtrl.answerIsSaved(item)" class="btn btn-danger fa fa-trash" data-ng-click="matchQuestionCtrl.removeDropped(item.source, proposal.id)"></button>
                                     </div>
-                                </div>                               
+                                </div>
                             </li>
                         </ul>
                     </div>
