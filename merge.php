@@ -58,6 +58,7 @@ $vendors = [
 foreach ($vendors as $vendor => $packages) {
   foreach ($packages as $package) {
     cmd("php import.php {$vendor} {$package} plugin/" . prettify($package));
+  }
 }
 
 function cmd($cmd) {
