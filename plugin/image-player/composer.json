@@ -1,0 +1,22 @@
+{
+    "name": "claroline/image-player-bundle",
+    "description": "Claroline image player plugin",
+    "keywords": ["Claroline", "Plugin", "Image player"],
+    "homepage": "http://www.claroline.net",
+    "type": "claroline-plugin",
+    "license": "GPL-3.0+",
+    "authors": [
+        {
+            "name": "Claroline development team",
+            "email": "dev@claroline.net",
+            "homepage": "http://github.com/claroline"
+        }
+    ],
+    "require": {
+        "php": ">=5.5",
+        "claroline/core-bundle": "~6.0"
+    },
+    "autoload": {
+        "psr-4": { "Claroline\\ImagePlayerBundle\\": "" }
+    }
+}
