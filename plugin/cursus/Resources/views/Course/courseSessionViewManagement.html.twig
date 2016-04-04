@@ -1,0 +1,192 @@
+<div id="session-management-box">
+    <h3>
+        <small>
+            <i class="fa fa-circle"
+               {% if session.getSessionStatus() == 0 %}
+                   style="color: #706c6c"
+               {% elseif session.getSessionStatus() == 1 %}
+                   style="color: #5CB85C"
+               {% elseif session.getSessionStatus() == 2 %}
+                   style="color: #D9534F"
+               {% endif %}
+            >
+            </i>
+        </small>
+        &nbsp;
+        {{ session.getName() }}
+        <small>
+            ({{ session.getCreationDate()|intl_date_format }})
+        </small>
+    </h3>
+    <hr>
+
+    <div class="table-responsive">
+        <table id="session-learners-table" class="table col-md-6">
+            <tr>
+                <th class="text-center">
+                    {{ 'learners'|trans({}, 'cursus') }}
+                    &nbsp;
+                    <i class="fa fa-user pointer-hand"
+                       id="register-learners-btn"
+                       data-toggle="tooltip"
+                       data-placement="top"
+                       data-container="#session-management-box"
+                       title="{{ 'register_learners_to_session'|trans({}, 'cursus') }}"
+                       data-session-id="{{ session.getId() }}"
+                    >
+                    </i>
+                    &nbsp;
+                    <i class="fa fa-users pointer-hand"
+                       id="register-groups-btn"
+                       data-toggle="tooltip"
+                       data-placement="top"
+                       data-container="#session-management-box"
+                       title="{{ 'register_groups_to_session'|trans({}, 'cursus') }}"
+                       data-session-id="{{ session.getId() }}"
+                    >
+                    </i>
+                </th>
+            </tr>
+            
+            {% for sessionGroup in learnersGroups %}
+                {% set group = sessionGroup.getGroup() %}
+                <tr id="row-session-group-{{ sessionGroup.getId() }}">
+                    <td>
+                        <b>
+                            {{ group.getName() }}
+                        </b>
+                        &nbsp;
+                        <i class="fa fa-times-circle unregister-group-from-session pointer-hand"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           data-container="#session-management-box"
+                           title="{{ 'unregister_group_from_session'|trans({}, 'cursus') }}"
+                           data-session-group-id="{{ sessionGroup.getId() }}"
+                           style="color: #D9534F"
+                        >    
+                        </i>
+                    </td>
+                </tr>
+            {% endfor %}
+
+            {% for sessionUser in learners %}
+                {% set user = sessionUser.getUser() %}
+                <tr id="row-session-user-{{ sessionUser.getId() }}">
+                    <td>
+                        {{ user.getFirstName() }}
+                        {{ user.getLastName() }}
+                        <small>({{ user.getUsername() }})</small>
+                        &nbsp;
+                        <i class="fa fa-envelope-o user-send-confirmation-mail-btn pointer-hand"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           data-container="#session-management-box"
+                           title="{{ 'send_confirmation_mail_to_user'|trans({}, 'cursus') }}"
+                           data-session-id="{{ session.getId() }}"
+                           data-user-id="{{ user.getId() }}"
+                        >    
+                        </i>
+                        <i class="fa fa-times-circle unregister-user-from-session pointer-hand"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           data-container="#session-management-box"
+                           title="{{ 'unregister_learner_from_session'|trans({}, 'cursus') }}"
+                           data-session-user-id="{{ sessionUser.getId() }}"
+                           style="color: #D9534F"
+                        >    
+                        </i>
+                    </td>
+                </tr>
+            {% endfor %}
+                
+            {% for queue in queues %}
+                {% set queueId = queue.getId() %}
+                {% set queuedUser = queue.getUser() %}
+                <tr id="row-queued-user-{{ queueId }}">
+                    <td>
+                        {{ queuedUser.getFirstName() }}
+                        {{ queuedUser.getLastName() }}
+                        <small>({{ queuedUser.getUsername() }})</small>
+                        &nbsp;
+                        <span id="row-queued-user-management-{{ queueId }}">
+                            <span class="label label-default">
+                                {{ 'pending'|trans({}, 'platform') }}
+                            </span>
+                            <span class="label label-success pointer-hand accept-registration-btn"
+                                  data-queue-id="{{ queueId }}"
+                            >
+                                <i class="fa fa-check"></i>
+                            </span>
+                            <span class="label label-danger pointer-hand decline-registration-btn"
+                                  data-queue-id="{{ queueId }}"
+                            >
+                                <i class="fa fa-times"></i>
+                            </span>
+                        </span>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="table-responsive">
+        <table id="session-tutors-table" class="table col-md-6">
+            <tr>
+                <th class="text-center">
+                    {{ 'tutors'|trans({}, 'cursus') }}
+                    &nbsp;
+                    <i class="fa fa-user pointer-hand"
+                       id="register-tutors-btn"
+                       data-toggle="tooltip"
+                       data-placement="top"
+                       data-container="#session-management-box"
+                       title="{{ 'register_tutors_to_session'|trans({}, 'cursus') }}"
+                       data-session-id="{{ session.getId() }}"
+                    >
+                    </i>
+                </th>
+            </tr>
+            
+            {% for sessionGroup in tutorsGroups %}
+                {% set group = sessionGroup.getGroup() %}
+                <tr id="row-session-group-{{ sessionGroup.getId() }}">
+                    <td>
+                        <b>
+                            {{ group.getName() }}
+                        </b>
+                        &nbsp;
+                        <i class="fa fa-times-circle unregister-group-from-session pointer-hand"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           data-container="#session-management-box"
+                           title="{{ 'unregister_group_from_session'|trans({}, 'cursus') }}"
+                           data-session-group-id="{{ sessionGroup.getId() }}"
+                           style="color: #D9534F"
+                        >    
+                        </i>
+                    </td>
+                </tr>
+            {% endfor %}
+
+            {% for sessionUser in tutors %}
+                {% set user = sessionUser.getUser() %}
+                <tr id="row-session-user-{{ sessionUser.getId() }}">
+                    <td>
+                        {{ user.getFirstName() }}
+                        {{ user.getLastName() }}
+                        <small>({{ user.getUsername() }})</small>
+                        &nbsp;
+                        <i class="fa fa-times-circle unregister-user-from-session pointer-hand"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           data-container="#session-management-box"
+                           title="{{ 'unregister_tutor_from_session'|trans({}, 'cursus') }}"
+                           data-session-user-id="{{ sessionUser.getId() }}"
+                           style="color: #D9534F"
+                        >    
+                        </i>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>

@@ -1,0 +1,318 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}
+    {% if source == 0 %}
+        {{ 
+            parent() ~
+            ' - ' ~
+            'claroline_cursus_tool' | trans({}, 'tools') | striptags | raw ~
+            ' - ' ~
+            displayedWords['course'] ~
+            ' - ' ~ 
+            'course_edition'|trans({}, 'cursus') ~
+            ' [' ~
+            course.getTitle() ~
+            ']'
+        }}
+    {% elseif source == 1 %}
+        {{ 
+            parent() ~
+            ' - ' ~
+            'claroline_cursus_tool' | trans({}, 'tools') | striptags | raw ~
+            ' - ' ~
+            displayedWords['course'] ~
+            ' - ' ~ 
+            course.getTitle() ~
+            ' - ' ~ 
+            'course_edition'|trans({}, 'cursus')
+        }}
+    {% elseif source == 2 %}
+        {{ 
+            parent() ~
+            ' - ' ~
+            'claroline_cursus_tool' | trans({}, 'tools') | striptags | raw ~
+            ' - ' ~
+            displayedWords['cursus'] ~
+            ' - ' ~ 
+            course.getTitle() ~
+            ' - ' ~ 
+            'course_edition'|trans({}, 'cursus')
+        }}
+    {% endif %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {% if source == 0 %}
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'fa fa-cog',
+                    'name': 'administration'|trans({}, 'platform'),
+                    'href': path('claro_admin_index')
+                },
+                {
+                    'name': 'claroline_cursus_tool'|trans({}, 'tools'),
+                    'href': path('claro_cursus_management_tool_menu')
+                },
+                {
+                    'name': displayedWords['course'],
+                    'href': path('claro_cursus_tool_course_index')
+                },
+                {
+                    'name': 'course_edition'|trans({}, 'cursus') ~ ' [' ~ course.getTitle() ~ ']',
+                    'href': ''
+                }
+            ])
+        }}
+    {% elseif source == 1 %}
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'fa fa-cog',
+                    'name': 'administration'|trans({}, 'platform'),
+                    'href': path('claro_admin_index')
+                },
+                {
+                    'name': 'claroline_cursus_tool'|trans({}, 'tools'),
+                    'href': path('claro_cursus_management_tool_menu')
+                },
+                {
+                    'name': displayedWords['course'],
+                    'href': path('claro_cursus_tool_course_index')
+                },
+                {
+                    'name': course.getTitle(),
+                    'href': path('claro_cursus_course_management', {'course': course.getId()})
+                },
+                {
+                    'name': 'course_edition'|trans({}, 'cursus'),
+                    'href': ''
+                }
+            ])
+        }}
+    {% elseif source == 2 %}
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'fa fa-cog',
+                    'name': 'administration'|trans({}, 'platform'),
+                    'href': path('claro_admin_index')
+                },
+                {
+                    'name': 'claroline_cursus_tool'|trans({}, 'tools'),
+                    'href': path('claro_cursus_management_tool_menu')
+                },
+                {
+                    'name': displayedWords['cursus'],
+                    'href': path('claro_cursus_tool_index')
+                },
+                {
+                    'name': cursus.getTitle(),
+                    'href': path('claro_cursus_management', {'cursus': cursusId})
+                },
+                {
+                    'name': course.getTitle(),
+                    'href': path('claro_cursus_course_management', {'course': course.getId(), 'cursusId': cursusId})
+                },
+                {
+                    'name': 'course_edition'|trans({}, 'cursus'),
+                    'href': ''
+                }
+            ])
+        }}
+    {% endif %}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'course_edition'|trans({}, 'cursus') }}
+            [{{ course.getTitle() }}]
+        </h3>
+    </div>
+    <form action="{{ path('claro_cursus_course_edit', {'course': course.getId(), 'source': source, 'cursusId': cursusId}) }}"
+          method="POST"
+          {{ form_enctype(form) }}
+          novalidate
+    >
+        <div class="panel-body">
+            {{ form_widget(form) }}
+            <div id="role-name-choice">
+                <div class="form-group row">
+                    <label class="control-label col-md-3"
+                           for="course_form_tutorRoleName"
+                    >
+                        {{ 'tutor_role_name'|trans({}, 'cursus') }}
+                    </label>
+                    <div class="col-md-9">
+                        <select id="tutor-role-name-choice"
+                                class="form-control"
+                        >
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="control-label col-md-3"
+                           for="course_form_learnerRoleName"
+                    >
+                        {{ 'learner_role_name'|trans({}, 'cursus') }}
+                    </label>
+                    <div class="col-md-9">
+                        <select id="learner-role-name-choice"
+                                class="form-control"
+                        >
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">
+                {{ 'ok'|trans({}, 'platform') }}
+            </button>
+            <a 
+               {% if source == 0 %}
+                   href="{{ path('claro_cursus_tool_course_index') }}"
+               {% elseif source == 1 %}
+                   href="{{ path('claro_cursus_course_management', {'course': course.getId()}) }}"
+               {% elseif source == 2 %}
+                   href="{{ path('claro_cursus_course_management', {'course': course.getId(), 'cursusId': cursus.getId()}) }}"
+               {% endif %}
+               class="btn btn-default" 
+               role="button"
+            >
+                {{ 'cancel'|trans({}, 'platform') }}
+            </a>
+        </div>
+    </form>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        
+        function manageWorkspaceValue()
+        {
+            var value = $('#course_form_workspace').val();
+            
+            if (value === '') {
+                $('#role-name-choice').addClass('hidden');
+                $('.role-name-txt').each(function () {
+                    $(this).parents('.form-group').removeClass('hidden');
+                });
+                $('#tutor-role-name-choice').empty();
+                $('#learner-role-name-choice').empty();
+                manageModelValue();
+            } else {
+                var tutorValue = $('#course_form_tutorRoleName').val();
+                var learnerValue = $('#course_form_learnerRoleName').val();
+                
+                $.ajax({
+                    url: Routing.generate(
+                        'course_workspace_roles_translation_keys_retrieve',
+                        {'workspace': value}
+                    ),
+                    type: 'GET',
+                    success: function (datas) {
+                        $('#tutor-role-name-choice').empty();
+                        $('#tutor-role-name-choice').append('<option value></option>');
+                        $('#learner-role-name-choice').empty();
+                        $('#learner-role-name-choice').append('<option value></option>');
+                        
+                        for (var i = 0; i < datas.length; i++) {
+                            var option = '<option value="' +
+                                datas[i] +
+                                '">' +
+                                datas[i] +
+                                '</option>';
+                            $('#tutor-role-name-choice').append(option);
+                            $('#learner-role-name-choice').append(option);
+                        }
+                        $('.role-name-txt').each(function () {
+                            $(this).parents('.form-group').addClass('hidden');
+                        });
+                        $('#role-name-choice').removeClass('hidden');
+                        $('#tutor-role-name-choice option[value="' + tutorValue + '"]').prop('selected', true);
+                        $('#learner-role-name-choice option[value="' + learnerValue + '"]').prop('selected', true);
+                        $('#course_form_tutorRoleName').val($('#tutor-role-name-choice').val());
+                        $('#course_form_learnerRoleName').val($('#learner-role-name-choice').val());
+                    }
+                });
+            }
+        }
+        
+        function manageModelValue()
+        {
+            var value = $('#course_form_workspaceModel').val();
+            var workspaceValue = $('#course_form_workspace').val();
+            
+            if (workspaceValue === '') {
+                
+                if (value === '') {
+                    $('#role-name-choice').addClass('hidden');
+                    $('.role-name-txt').each(function () {
+                        $(this).parents('.form-group').removeClass('hidden');
+                    });
+                    $('#tutor-role-name-choice').empty();
+                    $('#learner-role-name-choice').empty();
+                } else {
+                    var tutorValue = $('#course_form_tutorRoleName').val();
+                    var learnerValue = $('#course_form_learnerRoleName').val();
+
+                    $.ajax({
+                        url: Routing.generate(
+                            'ws_model_roles_translation_keys_retrieve',
+                            {'model': value}
+                        ),
+                        type: 'GET',
+                        success: function (datas) {
+                            $('#tutor-role-name-choice').empty();
+                            $('#tutor-role-name-choice').append('<option value></option>');
+                            $('#learner-role-name-choice').empty();
+                            $('#learner-role-name-choice').append('<option value></option>');
+
+                            for (var i = 0; i < datas.length; i++) {
+                                var option = '<option value="' +
+                                    datas[i] +
+                                    '">' +
+                                    datas[i] +
+                                    '</option>';
+                                $('#tutor-role-name-choice').append(option);
+                                $('#learner-role-name-choice').append(option);
+                            }
+                            $('.role-name-txt').each(function () {
+                                $(this).parents('.form-group').addClass('hidden');
+                            });
+                            $('#role-name-choice').removeClass('hidden');
+                            $('#tutor-role-name-choice option[value="' + tutorValue + '"]').prop('selected', true);
+                            $('#learner-role-name-choice option[value="' + learnerValue + '"]').prop('selected', true);
+                            $('#course_form_tutorRoleName').val($('#tutor-role-name-choice').val());
+                            $('#course_form_learnerRoleName').val($('#learner-role-name-choice').val());
+                        }
+                    });
+                }
+            }
+        }
+        
+        $('#tutor-role-name-choice').on('change', function () {
+            var value = $(this).val();
+            $('#course_form_tutorRoleName').val(value);
+        });
+        
+        $('#learner-role-name-choice').on('change', function () {
+            var value = $(this).val();
+            $('#course_form_learnerRoleName').val(value);
+        });
+        
+        $('#course_form_workspaceModel').on('change', function () {
+            manageModelValue();
+        });
+        
+        $('#course_form_workspace').on('change', function () {
+            manageWorkspaceValue();
+        });
+        
+        manageModelValue();
+        manageWorkspaceValue();
+    </script>
+{% endblock %}

@@ -1,0 +1,19 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <button class="close" ng-click="cgumc.closeModal()">x</button>
+        <h4 class="modal-title">
+            {{ 'unregister_selected_groups'|trans:{}:'cursus' }}
+        </h4>
+    </div>
+    <div class="modal-body">
+        {{ 'unregister_selected_groups_message'|trans:{}:'cursus' }}
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-default" ng-click="cgumc.closeModal()">
+            {{ 'cancel'|trans:{}:'platform' }}
+        </button>
+        <button class="btn btn-primary" ng-click="cgumc.confirmModal()">
+            {{ 'ok'|trans:{}:'platform' }}
+        </button>
+    </div>
+</div>

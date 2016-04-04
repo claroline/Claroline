@@ -1,0 +1,29 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <span class="pointer-hand" data-toggle="collapse" href="#collapse-groups-list">
+            {{ 'groups'|trans:{}:'platform' }}
+        </span>
+        <span class="pull-right">
+            <i class="fa fa-users pointer-hand"
+               data-toggle="tooltip"
+               data-placement="left"
+               title="{{ 'register_groups_to_cursus'|trans:{}:'cursus' }}"
+               ng-click="crmc.registerGroups()"
+            >
+            </i>
+        </span>
+    </div>
+    <div id="collapse-groups-list" class="panel-collapse collapse in">
+        <div class="panel-body">
+            <dtable options="crmc.dataGroupsTableOptions"
+                    rows="crmc.cursusGroups"
+                    class="material"
+                    ng-if="crmc.cursusGroups.length > 0"
+            >
+            </dtable>
+            <div class="alert alert-warning" ng-if="crmc.cursusGroups.length == 0">
+                {{ 'no_group'|trans:{}:'platform' }}
+            </div>
+        </div>
+    </div>
+</div>

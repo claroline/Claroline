@@ -1,0 +1,12 @@
+<div>
+    {{ 'course_request_confirm_msg'|trans({'%courseTitle%': queue.getCourse().getTitle(), '%courseCode%': queue.getCourse().getCode()}, 'cursus') }}
+</div>
+<br>
+<div>
+    {{ 'click_on_link_below_to_confirm_request'|trans({}, 'cursus') }}
+</div>
+<br>
+<a href="{{ link }}">
+    {{ link }}
+</a>
+<br>

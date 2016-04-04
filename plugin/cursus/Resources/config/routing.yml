@@ -1,0 +1,22 @@
+claro_cursus_bundle_cursus:
+    resource: "@ClarolineCursusBundle/Controller/CourseController.php"
+    type:     annotation
+    prefix:   /
+    
+claro_cursus_bundle_course:
+    resource: "@ClarolineCursusBundle/Controller/CursusController.php"
+    type:     annotation
+    prefix:   /
+    
+claro_cursus_bundle_cursus_registration:
+    resource: "@ClarolineCursusBundle/Controller/CursusRegistrationController.php"
+    type:     annotation
+    prefix:   /
+    
+claro_cursus_bundle_api_cursus:
+    resource: "@ClarolineCursusBundle/Controller/API/CursusController.php"
+    type:     rest
+    prefix:   api
+    defaults: {_format: json}
+    options:
+        expose: true

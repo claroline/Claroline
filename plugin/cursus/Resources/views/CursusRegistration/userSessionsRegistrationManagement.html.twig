@@ -1,0 +1,113 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% set pageTitle = '' %}
+
+{% if type == 0 %}
+    {% set pageTitle = 'sessions_registration_as_learner'|trans({}, 'cursus') %}
+{% elseif type == 1 %}
+    {% set pageTitle = 'sessions_registration_as_tutor'|trans({}, 'cursus') %}
+{% endif %}
+
+{% block title %}
+    {{
+        parent() ~
+        ' - ' ~
+        user.getFirstName() ~
+        ' ' ~
+        user.getLastName() ~
+        ' - ' ~
+        pageTitle
+    }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'name': 'user_sessions_management'|trans({}, 'cursus'),
+                'href': path('claro_cursus_user_sessions_management', {'user': user.getId()})
+            },
+            {
+                'name': pageTitle,
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ pageTitle }}
+        </h3>
+    </div>
+    <div class="panel-body">
+        <h3>{{ user.getFirstName() }} {{ user.getLastName() }}</h3>
+        <hr>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" href="#selected-sessions-box">
+                        {{ 'selected_sessions'|trans({}, 'cursus') }}
+                    </a>
+                </h4>
+            </div>
+            <div id="selected-sessions-box" class="panel-collapse collapse in">
+                <div class="panel-body" id="selected-sessions">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-group col-md-6 pull-right margin-top-sm">
+                <input class="form-control search-sessions"
+                       type="text"
+                       id="search-sessions-input"
+                       placeholder="{{ 'search'|trans({}, 'platform') }}"
+                >
+                <span class="input-group-btn">
+                    <button class="filter btn btn-default search-sessions-btn"
+                            type="button"
+                            id="search-sessions-btn"
+                    >
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
+            </div>
+        </div>
+        <br>
+        <div id="sessions-list-box">
+            {% render(controller("ClarolineCursusBundle:CursusRegistration:sessionsDatasList")) %}
+        </div>
+    </div>
+    <div class="panel-footer">
+        <button class="btn btn-primary disabled"
+                id="register-sessions-btn"
+        >
+            {{ 'ok'|trans({}, 'platform') }}
+        </button>
+        <a href="{{ path('claro_cursus_user_sessions_management', {'user': user.getId()}) }}"
+           class="btn btn-default"
+        >
+            {{ 'cancel'|trans({}, 'platform') }}
+        </a>
+    </div>
+
+    <div id="registration-datas-box"
+         data-user-id="{{ user.getId() }}"
+         data-type="{{ type }}"
+         data-sessions-ids="{% for session in sessions %}{{ session.getId() }}{% if not loop.last %},{% endif %}{% endfor %}"
+    >
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript"
+            src="{{ url('bazinga_jstranslation_js', { 'domain': 'cursus' }) }}"
+    >
+    </script>
+    <script src='{{ asset('bundles/clarolinecursus/js/userSessionsRegistrationManagement.js') }}'
+            type="text/javascript"
+    >
+    </script>
+{% endblock %}

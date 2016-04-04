@@ -1,0 +1,18 @@
+<div id="my-courses-widget">
+    <div id="courses-list">
+        {{
+            render(controller(
+                'ClarolineCursusBundle:Cursus:myCoursesListForWidget',
+                {'widgetInstance': widgetInstance.getId()}
+            ))
+        }}
+    </div>
+</div>
+
+{% block javascripts %}
+    <script
+        src='{{ asset('bundles/clarolinecursus/js/myCoursesWidget.js') }}'
+        type="text/javascript"
+    >
+    </script>
+{% endblock %}

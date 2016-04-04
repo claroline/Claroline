@@ -1,0 +1,31 @@
+<div id="modal-course-session-edition-form"
+     class="modal-dialog"
+>
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3 class="modal-title">
+                {{ 'session_edition'|trans({}, 'cursus') }}
+            </h3>
+        </div>
+        <div class="modal-body">
+            <form id="course-session-edit-form"
+                  action="{{ path('claro_cursus_course_session_edit', {'session': session.getId()}) }}"
+                  method="POST"
+                  {{ form_enctype(form) }}
+            > 
+                {{ form_widget(form) }}
+            </form>
+        </div>
+        <div class="modal-footer">
+            <span class="btn btn-default" data-dismiss="modal">
+                {{ 'cancel'|trans({},'platform') }}
+            </span>
+            <button type="submit" id='session-edit-btn' class="btn btn-primary">
+                {{ 'ok'|trans({},'platform') }}
+            </button>
+        </div>
+    </div>
+</div>

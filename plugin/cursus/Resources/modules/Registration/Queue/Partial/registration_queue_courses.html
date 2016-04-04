@@ -1,0 +1,24 @@
+<div class="panel panel-default" ng-repeat="course in cqmc.courses">
+    <div class="panel-heading">
+        <h4 class="panel-title pointer-hand" data-toggle="collapse" href="#collapse-{{ course['id'] }}">
+            {{ course['title'] }} [{{ course['code'] }}]
+        </h4>
+    </div>
+    <div id="collapse-{{ course['id'] }}" class="panel-collape collapse">
+        <div class="panel-body">
+            <dtable options="cqmc.coursesDataTableOptions"
+                    rows="cqmc.coursesQueues[course['id']]" 
+                    class="material"
+                    ng-if="cqmc.coursesQueues[course['id']].length > 0"
+            >
+            </dtable>
+            <hr ng-if="cqmc.coursesQueues[course['id']].length > 0 && cqmc.sessionsQueues[course['id']].length > 0">
+            <dtable options="cqmc.sessionsDataTableOptions"
+                    rows="cqmc.sessionsQueues[course['id']]" 
+                    class="material"
+                    ng-if="cqmc.sessionsQueues[course['id']].length > 0"
+            >
+            </dtable>
+        </div>
+    </div>
+</div>
