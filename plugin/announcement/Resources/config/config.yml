@@ -1,0 +1,12 @@
+plugin:
+  has_options: false
+  icon: res_announcement.png
+
+  resources:
+    - class: Claroline\AnnouncementBundle\Entity\AnnouncementAggregate
+      name: claroline_announcement_aggregate
+      icon: res_announcement.png
+
+  widgets:
+    - name: claroline_announcement_widget
+      is_configurable: false

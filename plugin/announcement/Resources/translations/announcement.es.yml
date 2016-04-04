@@ -1,0 +1,18 @@
+announcement_creation: 'Nuevo anuncio'
+announcement_delete_confirm_message: 'Este anuncio se eliminará de forma permanente.'
+announcement_delete_confirm_title: '¿Realmente quiere borrar este anuncio?'
+announcement_edition: 'Editar anuncio'
+announcement_form_announcer: Editor
+announcement_form_content: Mensaje
+announcement_form_title: Titulo
+announcement_form_visible: Visible
+announcement_form_visible_from: De
+announcement_form_visible_until: Hasta
+announcements_list: 'Lista de anuncios'
+at: En
+by: Por
+created_on: 'Creado en'
+create_new_announcement: 'Agregar nuevo anuncio'
+published_on: 'Publicado el'
+visible_from_until_condition: 'La fecha de inicio debe ser anterior a la fecha de finalización'
+notify_user: "Notificar al usuario"

@@ -1,0 +1,12 @@
+log_resource-claroline_announcement_aggregate-create_filter: Creación de anuncios
+log_resource-claroline_announcement_aggregate-create_sentence: ha creado un anuncio en %resource%
+log_resource-claroline_announcement_aggregate-create_shortname: Creación
+log_resource-claroline_announcement_aggregate-create_title: Creación de anuncios
+log_resource-claroline_announcement_aggregate-delete_filter: Supresión de anuncios
+log_resource-claroline_announcement_aggregate-delete_sentence: ha borrado un anuncio en %resource%
+log_resource-claroline_announcement_aggregate-delete_shortname: Supresión
+log_resource-claroline_announcement_aggregate-delete_title: Supresión de anuncios
+log_resource-claroline_announcement_aggregate-edit_filter: Edición de anuncios
+log_resource-claroline_announcement_aggregate-edit_sentence: ha editado un anuncio en %resource%
+log_resource-claroline_announcement_aggregate-edit_shortname: Edición
+log_resource-claroline_announcement_aggregate-edit_title: Edición de anuncios
