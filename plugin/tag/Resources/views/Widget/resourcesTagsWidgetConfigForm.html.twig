@@ -1,0 +1,20 @@
+<form role="form"
+      class="form-horizontal"
+      action="{{ path('claro_tag_resources_widget_configure', {'config': config.getId()}) }}"
+      method="post"
+      novalidate
+    >
+    <div class="panel-body">
+        {{ form_widget(form) }}
+    </div>
+    <div class="panel-footer">
+        <button type="submit" class="btn btn-primary">
+            {{ 'ok'|trans({}, 'platform') }}
+        </button>
+        <a href="#">
+            <button type="button" class="btn btn-default claro-widget-form-cancel">
+                {{ 'cancel'|trans({}, 'platform') }}
+            </button>
+        </a>
+    </div>
+</form>

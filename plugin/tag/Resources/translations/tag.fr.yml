@@ -1,0 +1,20 @@
+Claroline\CoreBundle\Entity\Group: Groupe
+Claroline\CoreBundle\Entity\Resource\ResourceNode: Ressource
+Claroline\CoreBundle\Entity\Role: Rôle
+laroline\CoreBundle\Entity\Tool\AdminTool: Outil d'administration
+Claroline\CoreBundle\Entity\Tool\OrderedTool: Outil
+Claroline\CoreBundle\Entity\Tool\Tool: Admin Outil
+Claroline\CoreBundle\Entity\User: Utilisateur
+Claroline\CoreBundle\Entity\Workspace\Workspace: Espace d'activités
+delete_tag: Supprimer le Tag
+no_tag: Aucun Tag
+number_of_tags: Nombre de Tags
+remove_tag: Retirer le Tag
+remove_tag_from_object_message: Êtes-vous sûr de vouloir retirer ce Tag de cet objet ?
+tag_action: Taguer
+tag_deletion: Suppression du Tag
+tag_deletion_message: Êtes-vous sûr de vouloir supprimer ce Tag ?
+tag_group: Taguer le groupe
+tag_resource: Taguer la ressource
+tag_user: Taguer l'utilisateur
+tag_workspace: Taguer l'espace d'activités

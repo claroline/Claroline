@@ -1,0 +1,65 @@
+<div id="modal-group-tag-form" 
+     class="modal-dialog" 
+     role="dialog" 
+     aria-labelledby="modalLabel" 
+     aria-hidden="true"
+>
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3 class="modal-title">
+                {{ 'tag_group'|trans({}, 'tag') }}
+                <br>
+                <small>{{ group.getName() }}</small>
+            </h3>
+        </div>
+        <div class="modal-body">
+            <div>
+                {% for groupTag in groupTags %}
+                    <span class="label label-success margin-bottom-sm margin-right-sm">
+                        <i class="fa fa-tag"></i>
+                        {{ groupTag.getName() }}
+                    </span>
+                {% endfor %}
+            </div>
+            <br>
+            <form id="group-tag-form"
+                  action="{{ path('claro_tag_group_tag', {'group': group.getId()}) }}"
+                  method="POST"
+                  novalidate="novalidate"
+            > 
+                {% form_theme form 'ClarolineCoreBundle::form_theme_no_label.html.twig' %}
+                {{ form_widget(form) }}
+                
+                <br>
+                <span class="pull-right">
+                    <span class="btn btn-default" data-dismiss="modal">
+                        {{ 'cancel'|trans({},'platform') }}
+                    </span>
+                    <button type="submit" id='tag-btn' class="btn btn-primary">
+                        {{ 'ok'|trans({},'platform') }}
+                    </button>
+                </span>
+            </form>
+            <br>
+            <br>
+        </div>
+    </div>
+</div>
+
+{% block javascripts %}
+    <script src='{{ asset('bundles/clarolinetag/js/bootstrap3-typeahead.js') }}'
+            type="text/javascript"
+    >
+    </script>
+    <script src='{{ asset('bundles/clarolinetag/js/tag-typeahead.js') }}'
+            type="text/javascript"
+    >
+    </script>
+    <script type="text/javascript">
+        var allTags = [{% for tag in tags %}'{{ tag.getName() }}'{% if not loop.last %}, {% endif %}{% endfor %}];
+        new TagTypeAhead({'tags': allTags});
+    </script>
+{% endblock %}
