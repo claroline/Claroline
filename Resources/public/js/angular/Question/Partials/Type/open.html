@@ -24,8 +24,11 @@
 
         <hr data-ng-if="openQuestionCtrl.question.description" />
 
-        <textarea data-ng-disabled="openQuestionCtrl.feedbackIsVisible" data-ng-if="openQuestionCtrl.question.typeOpen !== 'oneWord'" data-ng-change="openQuestionCtrl.updateStudentData()" data-ng-model="openQuestionCtrl.answer" data-ng-bind="openQuestionCtrl.answer" id="openTextArea" ></textarea>
-        <input data-ng-disabled="openQuestionCtrl.feedbackIsVisible" type="text" data-ng-if="openQuestionCtrl.question.typeOpen === 'oneWord'" data-ng-change="openQuestionCtrl.updateStudentData()" data-ng-model="openQuestionCtrl.answer" data-ng-bind="openQuestionCtrl.answer" id="openTextArea" />
+        <textarea data-ng-if="openQuestionCtrl.question.typeOpen !== 'oneWord' && !openQuestionCtrl.feedbackIsVisible" data-ng-change="openQuestionCtrl.updateStudentData()" data-ng-model="openQuestionCtrl.answer" data-ng-bind="openQuestionCtrl.answer" id="openTextArea" ></textarea>
+        <input type="text" data-ng-if="openQuestionCtrl.question.typeOpen === 'oneWord' && !openQuestionCtrl.feedbackIsVisible" data-ng-change="openQuestionCtrl.updateStudentData()" data-ng-model="openQuestionCtrl.answer" data-ng-bind="openQuestionCtrl.answer" id="openTextArea" />
+        <div data-ng-if="openQuestionCtrl.feedbackIsVisible">
+            <span data-ng-bind-html="openQuestionCtrl.answer"></span>
+        </div>
         <div data-ng-if="openQuestionCtrl.question.hints">
             <hr/>
             <!-- Question hints row -->
@@ -48,29 +51,6 @@
                     <label class="alert alert-info" data-ng-bind-html="openQuestionCtrl.questionFeedback | unsafe"></label>
                 </div>
             </div>
-        </div>
-        <div data-ng-if="openQuestionCtrl.question.typeOpen !== 'long' && openQuestionCtrl.feedbackIsVisible && openQuestionCtrl.getFoundSolutions().length > 0" >
-            <h3 class="panel-title">{{ 'keys_words'|trans:{}:'ujm_sequence' }}</h3>
-            <table class="table table-striped table-bordered table-condensed">
-                <tr>
-                    <th class="center-text">{{ 'keys_words'|trans:{}:'ujm_sequence' }}</th>
-                    <th class="center-text">{{ 'case_sensitive'|trans:{}:'ujm_sequence' }}</th>
-                    <th class="center-text">{{ 'points'|trans:{}:'ujm_sequence' }}</th>
-                    <th class="center-text">{{ 'comment'|trans:{}:'ujm_sequence' }}</th>
-                </tr>
-                <tr data-ng-repeat="keyword in openQuestionCtrl.getFoundSolutions()">
-                    <td>{{ keyword.word }}</td>
-                    <td class="center-text">
-                        <span data-ng-if="keyword.caseSensitive === true " class="fa fa-check-square-o"></span>
-                        <span data-ng-if="keyword.caseSensitive === false " class="fa fa-square-o"></span>
-                    </td>
-                    <td class="center-text">{{ keyword.score }}</td>
-                    <td class="center-text">
-                        <span data-ng-if="keyword.feedback === null"> - </span>
-                        <span data-ng-if="keyword.feedback !== null">{{ keyword.feedback }}</span>
-                    </td>
-                </tr>
-            </table>
         </div>
     </div>
 </div>
