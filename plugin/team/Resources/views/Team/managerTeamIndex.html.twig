@@ -1,0 +1,292 @@
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ team.getName() | striptags | raw }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'claroline_team_tool'|trans({}, 'tools'),
+                    'href': path('claro_team_manager_menu', {'workspace': workspace.getId()})
+                },
+                {
+                    'name': team.getName(),
+                    'href': ''
+                }
+            ]
+        )
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ team.getName() }}
+        </h3>
+    </div>
+    <div class="panel-body">
+
+        {% if team.getDescription() is not empty %}
+            <div class="well well-sm">
+                {{ team.getDescription()|raw }}
+            </div>
+        {% endif %}
+
+        <div>
+            <label>
+                {{ 'team_directory_link'|trans({}, 'team') }}
+                :
+            </label>
+
+            {% if team.getDirectory() is not empty %}
+                {% set directoryNode = team.getDirectory().getResourceNode() %}
+                <a href="{{  path(
+                        'claro_workspace_open_tool',
+                        {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}
+                    ) }}#resources/{{ directoryNode.getId() }}"
+                    class="fa fa-folder-open"
+                >
+                    {{ directoryNode.getName() }}
+                </a>
+            {% else %}
+                [{{ 'none'|trans({}, 'platform') }}]
+            {% endif %}
+        </div>
+        <div>
+            <label>
+                {{ 'team_manager'|trans({}, 'team') }}
+                :
+            </label>
+
+            <span id="team-manager-box">
+
+                {% if team.getTeamManager() is not empty %}
+                    {% set manager = team.getTeamManager() %}
+                    {{ manager.getFirstName() }}
+                    {{ manager.getLastName() }}
+                    <span>
+                        <i id="remove-team-manager-btn"
+                           class="fa fa-times-circle pointer-hand"
+                           style="color: #D9534F"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="{{ 'remove_team_manager'|trans({}, 'team') }}"
+                        >
+                        </i>
+                    </span>
+                {% else %}
+                    [{{ 'none'|trans({}, 'platform') }}]
+                {% endif %}
+            </span>
+            &nbsp;
+            <span>
+                <i id="select-team-manager-btn"
+                   class="fa fa-user pointer-hand"
+                   data-toggle="tooltip"
+                   data-placement="top"
+                   title="{{ 'select_team_manager'|trans({}, 'team') }}"
+                >
+                </i>
+            </span>
+        </div>
+        <hr>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a data-toggle="collapse" href="#collapse-params">
+                    {{ 'parameters'|trans({}, 'platform') }}
+                </a>
+                <span class="pull-right">
+                    <i id="edit-params-btn"
+                       class="fa fa-cog pointer-hand"
+                       data-toggle="tooltip"
+                       data-placement="left"
+                       title="{{ 'edit_team'|trans({}, 'team') }}"
+                    >
+                    </i>
+                </span>
+            </div>
+            <div id="collapse-params" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <div id="parameters-box" class="table-responsive">
+                        <table class="table table-bordered text-center">
+                            <tr>
+                                <th>{{ 'team_form_maxUsers'|trans({}, 'team') }}</th>
+                                <td>
+                                    {% if team.getMaxUsers() is empty %}
+                                        -
+                                    {% else %}
+                                        {{ team.getMaxUsers() }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>{{ 'team_form_isPublic'|trans({}, 'team') }}</th>
+                                <td>
+                                    {% if team.getIsPublic() %}
+                                        {{ 'public'|trans({}, 'team') }}
+                                    {% else %}
+                                        {{ 'private'|trans({}, 'team') }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>{{ 'team_form_selfRegistration'|trans({}, 'team') }}</th>
+                                <td>
+                                    {% if team.getSelfRegistration() %}
+                                        <i class="fa fa-check-circle" style="color: #5CB85C"></i>
+                                    {% else %}
+                                        <i class="fa fa-times-circle" style="color: #D9534F"></i>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>{{ 'team_form_selfUnregistration'|trans({}, 'team') }}</th>
+                                <td>
+                                    {% if team.getSelfUnregistration() %}
+                                        <i class="fa fa-check-circle" style="color: #5CB85C"></i>
+                                    {% else %}
+                                        <i class="fa fa-times-circle" style="color: #D9534F"></i>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a data-toggle="collapse" href="#collapse-users-list">
+                    {{ 'users'|trans({}, 'platform') }}
+                </a>
+                <span class="pull-right">
+                    <i id="register-users-btn"
+                       class="fa fa-user pointer-hand"
+                       data-toggle="tooltip"
+                       data-placement="left"
+                       title="{{ 'register_users_to_team'|trans({}, 'team') }}"
+                    >
+                    </i>
+                </span>
+            </div>
+            <div id="collapse-users-list" class="panel-collapse collapse in">
+                <div class="panel-body">
+
+                    {% if users|length > 0 %}
+                        <div id="users-list" class="table-responsive">
+                            <table id="users-list-table" class="table">
+                                <tr>
+                                    <th>{{ 'firstName'|trans({}, 'platform') }}</th>
+                                    <th>{{ 'lastName'|trans({}, 'platform') }}</th>
+                                    <th>{{ 'username'|trans({}, 'platform') }}</th>
+                                    <th></th>
+                                </tr>
+
+                                {% for user in users %}
+                                    <tr id="row-user-{{ user.getId() }}">
+                                        <td>{{ user.getFirstName() }}</td>
+                                        <td>{{ user.getLastName() }}</td>
+                                        <td>{{ user.getUsername() }}</td>
+                                        <td class="text-center">
+                                            <span class="btn btn-danger btn-sm pointer-hand unregister-btn"
+                                                  data-user-id="{{ user.getId() }}"
+                                                  data-user-first-name="{{ user.getFirstName() }}"
+                                                  data-user-last-name="{{ user.getLastName() }}"
+                                                  data-user-username="{{ user.getUsername() }}"
+                                            >
+                                                {{ 'unregister'|trans({}, 'team') }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    {% else %}
+                        <div id="no-user-alert" class="alert alert-warning">
+                            {{ 'no_user'|trans({}, 'platform') }}
+                        </div>
+                        <div id="users-list" class="table-responsive hidden">
+                            <table id="users-list-table" class="table">
+                                <tr>
+                                    <th>{{ 'firstName'|trans({}, 'platform') }}</th>
+                                    <th>{{ 'lastName'|trans({}, 'platform') }}</th>
+                                    <th>{{ 'username'|trans({}, 'platform') }}</th>
+                                    <th></th>
+                                </tr>
+                            </table>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-registration-users-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <h3 id="view-registration-users-header" class="modal-header">
+                    {{ 'register_users_to_team'|trans({}, 'team') }}
+                </h3>
+                <div id="view-registration-users-body" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                           class="btn btn-default"
+                           data-dismiss="modal"
+                    >{{ 'close'|trans({}, 'platform') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-registration-manager-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <h3 id="view-registration-manager-header" class="modal-header">
+                    {{ 'team_manager_selection'|trans({}, 'team') }}
+                </h3>
+                <div id="view-registration-manager-body" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                           class="btn btn-default"
+                           data-dismiss="modal"
+                    >{{ 'close'|trans({}, 'platform') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if team.getTeamManager() is not empty %}
+        {% set managerId = manager.getId() %}
+    {% else %}
+        {% set managerId = -1 %}
+    {% endif %}
+
+    <div id="team-datas"
+         data-team-id="{{ team.getId() }}"
+         data-max-users="{{ team.getMaxUsers() }}"
+         data-nb-users="{{ team.getUsers()|length }}"
+         data-workspace-id="{{ workspace.getId() }}"
+         data-team-manager-id="{{ managerId }}"
+    >
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript"
+            src="{{ url('bazinga_jstranslation_js', { 'domain': 'team' }) }}"
+    >
+    </script>
+    <script src='{{ asset('bundles/clarolineteam/js/managerTeamIndex.js') }}'
+            type="text/javascript"
+    >
+    </script>
+{% endblock %}

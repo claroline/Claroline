@@ -1,0 +1,4 @@
+claro_team_bundle:
+    resource: "@ClarolineTeamBundle/Controller/"
+    type:     annotation
+    prefix:   /

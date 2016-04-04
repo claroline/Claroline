@@ -1,0 +1,8 @@
+plugin:
+  has_options: false
+  
+  tools:
+    - name: claroline_team_tool
+      class: users
+      is_displayable_in_workspace: true
+      is_displayable_in_desktop: false

@@ -1,0 +1,64 @@
+all_other_teams: 'All other teams'
+automatic_fill: 'Automatic fill'
+create_a_team: 'Create a team'
+create_teams: 'Create teams'
+default_parameters: 'Default parameters'
+default_resource: 'Default resource'
+delete_selected_teams: 'Delete selected team(s)'
+delete_selected_teams_confirm_message: 'Are you sure you want to delete the selected team(s) ?'
+delete_team: 'Delete team'
+delete_team_confirm_message: 'Are you sure you want to delete this team ?'
+delete_team_directory: 'Delete team''s directory'
+delete_teams: 'Delete teams'
+edit_team: 'Edit team'
+empty_action: Empty
+empty_selected_teams_confirm_message: 'Are you sure you want to empty the selected team(s) ?'
+empty_teams: 'Empty teams'
+fill_selected_teams_confirm_message: 'Are you sure you want to fill the selected team(s) ?'
+fill_selected_teams_with_unregistered_users: 'Fill selected team(s) with users who are registered in no team'
+fill_teams: 'Fill teams'
+go_to_team_directory: 'Go to team''s directory'
+hide_advanced_parameters: 'Hide advanced parameters'
+max_teams_limit_reached: 'Maximum number of teams reached'
+maximum: Maximum
+maximum_informations: 'The number of users that can be registered into team'
+my_teams: 'My teams'
+no_description: 'No description'
+no_team: 'No team'
+private: Private
+public: Public
+public_registration: 'Public registration'
+public_unregistration: 'Public unregistration'
+register: Register
+register_to_team: 'Register to team'
+register_to_team_confirm_message: 'Are you sure you want to register to this team ?'
+register_unregister_users_to_team: 'Register/Unregister users to team'
+register_users_to_team: 'Register users to team'
+remove_team_manager: 'Remove team manager'
+remove_team_manager_confirm_message: 'Are you sure you want to remove the team manager ?'
+select: Select
+select_team_manager: 'Select team manager'
+self_register: Register
+self_unregister: Unregister
+show_advanced_parameters: 'Show advanced parameters'
+team: Team
+team_creation: 'Team creation'
+team_directory: 'Team''s directory'
+team_directory_link:  'Team''s directory link'
+team_edition: 'Team edition'
+team_form_description: Description
+team_form_isPublic: 'Team directory access'
+team_form_maxTeams: 'Number of teams allowed by user'
+team_form_maxUsers: 'Max number of users'
+team_form_name: Name
+team_form_nbTeams: 'Number of teams'
+team_form_selfRegistration: 'Allow user to register'
+team_form_selfUnregistration: 'Allow user to unregister'
+team_manager: 'Team manager'
+team_manager_selection: 'Team manager selection'
+teams_creation: 'Teams creation'
+unregister: Unregister
+unregister_all_users_from_selected_teams: 'Unregister all users from selected team(s)'
+unregister_from_team: 'Unregister from team'
+unregister_from_team_confirm_message: 'Are you sure you want to unregister from this team ?'
+unregister_user_from_team_confirm_message: 'Are you sure you want to unregister this user from this team ?'
