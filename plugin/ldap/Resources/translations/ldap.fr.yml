@@ -1,0 +1,28 @@
+Add server: Ajouter un serveur
+Allow account creation at the first login: Permettre la création de compte lors de la première connexion
+Export LDAP users: Exporter les utilisateurs LDAP
+LDAP settings: Paramètres LDAP
+Save settings: Enregistrer les paramètres
+Servers settings: Réglages des serveurs
+There are no configured servers: Il n'y a pas de serveurs configurés
+There is not users settings: Il n'y a pas les paramètres des utilisateurs
+Users and groups settings: Réglages d'utilisateurs et groupes
+Users and groups: Utilisateurs et groupes
+groups_settings: Réglages des groupes
+ldap_already_exists: Il existe déjà un serveur avec ce nom
+ldap_cant_connect: Impossible de se connecter au serveur
+ldap_error_conexion: Impossible de se connecter au serveur LDAP
+ldap_group_class: Classe d'un group
+ldap_save_groups_settings_error: Afin d'enregistrer les paramètres, vous devez fournir le nom et le code
+ldap_save_users_settings_error: Afin d'enregistrer les paramètres, vous devez fournir le nom d'utilisateur, nom, prénom, e-mail et mot de passe
+ldap_user_class: Classe d'utilisateur
+users_settings: Réglages d'utilisateurs
+name: Nom
+host: Host
+port: Port
+distinguished_name: DN
+username: Utilisateur
+password: Mot de passe
+protocol_version: Version
+append_dn: Ajouter le dn au nom d'utilisateur
+auto_creation: Créer l'utilisateur s'il n'existe pas

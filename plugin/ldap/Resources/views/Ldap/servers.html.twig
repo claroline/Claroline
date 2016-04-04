@@ -1,0 +1,57 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'Users and groups settings' | trans({}, 'ldap') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_parameters_index')
+            },
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_admin_parameters_index')
+            },
+            {
+                'name': 'LDAP'|trans({}, 'ldap'),
+                'href': path('claro_admin_ldap')
+            },
+            {
+                'name': 'Users and groups'|trans({}, 'ldap'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'Users and groups settings' | trans({}, 'ldap') }}</h3>
+    </div>
+    {% if servers is empty %}
+        <div class="panel-body">
+            <div class="alert alert-danger">
+                <i class="fa fa-warning"></i> {{ 'There are no configured servers' | trans({}, 'ldap') }}
+            </div>
+            <a class="btn btn-primary" href="{{ path('claro_admin_ldap_settings') }}" class="alert-link">
+                <i class="fa fa-wrench"></i> {{ 'LDAP settings' | trans({}, 'ldap')}}
+            </a>
+        </div>
+    {% else %}
+        <div class="list-group">
+            {% for server in servers %}
+                <div class="list-group-item clearfix">
+                    {{ server.name }} <span class="text-muted">({{ server.host }})</span>
+                    <a class="badge" href="{{ path('claro_admin_ldap_groups', {'name': server.name }) }}">
+                        <i class="fa fa-group"></i> {{ 'groups_settings' | trans({}, 'ldap') }}
+                    </a>
+                    <a class="badge" href="{{ path('claro_admin_ldap_users', {'name': server.name }) }}">
+                        <i class="fa fa-user"></i> {{ 'users_settings' | trans({}, 'ldap') }}
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

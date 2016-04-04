@@ -1,0 +1,134 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - LDAP ' ~ ' groups' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'LDAP'|trans({}, 'ldap'),
+                'href': path('claro_admin_ldap')
+            },
+            {
+                'name': 'Users and groups'|trans({}, 'ldap'),
+                'href': path('claro_admin_ldap_servers')
+            },
+            {
+                'name': 'groups'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% macro row(id, name, groups, server) %}
+    <div class="row margin-bottom-md">
+        <div class="col-sm-3">
+            <label for="{{ id }}">{{ name | trans({}, 'platform') }}:</label>
+        </div>
+        <div class="col-sm-9">
+            <select class="form-control" name="{{ id }}" id="{{ id }}">
+                {% if groups is defined and not groups is empty %}
+                    <option></option>
+                    {% for i in 0..(groups[1].count - 1) %}
+                        <option
+                            {% if server is defined and not server is empty and server[id] == groups[1][i] %}selected="selected"{% endif %}
+                        >
+                            {{ groups[1][i] }}
+                        </option>
+                    {% endfor %}
+                {% endif %}
+            </select>
+        </div>
+    </div>
+{% endmacro %}
+
+{% block section_content %}
+    {% import _self as select %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{  'LDAP - ' ~ 'groups' | trans({}, 'platform') }}</h3>
+    </div>
+    <div class="panel-body">
+        <form id='ldapForm'>
+            <input type="hidden" name="name" value="{{ server.name }}">
+            {% if error is defined %}
+                <div class="alert alert-danger">
+                    <i class="fa fa-warning"></i> {{ 'ldap_error_conexion' | trans({}, 'ldap') }}
+                </div>
+                <a class="btn btn-primary" href="{{ path('claro_admin_ldap_settings') }}" class="alert-link">
+                    <i class="fa fa-wrench"></i> {{ 'LDAP settings' | trans({}, 'ldap')}}
+                </a>
+            {% else %}
+                <div class="row margin-bottom-md">
+                    <div class="col-sm-3">
+                        <label for="ldapObjectClass">{{ 'ldap_group_class' | trans({}, 'ldap') }}:</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <select class="form-control" name="group" id="ldapObjectClass" data-type="groups" data-name="{{ server.name }}">
+                            <option></option>
+                            {% for objectClass in classes %}
+                                <option
+                                    {% if server is defined and not server is empty and server['group'] is defined and server['group'] == objectClass %}selected="selected"{% endif %}
+                                >
+                                    {{ objectClass }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div{% if groups is defined and groups is empty %} class="hide"{% endif %} id="ldapAttributes">
+                    {{ select.row('groupName', 'name', groups, server) }}
+                    {{ select.row('groupCode', 'code', groups, server) }}
+                </div>
+                <div class="hide table-responsive" id="ldapPreview">
+                    <p class='text-muted'><i class="fa fa-eye"></i> {{ 'Preview' | trans({}, 'theme') }}</p>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>{{ 'name' | trans({}, 'platform') }}</th>
+                            <th>{{ 'code' | trans({}, 'platform') }}</th>
+                        </tr>
+                        {% for i in 1..5 %}
+                            <tr id="groups{{ i }}">
+                                <td class="groupName"></td>
+                                <td class="groupCode"></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif %}
+        </form>
+    </div>
+    <div class="panel-footer text-right{% if groups is defined and groups is empty %} hide{% endif %}" id='ldapFooter'>
+        <a class="btn btn-default" href="{{ path('claro_admin_ldap') }}">{{ 'cancel' | trans({}, 'platform') }}</a>
+        <a class="btn btn-primary"><i class='fa fa-check'></i> {{ 'Save settings' | trans({}, 'ldap') }}</a>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain_name': 'ldap' }) }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolineldap/js/ldap.js') }}"></script>
+    {% if groups is defined and not groups is empty %}
+        <script>
+            (function () {
+                'use strict';
+
+                var ldap = window.Claroline.LDAP;
+
+                ldap.setAttribute('entries', {{ groupsJSON | raw }});
+                {% if server.groupName is defined and not server.groupName is empty %}ldap.setAttribute('groupName', '{{ server.groupName }}');{% endif %}
+                {% if server.groupCode is defined and not server.groupCode is empty %}ldap.setAttribute('groupCode', '{{ server.groupCode }}');{% endif %}
+                ldap.showPreview();
+            }());
+        </script>
+    {% endif %}
+{% endblock %}
