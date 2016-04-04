@@ -56,6 +56,6 @@
     </span>
 </div>
 
-<ol ui-tree-nodes class="step-children lvl lvl-{{ step.lvl }} lvl-border" data-ng-model="step.children" data-ng-hide="collapsed">
+<ul ui-tree-nodes class="step-children lvl lvl-{{ step.lvl }} lvl-border" data-ng-model="step.children" data-ng-hide="collapsed">
     <li ui-tree-node data-ng-repeat="step in step.children" data-ng-include="pathSummaryEditCtrl.webDir + 'bundles/innovapath/js/PathSummary/Partial/edit-item.html'"></li>
-</ol>
+</ul>

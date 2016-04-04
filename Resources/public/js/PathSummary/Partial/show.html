@@ -19,10 +19,10 @@
             </div>
 
             <!-- Block to display when a structure is set -->
-            <div class="path-summary-tree" data-ng-if="pathSummaryShowCtrl.structure.length !== 0" data-ui-tree="">
-                <ol class="tree" data-ui-tree-nodes="" data-ng-model="pathSummaryShowCtrl.structure" data-nodrop="">
+            <div class="path-summary-tree" data-ui-tree="" data-ng-if="pathSummaryShowCtrl.structure.length !== 0">
+                <ul class="tree" data-ui-tree-nodes="" data-ng-model="pathSummaryShowCtrl.structure" data-nodrop="">
                     <li data-ui-tree-node="" data-ng-repeat="step in pathSummaryShowCtrl.structure" data-ng-include="pathSummaryShowCtrl.webDir + 'bundles/innovapath/js/PathSummary/Partial/show-item.html'"></li>
-                </ol>
+                </ul>
             </div>
         </div>
     </div>

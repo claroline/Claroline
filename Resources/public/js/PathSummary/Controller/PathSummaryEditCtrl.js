@@ -22,8 +22,12 @@ var PathSummaryEditCtrl = function PathSummaryEditCtrl($routeParams, PathService
 
             // Hide tooltip for the dragged element
             if (event.source && event.source.nodeScope && event.source.nodeScope.$element) {
-                event.source.nodeScope.$element.find('.angular-ui-tree-handle').tooltip('toggle');
+                event.source.nodeScope.$element.find('.angular-ui-tree-handle').tooltip('hide');
             }
+
+            console.log(event.source.nodeScope);
+
+            console.log('coucou');
         },
         dropped: function (event) {
             // Enable tooltip on drag handlers

@@ -58,6 +58,6 @@
     </div>
 </div>
 
-<ol class="step-children lvl lvl-{{ step.lvl }} lvl-border" data-ui-tree-nodes="" data-ng-model="step.children" data-ng-hide="collapsed">
+<ul class="step-children lvl lvl-{{ step.lvl }} lvl-border" data-ui-tree-nodes="" data-ng-model="step.children" data-ng-hide="collapsed">
     <li data-ui-tree-node="" data-ng-repeat="step in step.children" data-ng-include="pathSummaryShowCtrl.webDir + 'bundles/innovapath/js/PathSummary/Partial/show-item.html'"></li>
-</ol>
+</ul>
