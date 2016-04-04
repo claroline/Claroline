@@ -1,0 +1,22 @@
+{
+    "name": "claroline/activity-tool-bundle",
+    "description": "Claroline activity tool bundle",
+    "keywords": ["Claroline", "Activity", "Tool"],
+    "homepage": "http://www.claroline.net",
+    "license": "GPL-3.0+",
+    "type": "claroline-plugin",
+    "authors": [
+        {
+            "name": "Claroline development team",
+            "email": "dev@claroline.net",
+            "homepage": "http://github.com/claroline"
+        }
+    ],
+    "require": {
+        "php": ">=5.5",
+        "claroline/core-bundle": "~6.0"
+    },
+    "autoload": {
+        "psr-4": { "Claroline\\ActivityToolBundle\\": "" }
+    }
+}
