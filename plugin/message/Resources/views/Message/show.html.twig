@@ -1,0 +1,110 @@
+{% extends 'ClarolineMessageBundle:Message:layout.html.twig' %}
+
+{% block title %}{% spaceless %}
+    {% if ancestors | length >= 1 %}
+        {{ parent() ~ ' - ' ~ ancestors[0].getObject() | striptags | raw }}
+    {% else %}
+        {{ 'new_message' | trans({}, 'platform') | striptags | raw }}
+    {% endif %}
+{% endspaceless %}{% endblock %}
+
+{% block section_content %}
+    <div class="row">
+        <div class="col-md-6">
+            {% for ancestor in ancestors %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class='panel-title'>{{ ancestor.getObject() | raw }}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-2">
+                                {% if ancestor.getSender() and ancestor.getSender().getPicture() != "" %}
+                                    <img src="{{ asset('uploads/pictures/') ~  ancestor.getSender().getPicture() }}" class="col-md-2" alt="{{ ancestor.getObject() }}">
+                                {% else %}
+                                    <h1 class="profile_picture_placeholder"><i class="fa fa-user"></i></h1>
+                               {% endif %}
+                                <p class="text-muted">
+                                    {{ ancestor.getSenderUsername() }} ({{ ancestor.getSender().getFirstName()}} {{ ancestor.getSender().getLastName()}})
+                                </p>
+                            </div>
+                            <div class="col-md-9">
+                                {{ ancestor.getContent()|raw }}
+                                <p class="text-muted">
+                                    {{ ancestor.getDate()|timeAgo }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="col-md-{% if ancestors is empty %}12{% else %}6{% endif %}">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        {{ 'new_message'|trans({}, 'platform') }}
+                    </h3>
+                </div>
+                <form role="form" novalidate="novalidate"
+                    {% if message is empty %}
+                        action="{{ path('claro_message_send', {'parentId': null}) }}"
+                    {% else %}
+                        action="{{ path('claro_message_send', {'parentId': message.getId()}) }}"
+                    {% endif %}
+                    method="post" {{ form_enctype(form) }}
+                    id="generic-form"
+                    class="form-horizontal">
+                    <div class="panel-body">
+                        {{ form_widget(form) }}
+                        {{ form_rest(form) }}
+                    </div>
+                    <div class="panel-footer">
+                        <button id="submit-button" type="submit" class="btn btn-primary">{{ 'send'|trans({}, 'platform') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="contacts-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3>{{ 'select_contacts_title'|trans({}, 'platform') }}</h3>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs margin-bottom-md">
+                        <li class="active" id="users-nav-tab">
+                            <a href="#">
+                                {{ 'users'|trans({}, 'platform') }}
+                            </a>
+                        </li>
+                        <li id="groups-nav-tab">
+                            <a href="#">
+                                {{ 'groups'|trans({}, 'platform') }}
+                            </a>
+                        </li>
+                        <li id="workspaces-nav-tab">
+                            <a href="#">
+                                {{ 'workspaces'|trans({}, 'platform') }}
+                            </a>
+                        </li>
+                    </ul>
+                    <br>
+                    <div id="contacts-list"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="add-contacts-confirm-ok" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src='{{ asset('bundles/clarolinemessage/js/message/show.js') }}' type="text/javascript"></script>
+{% endblock %}

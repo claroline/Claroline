@@ -1,0 +1,59 @@
+{% macro renderPager(search, pager) %}
+    {% if search == '' %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {}
+        )
+    }}
+    {% else %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {}
+            )
+        }}
+    {% endif %}
+{% endmacro %}
+
+{% from _self import renderPager %}
+
+{% if search is not empty %}
+    <div>
+        <small>
+            * {{ 'results_for_search_on'|trans({}, 'platform') }}
+            "{{ search }}"
+        </small>
+    </div>
+{% endif %}
+
+{% if groups is empty %}
+    {{ 'no_group'|trans({}, 'platform') }}
+{% else %}
+    {% set nbPages = groups.getNbPages() %}
+    <div id="contacts-list-page" class="contacts-list-page">
+
+        {% if nbPages > 1 %}
+            {{ renderPager(search, groups) }}
+        {% endif %}
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <tr>
+                    <th>{{ 'name'|trans({}, 'platform') }}</th>
+                    <th></th>
+                </tr>
+                {% for group in groups %}
+                    <tr>
+                        <td>{{ group.getName() }}</td>
+                        <td><input type="checkbox" class="contact-chk" contact-id="{{ group.getId() }}"></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        {% if nbPages > 1 %}
+            {{ renderPager(search, groups) }}
+        {% endif %}
+    </div>
+{% endif %}
