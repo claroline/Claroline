@@ -35,12 +35,12 @@ class BundleManager
         $this->kernelRootDir    = $kernelRootDir;
     }
 
-    public function getCoreBundleVersion()
+    public function getDistributionVersion()
     {
         $installedFile = $this->kernelRootDir . '/../vendor/composer/installed.json';
         $repo = new InstalledFilesystemRepository(new JsonFile($installedFile));
-        $corePackage = $repo->findPackage('claroline/core-bundle', '*');
-
+        $corePackage = $repo->findPackage('claroline/distribution-bundle', '*');
+        
         return $corePackage->getPrettyVersion();
     }
 
