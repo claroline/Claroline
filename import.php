@@ -8,9 +8,8 @@ if ($argc < 4) {
 }
 
 $account = $argv[1];
-$namespace = $argv[2];
-$bundle = $argv[3];
-$prefix = $argv[4];
+$bundle = $argv[2];
+$prefix = $argv[3];
 
 // Import the target repository in a dedicated branch and prefix
 // all of its commits with the name of the bundle

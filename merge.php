@@ -1,32 +1,32 @@
 <?php
 
 $vendors = [
-  'claroline' => [
+  'Claroline' => [
     'ActivityToolBundle',
     'AnnouncementBundle',
-    'BundleRecorder',
-    'CoreBundle',
+    //'BundleRecorder',
+    //'CoreBundle',
     'CursusBundle',
     'ForumBundle',
     'ImagePlayerBundle',
-    'InstallationBundle',
-    'KernelBundle',
+    //'InstallationBundle',
+    //'KernelBundle',
     'MessageBundle',
-    'MigrationBundle',
+    //'MigrationBundle',
     'PdfPlayerBundle',
     'RssReaderBundle',
     'ScormBundle',
     'SurveyBundle',
     'TeamBundle',
     'VideoPlayerBundle',
-    'WebInstaller',
+    //'WebInstaller',
     'WebResourceBundle'
   ],
-  'formalibre' => [
+  'FormaLibre' => [
     'PresenceBundle',
     'ReservationBundle',
     'SupportBundle'
-  ],
+  ]/*,
   'hevinci' => [
     'CompetencyBundle',
     'FavouriteBundle',
@@ -48,7 +48,7 @@ $vendors = [
   ],
   'ujm-dev' => [
     'ExoBundle'
-  ]
+  ]*/
 ];
 
 $remotes = array_map(function ($line) {
@@ -60,39 +60,7 @@ $remotes = array_map(function ($line) {
 
 foreach ($vendors as $vendor => $packages) {
   foreach ($packages as $package) {
-    $isNew = !in_array($package, $remotes);
-    $prefixCommits = true;
-
-    if ($isNew) {
-      cmd("git remote add {$package} http://github.com/{$vendor}/{$package}");
-      cmd("git fetch --no-tags {$package} master");
-      cmd("git branch -f {$package} {$package}/master");
-      cmd("git checkout {$package}");
-      $rewriteRange = 'HEAD';
-    } else {
-      cmd("git checkout {$package}");
-      $previousRevision = cmd("git rev-parse HEAD")[0];
-      cmd("git fetch --no-tags {$package} master");
-      $rewriteRange = "{$previousRevision}..HEAD";
-      $list = cmd("git rev-list {$rewriteRange}");
-      $prefixCommits = count($list) > 0;
-    }
-
-    cmd("git pull --no-tags --no-commit {$package} master");
-
-    if ($prefixCommits) {
-      cmd("git filter-branch -f --msg-filter 'sed \"1 s/^/[{$package}] /\"' {$rewriteRange}");
-    }
-
-    cmd("git checkout master");
-
-    if ($isNew) {
-      cmd("git read-tree --prefix={$package}/ -u {$package}");
-      cmd("git commit -m 'Add {$package} package'");
-    }
-
-    cmd("git merge -s subtree {$package}");
-  }
+    cmd("php import.php {$vendor} {$package} plugin/" . prettify($package));
 }
 
 function cmd($cmd) {
@@ -104,4 +72,8 @@ function cmd($cmd) {
   }
 
   return $output;
+}
+
+function prettify($str) {
+	return str_replace('-bundle', '', ltrim(strtolower(preg_replace('/(?!^)[A-Z]{2,}(?=[A-Z][a-z])|[A-Z][a-z]|[0-9]{1,}/', '-$0', $str)), '-'));
 }
