@@ -1,0 +1,139 @@
+{% macro renderMenu(scos, trackings, isAnon) %}
+    <ul>
+    {% for sco in scos %}
+        
+        {% if sco.getIsBlock() %}
+            {% set scoChildren = sco.getScoChildren() %}
+            <li><b>{{ sco.getTitle() }}</b></li>
+            
+            {% if scoChildren is not null %}
+                {{ _self.renderMenu(scoChildren, trackings, isAnon) }}
+            {% endif %}
+                
+        {% else %}
+            {% set scoId = sco.getId() %}
+            {% set scoTitle = sco.getTitle() %}
+            
+            {% if isAnon %}
+                <li>
+                    <a href="{{ path('claro_render_scorm_12_sco', {'scoId': scoId}) }}" class="sco-menu-link">
+                        {{ scoTitle }}
+                    </a>
+                </li>
+            {% else %}
+                {% set tracking = trackings[sco.getId()] %}
+                <li>
+                    <a href="{{ path('claro_render_scorm_12_sco', {'scoId': scoId}) }}" class="sco-menu-link">
+                        {{ scoTitle }}
+                    </a>
+
+                    {% set bestLessonStatus = tracking.getBestLessonStatus() %}
+                    {% if bestLessonStatus == 'passed' or
+                        bestLessonStatus == 'completed' or
+                        bestLessonStatus == 'browsed' or
+                        bestLessonStatus == 'failed' or
+                        bestLessonStatus == 'incomplete'
+                    %}
+                        {% set bestScoreRaw = tracking.getBestScoreRaw() %}
+                        {% set scoreMax = tracking.getScoreMax() %}
+                        {% if (scoreMax is not null) and (bestScoreRaw is not null) and (scoreMax > 0) %}
+                            {% set bestScore = bestScoreRaw ~ ' / ' ~ scoreMax %}
+                        {% endif %}
+                        &nbsp;
+                        {% if bestLessonStatus == 'failed' or bestLessonStatus == 'incomplete' %}
+                            <i class="fa fa-exclamation-triangle pointer-hand check-status-btn"
+                                style="color: #E60000"
+                                data-container="#scorm-menu"
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                data-title="{{ bestLessonStatus|trans({}, 'scorm') }}"
+                                data-sco-title="{{ scoTitle }}"
+                                data-best-lesson-status="{{ bestLessonStatus|trans({}, 'scorm') }}"
+                                data-total-time="{{ tracking.getFormattedTotalTime() }}"
+
+                                {% if bestScore is defined %}
+                                    data-best-score="{{ bestScore }}"
+                                {% endif %}
+                            ></i>
+                        {% else %}
+                            <i class="fa fa-check-circle pointer-hand check-status-btn"
+                                style="color: #009900"
+                                data-container="#scorm-menu"
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                data-title="{{ bestLessonStatus|trans({}, 'scorm') }}"
+                                data-sco-title="{{ scoTitle }}"
+                                data-best-lesson-status="{{ bestLessonStatus|trans({}, 'scorm') }}"
+                                data-total-time="{{ tracking.getFormattedTotalTime() }}"
+
+                                {% if bestScore is defined %}
+                                    data-best-score="{{ bestScore }}"
+                                {% endif %}
+                            ></i>
+                        {% endif %}
+                    {% endif %}
+                </li>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% from _self import renderMenu %}
+
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title"> {{ resource.getResourceNode().getName() }} </h3>
+    </div>
+    <div class="panel-body">
+        <div id="scorm-menu">
+            {{ renderMenu(scos, trackings, isAnon) }}
+        </div>
+    </div>
+    <div id="scorm-tracking-modal-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 id="scorm-tracking-modal-title"></h3>
+                </div>
+                <div id="scorm-tracking-modal-body" class="modal-body table-responsive">
+                        <table class="table text-center">
+                            <tr>
+                                <th class="text-center">{{ 'total_time'|trans({}, 'platform') }}</th>
+                                <th class="text-center">{{ 'status'|trans({}, 'platform') }}</th>
+                                <th id="score-tracking-title" class="text-center">
+                                    {{ 'best_score'|trans({}, 'platform') }}
+                                </th>
+                            </tr>
+                            <tr>
+                                <td id="total-time-tracking-display"></td>
+                                <td id="status-tracking-display"></td>
+                                <td id="score-tracking-display"></td>
+                            </tr>
+                        </table>
+                </div>
+                <div class="modal-footer">
+                    <input type="button"
+                        class="btn btn-default"
+                        data-dismiss="modal"
+                        value="{{ 'close'|trans({}, 'platform') }}"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/clarolinescorm/js/scorm12.js') }}"></script>
+{% endblock %}

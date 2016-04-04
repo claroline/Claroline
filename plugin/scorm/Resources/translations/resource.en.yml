@@ -1,0 +1,16 @@
+cannot_load_imsmanifest_message: 'Cannot load "imsmanifest.xml" file'
+claroline_scorm_12: 'Scorm (1.2)'
+claroline_scorm_12_resource: 'Scorm (1.2)'
+claroline_scorm_2004: 'Scorm (2004)'
+claroline_scorm_2004_resource: 'Scorm (2004)'
+default_organization_not_found_message: 'Default organization defined in "imsmanifest.xml" cannot be found.'
+invalid_scorm_archive_message: 'The file must be a ZIP archive with an "imsmanifest.xml" file in the root directory.'
+invalid_scorm_version_12_message: 'Scorm version defined in "imsmanifest.xml" must be "1.2".'
+invalid_scorm_version_2004_message: 'Scorm version defined in "imsmanifest.xml" must be "CAM 1.3" or "2004 3rd Edition" or "2004 4th Edition".'
+no_sco_in_scorm_archive_message: 'No SCO defined in "imsmanifest.xml"'
+quit: Quit
+sco_resource_without_href_message: 'A SCO defined in "imsmanifest.xml" is attached to an empty resource'
+sco_with_no_identifier_message: 'A SCO defined in "imsmanifest.xml" has no identifier'
+sco_without_resource_message: 'A SCO defined in "imsmanifest.xml" isn''t attached to a resource'
+scorm_form_file: File
+scorm_form_name: Name
