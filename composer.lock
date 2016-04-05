@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2e9a0f8fcc65eac3ea6a6f1cca4dea0a",
-    "content-hash": "2fbbc5ff12b6fcb90733ab69837faeb8",
+    "hash": "682e47db8d3f29b580d8286548ed501d",
+    "content-hash": "75a861f18af68273deeaa3adca8b019a",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -116,16 +116,16 @@
         },
         {
             "name": "claroline/distribution-bundle",
-            "version": "dev-import-with-history",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "4a822534c45e98de9e32d6b9d39fee6f3224e897"
+                "reference": "b8436e0dd4f217a34d1c6213a6abf27f55fdac4b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/4a822534c45e98de9e32d6b9d39fee6f3224e897",
-                "reference": "4a822534c45e98de9e32d6b9d39fee6f3224e897",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/b8436e0dd4f217a34d1c6213a6abf27f55fdac4b",
+                "reference": "b8436e0dd4f217a34d1c6213a6abf27f55fdac4b",
                 "shasum": ""
             },
             "require": {
@@ -247,13 +247,13 @@
                     "homepage": "http://github.com/claroline"
                 }
             ],
-            "description": "Claroline core bundle",
+            "description": "Claroline distribution",
             "homepage": "http://www.claroline.net",
             "keywords": [
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-04-05 12:32:41"
+            "time": "2016-04-05 12:54:47"
         },
         {
             "name": "cocur/slugify",
