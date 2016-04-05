@@ -35,7 +35,7 @@ $vendors = [/*
     'CompetencyBundle',
     'FavouriteBundle',
     'UrlBundle'
-  ]*/,
+  ],*/
   'iCAPLyon1' => [
     'BadgeBundle',
     'BlogBundle',
