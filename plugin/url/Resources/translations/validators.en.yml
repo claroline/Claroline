@@ -1,0 +1,6 @@
+website_doesnt_exist %url%: The website %url does not exist.
+server_error %errorCode%: An error has been thrown on the server side. Error Code: %errorCode%.
+client_error %errorCode%: An error has been thrown on the client side. Error Code: %errorCode%.
+method_not_allowed: This request method is not allowed.
+res_not_found: Resource not found.
+access_denied: You are not authorized to access this page.
