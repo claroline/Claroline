@@ -1,0 +1,11 @@
+{% extends 'HeVinciCompetencyBundle::modalForm.html.twig' %}
+
+{% block title %}
+    {{ 'scale.create'|trans({}, 'competency') }}
+{% endblock %}
+
+{% block id %}scale-form{% endblock %}
+
+{% block action %}
+    {{ path('hevinci_create_scale') }}
+{% endblock %}

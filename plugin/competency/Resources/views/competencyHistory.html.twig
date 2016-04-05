@@ -1,0 +1,50 @@
+{% extends 'HeVinciCompetencyBundle::modal.html.twig' %}
+
+{% block title %}
+    {{ 'objective.user_history'|trans({}, 'competency') }}
+    ({{ user.getFirstName() ~ ' ' ~ user.getLastName() }})
+{% endblock %}
+
+{% block body %}
+    <h4>{{ competency.getName() }}</h4>
+
+    {% if logs|length > 0 %}
+        <table class="table table-condensed table-bordered">
+            <thead>
+                <tr>
+                    <th>{{ 'date'|trans({}, 'platform') }}</th>
+                    <th>{{ 'activity'|trans({}, 'resource') }}</th>
+                    <th>{{ 'ability_'|trans({}, 'competency') }}</th>
+                    <th>{{ 'level_'|trans({}, 'competency') }}</th>
+                    <th>{{ 'status'|trans({}, 'platform') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                    <tr>
+                        <td>{{ log.date|date('date_format'|trans({}, 'platform')) }}</td>
+                        <td>{{ log.activityName }}</td>
+                        <td>{{ log.abilityName }}</td>
+                        <td>{{ log.levelName }}</td>
+                        <td class="{{ log.status == 'passed' or log.status == 'completed' ? 'success' : (log.status == 'failed' ? 'danger' : 'warning') }}">
+                            {{ log.status|trans({}, 'platform') }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            <i class="fa fa-info-circle"></i>
+            <span id="status-info">
+                {{ 'info.no_user_competency_history'|trans({}, 'competency') }}
+            </span>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block footer %}
+    <span class="btn btn-primary" data-dismiss="modal">
+        {{ 'close'|trans({}, 'platform') }}
+    </span>
+{% endblock %}

@@ -1,0 +1,136 @@
+ability:
+  add: Ajouter une capacité
+  create: Créer une capacité
+  delete: Supprimer une capacité
+  edit: Modifier une capacité
+  linked_activity_count: Activités liées
+  min_activity_count: Nombre d'activités à réussir
+  required_activity_count: Requis
+ability_: Capacité
+associated_competencies: Compétences associées
+collapse_all: Tout réduire
+competency:
+  activities: Activités associées
+  associate: Associer une compétence
+  create: Créer une compétence
+  create_sub: Créer une sous-compétence
+  do_select: 'Selectionnez une compétence '
+  delete: Supprimer une compétence
+  delete_association: Supprimer une association
+  edit: Modifier une compétence
+competency_: Compétence
+expand_all: Tout développer
+framework:
+  create: Créer un référentiel
+  delete: Supprimer un référentiel
+  do_select: 'Sélectionnez un référentiel '
+  edit: Éditer un référentiel
+  import: Importer un référentiel
+framework_: Référentiel
+info:
+  ability_search: Entrez ici la description de la capacité
+  add_competency_association: Cliquez sur le bouton ci-dessous pour sélectionner une compétence.
+  create_learning_objective: Cliquez sur le bouton ci-dessous pour créer un nouvel objectif.
+  no_ability_activities: Aucune activité n'est associée à cette capacité.
+  no_learning_objectives: Il n'y a encore aucun objectif d'apprentissage.
+  no_competency_activities: Aucune activité n'est associée à cette compétence.
+  no_competency_association: Il n'y a encore aucune compétence associée.
+  no_frame: Il n'y a pas encore de référentiels. Vous pouvez créer un nouveau référentiel ou gérer les échelles de difficultés à l'aide des boutons ci-dessous.
+  no_frame_no_scale: Il n'y a pas encore de référentiels ni d'échelles. Si vous choisissez de créer un référentiel maintenant, celui-ci se verra assigner une échelle par défaut d'un seul niveau. Alternativement, vous pouvez créer une échelle directement et l'associer ensuite à votre référentiel.
+  no_frame_to_select: Aucun référentiel de compétences n'a encore été défini.
+  no_group_objectives: Aucun objectif n'a encore été assigné à un groupe. Vous pouvez assigner des objectifs à des groupes dans l'onglet "Objectifs".
+  no_my_objectives: Aucun objectif d'apprentissage ne vous est actuellement assigné.
+  no_scale: Il n'y a pas encore d'échelles. Vous pouvez créer une nouvelle échelle à l'aide du bouton ci-dessous.
+  no_objective_group_users: Ce groupe ne comprend actuellement aucun utilisateur.
+  no_objective_groups: Cet objectif n'a encore été assigné à un aucun groupe. Vous pouvez assigner des objectifs à des groupes dans l'onglet "Objectifs".
+  no_objective_users: Cet objectif n'a encore été assigné à un aucun utilisateur. Vous pouvez assigner des objectifs à des utilisateurs dans l'onglet "Objectifs".
+  no_user_competency_history: Aucune activité associée à cette compétence n'a encore été réalisée.
+  no_user_objectives: Aucun objectif n'a encore été assigné à un utilisateur. Vous pouvez assigner des objectifs à des utilisateurs dans l'onglet "Objectifs".
+  scale_levels: "Les degrés doivent être séparés par des retours à la ligne. Exemple :\n\nFacile\nMoyen\nDifficile"
+learners: Apprenants
+level:
+  achieved: Niveau atteint
+  expected: Niveau attendu
+  obtained: Niveau obtenu
+  not_achieved: Niveau non atteint
+level_: Niveau
+levels: Dégrés
+message:
+  ability_added: Capacité ajoutée avec succès.
+  ability_association_deletion_confirm: Voulez-vous vraiment supprimer l'association avec cette capacité ?
+  ability_created: Capacité créée avec succès.
+  ability_deleted: Capacité supprimée avec succès.
+  ability_deletion_confirm: Voulez-vous vraiment supprimer cette capacité ?
+  ability_edited: Capacité modifiée avec succès.
+  competency_already_associated: Cette compétence est déjà associée à l'activité.
+  competency_associated: Compétence associée avec succès.
+  competency_association_deletion_confirm: Voulez-vous vraiment supprimer l'association avec cette compétence ?
+  competency_association_removed: Association supprimée avec succès.
+  competency_edited: Compétence modifiée avec succès.
+  competency_deleted: Compétence supprimée avec succès.
+  competency_deletion_confirm: Voulez-vous vraiment supprimer cette compétence ? Cette action est irréversible.
+  framework_created: Nouveau référentiel créé avec succès.
+  framework_deleted: Référentiel supprimé avec succès.
+  framework_deletion_confirm: Voulez-vous vraiment supprimer ce référentiel ? Cette action est irréversible.
+  framework_edited: Référentiel modifié avec succès.
+  objective_already_assigned_to_group: Cet objectif a déjà été assigné à ce groupe.
+  objective_already_assigned_to_user: Cet objectif a déjà été assigné à cet utilisateur.
+  objective_assigned: Objectif assigné avec succès.
+  objective_association_deleted: Compétence retirée avec succès.
+  objective_association_deletion_confirm: Voulez-vous vraiment retirer cette compétence de l'objectif ?
+  objective_competency_already_associated: Cette compétence est déjà associée à cet objectif.
+  objective_competency_associated: Compétence associée avec succès.
+  objective_created: Nouvel objectif créé avec succès.
+  objective_deleted: Objectif supprimé avec succès.
+  objective_deletion_confirm: Voulez-vous vraiment supprimer cet objectif ? Cette action est irréversible.
+  objective_edited: Objectif modifié avec succès.
+  objective_from_group_not_unassigned: Cet objectif ne peut être retiré directement car il a été assigné à l'un des groupes de l'utilisateur.
+  objective_unassigned: Objectif retiré avec succès.
+  objective_unassign_group_confirm: Voulez-vous vraiment retirer cet objectif à ce groupe ?
+  objective_unassign_user_confirm: Voulez-vous vraiment retirer cet objectif à cet utilisateur ?
+  scale_created: Nouvelle échelle créée avec succès.
+  scale_deleted: Échelle supprimée avec succès.
+  scale_deletion_confirm: Voulez-vous vraiment supprimer cette échelle ?
+  scale_edited: Échelle modifiée avec succès.
+  sub_competency_created: Sous-compétence créée avec succès.
+objective:
+  assign: Assigner un objectif
+  assign_this: Assigner cet objectif
+  create: Créer un objectif d'apprentissage
+  create_short: Créer un objectif
+  delete: Supprimer un objectif
+  edit: Éditer un objectif d'apprentissage
+  groups_with: Groupes ayant l'objectif %objective%
+  pick_level: 'Sélectionner le niveau de compétence à atteindre '
+  see_all_groups: Voir tous les groupes
+  see_all_users: Voir tous les utilisateurs
+  unassign_group: Retirer un objectif à un groupe
+  unassign_user: Retirer un objectif à un utilisateur
+  user_history: Historique de progression
+  users_with: Utilisateurs ayant l'objectif %objective%
+  users_from_group: Utilisateurs du groupe %group%
+objective_: Objectif
+objectives: Objectifs
+origin: Origine
+tooltip:
+  # cannot use pluralization techniques because transchoice filter is missing in twigjs
+  undeletable_scale: Cette échelle ne peut être supprimée car elle est liée à un référentiel.
+  undeletable_scale_plural: Cette échelle ne peut être supprimée car elle est liée à %count% référentiels.
+  uneditable_scale: Cette échelle ne peut être modifiée car une capacité lui est associée.
+  uneditable_scale_plural: Cette échelle ne peut être modifiée car %count% capacités lui sont associées.
+manage_scales: Gérer les échelles
+progress: Progression
+scale:
+  create: Créer une échelle
+  delete: Supprimer une échelle
+  default_level_name: Niveau 1
+  default_name: Échelle par défaut
+  edit: Modifier une échelle
+  view: Détails de l'échelle
+scale_: Échelle
+scales: Échelles
+user_picker:
+  select_target: 'Choisissez l''objet de la sélection '
+  enter_user_search: 'Entrez un nom, prénom ou nom d''utilisateur et sélectionnez une proposition dans la liste '
+  enter_group_search: 'Entrez un nom de groupe et sélectionnez une proposition dans la liste '
+user_picker_: Sélection d'utilisateur(s)

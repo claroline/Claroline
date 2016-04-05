@@ -1,0 +1,13 @@
+{
+  "name": "Civil service competency framework",
+  "description": "Competency framework to support the Civil Service Reform Plan and the new performance management system.",
+  "scale": {
+    "name": "Civil service levels",
+    "levels": ["Level 1", "Level 2", "Level 3"]
+  },
+  "abilities": [
+    {
+      "level": "Level 1"
+    }
+  ]
+}

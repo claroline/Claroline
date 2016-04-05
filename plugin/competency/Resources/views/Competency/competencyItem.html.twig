@@ -1,0 +1,90 @@
+{% twig_js name = 'CompetencyItem' %}
+
+{% trans_default_domain 'competency' %}
+
+{% set level = level is defined ? level : 0 %}
+{% set displayUntil = displayUntil is defined ? displayUntil : 1000 %}
+{% set hasChildren = competency.__children is defined and competency.__children|length > 0 %}
+{% set hasAbilities = competency.__abilities is defined and competency.__abilities|length > 0 %}
+{% set areChildrenDisplayable = level < displayUntil %}
+
+<li data-id="{{ competency.id }}" data-level="{{ level }}">
+    {% if hasChildren or hasAbilities %}
+        {% if areChildrenDisplayable %}
+            <i class="fa fa-minus-square-o collapse"></i>
+        {% else %}
+            <i class="fa fa-plus-square-o expand"></i>
+        {% endif %}
+    {% else %}
+        <i class="fa fa-plus-square-o empty"></i>
+    {% endif %}
+    <span class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <span class="competency-name">{{ competency.name }}</span>
+            <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+            <li role="presentation"{% if level == 0 %} class="disabled"{% endif %}>
+                <a class="edit-competency" role="menuitem" href="#" tabindex="-1">
+                    {{ 'edit'|trans({}, 'platform') }}
+                </a>
+            </li>
+            <li role="presentation"{% if level == 0 %} class="disabled"{% endif %}>
+                <a class="delete-competency" role="menuitem" href="#" tabindex="-1">
+                    {{ 'delete'|trans({}, 'platform') }}
+                </a>
+            </li>
+            <li role="presentation" class="divider"></li>
+            <li role="presentation"{% if hasAbilities %}class="disabled"{% endif %}>
+                <a class="create-sub-competency" role="menuitem" href="#" tabindex="-1">
+                    {{ 'competency.create_sub'|trans }}
+                </a>
+            </li>
+            <li role="presentation"{% if hasChildren %}class="disabled"{% endif %}>
+                <a class="create-ability" role="menuitem" href="#" tabindex="-1">
+                    {{ 'ability.create'|trans }}
+                </a>
+            </li>
+            <li role="presentation"{% if hasChildren %}class="disabled"{% endif %}>
+                <a class="add-ability" role="menuitem" href="#" tabindex="-1">
+                    {{ 'ability.add'|trans }}
+                </a>
+            </li>
+        </ul>
+    </span>
+    <ul class="children" style="display: {{ areChildrenDisplayable ? 'block' : 'none' }}">
+        {% if hasChildren %}
+            {% for child in competency.__children %}
+                {%
+                    include _self
+                    with {
+                        competency: child,
+                        level: level + 1,
+                        displayUntil: displayUntil
+                    }
+                %}
+            {% endfor %}
+        {% endif %}
+        <li>
+            <table class="abilities table table-condensed table-bordered" style="display:{{ hasAbilities ? 'table' : 'none' }}">
+                <thead>
+                    <tr>
+                        <th class="medium-cell">{{ 'level_'|trans }}</th>
+                        <th>{{ 'ability_'|trans }}</th>
+                        <th colspan="2" class="center">{{ 'actions'|trans({}, 'platform') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if hasAbilities %}
+                         {% for ability in competency.__abilities %}
+                            {%
+                                include 'HeVinciCompetencyBundle:Competency:abilityRow.html.twig'
+                                with ability
+                            %}
+                        {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+        </li>
+    </ul>
+</li>

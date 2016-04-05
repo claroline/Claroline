@@ -1,0 +1,11 @@
+{% extends 'HeVinciCompetencyBundle::modalForm.html.twig' %}
+
+{% block title %}
+    {{ 'framework.import'|trans({}, 'competency') }}
+{% endblock %}
+
+{% block id %}framework-import-form{% endblock %}
+
+{% block action %}
+    {{ path('hevinci_import_framework') }}
+{% endblock %}

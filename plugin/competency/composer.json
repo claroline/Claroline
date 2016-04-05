@@ -1,0 +1,17 @@
+{
+    "name": "hevinci/competency-bundle",
+    "type": "claroline-plugin",
+    "require": {
+        "php": ">=5.5",
+        "claroline/core-bundle": "~6.2",
+        "stefk/jval": "dev-master"
+    },
+    "require-dev": {
+        "claroline/dev-bundle": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+          "HeVinci\\CompetencyBundle\\": ""
+        }
+    }
+}

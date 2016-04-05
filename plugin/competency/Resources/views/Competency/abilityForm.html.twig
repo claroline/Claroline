@@ -1,0 +1,11 @@
+{% extends 'HeVinciCompetencyBundle::modalForm.html.twig' %}
+
+{% block title %}
+    {{ 'ability.create'|trans({}, 'competency') }}
+{% endblock %}
+
+{% block id %}ability-form{% endblock %}
+
+{% block action %}
+    {{ path('hevinci_create_ability', { id: competency.getId() }) }}
+{% endblock %}

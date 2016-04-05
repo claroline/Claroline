@@ -1,0 +1,9 @@
+{
+  "name": "Civil service competency framework",
+  "description": "",
+  "scale": {
+    "name": "Civil service levels",
+    "levels": ["Level 1", "Level 2", "Level 3"]
+  },
+  "competencies": []
+}

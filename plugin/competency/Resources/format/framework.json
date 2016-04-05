@@ -1,0 +1,104 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Competency framework schema",
+  "definitions": {
+    "namedObject": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      },
+      "required": ["name"]
+    },
+    "competency": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/namedObject"
+        },
+        {
+          "oneOf": [
+            {
+              "properties": {
+                "competencies": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "$ref": "#/definitions/competency"
+                  }
+                }
+              },
+              "required": ["competencies"]
+            },
+            {
+              "properties": {
+                "abilities": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "$ref": "#/definitions/ability"
+                  }
+                }
+              },
+              "required": ["abilities"]
+            }
+          ]
+        }
+      ]
+    },
+    "ability": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/namedObject"
+        },
+        {
+          "properties": {
+            "level": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 255
+            }
+          },
+          "required": ["level"]
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "$ref": "#/definitions/competency"
+    },
+    {
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scale": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 255
+            },
+            "levels": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 255
+              }
+            }
+          },
+          "required": ["name", "levels"]
+        }
+      },
+      "required": ["description", "scale"]
+    }
+  ]
+}

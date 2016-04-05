@@ -1,0 +1,90 @@
+{% extends 'HeVinciCompetencyBundle:Objective:layout.html.twig' %}
+
+{% trans_default_domain 'competency' %}
+
+{% set activeTab = 'users' %}
+{% set filterObjective = filterObjective is defined ? filterObjective : false %}
+{% set filterGroup = filterGroup is defined ? filterGroup : false %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ 'users'|trans({}, 'platform') }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs(objectiveBreadcrumbs|merge([{
+            name: 'users'|trans({}, 'platform'),
+            href: path('hevinci_objectives_users')
+        }]))
+    }}
+{% endblock %}
+
+{% block tabContent %}
+    {% if filterObjective or filterGroup %}
+        <br>
+        <h4>
+            {{
+                filterObjective ?
+                    'objective.users_with'|trans({ '%objective%': filterObjective.getName()|em })|raw :
+                    'objective.users_from_group'|trans({ '%group%': filterGroup.getName()|em })|raw
+            }}
+            <span class="clear-filter">
+                <a href="{{ path('hevinci_objectives_users') }}">({{ 'objective.see_all_users'|trans }})</a>
+            </span>
+        </h4>
+    {% endif %}
+
+    {% if pager.getNbPages() > 1 %}
+        {{ pagerfanta(pager, 'twitter_bootstrap_translated', { 'proximity': 1 }) }}
+    {% endif %}
+
+    <br>
+
+    {% if pager.getNbResults() > 0 %}
+        <table class="table table-condensed table-bordered user-objectives">
+            <thead>
+                <tr>
+                    <th>{{ 'user'|trans({}, 'platform') }}</th>
+                    <th>{{ 'framework_'|trans }}</th>
+                    <th>{{ 'progress'|trans }}</th>
+                    <th>{{ 'level.obtained'|trans }}</th>
+                    <th>{{ 'level.expected'|trans }}</th>
+                    <th colspan="3">{{ 'actions'|trans({}, 'platform') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in pager.currentPageResults() %}
+                    {%
+                        include 'HeVinciCompetencyBundle:Objective:userObjectiveRow.html.twig'
+                        with {
+                            id: user.id,
+                            firstName: user.firstName,
+                            lastName: user.lastName,
+                            progress: user.progress,
+                            hasObjectives: true
+                        }
+                    %}
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            <i class="fa fa-info-circle"></i>
+            {% if filterObjective %}
+                {{ 'info.no_objective_users'|trans }}
+            {% elseif filterGroup %}
+                {{ 'info.no_objective_group_users'|trans }}
+            {% else %}
+                {{ 'info.no_user_objectives'|trans }}
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/objectiveUsers.js') }}"></script>
+    <script type="text/javascript">
+        HeVinci.initUserObjectiveUtils('users');
+    </script>
+{% endblock %}

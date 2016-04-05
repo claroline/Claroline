@@ -1,0 +1,128 @@
+{% twig_js name = 'UserObjectiveRow' %}
+
+{% set originalId = originalId is defined ? originalId : id %}
+{% set type = type is defined ? type : 'user' %}
+{% set path = path is defined ? path : '' %}
+{% set childrenPath = path == '' ? id : path ~ '-' ~ id %}
+{% set indent = indent is defined ? indent : 0 %}
+{% set collapsed = collapsed is defined ? collapsed : false %}
+{% set framework = framework is defined ? framework : '-' %}
+{% set progress = progress is defined and progress is not null ? progress : 0 %}
+{% set level = level is defined ? level : '-' %}
+{% set userLevel = userLevel is defined ? userLevel : '-' %}
+{% set levelValue = levelValue is defined ? levelValue : -1 %}
+{% set userLevelValue = userLevelValue is defined ? userLevelValue : -1 %}
+{% set hasObjectives = hasObjectives is defined ? hasObjectives : false %}
+{% set hasCompetencies = competencyCount is defined ? competencyCount > 0 : __children is defined and __children|length > 0 %}
+{% set hasChildren = hasObjectives or hasCompetencies %}
+
+<tr data-id="{{ id }}"
+    data-type="{{ type }}"
+    data-path="{{ path }}"
+    {% if hasChildren %}data-has-children{% endif %}
+    {% if collapsed %} style="display: none;"{% endif %}>
+    <td class="{{ type }}-name level-{{ indent }}">
+        {% if type == 'user' %}
+            {{ firstName ~ ' ' ~ lastName }}
+        {% else %}
+            {{ name }}
+        {% endif %}
+    </td>
+    <td class="large-cell">
+        {{ framework }}
+    </td>
+    <td class="large-cell">
+        {% if hasChildren %}
+            <div class="progress"
+                 data-toggle="tooltip"
+                 data-placement="top"
+                 title="{{ progress }}%">
+                <div class="progress-bar"
+                     role="progressbar"
+                     aria-valuemin="0"
+                     aria-valuemax="100"
+                     aria-valuenow="{{ progress }}"
+                     style="width: {{ progress }}%;">
+                </div>
+            </div>
+        {% elseif userLevelValue == -1 %}
+            -
+        {% elseif userLevelValue >= levelValue %}
+            <i class="fa fa-check"
+               data-toggle="tooltip"
+               data-placement="top"
+               title="{{ 'level.achieved'|trans({}, 'competency') }}">
+            </i>
+        {% else %}
+           <i class="fa fa-frown-o"
+               data-toggle="tooltip"
+               data-placement="top"
+               title="{{ 'level.not_achieved'|trans({}, 'competency') }}">
+           </i>
+        {% endif %}
+    </td>
+    <td class="large-cell{{ userLevelValue > -1 ? userLevelValue >= levelValue ? ' success' : ' danger' : '' }}">
+        {{ userLevel }}
+    </td>
+    <td class="large-cell">
+        {{ level }}
+    </td>
+    <td class="x-small-cell">
+        <a href="#" class="{{ hasChildren ? 'expand' : 'expand disabled' }}">
+            <i class="fa fa-search-plus{{ hasChildren ? '' : ' disabled' }}"></i>
+        </a>
+    </td>
+    <td class="x-small-cell">
+        {% if type == 'competency' and not hasCompetencies %}
+            <a href="#"
+               class="history"
+               data-competency-id="{{ originalId }}"
+               data-user-id="{{ userId }}"
+               data-toggle="tooltip"
+               data-placement="left"
+               title="{{ 'objective.user_history'|trans({}, 'competency') }}">
+                <i class="fa fa-bar-chart"></i>
+            </a>
+        {% else %}
+            -
+        {% endif %}
+    </td>
+    <td class="x-small-cell">
+        {% if type == 'objective' %}
+            <a href="#"
+               class="remove"
+               data-toggle="tooltip"
+               data-placement="left"
+               title="{{ 'delete'|trans({}, 'platform') }}">
+                <i class="fa fa-remove"></i>
+            </a>
+        {% else %}
+            -
+        {% endif %}
+    </td>
+</tr>
+
+{% if hasCompetencies and __children is defined %}
+    {% for competency in __children %}
+        {% include
+            'HeVinciCompetencyBundle:Objective:userObjectiveRow.html.twig'
+            with {
+                id: competency.id,
+                name: competency.name,
+                path: childrenPath,
+                framework: '-',
+                level: competency.level is defined ? competency.level : '-',
+                levelValue: competency.levelValue is defined ? competency.levelValue : -1,
+                userLevel: competency.userLevel is defined ? competency.userLevel : '-',
+                userLevelValue: competency.userLevelValue is defined ? competency.userLevelValue : -1,
+                type: 'competency',
+                indent: indent + 1,
+                collapsed: true,
+                originalId: competency.originalId is defined ? competency.originalId : competency.id,
+                hasCompetencies: competency.__children is defined and competency.__children|length > 0,
+                __children: competency.__children is defined ? competency.__children : [],
+                __abilities: competency.__abilities is defined ? competency.__abilities : []
+            }
+        %}
+    {% endfor %}
+{% endif %}
