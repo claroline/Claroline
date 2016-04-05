@@ -2,7 +2,7 @@
   "name": "claroline",
   "description": "Claroline frontend dependencies",
   "dependencies": {
-    "claroline-core": "./vendor/claroline/distribution-bundle"
+    "claroline-core": "./vendor/claroline/distribution"
   },
   "resolutions": {
     "angular": ">=1.4.0"

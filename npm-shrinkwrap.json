@@ -473,8 +473,8 @@
     },
     "claroline-core": {
       "version": "1.0.0",
-      "from": "vendor/claroline/core-bundle",
-      "resolved": "file:vendor/claroline/core-bundle"
+      "from": "vendor/claroline/distribution",
+      "resolved": "file:vendor/claroline/distribution"
     },
     "cliui": {
       "version": "3.1.0",

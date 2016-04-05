@@ -4,11 +4,10 @@
   "description": "Claroline dev dependencies and scripts",
   "scripts": {
     "bower": "bower update --allow-root",
-    "themes": "node vendor/claroline/distribution-bundle/main/core/Resources/scripts/build-themes",
+    "themes": "node vendor/claroline/distribution/main/core/Resources/scripts/build-themes",
     "webpack": "rm -rf web/dist/* && webpack --progress --profile --colors --display-error-details",
     "watch": "webpack-dev-server --hot --inline --content-base web --claro-tgt=watch --display-error-details"
   },
   "dependencies": {
-    "distribution-core": "file:./vendor/claroline/distribution-bundle/"
-  }
+    "claroline-core": "file:./vendor/claroline/distribution"  }
 }

@@ -1,6 +1,6 @@
 const path = require('path')
 const colors = require('colors/safe')
-const scriptPath = './vendor/claroline/distribution-bundle/main/core/Resources/scripts/lib'
+const scriptPath = './vendor/claroline/distribution/main/core/Resources/scripts/lib'
 const collectPackages = require(path.resolve(scriptPath, 'collect-packages'))
 const buildConfig = require(path.resolve(scriptPath, 'webpack'))
 
