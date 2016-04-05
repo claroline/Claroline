@@ -33,15 +33,20 @@ class Detector
         $items = new \RecursiveIteratorIterator($filter, \RecursiveIteratorIterator::SELF_FIRST);
         $bundles = array();
 
+        //look for an ini file to inject for meta packages
+        if (file_exists($path . '/bundles.ini')) {
+            foreach(array_keys(parse_ini_file($path . '/bundles.ini')) as $el) {
+                $bundles[] = $el;
+            }
+
+            return $bundles;
+        }
+
         foreach ($items as $item) {
              if (preg_match('#^(.+Bundle)\.php$#', $item->getBasename(), $matches)) {
                  if ($bundle = $this->findBundleClass($item->getPathname())) {
+                    var_dump('matched');
                      $bundles[] = $bundle;
-                 }
-             //look for an ini file to inject for meta packages
-             } elseif (strpos($item->getPathname(), 'bundles.ini')) {
-                 foreach(array_keys(parse_ini_file($item->getPathname())) as $el) {
-                     $bundles[] = $el;
                  }
              }
          }
