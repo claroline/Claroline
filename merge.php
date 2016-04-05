@@ -30,12 +30,12 @@ $vendors = [/*
     'PresenceBundle',
     'ReservationBundle',
     'SupportBundle'
-  ],
+  ],*/
   'HeVinci' => [
     'CompetencyBundle',
     'FavouriteBundle',
     'UrlBundle'
-  ],
+  ]/*,
   'iCAPLyon1' => [
     'BadgeBundle',
     'BlogBundle',
