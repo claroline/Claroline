@@ -9,6 +9,6 @@
     "watch": "webpack-dev-server --hot --inline --content-base web --claro-tgt=watch --display-error-details"
   },
   "dependencies": {
-    "distribution-core": "file:./vendor/claroline/distribution-bundle/main/core"
+    "distribution-core": "file:./vendor/claroline/distribution-bundle/"
   }
 }
