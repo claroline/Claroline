@@ -120,24 +120,22 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "4a5335a6e8db4d6d81fda58e3274e925947cfb41"
+                "reference": "d9976dc3e7ebc5e0e7230a7a2f6e8f47c76f5053"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/4a5335a6e8db4d6d81fda58e3274e925947cfb41",
-                "reference": "4a5335a6e8db4d6d81fda58e3274e925947cfb41",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/d9976dc3e7ebc5e0e7230a7a2f6e8f47c76f5053",
+                "reference": "d9976dc3e7ebc5e0e7230a7a2f6e8f47c76f5053",
                 "shasum": ""
             },
             "require": {
                 "besimple/sso-auth-bundle": "*",
-                "claroline/front-end-bundle": "dev-7.x-test",
-                "claroline/video-js-bundle": "dev-7.x-test",
                 "cocur/slugify": "~1.0",
                 "composer/composer": "1.0.0-beta1",
                 "ddeboer/data-import": "~0.18",
                 "doctrine/data-fixtures": "dev-master",
                 "doctrine/dbal": "~2.4",
-                "doctrine/doctrine-bundle": "~1.0",
+                "doctrine/doctrine-bundle": "~1.3",
                 "doctrine/migrations": "~1.3",
                 "doctrine/orm": "~2.4",
                 "ext-curl": "*",
@@ -150,6 +148,7 @@
                 "friendsofsymfony/rest-bundle": "~1.4",
                 "gedmo/doctrine-extensions": "~2.3",
                 "gregwar/captcha-bundle": "1.0.12",
+                "guzzle/http": "~3.1",
                 "hwi/oauth-bundle": "0.4.*@dev",
                 "idci/exporter-bundle": "1.0.0",
                 "jdorn/sql-formatter": "~1.0",
@@ -168,6 +167,7 @@
                 "sensio/distribution-bundle": "~2.3.4",
                 "sensio/framework-extra-bundle": "3.0.12",
                 "sensio/generator-bundle": "~2.4",
+                "stefk/jval": "dev-master",
                 "stfalcon/tinymce-bundle": "0.3.8",
                 "stof/doctrine-extensions-bundle": "1.1.0",
                 "symfony/assetic-bundle": "~2.4",
@@ -207,9 +207,9 @@
                     "Claroline\\LdapBundle\\": "plugin/ldap",
                     "Claroline\\MessageBundle\\": "plugin/message",
                     "Icap\\NotificationBundle\\": "plugin/notification",
-                    "Claroline\\PdfBundle\\": "plugin/pdf-player",
+                    "Claroline\\PdfPlayerBundle\\": "plugin/pdf-player",
                     "FormaLibre\\PresenceBundle\\": "plugin/presence",
-                    "Claroline\\ReservationBundle\\": "plugin/reservation",
+                    "FormaLibre\\ReservationBundle\\": "plugin/reservation",
                     "Claroline\\RssReaderBundle\\": "plugin/rss-reader",
                     "Claroline\\ScormBundle\\": "plugin/scorm",
                     "FormaLibre\\SupportBundle\\": "plugin/support",
@@ -218,7 +218,11 @@
                     "Claroline\\TeamBundle\\": "plugin/team",
                     "Claroline\\TextPlayerBundle\\": "plugin/text-player",
                     "Claroline\\VideoPlayerBundle\\": "plugin/video-player",
-                    "Claroline\\WebResourceBundle\\": "plugin/web-resource"
+                    "Claroline\\WebResourceBundle\\": "plugin/web-resource",
+                    "Innova\\CollecticielBundle\\": "plugin/collecticiel",
+                    "HeVinci\\FavouriteBundle\\": "plugin/favourite",
+                    "HeVinci\\CompetencyBundle\\": "plugin/competency",
+                    "HeVinci\\UrlBundle\\": "plugin/url"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -238,7 +242,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-04-04 09:07:07"
+            "time": "2016-04-05 11:53:50"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -269,40 +273,6 @@
             ],
             "description": "Front-end dependencies bundle for Claroline 2.0",
             "time": "2016-04-01 14:34:48"
-        },
-        {
-            "name": "claroline/video-js-bundle",
-            "version": "dev-7.x-test",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/claroline/VideoJsBundle.git",
-                "reference": "175a2b6e8590a8a5b22a374fe24be50571f5f567"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/claroline/VideoJsBundle/zipball/175a2b6e8590a8a5b22a374fe24be50571f5f567",
-                "reference": "175a2b6e8590a8a5b22a374fe24be50571f5f567",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.5"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Claroline\\VideoJsBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "plugin"
-            ],
-            "time": "2016-04-04 09:03:43"
         },
         {
             "name": "cocur/slugify",
@@ -2010,6 +1980,208 @@
             "time": "2015-01-27 16:12:52"
         },
         {
+            "name": "guzzle/common",
+            "version": "v3.9.2",
+            "target-dir": "Guzzle/Common",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Guzzle3/common.git",
+                "reference": "2e36af7cf2ce3ea1f2d7c2831843b883a8e7b7dc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Guzzle3/common/zipball/2e36af7cf2ce3ea1f2d7c2831843b883a8e7b7dc",
+                "reference": "2e36af7cf2ce3ea1f2d7c2831843b883a8e7b7dc",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "symfony/event-dispatcher": ">=2.1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.7-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Guzzle\\Common": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Common libraries used by Guzzle",
+            "homepage": "http://guzzlephp.org/",
+            "keywords": [
+                "collection",
+                "common",
+                "event",
+                "exception"
+            ],
+            "abandoned": "guzzle/guzzle",
+            "time": "2014-08-11 04:32:36"
+        },
+        {
+            "name": "guzzle/http",
+            "version": "v3.9.2",
+            "target-dir": "Guzzle/Http",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Guzzle3/http.git",
+                "reference": "1e8dd1e2ba9dc42332396f39fbfab950b2301dc5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Guzzle3/http/zipball/1e8dd1e2ba9dc42332396f39fbfab950b2301dc5",
+                "reference": "1e8dd1e2ba9dc42332396f39fbfab950b2301dc5",
+                "shasum": ""
+            },
+            "require": {
+                "guzzle/common": "self.version",
+                "guzzle/parser": "self.version",
+                "guzzle/stream": "self.version",
+                "php": ">=5.3.2"
+            },
+            "suggest": {
+                "ext-curl": "*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.7-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Guzzle\\Http": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "HTTP libraries used by Guzzle",
+            "homepage": "http://guzzlephp.org/",
+            "keywords": [
+                "Guzzle",
+                "client",
+                "curl",
+                "http",
+                "http client"
+            ],
+            "abandoned": "guzzle/guzzle",
+            "time": "2014-08-11 04:32:36"
+        },
+        {
+            "name": "guzzle/parser",
+            "version": "v3.9.2",
+            "target-dir": "Guzzle/Parser",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Guzzle3/parser.git",
+                "reference": "6874d171318a8e93eb6d224cf85e4678490b625c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Guzzle3/parser/zipball/6874d171318a8e93eb6d224cf85e4678490b625c",
+                "reference": "6874d171318a8e93eb6d224cf85e4678490b625c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.7-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Guzzle\\Parser": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Interchangeable parsers used by Guzzle",
+            "homepage": "http://guzzlephp.org/",
+            "keywords": [
+                "URI Template",
+                "cookie",
+                "http",
+                "message",
+                "url"
+            ],
+            "abandoned": "guzzle/guzzle",
+            "time": "2014-02-05 18:29:46"
+        },
+        {
+            "name": "guzzle/stream",
+            "version": "v3.9.2",
+            "target-dir": "Guzzle/Stream",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Guzzle3/stream.git",
+                "reference": "60c7fed02e98d2c518dae8f97874c8f4622100f0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Guzzle3/stream/zipball/60c7fed02e98d2c518dae8f97874c8f4622100f0",
+                "reference": "60c7fed02e98d2c518dae8f97874c8f4622100f0",
+                "shasum": ""
+            },
+            "require": {
+                "guzzle/common": "self.version",
+                "php": ">=5.3.2"
+            },
+            "suggest": {
+                "guzzle/http": "To convert Guzzle request objects to PHP streams"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.7-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Guzzle\\Stream": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "Guzzle stream wrapper component",
+            "homepage": "http://guzzlephp.org/",
+            "keywords": [
+                "Guzzle",
+                "component",
+                "stream"
+            ],
+            "abandoned": "guzzle/guzzle",
+            "time": "2014-05-01 21:36:02"
+        },
+        {
             "name": "hwi/oauth-bundle",
             "version": "0.4.1",
             "source": {
@@ -2951,7 +3123,7 @@
                     "email": "stof@notk.org"
                 },
                 {
-                    "name": "Knplabs",
+                    "name": "KnpLabs",
                     "homepage": "http://knplabs.com"
                 },
                 {
@@ -4042,6 +4214,57 @@
             ],
             "description": "This bundle generates code for you",
             "time": "2015-03-17 06:36:52"
+        },
+        {
+            "name": "stefk/jval",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stefk/JVal.git",
+                "reference": "b4bffd0766ed0bb5c5ea0990a9dce46fa9de7195"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stefk/JVal/zipball/b4bffd0766ed0bb5c5ea0990a9dce46fa9de7195",
+                "reference": "b4bffd0766ed0bb5c5ea0990a9dce46fa9de7195",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.1"
+            },
+            "require-dev": {
+                "fabpot/php-cs-fixer": "~1.10",
+                "json-schema/json-schema": "dev-master",
+                "json-schema/test-suite": "dev-master",
+                "phpunit/phpunit": "~4.8"
+            },
+            "bin": [
+                "bin/jval"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "JVal\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Stéphane Klein",
+                    "email": "stephaneklein221@gmail.com"
+                }
+            ],
+            "description": "JSON Schema validator",
+            "homepage": "https://github.com/stefk/JVal",
+            "keywords": [
+                "JSON Schema",
+                "json",
+                "validation"
+            ],
+            "time": "2016-03-20 09:25:14"
         },
         {
             "name": "stfalcon/tinymce-bundle",
