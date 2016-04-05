@@ -100,6 +100,7 @@ class UserController extends FOSRestController
      *     description="Returns the users list",
      *     views = {"user"}
      * )
+     * @Get("/users", name="users", options={ "method_prefix" = false })
      */
     public function getUsersAction()
     {
@@ -114,7 +115,7 @@ class UserController extends FOSRestController
      *     description="Returns the users list",
      *     views = {"user"}
      * )
-     * @Get("/users/page/{page}/limit/{limit}/search", name="search_users", options={ "method_prefix" = false })
+     * @Get("/users/page/{page}/limit/{limit}/search", name="get_search_users", options={ "method_prefix" = false })
      */
     public function getSearchUsersAction($page, $limit)
     {
@@ -143,9 +144,9 @@ class UserController extends FOSRestController
      *     description="Returns the searchable user fields",
      *     views = {"user"}
      * )
-     * @Get("/users/fields")
+     * @Get("/users/fields", name="get_user_fields", options={ "method_prefix" = false })
      */
-    public function getUserSearchableFieldsAction()
+    public function getUserFieldsAction()
     {
         return $this->userManager->getUserSearchableFields();
     }
@@ -246,6 +247,7 @@ class UserController extends FOSRestController
      *     views = {"user"}
      * )
      * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
+     * @Get("/user/{user}", name="get_user", options={ "method_prefix" = false })
      */
     public function getUserAction(User $user)
     {
@@ -363,6 +365,7 @@ class UserController extends FOSRestController
      *     description="Returns the list of actions an admin can do on a user",
      *     views = {"user"}
      * )
+     * @Get("/user/admin/action", name="get_user_admin_actions", options={ "method_prefix" = false })
      */
     public function getUserAdminActionsAction()
     {

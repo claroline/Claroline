@@ -83,7 +83,7 @@ export default class GroupController {
 
     clickNew() {
         const modalInstance = this.$uibModal.open({
-            templateUrl: Routing.generate('api_get_create_group_form', {'_format': 'html'}),
+            templateUrl: Routing.generate('api_get_group_create_form', {'_format': 'html'}),
             controller: 'CreateGroupModalController',
             controllerAs: 'cgfm'
         })
@@ -102,7 +102,7 @@ export default class GroupController {
 
     clickEdit(group) {
         const modalInstance = this.$uibModal.open({
-            templateUrl: Routing.generate('api_get_edit_group_form', {'_format': 'html', 'group': group.id}) + '?bust=' + Math.random().toString(36).slice(2),
+            templateUrl: Routing.generate('api_get_group_edit_form', {'_format': 'html', 'group': group.id}) + '?bust=' + Math.random().toString(36).slice(2),
             controller: 'EditGroupModalController',
             controllerAs: 'egfm'
         });

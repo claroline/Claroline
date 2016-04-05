@@ -251,6 +251,7 @@ class GroupController extends FOSRestController
      *     description="Returns the users list",
      *     views = {"user"}
      * )
+     * @Get("/groups/page/{page}/limit/{limit}/search", name="get_search_groups", options={ "method_prefix" = false })
      */
     public function getSearchGroupsAction($page, $limit)
     {
@@ -281,7 +282,7 @@ class GroupController extends FOSRestController
      *     views = {"location"}
      * )
      */
-    public function getCreateGroupFormAction()
+    public function getGroupCreateFormAction()
     {
         $formType = new GroupSettingsType(null, true, 'cgfm');
         $formType->enableApi();
@@ -297,8 +298,9 @@ class GroupController extends FOSRestController
      *     description="Returns the group edition form",
      *     views = {"location"}
      * )
+     * @Get("/group/{group}/edit/form", options={ "method_prefix" = false })
      */
-    public function getEditGroupFormAction(Group $group)
+    public function getGroupEditFormAction(Group $group)
     {
         $this->throwExceptionIfNotGranted('edit', $group);
         $formType = new GroupSettingsType($group->getPlatformRole(), true, 'egfm');

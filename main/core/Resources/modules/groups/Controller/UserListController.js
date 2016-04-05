@@ -31,7 +31,7 @@ export default class UserListController {
             this.group = d.data;
         })
 
-        this.$http.get(Routing.generate('api_get_user_searchable_fields')).then(d => {
+        this.$http.get(Routing.generate('api_get_user_fields')).then(d => {
             this.fields = d.data;
             //removing group from fields
             for (var i = 0; i < this.fields.length; i++) {
@@ -100,7 +100,7 @@ export default class UserListController {
 
     paging(offset, size) {
         this.savedSearch = this.mergeSearches(this.savedSearch, this.baseSearch);
-        this.ClarolineSearchService.find('api_search_users', this.savedSearch, offset, size).then(d => {
+        this.ClarolineSearchService.find('api_get_search_users', this.savedSearch, offset, size).then(d => {
             var users = d.data.users;
 
             //I know it's terrible... but I have no other choice with this table.
@@ -197,7 +197,7 @@ export default class UserListController {
 
     _onSearch(searches) {
         searches = this.mergeSearches(searches, this.baseSearch)
-        this.ClarolineSearchService.find('api_search_users', searches, 0, this.dataTableOptions.paging.size).then(d => {
+        this.ClarolineSearchService.find('api_get_search_users', searches, 0, this.dataTableOptions.paging.size).then(d => {
             this.users = d.data.users
             this.dataTableOptions.paging.count = d.data.total
         })
