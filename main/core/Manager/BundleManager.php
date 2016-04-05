@@ -39,8 +39,8 @@ class BundleManager
     {
         $installedFile = $this->kernelRootDir . '/../vendor/composer/installed.json';
         $repo = new InstalledFilesystemRepository(new JsonFile($installedFile));
-        $corePackage = $repo->findPackage('claroline/distribution-bundle', '*');
-        
+        $corePackage = $repo->findPackage('claroline/distribution', '*');
+
         return $corePackage->getPrettyVersion();
     }
 
