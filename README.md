@@ -58,3 +58,4 @@ Official distribution of Claroline Connect LMS
 - update
 - upgrade from previous packages
 - remove the innova/angular bundles (required by portfolio)
+- remove the front-end-bundle (required by icapbadge for jqplot and by core/Resouces/less/layout.less)
