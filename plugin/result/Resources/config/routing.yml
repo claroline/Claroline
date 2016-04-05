@@ -1,0 +1,3 @@
+claro_result:
+    resource: "@ClarolineResultBundle/Controller/ResultController.php"
+    type: annotation

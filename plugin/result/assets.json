@@ -1,0 +1,7 @@
+{
+  "webpack": {
+    "entry": {
+      "list": "modules/results/results.js"
+    }
+  }
+}

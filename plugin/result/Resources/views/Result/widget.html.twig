@@ -1,0 +1,18 @@
+{% if results|length > 0 %}
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>{{ 'title'|trans({}, 'platform') }}</th>
+        <th>{{ 'note'|trans({}, 'platform') }}</th>
+      </tr>
+    </thead>
+    {% for result in results %}
+    <tr>
+      <td>{{ result.title }}</td>
+      <td style="text-align: center">{{ result.mark }} / {{ result.total }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+{% else %}
+  <em>{{ 'no_marks'|trans({}, 'widget') }}</em>
+{% endif %}
