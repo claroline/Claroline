@@ -30,23 +30,23 @@ $vendors = [/*
     'PresenceBundle',
     'ReservationBundle',
     'SupportBundle'
-  ],*/
+  ],
   'HeVinci' => [
     'CompetencyBundle',
     'FavouriteBundle',
     'UrlBundle'
-  ]/*,
+  ]*/,
   'iCAPLyon1' => [
     'BadgeBundle',
     'BlogBundle',
     'DropzoneBundle',
-    'LessonBundle',
+    //'LessonBundle',
     'PortfolioBundle',
     'SocialMediaBundle',
-    'WebsiteBundle',
+    //'WebsiteBundle',
     'WikiBundle',
     'OauthBundle'
-  ],
+  ]/*,
   'InnovaLangues' => [
     'PathBundle',
     'CollecticielBundle'
