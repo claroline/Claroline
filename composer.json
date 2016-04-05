@@ -103,7 +103,8 @@
             "Claroline\\TeamBundle\\": "plugin/team",
             "Claroline\\TextPlayerBundle\\": "plugin/text-player",
             "Claroline\\VideoPlayerBundle\\": "plugin/video-player",
-            "Claroline\\WebResourceBundle\\": "plugin/web-resource"
+            "Claroline\\WebResourceBundle\\": "plugin/web-resource",
+            "Innova\\CollecticielBundle\\": "plugin/collecticiel"
         }
     }
 }
