@@ -1,0 +1,111 @@
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/icapsocialmedia/css/comment_note.css') }}"/>
+{% endblock %}
+
+{% block title %}{% spaceless %}
+        {{ node.getName() | striptags | raw }} - {{ "comments"|trans({}, "icap_socialmedia") }}
+{% endspaceless %}{% endblock %}
+{% block breadcrumb %}
+    <div id="resource-breadcrumb">
+        {% if node is defined %}
+            <div id="twig-resource-attributes"
+                 data-resource-id="{{ node.getId() }}"
+                 data-resource-name="{{ node.getName() }}"
+                    >
+            </div>
+            <ul class="breadcrumb">
+                <li><a href="{{ path('claro_workspace_list') }}"><i class="fa fa-book"></i> {{ 'workspaces'|trans({}, 'platform') }}</a></li>
+                <li>
+                    {% set workspace = node.getWorkspace() %}
+                    <a href="{{ path('claro_workspace_open_tool', {'toolName': 'home', 'workspaceId': workspace.getId() }) }}">
+                        {{ workspace.getName() ~ ' (' ~ workspace.getCode() ~ ') ' }}
+                    </a>
+                </li>
+                {% render(controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
+                {'node': node, '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}))
+                %}
+                {% block resourceBreadcrumb %}
+                    <li class="active">{{ 'comments'|trans({}, 'icap_socialmedia') }}: {{ node.getName() }}</li>
+                {% endblock %}
+            </ul>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block leftbar %}
+    {% set workspace = node.getWorkspace() %}
+    {% if workspace is defined %}
+        {% if is_granted('OPEN', workspace) %}
+            {% render(controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspace': workspace, '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})) %}
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h4 class="panel-title">{{ "comment_action"|trans({}, 'resource') }}</h4>
+    </div>
+    <div class="panel-body">
+        <div class="social-media-comment-list">
+            {% if pager.nbResults > 0 %}
+                <h4>{{ 'comments'|trans({}, 'icap_socialmedia') }} <small>[{{ pager.nbResults }}]</small> <br/><small>*{{ 'comments_are_public'|trans({}, "icap_socialmedia") }}</small></h4>
+                <div class="jscroll-comment-list list-group">
+                    {% include "IcapSocialmediaBundle:CommentAction:commentList.html.twig" with {'pager':pager, 'resourceId':resourceId} %}
+                </div>
+            {% else %}
+                <div class="social-media-empty-list">{{ "no_comment"|trans({}, 'icap_socialmedia') }}</div>
+            {% endif %}
+        </div>
+        <form role="form" action="{{ path("icap_socialmedia_comment", {"resourceId":resourceId}) }}"
+              method="post">
+            <div class="social-media-textarea">
+                <textarea class="social-media-comment-text" name="social_media_comment_text"></textarea>
+                <div class="text-right">
+                    <button type="submit" class="btn btn-primary">{{ 'submit_comment'|trans({}, 'icap_socialmedia') }}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/icapsocialmedia/js/jquery.jscroll.min.js') }}"></script>
+    <script type="text/javascript">
+        function initializeJscroll()
+        {
+            $('.jscroll-comment-list').jscroll({
+                loadingHtml: '<div class="text-center list-group-item-loading"><i class="fa fa-spinner fa-pulse"></i></div>',
+                padding: 20,
+                nextSelector: 'a.jscroll-comment-list-previous',
+                contentSelector: 'div',
+                autoTrigger: false,
+                callback: removeParentClass
+            });
+        }
+        function removeParentClass()
+        {
+            $('div.jscroll-comment-list').find('.jscroll-added').each(function(){
+                $(this).parent().prepend($(this));
+                var contents = $(this).contents();
+                $(this).replaceWith(contents);
+            });
+        }
+        $(document).ready(function(){
+            initializeJscroll();
+            var deleteUrl = "{{ path("icap_socialmedia_comment_delete", {"id":"000"}) }}";
+            $('.remove-sociamedia-comment-item').on("click", function(){
+                var itemId = $(this).attr("data-item-id");
+                $.ajax({
+                    url: deleteUrl.replace("000", itemId),
+                    method: "DELETE"
+                }).done(function(){
+                    $("#socialmedia-comment-item-"+itemId).remove();
+                }).fail(function(){
+                    alert("{{ "error_deleting"|trans({}, "icap_socialmedia") }}");
+                });
+            });
+        });
+    </script>
+{% endblock %}

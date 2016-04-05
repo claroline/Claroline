@@ -1,0 +1,29 @@
+people_who_like_this: People who like this
+unlike_action: Unlike
+see_more: See more
+no_like: Be the first to like this resource
+choose_share_network: Choose network to share this resource on:
+shared_on: Shared on "%network%" :
+liked: Liked :
+commented: Commented :
+date_format: F j Y \a\t H:i
+no_wall_item: No activity so far
+comments: Comments
+no_comment: Be the first to write a comment
+submit_comment: Submit comment
+no_note: Write your first note for this resource
+your_notes: Your reminders
+submit_note: Submit note
+share_published_also_in_wall: Your share automatically gets published on your wall
+comments: Comments
+load_previous_comments: View previous comments
+load_next_notes: View more reminders
+load_next_likes: View more likes
+load_next_wall_items: View more items
+comments_are_public: Comments are public
+notes_are_private: Remiders are personal
+platform_share_message: Shares number on platform
+facebook_share_message: Shares on Facebook
+twitter_share_message: Shares on Twitter are not available due to its new policy
+google_share_message: Shares on Google+
+linkedin_share_message: Shares on LinkedIn

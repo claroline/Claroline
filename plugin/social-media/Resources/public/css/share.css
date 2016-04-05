@@ -1,0 +1,24 @@
+div.socialmedia-network-list{font-size: 0;}
+div.socialmedia-network-list a{
+    font-size: 1.3rem;
+    color: white;
+    border-radius: 0;
+    min-width: 40px;
+}
+div.socialmedia-network-list a .socialmedia-network-logo{
+    font-size: 2rem;
+    line-height: 2rem;
+}
+div.socialmedia-network-list a:hover,
+div.socialmedia-network-list a:active,
+div.socialmedia-network-list a:focus{
+    color: #f5f5f5;
+}
+div.socialmedia-network-list::after{
+    clear: both;
+}
+
+div.socialmedia-share-info {
+    margin-top: 20px;
+    color: #999999;
+}

@@ -1,0 +1,70 @@
+{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+
+{% block title %}{{ 'socialmedia_wall'|trans({}, 'resource') ~ ' - ' ~ user.getLastName() ~ ' ' ~ user.getFirstName() | striptags | raw }}{% endblock %}
+
+{% block content %}
+    {{ macros.flashBox() }}
+    <div class="panel panel-default panel-user">
+        <div class="panel-heading relative">
+            <h3 class="panel-title">
+                {{ 'socialmedia_wall'|trans({}, 'resource') }}
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div class="social-media-wall-list">
+                {% if pager.nbResults > 0 %}
+                <div class="jscroll-wall-list list-group">
+                    {% include "IcapSocialmediaBundle:Wall:itemList.html.twig" with {'pager':pager, 'userId':userId} %}
+                </div>
+                {% else %}
+                <div>{{ "no_wall_item"|trans({}, 'icap_socialmedia') }}</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/icapsocialmedia/css/wall.css')}}'>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/icapsocialmedia/js/jquery.jscroll.min.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(initializeJscroll);
+        function initializeJscroll()
+        {
+            $('.jscroll-wall-list').jscroll({
+                loadingHtml: '<div class="list-group-item list-group-item-loading"><i class="fa fa-spinner fa-pulse"></i></div>',
+                padding: 20,
+                nextSelector: 'a.jscroll-wall-list-next',
+                contentSelector: 'div',
+                autoTrigger: false,
+                callback: removeParentClass
+            });
+            {% if isOwner %}
+            var deleteUrl = "{{ path("icap_socialmedia_wall_item_delete", {"id":"000"}) }}";
+            $('.remove-sociamedia-wall-item').on("click", function(){
+                var itemId = $(this).attr("data-item-id");
+                $.ajax({
+                    url: deleteUrl.replace("000", itemId),
+                    method: "DELETE"
+                }).done(function(){
+                    $("#socialmedia-wall-item-"+itemId).remove();
+                }).fail(function(){
+                    alert("{{ "error_deleting"|trans({}, "icap_socialmedia") }}");
+                });
+            });
+            {% endif %}
+        }
+        function removeParentClass()
+        {
+            $('div.jscroll-wall-list').find('.jscroll-added').each(function(){
+                        var contents = $(this).contents();
+                        $(this).replaceWith(contents);
+                    }
+            );
+        }
+    </script>
+{% endblock %}

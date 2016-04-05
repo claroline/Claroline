@@ -1,0 +1,24 @@
+{% extends 'IcapNotificationBundle:Templates:notification.html.twig' %}
+{% set avatarUrlPrefix = asset('uploads/pictures/') %}
+{% set resourcePath = path("claro_resource_open_short", {"node":notification.details.resource.id}) %}
+
+{% block notificationText %}
+    {% if notification.userId is not empty and notification.details.doer is defined %}
+        <a href="{{ path('claro_public_profile_view', {'publicUrl' : notification.userId}) }}"><strong>{{ notification.details.doer.firstName ~ ' ' ~ notification.details.doer.lastName }}</strong></a>
+    {% else %}
+        <strong>{{ systemName }}</strong>
+    {% endif %}
+    {% if constant('Icap\\SocialmediaBundle\\Event\\Log\\LogSocialmediaLikeEvent::ACTION') == notification.actionKey %}
+        {{ 'liked'|trans({}, 'icap_socialmedia') }}
+    {% elseif constant('Icap\\SocialmediaBundle\\Event\\Log\\LogSocialmediaShareEvent::ACTION') == notification.actionKey %}
+        {% if notification.details.share is defined and notification.details.share.network is defined %}
+        {{ 'shared_on'|trans({'%network%' : notification.details.share.network}, 'icap_socialmedia') }}
+        {% else %}
+        {{ 'shared_on'|trans({'%network%' : 'claroline'}, 'icap_socialmedia') }}
+        {% endif %}
+    {% elseif constant('Icap\\SocialmediaBundle\\Event\\Log\\LogSocialmediaCommentEvent::ACTION') == notification.actionKey %}
+        {{ 'commented'|trans({}, 'icap_socialmedia') }}
+        {% set resourcePath = path("icap_socialmedia_comments_view", {"resourceId":notification.details.resource.id}) %}
+    {% endif %}
+    <a href="{{ resourcePath }}">{{ notification.details.resource.name }}</a>
+{% endblock %}

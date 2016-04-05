@@ -1,0 +1,20 @@
+div.social-media-like-list{
+    margin-top: 20px;
+}
+
+div.social-media-like-list div.jscroll-like-list{
+    max-height: 300px;
+    overflow: auto;
+}
+
+div.social-media-like-list div.jscroll-like-list div.list-group-item{
+    padding: 5px;
+}
+
+div.social-media-like-list div.jscroll-like-list div.list-group-item a.btn{
+    display: block !important;
+}
+
+div.social-media-like-list div.jscroll-like-list div.list-group-item-loading{
+    text-align: center;
+}

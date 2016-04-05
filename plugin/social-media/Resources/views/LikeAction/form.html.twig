@@ -1,0 +1,58 @@
+<div class="modal-dialog">
+    {% set formPath = path('icap_socialmedia_like', {'resourceId' : resourceId}) %}
+    {% if userLike is not null %}
+    {% set formPath = path('icap_socialmedia_unlike', {'resourceId' : resourceId}) %}
+    {% endif %}
+    <form role="form" action="{{ formPath }}"
+          method="get" class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title">{{ "like_action"|trans({}, 'resource') }}</h4>
+        </div>
+        <div class="modal-body">
+            <div class="text-right">
+                {% if userLike is null %}
+                <button type="submit" class="btn btn-primary"><i class="fa fa-thumbs-o-up"></i> {{ 'like_action'|trans({}, 'resource') }}</button>
+                {% else %}
+                <button type="submit" class="btn btn-default"><i class="fa fa-thumbs-o-down"></i> {{ "unlike_action"|trans({}, 'icap_socialmedia') }}</button>
+                {% endif %}
+            </div>
+            <div class="social-media-like-list">
+                {% if pager.nbResults > 0 %}
+                <h4>{{ 'people_who_like_this'|trans({}, 'icap_socialmedia') }} <small>[{{ pager.nbResults }}]</small></h4>
+                <div class="jscroll-like-list list-group">
+                    {% include "IcapSocialmediaBundle:LikeAction:likeList.html.twig" with {'pager':pager, 'parameters':{'page':pager.hasNextPage?pager.getNextPage:0, 'resourceId':resourceId}}%}
+                </div>
+                {% else %}
+                <div>{{ "no_like"|trans({}, 'icap_socialmedia') }}</div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'close'|trans({}, 'platform') }}</button>
+        </div>
+    </form>
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/icapsocialmedia/css/like.css')}}'>
+    <script type="text/javascript">
+        $.getScript("{{ asset('bundles/icapsocialmedia/js/jquery.jscroll.min.js') }}", initializeJscroll);
+        function initializeJscroll()
+        {
+            $('.jscroll-like-list').jscroll({
+                loadingHtml: '<div class="list-group-item list-group-item-loading"><i class="fa fa-spinner fa-pulse"></i></div>',
+                padding: 20,
+                nextSelector: 'a.jscroll-like-list-next',
+                contentSelector: 'div',
+                autoTrigger: false,
+                callback: removeParentClass
+            });
+        }
+        function removeParentClass()
+        {
+            $('div.jscroll-like-list').find('.jscroll-added').each(function(){
+                    var contents = $(this).contents();
+                    $(this).replaceWith(contents);
+                }
+            );
+        }
+    </script>
+</div>

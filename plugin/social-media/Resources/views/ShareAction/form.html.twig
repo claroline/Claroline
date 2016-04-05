@@ -1,0 +1,29 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title">{{ "share_action"|trans({}, 'resource') }}</h4>
+        </div>
+        <div class="modal-body">
+            <h4>{{ 'choose_share_network'|trans({}, 'icap_socialmedia') }}</h4>
+            <div class="socialmedia-network-list text-center">
+                <a target="_blank" class="btn" title="platform_share_message" style="font-weight:bold; background-color: #cccccc" href="{{ path("icap_socialmedia_share", {"resourceId":resourceNode.id}) }}"><span class="socialmedia-network-logo">cc</span><br/><span class="socialmedia-network-shares">{{ shares|smartCounter|raw }}</span></a>
+                {% for network in networks %}
+                <a target="_blank" class="btn" title="{{ (network.name~'_share_message')|trans({}, 'icap_socialmedia') }}" style="background-color: {{ network.color }}" href="{{ path("icap_socialmedia_share", {"resourceId":resourceNode.id, "network":network.name}) }}"><i class="socialmedia-network-logo fa fa-{{ network.iconClass }}"></i><br/><span class="socialmedia-network-shares">{{ network.countShares(resourceUrl)|smartCounter|raw }}</span></a>
+                {% endfor %}
+            </div>
+            <div class="text-center socialmedia-share-info">
+                <small class="small">*{{ 'share_published_also_in_wall'|trans({},'icap_socialmedia') }}</small>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'close'|trans({}, 'platform') }}</button>
+        </div>
+    </div>
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/icapsocialmedia/css/share.css')}}'>
+    <script type="text/javascript">
+        $("div.socialmedia-network-list a").on("click", function(){
+            $(this).parents(".modal").modal('hide');
+        });
+    </script>
+</div>
