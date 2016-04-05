@@ -1,0 +1,76 @@
+{% macro innovaDisplayDocumentsList(drop, dropzone, width, mode, documentListText ) %}
+    <div class="row">
+        <div class="col-md-{{ width }}">
+            {% if documentListText is not null %}
+                <div class="text-muted">{{ documentListText }}</div>
+            {% endif %}
+            <table class="table table-responsive {% if mode == "condensed" %}table-condensed{% endif %} well table-striped">
+                {% if drop.documents|length <= 0 %}
+                    <tr>
+                        <td>{{ 'No document associated'|trans({},'innova_collecticiel') }}</td>
+                    </tr>
+                {% else %}
+                    <thead>
+                        <tr class="text-left">
+                            <th></th>
+                            <th>{{ 'Type of document'|trans({}, 'innova_collecticiel') }}</th>
+                            <th>{{ 'Name of document'|trans({}, 'innova_collecticiel') }}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for index, document in drop.documents %}
+                            <tr id="row_{{ document.id }}">
+                                {# Suppression de l'ID
+                                <td>{{ document.id }}</td> #}
+                                <td></td>
+                                <td>{{ (document.type~'_type')|trans({}, 'innova_collecticiel') }}</td>
+                                <td>
+                                    {% if document.url is not null %}
+                                        <a target="_blank"
+                                           href="{{ document.url }}">{{ document.url | length > 40 ? document.url | slice(0, 40) ~ '...' :document.url }}</a>
+                                    {% else %}
+                                        <a target="_blank"
+                                           href="{{ path('innova_collecticiel_open_resource', {'resourceId': dropzone.id, 'documentId': document.id}) }}">{{ document.resourceNode.name }}</a>
+                                    {% endif %}
+                                </td>
+
+                                {% if mode == 'complete' %}
+                                    <td>
+                                    {# Si la document a été validé alors je ne peux pas le supprimer #}
+                                    {% if not document.validate %}
+                                        <a href="{{ path('innova_collecticiel_delete_document', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" class="btn btn-danger btn-sm pull-right launch-modal">
+                                            <span class="fa fa-trash-o"></span>
+                                            {{ 'Delete'|trans({}, 'innova_collecticiel') }}
+                                        </a>
+                                    {% endif %}
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                {% endif %}
+            </table>
+        </div>
+    </div>
+
+    {# Déclaration de la modal pour confirmation de la validation #}
+    <div class="modal fade" id="validate-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Confirmation de la validation</h4>
+            </div>
+            <div class="modal-body">
+                Êtes-vous sûr de vouloir valider ce document ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Non</button>
+                <button data-document_id="titi" id="modal_confirm" data-method="VALIDATE" type="button" class="btn btn-info rest" href="#">Oui, valider</button>
+            </div>
+            </div>
+        </div>
+    </div>
+    {# Fin de la déclaration de la modal pour confirmation de la validation #}
+{% endmacro %}

@@ -1,0 +1,40 @@
+{% form_theme form "InnovaCollecticielBundle::form_theme_bootstrap3.html.twig" %}
+
+<form class="form-inline" method="POST"
+action="{{ path('innova_collecticiel_document', {'resourceId': dropzone.id, 'documentType': documentType, 'dropId': drop.id}) }}" {{ form_enctype(form) }}>
+
+    {% block document_header %}
+        <div class="row">
+            <div class="col-md-12">
+                <br/>
+                {# <h5>{{ documentType|trans({}, 'innova_collecticiel') }}</h5> #}
+                {#<span class="text-muted">Default template</span>#}
+            </div>
+        </div>
+    {% endblock %}
+
+    {% block document_body %}
+        <div class="row">
+            <div class='col-md-8'>
+                <div class='input-group col-md-8'>
+                    {{ form_widget(form.document,{'label_col_size': ' ', 'attr': {'placeholder': (documentType~'_placeholder')|trans({}, 'innova_collecticiel')}, 'label_attr': {'class': 'sr-only'},'id':'innova_collecticiel_document_file_form_'~documentType }) }}
+                    <span class='input-group-btn'>
+                        <button type="submit" class="btn btn-default">
+                            {{ 'Add'|trans({}, 'innova_collecticiel') }}
+                        </button>
+                    </span>
+                </div>
+                {{ form_rest(form.document) }}
+            </div>
+        </div>
+
+        <script type='text/javascript'>
+            $('document').ready(function () {
+                /*$('input[type=file]').bootstrapFileInput();
+                 $('.file-inputs').bootstrapFileInput();
+                 */
+            })
+        </script>
+    {% endblock %}
+    {{ form_errors(form) }}
+    {{ form_end(form) }}

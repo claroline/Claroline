@@ -1,0 +1,86 @@
+{% extends "InnovaCollecticielBundle:Drop:dropsByBase.html.twig" %}
+
+{% block  drops_examiners_active %} active {% endblock %}
+{% block drops_examiners_link %} # {% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('innova_collecticiel_edit_common',{'resourceId':dropzone.id}) }}"><span
+                    class="fa fa-list"></span>  {{ dropzone.resourceNode.name }}</a></li>
+    <li class="active">
+        {{ 'Examiners'|trans({}, 'innova_collecticiel') }}
+    </li>
+{% endblock %}
+
+{% block dropzone_content_drops_by_beforeTitle %}
+    {% include 'InnovaCollecticielBundle:Drop:peerReviewHelper.html.twig' %}
+{% endblock %}
+
+{% block dropzone_content_drops_by_default %}
+{% endblock %}
+{% block dropzone_content_drops_by_user %}
+{% endblock %}
+{% block dropzone_content_drops_by_date %}
+{% endblock %}
+{% block dropzone_content_drops_by_reported %}
+{% endblock %}
+
+{% block dropzone_content_drops_by_list_title %}
+    {{ 'List of examiners'|trans({}, 'innova_collecticiel') }}
+{% endblock %}
+{% block dropzone_content_drops_by_list_tools %}
+    <div class="btn-group text-right">
+        <a type="button" class="btn btn-default btn-xs" data-toggle="tooltip" data-container="body"
+           data-placement="top" title="{{ 'unlock_user_tooltip'|trans({},'innova_collecticiel') }}"
+           href="{{ path('innova_collecticiel_unlock_all_user',{'resourceId':dropzone.id}) }}"><span
+                    class="fa fa-unlock">&nbsp;</span>{{ "unlock_all"|trans({},'innova_collecticiel') }}</a>
+
+        <a type="button" class="btn btn-default btn-xs"
+           href="{{ path('innova_collecticiel_unlock_cancel',{'resourceId': dropzone.id}) }}">{#<span
+                    class="fa fa-lock">&nbsp;</span>#}{{ "cancel_unlock"|trans({},'innova_collecticiel') }}</a>
+    </div>
+{% endblock %}
+{% block dropzone_content_drops_by_list_subtitle %}
+    {{ 'People that have a copy in this dropzone'|trans({}, 'innova_collecticiel') }}
+{% endblock %}
+
+{% block dropzone_content_drops_by_Listing %}
+
+    {% include 'InnovaCollecticielBundle:Drop:Listing/examinersListing.html.twig' %}
+{% endblock %}
+
+{% block dropzone_content_drops_by_pager %}
+    {% if pager.haveToPaginate %}
+        {{ pagerfanta(
+        pager,
+        'twitter_bootstrap_translated',
+        {
+        'proximity' : 1,
+        'routeName': 'innova_collecticiel_examiners_paginated',
+        'routeParams': {'resourceId': dropzone.id}
+        }
+        ) }}
+    {% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $('document').ready(function () {
+            $('.popoverItem').popover({
+                'trigger': 'hover',
+                'html': true
+            });
+        });
+    </script>
+{% endblock %}
+
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        table th div.popover {
+            font-weight: normal;
+        }
+    </style>
+{% endblock %}

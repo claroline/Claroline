@@ -1,0 +1,14 @@
+{% extends "InnovaCollecticielBundle::layout.html.twig" %}
+{% block resourceBreadcrumb %}
+    <li class="active"><span class="fa fa-file"></span> {{ dropzone.resourceNode.name }}</li>
+{% endblock %}
+{% block dropzone_content %}
+    <div class="col-md-12">
+        <hr>
+        <h4 class="modal-title">{{ 'Warning'|trans({}, 'innova_collecticiel') }}</h4>
+        {% include "InnovaCollecticielBundle:Correction:reportCorrectionForm.html.twig" %}
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

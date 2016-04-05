@@ -1,0 +1,45 @@
+<dl class="dl-horizontal">
+    <dt>{{ 'created by a manager'|trans({}, 'innova_collecticiel') }}</dt>
+    {% if correction.editable is sameas(true) %}
+        <dd>{{ ('yes')|trans({}, 'platform') }}</dd>
+    {% else %}
+        <dd>{{ ('no')|trans({}, 'platform') }}</dd>
+    {% endif %}
+
+    {% if correction.valid is defined %}
+        <dt>{{ 'Invalidated'|trans({}, 'innova_collecticiel') }}</dt>
+        {% if correction.valid is sameas(true) %}
+            <dd>{{ ('no')|trans({}, 'platform') }}</dd>
+        {% else %}
+            <dd>{{ ('yes')|trans({}, 'platform') }}</dd>
+        {% endif %}
+    {% endif %}
+
+    {% if correction.totalGrade is defined %}
+        <dt>{{ 'Total grade'|trans({}, 'innova_collecticiel') }}</dt>
+        <dd>{{ correction.totalGrade }}</dd>
+    {% endif %}
+
+    {% if correction.comment is defined %}
+        <dt>{{ 'Comment'|trans({}, 'innova_collecticiel') }}</dt>
+        <dd>{{ correction.comment|raw }}</dd>
+    {% endif %}
+
+    {% if correction.reporter is defined %}
+        <dt>{{ 'Reported'|trans({}, 'innova_collecticiel') }}</dt>
+        {% if correction.reporter is sameas(true) %}
+            <dd>{{ ('yes')|trans({}, 'platform') }}</dd>
+        {% else %}
+            <dd>{{ ('no')|trans({}, 'platform') }}</dd>
+        {% endif %}
+    {% endif %}
+
+    {% if correction.reportComment is defined %}
+        <dt>{{ 'reportComment'|trans({}, 'innova_collecticiel') }}</dt>
+        <dd>{{ correction.reportComment|raw }}</dd>
+    {% endif %}
+</dl>
+
+{% if correction.user is defined %}
+    {% include 'InnovaCollecticielBundle:Log:log_details_user.html.twig' with {'user': correction.user} %}
+{% endif %}

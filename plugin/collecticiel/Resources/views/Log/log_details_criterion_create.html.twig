@@ -1,0 +1,10 @@
+{% if log.details.criterion is defined %}
+    <h4>{{ ('log_created_criterion')|trans({}, 'log') }}</h4>
+
+    <dl class="dl-horizontal">
+        <dt>{{ ('instruction')|trans({}, 'log') }}</dt>
+        <dd>{{ log.details.criterion.instruction|raw }}</dd>
+    </dl>
+{% endif %}
+
+{% include 'InnovaCollecticielBundle:log:log_details_dropzone.html.twig' %}

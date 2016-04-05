@@ -1,0 +1,10 @@
+{% if notification.details.report.dropId is defined  %}
+    <a href="{{ path('innova_collecticiel_drops_detail', {'resourceId' : notification.details.report.dropzoneId,'dropId' : notification.details.report.dropId}) }}"
+       target="_blank"><span
+                class="fa fa-exclamation-triangle"></span>{{ notification.actionKey|trans({'%dropzone%' : notification.details.resource.name}, 'notification') }}
+    </a>
+{% else %}
+    <a href="#"><span
+                class="fa fa-exclamation-triangle"></span>{{ notification.actionKey|trans({'%dropzone%' : notification.details.resource.name}, 'notification') }}
+    </a>
+{% endif %}

@@ -1,0 +1,34 @@
+{% if dropzoneProgress is defined %}
+
+    {#{{ dump(dropzoneProgress)}}
+    {{dump( dropzoneProgress.states)}}
+    {{ dump(dropzoneProgress.currentState) }}#}
+
+    <h5>{{ 'Dropzone progress'|trans({},'innova_collecticiel') }}</h5>
+    <div class="progress " style="text-align: center;">
+        <div class="progress-bar " role="progressbar" aria-valuenow="{{ dropzoneProgress.currentState }}"
+             aria-valuemin="0" aria-valuemax="{{ dropzoneProgress.states|length }}"
+             style="width: {{ dropzoneProgress.percent }}%;">
+
+            <span class='progress-bar-label {% if dropzoneProgress.percent <= 25 %} empty-bar {% endif %}'>
+            	    {{ dropzoneProgress.percent }}%
+              -
+                {% set currentLiteralState = dropzoneProgress.states[dropzoneProgress.currentState] %}
+                {{ currentLiteralState|trans({'%nb_correction%':dropzoneProgress.nbCorrection,'%expected_correction%':dropzone.expectedTotalCorrection},'innova_collecticiel') }}
+            </span>
+        </div>
+    </div>
+
+    <style>
+        .progress-bar-label {
+            width: 100%;
+            min-width: 300px;
+            overflow-x: visible;
+        }
+
+        .empty-bar {
+            color: black;
+        }
+    </style>
+
+{% endif %}

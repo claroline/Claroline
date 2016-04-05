@@ -1,0 +1,344 @@
+{# InnovaERV : Liste des commentaires et saisie des commentaires  #}
+{% extends "InnovaCollecticielBundle::layout.html.twig" %}
+
+{% form_theme form "InnovaCollecticielBundle::form_theme_bootstrap3.html.twig" %}
+{# InnovaERV : cet écran a été "allégé" et la première version  #}
+{# qui devrait servir pour ailleurs a été copiée sur Comment/listComment.html.twig  #}
+{# elle sert notamment à lister les commentaires pour UN document  #}
+
+{% block resourceBreadcrumb %}
+    {# Ligne origine  #}
+    <li class="active"><span class=" fa fa-pencil-square-o"></span> {{ dropzone.resourceNode.name }}</li>
+
+    {# bloc ajouté, voir edit.html.twig  #}
+    {% if admin == true %}
+        <li><a href="{{ path('innova_collecticiel_edit_common', {'resourceId': dropzone.id}) }}"><span
+                        class="fa fa-list"></span> {{ dropzone.resourceNode.name }}</a>
+        </li>
+        <li>
+            <a href="{{ path('innova_collecticiel_drops', {'resourceId': dropzone.id}) }}"> {{ 'List of copies'|trans({}, 'innova_collecticiel') }}</a>
+        </li>
+        <li>
+            <a href="{{ path('innova_collecticiel_drops_detail', {'resourceId': dropzone.id, 'dropId': correction.drop.id}) }}">
+                {{ 'Retail copy of %firstName% %lastName%'|trans({'%firstName%': correction.drop.user.firstName, '%lastName%': correction.drop.user.lastName}, 'innova_collecticiel') }}
+            </a></li>
+        <li class="active">{{ 'Correction by %firstName% %lastName%'|trans({'%firstName%': correction.user.firstName, '%lastName%': correction.user.lastName}, 'innova_collecticiel') }}</li>
+    {% else %}
+        <li><a href="{{ path('innova_collecticiel_open', {'resourceId': dropzone.id}) }}"><span
+                        class="fa fa-file"></span> {{ dropzone.resourceNode.name }}</a></li>
+        <li>
+            <a href="{{ path('innova_collecticiel_drop_detail_by_user', {'resourceId': dropzone.id,'dropId':correction.drop.id}) }}">  {{ 'Details of your copy'|trans({}, 'innova_collecticiel') }}</a>
+        </li>
+        <li class="active">{{ 'Correction'|trans({}, 'innova_collecticiel') }}</li>
+    {% endif %}
+{% endblock %}
+
+{% block dropzone_content %}
+    <div class="panel-body container-dropzone">
+
+        <h2>
+            {{ dropzone.resourceNode.name }} (Collecticiel)
+
+            <div class="btn-group pull-right">
+                {# Ajout du bouton "Retour" InnovaERV #}
+                {% if not adminInnova  %}
+                    {# Si je suis "Etudiant" alors je viens sur cette page que par UNE seule route. InnovaERV #}
+                    <a href="{{ path('innova_collecticiel_drop', {'resourceId': dropzone.id}) }}" class="btn btn-default"><span class="fa fa-arrow-left"></span>{{ 'Return'|trans({}, 'innova_collecticiel') }}</a>
+                {% else %}
+                    {# Si je suis "Enseignant" alors je peux venir de DEUX routes. InnovaERV #}
+                    <a href="#" class="btn btn-default backLink" data-resource_id="{{ dropzone.id}}"><span class="fa fa-arrow-left"></span>{{ 'Return'|trans({}, 'innova_collecticiel') }}</a>
+                {% endif %}
+            </div>
+        </h2>
+
+        {{ macros.flashBox() }}
+
+        <ul class="nav nav-tabs  margin-bottom-md margin-top-md">
+            <!-- InnovaERV : ajout du traitement car les onglets ne sont pas identiques -->
+            <!-- suivant si on est ADMIN ou pas -->
+            {% if adminInnova %}
+                {% include "InnovaCollecticielBundle:Dropzone:editAdmin.html.twig" %}
+            {% else %}
+                <!-- (Mon) Espace collecticiel -->
+                {% include "InnovaCollecticielBundle:Dropzone:editNotAdmin.html.twig" %}
+            {% endif %}
+        </ul>
+
+
+        {% if admin %}
+        <!--    <h2 class="{% if correction.reporter %}text-danger{% endif %}">
+                {{ 'Correction by %firstName% %lastName%'|trans({'%firstName%': correction.user.firstName, '%lastName%': correction.user.lastName}, 'innova_collecticiel') }}
+            </h2>-->
+            {{ macros.flashBox() }}
+
+            {# Bloc "Retour aux corrections ..." #}
+{#            <div class="row">  #}
+{#                <div class="col-md-12">  #}
+{#                    {% if backUserId is defined  and backUserId != -1 %}  #}
+{#    #}                     {# back from correction By user ( admin tool ) #}
+{#                       <a class="btn btn-default btn-sm"  #}
+{#                           href="{{ path('innova_collecticiel_examiner_corrections', {'resourceId': dropzone.id, 'userId': backUserId}) }}"><span  #}
+{#                                    class="fa fa-angle-left"></span> {{ 'Return to corrections'|trans({}, 'innova_collecticiel') }}
+{#                        </a>  #}
+{#                    {% else %}  #}
+{#                        <a class="btn btn-default btn-sm"  #}
+{#                           href="{{ path('innova_collecticiel_drops_detail', {'resourceId': dropzone.id, 'dropId': correction.drop.id}) }}"><span #}
+{#                                    class="fa fa-angle-left"></span> {{ 'Return to corrections'|trans({}, 'innova_collecticiel') }}
+{#                        </a> #}
+{#                   {% endif %} #}
+{#                </div> #}
+{#           </div> #}
+{#           <br/> #}
+
+            {# Bloc "Rappel des instructions ..." #}
+            {% include 'InnovaCollecticielBundle:Dropzone:callInstruction.html.twig' %}
+
+            {# Bloc "Instructions aux correcteurs ..." #}
+            {% if dropzone.correctionInstruction|default
+              and dropzone.correctionInstruction != ''
+              and dropzone.correctionInstruction != '<p></p>' %}
+                {% include 'InnovaCollecticielBundle:Correction:correctionInstructions.html.twig' %}
+                <br/>
+            {% endif %}
+
+            {# Bloc ??? #}
+            {% if correction.reporter %}
+                <div class="col-md-12">
+                    <span class="text-danger"><span
+                                class="fa fa-exclamation-triangle"></span>{{ 'This correction has reported abuse'|trans({}, 'innova_collecticiel') }}</span>
+                    <a href="#reportModal" data-toggle="modal"
+                       class="btn btn-danger btn-sm pull-right">{{ 'Remove report'|trans({}, 'innova_collecticiel') }}</a>
+
+                    <div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"
+                                            aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">{{ 'Warning'|trans({}, 'innova_collecticiel') }}</h4>
+                                </div>
+                                <div class="modal-body">
+                                    {{ 'You are about to remove a report. What do you do'|trans({}, 'innova_collecticiel') }}
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default"
+                                            data-dismiss="modal">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</button>
+                                    <a href="{{ path('innova_collecticiel_remove_report', {'resourceId': dropzone.id, 'dropId': correction.drop.id, 'correctionId': correction.id, 'invalidate': 0}) }}"
+                                       class="btn btn-danger pull-right">{{ 'Keep this correction scored zero'|trans({}, 'innova_collecticiel') }}</a>
+                                    <a href="{{ path('innova_collecticiel_remove_report', {'resourceId': dropzone.id, 'dropId': correction.drop.id, 'correctionId': correction.id, 'invalidate': 1}) }}"
+                                       class="btn btn-danger pull-right">{{ 'Invalidate this correction'|trans({}, 'innova_collecticiel') }}</a>
+                                </div>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+                    <!-- /.modal -->
+                </div>
+            {% endif %}
+
+            {# Bloc Documents. C'est la liste des documents #}
+            {% set documentListText = 'Comments on'|trans({}, 'innova_collecticiel') %}
+            {# {{ dropzoneMacros.displayDocumentsList(correction.drop, dropzone, 6, "condensed", documentListText) }} #}
+            {#  Ajout de l'appel aux macros Collecticiel InnovaERV #}
+            {{ collecticielDocumentMacros.innovaDocumentDisplay(correction.drop, dropzone, 12, "condensed", documentListText, document)
+            }}
+
+            {# Bloc Apprenants #}
+            <div class="row">
+                <h4 class="text-muted col-md-2">{{ 'Author'|trans({}, 'innova_collecticiel') }}</h4>
+                <div class="col-md-3">{{ correction.drop.user.firstName }} {{ correction.drop.user.lastName }}</div>
+            </div>
+
+            <br/>
+
+            {# Bloc Correcteur
+            <div class="row">
+                <div class="text-muted col-md-4">{{ 'Corrector'|trans({}, 'innova_collecticiel') }}</div>
+                <div class="col-md-8">{{ correction.user.firstName }} {{ correction.user.lastName }}</div>
+            </div>
+            #}
+            
+            {# Bloc Note attribuée #}
+            {#
+            <div class="row">
+                <div class="text-muted col-md-4">{{ 'Grade attribuated'|trans({}, 'innova_collecticiel') }}</div>
+                <div class="col-md-8">{% if correction.totalGrade != null %}{{ correction.totalGrade|number_format(2) }}{% else %}--{% endif %}
+                    /20
+                </div>
+            </div>
+            #}
+
+            {# Bloc "Liste des commentaires" #}
+            {% block dropzone_list_comment %}
+                <h3>
+                    {{ 'Comments list'|trans({}, 'innova_collecticiel') }}
+                </h3>
+
+                {# Partie Affichage de la liste des commentaires #}
+                {# {% for comments in comments %}
+                    <div class="row">
+                        <div class="text-muted col-md-4">{{ comments.commentText  }}</div>
+                    </div>
+                {% endfor %} #}
+                <div class="box box-warning direct-chat direct-chat-warning">
+                    <div class="box-body">
+                        <!-- Conversations are loaded here -->
+                        <div class="direct-chat-messages col-md-9">
+                            {% for comment in comments %}
+                                <!-- Si le créateur du commentaire est l'utilisateur actuel alors ... -->
+                                {% if comment.user.id == user.id %}
+                                    <!-- Message. Default to the left -->
+                                    <!-- Message to the right -->
+                                    <div class="direct-chat-msg right">
+                                        <div class="direct-chat-info clearfix">
+                                            <span class="direct-chat-name">Vous</span>
+                                            <span class="direct-chat-timestamp"> - {{ comment.commentDate|date("d/m/Y (H:i:s)") }}</span>
+                                        </div><!-- /.direct-chat-info -->
+                                        <i class="direct-chat-img direct-chat-img-you right fa fa-user" ></i>
+                                        <div class="direct-chat-text">{{ comment.commentText|raw }}</div><!-- /.direct-chat-text -->
+                                    </div><!-- /.direct-chat-msg -->
+                                <!-- sinon ... -->
+                                {% else %}
+                                    <div class="direct-chat-msg">
+                                        <div class="direct-chat-info clearfix">
+                                            <span class="pull-right">
+                                            <span class="direct-chat-name">{{ comment.user.firstName }} {{ comment.user.lastName }} ({{ comment.user.username }})</span>
+                                            <span class="direct-chat-timestamp"> - {{ comment.commentDate|date("d/m/Y (H:i:s)") }}</span>
+                                            </span>
+                                        </div><!-- /.direct-chat-info -->
+                                        <!-- /.direct-chat-img -->
+                                        <i class="direct-chat-img direct-chat-img-others fa fa-user" ></i>
+                                        <div class="direct-chat-text">{{ comment.commentText|raw }}</div><!-- /.direct-chat-text -->
+                                    </div><!-- /.direct-chat-msg -->
+
+
+                                {% endif %}
+                            {% endfor %}
+                        </div><!-- direct-chat-messages -->
+                    </div><!-- box-body-->
+                </div><!-- box box-warning direct-chat direct-chat-warning-->
+
+                {# Partie "Ajout d'un commentaire" #}
+                <div class="form-group">
+                    {% include 'InnovaCollecticielBundle:Comment:addComment.html.twig' %}
+                </div>
+
+            {% endblock %}
+
+        {% else %}
+            {# TODO InnovaERV : partie "Non admin" qui n'a pas été analysée #}
+            {# NO ADMIN #}
+            <div class="row">
+                <div class="col-md-12">
+                    {% if state is defined and state =='preview' %}
+                        <h2>{{ 'Correction of your copy'|trans({}, 'innova_collecticiel') }}</h2>
+                    {% else %}
+                        <h2>{{ 'Correction'|trans({}, 'innova_collecticiel') }}</h2>
+                    {% endif %}
+                </div>
+            </div>
+            {{ macros.flashBox() }}
+            {# DROP STATUS BAR #}
+            {% include 'InnovaCollecticielBundle:Drop:dropStatus.html.twig' %}
+
+            {% if dropzone.instruction != null %}
+                {% include 'InnovaCollecticielBundle:Dropzone:recallInstruction.html.twig' %}
+            {% endif %}
+
+            {% if dropzone.correctionInstruction|default and dropzone.correctionInstruction != ''  and dropzone.correctionInstruction != '<p></p>' %}
+                {% include 'InnovaCollecticielBundle:Correction:correctionInstructions.html.twig' %}
+                <br/>
+            {% endif %}
+
+            {% if correction is not null %}
+                <h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ 'Relevant documents'|trans({}, 'innova_collecticiel') }}
+                        </div>
+                        <div class="col-md-6">
+                            {% if correction.dropzone.isPeerReview() and correction.dropzone.hasCriteria() and ((state is defined and state != 'preview') or (state is not defined )) %}
+                                {% if correction.reporter == false %}
+                                    <a href="{{ path('innova_collecticiel_report_drop', {'correctionId': correction.id}) }}"
+                                       class="btn btn-danger pull-right launch-modal">{{ 'Report'|trans({}, 'innova_collecticiel') }}</a>
+                                {% else %}
+                                    <span class="label label-danger pull-right">{{ 'Already reported'|trans({}, 'innova_collecticiel') }}</span>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </h3>
+                <p>
+                    {% if state is defined and  state == 'preview' %}
+                        {{ 'Here is the list of the corrected documents'|trans({}, 'innova_collecticiel') }}
+                    {% else %}
+                        {{ 'Here is the list of documents which you must correct'|trans({}, 'innova_collecticiel') }}
+                    {% endif %}
+                </p>
+                {% if correction.drop.documents|length > 0 %}
+                    {% set documentListText = 'Comments on'|trans({}, 'innova_collecticiel') %}
+                    {{ dropzoneMacros.displayDocumentsList(correction.drop, dropzone, 6, "condensed", documentListText) }}
+                {% else %}
+                    <p class="text-danger">{{ 'No document associated'|trans({}, 'innova_collecticiel') }}</p>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+
+        {# Contrôle #}
+        {% if state is defined and state == 'preview' and dropzone.getAllowCorrectionDeny %}
+            <div class="row">
+                <div class='col-md-12'>
+                    {% if correction.correctionDenied %}
+                        <span class="label label-danger btn-sm pull-right ">
+                        {{ 'Correction denied'|trans({},'innova_collecticiel') }}
+                    </span>
+                    {% else %}
+                        <a href="{{ path('innova_collecticiel_drops_deny_correction', {'resourceId': dropzone.id,  'correctionId': correction.id}) }}"
+                           class="btn btn-danger btn-sm pull-right launch-modal">
+                            {{ 'Deny correction'|trans({},'innova_collecticiel') }}
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+
+
+        {# Critères d'évaluation #}
+        {% if correction.reporter %}
+            <h3>{{ 'Reason of reporting'|trans({}, 'innova_collecticiel') }}</h3>
+            <div class="well">
+                {{ correction.reportComment|raw }}
+            </div>
+            {% if state == 'preview' %}
+                {% if correction.correctionDenied == false %}
+                    {# bouton d'activation du flag #}
+                    <a href="{{ path('innova_collecticiel_drop_detail_by_user', {'resourceId': dropzone.id,'dropId': correction.drop.id}) }}"
+                       class="btn btn-default">
+                        {{ 'Back to corrections'|trans({}, 'innova_collecticiel') }}
+                    </a>
+                    {#                     <a href="{{ path('innova_collecticiel_drop_detail_by_user', {'resourceId': dropzone.id,'dropId': correction.drop.id}) }}" class="btn btn-danger">
+                                            {{ 'Deny correction'|trans({}, 'innova_collecticiel') }}
+                                        </a> #}
+                {% else %}
+                    {# bouton désactivation du flag #}
+                    <a href="{{ path('innova_collecticiel_drop_detail_by_user', {'resourceId': dropzone.id,'dropId': correction.drop.id}) }}"
+                       class="btn btn-default">
+                        {{ 'Back to corrections'|trans({}, 'innova_collecticiel') }}
+                    </a>
+                {% endif %}
+            {% endif %}
+        {% else %}
+        {#    {% block dropzone_correct_content %}
+            {% endblock %}#}
+        {% endif %}
+    </div>
+
+{% block drop_zone_content_edit %}
+        {% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

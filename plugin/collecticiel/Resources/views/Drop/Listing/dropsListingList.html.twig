@@ -1,0 +1,103 @@
+{# Affichage du tableau de l'onglet "Demandes adressées" #}
+<tr>
+    {# Affichage de l'image de profil #}
+    {% if dropzone.picture == 1  %}
+        <td>
+            <div class="user-panel">
+                <div class="pull-left image">
+                    {% if drop.user.getPicture() != '' %}
+                        <img src="{{ asset('uploads/pictures/') ~ drop.user.getPicture() }}"
+                        class=""
+                        alt="{{ drop.user.getLastName() ~ ' ' ~ drop.user.getFirstName() }}">
+                    {% else %}
+                        <img class="img-polaroid img-responsive" src="{{ asset('bundles/icapnotification/images/default-avatar.png') }}">
+                    {% endif %}
+                </div>
+            </div>
+        </td>
+    {% endif %}
+
+    <td>{{ drop.user.lastName|upper }}</td>
+
+    <td>{{ drop.user.firstName|capitalize }}</td>
+
+    {% if dropzone.username == 1  %}
+        <td>{{ drop.user.userName|capitalize }}</td>
+    {% endif %}
+
+    {# En date du #}
+    <td>{{ document.documentDate|date('formatDatetime'|trans({}, 'innova_collecticiel')) }}</td>
+
+    <td>
+        {% if document.url is not null %}
+            <a target="_blank"
+               href="{{ document.url }}">{{ document.url | length > 40 ? document.url | slice(0, 40) ~ '...' :document.url }}</a>
+        {% else %}
+            {% if document.title is not null %}
+                <a target="_blank"
+                   href="{{ path('innova_collecticiel_open_resource', {'resourceId': dropzone.id, 'documentId': document.id}) }}">{{ document.title }}</a>
+            {% else %}
+                <a target="_blank"
+                   href="{{ path('innova_collecticiel_open_resource', {'resourceId': dropzone.id, 'documentId': document.id}) }}">{{ document.resourceNode.name }}</a>
+            {% endif %}
+        {% endif %}
+    </td>
+
+    {% if dropzone.evaluation != 1  %}
+    <td class="centered centering-columns">
+        {# Afficher ici la valeur "Devoirs à corriger" modifiée en "Etat" #}
+        <div class="btn-group">
+            {% include 'InnovaCollecticielBundle:Document:documentsNbTextToRead.html.twig' %}
+        </div>
+    </td>
+    {% endif %}
+
+    <td class="centered centering-columns">
+    {# Appel de la vue "Vue d'un fichier" où seront affichés les différents commentaires. #}
+        <div class="btn-group">
+           {# Variable qui va compter le nombre de commentaires #}
+           {# Affichage d'un bouton si pas de commentaires #}
+            {% if document.comments|length == 0 %}
+                <a data-toggle="tooltip" data-placement="top" data-original-title="{{ 'To drop'|trans({},'innova_collecticiel') }}" class="fa fa-commenting-o" href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" type="button" class="btn btn-default btn-sm">
+                </a>
+           {# Sinon affichage du compteur et des nouveaux commentaires #}
+            {% else %}
+                <a data-toggle="tooltip" data-placement="top" data-original-title="{{ 'To drop'|trans({},'innova_collecticiel') }}" class="fa fa-commenting-o" href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" type="button">
+                {# #229 : Réduire la taille du nombre de commentaires dans les cellules #}
+                    <div class="very-small">
+                        {{ document.comments|length }} 
+                        {% if document.getUnReadComments( app.user.id ) != 0 %}
+                            (+{{ document.getUnReadComments( app.user.id ) }})
+                        {% endif %}
+                    </div>
+                </a>
+            {% endif %}
+        </div>
+    </td>
+
+    {% if adminInnova %}
+        {# Affiche cette colonne si le créateur du collecticiel veut gérer les accusés de réception. Demande JJQ. InnovaERV #}
+        {% if dropzone.returnreceipt == 1  %}
+            <td class="centered centering-columnsAR">
+        <div class="btn-group">
+                {# Afficher ici la valeur de l'accusé de réception #}
+                {% include 'InnovaCollecticielBundle:Document:returnReceipt.html.twig' %}
+        </div>
+            </td>
+        {% endif %}
+
+        {# On affiche cette colonne si le créateur du collecticiel veut gérer les évaluations. Demande JJQ. InnovaERV #}
+        {% if dropzone.evaluation == 1  %}
+            <td class="centered"></td>
+            <td class="centered"></td>
+        {% endif %}
+    {% endif %}
+
+    <td class="centered no-sort sorting_disabled">
+    <div>
+        {# Affiche de la case à cocher en étant "coché" ou "décoche". Demande JJQ. InnovaERV #}
+        {% include 'InnovaCollecticielBundle:Document:inputReturnReceipt.html.twig' %}
+    </div>
+    </td>
+
+</tr>

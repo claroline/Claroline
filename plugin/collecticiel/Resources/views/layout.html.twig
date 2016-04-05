@@ -1,0 +1,77 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% import 'InnovaCollecticielBundle::macros.html.twig' as dropzoneMacros %}
+{#  Ajout de l'appel aux macros Collecticiel InnovaERV #}
+{% import 'InnovaCollecticielBundle::macrosCollecticiel.html.twig' as collecticielMacros %}
+{% import 'InnovaCollecticielBundle::macrosCollecticielDocumentDisplay.html.twig' as collecticielDocumentMacros %}
+{% import 'InnovaCollecticielBundle::macrosCollecticielDocumentDisplayAddComments.html.twig' as collecticielDocumentMacrosAddComments %}
+
+{#  
+Modification ERV (août 2015) InnovaERV
+suite demande JJQ, voir son document de référence d'août 2015
+il faut venir sur l'onglet "Mon espace collecticiel" et non plus sur "Drop"
+Point 5 du document, vu avec Axel
+#}
+{% block breadcrumb %}
+    <div id="resource-breadcrumb">
+        {% if _resource is defined %}
+            <div id="twig-resource-attributes"
+                 data-resource-id="{{ _resource.getId() }}"
+                 data-resource-name="{{ _resource.getName() }}"
+            >
+            </div>
+                <ul class="breadcrumb">
+                    {% if not has_role('ROLE_ANONYMOUS') %}
+                        <li><a href="{{ path('claro_workspace_list') }}"><i class="fa fa-book"></i> {{ 'workspaces'|trans({}, 'platform') }}</a></li>
+                        <li>
+                            {# we're finding wich is the workspace we want to display here #}
+                            {% set node = app.session.get('current_resource_node') %}
+                            {% if node is not null %}
+                                {% set workspace = node.getWorkspace() %}
+                            {% else %}
+                                {% set workspace = _resource.getResourceNode().getWorkspace() %}
+                            {% endif %}
+                            <a href="{{ path('claro_workspace_open_tool', {'toolName': 'home', 'workspaceId': workspace.getId() }) }}">
+                                {{ workspace.getName() ~ ' (' ~ workspace.getCode() ~ ') ' }}
+                            </a>
+                        </li>
+                        {% render(controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
+                            {'node': _resource.getResourceNode(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}))
+                        %}
+                        <li class="active">
+                            <span class="fa fa-file"></span> <a href="{{ path('innova_collecticiel_drop', {'resourceId': _resource.getId() }) }}">
+                            {{ _resource.getResourceNode().getName() }}
+                            </a>
+                        </li>
+                    {% endif %}
+                   
+                </ul>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets debug=false filter='lessphp' output='css/innovacollecticiel/style.css'
+      "@InnovaCollecticielBundle/Resources/views/less/style.less"
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    <link href="{{ asset("bundles/innovacollecticiel/css/player.css") }}" rel="stylesheet" />
+    <link href="{{ asset("bundles/innovacollecticiel/css/datatables.css") }}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link href="{{ asset("bundles/innovacollecticiel/css/adminLte.css") }}" rel="stylesheet" />
+
+
+    {% endstylesheets %}
+{% endblock %}
+
+{% block section_content %}
+    {% block dropzone_content %}
+    {% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset("bundles/innovacollecticiel/js/datatables.min.js") }}" ></script>
+    <script src="{{ asset("bundles/innovacollecticiel/js/datatables-init.js") }}" ></script>
+{% endblock %}

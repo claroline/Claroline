@@ -1,0 +1,35 @@
+{% extends "InnovaCollecticielBundle:Correction:correct.html.twig" %}
+
+{% block dropzone_correct_content %}
+    <h3>
+        {{ 'Warning'|trans({}, 'innova_collecticiel') }}
+    </h3>
+{% form_theme form "InnovaCollecticielBundle::form_theme_bootstrap3.html.twig" %}
+
+    <form class="form-horizontal" method="POST" action="{{ path('innova_collecticiel_correct_validation', {'resourceId': dropzone.id}) }}">
+        {{ form_errors(form) }}
+        <p>
+            {{ 'You are about to make your correction. This action is final. The rating is %grade%/20'|trans({'%grade%': (totalGrade|number_format(2)) }, 'innova_collecticiel') }}
+        </p>
+        <p>
+            {{ 'Are you sure you have done?'|trans({}, 'innova_collecticiel') }}
+        </p>
+
+        <div class="row">
+            <div class="col-md-12 form-group">
+                <div class="btn-group form-buttons pull-right">
+                    {% if dropzone.allowCommentInCorrection == false %}
+                        <a href="{{ path('innova_collecticiel_correct_paginated', {'resourceId': dropzone.id, 'page': nbPages}) }}" class="btn btn-default">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</a>
+                    {% else %}
+                        <a href="{{ path('innova_collecticiel_correct_comment', {'resourceId': dropzone.id}) }}" class="btn btn-default">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</a>
+                    {% endif %}
+                    <button type="submit" class="btn btn-primary">{{ 'Confirm and finished'|trans({}, 'innova_collecticiel') }}</button>
+                </div>
+            </div>
+        </div>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

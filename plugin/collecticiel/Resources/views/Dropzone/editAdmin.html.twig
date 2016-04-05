@@ -1,0 +1,27 @@
+{# Demandes adressées #}
+<li class="hometab-element {% block collecticiel_demandes_active %}active{% endblock %}">
+    <a href="{% block collecticiel_demandes_link %}
+       {{ path('innova_collecticiel_drops_awaiting', {'resourceId': dropzone.id}) }}
+       {% endblock %}">
+            {{ 'Requests'|trans({}, 'innova_collecticiel') }}
+        </a>
+    </li>
+
+    {# Espaces partagés #}
+    {# #63 : suppression de l'id car mauvaise navigation #}
+    <li class="hometab-element {% block collecticiel_shared_active %}{% endblock %}">
+        <a href="{% block collecticiel_shared_link %}
+           {{ path('innova_collecticiel_shared_spaces',{'resourceId':dropzone.id}) }}
+           {% endblock %}">
+                {{ 'Shared spaces'|trans({}, 'innova_collecticiel') }}
+            </a>
+        </li>
+
+        {# Paramètres #}
+        <li class="hometab-element {% block collecticiel_parametres_active %}{% endblock %}">
+            <a id="editParametresLink" href="{% block collecticiel_parametres_link %}
+               {{ path('innova_collecticiel_edit_common',{'resourceId':dropzone.id}) }}
+               {% endblock %}" >
+                    {{ 'Parameters'|trans({}, 'innova_collecticiel') }}
+                </a>
+            </li>

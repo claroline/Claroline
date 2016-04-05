@@ -1,0 +1,35 @@
+{% form_theme form "InnovaCollecticielBundle::form_theme_bootstrap3.html.twig" %}
+
+<form class="form-horizontal" method="POST" action="{{ path('innova_collecticiel_edit_create_criterion', {'resourceId': dropzone.id, 'page':page, 'criterionId':criterion.id}) }}">
+    {{ form_errors(form) }}
+
+    <div class="row">
+        <div class="col-md-12">
+            <label for="innova_collecticiel_criterion_form_instruction">{{ 'innova_collecticiel_criterion_form_instruction'|trans({}, 'innova_collecticiel') }}</label>
+        </div>
+    </div>
+    <div class="row">
+        {{ form_row(form.instruction, {'label_col_size': ' ', 'input_col_size': 'col-md-12', 'label_attr': {'style': 'display: none;'}}) }}
+    </div>
+
+    <div class="column-input">
+        {{ form_row(form.totalCriteriaColumn) }}
+    </div>
+
+    <div class="comment-input">
+        {{ form_row(form.allowCommentInCorrection) }}
+    </div>
+
+    <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-10 btn-group form-buttons">
+            <a href="{{ path('innova_collecticiel_edit_criteria_paginated', {'resourceId': dropzone.id, 'page':page}) }}" class="btn btn-default">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</a>
+            <button type="submit" class="btn btn-primary">
+                {% if criterion.id == 0 %}
+                    {{ 'Create'|trans({}, 'innova_collecticiel') }}
+                {% else %}
+                    {{ 'dropzone_edit'|trans({}, 'innova_collecticiel') }}
+                {% endif %}
+            </button>
+        </div>
+    </div>
+{{ form_end(form) }}

@@ -1,0 +1,12 @@
+{# Variable qui va compter le nombre de commentaires #}
+{% set nbComment = 10 %}
+
+{# stackoverflow.com/questions/10299202/twig-for-loop-and-array-with-key #}
+{# Parcours du tableau pour afficher le nombre de commentaires de l'utilisateur en train d'être traité
+{% for key,value in userNbTextToRead %}
+    {% if drop.user.id == key %}
+        {% set nbComment = value + 1 %}
+    {% endif %}
+{% endfor %}
+ #}
+{{ nbComment }}

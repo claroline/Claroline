@@ -1,0 +1,68 @@
+{% extends "InnovaCollecticielBundle::form_theme_bootstrap3.html.twig" %}
+
+{% block form_row %}
+<!-- InnovaERV : première ligne avec affichage libellé + "pas du tout" et "Tout à fait" -->
+    {% spaceless %}
+        {% set input_col_size = input_col_size|default('col-md-4') %}
+        {% set label_col_size = label_col_size|default('col-md-8') %}
+
+        <div{% if errors|length > 0 %} class="has-error"{% endif %}>
+            {% if 'checkbox' not in block_prefixes %}
+                <div class="{{ label_col_size }}">
+                    {% if 'checkbox' not in block_prefixes %}
+                        {{ form_label(form, label|default(null)) }}
+                    {% endif %}
+                </div>
+            {% endif %}
+            <div class="{{ input_col_size }}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <strong>{{ 'Not at all'|trans({}, translation_domain) }}</strong>
+                        <strong class="pull-right">{{ 'Entirely'|trans({}, translation_domain) }}</strong>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 column-container-div">
+                        {{ form_widget(form) }}
+                        {{ form_errors(form) }}
+                        {% if help is defined and help %}
+                            <div class="help-block">{{ help }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    {% endspaceless %}
+{% endblock form_row %}
+
+{% block choice_widget_expanded %}
+<!-- InnovaERV : deuxième ligne avec affichage des "radio button" -->
+    {% spaceless %}
+        <span {{ block('widget_container_attributes') }}>
+            {% for child in form %}
+                {{ form.vars.multiple }}
+                <div class="radio-inline {{ multiple ? 'checkbox' : 'radio' }}" style="margin-left: 0px;">
+                    {{ form_widget(child) }}
+                </div>
+            {% endfor %}
+        </span>
+    {% endspaceless %}
+{% endblock choice_widget_expanded %}
+
+{% block form_label %}
+    {% spaceless %}
+        {% if label is not sameas(false) %}
+            {% if not compound %}
+                {% set label_attr = label_attr|merge({'for': id}) %}
+            {% endif %}
+            {% if required %}
+                {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+            {% endif %}
+            {% if label is empty %}
+                {% set label = name|humanize %}
+            {% endif %}
+            <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ label|trans({}, translation_domain)|raw }}</label>
+        {% endif %}
+    {% endspaceless %}
+{% endblock form_label %}

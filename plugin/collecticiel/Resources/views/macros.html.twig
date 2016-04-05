@@ -1,0 +1,161 @@
+{% macro displayDocumentsList
+(drop, dropzone, width, mode, documentListText, adminInnova,
+collecticielOpenOrNot, returnReceiptArray, teacherCommentDocArray
+)
+%}
+    <div class="row">
+        <div class="col-md-{{ width }}">
+            {% if documentListText is not null %}
+                <div class="text-muted">{{ documentListText }}</div>
+            {% endif %}
+            
+            {% set documents_validated = "none" %}
+            {% for document in drop.documents %}
+                {% if document.validate %}
+                    {% set documents_validated = "yes" %}
+                {% endif %}
+            {% endfor %}
+            
+            {# InnovaERV : suppression de la condition "OR" suite retour Nathalie #}
+            {# InnovaERV : car il fallait voir les documents qund on va sur l'espace d'un étudiant #}
+            {# voir également documentItem.html.twig #}
+            {% if drop.documents|length == 0  %}
+                <p class="text-danger">{{ 'No document associated'|trans({},'innova_collecticiel') }}</p>
+            {% else %}
+                <table class="table table-responsive {% if mode == "condensed" %}table-condensed{% endif %} well datatable">
+                    <thead>
+                        <tr class="text-left">
+                            {% if dropzone.picture == 1  %}
+                                <th class="centered"></th>
+                            {% endif %}
+                            <th class="nameColumn">{{ 'Name'|trans({}, 'innova_collecticiel') }}</th>
+                            <th class="nameColumn">{{ 'First name'|trans({}, 'innova_collecticiel') }}</th>
+                            {% if dropzone.username == 1  %}
+                                <th class="usernameColumn">{{ 'Nickname'|trans({}, 'innova_collecticiel') }}</th>
+                            {% endif %}
+                            <th class="centered">
+                                <i class="fa fa-file-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Name of document'|trans({},'innova_collecticiel') }}"></i>
+                            </th>
+                            <th class="typeColumn centered">
+                                <i class="fa fa-file-excel-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Type of document'|trans({},'innova_collecticiel') }}"></i>
+                            </th>
+                            <th class="dateColumn centered">
+                                <i class="fa fa-calendar-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Date hour'|trans({},'innova_collecticiel') }}"></i>
+                            </th>
+                            {# #146 : on affiche cette colonne même en tant qu'enseignant, demande de JJQ #}
+                            <th class="centered">
+                                {% if dropzone.evaluation != 1 %}
+                                    <i class="fa fa-arrow-right" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Comment transmission'|trans({},'innova_collecticiel') }}"></i>
+                                {% else %}
+                                    <i class="fa fa-arrow-right" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Evaluation transmission'|trans({},'innova_collecticiel') }}"></i>
+                                {% endif %}
+                            </th>
+                            <th class="centered">
+                                <i class="fa fa-commenting-o" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Comment evaluation'|trans({},'innova_collecticiel') }}"></i>
+                            </th>
+                            {# #187 : ajout de la colonne "Accusé de réception", demande de JJQ #}
+                            {% if dropzone.returnreceipt == 1  %}
+                                <th class="centered">
+                                    <i class="fa fa-hand-o-right" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Return receipt'|trans({},'innova_collecticiel') }}">
+                                </th>
+                            {% endif %}
+                            {% if adminInnova %}
+                                <th class="no-sort"></th>
+                            {% else %}
+                                {% if collecticielOpenOrNot %}
+                                    <th class="no-sort"</th>
+                                {% endif %}
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for index, document in drop.documents %}
+                            {% include 'InnovaCollecticielBundle:Document:documentItem.html.twig'
+                            with {
+                                    'returnReceiptArray': returnReceiptArray,
+                                    'teacherCommentDocArray': teacherCommentDocArray
+                                 }
+                            %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </div>
+
+    {# Déclaration de la modal pour confirmation de la validation #}
+    <div class="modal fade" id="validate-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">
+                    {# Version commentaire #}
+                    {% if dropzone.evaluation != 1  %}
+                        {{ 'Commented document modal'|trans({}, 'innova_collecticiel') }}
+                    {# Version évaluation #}
+                    {% else %}
+                        {{ 'Evaluation document modal'|trans({}, 'innova_collecticiel') }}
+                    {% endif %}
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    {# Version commentaire #}
+                    {% if dropzone.evaluation != 1  %}
+                        {{ 'Sure to ask comment for document'|trans({}, 'innova_collecticiel') }}
+                    {# Version évaluation #}
+                    {% else %}
+                        {{ 'Sure to ask evaluation for document'|trans({}, 'innova_collecticiel') }}
+                    {% endif %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</button>
+                    <button data-document_id="titi"
+                            data-document_sender_id="99" 
+                            data-document_comment_length="99"
+                            data-document_docDropUser_id="99" 
+                            data-document_adminInnova="99" 
+                    id="modal_confirm" data-method="VALIDATE" type="button" class="btn btn-primary rest" href="#">{{ 'Ok'|trans({}, 'innova_collecticiel') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {# Fin de la déclaration de la modal pour confirmation de la validation #}
+    <script src="{{ asset('bundles/innovacollecticiel/js/tooltip.js') }}"></script>
+    <script src="{{ asset('bundles/innovacollecticiel/js/popup.js') }}"></script>
+{% endmacro %}
+
+{% macro renderList(array) %}
+    {% import _self as self %}
+    {% for element in array %}
+        {% if element is iterable %}
+             {{ self.renderList(element) }}
+        {% else %}
+            {{ element }}
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+{% macro flashBox() %}
+    {% import _self as self %}
+    {% set flashBag = app.session.getFlashBag() %}
+    {% if flashBag|length > 0 %}
+        {% set flashes =
+            {
+                'info': flashBag.get('info'),
+                'success': flashBag.get('success'),
+                'warning': flashBag.get('warning'),
+                'danger': flashBag.get('error'),
+                'alert': flashBag.get('alert')
+            }
+        %}
+        {% for category, msgs in flashes %}
+            {% if msgs|length > 0 %}
+                <div class="alert alert-{{ category }}">
+                    <a class="close" data-dismiss="alert" href="#" aria-hidden="true">&times;</a>
+                    {{ self.renderList(msgs) }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endmacro %}

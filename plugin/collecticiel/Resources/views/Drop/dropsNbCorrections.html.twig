@@ -1,0 +1,8 @@
+{% set nbFinishedCorrections = 0 %}
+{%  for correction in drop.corrections %}
+    {% if correction.finished == true and correction.valid %}
+        {% set nbFinishedCorrections = nbFinishedCorrections + 1 %}
+    {% endif %}
+{%  endfor %}
+
+{{ nbFinishedCorrections }}/{{ dropzone.expectedTotalCorrection }}

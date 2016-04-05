@@ -1,0 +1,82 @@
+{% extends "InnovaCollecticielBundle:Drop:drops.html.twig" %}
+
+{% block dropzone_content_drops %}
+
+    <div class="btn-group pull-right">
+        {% block dropzone_content_drops_by_default %}
+            <a href="{{ path('innova_collecticiel_drops_by_default', {'resourceId': dropzone.id}) }}"
+               class="btn btn-default btn-xs {% block dropzone_content_drops_by_default_active %}{% endblock %}"
+               data-toggle="tooltip" title=""
+               data-original-title="{{ 'Sorted by date with reported drops first'|trans({}, 'innova_collecticiel') }}">{{ 'default sort'|trans({}, 'innova_collecticiel') }}</a>
+        {% endblock %}
+        {% block dropzone_content_drops_by_user %}
+            <a href="{{ path('innova_collecticiel_drops_by_user', {'resourceId': dropzone.id}) }}"
+               class="btn btn-default btn-xs {% block dropzone_content_drops_by_user_active %}{% endblock %}">{{ 'Sort by user'|trans({}, 'innova_collecticiel') }}</a>
+        {% endblock %}
+        {% block dropzone_content_drops_by_date %}
+            <a href="{{ path('innova_collecticiel_drops_by_date', {'resourceId': dropzone.id}) }}"
+               class="btn btn-default btn-xs {% block dropzone_content_drops_by_date_active %}{% endblock %}">{{ 'Sort by date'|trans({}, 'innova_collecticiel') }}</a>
+        {% endblock %}
+        {% block dropzone_content_drops_by_reported %}
+            <a href="{{ path('innova_collecticiel_drops_by_report', {'resourceId': dropzone.id}) }}"
+               class="btn btn-default btn-xs {% block dropzone_content_drops_by_reported_active %}{% endblock %}"
+               data-toggle="tooltip" title=""
+               data-original-title="{{ 'only reported drops'|trans({}, 'innova_collecticiel') }}">{{ 'sort by reported'|trans({}, 'innova_collecticiel') }}</a>
+        {% endblock %}
+    </div>
+
+    <div>
+        {% block dropzone_content_drops_by_beforeTitle %}
+        {% endblock %}
+    </div>
+    <h3>{% block dropzone_content_drops_by_list_title %}{{ 'fully corrected copies'|trans({}, 'innova_collecticiel') }}{% endblock %}</h3>
+    <div>
+        {% block dropzone_content_drops_by_list_tools %}
+        {% endblock %}
+    </div>
+    <h5>{% block dropzone_content_drops_by_list_subtitle %}{% endblock %}</h5>
+
+    {% block dropzone_content_drops_by_Listing %}
+        {% include 'InnovaCollecticielBundle:Drop:Listing/dropsListing.html.twig' %}
+    {% endblock %}
+
+    <div class="container row">
+    {% block dropzone_content_drops_by_pager %}
+        {% block dropzone_content_drops_by_paginate_part %}
+            {% if pager.haveToPaginate %}
+                {{
+                pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                'proximity' : 1,
+                'routeName': 'innova_collecticiel_drops_by_default_paginated',
+                'routeParams': {'resourceId': dropzone.id}
+                }
+                )
+                }}
+            {% endif %}
+        {% endblock %}
+    {% endblock %}
+    </div>
+
+    {% if pager.nbResults == 0 %}
+        <div class="row">
+            <div class="col-md-12">
+                {% block dropzone_content_drops_by_no_result_exception %}
+                    {{ 'noCopyExpectedCorrection'|transchoice(dropzone.expectedTotalCorrection, {}, 'innova_collecticiel') }}
+                {% endblock %}
+            </div>
+        </div>
+        <br/>
+    {% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "InnovaCollecticielBundle:Dropzone:edit.html.twig" %}
+
+{% block drop_zone_content_edit %}
+
+
+    <h3 id="myModalLabel">
+        {{ 'Warning'|trans({}, 'innova_collecticiel') }}
+    </h3>
+
+    {% include "InnovaCollecticielBundle:Criterion:editDeleteCriterionForm.html.twig" %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

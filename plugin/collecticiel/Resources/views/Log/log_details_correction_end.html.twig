@@ -1,0 +1,21 @@
+{% if log.details.drop is defined and log.details.drop.owner is defined %}
+    <h4>
+        {{ ('log_owner_drop')|trans({}, 'log') }}
+    </h4>
+    {% include 'InnovaCollecticielBundle:Log:log_details_user.html.twig' with {'user': log.details.drop.owner} %}
+{% endif %}
+
+{% if log.details.correction is defined %}
+    <h4>
+        {{ ('log_correction')|trans({}, 'log') }}
+    </h4>
+    {% include 'InnovaCollecticielBundle:Log:log_details_correction.html.twig' with {'correction': log.details.correction} %}
+{% endif %}
+
+{% if log.details.drop is defined %}
+    <h4>{{ ('log_drop_all_documents')|trans({}, 'log') }}</h4>
+
+    {% for document in log.details.drop.documents %}
+        {% include 'InnovaCollecticielBundle:Log:log_details_document.html.twig' with {'document': document} %}
+    {% endfor %}
+{% endif %}

@@ -1,0 +1,355 @@
+{% extends "InnovaCollecticielBundle:Dropzone:edit.html.twig" %}
+
+{% form_theme form "InnovaCollecticielBundle::form_theme_bootstrap3.html.twig" %}
+
+{# Gestion des onglets #}
+{% block collecticiel_parametres_active %}active{% endblock %}
+{% block collecticiel_parametres_link %}#{% endblock %}
+
+{% block drop_zone_content_edit %}
+
+    <form class="form-horizontal" role="form" method="POST" action="{{ path('innova_collecticiel_edit_common', {'resourceId': dropzone.id}) }}" {{ form_enctype(form) }}>
+
+        {{ form_errors(form) }}
+
+        {# Explication #}
+        <p>{{ 'common_explication'|trans({}, 'innova_collecticiel')|raw }}</p>
+
+        {# Consigne #}
+        <h4>{{ 'Instruction'|trans({}, 'innova_collecticiel') }}</h4>
+        <div class="form-group">
+            {{ form_row(form.instruction, {'input_col_size': 'col-md-12', 'label_col_size': '', 'label_attr': {'style': 'display: none;'}}) }}
+        </div>
+
+        {# Documents autorisés #}
+        <h4>{{ 'Document type allowed'|trans({}, 'innova_collecticiel') }}</h4>
+        <p>{{ 'Select the types of documents that learners can make'|trans({}, 'innova_collecticiel') }}</p>
+
+        <div class="form-group">
+            {{ form_row(form.allowUpload, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label'}}) }}
+            {{ form_row(form.allowRichText, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label'}}) }}
+            {{ form_row(form.allowWorkspaceResource, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label'}}) }}
+            {{ form_row(form.allowUrl, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label'}}) }}
+        </div>
+
+        {# ??? #}
+        <div class="form-group">
+            <div id='dropzone-message-part' class='col-lg-offset-3 col-lg-7' {% if dropzone.displayNotationMessageToLearners == false %} style="display:none" {% endif %} >
+                {{ form_label(form.successMessage,null,{'label': 'successMessage'|trans({},'innova_collecticiel'), 'label_attr': {'class': 'control-label','style':'font-weight:normal;'}}) }}
+                {{ form_widget(form.successMessage, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
+                {{ form_errors(form.successMessage) }}
+                 {{ form_label(form.failMessage,null,{'label': 'failMessage'|trans({},'innova_collecticiel'), 'label_attr': {'class': 'control-label','style':'font-weight:normal;'}}) }}
+                {{ form_widget(form.failMessage, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
+                {{ form_errors(form.failMessage) }}
+            </div>
+            <div class="col-lg-offset-3 col-lg-9"></div>
+        </div>
+
+        {# Ouverture #}
+        <h4>{{ 'Planning'|trans({}, 'innova_collecticiel') }}</h4>
+        <p>{{ 'Planification instruction'|trans({}, 'innova_collecticiel') }}</p>
+        <p class="peer-review-options">{{ 'Planification peer review instruction'|trans({}, 'innova_collecticiel') }}</p>
+        {{ form_errors(form.manualPlanning.1) }}
+
+        {# Manuel #}
+        <div class="radio">
+            <label>
+                {{ form_widget(form.manualPlanning.0) }}
+                <strong>{{ 'manualPlanning'|trans({}, 'innova_collecticiel') }}</strong>
+            </label>
+        </div>
+
+        <div id="planning_manual" class="form-group">
+            <div class="col-md-offset-2">{{ 'Choose current phase'|trans({}, 'innova_collecticiel') }}</div>
+            {{ form_row(form.manualState, {'label_attr': {'style': 'display: none;'}}) }}
+        </div>
+
+        {# Par date #}
+        <div class="radio">
+            <label>
+                {{ form_widget(form.manualPlanning.1) }}
+                <strong>{{ 'scheduleByDatePlanning'|trans({}, 'innova_collecticiel') }}</strong>
+            </label>
+        </div>
+        
+        <div id="planning_dates">
+            <div class="row form-group">
+                <div class="col-md-6">
+                    {{ form_row(form.startAllowDrop, {'label_attr': {'class': 'control-label col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
+                    ) }}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-6">
+                    {{ form_row(form.endAllowDrop, {'label_attr': {'class': 'control-label col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
+                    ) }}
+                </div>
+            </div>
+        </div>
+
+        {# Publication. Ajout de cette zone, demande JJQ. InnovaERV #}
+        {# Partie sans form_row car c'est une extraData. InnovaERV #}
+        <div id="published">
+            <h4>{{ 'Publication Title'|trans({}, 'innova_collecticiel') }}</h4>
+            <div class="row form-group">
+                <div class="col-md-10">
+                    {% if dropzone.resourceNode.isPublished == 1 %}
+                        {{ form_row(form.published, {
+                        'label_attr':
+                            {
+                                'class': 'col-xs-offset-2 col-xs-12 col-sm-2',
+                                'style': 'font-weight: normal;'
+                            },
+                        'attr' : {'checked' : 'checked'},
+                        }
+                        ) }}
+                    {% else %}
+                        {{ form_row(form.published, {
+                        'label_attr':
+                            {
+                                'class': 'col-xs-offset-2 col-xs-12 col-sm-2',
+                                'style': 'font-weight: normal;'
+                            },
+                        'attr' : {},
+                        }
+                        ) }}
+                    {% endif %}
+                 </div>
+             </div>
+        </div>
+
+        {# Accusé de réception. Ajout de cette zone, demande JJQ. InnovaERV  #}
+        <div id="return_receipt">
+            <h4>{{ 'Return receipt'|trans({}, 'innova_collecticiel') }}</h4>
+            <div class="row form-group">
+                <div class="col-md-10">
+                    {{ form_row(form.returnReceipt, {'label_attr': {'class': 'col-xs-offset-1 col-xs-11 col-sm-2', 'style': 'font-weight: normal;' }}
+                    ) }}
+                 </div>
+             </div>
+        </div>
+
+        {# Evaluation. Ajout de cette zone, demande JJQ. InnovaERV  #}
+        <div id="evaluation">
+            <h4>{{ 'Evaluation'|trans({}, 'innova_collecticiel') }}</h4>
+            <div class="row form-group">
+                <div class="col-md-10">
+                    {{ form_row(form.evaluation, {'label_attr': {'class': 'col-xs-offset-1 col-xs-11 col-sm-2', 'style': 'font-weight: normal;' }}
+                    ) }}
+                 </div>
+             </div>
+        </div>
+
+        {# Accusé de réception. Ajout de cette zone, demande JJQ. InnovaERV  #}
+        <div id="display">
+            <h4>{{ 'Display'|trans({}, 'innova_collecticiel') }}</h4>
+            <div class="row form-group">
+                <div class="col-md-8">
+                    {{ form_row(form.picture, {'label_attr': {'class': 'col-xs-offset-1 col-xs-11 col-sm-2', 'style': 'font-weight: normal;' }}
+                    ) }}
+                 </div>
+             </div>
+
+            <div class="row form-group">
+                <div class="col-md-8">
+                    {{ form_row(form.username, {'label_attr': {'class': 'col-xs-offset-1 col-xs-11 col-sm-2', 'style': 'font-weight: normal;' }}
+                     ) }}
+                 </div>
+             </div>
+        </div>
+
+        {# Submit #}
+        <div class="btn-group pull-right">
+            <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}) }}"
+               class="btn btn-default ">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}
+            </a>
+            <button id="submitAndGotoCriteriaButton" type="submit" class="btn btn-primary submit_button">
+                {{ 'Save'|trans({}, 'innova_collecticiel') }}
+            </button>
+        </div>
+        {{ form_rest(form) }}
+    </form>
+
+    {% include 'InnovaCollecticielBundle:Dropzone:confirmCloseUnterminatedDropModalCollecticiel.html.twig' %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ tinymce_init() }}
+    <script>
+        $('document').ready(function() {
+            // hack dégueu pour recharger les calendriers avec le même format.
+            var pickers = $("#innova_collecticiel_common_form_startAllowDrop_date, #innova_collecticiel_common_form_endAllowDrop_date");
+            pickers.datepicker('remove');
+            pickers.datepicker({format: 'dd/mm/yyyy'});
+            $('#expected-total-correction-explication, .popoverItem').popover({
+                'trigger': 'hover',
+                'html': true
+            });
+            
+            $('#innova_collecticiel_common_form_manualPlanning_1').on('click', function() {
+                var hour1 = $("#innova_collecticiel_common_form_startAllowDrop_time").val();
+                var hour2 = $("#innova_collecticiel_common_form_endAllowDrop_time").val();
+                if (!hour1) {
+                    $("#innova_collecticiel_common_form_startAllowDrop_time").val("00:00");
+                }
+                if (!hour2) {
+                    $("#innova_collecticiel_common_form_endAllowDrop_time").val("00:00");
+                }
+            });
+            $("input:radio[name='innova_collecticiel_common_form[manualState]']").click(function()
+            {
+                onManualStateChange($(this));
+            });
+            $('#innova_collecticiel_common_form_stayHere').val(0);
+            $('#innova_collecticiel_common_form_autoCloseForManualStates').val(0);
+            $('.save-button').on('click', function(event) {
+                event.preventDefault();
+                $('#innova_collecticiel_common_form_stayHere').val(1);
+                $('.submit_button').trigger('click');
+            });
+            $('#innova_collecticiel_common_form_peerReview_0').on('click', function() {
+                enablePeerReviewOptions(false);
+            });
+            $('#innova_collecticiel_common_form_peerReview_1').on('click', function() {
+                enablePeerReviewOptions(true);
+            });
+            var $displayNotationToLearner = $('#innova_collecticiel_common_form_displayNotationMessageToLearners');
+            manageSuccessFailMessagesVisibility($displayNotationToLearner);
+            $displayNotationToLearner.change(function () {
+                manageSuccessFailMessagesVisibility($(this));
+            });
+            var enablePeerReviewOptions = function (peerReviewEnabled) {
+                // when loading the page without having saved yet, all tabs available by default
+                if (peerReviewEnabled || typeof peerReviewEnabled === 'undefined') {
+                    // show the peerReview options
+                    $('.peer-review-options').show();
+                    // hide the manuals options.
+                    $('.manual-review-option').hide();
+                    $('#innova_collecticiel_common_form_manualState_2').parent().show();
+                    $('#innova_collecticiel_common_form_manualState_3').parent().show();
+                    $('#innova_collecticiel_common_form_diplayCorrectionsToLearners').show();
+                    $('#dropzone_notification_part').hide();
+/*                    $('.submit_button').html('{{ 'Save and continue'|trans({}, 'innova_collecticiel') }}'); */
+                } else {
+                    // hide the peerReview options
+                    $('.peer-review-options').hide();
+                    //show the manuals options
+                    $('.manual-review-option').show();
+                    $('#innova_collecticiel_common_form_manualState_2').parent().hide();
+                    $('#innova_collecticiel_common_form_manualState_3').parent().hide();
+                    var $expectedTotalCorrection = $('#innova_collecticiel_common_form_expectedTotalCorrection');
+                    if ($expectedTotalCorrection.val() < 1 || $expectedTotalCorrection.val() > 10) {
+                        $expectedTotalCorrection.val(3);
+                    }
+                    $('#innova_collecticiel_common_form_endReview_date').val(null);
+                    $('#innova_collecticiel_common_form_endReview_time').val(null);
+                    $('#innova_collecticiel_common_form_startReview_date').val(null);
+                    $('#innova_collecticiel_common_form_startReview_time').val(null);
+                    $('#dropzone_notification_part').show();
+                    $('.submit_button').html('{{ 'Save and finished'|trans({}, 'innova_collecticiel') }}'); 
+                }
+                manageCorrectionVisibility(peerReviewEnabled);
+            };
+            
+            enablePeerReviewOptions({{ dropzone.peerReview }});
+            var manualPlanning = function () {
+                var $planning_dates = $('#planning_dates');
+                $planning_dates.addClass('text-muted');
+                $planning_dates.find('input').prop('disabled', true);
+                var $planning_manual = $('#planning_manual');
+                $planning_manual.removeClass('text-muted');
+                $planning_manual.find('input').prop('disabled', false);
+            };
+            var datesPlanning = function () {
+                var $planning_manual = $('#planning_manual');
+                $planning_manual.addClass('text-muted');
+                $planning_manual.find('input').prop('disabled', true);
+                var $planning_dates = $('#planning_dates');
+                $planning_dates.removeClass('text-muted');
+                $planning_dates.find('input').prop('disabled', false);
+                $("#innova_collecticiel_common_form_manualPlanning_1").attr('checked','checked');
+            };
+            $('#innova_collecticiel_common_form_manualPlanning_0').on('click', manualPlanning);
+            $('#innova_collecticiel_common_form_manualPlanning_1').on('click', datesPlanning);
+            if ({{ dropzone.manualPlanning ? 'true' : 'false' }}) {
+                manualPlanning();
+            } else {
+                datesPlanning();
+            }
+            $('#innova_collecticiel_common_form_diplayCorrectionsToLearners').click(function()
+            {
+                manageCorrectionDeny();
+            });
+            $('#editCriteriaLink').click(function (e) {
+                e.preventDefault();
+                $('#submitAndGotoCriteriaButton').trigger('click');
+            });
+        });
+        function manageCorrectionDeny()
+        {
+            // Set manageCorrectionDeny dependencies
+            // show option only if peerReview and CorrectionVisibility are Activated, set to false and desactivate if they are  not.
+            if($('#innova_collecticiel_common_form_peerReview_1:checked').length == 1
+                && $('#innova_collecticiel_common_form_diplayCorrectionsToLearners').prop('checked')) {
+                $('#allow-correction-deny').parent().show();
+            } else {
+                $('#innova_collecticiel_common_form_allowCorrectionDeny').prop('checked',false);
+                $('#allow-correction-deny').parent().hide();
+            }
+        }
+        function manageCorrectionVisibility(peerReviewEnabled)
+        {
+            // Set PeerReview dependency
+            // show option only if peerReview is Activated, set to false and desactivate if it is not.
+            // call manageCorrectionDeny to cascade dependencies .
+           /* if(peerReviewEnabled)
+            {
+                $('#innova_collecticiel_common_form_diplayCorrectionsToLearners').parent().show();
+            }else {
+                 $('#innova_collecticiel_common_form_diplayCorrectionsToLearners').prop('checked',false).parent().hide();
+            }*/
+            $('#innova_collecticiel_common_form_diplayCorrectionsToLearners').parent().show();
+            manageCorrectionDeny();
+        }
+        function manageSuccessFailMessagesVisibility($cb)
+        {
+            var $div = $('#dropzone-message-part');
+            if($cb.prop('checked')) {
+                $div.fadeIn();
+            }else {
+                $div.fadeOut();
+            }
+        }
+        /**
+         * When manual state has changed and involve that poeple will not be able to drop anymore, this will ask if
+         * you want to close opened drop. ( same as autoClose when time is up ).
+         *
+         * @param $radio (jquery selected item)
+         */
+        function onManualStateChange($radio)
+        {
+            var val = $radio.val();
+            $('#innova_collecticiel_common_form_autoCloseForManualStates').val(0);
+            if(val == 'finished' || val == 'peerReview' ) {
+                $('#modal-content').modal('show'); // call the modal dialog.
+                $('#acitvate_manualStateAutoClose').unbind('click').click(function(e) {
+                    e.preventDefault();
+                    $('#innova_collecticiel_common_form_autoCloseForManualStates').val(1);
+                    $('#modal-content').modal('hide');
+                });
+            }
+        }
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .form-control.time {
+            width: 50px;
+            display: inline;
+        }
+    </style>
+{% endblock %}

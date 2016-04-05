@@ -1,0 +1,19 @@
+{% extends "InnovaCollecticielBundle::layout.html.twig" %}
+{% block resourceBreadcrumb %}
+    <li class="active"><span class="fa fa-file"></span> {{ dropzone.resourceNode.name }}</li>
+    <li class="active">Copies made</li>
+    <li class="active">Invalidate a drop</li>
+{% endblock %}
+
+{% block dropzone_content %}
+    <div class="panel-body container-dropzone">
+        <h3>
+            {{ 'Invalidate a drop'|trans({}, 'innova_collecticiel') }}
+        </h3>
+        {% include "InnovaCollecticielBundle:Drop:dropsDeleteForm.html.twig" %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

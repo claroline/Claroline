@@ -1,0 +1,171 @@
+/** InnovaERV : pour positinner le bouton "Ajouter" au même niveau que le reste du texte **/
+.addButtonToTop {
+    vertical-align: top;
+}
+
+input.form-control {
+	padding: 0 0 0 0;
+	width:15%;
+}
+
+.direct-chat-text-color {
+    background: none repeat scroll 0 0 #F39C12;
+    border-color: #F39C12;
+    color: #FFFFFF;
+}
+
+.direct-chat-img-you,
+.direct-chat-img-others {
+    font-size: 35px;
+    margin-top: 5px;
+}
+
+.direct-chat-img-you {
+    color: #f39c12;
+}
+
+.direct-chat-img-others {
+    color: lightgrey;
+    margin-left: 10px;
+}
+    
+#delete_button_td {
+    margin: auto;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.del_btn_td {
+    margin: auto;
+}
+
+.table thead > tr > th {
+    vertical-align: middle;
+}
+
+.centered {
+    vertical-align: middle;
+    text-align: center;
+}
+
+.table thead > tr > th,
+.table thead > tr > td,
+.table tbody > tr > th,
+.table tbody > tr > td,
+.table tfoot > tr > th,
+.table tfoot > tr > td {
+    vertical-align: middle;
+}
+
+.sharedSpacesTable {
+/* #179 : mise en commentaire car le responsive ne fonctionne pas avec le ... fixed. InnovaERV. */
+/* table-layout: fixed; */
+     word-wrap: break-word;
+}
+
+.nameColumn {
+    width: 120px;
+}
+
+.usernameColumn {
+    width: 70px;
+}
+
+.dateColumn {
+    width: 90px;
+}
+
+.typeColumn {
+    width: 70px;
+}
+
+/* Affichage en rouge d'icone font-awesome. InnovaERV. */
+.icon-fontawesome-red {
+    color : red;
+}
+
+.title-label {
+    vertical-align: middle;
+}
+
+#innova_collecticiel_document_file_form_title {
+    vertical-align: middle;    
+}
+
+.dropdown-menu-right {
+  right: 0;
+  left: auto;
+}
+.dropdown-menu-left {
+  right: auto;
+  left: 0;
+}
+
+/* #229 : Réduire la taille du nombre de commentaires dans les cellules */
+.very-small {
+    font-size: 11px;
+}
+
+/* #224 et #228 : Centrage des colonnes */
+.centering-columns a {
+    position: absolute;
+    left: -17px;
+    top: -8px;
+}
+.centering-columns span {
+    position: absolute;
+    left: -17px;
+    top: -8px;
+}
+.centering-columnsAR span {
+    position: absolute;
+    left: -18px;
+    top: -8px;
+}
+.centering-columns-input input {
+    margin-left: 20px;
+}
+
+.centering-columns-study span {
+    margin-left: 5px;
+}
+.centering-columnsComment-study span {
+  position: absolute;
+  margin-left: -18px;
+  margin-top: -5px;
+}
+.centering-columnsComment-study a {
+  position: absolute;
+  margin-left: -18px;
+  margin-top: -5px;
+}
+
+.centering-columns-study a {
+  position: absolute;
+  left: -17px;
+  top: -8px;
+}
+.centering-columnsAR-study span {
+  position: absolute;
+  margin-left: -20px;
+  margin-top: -3px;
+}
+
+.centering-actions {
+  position: absolute;
+  margin-top: -45px;
+ }
+
+/* #274 : Changement de place pour le message "Ce collecticiel est fermé" */
+.closed-collecticiel {
+  float: right;
+  padding: 10px;
+  font-size:15px;
+  margin-top:-30px;
+  margin-right:-10px
+}
+
+/* #271 : Afficher les liens en noir */
+.blackLink {
+  color:black;  
+}

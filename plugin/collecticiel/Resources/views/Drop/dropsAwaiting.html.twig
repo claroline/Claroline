@@ -1,0 +1,58 @@
+{% extends "InnovaCollecticielBundle:Dropzone:edit.html.twig" %}
+
+{# Gestion des onglets #}
+{% block collecticiel_demandes_active %}active{% endblock %}
+{% block collecticiel_demandes_link %}#{% endblock %}
+
+{% block drop_zone_content_edit %}
+
+    <!-- ERV/La conformation de la suppression est à demander -->
+    <!-- ERV/Suppression "Aide sur le mode d'évaluation par les pairs" -->
+    <!-- {% include 'InnovaCollecticielBundle:Drop:peerReviewHelper.html.twig' %} -->
+
+    <!-- Copies terminées en attente de correction(s) -->
+    <!-- <h3>{{ 'Awaiting for correction copies'|trans({}, 'innova_collecticiel') }}</h3> -->
+
+    <div class="container row">
+        {% if pager.haveToPaginate %}
+            {{ pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+            'proximity' : 1,
+            'routeName': 'innova_collecticiel_drops_awaiting_paginated',
+            'routeParams': {'resourceId': dropzone.id}
+            }
+            ) }}
+        {% endif %}
+    </div>
+
+    <!-- InnovaERV : ici, appel à la vue qui traite l'affichage de la liste -->
+    {% set AwaitingMode = true %}
+
+    {% if pager.nbResults != 0 %}
+        {% include 'InnovaCollecticielBundle:Drop:Listing/dropsListing.html.twig' %}
+    {% endif %}
+
+    <div class="container row">
+        {% if pager.haveToPaginate %}
+            {{ pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+            'proximity' : 1,
+            'routeName': 'innova_collecticiel_drops_awaiting_paginated',
+            'routeParams': {'resourceId': dropzone.id}
+            }
+            ) }}
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}

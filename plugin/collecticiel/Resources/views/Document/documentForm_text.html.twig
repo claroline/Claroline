@@ -1,0 +1,54 @@
+{% extends "InnovaCollecticielBundle:Document:documentFormDefault.html.twig" %}
+
+{% block document_body %}
+    {#     <div class="row">
+            {{ form_row(form.document, {'label_col_size': ' ', 'input_col_size': 'col-md-8', 'attr': {'placeholder': (documentType~'_placeholder')|trans({}, 'innova_collecticiel')}, 'label_attr': {'class': 'sr-only'},'id': 'innova_collecticiel_document_file_form_text'}) }}
+            <div class="col-md-4 ">
+                <div class="form-group ">
+                    <button type="submit" class="btn btn-primary">
+                        {{ 'Add'|trans({}, 'innova_collecticiel') }}
+                    </button>
+                </div>
+            </div>
+        </div> #}
+
+    <div class="row">
+        <div class='col-md-8'>
+            <div class='input-group col-md-8'>
+                {{ form_widget(form.title,{'label_col_size': ' ', 'attr': {'placeholder': (documentType~'_placeholder')|trans({}, 'innova_collecticiel')}, 'label_attr': {'class': 'sr-only'},'id':'innova_collecticiel_document_file_form_text' }) }}
+                <span class='input-group-btn'>
+                    <button type="submit" id="submitTitle" class="btn btn-default">
+                        {{ 'Add'|trans({}, 'innova_collecticiel') }}
+                        <input type="hidden" value="{{ 'Please complete this field'|trans({}, 'innova_collecticiel') }}" id="translation_id">
+                    </button>
+                </span>
+            </div>
+
+            <div class='input-group col-md-8'>
+                <p><strong>{{ 'This field is required'|trans({}, 'innova_collecticiel') }}</strong></p>
+            </div>
+
+
+            <div class="input-group" id="innovaDocument">
+                {{ form_widget(form.document,{'label_col_size': ' ', 'attr': {}, 'label_attr': {'class': 'sr-only'},'id':'innova_collecticiel_document_file_form_document' }) }}  
+                <input type="hidden" value="{{ 'Please complete text'|trans({}, 'innova_collecticiel') }}" id="translation_doc_id">
+            </div>
+        </div>
+    </div>
+
+
+{#  InnovaERV : élargissement de la zone de saisie du texte et du document #}
+    <script type='text/javascript'>
+        $('document').ready(function () {
+            var myTextWidth = $("#innova_collecticiel_document_file_form_text").width();
+
+            if (myTextWidth != 100) {
+                myTextWidth = 100;
+            }
+
+            var myDocumentWidth = (myTextWidth-43.85)*$(window).width()/100;
+            $("#innovaDocument").width(myDocumentWidth);
+        })
+    </script>
+
+{% endblock %}

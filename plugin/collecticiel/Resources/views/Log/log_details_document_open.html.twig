@@ -1,0 +1,10 @@
+{% if log.details.document is defined %}
+    <h4>{{ ('log_open_document')|trans({}, 'log') }}</h4>
+    {% include 'InnovaCollecticielBundle:Log:log_details_document.html.twig' with {'document': log.details.document} %}
+{% endif %}
+{% if log.details.drop is defined and log.details.drop.owner is defined %}
+    <h4>
+        {{ ('log_owner_drop')|trans({}, 'log') }}
+    </h4>
+    {% include 'InnovaCollecticielBundle:Log:log_details_user.html.twig' with {'user': log.details.drop.owner} %}
+{% endif %}

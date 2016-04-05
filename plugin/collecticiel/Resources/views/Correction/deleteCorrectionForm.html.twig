@@ -1,0 +1,33 @@
+<form class="form-horizontal" method="POST"
+      action="{{ path('innova_collecticiel_drops_detail_delete_correction', {'resourceId': dropzone.id, 'correctionId':correction.id,'backPage':backPage}) }}">
+
+    <p>{{ 'You are about to delete a correction. This action is not without consequence.'|trans({}, 'innova_collecticiel') }}</p>
+
+    <p>{{ 'Are you sure you want to do this?'|trans({}, 'innova_collecticiel') }}</p>
+
+
+    <br/>
+
+    <div class="container form-group form-buttons">
+        <div class="btn-group pull-right">
+            {% if Modal is defined %} {# CASE MODAL #}
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+                {{ 'Cancel'|trans({}, 'innova_collecticiel') }}
+            </button>
+            {% else %} {# CASE NORMAL MODE #}
+            {% if  backPage is defined and backPage == 'AdminCorrectionsByUser'  and backUserId != 0 %}
+            <a href="  {{ path('innova_collecticiel_examiner_corrections', {'resourceId': dropzone.id, 'userId': backUserId}) }} "
+               class="btn btn-default" data-dismiss="modal">
+                {% else %}
+                <a href="{{ path('innova_collecticiel_drops_detail', {'resourceId': dropzone.id, 'dropId': drop.id}) }}"
+                   class="btn btn-default ">
+                    {% endif %}
+                    {{ 'Cancel'|trans({}, 'innova_collecticiel') }}
+                </a>
+                {% endif %}
+                <button type="submit" class="btn btn-danger">
+                    {{ 'Confirm the correction delete'|trans({}, 'innova_collecticiel') }}
+                </button>
+        </div>
+    </div>
+</form>

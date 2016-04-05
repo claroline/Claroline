@@ -1,0 +1,7 @@
+{% if log.details.drop is defined %}
+    <h4>{{ ('log_drop_documents')|trans({}, 'log') }}</h4>
+
+    {% for document in log.details.drop.documents %}
+        {% include 'InnovaCollecticielBundle:Log:log_details_document.html.twig' with {'document': document} %}
+    {% endfor %}
+{% endif %}

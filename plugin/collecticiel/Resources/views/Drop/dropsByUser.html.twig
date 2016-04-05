@@ -1,0 +1,21 @@
+{% extends "InnovaCollecticielBundle:Drop:dropsByBase.html.twig" %}
+
+{% block  drops_completed_active %} active {% endblock %}
+{% block drops_completed_link %} # {% endblock %}
+{% block dropzone_content_drops_by_user_active %}active{% endblock %}
+
+{% block dropzone_content_drops_by_paginate_part %}
+        {% if pager.haveToPaginate %}
+            {{
+            pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+            'proximity' : 1,
+            'routeName': 'innova_collecticiel_drops_by_user_paginated',
+            'routeParams': {'resourceId': dropzone.id}
+            }
+            )
+            }}
+        {% endif %}
+{% endblock %}

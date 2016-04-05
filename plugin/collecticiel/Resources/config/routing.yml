@@ -1,0 +1,4 @@
+innova_collecticiel:
+    resource: "@InnovaCollecticielBundle/Controller/"
+    type:     annotation
+    prefix:   /

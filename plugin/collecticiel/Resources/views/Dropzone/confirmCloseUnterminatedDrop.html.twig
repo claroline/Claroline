@@ -1,0 +1,29 @@
+{% extends "InnovaCollecticielBundle::layout.html.twig" %}
+{% block resourceBreadcrumb %}
+    <li class="active"><span class="fa fa-file"></span> {{ dropzone.resourceNode.name }}</li>
+{% endblock %}
+
+{% block dropzone_content %}
+    <div class="container">
+        <h3>
+            {{ 'Warning'|trans({}, 'innova_collecticiel') }}
+        </h3>
+        {% include "InnovaCollecticielBundle:Dropzone:confirmCloseUnterminatedDropForm.html.twig" %}
+        <div class="row">
+            <div class="col-md-4 col-md-offset-6 "></div>
+            <a id="acitvate_manualStateAutoClose"
+               href="{{ path('innova_collecticiel_drops_awaiting',{'resourceId':dropzone.id}) }}"
+               class="btn btn-default">{{ 'Do nothing'|trans({},'innova_collecticiel') }}</a>
+            <a id="form-submit" class="btn btn-primary"
+               href="{{ path('innova_collecticiel_auto_close_drops',{'resourceId':dropzone.id}) }}">
+                {{ 'Validate copies'|trans({}, 'innova_collecticiel') }}
+            </a>
+        </div>
+    </div>
+    <br>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

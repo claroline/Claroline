@@ -1,0 +1,23 @@
+{% block dropzone_add_comment %}
+    <h3>{{ 'Add comment'|trans({}, 'innova_collecticiel') }}</h3>
+    <div class="">
+        <form class="form-horizontal" role="form" method="POST" 
+        action="{{ path('innova_collecticiel_add_comment',
+        {'documentId': document.id, 'userId': user.id, 'dropzoneId': dropzone.id, 'correctionId': correction.id}) }}">
+            {{ form(formComment) }}
+        </form>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .column-container-div {
+            text-align: center;
+        }
+        .direct-chat-warning .right > .direct-chat-text {
+            background: none repeat scroll 0 0 #F39C12;
+            border-color: #F39C12;
+            color: #FFFFFF;
+        }
+    </style>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "InnovaCollecticielBundle::layout.html.twig" %}
+{% block resourceBreadcrumb %}
+    <li class="active"><span class="fa fa-file"></span> {{ dropzone.resourceNode.name }}</li>
+{% endblock %}
+
+{% block dropzone_content %}
+    <div class="container">
+        <h3>
+            {{ 'Add a document'|trans({}, 'innova_collecticiel') }}
+        </h3>
+        {% include 'InnovaCollecticielBundle:Document:documentForm.html.twig' %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

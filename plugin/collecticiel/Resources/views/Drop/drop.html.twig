@@ -1,0 +1,257 @@
+{# InnovaERV : "Espaces partagés" puis "Afficher"  #}
+{% extends "InnovaCollecticielBundle:Dropzone:edit.html.twig" %}
+
+{% form_theme form "InnovaCollecticielBundle::form_theme_bootstrap3.html.twig" %}
+
+{# Commentaire ErvInnova #}
+{# pour gérer les menus, il faut se rendre dans le fichier edit.html.twig afin d'y ajouter le nouvel onglet #}
+{# puis il faut déclarer la vue dans le modèle de cette page #}
+{# puis il faut ajouter dans chaque vue de l'onglet les "reset" et "active" tab #}
+{# donc dans chaque vue au début, il faut avoir UNE déclaration "active" et TOUTES les autres en "reset" #}
+{# Fin commentaire ErvInnova #}
+
+{# reset the default active tab#}
+{% block collecticiel_edit_navTabs_criteria_element_class %}
+{% endblock %}
+{% block dropzone_edit_navTabs_param_element_class %}
+{% endblock %}
+{% block collecticiel_espace_partage_edit_navTabs_criteria_element_class %}
+{% endblock %}
+
+{# seting the correct active tab#}
+{% block collecticiel_mon_espace_edit_navTabs_criteria_element_class %}
+    active
+{% endblock %}
+
+{% block collecticiel_shared_active %}active{% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li>
+        <a href="{{ path('innova_collecticiel_open', {'resourceId': dropzone.id}) }}"><span
+                    class="fa fa-file"></span> {{ dropzone.resourceNode.name }}</a>
+    </li>
+    <li class="active">{{ 'Make my copy'|trans({}, 'innova_collecticiel') }}</li>
+{% endblock %}
+
+{% block drop_zone_content_edit %}
+
+        {# InnovaERV : affichage enlevé car affiché en double
+        <h3>
+            {{ 'Make my copy'|trans({}, 'innova_collecticiel') }}
+        </h3>
+        #}
+
+        {{ macros.flashBox() }}
+
+        {# DROP STATUS BAR #}
+        {# Quand on arrive dans un collecticiel (vue étudiant), on appelle dropStatus #}
+        {# pour afficher la barre de progression que l'on ne veut plus #}
+        {#
+        {% include 'InnovaCollecticielBundle:Drop:dropStatus.html.twig' %}
+        #}
+
+        {# affichage : INSTRUCTIONS/CONSIGNES #}
+        {# innovaERV : JJQ veut que les consignes s'affichent #}
+        {# seulement si on est étudiant, pas enseignant #}
+        {# Changement septembre 2015 : on affiche la consigne mais dans un accordéon différent suivant le rôle #}
+        {% include 'InnovaCollecticielBundle:Dropzone:callInstruction.html.twig' %}
+
+        {# DOCUMENTS ALREADY ADDED #}
+        <h4>{{ 'Documents added  the copy %nom% %prenom% %pseudo%'|trans({'%nom%': drop.user.firstName, '%prenom%': drop.user.lastName, '%pseudo%': drop.user.username},'innova_collecticiel') }}</h4>
+        {{ dropzoneMacros.displayDocumentsList
+        (drop, dropzone, 12, "complete", null, adminInnova, collecticielOpenOrNot, returnReceiptArray, teacherCommentDocArray)
+        }}
+
+        {% if adminInnova %}
+            {% set lastType = "file" %}
+            {% if activeRoute == "innova_collecticiel_drop_switch" %}
+                    {% for document in drop.documents %}
+                        {% set lastType = document.type %}
+                    {% endfor %}
+            {% endif %}
+        {% else %}
+            {# Pour se positionner sur l'onglet par défaut ou sur l'onglet du type de document qui vient d'être créé. InnovaERV #}
+            {% set lastType = "file" %}
+            {% if activeRoute == "innova_collecticiel_drop_switch" %}
+                    {% for document in drop.documents %}
+                        {% set lastType = document.type %}
+                    {% endfor %}
+            {% endif %}
+        {% endif %}
+
+        <br/>
+        {# ADD DOCUMENT #}
+        {% include 'InnovaCollecticielBundle:Drop:addDocument.html.twig'
+         with {'lastType': lastType, 'collecticielOpenOrNot': collecticielOpenOrNot}
+        %}
+
+        {# GLOBAL DROP FORM #}
+        <form id='dropzone_global_drop_form' class="form-horizontal" method="POST"
+              action="{{ path('innova_collecticiel_drop', {'resourceId': dropzone.id}) }}">
+            <div class="{% if form.vars.errors|length > 0 %}has-error{% endif %}">
+                {{ form_errors(form) }}
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                    <!-- Button trigger modal -->
+                    {# Suppression du bouton Sauvegarder/Terminer sur la page vue "Apprenant" #29 InnovaERV #}
+                    {# <a id='dropzone_global_save_link' data-toggle="modal" href="#saveModal"
+                       class="btn btn-primary pull-right disabled-during-add">{{ 'Save and finished'|trans({}, 'innova_collecticiel') }}</a> #}
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="saveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"
+                                            aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">{{ 'Warning'|trans({}, 'innova_collecticiel') }}</h4>
+                                </div>
+                                <div class="modal-body">
+                                    {{ 'You are about to make your copy. This action is final. Are you sure you have done'|trans({}, 'innova_collecticiel') }}
+
+                                    <div class='modal-warning text-danger' style="display:none">
+                                        <span class="text-danger fa fa-exclamation-triangle"></span>
+                                        {{ 'Empty field warning'|trans({},'innova_collecticiel') }}
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="#" class="btn btn-default"
+                                       data-dismiss="modal">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</a>
+
+                                    <button type="submit" class="btn btn-primary pull-right">
+                                        {{ 'Confirm and finished'|trans({}, 'innova_collecticiel') }}
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+                    <!-- /.modal -->
+
+                </div>
+            </div>
+            {{ form_end(form) }}
+
+            <br/>
+
+    <div id="picker-wrapper"></div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% javascripts
+    vars=["locale"]
+    "@ClarolineCoreBundle/Resources/views/Resource/breadcrumbs.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Resource/actions.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Resource/filters.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Resource/thumbnail.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Resource/results.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Resource/roles.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
+    filter="twig_js" %}
+    <script language="javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script>
+        tinymce.claroline.configuration.toolbar1 = 'bold italic strikethrough | alignleft aligncenter alignright alignjustify | ';
+        $(document).ready(function () {
+            var resourceNodeId = null;
+
+            Claroline.ResourceManager.createPicker('dropPicker', {
+                callback: function (nodes) {
+                    resourceNodeId = _.keys(nodes)[0];
+                    $('.dropzone_ressrouceSelected').show();
+                    $('.dropzone_noRessourceSelected').hide();
+                    $('.selected-resource').html(name);
+                    $('#innova_collecticiel_document_file_form_resource').val(resourceNodeId);
+
+                    $('#add-document-sumbit').removeAttr('disabled');
+                    $('#add-document-sumbit').trigger('click');
+
+                    $('.add-document-pending').hide();
+                }
+            });
+
+            if ($('#innova_collecticiel_document_file_form_file').val() !== '') {
+                $('.please-wait').show();
+                $(this).parents('form').submit();
+            }
+            // autosubmit input files.
+            $('#innova_collecticiel_document_file_form_file').change(function () {
+                $('.please-wait').show();
+                $(this).parents('form').submit();
+            });
+
+            $('#innova_collecticiel_document_file_form_file').parents('form').find('button').click(function (e) {
+                // desactivation of the submit button ( autosubmit is activated).
+                e.preventDefault();
+            });
+
+            $('a.launch-inline').on('click', function (event) {
+                event.preventDefault();
+                $('.disabled-during-add').attr('disabled', 'disabled');
+
+                var launchResourcePicker = $(this).hasClass('launch-resource-picker');
+
+                $.get($(this).attr('href'))
+                        .always(function () {
+                        })
+                        .done(function (data) {
+                            $('.container-inline').append(data);
+                            $('.show-during-add').show();
+
+                            if (launchResourcePicker) {
+                                Claroline.ResourceManager.picker('dropPicker');
+
+                                $('#modal-picker').on('hidden.bs.modal', function () {
+                                    if (resourceNodeId === null) {
+                                        $('.cancel-inline').trigger('click');
+                                    }
+                                });
+                            }
+
+                            var top = $('.container-inline').offset().top;
+                            top = top - 50;
+                            $('body,html').scrollTop(top);
+                        })
+                ;
+            });
+
+
+            $('#addRessourceButton').click(function (e) {
+                e.preventDefault();
+                Claroline.ResourceManager.picker('dropPicker');
+                $('#modal-picker').unbind('hidden.bs.modal').on('hidden.bs.modal', function () {
+                    if (resourceNodeId === null) {
+                        //$('.cancel-inline').trigger('click');
+                    }
+                });
+            });
+
+
+            $('#dropzone_global_save_link').click(function () {
+                // test if some text or data is not save before launch modal, in order to adapt message.
+                var fieldEmpty = true;
+                var text = $('#innova_collecticiel_document_file_form_text').val();
+                var url = $('#innova_collecticiel_document_file_form_url').val();
+                var file = $('#innova_collecticiel_document_file_form_url').val();
+                var validate = $('#innova_collecticiel_document_file_form_validate').val();
+                if ((text !== '' && text !== '<p></p>') || (url !== '') || (file !== '')) {
+                    fieldEmpty = false;
+                }
+
+                if (!fieldEmpty) {
+                    $('.modal-warning').show();
+                } else {
+                    $('.modal-warning').hide();
+                }
+
+            });
+        });
+    </script>
+{% endblock %}

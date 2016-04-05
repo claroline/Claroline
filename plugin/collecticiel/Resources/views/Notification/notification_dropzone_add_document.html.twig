@@ -1,0 +1,6 @@
+	<a href="{{ path('innova_collecticiel_open', {'resourceId' : notification.details.resource.id}) }}" target="_blank">
+		{{ notification.actionKey|trans({
+			'%name%' : notification.details.resource.name, 
+			'%type%' : notification.details.resource.type
+		}, 'notification') }}
+	</a>

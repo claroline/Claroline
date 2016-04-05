@@ -1,0 +1,55 @@
+{% extends 'ClarolineCoreBundle:Log:view_details.html.twig' %}
+
+{% block logDetailsContext %}
+    {{ parent() }}
+    {% if constant('Icap\\DropzoneBundle\\Event\\Log\\LogDropzoneConfigureEvent::ACTION') == log.action %}
+        {% include 'InnovaCollecticielBundle:Log:log_details_dropzone.html.twig' %}
+    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogCriterionCreateEvent::ACTION') == log.action %}
+        {% include 'InnovaCollecticielBundle:Log:log_details_criterion_create.html.twig' %}
+    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogCriterionUpdateEvent::ACTION') == log.action %}
+        {% include 'InnovaCollecticielBundle:Log:log_details_criterion_update.html.twig' %}
+    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogCriterionDeleteEvent::ACTION') == log.action %}
+        {% include 'InnovaCollecticielBundle:Log:log_details_criterion_delete.html.twig' %}
+    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogDropEndEvent::ACTION') == log.action %}
+        {% include 'InnovaCollecticielBundle:Log:log_details_drop_end.html.twig' %}
+    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogDocumentCreateEvent::ACTION') == log.action %}
+        {% include 'InnovaCollecticielBundle:Log:log_details_document_create.html.twig' %}
+    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogDocumentDeleteEvent::ACTION') == log.action %}
+        {% include 'InnovaCollecticielBundle:Log:log_details_document_delete.html.twig' %}
+    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogDocumentOpenEvent::ACTION') == log.action %}
+        {% include 'InnovaCollecticielBundle:Log:log_details_document_open.html.twig' %}
+    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogCorrectionStartEvent::ACTION') == log.action %}
+        {% include 'InnovaCollecticielBundle:Log:log_details_correction_start.html.twig' %}
+    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogCorrectionEndEvent::ACTION') == log.action %}
+        {% include 'InnovaCollecticielBundle:Log:log_details_correction_end.html.twig' %}
+    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogCorrectionUpdateEvent::ACTION') == log.action %}
+        {% include 'InnovaCollecticielBundle:Log:log_details_correction_update.html.twig' %}
+    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogCorrectionDeleteEvent::ACTION') == log.action %}
+        {% include 'InnovaCollecticielBundle:Log:log_details_correction_delete.html.twig' %}
+    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogCorrectionValidationChangeEvent::ACTION') == log.action %}
+        {% include 'InnovaCollecticielBundle:Log:log_details_correction_validation_change.html.twig' %}
+    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogDropEvaluateEvent::ACTION') == log.action %}
+        {% include 'InnovaCollecticielBundle:Log:log_details_drop_evaluate.html.twig' %}
+    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogDropReportEvent::ACTION') == log.action %}
+         {% include  'InnovaCollecticielBundle:Log:log_details_drop_report.html.twig' %}
+    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogCorrectionReportEvent::ACTION') == log.action %}
+         {% include  'InnovaCollecticielBundle:Log:log_details_correction_report.html.twig' %}
+    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogDropGradeAvailableEvent::ACTION') == log.action %}
+         {% include  'InnovaCollecticielBundle:Log:log_details_drop_grade_available.html.twig' %}
+
+    {% elseif constant('Innova\\CollecticielBundle\\Event\\Log\\LogDropzoneManualStateChangedEvent::ACTION') == log.action %}
+        {% include  'InnovaCollecticielBundle:Log:log_details_dropzone_manualState.html.twig' %}
+
+    {% elseif constant('Innova\\CollecticielBundle\\Event\\Log\\LogDropzoneAddCommentEvent::ACTION') == log.action %}
+        {% include  'InnovaCollecticielBundle:Log:log_details_dropzone_addComment.html.twig' %}
+
+    {% elseif constant('Innova\\CollecticielBundle\\Event\\Log\\LogDropzoneAddDocumentEvent::ACTION') == log.action %}
+        {% include  'InnovaCollecticielBundle:Log:log_details_dropzone_addDocument.html.twig' %}
+
+    {# ACCUSE DE RECEPTION #}
+    {% elseif constant('Innova\\CollecticielBundle\\Event\\Log\\LogDropzoneReturnReceiptEvent::ACTION') == log.action %}
+        {% include  'InnovaCollecticielBundle:Log:log_details_dropzone_returnReceipt.html.twig' %}
+
+    {% endif %}
+
+{% endblock %}

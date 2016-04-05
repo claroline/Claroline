@@ -1,0 +1,14 @@
+<form class="form-horizontal" method="POST" action="{{ path('innova_collecticiel_delete_document', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId':document.id}) }}">
+    {{ form_errors(form) }}
+
+    <div class="container form-group form-buttons">
+        <div class="btn-group pull-right">
+            <a href="{{ path('innova_collecticiel_drop', {'resourceId': dropzone.id}) }}" class="btn btn-default">
+                {{ 'Cancel'|trans({}, 'innova_collecticiel') }}
+            </a>
+            <button type="submit" class="btn btn-danger">
+                {{ 'Confirm delete'|trans({}, 'innova_collecticiel') }}
+            </button>
+        </div>
+    </div>
+{{ form_end(form) }}

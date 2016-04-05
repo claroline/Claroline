@@ -1,0 +1,60 @@
+                            {# InnovaERV : Affichage de la ligne du tableau en fonction du type : admin ou pas #}
+                            {% if adminInnova %}
+                                <tr id="row_{{ document.id }}" class="warning">
+                            {% else %}
+                                <tr id="row_{{ document.id }}" class="info">
+                            {% endif %}
+                            {# InnovaERV : Fin ajout : Affichage ... #}
+                                <td>
+                                    {% if document.url is not null %}
+                                        <a target="_blank"
+                                           href="{{ document.url }}">{{ document.url | length > 40 ? document.url | slice(0, 40) ~ '...' :document.url }}</a>
+                                    {% else %}
+                                        <a target="_blank"
+                                           href="{{ path('innova_collecticiel_open_resource', {'resourceId': dropzone.id, 'documentId': document.id}) }}">{{ document.resourceNode.name }}</a>
+                                    {% endif %}
+                                </td>
+                                <td>{{ (document.type~'_type')|trans({}, 'innova_collecticiel') }}</td>
+
+                                <td>
+                                    {# InnovaERV : #19 ajout de l'affichage de la date de dépôt du document et formatage #}
+                                    {{ document.documentDate|date('formatDatetime'|trans({}, 'innova_collecticiel')) }}
+                                </td>
+
+                                <td>
+                                    {# Si le document a été demandé en évaluation alors je ne peux plus le faire #}
+                                    {# Cf popup.js #}
+                                    {# Ajout de la classe document_validate pour la validation du document #}
+                                    {% if not document.validate %}
+                                        <input id="document_id_{{ document.id }}" value="document" type="checkbox" class="form-control document_validate" name="document_id_{{ document.id }}" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#validate-modal" data-document_id="{{ document.id }}" />
+                                    {% else %}
+                                        <input id="document_id_{{ document.id }}" value="document" type="checkbox" class="form-control" name="document_id_{{ document.id }}" disabled checked />
+                                        {# #32 ajout de "Demande transmise #}
+                                        <button disabled id="request_id_{{ document.id }}" class="btn btn-default btn-xs" type="button">
+                                            {{ 'Request sent'|trans({}, 'innova_collecticiel') }}
+                                        </button>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    ----
+                                </td>
+
+                                {% if mode == 'complete' %}
+                                    <td>
+                                    {# Si la document a été validé alors je ne peux pas le supprimer #}
+                                    {% if not document.validate %}
+                                        <a href="{{ path('innova_collecticiel_delete_document', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}"
+                                           class="btn btn-danger btn-sm pull-right launch-modal"
+                                           id="delete_{{ document.id }}" >
+                                            <span class="fa fa-trash-o"></span>
+                                            {{ 'Delete'|trans({}, 'innova_collecticiel') }}
+                                        </a>
+                                    {% else %}
+                                        
+                                    ----
+
+                                    {% endif %}
+                                    </td>
+                                {% endif %}
+                            </tr>

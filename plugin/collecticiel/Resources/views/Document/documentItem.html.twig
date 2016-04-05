@@ -1,0 +1,213 @@
+{# InnovaERV : Affichage de la ligne du tableau en fonction du type : admin ou pas #}
+{% if document.sender.id == document.drop.user.id %}
+    {% set classArray="warning" %}
+{% else %}
+    {% set classArray="info" %}
+{% endif %}
+
+{# InnovaERV : suppression de la condition "OR" suite retour Nathalie #}
+{# InnovaERV : car il fallait voir les documents qund on va sur l'espace d'un étudiant #}
+{# voir également macros.html.twig #}
+
+{# InnovaERV : Fin ajout : Affichage ... #}
+<tr id="row_{{ document.id }}">
+    {# Affichage de l'image de profil #}
+    {% if dropzone.picture == 1  %}
+        <td class="{{ classArray }}">
+            <div class="user-panel">
+                 <div class="pull-left image">
+                    {% if document.sender.getPicture() != '' %}
+                        <img src="{{ asset('uploads/pictures/') ~ document.sender.getPicture() }}"
+                        class=""
+                        alt="{{ document.sender.getLastName() ~ ' ' ~ document.sender.getFirstName() }}">
+                    {% else %}
+                        <img class="img-polaroid img-responsive" src="{{ asset('bundles/icapnotification/images/default-avatar.png') }}">
+                    {% endif %}
+                </div>
+            </div>
+        </td>
+    {% endif %}
+    <td class="{{ classArray }}">
+        {{ document.sender.lastName }}
+    </td>
+    <td class={{ classArray }}>
+        {{ document.sender.firstName }}
+    </td>
+
+    {% if dropzone.username == 1  %}
+        <td class={{ classArray }}>
+            {{ document.sender.username }}
+        </td>
+    {% endif %}
+
+    <td class={{ classArray }}>
+        {% if document.url is not null %}
+            <a target="_blank"
+               href="{{ document.url }}">{{ document.url | length > 40 ? document.url | slice(0, 40) ~ '...' :document.url }}</a>
+        {% else %}
+            {% if document.title is not null %}
+                <a target="_blank"
+                   href="{{ path('innova_collecticiel_open_resource', {'resourceId': dropzone.id, 'documentId': document.id}) }}">{{ document.title }}</a>
+            {% else %}
+                <a target="_blank"
+                   href="{{ path('innova_collecticiel_open_resource', {'resourceId': dropzone.id, 'documentId': document.id}) }}">{{ document.resourceNode.name }}</a>
+            {% endif %}
+        {% endif %}
+    </td>
+    <td class={{ classArray }}>
+        {{ (document.type~'_type')|trans({}, 'innova_collecticiel') }}
+    </td>
+
+    <td class={{ classArray }}>
+        {# InnovaERV : #19 ajout de l'affichage de la date de dépôt du document et formatage #}
+        {{ document.documentDate|date('formatDatetime'|trans({}, 'innova_collecticiel')) }}
+    </td>
+
+    {# #146 : on affiche cette colonne même en tant qu'enseignant, demande de JJQ #}
+    {#  {% if not adminInnova %} #}
+    {# InnovaERV : Ajout d'id "is-valide" afin d'exécuter le traitement pour l'affichage de "Demande adressée" #}
+    <td class="{{ classArray }} centered centering-columnsComment-study" id="is-validate-{{ document.id }}">
+        {% include 'InnovaCollecticielBundle:Document:documentIsValidate.html.twig' %}
+    </td>
+    {# {% endif %} #}
+
+    <td class="{{ classArray }} centered centering-columns-study">
+        <div class="btn-group ">
+           {# Variable qui va compter le nombre de commentaires #}
+           {# Affichage d'un bouton si pas de commentaires #}
+            {% if document.comments|length == 0 %}
+                <a data-toggle="tooltip" data-placement="top" data-original-title="{{ 'See comments'|trans({},'innova_collecticiel') }}" class="fa fa-commenting-o" href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" type="button" class="btn btn-default btn-sm">
+                </a>
+           {# Sinon affichage du compteur et des nouveaux commentaires #}
+            {% else %}
+                <a data-toggle="tooltip" data-placement="top" data-original-title="{{ 'See comments'|trans({},'innova_collecticiel') }}" class="fa fa-commenting-o" href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" type="button">
+                    <div class="very-small">
+                        {{ document.comments|length }}
+                        {% if document.getUnReadComments( app.user.id ) != 0 %}
+                            (+{{ document.getUnReadComments( app.user.id ) }})
+                        {% endif %}
+                    </div>
+                </a>
+            {% endif %}
+        </div>
+    </td>
+
+    {# #187 : ajout de la colonne "Accusé de réception", demande de JJQ #}
+    {% if dropzone.returnreceipt == 1  %}
+        <td class="{{ classArray }} centered centering-columnsAR-study" id="is-validate-{{ document.id }}">
+            {# Pour affichage de la valeur de l'accusé de réception
+            {% render(controller('InnovaCollecticielBundle:Document:renderReturnReceipt',
+            {'documentId': document.id, 'dropzoneId': dropzone.id})) #}
+            {% include 'InnovaCollecticielBundle:Document:renderReturnReceipt.html.twig'
+            with {'value': returnReceiptArray[document.id]} 
+            %}
+        </td>
+    {% endif %}
+
+    {# #146 : changement de gestion des annulations et des suppressions, demande de JJQ #}
+    {% if adminInnova %}
+        {% if mode == 'complete' %}
+            <td id="delete_button_td" class="td_action">
+                {# Cas 1 #}
+                {# Si le document a été validé alors je ne peux pas le supprimer #}
+                <a href="{{ path('innova_collecticiel_delete_document', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" 
+                class="btn btn-danger btn-sm launch-modal del_btn_td" id="delete_{{ document.id }}" style="display:none;" >
+                    {# Ajout de l'icône "supprimer" #}
+                    <i class="fa fa-trash" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Delete'|trans({},'innova_collecticiel') }}"></i>
+                </a>
+                {# Cas 2 #}
+                <a data-target="#validate-cancel-modal" data-toggle="modal" class="btn btn-default cancel_button" style="display:none;" id="cancel_{{ document.id }}"
+                data-document_id="{{ document.id }}" data-document_adminInnova="1">
+                    {# Ajout de l'icône "annuler" #}
+                    <i class="fa fa-undo" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Cancel'|trans({},'innova_collecticiel') }}"></i>
+                </a>
+                {# Cas 3 #}
+                {# Ajout de l'icône "lock" #}
+                <i class="fa fa-lock" style="display:none;" id="lock_{{ document.id }}"  data-toggle="tooltip"
+                data-placement="top" data-original-title="{{ 'No action allowed'|trans({},'innova_collecticiel') }}"></i>
+
+                {# Pour passer les données au JS #}
+                <input type="hidden" value="{{document.id}}" name="document_id">
+                <input type="hidden" value="{{document.validate ? '1':'0'}}" id="document_validate_{{document.id}}">
+                <input type="hidden" value="{{document.comments | length }}" id="document_comments_length_{{document.id}}">
+                <input type="hidden" value="{{document.sender.id}}" id="document_sender_{{document.id}}">
+                <input type="hidden" value="{{document.drop.user.id}}" id="document_drop_user_{{document.id}}">
+                <input type="hidden" value="1" id="adminInnova_{{document.id}}">
+                <input type="hidden" value="{{returnReceiptArray[document.id]}}" id="return_receipt_{{document.id}}">
+                <input type="hidden" value="{{teacherCommentDocArray[document.id]}}" id="teacher_comment_{{document.id}}">
+            </td>
+        {% endif %}
+    {% else %}
+        {% if collecticielOpenOrNot %}
+            {% if mode == 'complete' %}
+                <td id="delete_button_td" class="td_action">
+                {# Cas 1 #}
+                {# Si le document a été validé alors je ne peux pas le supprimer #}
+                <a href="{{ path('innova_collecticiel_delete_document', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" 
+                class="btn btn-danger btn-sm launch-modal del_btn_td" id="delete_{{ document.id }}" style="display:none;" >
+                    {# Ajout de l'icône "supprimer" #}
+                    <i class="fa fa-trash" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Delete'|trans({},'innova_collecticiel') }}"></i>
+                </a>
+                {# Cas 2 #}
+                <a data-target="#validate-cancel-modal" data-toggle="modal" class="btn btn-default cancel_button" style="display:none;" id="cancel_{{ document.id }}"
+                data-document_id="{{ document.id }}" data-document_adminInnova="0">
+                    {# Ajout de l'icône "annuler" #}
+                    <i class="fa fa-undo" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Cancel'|trans({},'innova_collecticiel') }}"></i>
+                </a>
+                {# Cas 3 #}
+                {# Ajout de l'icône "lock" #}
+                <i class="fa fa-lock" style="display:none;" id="lock_{{ document.id }}"  data-toggle="tooltip"
+                data-placement="top" data-original-title="{{ 'No action allowed'|trans({},'innova_collecticiel') }}"></i>
+
+                {# Pour passer les données au JS #}
+                <input type="hidden" value="{{document.id}}" name="document_id">
+                <input type="hidden" value="{{document.validate ? '1':'0'}}" id="document_validate_{{document.id}}">
+                <input type="hidden" value="{{document.comments | length }}" id="document_comments_length_{{document.id}}">
+                <input type="hidden" value="{{document.sender.id}}" id="document_sender_{{document.id}}">
+                <input type="hidden" value="{{document.drop.user.id}}" id="document_drop_user_{{document.id}}">
+                <input type="hidden" value="0" id="adminInnova_{{document.id}}">
+                <input type="hidden" value="{{returnReceiptArray[document.id]}}" id="return_receipt_{{document.id}}">
+                <input type="hidden" value="{{teacherCommentDocArray[document.id]}}" id="teacher_comment_{{document.id}}">
+                </td>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+</tr>
+
+{# Déclaration de la modal pour confirmation de la validation #}
+<div class="modal fade" id="validate-cancel-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">
+                {# Version commentaire #}
+                {% if dropzone.evaluation != 1  %}
+                    {{ 'Cancel request for comment'|trans({}, 'innova_collecticiel') }}
+                {# Version évaluation #}
+                {% else %}
+                    {{ 'Cancel request for review'|trans({}, 'innova_collecticiel') }}
+                {% endif %}
+                </h4>
+            </div>
+            <div class="modal-body">
+                {# Version commentaire #}
+                {% if dropzone.evaluation != 1  %}
+                    {{ 'Do you want to cancel your request for comment'|trans({}, 'innova_collecticiel') }}
+                {# Version évaluation #}
+                {% else %}
+                    {{ 'Do you want to cancel your request for review'|trans({}, 'innova_collecticiel') }}
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</button>
+                <button data-document_id="titi"
+                        data-document_sender_id="99" 
+                        data-document_comment_length="99"
+                        data-document_docDropUser_id="99" 
+                        data-document_adminInnova="99" 
+                id="modal_confirm-cancel" data-method="VALIDATE" type="button" class="btn btn-primary rest" href="#">{{ 'Ok'|trans({}, 'innova_collecticiel') }}</button>
+            </div>
+        </div>
+    </div>
+</div>

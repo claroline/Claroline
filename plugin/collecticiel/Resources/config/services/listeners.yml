@@ -1,0 +1,70 @@
+services:
+    innova.listener.dropzone_listener:
+        class: Innova\CollecticielBundle\Listener\DropzoneListener
+        calls:
+          - [setContainer, ["@service_container"]]
+        tags:
+          - { name: kernel.event_listener, event: create_form_innova_collecticiel, method: onCreateForm }
+          - { name: kernel.event_listener, event: create_innova_collecticiel, method: onCreate }
+          - { name: kernel.event_listener, event: delete_innova_collecticiel, method: onDelete }
+          #- { name: kernel.event_listener, event: export_innova_dropzone, method: onExport }
+          - { name: kernel.event_listener, event: copy_innova_collecticiel, method: onCopy }
+          - { name: kernel.event_listener, event: open_innova_collecticiel, method: onOpen }
+          - { name: kernel.event_listener, event: create_log_list_item_innova_collecticiel, method: onCreateLogListItem }
+          - { name: kernel.event_listener, event: create_log_details_innova_collecticiel, method: onCreateLogDetails }
+          - { name: kernel.event_listener, event: plugin_options_innovacollecticiel, method: onAdministrate }
+          - { name: kernel.event_listener, event: edit_dropzone_innova_collecticiel, method: onEdit }
+          - { name: kernel.event_listener, event: open_dropzone_innova_collecticiel, method: onOpenCustom }
+
+    innova.listener.document_listener:
+        class: Innova\CollecticielBundle\Listener\DeleteListener
+        calls:
+          - [setContainer, ["@service_container"]]
+        tags:
+          - { name: doctrine.event_listener, event: preRemove }
+
+    innova.listener.dropzone.display_log_listener:
+            class: Innova\CollecticielBundle\Listener\Log\DisplayLogListener
+            calls:
+                - [setContainer, ["@service_container"]]
+            tags:
+                - { name: kernel.event_listener, event: create_log_details_resource-innova_dropzone-dropzone_configure,              method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-innova_dropzone-criterion_create,                method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-innova_dropzone-criterion_update,                method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-innova_dropzone-criterion_delete,                method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-innova_dropzone-drop_start,                      method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-innova_dropzone-drop_end,                        method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-innova_dropzone-document_create,                 method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-innova_dropzone-document_delete,                 method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-innova_dropzone-document_open,                   method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-innova_dropzone-correction_start,                method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-innova_dropzone-correction_end,                  method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-innova_dropzone-correction_update,               method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-innova_dropzone-correction_delete,               method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-innova_dropzone-correction_validation_change,    method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-innova_dropzone-drop_evaluate,                   method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-innova_dropzone-drop_report,                     method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-innova_dropzone-correction_report,               method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-innova_dropzone-drop_grade_available,            method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-innova_collecticiel-dropzone_manual_state_changed,   method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-innova_collecticiel-dropzone_add_comment,        method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-innova_collecticiel-dropzone_add_document,       method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-innova_collecticiel-dropzone_validate_document,  method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-innova_dropzone-dropzone_manual_request_sent,    method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-innova_collecticiel-dropzone_return_receipt,     method: onCreateLogDetails }
+
+    innova.listener.dropzone.notification_listener:
+            class: Innova\CollecticielBundle\Listener\NotificationListener
+            calls:
+                - [setContainer, ["@service_container"]]
+            tags:
+                - { name: kernel.event_listener, event: create_notification_item_resource-innova_dropzone-drop_report,                      method: onCreateNotificationItem }
+                - { name: kernel.event_listener, event: create_notification_item_resource-innova_dropzone-correction_report,                method: onCreateNotificationItem }
+                - { name: kernel.event_listener, event: create_notification_item_resource-innova_dropzone-drop_grade_available,             method: onCreateNotificationItem }
+                - { name: kernel.event_listener, event: create_notification_item_resource-innova_collecticiel-dropzone_manual_state_changed,    method: onCreateNotificationItem }
+                - { name: kernel.event_listener, event: create_notification_item_resource-innova_collecticiel-dropzone_add_comment,         method: onCreateNotificationItem }
+                - { name: kernel.event_listener, event: create_notification_item_resource-innova_collecticiel-dropzone_add_document,        method: onCreateNotificationItem }
+                - { name: kernel.event_listener, event: create_notification_item_resource-innova_collecticiel-dropzone_validate_document,         method: onCreateNotificationItem }
+                - { name: kernel.event_listener, event: create_notification_item_resource-innova_dropzone-dropzone_manual_request_sent,     method: onCreateNotificationItem }
+                - { name: kernel.event_listener, event: create_notification_item_resource-innova_dropzone-drop_end,                         method: onCreateNotificationItem }
+                - { name: kernel.event_listener, event: create_notification_item_resource-innova_collecticiel-dropzone_return_receipt,      method: onCreateNotificationItem }

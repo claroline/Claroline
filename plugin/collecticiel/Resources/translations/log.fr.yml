@@ -1,0 +1,146 @@
+log_resource-innova_collecticiel-drop_evaluate_filter: 'Evaluation d''une copie'
+log_resource-innova_collecticiel-drop_evaluate_shortname: 'Evaluation'
+log_resource-innova_collecticiel-drop_evaluate_sentence: 'a été évalué dans %resource%'
+log_resource-innova_collecticiel-drop_evaluate_title: 'Evaluation d''une copie'
+
+log_resource-innova_collecticiel-dropzone_configure_filter: 'Configuration d''une évaluation'
+log_resource-innova_collecticiel-dropzone_configure_shortname : 'Configuration d''une évaluation'
+log_resource-innova_collecticiel-dropzone_configure_sentence: 'a configuré %resource%'
+log_resource-innova_collecticiel-dropzone_configure_title: 'Configuration d''une évaluation'
+instruction: 'instruction'
+allowRichText: 'autorise les zones de texte libre'
+allowWorkspaceResource: 'autorise les ressources d''un workspace'
+allowUpload: 'autorise les téléchargements (upload)'
+allowUrl: 'autorise les liens web externes'
+peerReview: 'evaluation par les pairs'
+expectedTotalCorrection: 'nombre de correction attendu (évaluation par les pairs)'
+minimumScoreToPass: 'Note minimum pour réussir l''évaluation'
+displayNotationMessageToLearners: 'Message de réussite ou d''echec'
+displayNotationToLearners: 'Afficher la note aux apprenants'
+manualPlanning: 'Plannification manuelle'
+manualState: 'Etat choisi'
+startAllowDrop: 'Début du dépôt'
+endAllowDrop: 'Fin du dépôt'
+allowCommentInCorrection: 'autorise une les commentaires lors de la correction'
+totalCriteriaColumn: 'echelle de notation pour les critères d''évaluation'
+
+log_resource-innova_collecticiel-criterion_create_sentence: 'a ajouté un critère d''évaluation à %resource%'
+log_resource-innova_collecticiel-criterion_create_shortname: 'Creation d''un critère'
+log_resource-innova_collecticiel-criterion_create_filter: 'Creation d''un critère d''évaluation'
+log_resource-innova_collecticiel-criterion_create_title: 'Creation d''un critère d''évaluation'
+log_created_criterion: 'Nouveau critère'
+log_dropzone_change_set: 'Liste des propriétés modifiées pour l''évaluation'
+
+log_resource-innova_collecticiel-criterion_update_shortname: 'Modification d''un critère'
+log_resource-innova_collecticiel-criterion_update_filter: 'Modification d''un critère d''évaluation'
+log_resource-innova_collecticiel-criterion_update_sentence: 'a modifié un critère d''évaluation dans %resource%'
+log_resource-innova_collecticiel-criterion_update_title: 'Modification d''un critère d''évaluation'
+log_criterion_change_set: 'Liste des propriétés modifiées pour le critère'
+
+log_resource-innova_collecticiel-criterion_delete_shortname: 'Suppression d''un critère'
+log_resource-innova_collecticiel-criterion_delete_filter: 'Suppression d''un critère d''évaluation'
+log_resource-innova_collecticiel-criterion_delete_sentence: 'a supprimé un critère d''évaluation dans %resource%'
+log_resource-innova_collecticiel-criterion_delete_title: 'Suppression d''un critère d''évaluation'
+log_delete_criterion: 'Critère supprimé'
+
+log_resource-innova_collecticiel-drop_start_shortname: 'Début d''une copie'
+log_resource-innova_collecticiel-drop_start_sentence: 'a commencé à composer sa copie dans %resource%'
+log_resource-innova_collecticiel-drop_start_title: 'Début d''une copie dans une évaluation'
+log_resource-innova_collecticiel-drop_start_filter: 'Début d''une copie dans une évaluation'
+
+log_resource-innova_collecticiel-drop_end_shortname: 'Fin d''une copie'
+log_resource-innova_collecticiel-drop_end_sentence: 'a rendu sa copie dans %resource%'
+log_resource-innova_collecticiel-drop_end_title: 'Fin d''une copie dans une évaluation'
+log_resource-innova_collecticiel-drop_end_filter: 'Fin d''une copie dans une évaluation'
+log_drop_documents: 'Documents'
+
+log_resource-innova_collecticiel-document_create_shortname: 'Création d''un document'
+log_resource-innova_collecticiel-document_create_sentence: 'a ajouté un document à sa copie pour %resource%'
+log_resource-innova_collecticiel-document_create_title: 'Création d''un document pour une évaluation'
+log_resource-innova_collecticiel-document_create_filter: 'Création d''un document pour une évaluation'
+log_drop_all_documents: 'Tout les documents de la copie'
+log_create_document: 'Document ajouté'
+
+log_resource-innova_collecticiel-document_delete_shortname: 'Suppression d''un document'
+log_resource-innova_collecticiel-document_delete_sentence: 'a supprimé un document de sa copie pour %resource%'
+log_resource-innova_collecticiel-document_delete_title: 'Suppression d''un document pour une évaluation'
+log_resource-innova_collecticiel-document_delete_filter: 'Suppression d''un document pour une évaluation'
+log_delete_document: 'Document supprimé'
+
+log_resource-innova_collecticiel-document_open_shortname: 'Ouverture d''un document'
+log_resource-innova_collecticiel-document_open_sentence: 'a ouvert un document d''une copie de %resource%'
+log_resource-innova_collecticiel-document_open_title: 'Ouverture d''un document dans une évaluation'
+log_resource-innova_collecticiel-document_open_filter: 'Ouverture d''un document dans une évaluation'
+log_open_document: 'Document ouvert'
+log_owner_drop: 'Propriétaire de la copie'
+
+log_resource-innova_collecticiel-correction_start_shortname: 'Début d''une correction'
+log_resource-innova_collecticiel-correction_start_sentence: 'a commencé la correction d''une copie dans %resource%'
+log_resource-innova_collecticiel-correction_start_title: 'Début d''une correction dans une évaluation'
+log_resource-innova_collecticiel-correction_start_filter: 'Début d''une correction dans une évaluation'
+log_correction: 'Propriété de la correction'
+
+log_resource-innova_collecticiel-correction_end_shortname: 'Fin d''une correction'
+log_resource-innova_collecticiel-correction_end_sentence: 'a fini la correction d''une copie dans %resource%'
+log_resource-innova_collecticiel-correction_end_title: 'Fin d''une correction dans une évaluation'
+log_resource-innova_collecticiel-correction_end_filter: 'Fin d''une correction dans une évaluation'
+
+log_resource-innova_collecticiel-correction_update_shortname: 'Modification d''une correction'
+log_resource-innova_collecticiel-correction_update_sentence: 'a modifié une correction dans %resource%'
+log_resource-innova_collecticiel-correction_update_title: 'Modification d''une correction dans une évaluation'
+log_resource-innova_collecticiel-correction_update_filter: 'Modification d''une correction dans une évaluation'
+
+log_resource-innova_collecticiel-correction_delete_shortname: 'Suppression d''une correction'
+log_resource-innova_collecticiel-correction_delete_sentence: 'a supprimé une correction dans %resource%'
+log_resource-innova_collecticiel-correction_delete_title: 'Suppression d''une correction dans une évaluation'
+log_resource-innova_collecticiel-correction_delete_filter: 'Suppression d''une correction dans une évaluation'
+
+log_resource-innova_collecticiel-correction_validation_change_shortname: 'Modification de la validité d''une correction'
+log_resource-innova_collecticiel-correction_validation_change_sentence: 'a modifié la validité d''une correction dans  %resource%'
+log_resource-innova_collecticiel-correction_validation_change_title: 'Modification de la validité d''une correction dans une évaluation'
+log_resource-innova_collecticiel-correction_validation_change_filter: 'Modification de la validité d''une correction dans une évaluation'
+
+log_resource-innova_collecticiel-drop_report_shortname: 'Copie signalée'
+log_resource-innova_collecticiel-drop_report_sentence: 'a signalé une copie dans %resource%'
+log_resource-innova_collecticiel-drop_report_title: 'Une copie a été signalée'
+log_resource-innova_collecticiel-drop_report_filter: 'Une copie a été signalée'
+
+log_resource-innova_collecticiel-correction_report_shortname: 'Correction signalée '
+log_resource-innova_collecticiel-correction_report_sentence: 'a signalé une correction dans %resource%'
+log_resource-innova_collecticiel-correction_report_title: 'Une correction a été signalée'
+log_resource-innova_collecticiel-correction_report_filter: 'Une correction a été signalée'
+
+log_resource-innova_collecticiel-drop_grade_available_shortname: 'Note disponible'
+log_resource-innova_collecticiel-drop_grade_available_sentence: 'a éffectué la dernière correction d''une copie dans %resource%'
+log_resource-innova_collecticiel-drop_grade_available_title: 'Note disponible'
+log_resource-innova_collecticiel-drop_grade_available_filter: 'Note disponible'
+
+log_resource-innova_collecticiel-dropzone_manual_state_changed_shortname: "Changement d'état de l'évaluation "
+log_resource-innova_collecticiel-dropzone_manual_state_changed_sentence: "a changé la phase de l'évaluation %resource%"
+log_resource-innova_collecticiel-dropzone_manual_state_changed_title: "Changement d'état de l'évaluation"
+log_resource-innova_collecticiel-dropzone_manual_state_changed_filter: "Changement d'état de l'évaluation"
+
+log_resource-innova_collecticiel-dropzone_manual_request_sent_shortname: "Changement d'état d'un document "
+log_resource-innova_collecticiel-dropzone_manual_request_sent_sentence: "a changé l'état du document %resource%"
+log_resource-innova_collecticiel-dropzone_manual_request_sent_title: "Changement d'état du document"
+log_resource-innova_collecticiel-dropzone_manual_request_sent_filter: "Changement d'état du document"
+
+log_resource-innova_collecticiel-dropzone_add_comment_shortname: "Changement d'état de l'évaluation "
+log_resource-innova_collecticiel-dropzone_add_comment_sentence: "a changé la phase de l'évaluation %resource%"
+log_resource-innova_collecticiel-dropzone_add_comment_title: "Changement d'état de l'évaluation"
+log_resource-innova_collecticiel-dropzone_add_comment_filter: "Changement d'état de l'évaluation"
+
+log_resource-innova_collecticiel-dropzone_validate_document_shortname: "Changement d'état de l'évaluation "
+log_resource-innova_collecticiel-dropzone_validate_document_sentence: "a changé la phase de l'évaluation %resource%"
+log_resource-innova_collecticiel-dropzone_validate_document_title: "Changement d'état de l'évaluation"
+log_resource-innova_collecticiel-dropzone_validate_document_filter: "Changement d'état de l'évaluation"
+
+log_resource-innova_collecticiel-dropzone_add_document_shortname: "Changement d'état de l'évaluation "
+log_resource-innova_collecticiel-dropzone_add_document_sentence: "a changé la phase de l'évaluation %resource%"
+log_resource-innova_collecticiel-dropzone_add_document_title: "Changement d'état de l'évaluation"
+log_resource-innova_collecticiel-dropzone_add_document_filter: "Changement d'état de l'évaluation"
+
+log_resource-innova_collecticiel-dropzone_return_receipt_shortname: "Changement d'état de l'évaluation "
+log_resource-innova_collecticiel-dropzone_return_receipt_sentence: "a changé la phase de l'évaluation %resource%"
+log_resource-innova_collecticiel-dropzone_return_receipt_title: "Changement d'état de l'évaluation"
+log_resource-innova_collecticiel-dropzone_return_receipt_filter: "Changement d'état de l'évaluation"

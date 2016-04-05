@@ -1,0 +1,159 @@
+{% extends 'InnovaCollecticielBundle:Correction:correct.html.twig' %}
+
+{% form_theme form 'InnovaCollecticielBundle::form_theme_correct_criteria.html.twig' %}
+
+{#  Bloc à partir de "Critères d'évaluation" #}
+{#  La partie située en dessus est gérée par le twig Correction:correct.html.twig #}
+{% block dropzone_correct_content %}
+    <h3>
+        {{ 'Evaluation criteria'|trans({}, 'innova_collecticiel') }}
+    </h3>
+
+    <p>
+        {% if state is defined and state =='preview' %}
+            {{ 'Note assigned depends on the following criteria'|trans({}, 'innova_collecticiel') }}
+        {% else %}
+            {{ 'Note that you will assign depends on the following criteria'|trans({}, 'innova_collecticiel') }}
+        {% endif %}
+    </p>
+
+    <div class="container">
+        {% if dropzone.hasCriteria() %}
+            <div class="row">
+                <form id="correct-form" method="POST" action="{% if edit == false %}#{% elseif admin == true %}{{ path('innova_collecticiel_drops_detail_correction_paginated', {'resourceId': dropzone.id, 'state' : state, 'correctionId': correction.id, 'page': pager.currentPage}) }}{% else %}{{ path('innova_collecticiel_correct_paginated', {'resourceId': dropzone.id, 'page': pager.currentPage}) }}{% endif %}" class="form-horizontal">
+                    <hr/>
+                    {% for criterion in pager.currentPageResults %}
+                        {% set criterionNumber = (((pager.currentPage-1) * pager.maxPerPage) + loop.index) %}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4>#{{ criterionNumber }}</h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-11">
+                                <div class="form-group">
+                                    {{ form_row(form[criterion.id]) }}
+                                </div>
+                            </div>
+                            <div class="col-md-1 pull-tight">
+                                <strong>
+                                    Note
+                                </strong>
+                                <div>
+                                    {% set criterionGrade = 0 %}
+                                    {%  for value in form[criterion.id].vars.value %}
+                                        {% if value == true %}
+                                            {% set criterionGrade = loop.index-1 %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    <span class="criterion-grade" data-criterion="innova_collecticiel_correct_criteria_page_form[{{ criterion.id }}]">{{ criterionGrade }}</span>/{{ dropzone.totalCriteriaColumn-1 }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr/>
+                    {% endfor %}
+                    {{ form_rest(form) }}
+
+
+                    {% if edit == true %}
+                        <div class="btn-group pull-right">
+                            {% if admin == true %}
+                                {% if pager.currentPage == 1 %}
+                                    <a href="{{ path('innova_collecticiel_drops_detail', {'resourceId': dropzone.id, 'dropId': correction.drop.id}) }}" class="btn btn-default">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</a>
+                                {% else %}
+                                    {% set previousPage = pager.currentPage-1 %}
+                                    <a href="{{ path('innova_collecticiel_drops_detail_correction_paginated', {'resourceId': dropzone.id, 'state' : state, 'correctionId': correction.id, 'page': previousPage}) }}" class="btn btn-default back-button">{{ 'Previous'|trans({}, 'innova_collecticiel') }}</a>
+                                {% endif %}
+                            {% else %}
+                                {% if pager.currentPage == 1 %}
+                                    <a href="{{ path('innova_collecticiel_open', {'resourceId': dropzone.id}) }}" class="btn btn-default">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</a>
+                                {% else %}
+                                    {% set previousPage = pager.currentPage-1 %}
+                                    <a href="{{ path('innova_collecticiel_correct_paginated', {'resourceId': dropzone.id, 'page': previousPage}) }}" class="btn btn-default back-button">{{ 'Previous'|trans({}, 'innova_collecticiel') }}</a>
+                                {% endif %}
+                            {% endif %}
+
+                            <button type="submit" class="btn btn-primary">{{ 'Save and continue'|trans({}, 'innova_collecticiel') }}</button>
+                        </div>
+                    {% else %}
+                        <div class="btn-group pull-right">
+                            {% if pager.currentPage == 1 %}
+                                {%  if state is defined and state == 'preview' %}
+                                    <a href="{{ path('innova_collecticiel_drop_detail_by_user', {'resourceId': dropzone.id,'dropId': correction.drop.id}) }}" class="btn btn-default">
+                                        {{ 'Back to corrections'|trans({}, 'innova_collecticiel') }}
+                                    </a>
+                                {%  else %}
+
+                                    <a href="{{ path('innova_collecticiel_drops_detail', {'resourceId': dropzone.id, 'dropId': correction.drop.id}) }}" class="btn btn-default">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</a>
+                                {% endif %}
+
+                            {% else %}
+                                {% set previousPage = pager.currentPage-1 %}
+                                <a href="{{ path('innova_collecticiel_drops_detail_correction_paginated', {'resourceId': dropzone.id, 'state' : state, 'correctionId': correction.id, 'page': previousPage}) }}" class="btn btn-default">
+                                    {{ 'Previous'|trans({}, 'innova_collecticiel') }}</a>
+                            {% endif %}
+
+                            {% set nextPage = pager.currentPage+1 %}
+                            {% if pager.currentPage == pager.nbPages and not dropzone.allowCommentInCorrection %}
+                                {# nothing #}
+                            {% elseif pager.currentPage == pager.nbPages and dropzone.allowCommentInCorrection %}
+                                <a href="{{ path('innova_collecticiel_drops_detail_correction_comment', {'resourceId': dropzone.id, 'state' : state , 'correctionId': correction.id}) }}" class="btn btn-default">{{ 'Next'|trans({}, 'innova_collecticiel') }}</a>
+                            {% else %}
+                                <a href="{{ path('innova_collecticiel_drops_detail_correction_paginated', {'resourceId': dropzone.id, 'state' : state, 'correctionId': correction.id, 'page': nextPage}) }}" class="btn btn-default">{{ 'Next'|trans({}, 'innova_collecticiel') }}</a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </form>
+            </div>
+
+            <div class="row">
+                <strong>
+                    {{ pager.currentPage }} / {% if edit == false and not dropzone.allowCommentInCorrection %}{{ pager.nbPages}}{% else %}{{ pager.nbPages+1 }}{% endif %}
+                </strong>
+            </div>
+        {% else %}
+            <div class="alert alert-warning">L'évaluation ne possède aucun critère pour corriger les copies. La correction est impossible.</div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .column-container-div {
+            text-align: center;
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/innovacollecticiel/js/popup.js') }}"></script>
+    <script>
+        $(document).on('ready', function () {
+            $('#innova_collecticiel_correct_criteria_page_form_goBack').val(0);
+            $('.back-button').on('click', function(event) {
+                event.preventDefault();
+                $('#innova_collecticiel_correct_criteria_page_form_goBack').val(1);
+                $('#correct-form button[type="submit"]').trigger('click');
+            });
+
+            $('.column-container-div input[type="radio"]').on('click', function () {
+                var name = $(this).attr('name');
+                var value = $(this).val();
+
+                var test = '.criterion-grade[data-criterion="'+name+'"]';
+                $(test).html(value);
+            });
+
+            var calculateTotalGrade = function () {
+                var totalGrade = 20;
+
+                $('.correctionGrade').html(totalGrade);
+            };
+
+            calculateTotalGrade();
+        });
+    </script>
+{% endblock %}

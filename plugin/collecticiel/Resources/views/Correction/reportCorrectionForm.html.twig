@@ -1,0 +1,35 @@
+{% form_theme form "InnovaCollecticielBundle::form_theme_bootstrap3.html.twig" %}
+
+
+
+    <form class="form-horizontal" method="POST" action="{{ path('innova_collecticiel_drops_deny_correction', {'resourceId': dropzone.id, 'correctionId':correction.id}) }}">
+        {{ form_errors(form) }}
+
+        <p>{{ 'You are about to report a correction. This action is not without consequence.'|trans({}, 'innova_collecticiel') }}</p>
+        <p>{{ 'Are you sure you want to do this?'|trans({}, 'innova_collecticiel') }}</p>
+
+        <div class="row">
+            <strong class="col-md-12">
+                {{ 'Report comment'|trans({}, 'innova_collecticiel') }}
+            </strong>
+        </div>
+
+        <div class="row">
+            {{ form_row(form.correctionDeniedComment, {'label_col_size': ' ', 'input_col_size': 'col-md-12'}) }}
+        </div>
+
+        <br/>
+        <div class="container form-group form-buttons">
+            <div class="btn-group pull-right">
+                    <a href="{{ path('innova_collecticiel_correct', {'resourceId': dropzone.id, 'dropId': drop.id}) }}" class="btn btn-default">
+                        {{ 'Cancel'|trans({}, 'innova_collecticiel') }}
+                    </a>
+                    <button type="submit" class="btn btn-danger">
+                        {{ 'Confirm the correction report'|trans({}, 'innova_collecticiel') }}
+                </button>
+            </div>
+        </div>
+    {{ form_end(form) }}
+
+
+        {{ tinymce_init() }}
