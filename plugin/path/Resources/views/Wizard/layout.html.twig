@@ -1,0 +1,133 @@
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% block stylesheets %}
+    {# Claroline CSS #}
+    {{ parent() }}
+
+    {# Path Editor styles #}
+    {% stylesheets debug=false filter='less, cssmin' output='vendor/innovapath/wizards.css'
+        '@FrontEndBundle/Resources/public/angular-ui-tree/dist/angular-ui-tree.min.css'
+        '@InnovaPathBundle/Resources/public/less/wizards.less'
+    %}
+    <link rel="stylesheet" media="screen" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block content %}
+    {% block path_wizard %}{% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+    {# Claroline JS #}
+    {{ parent() }}
+
+    {# Translations #}
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'path_wizards' }) }}"></script>
+
+    {# Angular JS #}
+    {% javascripts debug=false filter='jsmin' output='vendor/innovapath/angular-js.js'
+        '@FrontEndBundle/Resources/public/angular/angular.min.js'
+        '@FrontEndBundle/Resources/public/angular-sanitize/angular-sanitize.min.js'
+        '@FrontEndBundle/Resources/public/angular-route/angular-route.min.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {# Angular UI #}
+    {% javascripts debug=false filter='jsmin' output='vendor/innovapath/angular-ui.js'
+        '@FrontEndBundle/Resources/public/angular-bootstrap/ui-bootstrap-tpls.min.js'
+        'packages/angular-ui-tree/dist/angular-ui-tree.min.js'
+        'packages/angular-ui-tinymce/src/tinymce.js'
+        '@FrontEndBundle/Resources/public/angular-ui-translation/angular-translation.js'
+        '@FrontEndBundle/Resources/public/angular-ui-resource-picker/angular-resource-picker.js'
+
+        '@InnovaAngularUIPageslideBundle/Resources/public/js/*'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {% javascripts debug=false filter='jsmin' output='vendor/innovapath/wizards.js'
+        '@InnovaPathBundle/Resources/public/js/Utils/*'
+        '@InnovaPathBundle/Resources/public/js/Utils/Filter/*'
+        '@InnovaPathBundle/Resources/public/js/Utils/Service/*'
+
+        '@InnovaPathBundle/Resources/public/js/Form/*'
+        '@InnovaPathBundle/Resources/public/js/Form/Directive/*'
+
+        '@InnovaPathBundle/Resources/public/js/Alert/*'
+        '@InnovaPathBundle/Resources/public/js/Alert/Service/*'
+        '@InnovaPathBundle/Resources/public/js/Alert/Directive/*'
+
+        '@InnovaPathBundle/Resources/public/js/Clipboard/*'
+        '@InnovaPathBundle/Resources/public/js/Clipboard/Service/*'
+
+        '@InnovaPathBundle/Resources/public/js/Confirm/*'
+        '@InnovaPathBundle/Resources/public/js/Confirm/Controller/*'
+        '@InnovaPathBundle/Resources/public/js/Confirm/Service/*'
+
+        '@InnovaPathBundle/Resources/public/js/History/*'
+        '@InnovaPathBundle/Resources/public/js/History/Service/*'
+
+        '@InnovaPathBundle/Resources/public/js/Path/*'
+        '@InnovaPathBundle/Resources/public/js/Path/Controller/*'
+        '@InnovaPathBundle/Resources/public/js/Path/Directive/*'
+        '@InnovaPathBundle/Resources/public/js/Path/Service/*'
+
+        '@InnovaPathBundle/Resources/public/js/UserProgression/*'
+        '@InnovaPathBundle/Resources/public/js/UserProgression/Service/*'
+
+        '@InnovaPathBundle/Resources/public/js/PathSummary/*'
+        '@InnovaPathBundle/Resources/public/js/PathSummary/Controller/*'
+        '@InnovaPathBundle/Resources/public/js/PathSummary/Directive/*'
+
+        '@InnovaPathBundle/Resources/public/js/PathNavigation/*'
+        '@InnovaPathBundle/Resources/public/js/PathNavigation/Controller/*'
+        '@InnovaPathBundle/Resources/public/js/PathNavigation/Directive/*'
+
+        '@InnovaPathBundle/Resources/public/js/Step/*'
+        '@InnovaPathBundle/Resources/public/js/Step/Controller/*'
+        '@InnovaPathBundle/Resources/public/js/Step/Service/*'
+
+        '@InnovaPathBundle/Resources/public/js/StepConditions/*'
+        '@InnovaPathBundle/Resources/public/js/StepConditions/Controller/*'
+        '@InnovaPathBundle/Resources/public/js/StepConditions/Directive/*'
+        '@InnovaPathBundle/Resources/public/js/StepConditions/Service/*'
+
+        '@InnovaPathBundle/Resources/public/js/Resource/*'
+        '@InnovaPathBundle/Resources/public/js/Resource/Controller/*'
+        '@InnovaPathBundle/Resources/public/js/Resource/Service/*'
+
+        '@InnovaPathBundle/Resources/public/js/ResourcePrimary/*'
+        '@InnovaPathBundle/Resources/public/js/ResourcePrimary/Controller/*'
+        '@InnovaPathBundle/Resources/public/js/ResourcePrimary/Directive/*'
+
+        '@InnovaPathBundle/Resources/public/js/ResourceSecondary/*'
+        '@InnovaPathBundle/Resources/public/js/ResourceSecondary/Controller/*'
+        '@InnovaPathBundle/Resources/public/js/ResourceSecondary/Directive/*'
+
+        '@InnovaPathBundle/Resources/public/js/Template/*'
+        '@InnovaPathBundle/Resources/public/js/Template/Controller/*'
+        '@InnovaPathBundle/Resources/public/js/Template/Directive/*'
+        '@InnovaPathBundle/Resources/public/js/Template/Resource/*'
+        '@InnovaPathBundle/Resources/public/js/Template/Service/*'
+
+        '@InnovaPathBundle/Resources/public/js/wizards.app.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {# Set some vars needed by Angular parts #}
+    <script type="text/javascript">
+        {# Make Twig variables accessibles by AngularJS #}
+        var AngularApp = {};
+
+        AngularApp.webDir        = "{{ asset('') }}";
+        AngularApp.locale        = "{{ app.request.locale ~ '_' ~ app.request.locale|upper }}";
+
+        AngularApp.resourceIcons = {
+            {% for resourceIcon in resourceIcons %}
+            "{{ resourceIcon.mimeType }}" : "{{ asset(resourceIcon.relativeUrl) }}"{% if loop.last != true %},{% endif %}
+            {% endfor %}
+        };
+    </script>
+{% endblock %}

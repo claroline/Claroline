@@ -1,0 +1,163 @@
+<div class="row" id="scroll-to-onload">
+    <!-- No selected step alert -->
+    <div data-ng-if="!stepEditCtrl.step" class="col-md-12">
+        <div class="alert alert-info text-center">
+            {{ 'no_step_selected'|trans:{}:'path_wizards' }}
+        </div>
+    </div>
+
+    <!-- Step form -->
+    <div data-ng-if="stepEditCtrl.step" class="col-md-12 panel-step">
+        <!-- Secondary resources of the Step -->
+        <resources-secondary-edit data-resources="stepEditCtrl.step.resources" data-inherited="stepEditCtrl.inheritedResources" data-excluded="stepEditCtrl.step.excludedResources"></resources-secondary-edit>
+
+        <!-- Form of the Step -->
+        <div class="panel panel-default">
+            <!-- Step level -->
+            <div class="lvl-indicator lvl lvl-{{ stepEditCtrl.step.lvl }} lvl-bg"></div>
+
+            <div class="panel-body">
+                <div class="panel-step-heading row">
+                    <!-- Previous step -->
+                    <div class="col-md-1 col-sm-2 col-xs-2 text-left">
+                        <button type="button" data-ng-click="stepEditCtrl.goTo(stepEditCtrl.previous)" class="btn btn-block btn-default" data-ng-disabled="null == stepEditCtrl.previous" data-placement="bottom" data-toggle="tooltip" data-original-title="{{ stepEditCtrl.previous.name }}">
+                            <span class="fa fa-arrow-left"></span>
+                            <span class="sr-only">previous</span>
+                        </button>
+                    </div>
+
+                    <div class="col-md-10 col-sm-8 col-xs-8">
+                        <label class="control-label sr-only" for="step-name">Step name</label>
+                        <!-- Edit step name -->
+                        <div class="input-group col-md-12">
+                            <input type="text" class="form-control text-center" name="step-name" id="step-name" data-ng-model="stepEditCtrl.step.name" />
+                            <div class="input-group-btn">
+                                <button data-ng-click="stepEditCtrl.showActivity()" class="btn btn-default" type="button" data-ng-if="stepEditCtrl.step.activityId" data-toggle="tooltip" data-container="body" title="{{ 'see_activity'|trans:{}:'path_wizards' }}">
+                                    <span class="fa fa-sign-out"></span>
+                                    <span class="sr-only">{{ 'see_activity'|trans:{}:'path_wizards' }}</span>
+                                </button>
+
+                                <btn-resource-picker class="btn btn-default" data-parameters="stepEditCtrl.resourcePicker" data-toggle="tooltip" data-container="body" title="{{ 'select_activity'|trans:{}:'path_wizards' }}">
+                                    <span class="fa fa-folder-open"></span>
+                                    <span class="sr-only">{{ 'select_activity'|trans:{}:'path_wizards' }}</span>
+                                </btn-resource-picker>
+
+                                <button data-ng-click="stepEditCtrl.deleteActivity()" class="btn btn-danger" type="button" data-ng-if="stepEditCtrl.step.activityId" data-toggle="tooltip" data-container="body" title="{{ 'delete_activity'|trans:{}:'path_wizards' }}">
+                                    <span class="fa fa-trash-o"></span>
+                                    <span class="sr-only">{{ 'delete_activity'|trans:{}:'path_wizards' }}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Next step button -->
+                    <div class="col-md-1 col-sm-2 col-xs-2 text-right">
+                        <button type="button" data-ng-click="stepEditCtrl.goTo(stepEditCtrl.next)" class="btn btn-block btn-default" data-ng-disabled="null == stepEditCtrl.next" data-placement="bottom" data-toggle="tooltip" data-original-title="{{ stepEditCtrl.next.name }}">
+                            <span class="sr-only">next</span>
+                            <span class="fa fa-arrow-right"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title" data-ng-click="stepEditCtrl.collapsedPanels.description = !stepEditCtrl.collapsedPanels.description">
+                            <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': stepEditCtrl.collapsedPanels.description, 'fa-caret-down': !stepEditCtrl.collapsedPanels.description }"></span>
+                            Description
+                        </h4>
+                    </div>
+
+                    <div id="panel-description" data-ng-show="!stepEditCtrl.collapsedPanels.description">
+                        <textarea data-ui-tinymce="stepEditCtrl.tinymceOptions" data-before-unload="off" class="form-control" name="step-description" data-ng-model="stepEditCtrl.step.description"></textarea>
+                    </div>
+                </div>
+
+                <!-- Primary resource -->
+                <resources-primary-edit data-resources="stepEditCtrl.step.primaryResource"></resources-primary-edit>
+
+                <!-- Properties -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title" data-ng-click="stepEditCtrl.collapsedPanels.properties = !stepEditCtrl.collapsedPanels.properties">
+                            <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': stepEditCtrl.collapsedPanels.properties, 'fa-caret-down': !stepEditCtrl.collapsedPanels.properties }"></span>
+                            {{ 'properties'|trans:{}:'path_wizards' }}
+                        </h4>
+                    </div>
+
+                    <div class="panel-body" data-ng-show="!stepEditCtrl.collapsedPanels.properties">
+                        <!-- Evaluation Type -->
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="evaluation-type">{{ 'step_evaluation_type'|trans:{}:'path_wizards' }}</label>
+                            <div class="col-md-8">
+                                <select class="form-control" id="evaluation-type" name="evaluation-type" data-ng-model="stepEditCtrl.step.evaluationType">
+                                    <option value="manual">{{ 'manual'|trans:{}:'platform' }}</option>
+                                    <option value="automatic">{{ 'automatic'|trans:{}:'platform' }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Min height of the Activity -->
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="activity-height">{{ 'activity_height'|trans:{}:'path_wizards' }}</label>
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <input type="text" class="form-control text-right" name="activity-height" id="activity-height" data-ng-model="stepEditCtrl.step.activityHeight" data-ng-disabled="!stepEditCtrl.step.primaryResource || stepEditCtrl.step.primaryResource.length == 0" />
+                                    <span class="input-group-addon">px</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- With tutor -->
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="with-tutor">{{ 'with_tutor'|trans:{}:'path_wizards' }}</label>
+                            <div class="col-md-4">
+                                <select class="form-control" name="with-tutor" id="with-tutor" data-ng-model="stepEditCtrl.step.withTutor">
+                                    <option value=""></option>
+                                    <option value="true">{{ 'yes'|trans:{}:'path_wizards' }}</option>
+                                    <option value="false">{{ 'no'|trans:{}:'path_wizards' }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Who -->
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="step-who">{{ 'step_who'|trans:{}:'path_wizards' }}</label>
+                            <div class="col-md-8">
+                                <select class="form-control" id="step-who" name="step-who" data-ng-model="stepEditCtrl.step.who">
+                                    <option value=""></option>
+                                    <option value="individual">{{ 'individual'|trans:{}:'platform' }}</option>
+                                    <option value="collaborative">{{ 'collaborative'|trans:{}:'platform' }}</option>
+                                    <option value="mixed">{{ 'mixed'|trans:{}:'platform' }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Where -->
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="step-where">{{ 'step_where'|trans:{}:'path_wizards' }}</label>
+                            <div class="col-md-8">
+                                <select class="form-control" id="step-where" name="step-where" data-ng-model="stepEditCtrl.step.where">
+                                    <option value=""></option>
+                                    <option value="classroom">{{ 'classroom'|trans:{}:'platform' }}</option>
+                                    <option value="anywhere">{{ 'anywhere'|trans:{}:'platform' }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Duration -->
+                        <div class="form-group">
+                            <label class="control-label col-md-4" for="duration">{{ 'step_duration'|trans:{}:'path_wizards' }}</label>
+                            <div class="col-md-8">
+                                <duration-field class="row" data-model="stepEditCtrl.step.duration"></duration-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conditions for the Next step -->
+        <step-conditions-edit data-next="stepEditCtrl.nextstep" data-ng-if="stepEditCtrl.nextstep"></step-conditions-edit>
+    </div>
+</div>

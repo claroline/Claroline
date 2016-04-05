@@ -1,0 +1,45 @@
+<form name="markForm" novalidate>
+  <div class="modal-header">
+    <button type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="{{ 'close'|trans }}">
+      <span aria-hidden="true" data-ng-click="vm.cancel()">&times;</span>
+    </button>
+    <h3 class="modal-title">{{ 'marks.edit'|trans:'results' }}</h3>
+  </div>
+  <div class="modal-body">
+    <div class="form-group"
+         data-ng-class="{ 'has-error': (markForm.$submitted || markForm.value.$dirty) && !markForm.value.$valid }">
+      <label for="mark-value">{{ 'mark'|trans:'results' }}</label>
+      <input id="mark-value"
+             type="text"
+             name="value"
+             class="form-control"
+             data-ng-model="vm.editedMark.newValue"
+             data-valid-mark
+             required />
+      <p class="help-block"
+         data-ng-if="(markForm.$submitted || markForm.value.$dirty) && markForm.value.$error.required">
+        {{ 'errors.not_blank'|trans:'results' }}
+      </p>
+      <p class="help-block"
+         data-ng-if="(markForm.$submitted || markForm.value.$dirty) && markForm.value.$error.validMark">
+        {{ 'errors.invalid_mark'|trans:'results' }}
+      </p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit"
+            class="btn btn-primary"
+            data-ng-disabled="!markForm.$valid"
+            data-ng-click="vm.editResult(markForm)">
+      {{ 'edit'|trans }}
+    </button>
+    <button type="button"
+            class="btn btn-default"
+            data-ng-click="vm.cancel()">
+      {{ 'cancel'|trans }}
+    </button>
+  </div>
+</form>

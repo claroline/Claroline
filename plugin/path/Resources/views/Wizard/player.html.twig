@@ -1,0 +1,8 @@
+{% extends "InnovaPathBundle:Wizard:layout.html.twig" %}
+
+{% block path_wizard %}
+    <div data-ng-cloak="" data-ng-app="PathPlayerApp" class="path-player">
+        {# Path Player (convert Path Entity into a JSON object to make it understandable by AngularJS) #}
+        <path-show data-id="{{ _resource.id }}" data-path="{{ _resource | json_encode }}" data-user-progression="{{ userProgression | json_encode }}" data-edit-enabled="{{ editEnabled }}"></path-show>
+    </div>
+{% endblock %}

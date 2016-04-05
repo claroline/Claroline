@@ -1,0 +1,65 @@
+<form name="createForm" novalidate>
+  <div class="modal-header">
+    <button type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="{{ 'close'|trans }}">
+      <span aria-hidden="true" data-ng-click="vm.cancel(createForm)">&times;</span>
+    </button>
+    <h3 class="modal-title">{{ 'marks.add'|trans:'results' }}</h3>
+  </div>
+  <div class="modal-body">
+    <div class="form-group"
+         data-ng-class="{ 'has-error': (createForm.$submitted || createForm.user.$dirty) && !createForm.user.$valid }">
+      <label for="mark-user">{{ 'user'|trans }}</label>
+      <input id="mark-user"
+             type="text"
+             name="user"
+             class="form-control"
+             data-ng-model="vm.createdMark.user"
+             data-uib-typeahead="user.name for user in vm.users | filter:$viewValue | limitTo:8"
+             data-valid-user
+             required />
+      <p class="help-block"
+         data-ng-if="(createForm.$submitted || createForm.user.$dirty) && createForm.user.$error.required">
+        {{ 'errors.not_blank'|trans:'results' }}
+      </p>
+      <p class="help-block"
+         data-ng-if="(createForm.$submitted || createForm.user.$dirty) && createForm.user.$error.validUser">
+        {{ 'errors.unknown_user'|trans:'results' }}
+      </p>
+    </div>
+    <div class="form-group"
+         data-ng-class="{ 'has-error': (createForm.$submitted || createForm.mark.$dirty) && !createForm.mark.$valid }">
+      <label for="mark-value">{{ 'mark'|trans:'results' }}</label>
+      <input id="mark-value"
+             type="text"
+             name="mark"
+             class="form-control"
+             data-ng-model="vm.createdMark.mark"
+             data-valid-mark
+             required />
+      <p class="help-block"
+         data-ng-if="(createForm.$submitted || createForm.mark.$dirty) && createForm.mark.$error.required">
+        {{ 'errors.not_blank'|trans:'results' }}
+      </p>
+      <p class="help-block"
+         data-ng-if="(createForm.$submitted || createForm.mark.$dirty) && createForm.mark.$error.validMark">
+        {{ 'errors.invalid_mark'|trans:'results' }}
+      </p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit"
+            class="btn btn-primary"
+            data-ng-disabled="!createForm.$valid"
+            data-ng-click="vm.createResult(createForm)">
+      {{ 'create'|trans }}
+    </button>
+    <button type="button"
+            class="btn btn-default"
+            data-ng-click="vm.cancel(createForm)">
+      {{ 'cancel'|trans }}
+    </button>
+  </div>
+</form>

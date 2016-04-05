@@ -1,0 +1,65 @@
+services: 
+    # Path controller
+    innova_path.controller.path:
+        class: Innova\PathBundle\Controller\PathController
+        arguments:
+            session:              @session
+            translator:           @translator
+            pathManager:          @innova_path.manager.path
+            publishingManager:    @innova_path.manager.publishing
+        scope: request
+
+    # Path template controller
+    innova_path.controller.path_template:
+        class: Innova\PathBundle\Controller\PathTemplateController
+        arguments:
+            formFactory:         @form.factory
+            pathTemplateManager: @innova_path.manager.path_template
+        scope: request
+
+    # Path Widget controller
+    innova_path.controller.path_widget:
+        class: Innova\PathBundle\Controller\Widget\PathWidgetController
+        arguments:
+            om:                   @doctrine.orm.entity_manager
+            formFactory:          @form.factory
+            authorizationChecker: @security.authorization_checker
+            pathManager:          @innova_path.manager.path
+            tagManager:           @claroline.manager.tag_manager
+        scope: request
+
+    # Player controller
+    innova_path.controller.path_player:
+        class: Innova\PathBundle\Controller\Wizard\PlayerController
+        arguments:
+            objectManager: @doctrine.orm.entity_manager
+            pathManager:   @innova_path.manager.path
+        scope: request
+          
+    # Editor controller
+    innova_path.controller.path_editor:
+        class: Innova\PathBundle\Controller\Wizard\EditorController
+        arguments:
+            objectManager:   @doctrine.orm.entity_manager
+            router:          @router
+            formFactory:     @form.factory
+            resourceManager: @claroline.manager.resource_manager
+            pathManager:     @innova_path.manager.path
+        scope: request
+
+    # User Progression controller
+    innova_path.controller.user_progression:
+        class: Innova\PathBundle\Controller\UserProgressionController
+        arguments:
+            userProgressionManager: @innova_path.manager.user_progression
+        scope: request
+
+    # Step Conditions controller
+    innova_path.controller.step_condition:
+        class: Innova\PathBundle\Controller\StepConditionController
+        arguments:
+            objectManager:  @claroline.persistence.object_manager
+            groupManager:   @claroline.manager.group_manager
+            securityToken:  @security.token_storage
+            teamManager:    @claroline.manager.team_manager
+        scope: request

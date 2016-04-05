@@ -22,6 +22,7 @@ Official distribution of Claroline Connect LMS
 - [x] ScormBundle
 - [x] AgendaBundle
 - [x] ActivityToolBundle
+- [x] ResultBundle
 - [x] RssReaderBundler
 - [x] ImagePlayerBundle
 - [x] TextPlayerBundle
@@ -47,7 +48,7 @@ Official distribution of Claroline Connect LMS
 - [x] SocialMediaBundle
 - [ ] WebsiteBundle
 - [x] oAuthBundle
-- [ ] PathBundle
+- [x] PathBundle
 - [x] CollecticielBundle
 - [ ] ExoBundle
 
@@ -58,4 +59,5 @@ Official distribution of Claroline Connect LMS
 - update
 - upgrade from previous packages
 - remove the innova/angular bundles (required by portfolio)
+- remove the "innova/angular-ui-pageslide-bundle" (for path)
 - remove the front-end-bundle (required by icapbadge for jqplot and by core/Resouces/less/layout.less)

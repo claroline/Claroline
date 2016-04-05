@@ -1,0 +1,24 @@
+.path-editor {
+    .navbar {
+        margin-bottom: 0 !important;
+
+        .navbar-brand {
+            color: @navbar-default-link-color;
+
+            &:hover,
+            &:focus {
+                color:      @navbar-default-link-hover-color;
+                background: @navbar-default-link-hover-bg;
+            }
+
+            &.active {
+                color:      @navbar-default-link-active-color;
+                background: @navbar-default-link-active-bg;
+            }
+        }
+    }
+
+    .toggle-path-info {
+        cursor: pointer;
+    }
+}

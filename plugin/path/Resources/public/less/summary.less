@@ -1,0 +1,288 @@
+/**
+ * Styles for Path summary
+ */
+
+.angular-ui-tree-placeholder {
+    background: #f0f9ff;
+    border: 2px dashed #bed2db;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.angular-ui-tree-drag {
+    position: absolute;
+    pointer-events: none;
+    z-index: 999;
+    opacity: .8;
+    list-style-type: none;
+}
+
+// Default state
+.path-summary-container {
+    margin-top: @navbar-height;
+    height: auto !important;
+    z-index: 9 !important;
+    background: @navbar-default-bg;
+    box-shadow: 3px 0 3px rgba(0,0,0,.25);
+
+    /* Sidebar close button */
+    .ps-close {
+        font-size: 16px;
+        position: absolute;
+        z-index: 2;
+        right: 0;
+        display: inline-block;
+        line-height: @navbar-height - 3;
+        padding: 0 floor(@grid-gutter-width / 2);
+        color: darken(@navbar-default-link-color, 10%);
+        opacity: 0.75;
+
+        &:hover,
+        &:focus {
+            opacity: 1;
+        }
+    }
+
+    .path-summary {
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        padding-top: @navbar-height - 3;
+
+        /* Sidebar title */
+        h2 {
+            font-size: 16px;
+            font-weight: bold;
+            color: darken(@navbar-default-link-color, 10%);
+            margin: 0;
+            padding: 0 @grid-gutter-width 0 floor(@grid-gutter-width / 2);
+            border-bottom: 3px solid @gray-light !important;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: @navbar-height - 3;
+            line-height: @navbar-height - 3;
+            z-index: 1;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+
+            .fa {
+                margin-right: 5px;
+            }
+        }
+
+        em {
+            display: block;
+            padding: floor(@grid-gutter-width / 2) 0;
+        }
+
+
+        .angular-ui-tree-handle {
+            font-weight: normal;
+        }
+
+        .path-summary-tree {
+            overflow-y: scroll;
+            overflow-x: hidden;
+            height: 100%;
+            position: relative;
+
+            .tree {
+                padding: 0;
+                margin: 0;
+                list-style-type: none;
+
+                .placeholder {
+                    background: #CCCCCC;
+                    min-height: 12px;
+                    border: 1px dashed #010101;
+                    margin-bottom: 15px;
+                }
+
+                a:hover,
+                a:focus,
+                a:active {
+                    text-decoration: none;
+                    color: #333333;
+                }
+
+                li {
+                    list-style: none;
+                }
+            }
+
+        }
+    }
+}
+
+.tree-item {
+    cursor: pointer;
+    line-height: 24px;
+    position: relative;
+    background-color: @panel-default-heading-bg;
+    margin: 2px 0 !important;
+
+    &:hover, &.active-step {
+        background-color: white;
+
+        .step-progression {
+            > a {
+                background-color: white;
+            }
+        }
+    }
+
+    .lvl-indicator {
+        width: 20px;
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        vertical-align: middle;
+        margin: 0;
+
+        .step-drag-handler {
+            z-index: 2;
+            display: table;
+            text-align: center;
+            margin: 0 !important;
+            width: 100%;
+            height: 100%;
+            cursor: move !important;
+
+            .fa {
+                display: table-cell;
+                position: relative;
+                width: 100%;
+                height: 100%;
+                vertical-align: middle;
+                color: white !important;
+            }
+        }
+    }
+
+    .step {
+        font-size: @path-summary-font;
+        padding: 5px 8px 5px 30px;
+        border-bottom: 1px solid #ddd;
+        border-top: 1px solid #ddd;
+        border-left: none;
+        display: block;
+        color: #333333;
+        vertical-align: middle;
+
+        .step-toggle {
+            display: inline-block;
+            position: relative;
+            vertical-align: middle;
+            color: #333333 !important;
+            opacity: 0.8;
+
+            &:hover,
+            &:focus {
+                opacity: 1;
+            }
+        }
+    }
+
+    .step-actions {
+        background-color: @btn-default-bg;
+    }
+
+    .step-actions, .step-progression {
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 100%;
+        border-radius: 0;
+
+        .btn {
+            height: 100%;
+            border-radius: 0;
+
+            > .fa {
+                vertical-align: bottom;
+            }
+        }
+    }
+
+    .step-progression {
+        height: 100%;
+        border-top: 1px solid transparent;
+        border-bottom: 1px solid transparent;
+
+        > a {
+            background-color: @panel-default-heading-bg;
+            vertical-align: bottom;
+            height: 100%;
+            display: inline-block;
+            line-height: 1.5;
+            padding: @padding-base-vertical @padding-base-horizontal;
+            color: @text-color;
+        }
+
+        .link-progression {
+            &:hover {
+                background-color: darken(@dropdown-bg, 5%);
+            }
+
+            &.link-progression-to_do {
+                color: @brand-warning;
+            }
+
+            &.link-progression-done {
+                color: @brand-success;
+            }
+
+            &.link-progression-to_review {
+                color: @brand-info;
+            }
+        }
+
+        .dropdown-menu-right {
+            left: auto;
+            right: 0;
+        }
+    }
+}
+
+.step-children {
+    margin-left: 9px;
+    padding-left: 10px;
+    border-left: 1px dotted;
+}
+
+// Opened state
+.path-summary-opened {
+    .path-summary-container {
+        overflow: visible !important;
+        width: @path-summary-width !important; // Override pageslideDirective width to make it a little more responsive
+    }
+}
+
+/* Shift content when sidebar is present */
+@media (min-width: @screen-sm) {
+    .path-summary-container {
+        margin-left: 40px;
+    }
+
+    .path-summary-opened {
+        margin-left: @path-summary-width + 40px !important;
+    }
+}
+
+/* Reset margin when no leftbar (on small screen) */
+@media (max-width: (@screen-sm - 1)) {
+    .path-summary-container {
+        margin-left: 0px;
+    }
+
+    .path-summary-opened {
+        margin-left: @path-summary-width !important;
+    }
+}

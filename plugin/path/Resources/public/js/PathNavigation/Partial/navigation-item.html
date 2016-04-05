@@ -1,0 +1,22 @@
+<li class="step-item lvl lvl-{{ pathNavigationItemCtrl.element.lvl }} lvl-zindex-reverse lvl-hover lvl-border" data-ng-class="{ 'dropdown': 1 < pathNavigationItemCtrl.parent.children.length, 'current': pathNavigationItemCtrl.element.id == pathNavigationItemCtrl.current.id  }">
+    <!-- Step level -->
+    <div class="lvl-indicator lvl lvl-{{ pathNavigationItemCtrl.element.lvl }} lvl-bg"></div>
+
+    <!-- Step link (if `element` is not the current step) -->
+    <a data-ng-if="pathNavigationItemCtrl.element.id != pathNavigationItemCtrl.current.id" href="#/{{ pathNavigationItemCtrl.element.id }}">{{ pathNavigationItemCtrl.element.name | truncate }}</a>
+
+    <!-- Step name (if `element` is the current step) -->
+    <span data-ng-if="pathNavigationItemCtrl.element.id == pathNavigationItemCtrl.current.id">{{ pathNavigationItemCtrl.element.name | truncate }}</span>
+
+    <!-- Siblings dropdown -->
+    <a href="" class="dropdown-toggle" type="button" id="step-{{ pathNavigationItemCtrl.element.id }}-siblings-dropdown" data-toggle="dropdown" aria-expanded="true" data-ng-if="1 < pathNavigationItemCtrl.parent.children.length">
+        <span class="caret"></span>
+        <span class="sr-only">{{ 'see_step_siblings'|trans:{}:'path_wizards' }}</span>
+    </a>
+    <ul class="dropdown-menu" role="menu" aria-labelledby="step-{{ pathNavigationItemCtrl.element.id }}-siblings-dropdown" data-ng-if="1 < pathNavigationItemCtrl.parent.children.length">
+        <!-- step-item lvl lvl-{{ sibling.lvl }} lvl-border lvl-hover -->
+        <li class="" data-ng-repeat="sibling in pathNavigationItemCtrl.parent.children" role="presentation" data-ng-class="{ 'current': pathNavigationItemCtrl.element.id == sibling.id }">
+            <a role="menuitem" tabindex="-1" href="#/{{ sibling.id }}">{{ sibling.name | truncate }}</a>
+        </li>
+    </ul>
+</li>

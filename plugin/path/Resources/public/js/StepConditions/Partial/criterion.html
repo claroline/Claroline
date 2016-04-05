@@ -1,0 +1,32 @@
+<div>
+    <!-- Group of buttons for the criterion criterion.splice($index, 1) -->
+    <div class="btn-group" role="group">
+        <button type="button" data-ng-click="stepConditionsEditCtrl.removeCriterion(group, $index)" class="btn btn-sm btn-danger text-right">
+            <span class="fa fa-trash"></span>
+            <span>{{ 'condition_criterion_delete'|trans:{}:'path_wizards' }}</span>
+        </button>
+    </div>
+
+    <div class="condition-criterion-element">
+        <!-- list of criterion type -->
+        <div class="row form-group">
+            <label class="control-label col-md-4 required data-ng-binding">{{ 'condition_criterion_type'|trans:{}:'path_wizards' }}</label>
+            <div class="col-md-8 criterion-type">
+                <select class="form-control" name="criterion-type" id="criterion-type" data-ng-model="criterion.type">
+                    <option value="">{{'condition_criterion_choice'|trans:{}:'path_wizards' }}</option>
+                    <option value="usergroup">{{'condition_criterion_type_usergroup'|trans:{}:'path_wizards' }}</option>
+                    <option value="userteam">{{'condition_criterion_type_userteam'|trans:{}:'path_wizards' }}</option>
+                    <option value="activitystatus" data-ng-if="stepConditionsEditCtrl.step.evaluationType === 'automatic'">{{'condition_criterion_type_activitystatus'|trans:{}:'path_wizards' }}</option>
+                    <option value="activityrepetition" data-ng-if="stepConditionsEditCtrl.step.evaluationType === 'automatic'">{{'condition_criterion_type_activityrepetition'|trans:{}:'path_wizards' }}</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Data for selected criterion type -->
+        <div class="row form-group condition-criterion-element-data"
+             data-ng-switch on="criterion.type"
+             data-ng-include="stepConditionsEditCtrl.webDir + 'bundles/innovapath/js/StepConditions/Partial/criteriontypechosen.html'">
+        </div>
+
+    </div>
+</div>

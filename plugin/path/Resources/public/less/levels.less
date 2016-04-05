@@ -1,0 +1,60 @@
+/**
+ * Add styles for each level of the Path
+ */
+
+.lvl {
+    // LEVEL 0
+    .createLevel(0, @lvl-gray);
+
+    // LEVEL 1
+    .createLevel(1, @lvl-blue);
+
+    // LEVEL 2
+    .createLevel(2, @lvl-purple);
+
+    // LEVEL 3
+    .createLevel(3, @lvl-red);
+
+    // LEVEL 4
+    .createLevel(4, @lvl-orange);
+
+    // LEVEL 5
+    .createLevel(5, @lvl-yellow);
+
+    // LEVEL 6
+    .createLevel(6, @lvl-light-green);
+
+    // LEVEL 7
+    .createLevel(7, @lvl-green);
+
+    // LEVEL 8
+    .createLevel(8, @lvl-light-blue);
+}
+
+.createLevel(@lvl, @color) {
+    &.lvl-@{lvl} {
+        &.lvl-bg {
+            background-color: @color !important;
+        }
+
+        &.lvl-text {
+            color: darken(@color, 20%) !important;
+        }
+
+        &.lvl-border {
+            border-color: @color !important;
+        }
+
+        &.lvl-zindex {
+            z-index: @lvl;
+        }
+
+        &.lvl-zindex-reverse {
+            z-index: 9 - @lvl;
+        }
+
+        &.lvl-hover:hover {
+            box-shadow: 1px 0 3px 1px fadeout(@color, 0.75);
+        }
+    }
+}

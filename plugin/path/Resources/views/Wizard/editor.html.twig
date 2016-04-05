@@ -1,0 +1,19 @@
+{% extends "InnovaPathBundle:Wizard:layout.html.twig" %}
+
+{% block resourceBreadcrumb %}
+    <li>
+        <a href="{{ path('claro_resource_open', { node: _resource.resourceNode.id, resourceType: 'innova_path' } ) }}">
+            {{ _resource.resourceNode.name }}
+        </a>
+    </li>
+    <li class="active">{{ 'edit' | trans({}, 'platform') }}</li>
+{% endblock %}
+
+{% block path_wizard %}
+    <div data-ng-cloak="" data-ng-app="PathEditorApp" class="path-editor">
+        {# Path Form (we not directly alter the entity, but work with a JSON structure which stores info before publishing) #}
+        <path-edit data-id="{{ _resource.id }}" data-path="{{ _resource.structure | raw | escape }}" data-modified="{{ _resource.modified }}" data-published="{{ _resource.published }}"></path-edit>
+
+        {{ tinymce_init() }}
+    </div>
+{% endblock %}

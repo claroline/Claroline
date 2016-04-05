@@ -1,0 +1,100 @@
+<div class="row" id="scroll-to-onload">
+    <!-- No selected step alert -->
+    <div data-ng-if="null == stepShowCtrl.step" class="col-md-12">
+        <div class="alert alert-info text-center">
+            {{ 'no_step_selected'|trans:{}:'path_wizards' }}
+        </div>
+    </div>
+
+    <!-- User is not authorized to access this step -->
+    <div data-ng-if="!stepShowCtrl.authorization.granted" class="col-md-12">
+        <div class="alert alert-info text-center" data-ng-bind-html="stepShowCtrl.authorization.message"></div>
+    </div>
+
+    <!-- Current step is not accessible for now -->
+    <div data-ng-if="stepShowCtrl.authorization.granted && null != stepShowCtrl.step && !stepShowCtrl.isAccessible()" class="col-md-12">
+        <div class="alert alert-info text-center">
+            {{ 'step_not_accessible'|trans:{}:'path_wizards' }}
+        </div>
+    </div>
+
+    <!-- Current step -->
+    <div data-ng-if="stepShowCtrl.authorization.granted && null != stepShowCtrl.step && stepShowCtrl.isAccessible()" class="panel-step col-md-12">
+        <resources-secondary-show data-resources="stepShowCtrl.step.resources" data-inherited="stepShowCtrl.inheritedResources" data-excluded="stepShowCtrl.step.excludedResources"></resources-secondary-show>
+
+        <div class="panel panel-default">
+            <div class="lvl-indicator lvl lvl-{{ stepShowCtrl.step.lvl }} lvl-bg">&nbsp;</div>
+
+            <div class="panel-body">
+                <div class="panel-step-heading row">
+                    <!-- Previous step button -->
+                    <div class="col-md-1 col-sm-2 col-xs-2 text-left">
+                        <button type="button" data-ng-click="stepShowCtrl.goTo(stepShowCtrl.previous)" class="btn btn-block btn-default" data-ng-disabled="null == stepShowCtrl.previous" data-placement="bottom" data-toggle="tooltip" data-original-title="{{ stepShowCtrl.previous.name }}">
+                            <span class="fa fa-arrow-left"></span>
+                            <span class="sr-only">{{ 'previous_step'|trans:{}:'path_wizards' }}</span>
+                        </button>
+                    </div>
+
+                    <!-- Step title -->
+                    <div class="col-md-10 col-sm-8 col-xs-8 text-center">
+                        <h4 class="panel-step-title">{{ stepShowCtrl.step.name }}</h4>
+                    </div>
+
+                    <!-- Next step button -->
+                    <div class="col-md-1 col-sm-2 col-xs-2 text-right">
+                        <button type="button" data-ng-click="stepShowCtrl.goTo(stepShowCtrl.next)" class="btn btn-block btn-default" data-ng-disabled="null == stepShowCtrl.next" data-placement="bottom" data-toggle="tooltip" data-original-title="{{ stepShowCtrl.next.name }}">
+                            <span class="sr-only">{{ 'next_step'|trans:{}:'path_wizards' }}</span>
+                            <span class="fa fa-arrow-right"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Description of the Step -->
+                <div class="step-description" data-ng-if="stepShowCtrl.step.description" data-ng-bind-html="stepShowCtrl.step.description"></div>
+
+                <!-- Primary resource of the Step -->
+                <resources-primary-show data-resources="stepShowCtrl.step.primaryResource" data-height="stepShowCtrl.step.activityHeight"></resources-primary-show>
+            </div>
+
+            <div class="panel-footer">
+                <div class="row">
+                    <!-- Previous step button -->
+                    <div class="col-md-1 col-sm-2 col-xs-2 text-left">
+                        <button type="button" data-ng-click="stepShowCtrl.goTo(stepShowCtrl.previous)" class="btn btn-block btn-default" data-ng-disabled="null == stepShowCtrl.previous" data-placement="top" data-toggle="tooltip" data-original-title="{{ stepShowCtrl.previous.name }}">
+                            <span class="fa fa-arrow-left"></span>
+                            <span class="sr-only">{{ 'previous_step'|trans:{}:'path_wizards' }}</span>
+                        </button>
+                    </div>
+
+                    <div class="col-md-8 col-md-offset-1 col-sm-8 col-xs-8 text-center">
+                        <!-- To do -->
+                        <button type="button" class="btn btn-default" data-ng-click="stepShowCtrl.updateProgression('to_do')" data-ng-class="{'active btn-warning': 'to_do' == stepShowCtrl.progression.status}">
+                            <span class="fa fa-fw fa-square-o"></span>
+                            {{ 'user_progression_step_to_do_label'|trans:{}:'path_wizards' }}
+                        </button>
+
+                        <!-- Done -->
+                        <button type="button" class="btn btn-default" data-ng-click="stepShowCtrl.updateProgression('done')" data-ng-class="{'active btn-success': 'done' == stepShowCtrl.progression.status}">
+                            <span class="fa fa-fw fa-check-square-o"></span>
+                            {{ 'user_progression_step_done_label'|trans:{}:'path_wizards' }}
+                        </button>
+
+                        <!-- Redo -->
+                        <button type="button" class="btn btn-default" data-ng-click="stepShowCtrl.updateProgression('to_review')" data-ng-class="{'active btn-info': 'to_review' == stepShowCtrl.progression.status}">
+                            <span class="fa fa-fw fa-retweet"></span>
+                            {{ 'user_progression_step_to_review_label'|trans:{}:'path_wizards' }}
+                        </button>
+                    </div>
+
+                    <!-- Next step button -->
+                    <div class="col-md-1 col-md-offset-1 col-sm-2 col-xs-2 text-right">
+                        <button type="button" data-ng-click="stepShowCtrl.goTo(stepShowCtrl.next)" class="btn btn-block btn-default" data-ng-disabled="null == stepShowCtrl.next" data-placement="top" data-toggle="tooltip" data-original-title="{{ stepShowCtrl.next.name }}">
+                            <span class="sr-only">{{ 'next_step'|trans:{}:'path_wizards' }}</span>
+                            <span class="fa fa-arrow-right"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

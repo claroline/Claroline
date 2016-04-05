@@ -1,0 +1,12 @@
+services:
+    innova_path.listener.path:
+        class: Innova\PathBundle\EventListener\Resource\PathListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: open_innova_path,         method: onOpen }
+            - { name: kernel.event_listener, event: create_form_innova_path,  method: onCreateForm }
+            - { name: kernel.event_listener, event: create_innova_path,       method: onCreate }
+            - { name: kernel.event_listener, event: delete_innova_path,       method: onDelete }
+            - { name: kernel.event_listener, event: copy_innova_path,         method: onCopy }
+            - { name: kernel.event_listener, event: administrate_innova_path, method: onAdministrate }
