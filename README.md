@@ -5,35 +5,36 @@ Official distribution of Claroline Connect LMS
 
 # Base Bundle
 
-- [ ] CoreBundle
-- [ ] BundleRecorder
-- [ ] InstallationBundle
-- [ ] MigrationBundle
-- [ ] KernelBundle
-- [ ] WebInstallerBundler
- 
+- [x] CoreBundle
+- [x] BundleRecorder
+- [x] InstallationBundle
+- [x] MigrationBundle
+- [x] KernelBundle
+- [x] WebInstallerBundler
+
 # Official Plugins
 
-- [ ] ForumBundle
-- [ ] MessageBundle
-- [ ] PdfPlayerBundle
-- [ ] CursusBundle
-- [ ] VideoPlayerBundle
-- [ ] ScormBundle
-- [ ] AgendaBundle
-- [ ] ActivityToolBundle
-- [ ] RssReaderBundler
-- [ ] ImagePlayerBundle
-- [ ] TextPlayerBundle
-- [ ] TeamBundle
-- [ ] TagBundle
-- [ ] LdapBundle
-- [ ] AnnoucementBundle
-- [ ] SurveyBundle
-- [ ] WebRessourceBundle
-- [ ] PresenceBundle
-- [ ] ReservationBundle
-- [ ] SupportBundle
+- [x] ForumBundle
+- [x] MessageBundle
+- [x] PdfPlayerBundle
+- [x] CursusBundle
+- [x] VideoPlayerBundle
+- [x] ScormBundle
+- [x] AgendaBundle
+- [x] ActivityToolBundle
+- [x] RssReaderBundler
+- [x] ImagePlayerBundle
+- [x] TextPlayerBundle
+- [x] TeamBundle
+- [x] TagBundle
+- [x] LdapBundle
+- [x] AnnoucementBundle
+- [x] SurveyBundle
+- [x] WebRessourceBundle
+- [x] PresenceBundle
+- [x] ReservationBundle
+- [x] SupportBundle
+- [x] NotificationBundle
 - [ ] CompetencyBundle
 - [ ] FavouriteBundle
 - [ ] UrlBundle
@@ -49,3 +50,6 @@ Official distribution of Claroline Connect LMS
 - [ ] CollecticielBundle
 - [ ] ExoBundle
 
+################
+
+There is still a lot bugfixing to do. 
