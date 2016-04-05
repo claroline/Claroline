@@ -1,0 +1,24 @@
+{
+    "name": "icap/portfolio-bundle",
+    "description": "Portfolio bundle for Claroline Connect. See https://github.com/claroline/Claroline",
+    "keywords": ["Claroline", "Portfolio"],
+    "homepage": "http://www.claroline.net",
+    "type": "claroline-plugin",
+    "authors": [
+        {
+            "name": "AILLOUD Maxime",
+            "homepage": "https://github.com/maxailloud"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.1",
+        "claroline/core-bundle": "~6.0",
+        "claroline/team-bundle": "~6.0",
+        "innova/angular-js-bundle": "~5.0",
+        "innova/angular-ui-resource-picker-bundle" : "~6.0",
+        "innova/angular-ui-tinymce-bundle": "5.*"
+    },
+    "autoload": {
+        "psr-4": { "Icap\\PortfolioBundle\\": "" }
+    }
+}

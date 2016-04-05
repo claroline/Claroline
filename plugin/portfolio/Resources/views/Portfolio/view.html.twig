@@ -1,0 +1,335 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block title %}{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName ~ ' - ' ~ 'portfolio' | trans({}, 'icap_portfolio') ~ ' - ' ~ portfolio.title | striptags | raw }}{% endblock %}
+
+{% set viewMode = (constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') == openingMode) %}
+{% set editMode = (constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_EDIT') == openingMode) %}
+
+{% block content_container %}
+    <div id="portfolio-section" data-portfolio-container="{{ portfolio.id }}">
+        <div id="portfolio-container"{% if not viewMode %} data-ng-if="portfolio.$resolved"{% endif %}>
+            <header>
+                <div class="row">
+                    <div class="col-md-offset-2">
+                        <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
+                        {% if not viewMode %}
+                            <div class="portfolio-title-container{% if not editMode %} margin{% endif %}">
+                                <div class="portfolio-title" data-ng-show="!portfolio.isEditing">
+                                    <h2 id="portfolio-title">{% verbatim %}{{ portfolio.title }}{% endverbatim %}</h2>
+                                </div>
+                                <div class="widget-actions">
+                                {% if editMode %}
+                                    <button class="widget-action btn btn-sm btn-primary" data-ng-click="edit()" data-ng-if="!portfolio.isEditing">
+                                        <span class="fa fa-pencil"></span>
+                                    </button>
+                                {% endif %}
+                                </div>
+                                <form name="form" class="edit-container form-inline widget-panel" data-loading-form="save()" data-ng-show="portfolio.isEditing">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" id="icap_portfolio_title_form_title"
+                                               name="icap_portfolio_title_form[title]" data-ng-model="portfolio.title"
+                                               required="required" />
+                                    </div>
+                                    <button type="submit" class="btn btn-md btn-primary">{{ 'save'|trans({}, 'platform') }}</button>
+                                    <button type="button" class="btn btn-md btn-default" data-ng-click="cancelRename()">{{ 'cancel'|trans({}, 'platform') }}</button>
+                                </form>
+                            </div>
+                        {% else %}
+                            <div class="portfolio-title-container margin">
+                                <div class="portfolio-title">
+                                    <h2 id="portfolio-title">{{ portfolio.title }}</h2>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </header>
+            <section class="col-md-12">
+                {% if not viewMode %}
+                <div class="communication_panel_container col-md-5">
+                    <div class="communication_panel_toggle" data-ng-init="displayComment=false" data-ng-class="{'expanded': displayComment}">
+                        <button class="btn btn-default btn-sm" data-ng-click="updateCountViewComments()" data-ng-class="{'info': 0 < portfolio.unreadComments}">
+                            {{ 'communication_panel' | trans({}, 'icap_portfolio') }}
+                            <span class="badge" data-ng-show="0 < portfolio.unreadComments">{% verbatim %}{{ portfolio.unreadComments }}{% endverbatim %}</span>
+                            <span class="fa" data-ng-class="{'fa-chevron-down': displayComment, 'fa-chevron-up': !displayComment}"></span>
+                        </button>
+                    </div>
+                    <div class="panel panel-default communication_panel nghide" data-comments-container="portfolio.comments" data-ng-class="{'nghide': !displayComment}">
+                        <div class="panel-heading">
+                            {{ 'communication_panel' | trans({}, 'icap_portfolio') }}
+                            <a href="{{ path('icap_portfolio_index', {'portfolioSlug': portfolio.slug}) }}#!exchange_space"
+                               title="{{ 'see_all_exchange'|trans({}, 'icap_portfolio') }}" class="pull-right text-muted fa fa-share">
+                                {{ 'see_all_exchange'|trans({}, 'icap_portfolio') }}</a>
+                        </div>
+                        <div class="panel-body">
+                            <ul class="media-list" data-scroll-container>
+                                {% verbatim %}
+                                <li class="media" data-ng-repeat="comment in comments | orderBy:['+date']">
+                                    <div class="media-body">
+                                        <p class="message" data-ng-bind-html="comment.message"></p>
+                                        <p class="pull-right author" data-ng-if="comment.date">
+                                            <small>{{ comment.sender.lastName }} {{ comment.sender.firstName }}, <span class="fa fa-calendar"></span> {{ comment.date|date : ('comment_date_format'|trans) }}</small>
+                                        </p>
+                                        <p class="pull-right author loading" data-ng-if="!comment.date">
+                                        </p>
+                                    </div>
+                                </li>
+                                {% endverbatim %}
+                                <li class="media media-empty" ng-show="!comments.length">
+                                    <div class="media-body">
+                                        <p class="message">{{ 'no_comments'|trans({}, 'icap_portfolio') }}</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="panel-footer">
+                            <form class="form" data-ng-submit="create()">
+                                <p class="comment_field">
+                                    <label for="portfolioComment">Commentaire</label><button type="submit" class="btn btn-primary btn-xs pull-right">{{ 'comment_send'|trans({}, 'icap_portfolio') }}</button>
+                                    <textarea data-ui-tinymce="tinyMceConfig" class="form-control" rows="3" name="comment[message]" data-ng-model="message"></textarea>
+                                </p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <script type="text/ng-template" id="widget_picker_modal.html">
+                    <div class="modal-header">
+                        <h3 class="modal-title">{{ 'widget_selection' | trans({}, 'icap_portfolio') }}</h3>
+                    </div>
+                    {% verbatim %}
+                    <div class="modal-body portfolio_widget_selection_panel">
+                        <div class="panel-group" id="data_widget_list" role="tablist" data-ng-show="portfolioWidgets.length">
+                            <div class="panel" data-ng-repeat="portfolioWidget in portfolioWidgets"
+                                 data-ng-class="{'panel-default': $parent.selectedPortfolioWidget.widget_id != portfolioWidget.widget_id,
+                                 'panel-primary': $parent.selectedPortfolioWidget.widget_id == portfolioWidget.widget_id}">
+                                <div class="panel-heading clearfix" role="tab" id="heading-widget{{ portfolioWidget.id }}">
+                                    <h4 class="panel-title pull-left" id="collapsible-widget{{ portfolioWidget.id }}">
+                                        <input type="radio" name="portfolioWidget" id="portfolioWidget{{ portfolioWidget.widget_id }}"
+                                               data-ng-model="$parent.selectedPortfolioWidget" data-ng-value="portfolioWidget">
+                                        <label></label>
+                                        <span class="fa"
+                                              data-ng-class="{'fa-caret-right': portfolioWidget.isCollapsed, 'fa-caret-down': !portfolioWidget.isCollapsed}"></span>
+                                        <span class="portfolio_widget_selector" data-ng-click="portfolioWidget.isCollapsed = !portfolioWidget.isCollapsed">
+                                            {{ portfolioWidget.widget.label }}
+                                        </span>
+                                    </h4>
+                                </div>
+                                <div class="panel-collapse" role="tabpanel" uib-collapse="portfolioWidget.isCollapsed">
+                                    <div class="panel-body" data-ng-bind-html="portfolioWidget.widget.views.view">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endverbatim %}
+                        <p class="no-data well ng-cloak" data-ng-show="!portfolioWidgets.length">
+                            {{ 'no_available_widget'|trans({}, 'icap_portfolio') }}
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="ok()">{{ 'ok'|trans({}, 'platform') }}</button>
+                        <button class="btn btn-warning" ng-click="cancel()">{{ 'cancel'|trans({}, 'platform') }}</button>
+                    </div>
+                </script>
+
+                <div class="main-content col-md-10 col-md-offset-1"{% if viewMode %} data-ng-controller="viewCtrl"{% endif %}>
+                    {% if not viewMode %}
+                        {% if editMode %}
+                        <div class="add_widget" data-ng-show="!isAdding">
+                            <div class="panel-body">
+                                <p class="add_widget_icon" data-ng-click="setAddingMode(true)" data-ng-show="!isFetching">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle-o fa-stack-2x"></i>
+                                        <i class="fa fa-plus fa-stack-1x"></i>
+                                    </span>
+                                </p>
+                                <p class="add_widget_icon" data-ng-show="isFetching">
+                                    <span class="fa fa-2x fa-spinner fa-pulse"></span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="add_widget" data-ng-show="isAdding">
+                            <div class="panel-body">
+                                <span class="fa fa-close pull-right" data-ng-click="setAddingMode(false)" role="button"></span>
+                                <ul class="list-inline widget_type_list">
+                                    {% verbatim %}
+                                    <li class="widget_type" data-ng-repeat="widgetType in widgetTypes"
+                                        data-ng-click="createWidget(widgetType.name)" role="button" data-widget-type="{{ widgetType.name }}">
+                                        <span class="fa fa-{{ widgetType.icon }}"></span>
+                                        <span>{{ widgetType.name + '_title' | trans }}</span>
+                                    </li>
+                                    {% endverbatim %}
+                                </ul>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <p class="no-data well" data-ng-show="widgets.length <= 0">
+                        {% if editMode %}
+                            {{ 'no_widget'|trans({}, 'icap_portfolio')|raw }}
+                        {% else %}
+                            {{ 'portfolio_empty'|trans({}, 'icap_portfolio')|raw }}
+                        {% endif %}
+                        </p>
+                        <ul class="list-unstyled" data-gridster="gridsterOptions">
+                            {% verbatim %}
+                            <li data-gridster-item="portfolioWidget" data-ng-repeat="portfolioWidget in portfolioWidgets | orderBy:'+row +col' track by portfolioWidget.id">
+                                {% endverbatim %}
+                                {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
+                            </li>
+                        </ul>
+                    {% else %}
+                        <ul class="list-unstyled ng-cloak" data-gridster="gridsterOptions" data-ng-show="portfolioWidgets.length">
+                            <li data-gridster-item="portfolioWidget" data-ng-repeat="portfolioWidget in portfolioWidgets | orderBy:'+row +col' track by portfolioWidget.id">
+                                <div class="panel panel-default widget-panel">
+                                    <div class="panel-heading">
+                                        {% verbatim %}{{ portfolioWidget.label }}{% endverbatim %}
+                                    </div>
+                                    <div class="panel-body">
+                                        <div data-ng-bind-html="portfolioWidget.widget.views.view"></div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <p class="no-data well ng-cloak" data-ng-show="!portfolioWidgets.length">{{ 'portfolio_empty'|trans({}, 'icap_portfolio') }}</p>
+                        <div class="well" data-ng-show="!portfolioWidgets"><p class="loading loading_view"></p></div>
+                    {% endif %}
+                </div>
+            </section>
+        </div>
+
+        {% if not viewMode %}
+            <div data-ng-show="!portfolio.$resolved" id="portfolio-loading"></div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets debug=false filter='less, cssmin'  output='css/icapportfolio/style_view.css'
+      "@IcapPortfolioBundle/Resources/views/less/style.less"
+      "@IcapPortfolioBundle/Resources/views/less/interface.less"
+      "bundles/frontend/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css"
+      "@FrontEndBundle/Resources/public/angular-motion/dist/angular-motion.min.css"
+      "@FrontEndBundle/Resources/public/angular-gridster/src/angular-gridster.less"
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% if not viewMode %}
+        <script type="text/javascript">
+            'use strict';
+            (function() {
+                window.widgetsConfig = '{{ widgetsConfig|json_encode()|raw }}';
+                window.resourceTypes = {
+                    {% for resourceType in resourceTypes %}
+                        "{{ resourceType.getName() }}": {
+                            "name": "{{ resourceType.getName()|trans({}, 'resource') }}"
+                        }{% if loop.last != true %},{% endif %}
+                    {% endfor %}
+                };
+                window.assetPath = "{{ asset('') }}";
+            })();
+        </script>
+
+        <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_portfolio' }) }}"></script>
+
+        {% if 'en' != app.request.locale %}
+            <script type="text/javascript" src="{{ asset('bundles/frontend/bootstrap-datepicker/dist/locales/bootstrap-datepicker.' ~ app.request.locale ~ '.min.js') }}"></script>
+        {% endif %}
+
+        {% javascripts debug=true output='js/portfolio/portfolio/vendor.js'
+            '@StfalconTinymceBundle/Resources/public/vendor/tinymce/tinymce.jquery.min.js'
+            '@StfalconTinymceBundle/Resources/public/vendor/tinymce/jquery.tinymce.min.js'
+            '@ClarolineCoreBundle/Resources/public/js/tinymce/tinymce.js'
+            '@IcapBadgeBundle/Resources/public/js/badge_picker.js'
+            '@FrontEndBundle/Resources/public/confirm-bootstrap/confirm-bootstrap.js'
+            '@FrontEndBundle/Resources/public/bootstrap-datepicker/dist/js/bootstrap-datepicker.js'
+            '@FrontEndBundle/Resources/public/angular/angular.min.js'
+            '@FrontEndBundle/Resources/public/angular-resource/angular-resource.min.js'
+            '@FrontEndBundle/Resources/public/angular-sanitize/angular-sanitize.min.js'
+            '@FrontEndBundle/Resources/public/angular-animate/angular-animate.min.js'
+            '@InnovaAngularUITinyMCEBundle/Resources/public/js/angular-tinymce-directive.js'
+            '@FrontEndBundle/Resources/public/moment/min/moment.min.js'
+            '@FrontEndBundle/Resources/public/angular-strap/dist/angular-strap.min.js'
+            '@FrontEndBundle/Resources/public/angular-strap/dist/angular-strap.tpl.min.js'
+            '@FrontEndBundle/Resources/public/angular-bootstrap/ui-bootstrap.js'
+            '@FrontEndBundle/Resources/public/angular-bootstrap/ui-bootstrap-tpls.js'
+            '@IcapPortfolioBundle/Resources/public/js/vendor/javascript-detect-element-resize/jquery.resize.js'
+            '@FrontEndBundle/Resources/public/angular-gridster/dist/angular-gridster.min.js'
+        %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+
+        {% javascripts debug=true filter='jsmin' output='js/portfolio/portfolio/script.js'
+            '@IcapPortfolioBundle/Resources/public/js/utils/Array.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/portfolioApp.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/controllers/portfolioController.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/controllers/widgetController.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/controllers/commentController.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/controllers/widgetPickerController.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/services/portfolioFactory.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/services/portfolioManager.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/services/widgetsManager.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/services/widgetsConfig.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/services/widgetFactory.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/services/commentsManager.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/services/commentFactory.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/widgetDirective.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/portfolioDirective.js'
+            '@IcapPortfolioBundle/Resources/public/js/modules/tinymceConfig.js'
+            '@IcapPortfolioBundle/Resources/public/js/modules/scrollContainerDirective.js'
+            '@IcapPortfolioBundle/Resources/public/js/modules/loadingFormDirective.js'
+            '@IcapPortfolioBundle/Resources/public/js/modules/confirmClickDirective.js'
+            '@IcapPortfolioBundle/Resources/public/js/modules/bindHtmlDirective.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/commentsDirective.js'
+            '@IcapPortfolioBundle/Resources/public/js/modules/translation.js'
+            '@IcapPortfolioBundle/Resources/public/js/modules/urlInterpolator.js'
+        %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+    {% else %}
+        {% javascripts debug=false output='js/portfolio/portfolio/vendor_view.js'
+            '@FrontEndBundle/Resources/public/angular/angular.min.js'
+            '@FrontEndBundle/Resources/public/angular-sanitize/angular-sanitize.min.js'
+            '@FrontEndBundle/Resources/public/angular-gridster/dist/angular-gridster.min.js'
+        %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+        <script type="text/javascript">
+            'use strict';
+            (function() {
+                var viewApp = angular.module('viewApp', ['ngSanitize', 'gridster']);
+
+                // Bootstrap portfolio application
+                angular.element(document).ready(function() {
+                    angular.bootstrap(document, ['viewApp'], {strictDi: true});
+                });
+
+                viewApp.controller('viewCtrl', ['$scope', function ($scope) {
+                    $scope.gridsterOptions = {
+                        columns:    16, // the width of the grid, in columns
+                        swapping:   true, // whether or not to have items of the same size switch places instead of pushing down if they are the same size
+                        floating:   true, // whether to automatically float items up so they stack (you can temporarily disable if you are adding unsorted items with ng-repeat)
+                        margins:    [10, 10], // the pixel distance between each widget
+                        minColumns: 1, // the minimum columns the grid must have
+                        minRows:    1, // the minimum height of the grid, in rows
+                        maxRows:    100,
+                        resizable: {
+                            enabled: false
+                        },
+                        draggable: {
+                            enabled: false
+                        }
+                    };
+
+                    $scope.portfolioWidgets = {{ widgets|json_encode()|raw }};
+                }]);
+            })();
+        </script>
+    {% endif %}
+{% endblock %}

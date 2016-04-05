@@ -1,0 +1,59 @@
+<div data-collection-form="{'resource': ''}" data-editable="false" data-collection-form-widget="widget">
+    <div class="form-group">
+        <label for="formation_name" class="required col-md-2 control-label">{{ 'formation_title'|trans({}, 'icap_portfolio') }}</label>
+        <div class="col-md-10">
+            <input type="text" class="form-control" id="formation_name" name="formations[name]" data-ng-model="widget.name" required="required" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <p class="input-daterange input-group" data-b-datepicker="{{ 'datepicker_date_format'|trans({}, 'icap_portfolio') }}" id="datepicker">
+                <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                <input type="text" data-datetime="{{ 'date_field_format'|trans({}, 'icap_portfolio') }}"
+                       data-datetime-model="yyyy/MM/dd"
+                       class="input-sm form-control" name="startDate" data-ng-model="widget.startDate" required="required" />
+                <span class="input-group-addon">{{ 'date_range_to'|trans({}, 'icap_portfolio') }}</span>
+                <input type="text" data-datetime="{{ 'date_field_format'|trans({}, 'icap_portfolio') }}"
+                       data-datetime-model="yyyy/MM/dd"
+                       class="input-sm form-control" name="endDate" data-ng-model="widget.endDate" />
+            </p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="formation_establishmentName" class="required col-md-2 control-label">{{ 'formation_establishmentName'|trans({}, 'icap_portfolio') }}</label>
+        <div class="col-md-10">
+            <input type="text" class="form-control" id="formation_establishmentName" name="formations[establishmentName]" data-ng-model="widget.establishmentName" required="required" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="formation_diploma" class="required col-md-2 control-label">{{ 'formation_diploma'|trans({}, 'icap_portfolio') }}</label>
+        <div class="col-md-10">
+            <input type="text" class="form-control" id="formation_diploma" name="formations[diploma]" data-ng-model="widget.diploma" required="required" />
+        </div>
+    </div>
+    <p>
+        <btn-resource-picker data-parameters="resourcePickerConfig" class="btn btn-sm btn-success">
+            <span>{{ 'formation_add_resource'|trans({}, 'icap_portfolio') }}</span>
+        </btn-resource-picker>
+    </p>
+    <ul class="list-unstyled">
+        <li data-ng-repeat="resource in collection">
+            <div data-ng-class="{'input-group': isAdded(resource)}">
+                {% verbatim %}
+                <input type="text" readonly="readonly" data-ng-disabled="resource.toDelete" class="input-sm form-control"
+                       name="resource" value="{{ resource.name }}" />
+                <input type="hidden" class="form-control" id="formation_{{ $index }}_resource"
+                     name="formations[resources][{{ $index }}]" data-ng-model="resource.resource" />
+                {% endverbatim %}
+                <span class="input-group-btn" data-ng-if="isAdded(resource)">
+                    <button aria-label="{{ 'formation_delete_resource'|trans({}, 'icap_portfolio') }}" class="btn btn-sm btn-danger" type="button" data-ng-if="!isEmpty(resource) && !resource.toDelete" data-ng-click="deleteChild(resource)">
+                        <span class="fa fa-trash-o"></span>
+                    </button>
+                    <button aria-label="{{ 'formation_cancel_deletion_resource'|trans({}, 'icap_portfolio') }}" class="btn btn-sm btn-default" type="button" data-ng-if="resource.toDelete" data-ng-click="cancelDeletionOfChild(resource)">
+                        <span class="fa fa-undo"></span>
+                    </button>
+                </span>
+            </div>
+        </li>
+    </ul>
+</div>

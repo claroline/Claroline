@@ -1,0 +1,62 @@
+{% extends app.request.xmlHttpRequest
+         ? 'IcapPortfolioBundle::modalLayout.html.twig'
+         : 'IcapPortfolioBundle::layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'rename_portfolio' | trans({}, 'icap_portfolio') | striptags | raw }}{% endblock %}
+
+{% block content_title %}{{ 'rename_portfolio'|trans({}, 'icap_portfolio') }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-list-alt',
+                'name': 'my_portfolios'|trans({}, 'icap_portfolio'),
+                'href': path('icap_portfolio_index')
+            },
+            {
+                'icon': 'fa fa-list-alt',
+                'name': 'rename_portfolio'|trans({}, 'icap_portfolio'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block content_body %}
+    <form action="{{ path('icap_portfolio_rename', {'id': portfolio.id}) }}" method="post" class="form-horizontal" {{ form_enctype(form) }}>
+        {{ form_errors(form) }}
+
+        <div class="form-group">
+            {{ form_label(form.title) }}
+            {{ form_errors(form.title) }}
+            <div class="col-md-10">
+                {{ form_widget(form.title) }}
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-md-10">
+                {{ form_errors(form.refreshUrl) }}
+                <div class="checkbox">
+                    <label>
+                        {{ form_widget(form.refreshUrl) }} {{ 'refresh_url'|trans({}, 'icap_portfolio') }}
+                    </label>
+                    <span class="help-block alert alert-warning">
+                        {{ 'refresh_url_rename_warning_message'|trans({}, 'icap_portfolio')|raw }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        {{ form_rest(form) }}
+
+        {% if not app.request.xmlHttpRequest %}
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary">{{ 'rename'|trans({}, 'platform') }}</button>
+                <a href="{{ path("icap_portfolio_index") }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</a>
+            </div>
+        </div>
+        {% endif %}
+    </form>
+{% endblock %}

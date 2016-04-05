@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:leap2="http://terms.leapspecs.org/"
+      xmlns:categories="http://www.leapspecs.org/2A/categories">
+    <leap2:version>http://www.leapspecs.org/2010-07/2A/</leap2:version>
+    <id>http://www.example.ac.uk/pfs/export_262144/</id>
+    <title>A few small related items</title>
+    <author>
+        <name>Theophilus Thistledown</name>
+    </author>
+    <updated>2009-03-15T14:33:12Z</updated>
+
+    <entry>
+        <title>experience</title>
+        <id>portfolio:experience/1</id>
+        <updated>2008-01-08T14:12:12Z</updated>
+        <content type="html"><![CDATA[The description of a formation]]></content>
+        <leap2:orgdata leap2:field="website">www.pebblepad.co.uk</leap2:orgdata>
+        <leap2:orgdata leap2:field="legal_org_name">Company Name</leap2:orgdata>
+        <leap2:myrole>Post name</leap2:myrole>
+
+        <leap2:date leap2:point="start">2011-03-14</leap2:date>
+        <leap2:date leap2:point="end">2011-03-15</leap2:date>
+
+        <rdf:type rdf:resource="leap2:activity"/>
+        <category term="Work" scheme="categories:life_area"/>
+    </entry>
+</feed>

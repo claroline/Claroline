@@ -1,0 +1,5 @@
+{% if log.receiver is defined %}
+    <a href="{{ path('claro_public_profile_view', {'publicUrl' : log.receiver.publicUrl}) }}"><strong>{{ log.receiver.firstName ~ ' ' ~ log.receiver.lastName }}</strong></a>
+{% else %}
+    <strong>{{ systemName }}</strong>
+{% endif %}

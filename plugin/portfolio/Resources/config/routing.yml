@@ -1,0 +1,4 @@
+icap_portfolio:
+    resource: "@IcapPortfolioBundle/Controller/"
+    type:     annotation
+    prefix:   /

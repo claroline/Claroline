@@ -1,0 +1,26 @@
+.stats {
+    .stat {
+        .count {
+            font-size: 2em;
+        }
+        .badge {
+            display: block;
+            height: 15px;
+            width: 15px;
+            float: left;
+            margin-right: 5px;
+            &.visibile_to_me {
+                background-color: #d9534f;
+            }
+            &.visible_for_some_users {
+                background-color: #ed9c28;
+            }
+            &.visible_for_platform_user {
+                background-color: #428bca;
+            }
+            &.visible_for_everybody {
+                background-color: #5cb85c;
+            }
+        }
+    }
+}

@@ -1,0 +1,10 @@
+{% extends 'ClarolineCoreBundle:Log:view_details.html.twig' %}
+
+{% block logDetailsContext %}
+    {{ parent() }}
+    {% if constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioAddGuideEvent::ACTION') == log.action %}
+        {% include 'IcapPortfolioBundle:Log:log_details_portfolio_add_guide.html.twig' %}
+    {% elseif constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioRemoveGuideEvent::ACTION') == log.action %}
+        {% include 'IcapPortfolioBundle:Log:log_details_portfolio_remove_guide.html.twig' %}
+    {% endif %}
+{% endblock %}

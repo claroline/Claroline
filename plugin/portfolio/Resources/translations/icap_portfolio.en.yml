@@ -1,0 +1,126 @@
+datepicker_date_format: 'mm/dd/yyyy'
+date_field_format: 'MM/dd/yyyy'
+no_portfolios_create_one: 'You don''t have any portfolio yet.<br>You can <a href="%newPortfolioUrl%" title="Add a portfolio">create some</a> to show your skills.'
+updated_on: 'Updated on %date%'
+portfolio_deletion_confirm_title: 'Deletion of a portfolio'
+portfolio_deletion_confirm_message: 'Are you sure you want to delete the portfolio <strong>%portfolioName%</strong> ?'
+portfolio_delete_success_message: 'Portfolio deleted with success'
+portfolio_delete_error_message: 'An error occured while deleting portfolio'
+portfolio_rename_success_message: 'Portfolio renamed with success'
+portfolio_rename_error_message: 'An error occured while renaming portfolio'
+portfolio_rename_success_message: 'Portfolio visibility updated with success'
+portfolio_rename_error_message: 'An error occured while updating portfolio visibility'
+visibile_to_me: 'myself only'
+visible_for_some_users: 'list of users'
+visible_for_platform_user: 'platform users'
+visible_for_everybody: 'everybody'
+add_portfolio: 'Add a portfolio'
+adding_portfolio: 'Adding a portfolio'
+rename_portfolio: 'Rename a portfolio'
+portfolio_add_error_message: 'An error occured while adding new portfolio.'
+portfolio_add_success_message: 'Portfolio added with success.'
+title: 'Title'
+visibility: 'Visibility'
+rename: 'Rename'
+update: 'Update'
+refresh_url: 'Refresh url'
+refresh_url_rename_warning_message: '<span class="fa fa-exclamation-triangle"></span> <strong>Beware!</strong> Checking this checkbox will result in updating portfolio access url with the new name you''ll provide.<br>The old portfolio access url won''t be accessible anymore.'
+update_visibility: 'Update visibility'
+update_portfolio_visibility: 'Update portfolio visibility'
+select_visible_users: 'Select users that will be able to see this portfolio'
+select_visible_users: 'Select groups that will be able to see this portfolio'
+select_visible_teams: 'Select teams that will be able to see this portfolio'
+revoke_access: 'Revoke access'
+select_user: 'Select user'
+select_user: 'Select group'
+select_team: 'Select team'
+portfolio_error_401: 'Required connection'
+portfolio_error_401_text: 'You must be <a href="%loginUrl%" title="Connection">connected</a> to the platform to access portfolio <strong>%portfolioSlug%</strong>'
+portfolio_error_403: 'Forbidden access to portfolio'
+portfolio_error_403_text: 'You are not allowed to access this portfolio.'
+userInformation_title: 'User information'
+user_information_form_city: 'City'
+user_information_form_text: 'Free input'
+widget_delete_confirm_title: 'Deletion of a widget'
+widget_delete_confirm_message: 'Are you sure you want to delete this widget ?'
+widget_delete_confirm_ok: 'Delete'
+widget_delete_confirm_cancel: 'Cancel'
+no_widget: 'You aren''t displaying any information on your portfolio. <br /> Use menu above to add information to your portfolio.'
+skills_title: 'Skills'
+text_title: 'Open informations'
+formations_title: 'Formations'
+formation_title: 'Name of the formation'
+formation_delete_resource: 'Delete the ressource'
+formation_cancel_deletion_resource: 'Cancel the deletion of the resource'
+formation_add_resource: "Link to some platform's documents"
+date_range_to: 'to'
+user_information_form_birth_date: 'Birth date'
+portfolio_empty: 'No information is display on this portfolio.'
+select_guides: 'Guides selection'
+update_guides: 'Update guides'
+update_portfolio_guides: 'Update portfolio guides list'
+manage_portfolio_guides: 'Manage guides list'
+manage_guides: 'Manage guides'
+portfolio_guides_update_success_message: 'Guides list of the portfolio updated with success'
+portfolio_guides_update_error_message: 'An error occured while updating guides list of the portfolio'
+communication_panel: 'Support'
+widget_content: 'Content'
+no_comments: 'No comment'
+comment_type_your_message: 'Type your message here...'
+comment_send: 'Send'
+configuration: 'Configuration'
+see: 'See'
+guide_exchange: 'Exchange with guides'
+portfolios_comments: 'Exchanges'
+my_owned_portfolio: 'My portfolios'
+no_owned_portfolio: 'No owned portfolio'
+my_guided_portfolio: 'Portfolios I am guide on'
+no_guided_portfolio: 'No guided portfolio'
+select_portfolio_to_comment: 'Select a portfolio to discuss about it'
+comment_date_format: 'MM/dd/yyyy HH:mm:ss'
+see_all_exchange: 'See all exchange'
+no_skills: 'No skills given'
+import: 'Import'
+export_portfolio: 'Export in Leap2A format'
+importing_portfolio: 'Importing a portfolio'
+icap_portfolio_import_form_format: 'Importing format'
+icap_portfolio_import_form_content: 'Importing file'
+portfolio_import_success_message: 'Portfolio imported with success'
+portfolio_import_error_message: 'An error occured while importing the portfolio'
+choose_import_portfolio_format: 'Choose importing format'
+preview_importing_portfolio: 'Importing portfolio preview'
+do_import: 'Do the importation'
+check_before_do_import: 'If shown data are correct you can'
+experience_title: 'Experience'
+experience_post: 'Job title'
+experience_company_name: 'Company'
+my_portfolios: 'My portfolio space'
+today: "today"
+formation_establishmentName: "Establishment"
+formation_diploma : "Diploma"
+experience_website: "Website of institution/company"
+experience_description: "Description"
+user_information_form_show_avatar: "Display profile picture ?"
+user_information_form_show_mail: "Display email ?"
+user_information_form_show_phone: "Display phone number ?"
+user_information_form_show_description: "Display profile description ?"
+owner: "Owner"
+presentation: "Presentation"
+portfolio: "Portfolio"
+exchange_space: "Exchange space"
+presentation_message: "<h3>Welcome in your portfolio area</h3><br>From this area you can :<br /><ul><li>manage your portfolio</li><li>see the portfolio you guide</li><li>exchange on you portfolio or on the portfolio you guide</li></ul>"
+portfolio_added_ajax_notification: "Portfolio added withsuccess"
+portfolio_renamed_ajax_notification: "Portfolio renamed with success"
+portfolio_update_visibility_ajax_notification: "Visibility of the portfolio updated with success"
+portfolio_update_guides_ajax_notification: "Guide list of the portfolio updated with success"
+portfolio_imported_ajax_notification: "Import of a portfolio made with success"
+portfolio_deleted_ajax_notification: "Portfolio deleted with success"
+no_data_widget: "No data of this type yet."
+add_data_widget: "Adding data"
+widget_selection: "Widget selection"
+no_available_widget: "No available widget of this type"
+statistics: "Statistics"
+portfolio_view_statistics: "View statistics"
+select_portfolio: "Select a portfolio"
+period: "Period"
+no_data_available: "No available data for selected period and portfolio"
