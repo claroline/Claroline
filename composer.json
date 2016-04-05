@@ -1,6 +1,6 @@
 {
-    "name": "claroline/distribution-bundle",
-    "description": "Claroline core bundle",
+    "name": "claroline/distribution",
+    "description": "Claroline distribution",
     "keywords": ["Claroline", "Distribution"],
     "homepage": "http://www.claroline.net",
     "type": "claroline-core",
