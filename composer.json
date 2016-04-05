@@ -76,7 +76,8 @@
         "zenstruck/form-bundle": "1.5.1",
         "innova/angular-js-bundle": "~5.0",
         "innova/angular-ui-resource-picker-bundle" : "~6.0",
-        "innova/angular-ui-tinymce-bundle": "5.*"
+        "innova/angular-ui-tinymce-bundle": "5.*",
+        "claroline/front-end-bundle": "dev-7.x-test"
     },
     "autoload": {
         "psr-4": {
