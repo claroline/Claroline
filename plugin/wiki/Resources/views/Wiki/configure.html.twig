@@ -1,0 +1,81 @@
+{% extends 'IcapWikiBundle::layout.html.twig' %}
+
+{% trans_default_domain "icap_wiki" %}
+
+{% block title %}{{ _resource.resourceNode.name }}{% endblock %}
+
+{% set nbResults = pager.getNbResults() %}
+
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('icap_wiki_view', {"wikiId": _resource.id}) }}">{{_resource.resourceNode.name}}</a></li>
+    <li class="active">{{"options"|trans({}, 'icap_wiki')}}</li>
+{% endblock %}
+
+{% block wiki_content %}
+    <div class="wiki-page-header page-header">
+        <h1 class="wiki-title-header">
+            {{ _resource.resourceNode.name }} : {{"options"|trans({}, 'icap_wiki')}}
+        </h1>        
+    </div>
+    {% form_theme form 'IcapWikiBundle:Wiki:modeField.html.twig' %}
+    <form id="configureWiki-form-{{_resource.id}}" name="icap_wiki_configure" method="POST" class="form-vertical" action="{{ path("icap_wiki_configure", {'wikiId': _resource.id }) }}">
+        <div class="control-group">
+            <div class="controls">
+                {{ form_row(form.mode) }}
+            </div>
+        </div>
+        {{ form_rest(form) }}
+        <div class="well well-sm col-md-9 col-md-offset-3"><small>{{'note_well'|trans({},'icap_wiki')|raw}}</small></div>
+        <a class="btn btn-default cancel-btn" href="{{ path('icap_wiki_view', {"wikiId": _resource.id}) }}">{% trans %}Cancel{% endtrans %}</a>&nbsp;
+        <input type="submit" value="{% trans %}Confirm{% endtrans %}" class="btn btn-primary"/>
+    </form>
+
+    
+    <div class="wiki-deleted-sections-container">
+        <div class="wiki-deleted-sections-header">
+            <strong>{{"deleted_sections"|trans({},'icap_wiki')}}</strong>
+        </div>
+        {% if nbResults > 0 %}
+        {% if pager.haveToPaginate %}
+        <div>
+            {{
+                pagerfanta(
+                    pager,
+                    'twitter_bootstrap_translated',
+                    {
+                        'proximity' : 1,
+                        'routeName': 'icap_wiki_configure',
+                        'routeParams': {'wikiId': _resource.id}
+                    }
+                )
+            }}
+        </div>
+        {%  endif %}
+        <ul id="wiki-deleted-sections-list" class="list-unstyled">
+        {% for section in pager %}
+            <li class="wiki-contribution-version row">
+                <div class="wiki-deleted-section-title col-sm-5"><a href="{{path('icap_wiki_contribution_view', {"wikiId": _resource.id, "sectionId": section.id, "contributionId": section.activeContribution.id})}}">{{section.activeContribution.title}}</a></div>
+                <div class="col-sm-3 wiki-deleted-section-date"> 
+                    {{section.deletionDate|date("date_format"|trans({},'icap_wiki'))}}
+                </div>                
+                <div class="col-sm-4"><a class="wiki-deleted-section-restore btn btn-default btn-xs" href="{{ path('icap_wiki_restore_section', {"wikiId": _resource.id, "sectionId": section.id})}}">
+                    {{'restore_section'|trans({}, 'icap_wiki')}}
+                </a>
+                <a href="{{ path('icap_wiki_delete_section', { 'wikiId': _resource.id, 'sectionId' : section.id }) }}" class="delete-section btn btn-danger btn-xs" data-section="{{section.id}}" >
+                {{ 'remove_section'|trans({}, 'icap_wiki') }}
+                </a>                
+            </li>
+        {% endfor %}
+        </ul>
+        {% else %}
+        <div>{{'no_deleted_sections'|trans({},'icap_wiki')}}</div>
+        {% endif %}
+    </div>
+    
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type='text/javascript' src="{{ asset('bundles/icapwiki/js/section.edit.js') }}"></script>
+{% endblock %}

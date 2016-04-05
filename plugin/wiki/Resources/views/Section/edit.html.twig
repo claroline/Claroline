@@ -1,0 +1,21 @@
+{% extends 'IcapWikiBundle::layout.html.twig' %}
+
+{% trans_default_domain "icap_wiki" %}
+
+{% block title %}{{ _resource.resourceNode.name }}{% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('icap_wiki_view', {"wikiId": _resource.id}) }}">{{_resource.resourceNode.name}}</a></li>
+    <li class="active">{{(section.isRoot())?_resource.resourceNode.name:section.activeContribution.title}}</li>
+{% endblock %}
+
+{% block wiki_panel %}
+    {% block wiki_content %}
+        {% include "IcapWikiBundle:Section:editForm.html.twig"%}
+    {% endblock %}
+{% endblock%}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type='text/javascript' src="{{ asset('bundles/icapwiki/js/section.edit.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% macro wiki_contents(sections, isAdmin, delimeter, prefix) %}
+    {% for section in sections %}
+        {% if isAdmin or section.visible %}
+            {% set visibleClass = section.visible is sameas (true)?"":"invisible-wiki-content" %}
+            <li id="li-{{ section.id }}" data-section="{{ section.id }}" class="{{ visibleClass }}">
+                <a href="#section-{{section.id}}">
+                    {{prefix ~ loop.index}}&nbsp;{{ section.activeContribution.title }}
+                    {% if section.visible is sameas (false) %}
+                        <span class="invisible-section-text">({{"invisible"|trans({},'icap_wiki')}})</span>
+                    {% endif %}
+                </a>
+                <ul id="ul-{{ section.id }}" class="sortable-list" data-section="{{ section.id }}">
+                    {% if section.__children is not empty %}
+                        {{ _self.wiki_contents(section.__children, isAdmin, delimeter, prefix ~ loop.index ~ delimeter) }}
+                    {% endif %}
+                </ul>                
+            </li>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+<ul id="wiki-contents-list" data-section="{{ rootId }}" class="jquery-sortable-list sortable-list">
+    {{ _self.wiki_contents(sections, isAdmin, delimeter, "") }}
+</ul>

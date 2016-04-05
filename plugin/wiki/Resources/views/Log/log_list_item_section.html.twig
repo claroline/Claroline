@@ -1,0 +1,7 @@
+{% if log.details.section is defined %}
+    <a href="{{ path('icap_wiki_view', {"wikiId": log.details.section.wiki}) ~ "#section-" ~ log.details.section.id }}"><strong>{{ log.details.section.title }}</strong></a>
+{% endif %}
+
+{% if log.details.contribution is defined %}
+    <a href="{{ path('icap_wiki_view', {"wikiId": log.details.contribution.wiki}) ~ "#section-" ~ log.details.contribution.section }}"><strong>{{ log.details.contribution.title }}</strong></a>
+{% endif %}

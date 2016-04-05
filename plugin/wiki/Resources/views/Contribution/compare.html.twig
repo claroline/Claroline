@@ -1,0 +1,61 @@
+{% extends 'IcapWikiBundle::layout.html.twig' %}
+
+{% trans_default_domain "icap_wiki" %}
+
+{% block title %}{{ _resource.resourceNode.name }}{% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('icap_wiki_view', {"wikiId": _resource.id}) }}">{{_resource.resourceNode.name}}</a></li>
+    <li><a href="{{ path('icap_wiki_section_history', {"wikiId": _resource.id, "sectionId": section.id}) }}">{{(section.isRoot())?_resource.resourceNode.name:section.activeContribution.title}} : {{'history'|trans({},'icap_wiki')}}</a></li>
+    <li class="active">{{'revision_comparison'|trans({},'icap_wiki')}}</li>
+{% endblock %}
+
+{% block wiki_buttons %}
+    <div class="wiki-header-buttons">
+        <a href="{{ path('icap_wiki_view', { 'wikiId': _resource.id }) }}" class="btn btn-primary"> {{'back_to_wiki'|trans({},'icap_wiki')}}</a>
+        <a href="{{ path('icap_wiki_section_history', {"wikiId": _resource.id, "sectionId": section.id}) }}" class="btn btn-default"> {{'back_to_history'|trans({},'icap_wiki')}}</a>
+    </div>
+{% endblock %}
+
+{% block wiki_panel %}
+    {% block wiki_content %}
+        <div class="page-header">
+            <h2 class="wiki-title-header">
+                {% if section.isRoot() %}
+                    {{_resource.resourceNode.name}}
+                {% else %}
+                    {{section.activeContribution.title}}
+                {% endif %}
+                : {{'revision_comparison'|trans({},'icap_wiki')}}
+            </h2>     
+        </div>
+        <div class="row">
+            {% for contribution in contributions %}
+                <div class="col-md-6">
+                    {% if not section.isRoot() %}
+                        <h3 class="wiki-revision-comparison-header">{{contribution.title|raw}}</h3>
+                    {% endif %}
+                    <div class="wiki-revision-comparison-info">
+                        [
+                            {{contribution.contributor.username}} ({{ contribution.contributor.firstName ~ " " ~ contribution.contributor.lastName}}) - 
+                            {{contribution.creationDate|date("date_format"|trans({},'icap_wiki'))}}
+                        ]
+                    </div>
+                    <div class="">{{contribution.text|raw}}</div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="well well-sm diff-html-legend">
+            <div class="row">
+                <div class="col-md-4"><span class="diff-html-added diff-html-simple">&nbsp;</span> {{'added'|trans({},'icap_wiki')}}</div>
+                <div class="col-md-4"><span class="diff-html-removed diff-html-simple">&nbsp;</span> {{'deleted'|trans({},'icap_wiki')}}</div>
+                <div class="col-md-4"><span class="diff-html-changed diff-html-simple">&nbsp;</span> {{'changed'|trans({},'icap_wiki')}}</div>
+            </div>
+        </div>
+    {% endblock %}
+{% endblock%}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/icapwiki/css/contribution.css') }}'/>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/icapwiki/css/style.css') }}"/>
+{% endblock %}
+
+{% block content %}
+        <div class="alert-messages">
+            {% for successMessage in app.session.flashbag.get('success') %}
+                <div class="alert alert-dismissable alert-success">
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                  {{ successMessage }}
+                </div>
+            {% endfor %}
+
+            {% for errorMessage in app.session.flashbag.get('error') %}
+                <div class="alert alert-dismissable alert-danger">
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                  {{ errorMessage }}
+                </div>
+            {% endfor %}
+        </div>
+        {% block wiki_buttons %}
+        {% endblock %}
+        <div class="panel panel-wiki">
+            <div class="panel-body"> 
+                {% block wiki_panel %}           
+                    {% block wiki_content %}
+                    {% endblock %}
+                {% endblock%}
+            </div>            
+        </div>
+    </div>    
+{% endblock %}

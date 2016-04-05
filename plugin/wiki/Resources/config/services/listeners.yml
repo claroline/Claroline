@@ -1,0 +1,42 @@
+services:
+    icap.listener.wiki_listener:
+        class: Icap\WikiBundle\Listener\WikiListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: create_form_icap_wiki, method: onCreateForm }
+            - { name: kernel.event_listener, event: create_icap_wiki, method: onCreate }
+            - { name: kernel.event_listener, event: open_icap_wiki, method: onOpen }
+            - { name: kernel.event_listener, event: delete_icap_wiki, method: onDelete }
+            - { name: kernel.event_listener, event: copy_icap_wiki, method: onCopy }
+
+    icap.listener.wiki.log_listener:
+        class: Icap\WikiBundle\Listener\LogListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: create_log_details_resource-icap_wiki-section_create, method: onSectionCreateLogDetails }
+            - { name: kernel.event_listener, event: create_log_details_resource-icap_wiki-section_move, method: onSectionCreateLogDetails }
+            - { name: kernel.event_listener, event: create_log_details_resource-icap_wiki-section_update, method: onSectionCreateLogDetails }
+            - { name: kernel.event_listener, event: create_log_details_resource-icap_wiki-section_delete, method: onSectionCreateLogDetails }
+            - { name: kernel.event_listener, event: create_log_details_resource-icap_wiki-section_restore, method: onSectionCreateLogDetails }
+            - { name: kernel.event_listener, event: create_log_details_resource-icap_wiki-section_remove, method: onSectionCreateLogDetails }
+            - { name: kernel.event_listener, event: create_log_details_resource-icap_wiki-contribution_create, method: onSectionCreateLogDetails }
+            - { name: kernel.event_listener, event: create_log_details_resource-icap_wiki-configure, method: onSectionCreateLogDetails }
+            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_wiki-section_create, method: onCreateLogListItem }
+            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_wiki-section_move, method: onCreateLogListItem }
+            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_wiki-section_update, method: onCreateLogListItem }
+            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_wiki-section_delete, method: onCreateLogListItem }
+            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_wiki-section_restore, method: onCreateLogListItem }
+            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_wiki-section_remove, method: onCreateLogListItem }
+            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_wiki-contribution_create, method: onCreateLogListItem }
+            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_wiki-configure, method: onCreateLogListItem }
+
+    icap.listener.wiki.notification_listener:
+        class: Icap\WikiBundle\Listener\NotificationListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: create_notification_item_resource-icap_wiki-section_create, method: onCreateNotificationItem }
+            - { name: kernel.event_listener, event: create_notification_item_resource-icap_wiki-contribution_create, method: onCreateNotificationItem }
+            - { name: kernel.event_listener, event: create_notification_item_resource-icap_wiki-user_tagged, method: onCreateNotificationItem }

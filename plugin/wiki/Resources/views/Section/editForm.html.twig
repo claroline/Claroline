@@ -1,0 +1,43 @@
+{% if section.getIsWikiAdmin() is sameas(true) and section.isRoot() is sameas(false) %}
+    <div class="pull-right wiki-header-buttons">
+        <a href="{{ path('icap_wiki_delete_section', { 'wikiId': _resource.id, 'sectionId' : section.id }) }}" class="delete-section btn btn-danger" data-section="{{section.id}}" >
+            <i class="fa fa-trash-o"></i> {{ 'delete_section'|trans({}, 'icap_wiki') }}
+        </a>
+    </div>
+    <div class="clearfix"></div>
+{% endif %}
+<div>
+    {% form_theme form 'IcapWikiBundle:Wiki:editTheme.html.twig' %}
+    <form id="editSection-form-{{ section.id }}" name="icap_wiki_edit_section" method="POST" class="form-vertical" action="{{ path("icap_wiki_edit_section", {'wikiId': _resource.id, 'sectionId' : section.id }) }}">
+        {% if _resource.mode is sameas(1) %}
+            <div class="alert alert-warning">{{'moderate_mode_warning'|trans({},'icap_wiki')|raw}}</div>
+        {% endif %}
+        <div class="control-group">
+            {% if section.isRoot() is sameas(true) %}
+                <div class="controls">
+                    {{ form_row(form.activeContribution.text) }}
+                </div>
+            {% else %}
+                <div class="controls">
+                    {{ form_row(form.activeContribution.title) }}
+                    {{ form_row(form.activeContribution.text) }}
+                    {% if section.getIsWikiAdmin() is sameas(true) %}
+                        {{ form_row(form.visible) }}
+                    {% endif %}
+                </div>
+                {% if section.getIsWikiAdmin() is sameas(true) %}
+                    <div class="move-wiki-section-header">
+                        {{ "move_section"|trans({},'icap_wiki') }}
+                    </div>
+                    <div class="controls">
+                        {{ form_row(form.position) }}
+                        {{ form_row(form.brother) }}
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+        {{ form_rest(form) }}
+        <a class="btn btn-default cancel-btn" href="{{ path('icap_wiki_view', {"wikiId": _resource.id}) }}">{% trans %}Cancel{% endtrans %}</a>&nbsp;
+        <input type="submit" value="{% trans %}Save{% endtrans %}" class="btn btn-primary"/>
+    </form>
+</div>

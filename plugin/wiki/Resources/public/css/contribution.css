@@ -1,0 +1,49 @@
+ul li.wiki-contribution-version {
+	margin-top: 3px;
+	line-height: 25px;
+	padding-left: 5px;
+}
+ul li.wiki-contribution-version input{
+	margin-top:5px;
+}
+
+ul li.wiki-contribution-version a{
+	margin-bottom: 2px;
+}
+
+ul li.wiki-contribution-version input, ul li.wiki-contribution-version a, ul li.wiki-contribution-version span {
+	margin-right: 20px;
+}
+
+form.wiki-revision-history-form {
+	margin-left: 10px;
+}
+
+ul#wiki-section-revision-history-list li.selected-version {
+	background-color: #f9f9f9;
+	border: 1px dashed #aaa;
+}
+
+
+div.wiki-history-max-per-page {
+	text-align: right;
+	margin-bottom: 10px;
+}
+
+h3.wiki-revision-comparison-header {
+	margin-bottom: 0px;
+}
+
+div.wiki-revision-comparison-info {
+	color:#888;
+	font-size: 12px;
+	margin-bottom: 15px;
+}
+
+/*Compare revisions style*/
+.diff-html-changed, .diff-html-added, .diff-html-removed {padding: 2px; margin: 2px; display: inline-block;}
+.diff-html-changed {background-color: #FCF8E3; border: 1px solid #FBEED5;}
+.diff-html-added {background-color: #DFF0D8; border: 1px solid #D6E9C6; text-decoration: none;}
+.diff-html-removed {background-color: #F2DEDE; border: 1px solid #EED3D7;}
+.diff-html-simple {padding:0px; margin: 0px; min-width: 15px; line-height: 15px;}
+.diff-html-legend {width: auto;}

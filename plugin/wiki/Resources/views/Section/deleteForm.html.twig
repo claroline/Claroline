@@ -1,0 +1,19 @@
+{% trans_default_domain "icap_wiki" %}
+<div class='icap-wiki-delete-section-message'>
+    {% if section.deleted is empty %}
+    	{{ 'delete_confirmation'|trans({'%sectionTitle%': section.activeContribution.title}, 'icap_wiki') }}
+    {% else %}
+    	{{ 'remove_confirmation'|trans({'%sectionTitle%': section.activeContribution.title}, 'icap_wiki') }}
+    {% endif %}
+</div>
+{% form_theme form 'IcapWikiBundle:Section:deleteChildrenField.html.twig' %}
+<form id="deleteSection-form-{{section.id}}" name="icap_wiki_delete_section" method="POST" class="form-vertical" action="{{ path("icap_wiki_delete_section", {'wikiId': _resource.id, 'sectionId' : section.id }) }}">
+    <div class="control-group">
+        <div class="controls">
+            {{ form_widget(form) }}
+        </div>
+    </div>
+    {{ form_rest(form) }}
+    <a class="btn btn-default cancel-btn" href="{{ path('icap_wiki_view', {"wikiId": _resource.id}) }}">{% trans %}Cancel{% endtrans %}</a>&nbsp;
+    <input type="submit" value="{% trans %}Confirm{% endtrans %}" class="btn btn-primary"/>
+</form>

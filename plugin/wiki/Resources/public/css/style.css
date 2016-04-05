@@ -1,0 +1,115 @@
+div#modal-picker {z-index: 1050;}
+div.panel-wiki {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border:1px solid #eee;	
+}
+
+.wiki-actions {
+	font-size: 12px;
+}
+
+.wiki-page-header {
+	margin-top: 20px;
+}
+
+.wiki-page-header h1.wiki-title-header {
+	margin-bottom: 0px;
+}
+
+.wiki-description {
+	margin-bottom: 30px;
+}
+
+.wiki-new-section-container, .wiki-edit-section-container {
+	display: none;
+}
+
+.wiki-header-buttons {
+	margin-bottom: 10px;
+}
+/*Wiki contents*/
+div.wiki-contents-inner { float:left; min-width: 20%; }
+div.wiki-contents ul { list-style-type: none; padding-left: 10px; }
+div.wiki-contents ul#wiki-contents-list{padding-left: 0px; }
+div.wiki-contents-title { text-align: center; margin-bottom:5px; }
+
+ul.sortable-list.sortable-enable li, ul.sortable-list.sortable-enable li a { cursor: move !important; }
+ul.sortable-list.sortable-enable li {border: 1px dashed #357EBD; padding-left: 2px; border-left: 4px solid #357EBD;}
+ul#wiki-contents-list li.invisible-wiki-content a { color:#999; }
+
+
+/*Wiki sections*/
+/*div.wiki-sections ul { list-style-type: none; padding-left: 0; }*/
+#wiki-sections-list { padding-left: 0; }
+div.subsection-header h3, div.subsection-header h4 { margin-bottom: 5px; padding-bottom: 3px;}
+div.subsection-header h3 {margin-top: 15px; border-bottom: 1px dashed #eeeeee;}
+div.subsection-header h4 {margin-top: 10px; border-bottom: 1px dotted #eeeeee;}
+div.wiki-sections div.page-header {padding-bottom: 0px; margin:25px 0 10px 0;}
+div.wiki-sections div.page-header h2 {margin-bottom:2px; font-weight: bold !important;}
+div.wiki-sections li.invisible-wiki-section { color: #aaa; }
+div.wiki-sections div.wiki-section-text { overflow: auto;}
+div.wiki-sections .section-title { list-style-type: none; padding-left: 0px;}
+
+
+div.wiki-sections li.invisible-wiki-section div.wiki-section-text,  
+div.wiki-sections li.invisible-wiki-section div.wiki-section-text *
+{ color: #aaa!important; }
+
+span.invisible-section-text {font-style: italic;}
+
+/*Delete section form*/
+.icap-wiki-delete-section-message {margin: 10px 0 20px 0; font-size: 16px;}
+
+
+/*Move section form*/
+.move-wiki-section-header {margin: 20px 0 20px; font-size: 20px;}
+.move-wiki-section-header+.controls {padding-left: 10px;}
+
+/* Wiki configure */
+
+/* Restore sections */
+.wiki-deleted-sections-header{margin:40px 0 20px;}
+#wiki-deleted-sections-list li {line-height: 25px; padding: 3px;}
+
+/*Wiki Section edit and create new*/
+.wiki-new-section-container .panel, .wiki-edit-section-container .panel{ box-shadow: none;}
+
+.wiki-new-section-container .panel,
+.wiki-new-section-container .panel .panel-heading,
+.wiki-new-section-container .panel .panel-footer,
+.wiki-edit-section-container .panel,
+.wiki-edit-section-container .panel .panel-heading,
+.wiki-edit-section-container .panel .panel-footer{
+    background-color: #EDF3FF;
+}
+
+.wiki-new-section-container .panel > div[class^=panel-], .wiki-edit-section-container .panel > div[class^=panel-] {
+    padding:5px;
+}
+
+.wiki-new-section-container .panel .panel-heading h3,  .wiki-edit-section-container .panel .panel-heading h3{
+    margin:0;
+}
+
+.wiki-new-section-container .panel .panel-footer,
+.wiki-edit-section-container .panel .panel-footer {
+    margin-top: -25px;
+    text-align: right;
+}
+
+.wiki-contents-inner.well ul.sortable-list.sortable-enable li{
+    padding: 5px 5px 5px 15px;
+    font-size: 0.9em;
+}
+
+/* Grip */
+.wiki-contents-inner.well ul.sortable-list.sortable-enable li::before{
+    content: "..\A ..\A ..\A ..\A ";
+    display: inline-block;
+    line-height: 5px;
+    margin-left: -11px;
+    margin-top: -5px;
+    position: absolute;
+    width: 5px;
+}

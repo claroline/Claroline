@@ -1,0 +1,60 @@
+{% trans_default_domain "icap_wiki" %}
+
+<div id="editSectionContainer-{{ section.id }}">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 id="myModalLabel">{% trans %}Edit section{% endtrans %}</h3>
+        </div>
+        <div class="panel-body">
+            {% include "IcapWikiBundle:Section:editForm.html.twig"%}
+        </div>
+        <div class="panel-footer">
+            <button id="editSectionContainer-cancel-{{ section.id }}" class="btn btn-default" >{% trans %}Cancel{% endtrans %}</button>
+            <button id="editSectionContainer-submit-{{ section.id }}" class="btn btn-primary">{% trans %}Save{% endtrans %}</button>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('form[id="editSection-form-{{ section.id }}"] > input[type="submit"]').hide();
+            $('form[id="editSection-form-{{ section.id }}"] > a.cancel-btn').hide();
+
+            $('#editSectionContainer-submit-{{ section.id }}').on('click', function () {
+                //I do the "click" on submit button for keep html5 warning
+                $('form[id="editSection-form-{{ section.id }}"] > input[type="submit"]').trigger('click');
+            });
+
+            $('#editSectionContainer-cancel-{{ section.id }}').on('click', function () {
+                //I do the "click" on submit button for keep html5 warning
+                $('#editSectionContainer-{{ section.id }}').parent().hide();
+                $('#wst-{{ section.id }}').show();
+            });
+
+            $('a.delete-section[data-section="{{ section.id }}"]').each(function(){
+                $(this).appendTo($('#editSectionContainer-{{ section.id }} .panel-footer'));
+                $(this).addClass('pull-left');
+                var deleteLink = $(this);
+                deleteLink.attr("data-path", deleteLink.attr('href'));
+                deleteLink.attr('href', '#deleteSectionModal-'+deleteLink.attr('data-section')).attr('data-toggle', 'modal');
+                var modalDeleteForm = null;
+                deleteLink.on('click', function (event){
+                    if(modalDeleteForm === null){
+                        event.preventDefault();
+                        $.get(deleteLink.attr("data-path"))
+                                .always(function () {
+                                    if (modalDeleteForm !== null) {
+                                        modalDeleteForm.remove();
+                                    }
+                                })
+                                .done(function (data) {
+                                    $('body').append(data);
+                                    modalDeleteForm = $('#deleteSectionModal-'+deleteLink.attr('data-section'));
+                                    modalDeleteForm.modal('show');
+                                })
+                        ;
+                    }
+                });
+            });
+        });
+    </script>
+</div>

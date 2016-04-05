@@ -1,0 +1,18 @@
+{% extends 'ClarolineCoreBundle::form_theme.html.twig' %}
+
+{% block choice_widget_expanded %}
+    {% spaceless %}
+        <div {{ block('widget_container_attributes') }}>
+        	{% for child in form %}
+                <div>
+                	<div class="wiki-mode-option-label">
+                		{{ form_label(child) }}
+                	</div>
+                	<div class="wiki-mode-option-text">
+                		<small class="text-muted">{{(child.vars.label~'_message')|trans({}, translation_domain)}}</small>
+                	</div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endspaceless %}
+{% endblock choice_widget_expanded %}

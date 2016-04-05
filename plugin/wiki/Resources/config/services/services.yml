@@ -1,0 +1,18 @@
+parameters:
+    icap.wiki.section.class:             Icap\WikiBundle\Entity\Section
+    icap.wiki.section_repository.class:  Icap\WikiBundle\Repository\SectionRepository
+    icap.wiki.contribution.class:            Icap\WikiBundle\Entity\Contribution
+    icap.wiki.contribution_repository.class: Icap\WikiBundle\Repository\ContributionRepository
+
+services:
+    icap.wiki.section_repository:
+        class: "%icap.wiki.section_repository.class%"
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - "%icap.wiki.section.class%"
+
+    icap.wiki.contribution_repository:
+        class: "%icap.wiki.contribution_repository.class%"
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - "%icap.wiki.contribution.class%"

@@ -1,0 +1,3 @@
+resource-icap_wiki-contribution_create: contributed to '%section%' section of '%wiki%' wiki
+resource-icap_wiki-section_create: created a '%section%' to '%wiki%' wiki
+resource-icap_wiki-user_tagged: tagged you in '%section%' section of '%wiki%' wiki

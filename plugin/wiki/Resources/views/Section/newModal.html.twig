@@ -1,0 +1,33 @@
+{% trans_default_domain "icap_wiki" %}
+
+<div id="newSectionContainer-{{ parentSectionId }}">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 id="myModalLabel">{% trans %}New section{% endtrans %}</h3>
+        </div>
+        <div class="panel-body">
+            {% include "IcapWikiBundle:Section:newForm.html.twig"%}
+        </div>
+        <div class="panel-footer">
+            <button id="newSectionContainer-cancel-{{ parentSectionId }}" class="btn btn-default" >{% trans %}Cancel{% endtrans %}</button>
+            <button id="newSectionContainer-submit-{{ parentSectionId }}" class="btn btn-primary">{% trans %}Create{% endtrans %}</button>
+        </div>
+    </div>
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('form[id="newSection-form-{{ parentSectionId }}"] > input[type="submit"]').hide();
+            $('form[id="newSection-form-{{ parentSectionId }}"] > a.cancel-btn').hide();
+
+            $('#newSectionContainer-submit-{{ parentSectionId }}').on('click', function () {
+                //I do the "click" on submit button for keep html5 warning
+                $('form[id="newSection-form-{{ parentSectionId }}"] > input[type="submit"]').trigger('click');
+            });
+
+            $('#newSectionContainer-cancel-{{ parentSectionId }}').on('click', function () {
+                //I do the "click" on submit button for keep html5 warning
+                $('#newSectionContainer-{{ parentSectionId }}').parent().hide();
+            });
+        });
+    </script>
+</div>

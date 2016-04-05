@@ -1,0 +1,52 @@
+{% macro wiki_sections(sections, isAdmin, wikiId, wikiMode, user) %}
+    {% for section in sections %}
+        {% if section.deleted is empty and (isAdmin or section.visible) %}
+            {% set level = section.level + 1 %}
+            {% set visibleClass = section.visible is sameas (true)?"":"invisible-wiki-section" %}
+            {% set fontsize = 0 %}
+            {% if level > 4 %}
+                {% set level = 4 %}
+                {% set fontsize = (section.level<8)?21 - section.level:14 %}
+            {% endif %}
+            <li id="section-{{section.id}}" class="{{ visibleClass }} section-title">
+                <div class="{{level>2?"subsection-header":"page-header"}}" >
+                    <h{{level}} {{ fontsize!=0?"style=font-size:" ~ fontsize ~ "px;":"" }}>
+                        {{section.activeContribution.title}}
+                        {% if user is not empty and (isAdmin or wikiMode is not sameas(2)) %}
+                            <small class="wiki-actions">
+                                {% if section.visible is sameas (false) %}
+                                    <span class="invisible-section-text">({{"invisible"|trans({},'icap_wiki')}})</span>
+                                {% endif %}
+                                [
+                                    <a href="{{ path('icap_wiki_new_section', { 'wikiId': wikiId, 'parentSectionId' : section.id }) }}" class="new-section" data-section="{{section.id}}" >
+                                        {{ 'add_new_subsection'|trans({}, 'icap_wiki') }}
+                                    </a>
+                                    |
+                                    <a href="{{ path('icap_wiki_edit_section', { 'wikiId': wikiId, 'sectionId' : section.id }) }}" class="edit-section" data-section="{{section.id}}" >
+                                        {{ 'edit'|trans({}, 'icap_wiki') }}
+                                    </a>
+                                    |
+                                    <a href="{{ path('icap_wiki_section_history', { 'wikiId': wikiId, 'sectionId' : section.id }) }}" class="history-section" data-section="{{section.id}}" >
+                                        {{ 'history'|trans({}, 'icap_wiki') }}
+                                    </a>
+                                ]
+                            </small>
+                        {% endif%}
+                    </h{{level}}>
+                </div>
+                <div id="wnsc-{{ section.id }}" class="wiki-new-section-container"></div>
+                <div id="wesc-{{ section.id }}" class="wiki-edit-section-container"></div>
+                <div id="wst-{{ section.id }}"class="wiki-section-text">{{section.activeContribution.text|raw}}</div>
+                {% if section.__children is not empty %}
+                    <ul>
+                        {{ _self.wiki_sections(section.__children, isAdmin, wikiId, wikiMode, user) }}
+                    </ul>
+                {% endif %}
+            </li>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+<ul id="wiki-sections-list">
+    {{ _self.wiki_sections(sections, isAdmin, wikiId, wikiMode, user) }}
+</ul>

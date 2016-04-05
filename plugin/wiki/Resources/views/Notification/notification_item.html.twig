@@ -1,0 +1,17 @@
+{% extends 'IcapNotificationBundle:Templates:notification.html.twig' %}
+{% set avatarUrlPrefix = asset('uploads/pictures/') %}
+
+{% block notificationText %}
+    {% if notification.userId is not empty and notification.details.doer is defined %}
+        <a href="{{ path('claro_public_profile_view', {'publicUrl' : notification.userId}) }}"><strong>{{ notification.details.doer.firstName ~ ' ' ~ notification.details.doer.lastName }}</strong></a>
+    {% else %}
+        <strong>{{ systemName }}</strong>
+    {% endif %}
+    {% if constant('Icap\\WikiBundle\\Event\\Log\\LogSectionCreateEvent::ACTION') == notification.actionKey %}
+        {% include 'IcapWikiBundle:Notification:notification_section_create.html.twig' %}
+    {% elseif constant('Icap\\WikiBundle\\Event\\Log\\LogContributionCreateEvent::ACTION') == notification.actionKey %}
+        {% include 'IcapWikiBundle:Notification:notification_contribution_create.html.twig' %}
+    {% elseif 'resource-icap_wiki-user_tagged' == notification.actionKey %}
+        {% include 'IcapWikiBundle:Notification:notification_user_tagged.html.twig' %}
+    {% endif %}
+{% endblock %}

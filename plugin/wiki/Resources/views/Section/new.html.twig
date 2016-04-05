@@ -1,0 +1,18 @@
+{% extends 'IcapWikiBundle::layout.html.twig' %}
+
+{% trans_default_domain "icap_wiki" %}
+
+{% block title %}{{ _resource.resourceNode.name }}{% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('icap_wiki_view', {"wikiId": _resource.id}) }}">{{_resource.resourceNode.name}}</a></li>
+    <li class="active">{{'new_section'|trans({},'icap_wiki')}}</li>
+{% endblock %}
+
+{% block wiki_panel %}
+    {% block wiki_content %}
+        <div>
+            {% include "IcapWikiBundle:Section:newForm.html.twig"%}
+        </div>
+    {% endblock %}
+{% endblock%}

@@ -1,0 +1,27 @@
+{% set section %}
+    {% include 'IcapWikiBundle:Log:log_list_item_section.html.twig' %}
+{% endset %}
+
+{% set resource %}
+    {% include 'ClarolineCoreBundle:Log:view_list_item_resource.html.twig' %}
+{% endset %}
+
+{% if constant('Icap\\WikiBundle\\Event\\Log\\LogSectionCreateEvent::ACTION') == log.action %}
+    {{ 'log.wiki.create_section'|trans({'%wiki%': resource, '%section%': section}, 'log')|raw }}
+{% elseif constant('Icap\\WikiBundle\\Event\\Log\\LogSectionMoveEvent::ACTION') == log.action %}
+    {{ 'log.wiki.move_section'|trans({'%wiki%': resource, '%section%': section}, 'log')|raw }}
+{% elseif constant('Icap\\WikiBundle\\Event\\Log\\LogSectionUpdateEvent::ACTION') == log.action %}
+    {{ 'log.wiki.update_section'|trans({'%wiki%': resource, '%section%': section}, 'log')|raw }}
+{% elseif constant('Icap\\WikiBundle\\Event\\Log\\LogSectionDeleteEvent::ACTION') == log.action %}
+    {{ 'log.wiki.delete_section'|trans({'%wiki%': resource, '%section%': section}, 'log')|raw }}
+{% elseif constant('Icap\\WikiBundle\\Event\\Log\\LogSectionRemoveEvent::ACTION') == log.action %}
+    {{ 'log.wiki.remove_section'|trans({'%wiki%': resource, '%section%': section}, 'log')|raw }}
+{% elseif constant('Icap\\WikiBundle\\Event\\Log\\LogSectionRestoreEvent::ACTION') == log.action %}
+    {{ 'log.wiki.restore_section'|trans({'%wiki%': resource, '%section%': section}, 'log')|raw }}
+{% elseif constant('Icap\\WikiBundle\\Event\\Log\\LogContributionCreateEvent::ACTION') == log.action %}
+    {{ 'log.wiki.create_contribution'|trans({'%wiki%': resource, '%contribution%': section}, 'log')|raw }}
+{% elseif constant('Icap\\WikiBundle\\Event\\Log\\LogWikiConfigureEvent::ACTION') == log.action %}
+    {{ 'log.wiki.configure'|trans({'%wiki%': resource}, 'log')|raw }}
+{% else %}
+    no default text
+{% endif %}

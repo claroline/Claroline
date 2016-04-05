@@ -1,0 +1,35 @@
+{% extends 'IcapWikiBundle::layout.html.twig' %}
+
+{% trans_default_domain "icap_wiki" %}
+
+{% block title %}{{ _resource.resourceNode.name }}{% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('icap_wiki_view', {"wikiId": _resource.id}) }}">{{_resource.resourceNode.name}}</a></li>
+    <li><a href="{{ path('icap_wiki_section_history', {"wikiId": _resource.id, "sectionId": section.id}) }}">{{(section.isRoot())?_resource.resourceNode.name:section.activeContribution.title}} : {{'history'|trans({},'icap_wiki')}}</a></li>
+    <li class="active">{{contribution.title}}</li>
+{% endblock %}
+
+{% block wiki_buttons %}
+    <div class="wiki-header-buttons">
+        <a href="{{ path('icap_wiki_view', { 'wikiId': _resource.id }) }}" class="btn btn-primary"> {{'back_to_wiki'|trans({},'icap_wiki')}}</a>
+        <a href="{{ path('icap_wiki_section_history', {"wikiId": _resource.id, "sectionId": section.id}) }}" class="btn btn-default"> {{'back_to_history'|trans({},'icap_wiki')}}</a>
+    </div>
+{% endblock %}
+
+{% block wiki_panel %}
+    {% block wiki_content %}
+        <div class="wiki-page-header page-header">
+            <h2 class="wiki-title-header">
+                {% if section.isRoot() %}
+                    {{_resource.resourceNode.name}}
+                {% else %}
+                    {{contribution.title}}
+                {% endif %}
+            </h2>     
+        </div>
+        <div class="contribution-text">
+            {{contribution.text|raw}}
+        </div>
+    {% endblock %}
+{% endblock%}

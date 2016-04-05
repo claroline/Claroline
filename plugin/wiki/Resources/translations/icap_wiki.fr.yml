@@ -1,0 +1,68 @@
+icap_wiki_type_name: 'Nom'
+icap_wiki_section_type_activeContribution_title: 'Titre'
+icap_wiki_edit_section_type_activeContribution_title: 'Titre'
+icap_wiki_section_type_activeContribution_text: 'Texte'
+icap_wiki_edit_section_type_activeContribution_text: 'Texte'
+icap_wiki_edit_section_type_position: 'Positionnement'
+icap_wiki_edit_section_type_visible: 'Visible'
+icap_wiki_edit_section_type_brother: 'Voulez-vous que cette section soit au même niveau que celle selectionnée ?'
+icap_wiki_delete_section_type_children: 'Supprimer également les sous-sections'
+icap_wiki_options_type_mode: 'Fonctionnement du Wiki'
+delete_section: 'Supprimer la section'
+remove_section: 'Supprimer définitivement'
+create_new_section: 'Créer une section'
+create_section: "Création de section"
+add_new_subsection: 'Ajouter une section ici'
+move_section: 'Déplacer la section'
+back: 'Retour'
+back_to_wiki: 'Retour au wiki'
+back_to_history: "Retour à l'historique"
+edit: 'Modifier'
+delete: 'Supprimer'
+Delete: 'Supprimer'
+Create: 'Créer'
+Confirm: 'Confirmer'
+Cancel: 'Annuler'
+Save: 'Sauvegarder'
+added: 'Ajouté'
+deleted: 'Supprimé'
+changed: 'Modifié (style)'
+normal: "Normal"
+moderate: "Modéré "
+read_only: "Consultation"
+options: "Options"
+New section: 'Nouvelle section'
+Edit section: 'Modifier la section'
+wiki_contents: 'Sommaire'
+history: 'Historique'
+active_contribution: 'Version actuelle'
+revision_history: 'Historique des versions'
+revision_comparison: 'Comparaison des versions'
+items_per_page: 'Affichage par :'
+set_active_contribution: 'Publier cette version'
+compare_versions: 'Comparer les versions sélectionnées'
+delete_confirmation: 'Êtes-vous sûr de vouloir supprimer la section "%sectionTitle%" ?'
+remove_confirmation: 'Êtes-vous sûr de vouloir supprimer définitivement la section "%sectionTitle%" ?'
+icap_wiki_section_add_success: "La section a été créée avec succès"
+icap_wiki_section_add_error: "Erreur durant la création de la section"
+icap_wiki_section_update_success: "La section a été modifiée avec succès"
+icap_wiki_section_update_error: "Erreur durant la modification de la section"
+icap_wiki_section_move_success: "La section a été déplacée avec succès"
+icap_wiki_section_move_error: "Erreur durant le déplacement de la section"
+icap_wiki_section_delete_success: "La section a été supprimée avec succès"
+icap_wiki_section_delete_error: "Erreur durant la suppression de la section"
+icap_wiki_options_save_success: "Les options du wiki ont été modifiées avec succès"
+icap_wiki_options_save_error: "Erreur durant la modification des options du wiki"
+icap_wiki_section_restore_success: "La section a été restaurée avec succès"
+icap_wiki_section_restore_error: "Erreur durant la restauration de la section"
+icap_wiki_section_remove_success: "La section a été supprimée définitivement"
+icap_wiki_section_remove_error: "Erreur durant la suppression définitive de la section"
+normal_message: "Tous les utilisateurs peuvent contribuer au wiki. Toutes les contributions sont publiées automatiquement."
+moderate_message: "Les nouvelles contributions ne sont pas publiées automatiquement et attendent validation d'un administrateur du wiki."
+read_only_message: "Le wiki est verrouillé: les utilisateurs ne peuvent plus créer de contributions (à part l'administrateur). Cela vous permet de figer votre wiki afin de le transformer en Foire Aux Questions -FAQ-."
+note_well: "<strong>NB</strong>: Notez que dans un fonctionnement normal et modéré, toutes personnes authentifiées sur la plateforme ont la possibilité de participer au wiki"
+moderate_mode_warning: "<div><strong>Ce Wiki est en mode modéré</strong></div> <div>Toutes les modifications seront disponibles après leur autorisation par un administrateur. L'historique complet d'une section est disponible dans la page 'historique'.</div>"
+date_format: "d/m/Y \\à H:i"
+deleted_sections: "Sections supprimées"
+restore_section: "Restaurer la section"
+no_deleted_sections: "Aucune section supprimée"

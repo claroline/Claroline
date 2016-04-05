@@ -1,0 +1,65 @@
+icap_wiki_type_name: 'Name'
+icap_wiki_section_type_activeContribution_title: 'Title'
+icap_wiki_edit_section_type_activeContribution_title: 'Title'
+icap_wiki_section_type_activeContribution_text: 'Text'
+icap_wiki_edit_section_type_activeContribution_text: 'Text'
+icap_wiki_edit_section_type_position: 'Position'
+icap_wiki_edit_section_type_visible: 'Visible'
+icap_wiki_edit_section_type_brother: 'Do you want this section to be at the same level as the one selected?'
+icap_wiki_delete_section_type_children: 'Also delete its subsections'
+icap_wiki_options_type_mode: 'Wiki mode'
+delete_section: 'Delete section'
+remove_section: 'Remove section'
+create_new_section: 'Create new section'
+create_section: "Create section"
+add_new_subsection: 'Add section here'
+move_section: 'Move section'
+back: 'Back'
+back_to_wiki: 'Back to wiki'
+back_to_history: 'Back to history'
+edit: 'Edit'
+delete: 'Delete'
+Create: 'Create'
+Confirm: 'Confirm'
+Cancel: 'Cancel'
+history: 'History'
+added: 'Added'
+deleted: 'Removed'
+changed: 'Changed (style)'
+normal: "Normal"
+moderate: "Moderate"
+read_only: "Read only"
+options: "Options"
+active_contribution: 'Current revision'
+set_active_contribution: 'Publish this revision'
+wiki_contents: 'Contents'
+revision_history: 'Revision history'
+revision_comparison: 'Revision comparison'
+compare_versions: 'Compare selected revisions'
+items_per_page: 'Items per page:'
+delete_confirmation: 'Do you really want to delete "%sectionTitle%" section?'
+remove_confirmation: 'Do you really want to permanently delete "%sectionTitle%" section?'
+icap_wiki_section_add_success: "Section was created successfully"
+icap_wiki_section_add_error: "Error during section creation"
+icap_wiki_section_update_success: "Section was updated successfully"
+icap_wiki_section_update_error: "Error during section update"
+icap_wiki_section_move_success: "Section was moved successfully"
+icap_wiki_section_move_error: "Error during section move"
+icap_wiki_section_delete_success: "Section was deleted successfully"
+icap_wiki_section_delete_error: "Error during section deletion"
+icap_wiki_options_save_success: "Wiki options were updated successfully"
+icap_wiki_options_save_error: "Error during updated of wiki options"
+icap_wiki_section_restore_success: "Section was restored successfully"
+icap_wiki_section_restore_error: "Error during section restore"
+icap_wiki_section_remove_success: "Section was removed permanently"
+icap_wiki_section_remove_error: "Error during permanent removal of section"
+normal_message: "Every one can contribute to the wiki. Any contribution is directly published."
+moderate_message: "Every one can contribute. However, only Administrator and Moderator can publish it."
+read_only_message: "Only Administrator and Moderator users can contribute to the wiki."
+note_well: "<strong>NB</strong>: Note that in a normal and moderate functioning, every persons authenticated on the platform has the possibility of participating in the wiki"
+moderate_mode_warning: "<div><strong>Wiki runs in moderate mode</strong></div> <div>Any changes would be available only after administrator's approval. A complete history of a section's revisions can be found in 'history' page.</div>"
+date_format: "m/d/Y \\a\\t H:i"
+deleted_sections: "Delted sections"
+restore_section: "Restore section"
+no_deleted_sections: "There are no deleted sections"
+

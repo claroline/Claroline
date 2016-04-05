@@ -1,0 +1,1 @@
+<a href="{{ path('icap_wiki_view', {'wikiId' : notification.details.resource.id}) ~ '#section-' ~ notification.details.contribution.section }}">{{ notification.actionKey|trans({'%wiki%' : notification.details.resource.name, '%section%' : notification.details.contribution.title}, 'notification') }}</a>
