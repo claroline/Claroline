@@ -1,0 +1,4 @@
+innova_path:
+    resource: "@InnovaPathBundle/Controller/"
+    type:     annotation
+    prefix:   /

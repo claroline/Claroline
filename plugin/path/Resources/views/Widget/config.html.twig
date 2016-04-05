@@ -1,0 +1,68 @@
+{% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
+
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+
+<form role="form" id="form_log_update_desktop_widget" method="POST"
+      action="{{ path('innova_path_widget_config', { 'widgetInstance': instance.getId() }) }}"
+      class="form-horizontal"
+        {{ form_enctype(form) }}>
+
+
+    <div class="panel-body">
+        {{ form_widget(form) }}
+
+        <div class="tagList">
+            {% if form.vars.value is not null and form.vars.value.tags is not empty %}
+                {% for resourceTag in form.vars.value.tags %}
+                <span class="label label-success margin-bottom-sm margin-right-sm">
+                    <i class="fa fa-tag"></i>
+                    {{ resourceTag.getName() }}
+
+                    <a role=button class="removeTag" href="" data-tag-id="{{ resourceTag.getId() }}"><span class="fa fa-times"></span></a>
+                </span>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    {{ macros.flashBox() }}
+    <div class="panel-footer">
+        <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+        <a href="#">
+            <button type="button" class="btn btn-default claro-widget-form-cancel">{{ 'cancel'|trans({}, 'platform') }}</button>
+        </a>
+    </div>
+</form>
+
+{% block javascripts %}
+    <style>
+        .removeTag,
+        .removeTag:hover,
+        .removeTag:focus {
+            color: #fff;
+        }
+    </style>
+
+    <script type="text/javascript" src='{{ asset('bundles/clarolinetag/js/bootstrap3-typeahead.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/clarolinetag/js/tag-typeahead.js') }}'></script>
+    <script type="text/javascript">
+        var allTags = [{% for tag in tags %}'{{ tag.getName() }}'{% if not loop.last %}, {% endif %}{% endfor %}];
+        new TagTypeAhead({
+            tags: allTags,
+            selector: '#innova_path_widget_config_tags'
+        });
+
+        // Remove Tags
+        $('.removeTag').on('click', function (e) {
+            // Flag the Tag has "to remove"
+            var id = $(this).data('tag-id');
+
+            $('.tagList').append('<input type="hidden" name="{{ form.vars.name }}[removeTags][]" value="' + id + '" />');
+
+            // Remove the displayed label
+            $(this).parents('.label').remove();
+
+            e.preventDefault();
+        });
+    </script>
+{% endblock %}

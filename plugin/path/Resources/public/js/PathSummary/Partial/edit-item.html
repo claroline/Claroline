@@ -1,0 +1,61 @@
+<!-- Item row -->
+<div ui-tree-handle class="tree-item" data-ng-class="{ 'active-step': pathSummaryEditCtrl.current.stepId == step.id || (!pathSummaryEditCtrl.current.stepId && 0 == step.lvl) }"
+     data-ng-mouseenter="showButtons = step.id"
+     data-ng-mouseleave="showButtons = null">
+
+    <!-- Level indicator -->
+    <div class="lvl-indicator lvl lvl-{{ step.lvl }} lvl-bg">
+        <!-- Drag&Drop handler -->
+        <div data-ng-if="step.lvl !== 0" data-ui-tree-handle="" class="step-drag-handler" data-toggle="tooltip" data-container="body" title="{{ 'step_drag' | trans:{}:'path_wizards' }}">
+            <span class="fa fa-ellipsis-v"></span>
+            <span class="sr-only">{{ 'step_drag' | trans:{}:'path_wizards' }}</span>
+        </div>
+    </div>
+
+    <!-- Step name -->
+    <div class="step lvl lvl-{{ step.lvl }}" data-nodrag="" data-ng-class="{ 'lvl-text': pathSummaryEditCtrl.current.stepId == step.id }" data-ng-click="pathSummaryEditCtrl.goTo(step)">
+        <!-- Collapse / Expand button -->
+        <a class="step-toggle" href="" data-ng-click="toggle(this)" data-ng-show="0 != step.children.length" role="button">
+            <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': collapsed, 'fa-caret-down': !collapsed }"></span>
+        </a>
+
+        {{ step.name | truncate }}
+    </div>
+
+    <!-- Actions available -->
+    <span data-ng-show="showButtons == step.id || pathSummaryEditCtrl.current.stepId == step.id || (!pathSummaryEditCtrl.current.stepId && 0 == step.lvl)" class="step-actions btn-group" data-nodrag="">
+        <!-- Add child -->
+        <a href="" role="button" class="btn btn-default btn-sm" data-ng-click="pathSummaryEditCtrl.addStep(step)" data-ng-disabled="step.lvl >= pathSummaryEditCtrl.maxDepth" data-toggle="tooltip" data-container="body" title="{{ 'step_add_child' | trans:{}:'path_wizards' }}">
+            <span class="fa fa-plus"></span>
+            <span class="sr-only">{{ 'step_add_child' | trans:{}:'path_wizards' }}</span>
+        </a>
+
+        <!-- Copy to clipboard -->
+        <a href="" role="button" class="btn btn-default btn-sm" data-ng-click="pathSummaryEditCtrl.copy(step)" data-ng-disabled="pathSummaryEditCtrl.clipboardDisabled.copy" data-toggle="tooltip" data-container="body" title="{{ 'step_copy' | trans:{}:'path_wizards' }}">
+            <span class="fa fa-copy"></span>
+            <span class="sr-only">{{ 'step_copy' | trans:{}:'path_wizards' }}</span>
+        </a>
+
+        <!-- Paste from clipboard -->
+        <a href="" role="button" class="btn btn-default btn-sm" data-ng-click="pathSummaryEditCtrl.paste(step)" data-ng-disabled="pathSummaryEditCtrl.clipboardDisabled.paste" data-toggle="tooltip" data-container="body" title="{{ 'step_paste' | trans:{}:'path_wizards' }}">
+            <span class="fa fa-paste"></span>
+            <span class="sr-only">{{ 'step_paste' | trans:{}:'path_wizards' }}</span>
+        </a>
+
+        <!-- Create as template -->
+        <!--<a href="" role="button" class="btn btn-default btn-sm" data-ng-click="pathSummaryEditCtrl.saveAsTemplate(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_to_template' | trans:{}:'path_wizards' }}">
+            <span class="fa fa-download"></span>
+            <span class="sr-only">{{ 'step_to_template' | trans:{}:'path_wizards' }}</span>
+        </a>-->
+
+        <!-- Delete step -->
+        <a href="" role="button" class="btn btn-danger btn-sm" data-ng-click="pathSummaryEditCtrl.removeStep(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_delete' | trans:{}:'path_wizards' }}">
+            <span class="fa fa-trash-o"></span>
+            <span class="sr-only">{{ 'step_delete' | trans:{}:'path_wizards' }}</span>
+        </a>
+    </span>
+</div>
+
+<ul ui-tree-nodes class="step-children lvl lvl-{{ step.lvl }} lvl-border" data-ng-model="step.children" data-ng-hide="collapsed">
+    <li ui-tree-node data-ng-repeat="step in step.children" data-ng-include="pathSummaryEditCtrl.webDir + 'bundles/innovapath/js/PathSummary/Partial/edit-item.html'"></li>
+</ul>

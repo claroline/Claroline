@@ -1,0 +1,25 @@
+services:
+    # Abstract Path type
+    innova_path.form.type.abstract_path: 
+        class: Innova\PathBundle\Form\AbstractPathType
+        abstract: true
+
+    # Path type
+    innova_path.form.type.path:
+        class: Innova\PathBundle\Form\PathType
+        parent: innova_path.form.type.abstract_path
+        tags:
+          - { name: form.type, alias: innova_path }
+          
+    # Path template type
+    innova_path.form.type.path_template:
+        class: Innova\PathBundle\Form\PathTemplateType
+        parent: innova_path.form.type.abstract_path
+        tags:
+          - { name: form.type, alias: innova_path_template }
+
+    # Path Widget Config type
+    innova_path.form.type.path_widget_config:
+        class: Innova\PathBundle\Form\Widget\PathWidgetConfigType
+        tags:
+          - { name: form.type, alias: innova_path_widget_config }

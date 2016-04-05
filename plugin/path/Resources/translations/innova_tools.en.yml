@@ -1,0 +1,90 @@
+# A
+anywhere: Anywhere
+at_home: At home
+abstract_resources: Resource Type
+available_actions: Available actions
+
+# B
+back_to_paths_list: Back to paths list
+back_to: Back to
+
+# C
+create_path: Create
+create_path_from_model: Create from model
+create_path_from_model_loading: Models loading...
+current_position: Current position
+class: The class
+classroom: In a classroom
+close: Close
+choose_model: Choose a model
+
+# D
+description: Description
+duration: Duration
+delete: Delete
+
+# E
+edit: Edit
+
+# G
+groupware: Groupware
+group: In group
+
+# H
+
+heritated_from: Heritated from
+
+# I
+informations: Informations
+
+
+# L
+local: Local
+library: In a library
+
+
+# M
+my_paths : My paths
+
+
+# N
+next: Next
+no_path_found: No path found
+name: Name of the path
+
+# O
+others_paths : Other paths
+
+# P
+paths: Paths
+path: Path
+path_not_found: Path not found
+path_delete_success: Path has been deleted
+path_delete_error: Le parcours has not been deleted due to technical problem. Please try again
+play: Execute
+paths_list: Paths list
+progression: Progression
+path_open_not_published_error: The path you wanted to open has not been published yet by its owner.
+paths_template_list: Template paths list
+publish: Publish
+
+# R
+resources: Resources
+
+# S
+submit: Submit
+student: Individually
+status: Status
+select: Select
+
+# W
+warning_primary_resource_deleted: The primary resource 'resourceName' (resourceId) no longer exists. It has been removed from path.
+warning_compl_resource_deleted: The complementary resource 'resourceName' (resourceId) no longer exists. It has been removed from path.
+with_computer: With a computer
+without_computer: Without a computer
+with_tutor: With a tutor
+without_tutor: Without a tutor
+
+back_to_home: Back to Workspace home
+
+no_path: There is no Path to display.

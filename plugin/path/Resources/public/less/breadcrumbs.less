@@ -1,0 +1,116 @@
+.path-breadcrumbs {
+    padding: 0;
+    margin-bottom: floor(@line-height-computed / 2);
+    font-size: 0; /* To remove whitespace between <li> elements */
+
+    > li {
+        display: inline-block;
+        margin-bottom: floor(@line-height-computed / 2);
+
+        &:first-child {
+            border-top-left-radius: @border-radius-base;
+            border-bottom-left-radius: @border-radius-base;
+
+            > .lvl-indicator {
+                border-top-left-radius: @border-radius-base;
+            }
+        }
+
+        &:last-child {
+            border-top-right-radius: @border-radius-base;
+            border-bottom-right-radius: @border-radius-base;
+
+            > .lvl-indicator {
+                border-top-right-radius: @border-radius-base;
+            }
+        }
+
+        > a + .dropdown-toggle, > span + .dropdown-toggle {
+            padding-left: 0 !important;
+        }
+    }
+
+    .step-item {
+        position: relative;
+        font-size: @font-size-base;
+        list-style-type: none;
+        line-height: @line-height-base;
+        color: @text-color;
+        background-color: darken(@panel-default-heading-bg, 7%);
+        box-shadow: 1px 0 3px rgba(0, 0, 0, 0.5);
+
+        .lvl-indicator + a, .lvl-indicator + span {
+            padding-top: @padding-base-vertical + 5px;
+        }
+
+        .lvl-indicator {
+            z-index: -100;
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            overflow: hidden;
+        }
+
+        &.current {
+            background-color: @panel-bg;
+            > span {
+                text-decoration: underline;
+            }
+        }
+
+        > a, > span {
+            display: inline-block;
+            color: @text-color;
+            padding: @padding-base-vertical @padding-base-horizontal;
+        }
+
+        /*.dropdown-menu {
+            box-shadow: none;
+            border: none;
+            background: none;
+
+            padding: 0;
+            padding-top: floor(@line-height-computed / 4);
+            padding-left: 18px;
+
+            &:before {
+                content: " ";
+                display: block;
+                position: absolute;
+                top: 0;
+                bottom: floor(@line-height-computed / 4);
+                left: 0;
+                border-left: 1px dotted;
+            }
+
+            li {
+                position: relative;
+                margin-bottom: floor(@line-height-computed / 4);
+
+                &:before {
+                    content: " ";
+                    display: block;
+                    position: absolute;
+                    width: 18px;
+                    left: -18px;
+                    top: 50%;
+                    height: 1px;
+                    border-top: 1px dotted;
+                }
+            }
+
+            a, span {
+                display: block;
+
+                &:hover, &:focus {
+                    background-color: transparent !important;
+                    color: @text-color;
+                }
+            }
+        }*/
+    }
+}

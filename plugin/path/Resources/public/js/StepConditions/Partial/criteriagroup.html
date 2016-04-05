@@ -1,0 +1,34 @@
+<div class="condition-criteria-group" >
+    <!-- Group of buttons for the criteria group -->
+    <div class="btn-group" role="group">
+        <button type="button" data-ng-click="stepConditionsEditCtrl.addCriteriagroup(group)" class="btn btn-sm btn-primary">
+            <span class="fa fa-plus"></span>
+            <span>{{ 'condition_criteria_group_add'|trans:{}:'path_wizards' }}</span>
+        </button>
+
+        <button type="button" data-ng-click="stepConditionsEditCtrl.addCriterion(group)" class="btn btn-sm btn-primary text-right">
+            <span class="fa fa-plus"></span>
+            <span>{{ 'condition_criterion_add'|trans:{}:'path_wizards' }}</span>
+        </button>
+
+        <button type="button" ng-if="group.lvl>0" data-ng-click="stepConditionsEditCtrl.removeCriteriagroup(group)" class="btn btn-sm btn-danger text-right">
+            <span class="fa fa-trash"></span>
+            <span>{{ 'condition_criteria_group_delete'|trans:{}:'path_wizards' }}</span>
+        </button>
+    </div>
+
+    <!-- criterion Block, recursive generation -->
+    <ul class="criterion">
+        <li data-ng-repeat="(critIndex, criterion) in group.criterion" class="condition-criterion"
+            data-ng-include="stepConditionsEditCtrl.webDir + 'bundles/innovapath/js/StepConditions/Partial/criterion.html'">
+        </li>
+    </ul>
+
+    <!-- criteriagroup Block, recursive generation-->
+    <ul ng-if="group.criteriagroup" class="condition-criteria-group-if">
+        <li class="criteriagroup-li" data-ng-repeat="group in group.criteriagroup"
+            data-ng-include="stepConditionsEditCtrl.webDir + 'bundles/innovapath/js/StepConditions/Partial/criteriagroup.html'">
+        </li>
+    </ul>
+
+</div>

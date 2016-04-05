@@ -1,0 +1,19 @@
+plugin:
+  has_options: false
+  icon: res_file.png
+
+  resources:
+    - class: Innova\PathBundle\Entity\Path\Path
+      name: innova_path
+      is_exportable: true
+      icon: res_file.png
+      actions:
+        - name: path_administrate
+          menu_name: administrate
+
+  widgets:
+     - name: innova_path_widget
+       is_configurable: true
+       is_displayable_in_desktop: true
+       is_displayable_in_workspace: true
+       is_exportable: false

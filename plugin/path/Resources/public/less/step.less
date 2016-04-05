@@ -1,0 +1,80 @@
+.panel-step {
+    > .panel {
+        position: relative;
+
+        // Step level colors
+        .lvl-indicator {
+            display: block;
+            width: 100%;
+            top:   0;
+            left:  0;
+            right: 0;
+            height: 6px;
+            border-radius: @border-radius-base @border-radius-base 0 0;
+        }
+
+        .panel-step-heading {
+            margin-bottom: 15px;
+        }
+
+        .panel-step-title {
+            border-bottom: 1px solid #ccc;
+            margin: 0;
+            padding-bottom: 15px;
+        }
+
+        .panel {
+            /* Apply same margin bottom as `.form-group` (unfortunately Bootstrap doesn't use var for this value) */
+            margin-bottom: 15px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+
+            .panel-heading {
+                position: relative;
+
+                /* Panels can be collapsed by clicking on heading => change cursor to help User */
+                cursor: pointer;
+
+                /* Use a custom Angular accordion system */
+                border-bottom: none;
+
+                .panel-title > * {
+                    vertical-align: middle;
+                }
+
+                .btns {
+                    position: absolute;
+                    right: 10px; /* Same as `.panel-heading` padding (unfortunately Bootstrap doesn't use var for this value) */
+                    top: 4px;
+                }
+
+                + .panel-body {
+                    border-top: 1px solid @panel-inner-border;
+                }
+            }
+        }
+
+        /* Override TinyMCE styles to make it fit a Bootstrap panel in the step form */
+        .mce-tinymce.mce-container.mce-panel {
+            border: none;
+            border-top: 1px solid @panel-inner-border !important;
+            border-radius: 0;
+        }
+
+        /* Description of the step Block */
+        .step-description {
+            margin-bottom: 15px;
+        }
+
+        /* Primary resource block */
+        .step-resource {
+            > iframe {
+                border: none;
+                padding: 0;
+                width: 100%;
+            }
+        }
+    }
+}
