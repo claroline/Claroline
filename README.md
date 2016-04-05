@@ -35,9 +35,9 @@ Official distribution of Claroline Connect LMS
 - [x] ReservationBundle
 - [x] SupportBundle
 - [x] NotificationBundle
-- [ ] CompetencyBundle
-- [ ] FavouriteBundle
-- [ ] UrlBundle
+- [x] CompetencyBundle
+- [x] FavouriteBundle
+- [x] UrlBundle
 - [ ] BadgeBundle
 - [ ] BlogBundle
 - [ ] WikiBundle
@@ -47,9 +47,12 @@ Official distribution of Claroline Connect LMS
 - [ ] WebsiteBundle
 - [ ] oAuthBundle
 - [ ] PathBundle
-- [ ] CollecticielBundle
+- [x] CollecticielBundle
 - [ ] ExoBundle
 
 ################
 
-There is still a lot bugfixing to do. 
+# TODO
+
+- update
+- upgrade from previous packages
