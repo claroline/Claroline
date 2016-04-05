@@ -1,0 +1,39 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block title %}{{ ('login_'~service)|trans({}, 'icap_oauth') }}{% endblock %}
+
+{% block topBarRender %}
+{% include 'IcapOAuthBundle:Connect:top_bar_render.html.twig' %}
+{% endblock %}
+
+{% block content %}
+    <style>
+        a.icap-oauth-choice-btn::after{
+            font-family: "FontAwesome";
+            text-align: center;
+            content: '\f054';
+            position: absolute;
+            right: 0;
+            width: 25px;
+        }
+        a.icap-oauth-choice-btn {
+            padding-right: 25px;
+        }
+    </style>
+    <div class="col-sm-4 col-sm-offset-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">{{ ('login_'~service)|trans({}, 'icap_oauth') }}</h3>
+            </div>
+            <div class="panel-body">
+                {{ 'oauth_check_connexion_info'|trans({}, 'icap_oauth') }}
+            </div>
+            <div class="list-group">
+                <a href="{{ path('icap_oauth_register') }}" class="list-group-item icap-oauth-choice-btn"><i class="fa fa-plus"></i> {{ 'create_new_oauth_account'|trans({},'icap_oauth') }}</a>
+                <a href="{{ path('icap_oauth_login') }}" class="list-group-item icap-oauth-choice-btn"><i class="fa fa-chain"></i> {{ 'link_oauth_to_account'|trans({},'icap_oauth') }}</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+

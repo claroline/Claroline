@@ -1,0 +1,39 @@
+<script>
+    //Load facebook JavaScript SDK async
+    (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/fr_FR/all.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    window.fbAsyncInit = function() {
+        // init the FB JS SDK
+        FB.init({
+            appId       : '{{ get_oauth_app_id('facebook') }}',        // App ID from the app dashboard
+            status      : true,                                 // Check Facebook Login status
+            xfbml       : true,
+            cookie      : true
+        });
+        $('#facebook-connect-btn').on('click', fb_login);
+    };
+
+    // login function
+    function fb_login(event) {
+        FB.getLoginStatus(function(response) {
+            if (response.status === 'connected') {
+                document.location = "{{ url("hwi_oauth_service_redirect", {service: "facebook"}) }}";
+            } else {
+                FB.login(function(response) {
+                    if (response.authResponse) {
+                        document.location = "{{ url("hwi_oauth_service_redirect", {service: "facebook"}) }}";
+                    }
+                });
+            }
+        });
+        event.preventDefault();
+    };
+</script>
+<a href="#" type="button" id="{{ service }}-connect-btn" class='btn {{ service }}-connect icap-oauth-btn btn-block' style="position: relative">
+    {{ ('login_'~service)|trans({}, 'icap_oauth') }}
+</a>

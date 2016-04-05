@@ -1,0 +1,16 @@
+client_id:  Id de l'application
+client_secret: Secret de l'application
+client_active: Activer
+login_facebook: Connexion Facebook
+login_twitter: Connexion Twitter
+login_google: Connexion Google
+login_linkedin: Connexion Linkedin
+login_windows_live: Connexion Windows Live
+create_new_oauth_account: Créer un nouveau compte
+link_oauth_to_account: Lier à un compte existant
+oauth_check_connexion_info: Souhaitez vous créer un nouveau compte sur la plateforme, ou lier à un compte déjà existant?
+facebook: Facebook
+twitter: Twitter
+windows_live: Windows Live
+google: Google
+linkedin: LinkedIn

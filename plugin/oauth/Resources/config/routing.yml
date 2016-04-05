@@ -1,0 +1,32 @@
+icap_oauth_controller:
+    resource: "@IcapOAuthBundle/Controller/OauthController.php"
+    type: annotation
+    prefix: /
+
+icap_oauth_connexion_controller:
+    resource: "@IcapOAuthBundle/Controller/ConnexionController.php"
+    type: annotation
+    prefix: /
+
+hwi_oauth_login:
+    resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
+    prefix: /login/hwi
+
+hwi_oauth_redirect:
+    resource: "@HWIOAuthBundle/Resources/config/routing/redirect.xml"
+    prefix: /connect
+
+facebook_login:
+    path: /login/check-facebook
+
+twitter_login:
+    path: /login/check-twitter
+
+google_login:
+    path: /login/check-google
+
+linkedin_login:
+    path: /login/check-linkedin
+
+windows_live_login:
+    path: /login/check-windows
