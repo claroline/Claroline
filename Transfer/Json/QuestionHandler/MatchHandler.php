@@ -206,6 +206,7 @@ class MatchHandler implements QuestionHandlerInterface {
 
         $proposals = $match->getProposals()->toArray();
         $exportData->toBind = $match->getTypeMatching()->getCode() === 1 ? true : false;
+        $exportData->typeMatch = $match->getTypeMatching()->getCode();
         $exportData->firstSet = array_map(function ($proposal) {
             $firstSetData = new \stdClass();
             $firstSetData->id = (string) $proposal->getId();
