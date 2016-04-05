@@ -45,7 +45,6 @@ class Detector
         foreach ($items as $item) {
              if (preg_match('#^(.+Bundle)\.php$#', $item->getBasename(), $matches)) {
                  if ($bundle = $this->findBundleClass($item->getPathname())) {
-                    var_dump('matched');
                      $bundles[] = $bundle;
                  }
              }
