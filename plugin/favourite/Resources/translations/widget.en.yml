@@ -1,0 +1,10 @@
+hevinci_favourite_widget: Favourites resources
+favourite: Favourites
+widget_no_favourite: There is no favourites yet.
+add_to_favourite: Do you want to add this resource to your favourites ?
+add_to_favourite_error: This resource in already in your favourites. Do you want to delete it ?
+add_to_favourite_btn: Add to favourites
+remove_from_favourite: Do you want to delete this resource from your favourites ?
+remove_from_favourite_star: Delete from favourites
+remove_from_favourite_error: This resource in not in your favourites. Do you want to add it ?
+remove_from_favourite_btn: Remove from favourites
