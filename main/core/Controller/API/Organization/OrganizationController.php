@@ -27,6 +27,7 @@ use Claroline\CoreBundle\Form\Organization\OrganizationType;
 use Claroline\CoreBundle\Form\Organization\OrganizationParametersType;
 use Claroline\CoreBundle\Form\Organization\OrganizationNameType;
 use JMS\SecurityExtraBundle\Annotation as SEC;
+use FOS\RestBundle\Controller\Annotations\Get;
 
 /**
  * @NamePrefix("api_")
@@ -130,8 +131,9 @@ class OrganizationController extends FOSRestController
      *     description="Returns the location edition form",
      *     views = {"location"}
      * )
+     * @Get("/organization/{organization}/edit/form")
      */
-    public function getEditOrganizationFormAction(Organization $organization)
+    public function getOrganizationEditFormAction(Organization $organization)
     {
         $formType = new OrganizationParametersType('eofm');
         $formType->enableApi();

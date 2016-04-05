@@ -52,7 +52,6 @@ export default class UserController {
         let availableColumns = angular.copy(columns)
         //removing username from the selection
         availableColumns.splice(0, 1)
-        //availableColumns.push({name: "guid", prop: "guid"})
 
         this.dataTableOptions = {
             scrollbarV: false,
@@ -74,7 +73,7 @@ export default class UserController {
         $http.get(Routing.generate('api_get_user_admin_actions'))
             .then(d => this.userActions = d.data)
 
-        $http.get(Routing.generate('api_get_user_searchable_fields'))
+        $http.get(Routing.generate('api_get_user_fields'))
             .then(d => this.fields = d.data)
 
         this._onSearch = this._onSearch.bind(this)
@@ -97,7 +96,7 @@ export default class UserController {
     }
 
     paging(offset, size) {
-        this.ClarolineSearchService.find('api_search_users', this.savedSearch, offset, size).then(d => {
+        this.ClarolineSearchService.find('api_get_search_users', this.savedSearch, offset, size).then(d => {
             const users = d.data.users;
 
             //I know it's terrible... but I have no other choice with this table.
@@ -164,7 +163,7 @@ export default class UserController {
 
     _onSearch(searches) {
         this.savedSearch = searches;
-        this.ClarolineSearchService.find('api_search_users', searches, 0, this.dataTableOptions.paging.size)
+        this.ClarolineSearchService.find('api_get_search_users', searches, 0, this.dataTableOptions.paging.size)
             .then(d => {
                 this.users = d.data.users;
                 this.dataTableOptions.paging.count = d.data.total

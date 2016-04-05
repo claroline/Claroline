@@ -25,6 +25,7 @@ use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Form\Organization\LocationType;
 use JMS\SecurityExtraBundle\Annotation as SEC;
+use FOS\RestBundle\Controller\Annotations\Get;
 
 /**
  * @NamePrefix("api_")
@@ -77,7 +78,7 @@ class LocationController extends FOSRestController
      *     views = {"location"}
      * )
      */
-    public function getCreateLocationFormAction()
+    public function getLocationCreateFormAction()
     {
         $formType = new LocationType('clfm');
         $formType->enableApi();
@@ -93,8 +94,9 @@ class LocationController extends FOSRestController
      *     description="Returns the location edition form",
      *     views = {"location"}
      * )
+     * @Get("/location/{location}/edit/form")
      */
-    public function getEditLocationFormAction(Location $location)
+    public function getLocationEditFormAction(Location $location)
     {
         $formType = new LocationType('elfm');
         $formType->enableApi();

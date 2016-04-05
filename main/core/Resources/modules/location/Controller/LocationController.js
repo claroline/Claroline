@@ -8,7 +8,7 @@ export default class LocationController {
         this.locations = undefined
         this.ClarolineAPIService = ClarolineAPIService
 
-        this.columns = [
+        const columns = [
             {
                 name: this.translate('name'),
                 prop: 'name',
@@ -40,19 +40,19 @@ export default class LocationController {
         ];
 
         this.dataTableOptions = {
-            scrollbarV: true,
+            scrollbarV: false,
             columnMode: 'force',
             headerHeight: 50,
             footerHeight: 50,
-            columns: this.columns
-        };
+            columns: columns
+        }
 
         this.LocationAPIService.findAll().then(d => this.locations = d.data)
-    }  
+    }
 
     translate(key) {
         return window.Translator.trans(key, {}, 'platform');
-    } 
+    }
 
     removeLocation(location) {
         this.LocationAPIService.delete(location.id).then(function(d) {
@@ -62,12 +62,12 @@ export default class LocationController {
 
     removeLocationCallback(location) {
         const index = this.locations.indexOf(location);
-        if (index > -1 ) this.locations.splice(index, 1); 
+        if (index > -1 ) this.locations.splice(index, 1);
     }
 
     createForm() {
         const modal = this.$uibModal.open({
-            templateUrl: Routing.generate('api_get_create_location_form', {'_format': 'html'}),
+            templateUrl: Routing.generate('api_get_location_create_form', {'_format': 'html'}),
             controller: 'CreateLocationModalController',
             controllerAs: 'clfm',
             resolve: {
@@ -83,7 +83,7 @@ export default class LocationController {
 
     editLocation(location) {
         const modal = this.$uibModal.open({
-            templateUrl: Routing.generate('api_get_edit_location_form', {'_format': 'html', 'location': location.id}) + '?bust=' + Math.random().toString(36).slice(2),
+            templateUrl: Routing.generate('api_get_location_edit_form', {'_format': 'html', 'location': location.id}) + '?bust=' + Math.random().toString(36).slice(2),
             controller: 'EditLocationModalController',
             controllerAs: 'elfm',
             resolve: {
