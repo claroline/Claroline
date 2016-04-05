@@ -52,7 +52,6 @@ export default class UserController {
         let availableColumns = angular.copy(columns)
         //removing username from the selection
         availableColumns.splice(0, 1)
-        //availableColumns.push({name: "guid", prop: "guid"})
 
         this.dataTableOptions = {
             scrollbarV: false,
