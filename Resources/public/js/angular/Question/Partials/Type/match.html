@@ -31,7 +31,7 @@
             </div>
         </div>        
         <!-- TO BIND PROPOSALS & ASSOCIATED LABELS -->
-        <div data-ng-if="matchQuestionCtrl.question.toBind" class="row center-text">
+        <div data-ng-if="matchQuestionCtrl.question.typeMatch === 1" class="row center-text">
             <!-- PROPOSALS -->
             <div class="col-md-6">
                 <div data-ng-repeat="proposal in matchQuestionCtrl.question.firstSet" class="row origin draggable" id="draggable_{{proposal.id}}">
@@ -54,7 +54,7 @@
             </div>
         </div>
         <!-- TO DRAG SUB TYPE  -->
-        <div data-ng-if="!matchQuestionCtrl.question.toBind" class="row center-text">
+        <div data-ng-if="matchQuestionCtrl.question.typeMatch === 2" class="row center-text">
             <!-- PROPOSALS -->
             <div class="col-md-6">
                 <div data-ng-repeat="proposal in matchQuestionCtrl.question.firstSet" class="row origin" id="div_{{proposal.id}}">
@@ -98,6 +98,41 @@
                                 </div>
                             </li>
                         </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- TO PAIR SUB TYPE  -->
+        <div data-ng-if="matchQuestionCtrl.question.typeMatch === 3" class="row">
+            <!-- PROPOSALS -->
+            <div class="col-md-3">
+                <div data-ng-repeat="proposal in matchQuestionCtrl.question.firstSet" class="row origin drop-textbox" id="div_{{proposal.id}}">
+                    <div class="col-md-12 setLabel">
+                        <div data-ng-bind-html="proposal.data | unsafe" id="draggable_{{proposal.id}}" class="draggable"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- LABELS -->
+            <div class="col-md-3">
+                <div data-ng-repeat="proposal in matchQuestionCtrl.question.secondSet" class="row droppable drop-textbox dropzone-textbox" id="droppable_{{proposal.id}}">
+                    <div class="col-md-12 setLabel">
+                        <div data-ng-repeat="item in matchQuestionCtrl.dropped" id="dropped_{{item.source}}" data-ng-if="item.target === proposal.id">
+                            <div class="row dropped-item-row">
+                                <div class="col-sm-9" data-ng-bind-html="item.label | unsafe">
+                                    
+                                </div>
+                                <div class="col-sm-3">
+                                    <button data-ng-disabled="matchQuestionCtrl.feedbackIsVisible" class="btn btn-danger fa fa-trash" data-ng-click="matchQuestionCtrl.removeDropped(item.source, proposal.id)"></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div data-ng-repeat="proposal in matchQuestionCtrl.question.secondSet" class="row drop-textbox drop-label-textbox alert alert-info" id="label_{{proposal.id}}">
+                    <div class="col-md-12 setLabel">
+                        <div data-ng-bind-html="proposal.data | unsafe"></div>
                     </div>
                 </div>
             </div>
