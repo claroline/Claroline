@@ -77,6 +77,7 @@
         "innova/angular-js-bundle": "~5.0",
         "innova/angular-ui-resource-picker-bundle" : "~6.0",
         "innova/angular-ui-tinymce-bundle": "5.*",
+        "innova/angular-ui-pageslide-bundle" : "~5.0",
         "claroline/front-end-bundle": "dev-7.x-test"
     },
     "autoload": {
@@ -118,7 +119,9 @@
             "Icap\\PortfolioBundle\\": "plugin/portfolio",
             "Icap\\SocialmediaBundle\\": "plugin/social-media",
             "Icap\\WikiBundle\\": "plugin/wiki",
-            "Icap\\OAuthBundle\\": "plugin/oauth"
+            "Icap\\OAuthBundle\\": "plugin/oauth",
+            "Claroline\\ResultBundle\\": "plugin/result",
+            "Innova\\PathBundle\\": "plugin/path"
         }
     }
 }
