@@ -1,0 +1,48 @@
+{% extends "ClarolineCoreBundle:Administration:ajaxLayout.html.twig" %}
+
+{% trans_default_domain "platform" %}
+
+{% block content %}
+    <form role="form" action="{{ path('icap_badge_workspace_tool_badges_award', {'workspaceId': workspace.id, 'slug': badge.slug}) }}" method="post" class="form-horizontal" id="award_form">
+
+        {{ form_errors(form) }}
+
+        <div class="row">
+            <div class="col-lg-2">
+                {{ form_label(form.group) }}
+                {{ form_errors(form.group) }}
+            </div>
+            <div class="col-lg-3">
+                {{ form_widget(form.group) }}
+            </div>
+
+            <div class="col-lg-2 text-center">
+                <p>{{ 'or'|trans }}</p>
+            </div>
+
+
+            <div class="col-lg-2">
+                {{ form_label(form.user) }}
+                {{ form_errors(form.user) }}
+            </div>
+            <div class="col-lg-3">
+                {{ form_widget(form.user) }}
+            </div>
+        </div>
+
+        <div class="form-group award_comment">
+            {{ form_label(form.comment) }}
+            {{ form_errors(form.comment) }}
+            <div class="col-lg-6">
+                {{ form_widget(form.comment) }}
+            </div>
+        </div>
+
+        {{ form_rest(form) }}
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">{{ 'award'|trans({}, 'icap_badge') }}</button>
+            <button class="btn btn-default" id="viewAwardedUser" type="button" title="{{ 'cancel'|trans }}">{{ 'cancel'|trans }}</button>
+        </div>
+    </form>
+{% endblock %}

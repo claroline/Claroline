@@ -1,0 +1,26 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% trans_default_domain "icap_badge" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets debug=false filter="less, cssmin" output="css/icapbadge/badge.css"
+      "@IcapBadgeBundle/Resources/views/less/badge.less"
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {% block section_title %}{% endblock %}
+        </h3>
+    </div>
+
+    {{ macros.flashBox() }}
+
+    <div class="panel-body badge_body">
+        {% block section_body %}{% endblock %}
+    </div>
+{% endblock %}

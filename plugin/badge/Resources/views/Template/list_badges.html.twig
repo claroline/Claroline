@@ -1,0 +1,77 @@
+<div class="col-md-12 list_badges">
+    <ul class="list-inline my_badges badge_list">
+        {% for badge in badgePager %}
+        <li class="col-md-12">
+            <div class="panel panel-default badge_panel">
+                <div class="panel-body">
+                    <div class="col-md-4">
+                        <a href="{{ path(parameters.edit_link.url, {'slug': badge.slug}|merge(parameters.route_parameters)) }}" title="{{ badge.name }}" class="img_container">
+                            <img  class="badge_image_informations" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" />
+                        </a>
+                    </div>
+                    <div class="col-md-8">
+                        <a href="{{ path(parameters.edit_link.url, {'slug': badge.slug}|merge(parameters.route_parameters)) }}" title="{{ badge.name }}">
+                            <h3>{{ badge.name }}</h3>
+                        </a>
+                        <p>{{ badge.description }}</p>
+                        <p class="criteria">
+                            <span class="fa fa-th-list"></span> {{ badge.criteria|truncate(140, true, ' ...')|striptags|raw }}
+                        </p>
+                        <!--
+                        <a href="{{ path(parameters.view_link, {'slug': badge.slug}|merge(parameters.route_parameters)) }}">
+                            {{ 'view'|trans({}, 'platform') }}
+                        </a>
+                        <a href="{{ path(parameters.edit_link.url, {'slug': badge.slug}|merge(parameters.route_parameters)) }}{{ parameters.edit_link.suffix }}">
+                            {{ 'edit'|trans({}, 'platform') }}
+                        </a>
+                        <button type="button" data-href="{{ path(parameters.delete_link, {'slug': badge.slug}|merge(parameters.route_parameters)) }}" data-confirm-title="{{ 'badge_delete_confirm_title'|trans({}, 'icap_badge') }}" data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name}, 'icap_badge') }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger">
+                            {{ 'delete'|trans({}, 'platform') }}
+                        </button>
+                        -->
+
+                    </div>
+                </div>
+            </div>
+        </li>
+        {% else %}
+            <li class="node-thumbnail node">
+                {{ 'no_badges_create_to_motivate'|trans({'%url%': path(parameters.add_link, parameters.route_parameters)}, 'icap_badge')|raw }}
+            </li>
+        {% endfor %}
+    </ul>
+
+    {% if badgePager.haveToPaginate %}
+    <div>
+        {{
+            pagerfanta(
+                badgePager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' :    1,
+                    'routeName':     parameters.current_link,
+                    'routeParams':   parameters.route_parameters,
+                    'pageParameter': '[badgePage]'
+                }
+            )
+        }}
+    </div>
+    {% endif %}
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var image = $('.panel-body .col-md-4 .badge_image_informations');
+        image.each(function(){
+            if ($( this ).width() > $( this ).height()) {
+                $( this ).css('height', '100px');
+                $( this ).css('marginLeft', -($( this ).width())/2);
+                $( this ).css('marginTop', -($( this ).height())/2);
+            }
+            else{
+                $( this ).css('width', '100px');
+                $( this ).css('marginLeft', -($( this ).width())/2);
+                $( this ).css('marginTop', -($( this ).height())/2);
+            }
+        });
+    });
+</script>

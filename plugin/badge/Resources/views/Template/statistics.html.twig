@@ -1,0 +1,50 @@
+{% trans_default_domain "icap_badge" %}
+
+<ul class="list-inline badge_general_statistics">
+    <li>
+        <p><span>{{ parameters.totalBadges }}</span> {{ 'badge_count'|transchoice(parameters.totalBadges) }}</p>
+    </li>
+    <li>
+        <p><span>{{ parameters.totalAwarding }}</span> {{ 'total_awarding'|transchoice(parameters.totalAwarding) }}</p>
+    </li>
+    <li>
+        <p><span>{{ parameters.totalBadgeAwarded }}</span> {{ 'total_awarded_badge'|transchoice(parameters.totalBadgeAwarded) }}</p>
+    </li>
+    <li>
+        <p><span>{{ parameters.totalBadgeNotAwarded }}</span> {{ 'total_not_awarded_badge'|transchoice(parameters.totalBadgeNotAwarded) }}</p>
+    </li>
+</ul>
+{% if parameters.totalBadges > 0 and parameters.badges_per_user is not empty %}
+<div class="container row">
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-bar-chart-o"></i>
+                {{ 'badges_per_user'|trans({}, 'icap_badge') }}
+            </div>
+            <div id="badgesPerUsers" class="panel-body">
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-pie-chart"></i>
+                {{ 'awarded_badges'|trans({}, 'icap_badge') }}
+            </div>
+            <div id="globalAttrib" class="panel-body"></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-pie-chart"></i>
+                {{ 'top_10_most_awarded_badges'|trans({}, 'icap_badge') }}
+            </div>
+            <div id="repartitionBadges" class="panel-body">
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+

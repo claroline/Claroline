@@ -1,0 +1,154 @@
+actions: 'Acciones'
+actions_lead_to_badge_awarding: 'acciones que conducen a conferir una insignia'
+add_badge: 'Agregar una insignia'
+add_rule: 'Agregar una regla'
+award: 'Conferir'
+award_badge: 'Conferir una insignia'
+badges_platform_list: "Insignia de la plataforma"
+back_to_badges_list: 'Volver a la lista de insignias'
+back_to_my_badges: 'Volver a mis insignias'
+back_to_users_badge: 'Volver a la lista de usuarios'
+badge: 'Insignia'
+badge_add_error_message: 'Se produjo un error al agregar nueva insignia.'
+badge_add_success_message: 'Insignia añadida con éxito.'
+badge_already_award_info_message: 'Validación de la atribución de la insignia sin sentido, el usuario ya posee esta insignia.'
+badge_already_award_message: 'Usted no puede reclamar una insignia que ya posee.'
+badge_already_claim_message: 'Usted ya realizó una solicitud para esta insignia.'
+badge_award_confirm_message: '¿Confirma la atribución de la insignia <strong>%badgeName%</strong> al usuario<strong>%user%</strong>?'
+badge_award_confirm_title: 'Confirmación de la atribución de la insignia'
+badge_award_error_message: 'Ha ocurrido un error en la atribución de la insignia.'
+badge_award_form_group: 'Grupo'
+badge_award_form_group_choose: "Elija un grupo"
+badge_award_form_user: 'Usuario'
+badge_award_form_user_choose: "Elija un usuario"
+badge_award_info_no_group_message: 'Ningún grupo seleccionado para la atribución'
+badge_awarded_automatically_on: 'Insignia atribuida automáticamente el %awardingDate%'
+badge_awarded_count_message: 'Insignia %awaredBadge% atribuida correctamente.|Insignias %awaredBadge% atribuidas correctamente.'
+badge_awarded_on_by: 'Insignia atribuida el %awardingDate% por %awardingIssuer%'
+badge_awarded_to: 'Insignia atribuida a'
+badge_awarding_rules_not_respected: 'Reglas de la atribución insignia no respetadas.'
+badge_check_state: 'Estado de la atribución'
+badge_claim_error_message: 'Ha ocurrido un error en la petición de la insignia.'
+badge_claim_form_badge: 'Nombre de la petición de la insignia.'
+badge_claim_success_message: 'LA petición de la insignia fue hecha correctamente.'
+badge_current_claimed_badges: '%claimedBadgeCount% petición de insignia|%claimedBadgeCount% peticiones de insignias'
+badge_current_claimed_badges_manage: '%claimedBadgeCount%  petición de insignia a examinar|%claimedBadgeCount% peticiones de insignias a examinar'
+badge_delete_confirm_message: '¿Esta seguro que desea borrar la insignia <strong>%badgeName%</strong>?'
+badge_delete_confirm_title: 'Borrar la insignia'
+badge_delete_error_message: 'Ha ocurrido un error al borrar la insignia.'
+badge_delete_success_message: 'Insignia borrada correctamente'
+badge_edit_confirm_message: '¿Esta seguro que desea editar la Insignia <strong>%badgeName%</strong>?'
+badge_edit_confirm_title: 'Editar una insignia'
+badge_dont_award_confirm_message: '¿Esta seguro que no desea atribuir la insignia <strong>%badgeName%</strong> al usuario <strong>%user%</strong>?'
+badge_dont_award_confirm_title: 'Rechazo de atribución de una insignia.'
+badge_edit_error_message: 'Ha ocurrido un error en la edición de la insignia.'
+badge_edit_success_message: 'insignia editada correctamente'
+badge_expired_on_date: 'Ha expirado el %expirationDate%'
+badge_valid_for_period: "Valida %validityPeriod%"
+badge_form_advance_options: 'Opciones avanzadas'
+badge_form_automatic_award: 'Atribución automática, si las reglas son respetadas'
+badge_form_awarding_on_result_action: 'Cuando el resultado de la acción es'
+badge_form_awarding_on_result_action_to: 'a'
+badge_form_badge: 'Cuando la acción es la atribución de una insignia'
+badge_form_badge_help: 'Si es compatible con la acción'
+badge_form_badge_selection: 'Seleccionar la insignia'
+badge_form_resource: "En un recurso"
+badge_form_resource_selection: 'Seleccione el recurso'
+badge_form_change_image: 'Cambiar la imagen de la insignia'
+badge_form_choose_image: 'Escoger la imagen de la insignia'
+badge_form_criteria: 'Criterios de atribución'
+badge_form_description: 'Descripción'
+badge_form_enTranslation: 'Traducción al ingles'
+badge_form_execute: 'El usuario validar la regla después de ejecutar una acción en'
+badge_form_execute_times: 'Cuando se ejecuta la acción'
+badge_form_is_expiring: "¿La insignia tiene un periodo de validez?"
+badge_form_frTranslation: 'traducción francesa '
+badge_form_image: 'Imagen'
+badge_form_name: 'Nombre'
+badge_form_rules: 'regla de atribución'
+badge_form_times: 'Tiempos'
+badge_form_user_target_of_action: 'El usuario es el objetivo de la acción'
+badge_version: 'Versión'
+badge_no_rules_check_manually: 'Sin reglas, comprobado manualmente'
+badge_reject_award: 'Rechazar la atribución de la insignia'
+badge_reject_award_error_message: 'Ha ocurrido un error en el rechazo de la insignia.'
+badge_reject_award_short: 'rechazo'
+badge_reject_award_success_message: 'Rechazo de la atribución de la insignia hecho correctamente.'
+badge_rule_delete_confirm_message: '¿Esta seguro que desea borrar esta regla?'
+badge_rule_delete_confirm_title: 'Supresión de una regla'
+badge_rules_not_respected: 'Reglas no respetadas'
+badge_rules_respected: 'Reglas respetadas'
+badge_rules_respected_state: 'Página no disponible en este momento'
+badge_unaward_confirm_message: '¿Esta seguro que desea borrar la insignia <strong>%badgeName%</strong> al usuario <strong>%user%</strong>?'
+badge_unaward_confirm_title: 'Supresión de la insignia'
+badge_unaward_error_message: 'Ha ocurrido un error en la supresión de la atribución de la insignia.'
+badge_unaward_success_message: 'Atribución de insignia ha sido borrada correctamente.'
+badge_validate_award: 'Confirmar la atribución de la insignia'
+badge_validate_award_error_message: 'Ha ocurrido un error en la validación de la atribución de la insignia.'
+badge_validate_award_short: 'Confirmar'
+badge_validate_award_success_message: 'La validación de la atribución de la insignia fue hecha correctamente.'
+badges: 'insignias'
+claim: 'Petición'
+claim_badge: 'Petición de una insignia'
+claim_badge_form: 'Formulario de petición de una insignia'
+claim_date: 'Fecha de petición'
+claiming: 'Petición|Peticiones'
+day: 'Día'
+dont_award: 'No atribuir'
+edit_badge: 'Editar la insignia ''%badge_name%'''
+month: 'mes'
+no_badge_claim: 'No hya peticiones de insignias.'
+no_badges: 'Sin insignias.'
+no_badges_create_to_motivate: 'Sin insignia actualmente, Usted puede <a href="%url%">crear</a> algunas para usuarios motivados.'
+no_rule: 'Sin reglas'
+rule: 'regla'
+rule_details: 'Detalles de la regla'
+unaward: 'Retirar atribución'
+view_badge: 'Insignia ''%badge_name%'''
+week: 'semana'
+workspace_badges: 'insignias del espacio de trabajo'
+year: 'año'
+my_collections: "Mis colecciones"
+my_workspace_badges: 'Insignias del espacio de trabajo'
+organize_badges_the_way_you_want: "Organizar las insignias de la manera desee"
+no_collection: "Sin colecciones."
+add_collection: "Agregar una colección"
+collection_name: "Nombre de la colección"
+badge_collection_delete_confirm_title: "Supresión de una colecciones"
+badge_collection_delete_confirm_message: "¿Esta seguro que desea borrar esta colección?"
+add_collection_in_progress: "Creación de una colección en curso..."
+add_collection_error: "Ha ocurrido un error al agregar una colección."
+add_badge_to_collection_error: "Ha ocurrido un error al agregar una insignia a una colección."
+edit_title_collection_error: "Ha ocurrido un error al editar el titulo de la colección."
+delete_collection_error: "Ha ocurrido un error al borrar la colección."
+remove_badge_from_collection_error: "Ha ocurrido un error al remover la insignia de la colección."
+edit_is_shared_collection_error: "Ha ocurrido un error al compartir la insignia."
+edit_is_unshared_collection_error: "Ha ocurrido un error al anular la compartición de la insignia."
+see_shared_collection: "Ver las colección compartidas"
+share: "Compartir"
+shared: "Compartido"
+stop_share: "Anular la compartición"
+private: "Privado"
+page_public_look: "Así es como se verá la página al público."
+no_badge_in_collection: "No hya insignias en esta colección."
+badge_details: "Detalles de la insignia"
+collection_owned_by_user: "Del usuario %user%"
+badge_expiration_date_explanation: "Período de validez de la insignia. Si se omite, la insignia no expira nunca. La insignia no se elimina después de la fecha de vencimiento, habrá un indicador visual de que la placa ha expirado en la pantalla."
+badge_validity_period: "Período de validez de la insignia"
+start_to_award_this_badge: 'Comenzar a <a href="%url%" id="awardUser" role="button">atribuir</a> esta insignia.'
+badge_edit_create_new_version: "<strong>Advertencia!!!</strong> esta insignia ya a sido atribuida. Modificar las reglas de atribución creara una nueva versión de la insignia."
+badges_management: 'Gestión de insignias'
+my_badges: 'Mis insignias'
+last_awarded_badges: 'Sus ultimas insignias obtenidas aqui'
+ladder_awarded_badges: 'Top de las insignias del espacio'
+badge_usage_widget_form_simple_view: 'Activar la visualización simplificada'
+no_badges_obtained:  'Usted no obtuvo insignias para este espacio de trabajo'
+workspace_manage_badges: 'Gestión de las insignias del espacio de trabajo'
+list_by_user: 'Poner en una lista por usuario'
+show_all_badges: 'Mostrar todas las insignias'
+back_to_badge_list: 'Volver a la lista de insignias'
+availables_badges : 'Insignias disponibles'
+badges_per_user: Nombre de badge par utilisateurs
+top_10_most_awarded_badges: Top 10 des Badges les plus attribués
+badges_number: Nombre des badges
+user_number: Nombre des utilisateurs

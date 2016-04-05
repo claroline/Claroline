@@ -1,0 +1,4 @@
+twig:
+    form:
+        resources:
+            - 'IcapBadgeBundle:Form:badge_picker.html.twig'

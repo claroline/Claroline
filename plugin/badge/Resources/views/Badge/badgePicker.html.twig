@@ -1,0 +1,69 @@
+{% stylesheets debug=false filter='less, cssmin' output='css/icapbadge/badge_picker.css'
+  "@IcapBadgeBundle/Resources/views/less/badge.less"
+  "@IcapBadgeBundle/Resources/views/less/badge_picker.less"
+%}
+    <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+{% endstylesheets %}
+
+<div class="modal-dialog badge_picker_modal">
+    <form novalidate="novalidate" action="" id="resource-rename-form" class="modal-content">
+        <div class='modal-header'>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">{{ 'badge_selection' | trans({}, 'icap_badge') }}</h4>
+        </div>
+        <div class='modal-body'>
+            <ul class="list-inline badge_picker_list" data-multiple="{{ multiple }}">
+                {% for badge in badges %}
+                    {% set isSelected = (badge.id in value) %}
+                <li class="badge_picker_item{% if isSelected %} selected{% endif %}">
+                    <input type="checkbox" name="badge_{{ badge.id }}" value="{{ badge.id }}"
+                        {% if isSelected %} checked="checked"{% endif %} class="hidden"
+                           data-icon="{{ badge.webPath }}"
+                           data-text="{{ badge.name }}"/>
+                    <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="badge_image" />
+                    <span>{{ badge.name }}</span>
+                </li>
+                {% else %}
+                <li>{{ 'no_badge_to_select'|trans({}, 'icap_badge') }}.</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
+            <button type="submit" class="btn btn-primary submit">{{ 'select'|trans({}, 'icap_badge') }}</button>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        var modalElement = $(".badge_picker_modal");
+        var multipleSelection = $(".badge_picker_list").data('multiple');
+
+        $(".badge_picker_item").click(function (event) {
+            manageMultipleSelection(this);
+            toggleBadgeSelection(this);
+        });
+
+        function countSelectedBadge() {
+            return $("input[type=checkbox]:checked", modalElement).length;
+        }
+
+        function manageMultipleSelection(badge) {
+            if (!multipleSelection && !$(badge).hasClass('selected')) {
+                var selectedBadges = $(".badge_picker_item.selected", modalElement);
+
+                var checkboxes = $('input[type=checkbox]', modalElement);
+                checkboxes.prop('checked', false);
+
+                selectedBadges.removeClass('selected');
+            }
+        }
+
+        function toggleBadgeSelection(badge) {
+            $(badge).toggleClass('selected');
+            var checkbox = $('input[type=checkbox]', badge);
+            checkbox.prop('checked', !checkbox.prop('checked'));
+        }
+    });
+</script>

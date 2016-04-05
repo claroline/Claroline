@@ -1,0 +1,37 @@
+{% extends 'IcapBadgeBundle:Tool:Workspace/layout.html.twig' %}
+
+{% trans_default_domain "icap_badge" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'badges' | trans | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'workspace_manage_badges'|trans({}, 'icap_badge'),
+                    'href': ''
+                }
+            ]
+        )
+    }}
+{% endblock %}
+
+{% block section_title %}
+    {{ 'workspace_manage_badges'|trans({}, 'icap_badge') }}
+{% endblock %}
+
+{% block section_body %}
+    {{ render(controller('IcapBadgeBundle:Badge:list', {'parameters': parameters})) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src='{{ asset('bundles/frontend/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
+    <script type="text/javascript">
+        $(function(){
+            $('.confirm').confirmModal();
+        });
+    </script>
+{% endblock %}

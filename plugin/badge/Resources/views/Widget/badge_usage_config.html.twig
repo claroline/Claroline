@@ -1,0 +1,9 @@
+<form class="form-horizontal" action="{{ path('icap_badge_badge_usage_update_config', {'widgetInstance': instance.id}) }}" method="post" novalidate>
+    <div class="panel-body">
+        {{ form_widget(form) }}
+    </div>
+    <div class="panel-footer">
+        <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+        <a href="#" class="btn btn-default claro-widget-form-cancel">{{ 'cancel'|trans({}, 'platform') }}</a>
+    </div>
+</form>

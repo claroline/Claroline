@@ -1,0 +1,39 @@
+{% extends "IcapBadgeBundle:Administration:layout.html.twig" %}
+
+{% trans_default_domain "icap_badge" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'badges_management' | trans({}, 'icap_badge') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'badges_management'|trans({}, 'icap_badge'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_title %}
+    {{ 'badges_platform_list'|trans({}, 'icap_badge') }}
+{% endblock %}
+
+{% block section_body %}
+    {{ render(controller('IcapBadgeBundle:Badge:list', {'parameters': parameters})) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src='{{ asset('bundles/frontend/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
+    <script type="text/javascript">
+        $(function(){
+            $('.confirm').confirmModal();
+        });
+    </script>
+{% endblock %}

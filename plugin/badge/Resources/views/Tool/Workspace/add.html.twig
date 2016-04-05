@@ -1,0 +1,169 @@
+{% extends 'IcapBadgeBundle:Tool:Workspace/layout.html.twig' %}
+
+{% form_theme form 'IcapBadgeBundle:Form:rules.html.twig' %}
+
+{% trans_default_domain "icap_badge" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'add_badge' | trans | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'workspace_badges'|trans({}, 'icap_badge'),
+                    'href': path('claro_workspace_open_tool', {'workspaceId': workspace.id, 'toolName': 'badges'})
+                },
+                {
+                    'name': 'add_badge'|trans({}, 'icap_badge'),
+                    'href': ''
+                }
+            ]
+        )
+    }}
+{% endblock %}
+
+{% block section_title %}{{ 'add_badge'|trans }}{% endblock %}
+
+{% block section_body %}
+    <form role="form" action="{{ path('icap_badge_workspace_tool_badges_add', {'workspaceId': workspace.id}) }}" method="post" class="form-horizontal" {{ form_enctype(form) }} novalidate>
+        {% if not form.vars.valid %}
+            {% for error in form.vars.errors %}
+            <div class="alert alert-danger">
+                {{ error.message }}.
+            </div>
+            {% endfor %}
+        {% endif %}
+        <div class="row badges_infos">
+            <div class="col-md-2 file_upload text-center{% if not form.file.vars.valid %} has-error{% endif %}">
+                <p class="text-center">
+                    <a href="#" class="thumbnail upload_image_placeholder">
+                        <span class="fa fa-picture-o"></span><br />
+                        {{ 'badge_form_choose_image'|trans }}
+                    </a>
+                </p>
+                <div class="help-block badge_help">
+                    <span class="image_help">64px * 64px min., 256kb max.</span>
+                </div>
+
+                {{ form_widget(form.file) }}
+                {{ form_errors(form.file) }}
+            </div>
+            <div class="col-md-10">
+                <ul class="nav nav-tabs" id="translationFormTabs">
+                    {% for translation in form.translations %}
+                        {% set locale = translation.locale.vars.value %}
+                        <li{% if loop.first %} class="active"{% endif %}>
+                            <a href="#{{ locale }}" {% if not translation.vars.valid %}class="has-error" {% endif %}data-toggle="tab">
+                                {{ ('badge_form_' ~ locale ~ 'Translation')|trans }}
+                                <img src="{{ asset('bundles/clarolinecore/images/lang/' ~ locale ~ '.png') }}" alt="{{ locale }}" class="flag" />
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+
+                <div class="tab-content well well-sm badge_translations">
+                    {% for translation in form.translations %}
+                        {% set locale = translation.locale.vars.value %}
+                        <div class="tab-pane{% if loop.first %} active{% endif %}" id="{{ locale }}">
+                            {{ form_errors(translation) }}
+                            <div class="form-group{% if not translation.name.vars.valid %} has-error{% endif %}">
+                                <label class="required control-label" for="badge_form_{{ locale }}Translation_name">{{ 'badge_form_name'|trans }} :</label>
+                                {{ form_errors(translation.name) }}
+                                {{ form_widget(translation.name) }}
+                                <div class="help-block badge_help">
+                                    <span class="image_help">128 carac. max</span>
+                                </div>
+                            </div>
+                            <div class="form-group{% if not translation.description.vars.valid %} has-error{% endif %}">
+                                <label class="required control-label" for="badge_form_{{ locale }}Translation_description">{{ 'badge_form_description'|trans }} :</label>
+                                {{ form_errors(translation.description) }}
+                                {{ form_widget(translation.description) }}
+                                <div class="help-block badge_help">
+                                    <span class="image_help">128 carac. max</span>
+                                </div>
+                            </div>
+                            <div class="form-group{% if not translation.criteria.vars.valid %} has-error{% endif %}">
+                                <label class="required control-label" for="badge_form_{{ locale }}Translation_criteria">{{ 'badge_form_criteria'|trans }} :</label>
+                                {{ form_errors(translation.criteria) }}
+                                {{ form_widget(translation.criteria) }}
+                            </div>
+                            {{ form_widget(translation) }}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group is_expiring">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="checkbox">
+                                {{ form_widget(form.is_expiring) }}{{ 'badge_form_is_expiring'|trans }}
+                            </label>
+                            <button type="button" class="btn btn-default btn-xs help" data-container="body" data-toggle="popover" data-placement="right" data-content="{{ 'badge_expiration_date_explanation'|trans }}">
+                                <span class="fa fa-question"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="expiring_period_duration"{% if not badge.isExpiring %} style="display: none"{% endif %}>
+                    <div class="row">
+                        <div class="col-md-12{% if not form.expire_duration.vars.valid or not form.expire_period.vars.valid %} has-error{% endif %}">
+                            {{ form_errors(form.expire_duration) }}
+                            {{ form_errors(form.expire_period) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 form-group expiration_duration_field{% if not form.expire_duration.vars.valid %} has-error{% endif %}">
+                            {{ form_widget(form.expire_duration) }}
+                        </div>
+                        <div class="col-md-3 form-group{% if not form.expire_period.vars.valid %} has-error{% endif %}">
+                            {{ form_widget(form.expire_period) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="checkbox">
+                                {{ form_widget(form.automatic_award) }}{{ 'badge_form_automatic_award'|trans }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{ form_widget(form.rules) }}
+
+        {{ form_rest(form) }}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">{{ 'add'|trans({}, 'platform') }}</button>
+            <a href="{{ path('icap_badge_workspace_tool_badges', {'workspaceId': workspace.id}) }}"
+               title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-default" role="button">
+                {{ 'cancel'|trans({}, 'platform') }}
+            </a>
+        </div>
+
+    </form>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/frontend/select2/select2.css') }}" screen="media" />
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script type="text/javascript" src="{{ asset('bundles/zenstruckform/js/helper.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/select2/select2.min.js') }}"></script>
+{% if 'en' != app.request.locale %}
+<script type="text/javascript" src="{{ asset('bundles/frontend/select2/select2_locale_' ~ app.request.locale ~ '.js') }}"></script>
+{% endif %}
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery-option-tree/jquery.optionTree.js') }}"></script>
+<script type="text/javascript" src='{{ asset('bundles/frontend/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
+<script type="text/javascript" src='{{ asset('bundles/icapbadge/js/add.js') }}'></script>
+<script type="text/javascript" src='{{ asset('bundles/icapbadge/js/rules.js') }}'></script>
+{% endblock %}

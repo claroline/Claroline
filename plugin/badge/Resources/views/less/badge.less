@@ -1,0 +1,686 @@
+.list_badges {
+    .fa-exclamation-triangle {
+        color: orange;
+    }
+    .fa-exclamation-circle {
+        color: red;
+    }
+    .fa-check-circle {
+        color: green;
+    }
+}
+.badge_list {
+    .badge_container {
+        margin: 5px 0 0 5px;
+        .dropdown {
+            width: 150px;
+            .badge_menu_link {
+                .badge_name {
+                    display: inline-block;
+                    width: 100px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+        }
+        .thumbnail {
+            width: 150px;
+            &:hover {
+                color: #333333;
+                text-decoration: none;
+            }
+            .badge_name {
+                color: #333333;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                text-align: center;
+            }
+            .caption {
+                padding-bottom: 0;
+                .shared_options_container {
+                    margin-bottom: 0;
+                }
+            }
+        }
+        .expired {
+            position: absolute;
+            right: 5px;
+            color: red;
+            margin-top: 5px;
+            font-size: 18px;
+        }
+    }
+}
+.panel{
+    .user_badge_list {
+        .username {
+            width: 150px;
+        }
+        tbody > tr > td {
+            padding-bottom: 0;
+        }
+        .user_badge {
+            margin-bottom: 0;
+            li {
+                margin-bottom: 5px;
+                a {
+                    display: inline-block;
+                    overflow: hidden;
+                    width: 32px;
+                    height: 32px;
+                    .badge_image {
+                        left: 50%;
+                        position: relative;
+                        top:50%;
+                        max-width: none;
+                    }
+                }
+            }
+        }
+    }
+    #users.tab-pane {
+        .badge_image{left: 0; top: 0; max-width: 100%; max-height: 100%;}
+    }
+}
+.media{
+    display:block !important;
+    padding-left:0 !important;
+    padding-right: 0 !important;
+    .pull-left{
+        height: 64px;
+        overflow: hidden;
+        width: 64px;
+        .badge_image {
+            width:  auto;
+            height: auto;
+            max-width:none;
+            position:relative;
+            left:50%;
+            top: 50%;
+        }
+    }
+}
+
+.badge-info {
+    background-color: #5bc0de;
+}
+
+.nodes {
+    padding: 0;
+}
+
+.badge_image {
+    width:  100px;
+    height: 100px;
+}
+.my_badges{
+    .panel{
+        &.panel-default {
+            border-color: rgba(0, 0, 0, 0);
+            margin: 0;
+        }
+        .col-md-4{
+            width:125px;
+            .img_container{
+                height: 100px;
+                width:100px;
+                overflow: hidden;
+                display:block;
+                .badge_image_informations {
+                    left: 50%;
+                    position: relative;
+                    top:50%;
+                    max-width: none;
+                }
+            }
+        }
+    }
+}
+
+
+.badge_simple_display
+{
+    display:none;
+}
+
+.simple_display{
+    .col-md-6{
+        width:auto;
+    }
+    .badge_simple_display {
+        display:inline-block;
+        height: 128px;
+        overflow: hidden;
+        width: 128px;
+        padding: 0;
+        text-align: initial;
+        img{
+            left:50%;
+            top:50%;
+            position:relative;
+            max-width: none;
+        }
+    }
+    .simple_available_badge{
+        opacity:0.5;
+        border-radius: 4px;
+    }
+    .panel.panel-default.badge_panel.owned_badge{
+        display:none;
+    }
+    .panel.panel-default.badge_panel.available_badges{
+        display:none;
+    }
+}
+
+.widget_simple_view{
+    .media-list.list-inline {
+        display: inline-block;
+    }
+    .no_simple_view {
+        display: none !important;
+    }
+    .available_badges_simple_view {
+        opacity:0.5;
+        .badge_image {
+            cursor: auto;
+        }
+    }
+    .media{
+        margin-top: 0;
+        display:inline-block !important;
+        .media-body {
+            display: none;
+        }
+    }
+}
+
+.available_badges_simple_view{
+    display:none;
+}
+
+.list_my_badges{
+    float:left;
+}
+#badges{
+    .btn.btn-primary.btn-md {
+        margin-bottom: 25px;
+        margin-top: 25px;
+    }
+}
+
+
+.badge_management_container {
+    .collections_container {
+        padding-right: 0;
+        padding-left:  0;
+        h3 {
+            margin-top:  0;
+            margin-left: 10px;
+        }
+
+        .collections_list {
+            border-right:  1px solid #e3e3e3;
+            height:        400px;
+            overflow:      auto;
+            padding:       10px 10px 0 10px;
+
+            .collection {
+                padding: 0;
+
+                .badge_image_mini {
+                    width:  36px;
+                    height: 36px;
+                }
+                .collection_title {
+                    margin-bottom: 0;
+                    margin-top:    0;
+                    padding-top: 5px;
+                    padding-left: 5px;
+                    white-space:   nowrap;
+                    overflow:      hidden;
+                    text-overflow: ellipsis;
+                }
+                header {
+                    border-bottom: 1px solid #e3e3e3;
+                    height:        28px;
+
+                    .btn-group {
+                        .btn-primary {
+                            border-top-left-radius:    0;
+                            border-bottom-left-radius: 0;
+                        }
+                        .btn-danger {
+                            border-bottom-right-radius: 0;
+                        }
+                        .btn {
+                            padding: 4px 7px;
+                        }
+                    }
+                    .collection_title_input {
+                        width:         auto;
+                        height:        28px;
+                        padding-right: 0;
+                    }
+                }
+                .badges {
+                    margin-top:  10px;
+                    margin-left: 19px;
+
+                    .clarobadge {
+                        padding:       5px;
+                        margin-bottom: 5px;
+                        border-radius: 4px;
+
+                        &:hover {
+                            cursor: pointer;
+                        }
+                    }
+                }
+                footer {
+                    p {
+                        margin-bottom: 0;
+                    }
+                    .publish_collection {
+                        margin-left: 5px;
+                    }
+                    .share_collection {
+                        margin-right: 5px;
+                        font-size:    16px;
+                    }
+                }
+            }
+
+            .no_collection {
+                .collection_title {
+                    margin-bottom: 0;
+                }
+            }
+
+            .deleting_collection {
+                position: absolute;
+                opacity:  0.7;
+                padding:  17px;
+            }
+
+            .deleting_collection_badge {
+                border:         1px dashed grey;
+                color:          grey;
+                font-size:      20px;
+                padding-top:    10px;
+                padding-bottom: 10px;
+
+                p {
+                    margin: 0;
+                }
+
+                &.drag_hover {
+                    box-shadow: 0 0 12px #aaa inset;
+                }
+            }
+
+            .collection_state_drag_start {
+                border: 2px dashed grey;
+            }
+
+            .collection_state_hover {
+                box-shadow: 0 0 12px #aaa inset;
+            }
+        }
+    }
+    .badge_list {
+        height:        500px;
+        overflow:      auto;
+        margin-bottom: 0;
+        padding:       5px;
+    }
+}
+.widget-instance-content-body {
+    .media-body {
+        color: silver;
+        font-size:12px;
+    }
+}
+
+#globalAttrib{
+    .jqplot-donut-series.jqplot-data-label{
+        color:white;
+    }
+}
+
+
+div.alert-info {
+    overflow:    auto;
+    line-height: 30px;
+}
+
+table.badge_informations {
+    font-size: 13px;
+    tbody > tr > td {
+        border: 0;
+    }
+    td.section-head {
+        color:         #999;
+        border-bottom: 1px solid #ccc;
+        line-height:   1.5em;
+        padding-left:  0;
+    }
+    .fieldLabelCol {
+        width: 170px;
+    }
+}
+
+.view_badge {
+    .view {
+        padding-top: 25px;
+    }
+
+    .award_users_container {
+        .badge_not_awarded {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+    }
+}
+
+.panel-body
+{
+    p{
+        margin:0;
+    }
+    h3{
+        margin-top:0;
+    }
+    .criteria{
+        color:silver;
+    }
+    .award_text{
+        color:green;
+    }
+}
+
+.my_badges {
+    .badge_panel {
+        border-radius: 0px;
+        .panel-heading {
+            background-color: white;
+        }
+
+        &.owned_badge {
+            border-color: #4cae4c;
+            border-width: 1px;
+            .panel-heading {
+                border-color: #4cae4c;
+                border-width: 1px;
+            }
+            .award_text {
+                font-size: 1.20em;
+                color: #4cae4c;
+            }
+        }
+        &.available_badges {
+            background-color: #f5f5f5;
+            .panel-heading {
+                background-color: #f5f5f5;
+                .finished {
+                    color: white;
+                }
+                .claimed {
+                    color: #428bca;
+                }
+            }
+            h3{
+                a {
+                    color: darkgrey;
+                }
+            }
+            .badge_image_informations {
+                filter: grayscale(90%); /* Standard CSS */
+                -webkit-filter: grayscale(90%); /* CSS for Webkit Browsers */
+                transition: filter 0.5s;
+                -webkit-transition: filter 0.5s; /* Safari */
+            }
+            .badge_image_informations:hover {
+                filter: grayscale(50%); /* Standard CSS */
+                -webkit-filter: grayscale(50%); /* CSS for Webkit Browsers */
+            }
+
+        }
+    }
+}
+
+/**** Form style ****/
+.badges_infos {
+    .form-group {
+        margin-left:   0;
+        margin-bottom: 5px;
+        .row {
+            margin-bottom: 5px;
+        }
+    }
+    #change_image {
+        position: absolute;
+        top:      95px;
+        left:     0;
+        width:    100%;
+    }
+    #current_image {
+        background-color: #f5f5f5;
+    }
+    .file_upload {
+        position: relative;
+        overflow: hidden;
+
+        input[type=file] {
+            position: absolute;
+            top:      128px;
+            right:    0;
+            cursor:   pointer;
+            opacity:  0;
+            filter:   alpha(opacity=0);
+        }
+
+        .upload_image_placeholder {
+            padding-top: 30px;
+        }
+
+        &.has-error {
+            .upload_image_placeholder {
+                border-color: #953b39;
+            }
+        }
+    }
+    .is_expiring {
+        label {
+            float:       left;
+            padding-top: 0;
+        }
+        .badge_help {
+            margin: 0;
+            .image_help {
+                font-size: 10px;
+            }
+        }
+        button.help {
+            border-radius: 10px;
+        }
+    }
+}
+.thumbnail {
+    padding-top: 15px;
+}
+
+.thumbnail_dropdown {
+    padding-top: 25px;
+}
+
+#translationFormTabs {
+    margin-bottom: 0;
+    border-bottom: 0;
+    &> li > a {
+        &.has-error {
+            background-color: #FDDCDC;
+            &:hover {
+                border-color: #b94a48 #b94a48 transparent;
+                background-color: #FACACA;
+            }
+        }
+    }
+    &> li.active > a {
+        background-color: #f5f5f5;
+        &:hover {
+            background-color: #f5f5f5;
+        }
+        &.has-error {
+            border-color: #b94a48 #b94a48 transparent;
+            background-color: #FDDCDC;
+        }
+    }
+}
+
+.badge_translations {
+    border-top:             0;
+    padding-right:          32px;
+    border-top-left-radius: 0;
+}
+
+#award_user_modal {
+    min-width: 650px;
+
+    .modal-body {
+        max-height: 500px;
+    }
+}
+
+.users_container {
+    max-height: 400px;
+    overflow: auto;
+}
+
+ul.user_badges {
+    & > li {
+        padding: 0;
+
+        a:hover {
+            &> span {
+                background-color: #333333;
+            }
+        }
+
+        &:hover {
+            .close {
+                visibility: visible;
+            }
+        }
+
+        .close {
+            visibility: hidden;
+            margin-top: -10px;
+        }
+    }
+}
+
+#award_form_container {
+    display: none;
+    .award_comment {
+        margin-top: 20px;
+    }
+}
+
+.flag {
+    margin-left: 10px;
+}
+
+.form-actions {
+    clear: both;
+    text-align: center;
+    padding: 19px 20px 20px;
+}
+
+.badge_body.panel-body {
+    padding-left: 10px;
+}
+
+table.no_margin {
+    margin: 0;
+}
+
+form{
+    .row {
+        margin-left:  0;
+        margin-right: 0;
+    }
+}
+
+.badges_rules {
+    .rules {
+        border:           1px solid #ddd;
+        padding-top:      15px;
+        padding-bottom:   15px;
+        background-color: #f5f5f5;
+        select {
+            display: inline-block;
+        }
+    }
+    .nav-tabs {
+        #add_rule a {
+            cursor: pointer;
+        }
+        border-bottom: 0;
+        & > li > a {
+            margin-right:       0;
+            border-radius:      4px 0 0 0;
+            border-bottom:      0;
+        }
+        & > li.active {
+            & > a, & > a:hover, & > a:focus {
+                border-right-color: transparent;
+                border-bottom:      1px solid #dddddd;
+                background-color:   #f5f5f5;
+                margin-right:       -1px;
+                z-index:            1;
+            }
+        }
+    }
+    .nav-stacked {
+        padding-right: 0;
+        & > li + li {
+            margin-top: 0;
+        }
+    }
+    .rules {
+        .row {
+            padding-left:  15px;
+            margin-bottom: 10px;
+        }
+    }
+}
+
+.badge_infos {
+    .alert {
+        margin-top: 20px;
+    }
+}
+
+.fullwidth {
+    width: 100%;
+}
+
+/*** Statistics pages style ***/
+.badge_general_statistics {
+    padding: 40px;
+    li {
+        border:        1px solid #357ebd;
+        border-radius: 4px;
+        padding:       20px;
+        text-align:    center;
+        margin-right:  20px;
+        span {
+            color:       #3071a9;
+            display:     block;
+            font-weight: bold;
+        }
+    }
+}

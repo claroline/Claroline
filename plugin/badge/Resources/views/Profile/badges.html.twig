@@ -1,0 +1,271 @@
+{% extends "IcapBadgeBundle::layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'my_badges' | trans({}, 'icap_badge') | striptags | raw }}{% endblock %}
+
+{% trans_default_domain "icap_badge" %}
+
+{% block content %}
+    {{ macros.flashBox() }}
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h1 class="panel-title">
+                {{ 'my_badges'|trans({}, 'icap_badge') }}
+                <a href="{{ path('icap_badge_claim_badge') }}" class="btn btn-default btn-xs" role="button">{{ 'claim_badge'|trans }}</a>
+            </h1>
+        </div>
+        <div class="panel-body">
+            {% if 0 < badgeClaims|length %}
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" href="#claimedBadges">
+                            {{ 'badge_current_claimed_badges'|transchoice(badgeClaims|length, {'%claimedBadgeCount%': badgeClaims|length}) }}
+                        </a>
+                    </div>
+                    <div id="claimedBadges" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="list-group">
+                                {% for badgeClaim in badgeClaims %}
+                                    <li class="list-group-item">
+                                        <a href="{{ path('icap_badge_view_badge', {'slug': badgeClaim.badge.slug}) }}"
+                                           title="{{ badgeClaim.badge.name }}">{{ badgeClaim.badge.name }}</a>
+                                        {{ badgeClaim.claimedAt|date('date_format'|trans({}, 'platform')) }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="badge_management_container">
+                <div class="col-md-3 collections_container">
+                    <h3>
+                        {{ 'my_collections'|trans }}<br/>
+                        <small>{{ 'organize_badges_the_way_you_want'|trans }}</small>
+
+                    </h3>
+                    <hr/>
+                    <div class="text-center">
+                        <button type="button" class="btn btn-xs btn-success" id="add_collection"
+                                data-loading-text="{{ 'add_collection_in_progress'|trans }}">{{ 'add_collection'|trans }}</button>
+                    </div>
+                    {% set loadingState = '<span class="fa fa-spinner fa-pulse"></span>' %}
+                    {% set sharedState = '<span class="fa fa-unlock-alt publish_collection"></span> ' ~ 'shared'|trans %}
+                    {% set privateState = '<span class="fa fa-lock publish_collection"></span> ' ~ 'private'|trans %}
+                    {% set collectionTemplate = '<li class="collection well editing" data-id="__collectionId__" style="display: none">
+                            <header>
+                                <div class="btn-group btn-group-xs pull-right">
+                                    <button type="button" class="btn btn-success btn-edit" data-loading-text="..."
+                                            data-toggle="tooltip" data-placement="top" data-container="body"
+                                            data-title="' ~ 'edit'|trans({}, 'platform') ~ '">
+                                        <span class="fa fa-pencil"></span>
+                                            </button>
+                                    <button type="button" class="btn btn-danger btn-delete" data-toggle="tooltip"
+                                            data-placement="top" data-container="body"
+                                            data-title="' ~ 'delete'|trans({}, 'platform') ~ '"
+                                            data-confirm-title="' ~ 'badge_collection_delete_confirm_title'|trans ~ '"
+                                            data-confirm-message="' ~ 'badge_collection_delete_confirm_message'|trans ~ '"
+                                            data-confirm-ok="' ~ 'delete'|trans({}, 'platform') ~ '"
+                                            data-confirm-cancel="' ~ 'cancel'|trans({}, 'platform') ~ '"
+                                            data-confirm-style="danger" style="display: none">
+                                        <span class="fa fa-trash-o"></span>
+                                    </button>
+                                    <button type="button" class="btn btn-default btn-edit-cancel" data-toggle="tooltip"
+                                            data-placement="top" data-container="body"
+                                            data-title="' ~ 'cancel'|trans({}, 'platform') ~ '">
+                                        <span class="fa fa-times"></span>
+                                    </button>
+                                </div>
+                                <h4 class="collection_title" style="display: none">' ~ 'collection_name'|trans ~ '</h4>
+                                <input type="text" class="form-control collection_title_input" name="badge_collection_form[name]" value="' ~ 'collection_name'|trans ~ '" />
+                            </header>
+                            <ul class="list-inline badges">
+                                <li class="loading_badge" style="display: none"><img src="' ~ asset('bundles/clarolinecore/images/loading.gif') ~ '" alt="Loading" /></li>
+                                <li class="no_badge">' ~ 'no_badges'|trans ~ '</li>
+                            </ul>
+                            <footer>
+                                <div class="dropdown">
+                                    <a href="" title="' ~ 'see_shared_collection'|trans ~ '" data-title="' ~ 'see_shared_collection'|trans ~ '"
+                                        data-toggle="tooltip" data-placement="top" data-container="body"
+                                        class="pull-right share_collection" style="display: none">
+                                            <span class="fa fa-share"></span>
+                                    </a>
+                                    <a data-toggle="dropdown" href="#" title="' ~ 'private'|trans ~ '"
+                                        data-title="' ~ 'private'|trans ~ '" data-toggle="tooltip"
+                                        data-placement="top" data-container="body"  class="shared_toggle"
+                                        data-loading-state="' ~ loadingState|escape ~ '" data-shared-state="' ~ sharedState|escape ~ '" data-private-state="' ~ privateState|escape ~ '">
+                                            ' ~ privateState|raw ~ '
+                                    </a>
+                                    <ul class="dropdown-menu shared_options" role="menu">
+                                        <li role="presentation" class="active">
+                                            <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="shared_option" data-value="0"><span class="fa fa-lock publish_collection"></span> ' ~ 'stop_share'|trans ~ '</a>
+                                        </li>
+                                        <li role="presentation">
+                                            <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="shared_option" data-value="1"><span class="fa fa-unlock publish_collection"></span> ' ~ 'share'|trans ~ '</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </footer>
+                        </li>' %}
+                    {% set deleteCollectionBadgeTemplate = '<li class="deleting_collection_badge well" id="deleting_collection_badge"><p class="text-center"><span class="fa fa-trash-o"></span><img src="' ~ asset('bundles/clarolinecore/images/loading.gif') ~ '" alt="Loading" style="display: none"/></p></li>' %}
+                    <ul class="list-unstyled collections_list" id="collections_list"
+                        data-collection-template="{{ collectionTemplate }}"
+                        data-delete-collection-badge-template="{{ deleteCollectionBadgeTemplate }}"
+                        data-action-url="{{ path('icap_badge_badge_collection_add') }}">
+                        {% for collection in badgeCollections %}
+                            <li class="collection well" data-id="{{ collection.id }}">
+                                <header>
+                                    <div class="btn-group btn-group-xs pull-right">
+                                        <button type="button" class="btn btn-primary btn-edit" data-loading-text="..."
+                                                data-toggle="tooltip" data-placement="top" data-container="body"
+                                                data-title="{{ 'edit'|trans({}, 'platform') }}">
+                                            <span class="fa fa-pencil"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-delete" data-toggle="tooltip"
+                                                data-placement="top" data-container="body"
+                                                data-title="{{ 'delete'|trans({}, 'platform') }}"
+                                                data-confirm-title="{{ 'badge_collection_delete_confirm_title'|trans }}"
+                                                data-confirm-message="{{ 'badge_collection_delete_confirm_message'|trans }}"
+                                                data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}"
+                                                data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"
+                                                data-confirm-style="danger">
+                                            <span class="fa fa-trash-o"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-edit-cancel" data-toggle="tooltip"
+                                                data-placement="top" data-container="body"
+                                                data-title="{{ 'cancel'|trans({}, 'platform') }}" style="display: none">
+                                            <span class="fa fa-times"></span>
+                                        </button>
+                                    </div>
+                                    <h4 class="collection_title">{{ collection.name }}</h4>
+                                    <input type="text" class="form-control collection_title_input" style="display: none" name="badge_collection_form[name]" value="{{ collection.name }}"/>
+                                </header>
+                                <ul class="list-inline badges">
+                                    {% for userBadge in collection.userBadges %}
+                                        {% set badge = userBadge.badge %}
+                                        <li class="clarobadge" data-id="{{ badge.id }}" data-collection-id="{{ collection.id }}"><img class="badge_image_mini" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" /></li>
+                                    {% endfor %}
+                                    <li class="loading_badge" style="display: none"><img src="{{ asset('bundles/clarolinecore/images/loading.gif') }}" alt="Loading" /></li>
+                                    <li class="no_badge"{% if 0 < collection.userBadges|length %} style="display: none"{% endif %}>{{ 'no_badges'|trans }}</li>
+                                </ul>
+                                <footer>
+                                    <div class="dropdown">
+                                        {% set isCollectionShared = collection.isShared %}
+
+                                        <a href="{{ path('icap_badge_badge_collection_share_view', {'slug': collection.slug}) }}"
+                                           title="{{ 'see_shared_collection'|trans }}" data-title="{{ 'see_shared_collection'|trans }}"
+                                           data-toggle="tooltip" data-placement="top" data-container="body"
+                                           class="pull-right share_collection"{% if false == isCollectionShared %} style="display: none"{% endif %}>
+                                            <span class="fa fa-share"></span>
+                                        </a>
+                                        <a data-toggle="dropdown" href="#" title="{% if isCollectionShared %}{{ 'shared'|trans }}{% else %}{{ 'private'|trans }}{% endif %}"
+                                           data-title="{% if isCollectionShared %}{{ 'shared'|trans }}{% else %}{{ 'private'|trans }}{% endif %}" data-toggle="tooltip"
+                                           data-placement="top" data-container="body" class="shared_toggle"
+                                           data-loading-state="{{ loadingState }}" data-shared-state="{{ sharedState }}" data-private-state="{{ privateState }}">
+                                            {% if isCollectionShared %}
+                                                {{ sharedState|raw }}
+                                            {% else %}
+                                                {{ privateState|raw }}
+                                            {% endif %}
+                                        </a>
+                                        <ul class="dropdown-menu shared_options" role="menu">
+                                            <li role="presentation" class="{% if false == isCollectionShared %} active{% endif %}">
+                                                <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="shared_option" data-value="0"><span class="fa fa-lock publish_collection"></span> {{ 'stop_share'|trans }}</a>
+                                            </li>
+                                            <li role="presentation" class="{% if isCollectionShared %} active{% endif %}">
+                                                <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="shared_option" data-value="1"><span class="fa fa-unlock publish_collection"></span> {{ 'share'|trans }}</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </footer>
+                            </li>
+                        {% endfor %}
+                        <li class="no_collection well"{% if 0 < badgeCollections|length %} style="display: none"{% endif %} id="no_collection">
+                            <p class="collection_title text-center">{{ 'no_collection'|trans }}</p>
+                        </li>
+                        <li class="deleting_collection well" id="deleting_collection" style="display: none">
+                            <p class="text-center"><img src="{{ asset('bundles/clarolinecore/images/loading.gif') }}" alt="Loading" /></p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-9">
+                    <div class="alert alert-danger" id="error_container" style="display: none">
+                        <button type="button" class="close" aria-hidden="true">&times;</button>
+                        <p></p>
+                    </div>
+                    <ul class="nodes badge_list list-unstyled well" id="badge_list" data-action-url="{{ path('icap_badge_user_badge_edit') }}">
+                        {% set badgeLoadingState = '<span class="fa fa-spinner fa-pulse"></span>' %}
+                        {% set badgeSharedState = '<span class="fa fa-unlock-alt publish_badge"></span> ' ~ 'badge-shared'|trans %}
+                        {% set bagdePrivateState = '<span class="fa fa-lock publish_badge"></span> ' ~ 'badge-private'|trans %}
+                        {% for userBadge in userBadges %}
+                            {% set badge = userBadge.badge %}
+                            {% set dataImage = '<img class="badge_image_mini" src="' ~ asset(badge.webPath) ~ '" alt="' ~ badge.name ~ '" />' %}
+                            <li class="node-thumbnail badge_container" data-image="{{ dataImage }}" data-id="{{ userBadge.id }}">
+                                {% if userBadge.isExpired %}
+                                    <span class="expired fa fa-exclamation-circle" data-title="Badge expiré"
+                                           data-toggle="tooltip" data-placement="top" data-container="body"></span>
+                                {% endif %}
+                                {% set isBadgeShared = userBadge.isIsShared %}
+                                <div class="thumbnail">
+                                    <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}"/>
+                                    <div class="caption">
+                                        <p class="badge_name">
+                                            <a href="{{ path('icap_badge_profile_view_badge', {'slug': badge.slug}) }}" title="{{ badge.name }}">
+                                                {{ badge.name }}
+                                            </a>
+                                        </p>
+                                        <div class="shared_options_container">
+                                            <a href="{{ path('icap_badge_badge_share_view', {'username': userBadge.user.username, 'badgeSlug': badge.slug}) }}"
+                                               title="{{ 'see_shared_badge'|trans }}" data-title="{{ 'see_shared_badge'|trans }}"
+                                               data-toggle="tooltip" data-placement="top" data-container="body"
+                                               class="pull-right share_badge"{% if false == isBadgeShared %} style="display: none"{% endif %}>
+                                                <span class="fa fa-share"></span>
+                                            </a>
+                                            <a data-toggle="dropdown" href="#" data-target="#" class="shared_toggle"
+                                               title="{% if isBadgeShared %}{{ 'badge-shared'|trans }}{% else %}{{ 'badge-private'|trans }}{% endif %}"
+                                               data-loading-state="{{ badgeLoadingState }}" data-shared-state="{{ badgeSharedState }}"
+                                               data-private-state="{{ bagdePrivateState }}">
+                                                {% if isBadgeShared %}
+                                                    {{ badgeSharedState|raw }}
+                                                {% else %}
+                                                    {{ bagdePrivateState|raw }}
+                                                {% endif %}
+                                            </a>
+                                            <ul class="dropdown-menu shared_options" role="menu">
+                                                <li role="presentation" class="{% if false == isBadgeShared %} active{% endif %}">
+                                                    <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="shared_option" data-value="0">
+                                                        <span class="fa fa-lock publish_badge"></span> {{ 'stop_share'|trans }}
+                                                    </a>
+                                                </li>
+                                                <li role="presentation" class="{% if isBadgeShared %} active{% endif %}">
+                                                    <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="shared_option" data-value="1">
+                                                        <span class="fa fa-unlock publish_badge"></span> {{ 'share'|trans }}
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        {% else %}
+                            <li>{{ 'no_badges'|trans({}, 'icap_badge') }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_badge' }) }}"></script>
+    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery-ui/ui/minified/effect.min.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery-ui/ui/minified/effect-highlight.min.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery-ui/ui/minified/droppable.min.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery-ui/ui/minified/draggable.min.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/frontend/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/icapbadge/js/profile.js') }}'></script>
+{% endblock %}
+

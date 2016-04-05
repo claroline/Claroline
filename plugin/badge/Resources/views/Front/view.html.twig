@@ -1,0 +1,61 @@
+{% extends "IcapBadgeBundle::layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ badge.name | striptags | raw }}{% endblock %}
+
+{% trans_default_domain "icap_badge" %}
+
+{% block content %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                {{ 'badge'|trans }} "{{ badge.name }}"
+            </h3>
+        </div>
+        <div class="panel-body">
+            <a href="{{ path('claro_workspace_open', {'workspaceId': badge.workspace.getId(), 'toolName': 'home'}) }}" class="btn btn-default btn-md btn-back" role="button"><i class="fa fa-reply"></i>
+                {{ 'back_to_badge_list'|trans({}, 'icap_badge') }}</a>
+            <div class="row">
+                <div class="col-md-2 text-center">
+                    <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="media-object pull-left badge_image_informations" />
+                </div>
+                <div class="col-md-7">
+                    <div class="table-responsive">
+                        <table class="badge_informations table table-condensed">
+                            <colgroup>
+                                <col class="fieldLabelCol">
+                                <col class="dataCol">
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                  <td class="section-head text-muted" colspan="2"> {{ 'badge_details'|trans }}</td>
+                                </tr>
+                                <tr>
+                                  <td class="fieldlabel">{{ 'badge_form_name'|trans }}</td>
+                                  <td>{{ badge.name }}</td>
+                                </tr>
+                                <tr>
+                                  <td class="fieldlabel">{{ 'badge_version'|trans }}</td>
+                                  <td>{{ badge.version }}</td>
+                                </tr>
+                                {% if badge.isExpiring %}
+                                <tr>
+                                  <td class="fieldlabel">{{ 'badge_validity_period'|trans }}</td>
+                                    <td>{{ badge.expireDuration ~ ' ' ~ badge.expirePeriodLabel|trans }}</td>
+                                </tr>
+                                {% endif %}
+                                <tr>
+                                  <td class="fieldlabel">{{ 'badge_form_description'|trans }}</td>
+                                  <td>{{ badge.description }}</td>
+                                </tr>
+                                <tr>
+                                  <td class="fieldlabel">{{ 'badge_form_criteria'|trans }}</td>
+                                  <td>{{ badge.criteria|raw }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

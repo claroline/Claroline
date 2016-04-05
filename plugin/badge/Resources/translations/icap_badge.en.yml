@@ -1,0 +1,197 @@
+actions: Actions
+actions_lead_to_badge_awarding: 'Actions that lead to badge awarding'
+add_badge: 'Add a badge'
+add_badge_to_collection_error: 'An error occured while adding the badge to the collection.'
+add_collection: 'Add a collection'
+add_collection_error: 'An error occured while adding a collection.'
+add_collection_in_progress: 'Adding a collection in progress...'
+add_rule: 'Add a rule'
+award: Award
+award_badge: 'Award the badge'
+back_to_badges_list: 'Back to badges list'
+back_to_my_badges: 'Back to my badges'
+back_to_users_badge: 'Back to users list'
+badge: Badge
+badge_add_error_message: 'An error occured while adding new badge.'
+badge_add_success_message: 'Badge added with success.'
+badge_already_award_info_message: 'Pointless validation of badge awarding, user already owns this badge.'
+badge_already_award_message: 'You can''t claim a badge that you already own.'
+badge_already_claim_message: 'You already made a claim for this badge.'
+badge_award_confirm_message: 'Are you sure you want to award badge <strong>%badgeName%</strong> to user <strong>%user%</strong> ?'
+badge_award_confirm_title: 'Validation of badge awarding'
+badge_award_error_message: 'An error occured while awarding badge.'
+badge_award_form_group: Group
+badge_award_form_group_choose: 'Choose a group'
+badge_award_form_user: User
+badge_award_form_user_choose: 'Choose a user'
+badge_award_info_no_group_message: 'No selected group for attribution'
+badge_awarded_automatically_on: 'Badge automatically awarded on %awardingDate%'
+badge_awarded_count_message: '%awaredBadge% badge awarding made with success.|%awaredBadge% badge awardings made with success.'
+badge_awarded_on_by: 'Badge awarded on %awardingDate% by %awardingIssuer%'
+badge_awarded_on: 'Badge awarded on %awardingDate%'
+badge_awarded_to: 'Badge awarded to'
+badge_awarded_to_full: 'Awarded to <a href="%userUrl%" title="%user%">%user%</a> by <a href="%issuerUrl%" title="%issuer%">%issuer%</a>'
+badge_awarded_to_full_platform: 'Awarded to <a href="%userUrl%" title="%user%">%user%</a> by %systemName%'
+badge_awarding_rules_not_respected: 'Badge awarding rules not followed'
+badge_awarding_some_rules_respected: '%nbvalidRules% badge awarding rules respected in %nbRules%'
+badge_awarding_in_progress: 'In progress'
+badge_check_state: 'Validation state'
+badge_claim_error_message: 'An error occured while claiming a badge.'
+badge_claim_form_badge: 'Name of the claiming badge'
+badge_claim_success_message: 'Badge claimed with success.'
+badge_claim_nothing_selected_warning_message: 'No badge selected for claiming badge.'
+badge_collection_delete_confirm_message: 'Are you sure you want to delete this collection ?'
+badge_collection_delete_confirm_title: 'Deletion of a collection'
+badge_current_claimed_badges: '%claimedBadgeCount% claim for badge|%claimedBadgeCount% claims for badge'
+badge_current_claimed_badges_manage: '%claimedBadgeCount% pending claim for badge|%claimedBadgeCount% pending claims for badge'
+badge_delete_confirm_message: 'Are you sure you want to delete badge <strong>%badgeName%</strong> ?'
+badge_delete_confirm_title: 'Delete of a badge'
+badge_delete_error_message: 'An error occured while deleting badge.'
+badge_delete_success_message: 'Badge deleted with success.'
+badge_details: 'Badge details'
+badge_dont_award_confirm_message: 'Are you sure you don''t want to award badge <strong>%badgeName%</strong> to the user <strong>%user%</strong> ?'
+badge_dont_award_confirm_title: 'Rejection of badge awarding'
+badge_edit_confirm_message: 'Are you sure you want to edit the badge <strong>%badgeName%</strong> ?'
+badge_edit_confirm_title: 'Edition of a badge'
+badge_edit_create_new_version: '<strong>Warning!!!</strong> This badge has already been awarded. Editing its awarding rules will make a new version of this badge created.'
+badge_edit_error_message: 'An error occured while editing badge.'
+badge_edit_success_message: 'Badge edited with success.'
+badge_expired_on_date: 'Has expired the %expirationDate%'
+badge_valid_for_period: "Valid %validityPeriod%"
+badge_form_advance_options: 'Advance options'
+badge_form_automatic_award: 'Automatic awarding, if rules are respected'
+badge_form_awarding_on_result_action: 'When action''s result is'
+badge_form_awarding_on_result_action_to: to
+badge_form_badge: 'When the action is a badge awarding'
+badge_form_badge_help: 'If compatible with the action'
+badge_form_badge_selection: 'Select the badge'
+badge_form_resource: "On the resource"
+badge_form_resource_selection: 'Select the resource'
+badge_form_change_image: 'Change badge image'
+badge_form_choose_image: 'Choose badge image'
+badge_form_criteria: 'Earning criteria'
+badge_form_description: Description
+badge_form_enTranslation: 'English translation'
+badge_form_esTranslation: 'Spanish translation'
+badge_form_execute: 'User validate the rule following executing an action on'
+badge_form_execute_times: 'When he executed the action'
+badge_form_frTranslation: 'French translation'
+badge_form_image: Image
+badge_form_is_expiring: 'Does the badge has a period of validity ?'
+badge_form_name: Name
+badge_form_resource: 'On the resource'
+badge_form_resource_selection: 'Select the resource'
+badge_form_rules: 'Awarding rules'
+badge_form_times: times
+badge_form_user_target_of_action: 'User is the target of the action'
+badge_version: Version
+badge_no_rules_check_manually: 'No rules, check manually'
+badge_reject_award: 'Reject badge awarding'
+badge_reject_award_error_message: 'An error occured while rejecting badge awarding.'
+badge_reject_award_short: Reject
+badge_reject_award_success_message: 'Reject of badge awarding done with success.'
+badge_rule_delete_confirm_message: 'Are you sure you want to delete the rule ?'
+badge_rule_delete_confirm_title: 'Delete a rule'
+badge_rules_not_respected: 'Rules not followed'
+badge_rules_respected: 'Rules followed'
+badge_rules_respected_state: 'Page currently unavailable'
+badge_unaward_confirm_message: 'Are you sure you want to remove the badge <strong>%badgeName%</strong> from <strong>%user%</strong>?'
+badge_unaward_confirm_title: 'Remove a badge'
+badge_unaward_error_message: 'An error occured while removing awarded badge.'
+badge_unaward_success_message: 'Badge awarded remove with success.'
+badge_valid_for_period: 'Valid %validityPeriod%'
+badge_validate_award: 'Validate badge awarding'
+badge_validate_award_error_message: 'An error occured while validating badge awarding.'
+badge_validate_award_short: Validate
+badge_validate_award_success_message: 'Validation of badge awarding made with success.'
+badge_validity_period: 'Validity period of the badge'
+badge_version: Version
+badges: Badges
+badges_platform_list: 'Platform badges'
+claim: Claim
+claim_badge: 'Claim a badge'
+claim_badge_form: 'Claim badge form'
+claim_date: 'Claim date'
+claiming: Claim|Claimings
+collection_name: 'Collection name'
+collection_owned_by_user: 'From user %user%'
+day: day
+delete_collection_error: 'An error occured while deleting the collection.'
+dont_award: 'Don''t award'
+edit_badge: 'Edition of the badge ''%badge_name%'''
+edit_is_shared_collection_error: 'An error occured while sharing the collection.'
+edit_is_unshared_collection_error: 'An error occured while unsharing the collection.'
+edit_title_collection_error: 'An error occured while editing title''s collection.'
+month: month
+my_badges: 'My badges'
+my_collections: 'My collections'
+my_workspace_badges: 'Workspace badges'
+no_badge_claim: 'No claim for badge.'
+no_badge_in_collection: 'There is no badge in this collection.'
+no_badges: 'No badge.'
+no_badges_create_to_motivate: 'No badge currently, you can <a href="%url%">create</a> some to motivate you user.'
+no_collection: 'No collection.'
+no_rule: 'No rule'
+organize_badges_the_way_you_want: 'Organize badges the way you want'
+page_public_look: 'This is how your page will look to the public.'
+private: Private
+remove_badge_from_collection_error: 'An error occured while removing the badge from the collection.'
+rule: Rule
+rule_details: 'Rule details'
+see_shared_collection: 'See shared collection'
+see_shared_badge: "See shared badge"
+share: "Share"
+shared: "Shared"
+start_to_award_this_badge: 'Start to <a href="%url%" id="awardUser" role="button">award</a> this badge.'
+stop_share: 'Don''t share anymore'
+unaward: 'Remove award'
+view_badge: 'Badge ''%badge_name%'''
+week: week
+workspace_badges: 'Workspace badges'
+year: year
+page_public_look: "This is how the public will see your page."
+no_badge_in_collection: "There are no badges in this collection."
+badge_details: "Badge details"
+collection_owned_by_user: "From user %user%"
+badge_expiration_date_explanation: "Validity period of the badge. If omitted, the badge will never expire. The badge is not removed after the expiration date but a visual indicator that the badge has expired is displayed."
+badge_validity_period: "Validity period of the badge"
+badge_edit_create_new_version: "<strong>Warning!!!</strong> This badge has already been awarded. Editing its awarding rules will create a new version of this badge."
+consult_my_badge_details: 'View my details badge'
+badge_award_form_comment: 'Comment'
+comment: 'Comment'
+badge_statistics: 'Badge statistics'
+workspace_badges_statistics: 'Workspace badge statistics'
+badges_platform_statistics: 'Platform badge statistics'
+awarded_badges: 'Awarded badges'
+badge_usage_widget_form_number_last_awarded_badge: 'Awarded badge to display'
+badge_usage_widget_form_number_most_awarded_badge: 'Badges to display in the ladder'
+badge_usage_widget_form_simple_view: 'Activate the simplified display'
+last_awarded_badges: 'Last awarded badges'
+ladder_awarded_badges: 'Awarded badges ladder'
+badge_awarded_nb_times: 'Awarded %nbTimes% times'
+badge_awarding_finished: 'Rules respected, claim the badge'
+badge_claimed: 'Badge claimed'
+browse_badges: 'Browse badges'
+select_badge: 'Select a badge'
+select_badges: 'Select one or several badges'
+badge_selection : 'Badge selection'
+select: 'Select'
+no_badge_to_select: 'No badge to select'
+count_selected_badge: '%nbBadge% selected badge|%nbBadge% selecrted badges'
+badges_management: 'Badges management'
+badge_awarding_date: 'Badge awarding date'
+total_awarding: 'awarding|awarding'
+total_awarded_badge: 'awarded badge|awarded badges'
+total_not_awarded_badge: 'not awarded badge|not awarded badges'
+badge-shared: "Shared"
+badge-private: "Private"
+no_badges_obtained:  'You did not obtain badge for this workspace'
+workspace_manage_badges: 'Management of the badges of the workspace'
+list_by_user: 'list by user'
+show_all_badges: 'Show all the badges'
+back_to_badge_list: 'Back to the list of badges'
+availables_badges: 'Availables badges'
+badges_per_user: Badges number by number of users
+top_10_most_awarded_badges: Top 10 of most awarded badges
+badges_number: Badges number
+user_number: Users number

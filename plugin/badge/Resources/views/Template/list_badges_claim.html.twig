@@ -1,0 +1,80 @@
+{% if 0 < claimPager|length %}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <a class="accordion-toggle" data-toggle="collapse" href="#claimedBadges">
+                {{ 'badge_current_claimed_badges_manage'|transchoice(claimPager|length, {'%claimedBadgeCount%': claimPager|length}, 'icap_badge') }}
+            </a>
+        </div>
+        <div id="claimedBadges" class="panel-collapse collapse">
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table no_margin claim_list">
+                        <thead>
+                            <th>{{ 'badge'|trans({}, 'icap_badge') }}</th>
+                            <th>{{ 'user'|trans({}, 'platform') }}</th>
+                            <th>{{ 'claim_date'|trans({}, 'icap_badge') }}</th>
+                            <th>{{ 'badge_check_state'|trans({}, 'icap_badge') }}</th>
+                            <th>{{ 'actions'|trans({}, 'icap_badge') }}</th>
+                        </thead>
+                        <tbody>
+                        {% for badgeClaim in claimPager %}
+                            <tr>
+                                <td><a href="{{ path('icap_badge_view_badge', {'slug': badgeClaim.badge.slug}) }}" title="{{ badgeClaim.badge.name }}">{{ badgeClaim.badge.name }}</a></td>
+                                <td><a href="{{ path('claro_public_profile_view', {'publicUrl': badgeClaim.user.publicUrl}) }}" title="{{ badgeClaim.user.firstname }} {{ badgeClaim.user.lastname }}">{{ badgeClaim.user.firstname }} {{ badgeClaim.user.lastname }}</a></td>
+                                <td>{{ badgeClaim.claimedAt|date('date_format'|trans({}, 'platform')) }}</td>
+                                <td>
+                                    {% if (badgeClaim.badge.hasRules) %}
+                                        {% if false == badgeRuleChecker.validate(badgeClaim.badge, badgeClaim.user) %}
+                                        <span class="fa fa-exclamation-circle" data-toggle="tooltip" title="{{ 'badge_rules_not_respected'|trans({}, 'icap_badge') }}"></span>
+                                        {% else %}
+                                        <span class="fa fa-check-circle" data-toggle="tooltip" title="{{ 'badge_rules_respected'|trans({}, 'icap_badge') }}"></span>
+                                        {% endif %}
+                                        (<span class="text-muted" data-toggle="tooltip" title="{{ 'badge_rules_respected_state'|trans({}, 'icap_badge') }}">détails</span>)
+                                    {% else %}
+                                        <span class="fa fa-exclamation-triangle" data-toggle="tooltip" title="{{ 'badge_no_rules_check_manually'|trans({}, 'icap_badge') }}"></span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a href="{{ path(parameters.claim_link, {'id': badgeClaim.id, 'validate': true}|merge(parameters.route_parameters)) }}" class="btn btn-xs btn-success confirm" title="{{ 'badge_validate_award'|trans({}, 'icap_badge') }}" data-confirm-title="{{ 'badge_award_confirm_title'|trans({}, 'icap_badge') }}" data-confirm-message="{{ 'badge_award_confirm_message'|trans({'%badgeName%': badgeClaim.badge.name, '%user%': badgeClaim.user.firstname ~ ' ' ~ badgeClaim.user.lastname }, 'icap_badge') }}" data-confirm-ok="{{ 'award'|trans({}, 'icap_badge') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="success" role="button">
+                                            {{ 'badge_validate_award_short'|trans({}, 'icap_badge') }}
+                                        </a>
+                                        <a href="{{ path(parameters.claim_link, {'id': badgeClaim.id, 'validate': false}|merge(parameters.route_parameters)) }}" class="btn btn-xs btn-danger confirm" title="{{ 'badge_reject_award'|trans({}, 'icap_badge') }}" data-confirm-title="{{ 'badge_dont_award_confirm_title'|trans({}, 'icap_badge') }}" data-confirm-message="{{ 'badge_dont_award_confirm_message'|trans({'%badgeName%': badgeClaim.badge.name, '%user%': badgeClaim.user.firstname ~ ' ' ~ badgeClaim.user.lastname}, 'icap_badge') }}" data-confirm-ok="{{ 'dont_award'|trans({}, 'icap_badge') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger" role="button">
+                                            {{ 'badge_reject_award_short'|trans({}, 'icap_badge') }}
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5">{{ 'no_badge_claim'|trans({}, 'icap_badge') }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <ul class="list-inline pull-right">
+                    <li class="text-muted"><small><span class="fa fa-exclamation-circle"></span> {{ 'badge_rules_not_respected'|trans({}, 'icap_badge') }}</small></li>
+                    <li class="text-muted"><small><span class="fa fa-check-circle"></span> {{ 'badge_rules_respected'|trans({}, 'icap_badge') }}</small></li>
+                    <li class="text-muted"><small><span class="fa fa-exclamation-triangle"></span> {{ 'badge_no_rules_check_manually'|trans({}, 'icap_badge') }}</small></li>
+                </ul>
+                {% if claimPager.haveToPaginate %}
+                <div>
+                    {{
+                        pagerfanta(
+                            claimPager,
+                            'twitter_bootstrap_translated',
+                            {
+                                'proximity' :    1,
+                                'routeName':     parameters.current_link,
+                                'routeParams':   parameters.route_parameters,
+                                'pageParameter': '[claimPage]'
+                            }
+                        )
+                    }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endif %}

@@ -1,0 +1,210 @@
+{% trans_default_domain "icap_badge" %}
+
+{% block _badge_form_rules_widget %}
+    {% spaceless %}
+        {% if prototype is defined %}
+            {% set attr = attr|merge({'data-prototype': block('_badge_form_rules_widget_prototype') }) %}
+        {% endif %}
+        <div class="row badges_rules" {{ block('widget_container_attributes') }}>
+            <p class="row">{{ form_label(form) }}</p>
+            {{ form_errors(form) }}
+            {% set tabPrototype = '<li id="tabrule__name__"><a href="#rule__name__" data-toggle="tab">' ~ "rule"|trans ~ ' __indexname__ <span class="btn btn-sm btn-danger fa fa-trash-o delete_rule delete_rule_no_confirm pull-right" data-id-tab="rule__name__" style="display: none;"></span></a></li>' %}
+            <ul class="nav nav-tabs nav-stacked col-md-2" id="ruleTabs" data-tab-prototype="{{ tabPrototype|e }}">
+                {% for rows in form %}
+                    {% set loopIndex = loop.index - 1 %}
+                    <li id="tabrule{{ loopIndex }}">
+                        <a href="#rule{{ loopIndex }}" data-toggle="tab">{{ 'rule'|trans }} {{ loopIndex + 1 }}
+                            {% if allow_delete %}
+                            <span class="btn btn-sm btn-danger fa fa-trash-o delete_rule delete_rule_confirm pull-right" data-id-tab="rule{{ loopIndex }}" data-confirm-title="{{ 'badge_rule_delete_confirm_title'|trans }}" data-confirm-message="{{ 'badge_rule_delete_confirm_message'|trans }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger"></span>
+                            {% endif %}
+                        </a>
+                    </li>
+                {% endfor %}
+                {% if allow_add %}
+                <li id="add_rule"><a href="#"><span class="fa fa-plus"></span>{{ 'add_rule'|trans }}</a></li>
+                {% endif %}
+            </ul>
+            <div class="tab-content rules col-md-10">
+                {% for rows in form %}
+                    {% set loopIndex = loop.index - 1 %}
+                    <div class="tab-pane" id="rule{{ loopIndex }}">
+                        <h4>{{ 'rule_details'|trans }}</h4>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p class="form-control-static">{{ 'badge_form_execute'|trans }} : </p>
+                            </div>
+                        </div>
+                        <div class="row action_panel{% if rows.children.action.vars.errors|length > 0 %} has-error{% endif %}">
+                            <div class="col-md-12">
+                                {{ form_widget(rows.children.action) }}
+                                {{ form_errors(rows.children.action) }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="checkbox" style="margin-left: 20px;">
+                                    <label>
+                                        {{ form_widget(rows.children.isUserReceiver) }}{{ 'badge_form_user_target_of_action'|trans }}<strong> *</strong>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <p class="form-control-static">{{ 'badge_form_execute_times'|trans }} </p>
+                            </div>
+                            <div class="col-md-2">
+                                {{ form_widget(rows.children.occurrence) }}
+                            </div>
+                            <div class="col-md-2">
+                                <p class="form-control-static">{{ 'badge_form_times'|trans }}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <p class="form-control-static">{{ 'badge_form_resource'|trans }} </p>
+                            </div>
+                            <div class="col-md-8">
+                                {{ form_widget(rows.children.resource) }}
+                            </div>
+                        </div>
+                        <div class="row hide badge_panel">
+                            <div class="col-md-5">
+                                <p class="form-control-static">{{ 'badge_form_badge'|trans }} </p>
+                            </div>
+                            <div class="col-md-5">
+                                {{ form_widget(rows.children.badge) }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <p><small><strong>* </strong><span class="text-muted">{{ 'badge_form_badge_help'|trans }}</span></small></p>
+                        </div>
+                        <div class="panel-group" id="advancedOptionsAccordion{{ loopIndex }}">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#advancedOptionsAccordion{{ loopIndex }}" href="#advancedOptions{{ loopIndex }}">
+                                            <span class="fa fa-gear"></span> {{ 'badge_form_advance_options'|trans }}
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="advancedOptions{{ loopIndex }}" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <p class="form-control-static">{{ 'badge_form_awarding_on_result_action'|trans }} </p>
+                                            </div>
+                                            <div class="col-md-2">
+                                                {{ form_widget(rows.children.resultComparison) }}
+                                            </div>
+                                            <div class="col-md-1">
+                                                <p class="form-control-static text-center">{{ 'badge_form_awarding_on_result_action_to'|trans }}</p>
+                                            </div>
+                                            <div class="col-md-2">
+                                                {{ form_widget(rows.children.result) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                <p id="no_rule">{{ 'no_rule'|trans }}</p>
+            </div>
+            {{ form_rest(form) }}
+        </div>
+    {% endspaceless %}
+{% endblock _badge_form_rules_widget %}
+
+{% block _badge_form_rules_widget_prototype %}
+    {{ _self._badge_form_rules_widget_prototype_row(prototype) }}
+{% endblock _badge_form_rules_widget_prototype %}
+
+{% macro _badge_form_rules_widget_prototype_row(rows) %}
+    {% spaceless %}
+        <div class="tab-pane" id="rule__name__">
+            <h4>{{ 'rule_details'|trans }}</h4>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="form-control-static">{{ 'badge_form_execute'|trans }} : </p>
+                </div>
+            </div>
+            <div class="row action_panel">
+                <div class="col-md-12">
+                    {{ form_widget(rows.children.action) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="checkbox" style="margin-left: 20px;">
+                        <label>
+                            {{ form_widget(rows.children.isUserReceiver) }}{{ 'badge_form_user_target_of_action'|trans }}<strong> *</strong>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <p class="form-control-static">{{ 'badge_form_execute_times'|trans }} </p>
+                </div>
+                <div class="col-md-2">
+                    {{ form_widget(rows.children.occurrence, {'attr': {'value': 1}}) }}
+                </div>
+                <div class="col-md-2">
+                    <p class="form-control-static">{{ 'badge_form_times'|trans }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <p class="form-control-static">{{ 'badge_form_resource'|trans }} </p>
+                </div>
+                <div class="col-md-8">
+                    {{ form_widget(rows.children.resource) }}
+                </div>
+            </div>
+            <div class="row hide badge_panel">
+                <div class="col-md-5">
+                    <p class="form-control-static">{{ 'badge_form_badge'|trans }} </p>
+                </div>
+                <div class="col-md-5">
+                    {{ form_widget(rows.children.badge) }}
+                </div>
+            </div>
+            <div class="row">
+                <p><small><strong>* </strong><span class="text-muted">{{ 'badge_form_badge_help'|trans }}</span></small></p>
+            </div>
+            <div class="panel-group" id="advancedOptionsAccordion__name__">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#advancedOptionsAccordion__name__" href="#advancedOptions__name__">
+                                <span class="fa fa-gear"></span> {{ 'badge_form_advance_options'|trans }}
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="advancedOptions__name__" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p class="form-control-static">{{ 'badge_form_awarding_on_result_action'|trans }} </p>
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_widget(rows.children.resultComparison) }}
+                                </div>
+                                <div class="col-md-1">
+                                    <p class="form-control-static text-center">{{ 'badge_form_awarding_on_result_action_to'|trans }}</p>
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_widget(rows.children.result) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endspaceless %}
+{% endmacro %}

@@ -1,0 +1,197 @@
+actions: Actions
+actions_lead_to_badge_awarding: 'Actions qui ont mené à l''attribution de ce badge'
+add_badge: 'Ajouter un badge'
+add_badge_to_collection_error: 'Une erreur est survenue lors de l''ajout du badge à la collection.'
+add_collection: 'Ajouter une collection'
+add_collection_error: 'Une erreur est survenue lors de l''ajout d''une collection.'
+add_collection_in_progress: 'Ajout d''une collection en cours...'
+add_rule: 'Ajouter une règle'
+award: Attribuer
+award_badge: 'Attribuer le badge'
+back_to_badges_list: 'Retour à la liste des badges'
+back_to_my_badges: 'Retour à mes badges'
+back_to_users_badge: 'Retour à la liste des utilisateurs'
+badge: Badge
+badge_count: badge|badges
+badge_add_error_message: 'Erreur lors de l''ajout du badge.'
+badge_add_success_message: 'Badge ajouté avec succès.'
+badge_already_award_info_message: 'Validation de l''attribution du badge inutile, l''utilisateur possède déjà ce badge.'
+badge_already_award_message: 'Vous ne pouvez faire une demande d''attribution pour un badge que vous possédez déjà.'
+badge_already_claim_message: 'Vous avez déjà effectué une demande d''attribution pour ce badge.'
+badge_award_confirm_message: 'Etes-vous sûr de vouloir attribuer le badge <strong>%badgeName%</strong> à l''utilisateur <strong>%user%</strong> ?'
+badge_award_confirm_title: 'Validation de l''attribution d''un badge'
+badge_award_error_message: 'Erreur lors de l''attribution du badge.'
+badge_award_form_group: Groupe
+badge_award_form_group_choose: 'Sélectionner un groupe'
+badge_award_form_user: Utilisateur
+badge_award_form_user_choose: 'Sélectionner un utilisateur'
+badge_award_info_no_group_message: 'Aucun groupe sélectionné pour l''attribution'
+badge_awarded_automatically_on: 'Badge attribué automatiquement le %awardingDate%'
+badge_awarded_count_message: '%awaredBadge% attribution de badge effectuée.|%awaredBadge% attributions de badge effectuées.'
+badge_awarded_on_by: 'Badge attribué le %awardingDate% par %awardingIssuer%'
+badge_awarded_on: 'Badge attribué le %awardingDate%'
+badge_awarded_to: 'Badge attribué à'
+badge_awarded_to_full: 'Attribué à <a href="%userUrl%" title="%user%">%user%</a> par <a href="%issuerUrl%" title="%issuer%">%issuer%</a>'
+badge_awarded_to_full_platform: 'Attribué à <a href="%userUrl%" title="%user%">%user%</a> par %systemName%'
+badge_awarding_rules_not_respected: 'Règle d''attribution du badge non respectées'
+badge_awarding_some_rules_respected: '%nbvalidRules% règle d''attribution du badge respectées sur %nbRules%'
+badge_awarding_in_progress: 'En cours'
+badge_check_state: 'Conditions vérifiées'
+badge_claim_error_message: 'Erreur lors de la demande d''attribution de badge.'
+badge_claim_form_badge: 'Nom du badge à réclamer'
+badge_claim_success_message: 'Demande d''attribution de badge effectué avec succès.'
+badge_claim_nothing_selected_warning_message: 'Aucun badge sélectionné pour la demande d''attribution.'
+badge_collection_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer cette collection ?'
+badge_collection_delete_confirm_title: 'Suppression d''une collection'
+badge_current_claimed_badges: '%claimedBadgeCount% demande d''attribution de badge en cours|%claimedBadgeCount% demandes d''attribution de badge en cours'
+badge_current_claimed_badges_manage: '%claimedBadgeCount% demande d''attribution de badge à examiner|%claimedBadgeCount% demandes d''attribution de badge à examiner'
+badge_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer le badge <strong>%badgeName%</strong> ?'
+badge_delete_confirm_title: 'Suppression d''un badge'
+badge_delete_error_message: 'Erreur lors de la suppression du badge.'
+badge_delete_success_message: 'Badge supprimé avec succès.'
+badge_details: 'Détails du badge'
+badge_dont_award_confirm_message: 'Etes-vous sûr de ne pas vouloir attribuer le badge <strong>%badgeName%</strong> à l''utilisateur <strong>%user%</strong> ?'
+badge_dont_award_confirm_title: 'Refus d''attribution d''un badge'
+badge_edit_confirm_message: 'Etes-vous sûr de vouloir modifier le badge <strong>%badgeName%</strong> ?'
+badge_edit_confirm_title: 'Modification d''un badge'
+badge_edit_create_new_version: '<strong>Attention!!!</strong> Ce badge a déjà été attribué. Modifier ses règles d''attribution entraînera la création d''une nouvelle version de ce badge.'
+badge_edit_error_message: 'Erreur lors de la modification du badge.'
+badge_edit_success_message: 'Badge modifié avec succès.'
+badge_expiration_date_explanation: 'Durée de validité du badge. Si omis le badge n''expirera jamais. Le badge n''est pas supprimé de l''utilisateur après expiration, un indicateur visuel d''expiration est affiché.'
+badge_expired_on_date: 'A expiré le %expirationDate%'
+badge_valid_for_period: "Valable %validityPeriod%"
+badge_form_advance_options: 'Options avancées'
+badge_form_automatic_award: 'Attribution automatique, si les règles sont respectées'
+badge_form_awarding_on_result_action: 'Lorsque le résultat de l''action est'
+badge_form_awarding_on_result_action_to: à
+badge_form_badge: 'Lorsque l''action est l''attribution d''un badge'
+badge_form_badge_help: 'Si compatible avec l''action'
+badge_form_badge_selection: 'Sélectionner le badge'
+badge_form_resource: "Sur la ressource"
+badge_form_resource_selection: 'Sélectionner la ressource'
+badge_form_change_image: 'Changer l''image du badge'
+badge_form_choose_image: 'Choisir l''image du badge'
+badge_form_criteria: 'Critères d''obtention'
+badge_form_description: Description
+badge_form_enTranslation: 'Traduction anglaise'
+badge_form_esTranslation: 'Traduction espagnole'
+badge_form_execute: 'La règle est validée suite à une action de l''utilisateur sur'
+badge_form_execute_times: 'Quand il a effectué l''action'
+badge_form_is_expiring: "Le badge a-t-il une durée de validité ?"
+badge_form_frTranslation: 'Traduction française'
+badge_form_image: Image
+badge_form_is_expiring: 'Le badge a-t-il une durée de validité ?'
+badge_form_name: Nom
+badge_form_resource: 'Sur la ressource'
+badge_form_resource_selection: 'Sélectionner la ressource'
+badge_form_rules: 'Règles d''attribution'
+badge_form_times: fois
+badge_form_user_target_of_action: 'L''utilisateur est la cible de l''action'
+badge_version: Version
+badge_no_rules_check_manually: 'Aucune règle, vérifier manuellement'
+badge_reject_award: 'Refuser l''attribution du badge'
+badge_reject_award_error_message: 'Erreur lors du refus d''attribution du badge.'
+badge_reject_award_short: Refuser
+badge_reject_award_success_message: 'Refus de l''attribution du badge effectuée avec succès.'
+badge_rule_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer cette règle ?'
+badge_rule_delete_confirm_title: 'Suppression d''une règle'
+badge_rules_not_respected: 'Règles non respectées'
+badge_rules_respected: 'Règles respectées'
+badge_rules_respected_state: 'Page indisponible actuellement'
+badge_unaward_confirm_message: 'Etes-vous sûr de vouloir désattribuer le badge <strong>%badgeName%</strong> à <strong>%user%</strong>?'
+badge_unaward_confirm_title: 'Désattribution d''un badge'
+badge_unaward_error_message: 'Erreur lors de la désattribution du badge.'
+badge_unaward_success_message: 'Désattribution du badge effectuée avec succès.'
+badge_valid_for_period: 'Valable %validityPeriod%'
+badge_validate_award: 'Valider l''attribution du badge'
+badge_validate_award_error_message: 'Erreur lors de la validation l''attribution du badge.'
+badge_validate_award_short: Valider
+badge_validate_award_success_message: 'Validation de l''attribution du badge effectuée avec succès.'
+badge_validity_period: 'Durée de validité du badge'
+badge_version: Version
+badges: Badges
+badges_platform_list: 'Badges de la plateforme'
+claim: Réclamer
+claim_badge: 'Réclamer un badge'
+claim_badge_form: 'Formulaire de demande d''attribution de badge'
+claim_date: 'Date de la demande'
+claiming: 'Demande d''attribution|Demandes d''attribution'
+collection_name: 'Nom de la collection'
+collection_owned_by_user: 'De l''utilisateur %user%'
+day: jour
+delete_collection_error: 'Une erreur est survenue lors de la suppression de la collection.'
+dont_award: 'Ne pas attribuer'
+edit_badge: 'Modification du badge ''%badge_name%'''
+edit_is_shared_collection_error: 'Une erreur est survenue lors du partage de la collection.'
+edit_is_unshared_collection_error: 'Une erreur est survenue lors de la suppression du partage de la collection.'
+edit_title_collection_error: 'Une erreur est survenue lors de la modification du nom de la collection.'
+month: mois
+my_collections: 'Mes collections'
+my_workspace_badges: Badges de l'espace de travail
+no_badge_claim: 'Aucune demande d''attribution.'
+my_latest_badges: Mes derniers badges
+availables_badges: Badges disponibles
+no_badge_in_collection: 'Il n''y a aucun badge dans cette collection.'
+no_badges: 'Aucun badge.'
+no_badges_create_to_motivate: 'Aucun badge actuellement, vous pouvez en <a href="%url%">créer</a> pour motiver vos utilisateurs.'
+no_collection: 'Aucune collection.'
+no_badges_in_workspace: 'Il n''y a pour l''instant aucun badge à obtenir dans cet espace de travail.'
+no_rule: 'Aucune règle'
+organize_badges_the_way_you_want: 'Organisez vos badges à votre manière'
+page_public_look: 'Voici comment s''affichera cette page pour les visiteurs.'
+private: Privée
+remove_badge_from_collection_error: 'Une erreur est survenue lors de la suppression du badge de la collection.'
+rule: Règle
+rule_details: 'Détails de la règle'
+see_shared_collection: 'Voir la collection partagée'
+see_shared_badge: "Voir le badge partagé"
+share: Partager
+shared: Partagée
+start_to_award_this_badge: 'Commencez à <a href="%url%" id="awardUser" role="button">attribuer</a> ce badge.'
+stop_share: 'Ne plus partager'
+unaward: Désattribuer
+unaward: Retirer
+view_badge: 'Badge ''%badge_name%'''
+week: semaine
+workspace_badges: 'Badges de l''espace de travail'
+year: année
+consult_my_badge_details: 'Consulter mon badge en détails'
+badge_award_form_comment: 'Commentaire'
+comment: 'Commentaire'
+badge_statistics: 'Statistiques des badges'
+workspace_badges_statistics: 'Statistiques des badges de l''espace de travail'
+badges_platform_statistics: 'Statistiques des badges de la plateforme'
+awarded_badges: 'Badges attribués'
+badge_usage_widget_form_number_last_awarded_badge: 'Badges attribués à afficher'
+badge_usage_widget_form_number_most_awarded_badge: 'Badges à afficher dans le top'
+badge_usage_widget_form_simple_view: 'Activer l''affichage simplifié'
+last_awarded_badges: 'Vos derniers badges obtenus ici'
+ladder_awarded_badges: 'Top des badges de l''espace'
+badge_awarded_nb_times: 'Atrribué %nbTimes% fois'
+badge_awarding_finished: 'Règles respectées, réclamer le badge'
+badge_claimed: 'Badge réclamé'
+browse_badges: 'Parcourir les badges'
+select_badge: 'Sélectionner un badge'
+select_badges: 'Sélectionner un ou plusieurs badges'
+badge_selection: 'Sélection de badge'
+select: 'Sélectionner'
+no_badge_to_select: 'Aucun badge à sélectionner'
+count_selected_badge: '%nbBadge% badge sélectionné|%nbBadge% badges sélectionnés'
+badges_management: 'Gestion des badges'
+my_badges: 'Mes badges'
+badge_awarding_date: 'Date d''attribution'
+total_awarding: 'attribution|attributions'
+total_awarded_badge: 'badge attribué|badges attribués'
+total_not_awarded_badge: 'badge non-attribué|badges non-attribués'
+badge-shared: "Partagé"
+badge-private: "Privé"
+no_badges_obtained: 'Vous n''avez pas obtenu de badge pour cet espace de travail'
+workspace_manage_badges: 'Gestion des badges de l''espace de travail'
+list_by_user: 'Lister par utilisateur'
+show_all_badges: 'Afficher tous les badges'
+back_to_badge_list: 'Retour à la liste de badge'
+badges_per_user: Nombre de badge par utilisateurs
+top_10_most_awarded_badges: Top 10 des Badges les plus attribués
+badges_number: Nombre des badges
+user_number: Nombre des utilisateurs
+

@@ -1,0 +1,27 @@
+{% extends 'IcapBadgeBundle:Tool:Workspace/layout.html.twig' %}
+
+{% trans_default_domain "icap_badge" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'badges' | trans | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'my_workspace_badges'|trans({}, 'icap_badge'),
+                    'href': ''
+                }
+            ]
+        )
+    }}
+{% endblock %}
+
+{% block section_title %}
+    {{ 'my_workspace_badges'|trans({}, 'icap_badge') }}
+{% endblock %}
+
+{% block section_body %}
+    {{ render(controller('IcapBadgeBundle:Tool/Badge:myWorkspaceBadge', {'workspace': workspace, 'loggedUser': user, 'badgePage': 1})) }}
+{% endblock %}

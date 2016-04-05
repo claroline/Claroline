@@ -1,0 +1,4 @@
+doctrine:
+  orm:
+    hydrators:
+      PairHydrator: Icap\BadgeBundle\Hydrators\PairHydrator

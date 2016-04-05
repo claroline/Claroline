@@ -1,0 +1,133 @@
+{% extends 'IcapBadgeBundle:Tool:Workspace/layout.html.twig' %}
+
+{% trans_default_domain "icap_badge" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ workspace.name ~ ' - ' ~ 'badge' | trans | striptags ~ ' ' ~ badge.name | striptags }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'my_badges'|trans({}, 'icap_badge'),
+                    'href': path('icap_badge_workspace_tool_my_badges', {'workspaceId': workspace.id})
+                },
+                {
+                    'name': badge.name,
+                    'href': ''
+                }
+            ]
+        )
+    }}
+{% endblock %}
+
+{% block content %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                {{ 'badge'|trans }} "{{ badge.name }}"
+            </h3>
+        </div>
+        <div class="panel-body badge_infos">
+            <a href="{{ path('icap_badge_workspace_tool_my_badges', {'workspaceId': workspace.id}) }}" class="btn btn-default btn-md btn-back" role="button"><span class="fa fa-reply"></span>
+                {{ 'back_to_badge_list'|trans({}, 'icap_badge') }}</a>
+            {% if userBadge %}
+                {% if null == userBadge.issuer %}
+                    <p>{{ 'badge_awarded_automatically_on'|trans({'%awardingDate%': userBadge.issuedAt|date('date_format'|trans({}, 'platform'))}, 'icap_badge') }}</p>
+                {% else %}
+                    <p>{{ 'badge_awarded_on_by'|trans({'%awardingDate%': userBadge.issuedAt|date('date_format'|trans({}, 'platform')), '%awardingIssuer%': '<a href="' ~ path("claro_profile_view", {"userId": userBadge.issuer.id}) ~ '" title="' ~ userBadge.issuer.firstname ~ ' ' ~ userBadge.issuer.lastname ~ '">' ~ userBadge.issuer.firstname ~ ' ' ~ userBadge.issuer.lastname ~ '</a>'}, 'icap_badge')|raw }}</p>
+                {% endif %}
+                {% if userBadge.isExpiring %}
+                    {% if userBadge.isExpired %}
+                        <p class="alert alert-danger">{{ 'badge_expired_on_date'|trans({'%expirationDate%': userBadge.expiredAt|date('date_format'|trans({}, 'platform'))}) }}</p>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+            <div class="row">
+                <div class="col-md-2 text-center">
+                    <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="media-object pull-left badge_image_informations" />
+                </div>
+                <div class="col-md-7">
+                    <div class="table-responsive">
+                        <table class="badge_informations table table-condensed">
+                            <colgroup>
+                                <col class="fieldLabelCol">
+                                <col class="dataCol">
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                  <td class="section-head text-muted" colspan="2">{{ 'badge_details'|trans }}</td>
+                                </tr>
+                                <tr>
+                                  <td class="fieldlabel">{{ 'badge_form_name'|trans }}</td>
+                                  <td>{{ badge.name }}</td>
+                                </tr>
+                                <tr>
+                                  <td class="fieldlabel">{{ 'badge_version'|trans }}</td>
+                                  <td>{{ badge.version }}</td>
+                                </tr>
+                                <tr>
+                                  <td class="fieldlabel">{{ 'badge_form_description'|trans }}</td>
+                                  <td>{{ badge.description }}</td>
+                                </tr>
+                                <tr>
+                                  <td class="fieldlabel">{{ 'badge_form_criteria'|trans }}</td>
+                                  <td>{{ badge.criteria|raw }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% set nbRules = badge.rules|length %}
+            {% if 0 < nbRules %}
+                {% if 0 == validatedRules.validRules %}
+                <div class="alert alert-danger">{{ 'badge_awarding_rules_not_respected'|trans({}, 'icap_badge') }}.</div>
+                {% elseif validatedRules.validRules < nbRules %}
+                <div class="alert alert-info">{{ 'badge_awarding_some_rules_respected'|trans({'%nbvalidRules%': validatedRules.validRules, '%nbRules%': nbRules}, 'icap_badge') }}.</div>
+                {% else %}
+                <div class="badge_rules_resources">
+                    <h4>{{ 'actions_lead_to_badge_awarding'|trans({}, 'icap_badge') }} :</h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>{{ 'action'|trans({}, 'platform') }}</th>
+                                    <th>{{ 'date'|trans({}, 'platform') }}</th>
+                                    <th>{{ 'resource'|trans({}, 'platform') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for validatedRule in validatedRules.rules %}
+                                {% for validatedLog in validatedRule.logs %}
+                                    {% set log    = validatedLog.log %}
+                                    {% set action = 'log_' ~ log.action ~ '_title' %}
+                                    <tr>
+                                        <td>{{ action|trans({}, 'log') }}</td>
+                                        <td>{{ log.dateLog|date('date_format'|trans({}, 'platform')) }}</td>
+                                        <td>
+                                            {% if validatedLog.url is not null %}
+                                                {{ validatedLog.url | raw }}
+                                            {% else %}
+                                                {% if log.resourceNode != null %}
+                                                    <a href="{{ path('claro_resource_open', {'resourceType': log.resourceType.name, 'action': 'open', 'node': log.resourceNode.id})}}">
+                                                        {{ log.resourceNode.pathForDisplay }}
+                                                    </a>
+                                                {% else %}
+                                                    N/A
+                                                {% endif %}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'IcapBadgeBundle:Tool:Workspace/layout.html.twig' %}
+
+{% trans_default_domain "icap_badge" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'workspace_badges_statistics' | trans | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'workspace_badges'|trans({}, 'icap_badge'),
+                    'href': path('icap_badge_workspace_tool_badges', {'workspaceId': workspace.id})
+                },
+                {
+                    'name': 'workspace_badges_statistics'|trans({}, 'icap_badge'),
+                    'href': ''
+                }
+            ]
+        )
+    }}
+{% endblock %}
+
+{% block section_title %}
+    {{ 'workspace_badges_statistics'|trans({}, 'icap_badge') }}
+{% endblock %}
+
+{% block section_body %}
+    <ul class="list-inline badge_general_statistics">
+        <li>
+            <p><span>{{ statistics.totalBadges }}</span> {{ 'badge'|trans() }}</p>²
+        </li>
+        <li>
+            <p><span>{{ statistics.totalAwarding }}</span> {{ 'total_awarding'|transchoice(statistics.totalAwarding) }}</p>
+        </li>
+        <li>
+            <p><span>{{ statistics.totalBadgeAwarded }}</span> {{ 'total_awarded_badge'|transchoice(statistics.totalBadgeAwarded) }}</p>
+        </li>
+        <li>
+            <p><span>{{ statistics.totalBadgeNotAwarded }}</span> {{ 'total_not_awarded_badge'|transchoice(statistics.totalBadgeNotAwarded) }}</p>
+        </li>
+    </ul>
+{% endblock %}

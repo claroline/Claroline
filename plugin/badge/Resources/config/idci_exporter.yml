@@ -1,0 +1,10 @@
+idci_exporter:
+    entities:
+        badge:
+            class: 'Icap\BadgeBundle\Entity\Badge'
+            formats:
+                jsonp:
+                    transformer:
+                        service: "icap.transformer.badge"
+                        options:
+                            template_name_format: 'export.json.twig'
