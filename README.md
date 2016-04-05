@@ -38,14 +38,15 @@ Official distribution of Claroline Connect LMS
 - [x] CompetencyBundle
 - [x] FavouriteBundle
 - [x] UrlBundle
-- [ ] BadgeBundle
-- [ ] BlogBundle
-- [ ] WikiBundle
-- [ ] DropZoneBundle
+- [x] BadgeBundle
+- [x] BlogBundle
+- [x] WikiBundle
+- [x] DropZoneBundle
 - [ ] LessonBundle
-- [ ] PortfolioBundle
+- [x] PortfolioBundle
+- [x] SocialMediaBundle
 - [ ] WebsiteBundle
-- [ ] oAuthBundle
+- [x] oAuthBundle
 - [ ] PathBundle
 - [x] CollecticielBundle
 - [ ] ExoBundle

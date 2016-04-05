@@ -35,6 +35,7 @@
         "gregwar/captcha-bundle": "1.0.12",
         "guzzle/http": "~3.1",
         "hwi/oauth-bundle": "0.4.*@dev",
+        "icap/html-diff": "~1.1",
         "idci/exporter-bundle": "1.0.0",
         "jdorn/sql-formatter": "~1.0",
         "jms/di-extra-bundle": "1.5.0",
@@ -71,7 +72,12 @@
         "white-october/pagerfanta-bundle": "1.0.2",
         "willdurand/js-translation-bundle": "~2.1",
         "zendframework/zend-crypt": "~2.3",
-        "zenstruck/form-bundle": "1.5.1"
+        "zenstruck/form-bundle": "1.5.1",
+
+
+        "innova/angular-js-bundle": "~5.0",
+        "innova/angular-ui-resource-picker-bundle" : "~6.0",
+        "innova/angular-ui-tinymce-bundle": "5.*"
     },
     "autoload": {
         "psr-4": {
@@ -105,7 +111,14 @@
             "Innova\\CollecticielBundle\\": "plugin/collecticiel",
             "HeVinci\\FavouriteBundle\\": "plugin/favourite",
             "HeVinci\\CompetencyBundle\\": "plugin/competency",
-            "HeVinci\\UrlBundle\\": "plugin/url"
+            "HeVinci\\UrlBundle\\": "plugin/url",
+            "Icap\\BadgeBundle\\": "plugin/badge",
+            "Icap\\BlogBundle\\": "plugin/blog",
+            "Icap\\DropzoneBundle\\": "plugin/dropzone",
+            "Icap\\PortfolioBundle\\": "plugin/portfolio",
+            "Icap\\SocialmediaBundle\\": "plugin/social-media",
+            "Icap\\WikiBundle\\": "plugin/wiki",
+            "Icap\\OAuthBundle\\": "plugin/oauth"
         }
     }
 }
