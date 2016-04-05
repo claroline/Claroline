@@ -120,16 +120,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "2c90f3aa8b2466270f38574f443807259421867a"
+                "reference": "bb149cb05d57debaec98a659296296bc0336c3e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/2c90f3aa8b2466270f38574f443807259421867a",
-                "reference": "2c90f3aa8b2466270f38574f443807259421867a",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/bb149cb05d57debaec98a659296296bc0336c3e4",
+                "reference": "bb149cb05d57debaec98a659296296bc0336c3e4",
                 "shasum": ""
             },
             "require": {
                 "besimple/sso-auth-bundle": "*",
+                "claroline/front-end-bundle": "dev-7.x-test",
                 "cocur/slugify": "~1.0",
                 "composer/composer": "1.0.0-beta1",
                 "ddeboer/data-import": "~0.18",
@@ -256,7 +257,37 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-04-05 13:10:04"
+            "time": "2016-04-05 13:51:08"
+        },
+        {
+            "name": "claroline/front-end-bundle",
+            "version": "dev-7.x-test",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/claroline/FrontEndBundle.git",
+                "reference": "2baad174be4bcb35c87f8f5df07127de1d23fa17"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/claroline/FrontEndBundle/zipball/2baad174be4bcb35c87f8f5df07127de1d23fa17",
+                "reference": "2baad174be4bcb35c87f8f5df07127de1d23fa17",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Claroline\\Bundle\\FrontEndBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0+"
+            ],
+            "description": "Front-end dependencies bundle for Claroline 2.0",
+            "time": "2016-04-01 14:34:48"
         },
         {
             "name": "cocur/slugify",
