@@ -1,0 +1,37 @@
+{% set level = level is defined ? level : 0 %}
+{% set displayUntil = displayUntil is defined ? displayUntil : 1000 %}
+{% set hasChildren = target.__children is defined and target.__children|length > 0 %}
+{% set hasAbilities = target.__abilities is defined and target.__abilities|length > 0 %}
+{% set areChildrenDisplayable = level < displayUntil %}
+
+<li data-id="{{ target.id }}"
+    data-type="{{ isCompetency ? 'competency' : 'ability' }}"
+    data-level="{{ level }}">
+    {% if hasChildren or hasAbilities %}
+        {% if areChildrenDisplayable %}
+            <i class="fa fa-minus-square-o collapse"></i>
+        {% else %}
+            <i class="fa fa-plus-square-o expand"></i>
+        {% endif %}
+    {% endif %}
+    {% if not isCompetency %}
+        <span class="node-level">{{ target.levelName }}</span>:
+    {% endif %}
+    <span class="node-name">{{ target.name }}</span>
+    <ul class="children" style="display: {{ areChildrenDisplayable ? 'block' : 'none' }}">
+        {% if hasChildren or hasAbilities %}
+            {% set collection = hasChildren ? target.__children : target.__abilities %}
+            {% for item in collection %}
+                {%
+                    include _self
+                    with {
+                        target: item,
+                        isCompetency: hasChildren,
+                        level: level + 1,
+                        displayUntil: displayUntil
+                    }
+                %}
+            {% endfor %}
+        {% endif %}
+    </ul>
+</li>

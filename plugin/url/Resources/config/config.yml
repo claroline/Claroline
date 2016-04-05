@@ -1,0 +1,13 @@
+plugin:
+  has_options: false
+  icon: res_url.png
+
+  resources:
+    - class: HeVinci\UrlBundle\Entity\Url
+      name: hevinci_url
+      is_exportable: false
+      icon: res_url.png
+      actions:
+        - name: edit
+          menu_name: change_url_menu
+          is_form: true

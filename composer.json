@@ -33,6 +33,7 @@
         "friendsofsymfony/rest-bundle": "~1.4",
         "gedmo/doctrine-extensions": "~2.3",
         "gregwar/captcha-bundle": "1.0.12",
+        "guzzle/http": "~3.1",
         "hwi/oauth-bundle": "0.4.*@dev",
         "idci/exporter-bundle": "1.0.0",
         "jdorn/sql-formatter": "~1.0",
@@ -50,6 +51,7 @@
         "sensio/distribution-bundle": "~2.3.4",
         "sensio/framework-extra-bundle": "3.0.12",
         "sensio/generator-bundle": "~2.4",
+        "stefk/jval": "dev-master",
         "stfalcon/tinymce-bundle": "0.3.8",
         "stof/doctrine-extensions-bundle": "1.1.0",
         "symfony/assetic-bundle": "~2.4",
@@ -100,7 +102,10 @@
             "Claroline\\TextPlayerBundle\\": "plugin/text-player",
             "Claroline\\VideoPlayerBundle\\": "plugin/video-player",
             "Claroline\\WebResourceBundle\\": "plugin/web-resource",
-            "Innova\\CollecticielBundle\\": "plugin/collecticiel"
+            "Innova\\CollecticielBundle\\": "plugin/collecticiel",
+            "HeVinci\\FavouriteBundle\\": "plugin/favourite",
+            "HeVinci\\CompetencyBundle\\": "plugin/competency",
+            "HeVinci\\UrlBundle\\": "plugin/url"
         }
     }
 }

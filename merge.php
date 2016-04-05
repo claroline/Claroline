@@ -48,7 +48,8 @@ $vendors = [/*
     'OauthBundle'
   ],
   'InnovaLangues' => [
-    'PathBundle'
+    'PathBundle',
+    'CollecticielBundle'
   ],
   'ujm-dev' => [
     'ExoBundle'

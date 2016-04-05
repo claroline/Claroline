@@ -1,0 +1,13 @@
+<div>
+    {{ 'competency.do_select'|trans({}, 'competency') }}:
+</div>
+<ul class="framework">
+    {%
+        include 'HeVinciCompetencyBundle:Activity:frameworkItem.html.twig'
+        with {
+            target: framework,
+            isCompetency: true,
+            displayUntil: 1
+        }
+    %}
+</ul>

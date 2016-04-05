@@ -1,0 +1,16 @@
+{% twig_js name = 'AbilityRow' %}
+
+<tr data-id="{{ id }}" data-level="{{ levelValue }}">
+    <td class="center">{{ levelName }}</td>
+    <td>{{ name }}</td>
+    <td class="small-cell">
+        <a href="#" class="edit-ability">
+            <i class="fa fa-pencil"></i>
+        </a>
+    </td>
+    <td class="small-cell">
+        <a href="#" class="delete-ability">
+            <i class="fa fa-remove"></i>
+        </a>
+    </td>
+</tr>

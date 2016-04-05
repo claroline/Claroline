@@ -1,0 +1,6 @@
+website_doesnt_exist %url%: Le site internet %url n'existe pas.
+server_error %errorCode%: Une erreur a été levée du côté serveur. Code erreur: %errorCode%.
+client_error %errorCode%: Une erreur a été levée du côté client. Code erreur: %errorCode%.
+method_not_allowed: Cette méthode de requête n'est pas autorisée.
+res_not_found: Ressource non trouvée.
+access_denied: Vous n'êtes pas autorisé à accéder à cette page.

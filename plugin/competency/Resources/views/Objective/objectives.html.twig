@@ -1,0 +1,66 @@
+{% extends 'HeVinciCompetencyBundle:Objective:layout.html.twig' %}
+
+{% trans_default_domain 'competency' %}
+
+{% set activeTab = 'objectives' %}
+
+{% block tabContent %}
+    {% set length = objectives|length %}
+    <br>
+    <div class="alert alert-info" role="alert"{% if length > 0 %} style="display: none"{% endif %}>
+        <i class="fa fa-info-circle"></i>
+        {{ 'info.no_learning_objectives'|trans }}
+        {{ 'info.create_learning_objective'|trans }}
+    </div>
+    <table class="table table-condensed table-bordered objectives"
+           {% if length == 0 %}style="display: none"{% endif %}>
+        <thead>
+            <tr>
+                <th>{{ 'objective_'|trans }}</th>
+                <th class="medium-cell">{{ 'framework_'|trans }}</th>
+                <th class="medium-cell">{{ 'level_'|trans }}</th>
+                <th colspan="7">{{ 'actions'|trans({}, 'platform') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for objective in objectives %}
+                {%
+                    include 'HeVinciCompetencyBundle:Objective:objectiveRow.html.twig'
+                    with {
+                        id: objective.id,
+                        name: objective.name,
+                        hasCompetencies: objective.competencyCount > 0,
+                        isLoaded: false,
+                    }
+                %}
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block tabFooter %}
+    <button id="create-objective" class="btn btn-primary">
+        {{ 'objective.create_short'|trans }}
+    </button>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts debug=false filter='twig_js, jsmin' vars=["locale"]
+        "@HeVinciCompetencyBundle/Resources/views/Picker/users.html.twig"
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'competency' }) }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/typeahead.js/dist/typeahead.bundle.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/tree.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/competencyPicker.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/userPicker.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/objective.js') }}"></script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/frontend/typeahead.js-bootstrap3.less/typeaheadjs.css') }}"/>
+{% endblock %}
+

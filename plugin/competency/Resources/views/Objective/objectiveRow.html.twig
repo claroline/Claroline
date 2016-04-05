@@ -1,0 +1,147 @@
+{% twig_js name = 'ObjectiveRow' %}
+
+{% set type = type is defined ? type : 'objective' %}
+{% set framework = framework is defined ? framework : '-' %}
+{% set level = level is defined ? level : '-' %}
+{% set indent = indent is defined ? indent : 0 %}
+{% set collapsed = collapsed is defined ? collapsed : false %}
+{% set isLoaded = isLoaded is defined ? isLoaded : true %}
+{% set path = path is defined ? path : '' %}
+{% set childrenPath = path == '' ? id : path ~ '-' ~ id %}
+{% set hasCompetencies = hasCompetencies is defined ? hasCompetencies : (__children is defined and __children|length > 0) %}
+{% set hasAbilities = __abilities is defined and __abilities|length > 0 %}
+{% set hasChildren = hasCompetencies or hasAbilities %}
+
+<tr data-id="{{ id }}"
+    data-type="{{ type }}"
+    data-path="{{ path }}"
+    {% if hasChildren %}data-has-children{% endif %}
+    {% if isLoaded %}data-is-loaded="true"{% endif %}
+    {% if collapsed %} style="display: none;"{% endif %}>
+    <td class="{{ type }}-name level-{{ indent }}">{{ name }}</td>
+    <td class="center">{{ framework }}</td>
+    <td class="center{% if type == 'ability' %} level-small{% endif %}">{{ level }}</td>
+    <td class="x-small-cell">
+        <a href="#" class="{{ hasChildren ? 'expand' : 'expand disabled' }}">
+            <i class="fa fa-search-plus{{ hasChildren ? '' : ' disabled' }}"></i>
+        </a>
+    </td>
+    <td class="x-small-cell">
+        {% if type == 'objective' %}
+            <a href="{{ path('hevinci_objective_users', { id: id }) }}"
+               data-toggle="tooltip"
+               data-placement="left"
+               title="{{ 'users'|trans({}, 'platform') }}">
+                <i class="fa fa-user"></i>
+            </a>
+        {% else %}
+            -
+        {% endif %}
+    </td>
+    <td class="x-small-cell">
+        {% if type == 'objective' %}
+            <a href="{{ path('hevinci_objective_groups', { id: id }) }}"
+               data-toggle="tooltip"
+               data-placement="left"
+               title="{{ 'groups'|trans({}, 'platform') }}">
+                <i class="fa fa-group"></i>
+            </a>
+        {% else %}
+            -
+        {% endif %}
+    </td>
+    <td class="x-small-cell">
+        {% if type == 'objective' %}
+            <a href="#"
+               class="add-users"
+               data-toggle="tooltip"
+               data-placement="left"
+               title="{{ 'objective.assign_this'|trans({}, 'competency') }}">
+                <i class="fa fa-user-plus"></i>
+            </a>
+        {% else %}
+            -
+        {% endif %}
+    </td>
+    <td class="x-small-cell">
+        {% if type == 'objective' %}
+            <a href="#"
+               class="associate"
+               data-toggle="tooltip"
+               data-placement="left"
+               title="{{ 'competency.associate'|trans({}, 'competency') }}">
+                <i class="fa fa-plus"></i>
+            </a>
+        {% else %}
+            -
+        {% endif %}
+    </td>
+    <td class="x-small-cell">
+        {% if type == 'objective' %}
+            <a href="#"
+               class="edit"
+               data-toggle="tooltip"
+               data-placement="left"
+               title="{{ 'edit'|trans({}, 'platform') }}">
+                <i class="fa fa-pencil"></i>
+            </a>
+        {% else %}
+            -
+        {% endif %}
+    </td>
+    <td class="x-small-cell">
+        {% if type == 'objective' or type == 'competency' and indent == 1 %}
+            <a href="#"
+               class="remove"
+               data-toggle="tooltip"
+               data-placement="left"
+               title="{{ 'delete'|trans({}, 'platform') }}">
+                <i class="fa fa-remove"></i>
+            </a>
+        {% else %}
+            -
+        {% endif %}
+    </td>
+</tr>
+
+{% if hasCompetencies and __children is defined %}
+    {% for competency in __children %}
+        {% include
+            'HeVinciCompetencyBundle:Objective:objectiveRow.html.twig'
+            with {
+                id: competency.id,
+                name: competency.name,
+                path: childrenPath,
+                framework: '-',
+                level: '-',
+                type: 'competency',
+                indent: indent + 1,
+                collapsed: true,
+                hasCompetencies: competency.__children is defined and competency.__children|length > 0,
+                __children: competency.__children is defined ? competency.__children : [],
+                __abilities: competency.__abilities is defined ? competency.__abilities : []
+            }
+        %}
+    {% endfor %}
+{% endif %}
+
+{% if hasAbilities %}
+    {% for ability in __abilities %}
+        {% include
+            'HeVinciCompetencyBundle:Objective:objectiveRow.html.twig'
+            with {
+                id: ability.id,
+                name: ability.name,
+                path: childrenPath,
+                framework: '-',
+                level: ability.levelName,
+                type: 'ability',
+                indent: indent + 1,
+                collapsed: true,
+                hasCompetencies: false,
+                __children: [],
+                __abilities: []
+            }
+        %}
+    {% endfor %}
+{% endif %}

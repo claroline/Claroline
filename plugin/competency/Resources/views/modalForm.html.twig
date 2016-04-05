@@ -1,0 +1,10 @@
+{% extends 'HeVinciCompetencyBundle::modal.html.twig' %}
+
+{% block body %}
+    <form id="{% block id %}#{% endblock %}"
+          action="{% block action %}#{% endblock %}"
+          method="POST"
+          {{ form_enctype(form) }}>
+        {{ form_widget(form) }}
+    </form>
+{% endblock %}

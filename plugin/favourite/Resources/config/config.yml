@@ -1,0 +1,11 @@
+plugin:
+    has_options: false
+
+    resource_actions:
+      - name: hevinci_favourite
+        is_form: true
+
+    widgets:
+      - name: hevinci_favourite_widget
+        is_configurable: false
+        is_displayable_in_workspace: false
