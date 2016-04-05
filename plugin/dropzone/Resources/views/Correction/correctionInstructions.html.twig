@@ -1,0 +1,42 @@
+<div class="panel-group" id="correction-instruction-accordion">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#correction-instruction"
+               href="#correction-instruction">
+                <h4 class="panel-title">
+                    <span class="fa fa-angle-down"></span>
+                    <span class="fa fa-angle-right" style="display: none;"></span>
+                    {{ 'Examiners Instructions'|trans({}, 'icap_dropzone') }}
+                </h4>
+            </a>
+        </div>
+        <div id="correction-instruction" class="panel-collapse collapse">
+            <div class="panel-body">
+                {{ dropzone.correctionInstruction|raw }}
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .panel-default > .panel-heading {
+            background-color: #fff;
+        }
+
+        .panel-default {
+            margin-top: 10px;
+        }
+    </style>
+
+    <script>
+        $(document).on('ready', function () {
+            $('#correction-instruction').on('hide.bs.collapse', function () {
+                $('#accordion .fa-angle-down').show();
+                $('#accordion .fa-angle-right').hide();
+            });
+            $('#correction-instruction').on('show.bs.collapse', function () {
+                $('#accordion .fa-angle-right').show();
+                $('#accordion .fa-angle-down').hide();
+            });
+        });
+    </script>
+</div>

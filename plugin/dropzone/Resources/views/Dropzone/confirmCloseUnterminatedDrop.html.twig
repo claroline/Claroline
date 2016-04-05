@@ -1,0 +1,29 @@
+{% extends "IcapDropzoneBundle::layout.html.twig" %}
+{% block resourceBreadcrumb %}
+    <li class="active"><span class="fa fa-file"></span> {{ dropzone.resourceNode.name }}</li>
+{% endblock %}
+
+{% block dropzone_content %}
+    <div class="container">
+        <h3>
+            {{ 'Warning'|trans({}, 'icap_dropzone') }}
+        </h3>
+        {% include "IcapDropzoneBundle:Dropzone:confirmCloseUnterminatedDropForm.html.twig" %}
+        <div class="row">
+            <div class="col-md-4 col-md-offset-6 "></div>
+            <a id="acitvate_manualStateAutoClose"
+               href="{{ path('icap_dropzone_drops_awaiting',{'resourceId':dropzone.id}) }}"
+               class="btn btn-default">{{ 'Do nothing'|trans({},'icap_dropzone') }}</a>
+            <a id="form-submit" class="btn btn-primary"
+               href="{{ path('icap_dropzone_auto_close_drops',{'resourceId':dropzone.id}) }}">
+                {{ 'Validate copies'|trans({}, 'icap_dropzone') }}
+            </a>
+        </div>
+    </div>
+    <br>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

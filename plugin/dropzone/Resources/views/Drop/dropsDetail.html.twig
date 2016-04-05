@@ -1,0 +1,140 @@
+{% extends "IcapDropzoneBundle::layout.html.twig" %}
+{% if (byUserMod is not defined) %}
+    {% set byUserMod = 0 %}
+{% endif %}
+
+{% block resourceBreadcrumb %}
+    {% if byUserMod == 1 %}
+        <li>
+            <a href="{{ path('icap_dropzone_open', {'resourceId': dropzone.id}) }}"><span
+                        class="fa fa-list"></span> {{ dropzone.resourceNode.name }}</a>
+        </li>
+    {% else %}
+        <li>
+            <a href="{{ path('icap_dropzone_edit_common',{'resourceId':dropzone.id}) }}"><span
+                        class="fa fa-list"></span>  {{ dropzone.resourceNode.name }}</a>
+        </li>
+        <li>
+            <a href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"> {{ 'List of copies'|trans({}, 'icap_dropzone') }}</a>
+        </li>
+    {% endif %}
+
+    <li class="active">
+        {% if byUserMod == 1 %}
+            {{ 'Details of your copy'|trans({}, 'icap_dropzone') }}
+        {% else %}
+            {{ 'Retail copy of %firstName% %lastName%'|trans({'%firstName%': drop.user.firstName, '%lastName%': drop.user.lastName}, 'icap_dropzone') }}
+        {% endif %}
+    </li>
+
+
+{% endblock %}
+
+{% block dropzone_content %}
+
+    <div class="container container-dropzone">
+        <span class="{% if drop.reported and byUserMod == 0 %}text-danger{% endif %}">
+            <h2>
+                {% if byUserMod == 1 %}
+                    {{ 'Details of your copy'|trans({}, 'icap_dropzone') }}
+                {% else %}
+                    {{ 'Retail copy of %firstName% %lastName%'|trans({'%firstName%': drop.user.firstName, '%lastName%': drop.user.lastName}, 'icap_dropzone') }}
+                {% endif %}
+            </h2>
+        </span>
+        {% if(byUserMod == 0) %}
+            <div class="row">
+                <div class="col-md-12">
+                    <a class="btn btn-default btn-sm"
+                       href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"><span
+                                class="fa fa-angle-left"></span> {{ 'Return to copies'|trans({}, 'icap_dropzone') }}
+                    </a>
+                </div>
+            </div>
+
+            <br/>
+            {{ macros.flashBox() }}
+
+
+            {% if drop.reported %}
+                <div class="row text-danger">
+                    <div class="col-md-12">
+                        <span class="fa fa-exclamation-triangle"></span>
+                        {{ 'This copy has been reported'|trans({}, 'icap_dropzone') }}
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+
+        {% set documentListText = 'Documents'|trans({}, 'icap_dropzone') %}
+        {{ dropzoneMacros.displayDocumentsList(drop, dropzone, 6, "condensed", documentListText) }}
+
+        <div class="row">
+            <div class="text-muted col-md-4">{{ 'Learner'|trans({}, 'icap_dropzone') }}</div>
+            <div class="col-md-8">{{ drop.user.firstName }} {{ drop.user.lastName }}</div>
+        </div>
+
+        <div class="row">
+            <div class="text-muted col-md-4">{{ 'Number of validated corrections'|trans({}, 'icap_dropzone') }}
+            </div>
+            <div class="col-md-8">
+                {% include 'IcapDropzoneBundle:Drop:dropsNbCorrections.html.twig' %}
+                {% if drop.unlockedDrop %}
+                    {% if drop.unlockedDrop %}
+                        <span class="text-warning fa fa-info-circle" data-toggle="tooltip" title=""
+                              data-original-title="{{ 'This copy has been unlocked by admin.(it did not received the expected number of correction)'|trans({}, 'icap_dropzone') }}"></span>
+                    {% endif %}
+
+                {% endif %}
+            </div>
+        </div>
+        {% if byUserMod == 0   or showCorrections or dropzone.displayNotationToLearners %}
+            <div class="row">
+                <div class="text-muted col-md-4">{{ 'Average validated corrections'|trans({}, 'icap_dropzone') }}</div>
+                <div class="col-md-8">{% include 'IcapDropzoneBundle:Drop:dropsTotalGrade.html.twig' %}</div>
+            </div>
+        {% endif %}
+        <br/>
+        {# showCorrection is set in controller if drop is finished and have expected corrections
+        and the author have done the expected number of correction #}
+        {% if byUserMod == 0  or showCorrections %}
+
+            <h3>{{ 'List of corrections'|trans({}, 'icap_dropzone') }}</h3>
+            {% if isAllowedToEdit %}
+                <a class="btn btn-default"
+                   href="{{ path("icap_dropzone_drops_detail_add_correction",{'resourceId':dropzone.id,'dropId':drop.id}) }}">
+                    {{ "Add a correction"|trans({},'icap_dropzone') }}
+                </a>
+                {% if dropzone.peerReview %}
+                    <a href="{{ path('icap_dropzone_recalculate_drop_grade',
+                    { 'dropId': drop.id}) }}"
+                       class="btn btn-default " data-toggle="tooltip" data-placement="left"
+                       data-container="body"
+                       title="{{ 'recalculate_helper'|trans({},'icap_dropzone') }}">
+                        {{ 'Recalculate the score'|trans({}, 'icap_dropzone') }}</a>
+                {% endif %}
+            {% endif %}
+
+
+            <hr/>
+
+            {% set corrections = drop.corrections %}
+            {% include 'IcapDropzoneBundle:Correction:Listing/correctionListing.html.twig' %}
+        {% endif %}
+
+        {% if byUserMod == 1 %}
+            <a href="{{ path("icap_dropzone_open",{'resourceId':dropzone.id}) }}"
+               class="btn btn-default">{{ "Return"|trans({},'icap_dropzone') }}</a>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/icapdropzone/js/popup.js') }}"></script>
+    <script src="{{ asset('bundles/icapdropzone/js/tooltip.js') }}"></script>
+{% endblock %}

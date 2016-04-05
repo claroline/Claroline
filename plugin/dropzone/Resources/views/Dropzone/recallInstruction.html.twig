@@ -1,0 +1,37 @@
+<div class="panel-group" id="recall-instruction-accordion">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#recall-instruction" href="#recall-instruction">
+                <h4 class="panel-title">
+                    <span class="fa fa-angle-down"></span>
+                    <span class="fa fa-angle-right" style="display: none;"></span>
+                    {{ 'Recall instructions'|trans({}, 'icap_dropzone') }}
+                </h4>
+            </a>
+        </div>
+        <div id="recall-instruction" class="panel-collapse collapse">
+            <div class="panel-body">
+                {{ dropzone.instruction|raw }}
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .panel-default > .panel-heading {
+            background-color: #fff;
+        }
+    </style>
+
+    <script>
+        $(document).on('ready', function() {
+            $('#recall-instruction').on('hide.bs.collapse', function () {
+                $('#accordion .fa-angle-down').show();
+                $('#accordion .fa-angle-right').hide();
+            });
+            $('#recall-instruction').on('show.bs.collapse', function () {
+                $('#accordion .fa-angle-right').show();
+                $('#accordion .fa-angle-down').hide();
+            });
+        });
+    </script>
+</div>

@@ -1,0 +1,60 @@
+{% extends "IcapDropzoneBundle:Drop:drops.html.twig" %}
+
+{% block  drops_awaiting_active %} active {% endblock %}
+{% block drops_awaiting_link %} # {% endblock %}
+
+{% block dropzone_content_drops %}
+
+    {% include 'IcapDropzoneBundle:Drop:peerReviewHelper.html.twig' %}
+
+
+
+    <h3>{{ 'Awaiting for correction copies'|trans({}, 'icap_dropzone') }}</h3>
+
+    <div class="container row">
+        {% if pager.haveToPaginate %}
+            {{ pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+            'proximity' : 1,
+            'routeName': 'icap_dropzone_drops_awaiting_paginated',
+            'routeParams': {'resourceId': dropzone.id}
+            }
+            ) }}
+        {% endif %}
+    </div>
+    {% set AwaitingMode = true %}
+    {% include 'IcapDropzoneBundle:Drop:Listing/dropsListing.html.twig' %}
+
+    {% if pager.nbResults == 0 %}
+        <div class="row">
+            <div class="col-md-12 col-md-offset-1">
+                {{ 'No copy waiting for correction'|trans({}, 'icap_dropzone') }}
+            </div>
+        </div>
+        <br>
+    {% endif %}
+
+    <div class="container row">
+        {% if pager.haveToPaginate %}
+            {{ pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+            'proximity' : 1,
+            'routeName': 'icap_dropzone_drops_awaiting_paginated',
+            'routeParams': {'resourceId': dropzone.id}
+            }
+            ) }}
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}

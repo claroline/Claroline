@@ -1,0 +1,236 @@
+{% extends "IcapDropzoneBundle::layout.html.twig" %}
+
+{% form_theme form "IcapDropzoneBundle::form_theme_bootstrap3.html.twig" %}
+
+{% block resourceBreadcrumb %}
+    <li>
+        <a href="{{ path('icap_dropzone_open', {'resourceId': dropzone.id}) }}"><span
+                    class="fa fa-file"></span> {{ dropzone.resourceNode.name }}</a>
+    </li>
+    <li class="active"> {{ 'Make my copy'|trans({}, 'icap_dropzone') }}</li>
+{% endblock %}
+
+{% block dropzone_content %}
+    <style>
+        .dropzone-form-control-reduced {
+            width: 80%;
+        }
+
+        .dropzone-form-clean {
+            clear: both;
+        }
+
+        .dropzone_button_textarea {
+            float: left;
+            display: block;
+        }
+    </style>
+    <div class="container">
+        <h3>
+            {{ 'Make my copy'|trans({}, 'icap_dropzone') }}
+        </h3>
+
+        {{ macros.flashBox() }}
+
+        {# DROP STATUS BAR #}
+        {% include 'IcapDropzoneBundle:Drop:dropStatus.html.twig' %}
+
+        {# INSTRUCTIONS #}
+        {% if dropzone.instruction != null %}
+            {% include 'IcapDropzoneBundle:Dropzone:recallInstruction.html.twig' %}
+            <br/>
+        {% endif %}
+        <div class="panel panel-default">
+            <div class="panel-body"><p class="text-muted"><span
+                            class="fa fa fa-info-circle"></span> {{ 'drop_info'|trans({},'icap_dropzone') }}</p>
+            </div>
+        </div>
+
+        {# DOCUMENTS ALLREADY ADDED #}
+        <h4>{{ 'Documents added  the copy'|trans({},'icap_dropzone') }}</h4>
+        {{ dropzoneMacros.displayDocumentsList(drop, dropzone, 12, "complete", null) }}
+
+
+
+        <br/>
+        {# ADD DOCUMENT #}
+        {% include 'IcapDropzoneBundle:Drop:addDocument.html.twig' %}
+
+        {# GLOBAL DROP FORM #}
+        <form id='dropzone_global_drop_form' class="form-horizontal" method="POST"
+              action="{{ path('icap_dropzone_drop', {'resourceId': dropzone.id}) }}">
+            <div class="{% if form.vars.errors|length > 0 %}has-error{% endif %}">
+                {{ form_errors(form) }}
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                    <!-- Button trigger modal -->
+                    <a id='dropzone_global_save_link' data-toggle="modal" href="#saveModal"
+                       class="btn btn-primary pull-right disabled-during-add">{{ 'Save and finished'|trans({}, 'icap_dropzone') }}</a>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="saveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"
+                                            aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">{{ 'Warning'|trans({}, 'icap_dropzone') }}</h4>
+                                </div>
+                                <div class="modal-body">
+                                    {{ 'You are about to make your copy. This action is final. Are you sure you have done'|trans({}, 'icap_dropzone') }}
+
+                                    <div class='modal-warning text-danger' style="display:none">
+                                        <span class="text-danger fa fa-exclamation-triangle"></span>
+                                        {{ 'Empty field warning'|trans({},'icap_dropzone') }}
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" href="#" class="btn btn-default"
+                                       data-dismiss="modal">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</button>
+
+                                    <button type="submit" class="btn btn-primary pull-right">
+                                        {{ 'Confirm and finished'|trans({}, 'icap_dropzone') }}
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+                    <!-- /.modal -->
+
+                </div>
+            </div>
+            {{ form_end(form) }}
+
+            <br/>
+    </div>
+
+    <div id="picker-wrapper"></div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% javascripts
+    vars=["locale"]
+    "@ClarolineCoreBundle/Resources/views/Resource/breadcrumbs.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Resource/actions.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Resource/filters.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Resource/thumbnail.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Resource/results.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Resource/roles.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
+    filter="twig_js" %}
+    <script language="javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script type='text/javascript'
+            src='{{ asset('bundles/frontend/jquery-ui/jquery-ui.min.js') }}'></script>
+    <script src="{{ asset('bundles/icapdropzone/js/popup.js') }}"></script>
+
+    <script>
+        tinymce.claroline.configuration.toolbar1 = 'bold italic strikethrough | alignleft aligncenter alignright alignjustify | ';
+        $(document).ready(function () {
+            var resourceNodeId = null;
+
+            Claroline.ResourceManager.createPicker('dropPicker', {
+                callback: function (nodes) {
+                    resourceNodeId = _.keys(nodes)[0];
+                    $('.dropzone_ressrouceSelected').show();
+                    $('.dropzone_noRessourceSelected').hide();
+                    $('.selected-resource').html(name);
+                    $('#icap_dropzone_document_file_form_resource').val(resourceNodeId);
+
+                    $('#add-document-sumbit').removeAttr('disabled');
+                    $('#add-document-sumbit').trigger('click');
+
+                    $('.add-document-pending').hide();
+                }
+            });
+
+            if ($('#icap_dropzone_document_file_form_file').val() != '') {
+                $('.please-wait').show();
+                $(this).parents('form').submit();
+            }
+            // autosubmit input files.
+            $('#icap_dropzone_document_file_form_file').change(function () {
+                $('.please-wait').show();
+                $(this).parents('form').submit();
+            });
+
+            $('#icap_dropzone_document_file_form_file').parents('form').find('button').click(function (e) {
+                // desactivation of the submit button ( autosubmit is activated).
+                e.preventDefault();
+            });
+
+            $('a.launch-inline').on('click', function (event) {
+                event.preventDefault();
+                $('.disabled-during-add').attr('disabled', 'disabled');
+
+                var launchResourcePicker = $(this).hasClass('launch-resource-picker');
+                console.log(launchResourcePicker);
+
+                $.get($(this).attr('href'))
+                        .always(function () {
+                        })
+                        .done(function (data) {
+                            $('.container-inline').append(data);
+                            $('.show-during-add').show();
+
+                            if (launchResourcePicker) {
+                                Claroline.ResourceManager.picker('dropPicker');
+
+                                $('#modal-picker').on('hidden.bs.modal', function () {
+                                    console.log('hidden modal');
+                                    if (resourceNodeId == null) {
+                                        console.log('hidden modal => cancel');
+                                        $('.cancel-inline').trigger('click');
+                                    }
+                                });
+                            }
+
+                            var top = $('.container-inline').offset().top;
+                            top = top - 50;
+                            $('body,html').scrollTop(top);
+                        })
+                ;
+            });
+
+
+            $('#addRessourceButton').click(function (e) {
+                e.preventDefault();
+                Claroline.ResourceManager.picker('dropPicker');
+                $('#modal-picker').unbind('hidden.bs.modal').on('hidden.bs.modal', function () {
+                    console.log('hidden modal');
+                    if (resourceNodeId == null) {
+                        console.log('hidden modal => cancel');
+                        //$('.cancel-inline').trigger('click');
+                    }
+                });
+            });
+
+
+            $('#dropzone_global_save_link').click(function () {
+                // test if some text or data is not save before launch modal, in order to adapt message.
+                var fieldEmpty = true;
+                var text = $('#icap_dropzone_document_file_form_text').val();
+                var url = $('#icap_dropzone_document_file_form_url').val();
+                var file = $('#icap_dropzone_document_file_form_url').val();
+                if ((text != '' && text != '<p></p>') || (url != '') || (file != '')) {
+                    fieldEmpty = false;
+                }
+
+                if (!fieldEmpty) {
+                    $('.modal-warning').show();
+                } else {
+                    $('.modal-warning').hide();
+                }
+
+            })
+        });
+    </script>
+{% endblock %}

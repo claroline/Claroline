@@ -1,0 +1,45 @@
+{% macro displayDocumentsList(drop, dropzone, width, mode, documentListText ) %}
+    <div class="row">
+        <div class="col-md-{{ width }}">
+            {% if documentListText is not null %}
+                <div class="text-muted">{{ documentListText }}</div>
+            {% endif %}
+            <table class="table table-responsive {% if mode == "condensed" %}table-condensed{% endif %} well">
+                {% if drop.documents|length <= 0 %}
+                    <tr>
+                        <td>{{ 'No document associated'|trans({},'icap_dropzone') }}</td>
+                    </tr>
+                {% else %}
+                    {% for index, document in drop.documents %}
+                        <tr>
+                            <td>{{ 'Document n°%count%'|trans({'%count%': index + 1}, 'icap_dropzone') }}</td>
+                            <td>{{ (document.type~'_type')|trans({}, 'icap_dropzone') }}</td>
+                            <td>
+                                {% if document.url is not null %}
+                                    <a target="_blank"
+                                       href="{{ document.url }}">{{ document.url | length > 40 ? document.url | slice(0, 40) ~ '...' :document.url }}</a>
+                                {% else %}
+                                    {% if document.resourceNode %}
+                                        <a target="_blank"
+                                           href="{{ path('icap_dropzone_open_resource', {'resourceId': dropzone.id, 'documentId': document.id}) }}">{{ document.resourceNode.name }}</a>
+                                    {% else %}
+                                        {{ 'file_not_found'|trans({}, 'icap_dropzone') }}
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                            {% if mode == 'complete' %}
+                                <td>
+                                    <a href="{{ path('icap_dropzone_delete_document', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}"
+                                       class="btn btn-danger btn-sm pull-right launch-modal">
+                                        <span class="fa fa-trash-o"></span>
+                                        {{ 'Delete'|trans({}, 'icap_dropzone') }}
+                                    </a>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </table>
+        </div>
+    </div>
+{% endmacro %}

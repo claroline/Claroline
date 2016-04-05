@@ -1,0 +1,86 @@
+{% extends "IcapDropzoneBundle:Drop:dropsByBase.html.twig" %}
+
+{% block  drops_examiners_active %} active {% endblock %}
+{% block drops_examiners_link %} # {% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('icap_dropzone_edit_common',{'resourceId':dropzone.id}) }}"><span
+                    class="fa fa-list"></span>  {{ dropzone.resourceNode.name }}</a></li>
+    <li class="active">
+        {{ 'Examiners'|trans({}, 'icap_dropzone') }}
+    </li>
+{% endblock %}
+
+{% block dropzone_content_drops_by_beforeTitle %}
+    {% include 'IcapDropzoneBundle:Drop:peerReviewHelper.html.twig' %}
+{% endblock %}
+
+{% block dropzone_content_drops_by_default %}
+{% endblock %}
+{% block dropzone_content_drops_by_user %}
+{% endblock %}
+{% block dropzone_content_drops_by_date %}
+{% endblock %}
+{% block dropzone_content_drops_by_reported %}
+{% endblock %}
+
+{% block dropzone_content_drops_by_list_title %}
+    {{ 'List of examiners'|trans({}, 'icap_dropzone') }}
+{% endblock %}
+{% block dropzone_content_drops_by_list_tools %}
+    <div class="btn-group text-right">
+        <a type="button" class="btn btn-default btn-xs" data-toggle="tooltip" data-container="body"
+           data-placement="top" title="{{ 'unlock_user_tooltip'|trans({},'icap_dropzone') }}"
+           href="{{ path('icap_dropzone_unlock_all_user',{'resourceId':dropzone.id}) }}"><span
+                    class="fa fa-unlock">&nbsp;</span>{{ "unlock_all"|trans({},'icap_dropzone') }}</a>
+
+        <a type="button" class="btn btn-default btn-xs"
+           href="{{ path('icap_dropzone_unlock_cancel',{'resourceId': dropzone.id}) }}">{#<span
+                    class="fa fa-lock">&nbsp;</span>#}{{ "cancel_unlock"|trans({},'icap_dropzone') }}</a>
+    </div>
+{% endblock %}
+{% block dropzone_content_drops_by_list_subtitle %}
+    {{ 'People that have a copy in this dropzone'|trans({}, 'icap_dropzone') }}
+{% endblock %}
+
+{% block dropzone_content_drops_by_Listing %}
+
+    {% include 'IcapDropzoneBundle:Drop:Listing/examinersListing.html.twig' %}
+{% endblock %}
+
+{% block dropzone_content_drops_by_pager %}
+    {% if pager.haveToPaginate %}
+        {{ pagerfanta(
+        pager,
+        'twitter_bootstrap_translated',
+        {
+        'proximity' : 1,
+        'routeName': 'icap_dropzone_examiners_paginated',
+        'routeParams': {'resourceId': dropzone.id}
+        }
+        ) }}
+    {% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $('document').ready(function () {
+            $('.popoverItem').popover({
+                'trigger': 'hover',
+                'html': true
+            });
+        });
+    </script>
+{% endblock %}
+
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        table th div.popover {
+            font-weight: normal;
+        }
+    </style>
+{% endblock %}

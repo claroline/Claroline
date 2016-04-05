@@ -1,0 +1,61 @@
+services:
+    icap.listener.dropzone_listener:
+        class: Icap\DropzoneBundle\Listener\DropzoneListener
+        calls:
+          - [setContainer, ["@service_container"]]
+        tags: 
+          - { name: kernel.event_listener, event: create_form_icap_dropzone, method: onCreateForm }
+          - { name: kernel.event_listener, event: create_icap_dropzone, method: onCreate }
+          - { name: kernel.event_listener, event: delete_icap_dropzone, method: onDelete }
+          #- { name: kernel.event_listener, event: export_icap_dropzone, method: onExport }
+          - { name: kernel.event_listener, event: copy_icap_dropzone, method: onCopy }
+          - { name: kernel.event_listener, event: open_icap_dropzone, method: onOpen }
+          - { name: kernel.event_listener, event: create_log_list_item_icap_dropzone, method: onCreateLogListItem }
+          - { name: kernel.event_listener, event: create_log_details_icap_dropzone, method: onCreateLogDetails }
+          - { name: kernel.event_listener, event: plugin_options_icapdropzone, method: onAdministrate }
+          - { name: kernel.event_listener, event: edit_dropzone_icap_dropzone, method: onEdit }
+          - { name: kernel.event_listener, event: list_dropzone_icap_dropzone, method: onList }
+          - { name: kernel.event_listener, event: open_dropzone_icap_dropzone, method: onOpenCustom }
+
+    icap.listener.document_listener:
+        class: Icap\DropzoneBundle\Listener\DeleteListener
+        calls:
+          - [setContainer, ["@service_container"]]
+        tags:
+          - { name: doctrine.event_listener, event: preRemove }
+
+    icap.listener.dropzone.display_log_listener:
+            class: Icap\DropzoneBundle\Listener\Log\DisplayLogListener
+            calls:
+                - [setContainer, ["@service_container"]]
+            tags:
+                - { name: kernel.event_listener, event: create_log_details_resource-icap_dropzone-dropzone_configure,              method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-icap_dropzone-criterion_create,                method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-icap_dropzone-criterion_update,                method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-icap_dropzone-criterion_delete,                method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-icap_dropzone-drop_start,                      method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-icap_dropzone-drop_end,                        method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-icap_dropzone-document_create,                 method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-icap_dropzone-document_delete,                 method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-icap_dropzone-document_open,                   method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-icap_dropzone-correction_start,                method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-icap_dropzone-correction_end,                  method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-icap_dropzone-correction_update,               method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-icap_dropzone-correction_delete,               method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-icap_dropzone-correction_validation_change,    method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-icap_dropzone-drop_evaluate,                   method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-icap_dropzone-drop_report,                     method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-icap_dropzone-correction_report,               method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-icap_dropzone-drop_grade_available,            method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-icap_dropzone-dropzone_manual_state_changed,   method: onCreateLogDetails }
+
+    icap.listener.dropzone.notification_listener:
+            class: Icap\DropzoneBundle\Listener\NotificationListener
+            calls:
+                - [setContainer, ["@service_container"]]
+            tags:
+                - { name: kernel.event_listener, event: create_notification_item_resource-icap_dropzone-drop_report,                      method: onCreateNotificationItem }
+                - { name: kernel.event_listener, event: create_notification_item_resource-icap_dropzone-correction_report,                method: onCreateNotificationItem }
+                - { name: kernel.event_listener, event: create_notification_item_resource-icap_dropzone-drop_grade_available,             method: onCreateNotificationItem }
+                - { name: kernel.event_listener, event: create_notification_item_resource-icap_dropzone-dropzone_manual_state_changed,    method: onCreateNotificationItem }
+                - { name: kernel.event_listener, event: create_notification_item_resource-icap_dropzone-drop_end,                         method: onCreateNotificationItem }

@@ -1,0 +1,19 @@
+{% extends "IcapDropzoneBundle::layout.html.twig" %}
+{% block resourceBreadcrumb %}
+    <li class="active"><span class="fa fa-file"></span> {{ dropzone.resourceNode.name }}</li>
+    <li class="active">Copies made</li>
+    <li class="active">Invalidate a drop</li>
+{% endblock %}
+
+{% block dropzone_content %}
+    <div class="container container-dropzone">
+        <h3>
+            {{ 'Invalidate a drop'|trans({}, 'icap_dropzone') }}
+        </h3>
+        {% include "IcapDropzoneBundle:Drop:dropsDeleteForm.html.twig" %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

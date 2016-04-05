@@ -1,0 +1,14 @@
+{% extends "IcapDropzoneBundle::layout.html.twig" %}
+{% block resourceBreadcrumb %}
+    <li class="active"><span class="fa fa-file"></span> {{ dropzone.resourceNode.name }}</li>
+{% endblock %}
+{% block dropzone_content %}
+    <div class="col-md-12">
+        <hr>
+        <h4 class="modal-title">{{ 'Warning'|trans({}, 'icap_dropzone') }}</h4>
+        {% include "IcapDropzoneBundle:Correction:deleteCorrectionForm.html.twig" %}
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

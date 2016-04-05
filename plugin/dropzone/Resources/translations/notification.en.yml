@@ -1,0 +1,5 @@
+resource-icap_dropzone-drop_report: ' reported a copy in  %dropzone%'
+resource-icap_dropzone-correction_report: 'reported a correction in %dropzone% '
+resource-icap_dropzone-drop_grade_available: 'your copy has been corrected, your grade is now available in %dropzone%'
+resource-icap_dropzone-dropzone_manual_state_changed: 'The current phase of  %dropzone% jsut changed to : %newState%'
+resource-icap_dropzone-drop_end: 'has made a drop in %dropzone%'

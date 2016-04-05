@@ -1,0 +1,27 @@
+
+
+{% import 'IcapDropzoneBundle::macros.html.twig' as dropzoneMacros %}
+<form class="form-horizontal" method="POST" action="{{ path('icap_dropzone_drops_delete', {'resourceId': dropzone.id, 'dropId':drop.id, 'tab': tab, 'page': page}) }}">
+    {{ form_errors(form) }}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 text-muted">{{ 'Drop by'|trans({}, 'icap_dropzone') }}</div>
+            <div class="col-md-9">{{ drop.user.firstName }} {{ drop.user.lastName }}</div>
+        </div>
+        
+        {% set documentListText = 'Documents'|trans({}, 'icap_dropzone') %}
+        {{ dropzoneMacros.displayDocumentsList(drop ,dropzone, 12, "condensed", documentListText) }}
+    </div>
+
+    <div class="container form-group form-buttons">
+        <div class="btn-group pull-right">
+            <a href="{{ path(previousPath, {'resourceId': dropzone.id, 'page': page}) }}" class="btn btn-default">
+                {{ 'Cancel'|trans({}, 'icap_dropzone') }}
+            </a>
+            <button type="submit" class="btn btn-danger">
+                {{ 'Confirm delete'|trans({}, 'icap_dropzone') }}
+            </button>
+        </div>
+    </div>
+{{ form_end(form) }}

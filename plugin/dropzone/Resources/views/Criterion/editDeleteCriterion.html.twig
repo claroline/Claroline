@@ -1,0 +1,15 @@
+{% extends "IcapDropzoneBundle:Dropzone:edit.html.twig" %}
+
+{% block drop_zone_content_edit %}
+
+
+    <h3 id="myModalLabel">
+        {{ 'Warning'|trans({}, 'icap_dropzone') }}
+    </h3>
+
+    {% include "IcapDropzoneBundle:Criterion:editDeleteCriterionForm.html.twig" %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

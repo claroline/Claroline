@@ -1,0 +1,98 @@
+ <div class="table-responsive">
+        <table class="table   table-striped table-hover  ">
+            <thead>
+                <th>{{'user'|trans({},'icap_dropzone')}}</th>
+{#                 <th>{{'has a drop'|trans({}, 'icap_dropzone') }}</th> #}
+                <th>{{'Started Corrections'|trans({}, 'icap_dropzone') }}</th>
+                <th>{{'Complete Corrections'|trans({}, 'icap_dropzone') }}</th>
+                <th>
+                    <div class="popoverItem" data-toggle="popover" data-placement="top"
+                         data-content="{{ 'number_of_denied_corrections'|trans({}, 'icap_dropzone')|raw }}">{{ 'number of Report'|trans({},'icap_dropzone') }}</div>
+                </th>
+                <th>
+                    <div class="popoverItem" data-toggle="popover" data-placement="top"
+                         data-content="{{ 'corrections_denied'|trans({}, 'icap_dropzone')|raw }}">{{ 'was reported'|trans({},'icap_dropzone') }}</div>
+                </th>
+                {# <th>{{'tools'|trans({},'icap_dropzone')}}</th>#}
+            </thead>
+            <tbody>
+
+        {% for user in pager.currentPageResults %}
+            {% set needCorrection = 0 %}
+            {% set unlockedUser = 0 %}
+            {% if attribute(usersAndCorrectionCount, user.id).drop_isUnlocked == 1 %}
+                {% set unlockedUser = 1 %}
+            {% endif %}
+            {% if attribute(usersAndCorrectionCount, user.id).correction_finishedCount <   dropzone.expectedTotalCorrection %}
+                {% set needCorrection = 1 %}
+            {% endif %}
+
+            <tr  >
+                <td>
+                    <a href="{{ path('icap_dropzone_examiner_corrections',{'resourceId':dropzone.id,'userId':user.id}) }}">
+                        {{ user.lastName|upper }} {{ user.firstName|capitalize }}</a>
+                </td>
+
+                <td class="{% if unlockedUser == 1 and  needCorrection == 1 %}
+                               info
+                           {% elseif needCorrection == 1 %}
+                               warning
+                           {% endif %}">
+                    {{ attribute(usersAndCorrectionCount, user.id).correction_count }}
+                </td>
+
+                <td class="{% if unlockedUser == 1 and  needCorrection == 1 %}
+                               info"
+                    {% elseif needCorrection == 1 %}
+                    warning
+                " data-toggle="tooltip" data-container="body" data-placement="left"
+                title="{{ 'unlock_user_tooltip'|trans({},'icap_dropzone') }}"
+                {% endif %}">
+                {{ attribute(usersAndCorrectionCount, user.id).correction_finishedCount }}
+                    / {{ dropzone.expectedTotalCorrection }}
+
+
+                {% if attribute(usersAndCorrectionCount, user.id).drop_isUnlocked == 0 %}
+                    {% if  needCorrection == 1 %}
+                        <a class="btn btn-default btn-xs"
+                           href="{{ path('icap_dropzone_unlock_user',{'resourceId':dropzone.id,'userId':user.id}) }}">
+                            <span class="fa fa-unlock">&nbsp;</span>
+                            {{ 'unlock user'|trans({},'icap_dropzone') }}
+                        </a>
+                    {% endif %}
+                {% else %}
+                    {# <button type="button" class="btn btn-info btn-xs" disabled> #}
+                    <a class="btn btn-info btn-xs" disabled>
+                        <span class="fa fa-unlock info">&nbsp;</span>
+                        {{ "unlocked user"|trans({},'icap_dropzone') }}
+                    </a>
+
+                    {# </button>#}
+                {% endif %}
+                </td>
+                <td>
+                   {{ attribute(usersAndCorrectionCount, user.id).correction_reportCount }} / {{ attribute(usersAndCorrectionCount, user.id).correction_count }}
+                </td> 
+                <td >
+                   {{ attribute(usersAndCorrectionCount, user.id).correction_deniedCount }} / {{ attribute(usersAndCorrectionCount, user.id).correction_count }}
+                </td>
+
+                {#              <td>
+                                  <div class="btn-group ">
+                                      &#123;&#35;
+                                      <a href="#" type="button" class="btn btn-default btn-xs">{{ 'See user s correction'|trans({}, 'icap_dropzone') }}</a>
+                                      &#35;&#125;
+                                     &#123;&#35;
+                                      {%  if AwaitingMode is defined and  AwaitingMode == true %}
+                                          <a href="{{ path('icap_dropzone_drops_detail_add_correction', {'resourceId': dropzone.id, 'dropId': drop.id}) }}" type="button" class="btn btn-default btn-xs">{{ 'Add a correction'|trans({}, 'icap_dropzone') }}</a>
+                                      {% endif %}
+                                      <a href="{{ path('icap_dropzone_drops_delete', {'resourceId': dropzone.id, 'dropId': drop.id, 'tab': 0, 'page': pager.currentPage}) }}" class="btn btn-danger btn-xs launch-modal"><span class="glyphicon icon-trash"></span> {{ 'Delete copy'|trans({}, 'icap_dropzone') }}</a>
+                                       &#35;&#125;
+                                  </div>
+                              </td>#}
+            </tr>
+        {% endfor %}
+            </tbody>
+    </table>
+
+</div>

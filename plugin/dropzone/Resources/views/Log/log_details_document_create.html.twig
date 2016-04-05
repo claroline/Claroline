@@ -1,0 +1,11 @@
+{% if log.details.document is defined %}
+    <h4>{{ ('log_create_document')|trans({}, 'log') }}</h4>
+    {% include 'IcapDropzoneBundle:Log:log_details_document.html.twig' with {'document': log.details.document} %}
+{% endif %}
+{% if log.details.drop is defined %}
+    <h4>{{ ('log_drop_all_documents')|trans({}, 'log') }}</h4>
+
+    {% for document in log.details.drop.documents %}
+        {% include 'IcapDropzoneBundle:Log:log_details_document.html.twig' with {'document': document} %}
+    {% endfor %}
+{% endif %}

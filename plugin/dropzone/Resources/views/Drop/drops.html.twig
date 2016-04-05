@@ -1,0 +1,80 @@
+{% extends "IcapDropzoneBundle::layout.html.twig" %}
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('icap_dropzone_edit_common',{'resourceId':dropzone.id}) }}"><span
+                    class="fa fa-list"></span>  {{ dropzone.resourceNode.name }}</a></li>
+    <li class="active"> {{ 'List of copies'|trans({}, 'icap_dropzone') }}</li>
+{% endblock %}
+
+{% block dropzone_content %}
+    <div class="container container-dropzone">
+        <h2>
+            {{ 'List of copies'|trans({}, 'icap_dropzone') }}
+            <div class=" pull-right">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <span
+                                class="fa fa-download"></span> {{ 'Download copies'|trans({}, 'icap_dropzone') }} <span
+                                class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a href="{{ path('icap_dropzone_download_copies', {'resourceId': dropzone.id}) }}">
+                                {{ 'Download all copies'|trans({}, 'icap_dropzone') }} </a>
+                        </li>
+                        <li>
+                            <a class="launch-modal" data-loading-text="Loading..."
+                               href="{{ path('icap_dropzone_download_copies_by_date', {'resourceId': dropzone.id}) }}">{{ 'Download between two dates'|trans({}, 'icap_dropzone') }}  </a>
+                        </li>
+                    </ul>
+
+
+                    <a class=" btn btn-default "
+                       href="{{ path('icap_dropzone_edit', {'resourceId': dropzone.id}) }}"><span
+                                class="fa fa-pencil-square-o"></span> {{ 'Edit evaluation'|trans({}, 'icap_dropzone') }}
+                    </a>
+                </div>
+            </div>
+        </h2>
+
+        {% if unterminated_drops is defined %}
+            <p>{{ unterminated_drops }} {{ 'unterminated drops'|trans({},'icap_dropzone') }}
+                {% if unterminated_drops > 0 and (dropzone.manualState ==  'finished' or dropzone.manualState == 'peerReview' ) %}
+                    <a href="{{ path('icap_dropzone_auto_close_drops_confirmation',{'resourceId':dropzone.id}) }}"
+                       class="btn btn-default btn-xs launch-modal"><span
+                                class="fa fa-check"></span> {{ 'Close unterminated drops'|trans({},'icap_dropzone' ) }}
+                    </a>
+                {% endif %}
+            </p>
+
+        {% endif %}
+        {{ macros.flashBox() }}
+        <ul class="nav nav-tabs  margin-bottom-md margin-top-md">
+            <li class="hometab-element {% block drops_completed_active %}{% endblock %}">
+                <a href="{% block drops_completed_link %}{{ path('icap_dropzone_drops_by_default', {'resourceId': dropzone.id}) }} {% endblock %}">
+                    {{ 'Copies evaluation finished'|trans({}, 'icap_dropzone') }} <span
+                            class="badge">{{ nbDropCorrected }}</span>
+                </a>
+            </li>
+            <li class="hometab-element {% block drops_awaiting_active %}{% endblock %}">
+                <a href="{% block drops_awaiting_link %}{{ path('icap_dropzone_drops_awaiting', {'resourceId': dropzone.id}) }} {% endblock %}">
+                    {{ 'Copies being evaluated'|trans({}, 'icap_dropzone') }} <span
+                            class="badge">{{ nbDrop - nbDropCorrected }}</span>
+                </a>
+            </li>
+            <li class="hometab-element {% block drops_examiners_active %}{% endblock %}">
+                <a href="{% block drops_examiners_link %}{{ path('icap_dropzone_examiners', {'resourceId': dropzone.id}) }} {% endblock %}">
+                    {{ 'Examiners'|trans({}, 'icap_dropzone') }}
+                </a>
+            </li>
+        </ul>
+
+
+        {% block dropzone_content_drops %}
+        {% endblock %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/icapdropzone/js/popup.js') }}"></script>
+{% endblock %}

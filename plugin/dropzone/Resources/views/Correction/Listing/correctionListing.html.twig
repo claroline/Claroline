@@ -1,0 +1,209 @@
+{% if byUserMod == 0 %}
+    {% set viewState_var = 'show' %}
+{% else %}
+    {% set viewState_var = 'preview' %}
+{% endif %}
+{##}
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead>
+        <th>Etat</th>
+        <th>
+            {% if  adminCorrectionByUserMod is defined and  adminCorrectionByUserMod == 1 %}
+                {{ "copy author's"|trans({},'icap_dropzone') }}
+            {% elseif byUserMod == 0 %}
+                {% set adminCorrectionByUserMod = 0 %}
+                {{ 'Examiner'|trans({},'icap_dropzone') }}
+            {% endif %}
+
+        </th>
+        <th>Commencée</th>
+        <th>Dernière Ouverture</th>
+        <th>Terminée</th>
+        <th>Note</th>
+        <th>Outils</th>
+        </thead>
+        <tbody>
+        {% set validCorrections = 0 %}
+        {% for correction in corrections %}
+            <tr class="{% if not  correction.valid %}danger{% endif %} ">
+                <td>
+
+
+                    {% if not correction.valid %}
+
+                        <span class=" fa fa-minus" data-toggle="tooltip"
+                              data-original-title="{{ 'Invalidated'|trans({}, 'icap_dropzone') }}"></span>
+                    {% else %}
+                        {% set validCorrections = validCorrections+1 %}
+                        {% if correction.reporter %}
+                            <span class="text-danger fa fa-exclamation-triangle" data-toggle="tooltip"
+                                  data-original-title="{{ 'Reported'|trans({}, 'icap_dropzone') }}"></span>
+                        {% endif %}
+                        {% if correction.correctionDenied %}
+                            <span class="text-warning fa fa-exclamation-triangle" data-toggle="tooltip"
+                                  data-original-title="{{ 'Correction denied'|trans({}, 'icap_dropzone') }}"></span>
+                        {% endif %}
+                    {% endif %}
+                </td>
+                <td>
+
+                    {% if  adminCorrectionByUserMod is defined and  adminCorrectionByUserMod == 1 %}
+                        {% set backPage = 'adminCorrectionByUserMod' %}
+                        {% if  backUserId is not defined %}
+                            {% set backUserId = -1 %}
+                        {% endif %}
+                        {% if  correction.drop is defined and correction.drop != null %}
+                            <a href="{{ path('icap_dropzone_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id,'state':'show', 'backUserId':backUserId}) }}"
+                               class="" data-toggle="tooltip"
+                               data-original-title="{{ 'See correction'|trans({},'icap_dropzone') }}">
+
+                                {{ correction.drop.user.firstName|capitalize ~' '~ correction.drop.user.lastName|upper }}
+                            </a>
+                        {% else %}
+                            {# case where a drop was deleted ( we keep the corrections ) #}
+                            <span class="" data-toggle="tooltip"
+                                  data-original-title="{{ 'The drop was deleted by administator'|trans({},'icap_dropzone') }}">
+
+                               {{ 'Deleted drop'|trans({},'icap_dropzone') }}
+                            </span>
+                        {% endif %}
+                    {% else %}
+                        {% set backPage = 'default' %}
+                        {% if correction.editable and byUserMod == 0 %}
+                            <span class="text-muted fa fa-users" data-toggle="tooltip"
+                                  data-original-title="{{ 'created by a manager'|trans({}, 'icap_dropzone') }}">
+                            </span>
+                        {% endif %}
+                        <a href="{{ path('icap_dropzone_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': viewState_var}) }}"
+                           class="" data-toggle="tooltip"
+                           data-original-title="{{ 'See correction'|trans({},'icap_dropzone') }}">
+
+
+                            {% if(byUserMod == 0) %}
+                                {{ correction.user.firstName|capitalize ~' '~ correction.user.lastName|upper }}
+                            {% else %}
+                                {{ 'Correction number %num%'|trans({'%num%': loop.index}, 'icap_dropzone') }}
+                            {% endif %}
+                        </a>
+                    {% endif %}
+                </td>
+                <td>
+                    {{ correction.startDate|date('formatDatetime'|trans({}, 'icap_dropzone')) }}
+                </td>
+                <td>
+                    {{ correction.lastOpenDate|date('formatDatetime'|trans({}, 'icap_dropzone')) }}
+                </td>
+                <td>
+                    {% if correction.endDate != null %}
+                        {{ correction.endDate|date('formatDatetime'|trans({}, 'icap_dropzone')) }}
+                    {% else %}
+                        --
+                    {% endif %}
+                </td>
+                <td>
+                    {% if correction.totalGrade != null %}{{ correction.totalGrade|number_format(2) }}{% else %}--{% endif %}
+                    /20
+                </td>
+                <td>
+                    <div class="btn-group correction-tools">
+                        {#
+                        <a href="{{ path('icap_dropzone_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': viewState_var}) }}" class="btn btn-default btn-xs" >
+                            {{ 'See correction'|trans({},'icap_dropzone')}}
+                        </a>
+                        #}
+
+                        {% if byUserMod == 0 %}
+
+                            {% if dropzone.peerReview %}
+                                {# <a href="{{ path('icap_dropzone_recalculate_score',
+                                 {'resourceId': dropzone.id, 'correctionId': correction.id}) }}"
+                                    class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="left"
+                                    data-container="body"
+                                    title="{{ 'recalculate_helper'|trans({},'icap_dropzone') }}">
+                                     {{ 'Recalculate the score'|trans({}, 'icap_dropzone') }}</a>#}
+                            {% endif %}
+                            {% if correction.finished %}
+                                {% if correction.valid %}
+                                    {% set path_invalidate_link = 'icap_dropzone_drops_detail_correction_validation' %}
+                                    {% if  adminCorrectionByUserMod == 1 %}
+                                        {% set path_invalidate_link = 'icap_dropzone_drops_detail_correction_validation_by_user' %}
+                                    {% endif %}
+                                    <a href="{{ path(path_invalidate_link,
+                                    {'resourceId': dropzone.id, 'correctionId': correction.id, 'value': 'no'}) }}"
+                                       class="btn btn-default btn-xs dropzone_invalidate_link ">{{ 'Invalidate'|trans({}, 'icap_dropzone') }}</a>
+                                {% else %}
+                                    <a href="{{ path('icap_dropzone_revalidateCorrection',
+                                    {'resourceId': dropzone.id, 'correctionId': correction.id, 'value': 'yes'}) }}"
+                                       class="btn btn-default btn-xs launch-modal ">{{ 'revalidate'|trans({}, 'icap_dropzone') }}</a>
+                                {% endif %}
+                            {% endif %}
+                            {% if correction.editable %}
+                                <a href="{{ path('icap_dropzone_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': 'edit'}) }}"
+                                   class="btn btn-default btn-xs">{{ 'dropzone_edit'|trans({}, 'icap_dropzone') }}</a>
+                                {% if backUserId is defined %}
+                                    <a href="{{ path('icap_dropzone_drops_detail_delete_correction', {'resourceId': dropzone.id, 'correctionId': correction.id,'backUserId': backUserId }) }}"
+                                       class="btn btn-danger btn-xs launch-modal"><span
+                                                class="fa fa-trash-o "></span>{{ 'Delete'|trans({}, 'icap_dropzone') }}
+                                    </a>
+                                {% else %}
+                                    <a href="{{ path('icap_dropzone_drops_detail_delete_correction', {'resourceId': dropzone.id, 'correctionId': correction.id}) }}"
+                                       class="btn btn-danger btn-xs launch-modal"><span
+                                                class="fa fa-trash-o "></span>{{ 'Delete'|trans({}, 'icap_dropzone') }}
+                                    </a>
+                                {% endif %}
+                            {% else %}
+                                <a href="#" class="btn btn-default btn-xs disabled" disabled="disabled"
+                                   data-toggle="tooltip"
+                                   title="{{ 'Need to be the author'|trans({}, 'icap_dropzone') }}"
+                                   data-container="body">
+                                    {{ 'dropzone_edit'|trans({}, 'icap_dropzone') }}
+                                </a>
+                                <a href="#" class="btn btn-default btn-xs disabled" disabled="disabled"
+                                   data-toggle="tooltip"
+                                   title="{{ 'Need to be the author'|trans({}, 'icap_dropzone') }}"
+                                   data-container="body"><span class="fa fa-trash-o"></span>
+                                    {{ 'Delete'|trans({}, 'icap_dropzone') }}
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<div style="display:none">
+
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        /**
+         Allow to use tooltip in disable button inside a button group
+         creating a div in absolute pos
+         **/
+        $('input:disabled, button:disabled, a.disabled').after(function (e) {
+            d = $("<div >");
+            i = $(this);
+            var offset = i.offset();
+            var left_pos = offset.left - $(this).parent().offset().left; // due  to table and groupButton
+            d.css({
+                height: i.outerHeight(),
+                width: i.outerWidth(),
+                position: "absolute",
+                left: left_pos
+            });
+            d.attr("title", i.attr("title"));
+            d.attr('data-container', 'body'); // specific to group Buttons.
+            d.tooltip();
+            return d;
+        });
+
+
+    });
+
+</script>

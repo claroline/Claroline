@@ -1,0 +1,7 @@
+{% set date = drop.getLastCorrectionDate() %}
+
+{% if false != date %}
+    {{ date|date('formatDatetime'|trans({}, 'icap_dropzone')) }}
+{% else %}
+    ---------
+{% endif %}

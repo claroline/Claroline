@@ -1,0 +1,36 @@
+<div id="modal-content" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 id="myModalLabel">
+                    {{ 'Close unterminated drops'|trans({},'icap_dropzone') }}
+                </h4>
+            </div>
+            <div class="modal-body">
+                {% include "IcapDropzoneBundle:Dropzone:confirmCloseUnterminatedDropForm.html.twig" %}
+            </div>
+            <div class="modal-footer">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"
+                            aria-hidden="true">{{ 'Do nothing'|trans({}, 'icap_dropzone') }}</button>
+                    <a id="form-submit" class="btn btn-primary"
+                       href="{{ path('icap_dropzone_auto_close_drops',{'resourceId':dropzone.id}) }}">
+                        {{ 'Validate copies'|trans({}, 'icap_dropzone') }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.form-buttons').hide();
+
+            $('#form-submit').on('click', function () {
+                //I do the "click" on submit button for keep html5 warning
+                $('.modal-body button[type="submit"]').trigger('click');
+            });
+        });
+    </script>
+</div>

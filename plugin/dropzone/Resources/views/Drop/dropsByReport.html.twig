@@ -1,0 +1,26 @@
+{% extends "IcapDropzoneBundle:Drop:dropsByBase.html.twig" %}
+
+{% block  drops_completed_active %} active {% endblock %}
+{% block drops_completed_link %} # {% endblock %}
+
+{% block dropzone_content_drops_by_reported_active %}active{% endblock %}
+
+{% block dropzone_content_drops_by_paginate_part %}
+        {% if pager.haveToPaginate %}
+            {{
+            pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+            'proximity' : 1,
+            'routeName': 'icap_dropzone_drops_by_date_paginated',
+            'routeParams': {'resourceId': dropzone.id}
+            }
+            )
+            }}
+        {% endif %}
+{% endblock %}
+
+{% block dropzone_content_drops_by_no_result_exception %}
+    {{ 'no reported copies'|trans({},'icap_dropzone') }}
+{% endblock %}

@@ -1,0 +1,18 @@
+plugin:
+    has_options: false
+    icon: icap_eval_icon.png
+
+    resources:
+        - name: icap_dropzone
+          class: Icap\DropzoneBundle\Entity\Dropzone
+          is_visible: true
+          icon: icap_eval_icon.png
+          actions:
+            - name: open
+              menu_name: open_dropzone
+            - name: edit
+              menu_name: edit_dropzone
+            - name: edit
+              menu_name: list_dropzone
+          activity_rules:
+            - action: resource-icap_dropzone-drop_evaluate

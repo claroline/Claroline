@@ -1,0 +1,32 @@
+{% if log.details.drop is defined and log.details.drop.owner is defined %}
+    <h4>
+        {{ ('log_owner_drop')|trans({}, 'log') }}
+    </h4>
+    {% include 'IcapDropzoneBundle:Log:log_details_user.html.twig' with {'user': log.details.drop.owner} %}
+{% endif %}
+{% if log.details.dropId is defined %}  
+    <div class='list-group'>
+        <div class='list-group-item'>
+            {% if log.details.dropGrade is defined %}
+                <dl class="dl-horizontal">
+                    <dt>{{ 'Grade'|trans({},'icap_dropzone') }}</dt>
+                    <dd>{{ log.details.dropGrade }}/20 - <a
+                                href="{{ path('icap_dropzone_drops_detail', {'resourceId' : log.details.dropzoneId,'dropId' : log.details.dropId}) }}"
+                                target="_blank">
+                            {{ 'See copy'|trans({},'icap_dropzone') }}
+                        </a></dd>
+                </dl>
+            {% else %}
+                <dl class="dl-horizontal">
+                    <dd>
+                        <a href="{{ path('icap_dropzone_drops_detail', {'resourceId' : log.details.dropzoneId,'dropId' : log.details.dropId}) }}"
+                           target="_blank">
+                            {{ 'See copy'|trans({},'icap_dropzone') }}
+                        </a>
+                    </dd>
+                </dl>
+
+            {% endif %}
+        </div>
+    </div>
+{% endif %}

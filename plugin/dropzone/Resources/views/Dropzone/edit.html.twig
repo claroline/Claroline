@@ -1,0 +1,46 @@
+{% extends "IcapDropzoneBundle::layout.html.twig" %}
+{% block resourceBreadcrumb %}
+    <li class="active"><span class=" fa fa-pencil-square-o"></span> {{ dropzone.resourceNode.name }}</li>
+{% endblock %}
+
+{% block dropzone_content %}
+    <div class="container container-dropzone">
+
+        <h2>
+            {{ 'Edit evaluation'|trans({}, 'icap_dropzone') }}
+            <div class="btn-group pull-right">
+
+
+                {% render controller('IcapNotificationBundle:FollowerResource:renderForm', {'resourceId': dropzone.resourceNode.id, 'resourceClass': dropzone.resourceNode.class}) %}
+                <a class="btn btn-default " href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"><span
+                            class="fa fa-list"></span> {{ 'See copies'|trans({}, 'icap_dropzone') }}</a>
+            </div>
+        </h2>
+        {{ macros.flashBox() }}
+        <ul class="nav nav-tabs  margin-bottom-md margin-top-md">
+
+            <li class="hometab-element {% block dropzone_edit_navTabs_param_element_class %}active {% endblock %}">
+                <a href="
+                    {% block dropzone_edit_navTabs_param_link %}
+                        {{ path('icap_dropzone_edit_common',{'resourceId':dropzone.id}) }}
+                    {% endblock %}" class="hometab-link">
+                    Paramètres
+                </a>
+            </li>
+            {% block dropzone_edit_navTabs_criteria_block %}
+                <!-- class "peer-review-options" make this tab hidden when peerReview is not activated.  -->
+                <li class="hometab-element peer-review-options {% block dropzone_edit_navTabs_criteria_element_class %} {% endblock %}">
+                    <a id="editCriteriaLink" href="
+                    {% block dropzone_edit_navTabs_criteria_element_link %}
+                        {{ path('icap_dropzone_edit_criteria',{'resourceId':dropzone.id}) }}
+                    {% endblock %}" class="hometab-link">
+                        Critères d'évaluation par les pairs
+                    </a>
+                </li>
+            {% endblock %}
+        </ul>
+
+        {% block drop_zone_content_edit %}
+        {% endblock %}
+    </div>
+{% endblock %}

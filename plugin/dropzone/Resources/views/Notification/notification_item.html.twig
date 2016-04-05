@@ -1,0 +1,27 @@
+{% extends 'IcapNotificationBundle:Templates:notification.html.twig' %}
+{% set avatarUrlPrefix = asset('uploads/pictures/') %}
+
+{% block notificationText %}
+    {% if notification.userId is not empty and notification.details.doer is defined %}
+        <a href="{{ path('claro_profile_view', {'userId' : notification.userId}) }}"><strong>{{ notification.details.doer.firstName ~ ' ' ~ notification.details.doer.lastName }}</strong></a>
+    {% else %}
+        <strong>{{ systemName }}</strong>
+    {% endif %}
+    {% if constant('Icap\\DropzoneBundle\\Event\\Log\\LogDropReportEvent::ACTION') == notification.actionKey %}
+        {#    DROP REPORT  #}
+        {% include 'IcapDropzoneBundle:Notification:notification_drop_report.html.twig' %}
+    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogCorrectionReportEvent::ACTION') == notification.actionKey %}
+        {#    CORRECTION  REPORT  #}
+        {% include 'IcapDropzoneBundle:Notification:notification_correction_report.html.twig' %}
+    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogDropGradeAvailableEvent::ACTION') == notification.actionKey %}
+        {#    DROP GRADE AVAILABLE  #}
+        {% include 'IcapDropzoneBundle:Notification:notification_drop_grade_available.html.twig' %}
+    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogDropzoneManualStateChangedEvent::ACTION') == notification.actionKey %}
+        {#    MANUAL STATE CHANGED  #}
+        {% include 'IcapDropzoneBundle:Notification:notification_dropzone_manual_state_changed.html.twig' %}
+    {% elseif constant('Icap\\DropzoneBundle\\Event\\Log\\LogDropEndEvent::ACTION') == notification.actionKey %}
+        {#    DROP END  #}
+        {% include 'IcapDropzoneBundle:Notification:notification_drop_end.html.twig' %}
+
+    {% endif %}
+{% endblock %}

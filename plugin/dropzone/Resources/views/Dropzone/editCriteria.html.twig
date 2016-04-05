@@ -1,0 +1,414 @@
+{% extends "IcapDropzoneBundle:Dropzone:edit.html.twig" %}
+{% form_theme form "IcapDropzoneBundle::form_theme_bootstrap3.html.twig" %}
+
+
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('icap_dropzone_edit_common',{'resourceId':dropzone.id}) }}"><span
+                    class=" fa fa-bars"></span>  {{ dropzone.resourceNode.name }}</a></li>
+    <li class="active"> {{ 'Evaluation criterions'|trans({}, 'icap_dropzone') }}</li>
+{% endblock %}
+
+{# reset the default active tab#}
+{% block dropzone_edit_navTabs_param_element_class %}
+{% endblock %}
+{# seting the correct  active tab#}
+{% block dropzone_edit_navTabs_criteria_element_class %}
+    active
+{% endblock %}
+
+{# reset the default url setting to # #}
+{% block dropzone_edit_navTabs_criteria_element_link %}
+    #
+{% endblock %}
+
+{% block drop_zone_content_edit %}
+
+
+    <form id="global_form" class="form-horizontal" method="POST"
+          action="{{ path('icap_dropzone_edit_criteria', {'resourceId': dropzone.id}) }}"
+          class="disabled-during-edition">
+    <input id="addCriteriaReRouting" type="hidden" name="addCriteria" value="default"/>
+
+    <p>{{ 'criteria_explication'|trans({}, 'icap_dropzone')|raw }}</p>
+
+    <div class='container col-md-12'>
+        <div class='row '>
+            <h4> {{ 'Instructions for examiners'|trans({},'icap_dropzone') }}</h4>
+            {{ form_widget(form.correctionInstruction) }}
+            {{ form_errors(form.correctionInstruction) }}
+        </div>
+    </div>
+    <h3>{{ 'Evaluation Criteria'|trans({}, 'icap_dropzone') }}</h3>
+    {% if nbCorrection > 0 %}
+        <div class="alert alert-warning">
+            <h4> {{ 'Warning'|trans({}, 'icap_dropzone') }}</h4>
+
+            <p> {{ 'corrections were already created'|transchoice(nbCorrection,{},'icap_dropzone') }}</p>
+
+            <p> {{ 'Modify add or delete criteria will affect this corrections if you recalculate the note on it.'|trans({},'icap_dropzone') }}</p>
+        </div>
+    {% endif %}
+    <div class="container">
+    <div class="row align-with-panel">
+        <div class="col-md-8">
+            <a href="{{ path('icap_dropzone_edit_add_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage}) }}"
+               class="btn btn-primary add-criterion-button disabled-during-edition"><span
+                        class="fa fa-plus "> {{ 'Add a criterion'|trans({}, 'icap_dropzone') }}</span></a>
+            {# <a href="{{ path('icap_dropzone_recalculate_dropzone_grades', {'dropzone': dropzone.id}) }}"
+                class="btn btn-default disabled-during-edition" data-toggle="tooltip" data-placement="left"
+                data-container="body"
+                title="{{ 'recalculate_helper'|trans({},'icap_dropzone') }}"><span
+                         class="glyphicon icon-repeat"> {{ 'Recalculate all grade'|trans({}, 'icap_dropzone') }}</span></a>#}
+        </div>
+
+        <div class="col-md-4 add-remove-column" {% if pager.nbResults == 0 %}style="display: none;"{% endif %}>
+            <div class="form-group column-input">
+                {{ form_row(form.totalCriteriaColumn, {'type': 'number', 'label_col_size': 'col-md-6', 'input_col_size': 'col-md-6', 'label_attr': {'style': 'font-weight: normal;'}, 'attr': {'class': 'form-control', 'style': 'width: 60px;' }}
+                ) }}
+            </div>
+
+            <div class="column-input-js center-div" style="display: none;">
+                <div class="btn-group">
+                    <a href="#" class="remove-column btn btn-primary"><span class="fa fa-minus"></span> </a>
+                    <span class="btn btn-default disabled fake-button">{{ 'Change scale'|trans({}, 'icap_dropzone') }}</span>
+                    <a href="#" class="add-column btn btn-primary"><span class="fa fa-plus"></span> </a>
+                </div>
+            </div>
+            {#<div class="row column-input-js" style="display: none;">
+                <label class="col-md-12 control-label pull-right" style="text-align: center;">
+                    <div>{{ 'Change scale'|trans({}, 'icap_dropzone') }}</div>
+                    <span>
+                        <a href="#" class="remove-column"><span class="fa fa-minus"></span> </a>
+                        <a href="#" class="add-column"><span class="fa fa-plus"></span> </a>
+                    </span>
+
+                </label>
+            </div>#}
+        </div>
+    </div>
+    <div class="spacer10"></div>
+
+    {% if pager.haveToPaginate %}
+        <div class="row">
+            {{ pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+            'proximity' : 1,
+            'routeName': 'icap_dropzone_edit_criteria_paginated',
+            'routeParams': {'resourceId': dropzone.id}
+            }
+            ) }}
+        </div>
+    {% endif %}
+
+    {% if pager %}
+        {% for criterion in pager.currentPageResults %}
+            {% set criterionNumber = (((pager.currentPage-1) * pager.maxPerPage) + loop.index) %}
+            <div id="criterion-{{ criterion.id }}" class="criterion-row">
+                <div class="panel panel-criteria">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5 class="panel-title">
+                                    #{{ criterionNumber }} {{ 'Criteria'|trans({},'icap_dropzone') }} {{ criterionNumber }} </h5>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="btn-group pull-right btn-group-xs">
+                                    <a href="{{ path('icap_dropzone_edit_add_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage, 'criterionId': criterion.id}) }}"
+                                       class="btn btn-default btn-sm edit-criterion-button disabled-during-edition"
+                                       data-criterion="criterion-{{ criterion.id }}"><span
+                                                class="fa fa-edit"></span> {{ 'dropzone_edit'|trans({}, 'icap_dropzone') }}
+                                    </a>
+                                    <a href="{{ path('icap_dropzone_edit_delete_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage, 'criterionId': criterion.id, 'number': criterionNumber}) }}"
+                                       class="btn btn-danger disabled-during-edition btn-sm launch-modal delete-criteria-button"><span
+                                                class="fa fa-trash-o"></span> {{ 'Delete'|trans({}, 'icap_dropzone') }}
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="panel-body ">
+                        <div class="criterion-show">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    {{ criterion.instruction|raw }}
+                                </div>
+                                <div class="col-md-3 criteria-radio-container ">
+                                            <span class="column-container">
+                                                {% for i in 1..dropzone.totalCriteriaColumn %}
+                                                    <input type="radio" disabled/>
+                                                {% endfor %}
+                                            </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="criterion-edit well" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+            {#<hr/>
+            <div id="criterion-{{ criterion.id }}" class="criterion-row">
+                {% set criterionNumber = (((pager.currentPage-1) * pager.maxPerPage) + loop.index) %}
+                <h4>#{{ criterionNumber }}</h4>
+                <div class="criterion-show">
+                    <div class="row">
+                        <div class="col-md-9">
+                            {{ criterion.instruction|raw }}
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <span>{{ 'Not at all'|trans({}, 'icap_dropzone') }}</span>
+                                    <span class="pull-right">{{ 'Entirely'|trans({}, 'icap_dropzone') }}</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 column-container-div">
+                                    <span class="column-container">
+                                        {% for i in 1..dropzone.totalCriteriaColumn %}
+                                            <input type="radio" disabled />
+                                        {% endfor %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="btn-group pull-right">
+                                <a href="{{ path('icap_dropzone_edit_add_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage, 'criterionId': criterion.id}) }}"
+                                   class="btn btn-default btn-sm edit-criterion-button disabled-during-edition"
+                                   data-criterion="criterion-{{ criterion.id }}"><span
+                                            class="fa fa-edit"></span> {{ 'dropzone_edit'|trans({}, 'icap_dropzone') }}
+                                </a>
+                                <a href="{{ path('icap_dropzone_edit_delete_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage, 'criterionId': criterion.id, 'number': criterionNumber}) }}"
+                                   class="btn btn-danger disabled-during-edition btn-sm launch-modal delete-criteria-button"><span
+                                            class="fa fa-trash-o"></span> {{ 'Delete'|trans({}, 'icap_dropzone') }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="criterion-edit well" style="display: none;"></div>
+            </div>#}
+        {% endfor %}
+    {% endif %}
+
+    <div id="new-criteria" class="new-criteria well" style="display: none;">
+        <div class="new-criteria-zone"></div>
+    </div>
+
+    {% if pager.haveToPaginate %}
+        <div class="row">
+            {{ pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+            'proximity' : 1,
+            'routeName': 'icap_dropzone_edit_criteria_paginated',
+            'routeParams': {'resourceId': dropzone.id}
+            }
+            ) }}
+        </div>
+    {% endif %}
+
+    <hr/>
+    <div class="row add-criteria-zone">
+        <div class="col-md-12">
+            {% if pager.nbResults == 0 %}
+                {{ 'There are no evaluation criterion'|trans({}, 'icap_dropzone') }}
+                <hr/>
+            {% endif %}
+        </div>
+    </div>
+
+
+    <div class="template" style="display: none;">
+        <div class="template-criteria-zone" style="display: none;">
+            <div class="row">
+                <div class="col-md-9 new-criteria-form">
+                    <!-- awaiting form -->
+                </div>
+                <div class="col-md-3 criteria-radio-container ">
+                            <span class="column-container">
+                                {% for i in 1..dropzone.totalCriteriaColumn %}
+                                    <input type="radio" disabled/>
+                                {% endfor %}
+                            </span>
+                </div>
+            </div>
+            {# <div class="row">
+                 <div class="col-md-9 new-criteria-form">
+                     &#123;&#35; form awaiting &#35;&#125;
+                 </div>
+
+                 <div class="col-md-3">
+                     <div class="row">
+                         <div class="col-md-12">
+                             <span>{{ 'Not at all'|trans({}, 'icap_dropzone') }}</span>
+                             <span class="pull-right">{{ 'Entirely'|trans({}, 'icap_dropzone') }}</span>
+                         </div>
+                     </div>
+                     <div class="row">
+                         <div class="col-md-12 column-container-div">
+                             <span class="column-container">
+                                 {% for i in 1..dropzone.totalCriteriaColumn %}
+                                     <input type="radio" disabled />
+                                 {% endfor %}
+                             </span>
+                         </div>
+                     </div>
+                 </div>
+             </div>  #}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="btn-group pull-right">
+                        <a href="#" class="btn btn-default btn-sm form-cancel"
+                           data-criterion="new">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</a>
+                        <a href="#"
+                           class="btn btn-primary btn-sm form-submit">{{ 'Save criterion'|trans({}, 'icap_dropzone') }}</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div>
+            {{ form_row(form.allowCommentInCorrection, {'input_col_size': ' '}) }}
+        </div>
+        <div>
+            {{ form_row(form.forceCommentInCorrection, {'input_col_size': ' '}) }}
+
+        </div>
+    </div>
+
+    {{ form_rest(form) }}
+    <div class="row">
+        <div class="btn-group pull-right">
+            <a href="{{ path('icap_dropzone_edit_common', {'resourceId': dropzone.getId()}) }}"
+               class="btn btn-default criteria-form-button back-button">{{ 'Return'|trans({}, 'icap_dropzone') }}</a>
+            <button id="submit_global_form" type="submit"
+                    class="btn btn-primary criteria-form-button save-submit">{{ 'Save and finished'|trans({}, 'icap_dropzone') }}</button>
+
+        </div>
+    </div>
+    </form>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <strong>2/2</strong>
+        </div>
+    </div>
+    <div class="modal fade" id="recalculateAskPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">{{ 'Warning'|trans({}, 'icap_dropzone') }}  {{ 'corrections were already created'|transchoice(nbCorrection,{},'icap_dropzone') }}</h4>
+                </div>
+                <div class="modal-body">
+
+
+                    <p> {{ 'Your modifications will only affect new corrections. For older, do you want to apply modification and recalculate grades'|trans({},'icap_dropzone') }}</p>
+
+                </div>
+                <div class="modal-footer">
+                    <button id="notRecalculateButton"
+                            class="btn btn-default">{{ 'Just save'|trans({}, 'icap_dropzone') }}</button>
+
+                    <button id='recalculateButton' class="btn btn-primary pull-right">
+                        {{ 'Save and recalculate all grade'|trans({}, 'icap_dropzone') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /*.row {
+            border:1px solid red;
+        }*/
+        .column-container-div {
+            text-align: center;
+        }
+
+        hr {
+            margin-bottom: 0px;
+            margin-top: 0px;
+        }
+
+        .panel-heading {
+            padding: 10px;
+        }
+
+        .panel-body {
+            padding: 10px;
+        }
+
+        .criteria-radio-container {
+            text-align: center;
+        }
+
+        .btn.disabled.fake-button {
+            opacity: 1;
+        }
+
+        .align-with-panel {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .spacer10 {
+            height: 10px;
+            width: 100%;
+            font-size: 0;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            display: block;
+        }
+
+        .center-div {
+            margin: auto;
+            text-align: center;
+        }
+
+        .panel-criteria > .panel-heading {
+            background-color: #E0E0E0;
+            border-color: #E0E0E0;
+        }
+
+        .panel-criteria {
+            border-color: #E0E0E0;
+        }
+
+        /*.test {
+            background-color:blue;
+        }*/
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/icapdropzone/js/popup.js') }}"></script>
+    {{ tinymce_init() }}
+    <script>
+        var totalColumn = {{ dropzone.totalCriteriaColumn }};
+        var comment =
+        {{ dropzone.allowCommentInCorrection ? 1 : 0 }}
+        var nbCorrection = {{nbCorrection}};
+        var nbResults = {{ pager.nbResults }};
+    </script>
+    <script src="{{ asset('bundles/icapdropzone/js/Dropzone/editCriteria.js') }}"></script>
+
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "IcapDropzoneBundle:Document:documentFormDefault.html.twig" %}
+
+{% block document_body %}
+
+    {% set id_input  ='icap_dropzone_document_file_form_resource' %}
+    {% if documentType == 'url' %}
+        {% set id_input  = 'icap_dropzone_document_file_form_url' %}
+    {% elseif documentType == 'url' %}
+        {% set id_input  = 'icap_dropzone_document_file_form_text' %}
+    {% elseif documentType == 'file' %}
+        {% set id_input  = 'icap_dropzone_document_file_form_file' %}
+    {% endif %}
+    <div class="row">
+        {{ form_row(form.document,{'id': id_input}) }}
+    </div>
+    <div class="row dropzone_ressrouceSelected" style="display:none">
+        <div class="col-md-3">
+            <strong>{{ 'Resource selected'|trans({}, 'icap_dropzone') }}</strong>
+        </div>
+        <div class="col-md-6">
+            <span class="selected-resource">-</span>
+            <strong class="add-document-pending"
+                    style="display: none;"> {{ 'loading'|trans({}, 'icap_dropzone') }}</strong>
+        </div>
+    </div>
+    <div class="row dropzone_noRessourceSelected">
+        <div class="col-md-8">
+            <div class='input-group'>
+                <input id='addRessourceInput' type="text" class='form-control'
+                       placeholder="{{ 'Choose a resource'|trans({},'icap_dropzone') }}"></input>
+                <span class='input-group-btn'>
+                     <a href='#' id='addRessourceButton'
+                        class='btn btn-default'>{{ 'Add'|trans({}, 'icap_dropzone') }}</a>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="display: none;">
+        <div class="col-md-12">
+            <div class="form-group pull-right">
+                <button id="add-document-sumbit" disabled type="submit" class="btn btn-default">
+                    {{ 'Add'|trans({}, 'icap_dropzone') }}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#addRessourceInput').click(function () {
+                $('#addRessourceButton').click();
+            });
+        })
+    </script>
+
+{% endblock %}
+

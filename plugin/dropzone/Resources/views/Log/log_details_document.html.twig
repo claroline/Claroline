@@ -1,0 +1,10 @@
+<dl class="dl-horizontal">
+    <dt>{{ (document.type~'_type')|trans({}, 'icap_dropzone') }}</dt>
+    {% if document.url is not null %}
+        <dd><a href="{{ document.url }}">{{ document.url }}</a> </dd>
+    {% elseif document.resourceNode is not null %}
+        <dd><a href="{{ path('icap_dropzone_open_resource', {'resourceId': log.details.dropzone.id, 'documentId': document.id}) }}">{{ document.resourceNode.name }}</a></dd>
+    {% else %}
+        <dd>{{ 'Unrecognized type'|trans({}, 'icap_dropzone') }}</dd>
+    {% endif %}
+</dl>

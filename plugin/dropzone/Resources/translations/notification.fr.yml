@@ -1,0 +1,5 @@
+resource-icap_dropzone-drop_report: ' a signalé une une copie  dans l''évaluation %dropzone%'
+resource-icap_dropzone-correction_report: ' a signalé une correction dans l''évaluation %dropzone%'
+resource-icap_dropzone-drop_grade_available: ' Votre copie a été corrigée et votre note est disponible dans l''évaluation %dropzone%'
+resource-icap_dropzone-dropzone_manual_state_changed: 'La phase de l''évaluation %dropzone% a changé en : "%newState%"'
+resource-icap_dropzone-drop_end: 'a déposé une copie dans l''évaluation %dropzone%'

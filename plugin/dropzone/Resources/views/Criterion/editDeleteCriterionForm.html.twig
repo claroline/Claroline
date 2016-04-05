@@ -1,0 +1,23 @@
+<form class="form-horizontal" method="POST" action="{{ path('icap_dropzone_edit_remove_criterion', {'resourceId': dropzone.id, 'page': page, 'criterionId':criterion.id}) }}">
+    {{ form_errors(form) }}
+
+    <div class="container">
+        {% if nbCorrection > 0 %}
+            <p>
+                {{ 'corrections were already created'|transchoice(nbCorrection,{},'icap_dropzone') }}
+            </p>
+        {% endif %}
+        {{ 'Are you sure you want to delete the %number%'|trans({'%number%': number}, 'icap_dropzone') }}
+    </div>
+
+    <div class="container form-group form-buttons">
+        <div class="btn-group pull-right">
+            <a href="{{ path('icap_dropzone_edit_criteria_paginated', {'resourceId': dropzone.id, 'page': page}) }}" class="btn btn-default">
+                {{ 'Cancel'|trans({}, 'icap_dropzone') }}
+            </a>
+            <button type="submit" class="btn btn-danger">
+                {{ 'Confirm delete'|trans({}, 'icap_dropzone') }}
+            </button>
+        </div>
+    </div>
+{{ form_end(form) }}

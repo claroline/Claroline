@@ -1,0 +1,30 @@
+{% extends "IcapDropzoneBundle:Document:documentFormDefault.html.twig" %}
+
+{% block document_body %}
+    {#     <div class="row">
+            {{ form_row(form.document, {'label_col_size': ' ', 'input_col_size': 'col-md-8', 'attr': {'placeholder': (documentType~'_placeholder')|trans({}, 'icap_dropzone')}, 'label_attr': {'class': 'sr-only'},'id': 'icap_dropzone_document_file_form_text'}) }}
+            <div class="col-md-4 ">
+                <div class="form-group ">
+                    <button type="submit" class="btn btn-primary">
+                        {{ 'Add'|trans({}, 'icap_dropzone') }}
+                    </button>
+                </div>
+            </div>
+        </div> #}
+
+    <div class="row">
+        <div class='col-md-8'>
+            <div class='input-group'>
+                {{ form_widget(form.document,{'label_col_size': ' ', 'attr': {'placeholder': (documentType~'_placeholder')|trans({}, 'icap_dropzone')}, 'label_attr': {'class': 'sr-only'},'id':'icap_dropzone_document_file_form_text' }) }}
+                <span class='input-group-btn'>
+                        <button type="submit" class="btn btn-default">
+                            {{ 'Add'|trans({}, 'icap_dropzone') }}
+                        </button>
+                    </span>
+            </div>
+            {{ form_rest(form.document) }}
+        </div>
+    </div>
+
+{% endblock %}
+
