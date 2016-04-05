@@ -1,0 +1,19 @@
+{% trans_default_domain "icap_blog" %}
+
+<form name="blog_widegt_tag_list_blog_form" class="configure_blog_form" action="{{ path("icap_blog_widget_tag_list_blog_configure", {'id': widgetInstance.id}) }}"
+      method="post" {{ form_enctype(form) }} novalidate="novalidate">
+    <div class="panel-body">
+        {{ form_errors(form) }}
+        <div class="form-group row">
+            <div class="col-md-12">
+                 {{ form_widget(form.resourceNode) }}
+            </div>
+        </div>
+        {{ form_row(form.tag_cloud) }}
+        {{ form_rest(form) }}
+    </div>
+    <div class="panel-footer">
+        <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
+        <button type="button" class="btn btn-default claro-widget-form-cancel">{{ 'cancel'|trans({}, 'platform') }}</button>
+    </div>
+</form>

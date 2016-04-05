@@ -1,0 +1,41 @@
+services:
+    icap.listener.blog_listener:
+        class: Icap\BlogBundle\Listener\BlogListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: create_form_icap_blog,    method: onCreateForm }
+            - { name: kernel.event_listener, event: create_icap_blog,         method: onCreate }
+            - { name: kernel.event_listener, event: open_icap_blog,           method: onOpen }
+            - { name: kernel.event_listener, event: delete_icap_blog,         method: onDelete }
+            - { name: kernel.event_listener, event: copy_icap_blog,           method: onCopy }
+            - { name: kernel.event_listener, event: configure_blog_icap_blog, method: onConfigure }
+
+    icap.listener.blog.log_listener:
+        class: Icap\BlogBundle\Listener\LogListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: create_log_details_resource-icap_blog-configure,          method: onPostCreateLogDetails }
+            - { name: kernel.event_listener, event: create_log_details_resource-icap_blog-configure_banner,   method: onPostCreateLogDetails }
+            - { name: kernel.event_listener, event: create_log_details_resource-icap_blog-post_create,        method: onPostCreateLogDetails }
+            - { name: kernel.event_listener, event: create_log_details_resource-icap_blog-post_read,          method: onPostCreateLogDetails }
+            - { name: kernel.event_listener, event: create_log_details_resource-icap_blog-post_update,        method: onPostCreateLogDetails }
+            - { name: kernel.event_listener, event: create_log_details_resource-icap_blog-post_delete,        method: onPostCreateLogDetails }
+            - { name: kernel.event_listener, event: create_log_details_resource-icap_blog-post_publish,       method: onPostCreateLogDetails }
+            - { name: kernel.event_listener, event: create_log_details_resource-icap_blog-comment_create,     method: onPostCreateLogDetails }
+            - { name: kernel.event_listener, event: create_log_details_resource-icap_blog-comment_delete,     method: onPostCreateLogDetails }
+            - { name: kernel.event_listener, event: create_log_details_resource-icap_blog-comment_update,     method: onPostCreateLogDetails }
+            - { name: kernel.event_listener, event: create_log_details_resource-icap_blog-comment_publish,    method: onPostCreateLogDetails }
+
+            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_blog-configure,        method: onCreateLogListItem }
+            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_blog-configure_banner, method: onCreateLogListItem }
+            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_blog-post_create,      method: onCreateLogListItem }
+            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_blog-post_read,        method: onCreateLogListItem }
+            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_blog-post_update,      method: onCreateLogListItem }
+            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_blog-post_publish,     method: onCreateLogListItem }
+            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_blog-post_delete,      method: onCreateLogListItem }
+            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_blog-comment_create,   method: onCreateLogListItem }
+            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_blog-comment_delete,   method: onCreateLogListItem }
+            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_blog-comment_update,   method: onCreateLogListItem }
+            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_blog-comment_publish,  method: onCreateLogListItem }

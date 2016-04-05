@@ -1,0 +1,21 @@
+<div id="panel6" class="panel panel-default archives_panel {% if orderPanelInfo.visibility == 0 %}hidden{% endif %}">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'archives'|trans({}, 'icap_blog') }}</h3>
+    </div>
+    <div class="panel-body">
+        <ul class="tree">
+            {% for year, datas in archives %}
+            <li>
+                <span>{{ year }}</span>
+                <ul>
+                {% for data in datas %}
+                    <li><a href="{{ path('icap_blog_view_filter', {'blogId': blog.id, 'filter': data.urlParameters}) }}">{{ data.month }} ({{ data.count }})</a></li>
+                {% endfor %}
+                </ul>
+            </li>
+            {% else %}
+            <li>{{ 'no_archives'|trans({}, 'icap_blog') }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

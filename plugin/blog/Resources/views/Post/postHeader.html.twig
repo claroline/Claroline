@@ -1,0 +1,43 @@
+<header>
+    {% if 'blog_view' == mode %}
+        <h1><a href="{{ path('icap_blog_post_view', {'blogId': _resource.id, 'postSlug': post.slug}) }}" title="">{{ post.title }}</a></h1>
+    {% elseif 'search_view' == mode %}
+        <h1>{{ post.title|highlight(search)|raw }}</h1>
+    {% else %}
+        <h1>{{ post.title }}</h1>
+    {% endif %}
+
+    {% if is_granted('EDIT', _resource) or (is_granted('POST', _resource) and post.author == user) %}
+    <div class="btn-group pull-right options">
+        {% if is_granted('EDIT', _resource) %}
+            {% if isPublished %}
+            <a href="{{ path('icap_blog_post_unpublish', {'blogId': _resource.id, 'postSlug': post.slug}) }}" class="btn btn-default btn-xs">
+                {{ 'unpublish'|trans({}, 'icap_blog') }}
+            </a>
+            {% else %}
+            <a href="{{ path('icap_blog_post_publish', {'blogId': _resource.id, 'postSlug': post.slug}) }}" class="btn btn-default btn-xs">
+                {{ 'publish'|trans({}, 'icap_blog') }}
+            </a>
+            {% endif %}
+        {% endif %}
+        <a href="{{ path('icap_blog_post_edit', {'blogId': _resource.id, 'postSlug': post.slug}) }}" class="btn btn-primary btn-xs">
+            <span class="fa fa-edit"></span> {{ 'edit'|trans({}, 'platform') }}
+        </a>
+        <a href="{{ path('icap_blog_post_delete', {'blogId': _resource.id, 'postSlug': post.slug}) }}" class="btn btn-xs btn-danger delete" data-confirm-title="{{ 'post_deletion_confirm_title'|trans({}, 'icap_blog') }}" data-confirm-message="{{ 'post_deletion_confirm_message'|trans({'%postName%': post.title}, 'icap_blog') }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-toggle="tooltip" data-container="body" title="{{ 'delete'|trans({}, 'platform') }}" data-placement="top" data-original-title="{{ 'delete'|trans({}, 'platform') }}">
+            <span class="fa fa-trash-o"></span>
+        </a>
+    </div>
+    {% endif %}
+
+    {% set author = post.author %}
+    <ul class="list-inline post_infos">
+        {% set authorPicture = author.picture %}
+        <li>{% if authorPicture is null %}<span class="fa fa-user"></span>{% else %}<img src="{{ asset('uploads/pictures/') ~ authorPicture }}" alt="{{ author.firstname ~ ' ' ~ author.lastname }}" class="img-rounded user_picture">{% endif %}&nbsp;<small><a href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': author.username}) }}" rel="author" title="{{ author.firstname ~ ' ' ~ author.lastname }}">{{ author.firstname ~ ' ' ~ author.lastname }}</a></small></li>
+        {% if null != post.publicationDate %}
+            <li><span class="fa fa-calendar"></span> <small><time>{{ post.publicationDate|date('date_format'|trans({}, 'platform')) }}</time></small></li>
+        {% endif %}
+        {% if _resource.displayPostViewCounter and 0 < post.viewCounter %}
+            <li><span class="fa fa-eye"></span> <small>{{ 'view'|transchoice(post.viewCounter, {'%viewCounter%': post.viewCounter}, 'icap_blog') }}</small></li>
+        {% endif %}
+    </ul>
+</header>

@@ -1,0 +1,11 @@
+<footer>
+    <p class="pull-right">{% if _resource.isCommentsAuthorized %}<a href="{{ path('icap_blog_post_view', {'blogId': _resource.id, 'postSlug': post.slug}) }}#comments" {% if 'post_view' == mode %}name="comments" {% endif %} title="{{ 'see_comments'|trans({}, 'icap_blog') }}"><i class="fa fa-comments"></i> {% set countComments = is_granted('EDIT', _resource) ? post.countComments(true) : post.countComments %}{{ countComments }} {{ 'comments'|transchoice(countComments, {}, 'icap_blog') }}</a>{% endif %}</p>
+    <ul class="list-unstyled list-inline tags">
+        <li><span class="fa fa-tags"></span></li>
+    {% for tag in post.tags %}
+        <li><a href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': tag.slug}) }}" title="{{ tag }}">{{ tag }}</a></li>
+    {% else %}
+        <li>{{ 'no_tags'|trans({}, 'icap_blog') }}</li>
+    {% endfor %}
+    </ul>
+</footer>

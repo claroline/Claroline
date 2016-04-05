@@ -1,0 +1,82 @@
+{% extends 'IcapBlogBundle::layout.html.twig' %}
+
+{% form_theme form _self %}
+
+{% block form_row %}
+    {% spaceless %}
+        <div class="form-group{% if errors|length > 0 %} has-error{% endif %}">
+            {{ form_label(form, label|default(null)) }}
+            {% set ctrl_width = theme_options.control_width is defined ? theme_options.control_width : 'col-md-10' %}
+            <div class="{{ ctrl_width }}">
+                {{ form_errors(form) }}
+                {% if help is defined and help %}
+                    <div class="help-block">{{ help }}</div>
+                {% endif %}
+                {{ form_widget(form) }}
+            </div>
+        </div>
+    {% endspaceless %}
+{% endblock form_row %}
+
+{% block title %}{{ _resource.resourceNode.name }} - {{ "edit_post"|trans({'%postTitle%': post.title}, 'icap_blog') }}{% endblock %}
+
+{% block blog_content %}
+    <form action="{{ path('icap_blog_post_edit', {'blogId': _resource.id, 'postSlug': post.slug}) }}" method="post" {{ form_enctype(form) }} class="well" id="icap_blog_post_form" novalidate>
+        <legend>{{ "edit_post"|trans({'%postTitle%': post.title}, 'icap_blog') }}</legend>
+        {% if false == is_granted('EDIT', _resource) and false == _resource.isAutoPublishPost %}
+        <p class="alert alert-warning">
+            {{ 'icap_blog_post_edit_need_validation_before_publishing'|trans({}, 'icap_blog') }}
+        </p>
+        {% endif %}
+        {{ form_errors(form) }}
+
+        <div class="row">
+            {{ form_row(form.title) }}
+        </div>
+        {% if is_granted('EDIT', _resource) %}
+        <div class="row">
+            <div class="form-group">
+                <label class="control-label col-md-3" for="icap_blog_post_form_publicationDate">{{ 'icap_blog_post_form_publicationDate'|trans({}, 'icap_blog') }}</label>
+                {{ form_errors(form.publicationDate) }}
+                <div class="col-md-3">
+                    {{ form_widget(form.publicationDate) }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <div class="row">
+            {{ form_row(form.content) }}
+        </div>
+        {{ form_row(form.tags) }}
+
+        {{ form_rest(form) }}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
+            <a href="{{ path("icap_blog_view", {"blogId": _resource.id}) }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-danger">{{ 'cancel'|trans({}, 'platform') }}</a>
+        </div>
+    </form>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/frontend/tag-it/css/jquery.tagit.css') }}"/>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+{% javascripts output='js/blog.js'
+    '@FrontEndBundle/Resources/public/jquery-ui/ui/minified/position.min.js'
+    '@FrontEndBundle/Resources/public/jquery-ui/ui/minified/menu.min.js'
+    '@FrontEndBundle/Resources/public/jquery-ui/ui/minified/autocomplete.min.js'
+    '@FrontEndBundle/Resources/public/tag-it/js/tag-it.min.js'
+    %}<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+<script type="text/javascript">
+    $(function() {
+        $(".tags").tagit({
+            'availableTags' : ["{{ blog_tags(_resource)|tagnames|join('","')|raw }}"],
+            'allowSpaces' : true
+        });
+    });
+</script>
+{% endblock %}

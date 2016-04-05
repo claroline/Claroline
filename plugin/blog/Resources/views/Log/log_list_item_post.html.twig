@@ -1,0 +1,3 @@
+{% if log.details.post is defined %}
+    <a href="{{ path('icap_blog_post_view', {'blogId': log.details.post.blog, 'postSlug': log.details.post.slug }) }}"><strong>{{ log.details.post.title }}</strong></a>
+{% endif %}

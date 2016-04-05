@@ -1,0 +1,8 @@
+<div id="panel3" class="panel panel-default tagcloud_panel {% if orderPanelInfo.visibility == 0 %}hidden{% endif %}">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'tag_cloud'|trans({}, 'icap_blog') }}</h3>
+    </div>
+    <div class="tag-cloud-container panel-body">
+        {% include 'IcapBlogBundle:Layout:tags.html.twig' with {'blogOptions': blog.options} %}
+    </div>
+</div>

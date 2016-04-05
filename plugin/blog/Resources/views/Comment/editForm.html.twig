@@ -1,0 +1,9 @@
+<form action="{{ path('icap_blog_comment_edit', {'blogId': _resource.id, 'postSlug': post.slug, 'commentId': comment.id}) }}" class="well" method="post" {{ form_enctype(form) }}>
+    {{ form_errors(form) }}
+    {{ form_widget(form.message) }}
+    {{ form_rest(form) }}
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary submit-update-comment-btn">{{ 'save'|trans }}</button>
+        <a class="btn btn-default cancel-update-comment-btn" href="{{ path('icap_blog_post_view', {'blogId': _resource.id, 'postSlug': post.slug}) }}">{{ 'cancel'|trans }}</a>
+    </div>
+</form>

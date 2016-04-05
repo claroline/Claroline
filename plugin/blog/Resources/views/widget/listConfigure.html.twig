@@ -1,0 +1,33 @@
+{% trans_default_domain "icap_blog" %}
+
+{% form_theme form 'IcapBlogBundle:widget:list_form_theme.html.twig' %}
+
+{% block stylesheets %}
+    {% stylesheets debug=false filter="less, cssmin"  output="css/icapblog/widget_list.css"
+      "@IcapBlogBundle/Resources/views/less/widget_list.less"
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
+{% endblock %}
+
+<form name="blog_widegt_list_form" class="form-inline" action="{{ path("icap_blog_widget_list_configure", {'id': widgetInstance.id}) }}" method="post" {{ form_enctype(form) }} novalidate="novalidate">
+    <div class="panel-body">
+        {{ form_errors(form) }}
+        {{ form_widget(form.widgetListBlogs) }}
+        <p>{{ 'display_for_list'|trans({}, 'widget') }}</p>
+        {{ form_widget(form.widgetDisplayListBlogs) }}
+        {{ form_rest(form) }}
+    </div>
+    <div class="panel-footer">
+        <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
+        <button type="button" class="btn btn-default claro-widget-form-cancel">{{ 'cancel'|trans({}, 'platform') }}</button>
+    </div>
+</form>
+
+<script type="text/javascript" src="{{ asset('bundles/zenstruckform/js/helper.js') }}"></script>
+<script type="text/javascript">
+    (function () {
+        "use strict";
+        ZenstruckFormHelper.initFormCollectionHelper();
+    }());
+</script>

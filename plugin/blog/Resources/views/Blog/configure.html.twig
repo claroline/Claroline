@@ -1,0 +1,57 @@
+{% extends 'IcapBlogBundle::layout.html.twig' %}
+
+{% block title %}{{ _resource.resourceNode.name }} - {{ "configure_blog"|trans({}, 'icap_blog') }}{% endblock %}
+
+{% block blog_content %}
+    <form action="{{ path('icap_blog_configure', {'blogId':_resource.id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal well configure_blog_form">
+        <legend>{{ "configure_blog"|trans({}, 'icap_blog') }}</legend>
+        {{ form_errors(form) }}
+        <div class="checkbox">
+            <label>
+                {{ form_widget(form.authorize_comment) }} {{ 'icap_blog_options_form_authorize_comment'|trans({}, 'icap_blog') }}
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                {{ form_widget(form.authorize_anonymous_comment) }} {{ 'icap_blog_options_form_authorize_anonymous_comment'|trans({}, 'icap_blog') }}
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                {{ form_widget(form.auto_publish_post) }} {{ 'icap_blog_options_form_auto_publish_post'|trans({}, 'icap_blog') }}
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                {{ form_widget(form.auto_publish_comment) }} {{ 'icap_blog_options_form_auto_publish_comment'|trans({}, 'icap_blog') }}
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                {{ form_widget(form.display_title) }} {{ 'icap_blog_options_form_display_title'|trans({}, 'icap_blog') }}
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                {{ form_widget(form.display_post_view_counter) }} {{ 'icap_blog_options_form_display_post_view_counter'|trans({}, 'icap_blog') }}
+            </label>
+        </div>
+
+        {{ form_row(form.post_per_page) }}
+        {{ form_row(form.tag_cloud) }}
+
+        <div class="form-group row">
+            <div class=" col-md-3"></div>
+            <div id="row_max_tag" class="col-md-9">
+            {{ form_widget(form.tag_top_mode) }} <label id="label_max_tag">{{ 'limit_to'|trans({}, 'icap_blog') }} {{ form_widget(form.max_tag) }} {{ 'tags_in_the_cloud'|trans({}, 'icap_blog') }}</label>
+            </div>
+        </div>
+
+        {{ form_rest(form) }}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">{{ 'apply'|trans({}, 'icap_blog') }}</button>
+            <a href="{{ path("icap_blog_view", {"blogId": _resource.id}) }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-annuler">{{ 'cancel'|trans({}, 'platform') }}</a>
+        </div>
+        
+    </form>
+{% endblock %}

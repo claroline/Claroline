@@ -1,0 +1,8 @@
+resource-icap_blog-comment_create: a créé un commentaire dans l'article '%post%' du blog '%blog%'
+resource-icap_blog-comment_update: a mis à jour un commentaire dans l'article '%post%' du blog '%blog%'
+resource-icap_blog-comment_publish: a publié un commentaire dans l'article '%post%' du blog '%blog%'
+resource-icap_blog-post_create: a créé l'article '%post%' dans '%blog%' blog
+resource-icap_blog-post_update: a mis à jour l'article '%post%' dans '%blog%' blog
+resource-icap_blog-post_publish: a publié l'article '%post%' dans '%blog%' blog
+resource-icap_blog-post-user_tagged: vous a mentionné dans l'acticle '%post%' du blog '%blog%'
+resource-icap_blog-comment-user_tagged: vous a mentionné dans un commentaire de l'article '%post%' du blog '%blog%'

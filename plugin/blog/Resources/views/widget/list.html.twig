@@ -1,0 +1,18 @@
+{% block stylesheets %}
+    {% stylesheets debug=false filter="less, cssmin"  output="css/icapblog/widget_list.css"
+      "@IcapBlogBundle/Resources/views/less/widget_list.less"
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
+{% endblock %}
+
+<div class="list-group blog_list  {% if diplayStyle == 'l' %} list-inline {% endif %}">
+    {% for blog in blogs %}
+    <a href="{{ path('icap_blog_view', {'blogId' : blog.id}) }}" class="list-group-item col-md-3">
+        <span class="blog_name">{{ blog.resourceNode.name }}</span>
+        <span class="badge">{{ blog.countPublishedPosts }} {{ 'articles'|trans({}, 'widget') }}</span>
+    </a>
+    {% else %}
+    <span>{{ 'widget_list_no_blog'|trans({}, 'icap_blog') }}</span>
+    {% endfor %}
+</div>

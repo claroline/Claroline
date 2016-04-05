@@ -1,0 +1,10 @@
+<header>
+    <h2 class="page-header">{{ post.title }}</h2>
+    {% set author = post.author %}
+    <div class="list-inline post_infos">
+        <small>{{ 'created_by'|trans({}, 'icap_blog') }} <span class="author">{{ author.firstname ~ ' ' ~ author.lastname }}</span></small>
+        {% if null != post.publicationDate %},
+        <small>{{ 'created_on'|trans({}, 'icap_blog') }} <time>{{ post.publicationDate|date('date_format'|trans({}, 'platform')) }}</time></small>
+        {% endif %}
+    </div>
+</header>

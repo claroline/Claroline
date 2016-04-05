@@ -1,0 +1,19 @@
+{% extends 'IcapBlogBundle::layout.html.twig' %}
+
+{% form_theme form _self %}
+
+{% block title %}{{ _resource.resourceNode.name }} - {{ "edit_post"|trans({'%postTitle%': post.title}, 'icap_blog') }}{% endblock %}
+
+{% block blog_content %}
+    {% include "IcapBlogBundle:Comment:editForm.html.twig"%}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts output='js/blog.js'
+    '@FrontEndBundle/Resources/public/jquery-ui/ui/minified/position.min.js'
+    '@FrontEndBundle/Resources/public/jquery-ui/ui/minified/menu.min.js'
+    '@FrontEndBundle/Resources/public/jquery-ui/ui/minified/autocomplete.min.js'
+    %}<script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

@@ -1,0 +1,10 @@
+{% if log.details.comment is defined %}
+    <h4>{{ ('log_deleted_comment')|trans({}, 'log') }}</h4>
+
+    <dl class="dl-horizontal">
+        <dt>{{ ('log_comment_author')|trans({}, 'log') }}</dt>
+        <dd>{{ log.details.comment.author }}</dd>
+        <dt>{{ ('log_comment_content')|trans({}, 'log') }}</dt>
+        <dd>{{ log.details.comment.content|raw }}</dd>
+    </dl>
+{% endif %}

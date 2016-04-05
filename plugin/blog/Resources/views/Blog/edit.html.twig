@@ -1,0 +1,15 @@
+{% extends 'IcapBlogBundle::layout.html.twig' %}
+
+{% block title %}{{ _resource.resourceNode.name }} - {{ "edit_blog_infos"|trans({}, 'icap_blog') }}{% endblock %}
+
+{% block blog_content %}
+    <form action="{{ path('icap_blog_edit_infos', {'blogId':_resource.id}) }}" method="post" {{ form_enctype(form) }} class="well" id="edit_blog_infos_form">
+        <legend>{{ "edit_blog_infos"|trans({}, 'icap_blog') }}</legend>
+        test
+        {{ form_widget(form) }}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
+            <a href="{{ path("icap_blog_view", {"blogId": _resource.id}) }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-danger">{{ 'cancel'|trans({}, 'platform') }}</a>
+        </div>
+    </form>
+{% endblock %}

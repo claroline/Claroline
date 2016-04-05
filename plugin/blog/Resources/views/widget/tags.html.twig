@@ -1,0 +1,32 @@
+{% if blog is not null %}
+    <p>{{ blog.resourceNode.name }}</p>
+
+    <div class="tag-cloud-container">
+        {% include 'IcapBlogBundle:Layout:tags.html.twig' with {'blogOptions': blogOptions} %}
+    </div>
+{% else %}
+    <p>{{ 'no_blog_selected'|trans({}, 'icap_blog') }}</p>
+{% endif %}
+
+{% block javascripts %}
+    {% if blogOptions.tagCloud == 1 %}
+    <script type='text/javascript'src='{{ asset('bundles/icapblog/js/jquery.tagcanvas.min.js') }}'></script>
+    <script type="text/javascript">
+        (function($) {
+            $(function() {
+                $('#tagCloudCanvas').tagcanvas({
+                    textColour : '#428BCA',
+                    outlineThickness : 1,
+                    maxSpeed : 0.05,
+                    textHeight: 18,
+                    depth : 0.5,
+                    weight : true,
+                    outlineColour : '#2A6496',
+                    outlineMethod : 'colour',
+                    reverse : true
+                }, 'tagList');
+            });
+        })(jQuery);
+    </script>
+    {% endif %}
+{% endblock javascripts %}

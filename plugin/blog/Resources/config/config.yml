@@ -1,0 +1,29 @@
+plugin:
+    has_options: false
+    icon: icap_blog_icon.png
+
+    resources:
+        - class: Icap\BlogBundle\Entity\Blog
+          name: icap_blog
+          is_exportable: false
+          icon: icap_blog_icon.png
+          actions:
+            - name: post
+            - name: administrate
+              menu_name: configure_blog
+          activity_rules:
+            - action: resource-read
+            - action: resource-icap_blog-post_create
+            - action: resource-icap_blog-post_read
+            - action: resource-icap_blog-comment_create
+
+    widgets:
+      - name: blog_list
+        is_configurable: true
+        is_exportable: false
+      - name: blog
+        is_configurable: true
+        is_exportable: false
+      - name: tag_list
+        is_configurable: true
+        is_exportable: false

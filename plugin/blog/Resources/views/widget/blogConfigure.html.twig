@@ -1,0 +1,15 @@
+{% trans_default_domain "icap_blog" %}
+
+{% form_theme form 'IcapBlogBundle:widget:list_form_theme.html.twig' %}
+
+<form name="blog_widegt_blog_form" class="form-inline" action="{{ path("icap_blog_widget_blog_configure", {'id': widgetInstance.id}) }}" method="post" {{ form_enctype(form) }} novalidate="novalidate">
+    <div class="panel-body">
+        {{ form_errors(form) }}
+        {{ form_row(form.resourceNode) }}
+        {{ form_rest(form) }}
+    </div>
+    <div class="panel-footer">
+        <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
+        <button type="button" class="btn btn-default claro-widget-form-cancel">{{ 'cancel'|trans({}, 'platform') }}</button>
+    </div>
+</form>

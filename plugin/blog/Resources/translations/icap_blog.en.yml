@@ -1,0 +1,110 @@
+icap_blog_form_name: 'Name'
+icap_blog_post_form_title: 'Title'
+icap_blog_post_form_content: 'Content'
+icap_blog_post_form_tags: 'Tags <span class="info">(seperated by ,)</span>'
+icap_blog_infos_form_infos: 'Information'
+icap_blog_post_form_publicationDate: "Publishing date"
+new_post: 'New post'
+no_post: 'No post.'
+add_new_post: 'Add new post'
+edit_post: "Edition of the post '%postTitle%'"
+back_to_blog: 'Back to blog'
+icap_blog_edit_banner: "Edit the banner"
+icap_blog_options_form_authorize_comment: 'Authorize comments on the articles'
+icap_blog_options_form_authorize_anonymous_comment: 'Anonymous comments authorized (authentification not riquired)'
+icap_blog_options_form_post_per_page: 'Post per page'
+icap_blog_options_form_auto_publish_post: 'Automatic publication of posts on there creation'
+icap_blog_options_form_auto_publish_comment: 'Automatic publication of comments on there creation (without moderation)'
+icap_blog_options_form_display_title: "Display title of the blog"
+icap_blog_banner_form_banner_background_color: "Background color"
+icap_blog_banner_form_banner_activate: "Activate the banner ?"
+icap_blog_banner_form_banner_background_image_position: "Positionning"
+icap_blog_banner_form_banner_background_image_repeat: "Repeat"
+icap_blog_banner_form_banner_height: "Height"
+icap_blog_banner_form_banner_background_image: "Background image"
+icap_blog_post_add_success: 'Post added with success'
+icap_blog_post_add_error: 'An error occured while adding post'
+icap_blog_post_delete_success: 'Post deleted with success'
+icap_blog_post_delete_error: 'An error occured while deleting post'
+icap_blog_post_edit_success: 'Post edited with success'
+icap_blog_post_edit_error: 'An error occured while editing post'
+icap_blog_post_publish_success: 'Post published with success'
+icap_blog_post_publish_error: 'An error occured while publishing post'
+icap_blog_post_unpublish_success: 'Post unpublished with success'
+icap_blog_post_unpublish_error: 'An error occured while unpublishing post'
+icap_blog_comment_add_success: 'Comment added with success'
+icap_blog_comment_add_error: 'An error occured while adding comment'
+icap_blog_comment_delete_success: 'Comment deleted with success'
+icap_blog_comment_delete_error: 'An error occured while deleting comment'
+icap_blog_comment_publish_success: 'Comment published with success'
+icap_blog_comment_publish_error: 'An error occured while publishing comment'
+icap_blog_comment_unpublish_success: 'Comment unpublished with success'
+icap_blog_comment_unpublish_error: 'An error occured while unpublishing comment'
+icap_blog_comment_edit_success: 'Comment updated with success'
+icap_blog_comment_edit_error: 'An error occured while updating comment'
+icap_blog_comment_access_denied: 'You are not authorized to modify this comment.'
+icap_blog_post_need_validation_before_publishing: "Your post will need to be validated by an administrator before being publish."
+icap_blog_post_edit_need_validation_before_publishing: "Edition of your post will need to be validated by an administrator before being publish."
+icap_blog_post_comment_need_validation_before_publishing: "Your comment will need to be validated by an administrator before being publish."
+icap_blog_post_comment_need_authentication: "<a href='%connection_url%' title='Connection'>Log in</a> to comment this post."
+icap_blog_post_need_publishing: "Your post will need to be publish after validate."
+no_tags: 'No tags'
+no_authors: 'No authors'
+no_archives: 'No archive'
+comments: 'comment|comments'
+see_comments: 'See the comments'
+publish: 'Make it visible'
+publish: 'Make it non visible'
+Post: 'Post'
+post_deletion_confirm_title: 'Deletion of a post'
+post_deletion_confirm_message: 'Are you sure you want to delete the post <strong>%postName%</strong> ?'
+comment_deletion_confirm_title: 'Deletion of a comment'
+comment_deletion_confirm_message: 'Are you sure you want to delete this comment ?'
+configure_blog: 'Configuration of the blog'
+icap_blog_post_configure_success: 'Blog configured with success'
+icap_blog_post_configure_error: 'An error occured while configuring the blog'
+icap_blog_post_configure_banner_success: "Banner's blog configured with success."
+icap_blog_post_configure_banner_error: "An error occured while configuring the banner of the blog."
+valid_banner_modification: "Validate updates"
+delete_filter: 'Delete filter'
+post_filtered_by_tag: 'Post list filtred by tag <strong>%tagName%</strong>'
+post_filtered_by_author: 'Post list filtred by author <strong>%authorName%</strong>'
+post_filtered_by_search: 'Post list filtered by search <strong>%searchTerms%</strong>'
+post_filtered_by_date: 'Post list filtered by date <strong>%date%</strong>'
+edit_blog_infos: "Edit blog's information"
+icap_blog_edit_infos_success: 'Blog information edited with success'
+icap_blog_edit_infos_error: 'An error occured while editing blog information'
+icap_blog_post_search_too_much_result: 'Your search criteria are considered irrelevant, please use other key words.'
+icap_blog_options_form_tag_cloud: 'Tag cloud'
+add_comment: 'Add a comment'
+be_the_first_to_comment: 'Be the first to comment this post'
+icap_blog_post_comment_form_message: 'Comment'
+to_comment: 'Comment'
+search: "Search"
+search_in_title_and_content: "Search in title, contents."
+info_bar: "Info bar"
+informations: "Informations"
+tag_cloud: "Tag cloud"
+editor: "Editors"
+calendar: "Calendar"
+archives: "Archives"
+blog_rss_feed: "RSS feed of the blog"
+rss_feed: "RSS feed"
+read_more: "View more"
+modified_at: "Modified at"
+classic: "Classic"
+3D: "3D sphere <span>(* Not compatible with IE<9)</span>"
+advanced: "Classic with post number"
+view: '%viewCounter% view | %viewCounter% views'
+icap_blog_options_form_display_post_view_counter: 'Display view counter on each post'
+blog_widgt_list_form_blog: 'Blog to add'
+widget_list_no_blog: 'No blog displayed'
+no_blog_selected: 'No blog selected'
+blog_widget_tag_list_blog_form_tag_cloud: "Tag cloud"
+icap_blog_options_form_Order_Widget_Right: "Manage the side bar of widget"
+apply: "Apply"
+limit_to: "Limit to the"
+tags_in_the_cloud: "tags most used"
+created_by: "by"
+created_on: "on"
+posts: Posts
