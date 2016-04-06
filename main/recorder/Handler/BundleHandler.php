@@ -16,11 +16,15 @@ use Psr\Log\LoggerInterface;
 class BundleHandler extends BaseHandler
 {
     private $registeredBundles;
+    private $configDir;
 
-    public function __construct($bundleFile, LoggerInterface $logger = null)
+    public function __construct($configDir, LoggerInterface $logger = null)
     {
+        $this->configDir = $configDir;
+        $bundleFile = $configDir . '/bundles.ini';
         parent::__construct($bundleFile, $logger);
         $this->registeredBundles = parse_ini_file($this->targetFile);
+        $this->bupIniFile = $configDir . '/bundles.bup.ini';
     }
 
     public function writeBundleFile(array $bundleFqcns)
@@ -43,6 +47,9 @@ class BundleHandler extends BaseHandler
 
     private function doWriteBundleFile()
     {
+        $this->log('Saving old bundle file...', '');
+        @unlink($this->bupIniFile);
+        copy($this->targetFile, $this->bupIniFile);
         $this->log('Writing bundle file...', '');
 
         $content = '';

@@ -52,7 +52,7 @@ class ScriptHandler
             static::$recorder = new Recorder(
                 $manager->getLocalRepository(),
                 new Detector($vendorDir),
-                new BundleHandler($configDir . '/bundles.ini', $logger),
+                new BundleHandler($configDir, $logger),
                 $rootPackage->getAliases(),
                 $vendorDir
             );
