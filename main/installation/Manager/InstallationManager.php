@@ -90,6 +90,9 @@ class InstallationManager
 
     public function update(InstallableInterface $bundle, $currentVersion, $targetVersion)
     {
+        if (strpos($currentVersion, 'dev') === 0) $currentVersion = '9999999-' . $currentVersion;
+        if (strpos($targetVersion, 'dev') === 0) $targetVersion = '9999999-' . $targetVersion;
+
         $this->log(sprintf(
             "<comment>Updating %s from %s to %s...</comment>",
             $bundle->getName(),
