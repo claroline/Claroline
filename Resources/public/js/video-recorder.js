@@ -1,39 +1,35 @@
 "use strict";
 
-import * as VolumeMeter from './libs/volume-meter';
+import Meter from './libs/js-meter';
+var CircleProgress = require('./libs/circle-progress');
 
 const isFirefox = !!navigator.mediaDevices.getUserMedia;
 
-const isDebug = false;
-if(isDebug){
-  console.log(isFirefox ? 'firefox':'chrome');
+const isDebug = true;
+if (isDebug) {
+  console.log(isFirefox ? 'firefox' : 'chrome');
 }
 let mediaRecorder;
 let recordedBlobs; // array of chunk video blobs
 
 // audio input volume visualisation
 let audioContext = new window.AudioContext();
-let audioInput = null,
-  realAudioInput = null,
-  inputPoint = null;
-let rafID = null;
-let analyserContext = null;
-let analyserNode = null;
-let canvasWidth, canvasHeight;
-let gradient;
-let meter; // audio vu-meter
+let realAudioInput = null;
+let meter;
+
+let maxTime = 0;
+let currentTime = 0;
+
+let intervalID;
 
 // avoid the recorded file to be chunked by setting a slight timeout
 const recordEndTimeOut = 1000;
-const videoPlayer = document.querySelector('video');
-
-//navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mediaDevices.getUserMedia;
+const videoPlayer = document.getElementById('preview');
 
 const constraints = {
   audio: true,
   video: true
 };
-
 
 $('.modal').on('shown.bs.modal', function() {
   console.log('modal shown');
@@ -67,6 +63,14 @@ $('.modal').on('shown.bs.modal', function() {
 
   videoPlayer.controls = false;
 
+  maxTime = parseInt($('#maxTime').val());
+  $('.circle').circleProgress({
+    size: 30,
+    thickness: 5,
+    fill: { color: "#ff1e41" }
+  }).on('circle-animation-progress', function(event, progress){
+    //console.log(progress);
+  });
 });
 
 $('.modal').on('hide.bs.modal', function() {
@@ -87,12 +91,12 @@ const promisifiedOldGUM = function(constraints, successCallback, errorCallback) 
 
   // First get ahold of getUserMedia, if present
   let getUserMedia = (navigator.getUserMedia ||
-      navigator.webkitGetUserMedia ||
-      navigator.mozGetUserMedia);
+    navigator.webkitGetUserMedia ||
+    navigator.mozGetUserMedia);
 
   // Some browsers just don't implement it - return a rejected promise with an error
   // to keep a consistent interface
-  if(!getUserMedia) {
+  if (!getUserMedia) {
     return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
   }
 
@@ -104,7 +108,7 @@ const promisifiedOldGUM = function(constraints, successCallback, errorCallback) 
 }
 
 // Older browsers might not implement mediaDevices at all, so we set an empty object first
-if(navigator.mediaDevices === undefined) {
+if (navigator.mediaDevices === undefined) {
   navigator.mediaDevices = {};
 }
 
@@ -112,30 +116,38 @@ if(navigator.mediaDevices === undefined) {
 // Some browsers partially implement mediaDevices. We can't just assign an object
 // with getUserMedia as it would overwrite existing properties.
 // Here, we will just add the getUserMedia property if it's missing.
-if(navigator.mediaDevices.getUserMedia === undefined) {
+if (navigator.mediaDevices.getUserMedia === undefined) {
   navigator.mediaDevices.getUserMedia = promisifiedOldGUM;
 }
 
 navigator.mediaDevices.getUserMedia(constraints)
-.then(
-  gumSuccess
-).catch(
-  gumError
-);
+  .then(
+    gumSuccess
+  ).catch(
+    gumError
+  );
 
 
 // getUserMedia Success Callback
-function gumSuccess(stream){
+function gumSuccess(stream) {
   if (isDebug) {
     console.log('success');
     console.log('getUserMedia() got stream: ', stream);
   }
   window.stream = stream;
+
+  if (window.URL) {
+    videoPlayer.src = window.URL.createObjectURL(window.stream);
+  } else {
+    videoPlayer.src = window.stream;
+  }
+  videoPlayer.muted = true;
+  videoPlayer.play();
   createVolumeMeter();
 }
 
 // getUserMedia Error Callback
-function gumError(error){
+function gumError(error) {
   const msg = 'navigator.getUserMedia error.';
   showError(msg, false);
   if (isDebug) {
@@ -147,11 +159,25 @@ function recordStream() {
   $('#video-record-start').prop('disabled', 'disabled');
   $('#video-record-stop').prop('disabled', '');
 
+  $('.fa-circle').addClass('blinking');
+
   const options = {
     mimeType: 'video/webm',
     audioBitsPerSecond: 128000,
     videoBitsPerSecond: 1024000
   };
+
+  if(maxTime > 0){
+    intervalID = window.setInterval(function(){
+      currentTime += 1;
+      let value = currentTime * 1 / maxTime;
+      $('.circle').circleProgress('value', value);
+      if(currentTime === maxTime){
+        window.clearInterval(intervalID);
+        stopRecording();
+      }
+    }, 1000);
+  }
 
   recordedBlobs = [];
   try {
@@ -166,9 +192,6 @@ function recordStream() {
 
   mediaRecorder.ondataavailable = handleDataAvailable;
   mediaRecorder.start(10); // collect 10ms of data
-  if (isDebug) {
-    console.log('MediaRecorder started', mediaRecorder);
-  }
 
   if (window.URL) {
     videoPlayer.src = window.URL.createObjectURL(window.stream);
@@ -177,6 +200,10 @@ function recordStream() {
   }
   videoPlayer.muted = true;
   videoPlayer.play();
+  if (isDebug) {
+    console.log('MediaRecorder started', mediaRecorder);
+  }
+
 }
 
 function resetData() {
@@ -190,16 +217,6 @@ function resetData() {
       track.stop();
     });
   }
-
-  recordedBlobs = null;
-  mediaRecorder = null;
-  audioContext = null;
-  audioInput = null;
-  realAudioInput = null;
-  inputPoint = null;
-  rafID = null;
-  analyserContext = null;
-  analyserNode = null;
 }
 
 function stopRecording() {
@@ -207,6 +224,14 @@ function stopRecording() {
   videoPlayer.pause();
 
   window.setTimeout(function() {
+
+    $('.fa-circle').removeClass('blinking');
+    if(maxTime > 0){
+      currentTime = 0;
+      $('.circle').circleProgress('value', currentTime);
+    }
+
+    window.clearInterval(intervalID);
     mediaRecorder.stop();
     $('#video-record-start').prop('disabled', '');
     $('#video-record-stop').prop('disabled', 'disabled');
@@ -214,10 +239,10 @@ function stopRecording() {
     if (isDebug) {
       console.log(recordedBlobs);
     }
+
     let superBuffer = new Blob(recordedBlobs, {
       type: 'video/webm'
     });
-
 
     videoPlayer.src = window.URL ? window.URL.createObjectURL(superBuffer) : superBuffer;
     videoPlayer.muted = false;
@@ -327,43 +352,12 @@ function downloadVideo() {
 }
 
 function createVolumeMeter() {
-  inputPoint = audioContext.createGain();
   // Create an AudioNode from the stream.
   realAudioInput = audioContext.createMediaStreamSource(window.stream);
-
-  meter = VolumeMeter.createAudioMeter(audioContext);
-  realAudioInput.connect(meter);
-  draw();
-}
-
-function draw() {
-
-  if (!analyserContext) {
-    const canvas = document.getElementById("analyser");
-    canvasWidth = canvas.width;
-    canvasHeight = canvas.height;
-    analyserContext = canvas.getContext('2d');
-    gradient = analyserContext.createLinearGradient(0, 0, canvasWidth, 0);
-    gradient.addColorStop(0.15, '#ffff00'); // min level color
-    gradient.addColorStop(0.80, '#ff0000'); // max level color
-  }
-
-  // clear the background
-  analyserContext.clearRect(0, 0, canvasWidth, canvasHeight);
-
-  analyserContext.fillStyle = gradient;
-  // draw a bar based on the current volume
-  analyserContext.fillRect(0, 0, meter.volume * canvasWidth * 1.4, canvasHeight);
-
-  // set up the next visual callback
-  rafID = window.requestAnimationFrame(draw);
+  meter = new Meter();
+  meter.setup(audioContext, realAudioInput);
 }
 
 function cancelAnalyserUpdates() {
-  window.cancelAnimationFrame(rafID);
-  // clear the current state
-  if (analyserContext) {
-    analyserContext.clearRect(0, 0, canvasWidth, canvasHeight);
-  }
-  rafID = null;
+  window.cancelAnimationFrame(meter.rafID);
 }

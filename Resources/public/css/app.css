@@ -1,0 +1,37 @@
+video {
+  width: 250px;
+  height: 188px;
+}
+#analyser {
+  background: #eee;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  vertical-align: middle;
+}
+#meter {
+  background: #eee;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  vertical-align: middle;
+}
+.fa-circle::before {
+  content: "\f111";
+  color: red;
+}
+.fa-circle.blinking::before {
+  animation-duration: 1s;
+  animation-name: blinkRed;
+  animation-iteration-count: infinite;
+}
+@keyframes blinkRed {
+  from {
+    color: red;
+  }
+  50% {
+    color: black;
+    box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;
+  }
+  to {
+    color: red;
+  }
+}

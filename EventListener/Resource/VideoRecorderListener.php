@@ -22,18 +22,18 @@ class VideoRecorderListener
 {
 
     private $container;
-    private $vrm;
+    private $manager;
 
     /**
      * @DI\InjectParams({
      *      "container" = @DI\Inject("service_container"),
-     *      "vrm" = @DI\Inject("innova.video_recorder.manager")
+     *      "manager" = @DI\Inject("innova.video_recorder.manager")
      * })
      */
-    public function __construct(ContainerInterface $container, VideoRecorderManager $vrm)
+    public function __construct(ContainerInterface $container, VideoRecorderManager $manager)
     {
         $this->container = $container;
-        $this->vrm = $vrm;
+        $this->manager = $manager;
     }
 
     /**
@@ -89,9 +89,14 @@ class VideoRecorderListener
      */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
+        $config = $this->manager->getConfig();
         // Create form POPUP
         $content = $this->container->get('templating')->render(
-                'InnovaVideoRecorderBundle:VideoRecorder:form.html.twig', array('resourceType' => 'innova_video_recorder')
+                'InnovaVideoRecorderBundle:VideoRecorder:form.html.twig',
+                array(
+                  'resourceType' => 'innova_video_recorder',
+                  'maxTime' => $config->getMaxRecordingTime()
+                )
         );
         $event->setResponseContent($content);
         $event->stopPropagation();
