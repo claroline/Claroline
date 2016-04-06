@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "bb149cb05d57debaec98a659296296bc0336c3e4"
+                "reference": "08705de43a597e17d2edb88ebc7fd0cbb75c4666"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/bb149cb05d57debaec98a659296296bc0336c3e4",
-                "reference": "bb149cb05d57debaec98a659296296bc0336c3e4",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/08705de43a597e17d2edb88ebc7fd0cbb75c4666",
+                "reference": "08705de43a597e17d2edb88ebc7fd0cbb75c4666",
                 "shasum": ""
             },
             "require": {
@@ -154,6 +154,7 @@
                 "icap/html-diff": "~1.1",
                 "idci/exporter-bundle": "1.0.0",
                 "innova/angular-js-bundle": "~5.0",
+                "innova/angular-ui-pageslide-bundle": "~5.0",
                 "innova/angular-ui-resource-picker-bundle": "~6.0",
                 "innova/angular-ui-tinymce-bundle": "5.*",
                 "jdorn/sql-formatter": "~1.0",
@@ -237,7 +238,9 @@
                     "Icap\\PortfolioBundle\\": "plugin/portfolio",
                     "Icap\\SocialmediaBundle\\": "plugin/social-media",
                     "Icap\\WikiBundle\\": "plugin/wiki",
-                    "Icap\\OAuthBundle\\": "plugin/oauth"
+                    "Icap\\OAuthBundle\\": "plugin/oauth",
+                    "Claroline\\ResultBundle\\": "plugin/result",
+                    "Innova\\PathBundle\\": "plugin/path"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -257,7 +260,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-04-05 13:51:08"
+            "time": "2016-04-06 14:45:55"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -2483,6 +2486,63 @@
                 "angular"
             ],
             "time": "2015-06-09 14:59:11"
+        },
+        {
+            "name": "innova/angular-ui-pageslide-bundle",
+            "version": "5.0.1",
+            "target-dir": "Innova/AngularUIPageslideBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/InnovaLangues/AngularUIPageslideBundle.git",
+                "reference": "a7d38b666e152467c84d8b5590d59569bdac1096"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/InnovaLangues/AngularUIPageslideBundle/zipball/a7d38b666e152467c84d8b5590d59569bdac1096",
+                "reference": "a7d38b666e152467c84d8b5590d59569bdac1096",
+                "shasum": ""
+            },
+            "require": {
+                "innova/angular-js-bundle": "~5.0",
+                "php": ">=5.3.0",
+                "symfony/symfony": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Innova\\AngularUIPageslideBundle": "."
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Arnaud Bey",
+                    "email": "arnaud.bey@u-grenoble3.fr"
+                },
+                {
+                    "name": "Axel Penin",
+                    "email": "axel.penin@u-grenoble3.fr"
+                },
+                {
+                    "name": "Eric Vincent",
+                    "email": "eric.vincent@u-grenoble3.fr"
+                },
+                {
+                    "name": "Donovan Tengblad",
+                    "email": "donovan.tengblad@u-grenoble3.fr"
+                }
+            ],
+            "description": "Symfony 2 bundle which provides Angular JS directive to add pageslide effect.",
+            "homepage": "http://github.com/InnovaLangues/AngularUIPageslideBundle",
+            "keywords": [
+                "Pageslide",
+                "Symfony2",
+                "angular"
+            ],
+            "time": "2015-05-20 07:41:51"
         },
         {
             "name": "innova/angular-ui-resource-picker-bundle",
