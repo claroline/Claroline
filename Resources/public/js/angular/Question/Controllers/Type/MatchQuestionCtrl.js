@@ -45,6 +45,27 @@ angular.module('Question').controller('MatchQuestionCtrl', [
             
             this.solutions = this.question.solutions;
         };
+        
+        this.getDropClass = function (typeDiv, proposal) {
+            var droppable = true;
+            for (var i=0; i<this.dropped.length; i++) {
+                if (this.dropped[i].target === proposal.id) {
+                    droppable = false;
+                }
+            }
+            
+            var classname = "";
+            if (typeDiv === "dropzone") {
+                if (droppable) {
+                    classname += "droppable ";
+                }
+                else {
+                    classname += "state-highlight-pair";
+                }
+            }
+            
+            return classname;
+        };
 
         /**
          * find all orphan answers and set them in an array
@@ -533,6 +554,7 @@ angular.module('Question').controller('MatchQuestionCtrl', [
                 $(".droppable").each(function () {
                     if ($(this).find(".dragDropped").children()) {
                         $(this).removeClass('state-highlight');
+                        $(this).droppable( "option", "disabled", false );
                         $(this).find(".dragDropped").children().remove();
                     }
                 });
@@ -579,6 +601,7 @@ angular.module('Question').controller('MatchQuestionCtrl', [
                         // ui update
                         $('#draggable_' + items[0]).fadeTo(100, 0.3);
                         $('#droppable_' + items[1]).addClass("state-highlight");
+                        $('#droppable_' + items[1]).droppable( "option", "disabled", true );
                         var label = $('#draggable_' + items[0])[0].innerHTML;
                         var item = {
                             source: items[0],
@@ -671,6 +694,7 @@ angular.module('Question').controller('MatchQuestionCtrl', [
             // ui update
             $('#' + sourceId).fadeTo(100, 0.3);
             $('#' + targetId).addClass("state-highlight");
+            $('#' + targetId).droppable( "option", "disabled", true );
         };
 
         /**
@@ -694,6 +718,7 @@ angular.module('Question').controller('MatchQuestionCtrl', [
             // ui update
             if ($('#droppable_' + targetId).find(".dragDropped").children().length <= 1) {
                 $('#droppable_' + targetId).removeClass("state-highlight");
+                $('#droppable_' + targetId).droppable( "option", "disabled", false );
             }
 
             // update student data
