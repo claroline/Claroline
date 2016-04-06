@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Library\Installation;
 use Claroline\BundleRecorder\Detector\Detector;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Library\Installation\Plugin\Installer;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\InstallationBundle\Manager\InstallationManager;
 use Claroline\InstallationBundle\Bundle\InstallableInterface;
 use Composer\Json\JsonFile;
@@ -41,18 +42,21 @@ class OperationExecutor
     private $installedRepoFile;
     private $previousRepoFile;
     private $detector;
+    private $om;
 
     /**
      * @DI\InjectParams({
      *     "kernel"             = @DI\Inject("kernel"),
      *     "baseInstaller"      = @DI\Inject("claroline.installation.manager"),
-     *     "pluginInstaller"    = @DI\Inject("claroline.plugin.installer")
+     *     "pluginInstaller"    = @DI\Inject("claroline.plugin.installer"),
+     *     "om"                 = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
         KernelInterface $kernel,
         InstallationManager $baseInstaller,
-        Installer $pluginInstaller
+        Installer $pluginInstaller,
+        ObjectManager $om
     )
     {
         $this->kernel = $kernel;
@@ -63,6 +67,7 @@ class OperationExecutor
         $this->bundleFile = $this->kernel->getRootDir() . '/config/bundles.ini';
         $this->bupBundleFile = $this->kernel->getRootDir() . '/config/bundles.bup.ini';
         $this->detector = new Detector();
+        $this->om = $om;
     }
 
     /**
@@ -206,7 +211,7 @@ class OperationExecutor
         $bundles = $this->getBundlesByFqcn();
 
         foreach ($operations as $operation) {
-            $installer = $operation->getPackage()->getType() === 'claroline-core' ?
+            $installer = $operation->getBundleFqcn() === 'Claroline\CoreBundle\ClarolineCoreBundle' ?
                 $this->baseInstaller :
                 $this->pluginInstaller;
 

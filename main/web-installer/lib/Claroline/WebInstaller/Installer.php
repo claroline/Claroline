@@ -115,8 +115,8 @@ class Installer
         );
         $logger = new ConsoleLogger($output, $verbosityLevelMap);
         $installer->setLogger($logger);
-        $output->writeln('Installing the platform from kernel...');
-        $installer->installFromKernel(false);
+        $output->writeln('Installing the platform from composer...');
+        $installer->updateFromComposerInfo();
     }
 
     private function createAdminUser(ContainerInterface $container, OutputInterface $output)
