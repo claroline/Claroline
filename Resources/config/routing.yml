@@ -1,3 +1,3 @@
 claro_flashcard:
-    resource: "@ClarolineFlashCardBundle/Controller/FlashCardController.php"
+    resource: "@ClarolineFlashCardBundle/Controller/DeckController.php"
     type: annotation

@@ -2,7 +2,7 @@ plugin:
   has_options: false
 
   resources:
-    - class: Claroline\FlashCardBundle\Entity\FlashCard
+    - class: Claroline\FlashCardBundle\Entity\Deck
       name: claroline_flashcard
 
 

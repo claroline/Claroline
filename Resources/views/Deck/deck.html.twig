@@ -1,0 +1,17 @@
+{% set layout = 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% if isDesktop() %}
+    {% set layout = 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+{% endif %}
+
+{% extends layout %}
+
+{% block title %}{{ _resource.getResourceNode().getName()|striptags|raw }}{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">{{ _resource.getResourceNode().getName() }}</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
