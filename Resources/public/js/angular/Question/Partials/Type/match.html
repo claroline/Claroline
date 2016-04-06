@@ -114,10 +114,10 @@
             </div>
             <!-- LABELS -->
             <div class="col-md-3">
-                <div data-ng-repeat="proposal in matchQuestionCtrl.question.secondSet" class="row droppable drop-textbox dropzone-textbox" id="droppable_{{proposal.id}}">
+                <div data-ng-repeat="proposal in matchQuestionCtrl.question.secondSet" class="{{matchQuestionCtrl.getDropClass('dropzone', proposal)}} row drop-textbox dropzone-textbox" id="droppable_{{proposal.id}}">
                     <div class="col-md-12 setLabel">
                         <div data-ng-repeat="item in matchQuestionCtrl.dropped" id="dropped_{{item.source}}" data-ng-if="item.target === proposal.id">
-                            <div class="row dropped-item-row">
+                            <div class="row">
                                 <div class="col-sm-9" data-ng-bind-html="item.label | unsafe">
                                     
                                 </div>
