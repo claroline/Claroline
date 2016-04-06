@@ -37,13 +37,13 @@ class Detector
         if (file_exists($path . '/composer.json')) {
             $json = json_decode(file_get_contents($path . '/composer.json'), true);
 
-            if (array_key_exists('bundles', $json)) {
+            if (array_key_exists('bundles', $json) && $json['type'] === 'claroline-core') {
                 foreach($json['bundles'] as $bundle) {
                     $bundles[] = $bundle;
                 }
+                
+                return $bundles;
             }
-
-            return $bundles;
         }
 
         foreach ($items as $item) {
