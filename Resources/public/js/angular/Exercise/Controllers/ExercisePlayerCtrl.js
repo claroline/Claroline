@@ -7,13 +7,19 @@
  * @param DataSharing
  * @constructor
  */
-var ExercisePlayerCtrl = function ExercisePlayerCtrl(exercise, paper, $window, $scope, ExerciseService, CommonService, DataSharing) {
+
+var exoPlayer;
+var myTimer;
+
+var ExercisePlayerCtrl = function ExercisePlayerCtrl(exercise, paper, $window, $scope, ExerciseService, CommonService, DataSharing, $timeout, $localStorage) {
     // Store services
     this.DataSharing     = DataSharing;
     this.CommonService   = CommonService;
     this.ExerciseService = ExerciseService;
     this.$scope          = $scope;
-    this.$window         = $window;
+    this.$window        = $window;
+    this.$timeout        = $timeout;
+    this.$localStorage   = $localStorage;
 
     // Initialize some data
     this.exercise = exercise;
@@ -21,10 +27,37 @@ var ExercisePlayerCtrl = function ExercisePlayerCtrl(exercise, paper, $window, $
 
     // Set the current Step
     this.setCurrentStep(this.currentStepIndex);
+
+    exoPlayer = this;
+
+    exoPlayer.$localStorage.$default({
+        counter: 0,
+        hours: 0,
+        minutes: 0,
+        secondes: 0
+    });
+
+    exoPlayer.duration = exoPlayer.exercise.meta.duration * 60;
+
+    var onTimeout = function() {
+
+        exoPlayer.$localStorage.counter =  exoPlayer.$localStorage.counter + 1;
+        myTimer = exoPlayer.$timeout(onTimeout, 1000);
+
+        exoPlayer.$localStorage.hours = Math.floor((exoPlayer.duration - exoPlayer.$localStorage.counter) / 3600);
+        exoPlayer.$localStorage.minutes = Math.floor(((exoPlayer.duration - exoPlayer.$localStorage.counter) - (exoPlayer.$localStorage.hours * 3600))  / 60);
+        exoPlayer.$localStorage.secondes = Math.floor((exoPlayer.duration - exoPlayer.$localStorage.counter) - ((exoPlayer.$localStorage.hours * 3600) + (exoPlayer.$localStorage.minutes * 60)));
+
+        if (exoPlayer.$localStorage.counter == exoPlayer.duration) {
+            exoPlayer.validateStep('end');
+        }
+    };
+
+    myTimer = exoPlayer.$timeout(onTimeout, 1000);
 };
 
 // Set up dependency injection
-ExercisePlayerCtrl.$inject = [ 'exercise', 'paper', '$window', '$scope', 'ExerciseService', 'CommonService', 'DataSharing' ];
+ExercisePlayerCtrl.$inject = [ 'exercise', 'paper', '$window', '$scope', 'ExerciseService', 'CommonService', 'DataSharing', '$timeout', '$localStorage' ];
 
 /**
  * Current played Exercise
@@ -189,6 +222,12 @@ ExercisePlayerCtrl.prototype.handleStepNavigation = function (action, paper) {
     if (action && (action === 'forward' || action === 'backward' || action === 'goto')) {
         this.setCurrentStep(this.currentStepIndex);
     } else if (action && action === 'end') {
+
+        exoPlayer.$localStorage.$reset({
+            counter: 0
+        });
+        exoPlayer.$timeout.cancel(myTimer);
+
         var endPromise = this.ExerciseService.end(paper);
         endPromise.then(function (result) {
             if (this.checkCorrectionAvailability()) {
