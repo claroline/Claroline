@@ -32,27 +32,68 @@ class Card
     private $id;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="CardType", 
-     *     inversedBy="cards",
-     *     onDelete="CASCADE",
-     *     onUpdate="CASCADE"
-     *  )
+     * @ORM\ManyToOne(targetEntity="CardType", inversedBy="cards")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
-    private $card_type;
+    private $cardType;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Note", 
-     *     inversedBy="cards",
-     *     onDelete="CASCADE",
-     *     onUpdate="CASCADE"
-     *  )
+     * @ORM\ManyToOne(targetEntity="Note", inversedBy="cards")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $note;
 
     public function __construct()
     {
         // Not imlemented yet.
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param CardType $obj
+     * @return Card
+     */
+    public function setCardType(CardType $obj)
+    {
+        $this->cardType = $obj;
+
+        return $this;
+    }
+
+    /**
+     * @return CardType
+     */
+    public function getCardType()
+    {
+        return $this->cardType;
+    }
+
+    /**
+     * @param Note $obj
+     *
+     * @return Card
+     */
+    public function setNote(Note $obj)
+    {
+        $this->note = $obj;
+
+        return $this;
+    }
+
+    /**
+     * @return Note
+     */
+    public function getNote()
+    {
+        return $this->note;
     }
 }

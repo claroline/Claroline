@@ -28,34 +28,140 @@ class Deck extends AbstractResource
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\OneToMany(targetEntity="Note", mappedBy="deck")
      */
-    private $notes;
+    protected $notes;
 
     /**
      * @ORM\OneToMany(targetEntity="Session", mappedBy="deck")
      */
-    private $sessions;
+    protected $sessions;
 
     /**
      * @var integer
      *
      * @ORM\Column(name="new_card_day_default", type="integer")
      */
-    private $new_card_day_default;
+    protected $newCardDayDefault;
 
     /**
      * @var integer
      *
      * @ORM\Column(name="session_duration_default", type="integer")
      */
-    private $session_duration_default;
+    protected $sessionDurationDefault;
+
+    /**
+     * @ORM\OneToMany(targetEntity="UserPreference", mappedBy="deck")
+     */
+    protected $userPreferences;
 
     public function __construct()
     {
-        // Not imlemented yet.
+        $this->notes = new ArrayCollection();
+        $this->sessions = new ArrayCollection();
+        $this->userPreferences = new ArrayCollection();
     }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param ArrayCollection $obj
+     *
+     * @return Deck
+     */
+    public function setNotes(ArrayCollection $obj)
+    {
+        $this->notes = $obj;
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getNotes()
+    {
+        return $this->notes;
+    }
+
+    /**
+     * @param ArrayCollection $obj
+     *
+     * @return Deck
+     */
+    public function setSessions(ArrayCollection $obj)
+    {
+        $this->sessions = $obj;
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getSessions()
+    {
+        return $this->sessions;
+    }
+
+    /**
+     * @param integer $newCardDayDefault
+     *
+     * @return Deck
+     */
+    public function setNewCardDayDefault($newCardDayDefault)
+    {
+        $this->newCardDayDefault = $newCardDayDefault;
+
+        return $this;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getNewCardDayDefault()
+    {
+        return $this->newCardDayDefault;
+    }
+
+    /**
+     * @param integer $sessionDurationDefault
+     *
+     * @return Deck
+     */
+    public function setSessionDurationDefault($sessionDurationDefault)
+    {
+        $this->sessionDurationDefault= $sessionDurationDefault;
+
+        return $this;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getSessionDurationDefault()
+    {
+        return $this->sessionDurationDefault;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getUserPreferences()
+    {
+        return $this->userPreferences;
+    }
+
 }

@@ -11,14 +11,16 @@
 
 namespace Claroline\FlashCardBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * Note
+ *
  * @ORM\Table(name="claro_fcbundle_note_type")
+ * @ORM\Entity
  */
-class NoteType extends AbstractResource
+class NoteType
 {
     /**
      * @ORM\Column(name="id", type="integer")
@@ -33,22 +35,103 @@ class NoteType extends AbstractResource
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="FieldLabel", mappedBy="note_type")
+     * @ORM\OneToMany(targetEntity="FieldLabel", mappedBy="noteType")
      */
-    private $field_labels;
+    private $fieldLabels;
 
     /**
-     * @ORM\OneToMany(targetEntity="CardType", mappedBy="note_type")
+     * @ORM\OneToMany(targetEntity="CardType", mappedBy="noteType")
      */
-    private $card_types;
+    private $cardTypes;
 
     /**
-     * @ORM\OneToMany(targetEntity="Node", inversedBy="note_type")
+     * @ORM\OneToMany(targetEntity="Note", mappedBy="noteType")
      */
-    private $nodes;
+    private $notes;
 
     public function __construct()
     {
-        // Not imlemented yet.
+        $this->fieldLabels = new ArrayCollection();
+        $this->cardTypes = new ArrayCollection();
+        $this->notes = new ArrayCollection();
     }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return NoteType
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param ArrayCollection $obj
+     *
+     * @return NoteType
+     */
+    public function setFieldLabels(ArrayCollection $obj)
+    {
+        $this->fieldLabels = $obj;
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getFieldLabels()
+    {
+        return $this->fieldLabels;
+    }
+
+    /**
+     * @param ArrayCollection $obj
+     *
+     * @return NoteType
+     */
+    public function setCardTypes(ArrayCollection $obj)
+    {
+        $this->cardTypes = $obj;
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getCardTypes()
+    {
+        return $this->cardTypes;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getNotes()
+    {
+        return $this->notes;
+    }
+
 }

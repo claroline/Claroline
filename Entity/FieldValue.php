@@ -39,27 +39,91 @@ class FieldValue
     private $value;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="FieldLabel", 
-     *     inversedBy="field_values",
-     *     onDelete="CASCADE",
-     *     onUpdate="CASCADE"
-     *  )
+     * @ORM\ManyToOne(targetEntity="FieldLabel", inversedBy="fieldValues")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
-    private $field_label;
+    private $fieldLabel;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Note", 
-     *     inversedBy="field_values",
-     *     onDelete="CASCADE",
-     *     onUpdate="CASCADE"
-     *  )
+     * @ORM\ManyToOne(targetEntity="Note", inversedBy="fieldValues")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $note;
 
     public function __construct()
     {
-        // Not imlemented yet.
     }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return FieldValue
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * @param FieldLabel $obj
+     *
+     * @return FieldValue
+     */
+    public function setFieldLabel(FieldLabel $obj)
+    {
+        $this->fieldLabel = $obj;
+
+        return $this;
+    }
+
+    /**
+     * @return FieldLabel
+     */
+    public function getFieldLabel()
+    {
+        return $this->fieldLabel;
+    }
+
+    /**
+     * @param Note $obj
+     *
+     * @return FieldValue
+     */
+    public function setNote(Note $obj)
+    {
+        $this->note = $obj;
+
+        return $this;
+    }
+
+    /**
+     * @return Note
+     */
+    public function getNote()
+    {
+        return $this->note;
+    }
+
+
+
 }

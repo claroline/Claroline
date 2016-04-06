@@ -39,17 +39,77 @@ class FieldLabel
     private $name;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="NoteType", 
-     *     inversedBy="field_labels",
-     *     onDelete="CASCADE",
-     *     onUpdate="CASCADE"
-     *  )
+     * @ORM\ManyToOne(targetEntity="NoteType", inversedBy="fieldLabels")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
-    private $note_type;
+    private $noteType;
+
+    /**
+     * @ORM\OneToMany(targetEntity="FieldValue", mappedBy="fieldLabel")
+     */
+    private $fieldValues;
 
     public function __construct()
     {
-        // Not imlemented yet.
+        $this->fieldValues = new ArrayCollection();
     }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return FieldLabel
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param NoteType $obj
+     *
+     * @return FieldLabel
+     */
+    public function setNoteType(NoteType $obj)
+    {
+        $this->noteType = $obj;
+
+        return $this;
+    }
+
+    /**
+     * @return NoteType
+     */
+    public function getNoteType()
+    {
+        return $this->noteType;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getFieldValues()
+    {
+        return $this->fieldValues;
+    }
+
 }

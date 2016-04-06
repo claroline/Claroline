@@ -32,29 +32,21 @@ class Note
     private $id;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="NodeType", 
-     *     inversedBy="notes",
-     *     onDelete="CASCADE",
-     *     onUpdate="CASCADE"
-     *  )
+     * @ORM\ManyToOne(targetEntity="NoteType", inversedBy="notes")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
-    private $node_type;
+    private $noteType;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Deck", 
-     *     inversedBy="notes",
-     *     onDelete="CASCADE",
-     *     onUpdate="CASCADE"
-     *  )
+     * @ORM\ManyToOne(targetEntity="Deck", inversedBy="notes")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $deck;
 
     /**
      * @ORM\OneToMany(targetEntity="FieldValue", mappedBy="note")
      */
-    private $field_values;
+    private $fieldValues;
 
     /**
      * @ORM\OneToMany(targetEntity="Card", mappedBy="note")
@@ -63,6 +55,86 @@ class Note
 
     public function __construct()
     {
-        // Not imlemented yet.
+        $this->fieldValues = new ArrayCollection();
+        $this->cards = new ArrayCollection();
     }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param NoteType $obj
+     *
+     * @return Note
+     */
+    public function setNoteType(NoteType $obj)
+    {
+        $this->noteType = $obj;
+
+        return $this;
+    }
+
+    /**
+     * @return NoteType
+     */
+    public function getNoteType()
+    {
+        return $this->noteType;
+    }
+
+    /**
+     * @param Deck $obj
+     *
+     * @return Note
+     */
+    public function setDeck(Deck $obj)
+    {
+        $this->deck = $obj;
+
+        return $this;
+    }
+
+    /**
+     * @return Deck
+     */
+    public function getDeck()
+    {
+        return $this->deck;
+    }
+
+    /**
+     * @param ArrayCollection $obj
+     *
+     * @return Note
+     */
+    public function setFieldValues(ArrayCollection $obj)
+    {
+        $this->fieldValues = $obj;
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getFieldValues()
+    {
+        return $this->fieldValues;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getCards()
+    {
+        return $this->cards;
+    }
+
 }
