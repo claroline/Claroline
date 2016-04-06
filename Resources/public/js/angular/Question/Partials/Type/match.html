@@ -107,14 +107,12 @@
             <!-- PROPOSALS -->
             <div class="col-md-3">
                 <div data-ng-repeat="proposal in matchQuestionCtrl.question.firstSet" class="row origin draggable drop-textbox" id="div_{{proposal.id}}">
-                    <div class="col-md-2 fa fa-arrows drag-handle" id="drag_handle_{{proposal.id}}"></div>
+                    <div class="col-md-2 fa fa-arrows drag-handle drop-textbox-height" id="drag_handle_{{proposal.id}}"></div>
                     <div class="col-md-8 setLabel">
                         <div data-ng-bind-html="proposal.data | unsafe" id="draggable_{{proposal.id}}"></div>
                     </div>
-                    <div class="col-md-2">
-                        <button type="button" class="btn btn-default btn-sm fa fa-search-plus" data-toggle="modal" data-target="#longTextValueModal"></button>
-                    </div>
-                    <div class="modal fade" id="longTextValueModal" tabindex="-1" role="dialog">
+                    <div class="col-md-2 fa fa-search-plus drag-zoom drop-textbox-height" data-toggle="modal" data-target="#longTextValueModal{{proposal.id}}"></div>
+                    <div class="modal fade" id="longTextValueModal{{proposal.id}}" tabindex="-1" role="dialog">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-body">
