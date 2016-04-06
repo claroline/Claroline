@@ -28,7 +28,7 @@
         "sync-dev": [
             "composer fetch-dev",
             "composer build",
-            "php app/console claroline:update",
+            "php app/console claroline:update -vvv",
             "composer disable-maintenance"
         ],
         "fetch": [
