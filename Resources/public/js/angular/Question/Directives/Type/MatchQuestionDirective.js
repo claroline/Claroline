@@ -49,6 +49,13 @@ angular.module('Question').directive('matchQuestion', [
                                 matchQuestionCtrl.handleDragMatchQuestionDrop(event, ui);
                             });
                         });
+                        
+                        $(".draggable").each(function () {
+                            var id = $(this)[0].id.replace("div", "drag_handle");
+                            $(this).draggable({
+                                handle: "#" + id
+                            });
+                        });
 
                         matchQuestionCtrl.addPreviousDroppedItems();
                     }
