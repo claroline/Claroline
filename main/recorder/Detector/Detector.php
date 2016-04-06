@@ -33,10 +33,14 @@ class Detector
         $items = new \RecursiveIteratorIterator($filter, \RecursiveIteratorIterator::SELF_FIRST);
         $bundles = array();
 
-        //look for an ini file to inject for meta packages
-        if (file_exists($path . '/bundles.ini')) {
-            foreach(array_keys(parse_ini_file($path . '/bundles.ini')) as $el) {
-                $bundles[] = $el;
+        //look for a bundle list in the composer.json for meta packages
+        if (file_exists($path . '/composer.json')) {
+            $json = json_decode(file_get_contents($path . '/composer.json'), true);
+
+            if (array_key_exists('bundles', $json)) {
+                foreach($json['bundles'] as $bundle) {
+                    $bundles[] = $bundle;
+                }
             }
 
             return $bundles;
