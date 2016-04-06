@@ -61,6 +61,7 @@ class ExerciseController extends Controller
             'exercise'         => $this->get('ujm.exo.exercise_manager')->exportExercise($exercise, false),
             'editEnabled'      => $isExoAdmin,
             'composeEnabled'   => $isAllowedToCompose,
+            'duration'         => $exercise->getDuration()
         ]);
     }
 
@@ -490,9 +491,9 @@ class ExerciseController extends Controller
 
         $docimoServ = $this->container->get('ujm.exo_docimology');
         $em = $this->getDoctrine()->getManager();
-        
+
         $sqs = $em->getRepository('UJMExoBundle:StepQuestion')->findExoByOrder($exercise);
-        
+
         $papers = $em->getRepository('UJMExoBundle:Paper')->getExerciseAllPapers($exercise->getId());
 
         if ($this->container->get('ujm.exo_exercise')->isExerciseAdmin($exercise)) {
