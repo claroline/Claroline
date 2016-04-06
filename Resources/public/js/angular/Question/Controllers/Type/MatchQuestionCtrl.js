@@ -671,7 +671,13 @@ angular.module('Question').controller('MatchQuestionCtrl', [
         this.handleDragMatchQuestionDrop = function (event, ui) {
             // get dropped element id
             var sourceId = ui.draggable[0].id;
+            if (this.question.typeMatch === 3) {
+                sourceId = sourceId.replace("div", "draggable");
+            }
             var label = ui.draggable[0].innerHTML;
+            if (this.question.typeMatch === 3) {
+                label = $("#" + sourceId)[0].innerHTML;
+            }
             // get the container in which the element has been dropped
             var targetId = event.target.id;
 
@@ -690,11 +696,19 @@ angular.module('Question').controller('MatchQuestionCtrl', [
             this.updateStudentData();
 
             // disable draggable element
-            $('#' + sourceId).draggable("disable");
+            if (this.question.typeMatch === 3) {
+                $('#' + sourceId.replace("draggable", "div")).draggable("disable");
+                $('#' + sourceId.replace("draggable", "div")).fadeTo(100, 0.3);
+            }
+            else {
+                $('#' + sourceId).draggable("disable");
+                $('#' + sourceId).fadeTo(100, 0.3);
+            }
             // ui update
-            $('#' + sourceId).fadeTo(100, 0.3);
             $('#' + targetId).addClass("state-highlight");
             $('#' + targetId).droppable( "option", "disabled", true );
+            
+            console.log(this.dropped);
         };
 
         /**
@@ -710,10 +724,16 @@ angular.module('Question').controller('MatchQuestionCtrl', [
                     this.dropped.splice(i, 1);
                 }
             }
-            // reactivate source draggable element
-            $('#draggable_' + sourceId).draggable("enable");
-            // visual changes for reactivated draggable element
-            $('#draggable_' + sourceId).fadeTo(100, 1);
+            if (this.question.typeMatch === 3) {
+                $('#div_' + sourceId).draggable("enable");
+                $('#div_' + sourceId).fadeTo(100, 1);
+            }
+            else {
+                // reactivate source draggable element
+                $('#draggable_' + sourceId).draggable("enable");
+                // visual changes for reactivated draggable element
+                $('#draggable_' + sourceId).fadeTo(100, 1);
+            }
 
             // ui update
             if ($('#droppable_' + targetId).find(".dragDropped").children().length <= 1) {

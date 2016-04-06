@@ -106,9 +106,12 @@
         <div data-ng-if="matchQuestionCtrl.question.typeMatch === 3" class="row">
             <!-- PROPOSALS -->
             <div class="col-md-3">
-                <div data-ng-repeat="proposal in matchQuestionCtrl.question.firstSet" class="row origin drop-textbox" id="div_{{proposal.id}}">
-                    <div class="col-md-12 setLabel">
-                        <div data-ng-bind-html="proposal.data | unsafe" id="draggable_{{proposal.id}}" class="draggable"></div>
+                <div data-ng-repeat="proposal in matchQuestionCtrl.question.firstSet" class="row origin draggable drop-textbox" id="div_{{proposal.id}}">
+                    <div class="col-md-9 setLabel">
+                        <div data-ng-bind-html="proposal.data | unsafe" id="draggable_{{proposal.id}}"></div>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-default fa fa-search-plus" data-toggle="modal" data-target="longTextValueModal"></button>
                     </div>
                 </div>
             </div>
