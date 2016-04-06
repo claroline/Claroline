@@ -130,7 +130,7 @@ class OperationExecutor
                         $operations[$bundle]->setFromVersion($previousPackage->getVersion());
                         $operations[$bundle]->setToVersion($currentPackage->getVersion());
                     } else {
-                        $operations[$bundle] = new Operation(Operation::UPDATE, $currentPackage, $bundle);
+                        $operations[$bundle] = new Operation(Operation::INSTALL, $currentPackage, $bundle);
                     }
                 }
             } else {
