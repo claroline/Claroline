@@ -64,9 +64,8 @@ class InteractionQCMType extends AbstractType
         $builder
             ->add(
                 'typeQCM', 'entity', array(
-                    'class' => 'UJM\\ExoBundle\\Entity\\TypeQCM',
+                    'class' => 'UJMExoBundle:TypeQCM',
                     'label' => 'type_qcm',
-                    'data_class' => 'UJM\\ExoBundle\\Entity\\TypeQCM',
                     'multiple' => false,
                     'expanded' => true,
                     'query_builder' => function (EntityRepository $er) {
