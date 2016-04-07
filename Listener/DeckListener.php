@@ -49,7 +49,7 @@ class DeckListener
      *
      * @param RequestStack          $stack
      * @param HttpKernelInterface   $kernel
-     * @param DeckManager      $manager
+     * @param DeckManager           $manager
      * @param FormHandler           $handler
      * @param SecurityContext       $context
      */
@@ -85,7 +85,7 @@ class DeckListener
      */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
-        $view = $this->formHandler->getView('claroline_form_flashcard');
+        $view = $this->formHandler->getView('claroline_form_deck');
         $event->setResponseContent($this->manager->getDeckFormContent($view));
         $event->stopPropagation();
     }
@@ -97,7 +97,7 @@ class DeckListener
      */
     public function onCreate(CreateResourceEvent $event)
     {
-        if ($this->formHandler->isValid('claroline_form_flashcard', $this->request, 
+        if ($this->formHandler->isValid('claroline_form_deck', $this->request, 
             new Deck())) {
             $event->setResources([$this->manager->create($this->formHandler->getData())]);
         } else {

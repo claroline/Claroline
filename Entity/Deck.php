@@ -63,6 +63,8 @@ class Deck extends AbstractResource
     {
         $this->notes = new ArrayCollection();
         $this->sessions = new ArrayCollection();
+        $this->newCardDayDefault = 10;
+        $this->sessionDurationDefault = 10;
         $this->userPreferences = new ArrayCollection();
     }
 
