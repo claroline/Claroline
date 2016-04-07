@@ -28,7 +28,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContext;
 
 /**
- * @DI\Service("claroline.deck.deck_listener")
+ * @DI\Service("claroline.flashcard.deck_listener")
  */
 class DeckListener
 {
@@ -42,7 +42,7 @@ class DeckListener
      * @DI\InjectParams({
      *     "stack"      = @DI\Inject("request_stack"),
      *     "kernel"     = @DI\Inject("http_kernel"),
-     *     "manager"    = @DI\Inject("claroline.deck.deck_manager"),
+     *     "manager"    = @DI\Inject("claroline.flashcard.deck_manager"),
      *     "handler"    = @DI\Inject("claroline.form_handler"),
      *     "context"    = @DI\Inject("security.context")
      * })

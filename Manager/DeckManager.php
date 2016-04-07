@@ -20,7 +20,7 @@ use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\Form\FormView;
 
 /**
- * @DI\Service("claroline.deck.deck_manager")
+ * @DI\Service("claroline.flashcard.deck_manager")
  */
 class DeckManager
 {
