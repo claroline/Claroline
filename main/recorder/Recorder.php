@@ -18,6 +18,7 @@ use Composer\DependencyResolver\Operation\InstallOperation;
 use Composer\DependencyResolver\Pool;
 use Composer\DependencyResolver\Request;
 use Composer\DependencyResolver\Solver;
+use Composer\IO\NullIO;
 use Composer\Package\Package;
 use Composer\Repository\ArrayRepository;
 use Composer\Repository\PlatformRepository;
@@ -95,7 +96,7 @@ class Recorder
             $request->install($package->getName());
         }
 
-        $solver = new Solver(new DefaultPolicy(), $pool, $toRepo);
+        $solver = new Solver(new DefaultPolicy(), $pool, $toRepo, new NullIO());
 
         return $solver->solve($request);
     }
