@@ -1,0 +1,19 @@
+# c
+creating_resource: Creating resource
+
+# d
+download_video: Download video file
+
+# m
+my_recordings: My recordings
+
+# r
+resource_name: Choose a name for the resource that will be generated (or leave the default one)
+resource_name_placeholder: The resource name is mandatory.
+resource_creation_error: An error occured while creating resource.
+resource_creation_error_download: Please use the download button to save locally your video file.
+resource_modal_title: Video recorder
+
+# s
+start_recording: Start recording
+stop_recording: Stop recording

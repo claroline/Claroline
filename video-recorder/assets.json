@@ -1,0 +1,7 @@
+{
+  "webpack": {
+    "entry": {
+      "recorder": "public/js/video-recorder"
+    }
+  }
+}
