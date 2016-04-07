@@ -43,7 +43,7 @@ class UserPreference
 
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="deck", inversedBy="user_preferences")
+     * @ORM\ManyToOne(targetEntity="deck", inversedBy="userPreferences")
      * @ORM\JoinColumn(name="deck", onDelete="CASCADE")
      */
     private $deck;
