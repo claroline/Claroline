@@ -51,13 +51,14 @@ Official distribution of Claroline Connect LMS
 - [x] PathBundle
 - [x] CollecticielBundle
 - [ ] ExoBundle
+- [ ] FormulaPluginBundle
 
 ################
 
 # TODO
 
-- update
-- upgrade from previous packages
-- remove the innova/angular bundles (required by portfolio)
-- remove the "innova/angular-ui-pageslide-bundle" (for path)
-- remove the front-end-bundle (required by icapbadge for jqplot and by core/Resouces/less/layout.less)
+- [ ] update
+- [ ] upgrade from previous packages
+- [ ] remove the innova/angular bundles (required by portfolio)
+- [ ] remove the "innova/angular-ui-pageslide-bundle" (for path)
+- [ ] remove the front-end-bundle (required by icapbadge for jqplot and by core/Resouces/less/layout.less)
