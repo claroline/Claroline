@@ -35,6 +35,11 @@ class ScriptHandler
         static::getRecorder($event)->buildBundleFile();
     }
 
+    public static function removeBupIniFile(Event $event)
+    {
+        static::getRecorder($event)->removeBupIniFile();
+    }
+
     /**
      * @param Event $event
      *

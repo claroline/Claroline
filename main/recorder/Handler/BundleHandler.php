@@ -45,6 +45,11 @@ class BundleHandler extends BaseHandler
         $this->doWriteBundleFile();
     }
 
+    public function removeBupIniFile()
+    {
+        @unlink($this->bupIniFile);
+    }
+
     private function doWriteBundleFile()
     {
         $this->log('Saving old bundle file...', '');

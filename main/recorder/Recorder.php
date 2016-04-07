@@ -64,6 +64,11 @@ class Recorder
         $this->bundleHandler->writeBundleFile(array_unique($orderedBundles));
     }
 
+    public function removeBupIniFile()
+    {
+        $this->bundleHandler->removeBupIniFile();
+    }
+
     /**
      * @return InstallOperation[]
      */
