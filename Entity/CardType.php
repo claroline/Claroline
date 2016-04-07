@@ -101,6 +101,30 @@ class CardType
     }
 
     /**
+     * @param FieldLabel
+     *
+     * @return boolean
+     */
+    public function addQuestion(FieldLabel $obj)
+    {
+        if($this->questions->contains($obj))
+        {
+            return false;
+        }
+        else
+        {
+            if($this->noteType == $obj->getNoteType())
+            {
+                return $this->questions->add($obj);
+            }
+            else
+            {
+                false;
+            }
+        }
+    }
+
+    /**
      * @param ArrayCollection
      *
      * @return CardType
@@ -118,6 +142,30 @@ class CardType
     public function getQuestions()
     {
         return $this->questions;
+    }
+
+    /**
+     * @param FieldLabel
+     *
+     * @return boolean
+     */
+    public function addAnswer(FieldLabel $obj)
+    {
+        if($this->answers->contains($obj))
+        {
+            return false;
+        }
+        else
+        {
+            if($this->noteType == $obj->getNoteType())
+            {
+                return $this->answers->add($obj);
+            }
+            else
+            {
+                false;
+            }
+        }
     }
 
     /**

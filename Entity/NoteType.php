@@ -87,6 +87,23 @@ class NoteType
     }
 
     /**
+     * @param FieldLabel
+     *
+     * @return boolean
+     */
+    public function addFieldLabel(FieldLabel $obj)
+    {
+        if($this->fieldLabels->contains($obj))
+        {
+            return false;
+        }
+        else
+        {
+            return $this->fieldLabels->add($obj);
+        }
+    }
+
+    /**
      * @param ArrayCollection $obj
      *
      * @return NoteType
@@ -104,6 +121,23 @@ class NoteType
     public function getFieldLabels()
     {
         return $this->fieldLabels;
+    }
+
+    /**
+     * @param CardType
+     *
+     * @return boolean
+     */
+    public function addCardType(CardType $obj)
+    {
+        if($this->fieldLabels->contains($obj))
+        {
+            return false;
+        }
+        else
+        {
+            return $this->cardTypes->add($obj);
+        }
     }
 
     /**
