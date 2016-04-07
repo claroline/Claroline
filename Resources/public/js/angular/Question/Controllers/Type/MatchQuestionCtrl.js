@@ -46,6 +46,16 @@ angular.module('Question').controller('MatchQuestionCtrl', [
             this.solutions = this.question.solutions;
         };
         
+        this.proposalDropped = function (proposal) {
+            for (var i=0; i<this.dropped.length; i++) {
+                if (this.dropped[i].source === proposal.id) {
+                    return true;
+                }
+            }
+            
+            return false;
+        };
+        
         this.getDropClass = function (typeDiv, proposal) {
             var droppable = true;
             for (var i=0; i<this.dropped.length; i++) {
@@ -169,7 +179,9 @@ angular.module('Question').controller('MatchQuestionCtrl', [
                 this.questionFeedback = result.feedback;
                 if (!this.question.toBind) {
                     $('.draggable').draggable("disable");
-                    $('.draggable').fadeTo(100, 0.3);
+                    if (this.question.typeMatch !== 3) {
+                        $('.draggable').fadeTo(100, 0.3);
+                    }
                 }
                 else {
                     //$('.endPoints').draggable("disable");
@@ -599,7 +611,9 @@ angular.module('Question').controller('MatchQuestionCtrl', [
                         // disable corresponding draggable item
                         $('#draggable_' + items[0]).draggable("disable");
                         // ui update
-                        $('#draggable_' + items[0]).fadeTo(100, 0.3);
+                        if (this.question.typeMatch !== 3) {
+                            $('#draggable_' + items[0]).fadeTo(100, 0.3);
+                        }
                         $('#droppable_' + items[1]).addClass("state-highlight");
                         $('#droppable_' + items[1]).droppable( "option", "disabled", true );
                         var label = $('#draggable_' + items[0])[0].innerHTML;
@@ -698,7 +712,6 @@ angular.module('Question').controller('MatchQuestionCtrl', [
             // disable draggable element
             if (this.question.typeMatch === 3) {
                 $('#' + sourceId.replace("draggable", "div")).draggable("disable");
-                $('#' + sourceId.replace("draggable", "div")).fadeTo(100, 0.3);
             }
             else {
                 $('#' + sourceId).draggable("disable");
@@ -718,31 +731,53 @@ angular.module('Question').controller('MatchQuestionCtrl', [
          * @returns {undefined}
          */
         this.removeDropped = function (sourceId, targetId) {
-            // remove from local array (this.dropped)
-            for (var i = 0; i < this.dropped.length; i++) {
-                if (this.dropped[i].source === sourceId && this.dropped[i].target === targetId) {
-                    this.dropped.splice(i, 1);
+            if (targetId !== -1) {
+                // remove from local array (this.dropped)
+                for (var i = 0; i < this.dropped.length; i++) {
+                    if (this.dropped[i].source === sourceId && this.dropped[i].target === targetId) {
+                        this.dropped.splice(i, 1);
+                    }
                 }
-            }
-            if (this.question.typeMatch === 3) {
-                $('#div_' + sourceId).draggable("enable");
-                $('#div_' + sourceId).fadeTo(100, 1);
+                if (this.question.typeMatch === 3) {
+                    $('#div_' + sourceId).draggable("enable");
+                    $('#div_' + sourceId).fadeTo(100, 1);
+                }
+                else {
+                    // reactivate source draggable element
+                    $('#draggable_' + sourceId).draggable("enable");
+                    // visual changes for reactivated draggable element
+                    $('#draggable_' + sourceId).fadeTo(100, 1);
+                }
+
+                // ui update
+                if ($('#droppable_' + targetId).find(".dragDropped").children().length <= 1) {
+                    $('#droppable_' + targetId).removeClass("state-highlight");
+                    $('#droppable_' + targetId).droppable( "option", "disabled", false );
+                }
+
+                // update student data
+                this.updateStudentData();
             }
             else {
-                // reactivate source draggable element
-                $('#draggable_' + sourceId).draggable("enable");
-                // visual changes for reactivated draggable element
-                $('#draggable_' + sourceId).fadeTo(100, 1);
-            }
+                // remove from local array (this.dropped)
+                for (var i = 0; i < this.dropped.length; i++) {
+                    if (this.dropped[i].source === sourceId) {
+                        var targetId = this.dropped[i].target;
+                        this.dropped.splice(i, 1);
+                    }
+                }
+                $('#div_' + sourceId).draggable("enable");
+                $('#div_' + sourceId).fadeTo(100, 1);
 
-            // ui update
-            if ($('#droppable_' + targetId).find(".dragDropped").children().length <= 1) {
-                $('#droppable_' + targetId).removeClass("state-highlight");
-                $('#droppable_' + targetId).droppable( "option", "disabled", false );
-            }
+                // ui update
+                if ($('#droppable_' + targetId).find(".dragDropped").children().length <= 1) {
+                    $('#droppable_' + targetId).removeClass("state-highlight");
+                    $('#droppable_' + targetId).droppable( "option", "disabled", false );
+                }
 
-            // update student data
-            this.updateStudentData();
+                // update student data
+                this.updateStudentData();
+            }
         };
     }
 ]);

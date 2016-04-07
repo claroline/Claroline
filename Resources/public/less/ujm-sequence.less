@@ -146,7 +146,8 @@
                 height: 80px;
                 max-height: 80px;
                 overflow: hidden;
-                border: 1px solid #B7B7B7;
+                border-style: solid;
+                border-width: 1px;
             }
             
             .drop-textbox-height {
@@ -160,21 +161,42 @@
             
             .drag-handle {
                 cursor: all-scroll;
-                padding-top: 35px;
-                border-right: 1px solid #b7b7b7;
+                padding-top: 32px;
+            /*    border-right-style: solid;
+                border-right-width: 1px;*/
                 background-color: #ededed;
             }
             
             .drag-zoom {
                 cursor: pointer;
-                padding-top: 35px;
-                border-left: 1px solid #b7b7b7;
+                padding-top: 32px;
+            /*    border-left-style: solid;
+                border-left-width: 1px;*/
                 background-color: #ededed;
             }
             
             .drop-label-textbox {
                 margin: 10px;
                 padding: 10px 10px 10px 0;
+            }
+            
+            .drop-textbox-undo {
+                cursor: pointer;
+                padding-top: 32px;
+                text-align: center;
+                background-color: #ededed;
+            /*    border-right-style: solid;
+                border-right-width: 1px;*/
+            }
+            
+            .drop-color-alert {
+                background-color: #FCEFBC;
+                border-color: #FCEFA1;
+            }
+            
+            .drop-color-default {
+                background-color: #ededed;
+                border-color: #b7b7b7;
             }
             
             ._jsPlumb_hover {
@@ -245,7 +267,6 @@
                 height: 80px;
                 max-height: 80px;
                 margin: 10px;
-                padding: 10px;
                 overflow: hidden;
             }
 
