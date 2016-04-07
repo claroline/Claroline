@@ -121,7 +121,8 @@
             "Icap\\WikiBundle\\": "plugin/wiki",
             "Icap\\OAuthBundle\\": "plugin/oauth",
             "Claroline\\ResultBundle\\": "plugin/result",
-            "Innova\\PathBundle\\": "plugin/path"
+            "Innova\\PathBundle\\": "plugin/path",
+            "Innova\\VideoRecorderBundle\\": "plugin/video-recorder"
         }
     },
     "bundles": [
@@ -162,6 +163,7 @@
         "Icap\\WikiBundle\\IcapWikiBundle",
         "Icap\\OAuthBundle\\IcapOAuthBundle",
         "Claroline\\ResultBundle\\ClarolineResultBundle",
-        "Innova\\PathBundle\\InnovaPathBundle"
+        "Innova\\PathBundle\\InnovaPathBundle",
+        "Innova\\VideoRecorderBundle\\InnovaVideoRecorderBundle"
     ]
 }
