@@ -10,6 +10,7 @@ use UJM\ExoBundle\Entity\InteractionGraphic;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("ujm.exo.graphic_handler")
@@ -18,16 +19,20 @@ use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
 class GraphicHandler implements QuestionHandlerInterface {
 
     private $om;
+    private $container;
 
     /**
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "container"       = @DI\Inject("service_container")
      * })
-     *
+     * 
      * @param ObjectManager $om
+     * @param ContainerInterface $container
      */
-    public function __construct(ObjectManager $om) {
+    public function __construct(ObjectManager $om, ContainerInterface $container) {
         $this->om = $om;
+        $this->container = $container;
     }
 
     /**

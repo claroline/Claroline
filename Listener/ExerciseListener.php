@@ -149,7 +149,7 @@ class ExerciseListener
      */
     public function onDelete(DeleteResourceEvent $event)
     {
-        $em = $this->container->get('claroline.persistence.object_manager');
+        $em = $this->container->get('doctrine.orm.entity_manager');
 
         $papers = $em->getRepository('UJMExoBundle:Paper')
                 ->findOneByExercise($event->getResource());
@@ -180,6 +180,7 @@ class ExerciseListener
             $exercise->archiveExercise();
             $em->persist($exercise);
             $em->flush();
+            exit();
         }
 
         $event->stopPropagation();

@@ -7,13 +7,19 @@
  * @param DataSharing
  * @constructor
  */
-var ExercisePlayerCtrl = function ExercisePlayerCtrl(exercise, paper, $window, $scope, ExerciseService, CommonService, DataSharing) {
+
+var exoPlayer;
+var myTimer;
+
+var ExercisePlayerCtrl = function ExercisePlayerCtrl(exercise, paper, $window, $scope, ExerciseService, CommonService, DataSharing, $timeout, $localStorage) {
     // Store services
     this.DataSharing     = DataSharing;
     this.CommonService   = CommonService;
     this.ExerciseService = ExerciseService;
     this.$scope          = $scope;
-    this.$window         = $window;
+    this.$window        = $window;
+    this.$timeout        = $timeout;
+    this.$localStorage   = $localStorage;
 
     // Initialize some data
     this.exercise = exercise;
@@ -21,10 +27,47 @@ var ExercisePlayerCtrl = function ExercisePlayerCtrl(exercise, paper, $window, $
 
     // Set the current Step
     this.setCurrentStep(this.currentStepIndex);
+
+    // Get the scope
+    exoPlayer = this;
+
+    // Initialize var
+    exoPlayer.$localStorage.$default({
+        counter: 0,
+        hours: 0,
+        minutes: 0,
+        secondes: 0
+    });
+
+    // Change duration from minutes to seconds because timer use second
+    exoPlayer.duration = exoPlayer.exercise.meta.duration * 60;
+
+    // Function to increase te timer
+    var onTimeout = function() {
+
+        // Increase the timer
+        exoPlayer.$localStorage.counter =  exoPlayer.$localStorage.counter + 1;
+        // Call function to increase next
+        myTimer = exoPlayer.$timeout(onTimeout, 1000);
+
+        // Transform counter into hours, minutes and second
+        exoPlayer.$localStorage.hours = Math.floor((exoPlayer.duration - exoPlayer.$localStorage.counter) / 3600);
+        exoPlayer.$localStorage.minutes = Math.floor(((exoPlayer.duration - exoPlayer.$localStorage.counter) - (exoPlayer.$localStorage.hours * 3600))  / 60);
+        exoPlayer.$localStorage.secondes = Math.floor((exoPlayer.duration - exoPlayer.$localStorage.counter) - ((exoPlayer.$localStorage.hours * 3600) + (exoPlayer.$localStorage.minutes * 60)));
+
+        // If timer reach the exercise duration
+        if (exoPlayer.$localStorage.counter == exoPlayer.duration) {
+            // Validate the exercise
+            exoPlayer.validateStep('end');
+        }
+    };
+
+    // Call for the first time the function to increase timer
+    myTimer = exoPlayer.$timeout(onTimeout, 1000);
 };
 
 // Set up dependency injection
-ExercisePlayerCtrl.$inject = [ 'exercise', 'paper', '$window', '$scope', 'ExerciseService', 'CommonService', 'DataSharing' ];
+ExercisePlayerCtrl.$inject = [ 'exercise', 'paper', '$window', '$scope', 'ExerciseService', 'CommonService', 'DataSharing', '$timeout', '$localStorage' ];
 
 /**
  * Current played Exercise
@@ -152,6 +195,10 @@ ExercisePlayerCtrl.prototype.validateStep = function (action, index) {
 
     // data set by question directive
     var studentData = this.DataSharing.getStudentData();
+    // TODO : améliorer
+    if (3 != this.exercise.meta.type) {
+        var submitPromise = this.ExerciseService.submitAnswer(this.paper.id, studentData);
+    }
 
     // navigate to desired step / end / terminate exercise
     this.handleStepNavigation(action, studentData.paper);
@@ -185,6 +232,14 @@ ExercisePlayerCtrl.prototype.handleStepNavigation = function (action, paper) {
     if (action && (action === 'forward' || action === 'backward' || action === 'goto')) {
         this.setCurrentStep(this.currentStepIndex);
     } else if (action && action === 'end') {
+
+        // If user validate exercise itself, reset the counter for the next paper
+        exoPlayer.$localStorage.$reset({
+            counter: 0
+        });
+        // And reset the timer (increase function)
+        exoPlayer.$timeout.cancel(myTimer);
+
         var endPromise = this.ExerciseService.end(paper);
         endPromise.then(function (result) {
             if (this.checkCorrectionAvailability()) {

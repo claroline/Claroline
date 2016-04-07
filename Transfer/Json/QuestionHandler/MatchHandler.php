@@ -237,7 +237,7 @@ class MatchHandler implements QuestionHandlerInterface {
         }
         $exportData->scoreTotal = $scoreTotal;
 
-        if ($withSolution) {
+        //if ($withSolution) {
 
             $exportData->solutions = array();
             foreach ($proposals as $proposal) {
@@ -253,7 +253,7 @@ class MatchHandler implements QuestionHandlerInterface {
                     array_push($exportData->solutions, $solution);
                 }
             }
-        }
+        //}
 
         return $exportData;
     }

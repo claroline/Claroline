@@ -305,7 +305,7 @@ class ExerciseManager
     public function exportSteps(Exercise $exercise, $withSolutions = true)
     {
         $stepList = array();
-        $steps = $exercise->getSteps();
+        $steps = $this->pickSteps($exercise);
 
         $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
 
@@ -321,7 +321,6 @@ class ExerciseManager
 
             $stepList[] = $currentStep;
         }
-
         return $stepList;
     }
 }

@@ -9,6 +9,7 @@ use UJM\ExoBundle\Entity\InteractionHole;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("ujm.exo.hole_handler")
@@ -17,17 +18,20 @@ use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
 class HoleHandler implements QuestionHandlerInterface
 {
     private $om;
+    private $container;
 
     /**
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "container"       = @DI\Inject("service_container")
      * })
-     *
+     * 
      * @param ObjectManager $om
+     * @param ContainerInterface $container
      */
-    public function __construct(ObjectManager $om)
-    {
+    public function __construct(ObjectManager $om, ContainerInterface $container) {
         $this->om = $om;
+        $this->container = $container;
     }
 
     /**
@@ -284,6 +288,10 @@ class HoleHandler implements QuestionHandlerInterface
             }
             $i++;
         }
+        
+//        $serviceHole = $this->container->get("ujm.exo.hole_service");
+//        
+//        $serviceHole->mark();
 
         if ($mark < 0) {
             $mark = 0;
