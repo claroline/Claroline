@@ -20,6 +20,15 @@ class ClarolineFlashCardBundle extends PluginBundle
     {
         $config = new ConfigurationBuilder();
 
-        return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'flashcards');
+        return $config->addRoutingResource(
+            __DIR__ . '/Resources/config/routing.yml', 
+            null, 
+            'flashcards'
+        );
+    }
+
+    public function getRequiredFixturesDirectory($environment)
+    {
+        return 'DataFixtures';
     }
 }
