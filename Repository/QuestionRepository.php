@@ -48,7 +48,7 @@ class QuestionRepository extends EntityRepository
             ->join('q.stepQuestions', 'sq')
             ->join('sq.step', 's')
             ->where('s.exercise = :exercise')
-            ->orderBy('sq.ordre')
+            ->orderBy('s.order, sq.ordre')
             ->setParameter(':exercise', $exercise)
             ->getQuery()
             ->getResult();
@@ -97,11 +97,7 @@ class QuestionRepository extends EntityRepository
      * @param bool      $limitToModels
      * @return array
      */
-    public function findByUserNotInExercise(
-        User $user,
-        Exercise $exercise,
-        $limitToModels = false
-    )
+    public function findByUserNotInExercise(User $user, Exercise $exercise, $limitToModels = false)
     {
         $stepQuestionsQuery = $this->createQueryBuilder('q1')
             ->join('q1.stepQuestions', 'sq')
@@ -223,11 +219,7 @@ class QuestionRepository extends EntityRepository
      * @param Exercise $excluded
      * @return array
      */
-    public function findByUserAndContent(
-        User $user,
-        $content,
-        Exercise $excluded = null
-    )
+    public function findByUserAndContent(User $user, $content, Exercise $excluded = null)
     {
         $qb = $this->createQueryBuilder('q')
             ->leftJoin('q.category', 'c')

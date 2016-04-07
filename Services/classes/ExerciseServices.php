@@ -8,7 +8,7 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use UJM\ExoBundle\Entity\ExerciseQuestion;
+// use UJM\ExoBundle\Entity\ExerciseQuestion;
 use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Event\Log\LogExerciseEvaluatedEvent;
 use UJM\ExoBundle\Entity\Question;
@@ -73,22 +73,22 @@ class ExerciseServices
      * Get max score possible for an exercise.
      *
      *
-     * @param int $exoID id Exercise
+     * @param UJM\ExoBundle\Entity\Exercise $exercise
      *
      * @return float
      */
-    public function getExerciseTotalScore($exoID)
+    public function getExerciseTotalScore($exercise)
     {
         $exoTotalScore = 0;
 
-        $eqs = $this->om
-                    ->getRepository('UJMExoBundle:ExerciseQuestion')
-                    ->findBy(array('exercise' => $exoID));
+        $questions = $this->om
+                    ->getRepository('UJMExoBundle:Question')
+                    ->findByExercise($exercise);
 
-        foreach ($eqs as $eq) {
-            $typeInter = $eq->getQuestion()->getType();
+        foreach ($questions as $question) {
+            $typeInter = $question->getType();
             $interSer = $this->container->get('ujm.exo_'.$typeInter);
-            $interactionX = $interSer->getInteractionX($eq->getQuestion()->getId());
+            $interactionX = $interSer->getInteractionX($question->getId());
             $scoreMax = $interSer->maxScore($interactionX);
             $exoTotalScore += $scoreMax;
         }
@@ -96,31 +96,31 @@ class ExerciseServices
         return $exoTotalScore;
     }
 
-    /**
-     * To link a question with an exercise.
-     *
-     *
-     * @param UJM\ExoBundle\Entity\Exercise               $exercise instance of Exercise
-     * @param InteractionQCM or InteractionGraphic or ... $interX
-     */
-    public function setExerciseQuestion($exercise, $interX, $order = -1)
-    {
-        $eq = new ExerciseQuestion($exercise, $interX->getQuestion());
-
-        if ($order == -1) {
-            $dql = 'SELECT max(eq.ordre) FROM UJM\ExoBundle\Entity\ExerciseQuestion eq '
-                  .'WHERE eq.exercise='.$exercise->getId();
-            $query = $this->doctrine->getManager()->createQuery($dql);
-            $maxOrdre = $query->getResult();
-
-            $eq->setOrdre((int) $maxOrdre[0][1] + 1);
-        } else {
-            $eq->setOrdre($order);
-        }
-        $this->om->persist($eq);
-
-        $this->om->flush();
-    }
+    // /**
+    //  * To link a question with an exercise.
+    //  *
+    //  *
+    //  * @param UJM\ExoBundle\Entity\Exercise               $exercise instance of Exercise
+    //  * @param InteractionQCM or InteractionGraphic or ... $interX
+    //  */
+    // public function setExerciseQuestion($exercise, $interX, $order = -1)
+    // {
+    //     $eq = new ExerciseQuestion($exercise, $interX->getQuestion());
+    //
+    //     if ($order == -1) {
+    //         $dql = 'SELECT max(eq.ordre) FROM UJM\ExoBundle\Entity\ExerciseQuestion eq '
+    //               .'WHERE eq.exercise='.$exercise->getId();
+    //         $query = $this->doctrine->getManager()->createQuery($dql);
+    //         $maxOrdre = $query->getResult();
+    //
+    //         $eq->setOrdre((int) $maxOrdre[0][1] + 1);
+    //     } else {
+    //         $eq->setOrdre($order);
+    //     }
+    //     $this->om->persist($eq);
+    //
+    //     $this->om->flush();
+    // }
 
     /**
      * To know if an user is the creator of an exercise.
@@ -233,6 +233,37 @@ class ExerciseServices
                     $em->persist($sq);
                     $em->flush();
                 }
+            }
+        }
+    }
+
+    /**
+     * Add a question in a step
+     *
+     *
+     * @param UJM\ExoBundle\Entity\Question $question
+     * @param UJM\ExoBundle\Entity\Step $step
+     * @param Integer $order
+     */
+    public function addQuestionInStep($question, $step, $order)
+    {
+        if ($step != null) {
+            if ($this->isExerciseAdmin($step->getExercise())) {
+                $sq = new StepQuestion($step, $question);
+
+                if ($order == -1) {
+                    $dql = 'SELECT max(sq.ordre) FROM UJM\ExoBundle\Entity\StepQuestion sq '
+                          .'WHERE sq.step='.$step->getId();
+                    $query = $this->doctrine->getManager()->createQuery($dql);
+                    $maxOrdre = $query->getResult();
+
+                    $sq->setOrdre((int) $maxOrdre[0][1] + 1);
+                } else {
+                    $sq->setOrdre($order);
+                }
+
+                $this->om->persist($sq);
+                $this->om->flush();
             }
         }
     }

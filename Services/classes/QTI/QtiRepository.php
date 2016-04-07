@@ -16,7 +16,7 @@ class QtiRepository
     private $userDir;
     private $tokenStorageInterface;
     private $container;
-    private $exercise = null;
+    private $step = null;
     private $exerciseQuestions = array();
     private $importedQuestions = array();
 
@@ -39,7 +39,7 @@ class QtiRepository
       */
      public function razValues()
      {
-         $this->exercise = null;
+         $this->step = null;
          $this->exerciseQuestions = array();
      }
 
@@ -162,7 +162,7 @@ class QtiRepository
                                 return 'qti unsupported format';
                             }
                         }
-                        if ($this->exercise != null) {
+                        if ($this->step != null) {
                             $this->exerciseQuestions[] = $file;
                             $this->importedQuestions[$file] = $interX;
                         }
@@ -298,11 +298,11 @@ class QtiRepository
      * Call scanFiles method for ExoImporter.
      *
      *
-     * @param UJM\ExoBundle\Entity\Exercise $exercise
+     * @param UJM\ExoBundle\Entity\Step $step
      */
-    public function scanFilesToImport($exercise)
+    public function scanFilesToImport(\UJM\ExoBundle\Entity\Step $step)
     {
-        $this->exercise = $exercise;
+        $this->step = $step;
         $scanFile = $this->scanFiles();
         if ($scanFile === true) {
             return true;
@@ -317,8 +317,7 @@ class QtiRepository
     private function addQuestionInExercise($interX, $order = -1)
     {
         $exoServ = $this->container->get('ujm.exo_exercise');
-        $exoServ->createStepForOneQuestion($this->exercise,
-                $interX->getQuestion(), $order);
+        $exoServ->addQuestionInStep($interX->getQuestion(), $this->step, $order);
     }
 
     /**

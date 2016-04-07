@@ -5,8 +5,12 @@ var deleteWr;
 var checkModal = false; //Checks whether the modal (question for a word) is show or hidden
 var editionAd;
 var commentRep;
+var keyWordTrans;
+var keysWords;
+var response;
+var numericalResponse;
 
-function insertStyle(tOpen, deleteTrans, edition, comment) {
+function insertStyle(tOpen, deleteTrans, edition, comment, keyWordTrans, responseTrans, numericalResponseTrans, keysWordsTrans) {
 
     typeOpen = JSON.parse(tOpen);
     container = $('div#ujm_exobundle_interactionopentype_wordResponses');
@@ -14,7 +18,11 @@ function insertStyle(tOpen, deleteTrans, edition, comment) {
     deleteWr = deleteTrans;
     editionAd = edition;
     commentRep = comment;
-    
+    keyWord = keyWordTrans;
+    response = responseTrans;
+    numericalResponse = numericalResponseTrans;
+    keysWords = keysWordsTrans;
+
     $('#ujm_exobundle_interactionopentype_interaction').find('div').first().find('label').first().remove();
     $('.form-collection-add').remove();
 
@@ -24,6 +32,8 @@ function insertStyle(tOpen, deleteTrans, edition, comment) {
         e.preventDefault(); // prevent add # in the url
         return false;
     });
+
+    //$("#ujm_exobundle_interactionopentype_typeopenquestion option[value='2']").prop('selected', true);
 
     //todo delete to implement numerical questions
     $("#ujm_exobundle_interactionopentype_typeopenquestion option[value='1']").remove();
@@ -59,16 +69,16 @@ function addWr(container, deleteWr) {
     while (uniqChoiceID == false) {
         if ($('#ujm_exobundle_interactionopentype_wordResponses_' + index + '_response').length) {
             index++;
-        } else {         
+        } else {
             uniqChoiceID = true;
         }
     }
-   
+
     // change the "name" by the index and delete the symfony delete form button
     var contain = $(container.attr('data-prototype').replace(/__name__label__/g, 'wr n°' + (index))
             .replace(/__name__/g, index)
             .replace('<a class="btn btn-danger remove" href="#">Delete</a>', '')
-            );     
+            );
     // Add the button to delete a choice
     addDelete(contain, deleteWr);
 
@@ -94,7 +104,7 @@ function addRowToTablewr(row,index) {
             $('#tablewr').find('td:last').append(row.find('input'));
         }
          //Add the field of type textarea feedback
-        
+
     }
     if (row.find('*[id$="_feedback"]').length) {
             var idFeedbackVal = row.find('textarea').attr("id");
@@ -103,7 +113,7 @@ function addRowToTablewr(row,index) {
             //Adds the textarea and its advanced edition button (hidden by default)
             $('#span_' + idFeedbackVal).append(row.find('*[id$="_feedback"]'));
             $('#span_' + idFeedbackVal).append('<span class="input-group-btn"><a class="btn btn-default" id="btnEdition_' + idFeedbackVal + '" onClick="advancedEdition(\'ujm_exobundle_interactionopentype_wordResponses_' + index + '_feedback\',\'btnEdition_' + idFeedbackVal + '\',event);" title="' + editionAd + '"><i class="fa fa-font"></i></a></span>');
-        }   
+        }
 }
 
 function openEdit(nbResponses) {
@@ -127,6 +137,22 @@ function showOpenWord(nbResponses) {
             addWr(container, deleteWr);
         }
     }
+    $('#add_wr').text(keyWord);
+    $('#tablewr').find('th:first').text(keysWords);
+    $('#tablewr').find('th').eq(2).css({'display':'block'});
+    $('#tablewr').find('td').eq(2).each(function () {
+            $(this).css({'display':'block'});
+    });
+}
+
+function showOpenNumerical(nbResponses) {
+    showOpenWord(nbResponses);
+    $('#add_wr').text(response);
+    $('#tablewr').find('th:first').text(numericalResponse);
+    $('#tablewr').find('th').eq(2).css({'display':'none'});
+    $('#tablewr').find('td').eq(2).each(function () {
+            $(this).css({'display':'none'});
+    });
 }
 
 function showShortResponse() {
@@ -154,6 +180,8 @@ $('#ujm_exobundle_interactionopentype_typeopenquestion').change(function () {
         showLongResponse();
     } else if (typeOpen[$(this).val()] == 3) {
         showOpenWord(0);
+    } else if (typeOpen[$(this).val()] == 1) {
+        showOpenNumerical(0);
     }
 });
 

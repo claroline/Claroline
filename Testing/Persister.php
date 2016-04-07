@@ -10,11 +10,12 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use UJM\ExoBundle\Entity\Category;
+use UJM\ExoBundle\Entity\Step;
+use UJM\ExoBundle\Entity\StepQuestion;
 use UJM\ExoBundle\Entity\Choice;
 use UJM\ExoBundle\Entity\Proposal;
 use UJM\ExoBundle\Entity\Label;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\ExerciseQuestion;
 use UJM\ExoBundle\Entity\Hint;
 use UJM\ExoBundle\Entity\InteractionOpen;
 use UJM\ExoBundle\Entity\InteractionQCM;
@@ -147,7 +148,7 @@ class Persister {
         $proposal->setValue($text);
         if ($label !== null) {
             $proposal->addAssociatedLabel($label);
-        }  
+        }
         $this->om->persist($proposal);
         return $proposal;
     }
@@ -168,12 +169,12 @@ class Persister {
         $interactionMatching->setQuestion($question);
         $interactionMatching->setShuffle(false);
         $interactionMatching->setTypeMatching($this->matchType);
-        
+
         for ($i = 0, $max = count($labels); $i < $max; ++$i) {
             $labels[$i]->setOrdre($i);
             $interactionMatching->addLabel($labels[$i]);
         }
-        
+
         for ($i = 0, $max = count($proposals); $i < $max; ++$i) {
             $proposals[$i]->setOrdre($i + 1);
             $interactionMatching->addProposal($proposals[$i]);
@@ -190,38 +191,48 @@ class Persister {
      * @param User          $user
      * @return Exercise
      */
-    public function exercise($title, array $questions = [], User $user = null) {
-        $exercise = new Exercise();
-        $exercise->setTitle($title);
+     public function exercise($title, array $questions = [], User $user = null) {
+         $exercise = new Exercise();
+         $exercise->setTitle($title);
 
-        for ($i = 0, $max = count($questions); $i < $max; ++$i) {
-            $link = new ExerciseQuestion($exercise, $questions[$i]);
-            $link->setOrdre($i);
-            $this->om->persist($link);
-        }
+         if ($user) {
+             if (!$this->exoType) {
+                 $this->exoType = new ResourceType();
+                 $this->exoType->setName('exercise');
+                 $this->om->persist($this->exoType);
+             }
 
-        if ($user) {
-            if (!$this->exoType) {
-                $this->exoType = new ResourceType();
-                $this->exoType->setName('exercise');
-                $this->om->persist($this->exoType);
-            }
+             $node = new ResourceNode();
+             $node->setName($title);
+             $node->setCreator($user);
+             $node->setResourceType($this->exoType);
+             $node->setWorkspace($user->getPersonalWorkspace());
+             $node->setClass('UJM\ExoBundle\Entity\Exercise');
+             $node->setGuid(time());
+             $exercise->setResourceNode($node);
+             $this->om->persist($node);
+         }
 
-            $node = new ResourceNode();
-            $node->setName($title);
-            $node->setCreator($user);
-            $node->setResourceType($this->exoType);
-            $node->setWorkspace($user->getPersonalWorkspace());
-            $node->setClass('UJM\ExoBundle\Entity\Exercise');
-            $node->setGuid(time());
-            $exercise->setResourceNode($node);
-            $this->om->persist($node);
-        }
+         $this->om->persist($exercise);
 
-        $this->om->persist($exercise);
+         for ($i = 0, $max = count($questions); $i < $max; ++$i) {
+             $step = new Step();
+             $step->setText('step');
+             $step->setOrder($i);
+             $step->setExercise($exercise);
+             $this->om->persist($step);
+             $stepQuestion = new StepQuestion($step, $questions[$i]);
+             $stepQuestion->setOrdre(0);
+             $this->om->persist($stepQuestion);
 
-        return $exercise;
-    }
+             /*$link = new ExerciseQuestion($exercise, $questions[$i]);
+             $link->setOrdre($i);
+             $this->om->persist($link);*/
+         }
+
+
+         return $exercise;
+     }
 
     /**
      * @param User      $user
