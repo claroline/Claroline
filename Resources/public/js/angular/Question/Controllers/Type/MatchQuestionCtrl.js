@@ -609,7 +609,12 @@ angular.module('Question').controller('MatchQuestionCtrl', [
                     if (sets[i] && sets[i] !== '') {
                         var items = sets[i].split(',');
                         // disable corresponding draggable item
-                        $('#draggable_' + items[0]).draggable("disable");
+                        if (this.question.typeMatch === 3) {
+                            $('#div_' + items[0]).draggable("disable");
+                        }
+                        else {
+                            $('#draggable_' + items[0]).draggable("disable");
+                        }
                         // ui update
                         if (this.question.typeMatch !== 3) {
                             $('#draggable_' + items[0]).fadeTo(100, 0.3);
