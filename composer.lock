@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ab0ddbc760f49bda8885f74ad1b170ea",
+    "hash": "fc3ca2c38b1201d7b0f0ea7c6e7908ea",
     "content-hash": "b7094b5541d69395f66743617d21a7e1",
     "packages": [
         {
@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "4e0fd3f6e9a7b2eab3d43f5f0b9b0107a0f20afd"
+                "reference": "b53a4ec2761634d61c5ae4ad028d49293a7e97e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/4e0fd3f6e9a7b2eab3d43f5f0b9b0107a0f20afd",
-                "reference": "4e0fd3f6e9a7b2eab3d43f5f0b9b0107a0f20afd",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/b53a4ec2761634d61c5ae4ad028d49293a7e97e8",
+                "reference": "b53a4ec2761634d61c5ae4ad028d49293a7e97e8",
                 "shasum": ""
             },
             "require": {
@@ -260,7 +260,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-04-06 16:04:53"
+            "time": "2016-04-07 08:23:47"
         },
         {
             "name": "claroline/front-end-bundle",

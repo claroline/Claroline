@@ -55,6 +55,9 @@
         "bundles": [
             "Claroline\\BundleRecorder\\ScriptHandler::buildBundleFile"
         ],
+        "bundles-clean": [
+            "Claroline\\BundleRecorder\\ScriptHandler::removeBupIniFile"
+        ],
         "pre-install-cmd": [
             "php scripts/check.php",
             "php scripts/save-repo.php"
