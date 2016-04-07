@@ -42,7 +42,6 @@
             "npm run bower"
         ],
         "build": [
-            "composer bundles",
             "Claroline\\CoreBundle\\Library\\Installation\\Refresher::deleteCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
