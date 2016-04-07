@@ -115,8 +115,24 @@ class OperationExecutor
         $previous = $this->openRepository($this->previousRepoFile);
         $current = $this->openRepository($this->installedRepoFile);
         $operations = [];
-
         $previousBundles = array_keys(parse_ini_file($this->bupBundleFile));
+
+        $previousBundles = array_filter($previousBundles, function($var) {
+            if (in_array('Claroline\InstallationBundle\Bundle\InstallableInterface', class_implements($var))) {
+                $parts = explode('\\', $var);
+
+                if ($var !== 'Claroline\CoreBundle\ClarolineCoreBundle') {
+                    $this->log('<fg=blue>' . $var . ' is already installed.</fg=blue>');
+                    $this->log('If something goes wrong, you can trigger these operations manually:');
+                    $this->log('Installation: php app/console claroline:plugin:install ' . $parts[0] . ' ' . $parts[1]);
+                    $this->log('Single update: php app/console claroline:test_update ' . $parts[0] . $parts[1]);
+                }
+
+                return true;
+            } else {
+                return false;
+            }
+        });
 
         /** @var PackageInterface $currentPackage */
         foreach ($current->getCanonicalPackages() as $currentPackage) {

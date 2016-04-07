@@ -29,9 +29,9 @@ class TestUpdateCommand extends ContainerAwareCommand
             ->setDescription('Tests the local update of a bundle.');
         $this->setDefinition(
             array(
+                new InputArgument('bundle', InputArgument::REQUIRED, 'bundle'),
                 new InputArgument('from_version', InputArgument::REQUIRED, 'from version'),
-                new InputArgument('to_version', InputArgument::REQUIRED, 'to version'),
-                new InputArgument('bundle', InputArgument::REQUIRED, 'bundle')
+                new InputArgument('to_version', InputArgument::REQUIRED, 'to version')
             )
         );
     }
