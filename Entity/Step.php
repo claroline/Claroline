@@ -70,7 +70,7 @@ class Step
     private $order;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Exercise")
+     * @ORM\ManyToOne(targetEntity="Exercise", inversedBy="steps")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $exercise;
