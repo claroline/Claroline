@@ -154,9 +154,21 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div data-ng-repeat="proposal in matchQuestionCtrl.question.secondSet" class="row drop-textbox drop-label-textbox alert alert-info" id="label_{{proposal.id}}">
-                    <div class="col-md-12 setLabel">
+                <div data-ng-repeat="proposal in matchQuestionCtrl.question.secondSet" class="row drop-textbox drop-label-textbox drop-droppable-color" id="label_{{proposal.id}}">
+                    <div class="col-md-11 setLabel">
                         <div data-ng-bind-html="proposal.data | unsafe"></div>
+                    </div>
+                    <div class="col-md-1 fa fa-search-plus drag-zoom drop-textbox-height drop-color-default" data-toggle="modal" data-target="#longTextValueModalLabel{{proposal.id}}"></div>
+                    <!-- Modal dialog -->
+                    <div class="modal fade" id="longTextValueModalLabel{{proposal.id}}" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <span data-ng-bind-html="proposal.data | unsafe"></span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
