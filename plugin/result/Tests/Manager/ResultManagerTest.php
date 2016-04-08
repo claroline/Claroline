@@ -99,7 +99,7 @@ class ResultManagerTest extends TransactionalTestCase
 
     public function testImportExpectsThreeValues()
     {
-        $john = $this->persist->user('john');;
+        $john = $this->persist->user('john');
         $result = $this->persist->result('Result 1', $john);
         $this->persist->workspaceUser($john->getPersonalWorkspace(), $john);
         $this->om->flush();
@@ -119,7 +119,6 @@ class ResultManagerTest extends TransactionalTestCase
         $this->om->flush();
 
         $data = $this->manager->importMarksFromCsv($result, $this->stubCsv('empty-values'));
-
         $this->assertEquals(1, count($data['errors']));
         $this->assertEquals(ResultManager::ERROR_EMPTY_VALUES, $data['errors'][0]['code']);
         $this->assertEquals(1, $data['errors'][0]['line']);

@@ -13,6 +13,7 @@ namespace Claroline\ResultBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ResultBundle\Entity\Mark;
 use Claroline\ResultBundle\Entity\Result;
@@ -20,7 +21,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("claroline.result.result_manager")
@@ -35,27 +35,28 @@ class ResultManager
 
     private $om;
     private $templating;
-    private $container;
+    private $utils;
 
     /**
      * @DI\InjectParams({
      *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
      *     "templating" = @DI\Inject("templating"),
-     *     "container"  = @DI\Inject("service_container")
+     *     "utils"      = @DI\Inject("claroline.utilities.misc")
      * })
      *
      * @param ObjectManager     $om
      * @param EngineInterface   $templating
+     * @param ClaroUtilities    $utils
      */
     public function __construct(
         ObjectManager $om,
         EngineInterface $templating,
-        ContainerInterface $container
+        ClaroUtilities $utils
     )
     {
         $this->om = $om;
         $this->templating = $templating;
-        $this->container = $container;
+        $this->utils = $utils;
     }
 
     /**
@@ -172,7 +173,10 @@ class ResultManager
      */
     public function isValidMark(Result $result, $mark)
     {
-        return  (float) str_replace(',', '.', $mark) <= $result->getTotal();
+        // normalize french decimal marks
+        $mark = str_replace(',', '.', $mark);
+
+        return is_numeric($mark) && (float) $mark <= $result->getTotal();
     }
 
     /**
@@ -215,7 +219,14 @@ class ResultManager
         $this->om->flush();
     }
 
-    public function importMarksFromCsv(Result $result, UploadedFile $csvFile, $importType)
+    /**
+     * Import marks from a CSV file into a result resource.
+     *
+     * @param Result        $result
+     * @param UploadedFile  $csvFile
+     * @param string        $importType Either "fullname", "code" or "username"
+     */
+    public function importMarksFromCsv(Result $result, UploadedFile $csvFile, $importType = 'fullname')
     {
         $repo = $this->om->getRepository('ClarolineCoreBundle:User');
         $roles = $result->getResourceNode()->getWorkspace()->getRoles()->toArray();
@@ -227,10 +238,10 @@ class ResultManager
         ];
 
         $fileData = file_get_contents($csvFile);
-        $fileData = $this->container->get('claroline.utilities.misc')->formatCsvOutput($fileData);
+        $fileData = $this->utils->formatCsvOutput($fileData);
         $lines = str_getcsv($fileData, PHP_EOL);
 
-        if (count($lines) === 0) {
+        if (count($lines) === 1 && $lines[0] === null) {
             $data['errors'][] = [
                 'code' => self::ERROR_EMPTY_CSV,
                 'message' => 'errors.csv_empty',
@@ -240,7 +251,7 @@ class ResultManager
             return $data;
         }
 
-        $countRowEl = $importType === 'fullname' ? 3: 2;
+        $countRowEl = $importType === 'fullname' ? 3 : 2;
 
         foreach (file($csvFile->getPathname()) as $index => $line) {
             $values = array_map('trim', str_getcsv($line, ';'));
