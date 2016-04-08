@@ -14,6 +14,8 @@ namespace Claroline\FlashCardBundle\Entity;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * @ORM\Table(name="claro_fcbundle_deck")
@@ -27,6 +29,7 @@ class Deck extends AbstractResource
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api_flashcard", "api_flashcard_deck"})
      */
     protected $id;
 
@@ -44,6 +47,7 @@ class Deck extends AbstractResource
      * @var integer
      *
      * @ORM\Column(name="new_card_day_default", type="integer")
+     * @Groups({"api_flashcard", "api_flashcard_deck"})
      */
     protected $newCardDayDefault;
 
@@ -51,6 +55,7 @@ class Deck extends AbstractResource
      * @var integer
      *
      * @ORM\Column(name="session_duration_default", type="integer")
+     * @Groups({"api_flashcard", "api_flashcard_deck"})
      */
     protected $sessionDurationDefault;
 
