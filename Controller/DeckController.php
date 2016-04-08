@@ -30,12 +30,12 @@ class DeckController
 
     /**
      * @DI\InjectParams({
-     *     "manager" = @DI\Inject("claroline.deck.deck_manager"),
+     *     "manager" = @DI\Inject("claroline.flashcard.deck_manager"),
      *     "handler" = @DI\Inject("claroline.form_handler"),
      *     "checker" = @DI\Inject("security.authorization_checker")
      * })
      *
-     * @param DeckManager              $manager
+     * @param DeckManager                   $manager
      * @param FormHandler                   $handler
      * @param AuthorizationCheckerInterface $checker
      */
