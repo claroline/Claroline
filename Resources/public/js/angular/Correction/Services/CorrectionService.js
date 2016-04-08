@@ -82,8 +82,19 @@ angular.module('Correction').factory('CorrectionService', [
                     var availableScore = 0.0;
                     var studentScore = 0.0;
                     var result = '';
-                    for (var i = 0; i < question.solutions.length; i++) {
-                        availableScore += question.solutions[i].score ? question.solutions[i].score : 0;
+                    if (question.typeOpen === "oneWord") {
+                        for (var i = 0; i < question.solutions.length; i++) {
+                            if (question.solutions[i].score > availableScore) {
+                                availableScore = question.solutions[i].score;
+                            }
+                        }
+                    }
+                    else{
+                        for (var i = 0; i < question.solutions.length; i++) {
+                            if(question.solutions[i].score > 0) {
+                                availableScore += question.solutions[i].score ? question.solutions[i].score : 0;
+                            }
+                        }
                     }
                     for (var j = 0; j < paper.questions.length; j++) {
                         if (paper.questions[j].id === question.id.toString()) {

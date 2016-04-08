@@ -202,13 +202,11 @@ class OpenHandler implements QuestionHandlerInterface {
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionOpen')
                 ->findOneByQuestion($question);
 
-        $mark = 0;
-
         $answer = $data;
 
         $serviceOpen = $this->container->get("ujm.exo.open_service");
-        
-        $serviceOpen->mark($interaction, $data, 0);
+
+        $mark=$serviceOpen->mark($interaction, $data, 0);
 
         $response->setResponse($answer);
         $response->setMark($mark);
