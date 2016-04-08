@@ -57,7 +57,7 @@
         <div data-ng-if="matchQuestionCtrl.question.typeMatch === 2" class="row center-text">
             <!-- PROPOSALS -->
             <div class="col-md-6">
-                <div data-ng-repeat="proposal in matchQuestionCtrl.question.firstSet" class="row origin" id="div_{{proposal.id}}">
+                <div data-ng-repeat="proposal in matchQuestionCtrl.question.firstSet" class="row origin to-drag" id="div_{{proposal.id}}">
                     <div class="col-md-12 setLabel">                        
                         <ul>
                             <li id="draggable_{{proposal.id}}" class="draggable">
