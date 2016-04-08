@@ -1,64 +1,29 @@
 # Distribution
-Official distribution of Claroline Connect LMS
 
-> [Installation instruction](https://github.com/claroline/Claroline/blob/master/README.md)
+[![Build Status](https://travis-ci.org/claroline/Distribution.svg?branch=master)](https://travis-ci.org/claroline/Distribution)
 
-# Base Bundle
+This is the official distribution package of the Claroline Connect learning
+management system. It is intended to be installed within the
+[claroline/Claroline](http://github.com/claroline/Claroline) application and
+provides:
 
-- [x] CoreBundle
-- [x] BundleRecorder
-- [x] InstallationBundle
-- [x] MigrationBundle
-- [x] KernelBundle
-- [x] WebInstallerBundler
+1. the core bundles and components needed to get a working platform;
+2. the plugin bundles officially supported by the Claroline Consortium.
 
-# Official Plugins
+## WARNING
 
-- [x] ForumBundle
-- [x] MessageBundle
-- [x] PdfPlayerBundle
-- [x] CursusBundle
-- [x] VideoPlayerBundle
-- [x] ScormBundle
-- [x] AgendaBundle
-- [x] ActivityToolBundle
-- [x] ResultBundle
-- [x] RssReaderBundler
-- [x] ImagePlayerBundle
-- [x] TextPlayerBundle
-- [x] TeamBundle
-- [x] TagBundle
-- [x] LdapBundle
-- [x] AnnoucementBundle
-- [x] SurveyBundle
-- [x] WebRessourceBundle
-- [x] PresenceBundle
-- [x] ReservationBundle
-- [x] SupportBundle
-- [x] NotificationBundle
-- [x] CompetencyBundle
-- [x] FavouriteBundle
-- [x] UrlBundle
-- [x] BadgeBundle
-- [x] BlogBundle
-- [x] WikiBundle
-- [x] DropZoneBundle
-- [ ] LessonBundle
-- [x] PortfolioBundle
-- [x] SocialMediaBundle
-- [ ] WebsiteBundle
-- [x] oAuthBundle
-- [x] PathBundle
-- [x] CollecticielBundle
-- [ ] ExoBundle
-- [ ] FormulaPluginBundle
+This repository is still a work in progress.
 
-################
-
-# TODO
+## TODO
 
 - [ ] update
 - [ ] upgrade from previous packages
+- [ ] add LessonBundle
+- [ ] add WebsiteBundle
+- [ ] add ExoBundle
+- [ ] add FormulaPluginBundle
+- [ ] migrate contents from DevBundle
 - [ ] remove the innova/angular bundles (required by portfolio)
 - [ ] remove the "innova/angular-ui-pageslide-bundle" (for path)
 - [ ] remove the front-end-bundle (required by icapbadge for jqplot and by core/Resouces/less/layout.less)
+- [ ] add install and doc sections (require claroline/Claroline to be updated as well)
