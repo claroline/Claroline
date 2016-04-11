@@ -1,0 +1,413 @@
+body {
+    font-family: Verdana, sans-serif;
+}
+
+.fm-editor {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: 2;
+
+}
+
+.fm-editor .fm-editor-toolbar {
+    padding: 1px 10px;
+    position: relative;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    background-color: #f6f5ee;
+    border: 1px solid #ccc;
+    -moz-box-shadow:1px 1px 1px rgba( 0, 0, 0, 0.1 );
+    -webkit-box-shadow:1px 1px 1px rgba( 0, 0, 0, 0.1 );
+    box-shadow:1px 1px 1px rgba( 0, 0, 0, 0.1 );
+    color: #444;
+}
+
+/* arrow buttons */
+.arrow-down{
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 6px 5px 0 5px;
+    border-color: #444 transparent transparent transparent;
+    display: inline-block;
+}
+
+.arrow-up{
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 5px 6px 5px;
+    border-color: transparent transparent #444 transparent;
+    display: inline-block;
+}
+.left-down-arrow{
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 0 8px 8px;
+    border-color: transparent transparent #444 transparent;
+    display: inline-block;
+}
+
+/* Panel buttons */
+.fm-editor .fm-editor-toolbar .fm-editor-panel .arrow-down {
+    margin-left: -9%;
+    position:absolute;
+    bottom: 10px;
+}
+.fm-editor .fm-editor-toolbar .fm-editor-panel-button {
+    padding: 1px 1px;
+    height: 90px;
+    width: 60px;
+    font-size: 12px;
+    text-align: center;
+    display: inline-block;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    cursor: default;
+    overflow:hidden;
+    z-index: 10;
+    position: relative;
+}
+
+.fm-editor .fm-editor-toolbar .fm-editor-panel-button .fm-editor-panel-button-label {
+    color: #666;
+    text-align: center;
+    display: block;
+    font-size: 10px;
+    line-height: 14px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-top: -3px;
+}
+
+.fm-editor .fm-editor-toolbar .fm-editor-panel-button:hover {
+    border: 1px solid #a9d9ab;
+    background: #ebf7e6;
+    cursor: pointer;
+}
+
+.fm-editor .fm-editor-toolbar .fm-editor-panel.active .fm-editor-panel-button {
+    border-color: #8fcc91!important;
+    background: #e0f0dd!important;
+}
+
+/* Sections */
+.fm-editor .fm-editor-section-mount-point{
+    display: none;
+    position: absolute;
+    bottom: -2px;
+    left: -1px;
+    z-index: 100;
+}
+.fm-editor .fm-editor-panel.active .fm-editor-section-mount-point{
+    display: block;
+}
+.fm-editor .fm-editor-section-container, .fm-editor .fm-editor-panel-area-section-container {
+    border: 1px solid #b3aead;
+    border-radius: 3px;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.11);
+    background: white;
+    position: absolute;
+    z-index: 200;
+    top: 0;
+    left: -1px;
+    left: -1px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.fm-editor .fm-editor-section-container .fm-editor-section-title,
+.fm-editor .fm-editor-panel-area .fm-editor-section-title
+{
+    background-color: #f7f6f0;
+    height: 23px;
+    line-height: 23px;
+    font-size: 12px;
+    border: 1px solid #ebeae4;
+    border-width: 1px 0;
+    padding-left: 12px;
+}
+
+.fm-editor .fm-editor-panel-area .fm-editor-panel-area-section-box-container .fm-editor-section {
+    display: none;
+}
+.fm-editor .fm-editor-panel-area .fm-editor-panel-area-section-box-container .fm-editor-section.active {
+    display: block;
+}
+
+/* Panels */
+.fm-editor .fm-editor-panel {
+    position: relative;
+    display: inline-block;
+    position: relative;
+    top: 0;
+    left: 0;
+    vertical-align: top;
+    margin-right: 1px;
+}
+
+/* Area panel */
+.fm-editor-panel-area {
+    height: 79px;
+    display: inline-block;
+    cursor: default;
+    position: relative;
+    top: 0;
+    left: 0;
+    vertical-align: top;
+    border: 1px solid #e0dfd5;
+    border-radius: 1px;
+    background: white;
+    margin: 8px 10px;
+}
+
+.fm-editor-panel-area .fm-editor-panel-area-container{
+    width: 303px;
+    height: 70px;
+    margin: 5px;
+    display: inline-block;
+    border-right: 0;
+    vertical-align: top;
+    position: relative;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+}
+.fm-editor-panel-area .fm-editor-panel-area-container .fm-editor-panel-area-box{
+    -webkit-transition: ease-in-out 400ms;
+    -moz-transition: ease-in-out 400ms;
+    -ms-transition: ease-in-out 400ms;
+    -o-transition: ease-in-out 400ms;
+    transition: ease-in-out 400ms;
+}
+.fm-editor-panel-area .fm-editor-panel-area-button-container {
+    display: inline-block;
+    width: 16px;
+    height: 100%;
+    overflow: hidden;
+    text-align: center;
+    border: 0 solid #D3D3D3;
+    border-left-width: 1px;
+    background-color: #f2f0e6;
+}
+
+.fm-editor-panel-area-section-mount-point {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+}
+.fm-editor-panel-area-section-mount-point.active{
+    display: block;
+}
+
+.fm-editor-panel-area .fm-editor-panel-area-moveup-button,
+.fm-editor-panel-area .fm-editor-panel-area-movedown-button,
+.fm-editor-panel-area .fm-editor-panel-area-popup-button{
+    height: 28px;
+    line-height: 22px;
+    border-bottom: 1px solid #ccc;
+}
+.fm-editor-panel-area .fm-editor-panel-area-popup-button{line-height: 15px;}
+
+.fm-editor-panel-area .fm-editor-panel-area-moveup-button:hover,
+.fm-editor-panel-area .fm-editor-panel-area-movedown-button:hover,
+.fm-editor-panel-area .fm-editor-panel-area-popup-button:hover{
+    background-color: #e5e4e1;
+    cursor: pointer;
+}
+
+.fm-editor-panel-area .fm-editor-panel-area-section-container {
+    border-color: #61b864;
+}
+.fm-editor-panel-area .fm-editor-panel-area-section-overlap-container {
+    min-height: 200px;
+}
+.fm-editor-panel-area .fm-editor-dropdown-button {
+    width: 100%;
+    height: 25px;
+    background: #53b856;
+    border-radius: 0;
+}
+
+.fm-editor-panel-area .fm-editor-dropdown-button .fm-editor-dropdown-label-button {
+    padding: 3px 5px;
+    text-align: left;
+    color: white;
+    font-size: 12px;
+}
+
+.fm-editor-panel-area .fm-editor-dropdown-button .fm-editor-dropdown-label-button div{
+    display: inline-block;
+}
+.fm-editor-panel-area .fm-editor-dropdown-button .fm-editor-dropdown-label-button .arrow-down{
+    border-color: #fff transparent transparent transparent;
+    margin-left: 10px;
+}
+
+.fm-editor-panel-area .fm-editor-dropdown-button .fm-editor-dropdown-list-mount-point
+{
+    display: none;
+    position: absolute;
+    bottom: 2px;
+    left: 5px;
+    top: 27px;
+    z-index: 200;
+}
+
+.fm-editor-panel-area .fm-editor-dropdown-button .fm-editor-dropdown-list-mount-point.active{
+    display: block;
+}
+
+/* dropdown list */
+.fm-editor-dropdown-list-items{
+    background: #f9f8f5;
+    border: 1px solid #b3aead;
+    border-radius: 1px;
+    top: 0;
+    left: 0;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.11);
+    width: 150px;
+    z-index: 200;
+}
+
+.fm-editor-dropdown-list-item {
+    line-height: 18px;
+    font-size: 12px;
+    padding: 2px 6px 2px 20px;
+    border: 1px solid transparent;
+    border-width: 1px 0;
+}
+
+.fm-editor-dropdown-list-item.active {
+    color: #61b864;
+    font-weight: bold;
+}
+.fm-editor-dropdown-list-item.active::before{
+    color: #61b864;
+    content: "\2713";
+    font-size: 16px;
+    margin-left:-17px;
+    padding-right:3px;
+}
+
+.fm-editor-dropdown-list-item:hover {
+    border-color: #beddbf;
+    background-color: #ecf3e9;
+}
+
+/* buttons */
+.fm-editor .fm-editor-section-buttons {
+    padding: 4px 0 0 4px;
+}
+.fm-editor .fm-editor-section-buttons .fm-editor-button {
+    border: 1px solid #ccc;
+    margin: 0 3px 2px 0;
+}
+
+.fm-editor .fm-editor-section-buttons .fm-editor-button:hover {
+    cursor: pointer;
+    border-color: #6eb864;
+}
+
+/* Content */
+.fm-editor .fm-editor-content-area{
+    margin-bottom : 20px;
+    border: 1px solid #ccc;
+    border-top: 1px solid transparent;
+    overflow-x: hidden;
+}
+.fm-editor .fm-editor-content {
+    min-height: 200px;
+    width: 97%;
+    border: none;
+    resize: none;
+    outline: none;
+    padding:10px 7px;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
+/* Result */
+.fm-editor .fm-editor-result-area {
+    padding: 20px;
+    min-height: 200px;
+    border: 1px solid #ccc;
+}
+.fm-editor .fm-editor-result-area .fm-editor-result-area-label {
+    width: auto;
+    position: absolute;
+    margin-top: -32px;
+    background-color: #fff;
+    padding: 2px;
+    color: #3d8e3e;
+    font-size: 14px;
+}
+
+/* Matrix popup */
+.fm-editor .fm-editor-matrix-popup-mount{
+    position: absolute;
+    top: 106px;
+    left: 556px;
+    z-index: 200;
+    display: none;
+}
+.fm-editor .fm-editor-matrix-popup-mount.active {
+    display:block;
+}
+.fm-editor .fm-editor-matrix-popup-container{
+    background: #f9f8f5;
+    border: 1px solid #b3aead;
+    font-size: 12px;
+    color: #444;
+    border-radius: 1px;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.11);
+    width: 126px;
+    padding: 3px;
+}
+
+.fm-editor .fm-editor-matrix-popup-container input{
+    width: 50px;
+}
+
+.fm-editor .fm-editor-matrix-popup-container button {
+    border: 1px solid #3d8e3e;
+    background-color: #53b856;
+    color: #fff;
+    cursor: pointer;
+}
+
+.fm-editor .fm-editor-matrix-popup-container table tr:last-child td{
+    text-align: right;
+}
+
+/* mlang panel */
+.fm-editor-panel .fm-editor-dropdown-list-mount-point{
+    display: none;
+    position: absolute;
+    left: -1px;
+    z-index: 200;
+}
+
+.fm-editor-panel .fm-editor-dropdown-list-mount-point.active{
+    display: block;
+}
+
+.fm-editor-panel .fm-editor-dropdown-list-item:hover{
+    cursor: pointer;
+}
+
+.fm-editor-panel.disabled .fm-editor-panel-button,
+.fm-editor-panel.disabled .fm-editor-panel-button:hover{
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: transparent;
+    border-color: transparent;
+}
