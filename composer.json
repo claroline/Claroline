@@ -45,6 +45,7 @@
         "jms/twig-js-bundle": "1.0.0",
         "johngrogg/ics-parser": "dev-master",
         "knplabs/knp-menu-bundle": "2.0.0",
+        "knplabs/knp-snappy-bundle": "1.3",
         "leafo/lessphp": "0.4.0",
         "mrclay/minify": "~2.2",
         "natxet/CssMin": "3.0.2",
@@ -125,7 +126,8 @@
             "Icap\\OAuthBundle\\": "plugin/oauth",
             "Claroline\\ResultBundle\\": "plugin/result",
             "Innova\\PathBundle\\": "plugin/path",
-            "Innova\\VideoRecorderBundle\\": "plugin/video-recorder"
+            "Innova\\VideoRecorderBundle\\": "plugin/video-recorder",
+            "Claroline\\PdfGeneratorBundle\\": "plugin/pdf-generator"
         }
     },
     "bundles": [
@@ -149,6 +151,7 @@
         "Claroline\\PdfPlayerBundle\\ClarolinePdfPlayerBundle",
         "Claroline\\CursusBundle\\ClarolineCursusBundle",
         "Claroline\\TeamBundle\\ClarolineTeamBundle",
+        "Claroline\\PdfGeneratorBundle\\ClarolinePdfGeneratorBundle",
         "FormaLibre\\PresenceBundle\\FormaLibrePresenceBundle",
         "Claroline\\VideoPlayerBundle\\ClarolineVideoPlayerBundle",
         "Claroline\\ActivityToolBundle\\ClarolineActivityToolBundle",
