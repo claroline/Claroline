@@ -51,27 +51,14 @@ angular.module('Question').controller('MatchQuestionCtrl', [
          */
         $scope.$on('show-feedback', function (event, data) {
             this.showFeedback();
-            /*
-             * //todo: Find another solution to disable question "à lier"
-             * Unbinding events is a bad solution
-             * - It doesn't prevent the user from creating new segments, it just doesn't save them
-             * - The events cannot be re-bound after being unbound (on the "hide-feedback")
-             */
-            //this.unbindEvents();
         }.bind(this));
 
         $scope.$on('hide-feedback', function () {
             this.hideFeedback();
-            //this.bindEvents();
         }.bind(this));
         
         this.answerIsSaved = function (item) {
-            if (this.savedAnswers.indexOf(item) === -1) {
-                return false;
-            }
-            else {
-                return true;
-            }
+            return (this.savedAnswers.indexOf(item) !== -1);
         };
 
         /**
@@ -81,12 +68,11 @@ angular.module('Question').controller('MatchQuestionCtrl', [
          * @returns {Boolean}
          */
         this.checkAnswerValidity = function (label) {
-            var answers;
             if (this.question.toBind) {
-                answers = this.connections;
+                var answers = this.connections;
             }
             else {
-                answers = this.dropped;
+                var answers = this.dropped;
             }
 
             // set the orphan answers list
@@ -132,13 +118,8 @@ angular.module('Question').controller('MatchQuestionCtrl', [
             var valid3 = true;
             for (var i=0; i<answers.length; i++) {
                 if (answers[i].target === label.id) {
-                    subvalid = false;
-                    for (var j=0; j<this.solutions.length; j++) {
-                        if (this.solutions[j].firstId === answers[i].source && this.solutions[j].secondId === answers[i].target) {
-                            subvalid = true;
-                        }
-                    }
-                    if (subvalid === false) {
+                    subvalid = this.dropIsValid(answers[i]);
+                    if (subvalid === 2) {
                         valid3 = false;
                     }
                 }
@@ -195,12 +176,6 @@ angular.module('Question').controller('MatchQuestionCtrl', [
                     }
                 }
             }
-
-            /**
-             * -----------------------------------------------------------------
-             * Reste un souci dans la liste des réponses correctes, à corriger
-             * -----------------------------------------------------------------
-             */
 
             var studentAnswers = this.getStudentAnswers(label);
 
@@ -466,19 +441,17 @@ angular.module('Question').controller('MatchQuestionCtrl', [
 
         this.setScore = function () {
             var score = 0;
+            var answers_to_check;
+            if (this.question.toBind) {
+                answers_to_check = this.connections;
+            }
+            else {
+                answers_to_check = this.dropped;
+            }
             for (var i=0; i<this.solutions.length; i++) {
-                if (this.question.toBind) {
-                    for (var j = 0; j < this.connections.length; j++) {
-                        if (this.connections[j] !== '' && this.connections[j].source === this.solutions[i].firstId && this.connections[j].target === this.solutions[i].secondId) {
-                            score = score + this.solutions[i].score;
-                        }
-                    }
-
-                } else { // toDrag
-                    for (var j = 0; j < this.dropped.length; j++) {
-                        if (this.dropped[j] !== '' && this.dropped[j].source === this.solutions[i].firstId && this.dropped[j].target === this.solutions[i].secondId) {
-                            score = score + this.solutions[i].score;
-                        }
+                for (var j=0; j<answers_to_check.length; j++) {
+                    if (answers_to_check[j] !== '' && answers_to_check[j].source === this.solutions[i].firstId && answers_to_check[j].target === this.solutions[i].secondId) {
+                        score = score + this.solutions[i].score;
                     }
                 }
             }
@@ -503,9 +476,6 @@ angular.module('Question').controller('MatchQuestionCtrl', [
                     if (this.question.typeMatch !== 3) {
                         $('.draggable').fadeTo(100, 0.3);
                     }
-                }
-                else {
-                    //$('.endPoints').draggable("disable");
                 }
             }.bind(this));
         };
@@ -562,22 +532,20 @@ angular.module('Question').controller('MatchQuestionCtrl', [
         this.updateStudentData = function () {
             // build answers
             this.currentQuestionPaperData.answer = [];
+            var answers_to_check;
             if (this.question.toBind) {
-                for (var i = 0; i < this.connections.length; i++) {
-                    if (this.connections[i] !== '' && this.connections[i].source && this.connections[i].target) {
-                        var answer = this.connections[i].source + ',' + this.connections[i].target;
-                        this.currentQuestionPaperData.answer.push(answer);
-                    }
-                }
-
-            } else { // toDrag
-                for (var i = 0; i < this.dropped.length; i++) {
-                    if (this.dropped[i] !== '' && this.dropped[i].source && this.dropped[i].target) {
-                        var answer = this.dropped[i].source + ',' + this.dropped[i].target;
-                        this.currentQuestionPaperData.answer.push(answer);
-                    }
+                answers_to_check = this.connections;
+            }
+            else {
+                answers_to_check = this.dropped;
+            }
+            for (var i = 0; i < answers_to_check.length; i++) {
+                if (answers_to_check[i] !== '' && answers_to_check[i].source && answers_to_check[i].target) {
+                    var answer = answers_to_check[i].source + ',' + answers_to_check[i].target;
+                    this.currentQuestionPaperData.answer.push(answer);
                 }
             }
+            
             DataSharing.setStudentData(this.question, this.currentQuestionPaperData);
         };
 
