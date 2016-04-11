@@ -248,6 +248,51 @@ angular.module('Question').controller('MatchQuestionCtrl', [
             return classname;
         };
         
+        this.getDropColor = function (subject, proposal) {
+            var found = false;
+            for (var i=0; i<this.savedAnswers.length; i++) {
+                if (this.savedAnswers[i].target === proposal.id) {
+                    for (var j=0; j<this.solutions.length; j++) {
+                        if (this.savedAnswers[i].source === this.solutions[j].firstId && this.savedAnswers[i].target === this.solutions[j].secondId) {
+                            if (subject === 'div') {
+                                return "drop-success";
+                            }
+                            else if (subject === 'button') {
+                                return "drop-button-success";
+                            }
+                            found = true;
+                        }
+                    }
+                }
+            }
+            if (this.feedbackIsVisible && !found) {
+                if (subject === 'div') {
+                    return "drop-warning";
+                }
+                else {
+                    return "drop-button-warning";
+                }
+            }
+            else {
+                for (var i=0; i<this.dropped.length; i++) {
+                    if (this.dropped[i].target === proposal.id) {
+                        if (subject === 'div') {
+                            return "drop-alert";
+                        }
+                        else if (subject === 'button') {
+                            return "drop-button-alert";
+                        }
+                    }
+                }
+                if (subject === 'div') {
+                    return "drop-default";
+                }
+                else {
+                    return "drop-button-default";
+                }
+            }
+        };
+        
         this.getDropFeedback = function (item) {
             for (var i=0; i<this.solutions.length; i++) {
                 if (item.source === this.solutions[i].firstId && item.target === this.solutions[i].secondId) {
@@ -367,6 +412,22 @@ angular.module('Question').controller('MatchQuestionCtrl', [
                 }
             }
             return false;
+        };
+        
+        this.isRemovableItem = function (proposalId, valueType) {
+            if (this.feedbackIsVisible) {
+                return false;
+            }
+            for (var i=0; i<this.savedAnswers.length; i++) {
+                if ((this.savedAnswers[i].target === proposalId && valueType === "target") || (this.savedAnswers[i].source === proposalId && valueType === "source")) {
+                    for (var j=0; j<this.solutions.length; j++) {
+                        if (this.savedAnswers[i].source === this.solutions[j].firstId && this.savedAnswers[i].target === this.solutions[j].secondId) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
         };
         
         this.proposalDropped = function (proposal) {
@@ -718,52 +779,69 @@ angular.module('Question').controller('MatchQuestionCtrl', [
          * @returns {undefined}
          */
         this.removeDropped = function (sourceId, targetId) {
-            if (targetId !== -1) {
-                // remove from local array (this.dropped)
-                for (var i = 0; i < this.dropped.length; i++) {
-                    if (this.dropped[i].source === sourceId && this.dropped[i].target === targetId) {
-                        this.dropped.splice(i, 1);
-                    }
-                }
-                if (this.question.typeMatch === 3) {
-                    $('#div_' + sourceId).draggable("enable");
-                    $('#div_' + sourceId).fadeTo(100, 1);
-                }
-                else {
-                    // reactivate source draggable element
-                    $('#draggable_' + sourceId).draggable("enable");
-                    // visual changes for reactivated draggable element
-                    $('#draggable_' + sourceId).fadeTo(100, 1);
-                }
-
-                // ui update
-                if ($('#droppable_' + targetId).find(".dragDropped").children().length <= 1) {
-                    $('#droppable_' + targetId).removeClass("state-highlight");
-                    $('#droppable_' + targetId).droppable( "option", "disabled", false );
-                }
-
-                // update student data
-                this.updateStudentData();
+            /**
+             * HANDLE VALUES REMOVAL
+             */
+            if (targetId === -1) {
+                var itemId = sourceId;
+                var valueType = "source";
             }
             else {
-                // remove from local array (this.dropped)
-                for (var i = 0; i < this.dropped.length; i++) {
-                    if (this.dropped[i].source === sourceId) {
-                        var targetId = this.dropped[i].target;
-                        this.dropped.splice(i, 1);
+                var itemId = targetId;
+                var valueType = "target";
+            }
+            
+            if ((this.isRemovableItem(itemId, valueType) && this.question.typeMatch === 3) || this.question.typeMatch !== 3) {
+                /**
+                 * HANDLE VALUES REMOVAL
+                 */
+                if (targetId !== -1) {
+                    // remove from local array (this.dropped)
+                    for (var i = 0; i < this.dropped.length; i++) {
+                        if (this.dropped[i].source === sourceId && this.dropped[i].target === targetId) {
+                            this.dropped.splice(i, 1);
+                        }
                     }
-                }
-                $('#div_' + sourceId).draggable("enable");
-                $('#div_' + sourceId).fadeTo(100, 1);
+                    if (this.question.typeMatch === 3) {
+                        $('#div_' + sourceId).draggable("enable");
+                        $('#div_' + sourceId).fadeTo(100, 1);
+                    }
+                    else {
+                        // reactivate source draggable element
+                        $('#draggable_' + sourceId).draggable("enable");
+                        // visual changes for reactivated draggable element
+                        $('#draggable_' + sourceId).fadeTo(100, 1);
+                    }
 
-                // ui update
-                if ($('#droppable_' + targetId).find(".dragDropped").children().length <= 1) {
-                    $('#droppable_' + targetId).removeClass("state-highlight");
-                    $('#droppable_' + targetId).droppable( "option", "disabled", false );
-                }
+                    // ui update
+                    if ($('#droppable_' + targetId).find(".dragDropped").children().length <= 1) {
+                        $('#droppable_' + targetId).removeClass("state-highlight");
+                        $('#droppable_' + targetId).droppable( "option", "disabled", false );
+                    }
 
-                // update student data
-                this.updateStudentData();
+                    // update student data
+                    this.updateStudentData();
+                }
+                else {
+                    // remove from local array (this.dropped)
+                    for (var i = 0; i < this.dropped.length; i++) {
+                        if (this.dropped[i].source === sourceId) {
+                            var targetId = this.dropped[i].target;
+                            this.dropped.splice(i, 1);
+                        }
+                    }
+                    $('#div_' + sourceId).draggable("enable");
+                    $('#div_' + sourceId).fadeTo(100, 1);
+
+                    // ui update
+                    if ($('#droppable_' + targetId).find(".dragDropped").children().length <= 1) {
+                        $('#droppable_' + targetId).removeClass("state-highlight");
+                        $('#droppable_' + targetId).droppable( "option", "disabled", false );
+                    }
+
+                    // update student data
+                    this.updateStudentData();
+                }
             }
         };
     }
