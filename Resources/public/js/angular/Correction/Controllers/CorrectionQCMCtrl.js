@@ -29,7 +29,7 @@ angular.module('Correction').controller('CorrectionQCMCtrl', [
          */
         this.isChoiceValid = function (question, choice) {
             for (var i = 0; i < question.solutions.length; i++) {
-                if (question.solutions[i].id === choice.id && question.solutions[i].score > 0) {
+                if (choice.rightResponse == true) {
                     return true;
                 }
             }

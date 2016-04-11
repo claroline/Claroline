@@ -31,12 +31,9 @@ angular.module('Correction').factory('CorrectionService', [
 
             },
             getChoiceQuestionScore: function (question, paper) {
-                var availableScore = 0.0;
+                var availableScore = question.scoreTotal;
                 var studentScore = 0.0;
-                var result = '';
-                for (var i = 0; i < question.solutions.length; i++) {
-                    availableScore += question.solutions[i].score ? question.solutions[i].score : 0;
-                }
+                var result ='';
                 for (var j = 0; j < paper.questions.length; j++) {
                     if (paper.questions[j].id === question.id.toString()) {
                         studentScore = paper.questions[j].score;
