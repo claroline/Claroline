@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit
+    backupGlobals               = "false"
+    backupStaticAttributes      = "false"
+    colors                      = "true"
+    convertErrorsToExceptions   = "true"
+    convertNoticesToExceptions  = "true"
+    convertWarningsToExceptions = "true"
+    processIsolation            = "false"
+    stopOnFailure               = "false"
+    syntaxCheck                 = "false"
+    bootstrap                   = "../../../app/bootstrap.php.cache" >
+
+    <php>
+        <server name="KERNEL_DIR" value="../../../app/" />
+    </php>
+
+    <testsuites>
+        <testsuite name="Claroline distribution test suite">
+            <!-- Use the two following elements only when tests from all packages are fixed -->
+
+            <!--
+            <directory>main/*/Tests/</directory>
+            <directory>plugin/*/Tests/</directory>
+            -->
+
+            <!-- Uncomment the following elements individually in the meantime -->
+
+            <!-- <directory>main/core/Tests/</directory> -->
+            <directory>main/migration/Tests/</directory>
+            <!-- <directory>plugin/activity-tool/Tests/</directory> -->
+            <!-- <directory>plugin/announcement/Tests/</directory> -->
+            <!-- <directory>plugin/badge/Tests/</directory> -->
+            <directory>plugin/collecticiel/Tests/</directory>
+            <directory>plugin/competency/Tests/</directory>
+            <directory>plugin/cursus/Tests/</directory>
+            <directory>plugin/dropzone/Tests/</directory>
+            <directory>plugin/favourite/Tests/</directory>
+            <directory>plugin/forum/Tests/</directory>
+            <!-- <directory>plugin/portfolio/Tests/</directory> -->
+            <directory>plugin/result/Tests/</directory>
+            <directory>plugin/rss-reader/Tests/</directory>
+            <directory>plugin/url/Tests/</directory>
+
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory>./main</directory>
+            <directory>./plugin</directory>
+            <exclude>
+                <directory>./*/*/Migrations</directory>
+                <directory>./*/*/Resources</directory>
+                <directory>./*/*/Tests</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+
+</phpunit>

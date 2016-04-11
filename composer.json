@@ -22,7 +22,7 @@
         "ext-pdo_mysql": "*",
         "besimple/sso-auth-bundle": "*",
         "cocur/slugify": "~1.0",
-        "composer/composer": "1.0.0-beta1",
+        "composer/composer": "~1.0",
         "ddeboer/data-import": "~0.18",
         "doctrine/data-fixtures": "dev-master",
         "doctrine/dbal": "~2.4",
@@ -79,6 +79,9 @@
         "innova/angular-ui-tinymce-bundle": "5.*",
         "innova/angular-ui-pageslide-bundle" : "~5.0",
         "claroline/front-end-bundle": "dev-7.x-test"
+    },
+    "require-dev": {
+        "claroline/dev-bundle": "dev-monolith"
     },
     "autoload": {
         "psr-4": {

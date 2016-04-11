@@ -69,6 +69,7 @@ class Persister
         $role->setTranslationKey($role->getName());
         $role->setWorkspace($workspace);
         $user->addRole($role);
+        $workspace->addRole($role);
 
         $this->om->persist($role);
         $this->om->persist($user);

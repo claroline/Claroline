@@ -39,6 +39,7 @@ class SerializerExtension extends \Twig_Extension
     {
         return array(
             'api_serialize' => new \Twig_Filter_Method($this, 'apiSerialize'),
+            'json_serialize' => new \Twig_Filter_Method($this, 'serialize')
         );
     }
 
@@ -47,16 +48,30 @@ class SerializerExtension extends \Twig_Extension
         return 'serializer_extension';
     }
 
+    /**
+     * Serializes data to JSON using the "api" serialization group.
+     *
+     * @param mixed $data
+     */
     public function apiSerialize($data)
     {
-        return $this->serialize($data);
+        return $this->serialize($data, 'api');
     }
 
-    public function serialize($data, $group = 'api')
+    /**
+     * Serializes data to JSON, optionally filtering on a serialization group.
+     *
+     * @param mixed  $data
+     * @param string $group
+     */
+    public function serialize($data, $group = null)
     {
         $context = new SerializationContext();
-        $context->setGroups($group);
+
+        if ($group) {
+            $context->setGroups($group);
+        }
 
         return $this->container->get('serializer')->serialize($data, 'json', $context);
     }
-} 
+}

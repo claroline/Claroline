@@ -192,7 +192,7 @@ class ResourceManager
 
         if ($workspace) {
             $node->setWorkspace($workspace);
-        } 
+        }
 
         $node->setParent($parent);
         $node->setName($name);
@@ -611,7 +611,7 @@ class ResourceManager
         if ($child->getWorkspace()->getId() !== $parent->getWorkspace()->getId()) {
             $this->updateWorkspace($child, $parent->getWorkspace());
         }
-        
+
         $this->om->persist($child);
         $this->om->endFlushSuite();
         $this->dispatcher->dispatch('log', 'Log\LogResourceMove', array($child, $parent));
@@ -922,6 +922,7 @@ class ResourceManager
              */
             if ($resource !== null) {
                 if ($node->getClass() !== 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
+
                     $event = $this->dispatcher->dispatch(
                         "delete_{$node->getResourceType()->getName()}",
                         'DeleteResource',
@@ -957,6 +958,8 @@ class ResourceManager
                         } else {
                             unlink($file);
                         }
+
+                        //It won't work if a resource has no workspace for a reason or an other. This could be a source of bug.
                         $dir = $this->filesDirectory .
                             DIRECTORY_SEPARATOR .
                             'WORKSPACE_' .
@@ -968,27 +971,28 @@ class ResourceManager
                     }
                 }
 
+                //what is it ?
                 $this->dispatcher->dispatch(
                     'claroline_resources_delete',
                     'GenericDatas',
                     array(array($node))
                 );
+
                 $this->dispatcher->dispatch(
                     "log",
                     'Log\LogResourceDelete',
                     array($node)
                 );
 
-                if ($node->getIcon() && !$softDelete) {
-                    $this->iconManager->delete($node->getIcon(), $workspace);
-                }
                 // Delete all associated shortcuts
                 $this->deleteAssociatedShortcuts($node);
 
-                if ($softDelete) {
+                if ($softDelete || $event->isSoftDelete()) {
                     $node->setActive(false);
                     $this->om->persist($node);
                 } else {
+                    if ($node->getIcon() && $workspace) $this->iconManager->delete($node->getIcon(), $workspace);
+
                     /*
                      * If the child isn't removed here aswell, doctrine will fail to remove $resChild
                      * because it still has $resChild in its UnitOfWork or something (I have no idea
@@ -1765,7 +1769,7 @@ class ResourceManager
 
         if ($node && $node->getWorkspace()) {
             $root = $this->directoryRepo->findDefaultUploadDirectories($node->getWorkspace());
-            
+
             if ($this->container->get('security.authorization_checker')->isGranted('CREATE', $root)) {
                 $defaults = array_merge($defaults, $root);
             }
