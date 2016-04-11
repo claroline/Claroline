@@ -173,6 +173,7 @@ class ExerciseListener
 
             $em->remove($event->getResource());
         } else {
+            $event->enableSoftDelete();
             $exercise = $event->getResource();
             $resourceNode = $exercise->getResourceNode();
 
