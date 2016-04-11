@@ -32,7 +32,7 @@ class Graphic extends Interaction
 
         $rightCoords = $em->getRepository('UJMExoBundle:Coords')
             ->findBy(array('interactionGraphic' => $graphId));
-
+        
         $interG = $em->getRepository('UJMExoBundle:InteractionGraphic')
             ->find($graphId);
 
@@ -88,22 +88,20 @@ class Graphic extends Interaction
     public function mark($answers = null, $request = null, $rightCoords = null, $coords = null)
     {
         // differenciate the exercise of the bank of questions
-        if(is_string($request) ) {
-            $max = $request->request->get('nbpointer'); // Number of answer zones
-        } else {
+        if(is_int($request) ) {
             $max = $request;
+            $coords = preg_split('[,]', $answers); // Divide the answer zones into cells
+        } else {
+            $max = $request->request->get('nbpointer'); // Number of answer zones
+            $coords = preg_split('[;]', $answers); // Divide the answer zones into cells
         }
         
         $verif = array();
-        $coords = preg_split('[;]', $answers); // Divide the answer zones into cells
         $point = $z = 0;
         
         for ($i = 0; $i < $max - 1; ++$i) {
-            echo 'dans le 1er for';
             for ($j = 0; $j < $max - 1; ++$j) {
-                echo 'dans le 2nd for';
                 if (preg_match('/[0-9]+/', $coords[$j])) {
-                    echo 'je suis dans le 1er if';
                     list($xa, $ya) = explode('-', $coords[$j]); // Answers of the student
                     list($xr, $yr) = explode(',', $rightCoords[$i]->getValue()); // Right answers
 
@@ -113,10 +111,8 @@ class Graphic extends Interaction
                     if ((($xa + 8) < ($xr + $valid)) && (($xa + 8) > ($xr)) &&
                         (($ya + 8) < ($yr + $valid)) && (($ya + 8) > ($yr))
                     ) {
-                        echo 'je suis dans le 2nd if';
                         // Not get points twice for one answer
                         if ($this->alreadyDone($rightCoords[$i]->getValue(), $verif, $z)) {
-                            echo 'coucou';
                             $point += $rightCoords[$i]->getScoreCoords(); // Score of the student without penalty
                             $verif[$z] = $rightCoords[$i]->getValue(); // Add this answer zone to already answered zones
                             ++$z;

@@ -21,6 +21,7 @@ class GraphicHandler implements QuestionHandlerInterface {
 
     private $om;
     private $container;
+    private $doctrine;
 
     /**
      * @DI\InjectParams({
@@ -262,7 +263,7 @@ class GraphicHandler implements QuestionHandlerInterface {
         $em = $this->doctrine->getManager();
 
         $rightCoords = $em->getRepository('UJMExoBundle:Coords')
-            ->findBy(array('interactionGraphic' => $question->getId()));
+            ->findBy(array('interactionGraphic' => $interaction->getId()));
 
         $serviceGraphic = $this->container->get("ujm.exo.graphic_service");
 
@@ -271,53 +272,8 @@ class GraphicHandler implements QuestionHandlerInterface {
         $responses = implode(',', $data);
 
         $coords2 = preg_split('[,]', $responses);
-        
-        var_dump($rightCoords);
 
         $mark = $serviceGraphic->mark($responses, $nbpointer, $rightCoords, $coords2);
-
-        //  471 - 335.9999694824219;583 - 125; <- format from UJM...Maybe choose another one
-        // 471|335.9999694824219;583|125
-        // array(
-        //  "471-335.9999694824219",
-        //  "583-125"
-        // )
-        //$answers = explode(';', $answer);
-//        $answers = array();
-//        foreach ($data as $answer) {
-//            if ($answer !== '') {
-//                $set = explode('-', $answer);
-//                $x = floatval($set[0]);
-//                $y = floatval($set[1]);
-//                array_push($answers, array("x" => $x, "y" => $y));
-//            }
-//        }
-//        $done = array();
-//        $mark = 0;
-//        foreach ($coords as $coord) {
-//            $values = $coord->getValue();
-//
-//            $explodeValues = explode(',', $values);
-//            $valueX = $explodeValues[0];
-//            $valueY = $explodeValues[1];
-//            $size = $coord->getSize(); // double
-//            // search into given answers for a correct one
-//            // original in Services->Interactions->Graphic->mark()
-//            foreach ($answers as $answer) {
-//                if (
-//                    ($answer['x'] <= ($valueX + $size)) // $answer['x'] + 8 < $xr + $valid... Why + 8 ?
-//                    && $answer['x'] >= $valueX // ($xa + 8) > ($xr)
-//                    && ($answer['y'] <= ($valueY + $size)) // + 8 ?
-//                    && $answer['y'] >= $valueY // + 8 ?
-//                    && !in_array($coord->getValue(), $done) // Avoid getting points twice for one answer
-//                )
-//                {
-//
-//                    $mark += $coord->getScoreCoords();
-//                    array_push($done,$coord->getValue());
-//                }
-//            }
-//        }
 
         if ($mark < 0) {
             $mark = 0;
