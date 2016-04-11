@@ -1,0 +1,2 @@
+parameters:
+    claroline.param.pdf_directory: "%claroline.param.files_directory%/pdf"
