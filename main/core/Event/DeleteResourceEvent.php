@@ -22,6 +22,7 @@ class DeleteResourceEvent extends Event implements MandatoryEventInterface
 {
     private $resource;
     private $files = array();
+    private $softDelete;
 
     /**
      * Constructor.
@@ -31,6 +32,7 @@ class DeleteResourceEvent extends Event implements MandatoryEventInterface
     public function __construct(AbstractResource $resource)
     {
         $this->resource = $resource;
+        $this->softDelete = false;
     }
 
     /**
@@ -56,5 +58,15 @@ class DeleteResourceEvent extends Event implements MandatoryEventInterface
     public function getFiles()
     {
         return $this->files;
+    }
+
+    public function enableSoftDelete()
+    {
+        $this->softDelete = true;
+    }
+
+    public function isSoftDelete()
+    {
+        return $this->softDelete;
     }
 }
