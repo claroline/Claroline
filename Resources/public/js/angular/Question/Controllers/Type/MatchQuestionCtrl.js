@@ -226,6 +226,12 @@ angular.module('Question').controller('MatchQuestionCtrl', [
                 }
             }
         };
+
+        this.getCurrentItemFeedBackIfOk = function (label) {
+            if (!this.isRemovableItem(label.id, 'target')) {
+                return this.getCurrentItemFeedBack(label);
+            }
+        };
         
         this.getDropClass = function (typeDiv, proposal) {
             var droppable = true;

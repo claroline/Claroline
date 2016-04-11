@@ -130,7 +130,7 @@
             </div>
             <!-- LABELS -->
             <div class="col-md-3">
-                <div data-ng-repeat="proposal in matchQuestionCtrl.question.secondSet" class="{{matchQuestionCtrl.getDropClass('dropzone', proposal)}} {{ matchQuestionCtrl.getDropColor('div', proposal) }} row drop-textbox dropzone-textbox" id="droppable_{{proposal.id}}">
+                <div data-ng-repeat="proposal in matchQuestionCtrl.question.secondSet" class="{{matchQuestionCtrl.getDropClass('dropzone', proposal)}} {{ matchQuestionCtrl.getDropColor('div', proposal) }} row drop-textbox dropzone-textbox" id="droppable_{{proposal.id}}" data-toggle="tooltip" title="{{matchQuestionCtrl.getCurrentItemFeedBackIfOk(proposal)}}">
                     <div class="col-md-12">
                         <div data-ng-repeat="item in matchQuestionCtrl.dropped" id="dropped_{{item.source}}" data-ng-if="item.target === proposal.id">
                             <div class="row">
