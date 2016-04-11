@@ -191,19 +191,22 @@ class PaginationService
      * @return array
      */
        public function paginationSearchQuestion($listQuestions) {
+        $em = $this->doctrine->getManager();
         $exoID = $this->request->query->get('exoID'); // If we import or see the questions
+        $exercise =  $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
         $page = $this->request->query->get('page'); // Which page
         $displayAll = $this->request->query->get('displayAll', 0); // If we want to have all the questions in one page
         $max = 10; // Max questions displayed per page
-        $em = $this->doctrine->getManager();
+
         if ($exoID == -1) {
+
             if ($displayAll == 1) {
                 $max = count($listQuestions);
             }
             return $pagination = $this->pagination($listQuestions, $max, $page);
-        } else {
-            //
-            $exoQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(array('exercise' => $exoID));
+        } else {      
+            $exoQuestions = $em->getRepository('UJMExoBundle:Question')->findByExercise($exercise);
+
             $finalList = $this->finishList($listQuestions,$exoQuestions);
             if ($displayAll == 1) {
                 $max = count($finalList);
@@ -223,7 +226,7 @@ class PaginationService
         $length = count($listQuestions);
         for ($i = 0; $i < $length; ++$i) {
             foreach ($exoQuestions as $exoQuestion) {
-                if ($exoQuestion->getQuestion()->getId() == $listQuestions[$i]->getId()) {
+                if ($exoQuestion->getId() == $listQuestions[$i]->getId()) {
                     $already = true;
                     break;
                 }
@@ -235,7 +238,7 @@ class PaginationService
         }
         return $finalList;
     }
-    
+
     /**
      * Calculation of Max for pagination
      * @param type $shared
@@ -253,7 +256,7 @@ class PaginationService
                 }
                 return $max;
     }
-    
+
     public function getPageGoNow($nbItem,$maxPage,$pageToGo,$pageGoNow){
         if ($pageToGo) {
                    $pageGoNow = $pageToGo;

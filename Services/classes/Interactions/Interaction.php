@@ -6,16 +6,18 @@
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use JMS\DiExtraBundle\Annotation as DI;
 
 abstract class Interaction
 {
     protected $doctrine;
 
     /**
-     * Constructor.
-     *
-     *
-     * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine Dependency Injection;
+     * @DI\InjectParams({
+     *     "doctrine"   = @DI\Inject("doctrine")
+     * })
+     * 
+     * @param Registry $doctrine
      */
     public function __construct(
         Registry $doctrine

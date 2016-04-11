@@ -6,6 +6,7 @@ btn_end_sequence_label: Terminer l'exercice
 btn_interrupt_sequence_label: Interrompre
 btn_prev_step_label: Aller à l'étape précédente
 btn_next_step_label: Aller à l'étape suivante
+btn_retry_step: Réessayer l'étape
 btn_validate_step: Valider l'étape
 btn_toggle_all_paper_question_panels: Montrer / cacher les questions
 
@@ -17,7 +18,7 @@ comment: Commentaire
 dropdown_step_navigate_choice_label: Etape n°%1% / %2%
 
 # g
-graphic_setpoint_first: Positionner le(s) pointeur(s) ci-dessous (croix rouge) sur l'image. La position du centre du pointeur défini votre réponse.
+graphic_setpoint_first: Positionner le(s) pointeur(s) ci-dessous (croix rouge) sur l'image. La position du centre du pointeur définit votre réponse.
 graphic_setpoint_second: Pour répondre, utiliser la technique du glisser/déposer.
 graphic_setpoint_third: Les bonnes réponses ne sont comptabilisées qu'une seule fois.
 graphic_reset_answers: Réinitialiser les réponses.
@@ -26,7 +27,8 @@ graphic_reset_answers: Réinitialiser les réponses.
 keys_words: Mots clés
 
 # l
-link_exercice_home: Accueil de l'exercise
+link_exercice_home: Accueil de l'exercice
+link_exercise_continue: Reprendre
 link_exercise_retry: Recommencer
 link_exercise_play: Répondre
 link_exercise_docimology: Docimologie
@@ -76,15 +78,16 @@ points: Points
 question_hints: Indices
 question_hint_label: Indice
 question_hint_show_title: Voir l'indice
-question_show_hint_confirm: Êtes vous sur de vouloir utiliser l'indice ? <br/> Cela entrainera une pénalité de %1% points.
+question_show_hint_confirm: Êtes vous sûr de vouloir utiliser l'indice ? <br/> Cela entrainera une pénalité de %1% points.
 
 # s
 sequence_step: Etape
 sequence_attempts_infos: Vous avez le droit à %1% essai(s)
-sequence_nb_attempts: Essais N° %1%
-sequence_interrupt_sequence_confirm: Êtes vous sur de vouloir interrompre l'exercice ?
-sequence_end_sequence_confirm: Êtes vous sur de vouloir terminer l'exercice ? <br/> Vous ne pourrez plus modifier vos réponses.
-sequence_play_leave_confirm: Êtes vous sur de vouloir quitter l'application ?
+sequence_nb_attempts: Essai N° %1%
+sequence_interrupt_sequence_confirm: Êtes vous sûr de vouloir interrompre l'exercice ?
+sequence_end_sequence_confirm: Êtes vous sûr de vouloir terminer l'exercice ? <br/> Vous ne pourrez plus modifier vos réponses.
+sequence_play_leave_confirm: Êtes vous sûr de vouloir quitter l'application ?
+sequence_score: Score
 
 # v
 validate: Valider

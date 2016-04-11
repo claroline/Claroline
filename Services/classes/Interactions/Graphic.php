@@ -5,6 +5,11 @@
  */
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
+/**
+ * @DI\Service("ujm.exo.graphic_service")
+ */
 class Graphic extends Interaction
 {
     /**

@@ -9,6 +9,7 @@ use UJM\ExoBundle\Entity\InteractionHole;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("ujm.exo.hole_handler")
@@ -17,17 +18,20 @@ use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
 class HoleHandler implements QuestionHandlerInterface
 {
     private $om;
+    private $container;
 
     /**
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "container"       = @DI\Inject("service_container")
      * })
-     *
+     * 
      * @param ObjectManager $om
+     * @param ContainerInterface $container
      */
-    public function __construct(ObjectManager $om)
-    {
+    public function __construct(ObjectManager $om, ContainerInterface $container) {
         $this->om = $om;
+        $this->container = $container;
     }
 
     /**
@@ -65,47 +69,33 @@ class HoleHandler implements QuestionHandlerInterface
             return $errors;
         }
 
-        // check solution ids are consistent with hole ids
+        // check solution ids are consistent with choice ids
         $holeIds = array_map(function ($hole) {
             return $hole->id;
         }, $questionData->holes);
 
         foreach ($questionData->solutions as $index => $solution) {
-            if (!in_array($solution->holeId, $holeIds)) {
+            if (!in_array($solution->id, $holeIds)) {
                 $errors[] = [
                     'path' => "solutions[{$index}]",
-                    'message' => "id {$solution->holeId} doesn't match any choice id"
+                    'message' => "id {$solution->id} doesn't match any choice id"
                 ];
             }
         }
 
-        $checkedHoleIds = $holeIds;
+        // check there is a positive score solution
+        $maxScore = -1;
 
-        // check there is a positive answer for each hole
-        foreach ($questionData->solutions as $index => $solution) {
-            $holeMaxScore = -1;
-
-            foreach ($solution->answers as $answer) {
-                if ($answer->score > $holeMaxScore) {
-                    $holeMaxScore = $answer->score;
-                }
+        foreach ($questionData->solutions as $solution) {
+            if ($solution->score > $maxScore) {
+                $maxScore = $solution->score;
             }
-
-            if ($holeMaxScore <= 0) {
-                $errors[] = [
-                    'path' => "solutions/{$index}/answers",
-                    'message' => 'there is no answer with a positive score'
-                ];
-            }
-
-            unset($checkedHoleIds[array_search($solution->holeId, $checkedHoleIds)]);
         }
 
-        // check every hole as a solution
-        if (count($checkedHoleIds) > 0) {
+        if ($maxScore <= 0) {
             $errors[] = [
-                'path' => "solutions",
-                'message' => 'not every hole has a solution'
+                'path' => 'solutions',
+                'message' => 'there is no solution with a positive score'
             ];
         }
 
@@ -149,7 +139,19 @@ class HoleHandler implements QuestionHandlerInterface
         $holeQuestion = $repo->findOneBy(['question' => $question]);
         $holes = $holeQuestion->getHoles()->toArray();
         $text = $holeQuestion->getHtmlWithoutValue();
-
+        
+        $scoreTotal = 0;
+        foreach ($holes as $hole) {
+            $maxScore = 0;
+            foreach ($hole->getWordResponses() as $wd) {
+                if ($wd->getScore() > $maxScore) {
+                    $maxScore = $wd->getScore();
+                }
+            }
+            $scoreTotal = $scoreTotal + $maxScore;
+        }
+        
+        $exportData->scoreTotal = $scoreTotal;
         $exportData->text = $text;
         if ($withSolution) {
             $exportData->solution = $holeQuestion->getHtml();
@@ -172,7 +174,34 @@ class HoleHandler implements QuestionHandlerInterface
 
             return $holeData;
         }, $holes);
+        
+        return $exportData;
+    }
+    
+    public function convertQuestionAnswers(Question $question, \stdClass $exportData){
+        $repo = $this->om->getRepository('UJMExoBundle:InteractionHole');
+        $holeQuestion = $repo->findOneBy(['question' => $question]);
+        
+        $holes = $holeQuestion->getHoles()->toArray();
+        $exportData->solutions = array_map(function ($hole) {
+                $solutionData = new \stdClass();
+                $solutionData->id = (string) $hole->getId();
+                $solutionData->type = 'text/html';
+                $solutionData->selector = $hole->getSelector();
+                $solutionData->position = (string) $hole->getPosition();
+                $solutionData->wordResponses = array_map(function ($wr) {
+                    $wrData = new \stdClass();
+                    $wrData->id = (string) $wr->getId();
+                    $wrData->response = (string) $wr->getResponse();
+                    $wrData->score = $wr->getScore();
+                    if ($wr->getFeedback()) {
+                        $wrData->feedback = $wr->getFeedback();
+                    }
+                    return $wrData;
+                }, $hole->getWordResponses()->toArray());
 
+                return $solutionData;
+            }, $holes);
         return $exportData;
     }
 
@@ -182,11 +211,11 @@ class HoleHandler implements QuestionHandlerInterface
     public function convertAnswerDetails(Response $response)
     {
         $parts = json_decode($response->getResponse());
-
+        
         foreach ($parts as $key=>$value) {
             $array[$key] = $value;
         }
-
+        
     //    $parts = explode(';', $response->getResponse());
 
         return array_filter($array, function ($part) {
@@ -250,7 +279,7 @@ class HoleHandler implements QuestionHandlerInterface
                 }
             }
         }
-
+        
         $answers = [];
         $i=0;
         foreach ($data as $answer) {
@@ -259,11 +288,15 @@ class HoleHandler implements QuestionHandlerInterface
             }
             $i++;
         }
+        
+//        $serviceHole = $this->container->get("ujm.exo.hole_service");
+//        
+//        $serviceHole->mark();
 
         if ($mark < 0) {
             $mark = 0;
         }
-
+        
         $json = json_encode($answers);
         $response->setResponse($json);
         $response->setMark($mark);

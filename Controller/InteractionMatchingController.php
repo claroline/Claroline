@@ -64,10 +64,11 @@ class InteractionMatchingController extends Controller
 
         return $this->container->get('templating')->renderResponse(
            'UJMExoBundle:InteractionMatching:new.html.twig', array(
-           'exoID' => $attr->get('exoID'),
-           'entity' => $entity,
-           'typeMatching' => json_encode($typeMatching),
-           'form' => $form->createView(),
+               'exoID' => $attr->get('exoID'),
+               'stepID' => $attr->get('stepID'),
+               'entity' => $entity,
+               'typeMatching' => json_encode($typeMatching),
+               'form' => $form->createView(),
            )
        );
     }
@@ -90,15 +91,17 @@ class InteractionMatchingController extends Controller
         );
 
         $exoID = $this->container->get('request')->request->get('exercise');
+        $stepID = $this->container->get('request')->request->get('step');
 
         //Get the lock category
         $catSer = $this->container->get('ujm.exo_category');
 
         $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
+        $step = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Step')->find($stepID);
         $formHandler = new InteractionMatchingHandler(
                 $form, $this->get('request'), $this->getDoctrine()->getManager(),
                 $this->container->get('ujm.exo_exercise'), $catSer,
-                $this->container->get('security.token_storage')->getToken()->getUser(), $exercise,
+                $this->container->get('security.token_storage')->getToken()->getUser(), $exercise, $step,
                 $this->get('translator')
          );
         $matchingHandler = $formHandler->processAdd();
@@ -115,9 +118,7 @@ class InteractionMatchingController extends Controller
                 );
             } else {
                 return $this->redirect(
-                    $this->generateUrl('ujm_exercise_questions', array(
-                        'id' => $exoID, 'categoryToFind' => $categoryToFind, 'titleToFind' => $titleToFind, )
-                    )
+                    $this->generateUrl('ujm_exercise_open', [ 'id' => $exoID ]) . '#/steps'
                 );
             }
         }
@@ -135,6 +136,7 @@ class InteractionMatchingController extends Controller
             'form' => $form->createView(),
             'error' => true,
             'exoID' => $exoID,
+            'stepID' => $stepID,
             'typeMatching' => json_encode($typeMatching),
             )
         );
@@ -145,6 +147,7 @@ class InteractionMatchingController extends Controller
                 'UJMExoBundle:Question:new.html.twig', array(
                 'formWithError' => $formWithError,
                 'exoID' => $exoID,
+                'stepID' => $stepID,
                 'linkedCategory' => $catSer->getLinkedCategories(),
                 'locker' => $catSer->getLockCategory(),
                 'interactionType' => $interactionType,
@@ -257,12 +260,7 @@ class InteractionMatchingController extends Controller
                 return $this->redirect($this->generateUrl('ujm_question_index'));
             } else {
                 return $this->redirect(
-                    $this->generateUrl(
-                        'ujm_exercise_questions',
-                            array(
-                                'id' => $exoID,
-                            )
-                    )
+                    $this->generateUrl('ujm_exercise_open', [ 'id' => $exoID ]) . '#/steps'
                 );
             }
         }

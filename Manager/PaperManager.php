@@ -99,6 +99,8 @@ class PaperManager
         $paper->setUser($user);
         $paper->setNumPaper($paperNum);
         $paper->setOrdreQuestion($order);
+        $paper->setAnonymous($exercise->getAnonymous());
+
 
         $this->om->persist($paper);
         $this->om->flush();
@@ -176,7 +178,7 @@ class PaperManager
     {
         $response = $this->om->getRepository('UJMExoBundle:Response')
             ->findOneBy(['paper' => $paper, 'question' => $question]);
-        
+
         $response->setMark($score);
 
         $scorePaper = $paper->getScore();
@@ -198,10 +200,10 @@ class PaperManager
      */
     public function hasHint(Paper $paper, Hint $hint)
     {
-        $link = $this->om->getRepository('UJMExoBundle:ExerciseQuestion')->findOneBy([
-            'question' => $hint->getQuestion(),
-            'exercise' => $paper->getExercise()
-        ]);
+        $link = $this->om->getRepository('UJMExoBundle:StepQuestion')->findStepByExoQuestion(
+            $paper->getExercise(),
+            $hint->getQuestion()
+        );
 
         return $link !== null;
     }
@@ -334,7 +336,7 @@ class PaperManager
 
         $showUser = $user->getFirstName() . ' ' . $user->getLastName();
 
-        if ($paper->getExercise()->getAnonymous()) {
+        if ($paper->getAnonymous()) {
             $showUser = $this->translator->trans('anonymous', array(), 'ujm_exo');
         }
 

@@ -10,6 +10,7 @@ use UJM\ExoBundle\Entity\InteractionMatching;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("ujm.exo.match_handler")
@@ -18,16 +19,20 @@ use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
 class MatchHandler implements QuestionHandlerInterface {
 
     private $om;
-
+    private $container;
+    
     /**
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "container"       = @DI\Inject("service_container")
      * })
-     *
+     * 
      * @param ObjectManager $om
+     * @param ContainerInterface $container
      */
-    public function __construct(ObjectManager $om) {
+    public function __construct(ObjectManager $om, ContainerInterface $container) {
         $this->om = $om;
+        $this->container = $container;
     }
 
     /**
@@ -113,7 +118,7 @@ class MatchHandler implements QuestionHandlerInterface {
         // this importQuestion method seems to be used only in test context...
         $interaction = new InteractionMatching();
 
-        // handle proposals   
+        // handle proposals
         $persistedProposals = array(); // do not add twice the same label!!
         // for each firstSet in data (= proposal)
         for ($i = 0, $max = count($importData->firstSet); $i < $max; ++$i) {
@@ -143,7 +148,7 @@ class MatchHandler implements QuestionHandlerInterface {
             $label = new Label();
             $label->setValue($importData->secondSet[$j]->data);
             $label->setOrdre($j);
-            // check if current label is in the solution                    
+            // check if current label is in the solution
             foreach ($importData->solutions as $solution) {
                 // label is in solution get score from solution
                 if ($solution->secondId === $importData->secondSet[$j]->id) {
@@ -223,23 +228,32 @@ class MatchHandler implements QuestionHandlerInterface {
             return $secondSetData;
         }, $labels);
 
-
-        if ($withSolution) {
-
-            $exportData->solutions = array_map(function ($proposal) {
-                $associatedLabels = $proposal->getAssociatedLabel();
-                $solutionData = new \stdClass();
-                $solutionData->firstId = (string) $proposal->getId();
-                foreach ($associatedLabels as $label) {
-                    $solutionData->secondId = (string) $label->getId();
-                    $solutionData->score = $label->getScoreRightResponse();
-                    if ($label->getFeedback()) {
-                        $solutionData->feedback = $label->getFeedback();
-                    }
-                }
-                return $solutionData;
-            }, $proposals);
+        $scoreTotal = 0;
+        foreach ($proposals as $proposal) {
+            $associatedLabels = $proposal->getAssociatedLabel();
+            foreach ($associatedLabels as $label) {
+                $scoreTotal = $scoreTotal + $label->getScoreRightResponse();
+            }
         }
+        $exportData->scoreTotal = $scoreTotal;
+
+        //if ($withSolution) {
+
+            $exportData->solutions = array();
+            foreach ($proposals as $proposal) {
+                $associatedLabels = $proposal->getAssociatedLabel();
+                foreach ($associatedLabels as $label) {
+                    $solution = new \stdClass();
+                    $solution->firstId = (string) $proposal->getId();
+                    $solution->secondId = (string) $label->getId();
+                    $solution->score = $label->getScoreRightResponse();
+                    if ($label->getFeedback()) {
+                        $solution->feedback = $label->getFeedback();
+                    }
+                    array_push($exportData->solutions, $solution);
+                }
+            }
+        //}
 
         return $exportData;
     }
@@ -247,22 +261,23 @@ class MatchHandler implements QuestionHandlerInterface {
     public function convertQuestionAnswers(Question $question, \stdClass $exportData) {
         $repo = $this->om->getRepository('UJMExoBundle:InteractionMatching');
         $match = $repo->findOneBy(['question' => $question]);
-
+        
         $proposals = $match->getProposals()->toArray();
-        $exportData->solutions = array_map(function ($proposal) {
+        $exportData->solutions = array();
+        foreach ($proposals as $proposal) {
             $associatedLabels = $proposal->getAssociatedLabel();
             foreach ($associatedLabels as $label) {
-                $solutionData = new \stdClass();
-                $solutionData->firstId = (string) $proposal->getId();
-                $solutionData->secondId = (string) $label->getId();
-                $solutionData->score = $label->getScoreRightResponse();
+                $solution = new \stdClass();
+                $solution->firstId = (string) $proposal->getId();
+                $solution->secondId = (string) $label->getId();
+                $solution->score = $label->getScoreRightResponse();
                 if ($label->getFeedback()) {
-                    $solutionData->feedback = $label->getFeedback();
+                    $solution->feedback = $label->getFeedback();
                 }
+                array_push($exportData->solutions, $solution);
             }
-
-            return $solutionData;
-        }, $proposals);
+        }
+        
         return $exportData;
     }
 
@@ -342,37 +357,41 @@ class MatchHandler implements QuestionHandlerInterface {
      *
      * {@inheritdoc}
      */
-    public function storeAnswerAndMark(Question $question, Response $response, $data) {
+     public function storeAnswerAndMark(Question $question, Response $response, $data) {
 
-        $interaction = $this->om->getRepository('UJMExoBundle:InteractionMatching')
-                ->findOneByQuestion($question);
+         $interaction = $this->om->getRepository('UJMExoBundle:InteractionMatching')
+                 ->findOneByQuestion($question);
 
-        $labels = $interaction->getLabels();
-        // at least one label must have a score
-        $score = 0;
+         $labels = $interaction->getLabels();
+         // at least one label must have a score
+         $score = 0;
+        $tabLabelGraduate = array(); // store labels already considered in calculating the score
         foreach ($labels as $label) {
-            $score += $label->getScoreRightResponse();
-        }
+             // if first label
+             if(count($tabLabelGraduate) === 0){
+               $score += $label->getScoreRightResponse();
+             } else if (count($tabLabelGraduate) > 0){
+               foreach($tabLabelGraduate as $labelPast) { // nothing in the array
+                   if ($labelPast !== $label) {
+                       $score += $label->getScoreRightResponse();
+                   }
+               }
+             }
+
+             // add the labels already considered
+             array_push($tabLabelGraduate, $label);
+         }
         if ($score === 0) {
             throw new \Exception('Global score not implemented yet');
         }
+        
+        $serviceMatching = $this->container->get("ujm.exo.matching_service");
+        
+        $tabsResponses = $serviceMatching->initTabResponseMatching($data, $interaction);
+        $tabRightResponse = $tabsResponses[1];
+        $tabResponseIndex = $tabsResponses[0];
 
-        // calculate response score
-        $mark = 0;
-        $targetIds = array();
-        foreach ($data as $answer) {
-            if ($answer !== '') {
-                $set = explode(',', $answer);
-                array_push($targetIds, $set[1]);
-            }
-        }
-
-        foreach ($labels as $label) {
-            // if student used the label in his answer
-            if (in_array((string) $label->getId(), $targetIds)) {
-                $mark += $label->getScoreRightResponse();
-            }
-        }
+        $mark = $serviceMatching->mark($interaction, 0, $tabRightResponse, $tabResponseIndex);
 
         if ($mark < 0) {
             $mark = 0;
@@ -381,6 +400,6 @@ class MatchHandler implements QuestionHandlerInterface {
         $result = count($data) > 0 ? implode(';', $data) : '';
         $response->setResponse($result);
         $response->setMark($mark);
-    }
+     }
 
 }

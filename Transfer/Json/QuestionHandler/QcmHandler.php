@@ -9,6 +9,7 @@ use UJM\ExoBundle\Entity\InteractionQCM;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("ujm.exo.qcm_handler")
@@ -17,17 +18,20 @@ use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
 class QcmHandler implements QuestionHandlerInterface
 {
     private $om;
+    private $container;
 
     /**
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "container"       = @DI\Inject("service_container")
      * })
-     *
+     * 
      * @param ObjectManager $om
+     * @param ContainerInterface $container
      */
-    public function __construct(ObjectManager $om)
-    {
+    public function __construct(ObjectManager $om, ContainerInterface $container) {
         $this->om = $om;
+        $this->container = $container;
     }
 
     /**
@@ -153,18 +157,26 @@ class QcmHandler implements QuestionHandlerInterface
         if($exportData->random && !$forPaperList){
             $qcm->shuffleChoices();
         }
-        
+
         $choices = $qcm->getChoices()->toArray();
 
-        $exportData->multiple = $qcm->getTypeQCM()->getCode() === 1;    
+        $exportData->multiple = $qcm->getTypeQCM()->getCode() === 1;
         $exportData->choices = array_map(function ($choice) {
             $choiceData = new \stdClass();
             $choiceData->id = (string) $choice->getId();
             $choiceData->type = 'text/html';
             $choiceData->data = $choice->getLabel();
+            $choiceData->rightResponse = $choice->getRightResponse();
+            $choiceData->feedback = $choice->getFeedback();
 
             return $choiceData;
         }, $choices);
+
+        $scoreTotal = 0;
+        foreach ($choices as $choice) {
+            $scoreTotal = $scoreTotal + $choice->getWeight();
+        }
+        $exportData->scoreTotal = $scoreTotal;
 
         if ($withSolution) {
             $exportData->solutions = array_map(function ($choice) {
@@ -182,23 +194,23 @@ class QcmHandler implements QuestionHandlerInterface
 
         return $exportData;
     }
-    
+
     public function convertQuestionAnswers(Question $question, \stdClass $exportData){
         $repo = $this->om->getRepository('UJMExoBundle:InteractionQCM');
         $qcm = $repo->findOneBy(['question' => $question]);
-        
+
         $choices = $qcm->getChoices()->toArray();
         $exportData->solutions = array_map(function ($choice) {
-                $solutionData = new \stdClass();
-                $solutionData->id = (string) $choice->getId();
-                $solutionData->score = $choice->getWeight();
+            $solutionData = new \stdClass();
+            $solutionData->id = (string) $choice->getId();
+            $solutionData->score = $choice->getWeight();
 
-                if ($choice->getFeedback()) {
-                    $solutionData->feedback = $choice->getFeedback();
-                }
+            if ($choice->getFeedback()) {
+                $solutionData->feedback = $choice->getFeedback();
+            }
 
-                return $solutionData;
-            }, $choices);
+            return $solutionData;
+        }, $choices);
         return $exportData;
     }
 
@@ -222,7 +234,7 @@ class QcmHandler implements QuestionHandlerInterface
         if (!is_array($data)) {
             return ['Answer data must be an array, ' . gettype($data) . ' given'];
         }
-        
+
         $count = 0;
 
         if (0 === $count = count($data)) {
@@ -246,7 +258,7 @@ class QcmHandler implements QuestionHandlerInterface
                 return ['Answer array identifiers must reference question choices'];
             }
         }
-        
+
         if ($interaction->getTypeQCM()->getCode() === 2 && $count > 1) {
             return ['This question does not allow multiple answers'];
         }
@@ -259,7 +271,7 @@ class QcmHandler implements QuestionHandlerInterface
      *
      * {@inheritdoc}
      */
-    public function storeAnswerAndMark(Question $question, Response $response, $data)
+    public function storeAnswerAndMark(Question $question, Response $responseEntity, $data)
     {
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionQCM')
             ->findOneByQuestion($question);
@@ -267,22 +279,19 @@ class QcmHandler implements QuestionHandlerInterface
         if (!$interaction->getWeightResponse()) {
             throw new \Exception('Global score not implemented yet');
         }
-
-        $mark = 0;
-
-        foreach ($interaction->getChoices() as $choice) {
-            if (in_array((string) $choice->getId(), $data)) {
-                $mark += $choice->getWeight();
-            }
-        }
+        
+        $serviceQCM = $this->container->get("ujm.exo.qcm_service");
+        $allChoices = $interaction->getChoices();
+        
+        $mark = $serviceQCM->mark($interaction, $data, $allChoices, 0);
 
         if ($mark < 0) {
             $mark = 0;
         }
-
+        
         $result = count($data) > 0 ? implode(';', $data) : '';
 
-        $response->setResponse($result);
-        $response->setMark($mark);
+        $responseEntity->setResponse($result);
+        $responseEntity->setMark($mark);
     }
 }

@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -100,9 +101,20 @@ class Exercise extends AbstractResource
      */
     private $type = '1';
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Step",
+     *     mappedBy="exercise",
+     *     cascade={"remove"}
+     * )
+     * @ORM\OrderBy({"order" = "ASC"})
+     */
+    private $steps;
+
     public function __construct()
     {
         $this->dateCorrection = new \DateTime();
+        $this->steps = new ArrayCollection();
     }
 
     /**
@@ -419,5 +431,44 @@ class Exercise extends AbstractResource
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     *
+     * @return ArrayCollection
+     */
+    public function getSteps()
+    {
+        return $this->steps;
+    }
+
+    /**
+     * Add a step to the Exercise
+     * @param Step $step
+     * @return $this
+     */
+    public function addStep(Step $step)
+    {
+        if (!$this->steps->contains($step)) {
+            $this->steps->add($step);
+
+            $step->setExercise($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a Step from the Exercise
+     * @param Step $step
+     * @return $this
+     */
+    public function removeStep(Step $step)
+    {
+        if ($this->steps->contains($step)) {
+            $this->steps->removeElement($step);
+        }
+
+        return $this;
     }
 }

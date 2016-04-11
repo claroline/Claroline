@@ -68,6 +68,11 @@ class Paper
      */
     private $exercise;
 
+    /**
+     * @ORM\Column(name="anonymous", type="boolean", nullable=true)
+     */
+    private $anonymous = false;
+
     public function __construct()
     {
         $this->start = new \DateTime();
@@ -239,5 +244,23 @@ class Paper
     public function getScore()
     {
         return $this->score;
+    }
+
+    /**
+     * Set anonymous.
+     *
+     * @param bool $anonymous
+     */
+    public function setAnonymous($anonymous)
+    {
+        $this->anonymous = $anonymous;
+    }
+
+    /**
+     * Get anonymous.
+     */
+    public function getAnonymous()
+    {
+        return $this->anonymous;
     }
 }

@@ -5,6 +5,11 @@
  */
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
+/**
+ * @DI\Service("ujm.exo.hole_service")
+ */
 class Hole extends Interaction
 {
     /**

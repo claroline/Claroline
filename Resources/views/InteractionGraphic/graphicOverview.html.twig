@@ -49,7 +49,7 @@
                 <i class="fa fa-arrow-left"></i> {{ 'back_to_the_list'|trans({}, 'ujm_exo') }}
             </a>
         {% else %}
-            <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': exoID }) }}">
+            <a class="btn btn-primary" href="{{ path('ujm_exercise_open', {'id': exoID}) }}#/steps">
                 <i class="fa fa-arrow-left"></i> {{ 'back'|trans({}, 'ujm_exo') }}
             </a>
         {% endif %}
@@ -61,7 +61,7 @@
             {% set inter = interG %}
             {% include "UJMExoBundle:Partial:correction/graphic.html.twig" %}              
             <div id="Answer" style="position: relative;">
-                <img class="AnswerImage" src="{{asset (doc.url)}}" width="{{ interG.width }}" height="{{ interG.height }}"
+                <img class="AnswerImage" src="{{asset (doc.url)}}" width="{{ interG.picture.width }}" height="{{ interG.picture.height }}"
                      alt="AnswerImage" id="AnswerImage1"/>
 
                 {% set i = 0 %}{% set allInfo = '' %}{% set allInfoTab = '' %}
