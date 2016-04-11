@@ -142,6 +142,105 @@
          * used in player.directive.html
          */
         .match-directive-container{
+            .drop-textbox {
+                height: 80px;
+                max-height: 80px;
+                overflow: hidden;
+                border-style: solid;
+                border-width: 1px;
+            }
+            
+            .drop-textbox-height {
+                height: 80px;
+                max-height: 80px;
+            }
+            
+            .dropzone-textbox {
+                padding-right: 0;
+            }
+            
+            .drop-droppable-color {
+                background-color: #f9f9f9;
+                border-color: #b7b7b7;
+            }
+            
+            .drag-handle {
+                cursor: all-scroll;
+                padding-top: 32px;
+            /*    border-right-style: solid;
+                border-right-width: 1px;*/
+                background-color: #ededed;
+                text-align: center;
+            }
+            
+            .drag-zoom {
+                cursor: pointer;
+                padding-top: 32px;
+                text-align: center;
+            /*    border-left-style: solid;
+                border-left-width: 1px;*/
+                background-color: #ededed;
+            }
+            
+            .drop-label-textbox {
+                margin: 10px;
+            }
+            
+            .drop-textbox-undo {
+                cursor: pointer;
+                padding-top: 32px;
+                text-align: center;
+                background-color: #ededed;
+            /*    border-right-style: solid;
+                border-right-width: 1px;*/
+            }
+            
+            .drop-success {
+                background-color: #F1FBF2;
+                border-color: #5CB85C;
+            }
+            
+            .drop-button-success {
+                background-color: #CCFFBC;
+            }
+            
+            .drop-alert {
+                background-color: #fbf9ee;
+                border-color: #FCEFA1;
+            }
+            
+            .drop-button-alert {
+                background-color: #FCEFBC;
+            }
+            
+            .drop-warning {
+                background-color: #F6EFEF;
+                border-color: #D9534F;
+            }
+            
+            .drop-button-warning {
+                background-color: #F6D0D0;
+            }
+            
+            .drop-default {
+                background-color: #f9f9f9;
+                border-color: #b7b7b7;
+            }
+            
+            .drop-button-default {
+                background-color: #ededed;
+            }
+            
+            .drop-color-alert {
+                background-color: #FCEFBC;
+                border-color: #FCEFA1;
+            }
+            
+            .drop-color-default {
+                background-color: #ededed;
+                border-color: #b7b7b7;
+            }
+            
             ._jsPlumb_hover {
                 cursor: url("../images/scissors-red.png"), pointer;
             }
@@ -160,7 +259,6 @@
                 min-height: 50px;
                 /*max-width: 400px;*/
                 min-width: 200px;
-                padding: 10px;
             }
 
             /*
@@ -186,9 +284,11 @@
 
             .draggable {
                 list-style-type:none;
+            }
+            
+            .to-drag {
                 cursor: all-scroll;
             }
-
 
             .setLabel{
                 margin-top: 5px;
@@ -203,9 +303,16 @@
             }
 
             .state-highlight {
-                border: 1px solid #fcefa1;
-                background: #fbf9ee 50% 50% repeat-x;
+            //    border: 1px solid #fcefa1;
+            //    background: #fbf9ee 50% 50% repeat-x;
                 color: #363636;
+            }
+            
+            .state-highlight-pair {
+                height: 80px;
+                max-height: 80px;
+                margin: 10px;
+                overflow: hidden;
             }
 
             .state-hover {
