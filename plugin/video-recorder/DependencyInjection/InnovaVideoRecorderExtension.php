@@ -14,6 +14,8 @@ class InnovaVideoRecorderExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        
+      $locator = new FileLocator(__DIR__ . '/../Resources/config/services');
+      $loader = new YamlFileLoader($container, $locator);
+      $loader->load('twig.yml');
     }
 }
