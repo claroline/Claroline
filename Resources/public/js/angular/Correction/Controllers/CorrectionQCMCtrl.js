@@ -58,7 +58,7 @@ angular.module('Correction').controller('CorrectionQCMCtrl', [
                     if (currentQuestion.answer) {
                         for (var j = 0; j < solutions.length; j++) {
                             // search for valid solutions (score > 0)
-                            if (solutions[j].id === choice.id && solutions[j].score > 0) {
+                            if ((solutions[j].id === choice.id && solutions[j].score > 0) || (solutions[j].id === choice.id && choice.rightResponse === true)) {
                                 var found = false;
                                 // search for expected answer checked by student
                                 for (var k = 0; k < currentQuestion.answer.length; k++) {

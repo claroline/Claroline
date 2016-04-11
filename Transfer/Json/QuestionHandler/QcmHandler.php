@@ -276,10 +276,6 @@ class QcmHandler implements QuestionHandlerInterface
     {
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionQCM')
             ->findOneByQuestion($question);
-
-        if (!$interaction->getWeightResponse()) {
-            throw new \Exception('Global score not implemented yet');
-        }
         
         $serviceQCM = $this->container->get("ujm.exo.qcm_service");
         $allChoices = $interaction->getChoices();
