@@ -49,6 +49,15 @@ angular.module('Question').directive('matchQuestion', [
                                 matchQuestionCtrl.handleDragMatchQuestionDrop(event, ui);
                             });
                         });
+                        
+                        if (scope.question.typeMatch === 3) {
+                            $(".draggable").each(function () {
+                                var id = $(this)[0].id.replace("div", "drag_handle");
+                                $(this).draggable({
+                                    handle: "#" + id
+                                });
+                            });
+                        }
 
                         matchQuestionCtrl.addPreviousDroppedItems();
                     }
