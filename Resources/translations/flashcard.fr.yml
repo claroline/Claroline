@@ -1,0 +1,24 @@
+mark: Résultat
+marks:
+  add: Ajouter un résultat
+  confirm_delete: Étes-vous certain(e) de vouloir supprimer ce résulat ?
+  delete: Supprimer un résultat
+  edit: Modifier un résultat
+  empty: Aucun résultat n'est associé à cette évaluation. Vous pouvez ajouter un résultat ou importer une série de résulats en cliquant un des boutons ci-dessous.
+  import: Importer
+  import_info: Pour importer des résultats, attachez un fichier CSV dans lequel chaque ligne comprend les trois valeurs suivantes (séparées par des virgules) : prénom de l'utilisateur, nom de l'utilisateur, cote ou grade obtenu. Notez que les utilisateurs référencés dans ce fichier doivent être membres de cet espace d'activités.
+errors:
+  csv_empty: Le fichier fourni est vide.
+  csv_empty_values: Une ou plusieurs valeurs sont vides
+  csv_extra_users: Utilisateur inconnu ou non membre de cet espace
+  csv_missing_values: Une ou plusieurs valeurs sont manquantes
+  invalid_mark: Cette cote n'est pas valide.
+  line: ligne
+  title: Erreur
+  mark_creation_failure: Une erreur s'est produite durant la création du résultat. Veuillez réessayer ultérieurement.
+  mark_edition_failure: Une erreur s'est produite durant la modification du résultat. Veuillez réessayer ultérieurement.
+  mark_import_failure: Les résultats ne peuvent pas être importés en raison d'une ou plusieurs erreurs dans le format des données :
+  mark_suppression_failure: Une erreur s'est produite durant la suppression du résultat. Veuillez réessayer ultérieurement.
+  not_blank: Cette valeur ne peut pas être vide.
+  unknown_user: Cet utilisateur n'est pas membre de cet espace.
+maximum_mark: Cote maximale

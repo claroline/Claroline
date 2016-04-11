@@ -1,0 +1,69 @@
+<div class="panel-body" >
+{{ vm.deck.id }}
+{{ vm.deckNode.name }}
+  <table class="table table-condensed table-bordered"
+         data-ng-if="vm.results.length > 0">
+    <thead>
+      <tr>
+        <th>{{ 'name'|trans }}</th>
+        <th>{{ 'mark'|trans:'flashcard' }}</th>
+        <th>{{ 'total'|trans }}</th>
+        <th colspan="2" data-ng-if="!vm.isReadOnly"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-ng-repeat="result in vm.results track by result.markId">
+        <td>{{ result.name }}</td>
+        <td>{{ result.mark }}</td>
+        <td>{{ vm.max }}</td>
+        <td style="text-align: center" data-ng-if="!vm.isReadOnly">
+          <a href="#"
+             aria-label="{{ 'edit'|trans }}"
+             onclick="return false"
+             style="outline: 0"
+             data-uib-tooltip="{{ 'edit'|trans }}"
+             data-ng-if="result.markId"
+             data-ng-click="vm.displayEditionForm(result)">
+            <i class="fa fa-edit"></i>
+          </a>
+        </td>
+        <td style="text-align: center" data-ng-if="!vm.isReadOnly">
+          <a href="#"
+             aria-label="{{ 'delete'|trans }}"
+             onclick="return false"
+             style="outline: 0"
+             data-uib-tooltip="{{ 'delete'|trans }}"
+             data-ng-if="result.markId"
+             data-ng-click="vm.confirmDeletion(result)">
+            <i class="fa fa-remove"></i>
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-info"
+       data-ng-if="vm.results.length == 0">
+    <i class="fa fa-info-circle"></i>
+    {{ 'deck.empty'|trans:'flashcard' }}
+  </div>
+</div>
+
+<div class="panel-footer" data-ng-if="!vm.isReadOnly">
+  <button class="btn btn-primary"
+          data-ng-click="">
+    {{ 'parameters'|trans:'flashcard' }}
+  </button>
+  <button class="btn btn-primary"
+          data-ng-click="">
+    {{ 'show_cards'|trans:'flashcard' }}
+  </button>
+  <button class="btn btn-primary"
+          data-ng-click="">
+    {{ 'study_now'|trans:'flashcard' }}
+  </button>
+  <button class="btn btn-primary"
+          data-ng-click="vm.displayNoteCreationForm()">
+    {{ 'notes.add'|trans:'flashcard' }}
+  </button>
+</div>
