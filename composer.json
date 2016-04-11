@@ -123,6 +123,7 @@
             "Icap\\SocialmediaBundle\\": "plugin/social-media",
             "Icap\\WikiBundle\\": "plugin/wiki",
             "Icap\\OAuthBundle\\": "plugin/oauth",
+            "Icap\\FormulaPluginBundle\\": "plugin/formula",
             "Claroline\\ResultBundle\\": "plugin/result",
             "Innova\\PathBundle\\": "plugin/path"
         }
@@ -164,6 +165,7 @@
         "Icap\\SocialmediaBundle\\IcapSocialmediaBundle",
         "Icap\\WikiBundle\\IcapWikiBundle",
         "Icap\\OAuthBundle\\IcapOAuthBundle",
+	"Icap\\FormulaPluginBundle\\IcapFormulaPluginBundle",
         "Claroline\\ResultBundle\\ClarolineResultBundle",
         "Innova\\PathBundle\\InnovaPathBundle"
     ]
