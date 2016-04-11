@@ -22,6 +22,9 @@ This repository is still a work in progress.
 - [ ] add WebsiteBundle
 - [ ] add ExoBundle
 - [ ] add FormulaPluginBundle
+- [ ] add PdfGeneratorBundle
+- [ ] check if PdfGeneratorBundle is usable before activation (requires wkhtmltopdf)
+- [ ] check if LdapBundle is usable before activation (requires ext5-ldap)
 - [ ] migrate contents from DevBundle
 - [ ] remove the innova/angular bundles (required by portfolio)
 - [ ] remove the "innova/angular-ui-pageslide-bundle" (for path)
