@@ -16,8 +16,8 @@ This repository is still a work in progress.
 
 ## TODO
 
-- [ ] update
-- [ ] upgrade from previous packages
+- [x] update
+- [x] upgrade from previous packages
 - [ ] add LessonBundle
 - [ ] add WebsiteBundle
 - [ ] add ExoBundle
@@ -27,3 +27,4 @@ This repository is still a work in progress.
 - [ ] remove the "innova/angular-ui-pageslide-bundle" (for path)
 - [ ] remove the front-end-bundle (required by icapbadge for jqplot and by core/Resouces/less/layout.less)
 - [ ] add install and doc sections (require claroline/Claroline to be updated as well)
+- [ ] fetch mathjax with bower and remove it from sources (required by formula)
