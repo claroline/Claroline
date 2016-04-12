@@ -245,9 +245,9 @@ class WorkspaceManager
     {
         $this->om->startFlushSuite();
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
-        $this->log('Removing root directory ' . $root->getName() . '[id:' . $root->getId() . ']');
-
+        
         if ($root) {
+            $this->log('Removing root directory ' . $root->getName() . '[id:' . $root->getId() . ']');
             $children = $root->getChildren();
             $this->log('Looping through ' . count($children) . ' children...');
 
