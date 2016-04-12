@@ -36,8 +36,7 @@ before_script:
   # override platform composer.json with build/repo local reference
   - mkdir -p travis/local/pkg && mv ../$TRAVIS_REPO_SLUG/* travis/local/pkg
   - rm -rf travis/local/pkg/.git
-  - curl -O https://raw.githubusercontent.com/claroline/DevBundle/monolith/Resources/travis/pre-composer.php
-  - php pre-composer.php claroline/distribution ./travis/local/pkg
+  - php travis/local/pkg/main/dev/Resources/travis/pre-composer.php claroline/distribution travis/local/pkg
 
   # fetch dependencies and build
   - composer self-update
