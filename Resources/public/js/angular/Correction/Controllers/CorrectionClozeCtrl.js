@@ -1,6 +1,6 @@
 /**
  * Paper details directive controller
- * 
+ *
  */
 angular.module('Correction').controller('CorrectionClozeCtrl', [
     'CommonService',
@@ -131,7 +131,9 @@ angular.module('Correction').controller('CorrectionClozeCtrl', [
                                     else {
                                         value_to_compare = holes[j].wordResponses[k].response;
                                     }
-                                    if (value_to_compare === answers[key] && holes[j].wordResponses[k].score > 0) {
+                                    // for removed spaces at the beginnig and at the end
+                                    var answer = answers[key].trim();
+                                    if (value_to_compare === answer && holes[j].wordResponses[k].score > 0) {
                                         good_answer = true;
                                     }
                                 }
