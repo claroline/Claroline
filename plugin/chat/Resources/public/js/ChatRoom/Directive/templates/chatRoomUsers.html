@@ -1,0 +1,63 @@
+<div id="chat-room-users-list" class="well well-sm" ng-controller="ChatRoomUsersCtrl">
+    <h4 class="text-center">
+        {{ 'users'|trans:{}:'platform' }}
+        <span class="badge">{{ users.length }}</span>
+    </h4>
+    <span ng-repeat="user in users" class="participant">
+        <i class="fa fa-user" style="color: {{ user['color'] }}"></i>
+        {{ user['name'] }}
+        <span ng-switch on="user['role']">
+            <i ng-switch-when="visitor"
+               class="fa fa-microphone-slash pointer-hand chat-room-mute-btn"
+               data-toggle="tooltip"
+               data-placement="top"
+               title="Unmute"
+               ng-click="unmuteUser(user['username'])"
+            >
+            </i>
+            <i ng-switch-default
+               class="fa fa-microphone pointer-hand chat-room-mute-btn"
+               data-toggle="tooltip"
+               data-placement="top"
+               title="Mute"
+               ng-click="muteUser(user['username'])"
+            >
+            </i>
+        </span>
+        <i ng-if="isModerator()"
+            class="fa fa-fire pointer-hand chat-room-kick-btn"
+           data-toggle="tooltip"
+           data-placement="top"
+           title="Kick"
+           ng-click="kickUser(user['username'])"
+        >
+        </i>
+        <i ng-if="isAdmin()"
+           class="fa fa-ban pointer-hand chat-room-ban-btn"
+           data-toggle="tooltip"
+           data-placement="top"
+           title="Ban"
+           ng-click="banUser(user['username'])"
+        >
+        </i>
+        <br>
+    </span>
+    <div ng-if="isAdmin() && bannedUsers.length > 0">
+        <hr>
+        <h4 class="text-center">
+            {{ 'banned_users'|trans:{}:'chat' }}
+            <span class="badge">{{ bannedUsers.length }}</span>
+        </h4>
+        <span ng-repeat="username in bannedUsers" class="banned-user">
+            {{ username }}
+            <i class="fa fa-ban pointer-hand chat-room-unban-btn"
+               data-toggle="tooltip"
+               data-placement="top"
+               title="Unban"
+               ng-click="unbanUser(username)"
+            >
+            </i>
+            <br>
+        </span>
+    </div>
+</div>

@@ -1,0 +1,12 @@
+stamp-npm
+stamp-bower
+version.txt
+node_modules
+bower_components
+strophejs-*/
+ndproj
+doc
+.taperc
+*.tar.gz
+*.zip
+*~

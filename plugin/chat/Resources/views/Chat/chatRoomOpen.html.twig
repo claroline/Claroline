@@ -1,0 +1,191 @@
+{% set layout = 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% if isDesktop() %}
+    {% set layout = 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+{% endif %}
+
+{% extends layout %}
+
+{% set _resource = chatRoom %}
+
+{% block chat_content %}
+    {% block section_content %}
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                {{ chatRoom.getResourceNode().getName() }}
+
+                {% if canChat and canEdit %}
+                    <i class="fa fa-cogs pointer-hand pull-right"
+                       id="chat-room-configuration-btn"
+                       data-toggle="tooltip"
+                       data-placement="left"
+                       title="{{ 'configuration'|trans({}, 'platform') }}"
+                    >
+                    </i>
+                {% endif %}
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div id="chat-room-app" ng-cloak="" ng-app="ChatRoomModule">
+                <div ui-view>
+                </div>
+            </div>
+            {#{% if canChat %}#}
+                {#{% set chatRoomStatus = chatRoom.getRoomStatus() %}#}
+                {#{% set chatRoomType = chatRoom.getRoomType() %}#}
+
+                {#{% if chatRoomStatus == constant('Claroline\\ChatBundle\\Entity\\ChatRoom::UNINITIALIZED') %}#}
+                    {#<div class="alert alert-warning">#}
+                        {#{{ 'chat_room_uninitialized_msg'|trans({}, 'chat') }}#}
+                    {#</div>#}
+
+                    {#{% if canChat and canEdit %}#}
+                        {#<div id="chat-room-app" ng-cloak="" ng-app="ChatRoomModule">#}
+                            {#<chat-room-init chat-room-xmpp-host="{{ xmppHost }}"#}
+                                            {#chat-room-xmpp-muc-host="{{ xmppMucHost }}"#}
+                                            {#chat-room-bosh-port="{{ boshPort }}"#}
+                                            {#chat-room-id="{{ chatRoom.getId() }}"#}
+                                            {#chat-room-name="{{ chatRoom.getRoomName() }}"#}
+                                            {#chat-room-user-username="{{ chatUser.getChatUsername() }}"#}
+                                            {#chat-room-user-password="{{ chatUser.getChatPassword() }}"#}
+                                            {#chat-room-user-first-name="{{ chatUser.getUser().getFirstName() }}"#}
+                                            {#chat-room-user-last-name="{{ chatUser.getUser().getLastName() }}"#}
+                                            {#chat-room-user-color="{{ color }}"#}
+                            {#>#}
+                            {#</chat-room-init>#}
+                        {#</div>#}
+                    {#{% endif %}#}
+                {#{% elseif chatRoomStatus == constant('Claroline\\ChatBundle\\Entity\\ChatRoom::CLOSED') %}#}
+                    {#<div class="alert alert-success">#}
+                        {#{{ 'chat_room_closed_msg'|trans({}, 'chat') }}#}
+                    {#</div>#}
+                {#{% elseif chatRoomStatus == constant('Claroline\\ChatBundle\\Entity\\ChatRoom::OPEN') %}#}
+                    {#<div id="chat-room-app" ng-cloak="" ng-app="ChatRoomModule">#}
+                        {#<div ui-view>#}
+                        {#</div>#}
+                        {#{% if chatRoomType == constant('Claroline\\ChatBundle\\Entity\\ChatRoom::TEXT') %}#}
+                            {#<chat-room chat-room-xmpp-host="{{ xmppHost }}"#}
+                                       {#chat-room-xmpp-muc-host="{{ xmppMucHost }}"#}
+                                       {#chat-room-bosh-port="{{ boshPort }}"#}
+                                       {#chat-room-id="{{ chatRoom.getId() }}"#}
+                                       {#chat-room-name="{{ chatRoom.getRoomName() }}"#}
+                                       {#chat-room-user-username="{{ chatUser.getChatUsername() }}"#}
+                                       {#chat-room-user-password="{{ chatUser.getChatPassword() }}"#}
+                                       {#chat-room-user-first-name="{{ chatUser.getUser().getFirstName() }}"#}
+                                       {#chat-room-user-last-name="{{ chatUser.getUser().getLastName() }}"#}
+                                       {#chat-room-user-color="{{ color }}"#}
+                            {#>#}
+                            {#</chat-room>#}
+                        {#{% elseif chatRoomType == constant('Claroline\\ChatBundle\\Entity\\ChatRoom::AUDIO') %}#}
+                            {#<chat-room chat-room-xmpp-host="{{ xmppHost }}"#}
+                                       {#chat-room-xmpp-muc-host="{{ xmppMucHost }}"#}
+                                       {#chat-room-bosh-port="{{ boshPort }}"#}
+                                       {#chat-room-id="{{ chatRoom.getId() }}"#}
+                                       {#chat-room-name="{{ chatRoom.getRoomName() }}"#}
+                                       {#chat-room-user-username="{{ chatUser.getChatUsername() }}"#}
+                                       {#chat-room-user-password="{{ chatUser.getChatPassword() }}"#}
+                                       {#chat-room-user-first-name="{{ chatUser.getUser().getFirstName() }}"#}
+                                       {#chat-room-user-last-name="{{ chatUser.getUser().getLastName() }}"#}
+                                       {#chat-room-user-color="{{ color }}"#}
+                            {#>#}
+                            {#</chat-room>#}
+                            {#<chat-room-audio chat-room-xmpp-host="{{ xmppHost }}"#}
+                                       {#chat-room-xmpp-muc-host="{{ xmppMucHost }}"#}
+                                       {#chat-room-bosh-port="{{ boshPort }}"#}
+                                       {#chat-room-id="{{ chatRoom.getId() }}"#}
+                                       {#chat-room-name="{{ chatRoom.getRoomName() }}"#}
+                                       {#chat-room-user-username="{{ chatUser.getChatUsername() }}"#}
+                                       {#chat-room-user-password="{{ chatUser.getChatPassword() }}"#}
+                                       {#chat-room-user-first-name="{{ chatUser.getUser().getFirstName() }}"#}
+                                       {#chat-room-user-last-name="{{ chatUser.getUser().getLastName() }}"#}
+                                       {#chat-room-user-color="{{ color }}"#}
+                            {#>#}
+                            {#</chat-room-audio>#}
+                        {#{% elseif chatRoomType == constant('Claroline\\ChatBundle\\Entity\\ChatRoom::VIDEO') %}#}
+                            {#<chat-room-video chat-room-xmpp-host="{{ xmppHost }}"#}
+                                       {#chat-room-xmpp-muc-host="{{ xmppMucHost }}"#}
+                                       {#chat-room-bosh-port="{{ boshPort }}"#}
+                                       {#chat-room-ice-servers="{{ iceServers }}"#}
+                                       {#chat-room-id="{{ chatRoom.getId() }}"#}
+                                       {#chat-room-name="{{ chatRoom.getRoomName() }}"#}
+                                       {#chat-room-user-username="{{ chatUser.getChatUsername() }}"#}
+                                       {#chat-room-user-password="{{ chatUser.getChatPassword() }}"#}
+                                       {#chat-room-user-first-name="{{ chatUser.getUser().getFirstName() }}"#}
+                                       {#chat-room-user-last-name="{{ chatUser.getUser().getLastName() }}"#}
+                                       {#chat-room-user-color="{{ color }}"#}
+                            {#>#}
+                            {#</chat-room-video>#}
+                        {#{% endif %}#}
+                    {#</div>#}
+                {#{% else %}#}
+                    {#<div class="alert alert-danger">#}
+                        {#{{ 'chat_room_unknown_status_msg'|trans({}, 'chat') }}#}
+                    {#</div>#}
+                {#{% endif %}#}
+            {#{% else %}#}
+                {#<div class="alert alert-danger">#}
+                    {#{{ 'chat_account_not_activated_msg'|trans({}, 'chat') }}#}
+                {#</div>#}
+            {#{% endif %}#}
+        </div>
+    {% endblock %}
+{% endblock %}
+
+{% block stylesheets %}
+    {# Claroline CSS #}
+    {{ parent() }}
+    <link rel="stylesheet"
+          href="{{ asset('bundles/clarolinechat/css/chatRoom.css') }}"
+          type="text/css"
+    />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'chat' }) }}"></script>
+
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/strophejs-1.2.3/strophe.min.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/strophejs-plugins/disco/strophe.disco.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/strophe.jingle/strophe.jingle.adapter.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/strophe.jingle/strophe.jingle.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/strophe.jingle/strophe.jingle.sdp.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/strophe.jingle/strophe.jingle.session.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/strophe.jingle/hark.bundle.js') }}"
+    >
+    </script>
+    <script>
+        window.roomId = {{ chatRoom.getId() }}
+        window.roomName = '{{ chatRoom.getRoomName() }}'
+        window.roomStatus = '{{ chatRoom.getRoomStatusText() }}'
+        window.roomType = '{{ chatRoom.getRoomTypeText() }}'
+        window.xmppHost = '{{ xmppHost }}'
+        window.xmppMucHost = '{{ xmppMucHost }}'
+        window.boshPort = {{ boshPort }}
+        window.iceServers = '{{ iceServers }}'
+        window.canChat = {{ canChat ? 'true' : 'false' }}
+        window.canEdit = {{ canEdit ? 'true' : 'false' }}
+        window.hasAdmin = {{ hasAdmin ? 'true' : 'false' }}
+        window.chatAdminUsername = '{{ chatAdminUsername }}'
+        window.chatAdminPassword = '{{ chatAdminPassword }}'
+    </script>
+    <script src="{{ hotAsset('dist/claroline-chat-list.js') }}"></script>
+{% endblock %}

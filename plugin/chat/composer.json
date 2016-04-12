@@ -1,0 +1,22 @@
+{
+    "name": "claroline/chat-bundle",
+    "description": "Claroline chat plugin",
+    "keywords": ["Claroline", "Plugin", "Chat"],
+    "homepage": "http://www.claroline.net",
+    "type": "claroline-plugin",
+    "license": "GPL-3.0+",
+    "authors": [
+        {
+            "name": "Claroline development team",
+            "email": "dev@claroline.net",
+            "homepage": "http://github.com/claroline"
+        }
+    ],
+    "require": {
+        "php": ">=5.5",
+        "claroline/core-bundle": ">=6.6.3,<7.0"
+    },
+    "autoload": {
+        "psr-4": { "Claroline\\ChatBundle\\": "" }
+    }
+}

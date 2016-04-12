@@ -1,0 +1,12 @@
+<iq type='result'
+    from='mim.shakespeare.lit'
+    to='romeo@montague.net/orchard'
+    id='info3'>
+  <query xmlns='http://jabber.org/protocol/disco#info' 
+         node='http://jabber.org/protocol/commands'>
+    <identity
+        category='automation'
+        type='command-list'/>
+  </query>
+</iq>
+      

@@ -1,0 +1,174 @@
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% block section_content %}
+    {% block chat_content %}{% endblock %}
+{% endblock %}
+
+{% block stylesheets %}
+    {# Claroline CSS #}
+    {{ parent() }}
+    <link rel="stylesheet"
+          href="{{ asset('bundles/clarolinechat/css/chatRoom.css') }}"
+          type="text/css"
+    />
+{% endblock %}
+
+{% block javascripts %}
+    {# Claroline JS #}
+    {{ parent() }}
+
+    {# Translations #}
+    <script type="text/javascript"
+            src="{{ url('bazinga_jstranslation_js', { 'domain': 'chat' }) }}"
+    >
+    </script>
+    
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/strophejs-1.2.3/strophe.min.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/strophejs-plugins/disco/strophe.disco.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/strophe.jingle/strophe.jingle.adapter.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/strophe.jingle/strophe.jingle.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/strophe.jingle/strophe.jingle.sdp.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/strophe.jingle/strophe.jingle.session.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/strophe.jingle/hark.bundle.js') }}"
+    >
+    </script>
+
+    {# Angular JS #}
+    {% javascripts debug=false filter='jsmin' output='vendor/angular/angular-js.js'
+        '@InnovaAngularJSBundle/Resources/public/js/angular.min.js'
+        '@InnovaAngularJSBundle/Resources/public/js/angular-sanitize.min.js'
+        '@InnovaAngularJSBundle/Resources/public/js/angular-route.min.js'
+        '@InnovaAngularJSBundle/Resources/public/js/angular-resource.min.js'
+        '@InnovaAngularJSBundle/Resources/public/js/angular-touch.min.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {# Angular UI #}
+    {% javascripts debug=false filter='jsmin' output='vendor/angular/angular-ui.js'
+        '@InnovaAngularUIBootstrapBundle/Resources/public/js/*'
+        '@InnovaAngularUITreeBundle/Resources/public/js/*'
+        '@InnovaAngularUIPageslideBundle/Resources/public/js/*'
+        '@InnovaAngularUITinyMCEBundle/Resources/public/js/*'
+        '@InnovaAngularUITranslationBundle/Resources/public/js/*'
+        '@InnovaAngularUIResourcePickerBundle/Resources/public/js/*'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {#{% javascripts debug=false filter='jsmin' output='vendor/clarolinechat/chatRoom.js'
+        '@ClarolineChatBundle/Resources/public/js/Xmpp/*'
+        '@ClarolineChatBundle/Resources/public/js/Xmpp/Service/*'
+        '@ClarolineChatBundle/Resources/public/js/ChatRoom/chatRoom.app.js'
+        '@ClarolineChatBundle/Resources/public/js/ChatRoom/Service/*'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}#}
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/Xmpp/module.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/Xmpp/Service/XmppService.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/ChatRoom/module.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/ChatRoom/Service/XmppMucService.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/ChatRoom/Controller/ChatRoomMessagesCtrl.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/ChatRoom/Controller/ChatRoomUsersCtrl.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/ChatRoom/Controller/ChatRoomInputCtrl.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/ChatRoom/Controller/ChatRoomXmppCtrl.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/ChatRoom/Controller/ChatRoomAudioCtrl.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/ChatRoom/Controller/ChatRoomVideoCtrl.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/ChatRoom/Controller/ChatRoomInitCtrl.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/ChatRoom/Directive/ChatRoomDirective.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/ChatRoom/Directive/ChatRoomAudioDirective.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/ChatRoom/Directive/ChatRoomVideoDirective.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/ChatRoom/Directive/ChatRoomUsersDirective.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/ChatRoom/Directive/ChatRoomMessagesDirective.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/ChatRoom/Directive/ChatRoomInputDirective.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinechat/js/ChatRoom/Directive/ChatRoomInitDirective.js') }}"
+    >
+    </script>
+
+    {# Set some vars needed by Angular parts #}
+    <script type="text/javascript">
+        {# Make Twig variables accessibles by AngularJS #}
+        var AngularApp = {};
+
+        AngularApp.webDir        = "{{ asset('') }}";
+        AngularApp.locale        = "{{ app.request.locale ~ '_' ~ app.request.locale|upper }}";
+
+        {#AngularApp.resourceIcons = {
+            {% for resourceIcon in resourceIcons %}
+                "{{ resourceIcon.mimeType }}" : "{{ asset(resourceIcon.relativeUrl) }}"{% if loop.last != true %},{% endif %}
+            {% endfor %}
+        };#}
+    </script>
+{% endblock %}
+
