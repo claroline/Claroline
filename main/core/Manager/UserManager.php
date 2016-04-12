@@ -707,7 +707,7 @@ class UserManager
             $usersInRoles[$role->getTranslationKey()] = intval(
                 $this->userRepo->countUsersByRole($role, $restrictionRoleNames)
             );
-            $usersInRoles['user_accounts'] += $usersInRoles[$role->getTranslationKey()];
+            $usersInRoles['user_accounts'] = $this->userRepo->countUsers();
         }
 
         return $usersInRoles;

@@ -421,6 +421,15 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $query->getSingleScalarResult();
     }
 
+    public function countUsers()
+    {
+        $qb = $this->createQueryBuilder('user')
+            ->select('COUNT(user.id)')
+            ->where('user.isEnabled = true');
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
     /**
      * Returns user Ids that are subscribed to one of the roles given
      * @param  array $roleNames
@@ -1443,7 +1452,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $query->getOneOrNullResult();
     }
 
-    
+
     /**
      * Returns all the users by search.
      *
