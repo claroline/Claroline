@@ -234,7 +234,7 @@ angular.module('Question').controller('MatchQuestionCtrl', [
             for (var i=0; i<this.savedAnswers.length; i++) {
                 if (this.savedAnswers[i].target === proposal.id) {
                     for (var j=0; j<this.solutions.length; j++) {
-                        if (this.savedAnswers[i].source === this.solutions[j].firstId && this.savedAnswers[i].target === this.solutions[j].secondId) {
+                        if (this.savedAnswers[i].source === this.solutions[j].firstId && this.savedAnswers[i].target === this.solutions[j].secondId && this.feedbackIsVisible) {
                             if (subject === 'div') {
                                 return "drop-success";
                             }
@@ -398,6 +398,9 @@ angular.module('Question').controller('MatchQuestionCtrl', [
         this.isRemovableItem = function (proposalId, valueType) {
             if (this.feedbackIsVisible) {
                 return false;
+            }
+            if (!this.canSeeFeedback) {
+                return true;
             }
             for (var i=0; i<this.savedAnswers.length; i++) {
                 if ((this.savedAnswers[i].target === proposalId && valueType === "target") || (this.savedAnswers[i].source === proposalId && valueType === "source")) {
@@ -743,7 +746,9 @@ angular.module('Question').controller('MatchQuestionCtrl', [
             }
             // ui update
             $('#' + targetId).addClass("state-highlight");
-            $('#' + targetId).droppable( "option", "disabled", true );
+            if (this.question.typeMatch === 3) {
+                $('#' + targetId).droppable( "option", "disabled", true );
+            }
         };
 
         /**

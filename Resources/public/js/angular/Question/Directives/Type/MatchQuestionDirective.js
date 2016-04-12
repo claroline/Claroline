@@ -14,7 +14,7 @@ angular.module('Question').directive('matchQuestion', [
             },
             link: function (scope, element, attr, matchQuestionCtrl) {
 
-                matchQuestionCtrl.init(scope.question);
+                matchQuestionCtrl.init(scope.question, scope.canSeeFeedback);
                 // init jsPlumb dom elements
                 $timeout(function () {
                     // MatchQuestion sub type is ToBind
