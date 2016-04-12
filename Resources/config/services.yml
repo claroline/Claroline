@@ -62,9 +62,9 @@ services:
         class: UJM\ExoBundle\Services\classes\Interactions\Open
         arguments: [@doctrine]
 
-#    ujm.exo_InteractionQCM:
-#        class: UJM\ExoBundle\Services\classes\Interactions\Qcm
-#        arguments: [@doctrine]
+    ujm.exo_InteractionQCM:
+        class: UJM\ExoBundle\Services\classes\Interactions\Qcm
+        arguments: [@doctrine]
 
     ujm.exo_paper:
         class: UJM\ExoBundle\Services\classes\PaperService

@@ -11,8 +11,8 @@
                 <thead>
                 <tr>
                     <!--<th scope="col">{{ 'category' | trans:{}:'ujm_exo' }}</th>-->
-                    <th scope="col" class="col-md-2">{{ 'type' | trans:{}:'ujm_exo' }}</th>
                     <th scope="col" class="col-md-3">{{ 'title' | trans:{}:'ujm_exo' }}</th>
+                    <th scope="col" class="col-md-2">{{ 'type' | trans:{}:'ujm_exo' }}</th>
                     <th scope="col" class="col-md-5">{{ 'question' | trans:{}:'ujm_exo' }}</th>
                     <th scope="col" class="col-md-2">{{ 'actions' | trans:{}:'ujm_exo' }}</th>
                 </tr>
@@ -21,8 +21,8 @@
                 <tbody>
                 <tr data-ng-repeat="item in step.items">
                     <!--<td></td>-->
-                    <td>{{ item.type }}</td>
                     <td>{{ item.title }}</td>
+                    <td>{{ item.type | trans:{}:'ujm_exo'}}</td>
                     <td class="text-center" data-ng-bind-html="item.invite"></td>
                     <td>
                         <!-- Edit Item button -->
@@ -32,7 +32,7 @@
                         </a>
 
                         <!-- Duplicate Item button -->
-                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans:{}:'ujm_exo' }}" href="{{ 'ujm_question_duplicate' | path:{ questionId: item.id, exoID: stepListCtrl.exerciseId } }}">
+                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans:{}:'ujm_exo' }}" href="{{ 'ujm_question_duplicate' | path:{ questionId: item.id, stepID: step.id } }}">
                             <span class="fa fa-repeat"></span>
                             <span class="sr-only">{{ 'duplicate' | trans:{}:'ujm_exo' }}</span>
                         </a>

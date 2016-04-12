@@ -31,6 +31,11 @@ at_the_end_of_assessment: A la fin du test
 at_the_same_time_that_the_correction: En même temps que la correction
 availability_of_correction: Disponibilité de la correction
 availability_of_score: Disponibilité de la note
+application/x.choice+json: QCM
+application/x.graphic+json: Graphique
+application/x.cloze+json: Texte à trous
+application/x.match+json: Association
+application/x.short+json: Ouverte
 
 # B
 badge_obtained: Félicitation ! Vous avez obtenu le badge de connaissances
