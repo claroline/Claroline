@@ -17,6 +17,7 @@ chat_room_uninitialized_msg: Chat room is not available yet
 chat_room_unknown_status_msg: Chat room has an unknown status
 chat_username: Chat username
 closed: Closed
+connect_to_chat_room: Connect to Chat room
 connecting: Connecting...
 create_chat_accounts: Create Chat accounts
 disable_chat_room_audio: Disable audio Chat room
@@ -28,6 +29,8 @@ has_left_the_chat_room: has left the Chat room
 host: Host
 ice_servers: ICE servers
 init_room: Initialize Chat room
+invalid_room_type: Invalid room type
+kick: Kick
 kicked_msg: You have been kicked from the Chat room.
 me: Me
 muc_host: MUC server

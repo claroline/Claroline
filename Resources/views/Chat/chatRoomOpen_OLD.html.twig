@@ -1,0 +1,148 @@
+{% extends "ClarolineChatBundle:Chat:layout.html.twig" %}
+
+{% set _resource = chatRoom %}
+
+{% block chat_content %}
+    {% block section_content %}
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                {{ chatRoom.getResourceNode().getName() }}
+                
+                {% if canChat and canEdit %}
+                    <i class="fa fa-cogs pointer-hand pull-right"
+                       id="chat-room-configuration-btn"
+                       data-toggle="tooltip"
+                       data-placement="left"
+                       title="{{ 'configuration'|trans({}, 'platform') }}"
+                    >
+                    </i>
+                {% endif %}
+            </h3>
+        </div>
+        <div class="panel-body">
+            {% if canChat %}
+                {% set chatRoomStatus = chatRoom.getRoomStatus() %}
+                {% set chatRoomType = chatRoom.getRoomType() %}
+                
+                {% if chatRoomStatus == constant('Claroline\\ChatBundle\\Entity\\ChatRoom::UNINITIALIZED') %}
+                    <div class="alert alert-warning">
+                        {{ 'chat_room_uninitialized_msg'|trans({}, 'chat') }}
+                    </div>
+                    
+                    {% if canChat and canEdit %}
+                        <div id="chat-room-app" ng-cloak="" ng-app="ChatRoomModule">
+                            <chat-room-init chat-room-xmpp-host="{{ xmppHost }}"
+                                            chat-room-xmpp-muc-host="{{ xmppMucHost }}"
+                                            chat-room-bosh-port="{{ boshPort }}"
+                                            chat-room-id="{{ chatRoom.getId() }}"
+                                            chat-room-name="{{ chatRoom.getRoomName() }}"
+                                            chat-room-user-username="{{ chatUser.getChatUsername() }}"
+                                            chat-room-user-password="{{ chatUser.getChatPassword() }}"
+                                            chat-room-user-first-name="{{ chatUser.getUser().getFirstName() }}"
+                                            chat-room-user-last-name="{{ chatUser.getUser().getLastName() }}"
+                                            chat-room-user-color="{{ color }}"
+                            >
+                            </chat-room-init>
+                        </div>
+                    {% endif %}
+                {% elseif chatRoomStatus == constant('Claroline\\ChatBundle\\Entity\\ChatRoom::CLOSED') %}
+                    <div class="alert alert-success">
+                        {{ 'chat_room_closed_msg'|trans({}, 'chat') }}
+                    </div>
+                {% elseif chatRoomStatus == constant('Claroline\\ChatBundle\\Entity\\ChatRoom::OPEN') %}
+                    <div id="chat-room-app" ng-cloak="" ng-app="ChatRoomModule">
+                        {% if chatRoomType == constant('Claroline\\ChatBundle\\Entity\\ChatRoom::TEXT') %}
+                            <chat-room chat-room-xmpp-host="{{ xmppHost }}"
+                                       chat-room-xmpp-muc-host="{{ xmppMucHost }}"
+                                       chat-room-bosh-port="{{ boshPort }}"
+                                       chat-room-id="{{ chatRoom.getId() }}"
+                                       chat-room-name="{{ chatRoom.getRoomName() }}"
+                                       chat-room-user-username="{{ chatUser.getChatUsername() }}"
+                                       chat-room-user-password="{{ chatUser.getChatPassword() }}"
+                                       chat-room-user-first-name="{{ chatUser.getUser().getFirstName() }}"
+                                       chat-room-user-last-name="{{ chatUser.getUser().getLastName() }}"
+                                       chat-room-user-color="{{ color }}"
+                            >
+                            </chat-room>
+                        {% elseif chatRoomType == constant('Claroline\\ChatBundle\\Entity\\ChatRoom::AUDIO') %}
+                            <chat-room chat-room-xmpp-host="{{ xmppHost }}"
+                                       chat-room-xmpp-muc-host="{{ xmppMucHost }}"
+                                       chat-room-bosh-port="{{ boshPort }}"
+                                       chat-room-id="{{ chatRoom.getId() }}"
+                                       chat-room-name="{{ chatRoom.getRoomName() }}"
+                                       chat-room-user-username="{{ chatUser.getChatUsername() }}"
+                                       chat-room-user-password="{{ chatUser.getChatPassword() }}"
+                                       chat-room-user-first-name="{{ chatUser.getUser().getFirstName() }}"
+                                       chat-room-user-last-name="{{ chatUser.getUser().getLastName() }}"
+                                       chat-room-user-color="{{ color }}"
+                            >
+                            </chat-room>
+                            {#<chat-room-audio chat-room-xmpp-host="{{ xmppHost }}"
+                                       chat-room-xmpp-muc-host="{{ xmppMucHost }}"
+                                       chat-room-bosh-port="{{ boshPort }}"
+                                       chat-room-id="{{ chatRoom.getId() }}"
+                                       chat-room-name="{{ chatRoom.getRoomName() }}"
+                                       chat-room-user-username="{{ chatUser.getChatUsername() }}"
+                                       chat-room-user-password="{{ chatUser.getChatPassword() }}"
+                                       chat-room-user-first-name="{{ chatUser.getUser().getFirstName() }}"
+                                       chat-room-user-last-name="{{ chatUser.getUser().getLastName() }}"
+                                       chat-room-user-color="{{ color }}"
+                            >
+                            </chat-room-audio>#}
+                        {% elseif chatRoomType == constant('Claroline\\ChatBundle\\Entity\\ChatRoom::VIDEO') %}
+                            <chat-room-video chat-room-xmpp-host="{{ xmppHost }}"
+                                       chat-room-xmpp-muc-host="{{ xmppMucHost }}"
+                                       chat-room-bosh-port="{{ boshPort }}"
+                                       chat-room-ice-servers="{{ iceServers }}"
+                                       chat-room-id="{{ chatRoom.getId() }}"
+                                       chat-room-name="{{ chatRoom.getRoomName() }}"
+                                       chat-room-user-username="{{ chatUser.getChatUsername() }}"
+                                       chat-room-user-password="{{ chatUser.getChatPassword() }}"
+                                       chat-room-user-first-name="{{ chatUser.getUser().getFirstName() }}"
+                                       chat-room-user-last-name="{{ chatUser.getUser().getLastName() }}"
+                                       chat-room-user-color="{{ color }}"
+                            >
+                            </chat-room-video>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-danger">
+                        {{ 'chat_room_unknown_status_msg'|trans({}, 'chat') }}
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="alert alert-danger">
+                    {{ 'chat_account_not_activated_msg'|trans({}, 'chat') }}
+                </div>
+            {% endif %}
+        </div>
+    {% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        (function () {
+            'use strict';
+            
+            $('#chat-room-configuration-btn').on('click', function () {
+                window.Claroline.Modal.displayForm(
+                    Routing.generate(
+                        'claro_chat_room_configure_form',
+                        {'chatRoom': {{ chatRoom.getId() }}}
+                    ),
+                    function (status) {
+                        
+                        if (status === 0 || status === 2) {
+                            angular.element(document.getElementById('chat-room-main')).scope().closeRoom();
+                        } else if (status === 1) {
+                            angular.element(document.getElementById('chat-room-main')).scope().openRoom();
+                        }
+{#                        window.location.reload();#}
+                    },
+                    function () {}
+                );
+            });
+        })();
+    </script>
+{% endblock %}

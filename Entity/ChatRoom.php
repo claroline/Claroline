@@ -89,6 +89,27 @@ class ChatRoom extends AbstractResource
         return $this->roomStatus;
     }
 
+    public function getRoomStatusText()
+    {
+        $status = '';
+
+        switch ($this->roomStatus) {
+            case self::UNINITIALIZED :
+                $status = 'uninitialized';
+                break;
+            case self::OPEN :
+                $status = 'open';
+                break;
+            case self::CLOSED :
+                $status = 'closed';
+                break;
+            default:
+                $status = 'unknown';
+        }
+
+        return $status;
+    }
+
     public function setRoomStatus($roomStatus)
     {
         $this->roomStatus = $roomStatus;
@@ -102,6 +123,27 @@ class ChatRoom extends AbstractResource
     public function setRoomType($roomType)
     {
         $this->roomType = $roomType;
+    }
+
+    public function getRoomTypeText()
+    {
+        $type = '';
+
+        switch ($this->roomType) {
+            case self::TEXT :
+                $type = 'text';
+                break;
+            case self::AUDIO :
+                $type = 'audio';
+                break;
+            case self::VIDEO :
+                $type = 'video';
+                break;
+            default:
+                $type = 'unknown';
+        }
+
+        return $type;
     }
 
     public function getMessages()

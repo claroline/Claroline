@@ -17,7 +17,7 @@ use Claroline\ChatBundle\Form\ChatRoomConfigurationType;
 use Claroline\ChatBundle\Manager\ChatManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -125,6 +125,8 @@ class ChatController extends Controller
         $xmppMucHost = $this->platformConfigHandler->getParameter('chat_xmpp_muc_host');
         $boshPort = $this->platformConfigHandler->getParameter('chat_bosh_port');
         $iceServers = $this->platformConfigHandler->getParameter('chat_ice_servers');
+        $chatAdminUsername = $this->platformConfigHandler->getParameter('chat_admin_username');
+        $chatAdminPassword = $this->platformConfigHandler->getParameter('chat_admin_password');
         $chatUser = $this->chatManager->getChatUserByUser($user);
         $canChat = !is_null($chatUser);
         $canEdit = $this->hasChatRoomRight($chatRoom, 'EDIT');
@@ -137,6 +139,7 @@ class ChatController extends Controller
                 $color = $options['color'];
             }
         }
+        $hasAdmin = !empty($chatAdminUsername) && !empty($chatAdminPassword);
 
         return array(
             'workspace' => $chatRoom->getResourceNode()->getWorkspace(),
@@ -148,7 +151,10 @@ class ChatController extends Controller
             'xmppMucHost' => $xmppMucHost,
             'boshPort' => $boshPort,
             'iceServers' => $iceServers,
-            'color' => $color
+            'color' => $color,
+            'hasAdmin' => $hasAdmin,
+            'chatAdminUsername' => $chatAdminUsername,
+            'chatAdminPassword' => $chatAdminPassword
         );
     }
 

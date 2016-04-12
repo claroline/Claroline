@@ -1,0 +1,63 @@
+<div id="chat-room-users-list" class="well well-sm">
+    <h4 class="text-center">
+        {{ 'users'|trans:{}:'platform' }}
+        <span class="badge">{{ crc.users.length }}</span>
+    </h4>
+    <span ng-repeat="user in crc.users" class="participant">
+        <i class="fa fa-user" style="color: {{ user['color'] }}"></i>
+        {{ user['name'] }}
+        <span ng-switch on="user['role']">
+            <i ng-switch-when="visitor"
+               class="fa fa-microphone-slash pointer-hand chat-room-mute-btn"
+               data-toggle="tooltip"
+               data-placement="top"
+               title="Unmute"
+               ng-click="crc.unmuteUser(user['username'])"
+            >
+            </i>
+            <i ng-switch-default
+               class="fa fa-microphone pointer-hand chat-room-mute-btn"
+               data-toggle="tooltip"
+               data-placement="top"
+               title="Mute"
+               ng-click="crc.muteUser(user['username'])"
+            >
+            </i>
+        </span>
+        <i ng-if="crc.isModerator()"
+            class="fa fa-fire pointer-hand chat-room-kick-btn"
+           data-toggle="tooltip"
+           data-placement="top"
+           title="{{ 'kick'|trans:{}:'chat' }}"
+           ng-click="crc.kickUser(user['username'])"
+        >
+        </i>
+        <i ng-if="crc.isAdmin()"
+           class="fa fa-ban pointer-hand chat-room-ban-btn"
+           data-toggle="tooltip"
+           data-placement="top"
+           title="{{ 'ban'|trans:{}:'chat' }}"
+           ng-click="crc.banUser(user['username'])"
+        >
+        </i>
+        <br>
+    </span>
+    <div ng-if="crc.isAdmin() && crc.bannedUsers.length > 0">
+        <hr>
+        <h4 class="text-center">
+            {{ 'banned_users'|trans:{}:'chat' }}
+            <span class="badge">{{ crc.bannedUsers.length }}</span>
+        </h4>
+        <span ng-repeat="username in crc.bannedUsers" class="banned-user">
+            {{ username }}
+            <i class="fa fa-ban pointer-hand chat-room-unban-btn"
+               data-toggle="tooltip"
+               data-placement="top"
+               title="Unban"
+               ng-click="crc.unbanUser(username)"
+            >
+            </i>
+            <br>
+        </span>
+    </div>
+</div>
