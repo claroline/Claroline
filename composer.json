@@ -82,7 +82,10 @@
         "claroline/front-end-bundle": "dev-7.x-test"
     },
     "require-dev": {
-        "claroline/dev-bundle": "dev-monolith"
+        "phpunit/phpunit": "~4.6",
+        "fabpot/php-cs-fixer":"^1.10",
+        "mikey179/vfsStream": "~1.5",
+        "mockery/mockery": "^0.9.4"
     },
     "autoload": {
         "psr-4": {
@@ -126,7 +129,8 @@
             "Icap\\OAuthBundle\\": "plugin/oauth",
             "Claroline\\ResultBundle\\": "plugin/result",
             "Innova\\PathBundle\\": "plugin/path",
-            "Claroline\\PdfGeneratorBundle\\": "plugin/pdf-generator"
+            "Claroline\\PdfGeneratorBundle\\": "plugin/pdf-generator",
+            "Claroline\\DevBundle\\": "main/dev"
         }
     },
     "bundles": [
@@ -168,6 +172,7 @@
         "Icap\\WikiBundle\\IcapWikiBundle",
         "Icap\\OAuthBundle\\IcapOAuthBundle",
         "Claroline\\ResultBundle\\ClarolineResultBundle",
-        "Innova\\PathBundle\\InnovaPathBundle"
+        "Innova\\PathBundle\\InnovaPathBundle",
+        "Claroline\\DevBundle\\ClarolineDevBundle"
     ]
 }
