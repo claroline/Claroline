@@ -106,7 +106,7 @@ function extractEntries(packages) {
     .reduce((entries, def) => {
       Object.keys(def.assets.webpack.entry).forEach(entry => {
          def.meta ?
-           entries[`${def.name}-${def.assets.webpack.entry[entry].dir}-${def.assets.webpack.entry[entry].bundle}-${entry}`] = `${def.assets.webpack.entry[entry].prefix}/Resources/${def.assets.webpack.entry[entry].name}`:
+           entries[`${def.name}-${def.assets.webpack.entry[entry].dir}-${entry}`] = `${def.assets.webpack.entry[entry].prefix}/Resources/${def.assets.webpack.entry[entry].name}`:
            entries[`${def.name}-${entry}`] = `${def.path}/Resources/${def.assets.webpack.entry[entry]}`
       })
 
