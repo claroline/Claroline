@@ -32,7 +32,7 @@ angular.module('Common').factory('CommonService', [
             },
 
             /**
-             * Calculate the global score for a paper
+             * Calculate the global score for a paper (on 20)
              * @param {type} paper
              * @param {type} questions
              * @returns {Number}
@@ -40,29 +40,15 @@ angular.module('Common').factory('CommonService', [
             getPaperScore: function (paper, questions) {
                 var score = 0.0; // final score
                 var totalPoints = this.getExerciseTotalScore(questions);
-                var studentPoints = 0.0; // good answers
-
-                for (var i = 0; i < paper.questions.length; i++) {
-                    // paper question item contains student answer, used hints
-                    var currentPaperQuestion = paper.questions[i];
-
-                    // for each given answer
-                    if (currentPaperQuestion.answer) {
-                        for (var j = 0; j < currentPaperQuestion.answer.length; j++) {
-                            var id = currentPaperQuestion.answer[j];
-                            studentPoints += this.getAnswerScore(id, questions);
-                        }
-                        // for each used hints
-                        for (var k = 0; k < currentPaperQuestion.hints.length; k++) {
-                            // find hint penalty in questions collection
-                            var penalty = this.getHintPenalty(currentPaperQuestion.hints[k], questions);
-                            // remove penalty value from student points
-                            studentPoints -= penalty;
-                        }
-                    }
+                var studentPoints = paper.globalNote;
+                if(studentPoints !== null){
+                    score = studentPoints * 20 / totalPoints;
+                    return score > 0 ? (Math.round(score / 0.5) * 0.5) : 0;
                 }
-                score = studentPoints * 20 / totalPoints;
-                return score > 0 ? (Math.round(score / 0.5) * 0.5) : 0;
+                else{
+                    return null;
+                }
+
             },
             /**
              * get available score in the exercise
