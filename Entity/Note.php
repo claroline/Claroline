@@ -13,6 +13,8 @@ namespace Claroline\FlashCardBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * Note
@@ -28,13 +30,15 @@ class Note
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api_flashcard", "api_flashcard_note", "api_flashcard_deck"})
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="NoteType", inversedBy="notes")
      * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+     * @Groups({"api_flashcard", "api_flashcard_note", "api_flashcard_deck"})
+    */
     private $noteType;
 
     /**
@@ -45,11 +49,13 @@ class Note
 
     /**
      * @ORM\OneToMany(targetEntity="FieldValue", mappedBy="note")
+     * @Groups({"api_flashcard", "api_flashcard_note", "api_flashcard_deck"})
      */
     private $fieldValues;
 
     /**
      * @ORM\OneToMany(targetEntity="Card", mappedBy="note")
+     * @Groups({"api_flashcard", "api_flashcard_note", "api_flashcard_deck"})
      */
     private $cards;
 
@@ -110,6 +116,24 @@ class Note
     }
 
     /**
+     * @param FieldValue
+     *
+     * @return boolean
+     */
+    public function addFieldValue(FieldValue $obj)
+    {
+        if($this->fieldValues->contains($obj)) {
+            return false;
+        } else {
+            if($this->noteType->getFieldLabels()->contains($obj->getFieldLabel())) {
+                return $this->fieldValues->add($obj);
+            } else {
+                false;
+            }
+        }
+    }
+
+    /**
      * @param ArrayCollection $obj
      *
      * @return Note
@@ -130,11 +154,40 @@ class Note
     }
 
     /**
+     * @param Card
+     *
+     * @return boolean
+     */
+    public function addCard(Card $obj)
+    {
+        if($this->cards->contains($obj)) {
+            return false;
+        } else {
+            if($this->noteType->getCardTypes()->contains($obj->getCardType())) {
+                return $this->cards->add($obj);
+            } else {
+                false;
+            }
+        }
+    }
+
+    /**
+     * @param ArrayCollection $obj
+     *
+     * @return Note
+     */
+    public function setCards(ArrayCollection $obj)
+    {
+        $this->cards = $obj;
+
+        return $this;
+    }
+
+    /**
      * @return ArrayCollection
      */
     public function getCards()
     {
         return $this->cards;
     }
-
 }

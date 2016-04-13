@@ -13,6 +13,8 @@ namespace Claroline\FlashCardBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * CardType
@@ -28,6 +30,10 @@ class CardType
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({
+     *     "api_flashcard",
+     *     "api_flashcard_deck"
+     * })
      */
     private $id;
 
@@ -35,6 +41,10 @@ class CardType
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
+     * @Groups({
+     *     "api_flashcard",
+     *     "api_flashcard_deck"
+     * })
      */
     private $name;
 
@@ -42,6 +52,10 @@ class CardType
      * @ORM\ManyToMany(targetEntity="FieldLabel")
      * @ORM\JoinTable(name="cardtype_fieldlabel_question")
      * @ORM\JoinColumn(onDelete="CASCADE")
+     * @Groups({
+     *     "api_flashcard",
+     *     "api_flashcard_deck"
+     * })
      */
     private $questions;
 
@@ -49,6 +63,10 @@ class CardType
      * @ORM\ManyToMany(targetEntity="FieldLabel")
      * @ORM\JoinTable(name="cardtype_fieldlabel_answer")
      * @ORM\JoinColumn(onDelete="CASCADE")
+     * @Groups({
+     *     "api_flashcard",
+     *     "api_flashcard_deck"
+     * })
      */
     private $answers;
 

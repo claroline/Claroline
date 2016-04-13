@@ -35,6 +35,7 @@ class Deck extends AbstractResource
 
     /**
      * @ORM\OneToMany(targetEntity="Note", mappedBy="deck")
+     * @Groups({"api_flashcard", "api_flashcard_deck"})
      */
     protected $notes;
 

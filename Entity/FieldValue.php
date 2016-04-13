@@ -13,6 +13,8 @@ namespace Claroline\FlashCardBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * FieldValue
@@ -28,6 +30,11 @@ class FieldValue
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({
+     *     "api_flashcard",
+     *     "api_flashcard_note",
+     *     "api_flashcard_deck"
+     * })
      */
     private $id;
 
@@ -35,12 +42,22 @@ class FieldValue
      * @var text
      *
      * @ORM\Column(name="value", type="text")
+     * @Groups({
+     *     "api_flashcard",
+     *     "api_flashcard_note",
+     *     "api_flashcard_deck"
+     * })
      */
     private $value;
 
     /**
      * @ORM\ManyToOne(targetEntity="FieldLabel", inversedBy="fieldValues")
      * @ORM\JoinColumn(onDelete="CASCADE")
+     * @Groups({
+     *     "api_flashcard",
+     *     "api_flashcard_note",
+     *     "api_flashcard_deck"
+     * })
      */
     private $fieldLabel;
 

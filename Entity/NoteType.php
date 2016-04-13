@@ -13,6 +13,8 @@ namespace Claroline\FlashCardBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * Note
@@ -26,16 +28,34 @@ class NoteType
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({
+     *     "api_flashcard",
+     *     "api_flashcard_note_type",
+     *     "api_flashcard_note",
+     *     "api_flashcard_deck"
+     * })
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({
+     *     "api_flashcard",
+     *     "api_flashcard_note_type",
+     *     "api_flashcard_note",
+     *     "api_flashcard_deck"
+     * })
      */
     private $name;
 
     /**
      * @ORM\OneToMany(targetEntity="FieldLabel", mappedBy="noteType")
+     * @Groups({
+     *     "api_flashcard",
+     *     "api_flashcard_note_type",
+     *     "api_flashcard_note",
+     *     "api_flashcard_deck"
+     * })
      */
     private $fieldLabels;
 
@@ -124,18 +144,29 @@ class NoteType
     }
 
     /**
+     * @param int $id
+     * @return FieldLabel Null if the field is not found.
+     */
+    public function getFieldLabel($id)
+    {
+        foreach($this->fieldLabels as $fieldLabel) {
+            if($fieldLabel->getId() == $id) {
+                return $fieldLabel;
+            }
+        }
+        return null;
+    }
+
+    /**
      * @param CardType
      *
      * @return boolean
      */
     public function addCardType(CardType $obj)
     {
-        if($this->fieldLabels->contains($obj))
-        {
+        if($this->fieldLabels->contains($obj)) {
             return false;
-        }
-        else
-        {
+        } else {
             return $this->cardTypes->add($obj);
         }
     }
