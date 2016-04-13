@@ -31,7 +31,7 @@
             </div>
         </div>        
         <!-- TO BIND PROPOSALS & ASSOCIATED LABELS -->
-        <div data-ng-if="matchQuestionCtrl.question.toBind" class="row center-text">
+        <div data-ng-if="matchQuestionCtrl.question.typeMatch === 1" class="row center-text">
             <!-- PROPOSALS -->
             <div class="col-md-6">
                 <div data-ng-repeat="proposal in matchQuestionCtrl.question.firstSet" class="row origin draggable" id="draggable_{{proposal.id}}">
@@ -54,10 +54,10 @@
             </div>
         </div>
         <!-- TO DRAG SUB TYPE  -->
-        <div data-ng-if="!matchQuestionCtrl.question.toBind" class="row center-text">
+        <div data-ng-if="matchQuestionCtrl.question.typeMatch === 2" class="row center-text">
             <!-- PROPOSALS -->
             <div class="col-md-6">
-                <div data-ng-repeat="proposal in matchQuestionCtrl.question.firstSet" class="row origin" id="div_{{proposal.id}}">
+                <div data-ng-repeat="proposal in matchQuestionCtrl.question.firstSet" class="row origin to-drag" id="div_{{proposal.id}}">
                     <div class="col-md-12 setLabel">                        
                         <ul>
                             <li id="draggable_{{proposal.id}}" class="draggable">
@@ -90,14 +90,85 @@
                                         
                                     </div>
                                     <div class="col-md-1">
-                                        <i data-ng-if="matchQuestionCtrl.feedbackIsVisible || (matchQuestionCtrl.dropIsValid(item) === 1 && matchQuestionCtrl.answerIsSaved(item))" data-toggle="tooltip" data-ng-class="{'color-success fa fa-check' : matchQuestionCtrl.dropIsValid(item) === 1, 'color-danger fa fa-close': matchQuestionCtrl.dropIsValid(item) === 2}" title="{{matchQuestionCtrl.getDropFeedback(item)}}"></i>
+                                        <i data-ng-if="(matchQuestionCtrl.feedbackIsVisible || (matchQuestionCtrl.dropIsValid(item) === 1 && matchQuestionCtrl.answerIsSaved(item))) && matchQuestionCtrl.canSeeFeedback" data-toggle="tooltip" data-ng-class="{'color-success fa fa-check' : matchQuestionCtrl.dropIsValid(item) === 1, 'color-danger fa fa-close': matchQuestionCtrl.dropIsValid(item) === 2}" title="{{matchQuestionCtrl.getDropFeedback(item)}}"></i>
                                     </div>
                                     <div class="col-sm-2">
-                                        <button data-ng-disabled="matchQuestionCtrl.feedbackIsVisible || matchQuestionCtrl.dropIsValid(item) === 1 && matchQuestionCtrl.answerIsSaved(item)" class="btn btn-danger fa fa-trash" data-ng-click="matchQuestionCtrl.removeDropped(item.source, proposal.id)"></button>
+                                        <button data-ng-disabled="(matchQuestionCtrl.feedbackIsVisible || (matchQuestionCtrl.dropIsValid(item) === 1 && matchQuestionCtrl.answerIsSaved(item))) && matchQuestionCtrl.canSeeFeedback" class="btn btn-danger fa fa-trash" data-ng-click="matchQuestionCtrl.removeDropped(item.source, proposal.id)"></button>
                                     </div>
                                 </div>
                             </li>
                         </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- TO PAIR SUB TYPE  -->
+        <div data-ng-if="matchQuestionCtrl.question.typeMatch === 3" class="row">
+            <!-- PROPOSALS -->
+            <div class="col-md-3">
+                <div data-ng-repeat="proposal in matchQuestionCtrl.question.firstSet" class="row origin draggable drop-textbox drop-textbox-height drop-color-default" id="div_{{proposal.id}}">
+                    <!-- When the div is not dropped yet -->
+                    <div data-ng-if="!matchQuestionCtrl.proposalDropped(proposal)" class="col-md-2 fa fa-arrows drag-handle drag-button drop-textbox-height" id="drag_handle_{{proposal.id}}"></div>
+                    <div data-ng-if="!matchQuestionCtrl.proposalDropped(proposal)" class="col-md-8 setLabel">
+                        <div data-ng-bind-html="proposal.data | unsafe" id="draggable_{{proposal.id}}"></div>
+                    </div>
+                    <div data-ng-if="!matchQuestionCtrl.proposalDropped(proposal)" class="col-md-2 fa fa-search-plus drag-zoom drag-button drop-textbox-height" data-toggle="modal" data-target="#longTextValueModal{{proposal.id}}"></div>
+                    <!-- Modal dialog -->
+                    <div class="modal fade" id="longTextValueModal{{proposal.id}}" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <span data-ng-bind-html="proposal.data | unsafe"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- When the div is dropped -->
+                    <div data-ng-if="matchQuestionCtrl.proposalDropped(proposal)" data-ng-click="matchQuestionCtrl.removeDropped(proposal.id, -1)" class="col-md-12 fa fa-undo drag-zoom drag-button drop-textbox-height"></div>
+                </div>
+            </div>
+            <!-- LABELS -->
+            <div class="col-md-3">
+                <div data-ng-repeat="proposal in matchQuestionCtrl.question.secondSet" class="{{matchQuestionCtrl.getDropClass('dropzone', proposal)}} {{ matchQuestionCtrl.getDropColor('div', proposal) }} row drop-textbox drop-textbox-height dropzone-textbox" id="droppable_{{proposal.id}}" data-toggle="tooltip" title="{{matchQuestionCtrl.getCurrentItemFeedBackIfOk(proposal)}}">
+                    <div class="col-md-12">
+                        <div data-ng-repeat="item in matchQuestionCtrl.dropped" id="dropped_{{item.source}}" data-ng-if="item.target === proposal.id">
+                            <div class="row">
+                                <div data-ng-click="matchQuestionCtrl.removeDropped(item.source, proposal.id)" class="col-md-2 fa fa-undo drag-zoom drag-button drop-textbox-height {{ matchQuestionCtrl.getDropColor('button', proposal) }}"></div>
+                                <div class="col-md-8 setLabel" data-ng-bind-html="item.label | unsafe"></div>
+                                <div class="col-md-2 fa fa-search-plus drag-zoom drag-button drop-textbox-height {{ matchQuestionCtrl.getDropColor('button', proposal) }}" data-toggle="modal" data-target="#longTextValueModalDropped{{item.source}}"></div>
+                            </div>
+                            <!-- Modal dialog -->
+                            <div class="modal fade" id="longTextValueModalDropped{{item.source}}" tabindex="-1" role="dialog">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <span data-ng-bind-html="item.label | unsafe"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div data-ng-repeat="proposal in matchQuestionCtrl.question.secondSet" class="row drop-textbox drop-textbox-height drop-label-textbox drop-default" id="label_{{proposal.id}}">
+                    <div class="col-md-11 setLabel">
+                        <div data-ng-bind-html="proposal.data | unsafe"></div>
+                    </div>
+                    <div class="col-md-1 fa fa-search-plus drag-zoom drag-button drop-textbox-height drop-color-default" data-toggle="modal" data-target="#longTextValueModalLabel{{proposal.id}}"></div>
+                    <!-- Modal dialog -->
+                    <div class="modal fade" id="longTextValueModalLabel{{proposal.id}}" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <span data-ng-bind-html="proposal.data | unsafe"></span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
