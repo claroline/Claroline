@@ -234,7 +234,7 @@ angular.module('Question').controller('MatchQuestionCtrl', [
             for (var i=0; i<this.savedAnswers.length; i++) {
                 if (this.savedAnswers[i].target === proposal.id) {
                     for (var j=0; j<this.solutions.length; j++) {
-                        if (this.savedAnswers[i].source === this.solutions[j].firstId && this.savedAnswers[i].target === this.solutions[j].secondId && this.feedbackIsVisible) {
+                        if (this.savedAnswers[i].source === this.solutions[j].firstId && this.savedAnswers[i].target === this.solutions[j].secondId && this.canSeeFeedback) {
                             if (subject === 'div') {
                                 return "drop-success";
                             }
@@ -402,6 +402,7 @@ angular.module('Question').controller('MatchQuestionCtrl', [
             if (!this.canSeeFeedback) {
                 return true;
             }
+            //----------
             for (var i=0; i<this.savedAnswers.length; i++) {
                 if ((this.savedAnswers[i].target === proposalId && valueType === "target") || (this.savedAnswers[i].source === proposalId && valueType === "source")) {
                     for (var j=0; j<this.solutions.length; j++) {
@@ -654,6 +655,9 @@ angular.module('Question').controller('MatchQuestionCtrl', [
                     }
                 }
             }
+            console.log("-------");
+            console.log(this.savedAnswers);
+            console.log(this.solutions);
             this.updateStudentData();
         };
 
