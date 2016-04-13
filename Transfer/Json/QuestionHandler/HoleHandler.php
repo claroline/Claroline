@@ -25,7 +25,7 @@ class HoleHandler implements QuestionHandlerInterface
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "container"       = @DI\Inject("service_container")
      * })
-     * 
+     *
      * @param ObjectManager $om
      * @param ContainerInterface $container
      */
@@ -139,7 +139,7 @@ class HoleHandler implements QuestionHandlerInterface
         $holeQuestion = $repo->findOneBy(['question' => $question]);
         $holes = $holeQuestion->getHoles()->toArray();
         $text = $holeQuestion->getHtmlWithoutValue();
-        
+
         $scoreTotal = 0;
         foreach ($holes as $hole) {
             $maxScore = 0;
@@ -150,7 +150,7 @@ class HoleHandler implements QuestionHandlerInterface
             }
             $scoreTotal = $scoreTotal + $maxScore;
         }
-        
+
         $exportData->scoreTotal = $scoreTotal;
         $exportData->text = $text;
         if ($withSolution) {
@@ -174,14 +174,14 @@ class HoleHandler implements QuestionHandlerInterface
 
             return $holeData;
         }, $holes);
-        
+
         return $exportData;
     }
-    
+
     public function convertQuestionAnswers(Question $question, \stdClass $exportData){
         $repo = $this->om->getRepository('UJMExoBundle:InteractionHole');
         $holeQuestion = $repo->findOneBy(['question' => $question]);
-        
+
         $holes = $holeQuestion->getHoles()->toArray();
         $exportData->solutions = array_map(function ($hole) {
                 $solutionData = new \stdClass();
@@ -211,11 +211,11 @@ class HoleHandler implements QuestionHandlerInterface
     public function convertAnswerDetails(Response $response)
     {
         $parts = json_decode($response->getResponse());
-        
+
         foreach ($parts as $key=>$value) {
             $array[$key] = $value;
         }
-        
+
     //    $parts = explode(';', $response->getResponse());
 
         return array_filter($array, function ($part) {
@@ -261,25 +261,6 @@ class HoleHandler implements QuestionHandlerInterface
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionHole')
             ->findOneByQuestion($question);
 
-        $mark = 0;
-
-        foreach ($data as $answer) {
-            foreach ($interaction->getHoles() as $hole) {
-                foreach ($hole->getWordResponses() as $wd) {
-                    if ($hole->getSelector() === true) {
-                        if ((string)$wd->getId() === (string)$answer) {
-                            $mark += $wd->getScore();
-                        }
-                    }
-                    else {
-                        if ($wd->getResponse() === $answer) {
-                            $mark += $wd->getScore();
-                        }
-                    }
-                }
-            }
-        }
-        
         $answers = [];
         $i=0;
         foreach ($data as $answer) {
@@ -288,15 +269,15 @@ class HoleHandler implements QuestionHandlerInterface
             }
             $i++;
         }
-        
-//        $serviceHole = $this->container->get("ujm.exo.hole_service");
-//        
-//        $serviceHole->mark();
+
+        $serviceHole = $this->container->get("ujm.exo.hole_service");
+
+        $mark = $serviceHole->mark($interaction, $data, 0);
 
         if ($mark < 0) {
             $mark = 0;
         }
-        
+
         $json = json_encode($answers);
         $response->setResponse($json);
         $response->setMark($mark);

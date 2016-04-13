@@ -11,6 +11,7 @@ use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 
 /**
  * @DI\Service("ujm.exo.graphic_handler")
@@ -20,19 +21,23 @@ class GraphicHandler implements QuestionHandlerInterface {
 
     private $om;
     private $container;
+    private $doctrine;
 
     /**
      * @DI\InjectParams({
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "container"       = @DI\Inject("service_container")
+     *     "container"       = @DI\Inject("service_container"),
+     *     "doctrine"        = @DI\Inject("doctrine")
      * })
-     * 
+     *
      * @param ObjectManager $om
      * @param ContainerInterface $container
+     * @param Registry $doctrine
      */
-    public function __construct(ObjectManager $om, ContainerInterface $container) {
+    public function __construct(ObjectManager $om, ContainerInterface $container, Registry $doctrine) {
         $this->om = $om;
         $this->container = $container;
+        $this->doctrine = $doctrine;
     }
 
     /**
@@ -255,50 +260,20 @@ class GraphicHandler implements QuestionHandlerInterface {
             throw new \Exception('Global score not implemented yet');
         }
 
+        $em = $this->doctrine->getManager();
 
+        $rightCoords = $em->getRepository('UJMExoBundle:Coords')
+            ->findBy(array('interactionGraphic' => $interaction->getId()));
 
-        //  471 - 335.9999694824219;583 - 125; <- format from UJM...Maybe choose another one
-        // 471|335.9999694824219;583|125
-        // array(
-        //  "471-335.9999694824219",
-        //  "583-125"
-        // )
-        //$answers = explode(';', $answer);
-        $answers = array();
-        foreach ($data as $answer) {
-            if ($answer !== '') {
-                $set = explode('-', $answer);
-                $x = floatval($set[0]);
-                $y = floatval($set[1]);
-                array_push($answers, array("x" => $x, "y" => $y));
-            }
-        }
-        $done = array();
-        $mark = 0;
-        foreach ($coords as $coord) {
-            $values = $coord->getValue();
+        $serviceGraphic = $this->container->get("ujm.exo.graphic_service");
 
-            $explodeValues = explode(',', $values);
-            $valueX = $explodeValues[0];
-            $valueY = $explodeValues[1];
-            $size = $coord->getSize(); // double
-            // search into given answers for a correct one
-            // original in Services->Interactions->Graphic->mark()
-            foreach ($answers as $answer) {
-                if (
-                    ($answer['x'] <= ($valueX + $size)) // $answer['x'] + 8 < $xr + $valid... Why + 8 ?
-                    && $answer['x'] >= $valueX // ($xa + 8) > ($xr)
-                    && ($answer['y'] <= ($valueY + $size)) // + 8 ?
-                    && $answer['y'] >= $valueY // + 8 ?
-                    && !in_array($coord->getValue(), $done) // Avoid getting points twice for one answer
-                )
-                {
+        $nbpointer = count($data);
 
-                    $mark += $coord->getScoreCoords();
-                    array_push($done,$coord->getValue());
-                }
-            }
-        }
+        $responses = implode(',', $data);
+
+        $coords2 = preg_split('[,]', $responses);
+
+        $mark = $serviceGraphic->mark($responses, $nbpointer, $rightCoords, $coords2);
 
         if ($mark < 0) {
             $mark = 0;

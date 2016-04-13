@@ -171,11 +171,12 @@ class QcmHandler implements QuestionHandlerInterface
 
             return $choiceData;
         }, $choices);
-
-        $scoreTotal = 0;
-        foreach ($choices as $choice) {
-            $scoreTotal = $scoreTotal + $choice->getWeight();
-        }
+        $interaction = $repo->findOneByQuestion($question);
+        $scoreTotal=$this->container->get("ujm.exo.qcm_service")->maxScore($interaction);
+//        $scoreTotal = 0;
+//        foreach ($choices as $choice) {
+//            $scoreTotal = $scoreTotal + $choice->getWeight();
+//        }
         $exportData->scoreTotal = $scoreTotal;
 
         if ($withSolution) {
@@ -275,10 +276,6 @@ class QcmHandler implements QuestionHandlerInterface
     {
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionQCM')
             ->findOneByQuestion($question);
-
-        if (!$interaction->getWeightResponse()) {
-            throw new \Exception('Global score not implemented yet');
-        }
         
         $serviceQCM = $this->container->get("ujm.exo.qcm_service");
         $allChoices = $interaction->getChoices();
@@ -288,7 +285,7 @@ class QcmHandler implements QuestionHandlerInterface
         if ($mark < 0) {
             $mark = 0;
         }
-        
+
         $result = count($data) > 0 ? implode(';', $data) : '';
 
         $responseEntity->setResponse($result);

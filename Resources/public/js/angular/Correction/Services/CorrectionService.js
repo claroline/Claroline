@@ -31,12 +31,9 @@ angular.module('Correction').factory('CorrectionService', [
 
             },
             getChoiceQuestionScore: function (question, paper) {
-                var availableScore = 0.0;
+                var availableScore = question.scoreTotal;
                 var studentScore = 0.0;
-                var result = '';
-                for (var i = 0; i < question.solutions.length; i++) {
-                    availableScore += question.solutions[i].score ? question.solutions[i].score : 0;
-                }
+                var result ='';
                 for (var j = 0; j < paper.questions.length; j++) {
                     if (paper.questions[j].id === question.id.toString()) {
                         studentScore = paper.questions[j].score;
@@ -70,6 +67,7 @@ angular.module('Correction').factory('CorrectionService', [
                 if (question.typeOpen === "long") {
                     for (var j = 0; j < paper.questions.length; j++) {
                         if (paper.questions[j].id === question.id.toString()) {
+                            console.log('truc '+ paper.questions[j].score);
                             if (paper.questions[j].score !== -1) {
                                 result = paper.questions[j].score.toString() + '/' + question.scoreMaxLongResp.toString();
                                 return result;
@@ -82,8 +80,19 @@ angular.module('Correction').factory('CorrectionService', [
                     var availableScore = 0.0;
                     var studentScore = 0.0;
                     var result = '';
-                    for (var i = 0; i < question.solutions.length; i++) {
-                        availableScore += question.solutions[i].score ? question.solutions[i].score : 0;
+                    if (question.typeOpen === "oneWord") {
+                        for (var i = 0; i < question.solutions.length; i++) {
+                            if (question.solutions[i].score > availableScore) {
+                                availableScore = question.solutions[i].score;
+                            }
+                        }
+                    }
+                    else{
+                        for (var i = 0; i < question.solutions.length; i++) {
+                            if(question.solutions[i].score > 0) {
+                                availableScore += question.solutions[i].score ? question.solutions[i].score : 0;
+                            }
+                        }
                     }
                     for (var j = 0; j < paper.questions.length; j++) {
                         if (paper.questions[j].id === question.id.toString()) {

@@ -68,7 +68,6 @@ class Qcm extends Interaction
         $penalty = null
     )
     {
-        $score = 0;
         $scoreMax = $this->maxScore($interQCM);
         
         if (!$interQCM->getWeightResponse()) {
@@ -76,7 +75,6 @@ class Qcm extends Interaction
         } else {
             $score = $this->markWeightResponse($allChoices, $response, $penalty, $scoreMax) . '/' . $scoreMax;
         }
-
         return $score;
     }
 
