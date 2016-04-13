@@ -38,6 +38,7 @@ class LoadOptionsData extends AbstractFixture
         $valTmatching = array();
         $valTmatching[1] = 'To bind';
         $valTmatching[2] = 'To drag';
+        $valTmatching[3] = 'To pair';
 
         foreach ($valTmatching as $code => $val) {
             $this->newTMatching($val, $code);
