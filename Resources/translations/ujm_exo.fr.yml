@@ -194,6 +194,7 @@ manage_img: Gérer mes documents
 mark: Note
 mark_question: Noter cette question
 mark_bigest: La note doit être inférieure ou égale à
+mark_bigest_other: La note est superieur au score maximun
 matching: Association
 matching_creation: Création d'une question associative
 matching_edition: Edition d'une question associative

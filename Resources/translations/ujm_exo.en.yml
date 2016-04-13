@@ -193,6 +193,7 @@ manage_img: Manage my documents
 mark: Mark
 mark_question: Marked this question
 mark_bigest: The mark must be less than or equal to
+mark_bigest_other: The rating is greater than the maximum score
 matching: Association
 matching_creation: Association creation
 matching_edition: Association edition
