@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Force publishing for Paths which are already published in the application
+ * Force publishing for Paths which are already published in the application.
  */
 class RepublishCommand extends AbstractPublishCommand
 {

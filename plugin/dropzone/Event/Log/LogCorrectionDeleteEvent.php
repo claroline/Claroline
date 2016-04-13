@@ -8,8 +8,8 @@ use Icap\DropzoneBundle\Entity\Correction;
 use Icap\DropzoneBundle\Entity\Drop;
 use Icap\DropzoneBundle\Entity\Dropzone;
 
-class LogCorrectionDeleteEvent extends AbstractLogResourceEvent implements PotentialEvaluationEndInterface {
-
+class LogCorrectionDeleteEvent extends AbstractLogResourceEvent implements PotentialEvaluationEndInterface
+{
     const ACTION = 'resource-icap_dropzone-correction_delete';
 
     private $correction;
@@ -29,10 +29,10 @@ class LogCorrectionDeleteEvent extends AbstractLogResourceEvent implements Poten
         }
 
         $details = array(
-            'dropzone'  => array(
+            'dropzone' => array(
                 'id' => $dropzone->getId(),
             ),
-            'drop'  => array(
+            'drop' => array(
                 'id' => $drop->getId(),
                 'documents' => $documentsDetails,
                 'owner' => array(
@@ -40,9 +40,9 @@ class LogCorrectionDeleteEvent extends AbstractLogResourceEvent implements Poten
                     'lastName' => $drop->getUser()->getLastName(),
                     'firstName' => $drop->getUser()->getFirstName(),
                     'username' => $drop->getUser()->getUsername(),
-                )
+                ),
             ),
-            'correction' => $correction->toArray(true)
+            'correction' => $correction->toArray(true),
         );
 
         parent::__construct($dropzone->getResourceNode(), $details);

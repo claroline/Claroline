@@ -6,5 +6,4 @@ use Doctrine\ORM\EntityRepository;
 
 class WidgetListOptionsRepository extends EntityRepository
 {
-    
 }

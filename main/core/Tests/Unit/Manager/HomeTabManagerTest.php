@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use \Mockery as m;
+use Mockery as m;
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\User;
@@ -260,7 +260,7 @@ class HomeTabManagerTest extends MockeryTestCase
             ->with(
                 array(
                     'homeTab' => $homeTab,
-                    'user' => $user
+                    'user' => $user,
                 )
             )
             ->once()
@@ -311,7 +311,7 @@ class HomeTabManagerTest extends MockeryTestCase
                     'homeTab' => $homeTab,
                     'type' => 'admin_desktop',
                     'user' => null,
-                    'workspace' => null
+                    'workspace' => null,
                 )
             )
             ->once()
@@ -321,7 +321,7 @@ class HomeTabManagerTest extends MockeryTestCase
             ->with(
                 array(
                     'homeTab' => $homeTab,
-                    'user' => $user
+                    'user' => $user,
                 )
             )
             ->once()
@@ -347,7 +347,7 @@ class HomeTabManagerTest extends MockeryTestCase
                     'homeTab' => $homeTab,
                     'type' => 'admin_desktop',
                     'user' => null,
-                    'workspace' => null
+                    'workspace' => null,
                 )
             )
             ->once()
@@ -357,7 +357,7 @@ class HomeTabManagerTest extends MockeryTestCase
             ->with(
                 array(
                     'homeTab' => $homeTab,
-                    'user' => $user
+                    'user' => $user,
                 )
             )
             ->once()
@@ -384,7 +384,7 @@ class HomeTabManagerTest extends MockeryTestCase
                     'homeTab' => $homeTab,
                     'type' => 'admin_desktop',
                     'user' => null,
-                    'workspace' => null
+                    'workspace' => null,
                 )
             )
             ->once()
@@ -394,7 +394,7 @@ class HomeTabManagerTest extends MockeryTestCase
             ->with(
                 array(
                     'homeTab' => $homeTab,
-                    'user' => $user
+                    'user' => $user,
                 )
             )
             ->once()
@@ -423,7 +423,7 @@ class HomeTabManagerTest extends MockeryTestCase
                     'homeTab' => $homeTab,
                     'type' => 'admin_desktop',
                     'user' => null,
-                    'workspace' => null
+                    'workspace' => null,
                 )
             )
             ->once()
@@ -433,7 +433,7 @@ class HomeTabManagerTest extends MockeryTestCase
             ->with(
                 array(
                     'homeTab' => $homeTab,
-                    'user' => $user
+                    'user' => $user,
                 )
             )
             ->once()
@@ -460,7 +460,7 @@ class HomeTabManagerTest extends MockeryTestCase
                     'homeTab' => $homeTab,
                     'type' => 'admin_workspace',
                     'user' => null,
-                    'workspace' => null
+                    'workspace' => null,
                 )
             )
             ->once()
@@ -470,7 +470,7 @@ class HomeTabManagerTest extends MockeryTestCase
             ->with(
                 array(
                     'homeTab' => $homeTab,
-                    'workspace' => $workspace
+                    'workspace' => $workspace,
                 )
             )
             ->once()
@@ -499,7 +499,7 @@ class HomeTabManagerTest extends MockeryTestCase
                     'homeTab' => $homeTab,
                     'type' => 'admin_workspace',
                     'user' => null,
-                    'workspace' => null
+                    'workspace' => null,
                 )
             )
             ->once()
@@ -509,7 +509,7 @@ class HomeTabManagerTest extends MockeryTestCase
             ->with(
                 array(
                     'homeTab' => $homeTab,
-                    'workspace' => $workspace
+                    'workspace' => $workspace,
                 )
             )
             ->once()
@@ -538,7 +538,7 @@ class HomeTabManagerTest extends MockeryTestCase
                     'homeTab' => $homeTab,
                     'type' => 'admin_workspace',
                     'user' => null,
-                    'workspace' => null
+                    'workspace' => null,
                 )
             )
             ->once()
@@ -548,7 +548,7 @@ class HomeTabManagerTest extends MockeryTestCase
             ->with(
                 array(
                     'homeTab' => $homeTab,
-                    'workspace' => $workspace
+                    'workspace' => $workspace,
                 )
             )
             ->once()
@@ -579,7 +579,7 @@ class HomeTabManagerTest extends MockeryTestCase
                     'homeTab' => $homeTab,
                     'type' => 'admin_workspace',
                     'user' => null,
-                    'workspace' => null
+                    'workspace' => null,
                 )
             )
             ->once()
@@ -589,7 +589,7 @@ class HomeTabManagerTest extends MockeryTestCase
             ->with(
                 array(
                     'homeTab' => $homeTab,
-                    'workspace' => $workspace
+                    'workspace' => $workspace,
                 )
             )
             ->once()
@@ -1334,7 +1334,7 @@ class HomeTabManagerTest extends MockeryTestCase
         $stringMocked .= ']';
 
         return $this->mock(
-            'Claroline\CoreBundle\Manager\HomeTabManager' . $stringMocked,
+            'Claroline\CoreBundle\Manager\HomeTabManager'.$stringMocked,
             array($this->om)
         );
     }

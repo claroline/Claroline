@@ -17,8 +17,8 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 /**
  * @DI\Service("claroline.manager.cache_manager")
  */
-class CacheManager {
-
+class CacheManager
+{
     private $eventManager;
     private $cachePath;
     private $iniFileManager;
@@ -33,7 +33,7 @@ class CacheManager {
     public function __construct(StrictDispatcher $eventManager, $rootDir, IniFileManager $iniFileManager)
     {
         $ds = DIRECTORY_SEPARATOR;
-        $this->cachePath = $rootDir . $ds . 'cache' . $ds . 'claroline.cache.ini';
+        $this->cachePath = $rootDir.$ds.'cache'.$ds.'claroline.cache.ini';
         $this->eventManager = $eventManager;
         $this->iniFileManager = $iniFileManager;
     }
@@ -72,12 +72,12 @@ class CacheManager {
             }
         }
 
-        return $return ? $return: false;
+        return $return ? $return : false;
     }
 
     public function getParameters()
     {
-        return $this->cacheExists() ? parse_ini_file($this->cachePath): [];
+        return $this->cacheExists() ? parse_ini_file($this->cachePath) : [];
     }
 
     public function setParameter($parameter, $value)
@@ -88,7 +88,7 @@ class CacheManager {
     }
 
     /**
-     * Refresh the claroline cache
+     * Refresh the claroline cache.
      */
     public function refresh()
     {

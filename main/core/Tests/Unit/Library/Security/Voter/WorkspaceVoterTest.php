@@ -33,8 +33,7 @@ class WorkspaceVoterTest extends MockeryTestCase
         $canDo,
         $action,
         $openableTools
-    )
-    {
+    ) {
         $voter = $this->getVoter();
         $workspace = new Workspace();
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
@@ -54,14 +53,13 @@ class WorkspaceVoterTest extends MockeryTestCase
         $roles,
         $workspaceRegistered,
         $canDo
-    )
-    {
+    ) {
         $voter = $this->getVoter(array('canDo'));
         $workspace = new Workspace();
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $manager = $this->mock('Claroline\CoreBundle\Entity\Role');
         $manager->shouldReceive('getName')->andReturn('ROLE_WS_MANAGER');
-        $roleRepo =  $this->mock('Claroline\CoreBundle\Repository\RoleRepository');
+        $roleRepo = $this->mock('Claroline\CoreBundle\Repository\RoleRepository');
         $workspaceRepo = $this->mock('Claroline\CoreBundle\Repository\WorkspaceRepository');
         $this->em->shouldReceive('getRepository')->with('ClarolineCoreBundle:Workspace\Workspace')
             ->andReturn($workspaceRepo);
@@ -71,7 +69,6 @@ class WorkspaceVoterTest extends MockeryTestCase
         $workspaceRepo->shouldReceive('findWorkspaceByWorkspaceAndRoles')->andReturn($workspaceRegistered);
         $voter->shouldReceive('canDo')->andReturn($canDo);
         $this->assertEquals($result, $voter->vote($token, $workspace, $attributes));
-
     }
 
     public function voteProvider()
@@ -85,7 +82,7 @@ class WorkspaceVoterTest extends MockeryTestCase
                 'result' => 1,
                 'roles' => array('ROLE_WS_MANAGER'),
                 'workspaceRegistered' => null,
-                'canDo' => null
+                'canDo' => null,
             ),
             //isGranted($workspace) is valid
             array(
@@ -93,7 +90,7 @@ class WorkspaceVoterTest extends MockeryTestCase
                 'result' => 1,
                 'roles' => array('ROLE_WS_COLLABORATOR'),
                 'workspaceRegistered' => $ws,
-                'canDo' => null
+                'canDo' => null,
             ),
             //isGranted($workspace) is invalid
             array(
@@ -101,7 +98,7 @@ class WorkspaceVoterTest extends MockeryTestCase
                 'result' => -1,
                 'roles' => array('ROLE_WS_COLLABORATOR'),
                 'workspaceRegistered' => null,
-                'canDo' => null
+                'canDo' => null,
             ),
             //isGranted($workspace, 'home')
             array(
@@ -109,7 +106,7 @@ class WorkspaceVoterTest extends MockeryTestCase
                 'result' => 1,
                 'roles' => array('ROLE_WS_COLLABORATOR'),
                 'workspaceRegistered' => null,
-                'canDo' => true
+                'canDo' => true,
             ),
             //isGranted($workspace, 'home') not valid
             array(
@@ -117,8 +114,8 @@ class WorkspaceVoterTest extends MockeryTestCase
                 'result' => -1,
                 'roles' => array('ROLE_WS_COLLABORATOR'),
                 'workspaceRegistered' => null,
-                'canDo' => false
-            )
+                'canDo' => false,
+            ),
         );
     }
 
@@ -132,20 +129,20 @@ class WorkspaceVoterTest extends MockeryTestCase
             array(
                 'canDo' => true,
                 'action' => 'open',
-                'openableTools' => array($tool)
+                'openableTools' => array($tool),
             ),
             //valid tool
             array(
                 'canDo' => true,
                 'action' => 'home',
-                'openableTools' => array($tool)
+                'openableTools' => array($tool),
             ),
             //invalid tool
             array(
                 'canDo' => false,
                 'action' => 'invalid',
-                'openableTools' => array($tool)
-            )
+                'openableTools' => array($tool),
+            ),
         );
     }
 
@@ -169,7 +166,7 @@ class WorkspaceVoterTest extends MockeryTestCase
         $stringMocked .= ']';
 
         return $this->mock(
-            'Claroline\CoreBundle\Library\Security\Voter\WorkspaceVoter' . $stringMocked,
+            'Claroline\CoreBundle\Library\Security\Voter\WorkspaceVoter'.$stringMocked,
             array($this->em, $this->translator, $this->ut)
         );
     }

@@ -28,18 +28,18 @@ class MoveMessageEvent extends AbstractLogResourceEvent
     {
         $details = array(
             'message' => array(
-                'id' => $message->getId()
+                'id' => $message->getId(),
             ),
             'subject' => array(
                 'oldSubjectId' => $oldSubject->getId(),
-                'newSubjectId' => $newSubject->getId()
+                'newSubjectId' => $newSubject->getId(),
             ),
             'category' => array(
-                'id' => $message->getSubject()->getCategory()->getId()
+                'id' => $message->getSubject()->getCategory()->getId(),
             ),
             'forum' => array(
-                'id' => $message->getSubject()->getCategory()->getForum()->getId()
-            )
+                'id' => $message->getSubject()->getCategory()->getForum()->getId(),
+            ),
         );
 
         parent::__construct($message->getSubject()->getCategory()->getForum()->getResourceNode(), $details);

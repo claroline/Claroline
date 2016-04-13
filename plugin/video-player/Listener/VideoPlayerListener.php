@@ -49,9 +49,11 @@ class VideoPlayerListener extends ContainerAware
     public function onOpenVideo(PlayFileEvent $event)
     {
         $player = $this->ch->getParameter('video_player');
-        if ($player == null) $player = 'videojs';
+        if ($player == null) {
+            $player = 'videojs';
+        }
 
-        $path = $this->fileDir . DIRECTORY_SEPARATOR . $event->getResource()->getHashName();
+        $path = $this->fileDir.DIRECTORY_SEPARATOR.$event->getResource()->getHashName();
         $content = $this->templating->render(
             'ClarolineVideoPlayerBundle::video.html.twig',
             array(
@@ -59,7 +61,7 @@ class VideoPlayerListener extends ContainerAware
                 'path' => $path,
                 'video' => $event->getResource(),
                 '_resource' => $event->getResource(),
-                'player' => $player
+                'player' => $player,
             )
         );
         $response = new Response($content);

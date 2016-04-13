@@ -140,4 +140,4 @@ class TransfertManagerTest extends MockeryTestCase
 
         $this->manager->validate($path);
     }
-} 
+}

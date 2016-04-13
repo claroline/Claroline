@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: Aurelien
  * Date: 29/09/14
- * Time: 11:24
+ * Time: 11:24.
  */
-
 namespace Icap\DropzoneBundle\Tests\Entity;
 
 use Icap\DropzoneBundle\Entity\Dropzone;

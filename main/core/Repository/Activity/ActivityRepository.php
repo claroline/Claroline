@@ -19,8 +19,7 @@ class ActivityRepository extends EntityRepository
     public function findActivityByWorkspace(
         Workspace $workspace,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT a
             FROM Claroline\CoreBundle\Entity\Resource\Activity a
@@ -32,14 +31,13 @@ class ActivityRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspace', $workspace);
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findActivitiesByResourceNodeIds(
         array $resourceNodeIds,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT a
             FROM Claroline\CoreBundle\Entity\Resource\Activity a
@@ -51,6 +49,6 @@ class ActivityRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('resourceNodeIds', $resourceNodeIds);
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 }

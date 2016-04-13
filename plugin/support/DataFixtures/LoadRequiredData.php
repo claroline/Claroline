@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class LoadRequiredData extends AbstractFixture implements ContainerAwareInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setContainer(ContainerInterface $container = null)
     {
@@ -20,7 +20,7 @@ class LoadRequiredData extends AbstractFixture implements ContainerAwareInterfac
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(ObjectManager $om)
     {

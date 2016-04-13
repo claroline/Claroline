@@ -72,8 +72,7 @@ class ResourceRightsController extends Controller
         RoleManager $roleManager,
         UserManager $userManager,
         ObjectManager $om
-    )
-    {
+    ) {
         $this->rightsManager = $rightsManager;
         $this->request = $requestStack;
         $this->tokenStorage = $tokenStorage;
@@ -96,7 +95,7 @@ class ResourceRightsController extends Controller
      *
      * Displays the resource rights form.
      *
-     * @param ResourceNode $node
+     * @param ResourceNode                      $node
      * @param \Claroline\CoreBundle\Entity\Role $role
      *
      * @return Response
@@ -135,7 +134,7 @@ class ResourceRightsController extends Controller
                     'resourceRights' => $resourceRights,
                     'isDir' => $isDir,
                     'role' => $role,
-                    'node' => $node
+                    'node' => $node,
                 )
             );
         }
@@ -160,7 +159,7 @@ class ResourceRightsController extends Controller
      */
     public function editPermsAction(ResourceNode $node)
     {
-        $rightsLog = $this->container->getParameter('kernel.root_dir') . '/logs/rights.log';
+        $rightsLog = $this->container->getParameter('kernel.root_dir').'/logs/rights.log';
         $logger = FileLogger::get($rightsLog);
         $this->rightsManager->setLogger($logger);
         $collection = new ResourceCollection(array($node));
@@ -176,9 +175,8 @@ class ResourceRightsController extends Controller
         return new JsonResponse($datas, 200);
     }
 
-
     /**
-     * Use only when create a new resource
+     * Use only when create a new resource.
      *
      * @EXT\Route(
      *     "/perms/open/{node}",
@@ -224,7 +222,7 @@ class ResourceRightsController extends Controller
             'configs' => array($this->rightsManager->getOneByRoleAndResource($role, $node)),
             'resourceTypes' => $this->rightsManager->getResourceTypes(),
             'nodeId' => $node->getId(),
-            'roleId' => $role->getId()
+            'roleId' => $role->getId(),
         );
     }
 
@@ -272,11 +270,11 @@ class ResourceRightsController extends Controller
      * Displays the resource rights form for all users.
      *
      * @param ResourceNode $node
-     * @param string $search
-     * @param string $orderedBy
-     * @param string $order
-     * @param int $page
-     * @param int $max
+     * @param string       $search
+     * @param string       $orderedBy
+     * @param string       $order
+     * @param int          $page
+     * @param int          $max
      *
      * @return Response
      */
@@ -287,8 +285,7 @@ class ResourceRightsController extends Controller
         $order = 'ASC',
         $page = 1,
         $max = 50
-    )
-    {
+    ) {
         $collection = new ResourceCollection(array($node));
         $this->checkAccess('ADMINISTRATE', $collection);
         $isDir = $node->getResourceType()->getName() === 'directory';
@@ -337,7 +334,7 @@ class ResourceRightsController extends Controller
             'orderedBy' => $orderedBy,
             'order' => $order,
             'max' => $max,
-            'search' => $search
+            'search' => $search,
         );
     }
 
@@ -361,27 +358,25 @@ class ResourceRightsController extends Controller
                 $data[] = array(
                     'role' => $this->roleManager->getRole($roleId),
                     'role_name' => $this->roleManager->getRole($roleId)->getName(),
-                    'permissions' => $changedPerms
+                    'permissions' => $changedPerms,
                 );
             }
         }
 
         foreach ($roles as $roleId => $perms) {
-
             foreach ($permsMap as $perm) {
-                $changedPerms[$perm] = (array_key_exists(trim($perm), $perms)) ? true: false;
+                $changedPerms[$perm] = (array_key_exists(trim($perm), $perms)) ? true : false;
             }
 
             $data[] = array(
                 'role' => $this->roleManager->getRole($roleId),
                 'role_name' => $this->roleManager->getRole($roleId)->getName(),
-                'permissions' => $changedPerms
+                'permissions' => $changedPerms,
             );
         }
 
         return $data;
     }
-
 
     /**
      * Checks if the current user has the right to perform an action on a ResourceCollection.
@@ -392,8 +387,9 @@ class ResourceRightsController extends Controller
      * - for MOVE / COPY $collection->setAttributes(array('parent' => $parent))
      *  where $parent is the new parent entity.
      *
-     * @param  string                $permission
-     * @param  ResourceCollection    $collection
+     * @param string             $permission
+     * @param ResourceCollection $collection
+     *
      * @throws AccessDeniedException if the current user is not allowed to edit the resource
      */
     private function checkAccess($permission, ResourceCollection $collection)

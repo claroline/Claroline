@@ -4,14 +4,11 @@ namespace Icap\BadgeBundle\Controller;
 
 use Icap\BadgeBundle\Entity\BadgeCollection;
 use Icap\BadgeBundle\Event\BadgeCreateValidationLinkEvent;
-use Icap\BadgeBundle\Form\Type\BadgeCollectionType;
 use Claroline\CoreBundle\Rule\Validator;
 use Icap\BadgeBundle\Entity\Badge;
 use Icap\BadgeBundle\Entity\UserBadge;
 use Icap\BadgeBundle\Entity\BadgeClaim;
 use Claroline\CoreBundle\Entity\User;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
-use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -53,8 +50,7 @@ class ProfileController extends Controller
                         $badgeManager->makeClaim($badge, $user);
 
                         $flashBag->add('success', $translator->trans('badge_claim_success_message', array(), 'icap_badge'));
-                    }
-                    else {
+                    } else {
                         $flashBag->add('warning', $translator->trans('badge_claim_nothing_selected_warning_message', array(), 'icap_badge'));
                     }
                 } catch (\Exception $exception) {
@@ -66,7 +62,7 @@ class ProfileController extends Controller
         }
 
         return array(
-            'form' => $form->createView()
+            'form' => $form->createView(),
         );
     }
 
@@ -79,20 +75,20 @@ class ProfileController extends Controller
     public function badgeAction(Badge $badge, User $user)
     {
         /** @var \Claroline\CoreBundle\Rule\Validator $badgeRuleValidator */
-        $badgeRuleValidator = $this->get("claroline.rule.validator");
-        $validatedRules     = $badgeRuleValidator->validate($badge, $user);
-        $validateLogsLink   = array();
+        $badgeRuleValidator = $this->get('claroline.rule.validator');
+        $validatedRules = $badgeRuleValidator->validate($badge, $user);
+        $validateLogsLink = array();
 
         if (0 < $validatedRules['validRules']) {
             foreach ($validatedRules['rules'] as $ruleIndex => $validatedRule) {
                 foreach ($validatedRule['logs'] as $logIndex => $validateLog) {
                     $validatedRules['rules'][$ruleIndex]['logs'][$logIndex] = array(
                         'log' => $validateLog,
-                        'url' => null
+                        'url' => null,
                     );
 
                     $validationLink = null;
-                    $eventLogName   = sprintf('badge-%s-generate_validation_link', $validateLog->getAction());
+                    $eventLogName = sprintf('badge-%s-generate_validation_link', $validateLog->getAction());
 
                     $eventDispatcher = $this->get('event_dispatcher');
                     if ($eventDispatcher->hasListeners($eventLogName)) {
@@ -118,9 +114,9 @@ class ProfileController extends Controller
         }
 
         return array(
-            'userBadge'      => $userBadge,
-            'badge'          => $badge,
-            'validatedRules' => $validatedRules
+            'userBadge' => $userBadge,
+            'badge' => $badge,
+            'validatedRules' => $validatedRules,
         );
     }
 
@@ -133,14 +129,14 @@ class ProfileController extends Controller
     {
         $doctrine = $this->getDoctrine();
         $doctrine->getManager()->getFilters()->disable('softdeleteable');
-        $userBadges       = $doctrine->getRepository('IcapBadgeBundle:UserBadge')->findByUser($user);
-        $badgeClaims      = $doctrine->getRepository('IcapBadgeBundle:BadgeClaim')->findByUser($user);
+        $userBadges = $doctrine->getRepository('IcapBadgeBundle:UserBadge')->findByUser($user);
+        $badgeClaims = $doctrine->getRepository('IcapBadgeBundle:BadgeClaim')->findByUser($user);
         $badgeCollections = $doctrine->getRepository('IcapBadgeBundle:BadgeCollection')->findByUser($user);
 
         return array(
-            'userBadges'       => $userBadges,
-            'badgeClaims'      => $badgeClaims,
-            'badgeCollections' => $badgeCollections
+            'userBadges' => $userBadges,
+            'badgeClaims' => $badgeClaims,
+            'badgeCollections' => $badgeCollections,
         );
     }
 }

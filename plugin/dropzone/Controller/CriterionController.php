@@ -2,13 +2,10 @@
 /**
  * Created by : Vincent SAISSET
  * Date: 22/08/13
- * Time: 09:30
+ * Time: 09:30.
  */
-
 namespace Icap\DropzoneBundle\Controller;
 
-use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
-use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use Icap\DropzoneBundle\Entity\Criterion;
 use Icap\DropzoneBundle\Entity\Dropzone;
 use Icap\DropzoneBundle\Event\Log\LogCriterionCreateEvent;
@@ -18,7 +15,6 @@ use Icap\DropzoneBundle\Form\CriterionDeleteType;
 use Icap\DropzoneBundle\Form\CriterionType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -53,7 +49,6 @@ class CriterionController extends DropzoneBaseController
         $form = $this->createForm(new CriterionType(), $criterion);
 
         if ($request->isXMLHttpRequest()) {
-
             return $this->render(
                 'IcapDropzoneBundle:Criterion:editAddCriterionModal.html.twig',
                 array(
@@ -62,7 +57,7 @@ class CriterionController extends DropzoneBaseController
                     'dropzone' => $dropzone,
                     'form' => $form->createView(),
                     'criterion' => $criterion,
-                    'page' => $page
+                    'page' => $page,
                 )
             );
         }
@@ -73,7 +68,7 @@ class CriterionController extends DropzoneBaseController
             'dropzone' => $dropzone,
             'form' => $form->createView(),
             'criterion' => $criterion,
-            'page' => $page
+            'page' => $page,
         );
     }
 
@@ -126,9 +121,9 @@ class CriterionController extends DropzoneBaseController
             $em->flush();
 
             $event = null;
-            if($edit === true) {
+            if ($edit === true) {
                 $event = new LogCriterionUpdateEvent($dropzone, $dropzoneChangeSet, $criterion, $criterionChangeSet);
-            } else{
+            } else {
                 $event = new LogCriterionCreateEvent($dropzone, $dropzoneChangeSet, $criterion);
             }
 
@@ -139,7 +134,7 @@ class CriterionController extends DropzoneBaseController
                     'icap_dropzone_edit_criteria_paginated',
                     array(
                         'resourceId' => $dropzone->getId(),
-                        'page' => $page
+                        'page' => $page,
                     )
                 )
             );
@@ -151,10 +146,9 @@ class CriterionController extends DropzoneBaseController
             'dropzone' => $dropzone,
             'form' => $form->createView(),
             'criterion' => $criterion,
-            'page' => $page
+            'page' => $page,
         );
     }
-
 
     /**
      * @Route(
@@ -180,7 +174,6 @@ class CriterionController extends DropzoneBaseController
             ->countByDropzone($dropzone->getId());
 
         if ($request->isXMLHttpRequest()) {
-
             return $this->render(
                 'IcapDropzoneBundle:Criterion:editDeleteCriterionModal.html.twig',
                 array(
@@ -249,7 +242,7 @@ class CriterionController extends DropzoneBaseController
                     'icap_dropzone_edit_criteria_paginated',
                     array(
                         'resourceId' => $dropzone->getId(),
-                        'page' => $page
+                        'page' => $page,
                     )
                 )
             );
@@ -261,7 +254,7 @@ class CriterionController extends DropzoneBaseController
             'dropzone' => $dropzone,
             'criterion' => $criterion,
             'form' => $form->createView(),
-            'page' => $page
+            'page' => $page,
         );
     }
 }

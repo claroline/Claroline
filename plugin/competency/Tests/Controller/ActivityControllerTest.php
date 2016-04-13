@@ -45,6 +45,7 @@ class ActivityControllerTest extends UnitTestCase
 
     /**
      * @dataProvider linkActionProvider
+     *
      * @param string $method
      * @param string $target
      */
@@ -61,6 +62,7 @@ class ActivityControllerTest extends UnitTestCase
 
     /**
      * @dataProvider linkActionProvider
+     *
      * @param string $method
      * @param string $target
      */
@@ -78,6 +80,7 @@ class ActivityControllerTest extends UnitTestCase
 
     /**
      * @dataProvider removeLinkActionProvider
+     *
      * @param string $method
      * @param string $target
      */
@@ -116,7 +119,7 @@ class ActivityControllerTest extends UnitTestCase
     {
         return [
             ['linkAbilityAction', new Ability()],
-            ['linkCompetencyAction', new Competency()]
+            ['linkCompetencyAction', new Competency()],
         ];
     }
 
@@ -124,7 +127,7 @@ class ActivityControllerTest extends UnitTestCase
     {
         return [
             ['removeAbilityLinkAction', new Ability()],
-            ['removeCompetencyLinkAction', new Competency()]
+            ['removeCompetencyLinkAction', new Competency()],
         ];
     }
 }

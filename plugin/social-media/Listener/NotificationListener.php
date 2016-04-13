@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -8,19 +8,17 @@
  * 
  * Date: 5/18/15
  */
-
 namespace Icap\SocialmediaBundle\Listener;
 
 use Icap\NotificationBundle\Event\Notification\NotificationCreateDelegateViewEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * Class NotificationListener
- * @package Icap\SocialmediaBundle\Listener
+ * Class NotificationListener.
  *
  * @DI\Service
  */
-class NotificationListener 
+class NotificationListener
 {
     private $templating;
 
@@ -47,9 +45,9 @@ class NotificationListener
         $content = $this->templating->render(
             'IcapSocialmediaBundle:Notification:notification_item.html.twig',
             array(
-                'notification'  => $notification,
-                'status'        => $notificationView->getStatus(),
-                'systemName'    => $event->getSystemName()
+                'notification' => $notification,
+                'status' => $notificationView->getStatus(),
+                'systemName' => $event->getSystemName(),
             )
         );
 

@@ -74,8 +74,7 @@ class ToolMaskDecoderManager
         $value,
         $grantedIconClass,
         $deniedIconClass
-    )
-    {
+    ) {
         $maskDecoder = new ToolMaskDecoder();
         $maskDecoder->setTool($tool);
         $maskDecoder->setName($action);
@@ -89,7 +88,7 @@ class ToolMaskDecoderManager
     /**
      * Returns an array containing the permission for a mask and a tool.
      *
-     * @param integer $mask
+     * @param int                                    $mask
      * @param \Claroline\CoreBundle\Entity\Tool\Tool $tool
      *
      * @return array
@@ -101,7 +100,7 @@ class ToolMaskDecoderManager
 
         foreach ($decoders as $decoder) {
             $perms[$decoder->getName()] = ($mask & $decoder->getValue()) ?
-                true:
+                true :
                 false;
         }
 
@@ -114,13 +113,12 @@ class ToolMaskDecoderManager
 
         foreach ($decoders as $decoder) {
             $perms[$decoder->getName()] = ($mask & $decoder->getValue()) ?
-                true:
+                true :
                 false;
         }
 
         return $perms;
     }
-
 
     /***** ToolRightsRepository access methods *****/
 
@@ -138,8 +136,7 @@ class ToolMaskDecoderManager
         Tool $tool,
         $name,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->maskRepo->findMaskDecoderByToolAndName(
             $tool,
             $name,

@@ -10,7 +10,6 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
-
 class WebUpdater
 {
     private $files = [];
@@ -57,8 +56,7 @@ class WebUpdater
         $iterator = new \DirectoryIterator($path);
 
         foreach ($iterator as $element) {
-
-            $newPath = $this->webProd . str_replace($this->webSrc, '', $element->getPathName());
+            $newPath = $this->webProd.str_replace($this->webSrc, '', $element->getPathName());
 
             if (!$element->isDot()) {
                 $this->files[$newPath] = $element->getPathName();
@@ -71,8 +69,10 @@ class WebUpdater
     }
 
     /**
-     * http://stackoverflow.com/questions/1653771/how-do-i-remove-a-directory-that-is-not-empty
+     * http://stackoverflow.com/questions/1653771/how-do-i-remove-a-directory-that-is-not-empty.
+     *
      * @param $dir
+     *
      * @return bool
      */
     private function deleteDirectory($dir)
@@ -90,10 +90,9 @@ class WebUpdater
                 continue;
             }
 
-            if (!$this->deleteDirectory($dir . DIRECTORY_SEPARATOR . $item)) {
+            if (!$this->deleteDirectory($dir.DIRECTORY_SEPARATOR.$item)) {
                 return false;
             }
-
         }
 
         return rmdir($dir);

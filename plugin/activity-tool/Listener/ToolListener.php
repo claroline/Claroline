@@ -50,8 +50,7 @@ class ToolListener
         TokenStorageInterface $tokenStorage,
         TwigEngine $templating,
         Utilities $utils
-    )
-    {
+    ) {
         $this->em = $em;
         $this->resourceManager = $resourceManager;
         $this->tokenStorage = $tokenStorage;
@@ -75,7 +74,7 @@ class ToolListener
             array(
                 'resourceInfos' => $data['resourceInfos'],
                 'activityInfos' => $data['activityInfos'],
-                'workspaceInfos' => $data['workspaceInfos']
+                'workspaceInfos' => $data['workspaceInfos'],
             )
         );
         $event->setContent($content);
@@ -96,7 +95,7 @@ class ToolListener
             array(
                 'workspace' => $workspace,
                 'resourceInfos' => $data['resourceInfos'],
-                'activityInfos' => $data['activityInfos']
+                'activityInfos' => $data['activityInfos'],
             )
         );
         $event->setContent($content);

@@ -21,14 +21,12 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Bridge\Doctrine\Security\User\EntityUserProvider;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * OAuthListener class.
- * This class is pretty much copied from oauthserverbundle. We use it to override what we need (and easy debug)
+ * This class is pretty much copied from oauthserverbundle. We use it to override what we need (and easy debug).
  *
  * @DI\Service("claroline.core_bundle.library.security.authentication.claroline_api_listener")
  */
@@ -58,12 +56,11 @@ class ClarolineApiListener implements ListenerInterface
      * })
      */
     public function __construct(
-        SecurityContextInterface $securityContext, 
-        AuthenticationManagerInterface $authenticationManager, 
+        SecurityContextInterface $securityContext,
+        AuthenticationManagerInterface $authenticationManager,
         OAuth2 $serverService,
         EntityUserProvider $userProvider
-    )
-    {
+    ) {
         $this->securityContext = $securityContext;
         $this->authenticationManager = $authenticationManager;
         $this->serverService = $serverService;
@@ -85,6 +82,7 @@ class ClarolineApiListener implements ListenerInterface
 
             if ($token) {
                 $this->securityContext->setToken($token);
+
                 return;
             }
         }
@@ -112,11 +110,12 @@ class ClarolineApiListener implements ListenerInterface
 
     public function handleCookie(GetResponseEvent $event)
     {
-
         $request = $event->getRequest();
         $session = $request->hasPreviousSession() ? $request->getSession() : null;
 
-        if (!$session) return;
+        if (!$session) {
+            return;
+        }
 
         $token = $session->get($this->sessionKey);
         $token = unserialize($token);
@@ -132,7 +131,7 @@ class ClarolineApiListener implements ListenerInterface
 
     /**
      * Refreshes the user by reloading it from the user provider.
-     * This method was copied from Symfony\Component\Security\Http\Firewall\ContextListener
+     * This method was copied from Symfony\Component\Security\Http\Firewall\ContextListener.
      *
      * @param TokenInterface $token
      *

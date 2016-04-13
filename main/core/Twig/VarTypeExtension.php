@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -29,7 +29,7 @@ class VarTypeExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'is_int' => new \Twig_Function_Method($this, 'isInt')
+            'is_int' => new \Twig_Function_Method($this, 'isInt'),
         );
     }
 

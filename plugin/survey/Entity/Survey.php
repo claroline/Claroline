@@ -110,7 +110,7 @@ class Survey extends AbstractResource
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isClosed()
     {
@@ -118,7 +118,7 @@ class Survey extends AbstractResource
     }
 
     /**
-     * @param boolean $closed
+     * @param bool $closed
      */
     public function setClosed($closed)
     {
@@ -126,7 +126,7 @@ class Survey extends AbstractResource
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isPublished()
     {
@@ -134,7 +134,7 @@ class Survey extends AbstractResource
     }
 
     /**
-     * @param boolean $published
+     * @param bool $published
      */
     public function setPublished($published)
     {
@@ -142,7 +142,7 @@ class Survey extends AbstractResource
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getHasPublicResult()
     {
@@ -150,7 +150,7 @@ class Survey extends AbstractResource
     }
 
     /**
-     * @param boolean $hasPublicResult
+     * @param bool $hasPublicResult
      */
     public function setHasPublicResult($hasPublicResult)
     {
@@ -158,7 +158,7 @@ class Survey extends AbstractResource
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getAllowAnswerEdition()
     {
@@ -166,7 +166,7 @@ class Survey extends AbstractResource
     }
 
     /**
-     * @param boolean $allowAnswerEdition
+     * @param bool $allowAnswerEdition
      */
     public function setAllowAnswerEdition($allowAnswerEdition)
     {

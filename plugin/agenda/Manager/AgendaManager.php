@@ -18,11 +18,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -30,7 +26,6 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Library\Security\Utilities;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 /**
  * @DI\Service("claroline.manager.agenda_manager")
@@ -66,8 +61,7 @@ class AgendaManager
         TranslatorInterface $translator,
         Utilities $su,
         ContainerInterface $container
-    )
-    {
+    ) {
         $this->rootDir = $rootDir;
         $this->om = $om;
         $this->tokenStorage = $tokenStorage;
@@ -102,8 +96,9 @@ class AgendaManager
     }
 
     /**
-     * @param  Event $event
-     * @return boolean
+     * @param Event $event
+     *
+     * @return bool
      */
     public function deleteEvent(Event $event)
     {
@@ -119,7 +114,7 @@ class AgendaManager
         foreach ($users as $key => $user) {
             $invitation = $this->om->getRepository('ClarolineAgendaBundle:EventInvitation')->findOneBy([
                 'user' => $user,
-                'event' => $event
+                'event' => $event,
             ]);
 
             if ($invitation) {
@@ -160,7 +155,7 @@ class AgendaManager
         $workspaceEventsAndTasks = $this->om->getRepository('ClarolineAgendaBundle:Event')->findEventsAndTasksOfWorkspaceForTheUser($usr);
         $invitationEvents = $this->om->getRepository('ClarolineAgendaBundle:EventInvitation')->findBy([
             'user' => $usr,
-            'status' => [EventInvitation::JOIN, EventInvitation::MAYBE]
+            'status' => [EventInvitation::JOIN, EventInvitation::MAYBE],
         ]);
 
         return array_merge(
@@ -172,6 +167,7 @@ class AgendaManager
 
     /**
      * @param $workspaceId
+     *
      * @return list of Events
      */
     public function export($workspaceId = null)
@@ -196,12 +192,13 @@ class AgendaManager
     /**
      * @param $text it's the calendar text formatted in ics structure
      * @param $workspaceId
+     *
      * @return string $fileName path to the file in web/upload folder
      */
-    public function writeToICS($text,$workspaceId)
+    public function writeToICS($text, $workspaceId)
     {
         $name = is_null($workspaceId) ? 'desktop' : $workspaceId->getName();
-        $fileName = $this->rootDir.'/../web/uploads/'.$name.".ics";
+        $fileName = $this->rootDir.'/../web/uploads/'.$name.'.ics';
         file_put_contents($fileName, $text);
 
         return $fileName;
@@ -210,8 +207,9 @@ class AgendaManager
     /**
      * Imports ical files.
      *
-     * @param  UploadedFile $file
-     * @param  Workspace $workspace
+     * @param UploadedFile $file
+     * @param Workspace    $workspace
+     *
      * @return int number of events saved
      */
     public function importEvents(UploadedFile $file, $workspace = null)
@@ -227,7 +225,9 @@ class AgendaManager
             $e->setStart($ical->iCalDateToUnixTimestamp($event['DTSTART']));
             $e->setEnd($ical->iCalDateToUnixTimestamp($event['DTEND']));
             $e->setDescription($event['DESCRIPTION']);
-            if ($workspace) $e->setWorkspace($workspace);
+            if ($workspace) {
+                $e->setWorkspace($workspace);
+            }
             $e->setUser($this->tokenStorage->getToken()->getUser());
             $e->setPriority('#01A9DB');
             $this->om->persist($e);
@@ -299,7 +299,7 @@ class AgendaManager
 
     /**
      * Set the event date.
-     * Only use this method for events created or updated through AgendaType
+     * Only use this method for events created or updated through AgendaType.
      *
      * @param Event $event
      */
@@ -316,7 +316,7 @@ class AgendaManager
         } else {
             // If it's a task, we subtract 30 min so that the event is not a simple line on the calendar
             if ($event->isTask()) {
-                $event->setStart($event->getEndInTimestamp() - 30*60);
+                $event->setStart($event->getEndInTimestamp() - 30 * 60);
             } else {
                 $event->setStart($event->getStartInTimestamp());
             }
@@ -328,12 +328,13 @@ class AgendaManager
     {
         usort(
             $listEvents,
-            function($a, $b) {
+            function ($a, $b) {
                 $aStartTimestamp = $a->getStartInTimestamp();
                 $bStartTimestamp = $b->getStartInTimestamp();
                 if ($aStartTimestamp == $bStartTimestamp) {
                     return 0;
                 }
+
                 return $aStartTimestamp > $bStartTimestamp ? 1 : -1;
             }
         );
@@ -343,6 +344,7 @@ class AgendaManager
 
     /**
      * @param array $events
+     *
      * @return Twig view in ics format
      */
     private function writeCalendar(array $events)
@@ -354,7 +356,7 @@ class AgendaManager
             'ClarolineAgendaBundle:Tool:exportIcsCalendar.ics.twig',
             array(
                 'tzName' => $tz->getName(),
-                'events' => $events
+                'events' => $events,
             )
         );
     }
@@ -362,14 +364,14 @@ class AgendaManager
     public function checkOpenAccess(Workspace $workspace)
     {
         if (!$this->authorization->isGranted('agenda_', $workspace)) {
-            throw new AccessDeniedException("You cannot open the agenda");
+            throw new AccessDeniedException('You cannot open the agenda');
         }
     }
 
     public function checkEditAccess(Workspace $workspace)
     {
         if (!$this->authorization->isGranted(array('agenda_', 'edit'), $workspace)) {
-            throw new AccessDeniedException("You cannot edit the agenda");
+            throw new AccessDeniedException('You cannot edit the agenda');
         }
     }
 }

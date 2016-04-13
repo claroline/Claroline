@@ -1,8 +1,8 @@
 <?php
+
 namespace Icap\PortfolioBundle\Installation;
 
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
-use Icap\PortfolioBundle\Installation\Updater;
 
 class AdditionalInstaller extends BaseInstaller
 {

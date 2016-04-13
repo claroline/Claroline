@@ -17,6 +17,7 @@ class AbilityRepository extends EntityRepository
      * about ability level as well.
      *
      * @param Competency $competency
+     *
      * @return array
      */
     public function findByCompetency(Competency $competency)
@@ -41,7 +42,7 @@ class AbilityRepository extends EntityRepository
             ->setParameters([
                 ':root' => $competency->getRoot(),
                 ':lft' => $competency->getLeft(),
-                ':rgt' => $competency->getRight()
+                ':rgt' => $competency->getRight(),
             ])
             ->getQuery()
             ->getArrayResult();
@@ -51,16 +52,16 @@ class AbilityRepository extends EntityRepository
      * Returns the abilities directly linked to a given competency and
      * a particular level, excluding a given ability.
      *
-     * @param Competency    $competency
-     * @param Level         $level
+     * @param Competency $competency
+     * @param Level      $level
+     *
      * @return array
      */
     public function findOthersByCompetencyAndLevel(
         Competency $competency,
         Level $level,
         Ability $abilityToExclude
-    )
-    {
+    ) {
         return $this->createQueryBuilder('a')
             ->select('a')
             ->join('a.competencyAbilities', 'ca')
@@ -73,7 +74,7 @@ class AbilityRepository extends EntityRepository
             ->setParameters([
                 ':competency' => $competency,
                 ':level' => $level,
-                ':excluded' => $abilityToExclude
+                ':excluded' => $abilityToExclude,
             ])
             ->getQuery()
             ->getResult();
@@ -108,8 +109,9 @@ class AbilityRepository extends EntityRepository
      * Returns the first five abilities whose name begins by a given
      * string, excluding abilities linked to a particular competency.
      *
-     * @param string        $name
-     * @param Competency    $excludedParent
+     * @param string     $name
+     * @param Competency $excludedParent
+     *
      * @return array
      */
     public function findFirstByName($name, Competency $excludedParent)
@@ -126,7 +128,7 @@ class AbilityRepository extends EntityRepository
             ->andWhere($qb->expr()->notIn('a', $qb2->getDQL()))
             ->orderBy('a.name')
             ->setMaxResults(5)
-            ->setParameter(':name', $name . '%')
+            ->setParameter(':name', $name.'%')
             ->setParameter(':parent', $excludedParent)
             ->getQuery()
             ->getResult();
@@ -137,6 +139,7 @@ class AbilityRepository extends EntityRepository
      * level information.
      *
      * @param Activity $activity
+     *
      * @return array
      */
     public function findByActivity(Activity $activity)
@@ -158,9 +161,11 @@ class AbilityRepository extends EntityRepository
      * a given user and a given competency, including information about
      * the activity and the related abilities.
      *
-     * @param Competency    $competency
-     * @param User          $user
+     * @param Competency $competency
+     * @param User       $user
+     *
      * @return array
+     *
      * @throws \Exception
      */
     public function findEvaluationsByCompetency(Competency $competency, User $user)
@@ -209,7 +214,7 @@ class AbilityRepository extends EntityRepository
             ->orderBy('e.date, e.id, a.id', 'ASC')
             ->setParameters([
                 ':competency' => $competency,
-                ':user' => $user
+                ':user' => $user,
             ])
             ->getQuery()
             ->getArrayResult();

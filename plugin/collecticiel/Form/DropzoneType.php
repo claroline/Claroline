@@ -14,7 +14,7 @@ class DropzoneType extends AbstractType
         $builder->add('name', 'text',
         array(
             'constraints' => new NotBlank(),
-            'required' => true
+            'required' => true,
              )
         );
     }
@@ -27,7 +27,7 @@ class DropzoneType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'translation_domain' => 'innova_collecticiel'
+            'translation_domain' => 'innova_collecticiel',
         ));
     }
 }

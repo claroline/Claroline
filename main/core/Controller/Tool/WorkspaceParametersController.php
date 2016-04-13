@@ -86,8 +86,7 @@ class WorkspaceParametersController extends Controller
         TermsOfServiceManager $tosManager,
         ClaroUtilities $utilities,
         ToolManager $toolManager
-    )
-    {
+    ) {
         $this->workspaceManager = $workspaceManager;
         $this->workspaceTagManager = $workspaceTagManager;
         $this->tokenStorage = $tokenStorage;
@@ -143,7 +142,7 @@ class WorkspaceParametersController extends Controller
                 $storageUsed,
                 $countResources,
                 $isAdmin,
-                $expDate
+                $expDate,
             ),
             $workspace
         );
@@ -163,7 +162,7 @@ class WorkspaceParametersController extends Controller
             'workspace' => $workspace,
             'url' => $url,
             'user' => $user,
-            'count' => $count
+            'count' => $count,
         );
     }
 
@@ -214,7 +213,7 @@ class WorkspaceParametersController extends Controller
                     'claro_workspace_open_tool',
                     array(
                         'workspaceId' => $workspace->getId(),
-                        'toolName' => 'parameters'
+                        'toolName' => 'parameters',
                     )
                 )
             );
@@ -238,7 +237,7 @@ class WorkspaceParametersController extends Controller
             'form' => $form->createView(),
             'workspace' => $workspace,
             'url' => $url,
-            'user' => $user
+            'user' => $user,
         );
     }
 
@@ -249,7 +248,7 @@ class WorkspaceParametersController extends Controller
      * )
      *
      * @param Workspace $workspace
-     * @param Tool              $tool
+     * @param Tool      $tool
      *
      * @return Response
      */
@@ -257,7 +256,7 @@ class WorkspaceParametersController extends Controller
     {
         $this->checkAccess($workspace);
         $event = $this->eventDispatcher->dispatch(
-            strtolower('configure_workspace_tool_' . $tool->getName()),
+            strtolower('configure_workspace_tool_'.$tool->getName()),
             'ConfigureWorkspaceTool',
             array($tool, $workspace)
         );
@@ -281,13 +280,13 @@ class WorkspaceParametersController extends Controller
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if ( $user === 'anon.') {
+        if ($user === 'anon.') {
             return $this->redirect(
                 $this->generateUrl(
                     'claro_workspace_subscription_url_generate_anonymous',
                     array(
                         'workspace' => $workspace->getId(),
-                        'toolName' => 'home'
+                        'toolName' => 'home',
                     )
                 )
             );
@@ -313,6 +312,7 @@ class WorkspaceParametersController extends Controller
      * @param Workspace $workspace
      *
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+     *
      * @return Response
      */
     public function anonymousSubscriptionAction(Workspace $workspace)
@@ -340,7 +340,7 @@ class WorkspaceParametersController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'workspace' => $workspace
+            'workspace' => $workspace,
         );
     }
 
@@ -356,7 +356,6 @@ class WorkspaceParametersController extends Controller
      *
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      */
-
     public function userSubscriptionAction(Workspace $workspace)
     {
         $sc = $this->get('security.authorization_checker');
@@ -380,8 +379,11 @@ class WorkspaceParametersController extends Controller
      *     name="claro_workspace_partial_import_form"
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:importForm.html.twig")
+     *
      * @param Workspace $workspace
+     *
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+     *
      * @return Response
      */
     public function importFormAction(Workspace $workspace)
@@ -398,8 +400,11 @@ class WorkspaceParametersController extends Controller
      *     name="claro_workspace_partial_import_submit"
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:importForm.html.twig")
+     *
      * @param Workspace $workspace
+     *
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+     *
      * @return Response
      */
     public function importAction(Workspace $workspace)

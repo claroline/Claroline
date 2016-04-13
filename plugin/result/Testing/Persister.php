@@ -38,7 +38,7 @@ class Persister
         $user->setLastName($username);
         $user->setUsername($username);
         $user->setPassword($username);
-        $user->setMail($username . '@mail.com');
+        $user->setMail($username.'@mail.com');
         $user->setGuid($username);
         $this->om->persist($user);
 

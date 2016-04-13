@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -8,7 +8,6 @@
  * 
  * Date: 4/22/15
  */
-
 namespace Icap\SocialmediaBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
@@ -26,27 +25,31 @@ class LikeActionController extends Controller
      * @Route("/like/form/{resourceId}", name = "icap_socialmedia_like_form")
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
-     * @param int $resourceId
+     *
+     * @param int  $resourceId
      * @param User $user
+     *
      * @return array
      */
     public function formAction($resourceId, User $user)
     {
         $likeManager = $this->getLikeActionManager();
-        $criteria = array("resource" => $resourceId);
+        $criteria = array('resource' => $resourceId);
         $userLike = $likeManager->getLikeBy($user, null, $criteria);
         $likesQB = $likeManager->getLikesForPagination(null, $criteria);
         $pager = $this->paginateQuery($likesQB, 1);
 
-        return array("resourceId" => $resourceId, "pager" => $pager, "userLike" => $userLike);
+        return array('resourceId' => $resourceId, 'pager' => $pager, 'userLike' => $userLike);
     }
 
     /**
      * @Route("/like", name="icap_socialmedia_like")
      * @Method({"POST"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param User $user
+     * @param User                                      $user
+     *
      * @return bool
      */
     public function likeAction(Request $request, User $user)
@@ -63,8 +66,10 @@ class LikeActionController extends Controller
     /**
      * @Route("/unlike", name="icap_socialmedia_unlike")
      * @ParamConverter("user", options={"authenticatedUser" = true})
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param User $user
+     * @param User                                      $user
+     *
      * @return bool
      */
     public function unlikeAction(Request $request, User $user)
@@ -82,9 +87,12 @@ class LikeActionController extends Controller
     /**
      * @Route("/like/list/{page}", name="icap_socialmedia_likelist", defaults={"page" = "1"})
      * @Method({"GET"})
+     *
      * @param Request $request
      * @Template()
+     *
      * @param $page
+     *
      * @return array
      */
     public function likeListAction(Request $request, $page)
@@ -92,8 +100,8 @@ class LikeActionController extends Controller
         $likesQB = $this->getLikeActionManager()->getLikesForPagination($request);
         $pager = $this->paginateQuery($likesQB, $page);
         $parameters = $request->query->all();
-        $parameters["page"] = ($pager->hasNextPage())?$pager->getNextPage():0;
+        $parameters['page'] = ($pager->hasNextPage()) ? $pager->getNextPage() : 0;
 
-        return array("pager" => $pager, "parameters" => $parameters);
+        return array('pager' => $pager, 'parameters' => $parameters);
     }
-} 
+}

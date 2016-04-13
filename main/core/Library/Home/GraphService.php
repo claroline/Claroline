@@ -30,7 +30,7 @@ class GraphService
         if ($headers and is_string($type = $headers['Content-Type']) and strpos($type, 'image/') === 0) {
             $this->graph['type'] = 'raw';
             $this->graph['images'][] = $url;
-        } else if (false !== ($content = @file_get_contents($url))) {
+        } elseif (false !== ($content = @file_get_contents($url))) {
             $content = mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8');
 
             $this->crawler = new Crawler();
@@ -100,7 +100,7 @@ class GraphService
         $this->crawler->filter('body p')->each(
             function ($node, $i) {
                 if (strlen($this->graph['description']) < 100) {
-                    $this->graph['description'] .= trim($node->text()) . ' ';
+                    $this->graph['description'] .= trim($node->text()).' ';
                 }
             }
         );

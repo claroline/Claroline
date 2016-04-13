@@ -1,8 +1,8 @@
 <?php
 
 if ($argc < 4) {
-  die(
-    "Usage:    php import.php <account> <namespace> <bundle>\n" .
+    die(
+    "Usage:    php import.php <account> <namespace> <bundle>\n".
     "Example:  php import.php UJM-dev UJM ExoBundle\n"
   );
 }
@@ -20,18 +20,19 @@ cmd("git branch -f {$bundle} {$bundle}/master");
 cmd("git checkout {$bundle}");
 cmd("git pull --no-tags {$bundle} master");
 cmd("git filter-branch -f --msg-filter 'sed \"1 s/^/[{$bundle}] /\"' HEAD");
-cmd("git checkout import-test");
+cmd('git checkout import-test');
 cmd("git read-tree --prefix={$prefix}/ -u {$bundle}");
 cmd("git commit -m 'Import {$bundle}'");
 cmd("git merge -s subtree {$bundle}");
 
-function cmd($cmd) {
-  echo "Executing: {$cmd}\n";
-  exec($cmd, $output, $code);
+function cmd($cmd)
+{
+    echo "Executing: {$cmd}\n";
+    exec($cmd, $output, $code);
 
-  if ($code !== 0) {
-    die("Command failed, aborting\n");
-  }
+    if ($code !== 0) {
+        die("Command failed, aborting\n");
+    }
 
-  return $output;
+    return $output;
 }

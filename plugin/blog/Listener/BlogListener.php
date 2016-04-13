@@ -22,12 +22,12 @@ class BlogListener extends ContainerAware
      */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
-        $form        = $this->container->get('form.factory')->create(new BlogType(), new Blog());
-        $content     = $this->container->get('templating')->render(
+        $form = $this->container->get('form.factory')->create(new BlogType(), new Blog());
+        $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'icap_blog'
+                'resourceType' => 'icap_blog',
             )
         );
         $event->setResponseContent($content);
@@ -40,7 +40,7 @@ class BlogListener extends ContainerAware
     public function onCreate(CreateResourceEvent $event)
     {
         $request = $this->container->get('request');
-        $form    = $this->container->get('form.factory')->create(new BlogType(), new Blog());
+        $form = $this->container->get('form.factory')->create(new BlogType(), new Blog());
         $form->bind($request);
 
         if ($form->isValid()) {
@@ -54,7 +54,7 @@ class BlogListener extends ContainerAware
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'icap_blog'
+                'resourceType' => 'icap_blog',
             )
         );
         $event->setErrorFormContent($content);
@@ -83,7 +83,7 @@ class BlogListener extends ContainerAware
     {
         $blog = $event->getResource();
         $options = $blog->getOptions();
-        @unlink($this->container->getParameter('icap.blog.banner_directory') . DIRECTORY_SEPARATOR . $options->getBannerBackgroundImage());
+        @unlink($this->container->getParameter('icap.blog.banner_directory').DIRECTORY_SEPARATOR.$options->getBannerBackgroundImage());
         $event->stopPropagation();
     }
 

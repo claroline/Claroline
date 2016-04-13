@@ -51,8 +51,8 @@ class AbilityImportType extends AbstractType
                 'attr' => [
                     'placeholder' => 'info.ability_search',
                     'class' => 'ability-search form-control',
-                    'rows' => 3
-                ]
+                    'rows' => 3,
+                ],
             ])
             ->add('level', 'entity', [
                 'label' => 'level_',
@@ -74,7 +74,7 @@ class AbilityImportType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'competency',
-            'competency' => null
+            'competency' => null,
         ]);
     }
 }

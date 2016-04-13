@@ -102,7 +102,7 @@ abstract class RepositoryTestCase extends TransactionalTestCase
         $user->setUsername($username);
         $user->setPassword($username);
         $user->setGuid($username);
-        $user->setMail($username . '@mail.com');
+        $user->setMail($username.'@mail.com');
         $this->om->persist($user);
 
         return $user;
@@ -166,8 +166,7 @@ abstract class RepositoryTestCase extends TransactionalTestCase
         $status,
         Evaluation $previous = null,
         ActivityParameters $parameters = null
-    )
-    {
+    ) {
         $params = $parameters ?
             $parameters :
             (

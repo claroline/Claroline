@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Auto-generated migration based on mapping information: modify it with caution
+ * Auto-generated migration based on mapping information: modify it with caution.
  *
  * Generation date: 2014/03/19 01:02:32
  */
@@ -14,36 +14,36 @@ class Version20140319130229 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE icap__dropzonebundle_correction 
             ADD COLUMN correctionDenied BOOLEAN NOT NULL
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__dropzonebundle_correction 
             ADD COLUMN correctionDeniedComment CLOB DEFAULT NULL
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__dropzonebundle_dropzone 
             ADD COLUMN diplay_corrections_to_learners BOOLEAN NOT NULL
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__dropzonebundle_dropzone 
             ADD COLUMN allow_correction_deny BOOLEAN NOT NULL
-        ");
+        ');
     }
 
     public function down(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             DROP INDEX IDX_CDA81F40A76ED395
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP INDEX IDX_CDA81F404D224760
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP INDEX IDX_CDA81F40A8C6E7BD
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TEMPORARY TABLE __temp__icap__dropzonebundle_correction AS 
             SELECT id, 
             user_id, 
@@ -60,11 +60,11 @@ class Version20140319130229 extends AbstractMigration
             reporter, 
             reportComment 
             FROM icap__dropzonebundle_correction
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE icap__dropzonebundle_correction
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TABLE icap__dropzonebundle_correction (
                 id INTEGER NOT NULL, 
                 user_id INTEGER NOT NULL, 
@@ -90,8 +90,8 @@ class Version20140319130229 extends AbstractMigration
                 REFERENCES icap__dropzonebundle_dropzone (id) 
                 ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
             )
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             INSERT INTO icap__dropzonebundle_correction (
                 id, user_id, drop_id, drop_zone_id, 
                 total_grade, comment, valid, start_date, 
@@ -113,26 +113,26 @@ class Version20140319130229 extends AbstractMigration
             reporter, 
             reportComment 
             FROM __temp__icap__dropzonebundle_correction
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE __temp__icap__dropzonebundle_correction
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE INDEX IDX_CDA81F40A76ED395 ON icap__dropzonebundle_correction (user_id)
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE INDEX IDX_CDA81F404D224760 ON icap__dropzonebundle_correction (drop_id)
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE INDEX IDX_CDA81F40A8C6E7BD ON icap__dropzonebundle_correction (drop_zone_id)
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP INDEX UNIQ_6782FC235342CDF
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP INDEX UNIQ_6782FC23B87FAB32
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TEMPORARY TABLE __temp__icap__dropzonebundle_dropzone AS 
             SELECT id, 
             hidden_directory_id, 
@@ -157,11 +157,11 @@ class Version20140319130229 extends AbstractMigration
             total_criteria_column, 
             resourceNode_id 
             FROM icap__dropzonebundle_dropzone
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE icap__dropzonebundle_dropzone
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TABLE icap__dropzonebundle_dropzone (
                 id INTEGER NOT NULL, 
                 hidden_directory_id INTEGER DEFAULT NULL, 
@@ -192,8 +192,8 @@ class Version20140319130229 extends AbstractMigration
                 REFERENCES claro_resource_node (id) 
                 ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
             )
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             INSERT INTO icap__dropzonebundle_dropzone (
                 id, hidden_directory_id, edition_state, 
                 instruction, allow_workspace_resource, 
@@ -229,15 +229,15 @@ class Version20140319130229 extends AbstractMigration
             total_criteria_column, 
             resourceNode_id 
             FROM __temp__icap__dropzonebundle_dropzone
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE __temp__icap__dropzonebundle_dropzone
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE UNIQUE INDEX UNIQ_6782FC235342CDF ON icap__dropzonebundle_dropzone (hidden_directory_id)
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE UNIQUE INDEX UNIQ_6782FC23B87FAB32 ON icap__dropzonebundle_dropzone (resourceNode_id)
-        ");
+        ');
     }
 }

@@ -4,11 +4,9 @@ namespace Innova\PathBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Innova\PathBundle\Entity\Step;
-use Innova\PathBundle\Entity\Criteriagroup;
 
 /**
- * StepCondition
+ * StepCondition.
  *
  * @ORM\Table(name="innova_stepcondition")
  * @ORM\Entity
@@ -16,7 +14,7 @@ use Innova\PathBundle\Entity\Criteriagroup;
 class StepCondition implements \JsonSerializable
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -25,7 +23,7 @@ class StepCondition implements \JsonSerializable
     private $id;
 
     /**
-     * criteriagroups linked to the condition
+     * criteriagroups linked to the condition.
      *
      * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\Criteriagroup", mappedBy="condition", indexBy="id", cascade={"persist", "remove"})
      * @ORM\OrderBy({"order" = "ASC"})
@@ -33,7 +31,8 @@ class StepCondition implements \JsonSerializable
     private $criteriagroups;
 
     /**
-     * Step the condition belongs to
+     * Step the condition belongs to.
+     *
      * @var \Innova\PathBundle\Entity\Step
      *
      * @ORM\OneToOne(targetEntity="Innova\PathBundle\Entity\Step", inversedBy="condition")
@@ -41,7 +40,7 @@ class StepCondition implements \JsonSerializable
     protected $step;
 
     /**
-     * Class constructor
+     * Class constructor.
      */
     public function __construct()
     {
@@ -49,9 +48,9 @@ class StepCondition implements \JsonSerializable
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -59,8 +58,10 @@ class StepCondition implements \JsonSerializable
     }
 
     /**
-     * Add criteriaGroup
-     * @param  \Innova\PathBundle\Entity\Criteriagroup $criteriaGroup
+     * Add criteriaGroup.
+     *
+     * @param \Innova\PathBundle\Entity\Criteriagroup $criteriaGroup
+     *
      * @return \Innova\PathBundle\Entity\StepCondition
      */
     public function addCriteriagroup(Criteriagroup $criteriaGroup)
@@ -75,8 +76,10 @@ class StepCondition implements \JsonSerializable
     }
 
     /**
-     * Remove CriteriaGroup
+     * Remove CriteriaGroup.
+     *
      * @param \Innova\PathBundle\Entity\Criteriagroup $criteriaGroup
+     *
      * @return \Innova\PathBundle\Entity\StepCondition
      */
     public function removeCriteriagroup(Criteriagroup $criteriaGroup)
@@ -91,7 +94,8 @@ class StepCondition implements \JsonSerializable
     }
 
     /**
-     * Get criteriagroups
+     * Get criteriagroups.
+     *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getCriteriagroups()
@@ -100,8 +104,10 @@ class StepCondition implements \JsonSerializable
     }
 
     /**
-     * Get root criteriagroup of the condition
+     * Get root criteriagroup of the condition.
+     *
      * @throws \Exception
+     *
      * @return \Innova\PathBundle\Entity\Criteriagroup
      */
     public function getRootCriteriagroup()
@@ -123,7 +129,7 @@ class StepCondition implements \JsonSerializable
     }
 
     /**
-     * Set step
+     * Set step.
      *
      * @param \Innova\PathBundle\Entity\Step $step
      *
@@ -142,7 +148,7 @@ class StepCondition implements \JsonSerializable
     }
 
     /**
-     * Get step
+     * Get step.
      *
      * @return \Innova\PathBundle\Entity\Step
      */
@@ -154,8 +160,8 @@ class StepCondition implements \JsonSerializable
     public function jsonSerialize()
     {
         // Initialize data array
-        $jsonArray = array (
-            'id'   => $this->id,
+        $jsonArray = array(
+            'id' => $this->id,
             'scid' => $this->id,
         );
 

@@ -16,7 +16,7 @@ class TypeType extends AbstractType
             array(
                 'required' => true,
                 'label' => 'name',
-                'translation_domain' => 'platform'
+                'translation_domain' => 'platform',
             )
         );
     }

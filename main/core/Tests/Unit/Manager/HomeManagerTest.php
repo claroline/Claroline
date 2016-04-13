@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-use Claroline\CoreBundle\Manager\HomeManager;
 use Claroline\CoreBundle\Entity\Home\Type;
 
 class HomeManagerTest extends MockeryTestCase

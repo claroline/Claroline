@@ -50,22 +50,22 @@ class CommentListener
         ) {
             $details = array(
                 'post' => array(
-                    'blog'  => $blog->getId(),
+                    'blog' => $blog->getId(),
                     'title' => $post->getTitle(),
-                    'slug'  => $post->getSlug()
+                    'slug' => $post->getSlug(),
                 ),
                 'comment' => array(
-                    'id'      => $comment->getId(),
+                    'id' => $comment->getId(),
                     'content' => $comment->getMessage(),
                     'published' => $comment->isPublished(),
-                    'author'    => $comment->getAuthor()->getFirstName()." ".$post->getAuthor()->getLastName(),
-                    'authorId'  => $comment->getAuthor()->getId()
+                    'author' => $comment->getAuthor()->getFirstName().' '.$post->getAuthor()->getLastName(),
+                    'authorId' => $comment->getAuthor()->getId(),
                 ),
                 'resource' => array(
-                    'id'    => $blog->getId(),
-                    'name'  => $blog->getResourceNode()->getName(),
-                    'type'  => $blog->getResourceNode()->getResourceType()->getName()
-                )
+                    'id' => $blog->getId(),
+                    'name' => $blog->getResourceNode()->getName(),
+                    'type' => $blog->getResourceNode()->getResourceType()->getName(),
+                ),
             );
             $notification = $this->notificationManager->createNotification(
                 'resource-icap_blog-comment-user_tagged',
@@ -77,7 +77,8 @@ class CommentListener
         }
     }
 
-    public function prePersist(Comment $comment, LifecycleEventArgs $event){
+    public function prePersist(Comment $comment, LifecycleEventArgs $event)
+    {
         if ($comment->getMessage() != null) {
             $userPicker = new UserPickerContent($comment->getMessage());
             $comment->setUserPicker($userPicker);
@@ -85,11 +86,13 @@ class CommentListener
         }
     }
 
-    public function preUpdate(Comment $comment, LifecycleEventArgs $event){
+    public function preUpdate(Comment $comment, LifecycleEventArgs $event)
+    {
         $this->prePersist($comment, $event);
     }
 
-    public function postUpdate(Comment $comment, LifecycleEventArgs $event){
+    public function postUpdate(Comment $comment, LifecycleEventArgs $event)
+    {
         $this->postPersist($comment, $event);
     }
 }

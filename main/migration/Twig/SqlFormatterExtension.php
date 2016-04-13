@@ -33,7 +33,7 @@ class SqlFormatterExtension extends \Twig_Extension
             'ADD' => Formatter::KEYWORD_NEWLINE,
             'REFERENCES' => Formatter::KEYWORD_NEWLINE,
             'ON DELETE CASCADE' => Formatter::KEYWORD_NEWLINE,
-            'ON DELETE SET NULL' => Formatter::KEYWORD_NEWLINE
+            'ON DELETE SET NULL' => Formatter::KEYWORD_NEWLINE,
         ));
     }
 
@@ -51,15 +51,16 @@ class SqlFormatterExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'formatSql' => new \Twig_SimpleFunction('formatSql', array($this, 'formatSql'))
+            'formatSql' => new \Twig_SimpleFunction('formatSql', array($this, 'formatSql')),
         );
     }
 
     /**
      * Formats an SQL query using the SqlFormatter library.
      *
-     * @param string    $sql
-     * @param integer   $tabOffset
+     * @param string $sql
+     * @param int    $tabOffset
+     *
      * @return string
      */
     public function formatSql($sql, $tabOffset = 3)
@@ -75,7 +76,7 @@ class SqlFormatterExtension extends \Twig_Extension
         $indentedLines = array();
 
         foreach ($sql as $line) {
-            $indentedLines[] = $indent . str_replace('"', '\"', $line);
+            $indentedLines[] = $indent.str_replace('"', '\"', $line);
         }
 
         return implode("\n", $indentedLines);

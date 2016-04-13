@@ -3,7 +3,6 @@
 namespace Icap\PortfolioBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\Widget\AbstractWidget;
 
 /**
@@ -13,7 +12,7 @@ use Icap\PortfolioBundle\Entity\Widget\AbstractWidget;
 class PortfolioWidget
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -38,28 +37,28 @@ class PortfolioWidget
     protected $widget;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="col", type="integer", options={"default" = 0})
      */
     protected $col;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="row", type="integer", options={"default" = 0})
      */
     protected $row;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="size_x", type="integer", options={"default" = 1})
      */
     protected $sizeX = 1;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="size_y", type="integer", options={"default" = 1})
      */
@@ -228,6 +227,7 @@ class PortfolioWidget
     public function setSize(array $position)
     {
         $this->setSizeX($position['sizeX']);
+
         return $this->setSizeY($position['sizeY']);
     }
 
@@ -244,7 +244,7 @@ class PortfolioWidget
             'row' => $this->getRow(),
             'col' => $this->getCol(),
             'sizeX' => $this->getSizeX(),
-            'sizeY' => $this->getSizeY()
+            'sizeY' => $this->getSizeY(),
         ];
     }
 }

@@ -28,8 +28,7 @@ class SessionType extends AbstractType
         $sessionType = 'native',
         PlatformConfiguration $config = null,
         array $lockedParams = array()
-    )
-    {
+    ) {
         $this->sessionType = $sessionType;
         $this->config = $config;
         $this->lockedParams = $lockedParams;
@@ -45,11 +44,11 @@ class SessionType extends AbstractType
                     'choices' => array(
                         'native' => 'files',
                         'claro_pdo' => 'database',
-                        'pdo' => 'external_pdo_database'
+                        'pdo' => 'external_pdo_database',
                     ),
                     'label' => 'storage_type',
                     'data' => $this->sessionType,
-                    'disabled' => isset($this->lockedParams['session_storage_type'])
+                    'disabled' => isset($this->lockedParams['session_storage_type']),
                 )
             );
 
@@ -63,7 +62,7 @@ class SessionType extends AbstractType
                     'constraints' => $this->notBlankIfExternal(),
                     'theme_options' => $this->hiddenIfNotExternal(),
                     'data' => $this->getConfigValue('sessionDbDsn'),
-                    'disabled' => isset($this->lockedParams['session_db_dsn'])
+                    'disabled' => isset($this->lockedParams['session_db_dsn']),
                 )
             )
             ->add(
@@ -75,7 +74,7 @@ class SessionType extends AbstractType
                     'constraints' => $this->notBlankIfExternal(),
                     'theme_options' => $this->hiddenIfNotExternal(),
                     'data' => $this->getConfigValue('sessionDbUser'),
-                    'disabled' => isset($this->lockedParams['session_db_user'])
+                    'disabled' => isset($this->lockedParams['session_db_user']),
                 )
             )
             ->add(
@@ -86,7 +85,7 @@ class SessionType extends AbstractType
                     'required' => false,
                     'theme_options' => $this->hiddenIfNotExternal(),
                     'data' => $this->getConfigValue('sessionDbPassword'),
-                    'disabled' => isset($this->lockedParams['session_db_password'])
+                    'disabled' => isset($this->lockedParams['session_db_password']),
                 )
             )
             ->add(
@@ -98,7 +97,7 @@ class SessionType extends AbstractType
                     'constraints' => $this->notBlankIfExternal(),
                     'theme_options' => $this->hiddenIfNotExternal(),
                     'data' => $this->getConfigValue('sessionDbTable'),
-                    'disabled' => isset($this->lockedParams['session_db_table'])
+                    'disabled' => isset($this->lockedParams['session_db_table']),
                 )
             )
             ->add(
@@ -110,7 +109,7 @@ class SessionType extends AbstractType
                     'constraints' => $this->notBlankIfExternal(),
                     'theme_options' => $this->hiddenIfNotExternal(),
                     'data' => $this->getConfigValue('sessionDbIdCol'),
-                    'disabled' => isset($this->lockedParams['session_db_id_col'])
+                    'disabled' => isset($this->lockedParams['session_db_id_col']),
                 )
             )
             ->add(
@@ -122,7 +121,7 @@ class SessionType extends AbstractType
                     'constraints' => $this->notBlankIfExternal(),
                     'theme_options' => $this->hiddenIfNotExternal(),
                     'data' => $this->getConfigValue('sessionDbDataCol'),
-                    'disabled' => isset($this->lockedParams['session_db_data_col'])
+                    'disabled' => isset($this->lockedParams['session_db_data_col']),
                 )
             )
             ->add(
@@ -134,7 +133,7 @@ class SessionType extends AbstractType
                     'constraints' => $this->notBlankIfExternal(),
                     'theme_options' => $this->hiddenIfNotExternal(),
                     'data' => $this->getConfigValue('sessionDbTimeCol'),
-                    'disabled' => isset($this->lockedParams['session_db_time_col'])
+                    'disabled' => isset($this->lockedParams['session_db_time_col']),
                 )
             );
 
@@ -146,7 +145,7 @@ class SessionType extends AbstractType
                 'label' => 'cookie_lifetime',
                 'constraints' => new GreaterThanOrEqual(array('value' => 60)),
                 'data' => $this->getConfigValue('cookieLifetime'),
-                'disabled' => isset($this->lockedParams['cookie_lifetime'])
+                'disabled' => isset($this->lockedParams['cookie_lifetime']),
             )
         );
     }
@@ -182,7 +181,7 @@ class SessionType extends AbstractType
     private function getConfigValue($parameter)
     {
         if ($this->config) {
-            $method = 'get' . ucfirst($parameter);
+            $method = 'get'.ucfirst($parameter);
 
             return $this->config->{$method}();
         }

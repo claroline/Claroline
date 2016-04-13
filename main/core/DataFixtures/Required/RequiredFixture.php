@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\DataFixtures\Required;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 
 interface RequiredFixture

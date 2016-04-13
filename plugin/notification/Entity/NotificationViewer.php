@@ -34,9 +34,9 @@ class NotificationViewer
     protected $status;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -44,9 +44,10 @@ class NotificationViewer
     }
 
     /**
-     * Set notification
+     * Set notification.
      *
      * @param \Icap\NotificationBundle\Entity\Notification $notification
+     *
      * @return NotificationViewer
      */
     public function setNotification(Notification $notification)
@@ -57,7 +58,7 @@ class NotificationViewer
     }
 
     /**
-     * Get notification
+     * Get notification.
      *
      * @return \Icap\NotificationBundle\Entity\Notification
      */
@@ -67,9 +68,10 @@ class NotificationViewer
     }
 
     /**
-     * Set viewerId
+     * Set viewerId.
      *
-     * @param integer $viewerId
+     * @param int $viewerId
+     *
      * @return NotificationViewer
      */
     public function setViewerId($viewerId)
@@ -80,9 +82,9 @@ class NotificationViewer
     }
 
     /**
-     * Get viewerId
+     * Get viewerId.
      *
-     * @return integer
+     * @return int
      */
     public function getViewerId()
     {
@@ -90,9 +92,10 @@ class NotificationViewer
     }
 
     /**
-     * Set status
+     * Set status.
      *
-     * @param boolean $status
+     * @param bool $status
+     *
      * @return NotificationViewer
      */
     public function setStatus($status)
@@ -103,13 +106,12 @@ class NotificationViewer
     }
 
     /**
-     * Get status
+     * Get status.
      *
-     * @return boolean
+     * @return bool
      */
     public function getStatus()
     {
         return $this->status;
     }
-
 }

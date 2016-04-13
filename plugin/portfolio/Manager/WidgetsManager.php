@@ -33,7 +33,6 @@ class WidgetsManager
     protected $templatingEngine;
 
     /**
-     *
      * @var FormFactory
      */
     protected $formFactory;
@@ -97,7 +96,7 @@ class WidgetsManager
     {
         $widgetViewEvent = new WidgetViewEvent($widgetType, $widget);
 
-        $this->eventDispatcher->dispatch('icap_portfolio_widget_view_' . $widgetType, $widgetViewEvent);
+        $this->eventDispatcher->dispatch('icap_portfolio_widget_view_'.$widgetType, $widgetViewEvent);
 
         return $widgetViewEvent->getView();
     }
@@ -111,7 +110,7 @@ class WidgetsManager
     {
         $widgetFormViewEvent = new WidgetFormViewEvent($widgetType);
 
-        $this->eventDispatcher->dispatch('icap_portfolio_widget_form_view_' . $widgetType, $widgetFormViewEvent);
+        $this->eventDispatcher->dispatch('icap_portfolio_widget_form_view_'.$widgetType, $widgetFormViewEvent);
 
         return $widgetFormViewEvent->getFormView();
     }
@@ -126,7 +125,7 @@ class WidgetsManager
     {
         $widgetFormEvent = new WidgetFormEvent($widgetType, $data);
 
-        $this->eventDispatcher->dispatch('icap_portfolio_widget_form_' . $widgetType, $widgetFormEvent);
+        $this->eventDispatcher->dispatch('icap_portfolio_widget_form_'.$widgetType, $widgetFormEvent);
 
         return $widgetFormEvent->getForm();
     }
@@ -167,7 +166,7 @@ class WidgetsManager
 
             foreach ($originalChildren as $child) {
                 if (!$newChildren->contains($child)) {
-                     $this->entityManager->remove($child);
+                    $this->entityManager->remove($child);
                 }
             }
 
@@ -180,12 +179,12 @@ class WidgetsManager
         }
 
         if ('dev' === $env) {
-            echo "<pre>";
+            echo '<pre>';
             foreach ($form->getErrors(true, false) as $formError) {
                 var_dump($formError->getMessage());
                 var_dump($formError->getMessageParameters());
             }
-            echo "</pre>" . PHP_EOL;
+            echo '</pre>'.PHP_EOL;
         }
 
         throw new \InvalidArgumentException();
@@ -215,12 +214,12 @@ class WidgetsManager
         }
 
         if ('dev' === $env) {
-            echo "<pre>";
+            echo '<pre>';
             foreach ($form->getErrors(true, false) as $formError) {
                 var_dump($formError->getMessage());
                 var_dump($formError->getMessageParameters());
             }
-            echo "</pre>" . PHP_EOL;
+            echo '</pre>'.PHP_EOL;
         }
 
         throw new \InvalidArgumentException();
@@ -273,7 +272,7 @@ class WidgetsManager
 
     /**
      * @param PortfolioWidget $portfolioWidget
-     * @param bool           $withView
+     * @param bool            $withView
      *
      * @return array
      */
@@ -282,11 +281,11 @@ class WidgetsManager
         $widget = $portfolioWidget->getWidget();
 
         $widgetViews = array(
-            'views' => $withView ? array('view' => $this->getView($widget, $widget->getWidgetType())) : array()
+            'views' => $withView ? array('view' => $this->getView($widget, $widget->getWidgetType())) : array(),
         );
 
         $widgetData = [
-            'widget' => $widget->getCommonData() + $widgetViews + ($withView ? $widget->getData() : $widget->getEmpty())
+            'widget' => $widget->getCommonData() + $widgetViews + ($withView ? $widget->getData() : $widget->getEmpty()),
         ];
 
         return  $portfolioWidget->getData() + $widgetData;
@@ -300,7 +299,7 @@ class WidgetsManager
     public function getWidgetData(AbstractWidget $widget)
     {
         $widgetViews = array(
-            'views' => array('view' => $this->getView($widget, $widget->getWidgetType()))
+            'views' => array('view' => $this->getView($widget, $widget->getWidgetType())),
         );
 
         return $widget->getCommonData() + $widgetViews + $widget->getData();
@@ -314,7 +313,7 @@ class WidgetsManager
      */
     public function getByPortfolioForGridster(Portfolio $portfolio, $inArray = false)
     {
-        $portfolioWidgets = $this->entityManager->getRepository("IcapPortfolioBundle:PortfolioWidget")->findOrderedByRowAndCol($portfolio);
+        $portfolioWidgets = $this->entityManager->getRepository('IcapPortfolioBundle:PortfolioWidget')->findOrderedByRowAndCol($portfolio);
 
         if ($inArray) {
             $portfolioWidgetsInArray = [];
@@ -329,7 +328,7 @@ class WidgetsManager
     }
 
     /**
-     * @param User $user
+     * @param User        $user
      * @param string|null $widgetType
      *
      * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]
@@ -341,8 +340,7 @@ class WidgetsManager
 
         if ($widgetType !== null) {
             $widgets = $abstractWidgetRepository->findByWidgetTypeAndUser($widgetType, $user);
-        }
-        else {
+        } else {
             $widgets = $abstractWidgetRepository->findByUser($user);
         }
 
@@ -378,23 +376,23 @@ class WidgetsManager
 
     public function getWidgetSizeByType($widgetType)
     {
-        if (strtoupper($widgetType) == "BADGES") {
+        if (strtoupper($widgetType) == 'BADGES') {
             $classNamespace = '\Icap\BadgeBundle\Entity\Portfolio\BadgesWidget';
         } else {
-            $classNamespace = '\Icap\PortfolioBundle\Entity\Widget\\' . ucfirst($widgetType) . 'Widget';
+            $classNamespace = '\Icap\PortfolioBundle\Entity\Widget\\'.ucfirst($widgetType).'Widget';
         }
         $position = [
             'sizeX' => $classNamespace::SIZE_X,
-            'sizeY' => $classNamespace::SIZE_Y
+            'sizeY' => $classNamespace::SIZE_Y,
         ];
 
         return $position;
     }
 
     /**
-     * @param string  $widgetType
-     * @param integer $widgetId
-     * @param User    $user
+     * @param string $widgetType
+     * @param int    $widgetId
+     * @param User   $user
      *
      * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]
      */
@@ -407,4 +405,3 @@ class WidgetsManager
         return $widget;
     }
 }
- 

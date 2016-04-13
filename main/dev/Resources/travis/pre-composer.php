@@ -19,8 +19,8 @@ set_error_handler(function ($severity, $message, $file, $line) {
 });
 
 if ($argc < 3) {
-  echo "Expected three arguments: package_name package_path\n";
-  exit(1);
+    echo "Expected three arguments: package_name package_path\n";
+    exit(1);
 }
 
 $packageName = $argv[1];
@@ -28,12 +28,12 @@ $packagePath = $argv[2];
 $composerFile = getcwd().'/composer.json';
 
 if (!file_exists($composerFile)) {
-  echo "No composer.json found (looked for {$composerFile})\n";
-  exit(1);
+    echo "No composer.json found (looked for {$composerFile})\n";
+    exit(1);
 }
 
 $data = json_decode(file_get_contents($composerFile));
-$data->require->{$packageName} = "*";
+$data->require->{$packageName} = '*';
 
 if (!isset($data->repositories)) {
     $data->repositories = [];
@@ -44,7 +44,7 @@ $repo->type = 'path';
 $repo->url = $packagePath;
 $data->repositories[] = $repo;
 
-$content = json_encode($data, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
+$content = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 file_put_contents($composerFile, $content);
 
 echo "Updated composer.json with content:\n{$content}\n";

@@ -4,20 +4,17 @@ namespace Icap\PortfolioBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
-use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\TeamBundle\Manager\TeamManager;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\PortfolioUser;
 use Icap\PortfolioBundle\Entity\PortfolioGuide;
-use Icap\PortfolioBundle\Entity\Widget\WidgetNode;
 use Icap\PortfolioBundle\Event\Log\PortfolioAddGuideEvent;
 use Icap\PortfolioBundle\Event\Log\PortfolioAddViewerEvent;
 use Icap\PortfolioBundle\Event\Log\PortfolioRemoveGuideEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormFactory;
 
 /**
@@ -25,9 +22,9 @@ use Symfony\Component\Form\FormFactory;
  */
 class PortfolioManager
 {
-    const PORTFOLIO_OPENING_MODE_VIEW     = 'view';
+    const PORTFOLIO_OPENING_MODE_VIEW = 'view';
     const PORTFOLIO_OPENING_MODE_EVALUATE = 'evaluate';
-    const PORTFOLIO_OPENING_MODE_EDIT     = 'edit';
+    const PORTFOLIO_OPENING_MODE_EDIT = 'edit';
 
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -40,7 +37,7 @@ class PortfolioManager
     protected $formFactory;
 
     /**
-     * @var  \Icap\PortfolioBundle\Manager\WidgetsManager
+     * @var \Icap\PortfolioBundle\Manager\WidgetsManager
      */
     protected $widgetsManager;
 
@@ -66,14 +63,14 @@ class PortfolioManager
     public function __construct(EntityManager $entityManager, FormFactory $formFactory, WidgetsManager $widgetsManager,
         EventDispatcherInterface $eventDispatcher, TeamManager $teamManager)
     {
-        $this->entityManager   = $entityManager;
-        $this->formFactory     = $formFactory;
-        $this->widgetsManager  = $widgetsManager;
+        $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
+        $this->widgetsManager = $widgetsManager;
         $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
-     * @param Portfolio   $portfolio
+     * @param Portfolio $portfolio
      *
      * @throws \InvalidArgumentException
      */
@@ -105,14 +102,13 @@ class PortfolioManager
     public function updateVisibility(Portfolio $portfolio, Collection $originalPortfolioUsers,
         Collection $originalPortfolioGroups, Collection $originalPortfolioTeams)
     {
-        $portfolioUsers                = $portfolio->getPortfolioUsers();
+        $portfolioUsers = $portfolio->getPortfolioUsers();
         $addedPortfolioViewersToNotify = array();
 
         foreach ($portfolioUsers as $portfolioUser) {
             if ($originalPortfolioUsers->contains($portfolioUser)) {
                 $originalPortfolioUsers->removeElement($portfolioUser);
-            }
-            else {
+            } else {
                 $addedPortfolioViewersToNotify[] = $portfolioUser;
             }
         }
@@ -154,22 +150,21 @@ class PortfolioManager
     }
 
     /**
-     * @param Portfolio                               $portfolio
-     * @param Collection|PortfolioGuide[]         $originalPortfolioGuides
+     * @param Portfolio                   $portfolio
+     * @param Collection|PortfolioGuide[] $originalPortfolioGuides
      */
     public function updateGuides(Portfolio $portfolio, Collection $originalPortfolioGuides)
     {
-        $portfolioGuides                = $portfolio->getPortfolioGuides();
+        $portfolioGuides = $portfolio->getPortfolioGuides();
         /** @var PortfolioGuide[] $addedPortfolioGuidesToNotify */
-        $addedPortfolioGuidesToNotify   = array();
+        $addedPortfolioGuidesToNotify = array();
         /** @var PortfolioGuide[] $removedPortfolioGuidesToNotify */
         $removedPortfolioGuidesToNotify = array();
 
         foreach ($portfolioGuides as $portfolioGuide) {
             if ($originalPortfolioGuides->contains($portfolioGuide)) {
                 $originalPortfolioGuides->removeElement($portfolioGuide);
-            }
-            else {
+            } else {
                 $addedPortfolioGuidesToNotify[] = $portfolioGuide;
             }
         }
@@ -225,14 +220,14 @@ class PortfolioManager
     public function getPortfolioData(Portfolio $portfolio)
     {
         /** @var \Icap\PortfolioBundle\Entity\PortfolioWidget[] $portfolioWidgets */
-        $portfolioWidgets  = $this->widgetsManager->getByPortfolioForGridster($portfolio);
+        $portfolioWidgets = $this->widgetsManager->getByPortfolioForGridster($portfolio);
         /** @var \Icap\PortfolioBundle\Entity\PortfolioComment[] $comments */
         $comments = $this->entityManager->getRepository('IcapPortfolioBundle:PortfolioComment')->findSome($portfolio);
 
         $data = array(
             'id' => $portfolio->getId(),
             'title' => $portfolio->getTitle(),
-            'portfolioWidgets' => []
+            'portfolioWidgets' => [],
         );
 
         foreach ($portfolioWidgets as $portfolioWidget) {
@@ -244,7 +239,7 @@ class PortfolioManager
         foreach ($comments as $comment) {
             $commentsDatas[] = $comment->getData();
         }
-        $data['comments']       = $commentsDatas;
+        $data['comments'] = $commentsDatas;
         $data['unreadComments'] = $portfolio->getCountUnreadComments();
         $data['commentsViewAt'] = $portfolio->getCommentsViewAt()->format(DATE_W3C);
 
@@ -259,7 +254,7 @@ class PortfolioManager
     public function getUserGuidedPortfoliosData(User $user)
     {
         /** @var \Icap\PortfolioBundle\Entity\Portfolio[] $portfolios */
-        $portfolios = $this->entityManager->getRepository("IcapPortfolioBundle:Portfolio")->findAvailableToGuideByUser($user);
+        $portfolios = $this->entityManager->getRepository('IcapPortfolioBundle:Portfolio')->findAvailableToGuideByUser($user);
 
         $data = array();
 
@@ -283,7 +278,7 @@ class PortfolioManager
             'id' => $portfolio->getId(),
             'title' => $portfolio->getTitle(),
             'unreadComments' => $portfolio->getCountUnreadComments(),
-            'commentsViewAt' => $portfolio->getCommentsViewAt()->format(DATE_W3C)
+            'commentsViewAt' => $portfolio->getCommentsViewAt()->format(DATE_W3C),
         );
     }
 
@@ -302,6 +297,7 @@ class PortfolioManager
      * @param array     $parameters
      *
      * @throws \InvalidArgumentException
+     *
      * @return array
      */
     public function handle(Portfolio $portfolio, array $parameters, $env = 'prod')
@@ -321,12 +317,12 @@ class PortfolioManager
         }
 
         if ('dev' === $env) {
-            echo "<pre>";
+            echo '<pre>';
             foreach ($form->getErrors(true, false) as $formError) {
                 var_dump($formError->getMessage());
                 var_dump($formError->getMessageParameters());
             }
-            echo "</pre>" . PHP_EOL;
+            echo '</pre>'.PHP_EOL;
         }
 
         throw new \InvalidArgumentException();
@@ -346,15 +342,12 @@ class PortfolioManager
         if (null !== $user) {
             if ($user === $portfolio->getUser() || $isAdmin) {
                 $openingMode = self::PORTFOLIO_OPENING_MODE_EDIT;
-            }
-            elseif ($portfolio->hasGuide($user)) {
+            } elseif ($portfolio->hasGuide($user)) {
                 $openingMode = self::PORTFOLIO_OPENING_MODE_EVALUATE;
-            }
-            elseif ($this->visibleToUser($portfolio, $user)) {
+            } elseif ($this->visibleToUser($portfolio, $user)) {
                 $openingMode = self::PORTFOLIO_OPENING_MODE_VIEW;
             }
-        }
-        elseif (Portfolio::VISIBILITY_EVERYBODY === $portfolio->getVisibility()) {
+        } elseif (Portfolio::VISIBILITY_EVERYBODY === $portfolio->getVisibility()) {
             $openingMode = self::PORTFOLIO_OPENING_MODE_VIEW;
         }
 
@@ -369,18 +362,16 @@ class PortfolioManager
      */
     public function visibleToUser(Portfolio $portfolio, User $user)
     {
-        $visibility     = $portfolio->getVisibility();
-        $isVisible      = false;
+        $visibility = $portfolio->getVisibility();
+        $isVisible = false;
 
         if ($portfolio->getUser() === $user) {
             $isVisible = true;
-        }
-        else {
+        } else {
             if (Portfolio::VISIBILITY_EVERYBODY === $visibility ||
                 Portfolio::VISIBILITY_PLATFORM_USER === $visibility) {
                 $isVisible = true;
-            }
-            elseif (Portfolio::VISIBILITY_USER === $visibility) {
+            } elseif (Portfolio::VISIBILITY_USER === $visibility) {
                 $portfolioUsers = $portfolio->getPortfolioUsers();
 
                 foreach ($portfolioUsers as $portfolioUser) {
@@ -392,7 +383,7 @@ class PortfolioManager
 
                 if (!$isVisible) {
                     $portfolioGroups = $portfolio->getPortfolioGroups();
-                    $userGroups      = $user->getGroups();
+                    $userGroups = $user->getGroups();
 
                     foreach ($portfolioGroups as $portfolioGroup) {
                         foreach ($userGroups as $userGroup) {
@@ -407,7 +398,7 @@ class PortfolioManager
                 if (!$isVisible) {
                     $portfolioTeams = $portfolio->getPortfolioTeams();
                     /** @var \Claroline\TeamBundle\Entity\Team[] $userTeams */
-                    $userTeams      = $this->teamManager->getTeamsByUser($user);
+                    $userTeams = $this->teamManager->getTeamsByUser($user);
 
                     foreach ($portfolioTeams as $portfolioTeam) {
                         foreach ($userTeams as $userTeam) {
@@ -440,7 +431,7 @@ class PortfolioManager
     public function countAll()
     {
         /** @var \Icap\PortfolioBundle\Repository\PortfolioRepository $portfolioRepository */
-        $portfolioRepository = $this->entityManager->getRepository("IcapPortfolioBundle:Portfolio");
+        $portfolioRepository = $this->entityManager->getRepository('IcapPortfolioBundle:Portfolio');
 
         return $portfolioRepository->countAll();
     }
@@ -451,7 +442,7 @@ class PortfolioManager
     public function countAllDeleted()
     {
         /** @var \Icap\PortfolioBundle\Repository\PortfolioRepository $portfolioRepository */
-        $portfolioRepository = $this->entityManager->getRepository("IcapPortfolioBundle:Portfolio");
+        $portfolioRepository = $this->entityManager->getRepository('IcapPortfolioBundle:Portfolio');
 
         return $portfolioRepository->countAllDeleted();
     }
@@ -462,7 +453,7 @@ class PortfolioManager
     public function countAllByVisibilityStatus()
     {
         /** @var \Icap\PortfolioBundle\Repository\PortfolioRepository $portfolioRepository */
-        $portfolioRepository = $this->entityManager->getRepository("IcapPortfolioBundle:Portfolio");
+        $portfolioRepository = $this->entityManager->getRepository('IcapPortfolioBundle:Portfolio');
 
         return $portfolioRepository->countAllByVisibilityStatus();
     }

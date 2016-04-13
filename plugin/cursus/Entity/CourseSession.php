@@ -14,8 +14,6 @@ namespace Claroline\CursusBundle\Entity;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CursusBundle\Entity\Course;
-use Claroline\CursusBundle\Entity\Cursus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
@@ -153,7 +151,7 @@ class CourseSession
      * )
      */
     protected $sessionGroups;
-   
+
     /**
      * @Groups({"api_bulletin"})
      * @SerializedName("extra")
@@ -393,11 +391,11 @@ class CourseSession
 
     public function getFullNameWithCourse()
     {
-        return $this->getCourseTitle() .
-            ' [' .
-            $this->getCourse()->getCode() .
-            ']' .
-            ' - ' .
+        return $this->getCourseTitle().
+            ' ['.
+            $this->getCourse()->getCode().
+            ']'.
+            ' - '.
             $this->getName();
     }
 
@@ -406,24 +404,22 @@ class CourseSession
         $courseTitle = $this->getCourseTitle();
         $length = strlen($courseTitle);
         $shortTitle = ($length > $courseLength) ?
-            substr($courseTitle, 0, $courseLength) . '...' :
+            substr($courseTitle, 0, $courseLength).'...' :
             $courseTitle;
 
-
-
-        return $shortTitle . ' - ' . $this->getName();
+        return $shortTitle.' - '.$this->getName();
     }
 
     public function __toString()
     {
         return $this->getName();
     }
-    
+
     public function setExtra(array $extra)
     {
         $this->extra = $extra;
     }
-    
+
     public function getExtra()
     {
         return $this->extra;
@@ -439,12 +435,12 @@ class CourseSession
         $this->userValidation = $userValidation;
     }
 
-    function getOrganizationValidation()
+    public function getOrganizationValidation()
     {
         return $this->organizationValidation;
     }
 
-    function setOrganizationValidation($organizationValidation)
+    public function setOrganizationValidation($organizationValidation)
     {
         $this->organizationValidation = $organizationValidation;
     }

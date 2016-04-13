@@ -28,12 +28,12 @@ class PlayersType extends AbstractType
             'choice',
             array(
                 'choices' => array(
-                    'videojs' => 'videojs'
+                    'videojs' => 'videojs',
                 ),
                 'multiple' => false,
                 'expanded' => true,
                 'label' => 'player',
-                'data' => $this->player
+                'data' => $this->player,
             )
         );
     }

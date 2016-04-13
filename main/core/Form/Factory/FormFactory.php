@@ -61,138 +61,138 @@ class FormFactory
     private static $types = array(
         self::TYPE_ORDERED_TOOL => array(
             'formType' => 'Claroline\CoreBundle\Form\WorkspaceOrderToolEditType',
-            'entity' => 'Claroline\CoreBundle\Entity\Tool\OrderedTool'
+            'entity' => 'Claroline\CoreBundle\Entity\Tool\OrderedTool',
         ),
         self::TYPE_TOOL => array(
             'formType' => 'Claroline\CoreBundle\Form\ToolType',
-            'entity' => 'Claroline\CoreBundle\Entity\Tool\Tool'
+            'entity' => 'Claroline\CoreBundle\Entity\Tool\Tool',
         ),
         self::TYPE_USER => array(
             'formType' => 'Claroline\CoreBundle\Form\ProfileType',
-            'entity' => 'Claroline\CoreBundle\Entity\User'
+            'entity' => 'Claroline\CoreBundle\Entity\User',
         ),
         self::TYPE_GROUP => array(
             'formType' => 'Claroline\CoreBundle\Form\GroupType',
-            'entity' => 'Claroline\CoreBundle\Entity\Group'
+            'entity' => 'Claroline\CoreBundle\Entity\Group',
         ),
         self::TYPE_GROUP_SETTINGS => array(
             'formType' => 'Claroline\CoreBundle\Form\GroupSettingsType',
-            'entity' => 'Claroline\CoreBundle\Entity\Group'
+            'entity' => 'Claroline\CoreBundle\Entity\Group',
         ),
         self::TYPE_PLATFORM_PARAMETERS => array(
             'formType' => 'Claroline\CoreBundle\Form\Administration\GeneralType',
-            'entity' => 'Claroline\CoreBundle\Library\Configuration\PlatformConfiguration'
+            'entity' => 'Claroline\CoreBundle\Library\Configuration\PlatformConfiguration',
         ),
         self::TYPE_USER_IMPORT => array(
-            'formType' => 'Claroline\CoreBundle\Form\ImportUserType'
+            'formType' => 'Claroline\CoreBundle\Form\ImportUserType',
         ),
         self::TYPE_IMPORT_USERS_IN_GROUP => array(
-            'formType' => 'Claroline\CoreBundle\Form\ImportUsersInGroupType'
+            'formType' => 'Claroline\CoreBundle\Form\ImportUsersInGroupType',
         ),
         self::TYPE_ADMIN_ANALYTICS_CONNECTIONS => array(
-            'formType' => 'Claroline\CoreBundle\Form\AdminAnalyticsConnectionsType'
+            'formType' => 'Claroline\CoreBundle\Form\AdminAnalyticsConnectionsType',
         ),
         self::TYPE_ADMIN_ANALYTICS_TOP => array(
-            'formType' => 'Claroline\CoreBundle\Form\AdminAnalyticsTopType'
+            'formType' => 'Claroline\CoreBundle\Form\AdminAnalyticsTopType',
         ),
         self::TYPE_MAIL => array(
-            'formType' => 'Claroline\CoreBundle\Form\MailType'
+            'formType' => 'Claroline\CoreBundle\Form\MailType',
         ),
         self::TYPE_WORKSPACE => array(
-            'formType' => 'Claroline\CoreBundle\Form\WorkspaceType'
+            'formType' => 'Claroline\CoreBundle\Form\WorkspaceType',
         ),
         self::TYPE_WORKSPACE_EDIT => array(
             'formType' => 'Claroline\CoreBundle\Form\WorkspaceEditType',
-            'entity' => 'Claroline\CoreBundle\Entity\Workspace\Workspace'
+            'entity' => 'Claroline\CoreBundle\Entity\Workspace\Workspace',
         ),
         self::TYPE_WORKSPACE_IMPORT => array(
-            'formType' => 'Claroline\CoreBundle\Form\ImportWorkspaceType'
+            'formType' => 'Claroline\CoreBundle\Form\ImportWorkspaceType',
         ),
         self::TYPE_LOG_WORKSPACE_WIDGET_CONFIG => array(
-            'formType' => 'Claroline\CoreBundle\Form\Log\LogWorkspaceWidgetConfigType'
+            'formType' => 'Claroline\CoreBundle\Form\Log\LogWorkspaceWidgetConfigType',
         ),
         self::TYPE_LOG_DESKTOP_WIDGET_CONFIG => array(
-            'formType' => 'Claroline\CoreBundle\Form\Log\LogDesktopWidgetConfigType'
+            'formType' => 'Claroline\CoreBundle\Form\Log\LogDesktopWidgetConfigType',
         ),
         self::TYPE_AGENDA => array(
             'formType' => 'Claroline\CoreBundle\Form\AgendaType',
-            'entity' => 'Claroline\CoreBundle\Entity\Event'
+            'entity' => 'Claroline\CoreBundle\Entity\Event',
         ),
         self::TYPE_WORKSPACE_TAG => array(
             'formType' => 'Claroline\CoreBundle\Form\WorkspaceTagType',
-            'entity' => 'Claroline\CoreBundle\Entity\Workspace\WorkspaceTag'
+            'entity' => 'Claroline\CoreBundle\Entity\Workspace\WorkspaceTag',
         ),
         self::TYPE_ADMIN_WORKSPACE_TAG => array(
             'formType' => 'Claroline\CoreBundle\Form\AdminWorkspaceTagType',
-            'entity' => 'Claroline\CoreBundle\Entity\Workspace\WorkspaceTag'
+            'entity' => 'Claroline\CoreBundle\Entity\Workspace\WorkspaceTag',
         ),
         self::TYPE_RESOURCE_PERMS => array(
             'formType' => 'Claroline\CoreBundle\Form\ResourceRightType',
-            'entity' => 'Claroline\CoreBundle\Entity\Resource\ResourceRights'
+            'entity' => 'Claroline\CoreBundle\Entity\Resource\ResourceRights',
         ),
         self::TYPE_RESOURCE_RENAME => array(
             'formType' => 'Claroline\CoreBundle\Form\ResourceNameType',
-            'entity' => 'Claroline\CoreBundle\Entity\Resource\ResourceNode'
+            'entity' => 'Claroline\CoreBundle\Entity\Resource\ResourceNode',
         ),
         self::TYPE_RESOURCE_PROPERTIES => array(
             'formType' => 'Claroline\CoreBundle\Form\ResourcePropertiesType',
-            'entity' => 'Claroline\CoreBundle\Entity\Resource\ResourceNode'
+            'entity' => 'Claroline\CoreBundle\Entity\Resource\ResourceNode',
         ),
         self::TYPE_WORKSPACE_ROLE => array(
-            'formType' => 'Claroline\CoreBundle\Form\WorkspaceRoleType'
+            'formType' => 'Claroline\CoreBundle\Form\WorkspaceRoleType',
         ),
         self::TYPE_ROLE_TRANSLATION => array(
-            'formType' => 'Claroline\CoreBundle\Form\RoleTranslationType'
+            'formType' => 'Claroline\CoreBundle\Form\RoleTranslationType',
         ),
         self::TYPE_USER_EMAIL => array(
-            'formType' => 'Claroline\CoreBundle\Form\EmailType'
+            'formType' => 'Claroline\CoreBundle\Form\EmailType',
         ),
         self::TYPE_USER_RESET_PWD => array(
             'formType' => 'Claroline\CoreBundle\Form\ResetPasswordType',
-            'entity' => 'Claroline\CoreBundle\Entity\User'
+            'entity' => 'Claroline\CoreBundle\Entity\User',
         ),
         self::TYPE_SIMPLE_TEXT => array(
-            'formType' => 'Claroline\CoreBundle\Form\SimpleTextType'
+            'formType' => 'Claroline\CoreBundle\Form\SimpleTextType',
         ),
         self::TYPE_HOME_TAB => array(
             'formType' => 'Claroline\CoreBundle\Form\HomeTabType',
-            'entity' => 'Claroline\CoreBundle\Entity\Home\HomeTab'
+            'entity' => 'Claroline\CoreBundle\Entity\Home\HomeTab',
         ),
         self::TYPE_WIDGET_CONFIG => array(
             'formType' => 'Claroline\CoreBundle\Form\WidgetDisplayType',
-            'entity' => 'Claroline\CoreBundle\Entity\Widget\WidgetInstance'
+            'entity' => 'Claroline\CoreBundle\Entity\Widget\WidgetInstance',
         ),
         self::TYPE_WIDGET_INSTANCE => array(
             'formType' => 'Claroline\CoreBundle\Form\WidgetInstanceType',
-            'entity' => 'Claroline\CoreBundle\Entity\Widget\WidgetInstance'
+            'entity' => 'Claroline\CoreBundle\Entity\Widget\WidgetInstance',
         ),
         self::TYPE_RESOURCE_TEXT => array(
             'formType' => 'Claroline\CoreBundle\Form\TextType',
-            'entity' => 'Claroline\CoreBundle\Entity\Resource\Text'
+            'entity' => 'Claroline\CoreBundle\Entity\Resource\Text',
         ),
         self::TYPE_EMAIL => array(
             'formType' => 'Claroline\CoreBundle\Form\SendMailType',
         ),
         self::TYPE_USER_FULL => array(
             'formType' => 'Claroline\CoreBundle\Form\ProfileCreationType',
-            'entity' => 'Claroline\CoreBundle\Entity\User'
+            'entity' => 'Claroline\CoreBundle\Entity\User',
         ),
         self::TYPE_USER_BASE_PROFILE => array(
             'formType' => 'Claroline\CoreBundle\Form\BaseProfileType',
-            'entity' => 'Claroline\CoreBundle\Entity\User'
+            'entity' => 'Claroline\CoreBundle\Entity\User',
         ),
         self:: TYPE_PLATFORM_APPEARANCE => array(
-            'formType' => 'Claroline\CoreBundle\Form\Administration\AppearanceType'
+            'formType' => 'Claroline\CoreBundle\Form\Administration\AppearanceType',
         ),
         self:: TYPE_PLATFORM_MAIL_SERVER => array(
-            'formType' => 'Claroline\CoreBundle\Form\Administration\MailServerType'
+            'formType' => 'Claroline\CoreBundle\Form\Administration\MailServerType',
         ),
         self:: TYPE_PLATFORM_MAIL_INSCRIPTION => array(
-            'formType' => 'Claroline\CoreBundle\Form\Administration\MailInscriptionType'
+            'formType' => 'Claroline\CoreBundle\Form\Administration\MailInscriptionType',
         ),
         self:: TYPE_AGENDA_IMPORTER => array(
-            'formType' => 'Claroline\CoreBundle\Form\ImportAgendaType'
-        )
+            'formType' => 'Claroline\CoreBundle\Form\ImportAgendaType',
+        ),
     );
 
     private $factory;
@@ -219,11 +219,11 @@ class FormFactory
             $rType = new \ReflectionClass(self::$types[$type]['formType']);
             $formType = $rType->newInstanceArgs($typeArgs);
         } else {
-            $formType = new self::$types[$type]['formType'];
+            $formType = new self::$types[$type]['formType']();
         }
 
         if (!$entityVar && isset(self::$types[$type]['entity'])) {
-            $entityVar = new self::$types[$type]['entity'];
+            $entityVar = new self::$types[$type]['entity']();
         }
 
         return $this->factory->create($formType, $entityVar);

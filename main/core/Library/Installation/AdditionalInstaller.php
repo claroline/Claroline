@@ -11,8 +11,6 @@
 
 namespace Claroline\CoreBundle\Library\Installation;
 
-use Claroline\CoreBundle\Library\Installation\Updater\MaintenancePageUpdater;
-use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
 use Symfony\Bundle\SecurityBundle\Command\InitAclCommand;
 use Symfony\Component\Console\Input\ArrayInput;

@@ -12,7 +12,7 @@ use Claroline\CoreBundle\Library\Testing\Persister;
  * - create database
  * - php app/console claroline:init_test_schema --env=test
  * - php app/console doctrine:schema:update --force --env=test
- * - bin/phpunit vendor/claroline/core-bundle/Tests/API/User/GroupControllerTest.php -c app/phpunit.xml
+ * - bin/phpunit vendor/claroline/core-bundle/Tests/API/User/GroupControllerTest.php -c app/phpunit.xml.
  */
 class GroupControllerTest extends TransactionalTestCase
 {
@@ -28,7 +28,7 @@ class GroupControllerTest extends TransactionalTestCase
     private $userOrga;
     /** @var Role*/
     private $teacherRole;
-    /** @var Role*/ 
+    /** @var Role*/
     private $baseRole;
 
     protected function setUp()
@@ -115,7 +115,6 @@ class GroupControllerTest extends TransactionalTestCase
         $this->markTestSkipped('This test has not been implemented yet.');
     }
 
-
     //@route: api_put_group
     //@url: /api/groups/{group}.{_format} 
     //@method: PUT
@@ -183,7 +182,7 @@ class GroupControllerTest extends TransactionalTestCase
         $this->client->request('DELETE', "/api/groups.json?groupIds[]={$this->groupOrga->getId()}&groupIds[]={$this->groupBase->getId()}");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
-    
+
     //@route: api_add_group_role
     //@url: /api/groups/{group}/roles/{role}/add.{_format}
     //@method: PATCH
@@ -204,7 +203,7 @@ class GroupControllerTest extends TransactionalTestCase
         $this->logIn($this->john);
         $this->client->request('PATCH', "/api/groups/{$this->groupOrga->getId()}/roles/{$this->teacherRole->getId()}/add.json");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    } 
+    }
 
     //@route: api_remove_group_role
     //@url: /api/groups/{group}/roles/{role}/remove.{_format}
@@ -243,7 +242,7 @@ class GroupControllerTest extends TransactionalTestCase
         $this->assertEquals(2, count($data['groups']));
 
         //now we're adding a simple filter
-        $this->client->request('GET', $url . '?name[]=base');
+        $this->client->request('GET', $url.'?name[]=base');
         $data = $this->client->getResponse()->getContent();
         $data = json_decode($data, true);
         $this->assertEquals(1, count($data['groups']));

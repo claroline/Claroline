@@ -34,8 +34,7 @@ class ScaleController
     public function __construct(
         CompetencyManager $manager,
         FormHandler $handler
-    )
-    {
+    ) {
         $this->competencyManager = $manager;
         $this->formHandler = $handler;
     }
@@ -61,6 +60,7 @@ class ScaleController
      * @EXT\Template("HeVinciCompetencyBundle:Scale:form.html.twig")
      *
      * @param Request $request
+     *
      * @return array|JsonResponse
      */
     public function createScaleAction(Request $request)
@@ -95,6 +95,7 @@ class ScaleController
      *
      * @param Scale $scale
      * @param bool  $edit
+     *
      * @return array
      */
     public function scaleAction(Scale $scale, $edit)
@@ -105,7 +106,7 @@ class ScaleController
                 $scale,
                 ['read_only' => $edit == 0]
             ),
-            'scale' => $edit == 0 ? null : $scale
+            'scale' => $edit == 0 ? null : $scale,
         ];
     }
 
@@ -116,8 +117,9 @@ class ScaleController
      * @EXT\Method("POST")
      * @EXT\Template("HeVinciCompetencyBundle:Scale:editForm.html.twig")
      *
-     * @param Request   $request
-     * @param Scale     $scale
+     * @param Request $request
+     * @param Scale   $scale
+     *
      * @return array
      */
     public function editScaleAction(Request $request, Scale $scale)
@@ -137,6 +139,7 @@ class ScaleController
      * @EXT\Route("/delete/{id}", name="hevinci_delete_scale")
      *
      * @param Scale $scale
+     *
      * @return JsonResponse
      */
     public function deleteScaleAction(Scale $scale)

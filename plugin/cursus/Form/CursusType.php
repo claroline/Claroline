@@ -61,7 +61,7 @@ class CursusType extends AbstractType
                             ->orderBy('w.name', 'ASC');
                 },
                 'label' => 'workspace',
-                'translation_domain' => 'platform'
+                'translation_domain' => 'platform',
             )
         );
         $builder->add(
@@ -77,7 +77,7 @@ class CursusType extends AbstractType
                 'mapped' => false,
                 'data' => $color,
                 'label' => 'color',
-                'translation_domain' => 'platform'
+                'translation_domain' => 'platform',
             )
         );
     }

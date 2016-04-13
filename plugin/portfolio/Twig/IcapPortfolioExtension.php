@@ -1,4 +1,5 @@
 <?php
+
 namespace Icap\PortfolioBundle\Twig;
 
 use Icap\PortfolioBundle\Entity\Portfolio;
@@ -19,8 +20,8 @@ class IcapPortfolioExtension extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            'visibilityLabel'  => new \Twig_Filter_Method($this, 'getVisibilityLabel'),
-            'orderByRow'       => new \Twig_Filter_Method($this, 'getOrder')
+            'visibilityLabel' => new \Twig_Filter_Method($this, 'getVisibilityLabel'),
+            'orderByRow' => new \Twig_Filter_Method($this, 'getOrder'),
         );
     }
 
@@ -39,7 +40,7 @@ class IcapPortfolioExtension extends \Twig_Extension
         $orderedWidgets = array();
 
         foreach ($widgets as $widget) {
-            $orderedWidgets[$widget->getCol() . $widget->getRow()] = $widget;
+            $orderedWidgets[$widget->getCol().$widget->getRow()] = $widget;
         }
 
         ksort($orderedWidgets);

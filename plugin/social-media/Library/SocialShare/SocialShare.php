@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -35,6 +35,7 @@ class SocialShare
 
     /**
      * @param $name
+     *
      * @return NetworkInterface
      */
     public function getNetwork($name)
@@ -46,4 +47,4 @@ class SocialShare
     {
         $this->networks[$network->getName()] = $network;
     }
-} 
+}

@@ -58,7 +58,6 @@ class Updater060300 extends Updater
             ->findAllPlatformRoles();
 
         foreach ($widgets as $widget) {
-
             foreach ($roles as $role) {
                 $widget->addRole($role);
             }

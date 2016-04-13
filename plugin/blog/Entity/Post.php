@@ -5,7 +5,6 @@ namespace Icap\BlogBundle\Entity;
 use Claroline\CoreBundle\Entity\User;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\Common\Collections\ArrayCollection;
 use Icap\BlogBundle\Utils\String;
 use Icap\NotificationBundle\Entity\UserPickerContent;
@@ -19,7 +18,7 @@ use Icap\NotificationBundle\Entity\UserPickerContent;
 class Post extends Statusable
 {
     /**
-     * @var int $id
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -28,14 +27,14 @@ class Post extends Statusable
     protected $id;
 
     /**
-     * @var string $title
+     * @var string
      *
      * @ORM\Column(type="string", length=255)
      */
     protected $title;
 
     /**
-     * @var string $content
+     * @var string
      *
      * @ORM\Column(type="text")
      */
@@ -48,7 +47,7 @@ class Post extends Statusable
     protected $slug;
 
     /**
-     * @var \Datetime $creationDate
+     * @var \Datetime
      *
      * @ORM\Column(type="datetime", name="creation_date")
      * @Gedmo\Timestampable(on="create")
@@ -56,7 +55,7 @@ class Post extends Statusable
     protected $creationDate;
 
     /**
-     * @var \Datetime $modificationDate
+     * @var \Datetime
      *
      * @ORM\Column(type="datetime", name="modification_date", nullable=true)
      * @Gedmo\Timestampable(on="change", field={"title", "content"})
@@ -64,7 +63,7 @@ class Post extends Statusable
     protected $modificationDate;
 
     /**
-     * @var \Datetime $publicationDate
+     * @var \Datetime
      *
      * @ORM\Column(type="datetime", name="publication_date", nullable=true)
      * @Gedmo\Timestampable(on="change", field="status", value="1")
@@ -72,7 +71,7 @@ class Post extends Statusable
     protected $publicationDate;
 
     /**
-     * @var int $viewCounter
+     * @var int
      *
      * @ORM\Column(type="integer", options={"default": "0"})
      */
@@ -86,7 +85,7 @@ class Post extends Statusable
     protected $comments;
 
     /**
-     * @var User $author
+     * @var User
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
@@ -114,13 +113,13 @@ class Post extends Statusable
     public function __construct()
     {
         $this->comments = new ArrayCollection();
-        $this->tags     = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -128,9 +127,9 @@ class Post extends Statusable
     }
 
     /**
-     * Set title
+     * Set title.
      *
-     * @param  string $title
+     * @param string $title
      *
      * @return Post
      */
@@ -142,7 +141,7 @@ class Post extends Statusable
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
@@ -152,9 +151,9 @@ class Post extends Statusable
     }
 
     /**
-     * Set content
+     * Set content.
      *
-     * @param  string $content
+     * @param string $content
      *
      * @return Post
      */
@@ -166,7 +165,7 @@ class Post extends Statusable
     }
 
     /**
-     * Get content
+     * Get content.
      *
      * @return string
      */
@@ -184,13 +183,14 @@ class Post extends Statusable
     public function getShortContent($url, $text)
     {
         $readMoreText = sprintf('... <a href="%s" class="read_more">%s <span class="fa fa-long-arrow-right"></span></a>', $url, $text);
+
         return String::resumeHtml($this->content, 400, $readMoreText);
     }
 
     /**
-     * Set slug
+     * Set slug.
      *
-     * @param  string $slug
+     * @param string $slug
      *
      * @return Post
      */
@@ -202,7 +202,7 @@ class Post extends Statusable
     }
 
     /**
-     * Get slug
+     * Get slug.
      *
      * @return string
      */
@@ -212,9 +212,9 @@ class Post extends Statusable
     }
 
     /**
-     * Set creationDate
+     * Set creationDate.
      *
-     * @param  \DateTime $creationDate
+     * @param \DateTime $creationDate
      *
      * @return Post
      */
@@ -226,7 +226,7 @@ class Post extends Statusable
     }
 
     /**
-     * Get creationDate
+     * Get creationDate.
      *
      * @return \DateTime
      */
@@ -236,9 +236,9 @@ class Post extends Statusable
     }
 
     /**
-     * Set modificationDate
+     * Set modificationDate.
      *
-     * @param  \DateTime $modificationDate
+     * @param \DateTime $modificationDate
      *
      * @return Post
      */
@@ -250,7 +250,7 @@ class Post extends Statusable
     }
 
     /**
-     * Get modificationDate
+     * Get modificationDate.
      *
      * @return \DateTime
      */
@@ -260,7 +260,7 @@ class Post extends Statusable
     }
 
     /**
-     * Set publicationDate
+     * Set publicationDate.
      *
      * @param \DateTime $publicationDate
      *
@@ -274,7 +274,7 @@ class Post extends Statusable
     }
 
     /**
-     * Get publicationDate
+     * Get publicationDate.
      *
      * @return \DateTime
      */
@@ -284,9 +284,9 @@ class Post extends Statusable
     }
 
     /**
-     * Add comments
+     * Add comments.
      *
-     * @param  Comment $comments
+     * @param Comment $comments
      *
      * @return Post
      */
@@ -298,7 +298,7 @@ class Post extends Statusable
     }
 
     /**
-     * Remove comments
+     * Remove comments.
      *
      * @param Comment $comments
      *
@@ -331,7 +331,7 @@ class Post extends Statusable
     }
 
     /**
-     * Get comments
+     * Get comments.
      *
      * @return ArrayCollection|Comment[]
      */
@@ -341,9 +341,9 @@ class Post extends Statusable
     }
 
     /**
-     * Set author
+     * Set author.
      *
-     * @param  User $author
+     * @param User $author
      *
      * @return Post
      */
@@ -355,7 +355,7 @@ class Post extends Statusable
     }
 
     /**
-     * Get author
+     * Get author.
      *
      * @return User
      */
@@ -365,9 +365,9 @@ class Post extends Statusable
     }
 
     /**
-     * Set blog
+     * Set blog.
      *
-     * @param  Blog $blog
+     * @param Blog $blog
      *
      * @return Post
      */
@@ -379,7 +379,7 @@ class Post extends Statusable
     }
 
     /**
-     * Get blog
+     * Get blog.
      *
      * @return Blog
      */
@@ -447,7 +447,7 @@ class Post extends Statusable
         } else {
             foreach ($this->getComments() as $comment) {
                 if ($comment->isPublished()) {
-                    $countComments++;
+                    ++$countComments;
                 }
             }
         }
@@ -501,6 +501,7 @@ class Post extends Statusable
 
     /**
      * @param UserPickerContent $userPicker
+     *
      * @return $this
      */
     public function setUserPicker(UserPickerContent $userPicker)

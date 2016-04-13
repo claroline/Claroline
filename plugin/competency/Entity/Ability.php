@@ -71,7 +71,7 @@ class Ability implements \JsonSerializable
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -120,6 +120,7 @@ class Ability implements \JsonSerializable
 
     /**
      * @see $level
+     *
      * @param Level $level
      */
     public function setLevel(Level $level)
@@ -129,6 +130,7 @@ class Ability implements \JsonSerializable
 
     /**
      * @see $level
+     *
      * @return Level
      */
     public function getLevel()
@@ -138,6 +140,7 @@ class Ability implements \JsonSerializable
 
     /**
      * @param Activity $activity
+     *
      * @return bool
      */
     public function isLinkedToActivity(Activity $activity)
@@ -154,7 +157,7 @@ class Ability implements \JsonSerializable
     {
         if (!$this->isLinkedToActivity($activity)) {
             $this->activities->add($activity);
-            $this->activityCount++;
+            ++$this->activityCount;
         }
     }
 
@@ -167,7 +170,7 @@ class Ability implements \JsonSerializable
     {
         if ($this->isLinkedToActivity($activity)) {
             $this->activities->removeElement($activity);
-            $this->activityCount--;
+            --$this->activityCount;
         }
     }
 
@@ -187,7 +190,7 @@ class Ability implements \JsonSerializable
             'activityCount' => $this->activityCount,
             'minActivityCount' => $this->minActivityCount,
             'levelName' => $this->level ? $this->level->getName() : null,
-            'levelValue' => $this->level ? $this->level->getValue() : null
+            'levelValue' => $this->level ? $this->level->getValue() : null,
         ];
     }
 }

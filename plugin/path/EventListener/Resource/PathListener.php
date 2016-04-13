@@ -4,26 +4,26 @@ namespace Innova\PathBundle\EventListener\Resource;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
-
 use Innova\PathBundle\Entity\Path\Path;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 /**
  * Path Event Listener
- * Used to integrate Path to Claroline resource manager
+ * Used to integrate Path to Claroline resource manager.
  */
 class PathListener extends ContainerAware
 {
     /**
-     * Fired when a ResourceNode of type Path is opened
-     * @param  \Claroline\CoreBundle\Event\OpenResourceEvent $event
+     * Fired when a ResourceNode of type Path is opened.
+     *
+     * @param \Claroline\CoreBundle\Event\OpenResourceEvent $event
+     *
      * @throws \Exception
      */
     public function onOpen(OpenResourceEvent $event)
@@ -32,15 +32,14 @@ class PathListener extends ContainerAware
         if ($path->isPublished()) {
             // Path is published => display the Player
             $route = 'innova_path_player_wizard';
-        }
-        else {
+        } else {
             // Path is not published (so we can't play the Path) => display the Editor
             $route = 'innova_path_editor_wizard';
         }
 
         $url = $this->container->get('router')->generate(
             $route,
-            array (
+            array(
                 'id' => $path->getId(),
             )
         );
@@ -55,7 +54,7 @@ class PathListener extends ContainerAware
 
         $route = $this->container->get('router')->generate(
             'innova_path_editor_wizard',
-            array (
+            array(
                 'id' => $path->getId(),
             )
         );
@@ -65,7 +64,8 @@ class PathListener extends ContainerAware
     }
 
     /**
-     * Fired when the form to create a new ResourceNode is displayed
+     * Fired when the form to create a new ResourceNode is displayed.
+     *
      * @param \Claroline\CoreBundle\Event\CreateFormResourceEvent $event
      */
     public function onCreateForm(CreateFormResourceEvent $event)
@@ -77,7 +77,7 @@ class PathListener extends ContainerAware
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'innova_path'
+                'resourceType' => 'innova_path',
             )
         );
 
@@ -86,7 +86,8 @@ class PathListener extends ContainerAware
     }
 
     /**
-     * Fired when a new ResourceNode of type Path is opened
+     * Fired when a new ResourceNode of type Path is opened.
+     *
      * @param \Claroline\CoreBundle\Event\CreateResourceEvent $event
      */
     public function onCreate(CreateResourceEvent $event)
@@ -107,14 +108,13 @@ class PathListener extends ContainerAware
             $path->initializeStructure();
 
             // Send new path to dispatcher through event object
-            $event->setResources(array ($path));
-        }
-        else {
+            $event->setResources(array($path));
+        } else {
             $content = $this->container->get('templating')->render(
                 'ClarolineCoreBundle:Resource:createForm.html.twig',
                 array(
                     'form' => $form->createView(),
-                    'resourceType' => 'innova_path'
+                    'resourceType' => 'innova_path',
                 )
             );
 
@@ -125,18 +125,20 @@ class PathListener extends ContainerAware
     }
 
     /**
-     * Fired when a ResourceNode of type Path is deleted
+     * Fired when a ResourceNode of type Path is deleted.
+     *
      * @param \Claroline\CoreBundle\Event\DeleteResourceEvent $event
      */
     public function onDelete(DeleteResourceEvent $event)
     {
-
         $event->stopPropagation();
     }
 
     /**
-     * Fired when a ResourceNode of type Path is duplicated
+     * Fired when a ResourceNode of type Path is duplicated.
+     *
      * @param \Claroline\CoreBundle\Event\CopyResourceEvent $event
+     *
      * @throws \Exception
      */
     public function onCopy(CopyResourceEvent $event)
@@ -158,7 +160,7 @@ class PathListener extends ContainerAware
         $structure = json_decode($pathToCopy->getStructure());
 
         // Process steps
-        $processedNodes = array ();
+        $processedNodes = array();
         foreach ($structure->steps as $step) {
             $processedNodes = $this->copyStepContent($step, $parent, $processedNodes);
         }
@@ -182,7 +184,7 @@ class PathListener extends ContainerAware
         $event->stopPropagation();
     }
 
-    private function copyStepContent(\stdClass $step, ResourceNode $newParent, array $processedNodes = array ())
+    private function copyStepContent(\stdClass $step, ResourceNode $newParent, array $processedNodes = array())
     {
         // Remove reference to Step Entity
         $step->resourceId = null;
@@ -212,7 +214,7 @@ class PathListener extends ContainerAware
         return $processedNodes;
     }
 
-    private function copyResource(\stdClass $resource, ResourceNode $newParent, array $processedNodes = array ())
+    private function copyResource(\stdClass $resource, ResourceNode $newParent, array $processedNodes = array())
     {
         // Get current User
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
@@ -270,7 +272,7 @@ class PathListener extends ContainerAware
         return $processedNodes;
     }
 
-    private function updateStep(\stdClass $step, array $processedNodes = array ())
+    private function updateStep(\stdClass $step, array $processedNodes = array())
     {
         if (!empty($step->primaryResource) && !empty($step->primaryResource[0])) {
             $this->replaceResourceId($step->primaryResource[0], $processedNodes);

@@ -40,16 +40,15 @@ class ObjectiveController
      *     "progressManager"    = @DI\Inject("hevinci.competency.progress_manager"),
      * })
      *
-     * @param FormHandler       $handler
-     * @param ObjectiveManager  $objectiveManager
-     * @param ProgressManager   $progressManager
+     * @param FormHandler      $handler
+     * @param ObjectiveManager $objectiveManager
+     * @param ProgressManager  $progressManager
      */
     public function __construct(
         FormHandler $handler,
         ObjectiveManager $objectiveManager,
         ProgressManager $progressManager
-    )
-    {
+    ) {
         $this->formHandler = $handler;
         $this->objectiveManager = $objectiveManager;
         $this->progressManager = $progressManager;
@@ -90,6 +89,7 @@ class ObjectiveController
      * @EXT\Template("HeVinciCompetencyBundle:Objective:objectiveForm.html.twig")
      *
      * @param Request $request
+     *
      * @return JsonResponse|array
      */
     public function createObjectiveAction(Request $request)
@@ -109,6 +109,7 @@ class ObjectiveController
      * @EXT\Route("/{id}/delete", name="hevinci_delete_objective")
      *
      * @param Objective $objective
+     *
      * @return JsonResponse
      */
     public function deleteObjectiveAction(Objective $objective)
@@ -123,13 +124,14 @@ class ObjectiveController
      * @EXT\Template("HeVinciCompetencyBundle:Objective:objectiveEditForm.html.twig")
      *
      * @param Objective $objective
+     *
      * @return array
      */
     public function objectiveEditionFormAction(Objective $objective)
     {
         return [
             'form' => $this->formHandler->getView('hevinci_form_objective', $objective),
-            'objective' => $objective
+            'objective' => $objective,
         ];
     }
 
@@ -142,6 +144,7 @@ class ObjectiveController
      *
      * @param Request   $request
      * @param Objective $objective
+     *
      * @return array
      */
     public function editObjectiveAction(Request $request, Objective $objective)
@@ -167,9 +170,10 @@ class ObjectiveController
      * @EXT\ParamConverter("competency", options={"id"= "competencyId"})
      * @EXT\ParamConverter("level", options={"id"="levelId"})
      *
-     * @param Objective     $objective
-     * @param Competency    $competency
-     * @param Level         $level
+     * @param Objective  $objective
+     * @param Competency $competency
+     * @param Level      $level
+     *
      * @return JsonResponse
      */
     public function linkCompetencyAction(Objective $objective, Competency $competency, Level $level)
@@ -186,6 +190,7 @@ class ObjectiveController
      * @EXT\Route("/link/{id}/delete", name="hevinci_delete_objective_association")
      *
      * @param ObjectiveCompetency $link
+     *
      * @return JsonResponse
      */
     public function deleteCompetencyLinkAction(ObjectiveCompetency $link)
@@ -199,6 +204,7 @@ class ObjectiveController
      * @EXT\Route("/{id}/competencies", name="hevinci_load_objective_competencies")
      *
      * @param Objective $objective
+     *
      * @return JsonResponse
      */
     public function objectiveCompetenciesAction(Objective $objective)
@@ -214,6 +220,7 @@ class ObjectiveController
      *
      * @param Objective $objective
      * @param User      $user
+     *
      * @return JsonResponse
      */
     public function userObjectiveCompetenciesAction(Objective $objective, User $user)
@@ -228,6 +235,7 @@ class ObjectiveController
      * @EXT\Template
      *
      * @param Request $request
+     *
      * @return array
      */
     public function usersAction(Request $request)
@@ -243,13 +251,14 @@ class ObjectiveController
      *
      * @param Objective $objective
      * @param Request   $request
+     *
      * @return array
      */
     public function objectiveUsersAction(Objective $objective, Request $request)
     {
         return [
             'pager' => $this->objectiveManager->listUsersWithObjective($objective, $request->query->get('page', 1)),
-            'filterObjective' => $objective
+            'filterObjective' => $objective,
         ];
     }
 
@@ -259,15 +268,16 @@ class ObjectiveController
      * @EXT\Route("/groups/{id}/users", name="hevinci_objective_group_users")
      * @EXT\Template("HeVinciCompetencyBundle:Objective:users.html.twig")
      *
-     * @param Group     $group
-     * @param Request   $request
+     * @param Group   $group
+     * @param Request $request
+     *
      * @return array
      */
     public function groupUsersAction(Group $group, Request $request)
     {
         return [
             'pager' => $this->objectiveManager->listGroupUsers($group, $request->query->get('page', 1)),
-            'filterGroup' => $group
+            'filterGroup' => $group,
         ];
     }
 
@@ -278,6 +288,7 @@ class ObjectiveController
      * @EXT\Template
      *
      * @param Request $request
+     *
      * @return array
      */
     public function groupsAction(Request $request)
@@ -292,13 +303,14 @@ class ObjectiveController
      * @EXT\Template("HeVinciCompetencyBundle:Objective:groups.html.twig")
      *
      * @param Objective $objective
+     *
      * @return array
      */
     public function objectiveGroupsAction(Objective $objective)
     {
         return [
             'pager' => $this->objectiveManager->listGroupsWithObjective($objective),
-            'filterObjective' => $objective
+            'filterObjective' => $objective,
         ];
     }
 
@@ -311,7 +323,8 @@ class ObjectiveController
      * @EXT\ParamConverter("user", options={"id"="userId"})
      *
      * @param Objective $objective
-     * @param User $user
+     * @param User      $user
+     *
      * @return JsonResponse
      */
     public function assignObjectiveToUserAction(Objective $objective, User $user)
@@ -332,6 +345,7 @@ class ObjectiveController
      *
      * @param Objective $objective
      * @param Group     $group
+     *
      * @return JsonResponse
      */
     public function assignObjectiveToGroupAction(Objective $objective, Group $group)
@@ -348,6 +362,7 @@ class ObjectiveController
      * @EXT\Route("/users/{id}", name="hevinci_user_objectives")
      *
      * @param User $user
+     *
      * @return JsonResponse
      */
     public function loadUserObjectivesAction(User $user)
@@ -364,6 +379,7 @@ class ObjectiveController
      *
      * @param Objective $objective
      * @param User      $user
+     *
      * @return JsonResponse
      */
     public function removeUserObjectiveAction(Objective $objective, User $user)
@@ -383,6 +399,7 @@ class ObjectiveController
      *
      * @param Objective $objective
      * @param Group     $group
+     *
      * @return JsonResponse
      */
     public function removeGroupObjectiveAction(Objective $objective, Group $group)
@@ -396,6 +413,7 @@ class ObjectiveController
      * @EXT\Route("/groups/{id}", name="hevinci_group_objectives")
      *
      * @param Group $group
+     *
      * @return JsonResponse
      */
     public function loadGroupObjectivesAction(Group $group)
@@ -414,8 +432,9 @@ class ObjectiveController
      * @EXT\ParamConverter("user", options={"id"="userId"})
      * @EXT\Template("HeVinciCompetencyBundle::competencyHistory.html.twig")
      *
-     * @param Competency    $competency
-     * @param User          $user
+     * @param Competency $competency
+     * @param User       $user
+     *
      * @return array
      */
     public function competencyUserHistoryAction(Competency $competency, User $user)
@@ -423,7 +442,7 @@ class ObjectiveController
         return [
             'competency' => $competency,
             'user' => $user,
-            'logs' => $this->progressManager->listLeafCompetencyLogs($competency, $user)
+            'logs' => $this->progressManager->listLeafCompetencyLogs($competency, $user),
         ];
     }
 }

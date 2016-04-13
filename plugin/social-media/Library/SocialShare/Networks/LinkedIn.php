@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -12,14 +12,14 @@ namespace Icap\SocialmediaBundle\Library\SocialShare\Networks;
 
 class LinkedIn implements NetworkInterface
 {
-    const NAME = "linkedin";
-    const SHARE_URL = "http://www.linkedin.com/shareArticle?%s";
-    const API_URL = "http://www.linkedin.com/countserv/count/share?url=%s&format=json";
-    const COLOR = "#007bb6";
-    const ICON = "linkedin";
+    const NAME = 'linkedin';
+    const SHARE_URL = 'http://www.linkedin.com/shareArticle?%s';
+    const API_URL = 'http://www.linkedin.com/countserv/count/share?url=%s&format=json';
+    const COLOR = '#007bb6';
+    const ICON = 'linkedin';
 
     /**
-     * Gets networks's name
+     * Gets networks's name.
      *
      * @return string
      */
@@ -29,7 +29,7 @@ class LinkedIn implements NetworkInterface
     }
 
     /**
-     * Gets the share link for provided URL
+     * Gets the share link for provided URL.
      *
      * @param $url
      * @param array $options
@@ -45,7 +45,7 @@ class LinkedIn implements NetworkInterface
     }
 
     /**
-     * Gets the number of shares of the URL
+     * Gets the number of shares of the URL.
      *
      * @param $url
      *
@@ -55,17 +55,17 @@ class LinkedIn implements NetworkInterface
     {
         $api_url = sprintf(self::API_URL, urlencode($url));
         $data = null;
-        try{
+        try {
             $data = json_decode(file_get_contents($api_url));
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $data = null;
         }
 
-        return ($data !== null && isset($data->count))?intval($data->count):0;
+        return ($data !== null && isset($data->count)) ? intval($data->count) : 0;
     }
 
     /**
-     * Gets networks's bg color
+     * Gets networks's bg color.
      *
      * @return string
      */
@@ -75,7 +75,7 @@ class LinkedIn implements NetworkInterface
     }
 
     /**
-     * Gets network's icon class
+     * Gets network's icon class.
      *
      * @return string
      */

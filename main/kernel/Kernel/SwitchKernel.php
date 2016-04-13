@@ -26,7 +26,7 @@ abstract class SwitchKernel extends Kernel
         }
 
         $this->originalEnvironement = $this->environment;
-        $this->environment = 'tmp' . time();
+        $this->environment = 'tmp'.time();
         $this->hasSwitched = true;
         $this->shutdown();
         $this->boot();

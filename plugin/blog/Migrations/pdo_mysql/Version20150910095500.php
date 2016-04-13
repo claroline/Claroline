@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Auto-generated migration based on mapping information: modify it with caution
+ * Auto-generated migration based on mapping information: modify it with caution.
  *
  * Generation date: 2015/09/10 09:55:01
  */
@@ -22,9 +22,9 @@ class Version20150910095500 extends AbstractMigration
 
     public function down(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE icap__blog_options 
             DROP display_list_widget_blog_right
-        ");
+        ');
     }
 }

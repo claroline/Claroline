@@ -81,8 +81,6 @@ class TokenUpdater
                 return;
             }
         }
-
-
     }
 
     public function cancelUsurpation($token)

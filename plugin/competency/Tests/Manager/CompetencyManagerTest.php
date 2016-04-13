@@ -70,7 +70,7 @@ class CompetencyManagerTest extends UnitTestCase
             ->willReturn([$c1, $c2]);
         $expected = [
             ['id' => null, 'name' => 'Foo', 'description' => 'Foo desc'],
-            ['id' => null, 'name' => 'Bar', 'description' => 'Bar desc']
+            ['id' => null, 'name' => 'Bar', 'description' => 'Bar desc'],
         ];
         $this->assertEquals($expected, $this->manager->listFrameworks(true));
     }
@@ -300,8 +300,9 @@ class CompetencyManagerTest extends UnitTestCase
                         $this->assertEquals($parent, $arg->getCompetency());
                         $this->assertEquals($ability, $arg->getAbility());
                         $this->assertEquals($level, $arg->getLevel());
+
                         return true;
-                    })
+                    }),
                 ]);
 
         $this->om->expects($this->once())->method('flush');
@@ -417,6 +418,7 @@ class CompetencyManagerTest extends UnitTestCase
                 $this->assertEquals($parent, $arg->getCompetency());
                 $this->assertEquals($ability, $arg->getAbility());
                 $this->assertEquals($level, $arg->getLevel());
+
                 return true;
             }));
         $this->om->expects($this->once())->method('flush');
@@ -430,13 +432,13 @@ class CompetencyManagerTest extends UnitTestCase
             [
                 [[
                     'id' => 1,
-                    'name' => 'C1'
+                    'name' => 'C1',
                 ]],
                 [],
                 [
                     'id' => 1,
-                    'name' => 'C1'
-                ]
+                    'name' => 'C1',
+                ],
             ],
             [
                 [[
@@ -445,9 +447,9 @@ class CompetencyManagerTest extends UnitTestCase
                     '__children' => [
                         [
                             'id' => 2,
-                            'name' => 'C2'
-                        ]
-                    ]
+                            'name' => 'C2',
+                        ],
+                    ],
                 ]],
                 [],
                 [
@@ -456,10 +458,10 @@ class CompetencyManagerTest extends UnitTestCase
                     '__children' => [
                         [
                             'id' => 2,
-                            'name' => 'C2'
-                        ]
-                    ]
-                ]
+                            'name' => 'C2',
+                        ],
+                    ],
+                ],
             ],
             [
                 [[
@@ -468,16 +470,16 @@ class CompetencyManagerTest extends UnitTestCase
                     '__children' => [
                         [
                             'id' => 2,
-                            'name' => 'C2'
-                        ]
-                    ]
+                            'name' => 'C2',
+                        ],
+                    ],
                 ]],
                 [
                     [
                         'id' => 3,
                         'name' => 'A1',
-                        'competencyId' => 2
-                    ]
+                        'competencyId' => 2,
+                    ],
                 ],
                 [
                     'id' => 1,
@@ -490,12 +492,12 @@ class CompetencyManagerTest extends UnitTestCase
                                 [
                                     'id' => 3,
                                     'name' => 'A1',
-                                    'competencyId' => 2
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
+                                    'competencyId' => 2,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
             ],
             [
                 [[
@@ -504,21 +506,21 @@ class CompetencyManagerTest extends UnitTestCase
                     '__children' => [
                         [
                             'id' => 2,
-                            'name' => 'C2'
-                        ]
-                    ]
+                            'name' => 'C2',
+                        ],
+                    ],
                 ]],
                 [
                     [
                         'id' => 3,
                         'name' => 'A1',
-                        'competencyId' => 2
+                        'competencyId' => 2,
                     ],
                     [
                         'id' => 4,
                         'name' => 'A2',
-                        'competencyId' => 2
-                    ]
+                        'competencyId' => 2,
+                    ],
                 ],
                 [
                     'id' => 1,
@@ -531,18 +533,18 @@ class CompetencyManagerTest extends UnitTestCase
                                 [
                                     'id' => 3,
                                     'name' => 'A1',
-                                    'competencyId' => 2
+                                    'competencyId' => 2,
                                 ],
                                 [
                                     'id' => 4,
                                     'name' => 'A2',
-                                    'competencyId' => 2
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
-            ]
+                                    'competencyId' => 2,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 }

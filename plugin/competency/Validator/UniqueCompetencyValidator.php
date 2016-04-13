@@ -49,16 +49,16 @@ class UniqueCompetencyValidator extends ConstraintValidator
         if (!$parent || !$parent instanceof Competency) {
             throw new \LogicException(
                 'Cannot validate competency name without a parent competency reference '
-                . 'the competency hasn\'t a parent yet and no parent was provided '
-                . 'in the constraint (did you forget to pass a reference through the '
-                . '"parent_competency" form option ?)'
+                .'the competency hasn\'t a parent yet and no parent was provided '
+                .'in the constraint (did you forget to pass a reference through the '
+                .'"parent_competency" form option ?)'
             );
         }
 
         $duplicate = $this->om->getRepository('HeVinciCompetencyBundle:Competency')
             ->findOneBy([
                 'name' => $competency->getName(),
-                'root' => $parent->getRoot()
+                'root' => $parent->getRoot(),
             ]);
 
         if ($duplicate) {

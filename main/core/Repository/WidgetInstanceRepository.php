@@ -50,8 +50,7 @@ class WidgetInstanceRepository extends EntityRepository
     public function findDesktopWidgetInstance(
         User $user,
         array $excludedWidgetInstances
-    )
-    {
+    ) {
         $dql = "
             SELECT wdc
             FROM Claroline\CoreBundle\Entity\Widget\WidgetInstance wdc
@@ -70,8 +69,7 @@ class WidgetInstanceRepository extends EntityRepository
     public function findWorkspaceWidgetInstance(
         Workspace $workspace,
         array $excludedWidgetInstances
-    )
-    {
+    ) {
         $dql = "
             SELECT wdc
             FROM Claroline\CoreBundle\Entity\Widget\WidgetInstance wdc

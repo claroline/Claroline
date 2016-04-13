@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
-use Claroline\CoreBundle\Event\DataConveyorEventInterface;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 /**
@@ -38,7 +37,7 @@ class CreateResourceEvent extends Event implements DataConveyorEventInterface
     }
 
     /**
-     * Sets the form content with validations errors (failure scenario)
+     * Sets the form content with validations errors (failure scenario).
      *
      * @param string $formContent
      */
@@ -49,7 +48,8 @@ class CreateResourceEvent extends Event implements DataConveyorEventInterface
     }
 
     /**
-     * Returns the form content with validation errors
+     * Returns the form content with validation errors.
+     *
      * @return string
      */
     public function getErrorFormContent()
@@ -63,7 +63,8 @@ class CreateResourceEvent extends Event implements DataConveyorEventInterface
     }
 
     /**
-     * Return the resource type (used by the file manager)
+     * Return the resource type (used by the file manager).
+     *
      * @return string
      */
     public function getResourceType()

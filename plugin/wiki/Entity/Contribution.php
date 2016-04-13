@@ -7,25 +7,23 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Icap\NotificationBundle\Entity\UserPickerContent;
-use JMS\DiExtraBundle\Annotation as DI;
-
 
 /**
  * @ORM\Entity(repositoryClass="Icap\WikiBundle\Repository\ContributionRepository")
  * @ORM\EntityListeners({"Icap\WikiBundle\Listener\ContributionListener"})
  * @ORM\Table(name="icap__wiki_contribution")
  * @ORM\HasLifecycleCallbacks()
-*/
+ */
 class Contribution
 {
-	/**
+    /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
-	/**
+    /**
      * @ORM\Column(type="string", nullable=true)
      */
     protected $title;
@@ -44,7 +42,7 @@ class Contribution
     protected $creationDate;
 
     /**
-     * @var User $contributor
+     * @var User
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
@@ -60,9 +58,9 @@ class Contribution
     protected $userPicker = null;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -96,8 +94,8 @@ class Contribution
     public function getTextForPdf()
     {
         $tmpText = $this->text;
-        str_replace("&nbsp;", " ", $tmpText);
-        preg_replace('/alt=["\'][a-zA-Z]*["\']/g', "", $tmpText);
+        str_replace('&nbsp;', ' ', $tmpText);
+        preg_replace('/alt=["\'][a-zA-Z]*["\']/g', '', $tmpText);
 
         return $tmpText;
     }
@@ -131,9 +129,10 @@ class Contribution
     }
 
     /**
-     * Set contributor
+     * Set contributor.
      *
      * @param User $contributor
+     *
      * @return Contribution
      */
     public function setContributor(User $contributor = null)
@@ -144,7 +143,7 @@ class Contribution
     }
 
     /**
-     * Get contributor
+     * Get contributor.
      *
      * @return User
      */
@@ -154,9 +153,10 @@ class Contribution
     }
 
     /**
-     * Set section
+     * Set section.
      *
      * @param \Icap\WikiBundle\Entity\Section $section
+     *
      * @return contribution
      */
     public function setSection(\Icap\WikiBundle\Entity\Section $section)
@@ -167,7 +167,7 @@ class Contribution
     }
 
     /**
-     * Get section
+     * Get section.
      *
      * @return \Icap\WikiBundle\Entity\Section
      */
@@ -178,6 +178,7 @@ class Contribution
 
     /**
      * @param UserPickerContent $userPicker
+     *
      * @return $this
      */
     public function setUserPicker(UserPickerContent $userPicker)
@@ -198,7 +199,8 @@ class Contribution
     /**
      * @ORM\PrePersist
      */
-    public function createUserPicker(LifecycleEventArgs $event){
+    public function createUserPicker(LifecycleEventArgs $event)
+    {
         if ($this->getText() != null) {
             $userPicker = new UserPickerContent($this->getText());
             $this->setUserPicker($userPicker);

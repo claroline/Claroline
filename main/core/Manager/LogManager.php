@@ -15,8 +15,6 @@ use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Pagerfanta\Adapter\ArrayAdapter;
-use Pagerfanta\Adapter\DoctrineCollectionAdapter;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Adapter\FixedAdapter;
 use Pagerfanta\Pagerfanta;
@@ -51,6 +49,7 @@ class LogManager
      *     "container"          = @DI\Inject("service_container"),
      *     "entityManager"      = @DI\Inject("doctrine.orm.entity_manager")
      * })
+     *
      * @param $container
      * @param $entityManager
      */
@@ -69,7 +68,6 @@ class LogManager
     public function getDesktopWidgetList(WidgetInstance $instance)
     {
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
-
 
         $hiddenConfigs = $this->em
             ->getRepository('ClarolineCoreBundle:Log\LogHiddenWorkspaceWidgetConfig')
@@ -103,7 +101,7 @@ class LogManager
                 'isAdmin' => true,
                 'workspace' => null,
                 'user' => null,
-                'isDesktop' => false
+                'isDesktop' => false,
             )
         );
 
@@ -152,11 +150,11 @@ class LogManager
         $configs = $configsCleaned;
 
         if (count($configs) === 0) {
-            return null;
+            return;
         }
 
         $desktopConfig = $this->getLogConfig($instance);
-        $desktopConfig = $desktopConfig === null ? $defaultConfig: $desktopConfig;
+        $desktopConfig = $desktopConfig === null ? $defaultConfig : $desktopConfig;
         $query = $this->logRepository->findLogsThroughConfigs($configs, $desktopConfig->getAmount());
         $logs = $query->getResult();
         $chartData = $this->logRepository->countByDayThroughConfigs($configs, $this->getDefaultRange());
@@ -174,7 +172,7 @@ class LogManager
                 'your_workspace_activity_overview',
                 array(),
                 'platform'
-            )
+            ),
         );
     }
 
@@ -183,7 +181,7 @@ class LogManager
         $workspace = $instance->getWorkspace();
 
         if (!$this->isAllowedToViewLogs($workspace)) {
-            return null;
+            return;
         }
 
         $config = $this->getLogConfig($instance);
@@ -210,7 +208,7 @@ class LogManager
         $eventManager = $this->container->get('claroline.event.manager');
 
         if ($config->hasNoRestriction()) {
-            return null;
+            return;
         }
 
         $query = $this->logRepository->findLogsThroughConfigs(array($config), $config->getAmount());
@@ -239,11 +237,11 @@ class LogManager
         return array(
             'logs' => $logs,
             'listItemViews' => $views,
-            'chartData'     => $chartData,
-            'workspace'     => $workspace,
-            'logAmount'     => $config->getAmount(),
-            'title'         => $title,
-            'isDesktop'     => false
+            'chartData' => $chartData,
+            'workspace' => $workspace,
+            'logAmount' => $config->getAmount(),
+            'title' => $title,
+            'isDesktop' => false,
         );
     }
 
@@ -306,8 +304,7 @@ class LogManager
         $maxResult = -1,
         $resourceNodeIds = null,
         $resourceClass = null
-    )
-    {
+    ) {
         $dateRangeToTextTransformer = new DateRangeToTextTransformer($this->container->get('translator'));
         $data = $this->processFormData(
             $actionsRestriction,
@@ -340,7 +337,7 @@ class LogManager
         );
 
         $adapter = new DoctrineORMAdapter($query);
-        $pager   = new PagerFanta($adapter);
+        $pager = new PagerFanta($adapter);
         $pager->setMaxPerPage(self::LOG_PER_PAGE);
 
         try {
@@ -369,7 +366,7 @@ class LogManager
             'filter' => $filter,
             'filterForm' => $filterForm->createView(),
             'chartData' => $chartData,
-            'actionName' => $actionString
+            'actionName' => $actionString,
         );
     }
 
@@ -378,8 +375,8 @@ class LogManager
         $workspace = null,
         $resource = null
     ) {
-        $workspaceIds = ($workspace == null)?null:array($workspace->getId());
-        $resourceNodeIds = ($resource == null)?null:array($resource->getResourceNode()->getId());
+        $workspaceIds = ($workspace == null) ? null : array($workspace->getId());
+        $resourceNodeIds = ($resource == null) ? null : array($resource->getResourceNode()->getId());
         if ($workspaceIds == null && $resourceNodeIds == null) {
             $workspaceIds = $this->getAdminOrCollaboratorWorkspaceIds();
         }
@@ -472,8 +469,7 @@ class LogManager
         $workspaceIds = null,
         $resourceNodeIds = null,
         $resourceClass = null
-    )
-    {
+    ) {
         $page = max(1, $page);
         $dateRangeToTextTransformer = new DateRangeToTextTransformer($this->container->get('translator'));
         $data = $this->processFormData(
@@ -515,7 +511,7 @@ class LogManager
         );
 
         $maxResult = self::LOG_PER_PAGE;
-        if (($page-1)*$maxResult>$nbUsers) {
+        if (($page - 1) * $maxResult > $nbUsers) {
             throw new NotFoundHttpException();
         }
 
@@ -533,7 +529,6 @@ class LogManager
             $orderBy,
             $order
         )->getResult();
-
 
         $formatedData = $this->formatTopUserDataArray($topUsers);
         $resultUserList = null;
@@ -566,17 +561,17 @@ class LogManager
             }
         }
         $adapter = new FixedAdapter($nbUsers, $resultUserList);
-        $pager   = new PagerFanta($adapter);
+        $pager = new PagerFanta($adapter);
         $pager->setMaxPerPage(self::LOG_PER_PAGE);
         $pager->setCurrentPage($page);
 
         return array(
-            'pager'         => $pager,
-            'filter'        => $data,
-            'filterForm'    => $filterForm->createView(),
-            'actionName'    => $actionString,
-            'orderBy'       => $orderBy,
-            'order'         => $order
+            'pager' => $pager,
+            'filter' => $data,
+            'filterForm' => $filterForm->createView(),
+            'actionName' => $actionString,
+            'orderBy' => $orderBy,
+            'order' => $order,
         );
     }
 
@@ -638,7 +633,7 @@ class LogManager
             $actionString = trim($actionString);
         }
 
-        return array('action'=>$actionString, 'resourceType'=>$resourceType);
+        return array('action' => $actionString, 'resourceType' => $resourceType);
     }
 
     protected function processFormData(
@@ -647,8 +642,7 @@ class LogManager
         $workspaceIds,
         $resourceClass,
         $dateRangeToTextTransformer
-    )
-    {
+    ) {
         $request = $this->container->get('request');
         $data = $request->query->all();
 
@@ -668,13 +662,13 @@ class LogManager
                 }
             }
         } else {
-            $dataClass['resourceClass'] = $resourceClass ? $resourceClass: null;
+            $dataClass['resourceClass'] = $resourceClass ? $resourceClass : null;
             $tmpForm = $this->container->get('form.factory')->create($logFilterFormType, $dataClass);
             $tmpForm->submit($request);
             $formData = $tmpForm->getData();
-            $action = isset($formData['action']) ? $formData['action']: null;
-            $range = isset($formData['range']) ?$formData['range']:null;
-            $userSearch = isset($formData['user'])?$formData['user']:null;
+            $action = isset($formData['action']) ? $formData['action'] : null;
+            $range = isset($formData['range']) ? $formData['range'] : null;
+            $userSearch = isset($formData['user']) ? $formData['user'] : null;
             if (!empty($data['orderBy'])) {
                 $orderBy = $data['orderBy'];
                 $order = $data['order'];
@@ -685,7 +679,7 @@ class LogManager
             $range = $this->getDefaultRange();
         }
 
-        if ($action == null && $actionsRestriction == "workspace" && $workspaceIds !== null) {
+        if ($action == null && $actionsRestriction == 'workspace' && $workspaceIds !== null) {
             $action = LogWorkspaceEnterEvent::ACTION;
         }
 
@@ -710,7 +704,7 @@ class LogManager
     {
         $security = $this->container->get('security.authorization_checker');
 
-        return $security->isGranted('ROLE_WS_COLLABORATOR_' . $workspace->getGuid())
+        return $security->isGranted('ROLE_WS_COLLABORATOR_'.$workspace->getGuid())
             || $security->isGranted('ROLE_WS_MANAGER_'.$workspace->getGuid());
     }
 
@@ -720,7 +714,7 @@ class LogManager
         $views = array();
         foreach ($logs as $log) {
             $eventName = 'create_log_list_item_'.$log->getAction();
-            $event     = new LogCreateDelegateViewEvent($log);
+            $event = new LogCreateDelegateViewEvent($log);
 
             /** @var EventDispatcher $eventDispatcher */
             $eventDispatcher = $this->container->get('event_dispatcher');
@@ -794,5 +788,4 @@ class LogManager
 
         return array('ids' => $topUsersIdList, 'userData' => $topUsersFormatedArray);
     }
-
 }

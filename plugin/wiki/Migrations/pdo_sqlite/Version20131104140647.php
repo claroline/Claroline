@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Auto-generated migration based on mapping information: modify it with caution
+ * Auto-generated migration based on mapping information: modify it with caution.
  *
  * Generation date: 2013/11/04 02:06:47
  */
@@ -14,31 +14,31 @@ class Version20131104140647 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE icap__wiki_section 
             ADD COLUMN deleted BOOLEAN DEFAULT NULL
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__wiki_section 
             ADD COLUMN deletion_date DATETIME DEFAULT NULL
-        ");
+        ');
     }
 
     public function down(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             DROP INDEX IDX_82904AAA76ED395
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP INDEX UNIQ_82904AAFE665925
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP INDEX IDX_82904AAAA948DBE
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP INDEX IDX_82904AA727ACA70
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TEMPORARY TABLE __temp__icap__wiki_section AS 
             SELECT id, 
             user_id, 
@@ -52,11 +52,11 @@ class Version20131104140647 extends AbstractMigration
             rgt, 
             root 
             FROM icap__wiki_section
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE icap__wiki_section
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TABLE icap__wiki_section (
                 id INTEGER NOT NULL, 
                 user_id INTEGER DEFAULT NULL, 
@@ -82,8 +82,8 @@ class Version20131104140647 extends AbstractMigration
                 REFERENCES icap__wiki_section (id) 
                 ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
             )
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             INSERT INTO icap__wiki_section (
                 id, user_id, active_contribution_id, 
                 wiki_id, parent_id, visible, creation_date, 
@@ -101,21 +101,21 @@ class Version20131104140647 extends AbstractMigration
             rgt, 
             root 
             FROM __temp__icap__wiki_section
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE __temp__icap__wiki_section
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE INDEX IDX_82904AAA76ED395 ON icap__wiki_section (user_id)
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE UNIQUE INDEX UNIQ_82904AAFE665925 ON icap__wiki_section (active_contribution_id)
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE INDEX IDX_82904AAAA948DBE ON icap__wiki_section (wiki_id)
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE INDEX IDX_82904AA727ACA70 ON icap__wiki_section (parent_id)
-        ");
+        ');
     }
 }

@@ -16,9 +16,7 @@ use Claroline\CoreBundle\Library\PluginBundleInterface;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\InstallationBundle\Manager\InstallationManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
-use Psr\Log\LogLevel;
 
 /**
  * This class is used to perform the (un-)installation of a plugin.
@@ -53,8 +51,7 @@ class Installer
         Recorder $recorder,
         InstallationManager $installer,
         ObjectManager $om
-    )
-    {
+    ) {
         $this->validator = $validator;
         $this->recorder = $recorder;
         $this->baseInstaller = $installer;
@@ -105,8 +102,8 @@ class Installer
      * Upgrades/downgrades a plugin to a specific version.
      *
      * @param PluginBundleInterface $plugin
-     * @param string       $currentVersion
-     * @param string       $targetVersion
+     * @param string                $currentVersion
+     * @param string                $targetVersion
      */
     public function update(PluginBundleInterface $plugin, $currentVersion, $targetVersion)
     {
@@ -139,10 +136,10 @@ class Installer
 
         if (0 !== count($errors)) {
             $report = "Plugin '{$plugin->getNamespace()}' cannot be installed, due to the "
-                . "following validation errors :" . PHP_EOL;
+                .'following validation errors :'.PHP_EOL;
 
             foreach ($errors as $error) {
-                $report .= $error->getMessage() . PHP_EOL;
+                $report .= $error->getMessage().PHP_EOL;
             }
 
             throw new \Exception($report);

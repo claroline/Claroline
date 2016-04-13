@@ -23,16 +23,15 @@ class ContactAdditionalActionEvent extends Event
     private $user;
 
     /**
-     * @param \Knp\Menu\FactoryInterface $factory
-     * @param \Knp\Menu\ItemInterface $menu
+     * @param \Knp\Menu\FactoryInterface       $factory
+     * @param \Knp\Menu\ItemInterface          $menu
      * @param Claroline\CoreBundle\Entity\User $user
      */
     public function __construct(
         FactoryInterface $factory,
         ItemInterface $menu,
         User $user
-    )
-    {
+    ) {
         $this->factory = $factory;
         $this->menu = $menu;
         $this->user = $user;

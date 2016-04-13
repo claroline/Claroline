@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Auto-generated migration based on mapping information: modify it with caution
+ * Auto-generated migration based on mapping information: modify it with caution.
  *
  * Generation date: 2014/09/08 03:47:50
  */
@@ -14,16 +14,16 @@ class Version20140908154749 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             DROP INDEX UNIQ_1B067922989D9B62
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP INDEX IDX_1B067922A76ED395
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP INDEX IDX_1B067922DAE07E97
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TEMPORARY TABLE __temp__icap__blog_post AS 
             SELECT id, 
             user_id, 
@@ -37,11 +37,11 @@ class Version20140908154749 extends AbstractMigration
             status, 
             viewCounter 
             FROM icap__blog_post
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE icap__blog_post
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TABLE icap__blog_post (
                 id INTEGER NOT NULL, 
                 user_id INTEGER DEFAULT NULL, 
@@ -60,8 +60,8 @@ class Version20140908154749 extends AbstractMigration
                 CONSTRAINT FK_1B067922DAE07E97 FOREIGN KEY (blog_id) 
                 REFERENCES icap__blog (id) NOT DEFERRABLE INITIALLY IMMEDIATE
             )
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             INSERT INTO icap__blog_post (
                 id, user_id, blog_id, title, content, 
                 slug, creation_date, modification_date, 
@@ -79,33 +79,33 @@ class Version20140908154749 extends AbstractMigration
             status, 
             viewCounter 
             FROM __temp__icap__blog_post
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE __temp__icap__blog_post
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE UNIQUE INDEX UNIQ_1B067922989D9B62 ON icap__blog_post (slug)
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE INDEX IDX_1B067922A76ED395 ON icap__blog_post (user_id)
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE INDEX IDX_1B067922DAE07E97 ON icap__blog_post (blog_id)
-        ");
+        ');
     }
 
     public function down(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             DROP INDEX UNIQ_1B067922989D9B62
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP INDEX IDX_1B067922A76ED395
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP INDEX IDX_1B067922DAE07E97
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TEMPORARY TABLE __temp__icap__blog_post AS 
             SELECT id, 
             user_id, 
@@ -119,11 +119,11 @@ class Version20140908154749 extends AbstractMigration
             viewCounter, 
             status 
             FROM icap__blog_post
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE icap__blog_post
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TABLE icap__blog_post (
                 id INTEGER NOT NULL, 
                 user_id INTEGER DEFAULT NULL, 
@@ -142,8 +142,8 @@ class Version20140908154749 extends AbstractMigration
                 CONSTRAINT FK_1B067922DAE07E97 FOREIGN KEY (blog_id) 
                 REFERENCES icap__blog (id) NOT DEFERRABLE INITIALLY IMMEDIATE
             )
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             INSERT INTO icap__blog_post (
                 id, user_id, blog_id, title, content, 
                 slug, creation_date, modification_date, 
@@ -161,18 +161,18 @@ class Version20140908154749 extends AbstractMigration
             viewCounter, 
             status 
             FROM __temp__icap__blog_post
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE __temp__icap__blog_post
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE UNIQUE INDEX UNIQ_1B067922989D9B62 ON icap__blog_post (slug)
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE INDEX IDX_1B067922A76ED395 ON icap__blog_post (user_id)
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE INDEX IDX_1B067922DAE07E97 ON icap__blog_post (blog_id)
-        ");
+        ');
     }
 }

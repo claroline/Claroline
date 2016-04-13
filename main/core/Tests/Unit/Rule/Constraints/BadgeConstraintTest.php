@@ -20,7 +20,7 @@ class BadgeConstraintTest extends MockeryTestCase
 {
     public function testIsNotApplicableTo()
     {
-        $badgeRule       = new BadgeRule();
+        $badgeRule = new BadgeRule();
         $badgeConstraint = new BadgeConstraint();
 
         $this->assertFalse($badgeConstraint->isApplicableTo($badgeRule));
@@ -55,8 +55,8 @@ class BadgeConstraintTest extends MockeryTestCase
         $log = new Log();
         $log->setDetails(array(
             'badge' => array(
-                'id' => $badge->getId()
-            )
+                'id' => $badge->getId(),
+            ),
         ));
         $badgeConstraint = new BadgeConstraint();
         $badgeConstraint
@@ -77,8 +77,8 @@ class BadgeConstraintTest extends MockeryTestCase
         $log = new Log();
         $log->setDetails(array(
             'badge' => array(
-                'id' => rand(0, PHP_INT_MAX / 2)
-            )
+                'id' => rand(0, PHP_INT_MAX / 2),
+            ),
         ));
         $badgeConstraint = new BadgeConstraint();
         $badgeConstraint

@@ -27,8 +27,8 @@ class LevelsType extends AbstractType
             'attr' => [
                 'class' => 'form-control',
                 'rows' => 6,
-                'placeholder' => 'info.scale_levels'
-            ]
+                'placeholder' => 'info.scale_levels',
+            ],
         ]);
     }
 

@@ -57,15 +57,14 @@ class AgendaController extends Controller
         RouterInterface $router,
         TokenStorageInterface $tokenStorage,
         EntityManager $em
-    )
-    {
+    ) {
         $this->authorization = $authorization;
-        $this->formFactory   = $formFactory;
-        $this->request       = $request;
+        $this->formFactory = $formFactory;
+        $this->request = $request;
         $this->agendaManager = $agendaManager;
-        $this->router        = $router;
-        $this->tokenStorage  = $tokenStorage;
-        $this->em            = $em;
+        $this->router = $router;
+        $this->tokenStorage = $tokenStorage;
+        $this->em = $em;
     }
 
     /**
@@ -76,7 +75,9 @@ class AgendaController extends Controller
      * )
      *
      * @throws \Exception
-     * @param  Event $event
+     *
+     * @param Event $event
+     *
      * @return Response
      */
     public function setTaskAsNotDone(Event $event)
@@ -101,7 +102,9 @@ class AgendaController extends Controller
      * )
      *
      * @throws \Exception
-     * @param  Event $event
+     *
+     * @param Event $event
+     *
      * @return Response
      */
     public function setTaskAsDone(Event $event)
@@ -130,7 +133,7 @@ class AgendaController extends Controller
         $user = $this->tokenStorage->getToken()->getUser();
         $invitation = $this->em->getRepository('ClarolineAgendaBundle:EventInvitation')->findOneBy([
             'event' => $event->getId(),
-            'user' => $user->getId()
+            'user' => $user->getId(),
         ]);
 
         if ($invitation && $invitation->getStatus() != $action) {
@@ -139,13 +142,13 @@ class AgendaController extends Controller
 
             return [
                 'invitation' => $invitation,
-                'already_done' => false
+                'already_done' => false,
             ];
         }
 
         return [
             'invitation' => $invitation,
-            'already_done' => true
+            'already_done' => true,
         ];
     }
 
@@ -203,14 +206,16 @@ class AgendaController extends Controller
      *     "/workspace/{workspace}/export",
      *     name="claro_workspace_agenda_export"
      * )
+     *
      * @param Workspace $workspace
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function exportWorkspaceEventIcsAction(Workspace $workspace)
     {
         //if you can open the tool, you can export
         if (!$this->authorization->isGranted('agenda_', $workspace)) {
-            throw new AccessDeniedException("The event cannot be updated");
+            throw new AccessDeniedException('The event cannot be updated');
         }
 
         return $this->exportEvent($workspace);
@@ -221,6 +226,7 @@ class AgendaController extends Controller
      *     "/desktop/export",
      *     name="claro_desktop_agenda_export"
      * )
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function exportDesktopEventIcsAction()
@@ -239,10 +245,10 @@ class AgendaController extends Controller
             }
         );
 
-        $name = $workspace ? $workspace->getName(): 'desktop';
+        $name = $workspace ? $workspace->getName() : 'desktop';
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename=' . $name . '.ics');
+        $response->headers->set('Content-Disposition', 'attachment; filename='.$name.'.ics');
         $response->headers->set('Content-Type', ' text/calendar');
         $response->headers->set('Connection', 'close');
 
@@ -252,18 +258,19 @@ class AgendaController extends Controller
     private function checkPermission(Event $event)
     {
         if ($event->isEditable() === false) {
-            throw new AccessDeniedException("You cannot edit this event");
+            throw new AccessDeniedException('You cannot edit this event');
         }
 
         if ($event->getWorkspace()) {
             if (!$this->authorization->isGranted(array('agenda_', 'edit'), $event->getWorkspace())) {
-                throw new AccessDeniedException("You cannot edit the agenda");
+                throw new AccessDeniedException('You cannot edit the agenda');
             }
+
             return;
         }
 
         if ($this->tokenStorage->getToken()->getUser() != $event->getUser()) {
-            throw new AccessDeniedException("You cannot edit the agenda");
+            throw new AccessDeniedException('You cannot edit the agenda');
         }
     }
 }

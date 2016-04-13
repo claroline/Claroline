@@ -106,7 +106,7 @@ class UserInformationWidget extends AbstractWidget
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isShowAvatar()
     {
@@ -114,7 +114,7 @@ class UserInformationWidget extends AbstractWidget
     }
 
     /**
-     * @param boolean $showAvatar
+     * @param bool $showAvatar
      *
      * @return UserInformationWidget
      */
@@ -126,7 +126,7 @@ class UserInformationWidget extends AbstractWidget
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isShowMail()
     {
@@ -134,7 +134,7 @@ class UserInformationWidget extends AbstractWidget
     }
 
     /**
-     * @param boolean $showMail
+     * @param bool $showMail
      *
      * @return UserInformationWidget
      */
@@ -146,7 +146,7 @@ class UserInformationWidget extends AbstractWidget
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isShowPhone()
     {
@@ -154,7 +154,7 @@ class UserInformationWidget extends AbstractWidget
     }
 
     /**
-     * @param boolean $showPhone
+     * @param bool $showPhone
      *
      * @return UserInformationWidget
      */
@@ -166,7 +166,7 @@ class UserInformationWidget extends AbstractWidget
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isShowDescription()
     {
@@ -174,7 +174,7 @@ class UserInformationWidget extends AbstractWidget
     }
 
     /**
-     * @param boolean $showDescription
+     * @param bool $showDescription
      *
      * @return UserInformationWidget
      */
@@ -219,7 +219,7 @@ class UserInformationWidget extends AbstractWidget
             'show_mail' => $this->isShowMail(),
             'show_phone' => $this->isShowPhone(),
             'show_description' => $this->isShowDescription(),
-            'text' => $this->getText()
+            'text' => $this->getText(),
         );
     }
 
@@ -235,7 +235,7 @@ class UserInformationWidget extends AbstractWidget
             'show_mail' => false,
             'show_phone' => false,
             'show_description' => false,
-            'text' => null
+            'text' => null,
         );
     }
 }

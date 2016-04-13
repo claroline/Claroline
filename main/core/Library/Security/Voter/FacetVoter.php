@@ -11,16 +11,14 @@
 
 namespace Claroline\CoreBundle\Library\Security\Voter;
 
-use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
-use Claroline\CoreBundle\Entity\Manager\FacetManager;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * This voter is involved in access decisions for facets
+ * This voter is involved in access decisions for facets.
  *
  * @DI\Service
  * @DI\Tag("security.voter")
@@ -43,7 +41,7 @@ class FacetVoter
     }
 
     /**
-     * Attributes can either be "open" or "edit"
+     * Attributes can either be "open" or "edit".
      *
      * @param TokenInterface $token
      * @param $object
@@ -73,12 +71,12 @@ class FacetVoter
 
         if (strtolower($attribute) === 'edit') {
             return $fieldFacet->getIsEditableByOwner() | $canEdit ?
-                VoterInterface::ACCESS_GRANTED: VoterInterface::ACCESS_DENIED;
-         }
+                VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
+        }
 
         if (strtolower($attribute) === 'open') {
             return $fieldFacet->getIsVisibleByOwner() | $canOpen ?
-                VoterInterface::ACCESS_GRANTED: VoterInterface::ACCESS_DENIED;
+                VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
         }
 
         return VoterInterface::ACCESS_DENIED;

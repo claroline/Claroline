@@ -1,4 +1,5 @@
 <?php
+
 namespace Innova\CollecticielBundle\Controller;
 
 use Innova\CollecticielBundle\Entity\Dropzone;
@@ -43,18 +44,18 @@ class DropzoneController extends DropzoneBaseController
      */
     public function editCommonAction(Dropzone $dropzone, $user)
     {
-        $em                     = $this->getDoctrine()->getManager();
-        $dropzoneVoter          = $this->get('innova.manager.dropzone_voter');
-        $dropzoneManager        = $this->get('innova.manager.dropzone_manager');
-        $translator             = $this->get('translator');
-        $platformConfigHandler  = $this->get('claroline.config.platform_config_handler');
+        $em = $this->getDoctrine()->getManager();
+        $dropzoneVoter = $this->get('innova.manager.dropzone_voter');
+        $dropzoneManager = $this->get('innova.manager.dropzone_manager');
+        $translator = $this->get('translator');
+        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
 
         $dropzoneVoter->isAllowToOpen($dropzone);
         $dropzoneVoter->isAllowToEdit($dropzone);
         $dropzoneManager = $this->get('innova.manager.dropzone_manager');
 
         if ($dropzone->getManualState() == 'notStarted') {
-            $dropzone->setManualState("allowDrop");
+            $dropzone->setManualState('allowDrop');
             $em->persist($dropzone);
             $em->flush();
         }
@@ -103,10 +104,8 @@ class DropzoneController extends DropzoneBaseController
             // InnovaERV : ici, on a changé l'état du collecticiel.
             // InnovaERV : j'ajoute une notification.
             // InnovaERV : #171 Bug : lors de la création d'un collecticiel et de la notification
-            if (count($dropzone->getDrops()) > 0)
-            {
-                if ($oldManualPlanningOption != $dropzone->getManualState())
-                {
+            if (count($dropzone->getDrops()) > 0) {
+                if ($oldManualPlanningOption != $dropzone->getManualState()) {
                     // send notification.
                     $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
                     $event = new LogDropzoneManualStateChangedEvent($dropzone, $dropzone->getManualState(), $usersIds);
@@ -136,7 +135,7 @@ class DropzoneController extends DropzoneBaseController
         && $this->get('security.token_storage')->getToken()->getUser()->getId() == $user->getId()) {
             $adminInnova = true;
         }
-    
+
         $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
 
         return array(
@@ -145,7 +144,7 @@ class DropzoneController extends DropzoneBaseController
             'dropzone' => $dropzone,
             'form' => $form->createView(),
             'adminInnova' => $adminInnova,
-            'collecticielOpenOrNot' => $collecticielOpenOrNot
+            'collecticielOpenOrNot' => $collecticielOpenOrNot,
         );
     }
 

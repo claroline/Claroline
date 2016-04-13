@@ -25,7 +25,7 @@ use OAuth2\OAuth2AuthenticateException;
 /**
  * OAuthProvider class.
  * Copied from FOS\OAuthServerBundle\Security\Authentication\Provider
- * class is defined in ClarolineCoreBundle/Resources/config/service.yml
+ * class is defined in ClarolineCoreBundle/Resources/config/service.yml.
  *
  * @author  Arnaud Le Blanc <arnaud.lb@gmail.com>
  */

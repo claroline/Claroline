@@ -75,8 +75,7 @@ class DatabaseWriter
         $templateDir,
         ToolManager $toolManager,
         ToolMaskDecoderManager $toolMaskManager
-    )
-    {
+    ) {
         $this->em = $em;
         $this->im = $im;
         $this->mm = $mm;
@@ -118,7 +117,7 @@ class DatabaseWriter
         $plugin = $this->em->getRepository('ClarolineCoreBundle:Plugin')->findOneBy(
             array(
                  'vendorName' => $pluginBundle->getVendorName(),
-                 'bundleName' => $pluginBundle->getBundleName()
+                 'bundleName' => $pluginBundle->getBundleName(),
             )
         );
 
@@ -161,7 +160,7 @@ class DatabaseWriter
      *
      * @param \Claroline\CoreBundle\Library\PluginBundle $plugin
      *
-     * @return boolean
+     * @return bool
      */
     public function isSaved(PluginBundle $plugin)
     {
@@ -321,8 +320,7 @@ class DatabaseWriter
         PluginBundle $pluginBundle,
         Plugin $plugin,
         array $roles = array()
-    )
-    {
+    ) {
         $widget = $this->em->getRepository('ClarolineCoreBundle:Widget\Widget')
             ->findOneByName($widgetConfiguration['name']);
 
@@ -356,7 +354,7 @@ class DatabaseWriter
     private function persistIcons(array $resource, ResourceType $resourceType, PluginBundle $pluginBundle)
     {
         $resourceIcon = new ResourceIcon();
-        $resourceIcon->setMimeType('custom/' . $resourceType->getName());
+        $resourceIcon->setMimeType('custom/'.$resourceType->getName());
         $ds = DIRECTORY_SEPARATOR;
 
         if (isset($resource['icon'])) {
@@ -393,11 +391,11 @@ class DatabaseWriter
     {
         $resourceIcon = $this->em
             ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
-            ->findOneByMimeType('custom/' . $resourceType->getName());
+            ->findOneByMimeType('custom/'.$resourceType->getName());
 
         if (null === $resourceIcon) {
             $resourceIcon = new ResourceIcon();
-            $resourceIcon->setMimeType('custom/' . $resourceType->getName());
+            $resourceIcon->setMimeType('custom/'.$resourceType->getName());
         }
 
         if (isset($resource['icon'])) {
@@ -448,15 +446,15 @@ class DatabaseWriter
     }
 
     /**
-     * @param array $actions
+     * @param array        $actions
      * @param ResourceType $resourceType
      */
     private function persistCustomAction($actions, ResourceType $resourceType)
     {
-        $decoderRepo      = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\MaskDecoder');
+        $decoderRepo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\MaskDecoder');
         $existingDecoders = $decoderRepo->findBy(array('resourceType' => $resourceType));
-        $exp              = count($existingDecoders);
-        $newDecoders      = array();
+        $exp = count($existingDecoders);
+        $newDecoders = array();
 
         foreach ($actions as $action) {
             $decoder = $decoderRepo->findOneBy(array('name' => $action['name'], 'resourceType' => $resourceType));
@@ -471,7 +469,7 @@ class DatabaseWriter
                     $decoder->setValue(pow(2, $exp));
                     $this->em->persist($decoder);
                     $newDecoders[$action['name']] = $decoder;
-                    $exp++;
+                    ++$exp;
                 }
             }
 
@@ -489,15 +487,15 @@ class DatabaseWriter
     }
 
     /**
-     * @param array $actions
+     * @param array        $actions
      * @param ResourceType $resourceType
      */
     private function updateCustomAction($actions, ResourceType $resourceType)
     {
-        $decoderRepo      = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\MaskDecoder');
+        $decoderRepo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\MaskDecoder');
         $existingDecoders = $decoderRepo->findBy(array('resourceType' => $resourceType));
-        $exp              = count($existingDecoders);
-        $newDecoders      = array();
+        $exp = count($existingDecoders);
+        $newDecoders = array();
 
         foreach ($actions as $action) {
             $decoder = $decoderRepo->findOneBy(array('name' => $action['name'], 'resourceType' => $resourceType));
@@ -514,7 +512,7 @@ class DatabaseWriter
 
                     $this->em->persist($decoder);
                     $newDecoders[$action['name']] = $decoder;
-                    $exp++;
+                    ++$exp;
                 }
             }
 
@@ -567,7 +565,7 @@ class DatabaseWriter
      */
     private function setResourceTypeDefaultMask(array $rightsName, ResourceType $resourceType)
     {
-        $mask = count($rightsName) === 0 ? 1: 0;
+        $mask = count($rightsName) === 0 ? 1 : 0;
         $permMap = $this->mm->getPermissionMap($resourceType);
 
         foreach ($rightsName as $rights) {
@@ -580,7 +578,6 @@ class DatabaseWriter
 
         $resourceType->setDefaultMask($mask);
         $this->em->persist($resourceType);
-
     }
 
     /**
@@ -656,7 +653,7 @@ class DatabaseWriter
         if (isset($toolConfiguration['class'])) {
             $tool->setClass("{$toolConfiguration['class']}");
         } else {
-            $tool->setClass("wrench");
+            $tool->setClass('wrench');
         }
 
         $this->toolManager->create($tool);
@@ -812,7 +809,7 @@ class DatabaseWriter
                     $right['granted_icon_class'],
                     $right['denied_icon_class']
                 );
-                $nb++;
+                ++$nb;
             }
         }
     }

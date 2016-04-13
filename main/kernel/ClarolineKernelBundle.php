@@ -24,7 +24,7 @@ class ClarolineKernelBundle extends Bundle
     public function __construct(KernelInterface $kernel, $bundlesFile = null)
     {
         if (!$bundlesFile) {
-            $bundlesFile = $kernel->getRootDir() . '/config/bundles.ini';
+            $bundlesFile = $kernel->getRootDir().'/config/bundles.ini';
         }
 
         BundleManager::initialize($kernel, $bundlesFile);

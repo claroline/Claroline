@@ -27,7 +27,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ApiManager
 {
-
     /**
      * @DI\InjectParams({
      *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
@@ -43,17 +42,17 @@ class ApiManager
         CurlManager $curlManager,
         $viewHandler,
         $container
-    )
-    {
+    ) {
         $this->om = $om;
         $this->oauthManager = $oauthManager;
-        $this->curlManager  = $curlManager;
-        $this->viewHandler  = $viewHandler;
-        $this->container    = $container;
+        $this->curlManager = $curlManager;
+        $this->viewHandler = $viewHandler;
+        $this->container = $container;
     }
 
     /**
      * Legacy method. Please use query() instead.
+     *
      * @deprecated
      */
     public function url($token, $url, $payload = null, $type = 'GET')
@@ -76,8 +75,10 @@ class ApiManager
     private function adminQuery(FriendRequest $request, $url, $payload = null, $type = 'GET')
     {
         $access = $request->getClarolineAccess();
-        if ($access === null) throw new \Exception('The oauth tokens were lost. Please ask for a new authentication.');
-        $firstTry = $request->getHost() . '/' . $url . '?access_token=' . $access->getAccessToken();
+        if ($access === null) {
+            throw new \Exception('The oauth tokens were lost. Please ask for a new authentication.');
+        }
+        $firstTry = $request->getHost().'/'.$url.'?access_token='.$access->getAccessToken();
         $serverOutput = $this->curlManager->exec($firstTry, $payload, $type);
         $json = json_decode($serverOutput, true);
 
@@ -85,7 +86,7 @@ class ApiManager
             if (array_key_exists('error', $json)) {
                 if ($json['error'] === 'access_denied' || $json['error'] === 'invalid_grant') {
                     $access = $this->oauthManager->connect($request->getHost(), $access->getRandomId(), $access->getSecret(), $access->getFriendRequest());
-                    $secondTry = $request->getHost() . '/' . $url . '?access_token=' . $access->getAccessToken();
+                    $secondTry = $request->getHost().'/'.$url.'?access_token='.$access->getAccessToken();
                     $serverOutput = $this->curlManager->exec($secondTry, $payload, $type);
                 }
             }
@@ -101,7 +102,7 @@ class ApiManager
 
         foreach ($form->getIterator() as $el) {
             if (is_array($entity)) {
-                $payload[$baseName . '[' . $el->getName() . ']'] = $entity[$el->getName()];
+                $payload[$baseName.'['.$el->getName().']'] = $entity[$el->getName()];
             }
         }
 
@@ -111,19 +112,18 @@ class ApiManager
     //helper for the API controllers methods. We only do this in case of html request
     public function handleFormView($template, $form, array $options = array())
     {
-        $httpCode = isset($options['http_code']) ? $options['http_code']: 200;
-        $parameters = isset($options['form_view']) ? $options['form_view']: array();
-        $serializerGroup = isset($options['serializer_group']) ? $options['serializer_group']: 'api';
+        $httpCode = isset($options['http_code']) ? $options['http_code'] : 200;
+        $parameters = isset($options['form_view']) ? $options['form_view'] : array();
+        $serializerGroup = isset($options['serializer_group']) ? $options['serializer_group'] : 'api';
 
         return $form->isValid() ?
-            $this->createSerialized($options['extra_parameters'], $serializerGroup):
+            $this->createSerialized($options['extra_parameters'], $serializerGroup) :
             $this->createFormView($template, $form, $httpCode, $parameters);
-
     }
 
     private function createFormView($template, $form, $formHttpCode, $parameters)
     {
-        $formHttpCode = $formHttpCode ?:200;
+        $formHttpCode = $formHttpCode ?: 200;
         $view = View::create($form, $formHttpCode);
         $view->setTemplate($template);
         $view->setTemplateData($parameters);
@@ -136,7 +136,7 @@ class ApiManager
     {
         $context = new SerializationContext();
         $format = $this->container->get('request')->getRequestFormat();
-        $format = $format === 'html' ? 'json': $format;
+        $format = $format === 'html' ? 'json' : $format;
         $context->setGroups($serializerGroup);
         $content = $this->container->get('serializer')->serialize($data, $format, $context);
         $response = new Response($content);
@@ -150,12 +150,15 @@ class ApiManager
         $request = $this->container->get('request');
         $data = $entities = array();
 
-        if ($request->request->has($name)) $data = $request->request->get($name);
-        if ($request->query->has($name)) $data = $request->query->get($name);
+        if ($request->request->has($name)) {
+            $data = $request->request->get($name);
+        }
+        if ($request->query->has($name)) {
+            $data = $request->query->get($name);
+        }
 
         foreach ($data as $id) {
-
-            $entities[] = $this->om->getRepository($class)->find((int)$id);
+            $entities[] = $this->om->getRepository($class)->find((int) $id);
         }
 
         return $entities;
@@ -163,6 +166,5 @@ class ApiManager
 
     private function validateUrl($url)
     {
-
     }
 }

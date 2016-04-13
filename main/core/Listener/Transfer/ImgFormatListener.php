@@ -39,8 +39,7 @@ class ImgFormatListener
         RichTextFormatter $formatter,
         ResourceManager $resourceManager,
         MaskManager $maskManager
-    )
-    {
+    ) {
         $this->router = $router;
         $this->om = $om;
         $this->formatter = $formatter;
@@ -52,7 +51,7 @@ class ImgFormatListener
      * @DI\Observe("rich_text_format_event_export")
      *
      * @param RichTextFormatEvent $event
-     * This is pretty much the same as the RichTextFormatter one
+     *                                   This is pretty much the same as the RichTextFormatter one
      */
     public function export(RichTextFormatEvent $event)
     {
@@ -65,13 +64,12 @@ class ImgFormatListener
         $_files = $event->getFiles();
 
         //first regex
-        $regex = '#' . $baseUrl . '/file/resource/media/([^\'"]+)#';
+        $regex = '#'.$baseUrl.'/file/resource/media/([^\'"]+)#';
 
         preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
 
         if (count($matches) > 0) {
             foreach ($matches as $match) {
-
                 if (!$this->formatter->getItemFromUid($match[1], $_data)) {
                     $this->formatter->createDataFolder($_data);
                     $node = $this->resourceManager->getNode($match[1]);
@@ -86,8 +84,8 @@ class ImgFormatListener
                         );
                         $el['item']['parent'] = 'data_folder';
                         $el['item']['roles'] = array(array('role' => array(
-                            'name'   => 'ROLE_USER',
-                            'rights' => $this->maskManager->decodeMask(7, $this->resourceManager->getResourceTypeByName('file'))
+                            'name' => 'ROLE_USER',
+                            'rights' => $this->maskManager->decodeMask(7, $this->resourceManager->getResourceTypeByName('file')),
                         )));
                         $_data['data']['items'][] = $el;
                     }
@@ -113,7 +111,7 @@ class ImgFormatListener
 
         foreach ($matches as $match) {
             $imgdata = explode('@', $match[1]);
-            $uid = (int)$imgdata[0]; //not really actually ~that would be the part before the first (@)
+            $uid = (int) $imgdata[0]; //not really actually ~that would be the part before the first (@)
             $parent = $this->formatter->findParentFromDataUid($uid);
             $el = $this->formatter->findItemFromUid($uid);
             $node = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
@@ -158,6 +156,7 @@ class ImgFormatListener
 
     /**
      * @todo find the method wich generate the url from tinymce
+     *
      * @param ResourceNode $node
      */
     public function generateDisplayedUrlForTinyMce(ResourceNode $node, $match)
@@ -167,11 +166,17 @@ class ImgFormatListener
         $height = $imgdata[2];
         $style = $imgdata[3];
         $url = $this->router->generate('claro_file_get_media', array('node' => $node->getId()));
-        $img = "<img ";
+        $img = '<img ';
 
-        if ($width !== '') $img .= "width='{$width}' ";
-        if ($height !== '') $img .= "height='{$height}' ";
-        if ($style !== '') $img .= "style='{$style}' ";
+        if ($width !== '') {
+            $img .= "width='{$width}' ";
+        }
+        if ($height !== '') {
+            $img .= "height='{$height}' ";
+        }
+        if ($style !== '') {
+            $img .= "style='{$style}' ";
+        }
 
         $img .= "src='{$url}' alt='{$node->getName()}'>";
 

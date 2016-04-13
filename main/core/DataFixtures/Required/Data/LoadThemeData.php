@@ -35,5 +35,4 @@ class LoadThemeData implements RequiredFixture
             $manager->persist($theme);
         }
     }
-
 }

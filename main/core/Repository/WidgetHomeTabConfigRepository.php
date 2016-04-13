@@ -92,8 +92,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
     public function findWidgetConfigsByWorkspace(
         HomeTab $homeTab,
         Workspace $workspace
-    )
-    {
+    ) {
         $dql = "
             SELECT whtc
             FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc
@@ -113,8 +112,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
     public function findVisibleWidgetConfigsByWorkspace(
         HomeTab $homeTab,
         Workspace $workspace
-    )
-    {
+    ) {
         $dql = "
             SELECT whtc
             FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc
@@ -135,8 +133,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
     public function findVisibleWidgetConfigsByTabIdAndWorkspace(
         $homeTabId,
         Workspace $workspace
-    )
-    {
+    ) {
         $dql = "
             SELECT whtc
             FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc
@@ -161,8 +158,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
         $widgetId,
         $homeTabId,
         Workspace $workspace
-    )
-    {
+    ) {
         $dql = "
             SELECT whtc
             FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc
@@ -205,8 +201,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
         HomeTab $homeTab,
         $widgetOrder,
         User $user
-    )
-    {
+    ) {
         $dql = "
             UPDATE Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc
             SET whtc.widgetOrder = whtc.widgetOrder - 1
@@ -227,8 +222,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
         HomeTab $homeTab,
         $widgetOrder,
         Workspace $workspace
-    )
-    {
+    ) {
         $dql = "
             UPDATE Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc
             SET whtc.widgetOrder = whtc.widgetOrder - 1
@@ -249,8 +243,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
         HomeTab $homeTab,
         $widgetOrder,
         $newWidgetOrder
-    )
-    {
+    ) {
         $dql = "
             UPDATE Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc
             SET whtc.widgetOrder = :newWidgetOrder
@@ -272,8 +265,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
         $widgetOrder,
         $newWidgetOrder,
         User $user
-    )
-    {
+    ) {
         $dql = "
             UPDATE Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc
             SET whtc.widgetOrder = :newWidgetOrder
@@ -296,8 +288,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
         $widgetOrder,
         $newWidgetOrder,
         Workspace $workspace
-    )
-    {
+    ) {
         $dql = "
             UPDATE Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc
             SET whtc.widgetOrder = :newWidgetOrder
@@ -319,8 +310,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
         HomeTab $homeTab,
         WidgetInstance $widgetInstance,
         User $user
-    )
-    {
+    ) {
         $dql = "
             SELECT whtc
             FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc
@@ -353,5 +343,4 @@ class WidgetHomeTabConfigRepository extends EntityRepository
 
         return $query->getResult();
     }
-
 }

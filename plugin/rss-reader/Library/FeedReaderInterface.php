@@ -11,7 +11,7 @@
 
 namespace Claroline\RssReaderBundle\Library;
 
-use \SimpleXMLElement;
+use SimpleXMLElement;
 
 interface FeedReaderInterface
 {
@@ -19,29 +19,31 @@ interface FeedReaderInterface
      * Returns whether a feed format is supported.
      *
      * @param string $feedType
-     * @return boolean
+     *
+     * @return bool
      */
-    function supports($feedType);
+    public function supports($feedType);
 
     /**
      * Sets the feed content.
      *
      * @param SimpleXMLElement $feed
      */
-    function setFeed(SimpleXMLElement $feed);
+    public function setFeed(SimpleXMLElement $feed);
 
     /**
      * Returns the feed information.
      *
      * @return FeedInfo
      */
-    function getFeedInfo();
+    public function getFeedInfo();
 
     /**
      * Returns the feed items.
      *
-     * @param integer $max The maximum number of items to return
+     * @param int $max The maximum number of items to return
+     *
      * @return array[FeedItem]
      */
-    function getFeedItems($max = null);
+    public function getFeedItems($max = null);
 }

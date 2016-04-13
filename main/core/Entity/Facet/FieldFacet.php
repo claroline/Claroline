@@ -14,13 +14,8 @@ namespace Claroline\CoreBundle\Entity\Facet;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Claroline\CoreBundle\Entity\Facet\Facet;
-use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
-use Claroline\CoreBundle\Entity\Role;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use JMS\Serializer\Annotation\Groups;
 
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\FieldFacetRepository")
@@ -96,7 +91,7 @@ class FieldFacet
     public function __construct()
     {
         $this->fieldsFacetValue = new ArrayCollection();
-        $this->fieldFacetsRole  = new ArrayCollection();
+        $this->fieldFacetsRole = new ArrayCollection();
     }
 
     /**
@@ -162,21 +157,21 @@ class FieldFacet
 
     public function getTypeTranslationKey()
     {
-         switch ($this->type) {
-            case self::FLOAT_TYPE: return "number";
-            case self::DATE_TYPE: return "date";
-            case self::STRING_TYPE: return "text";
-            default: return "error";
+        switch ($this->type) {
+            case self::FLOAT_TYPE: return 'number';
+            case self::DATE_TYPE: return 'date';
+            case self::STRING_TYPE: return 'text';
+            default: return 'error';
         }
     }
 
     public function getInputType()
     {
         switch ($this->type) {
-            case self::FLOAT_TYPE: return "number";
-            case self::DATE_TYPE: return "date";
-            case self::STRING_TYPE: return "text";
-            default: return "error";
+            case self::FLOAT_TYPE: return 'number';
+            case self::DATE_TYPE: return 'date';
+            case self::STRING_TYPE: return 'text';
+            default: return 'error';
         }
     }
 

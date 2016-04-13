@@ -14,15 +14,14 @@ class CommentType extends AbstractType
         $builder->add('commentText', 'tinymce', array(
             'label' => 'Comments add',
             'label_attr' => array(
-                'style' => 'display: none;'
-            )));
+                'style' => 'display: none;',
+            ), ));
 
         // Ajout de la déclaration du bouton "Envoyer"
         $builder->add('save', 'submit', array(
         'label' => 'Comment validation',
         'attr' => array('class' => 'btn btn-primary pull-left'),
         ));
-
     }
 
     public function getName()
@@ -33,7 +32,7 @@ class CommentType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'translation_domain' => 'innova_collecticiel'
+            'translation_domain' => 'innova_collecticiel',
         ));
     }
 }

@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Auto-generated migration based on mapping information: modify it with caution
+ * Auto-generated migration based on mapping information: modify it with caution.
  *
  * Generation date: 2015/04/14 03:39:15
  */
@@ -14,7 +14,7 @@ class Version20150414153912 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             CREATE TABLE icap__notification_plugin_configuration (
                 id NUMBER(10) NOT NULL, 
                 dropdown_items NUMBER(10) NOT NULL, 
@@ -24,7 +24,7 @@ class Version20150414153912 extends AbstractMigration
                 last_purge_date TIMESTAMP(0) DEFAULT NULL, 
                 PRIMARY KEY(id)
             )
-        ");
+        ');
         $this->addSql("
             DECLARE constraints_Count NUMBER; BEGIN 
             SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
@@ -33,9 +33,9 @@ class Version20150414153912 extends AbstractMigration
             AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
             OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE ICAP__NOTIFICATION_PLUGIN_CONFIGURATION ADD CONSTRAINT ICAP__NOTIFICATION_PLUGIN_CONFIGURATION_AI_PK PRIMARY KEY (ID)'; END IF; END;
         ");
-        $this->addSql("
+        $this->addSql('
             CREATE SEQUENCE ICAP__NOTIFICATION_PLUGIN_CONFIGURATION_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
-        ");
+        ');
         $this->addSql("
             CREATE TRIGGER ICAP__NOTIFICATION_PLUGIN_CONFIGURATION_AI_PK BEFORE INSERT ON ICAP__NOTIFICATION_PLUGIN_CONFIGURATION FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
             SELECT ICAP__NOTIFICATION_PLUGIN_CONFIGURATION_ID_SEQ.NEXTVAL INTO :NEW.ID 
@@ -57,8 +57,8 @@ class Version20150414153912 extends AbstractMigration
 
     public function down(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             DROP TABLE icap__notification_plugin_configuration
-        ");
+        ');
     }
 }

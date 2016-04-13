@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Twig;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Router;
@@ -38,7 +37,7 @@ class HomeExtension extends \Twig_Extension
     }
 
     /**
-     * Get filters of the service
+     * Get filters of the service.
      *
      * @return \Twig_Filter_Method
      */
@@ -50,7 +49,7 @@ class HomeExtension extends \Twig_Extension
             'activeLink' => new \Twig_Filter_Method($this, 'activeLink'),
             'activeRoute' => new \Twig_Filter_Method($this, 'activeRoute'),
             'compareRoute' => new \Twig_Filter_Method($this, 'compareRoute'),
-            'autoLink' => new \Twig_Filter_Method($this, 'autoLink')
+            'autoLink' => new \Twig_Filter_Method($this, 'autoLink'),
         );
     }
 
@@ -58,7 +57,7 @@ class HomeExtension extends \Twig_Extension
     {
         return array(
             'isDesktop' => new \Twig_Function_Method($this, 'isDesktop'),
-            'asset_exists' => new \Twig_Function_Method($this, 'assetExists')
+            'asset_exists' => new \Twig_Function_Method($this, 'assetExists'),
         );
     }
 
@@ -68,76 +67,77 @@ class HomeExtension extends \Twig_Extension
      * @param \DateTime $start The initial time.
      *
      * @return \String
+     *
      *                 @see Symfony\Component\Translation\Translator
      */
     public function timeAgo($start)
     {
-        $end = new \DateTime("now");
+        $end = new \DateTime('now');
         $translator = $this->container->get('translator');
         $interval = $start->diff($end);
-        $formats = array("%Y", "%m", "%W", "%d", "%H", "%i", "%s");
+        $formats = array('%Y', '%m', '%W', '%d', '%H', '%i', '%s');
 
-        $translation["singular"] = array(
-            "%Y" => $translator->trans("year", array(), 'platform'),
-            "%m" => $translator->trans("month", array(), 'platform'),
-            "%W" => $translator->trans("week", array(), 'platform'),
-            "%d" => $translator->trans("day", array(), 'platform'),
-            "%H" => $translator->trans("hour", array(), 'platform'),
-            "%i" => $translator->trans("minute", array(), 'platform'),
-            "%s" => $translator->trans("second", array(), 'platform')
+        $translation['singular'] = array(
+            '%Y' => $translator->trans('year', array(), 'platform'),
+            '%m' => $translator->trans('month', array(), 'platform'),
+            '%W' => $translator->trans('week', array(), 'platform'),
+            '%d' => $translator->trans('day', array(), 'platform'),
+            '%H' => $translator->trans('hour', array(), 'platform'),
+            '%i' => $translator->trans('minute', array(), 'platform'),
+            '%s' => $translator->trans('second', array(), 'platform'),
         );
 
-        $translation["plural"] = array(
-            "%Y" => $translator->trans("years", array(), 'platform'),
-            "%m" => $translator->trans("months", array(), 'platform'),
-            "%W" => $translator->trans("weeks", array(), 'platform'),
-            "%d" => $translator->trans("days", array(), 'platform'),
-            "%H" => $translator->trans("hours", array(), 'platform'),
-            "%i" => $translator->trans("minutes", array(), 'platform'),
-            "%s" => $translator->trans("seconds", array(), 'platform')
+        $translation['plural'] = array(
+            '%Y' => $translator->trans('years', array(), 'platform'),
+            '%m' => $translator->trans('months', array(), 'platform'),
+            '%W' => $translator->trans('weeks', array(), 'platform'),
+            '%d' => $translator->trans('days', array(), 'platform'),
+            '%H' => $translator->trans('hours', array(), 'platform'),
+            '%i' => $translator->trans('minutes', array(), 'platform'),
+            '%s' => $translator->trans('seconds', array(), 'platform'),
         );
 
         foreach ($formats as $format) {
-            if ($format == "%W") {
-                $i = round($interval->format("%d") / 8); //fix for week that does not exist in DataInterval obj
+            if ($format == '%W') {
+                $i = round($interval->format('%d') / 8); //fix for week that does not exist in DataInterval obj
             } else {
-                $i = ltrim($interval->format($format), "0");
+                $i = ltrim($interval->format($format), '0');
             }
 
             if ($i > 0) {
-                $unit = (int) $i === 1 ? $translation["singular"][$format]: $translation["plural"][$format];
+                $unit = (int) $i === 1 ? $translation['singular'][$format] : $translation['plural'][$format];
 
-                return $this->container->get("translator")->transChoice(
+                return $this->container->get('translator')->transChoice(
                     'time_ago',
                     $i,
                     array('%count%' => $i, '%unit%' => $unit),
-                    "platform"
+                    'platform'
                 );
             }
         }
 
         //?? why seconds ago
-        return $this->container->get("translator")->transChoice(
-            "seconds_ago",
+        return $this->container->get('translator')->transChoice(
+            'seconds_ago',
             1,
             array('%count%' => 1),
-            "home"
+            'home'
         );
     }
 
     /**
-     * Check if a link is local or external
+     * Check if a link is local or external.
      */
     public function homeLink($link)
     {
-        if (!(strpos($link, "http://") === 0 or
-            strpos($link, "https://") === 0 or
-            strpos($link, "ftp://") === 0 or
-            strpos($link, "www.") === 0)
+        if (!(strpos($link, 'http://') === 0 or
+            strpos($link, 'https://') === 0 or
+            strpos($link, 'ftp://') === 0 or
+            strpos($link, 'www.') === 0)
         ) {
-            $home = $this->container->get("router")->generate('claro_index').$link;
+            $home = $this->container->get('router')->generate('claro_index').$link;
 
-            $home = str_replace("//", "/", $home);
+            $home = str_replace('//', '/', $home);
 
             return $home;
         }
@@ -146,12 +146,12 @@ class HomeExtension extends \Twig_Extension
     }
 
     /**
-     * Return active if a given link match to the path info
+     * Return active if a given link match to the path info.
      */
     public function activeLink($link)
     {
         $pathinfo = $this->getPathInfo();
-        if (($pathinfo and '/' . $pathinfo === $link) or (!$pathinfo and $link === '/')) {
+        if (($pathinfo and '/'.$pathinfo === $link) or (!$pathinfo and $link === '/')) {
             return ' active'; //the white space is nedded
         }
 
@@ -160,7 +160,7 @@ class HomeExtension extends \Twig_Extension
 
     /**
      * Compare a route with master request route.
-     * Usefull in sub-views because there we can not use app.request.get('_route')
+     * Usefull in sub-views because there we can not use app.request.get('_route').
      *
      * Example: {% if "claro_get_content_by_type" | activeRoute({'type': 'home'}) %}true{% endif %}
      *
@@ -188,7 +188,7 @@ class HomeExtension extends \Twig_Extension
     public function compareRoute($link, $return = " class='active'")
     {
         $pathinfo = $this->getPathInfo();
-        if ($pathinfo and strpos('/' . $pathinfo, $link) === 0) {
+        if ($pathinfo and strpos('/'.$pathinfo, $link) === 0) {
             return $return;
         }
 
@@ -196,15 +196,15 @@ class HomeExtension extends \Twig_Extension
     }
 
     /**
-     * Find links in a text and made it clickable
+     * Find links in a text and made it clickable.
      */
     public function autoLink($text)
     {
         $rexProtocol = '(https?://)?';
-        $rexDomain   = '((?:[-a-zA-Z0-9]{1,63}\.)+[-a-zA-Z0-9]{2,63}|(?:[0-9]{1,3}\.){3}[0-9]{1,3})';
-        $rexPort     = '(:[0-9]{1,5})?';
-        $rexPath     = '(/[!$-/0-9:;=@_\':;!a-zA-Z\x7f-\xff]*?)?';
-        $rexQuery    = '(\?[!$-/0-9:;=@_\':;!a-zA-Z\x7f-\xff]+?)?';
+        $rexDomain = '((?:[-a-zA-Z0-9]{1,63}\.)+[-a-zA-Z0-9]{2,63}|(?:[0-9]{1,3}\.){3}[0-9]{1,3})';
+        $rexPort = '(:[0-9]{1,5})?';
+        $rexPath = '(/[!$-/0-9:;=@_\':;!a-zA-Z\x7f-\xff]*?)?';
+        $rexQuery = '(\?[!$-/0-9:;=@_\':;!a-zA-Z\x7f-\xff]+?)?';
         $rexFragment = '(#[!$-/0-9:;=@_\':;!a-zA-Z\x7f-\xff]+?)?';
 
         $text = preg_replace_callback(
@@ -213,8 +213,8 @@ class HomeExtension extends \Twig_Extension
                 // Prepend http:// if no protocol specified
                 $completeUrl = $match[1] ? $match[0] : "http://{$match[0]}";
 
-                return '<a href="' . $completeUrl . '" target="_blank">'
-                    . $match[2] . $match[3] . $match[4] . '</a>';
+                return '<a href="'.$completeUrl.'" target="_blank">'
+                    .$match[2].$match[3].$match[4].'</a>';
             },
             htmlspecialchars($text)
         );
@@ -246,8 +246,8 @@ class HomeExtension extends \Twig_Extension
 
     public function assetExists($path)
     {
-        $webRoot = realpath($this->kernel->getRootDir() . '/../web/');
-        $toCheck = realpath($webRoot . '/' . $path);
+        $webRoot = realpath($this->kernel->getRootDir().'/../web/');
+        $toCheck = realpath($webRoot.'/'.$path);
 
         if (!is_file($toCheck)) {
             return false;
@@ -255,7 +255,6 @@ class HomeExtension extends \Twig_Extension
 
         return true;
     }
-
 
     private function getPathInfo()
     {

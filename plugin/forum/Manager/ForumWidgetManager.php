@@ -64,6 +64,7 @@ class ForumWidgetManager
 
     /**
      * @param WidgetInstance $widgetInstance
+     *
      * @return \Claroline\ForumBundle\Entity\Widget\LastMessageWidgetConfig
      */
     public function getConfig(WidgetInstance $widgetInstance)
@@ -83,6 +84,7 @@ class ForumWidgetManager
     /**
      * @param WidgetInstance $widgetInstance
      * @param Workspace|null $workspace
+     *
      * @return \Claroline\ForumBundle\Entity\Message[]
      */
     public function getLastMessages(WidgetInstance $widgetInstance, Workspace $workspace = null)

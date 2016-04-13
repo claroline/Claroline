@@ -27,15 +27,15 @@ class LogResourceExportEvent extends LogGenericEvent
             array(
                 'resource' => array(
                     'name' => $node->getName(),
-                    'path' => $node->getPathForDisplay()
+                    'path' => $node->getPathForDisplay(),
                 ),
                 'workspace' => array(
-                    'name' => $node->getWorkspace()->getName()
+                    'name' => $node->getWorkspace()->getName(),
                 ),
                 'owner' => array(
                     'lastName' => $node->getCreator()->getLastName(),
-                    'firstName' => $node->getCreator()->getFirstName()
-                )
+                    'firstName' => $node->getCreator()->getFirstName(),
+                ),
             ),
             null,
             null,
@@ -51,6 +51,6 @@ class LogResourceExportEvent extends LogGenericEvent
      */
     public static function getRestriction()
     {
-        return null;
+        return;
     }
 }

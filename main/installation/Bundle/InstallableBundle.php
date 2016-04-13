@@ -22,26 +22,28 @@ abstract class InstallableBundle extends Bundle implements InstallableInterface
 
     public function getRequiredFixturesDirectory($environment)
     {
-        return null;
+        return;
     }
 
     public function getOptionalFixturesDirectory($environment)
     {
-        return null;
+        return;
     }
 
     public function getAdditionalInstaller()
     {
-        return null;
+        return;
     }
 
     public function getVersion()
     {
         $ds = DIRECTORY_SEPARATOR;
-        $path = realpath($this->getPath() . $ds . 'VERSION.txt');
-        if ($path) return trim(file_get_contents($path));
+        $path = realpath($this->getPath().$ds.'VERSION.txt');
+        if ($path) {
+            return trim(file_get_contents($path));
+        }
 
-        return "0.0.0.0";
+        return '0.0.0.0';
     }
 
     public function getClarolineName()
@@ -87,7 +89,7 @@ abstract class InstallableBundle extends Bundle implements InstallableInterface
 
         if (!$data) {
             $ds = DIRECTORY_SEPARATOR;
-            $path = realpath($this->getPath() . $ds . 'composer.json');
+            $path = realpath($this->getPath().$ds.'composer.json');
             $data = json_decode(file_get_contents($path));
         }
 

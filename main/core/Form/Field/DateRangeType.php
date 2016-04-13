@@ -33,6 +33,7 @@ class DateRangeType extends AbstractType
      * @DI\InjectParams({
      *     "translator" = @DI\Inject("translator")
      * })
+     *
      * @param TranslatorInterface $translator
      */
     public function __construct(TranslatorInterface $translator)
@@ -59,7 +60,7 @@ class DateRangeType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'translation_domain' => 'platform'
+                'translation_domain' => 'platform',
             )
         );
     }

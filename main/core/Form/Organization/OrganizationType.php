@@ -26,7 +26,7 @@ class OrganizationType extends AbstractType
     {
         $builder
             ->add('name', 'text', array(
-                    'required' => true
+                    'required' => true,
                 )
             );
 
@@ -36,10 +36,9 @@ class OrganizationType extends AbstractType
                     'property' => 'name',
                     'multiple' => false,
                     'expanded' => false,
-                    'required' => false
+                    'required' => false,
                 )
             );
-
     }
 
     public function getName()
@@ -55,7 +54,9 @@ class OrganizationType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $default = array('translation_domain' => 'platform');
-        if ($this->forApi) $default['csrf_protection'] = false;
+        if ($this->forApi) {
+            $default['csrf_protection'] = false;
+        }
 
         $resolver->setDefaults($default);
     }

@@ -26,7 +26,7 @@ class OccurenceConstraint extends AbstractConstraint
      */
     public function validate()
     {
-        $isValid               = false;
+        $isValid = false;
         $countedAssociatedLogs = count($this->getAssociatedLogs());
 
         if (0 < $countedAssociatedLogs && $countedAssociatedLogs >= $this->getRule()->getOccurrence()) {

@@ -18,7 +18,7 @@ use Claroline\CoreBundle\Entity\Calendar\Period;
 /**
  * @DI\Service("claroline.manager.calendar.period_manager")
  */
-class PeriodManager 
+class PeriodManager
 {
     private $om;
     private $repo;
@@ -57,7 +57,6 @@ class PeriodManager
         //you may want to trim timeslots if you reduce it
         //so let's do stuff here
     }
-
 
     //repositories method
 

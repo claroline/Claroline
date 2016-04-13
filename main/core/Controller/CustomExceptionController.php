@@ -24,7 +24,7 @@ class CustomExceptionController extends ExceptionController
     {
         if (!$debug && $format === 'html') {
             $code = in_array($code, array(400, 403, 404, 503)) ? $code : 500;
-            $template = new TemplateReference('ClarolineCoreBundle', 'Exception', 'error' . $code, 'html', 'twig');
+            $template = new TemplateReference('ClarolineCoreBundle', 'Exception', 'error'.$code, 'html', 'twig');
 
             if ($this->templateExists($template)) {
                 return $template;

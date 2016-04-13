@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 
 class FieldFacetRepository extends EntityRepository
 {

@@ -5,7 +5,7 @@ namespace Innova\PathBundle\Entity\Path;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * PathTemplate
+ * PathTemplate.
  *
  * @ORM\Table(name="innova_pathtemplate")
  * @ORM\Entity
@@ -13,8 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
 class PathTemplate extends AbstractPath implements \JsonSerializable
 {
     /**
-     * Unique identifier of the template
-     * @var integer
+     * Unique identifier of the template.
+     *
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -23,8 +24,9 @@ class PathTemplate extends AbstractPath implements \JsonSerializable
     private $id;
 
     /**
-     * Get id
-     * @return integer
+     * Get id.
+     *
+     * @return int
      */
     public function getId()
     {
@@ -33,9 +35,9 @@ class PathTemplate extends AbstractPath implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        return array (
-            'id'        => $this->id,
-            'name'      => $this->name,
+        return array(
+            'id' => $this->id,
+            'name' => $this->name,
             'structure' => json_decode($this->structure),
         );
     }

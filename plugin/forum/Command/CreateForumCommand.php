@@ -42,7 +42,7 @@ class CreateForumCommand extends ContainerAwareCommand
             'username' => 'username',
             'name' => 'name',
             'subjectsAmount' => 'subjectsAmount',
-            'messagesAmount' => 'messagesAmount'
+            'messagesAmount' => 'messagesAmount',
         );
 
         foreach ($params as $argument => $argumentName) {
@@ -80,8 +80,8 @@ class CreateForumCommand extends ContainerAwareCommand
         $fixture = new LoadForumData($name, $username, $messagesAmount, $subjectsAmount);
         $verbosityLevelMap = array(
             LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::DEBUG  => OutputInterface::VERBOSITY_NORMAL
+            LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL,
         );
         $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
         $fixture->setLogger($consoleLogger);

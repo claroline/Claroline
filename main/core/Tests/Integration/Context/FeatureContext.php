@@ -18,7 +18,6 @@ use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Exception\ExpectationException;
 use Behat\Symfony2Extension\Context\KernelDictionary;
 use Behat\MinkExtension\Context\MinkContext;
-use Claroline\CoreBundle\Library\Installation\Settings\SettingChecker;
 use Goutte\Client;
 
 /**
@@ -52,7 +51,7 @@ class FeatureContext extends MinkContext
             $content = $client->getResponse()->getContent();
         } else {
             $this->visit('test/reinstall');
-            $status  = $this->getSession()->getStatusCode();
+            $status = $this->getSession()->getStatusCode();
             $content = $this->getSession()->getPage()->getContent();
         }
 
@@ -60,10 +59,10 @@ class FeatureContext extends MinkContext
     }
 
     /**
-       * After each scenario, we close the browser
-       *
-       * @AfterScenario
-       */
+     * After each scenario, we close the browser.
+     *
+     * @AfterScenario
+     */
     public function closeBrowser()
     {
         $this->getSession()->stop();
@@ -109,7 +108,7 @@ class FeatureContext extends MinkContext
     }
 
     /**
-     * Connects the user with login and password
+     * Connects the user with login and password.
      *
      * @Given /^I log in with "([^"]*)"\/"([^"]*)"$/
      */
@@ -117,10 +116,10 @@ class FeatureContext extends MinkContext
     {
         return array(
             new Step\When('I am on "/login"'),
-            new Step\When('I fill in "Username or email" with "'. $login . '"'),
-            new Step\When('I fill in "Password" with "'. $password . '"'),
+            new Step\When('I fill in "Username or email" with "'.$login.'"'),
+            new Step\When('I fill in "Password" with "'.$password.'"'),
             new Step\When('I press "Login"'),
-            new Step\When('I should be on "/desktop/tool/open/home"')
+            new Step\When('I should be on "/desktop/tool/open/home"'),
         );
     }
 
@@ -169,7 +168,7 @@ class FeatureContext extends MinkContext
      */
     public function iClickOnTheNth($index, $position, $locator)
     {
-        $locator  = $this->fixStepArgument($locator);
+        $locator = $this->fixStepArgument($locator);
         $elements = $this->getSession()->getPage()->findAll('css', $locator);
 
         if (0 === count($elements)) {
@@ -184,14 +183,14 @@ class FeatureContext extends MinkContext
     }
 
     /**
-     * Fills in tinymce field with specified id
+     * Fills in tinymce field with specified id.
      *
      * @Given /^I fill in tinymce "([^"]*)" with "([^"]*)"$/
      */
     public function iFillInTinymceWith($locator, $value)
     {
-        $locator = $this->fixStepArgument($locator) . '_ifr';
-        $value   = $this->fixStepArgument($value);
+        $locator = $this->fixStepArgument($locator).'_ifr';
+        $value = $this->fixStepArgument($value);
 
         // Just checking if the iframe exists
         $this->getSession()->switchToIFrame($locator);
@@ -205,7 +204,7 @@ EOL;
     }
 
     /**
-     * Step for testing select2 autocomplete field
+     * Step for testing select2 autocomplete field.
      *
      * @Given /^I fill in "([^"]*)" with "([^"]*)" for autocomplete$/
      */
@@ -248,14 +247,14 @@ EOL;
      */
     public function resourceManagerIsLoaded()
     {
-        $this->spin(function($context) {
-            /** @var \Claroline\CoreBundle\Tests\Integration\Context\FeatureContext $context */
+        $this->spin(function ($context) {
+            /* @var \Claroline\CoreBundle\Tests\Integration\Context\FeatureContext $context */
             $resourceManager = $context->getSession()->getPage()->findById('sortable');
             if (null === $resourceManager) {
                 return false;
             }
 
-            return ($resourceManager->isVisible());
+            return $resourceManager->isVisible();
         });
     }
     /**
@@ -263,14 +262,14 @@ EOL;
      */
     public function iWaitForTheSuggestionBoxToAppear()
     {
-        $this->spin(function($context) {
-            /** @var \Claroline\CoreBundle\Tests\Integration\Context\FeatureContext $context */
+        $this->spin(function ($context) {
+            /* @var \Claroline\CoreBundle\Tests\Integration\Context\FeatureContext $context */
             $suggestionBox = $context->getSession()->getPage()->findById('select2-drop');
             if (null === $suggestionBox) {
                 return false;
             }
 
-            return ($suggestionBox->isVisible());
+            return $suggestionBox->isVisible();
         });
     }
 
@@ -279,8 +278,8 @@ EOL;
      */
     public function iShouldSeeInTheSuggestionBox($value)
     {
-        $this->spin(function($context) {
-            /** @var \Claroline\CoreBundle\Tests\Integration\Context\FeatureContext $context */
+        $this->spin(function ($context) {
+            /* @var \Claroline\CoreBundle\Tests\Integration\Context\FeatureContext $context */
             $suggestionBox = $context->getSession()->getPage()->findById('select2-drop');
             if (null === $suggestionBox) {
                 return false;
@@ -291,7 +290,7 @@ EOL;
                 return false;
             }
 
-            return ($suggestions->isVisible());
+            return $suggestions->isVisible();
         });
     }
 
@@ -300,14 +299,14 @@ EOL;
      */
     public function iWaitForThePopupToAppear()
     {
-        $this->spin(function($context) {
-            /** @var \Claroline\CoreBundle\Tests\Integration\Context\FeatureContext $context */
+        $this->spin(function ($context) {
+            /* @var \Claroline\CoreBundle\Tests\Integration\Context\FeatureContext $context */
             $suggestionBox = $context->getSession()->getPage()->findById('modal-form');
             if (null === $suggestionBox) {
                 return false;
             }
 
-            return ($suggestionBox->isVisible());
+            return $suggestionBox->isVisible();
         });
     }
 
@@ -316,14 +315,14 @@ EOL;
      */
     public function iWaitForTheConfirmPopupToAppear()
     {
-        $this->spin(function($context) {
-            /** @var \Claroline\CoreBundle\Tests\Integration\Context\FeatureContext $context */
+        $this->spin(function ($context) {
+            /* @var \Claroline\CoreBundle\Tests\Integration\Context\FeatureContext $context */
             $suggestionBox = $context->getSession()->getPage()->find('css', '.modal[id^=confirm]');
             if (null === $suggestionBox) {
                 return false;
             }
 
-            return ($suggestionBox->isVisible());
+            return $suggestionBox->isVisible();
         });
     }
 
@@ -332,14 +331,15 @@ EOL;
      */
     public function iClickOnInTheResourceManager($locator)
     {
-        $this->spin(function($context) use($locator) {
-            /** @var \Claroline\CoreBundle\Tests\Integration\Context\FeatureContext $context */
+        $this->spin(function ($context) use ($locator) {
+            /* @var \Claroline\CoreBundle\Tests\Integration\Context\FeatureContext $context */
             $element = $context->getSession()->getPage()->find('css', $locator);
             if (null === $element) {
                 return false;
             }
 
             $element->click();
+
             return true;
         });
     }
@@ -368,12 +368,12 @@ EOL;
     public function testResponseStatusCodeForThisUrl(TableNode $table)
     {
         $steps = array();
-        $hash  = $table->getHash();
+        $hash = $table->getHash();
 
         foreach ($hash as $row) {
-            $steps[] = new Step\When('I am on "' . $row['url'] . '"');
-            $steps[] = new Step\When('I should be on "' . $row['url'] . '"');
-            $steps[] = new Step\When('the response status code should be ' . $row['code']);
+            $steps[] = new Step\When('I am on "'.$row['url'].'"');
+            $steps[] = new Step\When('I should be on "'.$row['url'].'"');
+            $steps[] = new Step\When('the response status code should be '.$row['code']);
         }
 
         return $steps;
@@ -396,7 +396,7 @@ EOL;
 
     private function getUrl($path)
     {
-        return $this->getMinkParameter('base_url') . '/' . $path;
+        return $this->getMinkParameter('base_url').'/'.$path;
     }
 
     private function checkForResponseError($status, $content, $exceptionMsg)
@@ -408,16 +408,15 @@ EOL;
         if ($status !== 200 || preg_match('/Fatal error/i', $content)) {
             throw new \Exception(
                 "{$exceptionMsg}.\n"
-                . "Response status is: {$status}\n"
-                . "Response content is: {$content}"
+                ."Response status is: {$status}\n"
+                ."Response content is: {$content}"
             );
         }
     }
 
     public function spin($lambda, $wait = 5)
     {
-        for ($i = 0; $i < $wait; $i++)
-        {
+        for ($i = 0; $i < $wait; ++$i) {
             try {
                 if ($lambda($this)) {
                     return true;
@@ -431,6 +430,6 @@ EOL;
 
         $backtrace = debug_backtrace();
 
-        throw new \Exception("Timeout thrown by " . $backtrace[1]['class'] . "::" . $backtrace[1]['function']);
+        throw new \Exception('Timeout thrown by '.$backtrace[1]['class'].'::'.$backtrace[1]['function']);
     }
 }

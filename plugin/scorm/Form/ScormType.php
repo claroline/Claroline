@@ -17,7 +17,6 @@ use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-
 class ScormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -27,7 +26,7 @@ class ScormType extends AbstractType
             'text',
             array(
                 'required' => true,
-                'constraints' => new NotBlank()
+                'constraints' => new NotBlank(),
             )
         );
         $builder->add(
@@ -38,8 +37,8 @@ class ScormType extends AbstractType
                 'mapped' => false,
                 'constraints' => array(
                     new NotBlank(),
-                    new File()
-                )
+                    new File(),
+                ),
            )
         );
     }

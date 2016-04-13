@@ -25,8 +25,7 @@ class TaggedObjectRepository extends EntityRepository
         $class = null,
         $orderedBy = 'name',
         $order = 'ASC'
-    )
-    {
+    ) {
         $classTest = is_null($class) ? '' : 'AND to.objectClass = :class';
 
         if (is_null($user)) {
@@ -40,7 +39,6 @@ class TaggedObjectRepository extends EntityRepository
             ";
             $query = $this->_em->createQuery($dql);
         } else {
-
             if ($withPlatform) {
                 $dql = "
                     SELECT to
@@ -66,7 +64,7 @@ class TaggedObjectRepository extends EntityRepository
             $query = $this->_em->createQuery($dql);
             $query->setParameter('user', $user);
         }
-        
+
         if (!is_null($class)) {
             $query->setParameter('class', $class);
         }
@@ -82,8 +80,7 @@ class TaggedObjectRepository extends EntityRepository
         $orderedBy = 'name',
         $order = 'ASC',
         $strictSearch = false
-    )
-    {
+    ) {
         $classTest = is_null($class) ? '' : 'AND to.objectClass = :class';
         $searchTest = $strictSearch ? '= :search' : 'LIKE :search';
 
@@ -99,7 +96,6 @@ class TaggedObjectRepository extends EntityRepository
             ";
             $query = $this->_em->createQuery($dql);
         } else {
-
             if ($withPlatform) {
                 $dql = "
                     SELECT to
@@ -179,8 +175,7 @@ class TaggedObjectRepository extends EntityRepository
         array $ids,
         $orderedBy = 'id',
         $order = 'ASC'
-    )
-    {
+    ) {
         $dql = "
             SELECT to
             FROM Claroline\TagBundle\Entity\TaggedObject to
@@ -199,13 +194,11 @@ class TaggedObjectRepository extends EntityRepository
         Workspace $workspace,
         $user = 'anon.',
         array $roleNames = array('ROLE_ANONYMOUS')
-    )
-    {
+    ) {
         $isManager = false;
 
         foreach ($roleNames as $roleName) {
-
-            if ($roleName === 'ROLE_WS_MANAGER_' . $workspace->getGuid()) {
+            if ($roleName === 'ROLE_WS_MANAGER_'.$workspace->getGuid()) {
                 $isManager = true;
                 break;
             }
@@ -256,7 +249,6 @@ class TaggedObjectRepository extends EntityRepository
         return $query->getResult();
     }
 
-
     /********************************
      * Return casted tagged objects *
      ********************************/
@@ -266,8 +258,7 @@ class TaggedObjectRepository extends EntityRepository
         array $ids,
         $orderedBy = 'id',
         $order = 'ASC'
-    )
-    {
+    ) {
         $dql = "
             SELECT o
             FROM $class o
@@ -286,8 +277,7 @@ class TaggedObjectRepository extends EntityRepository
         $orderedBy = 'id',
         $order = 'ASC',
         $type = 0
-    )
-    {
+    ) {
         $dql = "
             SELECT DISTINCT w
             FROM Claroline\CoreBundle\Entity\Workspace\Workspace w

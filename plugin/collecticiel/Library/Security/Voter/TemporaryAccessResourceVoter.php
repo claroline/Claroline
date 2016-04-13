@@ -4,12 +4,9 @@ namespace Innova\CollecticielBundle\Library\Security\Voter;
 
 use Claroline\CoreBundle\Entity\User;
 use Innova\CollecticielBundle\Manager\TemporaryAccessResourceManager;
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -37,20 +34,19 @@ class TemporaryAccessResourceVoter implements VoterInterface
 
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-
         if ($object instanceof ResourceCollection) {
             $granted = false;
 
             $user = null;
             if ($token->getUser() instanceof User) {
-                $user= $token->getUser();
+                $user = $token->getUser();
             }
 
             if ($this->manager->hasTemporaryAccessOnSomeResources($user)) {
-                foreach($attributes as $attribute) {
+                foreach ($attributes as $attribute) {
                     if ($this->supportsAttribute($attribute) && $this->supportsClass($object)) {
                         foreach ($object->getResources() as $resource) {
-                            if ($this->manager->hasTemporaryAccess($resource, $user) ) {
+                            if ($this->manager->hasTemporaryAccess($resource, $user)) {
                                 $granted = true;
                                 break;
                             }
@@ -61,7 +57,7 @@ class TemporaryAccessResourceVoter implements VoterInterface
 
             if ($granted) {
                 return VoterInterface::ACCESS_GRANTED;
-            }else{
+            } else {
                 return VoterInterface::ACCESS_DENIED;
             }
         }

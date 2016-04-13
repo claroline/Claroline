@@ -13,8 +13,6 @@ namespace Claroline\CursusBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
-use Claroline\CursusBundle\Entity\Cursus;
-
 
 /**
  * @ORM\Entity()

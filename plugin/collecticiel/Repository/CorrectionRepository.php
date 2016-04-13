@@ -2,15 +2,14 @@
 /**
  * Created by : Vincent SAISSET
  * Date: 05/09/13
- * Time: 14:56
+ * Time: 14:56.
  */
-
 namespace Innova\CollecticielBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
-class CorrectionRepository extends EntityRepository {
-
+class CorrectionRepository extends EntityRepository
+{
     public function countFinished($dropzone, $user)
     {
         $nbCorrection = $this
@@ -34,7 +33,9 @@ class CorrectionRepository extends EntityRepository {
      * Get the number of correction of a dropzone.
      * usefull for example to see if correction are already created when user want to change
      * criterias of the dropzone.
+     *
      * @throws \Exception
+     *
      * @return mixed
      */
     public function countByDropzone($dropzoneId)
@@ -52,7 +53,7 @@ class CorrectionRepository extends EntityRepository {
 
     public function getNotFinished($dropzone, $user)
     {
-        $corrections =  $this->createQueryBuilder('correction')
+        $corrections = $this->createQueryBuilder('correction')
             ->andWhere('correction.user = :user')
             ->andWhere('correction.dropzone = :dropzone')
             ->andWhere('correction.finished = false')
@@ -64,13 +65,12 @@ class CorrectionRepository extends EntityRepository {
 
         if (count($corrections) == 1) {
             return $corrections[0];
-        } else if (count($corrections) > 1) {
+        } elseif (count($corrections) > 1) {
             throw new \Exception();
         }
 
-        return null;
+        return;
     }
-
 
     public function getCorrectionsIds($dropzone, $drop)
     {
@@ -81,15 +81,15 @@ class CorrectionRepository extends EntityRepository {
             ->andWhere('correction.valid = true')
             ->andWhere('correction.editable = false')
             ->andWhere('correction.drop = :drop')
-            ->setParameter('dropzone',$dropzone)
-            ->setParameter('drop',$drop)
+            ->setParameter('dropzone', $dropzone)
+            ->setParameter('drop', $drop)
             ->getQuery()
             ->getResult();
     }
 
     public function getAlreadyCorrectedDropIds($dropzone, $user)
     {
-       return $this->createQueryBuilder('correction')
+        return $this->createQueryBuilder('correction')
             ->select('drop.id')
             ->join('correction.drop', 'drop')
             ->andWhere('correction.user = :user')
@@ -151,11 +151,9 @@ class CorrectionRepository extends EntityRepository {
             ->getResult()[0];
     }
 
-
     public function getUsersByDropzoneQuery($dropzone)
     {
-
-         $dql = '
+        $dql = '
         SELECT  DISTINCT u  FROM Claroline\CoreBundle\Entity\User u
         WHERE u IN (
             SELECT u2 FROM InnovaCollecticielBundle:Correction c
@@ -172,13 +170,11 @@ class CorrectionRepository extends EntityRepository {
 
         $query = $this->_em->createQuery($dql);
 
-
         $query->setParameter('dropzoneId', $dropzone->getId());
         //var_dump($query);
        // die;
         return $query;
     }
-
 
     public function getByDropzoneUser($dropzone, $user, $onlyQuery = false)
     {

@@ -96,7 +96,7 @@ class ResourceType
     /**
      * Returns the resource type id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

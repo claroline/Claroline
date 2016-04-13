@@ -56,8 +56,7 @@ class TeamManager
         RightsManager $rightsManager,
         RoleManager $roleManager,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
         $this->resourceManager = $resourceManager;
@@ -81,14 +80,13 @@ class TeamManager
         $selfUnregistration,
         ResourceNode $resource = null,
         array $creatableResources = array()
-    )
-    {
+    ) {
         $this->om->startFlushSuite();
         $teams = array();
         $nodes = array();
         $index = 1;
 
-        for ($i = 0; $i < $nbTeams; $i++) {
+        for ($i = 0; $i < $nbTeams; ++$i) {
             $team = new Team();
             $validName = $this->computeValidTeamName($workspace, $name, $index);
             $team->setName($validName['name']);
@@ -129,8 +127,7 @@ class TeamManager
         User $user,
         ResourceNode $resource = null,
         array $creatableResources = array()
-    )
-    {
+    ) {
         $this->om->startFlushSuite();
         $team->setWorkspace($workspace);
         $validName = $this->computeValidTeamName($workspace, $team->getName(), 0);
@@ -195,11 +192,9 @@ class TeamManager
             $rights = array();
 
             foreach ($workspaceRoles as $role) {
-
                 if ($role->getId() !== $teamRole->getId() &&
                     $role->getId() !== $teamManagerRole->getId() &&
                     !is_null($resourceNode)) {
-
                     $roleName = $role->getName();
                     $rights[$roleName] = array();
                     $rights[$roleName]['role'] = $role;
@@ -280,7 +275,6 @@ class TeamManager
         $team->setTeamManager($user);
 
         if (!is_null($teamManagerRole)) {
-
             if (!is_null($currentTeamManager)) {
                 $this->roleManager
                     ->dissociateRole($currentTeamManager, $teamManagerRole);
@@ -311,7 +305,6 @@ class TeamManager
         $nodes = array();
 
         foreach ($teams as $team) {
-
             if ($withDirectory) {
                 $directory = $team->getDirectory();
 
@@ -324,7 +317,6 @@ class TeamManager
         $this->om->endFlushSuite();
 
         if (count($nodes) > 0) {
-
             foreach ($nodes as $node) {
                 $this->resourceManager->delete($node);
             }
@@ -351,7 +343,6 @@ class TeamManager
             ->findUsersWithNoTeamByWorkspace($workspace, $workspaceTeams);
 
         foreach ($teams as $team) {
-
             $maxUsers = $team->getMaxUsers();
 
             if (is_null($maxUsers)) {
@@ -365,7 +356,7 @@ class TeamManager
                     $this->registerUserToTeam($team, $users[$index]);
                     unset($users[$index]);
                     $users = array_values($users);
-                    $nbFreeSpaces--;
+                    --$nbFreeSpaces;
                 }
 
                 if (count($users) === 0) {
@@ -399,12 +390,12 @@ class TeamManager
     {
         $teamName = $team->getName();
         $roleName = $this->computeValidRoleName(
-            strtoupper(str_replace(' ', '_', $teamName . '_MANAGER')),
+            strtoupper(str_replace(' ', '_', $teamName.'_MANAGER')),
             $workspace->getGuid()
         );
         $roleKey = $this->computeValidRoleTranslationKey(
             $workspace,
-            $teamName . ' manager'
+            $teamName.' manager'
         );
 
         $role = $this->roleManager->createWorkspaceRole(
@@ -442,15 +433,15 @@ class TeamManager
     private function computeValidRoleName($roleName, $guid)
     {
         $i = 1;
-        $name = 'ROLE_WS_' . $roleName . '_' . $guid;
+        $name = 'ROLE_WS_'.$roleName.'_'.$guid;
         $role = $this->roleManager
             ->getRoleByName($name);
 
         while (!is_null($role)) {
-            $name = 'ROLE_WS_' . $roleName . '_' . $i . '_' . $guid;
+            $name = 'ROLE_WS_'.$roleName.'_'.$i.'_'.$guid;
             $role = $this->roleManager
                 ->getRoleByName($name);
-            $i++;
+            ++$i;
         }
 
         return $name;
@@ -466,12 +457,12 @@ class TeamManager
         );
 
         while (!is_null($role)) {
-            $translationKey = $key . ' (' . $i . ')';
+            $translationKey = $key.' ('.$i.')';
             $role = $this->roleManager->getRoleByTranslationKeyAndWorkspace(
                 $translationKey,
                 $workspace
             );
-            $i++;
+            ++$i;
         }
 
         return $translationKey;
@@ -479,17 +470,16 @@ class TeamManager
 
     private function computeValidTeamName(Workspace $workspace, $teamName, $index)
     {
-        $name = $index === 0 ? $teamName : $teamName . ' ' . $index;
+        $name = $index === 0 ? $teamName : $teamName.' '.$index;
 
         $teams = $this->teamRepo->findTeamsByWorkspaceAndName($workspace, $name);
 
         while (count($teams) > 0) {
-            $index++;
-            $name = $teamName . ' ' . $index;
+            ++$index;
+            $name = $teamName.' '.$index;
 
             $teams = $this->teamRepo
                 ->findTeamsByWorkspaceAndName($workspace, $name);
-
         }
 
         return array('name' => $name, 'index' => $index);
@@ -503,8 +493,7 @@ class TeamManager
         Role $teamManagerRole,
         ResourceNode $resource = null,
         array $creatableResources = array()
-    )
-    {
+    ) {
         $rootDirectory = $this->resourceManager->getWorkspaceRoot($workspace);
         $directoryType = $this->resourceManager->getResourceTypeByName('directory');
         $resourceTypes = $this->resourceManager->getAllResourceTypes();
@@ -578,7 +567,7 @@ class TeamManager
             foreach ($nodes as $node) {
                 $node->setIndex($index);
                 $this->om->persist($node);
-                $index++;
+                ++$index;
             }
         }
     }
@@ -589,14 +578,12 @@ class TeamManager
         $this->resourceManager->createRights($node, $rights);
 
         if ($node->getResourceType()->getName() === 'directory') {
-
             foreach ($node->getChildren() as $child) {
                 $this->applyRightsToResources($child, $rights);
             }
         }
         $this->om->endFlushSuite();
     }
-
 
     /***********************************
      * WorkspaceTeamParameters methods *
@@ -636,10 +623,8 @@ class TeamManager
             $workspaceRoles = $this->roleManager->getRolesByWorkspace($workspace);
 
             foreach ($workspaceRoles as $role) {
-
                 if ($role->getId() !== $teamRole->getId() &&
                     $role->getId() !== $teamManagerRole->getId()) {
-
                     $rights = array();
 
                     if ($isPublic) {
@@ -652,7 +637,6 @@ class TeamManager
         }
     }
 
-
     /************************************
      * Access to TeamRepository methods *
      ************************************/
@@ -662,8 +646,7 @@ class TeamManager
         $orderedBy = 'name',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->teamRepo->findTeamsByWorkspace(
             $workspace,
             $orderedBy,
@@ -677,8 +660,7 @@ class TeamManager
         $orderedBy = 'name',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->teamRepo->findTeamsByUser(
             $user,
             $orderedBy,
@@ -690,8 +672,7 @@ class TeamManager
     public function getTeamsWithUsersByWorkspace(
         Workspace $workspace,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->teamRepo->findTeamsWithUsersByWorkspace(
             $workspace,
             $executeQuery
@@ -702,8 +683,7 @@ class TeamManager
         User $user,
         Workspace $workspace,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->teamRepo->findTeamsByUserAndWorkspace(
             $user,
             $workspace,
@@ -718,8 +698,7 @@ class TeamManager
         $page = 1,
         $max = 50,
         $executeQuery = true
-    )
-    {
+    ) {
         $users = $this->teamRepo->findUnregisteredUsersByTeam(
             $team,
             $orderedBy,
@@ -740,8 +719,7 @@ class TeamManager
         $page = 1,
         $max = 50,
         $executeQuery = true
-    )
-    {
+    ) {
         $users = $this->teamRepo->findSearchedUnregisteredUsersByTeam(
             $team,
             $search,
@@ -762,8 +740,7 @@ class TeamManager
         $page = 1,
         $max = 50,
         $executeQuery = true
-    )
-    {
+    ) {
         $users = $this->teamRepo->findWorkspaceUsers(
             $workspace,
             $orderedBy,
@@ -784,8 +761,7 @@ class TeamManager
         $page = 1,
         $max = 50,
         $executeQuery = true
-    )
-    {
+    ) {
         $users = $this->teamRepo->findSearchedWorkspaceUsers(
             $workspace,
             $search,
@@ -806,8 +782,7 @@ class TeamManager
         $page = 1,
         $max = 50,
         $executeQuery = true
-    )
-    {
+    ) {
         $users = $this->teamRepo->findWorkspaceUsersWithManagers(
             $workspace,
             $orderedBy,
@@ -828,8 +803,7 @@ class TeamManager
         $page = 1,
         $max = 50,
         $executeQuery = true
-    )
-    {
+    ) {
         $users = $this->teamRepo->findSearchedWorkspaceUsersWithManagers(
             $workspace,
             $search,
@@ -847,8 +821,7 @@ class TeamManager
         Workspace $workspace,
         array $users,
         $executeQuery = true
-    )
-    {
+    ) {
         return count($users) > 0 ?
             $this->teamRepo->findNbTeamsByUsers(
                 $workspace,
@@ -864,10 +837,8 @@ class TeamManager
         $orderedBy = 'name',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         if (count($excludedTeams) > 0) {
-
             return $this->teamRepo->findTeamsWithExclusionsByWorkspace(
                 $workspace,
                 $excludedTeams,
@@ -876,7 +847,6 @@ class TeamManager
                 $executeQuery
             );
         } else {
-
             return $this->teamRepo->findTeamsByWorkspace(
                 $workspace,
                 $orderedBy,
@@ -886,7 +856,6 @@ class TeamManager
         }
     }
 
-
     /*******************************************************
      * Access to WorkspaceTeamParametersRepository methods *
      *******************************************************/
@@ -894,8 +863,7 @@ class TeamManager
     public function getParametersByWorkspace(
         Workspace $workspace,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->workspaceTeamParamsRepo->findParametersByWorkspace(
             $workspace,
             $executeQuery

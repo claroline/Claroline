@@ -19,8 +19,7 @@ class WorkspaceTeamParametersRepository extends EntityRepository
     public function findParametersByWorkspace(
         Workspace $workspace,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT wtp
             FROM Claroline\TeamBundle\Entity\WorkspaceTeamParameters wtp

@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Controller\API\User;
 
-use FOS\RestBundle\Util\Codes;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,8 +24,8 @@ class ApiController extends Controller
      */
     public function connectedUserAction()
     {
-        /** @var \Symfony\Component\Security\Core\SecurityContext $securityContext */
-        $tokenStorage  = $this->container->get('security.token_storage');
+        /* @var \Symfony\Component\Security\Core\SecurityContext $securityContext */
+        $tokenStorage = $this->container->get('security.token_storage');
         $token = $tokenStorage->getToken();
 
         if ($token) {
@@ -47,8 +46,8 @@ class ApiController extends Controller
      */
     public function connectedRoles()
     {
-        /** @var \Symfony\Component\Security\Core\SecurityContext $securityContext */
-        $tokenStorage  = $this->container->get('security.token_storage');
+        /* @var \Symfony\Component\Security\Core\SecurityContext $securityContext */
+        $tokenStorage = $this->container->get('security.token_storage');
         $token = $tokenStorage->getToken();
 
         if ($token) {

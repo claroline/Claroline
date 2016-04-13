@@ -34,6 +34,7 @@ class Converter
      * into an entity graph (without persisting it).
      *
      * @param string $jsonFramework
+     *
      * @return Competency
      */
     public function convertToEntity($jsonFramework)
@@ -68,6 +69,7 @@ class Converter
      * representation.
      *
      * @param array $framework
+     *
      * @return string
      */
     public function convertToJson(array $framework)
@@ -88,7 +90,7 @@ class Converter
 
         $this->walkArrayNodes($framework, $frameworkData);
 
-        return json_encode($frameworkData, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE);
+        return json_encode($frameworkData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     }
 
     private function walkJsonNodes(\stdClass $parentData, Competency $parentCompetency, Scale $scale)

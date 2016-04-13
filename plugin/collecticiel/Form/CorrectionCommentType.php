@@ -28,7 +28,7 @@ class CorrectionCommentType extends AbstractType
         $resolver->setDefaults(array(
             'edit' => true,
             'allowCommentInCorrection' => false,
-            'translation_domain' => 'innova_collecticiel'
+            'translation_domain' => 'innova_collecticiel',
         ));
     }
 }

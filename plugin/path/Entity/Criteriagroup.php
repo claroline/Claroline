@@ -4,10 +4,9 @@ namespace Innova\PathBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Innova\PathBundle\Entity\Criterion;
-use Innova\PathBundle\Entity\StepCondition;
+
 /**
- * Criteriagroup
+ * Criteriagroup.
  *
  * @ORM\Table(name="innova_stepcondition_criteriagroup")
  * @ORM\Entity
@@ -15,7 +14,7 @@ use Innova\PathBundle\Entity\StepCondition;
 class Criteriagroup implements \JsonSerializable
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -24,15 +23,17 @@ class Criteriagroup implements \JsonSerializable
     private $id;
 
     /**
-     * Depth of the criteriagroup in the Condition
-     * @var integer
+     * Depth of the criteriagroup in the Condition.
+     *
+     * @var int
      *
      * @ORM\Column(name="lvl", type="integer")
      */
     protected $lvl;
 
     /**
-     * Parent criteriagroup
+     * Parent criteriagroup.
+     *
      * @var \Innova\PathBundle\Entity\Criteriagroup
      *
      * @ORM\ManyToOne(targetEntity="Criteriagroup", inversedBy="children")
@@ -41,7 +42,8 @@ class Criteriagroup implements \JsonSerializable
     protected $parent;
 
     /**
-     * Children criteriagroup
+     * Children criteriagroup.
+     *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Criteriagroup", mappedBy="parent", indexBy="id", cascade={"persist", "remove"})
@@ -50,7 +52,8 @@ class Criteriagroup implements \JsonSerializable
     protected $children;
 
     /**
-     * StepCondition
+     * StepCondition.
+     *
      * @var \Innova\PathBundle\Entity\StepCondition
      *
      * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\StepCondition", inversedBy="criteriagroups")
@@ -59,7 +62,8 @@ class Criteriagroup implements \JsonSerializable
     protected $condition;
 
     /**
-     * Criteria linked to the criteriagroup
+     * Criteria linked to the criteriagroup.
+     *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\Criterion", mappedBy="criteriagroup", indexBy="id", cascade={"persist", "remove"}, orphanRemoval=true)
@@ -67,15 +71,16 @@ class Criteriagroup implements \JsonSerializable
     protected $criteria;
 
     /**
-     * Order of the criteriagroups relative to its siblings in the step
-     * @var integer
+     * Order of the criteriagroups relative to its siblings in the step.
+     *
+     * @var int
      *
      * @ORM\Column(name="criteriagroup_order", type="integer")
      */
     protected $order;
 
     /**
-     * Class constructor
+     * Class constructor.
      */
     public function __construct()
     {
@@ -84,9 +89,9 @@ class Criteriagroup implements \JsonSerializable
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -94,8 +99,10 @@ class Criteriagroup implements \JsonSerializable
     }
 
     /**
-     * Set lvl
-     * @param integer $lvl
+     * Set lvl.
+     *
+     * @param int $lvl
+     *
      * @return \Innova\PathBundle\Entity\Criteriagroup
      */
     public function setLvl($lvl)
@@ -106,16 +113,19 @@ class Criteriagroup implements \JsonSerializable
     }
 
     /**
-     * Get lvl
-     * @return integer
+     * Get lvl.
+     *
+     * @return int
      */
     public function getLvl()
     {
         return $this->lvl;
     }
     /**
-     * Set parent
-     * @param  \Innova\PathBundle\Entity\Criteriagroup $parent
+     * Set parent.
+     *
+     * @param \Innova\PathBundle\Entity\Criteriagroup $parent
+     *
      * @return \Innova\PathBundle\Entity\Criteriagroup
      */
     public function setParent(Criteriagroup $parent = null)
@@ -129,7 +139,8 @@ class Criteriagroup implements \JsonSerializable
     }
 
     /**
-     * Get parent
+     * Get parent.
+     *
      * @return \Innova\PathBundle\Entity\Criteriagroup
      */
     public function getParent()
@@ -138,7 +149,8 @@ class Criteriagroup implements \JsonSerializable
     }
 
     /**
-     * Get children of the step
+     * Get children of the step.
+     *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getChildren()
@@ -152,8 +164,10 @@ class Criteriagroup implements \JsonSerializable
     }
 
     /**
-     * Add new child to the criteriagroup
+     * Add new child to the criteriagroup.
+     *
      * @param \Innova\PathBundle\Entity\Criteriagroup $criteriagroup
+     *
      * @return \Innova\PathBundle\Entity\Criteriagroup
      */
     public function addChild(Criteriagroup $criteriagroup)
@@ -167,8 +181,10 @@ class Criteriagroup implements \JsonSerializable
     }
 
     /**
-     * Remove a step from children
+     * Remove a step from children.
+     *
      * @param \Innova\PathBundle\Entity\Criteriagroup $criteriagroup
+     *
      * @return \Innova\PathBundle\Entity\Criteriagroup
      */
     public function removeChild(Criteriagroup $criteriagroup)
@@ -182,8 +198,10 @@ class Criteriagroup implements \JsonSerializable
     }
 
     /**
-     * Set condition
-     * @param  \Innova\PathBundle\Entity\StepCondition $condition
+     * Set condition.
+     *
+     * @param \Innova\PathBundle\Entity\StepCondition $condition
+     *
      * @return \Innova\PathBundle\Entity\Criteriagroup
      */
     public function setCondition(Stepcondition $condition = null)
@@ -199,7 +217,8 @@ class Criteriagroup implements \JsonSerializable
     }
 
     /**
-     * Get condition
+     * Get condition.
+     *
      * @return \Innova\PathBundle\Entity\StepCondition
      */
     public function getCondition()
@@ -208,8 +227,10 @@ class Criteriagroup implements \JsonSerializable
     }
 
     /**
-     * Add criterion
-     * @param  \Innova\PathBundle\Entity\Criterion $criterion
+     * Add criterion.
+     *
+     * @param \Innova\PathBundle\Entity\Criterion $criterion
+     *
      * @return \Innova\PathBundle\Entity\Criteriagroup
      */
     public function addCriterion(Criterion $criterion)
@@ -224,8 +245,10 @@ class Criteriagroup implements \JsonSerializable
     }
 
     /**
-     * Remove criterion
+     * Remove criterion.
+     *
      * @param \Innova\PathBundle\Entity\Criterion $criterion
+     *
      * @return \Innova\PathBundle\Entity\Criteriagroup
      */
     public function removeCriterion(Criterion $criterion)
@@ -240,7 +263,8 @@ class Criteriagroup implements \JsonSerializable
     }
 
     /**
-     * Get criteria
+     * Get criteria.
+     *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getCriteria()
@@ -249,8 +273,10 @@ class Criteriagroup implements \JsonSerializable
     }
 
     /**
-     * Set order
-     * @param  integer $order
+     * Set order.
+     *
+     * @param int $order
+     *
      * @return \Innova\PathBundle\Entity\Criteriagroup
      */
     public function setOrder($order)
@@ -261,8 +287,9 @@ class Criteriagroup implements \JsonSerializable
     }
 
     /**
-     * Get order of the step
-     * @return integer
+     * Get order of the step.
+     *
+     * @return int
      */
     public function getOrder()
     {
@@ -272,10 +299,10 @@ class Criteriagroup implements \JsonSerializable
     public function jsonSerialize()
     {
         // Initialize data array
-        $jsonArray = array (
-            'id'                => $this->id,               // A local ID for the criteriagroup in the condition
-            'cgid'              => $this->id,               // The real ID of the criteriagroup into the DB
-            'lvl'               => $this->lvl,              // The depth of the criteriagroup in the condition structure
+        $jsonArray = array(
+            'id' => $this->id,               // A local ID for the criteriagroup in the condition
+            'cgid' => $this->id,               // The real ID of the criteriagroup into the DB
+            'lvl' => $this->lvl,              // The depth of the criteriagroup in the condition structure
         );
 
         // Get step criteriagroup

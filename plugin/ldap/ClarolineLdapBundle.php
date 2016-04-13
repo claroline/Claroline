@@ -25,7 +25,6 @@ class ClarolineLdapBundle extends PluginBundle
     {
         $config = new ConfigurationBuilder();
 
-        return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'admin/ldap');
+        return $config->addRoutingResource(__DIR__.'/Resources/config/routing.yml', null, 'admin/ldap');
     }
 }
-

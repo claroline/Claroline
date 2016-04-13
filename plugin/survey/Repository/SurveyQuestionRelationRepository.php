@@ -35,8 +35,7 @@ class SurveyQuestionRelationRepository extends EntityRepository
         Survey $survey,
         Question $question,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT sqr
             FROM Claroline\SurveyBundle\Entity\SurveyQuestionRelation sqr
@@ -53,8 +52,7 @@ class SurveyQuestionRelationRepository extends EntityRepository
     public function findSurveyLastQuestionOrder(
         Survey $survey,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT MAX(sqr.questionOrder) AS order_max
             FROM Claroline\SurveyBundle\Entity\SurveyQuestionRelation sqr
@@ -70,8 +68,7 @@ class SurveyQuestionRelationRepository extends EntityRepository
         Survey $survey,
         $questionOrder,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             UPDATE Claroline\SurveyBundle\Entity\SurveyQuestionRelation sqr
             SET sqr.questionOrder = sqr.questionOrder + 1

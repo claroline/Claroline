@@ -20,8 +20,7 @@ class ActivityRuleRepository extends EntityRepository
         $action,
         ResourceNode $resourceNode,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT ar
             FROM Claroline\CoreBundle\Entity\Activity\ActivityRule ar
@@ -33,14 +32,13 @@ class ActivityRuleRepository extends EntityRepository
         $query->setParameter('action', $action);
         $query->setParameter('resourceNodeId', $resourceNode->getId());
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findActivityRuleByActionWithNoResource(
         $action,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = '
             SELECT ar
             FROM Claroline\CoreBundle\Entity\Activity\ActivityRule ar
@@ -51,6 +49,6 @@ class ActivityRuleRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('action', $action);
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 }

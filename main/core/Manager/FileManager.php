@@ -18,7 +18,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Claroline\CoreBundle\Event\StrictDispatcher;
-use Claroline\CoreBundle\Entity\User;
 
 /**
  * @DI\Service("claroline.manager.file_manager")
@@ -48,8 +47,7 @@ class FileManager
         ResourceManager $rm,
         StrictDispatcher $dispatcher,
         $uploadDir
-    )
-    {
+    ) {
         $this->om = $om;
         $this->fileDir = $fileDir;
         $this->ut = $ut;
@@ -76,7 +74,7 @@ class FileManager
     public function deleteContent(File $file)
     {
         $ds = DIRECTORY_SEPARATOR;
-        $uploadFile = $this->fileDir . $ds . $file->getHashName();
+        $uploadFile = $this->fileDir.$ds.$file->getHashName();
         @unlink($uploadFile);
     }
 
@@ -91,12 +89,12 @@ class FileManager
         $size = @filesize($upload);
         $extension = pathinfo($fileName, PATHINFO_EXTENSION);
         $mimeType = $upload->getClientMimeType();
-        $hashName = 'WORKSPACE_' . $workspaceId .
-            $ds .
-            $this->ut->generateGuid() .
-            "." .
+        $hashName = 'WORKSPACE_'.$workspaceId.
+            $ds.
+            $this->ut->generateGuid().
+            '.'.
             $extension;
-        $upload->move($this->fileDir . $ds .  'WORKSPACE_' . $workspaceId, $hashName);
+        $upload->move($this->fileDir.$ds.'WORKSPACE_'.$workspaceId, $hashName);
         $file->setSize($size);
         $file->setHashName($hashName);
         $file->setMimeType($mimeType);

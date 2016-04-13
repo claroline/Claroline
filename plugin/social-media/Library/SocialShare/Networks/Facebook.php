@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -16,10 +16,10 @@ class Facebook implements NetworkInterface
     const SHARE_URL = 'https://www.facebook.com/sharer/sharer.php?u=%s';
     const API_URL = 'http://api.facebook.com/restserver.php?method=links.getStats&urls=%s&format=json';
     const COLOR = '#3b5998';
-    const ICON = "facebook";
+    const ICON = 'facebook';
 
     /**
-     * Gets networks's name
+     * Gets networks's name.
      *
      * @return string
      */
@@ -29,7 +29,7 @@ class Facebook implements NetworkInterface
     }
 
     /**
-     * Gets the share link for provided URL
+     * Gets the share link for provided URL.
      *
      * @param $url
      * @param array $options
@@ -42,7 +42,7 @@ class Facebook implements NetworkInterface
     }
 
     /**
-     * Gets the number of shares of the URL
+     * Gets the number of shares of the URL.
      *
      * @param $url
      *
@@ -52,17 +52,17 @@ class Facebook implements NetworkInterface
     {
         $api_url = sprintf(self::API_URL, urlencode($url));
         $data = null;
-        try{
+        try {
             $data = json_decode(file_get_contents($api_url));
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $data = null;
         }
 
-        return ($data !== null && isset($data[0]->share_count))?intval($data[0]->share_count):0;
+        return ($data !== null && isset($data[0]->share_count)) ? intval($data[0]->share_count) : 0;
     }
 
     /**
-     * Gets networks's bg color
+     * Gets networks's bg color.
      *
      * @return string
      */
@@ -72,7 +72,7 @@ class Facebook implements NetworkInterface
     }
 
     /**
-     * Gets network's icon class
+     * Gets network's icon class.
      *
      * @return string
      */
@@ -80,5 +80,4 @@ class Facebook implements NetworkInterface
     {
         return self::ICON;
     }
-
 }

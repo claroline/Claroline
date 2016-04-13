@@ -80,9 +80,9 @@ class Builder extends ContainerAware
             }
             $event = new ConfigureMenuEvent($factory, $menu, $tool);
 
-            if ($dispatcher->hasListeners('claroline_top_bar_right_menu_configure_desktop_tool_' . $toolName)) {
+            if ($dispatcher->hasListeners('claroline_top_bar_right_menu_configure_desktop_tool_'.$toolName)) {
                 $dispatcher->dispatch(
-                    'claroline_top_bar_right_menu_configure_desktop_tool_' . $toolName,
+                    'claroline_top_bar_right_menu_configure_desktop_tool_'.$toolName,
                     $event
                 );
             } else {
@@ -103,7 +103,7 @@ class Builder extends ContainerAware
         if ($hasRoleExtension->isImpersonated()) {
             $route = array(
                 'route' => 'claro_desktop_open',
-                'routeParameters' => array('_switch' => 'exit')
+                'routeParameters' => array('_switch' => 'exit'),
             );
         } else {
             $route = array('route' => 'claro_security_logout');
@@ -128,10 +128,10 @@ class Builder extends ContainerAware
         $menu = $factory->createItem('root')
             ->setChildrenAttribute('class', 'nav navbar-nav');
 
-         if ($configHandler->getParameter('name') == "" && $configHandler->getParameter('logo') == "") {
-             $menu->addChild($translator->trans('home', array(), 'platform'), array('route' => 'claro_index'))
+        if ($configHandler->getParameter('name') == '' && $configHandler->getParameter('logo') == '') {
+            $menu->addChild($translator->trans('home', array(), 'platform'), array('route' => 'claro_index'))
                 ->setExtra('icon', 'fa fa-home');
-         }
+        }
 
         $menu->addChild($translator->trans('desktop', array(), 'platform'), array('route' => 'claro_desktop_open'))
             ->setAttribute('role', 'presentation')
@@ -178,9 +178,9 @@ class Builder extends ContainerAware
                 }
                 $event = new ConfigureMenuEvent($factory, $menu, $tool);
 
-                if ($dispatcher->hasListeners('claroline_top_bar_left_menu_configure_desktop_tool_' . $toolName)) {
+                if ($dispatcher->hasListeners('claroline_top_bar_left_menu_configure_desktop_tool_'.$toolName)) {
                     $dispatcher->dispatch(
-                        'claroline_top_bar_left_menu_configure_desktop_tool_' . $toolName,
+                        'claroline_top_bar_left_menu_configure_desktop_tool_'.$toolName,
                         $event
                     );
                 } else {
@@ -212,20 +212,20 @@ class Builder extends ContainerAware
             $translator->trans('menu_bar', array(), 'platform'),
             array(
                 'route' => 'claro_tool_properties',
-                'routeParameters' => array('type' => 0)
+                'routeParameters' => array('type' => 0),
             ));
 
         $menu->addChild(
             $translator->trans('user_menu', array(), 'platform'),
             array(
                 'route' => 'claro_tool_properties',
-                'routeParameters' => array('type' => 1)
+                'routeParameters' => array('type' => 1),
             ));
 
         $menu->addChild(
             $translator->trans('desktop_parameters', array(), 'platform'),
             array(
-                'route' => 'claro_user_options_edit_form'
+                'route' => 'claro_user_options_edit_form',
             ));
 
         //allowing the menu to be extended

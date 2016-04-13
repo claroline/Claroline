@@ -18,7 +18,6 @@ use Claroline\CoreBundle\Entity\User;
  */
 class UserCollection
 {
-
     private $users;
     private $errors;
 

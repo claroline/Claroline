@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Auto-generated migration based on mapping information: modify it with caution
+ * Auto-generated migration based on mapping information: modify it with caution.
  *
  * Generation date: 2014/05/20 12:34:58
  */
@@ -24,9 +24,9 @@ class Version20140520123452 extends AbstractMigration
 
     public function down(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE icap__dropzonebundle_dropzone 
             DROP (notify_on_drop)
-        ");
+        ');
     }
 }

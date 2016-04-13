@@ -28,7 +28,7 @@ use Doctrine\ORM\Query;
 class UserRepository extends EntityRepository implements UserProviderInterface
 {
     /**
-     * @{inheritDoc}
+     * {@inheritdoc}
      */
     public function loadUserByUsername($username)
     {
@@ -53,7 +53,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
-     * @{inheritDoc}
+     * {@inheritdoc}
      */
     public function refreshUser(UserInterface $user)
     {
@@ -78,7 +78,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
-     * @{inheritDoc}
+     * {@inheritdoc}
      */
     public function supportsClass($class)
     {
@@ -88,9 +88,10 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     /**
      * Returns all the users.
      *
-     * @param boolean $executeQuery
+     * @param bool   $executeQuery
      * @param string $orderedBy
-     * @param null $order
+     * @param null   $order
+     *
      * @return User[]|Query
      */
     public function findAll($executeQuery = true, $orderedBy = 'id', $order = null)
@@ -117,9 +118,10 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * Search users whose first name, last name or username match a given search string.
      *
      * @param string $search
-     * @param boolean $executeQuery
+     * @param bool   $executeQuery
      * @param string $orderedBy
-     * @param null $order
+     * @param null   $order
+     *
      * @return User[]|Query
      */
     public function findByName($search, $executeQuery = true, $orderedBy = 'id', $order = null)
@@ -153,9 +155,9 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     /**
      * Returns the users of a group.
      *
-     * @param Group   $group
-     * @param boolean $executeQuery
-     * @param string  $orderedBy
+     * @param Group  $group
+     * @param bool   $executeQuery
+     * @param string $orderedBy
      *
      * @return User[]|Query
      */
@@ -164,8 +166,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $executeQuery = true,
         $orderedBy = 'id',
         $order = 'ASC'
-    )
-    {
+    ) {
         $dql = "
             SELECT DISTINCT u FROM Claroline\CoreBundle\Entity\User u
             JOIN u.groups g
@@ -183,10 +184,10 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * Returns the users of a group whose first name, last name or username match
      * a given search string.
      *
-     * @param string  $search
-     * @param Group   $group
-     * @param boolean $executeQuery
-     * @param string  $orderedBy
+     * @param string $search
+     * @param Group  $group
+     * @param bool   $executeQuery
+     * @param string $orderedBy
      *
      * @return User[]|Query
      */
@@ -196,8 +197,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $executeQuery = true,
         $orderedBy = 'id',
         $order = 'ASC'
-    )
-    {
+    ) {
         $dql = "
             SELECT DISTINCT u FROM Claroline\CoreBundle\Entity\User u
             JOIN u.groups g
@@ -221,7 +221,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * taken into account.
      *
      * @param Workspace|null $workspace
-     * @param boolean        $executeQuery
+     * @param bool           $executeQuery
      *
      * @return User[]|\Doctrine\ORM\QueryBuilder
      */
@@ -235,8 +235,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         if (null === $workspace) {
             $userQueryBuilder->andWhere('r.workspace IS NULL');
-        }
-        else {
+        } else {
             $userQueryBuilder
                 ->leftJoin('r.workspace', 'w')
                 ->andWhere('r.workspace = :workspace')
@@ -250,8 +249,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * Returns the users who are members of one of the given workspaces. Users's groups are not
      * taken into account.
      *
-     * @param array   $workspaces
-     * @param boolean $executeQuery
+     * @param array $workspaces
+     * @param bool  $executeQuery
      *
      * @return User[]|Query
      */
@@ -279,7 +278,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
     /**
      * Returns the users who are members of one of the given workspaces.
-     * User list is filtered by a search on first name, last name and username
+     * User list is filtered by a search on first name, last name and username.
      *
      * @param array  $workspaces
      * @param string $search
@@ -318,11 +317,11 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
     /**
      * Returns the users of a workspace whose first name, last name or username
-     * match a given search string. Including users in groups
+     * match a given search string. Including users in groups.
      *
      * @param Workspace $workspace
-     * @param string            $search
-     * @param boolean           $executeQuery
+     * @param string    $search
+     * @param bool      $executeQuery
      *
      * @return User[]|Query
      */
@@ -334,7 +333,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             WHERE u IN (
             SELECT u1 FROM Claroline\CoreBundle\Entity\User u1
             JOIN u1.roles r1 WITH r1 IN (
-                SELECT pr1 from Claroline\CoreBundle\Entity\Role pr1 WHERE pr1.type = ' . Role::WS_ROLE . '
+                SELECT pr1 from Claroline\CoreBundle\Entity\Role pr1 WHERE pr1.type = '.Role::WS_ROLE.'
             )
             LEFT JOIN r1.workspace wol1
             WHERE wol1.id = :workspaceId AND u1 IN (
@@ -399,11 +398,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
-     * Counts the users subscribed in a platform role
+     * Counts the users subscribed in a platform role.
      *
      * @param $role
      * @param $restrictionRoleNames
-     * @return integer
+     *
+     * @return int
      */
     public function countUsersByRole($role, $restrictionRoleNames)
     {
@@ -431,8 +431,10 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
-     * Returns user Ids that are subscribed to one of the roles given
-     * @param  array $roleNames
+     * Returns user Ids that are subscribed to one of the roles given.
+     *
+     * @param array $roleNames
+     *
      * @return array
      */
     public function findUserIdsInRoles($roleNames)
@@ -452,7 +454,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * Returns the first name, last name, username and number of workspaces of
      * each user enrolled in at least one workspace.
      *
-     * @param integer $max
+     * @param int $max
      *
      * @return User[]
      */
@@ -490,8 +492,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
-     * @param Role[]  $roles
-     * @param boolean $getQuery
+     * @param Role[] $roles
+     * @param bool   $getQuery
      *
      * @return Query|User[]
      */
@@ -506,12 +508,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query = $this->_em->createQuery($dql);
         $query->setParameter('roles', $roles);
 
-        return ($getQuery) ? $query: $query->getResult();
+        return ($getQuery) ? $query : $query->getResult();
     }
 
     /**
      * @param Role[] $roles
-     * @param boolean $getQuery
+     * @param bool   $getQuery
      * @param string $orderedBy
      * @param $order
      *
@@ -534,21 +536,20 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query = $this->_em->createQuery($dql);
         $query->setParameter('roles', $roles);
 
-        return ($getQuery) ? $query: $query->getResult();
+        return ($getQuery) ? $query : $query->getResult();
     }
 
     /**
-     * @param Role[]  $roles
-     * @param boolean $getQuery
-     * @param string  $orderedBy
+     * @param Role[] $roles
+     * @param bool   $getQuery
+     * @param string $orderedBy
      *
      * @return Query|User[]
      */
     public function findUsersByRolesIncludingGroups(
         array $roles,
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT u, r1, g, r2, ws
             From Claroline\CoreBundle\Entity\User u
@@ -568,9 +569,9 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
-     * @param Role[]  $roles
-     * @param string  $name
-     * @param boolean $getQuery
+     * @param Role[] $roles
+     * @param string $name
+     * @param bool   $getQuery
      *
      * @return Query|User[]
      */
@@ -589,15 +590,15 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query = $this->_em->createQuery($dql);
         $query->setParameter('roles', $roles);
 
-        return ($getQuery) ? $query: $query->getResult();
+        return ($getQuery) ? $query : $query->getResult();
     }
 
     /**
      * @param Role[] $roles
      * @param string $name
-     * @param boolean $getQuery
+     * @param bool   $getQuery
      * @param string $orderedBy
-     * @param null $order
+     * @param null   $order
      *
      * @return Query|User[]
      */
@@ -623,14 +624,14 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query->setParameter('roles', $roles);
         $query->setParameter('search', "%{$search}%");
 
-        return ($getQuery) ? $query: $query->getResult();
+        return ($getQuery) ? $query : $query->getResult();
     }
 
     /**
      * Returns the first name, last name, username and number of created workspaces
      * of each user who has created at least one workspace.
      *
-     * @param integer $max
+     * @param int $max
      *
      * @return array
      */
@@ -689,8 +690,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         foreach ($users as $user) {
             $resultArray[] = array(
-                'id'   => $user->getId(),
-                'text' => $user->getFirstName() . ' ' . $user->getLastName()
+                'id' => $user->getId(),
+                'text' => $user->getFirstName().' '.$user->getLastName(),
             );
         }
 
@@ -706,7 +707,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     {
         $search = $params['search'];
         if ($search !== null) {
-
             $query = $this->findByName($search, false);
 
             return $query
@@ -781,7 +781,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $query->getSingleScalarResult();
     }
 
-    public function countUsersOfGroup (Group $group)
+    public function countUsersOfGroup(Group $group)
     {
         $dql = '
             SELECT count(u) FROM Claroline\CoreBundle\Entity\User u
@@ -822,8 +822,10 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
     /**
      * @todo Make the correct sql request
+     *
      * @param WorkspaceModel $model
-     * @param bool $executeQuery
+     * @param bool           $executeQuery
+     *
      * @return array|Query
      */
     public function findUsersNotSharingModel(WorkspaceModel $model, $executeQuery = true)
@@ -834,14 +836,16 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         $query = $this->_em->createQuery($dql);
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     /**
      * @todo Make the correct sql request
+     *
      * @param WorkspaceModel $model
      * @param $search
      * @param bool $executeQuery
+     *
      * @return array|Query
      */
     public function findUsersNotSharingModelBySearch(WorkspaceModel $model, $search, $executeQuery = true)
@@ -858,7 +862,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query = $this->_em->createQuery($dql);
         $query->setParameter('search', "%$search%");
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findEnabledUserById($userId)
@@ -884,6 +888,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             WHERE u.isEnabled = TRUE
         ';
         $query = $this->_em->createQuery($dql);
+
         return $executeQuery ? $query->getResult() : $query;
     }
 
@@ -905,7 +910,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query = $this->_em->createQuery($dql);
         $query->setParameter('type', Role::USER_ROLE);
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findUsersWithRights(
@@ -913,8 +918,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $orderedBy = 'firstName',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT u
             FROM Claroline\CoreBundle\Entity\User u
@@ -945,7 +949,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query = $this->_em->createQuery($dql);
         $query->setParameter('resourceNode', $node);
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findUsersWithoutRights(
@@ -953,8 +957,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $orderedBy = 'firstName',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT u
             FROM Claroline\CoreBundle\Entity\User u
@@ -985,7 +988,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query = $this->_em->createQuery($dql);
         $query->setParameter('resourceNode', $node);
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findSearchedUsersWithRights(
@@ -994,8 +997,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $orderedBy = 'firstName',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT u
             FROM Claroline\CoreBundle\Entity\User u
@@ -1034,7 +1036,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query->setParameter('resourceNode', $node);
         $query->setParameter('search', "%{$upperSearch}%");
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findSearchedUsersWithoutRights(
@@ -1043,8 +1045,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $orderedBy = 'firstName',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT u
             FROM Claroline\CoreBundle\Entity\User u
@@ -1083,7 +1084,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query->setParameter('resourceNode', $node);
         $query->setParameter('search', "%{$upperSearch}%");
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findAllWithFacets()
@@ -1194,10 +1195,10 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 AND u.isEnabled = true
                 OR r2 in (:roles)';
 
-                $query = $this->_em->createQuery($dql);
-                $query->setParameter('roles', $roles);
+            $query = $this->_em->createQuery($dql);
+            $query->setParameter('roles', $roles);
 
-                return $query->getSingleScalarResult();
+            return $query->getSingleScalarResult();
         }
     }
 
@@ -1217,8 +1218,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         array $forcedRoles = array(),
         array $forcedWorkspaces = array(),
         $executeQuery = true
-    )
-    {
+    ) {
         $withSearch = !empty($search);
         $withGroups = count($groupRestrictions) > 0;
         $withRoles = count($roleRestrictions) > 0;
@@ -1259,7 +1259,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             }
 
             if ($withGroups) {
-
                 if ($withRoles) {
                     $dql .= 'OR';
                 }
@@ -1275,7 +1274,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             }
 
             if ($withWorkspaces) {
-
                 if ($withRoles || $withGroups) {
                     $dql .= 'OR';
                 }
@@ -1452,7 +1450,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $query->getOneOrNullResult();
     }
 
-
     /**
      * Returns all the users by search.
      *
@@ -1474,17 +1471,19 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             ';
             $query = $this->_em->createQuery($dql);
             $query->setParameter('search', "%{$upperSearch}%");
+
             return $query->getResult();
         }
+
         return parent::findAll();
     }
 
     /**
      * Returns the users who are not members of a group.
      *
-     * @param Group   $group
-     * @param boolean $executeQuery
-     * @param string  $orderedBy
+     * @param Group  $group
+     * @param bool   $executeQuery
+     * @param string $orderedBy
      *
      * @return User[]|Query
      *
@@ -1504,6 +1503,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('groupId', $group->getId());
+
         return $executeQuery ? $query->getResult() : $query;
     }
     /**
@@ -1511,9 +1511,9 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * name or username match a given search string.
      *
      * @param \Claroline\CoreBundle\Entity\Group $group
-     * @param string $search
-     * @param boolean $executeQuery
-     * @param string $orderedBy
+     * @param string                             $search
+     * @param bool                               $executeQuery
+     * @param string                             $orderedBy
      *
      * @return User[]|Query
      *
@@ -1540,6 +1540,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query = $this->_em->createQuery($dql);
         $query->setParameter('groupId', $group->getId());
         $query->setParameter('search', "%{$search}%");
+
         return $executeQuery ? $query->getResult() : $query;
     }
     /**
@@ -1558,6 +1559,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userIds', $excludedUser);
+
         return $query->getResult();
     }
     /**
@@ -1582,6 +1584,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query = $this->_em->createQuery($dql);
         $query->setParameter('wsId', $workspace->getId());
         $res = $query->getResult();
+
         return $res;
     }
 }

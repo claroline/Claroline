@@ -47,7 +47,7 @@ class PlatformConfigurationHandlerTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array('getParameter'),
-            array('setParameter')
+            array('setParameter'),
         );
     }
 }

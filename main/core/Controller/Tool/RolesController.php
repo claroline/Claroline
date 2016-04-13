@@ -90,8 +90,7 @@ class RolesController extends Controller
         TranslatorInterface $translator,
         workspaceUserQueueManager $wksUqmanager,
         SymfonyFormFactory $symfonyFormFactory
-    )
-    {
+    ) {
         $this->roleManager = $roleManager;
         $this->userManager = $userManager;
         $this->groupManager = $groupManager;
@@ -156,7 +155,7 @@ class RolesController extends Controller
             $name = $form->get('translationKey')->getData();
             $requireDir = $form->get('requireDir')->getData();
             $role = $this->roleManager
-                ->createWorkspaceRole('ROLE_WS_' . strtoupper($name) . '_' . $workspace->getGuid(), $name, $workspace);
+                ->createWorkspaceRole('ROLE_WS_'.strtoupper($name).'_'.$workspace->getGuid(), $name, $workspace);
 
             //add the role to every resource of that workspace
             $nodes = $this->resourceManager->getByWorkspace($workspace);
@@ -184,14 +183,14 @@ class RolesController extends Controller
                     $this->resourceManager->getWorkspaceRoot($workspace),
                     null,
                     array(
-                        'ROLE_WS_' .  strtoupper($name) => array(
+                        'ROLE_WS_'.strtoupper($name) => array(
                             'open' => true,
                             'edit' => true,
                             'copy' => true,
                             'delete' => true,
                             'export' => true,
                             'create' => $creations,
-                            'role' => $role
+                            'role' => $role,
                         ),
                         'ROLE_WS_MANAGER' => array(
                             'open' => true,
@@ -200,8 +199,8 @@ class RolesController extends Controller
                             'delete' => true,
                             'export' => true,
                             'create' => $creations,
-                            'role' => $this->roleManager->getManagerRole($workspace)
-                        )
+                            'role' => $this->roleManager->getManagerRole($workspace),
+                        ),
                     )
                 );
             }
@@ -295,7 +294,7 @@ class RolesController extends Controller
         } catch (LastManagerDeleteException $e) {
             return new JsonResponse(
                 array(
-                    'message' => $this->translator->trans('last_manager_error_message', array(), 'platform')
+                    'message' => $this->translator->trans('last_manager_error_message', array(), 'platform'),
                 ),
                 500
             );
@@ -342,7 +341,7 @@ class RolesController extends Controller
             'max' => $max,
             'order' => $order,
             'direction' => $direction,
-            'showMail' => $preferences['mail']
+            'showMail' => $preferences['mail'],
         );
     }
 
@@ -382,7 +381,7 @@ class RolesController extends Controller
             'wsRoles' => $wsRoles,
             'max' => $max,
             'order' => $order,
-            'direction' => $direction
+            'direction' => $direction,
         );
     }
 
@@ -403,8 +402,7 @@ class RolesController extends Controller
         $orderedBy = 'id',
         $order = 'ASC',
         $search = ''
-    )
-    {
+    ) {
         $this->checkEditionAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
         $preferences = $this->facetManager->getVisiblePublicPreference();
@@ -422,7 +420,7 @@ class RolesController extends Controller
             'max' => $max,
             'orderedBy' => $orderedBy,
             'order' => $order,
-            'showMail' => $preferences['mail']
+            'showMail' => $preferences['mail'],
         );
     }
 
@@ -445,8 +443,8 @@ class RolesController extends Controller
      *     options={"multipleIds"=true, "name"="roleIds"}
      * )
      *
-     * @param array $users
-     * @param array $roles
+     * @param array                                            $users
+     * @param array                                            $roles
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      *
      * @return Response
@@ -476,7 +474,7 @@ class RolesController extends Controller
         } catch (LastManagerDeleteException $e) {
             return new JsonResponse(
                 array(
-                    'message' => $this->translator->trans('last_manager_error_message', array(), 'platform')
+                    'message' => $this->translator->trans('last_manager_error_message', array(), 'platform'),
                 ),
                 500
             );
@@ -559,7 +557,6 @@ class RolesController extends Controller
                     if (!isset($groupsRoles[$userId][$roleId]) &&
                         !is_null($roleWorkspace) &&
                         $roleWorkspace->getId() === $workspace->getId()) {
-
                         $groupsRoles[$userId][$roleId] = $role;
                     }
                 }
@@ -577,7 +574,7 @@ class RolesController extends Controller
             'currentUser' => $currentUser,
             'showMail' => $preferences['mail'],
             'canEdit' => $canEdit,
-            'groupsRoles' => $groupsRoles
+            'groupsRoles' => $groupsRoles,
         );
     }
 
@@ -624,7 +621,7 @@ class RolesController extends Controller
             'max' => $max,
             'order' => $order,
             'direction' => $direction,
-            'canEdit' => $canEdit
+            'canEdit' => $canEdit,
         );
     }
 
@@ -656,8 +653,7 @@ class RolesController extends Controller
         $max,
         $order,
         $direction
-    )
-    {
+    ) {
         $this->checkAccess($workspace);
 
         $canEdit = $this->hasEditionAccess($workspace);
@@ -675,7 +671,7 @@ class RolesController extends Controller
             'order' => $order,
             'direction' => $direction,
             'showMail' => $preferences['mail'],
-            'canEdit' => $canEdit
+            'canEdit' => $canEdit,
         );
     }
 
@@ -696,7 +692,7 @@ class RolesController extends Controller
         $usernames = '';
 
         foreach ($users as $user) {
-            $usernames .= $user->getUsername() . ';';
+            $usernames .= $user->getUsername().';';
         }
 
         return new Response($usernames, 200);
@@ -719,7 +715,7 @@ class RolesController extends Controller
         $names = '';
 
         foreach ($groups as $group) {
-            $names .= '{' . $group->getName() . '};';
+            $names .= '{'.$group->getName().'};';
         }
 
         return new Response($names, 200);
@@ -742,7 +738,7 @@ class RolesController extends Controller
         $names = '';
 
         foreach ($workspaces as $workspace) {
-            $names .= '[' . $workspace->getCode() . '];';
+            $names .= '['.$workspace->getCode().'];';
         }
 
         return new Response($names, 200);
@@ -760,15 +756,14 @@ class RolesController extends Controller
         $search = '',
         $page = 1,
         $max = 50
-    )
-    {
+    ) {
         $this->checkEditionAccess($workspace);
 
         return array(
             'workspace' => $workspace,
             'pager' => $this->wksUqmanager->getAll($workspace, $page, $max, $search),
             'max' => $max,
-            'search' => $search
+            'search' => $search,
         );
     }
 
@@ -780,8 +775,7 @@ class RolesController extends Controller
     public function pendingUsersValidationAction(
         WorkspaceRegistrationQueue $wksqueue,
         Workspace $workspace
-    )
-    {
+    ) {
         $this->checkEditionAccess($workspace);
         $this->wksUqmanager->validateRegistration($wksqueue, $workspace);
         $route = $this->router->generate(
@@ -800,8 +794,7 @@ class RolesController extends Controller
     public function pendingUsersDeclineAction(
         WorkspaceRegistrationQueue $wksqueue,
         Workspace $workspace
-    )
-    {
+    ) {
         $this->checkEditionAccess($workspace);
         $this->wksUqmanager->removeRegistrationQueue($wksqueue);
         $route = $this->router->generate(
@@ -823,7 +816,7 @@ class RolesController extends Controller
     public function exportUsers(Workspace $workspace, $format)
     {
         $this->checkEditionAccess($workspace);
-        $exporter = $this->container->get('claroline.exporter.' . $format);
+        $exporter = $this->container->get('claroline.exporter.'.$format);
         $exporterManager = $this->container->get('claroline.manager.exporter_manager');
         $file = $exporterManager->export(
             'Claroline\CoreBundle\Entity\User',
@@ -840,7 +833,7 @@ class RolesController extends Controller
 
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename=users.' . $format);
+        $response->headers->set('Content-Disposition', 'attachment; filename=users.'.$format);
 
         switch ($format) {
             case 'csv': $response->headers->set('Content-Type', 'text/csv'); break;
@@ -907,7 +900,6 @@ class RolesController extends Controller
                 )
             );
         } else {
-
             return array('workspace' => $workspace, 'form' => $form->createView());
         }
     }
@@ -922,7 +914,6 @@ class RolesController extends Controller
     private function checkEditionAccess(Workspace $workspace)
     {
         if (!$this->authorization->isGranted(array('users', 'edit'), $workspace)) {
-
             throw new AccessDeniedException();
         }
     }

@@ -27,14 +27,14 @@ class LastMessageWidgetConfig
     protected $widgetInstance;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="display_my_last_messages", type="boolean")
      */
     protected $displayMyLastMessages;
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -51,16 +51,18 @@ class LastMessageWidgetConfig
 
     /**
      * @param WidgetInstance $widgetInstance
+     *
      * @return LastMessageWidgetConfig
      */
     public function setWidgetInstance(WidgetInstance $widgetInstance)
     {
         $this->widgetInstance = $widgetInstance;
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getDisplayMyLastMessages()
     {
@@ -68,12 +70,14 @@ class LastMessageWidgetConfig
     }
 
     /**
-     * @param boolean $displayMyLastMessages
+     * @param bool $displayMyLastMessages
+     *
      * @return LastMessageWidgetConfig
      */
     public function setDisplayMyLastMessages($displayMyLastMessages)
     {
         $this->displayMyLastMessages = $displayMyLastMessages;
+
         return $this;
     }
 }

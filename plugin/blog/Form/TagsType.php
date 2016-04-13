@@ -28,7 +28,7 @@ class TagsType extends AbstractType
         $class = 'tags';
 
         if (isset($view->vars['attr']['class'])) {
-            $class = $view->vars['attr']['class'] . ' ' . $class;
+            $class = $view->vars['attr']['class'].' '.$class;
         }
 
         $view->vars['attr']['class'] = $class;

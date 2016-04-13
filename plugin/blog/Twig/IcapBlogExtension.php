@@ -1,4 +1,5 @@
 <?php
+
 namespace Icap\BlogBundle\Twig;
 
 use Icap\BlogBundle\Entity\Blog;
@@ -18,7 +19,7 @@ class IcapBlogExtension extends \Twig_Extension
 
     public function __construct(TagManager $tagManager, PostRepository $postManager, $uploadDir, $webDirectory)
     {
-        $this->tagManager  = $tagManager;
+        $this->tagManager = $tagManager;
         $this->postRepository = $postManager;
         $this->uploadDir = $uploadDir;
         $this->webDirectory = $webDirectory;
@@ -48,11 +49,11 @@ class IcapBlogExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'blog_tags'                => new \Twig_Function_Method($this, 'getTagsByBlog'),
-            'blog_authors'             => new \Twig_Function_Method($this, 'getAuthorsByBlog'),
-            'get_blog_banner'          => new \Twig_Function_Method($this, 'getBlogBanner'),
-            'get_blog_upload_dir'      => new \Twig_Function_Method($this, 'getBlogUploadDir'),
-            'get_blog_banner_web_path' => new \Twig_Function_Method($this, 'getBlogBannerWebPath')
+            'blog_tags' => new \Twig_Function_Method($this, 'getTagsByBlog'),
+            'blog_authors' => new \Twig_Function_Method($this, 'getAuthorsByBlog'),
+            'get_blog_banner' => new \Twig_Function_Method($this, 'getBlogBanner'),
+            'get_blog_upload_dir' => new \Twig_Function_Method($this, 'getBlogUploadDir'),
+            'get_blog_banner_web_path' => new \Twig_Function_Method($this, 'getBlogBannerWebPath'),
         );
     }
 
@@ -66,10 +67,9 @@ class IcapBlogExtension extends \Twig_Extension
 
     public function getTagsByBlog(Blog $blog)
     {
-        if($blog->getOptions()->isTagTopMode()) {
+        if ($blog->getOptions()->isTagTopMode()) {
             $tags = $this->getTagManager()->loadByBlog($blog, $blog->getOptions()->getMaxTag());
-        }
-        else {
+        } else {
             $tags = $this->getTagManager()->loadByBlog($blog);
             shuffle($tags);
         }
@@ -84,14 +84,14 @@ class IcapBlogExtension extends \Twig_Extension
 
     public function getTagnames($tags)
     {
-        $tagNames = array_map(function($val){return $val["name"];}, $tags);
+        $tagNames = array_map(function ($val) {return $val['name'];}, $tags);
 
         return $tagNames;
     }
 
     public function getBlogBanner(Blog $blog)
     {
-        return $blog->getOptions()->getBannerBackgroundImage() ? realpath($this->uploadDir . '/' . $blog->getOptions()->getBannerBackgroundImage()) : null;
+        return $blog->getOptions()->getBannerBackgroundImage() ? realpath($this->uploadDir.'/'.$blog->getOptions()->getBannerBackgroundImage()) : null;
     }
 
     public function getBlogUploadDir()
@@ -101,7 +101,7 @@ class IcapBlogExtension extends \Twig_Extension
 
     public function getBlogBannerWebPath(Blog $blog)
     {
-        return $blog->getOptions()->getBannerBackgroundImage() ? $this->webDirectory . '/' . $blog->getOptions()->getBannerBackgroundImage() : null;
+        return $blog->getOptions()->getBannerBackgroundImage() ? $this->webDirectory.'/'.$blog->getOptions()->getBannerBackgroundImage() : null;
     }
 
     public function highlight($sentence, $search)
@@ -111,7 +111,7 @@ class IcapBlogExtension extends \Twig_Extension
         $returnHighlightedString = $sentence;
 
         foreach ($searchParameters as $searchParameter) {
-            $returnHighlightedString = preg_replace('/(' . $searchParameter . ')/','<span class="highlight">\1</span>', $returnHighlightedString);
+            $returnHighlightedString = preg_replace('/('.$searchParameter.')/', '<span class="highlight">\1</span>', $returnHighlightedString);
         }
 
         return $returnHighlightedString;

@@ -41,7 +41,7 @@ class FrameworkTypeTest extends FormTestCase
         $formData = [
             'name' => 'Foo',
             'description' => 'Foo...',
-            'scale' => $scale->getId()
+            'scale' => $scale->getId(),
         ];
 
         $form = $this->factory->create(new FrameworkType());

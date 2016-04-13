@@ -45,7 +45,7 @@ class HomeImporter extends Importer implements ConfigurationInterface, RichTextI
         $this->container = $container;
     }
 
-    public function  getConfigTreeBuilder()
+    public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('tabs');
@@ -99,10 +99,9 @@ class HomeImporter extends Importer implements ConfigurationInterface, RichTextI
                 ->end();
     }
 
-
     public function supports($type)
     {
-        return $type == 'yml' ? true: false;
+        return $type == 'yml' ? true : false;
     }
 
     public function validate(array $data)
@@ -113,7 +112,7 @@ class HomeImporter extends Importer implements ConfigurationInterface, RichTextI
         foreach ($data['data'] as $tab) {
             foreach ($tab['tab'] as $widgets) {
                 $toolImporter = null;
-                if (isset ($widgets['widgets'])) {
+                if (isset($widgets['widgets'])) {
                     foreach ($widgets['widgets'] as $widget) {
                         foreach ($this->getListImporters() as $importer) {
                             if ($importer->getName() == $widget['widget']['type']) {
@@ -164,11 +163,21 @@ class HomeImporter extends Importer implements ConfigurationInterface, RichTextI
                 $this->om->persist($widgetInstance);
 
                 $widgetConfig = new WidgetDisplayConfig();
-                if ($widget['widget']['row'])    $widgetConfig->setRow($widget['widget']['row']);
-                if ($widget['widget']['column']) $widgetConfig->setColumn($widget['widget']['column']);
-                if ($widget['widget']['width'])  $widgetConfig->setWidth($widget['widget']['width']);
-                if ($widget['widget']['height']) $widgetConfig->setHeight($widget['widget']['height']);
-                if ($widget['widget']['color'])  $widgetConfig->setColor($widget['widget']['color']);
+                if ($widget['widget']['row']) {
+                    $widgetConfig->setRow($widget['widget']['row']);
+                }
+                if ($widget['widget']['column']) {
+                    $widgetConfig->setColumn($widget['widget']['column']);
+                }
+                if ($widget['widget']['width']) {
+                    $widgetConfig->setWidth($widget['widget']['width']);
+                }
+                if ($widget['widget']['height']) {
+                    $widgetConfig->setHeight($widget['widget']['height']);
+                }
+                if ($widget['widget']['color']) {
+                    $widgetConfig->setColor($widget['widget']['color']);
+                }
                 $widgetConfig->setWorkspace($workspace);
                 $widgetConfig->setWidgetInstance($widgetInstance);
                 $this->om->persist($widgetConfig);
@@ -190,10 +199,10 @@ class HomeImporter extends Importer implements ConfigurationInterface, RichTextI
                     $importer->import($widgetdata, $widgetInstance);
                 }
 
-                $widgetOrder++;
+                ++$widgetOrder;
             }
 
-            $homeTabOrder++;
+            ++$homeTabOrder;
         }
     }
 
@@ -221,18 +230,18 @@ class HomeImporter extends Importer implements ConfigurationInterface, RichTextI
                     array($widgetConfig->getWidgetInstance())
                 );
 
-                $widgetDisplayConfig = isset($widgetDisplayConfigs[0]) ? $widgetDisplayConfigs[0]: null;
+                $widgetDisplayConfig = isset($widgetDisplayConfigs[0]) ? $widgetDisplayConfigs[0] : null;
 
                 //export the widget content here
                 $widgetData = array('widget' => array(
-                    'name'   => $widgetConfig->getWidgetInstance()->getName(),
-                    'type'   => $widgetConfig->getWidgetInstance()->getWidget()->getName(),
-                    'data'   => $data,
-                    'row'    => $widgetDisplayConfig ? $widgetDisplayConfig->getRow(): null,
-                    'column' => $widgetDisplayConfig ? $widgetDisplayConfig->getColumn(): null,
-                    'width'  => $widgetDisplayConfig ? $widgetDisplayConfig->getWidth(): null,
-                    'height' => $widgetDisplayConfig ? $widgetDisplayConfig->getHeight(): null,
-                    'color'  => $widgetDisplayConfig ? $widgetDisplayConfig->getColor(): null
+                    'name' => $widgetConfig->getWidgetInstance()->getName(),
+                    'type' => $widgetConfig->getWidgetInstance()->getWidget()->getName(),
+                    'data' => $data,
+                    'row' => $widgetDisplayConfig ? $widgetDisplayConfig->getRow() : null,
+                    'column' => $widgetDisplayConfig ? $widgetDisplayConfig->getColumn() : null,
+                    'width' => $widgetDisplayConfig ? $widgetDisplayConfig->getWidth() : null,
+                    'height' => $widgetDisplayConfig ? $widgetDisplayConfig->getHeight() : null,
+                    'color' => $widgetDisplayConfig ? $widgetDisplayConfig->getColor() : null,
                 ));
 
                 $widgets[] = $widgetData;
@@ -240,7 +249,7 @@ class HomeImporter extends Importer implements ConfigurationInterface, RichTextI
 
             $tabs[] = array('tab' => array(
                 'name' => $homeTab->getHomeTab()->getName(),
-                'widgets' => $widgets
+                'widgets' => $widgets,
             ));
         }
 

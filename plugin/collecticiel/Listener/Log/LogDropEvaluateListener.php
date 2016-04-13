@@ -3,22 +3,12 @@
 namespace Innova\CollecticielBundle\Listener\Log;
 
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
-use Claroline\CoreBundle\Event\Log\LogGroupDeleteEvent;
-use Claroline\CoreBundle\Event\Log\LogResourceDeleteEvent;
-use Claroline\CoreBundle\Event\Log\LogUserDeleteEvent;
-use Claroline\CoreBundle\Event\Log\LogWorkspaceRoleDeleteEvent;
-use Claroline\CoreBundle\Event\Log\LogNotRepeatableInterface;
 use Claroline\CoreBundle\Entity\Log\Log;
-use Claroline\CoreBundle\Event\LogCreateEvent;
-use Claroline\CoreBundle\Manager\RoleManager;
 use Doctrine\ORM\EntityManager;
 use Innova\CollecticielBundle\Entity\Drop;
-use Innova\CollecticielBundle\Event\Log\LogCorrectionEndEvent;
-use Innova\CollecticielBundle\Event\Log\LogCorrectionUpdateEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropEvaluateEvent;
 use Innova\CollecticielBundle\Event\Log\PotentialEvaluationEndInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -49,7 +39,7 @@ class LogDropEvaluateListener
     public function onLog(LogGenericEvent $event)
     {
         if ($event instanceof PotentialEvaluationEndInterface) {
-//            var_dump('on log !! : '.$event->getAction());
+            //            var_dump('on log !! : '.$event->getAction());
 //            var_dump('instance of potential evaluation end interface');
             $correction = $event->getCorrection();
             $this->sendFinishedLog($correction->getDrop());
@@ -64,14 +54,14 @@ class LogDropEvaluateListener
 
     private function sendFinishedLog(Drop $drop)
     {
-//        var_dump('sendFinishedLog');
+        //        var_dump('sendFinishedLog');
         if ($drop != null) {
-//            var_dump('drop not null');
+            //            var_dump('drop not null');
             if ($drop->getDropzone()->getPeerReview() === false or $drop->countFinishedCorrections() >= $drop->getDropzone()->getExpectedTotalCorrection()) {
-//                var_dump('pas de peer review ou bien assez de correction');
+                //                var_dump('pas de peer review ou bien assez de correction');
                 $finished = false;
                 if ($drop->getDropzone()->getPeerReview() === true) {
-//                    var_dump('peer review. mais est ce que le user a corrigé assez de copie');
+                    //                    var_dump('peer review. mais est ce que le user a corrigé assez de copie');
                     $nbCorrections = $this->entityManager
                         ->getRepository('InnovaCollecticielBundle:Correction')
                         ->countFinished($drop->getDropzone(), $drop->getUser());
@@ -80,12 +70,12 @@ class LogDropEvaluateListener
                         $finished = true;
                     }
                 } else {
-//                    var_dump('pas de peer review donc fini !');
+                    //                    var_dump('pas de peer review donc fini !');
                     $finished = true;
                 }
 
                 if ($finished === true) {
-//                    var_dump('finish');
+                    //                    var_dump('finish');
                     $grade = $drop->getCalculatedGrade();
                     $event = new LogDropEvaluateEvent($drop->getDropzone(), $drop, $grade);
                     $event->setDoer($drop->getUser());

@@ -2,7 +2,6 @@
 
 namespace Icap\BlogBundle\Event\Log;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Icap\BlogBundle\Entity\Blog;
@@ -29,17 +28,17 @@ class LogCommentCreateEvent extends AbstractLogResourceEvent implements Notifiab
 
         $this->details = array(
             'post' => array(
-                'blog'  => $this->blog->getId(),
+                'blog' => $this->blog->getId(),
                 'title' => $post->getTitle(),
-                'slug'  => $post->getSlug()
+                'slug' => $post->getSlug(),
             ),
             'comment' => array(
-                'id'        => $comment->getId(),
-                'content'   => $comment->getMessage(),
+                'id' => $comment->getId(),
+                'content' => $comment->getMessage(),
                 'published' => $comment->isPublished(),
-                'author'    => $comment->getAuthor()->getFirstName()." ".$post->getAuthor()->getLastName(),
-                'authorId'  => $comment->getAuthor()->getId()
-            )
+                'author' => $comment->getAuthor()->getFirstName().' '.$post->getAuthor()->getLastName(),
+                'authorId' => $comment->getAuthor()->getId(),
+            ),
         );
 
         parent::__construct($this->blog->getResourceNode(), $this->details);
@@ -56,7 +55,7 @@ class LogCommentCreateEvent extends AbstractLogResourceEvent implements Notifiab
     /**
      * Get sendToFollowers boolean.
      *
-     * @return boolean
+     * @return bool
      */
     public function getSendToFollowers()
     {
@@ -102,11 +101,11 @@ class LogCommentCreateEvent extends AbstractLogResourceEvent implements Notifiab
      */
     public function getIconKey()
     {
-        return "blog";
+        return 'blog';
     }
 
     /**
-     * Get details
+     * Get details.
      *
      * @return array
      */
@@ -116,16 +115,16 @@ class LogCommentCreateEvent extends AbstractLogResourceEvent implements Notifiab
         $notificationDetails['resource'] = array(
             'id' => $this->blog->getId(),
             'name' => $this->resource->getName(),
-            'type' => $this->resource->getResourceType()->getName()
+            'type' => $this->resource->getResourceType()->getName(),
         );
 
         return $notificationDetails;
     }
 
     /**
-     * Get if event is allowed to create notification or not
+     * Get if event is allowed to create notification or not.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAllowedToNotify()
     {

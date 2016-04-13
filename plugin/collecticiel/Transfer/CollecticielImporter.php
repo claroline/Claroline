@@ -14,7 +14,7 @@ class CollecticielImporter extends Importer implements ConfigurationInterface, R
 {
     /**
      * We need to inject the whole service container
-     * if we try to only inject PathManager, there is a crash because of a circular reference into services
+     * if we try to only inject PathManager, there is a crash because of a circular reference into services.
      *
      * @var ContainerInterface
      */
@@ -89,7 +89,7 @@ class CollecticielImporter extends Importer implements ConfigurationInterface, R
     {
         if (isset($data)) {
             if ($path = $data['instruction']) {
-                $content = file_get_contents($this->getRootPath() . DIRECTORY_SEPARATOR . $path);
+                $content = file_get_contents($this->getRootPath().DIRECTORY_SEPARATOR.$path);
                 $entities = $this->container->get('doctrine.orm.entity_manager')->getRepository('InnovaCollecticielBundle:Dropzone')->findByInstruction($content);
 
                 foreach ($entities as $entity) {

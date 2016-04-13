@@ -41,7 +41,7 @@ class LocaleController
     }
 
     /**
-     * Select a language
+     * Select a language.
      *
      * @Route("/locale/select", name="claroline_locale_select", options = {"expose" = true})
      *
@@ -55,12 +55,13 @@ class LocaleController
     }
 
     /**
-     * Change locale
+     * Change locale.
      *
      * @Route("/locale/change/{locale}", name="claroline_locale_change", options = {"expose" = true})
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param $locale
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function changeLocale(Request $request, $locale)
@@ -70,6 +71,6 @@ class LocaleController
         }
         $request->getSession()->set('_locale', $locale);
 
-        return new Response('Locale changed to ' . $locale, 200);
+        return new Response('Locale changed to '.$locale, 200);
     }
 }

@@ -12,20 +12,14 @@
 namespace Claroline\CoreBundle\Controller\API\Resource;
 
 use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\Controller\Annotations\View;;
+use FOS\RestBundle\Controller\Annotations\View;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
-use Claroline\CoreBundle\Persistence\ObjectManager;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use JMS\Serializer\SerializationContext;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 // Post Route Definition
 use FOS\RestBundle\Controller\Annotations\Post;
@@ -51,13 +45,12 @@ class ResourceController extends FOSRestController
         StrictDispatcher $dispatcher,
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization
-    )
-    {
-        $this->authorization   = $authorization;
-        $this->tokenStorage    = $tokenStorage;
-        $this->request         = $request;
+    ) {
+        $this->authorization = $authorization;
+        $this->tokenStorage = $tokenStorage;
+        $this->request = $request;
         $this->resourceManager = $resourceManager;
-        $this->dispatcher      = $dispatcher;
+        $this->dispatcher = $dispatcher;
     }
 
     public function getResourceFormAction($resourceType)
@@ -67,7 +60,8 @@ class ResourceController extends FOSRestController
 
     /**
      * POST Route annotation because it'll use 'PATCH' by default.
-     * php app/console router:debug submit_resource_form for routing informations
+     * php app/console router:debug submit_resource_form for routing informations.
+     *
      * @Post("/resources/{resourceType}/parent/{parent}/encoding/{encoding}/submit")
      * @View(serializerGroups={"api_resource_node"})
      * Set $parent to 0 for personal workspace !
@@ -92,10 +86,8 @@ class ResourceController extends FOSRestController
              * carreful, it won't work every time because not every user has a personal workspace.
              * we'll have to handle taht case later
              */
-            $this->resourceManager->getWorkspaceRoot($user->getPersonalWorkspace()):
+            $this->resourceManager->getWorkspaceRoot($user->getPersonalWorkspace()) :
             $parent = $this->resourceManager->getById($parent);
-
-
 
         //be sure we can create resources
         //these lines won't work for oauth
@@ -103,7 +95,7 @@ class ResourceController extends FOSRestController
         $collection->setAttributes(array('type' => $resourceType));
 
         if (!$this->authorization->isGranted('CREATE', $collection)) {
-            $errors = $collection->getErrors(); 
+            $errors = $collection->getErrors();
             //gotta think about error handling later
         }
         //end of oauth not working
@@ -114,7 +106,7 @@ class ResourceController extends FOSRestController
 
         //Handles the resource creation for any type because I'm lazy and it's better like this anyway.
         //@See FileListener for implementation
-        $event = $this->dispatcher->dispatch('create_api_' . $resourceType, 'CreateResource', array($parent, $resourceType, $encoding));
+        $event = $this->dispatcher->dispatch('create_api_'.$resourceType, 'CreateResource', array($parent, $resourceType, $encoding));
 
         if (count($event->getResources()) > 0) {
             //Foreach is here because when we unzip a resource, we may add a crapton of stuff at one here.
@@ -132,7 +124,7 @@ class ResourceController extends FOSRestController
                         $isPublished
                     );
                     $this->dispatcher->dispatch(
-                        'resource_created_' . $resourceType,
+                        'resource_created_'.$resourceType,
                         'ResourceCreated',
                         array($createdResource->getResourceNode())
                     );
@@ -149,7 +141,7 @@ class ResourceController extends FOSRestController
     /**
      * @View(serializerGroups={"api_resource_node"})
      */
-    public function getResourceNodeAction(ResourceNode $resourceNode) 
+    public function getResourceNodeAction(ResourceNode $resourceNode)
     {
         return $resourceNode;
     }

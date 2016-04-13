@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -12,14 +12,14 @@ namespace Icap\SocialmediaBundle\Library\SocialShare\Networks;
 
 class GooglePlus implements NetworkInterface
 {
-    const NAME = "google";
-    const SHARE_URL = "https://plus.google.com/share?url=%s";
-    const API_URL = "https://clients6.google.com/rpc";
-    const COLOR = "#dd4b39";
-    const ICON = "google-plus";
+    const NAME = 'google';
+    const SHARE_URL = 'https://plus.google.com/share?url=%s';
+    const API_URL = 'https://clients6.google.com/rpc';
+    const COLOR = '#dd4b39';
+    const ICON = 'google-plus';
 
     /**
-     * Gets networks's name
+     * Gets networks's name.
      *
      * @return string
      */
@@ -29,7 +29,7 @@ class GooglePlus implements NetworkInterface
     }
 
     /**
-     * Gets the share link for provided URL
+     * Gets the share link for provided URL.
      *
      * @param $url
      * @param array $options
@@ -42,7 +42,7 @@ class GooglePlus implements NetworkInterface
     }
 
     /**
-     * Gets the number of shares of the URL
+     * Gets the number of shares of the URL.
      *
      * @param $url
      *
@@ -55,17 +55,16 @@ class GooglePlus implements NetworkInterface
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_POSTFIELDS,
             '[{"method":"pos.plusones.get","id":"p",
-                "params":{"nolog":true,"id":"' . $url . '","source":"widget","userId":"@viewer","groupId":"@self"},
+                "params":{"nolog":true,"id":"'.$url.'","source":"widget","userId":"@viewer","groupId":"@self"},
                 "jsonrpc":"2.0","key":"p","apiVersion":"v1"}]'
         );
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
-        $curl_results = curl_exec ($curl);
-        curl_close ($curl);
+        $curl_results = curl_exec($curl);
+        curl_close($curl);
         $data = json_decode($curl_results, true);
 
-        if (isset($data[0]['result']['metadata']['globalCounts']['count']))
-        {
+        if (isset($data[0]['result']['metadata']['globalCounts']['count'])) {
             return intval($data[0]['result']['metadata']['globalCounts']['count']);
         } else {
             return 0;
@@ -73,7 +72,7 @@ class GooglePlus implements NetworkInterface
     }
 
     /**
-     * Gets networks's bg color
+     * Gets networks's bg color.
      *
      * @return string
      */
@@ -83,7 +82,7 @@ class GooglePlus implements NetworkInterface
     }
 
     /**
-     * Gets network's icon class
+     * Gets network's icon class.
      *
      * @return string
      */

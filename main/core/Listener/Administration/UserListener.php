@@ -14,8 +14,6 @@ namespace Claroline\CoreBundle\Listener\Administration;
 use Claroline\CoreBundle\Entity\User;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Claroline\CoreBundle\Event\AdminUserActionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -46,7 +44,7 @@ class UserListener
     {
         $params = array(
             '_controller' => 'ClarolineCoreBundle:Profile:editProfile',
-            'user' => $event->getUser()->getId()
+            'user' => $event->getUser()->getId(),
         );
 
         $subRequest = $this->container->get('request')->duplicate(array(), null, $params);
@@ -64,7 +62,7 @@ class UserListener
             '_controller' => 'ClarolineCoreBundle:Administration\Users:userWorkspaceList',
             'user' => $event->getUser()->getId(),
             'page' => 1,
-            'max' => 50
+            'max' => 50,
         );
 
         $subRequest = $this->container->get('request')->duplicate(array(), null, $params);

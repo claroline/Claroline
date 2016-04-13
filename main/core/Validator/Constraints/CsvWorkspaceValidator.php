@@ -39,8 +39,7 @@ class CsvWorkspaceValidator extends ConstraintValidator
         TranslatorInterface $translator,
         ObjectManager $om,
         ClaroUtilities $ut
-    )
-    {
+    ) {
         $this->translator = $translator;
         $this->om = $om;
         $this->ut = $ut;
@@ -60,12 +59,14 @@ class CsvWorkspaceValidator extends ConstraintValidator
                 if ($nbElements < 6) {
                     $msg = $this->translator->trans('6_parameters_min_msg');
                     $this->context->addViolation($msg);
+
                     return;
                 }
 
                 if (php_sapi_name() === 'cli' && $nbElements < 7) {
                     $msg = $this->translator->trans('7_parameters_min_msg');
                     $this->context->addViolation($msg);
+
                     return;
                 }
             }
@@ -77,20 +78,20 @@ class CsvWorkspaceValidator extends ConstraintValidator
                 $code = $workspace[1];
 
                 if (isset($workspace[6])) {
-                    $username = trim($workspace[6]) === '' ? null: $workspace[6];
+                    $username = trim($workspace[6]) === '' ? null : $workspace[6];
                 } else {
                     $username = null;
                 }
 
                 if (isset($workspace[7])) {
-                    $modelName = trim($workspace[7]) === '' ? null: $workspace[7];
+                    $modelName = trim($workspace[7]) === '' ? null : $workspace[7];
                 } else {
                     $modelName = null;
                 }
 
                 //find codes duplicatas
                 (!array_key_exists($code, $codes)) ?
-                    $codes[$code] = array($i + 1):
+                    $codes[$code] = array($i + 1) :
                     $codes[$code][] = $i + 1;
 
                 if ($this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->findOneByCode($code)) {
@@ -98,7 +99,7 @@ class CsvWorkspaceValidator extends ConstraintValidator
                             'workspace_code_invalid',
                             array('%code%' => $code, '%line%' => $i + 1),
                             'platform'
-                        ) . ' ';
+                        ).' ';
 
                     $this->context->addViolation($msg);
                 }
@@ -109,7 +110,7 @@ class CsvWorkspaceValidator extends ConstraintValidator
                                 'workspace_model_invalid',
                                 array('%model%' => $modelName, '%line%' => $i + 1),
                                 'platform'
-                            ) . ' ';
+                            ).' ';
 
                         $this->context->addViolation($msg);
                     }
@@ -121,7 +122,7 @@ class CsvWorkspaceValidator extends ConstraintValidator
                                 'workspace_user_invalid',
                                 array('%username%' => $username, '%line%' => $i + 1),
                                 'platform'
-                            ) . ' ';
+                            ).' ';
 
                         $this->context->addViolation($msg);
                     }
@@ -135,7 +136,7 @@ class CsvWorkspaceValidator extends ConstraintValidator
                 'code_found_at',
                 array('%code%' => $code, '%lines%' => $this->getLines($lines)),
                 'platform'
-                ) . ' ';
+                ).' ';
                 $this->context->addViolation($msg);
             }
         }

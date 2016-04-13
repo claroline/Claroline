@@ -16,7 +16,6 @@ use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Library\Installation\Plugin\Installer;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\InstallationBundle\Manager\InstallationManager;
-use Claroline\InstallationBundle\Bundle\InstallableInterface;
 use Composer\Json\JsonFile;
 use Composer\Package\PackageInterface;
 use Composer\Repository\InstalledFilesystemRepository;
@@ -57,15 +56,14 @@ class OperationExecutor
         InstallationManager $baseInstaller,
         Installer $pluginInstaller,
         ObjectManager $om
-    )
-    {
+    ) {
         $this->kernel = $kernel;
         $this->baseInstaller = $baseInstaller;
         $this->pluginInstaller = $pluginInstaller;
-        $this->previousRepoFile = $this->kernel->getRootDir() . '/config/previous-installed.json';
-        $this->installedRepoFile = $this->kernel->getRootDir() . '/../vendor/composer/installed.json';
-        $this->bundleFile = $this->kernel->getRootDir() . '/config/bundles.ini';
-        $this->bupBundleFile = $this->kernel->getRootDir() . '/config/bundles.bup.ini';
+        $this->previousRepoFile = $this->kernel->getRootDir().'/config/previous-installed.json';
+        $this->installedRepoFile = $this->kernel->getRootDir().'/../vendor/composer/installed.json';
+        $this->bundleFile = $this->kernel->getRootDir().'/config/bundles.ini';
+        $this->bupBundleFile = $this->kernel->getRootDir().'/config/bundles.bup.ini';
         $this->detector = new Detector();
         $this->om = $om;
     }
@@ -117,15 +115,15 @@ class OperationExecutor
         $operations = [];
         $previousBundles = array_keys(parse_ini_file($this->bupBundleFile));
 
-        $previousBundles = array_filter($previousBundles, function($var) {
+        $previousBundles = array_filter($previousBundles, function ($var) {
             if (in_array('Claroline\InstallationBundle\Bundle\InstallableInterface', class_implements($var))) {
                 $parts = explode('\\', $var);
 
                 if ($var !== 'Claroline\CoreBundle\ClarolineCoreBundle') {
-                    $this->log('<fg=blue>' . $var . ' is already installed.</fg=blue>');
+                    $this->log('<fg=blue>'.$var.' is already installed.</fg=blue>');
                     $this->log('If something goes wrong, you can trigger these operations manually:');
-                    $this->log('Installation: php app/console claroline:plugin:install ' . $parts[0] . ' ' . $parts[1]);
-                    $this->log('Single update: php app/console claroline:test_update ' . $parts[0] . $parts[1]);
+                    $this->log('Installation: php app/console claroline:plugin:install '.$parts[0].' '.$parts[1]);
+                    $this->log('Single update: php app/console claroline:test_update '.$parts[0].$parts[1]);
                 }
 
                 return true;
@@ -136,13 +134,13 @@ class OperationExecutor
 
         /** @var PackageInterface $currentPackage */
         foreach ($current->getCanonicalPackages() as $currentPackage) {
-            $jsonpath = $this->kernel->getRootDir() . '/../vendor/' . $currentPackage->getName() . '/composer.json';
+            $jsonpath = $this->kernel->getRootDir().'/../vendor/'.$currentPackage->getName().'/composer.json';
             $json = json_decode(file_get_contents($jsonpath), true);
             //this is a meta package
             if (array_key_exists('bundles', $json)) {
                 //this is only valid for installable bundles
-                $bundles = array_filter($json['bundles'], function($var) {
-                    return in_array('Claroline\InstallationBundle\Bundle\InstallableInterface', class_implements($var)) ?  true: false;
+                $bundles = array_filter($json['bundles'], function ($var) {
+                    return in_array('Claroline\InstallationBundle\Bundle\InstallableInterface', class_implements($var)) ?  true : false;
                 });
                 foreach ($bundles as $bundle) {
                     if (in_array($bundle, $previousBundles) === true) {
@@ -189,7 +187,7 @@ class OperationExecutor
 
         foreach ($bundles as $bundle) {
             $bundleClass = $bundle->getNamespace() ?
-                $bundle->getNamespace() . '\\' . $bundle->getName() :
+                $bundle->getNamespace().'\\'.$bundle->getName() :
                 $bundle->getName();
 
             if (isset($operations[$bundleClass])) {
@@ -209,6 +207,7 @@ class OperationExecutor
      * is deleted.
      *
      * @param Operation[] $operations
+     *
      * @throws \RuntimeException if the the previous repository file is not writable
      */
     public function execute(array $operations)
@@ -255,8 +254,9 @@ class OperationExecutor
     }
 
     /**
-     * @param string    $repoFile
-     * @param bool      $filter
+     * @param string $repoFile
+     * @param bool   $filter
+     *
      * @return InstalledFilesystemRepository
      */
     private function openRepository($repoFile, $filter = true)
@@ -290,7 +290,7 @@ class OperationExecutor
 
         foreach ($this->kernel->getBundles() as $bundle) {
             $fqcn = $bundle->getNamespace() ?
-                $bundle->getNamespace() . '\\' . $bundle->getName() :
+                $bundle->getNamespace().'\\'.$bundle->getName() :
                 $bundle->getName();
             $byFqcn[$fqcn] = $bundle;
         }
@@ -303,18 +303,21 @@ class OperationExecutor
         $previous = $this->openRepository($this->previousRepoFile);
 
         foreach ($previous->getCanonicalPackages() as $package) {
-            if ($package->getName() === $currentPackage->getName()) return $package;
+            if ($package->getName() === $currentPackage->getName()) {
+                return $package;
+            }
         }
     }
 
     private function buildOperation($type, PackageInterface $package)
     {
-        $vendorDir = $this->kernel->getRootDir() . '/../vendor';
+        $vendorDir = $this->kernel->getRootDir().'/../vendor';
         $targetDir = $package->getTargetDir() ?: '';
         $packageDir = empty($targetDir) ?
             $package->getPrettyName() :
             "{$package->getName()}/{$targetDir}";
         $fqcn = $this->detector->detectBundle("{$vendorDir}/{$packageDir}");
+
         return new Operation($type, $package, $fqcn);
     }
 }

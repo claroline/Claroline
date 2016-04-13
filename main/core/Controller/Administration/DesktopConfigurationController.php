@@ -40,8 +40,7 @@ class DesktopConfigurationController extends Controller
     public function __construct(
         RoleManager $roleManager,
         ToolManager $toolManager
-    )
-    {
+    ) {
         $this->roleManager = $roleManager;
         $this->toolManager = $toolManager;
     }
@@ -76,6 +75,7 @@ class DesktopConfigurationController extends Controller
      * Displays the desktop tools configuration page in admin.
      *
      * @param int type
+     *
      * @return Response
      */
     public function adminDesktopConfigureToolAction($type = 0)
@@ -88,7 +88,7 @@ class DesktopConfigurationController extends Controller
         return array(
             'tools' => $tools,
             'orderedTools' => $orderedTools,
-            'type' => $menuType
+            'type' => $menuType,
         );
     }
 
@@ -147,10 +147,8 @@ class DesktopConfigurationController extends Controller
         OrderedTool $orderedTool,
         $nextOrderedToolId,
         $type = 0
-    )
-    {
+    ) {
         if (is_null($orderedTool->getUser()) && $orderedTool->getType() === intval($type)) {
-
             $this->toolManager->reorderAdminOrderedTool(
                 $orderedTool,
                 $nextOrderedToolId,
@@ -159,7 +157,6 @@ class DesktopConfigurationController extends Controller
 
             return new Response('success', 200);
         } else {
-
             throw new AccessDeniedException();
         }
     }
@@ -178,9 +175,8 @@ class DesktopConfigurationController extends Controller
         $roles = array();
         $options = array();
         $platformRoles = $this->roleManager->getAllPlatformRoles();
-        
+
         foreach ($platformRoles as $role) {
-            
             if ($role->getName() !== 'ROLE_ADMIN') {
                 $roles[] = $role;
                 $roleOptions = $this->roleManager->getRoleOptions($role);

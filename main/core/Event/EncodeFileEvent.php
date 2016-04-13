@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Resource\File;
 
 class EncodeFileEvent extends Event implements DataConveyorEventInterface
@@ -44,5 +43,4 @@ class EncodeFileEvent extends Event implements DataConveyorEventInterface
     {
         return $this->isPopulated;
     }
-
 }

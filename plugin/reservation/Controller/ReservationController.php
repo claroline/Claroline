@@ -52,8 +52,7 @@ class ReservationController extends Controller
         ReservationManager $reservationManager,
         TranslatorInterface $translator,
         TokenStorageInterface $tokenStorage
-    )
-    {
+    ) {
         $this->om = $om;
         $this->router = $router;
         $this->request = $request;
@@ -78,9 +77,9 @@ class ReservationController extends Controller
 
         $events = [];
         foreach ($reservations as $key => $reservation) {
-             if ($this->reservationManager->hasAccess($reservation->getEvent()->getUser(), $reservation->getResource(), $this::SEE)) {
-                 $events[] = $this->reservationManager->completeJsonEventWithReservation($reservation);
-             }
+            if ($this->reservationManager->hasAccess($reservation->getEvent()->getUser(), $reservation->getResource(), $this::SEE)) {
+                $events[] = $this->reservationManager->completeJsonEventWithReservation($reservation);
+            }
         }
 
         return new JsonResponse($events);
@@ -117,7 +116,7 @@ class ReservationController extends Controller
             'form' => $form->createView(),
             'action' => $this->router->generate('formalibre_add_reservation'),
             'reservation' => $this->request->getMethod() === 'POST' ? $form->getData() : null,
-            'editMode' => false
+            'editMode' => false,
         ));
     }
 
@@ -143,7 +142,7 @@ class ReservationController extends Controller
             'action' => $this->router->generate('formalibre_change_reservation', ['id' => $reservation->getId()]),
             'reservation' => $reservation,
             'editMode' => true,
-            'canDelete' => $this->reservationManager->hasAccess($reservation->getEvent()->getUser(), $reservation->getResource(), ReservationController::BOOK)
+            'canDelete' => $this->reservationManager->hasAccess($reservation->getEvent()->getUser(), $reservation->getResource(), self::BOOK),
         ));
     }
 
@@ -180,7 +179,7 @@ class ReservationController extends Controller
             'action' => $this->router->generate('formalibre_change_reservation', ['id' => $reservation->getId()]),
             'reservation' => $reservation,
             'editMode' => true,
-            'canDelete' => $this->reservationManager->hasAccess($reservation->getEvent()->getUser(), $reservation->getResource(), ReservationController::BOOK)
+            'canDelete' => $this->reservationManager->hasAccess($reservation->getEvent()->getUser(), $reservation->getResource(), self::BOOK),
         ));
     }
 
@@ -257,7 +256,7 @@ class ReservationController extends Controller
             return new JsonResponse([
                 'description' => $none,
                 'localisation' => $none,
-                'maxTime' => $none
+                'maxTime' => $none,
             ]);
         }
 
@@ -267,7 +266,7 @@ class ReservationController extends Controller
         return new JsonResponse([
             'description' => empty($description) ? $none : $description,
             'localisation' => empty($localisation) ? $none : $localisation,
-            'maxTime' => $resource->getMaxTimeReservation() === '00:00:00' ? $none : $resource->getMaxTimeReservation()
+            'maxTime' => $resource->getMaxTimeReservation() === '00:00:00' ? $none : $resource->getMaxTimeReservation(),
         ]);
     }
 }

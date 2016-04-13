@@ -41,9 +41,9 @@ class Updater010004 extends Updater
         if (is_null($content)) {
             $contentTransRepo = $this->om->getRepository('Claroline\CoreBundle\Entity\ContentTranslation');
             $frTitle = 'Confirmation de votre inscription';
-            $frContent = "<div>Vous avez bien été inscrit au cours %course% pour la session %session% du %start_date% au %end_date%.</div>";
+            $frContent = '<div>Vous avez bien été inscrit au cours %course% pour la session %session% du %start_date% au %end_date%.</div>';
             $enTitle = 'Registration confirmation';
-            $enContent = "<div>You have been registered to course %course% in session %session% from %start_date% to %end_date%.</div>";
+            $enContent = '<div>You have been registered to course %course% in session %session% from %start_date% to %end_date%.</div>';
             $content = new Content();
             $content->setTitle($enTitle);
             $content->setContent($enContent);

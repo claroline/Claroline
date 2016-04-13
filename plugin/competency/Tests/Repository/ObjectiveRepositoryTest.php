@@ -204,7 +204,7 @@ class ObjectiveRepositoryTest extends RepositoryTestCase
         $l1 = $this->persistLevel('l1', $s1);
 
         $o1 = $this->persistObjective('o1', [
-            [$c2, $c1, $l1]
+            [$c2, $c1, $l1],
         ]);
         $o2 = $this->persistObjective('o2', [
             [$c2, $c1, $l1],
@@ -223,22 +223,22 @@ class ObjectiveRepositoryTest extends RepositoryTestCase
             'competencies' => [
                 'c1' => $c1,
                 'c2' => $c2,
-                'c3' => $c3
+                'c3' => $c3,
             ],
             'objectives' => [
                 'o1' => $o1,
-                'o2' => $o2
+                'o2' => $o2,
             ],
             'users' => [
                 'u1' => $u1,
                 'u2' => $u2,
-                'u3' => $u3
+                'u3' => $u3,
             ],
             'groups' => [
                 'g1' => $g1,
                 'g2' => $g2,
-                'g3' => $g3
-            ]
+                'g3' => $g3,
+            ],
         ];
     }
 }

@@ -44,7 +44,6 @@ class AdministrationToolRepository extends EntityRepository
             $query->setParameter('roleNames', $rolesNames);
         }
 
-
         return $query->getResult();
     }
-} 
+}

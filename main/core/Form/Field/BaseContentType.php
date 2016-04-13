@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Form\Field;
 
 use Symfony\Component\Form\Extension\Core\Type\BaseType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use JMS\DiExtraBundle\Annotation\Service;
 use JMS\DiExtraBundle\Annotation\FormType;
@@ -51,7 +50,7 @@ class BaseContentType extends BaseType
                 array(
                     'attr' => array('class' => 'form-control', 'rows' => '3'),
                     'mapped' => false,
-                    'data' => $content
+                    'data' => $content,
                 )
             );
         } else {

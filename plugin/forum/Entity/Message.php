@@ -13,7 +13,6 @@ namespace Claroline\ForumBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Claroline\ForumBundle\Entity\Subject;
 use Claroline\CoreBundle\Entity\User;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -75,7 +74,7 @@ class Message
     /**
      * Returns the resource id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

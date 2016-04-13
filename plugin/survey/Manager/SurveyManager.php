@@ -43,7 +43,7 @@ class SurveyManager
     private $questionAnswerRepo;
     private $questionModelRepo;
     private $questionRepo;
-    
+
     /**
      * @DI\InjectParams({
      *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
@@ -102,15 +102,13 @@ class SurveyManager
         Question $question,
         $horizontal,
         array $choices
-    )
-    {
+    ) {
         $multipleChoiceQuestion = new MultipleChoiceQuestion();
         $multipleChoiceQuestion->setQuestion($question);
         $multipleChoiceQuestion->setHorizontal($horizontal);
         $this->om->persist($multipleChoiceQuestion);
 
         foreach ($choices as $choice) {
-
             if (!empty($choice)) {
                 $newChoice = new Choice();
                 $newChoice->setChoiceQuestion($multipleChoiceQuestion);
@@ -127,8 +125,7 @@ class SurveyManager
         MultipleChoiceQuestion $multipleChoiceQuestion,
         $horizontal,
         array $newChoices
-    )
-    {
+    ) {
         $multipleChoiceQuestion->setHorizontal($horizontal);
         $this->om->persist($multipleChoiceQuestion);
 
@@ -139,7 +136,6 @@ class SurveyManager
         }
 
         foreach ($newChoices as $newChoice) {
-
             if (!empty($newChoice)) {
                 $choice = new Choice();
                 $choice->setChoiceQuestion($multipleChoiceQuestion);
@@ -153,8 +149,7 @@ class SurveyManager
     public function createSurveyQuestionRelation(
         Survey $survey,
         Question $question
-    )
-    {
+    ) {
         $relation = new SurveyQuestionRelation();
         $relation->setSurvey($survey);
         $relation->setQuestion($question);
@@ -164,7 +159,7 @@ class SurveyManager
         if (is_null($orderMax)) {
             $orderMax = 0;
         }
-        $orderMax++;
+        ++$orderMax;
         $relation->setQuestionOrder($orderMax);
 
         $this->om->persist($relation);
@@ -180,8 +175,7 @@ class SurveyManager
     public function deleteSurveyQuestionRelation(
         Survey $survey,
         Question $question
-    )
-    {
+    ) {
         $relation = $this->getRelationBySurveyAndQuestion($survey, $question);
 
         if (!is_null($relation)) {
@@ -198,10 +192,8 @@ class SurveyManager
         $page = 1,
         $max = 20,
         $executeQuery = true
-    )
-    {
+    ) {
         if (count($exclusions) === 0) {
-
             return $this->getQuestionsByWorkspace(
                 $workspace,
                 $orderedBy,
@@ -211,7 +203,6 @@ class SurveyManager
                 $executeQuery
             );
         } else {
-
             return $this->getQuestionsByWorkspaceWithExclusions(
                 $workspace,
                 $exclusions,
@@ -236,18 +227,15 @@ class SurveyManager
             if ((!is_null($startDate) && !is_null($endDate) &&
                 $now > $startDate && $now < $endDate) &&
                 ($survey->isClosed() || !$survey->isPublished())) {
-
                 $survey->setPublished(true);
                 $survey->setClosed(false);
                 $this->om->persist($survey);
                 $flush = true;
             } else {
-
                 if (!$survey->isPublished() &&
                     !$survey->isClosed() &&
                     !is_null($startDate) &&
                     $now > $startDate) {
-
                     $survey->setPublished(true);
                     $this->om->persist($survey);
                     $flush = true;
@@ -256,7 +244,6 @@ class SurveyManager
                 if (!$survey->isClosed() &&
                     !is_null($endDate) &&
                     $now > $endDate) {
-
                     $survey->setClosed(true);
                     $this->om->persist($survey);
                     $flush = true;
@@ -283,16 +270,14 @@ class SurveyManager
 
     public function persistOpenEndedQuestionAnswer(
         OpenEndedQuestionAnswer $openEndedAnswer
-    )
-    {
+    ) {
         $this->om->persist($openEndedAnswer);
         $this->om->flush();
     }
 
     public function persistMultipleChoiceQuestionAnswer(
         MultipleChoiceQuestionAnswer $choiceAnswer
-    )
-    {
+    ) {
         $this->om->persist($choiceAnswer);
         $this->om->flush();
     }
@@ -321,7 +306,7 @@ class SurveyManager
                 } else {
                     $details['withComment'] = 'no-comment';
                 }
-                
+
                 $horizontal = !is_null($choiceQuestion) &&
                     $choiceQuestion->getHorizontal();
                 $details['choiceDisplay'] = $horizontal ?
@@ -362,14 +347,12 @@ class SurveyManager
         Survey $survey,
         SurveyQuestionRelation $relation,
         $questionOrder
-    )
-    {
+    ) {
         $this->updateQuestionOrderBySurvey($survey, $questionOrder);
         $relation->setQuestionOrder($questionOrder);
         $this->om->persist($relation);
         $this->om->flush();
     }
-
 
     /****************************************
      * Access to QuestionRepository methods *
@@ -387,8 +370,7 @@ class SurveyManager
         $page = 1,
         $max = 20,
         $executeQuery = true
-    )
-    {
+    ) {
         $questions = $this->questionRepo->findQuestionsByWorkspace(
             $workspace,
             $orderedBy,
@@ -409,8 +391,7 @@ class SurveyManager
         $page = 1,
         $max = 20,
         $executeQuery = true
-    )
-    {
+    ) {
         $questions = $this->questionRepo->findQuestionsByWorkspaceWithExclusions(
             $workspace,
             $exclusions,
@@ -436,14 +417,12 @@ class SurveyManager
     public function getChoicesByQuestion(
         Question $question,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->choiceRepo->findChoicesByQuestion(
             $question,
             $executeQuery
         );
     }
-
 
     /******************************************************
      * Access to MultipleChoiceQuestionRepository methods *
@@ -452,12 +431,10 @@ class SurveyManager
     public function getMultipleChoiceQuestionByQuestion(
         Question $question,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->multipleChoiceQuestionRepo
             ->findMultipleChoiceQuestionByQuestion($question, $executeQuery);
     }
-
 
     /******************************************************
      * Access to SurveyQuestionRelationRepository methods *
@@ -466,8 +443,7 @@ class SurveyManager
     public function getQuestionRelationsBySurvey(
         Survey $survey,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->surveyQuestionRelationRepo
             ->findRelationsBySurvey($survey, $executeQuery);
     }
@@ -476,8 +452,7 @@ class SurveyManager
         Survey $survey,
         Question $question,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->surveyQuestionRelationRepo->findRelationBySurveyAndQuestion(
             $survey,
             $question,
@@ -488,8 +463,7 @@ class SurveyManager
     public function getSurveyLastQuestionOrder(
         Survey $survey,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->surveyQuestionRelationRepo
             ->findSurveyLastQuestionOrder($survey, $executeQuery);
     }
@@ -498,15 +472,13 @@ class SurveyManager
         Survey $survey,
         $questionOrder,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->surveyQuestionRelationRepo->updateQuestionOrderBySurvey(
             $survey,
             $questionOrder,
             $executeQuery
         );
     }
-
 
     /********************************************
      * Access to SurveyAnswerRepository methods *
@@ -516,8 +488,7 @@ class SurveyManager
         Survey $survey,
         User $user,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->surveyAnswerRepo->findSurveyAnswerBySurveyAndUser(
             $survey,
             $user,
@@ -530,7 +501,6 @@ class SurveyManager
         return $this->surveyAnswerRepo->findSurveyAnswersBySurvey($survey, $executeQuery);
     }
 
-
     /**********************************************
      * Access to QuestionAnswerRepository methods *
      **********************************************/
@@ -539,8 +509,7 @@ class SurveyManager
         SurveyAnswer $surveyAnswer,
         Question $question,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->questionAnswerRepo->findQuestionAnswerBySurveyAnswerAndQuestion(
             $surveyAnswer,
             $question,
@@ -552,8 +521,7 @@ class SurveyManager
         Survey $survey,
         Question $question,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->questionAnswerRepo->countAnswersBySurveyAndQuestion(
             $survey,
             $question,
@@ -567,8 +535,7 @@ class SurveyManager
         $page = 1,
         $max = 20,
         $executeQuery = true
-    )
-    {
+    ) {
         $comments = $this->questionAnswerRepo->findCommentsBySurveyAndQuestion(
             $survey,
             $question,
@@ -580,7 +547,6 @@ class SurveyManager
             $this->pagerFactory->createPager($comments, $page, $max);
     }
 
-
     /*******************************************************
      * Access to OpenEndedQuestionAnswerRepository methods *
      *******************************************************/
@@ -588,8 +554,7 @@ class SurveyManager
     public function getOpenEndedAnswerByQuestionAnswer(
         QuestionAnswer $questionAnswer,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->openEndedQuestionAnswerRepo->findOpenEndedAnswerByQuestionAnswer(
             $questionAnswer,
             $executeQuery
@@ -601,8 +566,7 @@ class SurveyManager
         Survey $survey,
         Question $question,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->openEndedQuestionAnswerRepo->findAnswerByUserAndSurveyAndQuestion(
             $user,
             $survey,
@@ -610,15 +574,14 @@ class SurveyManager
             $executeQuery
         );
     }
-    
+
     public function getOpenEndedAnswersBySurveyAndQuestion(
         Survey $survey,
         Question $question,
         $page = 1,
         $max = 20,
         $executeQuery = true
-    )
-    {
+    ) {
         $answers = $this->openEndedQuestionAnswerRepo->findAnswersBySurveyAndQuestion(
             $survey,
             $question,
@@ -634,15 +597,13 @@ class SurveyManager
         Survey $survey,
         Question $question,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->openEndedQuestionAnswerRepo->findAnswersBySurveyAndQuestion(
             $survey,
             $question,
             $executeQuery
         );
     }
-
 
     /************************************************************
      * Access to MultipleChoiceQuestionAnswerRepository methods *
@@ -651,8 +612,7 @@ class SurveyManager
     public function deleteMultipleChoiceAnswersByQuestionAnswer(
         QuestionAnswer $questionAnswer,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->multipleChoiceQuestionAnswerRepo
             ->deleteMultipleChoiceAnswersByQuestionAnswer(
                 $questionAnswer,
@@ -665,8 +625,7 @@ class SurveyManager
         Survey $survey,
         Question $question,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->multipleChoiceQuestionAnswerRepo
             ->findAnswersByUserAndSurveyAndQuestion(
                 $user,
@@ -680,8 +639,7 @@ class SurveyManager
         Survey $survey,
         Choice $choice,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->multipleChoiceQuestionAnswerRepo->countAnswersBySurveyAndChoice(
             $survey,
             $choice,
@@ -694,8 +652,7 @@ class SurveyManager
         $page,
         $max,
         $executeQuery = true
-    )
-    {
+    ) {
         $answers = $this->multipleChoiceQuestionAnswerRepo->findAnswersByChoice(
             $choice,
             $executeQuery
@@ -709,14 +666,12 @@ class SurveyManager
     public function getMultipleChoiceAnswersByQuestionAnswer(
         QuestionAnswer $questionAnswer,
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->multipleChoiceQuestionAnswerRepo->findMultipleChoiceAnswersByQuestionAnswer(
             $questionAnswer,
             $executeQuery
         );
     }
-
 
     /*********************************************
      * Access to QuestionModelRepository methods *
@@ -727,8 +682,7 @@ class SurveyManager
         $orderedBy = 'title',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         return $this->questionModelRepo->findModelsByWorkspace(
             $workspace,
             $orderedBy,

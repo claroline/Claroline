@@ -3,8 +3,6 @@
 namespace Icap\PortfolioBundle\Entity\Widget;
 
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="icap__portfolio_widget_skills_skill")
@@ -13,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class SkillsWidgetSkill implements SubWidgetInterface
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -88,8 +86,7 @@ class SkillsWidgetSkill implements SubWidgetInterface
     public function getData()
     {
         return array(
-            'name' => $this->getName()
+            'name' => $this->getName(),
         );
     }
 }
- 

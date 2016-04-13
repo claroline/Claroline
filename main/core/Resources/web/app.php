@@ -15,17 +15,18 @@ require_once __DIR__.'/../app/AppKernel.php';
 
 use Symfony\Component\Yaml\Yaml;
 
-$maintenanceMode = file_exists(__DIR__ . '/../app/config/.update');
+$maintenanceMode = file_exists(__DIR__.'/../app/config/.update');
 $authorized = false;
 
-if (file_exists($file = __DIR__ . '/../app/config/ip_white_list.yml')) {
-
+if (file_exists($file = __DIR__.'/../app/config/ip_white_list.yml')) {
     $ips = Yaml::parse($file);
     $authorized = false;
 
     if (is_array($ips)) {
         foreach ($ips as $ip) {
-            if ($ip === $_SERVER['REMOTE_ADDR']) $authorized = true;
+            if ($ip === $_SERVER['REMOTE_ADDR']) {
+                $authorized = true;
+            }
         }
     }
 }
@@ -37,6 +38,6 @@ if (!$maintenanceMode || $authorized) {
     $kernel->handle($request)->send();
     //$kernel->terminate($request, $response);
 } else {
-    $url = $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'] . '/../maintenance.php';
+    $url = $_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME'].'/../maintenance.php';
     header("Location: http://{$url}");
 }

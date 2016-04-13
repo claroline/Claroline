@@ -15,16 +15,12 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Form\WorkspaceImportType;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\FormError;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -48,11 +44,10 @@ class WorkspacesController extends Controller
         WorkspaceManager $workspaceManager,
         ObjectManager $om,
         StrictDispatcher $eventDispatcher
-    )
-    {
-        $this->workspaceManager   = $workspaceManager;
-        $this->om                 = $om;
-        $this->eventDispatcher    = $eventDispatcher;
+    ) {
+        $this->workspaceManager = $workspaceManager;
+        $this->om = $om;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -76,6 +71,7 @@ class WorkspacesController extends Controller
      * @param $order
      * @param $direction
      * @param $type
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function managementAction($page, $search, $max, $order, $direction, $type = 1)
@@ -112,7 +108,7 @@ class WorkspacesController extends Controller
             'max' => $max,
             'order' => $order,
             'direction' => $direction,
-            'type' => $type
+            'type' => $type,
         );
     }
 
@@ -123,6 +119,7 @@ class WorkspacesController extends Controller
      * )
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function toggleWorkspaceVisibilityAction(Request $request)
@@ -144,6 +141,7 @@ class WorkspacesController extends Controller
      * )
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response with the css class to apply to the element
      */
     public function toggleWorkspacePublicRegistrationAction(Request $request)
@@ -174,6 +172,7 @@ class WorkspacesController extends Controller
      * Removes many workspaces from the platform.
      *
      * @param array $workspaces
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteWorkspacesAction(array $workspaces)

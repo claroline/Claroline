@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -8,7 +8,6 @@
  *
  * Date: 2/18/16
  */
-
 namespace Claroline\CoreBundle\Listener;
 
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;

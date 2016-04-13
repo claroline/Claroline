@@ -63,7 +63,7 @@ class AdministrationAnalyticsListener
         $event->addItem([
             'item' => 'portfolio',
             'label' => $this->translator->trans('portfolio', [], 'icap_portfolio'),
-            'value' => $this->portfolioManager->countAll()
+            'value' => $this->portfolioManager->countAll(),
         ]);
     }
 
@@ -86,7 +86,7 @@ class AdministrationAnalyticsListener
 
         $countPortfolioByVisibilityStatuss = $this->portfolioManager->countAllByVisibilityStatus();
         foreach ($countPortfolioByVisibilityStatuss as $countPortfolioByVisibilityStatus) {
-            switch($countPortfolioByVisibilityStatus['visibility']) {
+            switch ($countPortfolioByVisibilityStatus['visibility']) {
                 case Portfolio::VISIBILITY_NOBODY:
                     $countClosedPortfolio = $countPortfolioByVisibilityStatus['number'];
                     break;
@@ -107,19 +107,19 @@ class AdministrationAnalyticsListener
         $countPortfolioByVisibilityStatusGraphData = [
             [
                 'name' => 'closed_mode_portfolio',
-                'value' => $countClosedPortfolio
+                'value' => $countClosedPortfolio,
             ],
             [
                 'name' => 'open_mode_portfolio',
-                'value' => $countOpenPortfolio
+                'value' => $countOpenPortfolio,
             ],
             [
                 'name' => 'private_mode_portfolio',
-                'value' => $countPrivatePortfolio
+                'value' => $countPrivatePortfolio,
             ],
             [
                 'name' => 'platform_mode_portfolio',
-                'value' => $countPlatformPortfolio
+                'value' => $countPlatformPortfolio,
             ],
         ];
 
@@ -130,7 +130,7 @@ class AdministrationAnalyticsListener
             'countPrivatePortfolio' => $countPrivatePortfolio,
             'countPlatformPortfolio' => $countPlatformPortfolio,
             'countDeletedPortfolio' => $countDeletedPortfolio,
-            'portfolioRepartitionStatuss' => $countPortfolioByVisibilityStatusGraphData
+            'portfolioRepartitionStatuss' => $countPortfolioByVisibilityStatusGraphData,
         ]));
         $event->stopPropagation();
     }

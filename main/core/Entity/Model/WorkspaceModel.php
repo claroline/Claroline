@@ -90,10 +90,10 @@ class WorkspaceModel
 
     public function __construct()
     {
-        $this->users          = new ArrayCollection();
-        $this->groups         = new ArrayCollection();
+        $this->users = new ArrayCollection();
+        $this->groups = new ArrayCollection();
         $this->resourcesModel = new ArrayCollection();
-        $this->homeTabs       = new ArrayCollection();
+        $this->homeTabs = new ArrayCollection();
     }
 
     public function getId()
@@ -168,11 +168,11 @@ class WorkspaceModel
 
     public function getNameAndWorkspace()
     {
-        return $this->name .
-            ' (' .
-            $this->workspace->getName() .
-            ' [' .
-            $this->workspace->getCode() .
+        return $this->name.
+            ' ('.
+            $this->workspace->getName().
+            ' ['.
+            $this->workspace->getCode().
             '])';
     }
 }

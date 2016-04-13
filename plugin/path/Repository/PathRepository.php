@@ -7,7 +7,6 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\ResourceQueryBuilder;
 use Doctrine\ORM\QueryBuilder;
 use Innova\PathBundle\Entity\PathWidgetConfig;
-use Doctrine\ORM\Query\Expr;
 
 class PathRepository extends EntityRepository
 {
@@ -29,7 +28,7 @@ class PathRepository extends EntityRepository
             // Add widget STATUS filters
             $statusList = $config->getStatus();
             if (!empty($statusList)) {
-                $whereStatus = array ();
+                $whereStatus = array();
                 foreach ($statusList as $status) {
                     switch ($status) {
                         case 'draft':
@@ -54,7 +53,7 @@ class PathRepository extends EntityRepository
             // Add widget TAG filters
             $tagList = $config->getTags();
             if (0 < count($tagList)) {
-                $tags = array ();
+                $tags = array();
                 foreach ($tagList as $tag) {
                     $tags[] = $tag->getId();
                 }
@@ -62,7 +61,7 @@ class PathRepository extends EntityRepository
                 // Join with the corresponding TaggedObject entities
                 $builder->addJoinClause('LEFT JOIN ClarolineTagBundle:TaggedObject AS t WITH t.objectId = node.id');
                 $builder->addWhereClause('t.id IS NOT NULL');
-                $builder->addWhereClause('t.tag IN (' . implode($tags, ', ') . ')');
+                $builder->addWhereClause('t.tag IN ('.implode($tags, ', ').')');
             }
         }
 
@@ -78,8 +77,10 @@ class PathRepository extends EntityRepository
     }
 
     /**
-     * Get all Paths of the Platform
-     * @param  bool  $toPublish If false, returns all paths, if true returns only paths which need publishing
+     * Get all Paths of the Platform.
+     *
+     * @param bool $toPublish If false, returns all paths, if true returns only paths which need publishing
+     *
      * @return array
      */
     public function findPlatformPaths($toPublish = false)
@@ -97,9 +98,11 @@ class PathRepository extends EntityRepository
     }
 
     /**
-     * Get all Paths of a Workspace
-     * @param  Workspace $workspace
-     * @param  bool      $toPublish If false, returns all paths, if true returns only paths which need publishing
+     * Get all Paths of a Workspace.
+     *
+     * @param Workspace $workspace
+     * @param bool      $toPublish If false, returns all paths, if true returns only paths which need publishing
+     *
      * @return array
      */
     public function findWorkspacePaths(Workspace $workspace, $toPublish = false)
@@ -107,7 +110,7 @@ class PathRepository extends EntityRepository
         $builder = $this->createQueryBuilder('p');
 
         // Join with resourceNode
-        $builder->join('p.resourceNode', 'r', 'WITH', 'r.workspace = ' . $workspace->getId());
+        $builder->join('p.resourceNode', 'r', 'WITH', 'r.workspace = '.$workspace->getId());
 
         // Get only Paths which need publishing
         if ($toPublish) {
@@ -118,8 +121,10 @@ class PathRepository extends EntityRepository
     }
 
     /**
-     * Get all published Paths
-     * @param  bool      $withPending If true, returns all published paths, including the ones with pending changes
+     * Get all published Paths.
+     *
+     * @param bool $withPending If true, returns all published paths, including the ones with pending changes
+     *
      * @return array
      */
     public function findPublishedPath($withPending = false)

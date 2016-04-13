@@ -31,7 +31,7 @@ class ConfigType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'translation_domain' => 'rss_reader'
+                'translation_domain' => 'rss_reader',
             )
         );
     }

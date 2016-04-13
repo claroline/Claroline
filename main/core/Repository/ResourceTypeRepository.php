@@ -35,6 +35,7 @@ class ResourceTypeRepository extends EntityRepository
      * Returns the number of existing resources for each resource type.
      *
      * @param null $workspace
+     *
      * @return array
      */
     public function countResourcesByType($workspace = null)
@@ -75,6 +76,7 @@ class ResourceTypeRepository extends EntityRepository
 
     /**
      * @param array $excludedTypeNames
+     *
      * @return array
      */
     public function findTypeNamesNotIn(array $excludedTypeNames)

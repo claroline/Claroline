@@ -23,7 +23,7 @@ class SectionType extends AbstractType
     {
         $resolver->setDefaults(array(
             'translation_domain' => 'icap_wiki',
-            'data_class' => 'Icap\WikiBundle\Entity\Section'
+            'data_class' => 'Icap\WikiBundle\Entity\Section',
         ));
     }
 }

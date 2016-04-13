@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Form\Organization;
 
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Claroline\CoreBundle\Form\Angular\AngularType;
@@ -37,7 +36,7 @@ class OrganizationParametersType extends AngularType
                     'class' => 'Claroline\CoreBundle\Entity\Organization\Location',
                     'expanded' => true,
                     'multiple' => true,
-                    'property' => 'name'
+                    'property' => 'name',
                 )
             )
             ->add(
@@ -45,7 +44,7 @@ class OrganizationParametersType extends AngularType
                 'userpicker',
                 array(
                     'multiple' => true,
-                    'label' => 'administrators'
+                    'label' => 'administrators',
                 )
             );
     }
@@ -63,7 +62,9 @@ class OrganizationParametersType extends AngularType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $default = array('translation_domain' => 'platform');
-        if ($this->forApi) $default['csrf_protection'] = false;
+        if ($this->forApi) {
+            $default['csrf_protection'] = false;
+        }
         $default['ng-model'] = 'organization';
         $default['ng-controllerAs'] = $this->ngAlias;
 

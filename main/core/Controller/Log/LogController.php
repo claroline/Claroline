@@ -61,15 +61,14 @@ class LogController extends Controller
         AuthorizationCheckerInterface $authorization,
         FormFactory $formFactory,
         TranslatorInterface $translator
-    )
-    {
-        $this->toolManager      = $toolManager;
+    ) {
+        $this->toolManager = $toolManager;
         $this->workspaceManager = $workspaceManager;
-        $this->eventDispatcher  = $eventDispatcher;
+        $this->eventDispatcher = $eventDispatcher;
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
-        $this->formFactory      = $formFactory;
-        $this->translator       = $translator;
+        $this->formFactory = $formFactory;
+        $this->translator = $translator;
     }
 
     /**
@@ -92,7 +91,7 @@ class LogController extends Controller
      */
     public function viewDetailsAction(Log $log)
     {
-        $eventLogName = 'create_log_details_' . $log->getAction();
+        $eventLogName = 'create_log_details_'.$log->getAction();
 
         if ($this->eventDispatcher->hasListeners($eventLogName)) {
             $event = $this->eventDispatcher->dispatch(
@@ -142,7 +141,7 @@ class LogController extends Controller
                 'ClarolineCoreBundle:Log:config_workspace_widget_form.html.twig',
                 array(
                     'form' => $form->createView(),
-                    'instance' => $widgetInstance
+                    'instance' => $widgetInstance,
                 )
             );
         }
@@ -190,7 +189,6 @@ class LogController extends Controller
         $form->bind($this->getRequest());
 
         if ($form->isValid()) {
-
             if (!$config) {
                 $config = new LogWidgetConfig();
                 $config->setWidgetInstance($widgetInstance);
@@ -215,13 +213,12 @@ class LogController extends Controller
             $config->setAmount($data['amount']);
             $em->persist($config);
             $em->flush();
-
         } else {
             return $this->render(
                 'ClarolineCoreBundle:Log:config_desktop_widget_form.html.twig',
                 array(
                     'form' => $form->createView(),
-                    'instance' => $widgetInstance
+                    'instance' => $widgetInstance,
                 )
             );
         }

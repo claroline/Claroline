@@ -8,8 +8,8 @@ use Innova\CollecticielBundle\Entity\Document;
 use Innova\CollecticielBundle\Entity\Drop;
 use Innova\CollecticielBundle\Entity\Dropzone;
 
-class LogDocumentDeleteEvent extends AbstractLogResourceEvent {
-
+class LogDocumentDeleteEvent extends AbstractLogResourceEvent
+{
     const ACTION = 'resource-innova_collecticiel-document_delete';
 
     /**
@@ -25,12 +25,12 @@ class LogDocumentDeleteEvent extends AbstractLogResourceEvent {
         }
 
         $details = array(
-            'dropzone'  => array(
+            'dropzone' => array(
                 'id' => $dropzone->getId(),
             ),
-            'drop'  => array(
+            'drop' => array(
                 'id' => $drop->getId(),
-                'documents' => $documentsDetails
+                'documents' => $documentsDetails,
             ),
             'document' => $document->toArray(),
         );

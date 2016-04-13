@@ -11,8 +11,7 @@ class InterventionRepository extends EntityRepository
         Ticket $ticket,
         $orderedBy = 'startDate',
         $order = 'ASC'
-    )
-    {
+    ) {
         $dql = "
             SELECT i
             FROM FormaLibre\SupportBundle\Entity\Intervention i
@@ -24,6 +23,5 @@ class InterventionRepository extends EntityRepository
         $query->setParameter('ticket', $ticket);
 
         return $query->getResult();
-
     }
 }

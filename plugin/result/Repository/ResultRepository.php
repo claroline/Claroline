@@ -23,6 +23,7 @@ class ResultRepository extends EntityRepository
      *
      * @param User      $user
      * @param Workspace $workspace
+     *
      * @return array
      */
     public function findByUserAndWorkspace(User $user, Workspace $workspace)
@@ -45,7 +46,7 @@ class ResultRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameters([
             'workspace' => $workspace,
-            'user' => $user
+            'user' => $user,
         ]);
 
         return $query->getArrayResult();

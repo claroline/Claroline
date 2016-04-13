@@ -32,7 +32,7 @@ class LogoService
      */
     public function __construct($path)
     {
-        $this->path = $path . '/';
+        $this->path = $path.'/';
         $this->fileTypes = '/\.jpg$|\.png$|\.gif$|\.jpeg$/';
         $this->finder = new Finder();
     }

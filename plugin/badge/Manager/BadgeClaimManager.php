@@ -25,7 +25,7 @@ class BadgeClaimManager
      */
     public function __construct(EntityManager $entityManager)
     {
-        $this->entityManager   = $entityManager;
+        $this->entityManager = $entityManager;
     }
 
     /**

@@ -25,8 +25,8 @@ class SubscribeForumEvent extends AbstractLogResourceEvent
     {
         $details = array(
             'forum' => array(
-                'id' => $forum->getId()
-            )
+                'id' => $forum->getId(),
+            ),
         );
 
         parent::__construct($forum->getResourceNode(), $details);

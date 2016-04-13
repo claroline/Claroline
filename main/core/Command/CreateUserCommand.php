@@ -34,7 +34,7 @@ class CreateUserCommand extends ContainerAwareCommand
                 new InputArgument('user_last_name', InputArgument::REQUIRED, 'The user last name'),
                 new InputArgument('user_username', InputArgument::REQUIRED, 'The user username'),
                 new InputArgument('user_password', InputArgument::REQUIRED, 'The user password'),
-                new InputArgument('user_email', InputArgument::REQUIRED, 'The user email')
+                new InputArgument('user_email', InputArgument::REQUIRED, 'The user email'),
             )
         );
         $this->addOption(
@@ -58,7 +58,7 @@ class CreateUserCommand extends ContainerAwareCommand
             'user_last_name' => 'last name',
             'user_username' => 'username',
             'user_password' => 'password',
-            'user_email' => 'email'
+            'user_email' => 'email',
         );
 
         foreach ($params as $argument => $argumentName) {

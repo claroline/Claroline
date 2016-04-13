@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Auto-generated migration based on mapping information: modify it with caution
+ * Auto-generated migration based on mapping information: modify it with caution.
  *
  * Generation date: 2013/11/13 11:34:46
  */
@@ -14,7 +14,7 @@ class Version20131113113444 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE icap__blog_options MODIFY (
                 display_title NUMBER(1) DEFAULT NULL, 
                 banner_activate NUMBER(1) DEFAULT NULL, 
@@ -23,7 +23,7 @@ class Version20131113113444 extends AbstractMigration
                 banner_background_image_position VARCHAR2(255) DEFAULT NULL, 
                 banner_background_image_repeat VARCHAR2(255) DEFAULT NULL
             )
-        ");
+        ');
     }
 
     public function down(Schema $schema)

@@ -2,14 +2,11 @@
 /**
  * Created by : Vincent SAISSET
  * Date: 22/08/13
- * Time: 09:30
+ * Time: 09:30.
  */
-
 namespace Icap\DropzoneBundle\Controller;
 
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
-use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Icap\DropzoneBundle\Entity\Dropzone;
 use Icap\DropzoneBundle\Event\Log\LogCorrectionDeleteEvent;
 use Icap\DropzoneBundle\Event\Log\LogCorrectionEndEvent;
 use Icap\DropzoneBundle\Event\Log\LogCorrectionStartEvent;
@@ -27,14 +24,12 @@ use Icap\DropzoneBundle\Event\Log\LogDropStartEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropzoneConfigureEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropzoneManualStateChangedEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class DropzoneBaseController extends Controller
 {
     const CRITERION_PER_PAGE = 10;
     const DROP_PER_PAGE = 10;
     const CORRECTION_PER_PAGE = 10;
-
 
     protected function dispatch($event)
     {

@@ -30,7 +30,7 @@ class PanelFacetType extends AbstractType
             'checkbox',
             array(
                 'label' => 'collapse',
-                'required' => false
+                'required' => false,
             )
 
         );

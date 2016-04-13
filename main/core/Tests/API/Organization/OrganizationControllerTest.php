@@ -12,7 +12,7 @@ use Claroline\CoreBundle\Library\Testing\Persister;
  * - create database
  * - php app/console claroline:init_test_schema --env=test
  * - php app/console doctrine:schema:update --force --env=test
- * - bin/phpunit vendor/claroline/core-bundle/Tests/API/Organization/OrganizationControllerTest.php -c app/phpunit.xml
+ * - bin/phpunit vendor/claroline/core-bundle/Tests/API/Organization/OrganizationControllerTest.php -c app/phpunit.xml.
  */
 class OrganizationControllerTest extends TransactionalTestCase
 {
@@ -42,7 +42,7 @@ class OrganizationControllerTest extends TransactionalTestCase
     {
         $this->logIn($this->admin);
         $form = array('organization_form' => array(
-            'name' => 'orga'
+            'name' => 'orga',
         ));
         $this->client->request('POST', '/api/organizations.json', $form);
         $data = $this->client->getResponse()->getContent();
@@ -51,7 +51,6 @@ class OrganizationControllerTest extends TransactionalTestCase
         $data = $this->client->getResponse()->getContent();
         //there is a default organization
         $this->assertEquals(2, count(json_decode($data, true)));
-
     }
 
     //@route: api_post_organization
@@ -165,15 +164,15 @@ class OrganizationControllerTest extends TransactionalTestCase
     //@url: /api/organizations/{organization}.{_format} 
     public function testPutOrganizationAction()
     {
-        $orga = $this->persister->organization('orga');   
-        $here = $this->persister->location('here');     
+        $orga = $this->persister->organization('orga');
+        $here = $this->persister->location('here');
         $this->persister->flush();
         $this->logIn($this->admin);
         $fields = array(
             'name' => 'rename',
             'email' => 'toto@toto.net',
             'administrators' => $this->admin->getId(),
-            'locations' => array($here->getId())
+            'locations' => array($here->getId()),
         );
         $form = array('organization_form' => $fields);
 
@@ -186,14 +185,14 @@ class OrganizationControllerTest extends TransactionalTestCase
     //@url: /api/organizations/{organization}.{_format} 
     public function testPutOrganizationActionIsProtected()
     {
-        $orga = $this->persister->organization('orga');        
+        $orga = $this->persister->organization('orga');
         $this->persister->flush();
         $this->logIn($this->john);
 
         $fields = array(
             'name' => 'rename',
             'email' => 'toto@toto.net',
-            'administrators' => $this->admin->getId()
+            'administrators' => $this->admin->getId(),
         );
         $form = array('organization_form' => $fields);
 

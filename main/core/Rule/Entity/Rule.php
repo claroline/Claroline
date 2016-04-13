@@ -23,17 +23,17 @@ use JMS\Serializer\Annotation\Expose;
  */
 abstract class Rule
 {
-    const RESULT_EQUAL          = '=';
-    const RESULT_INFERIOR       = '<';
+    const RESULT_EQUAL = '=';
+    const RESULT_INFERIOR = '<';
     const RESULT_INFERIOR_EQUAL = '<=';
-    const RESULT_SUPERIOR       = '>';
+    const RESULT_SUPERIOR = '>';
     const RESULT_SUPERIOR_EQUAL = '>=';
 
-    const DOER_USER             = 'doer';
-    const RECEIVER_USER         = 'receiver';
+    const DOER_USER = 'doer';
+    const RECEIVER_USER = 'receiver';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -43,7 +43,7 @@ abstract class Rule
     protected $id;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(type="smallint", nullable=false)
      * @Expose
@@ -92,7 +92,7 @@ abstract class Rule
     protected $resource;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(type="smallint", nullable=false)
      * @Expose
@@ -219,7 +219,7 @@ abstract class Rule
     }
 
     /**
-     * @param integer $resultComparison
+     * @param int $resultComparison
      *
      * @return Rule
      */
@@ -231,7 +231,7 @@ abstract class Rule
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getResultComparison()
     {
@@ -247,21 +247,22 @@ abstract class Rule
                      self::RESULT_INFERIOR,
                      self::RESULT_INFERIOR_EQUAL,
                      self::RESULT_SUPERIOR,
-                     self::RESULT_SUPERIOR_EQUAL);
+                     self::RESULT_SUPERIOR_EQUAL, );
     }
 
     /**
      * @param string $comparisonType
      *
      * @throws \InvalidArgumentException
-     * @return integer
+     *
+     * @return int
      */
     public static function getResultComparisonTypeValue($comparisonType)
     {
         $comparisonTypeValue = array_search($comparisonType, self::getResultComparisonTypes());
 
         if (false === $comparisonTypeValue) {
-            throw new \InvalidArgumentException("Unknow comparison type.");
+            throw new \InvalidArgumentException('Unknow comparison type.');
         }
 
         return $comparisonTypeValue;
@@ -301,6 +302,7 @@ abstract class Rule
 
     /**
      * @throws \RuntimeException
+     *
      * @return \Claroline\CoreBundle\Entity\User
      */
     public function getUser()
@@ -313,7 +315,7 @@ abstract class Rule
     }
 
     /**
-     * @param integer $userType
+     * @param int $userType
      *
      * @return Rule
      */
@@ -325,7 +327,7 @@ abstract class Rule
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getUserType()
     {
@@ -338,7 +340,7 @@ abstract class Rule
     public static function getUserTypes()
     {
         return array(self::DOER_USER,
-                     self::RECEIVER_USER);
+                     self::RECEIVER_USER, );
     }
 
     /**
@@ -358,8 +360,7 @@ abstract class Rule
     {
         if ($value) {
             $this->userType = 1;
-        }
-        else {
+        } else {
             $this->userType = 0;
         }
 

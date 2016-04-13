@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -8,10 +8,8 @@
  * 
  * Date: 5/12/15
  */
-
 namespace Icap\SocialmediaBundle\Event\Log;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Icap\SocialmediaBundle\Entity\LikeAction;
@@ -31,7 +29,7 @@ class LogSocialmediaLikeEvent extends AbstractLogResourceEvent implements Notifi
     /**
      * Get sendToFollowers boolean.
      *
-     * @return boolean
+     * @return bool
      */
     public function getSendToFollowers()
     {
@@ -77,11 +75,11 @@ class LogSocialmediaLikeEvent extends AbstractLogResourceEvent implements Notifi
      */
     public function getIconKey()
     {
-        return "socialmedia";
+        return 'socialmedia';
     }
 
     /**
-     * Get details
+     * Get details.
      *
      * @return array
      */
@@ -90,18 +88,18 @@ class LogSocialmediaLikeEvent extends AbstractLogResourceEvent implements Notifi
         $resource = $this->getResource();
         $notificationDetails = array_merge($this->details, array());
         $notificationDetails['resource'] = array(
-            'id'   => $resource->getId(),
+            'id' => $resource->getId(),
             'name' => $resource->getName(),
-            'type' => $resource->getResourceType()->getName()
+            'type' => $resource->getResourceType()->getName(),
         );
 
         return $notificationDetails;
     }
 
     /**
-     * Get if event is allowed to create notification or not
+     * Get if event is allowed to create notification or not.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAllowedToNotify()
     {

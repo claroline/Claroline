@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -8,9 +8,7 @@
  * 
  * Date: 7/6/15
  */
-
 namespace Icap\OAuthBundle\Controller;
-
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -23,6 +21,7 @@ class ConnexionController extends Controller
      * @EXT\Template("IcapOAuthBundle:Connect:check_connexion.html.twig")
      *
      * @param Request $request
+     *
      * @return array
      */
     public function checkConnexionAction(Request $request)
@@ -47,6 +46,7 @@ class ConnexionController extends Controller
      * @EXT\Template("IcapOAuthBundle:Connect:create_account.html.twig")
      *
      * @param Request $request
+     *
      * @return array
      */
     public function registerAction(Request $request)
@@ -72,6 +72,7 @@ class ConnexionController extends Controller
      * @EXT\Template("IcapOAuthBundle:Connect:create_account.html.twig")
      *
      * @param Request $request
+     *
      * @return array
      */
     public function createAccountAction(Request $request)
@@ -89,6 +90,7 @@ class ConnexionController extends Controller
      * @EXT\Template("IcapOAuthBundle:Connect:link_account.html.twig")
      *
      * @param Request $request
+     *
      * @return array
      */
     public function loginAction(Request $request)
@@ -112,6 +114,7 @@ class ConnexionController extends Controller
      * @EXT\Template("IcapOAuthBundle:Connect:link_account.html.twig")
      *
      * @param Request $request
+     *
      * @return array
      */
     public function linkAccountAction(Request $request)

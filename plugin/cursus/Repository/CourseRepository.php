@@ -21,8 +21,7 @@ class CourseRepository extends EntityRepository
         $orderedBy = 'title',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT c
             FROM Claroline\CursusBundle\Entity\Course c
@@ -38,8 +37,7 @@ class CourseRepository extends EntityRepository
         $orderedBy = 'title',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT c
             FROM Claroline\CursusBundle\Entity\Course c
@@ -60,8 +58,7 @@ class CourseRepository extends EntityRepository
         $orderedBy = 'title',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT c
             FROM Claroline\CursusBundle\Entity\Course c
@@ -85,8 +82,7 @@ class CourseRepository extends EntityRepository
         $orderedBy = 'title',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT c
             FROM Claroline\CursusBundle\Entity\Course c
@@ -115,8 +111,7 @@ class CourseRepository extends EntityRepository
         $orderedBy = 'title',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT c
             FROM Claroline\CursusBundle\Entity\Course c
@@ -144,8 +139,7 @@ class CourseRepository extends EntityRepository
         $orderedBy = 'title',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT c
             FROM Claroline\CursusBundle\Entity\Course c
@@ -178,8 +172,7 @@ class CourseRepository extends EntityRepository
         $orderedBy = 'title',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT c
             FROM Claroline\CursusBundle\Entity\Course c
@@ -204,8 +197,7 @@ class CourseRepository extends EntityRepository
         $orderedBy = 'title',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT c
             FROM Claroline\CursusBundle\Entity\Course c

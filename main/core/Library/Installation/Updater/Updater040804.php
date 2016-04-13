@@ -11,7 +11,6 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Entity\Plugin;
-use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -33,7 +32,6 @@ class Updater040804 extends Updater
         $installedBundles = $this->container->getParameter('kernel.bundles');
 
         if (isset($installedBundles['IcapPortfolioBundle'])) {
-
             $icapPortfolioPlugin = $this->om->getRepository('ClarolineCoreBundle:Plugin')->findOneByBundleFQCN($installedBundles['IcapPortfolioBundle']);
 
             if (null === $icapPortfolioPlugin) {

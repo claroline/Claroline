@@ -15,7 +15,6 @@ use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Entity\ContentTranslation;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\ORM\Query;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
@@ -41,8 +40,7 @@ class ContentManager
         Registry $manager,
         RequestStack $requestStack,
         ObjectManager $persistence
-    )
-    {
+    ) {
         $this->manager = $persistence;
         $this->request = $requestStack->getCurrentRequest();
         $this->content = $manager->getRepository('ClarolineCoreBundle:Content');
@@ -50,7 +48,7 @@ class ContentManager
     }
 
     /**
-     * Get Content
+     * Get Content.
      *
      * Example: $contentManager->getContent(array('id' => $id));
      *
@@ -64,13 +62,13 @@ class ContentManager
     }
 
     /**
-     * Get translated Content
+     * Get translated Content.
      *
      * Example: $contentManager->getTranslatedContent(array('id' => $id));
      *
      * @param array $filter
      *
-     * @return Array
+     * @return array
      */
     public function getTranslatedContent(array $filter)
     {
@@ -85,9 +83,9 @@ class ContentManager
      * Create a new content.
      *
      * @param string $translatedContent array('en' => array('content' => 'foo', 'title' => 'foo'))
-     * @param string $type A type of content
+     * @param string $type              A type of content
      *
-     * @return integer The id of the new content.
+     * @return int The id of the new content.
      */
     public function createContent(array $translatedContent, $type = null)
     {
@@ -122,7 +120,7 @@ class ContentManager
     }
 
     /**
-     * Delete a translation of content
+     * Delete a translation of content.
      *
      * @param $locale
      * @param $id
@@ -151,7 +149,7 @@ class ContentManager
      *
      * @return Claroline\CoreBundle\Entity\Content
      */
-    private function resetContent(Content $content, Array $translatedContents)
+    private function resetContent(Content $content, array $translatedContents)
     {
         foreach ($translatedContents as $lang => $translatedContent) {
             $this->updateTranslation($content, $translatedContent, $lang, true);

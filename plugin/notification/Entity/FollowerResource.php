@@ -38,9 +38,9 @@ class FollowerResource
     protected $followerId;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -48,9 +48,10 @@ class FollowerResource
     }
 
     /**
-     * Set hash
+     * Set hash.
      *
      * @param string $hash
+     *
      * @return FollowerResource
      */
     public function setHash($hash)
@@ -61,7 +62,7 @@ class FollowerResource
     }
 
     /**
-     * Get hash
+     * Get hash.
      *
      * @return string
      */
@@ -71,9 +72,10 @@ class FollowerResource
     }
 
     /**
-     * Set resourceClass
+     * Set resourceClass.
      *
      * @param string $resourceClass
+     *
      * @return FollowerResource
      */
     public function setResourceClass($resourceClass)
@@ -84,7 +86,7 @@ class FollowerResource
     }
 
     /**
-     * Get resourceClass
+     * Get resourceClass.
      *
      * @return string
      */
@@ -94,9 +96,10 @@ class FollowerResource
     }
 
     /**
-     * Set resourceId
+     * Set resourceId.
      *
-     * @param integer $resourceId
+     * @param int $resourceId
+     *
      * @return FollowerResource
      */
     public function setResourceId($resourceId)
@@ -107,9 +110,9 @@ class FollowerResource
     }
 
     /**
-     * Get resourceId
+     * Get resourceId.
      *
-     * @return integer
+     * @return int
      */
     public function getResourceId()
     {
@@ -117,9 +120,10 @@ class FollowerResource
     }
 
     /**
-     * Set followerId
+     * Set followerId.
      *
-     * @param integer $followerId
+     * @param int $followerId
+     *
      * @return FollowerResource
      */
     public function setFollowerId($followerId)
@@ -130,9 +134,9 @@ class FollowerResource
     }
 
     /**
-     * Get followerId
+     * Get followerId.
      *
-     * @return integer
+     * @return int
      */
     public function getFollowerId()
     {

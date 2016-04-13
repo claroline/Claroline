@@ -36,6 +36,7 @@ class WidgetController
      * @EXT\Template
      *
      * @param User $user
+     *
      * @return array
      */
     public function objectivesAction(User $user)

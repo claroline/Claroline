@@ -28,12 +28,12 @@ class BadgeManagerTest extends MockeryTestCase
         parent::setUp();
 
         $this->badgeRepository = $this->mock('Icap\BadgeBundle\Repository\BadgeRepository');
-        $this->unitOfWork      = $this->mock('Doctrine\ORM\UnitOfWork');
+        $this->unitOfWork = $this->mock('Doctrine\ORM\UnitOfWork');
         $this->unitOfWork
             ->shouldReceive('computeChangeSets')
                 ->andReturn(null);
 
-        $this->entityManager   = $this->mock('Doctrine\ORM\EntityManager');
+        $this->entityManager = $this->mock('Doctrine\ORM\EntityManager');
         $this->entityManager
             ->shouldReceive('persist')
                 ->andReturn(null)
@@ -49,7 +49,7 @@ class BadgeManagerTest extends MockeryTestCase
      * @param Badge       $badge
      * @param UserBadge[] $userBadges
      * @param User[]      $users
-     * @param integer     $expectedBadgeAttributionCount
+     * @param int         $expectedBadgeAttributionCount
      */
     public function testAddBadgeToUsers(Badge $badge, $userBadges, array $users, $expectedBadgeAttributionCount)
     {
@@ -82,8 +82,8 @@ class BadgeManagerTest extends MockeryTestCase
 
     public function testAddBadgeToUsersProvider()
     {
-        $badge     = new Badge();
-        $user      = new User();
+        $badge = new Badge();
+        $user = new User();
         $userBadge = new UserBadge();
 
         return array(
@@ -97,7 +97,7 @@ class BadgeManagerTest extends MockeryTestCase
             array($badge, array($userBadge, null, $userBadge), array($user, $user, $user), 1),
             array($badge, array($userBadge, $userBadge, null), array($user, $user, $user), 1),
 
-            array($badge, array($userBadge, $userBadge, $userBadge), array($user, $user, $user), 0)
+            array($badge, array($userBadge, $userBadge, $userBadge), array($user, $user, $user), 0),
         );
     }
 
@@ -165,7 +165,7 @@ class BadgeManagerTest extends MockeryTestCase
             array($badge5, new \DateTime('2014-02-02'), new \DateTime('2014-03-02')),
             array($badge6, new \DateTime('2014-02-02'), new \DateTime('2014-04-02')),
             array($badge7, new \DateTime('2014-02-02'), new \DateTime('2015-02-02')),
-            array($badge8, new \DateTime('2014-02-02'), new \DateTime('2016-02-02'))
+            array($badge8, new \DateTime('2014-02-02'), new \DateTime('2016-02-02')),
         );
     }
 

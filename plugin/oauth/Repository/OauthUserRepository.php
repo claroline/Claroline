@@ -5,7 +5,7 @@ namespace Icap\OAuthBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -17,11 +17,11 @@ class OauthUserRepository extends EntityRepository
 {
     public function unlinkOAuthUser($userId)
     {
-        $qb = $this->createQueryBuilder("oauth");
+        $qb = $this->createQueryBuilder('oauth');
         $qb
             ->delete()
-            ->andWhere("oauth.user = :user")
-            ->setParameter("user", $userId);
+            ->andWhere('oauth.user = :user')
+            ->setParameter('user', $userId);
 
         $qb->getQuery()->execute();
     }

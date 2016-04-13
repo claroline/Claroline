@@ -35,8 +35,7 @@ class SupportListener
         RequestStack $requestStack,
         UrlGeneratorInterface $router,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->httpKernel = $httpKernel;
         $this->request = $requestStack->getCurrentRequest();
         $this->router = $router;
@@ -120,7 +119,7 @@ class SupportListener
                 'file' => $file,
                 'line' => $line,
                 'url' => $url,
-                'referer' => $referer
+                'referer' => $referer,
             )
         );
 

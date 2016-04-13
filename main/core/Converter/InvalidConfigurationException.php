@@ -20,7 +20,7 @@ class InvalidConfigurationException extends \Exception
     private static $messages = array(
         self::MISSING_NAME => 'the controller parameter name is mandatory',
         self::MISSING_CLASS => 'the "class" field is mandatory',
-        self::MISSING_ID => 'the "id" option is mandatory'
+        self::MISSING_ID => 'the "id" option is mandatory',
     );
 
     public function __construct($code)

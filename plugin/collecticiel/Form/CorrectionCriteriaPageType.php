@@ -14,7 +14,7 @@ class CorrectionCriteriaPageType extends AbstractType
         $totalChoice = $options['totalChoice'];
 
         $choices = array();
-        for ($i = 0; $i < $totalChoice; $i++) {
+        for ($i = 0; $i < $totalChoice; ++$i) {
             $choices[$i] = $i;
         }
 
@@ -26,7 +26,7 @@ class CorrectionCriteriaPageType extends AbstractType
 // En commentaire car cette zone n'est plus obligatoire. InnovaERV, avril 2015.
                 'required' => true,
                 'label' => $criterion->getInstruction(),
-                'label_attr' => array('style' => 'font-weight: normal;')
+                'label_attr' => array('style' => 'font-weight: normal;'),
             );
 
             if ($options['edit'] === false) {
@@ -50,7 +50,7 @@ class CorrectionCriteriaPageType extends AbstractType
             'totalChoice' => 5,
             'criteria' => array(),
             'edit' => true,
-            'translation_domain' => 'innova_collecticiel'
+            'translation_domain' => 'innova_collecticiel',
         ));
     }
 }

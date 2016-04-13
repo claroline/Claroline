@@ -1,13 +1,12 @@
 <?php
+
 namespace Icap\DropzoneBundle\Manager;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Entity\User;
 use Icap\DropzoneBundle\Entity\Dropzone;
 use Icap\DropzoneBundle\Entity\Drop;
 use JMS\DiExtraBundle\Annotation as DI;
-use Proxies\__CG__\Icap\DropzoneBundle\Entity\Document;
 
 /**
  * @DI\Service("icap.manager.dropzone_manager")
@@ -32,11 +31,12 @@ class DropzoneManager
         $this->em = $em;
     }
 
-
     /**
      *  Getting the user that have the 'open' rights.
      *  Excluded the admin profil.
+     *
      * @param \Icap\DropzoneBundle\Entity\Dropzone $dropzone
+     *
      * @return array UserIds.
      */
     public function getDropzoneUsersIds(Dropzone $dropzone)
@@ -68,7 +68,6 @@ class DropzoneManager
                 foreach ($users as $user) {
                     array_push($userIds, $user->getId());
                 }
-
             }
         }
         $userIds = array_unique($userIds);
@@ -103,8 +102,10 @@ class DropzoneManager
      *  percent : rounded progress in percent
      *  nbCorrection : corrections made by the user in this evaluation.
      *   *
+     *
      * @param Dropzone dropzone
      * @param Drop drop
+     *
      * @return array (states, currentState,percent,nbCorrection)
      **/
     public function getDropzoneProgressByUser($dropzone, $user)
@@ -115,11 +116,11 @@ class DropzoneManager
         $nbCorrections = $this->em
             ->getRepository('IcapDropzoneBundle:Correction')
             ->countFinished($dropzone, $user);
+
         return $this->getDrozponeProgress($dropzone, $drop, $nbCorrections);
     }
 
     /**
-     *
      * STATES  FOR NORMAL ARE :
      *  0 : not started
      *  1 : Waiting for drop
@@ -141,9 +142,10 @@ class DropzoneManager
      *  percent : rounded progress in percent
      *  nbCorrection : corrections made by the user in this evaluation.
      *
-     * @param \Icap\DropzoneBundle\Entity\Dropzone $dropzone
+     * @param \Icap\DropzoneBundle\Entity\Dropzone                               $dropzone
      * @param \Icap\DropzoneBundle\Entity\Drop|\Icap\DropzoneBundle\Manager\Drop $drop
-     * @param int $nbCorrection number of correction the user did.
+     * @param int                                                                $nbCorrection number of correction the user did.
+     *
      * @return array (states, currentState,percent,nbCorrection)
      */
     public function getDrozponeProgress(Dropzone $dropzone, Drop $drop = null, $nbCorrection = 0)
@@ -151,7 +153,6 @@ class DropzoneManager
         $begin_states = array('Evaluation not started', 'awaiting for drop', 'drop provided');
         $end_states = array('waiting for correction', 'corrected copy');
         $states = array();
-
 
         $states = array_merge($states, $begin_states);
         $expectedCorrections = $dropzone->getExpectedTotalCorrection();
@@ -174,7 +175,7 @@ class DropzoneManager
             /* --------------------- SPECIAL CASE  END ------------------------------*/
 
             if (!$allow_user_to_not_have_expected_corrections && $drop != null && !$drop->isUnlockedDrop()) {
-                for ($i = 0; $i < $expectedCorrections; $i++) {
+                for ($i = 0; $i < $expectedCorrections; ++$i) {
                     array_push($states, 'correction n°%nb_correction%/%expected_correction%');
                 }
             }
@@ -184,10 +185,10 @@ class DropzoneManager
 
             // if no drop, state is 0 as default.
             if (!empty($drop)) {
-                $currentState++;
+                ++$currentState;
 
                 if ($drop->getFinished()) {
-                    $currentState++;
+                    ++$currentState;
                 }
                 // @TODO manage invalidated corrections. 
                 //  update the state with the correction number.
@@ -195,46 +196,42 @@ class DropzoneManager
                     $nbCorrection = $expectedCorrections;
                 }
 
-
                 if (!$allow_user_to_not_have_expected_corrections && !$drop->isUnlockedDrop()) {
                     $currentState += $nbCorrection;
                     if ($nbCorrection >= $expectedCorrections) {
-                        $currentState++;
+                        ++$currentState;
                     }
                 } else {
-                    $currentState++;
+                    ++$currentState;
                 }
 
-
                 if ($drop->countFinishedCorrections() >= $expectedCorrections) {
-                    $currentState++;
+                    ++$currentState;
 
                     if ($allow_user_to_not_have_expected_corrections) {
-                        $currentState++;
+                        ++$currentState;
                     }
-                } else if ($drop->isUnlockedDrop()) {
-                    $currentState++;
+                } elseif ($drop->isUnlockedDrop()) {
+                    ++$currentState;
                 }
 
                 // admin case ( can correct more than expected )
                 if ($currentState >= count($states)) {
                     $currentState = count($states) - 1;
                 }
-
-
             }
         } else {
             // case of normal correction.
             $states = array_merge($states, $end_states);
             // if no drop, state is 0 as default.
             if (!empty($drop)) {
-                $currentState++;
+                ++$currentState;
 
                 if ($drop->getFinished()) {
                     $currentState += 2;
                 }
                 if ($drop->countFinishedCorrections() >= $expectedCorrections) {
-                    $currentState++;
+                    ++$currentState;
                 }
             }
         }
@@ -250,6 +247,7 @@ class DropzoneManager
      *
      * @param Dropzone $dropzone
      * @param $nbCorrection
+     *
      * @return bool
      */
     public function isPeerReviewEndedOrManualStateFinished(Dropzone $dropzone, $nbCorrection)
@@ -258,24 +256,23 @@ class DropzoneManager
         if (($dropzone->getManualPlanning() && $dropzone->getManualState() == Dropzone::MANUAL_STATE_FINISHED) ||
             (!$dropzone->getManualPlanning() && $dropzone->getTimeRemaining($dropzone->getEndReview()) <= 0)
         ) {
-
             if ($dropzone->getExpectedTotalCorrection() > $nbCorrection) {
                 $specialCase = true;
             }
         }
+
         return $specialCase;
     }
-
 
     /**
      * if the dropzone option 'autocloseOpenDropsWhenTimeIsUp' is activated, and evalution allowToDrop time is over,
      *  this will close all drop not closed yet.
+     *
      * @param Dropzone $dropzone
-     * @param bool $force
+     * @param bool     $force
      */
     public function closeDropzoneOpenedDrops(Dropzone $dropzone, $force = false)
     {
-
         if ($force || $this->isDropzoneDropTimeIsUp($dropzone)) {
             $dropRepo = $this->em->getRepository('IcapDropzoneBundle:Drop');
             $dropRepo->closeUnTerminatedDropsByDropzone($dropzone->getId());
@@ -284,8 +281,10 @@ class DropzoneManager
     }
 
     /**
-     * Check if dropzone  options are ok in order to autoclose Drops
+     * Check if dropzone  options are ok in order to autoclose Drops.
+     *
      * @param Dropzone $dropzone
+     *
      * @return bool
      */
     private function isDropzoneDropTimeIsUp(Dropzone $dropzone)
@@ -295,9 +294,9 @@ class DropzoneManager
             $now = new \DateTime();
             $dropDatePassed = $now->getTimestamp() > $dropzone->getEndAllowDrop()->getTimeStamp();
         }
+
         return $dropDatePassed;
     }
-
 
     public function recalculateScoreByDropzone(Dropzone $dropzone)
     {
@@ -313,7 +312,6 @@ class DropzoneManager
         $corrections = $CorrectionRepo->findBy(['dropzone' => $dropzone->getId()]);
 
         $this->container->get('icap.manager.correction_manager')->recalculateScoreForCorrections($dropzone, $corrections);
-
     }
 
     private function isBetweenDates($begin, $end, $dateToTest)
@@ -344,15 +342,9 @@ class DropzoneManager
                         array_push($ids, $rootId);
                     }
                 }
-
             }
         }
 
-
         return $ids;
     }
-
-
-
-
 }

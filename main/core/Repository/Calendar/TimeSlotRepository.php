@@ -15,5 +15,4 @@ use Doctrine\ORM\EntityRepository;
 
 class TimeSlotRepository extends EntityRepository
 {
-
 }

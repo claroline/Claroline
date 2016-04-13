@@ -4,7 +4,6 @@ namespace Icap\BadgeBundle\Installation\Updater;
 
 use AppKernel;
 use Claroline\InstallationBundle\Updater\Updater;
-use Claroline\MigrationBundle\Migrator\Migrator;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Migrations\Configuration\Configuration;
 use Doctrine\DBAL\Migrations\Migration;
@@ -50,7 +49,7 @@ class Updater060300 extends Updater
         $portfolioBundle = $this->container->get('claroline.persistence.object_manager')->getRepository('ClarolineCoreBundle:Plugin')->findBy(
             array('vendorName' => 'Icap', 'bundleName' => 'PortfolioBundle')
         );
-        $portfolioBundle = count($portfolioBundle) === 1 ? true: false;
+        $portfolioBundle = count($portfolioBundle) === 1 ? true : false;
 
         if (!$portfolioBundle && $connection->getSchemaManager()->tablesExist(['icap__portfolio_widget_badges'])) {
             $this->log('Deleting portfolios badges tables...');
@@ -61,12 +60,12 @@ class Updater060300 extends Updater
 
         if ($portfolioBundle && !$connection->getSchemaManager()->tablesExist(['icap__portfolio_widget_badges'])) {
             $badgeBundle = $kernel->getBundle('IcapBadgeBundle');
-            $this->log("Executing migrations for portfolio interaction");
+            $this->log('Executing migrations for portfolio interaction');
 
             $migrationsDir = "{$badgeBundle->getPath()}/Installation/Migrations";
             $migrationsName = "{$badgeBundle->getName()} migration";
             $migrationsNamespace = "{$badgeBundle->getNamespace()}\\Installation\\Migrations";
-            $migrationsTableName = 'doctrine_' . strtolower($badgeBundle->getName()) . '_versions';
+            $migrationsTableName = 'doctrine_'.strtolower($badgeBundle->getName()).'_versions';
 
             $config = new Configuration($connection);
             $config->setName($migrationsName);
@@ -78,7 +77,7 @@ class Updater060300 extends Updater
             $migration = new Migration($config);
             $executedQueriesNumber = $migration->migrate('20150929141509');
 
-            $this->log(sprintf("%d queries executed", $executedQueriesNumber));
+            $this->log(sprintf('%d queries executed', $executedQueriesNumber));
         }
     }
 }

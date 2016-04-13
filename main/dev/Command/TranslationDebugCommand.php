@@ -59,7 +59,7 @@ class TranslationDebugCommand extends ContainerAwareCommand
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         $params = array(
-            'locale' => 'locale to fill: '
+            'locale' => 'locale to fill: ',
         );
 
         foreach ($params as $argument => $argumentName) {
@@ -90,12 +90,12 @@ class TranslationDebugCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $fqcn = $input->getOption('fqcn') ? $input->getOption('fqcn'): 'ClarolineCoreBundle';
-        $domain = $input->getOption('domain') ? $input->getOption('domain'): 'platform';
+        $fqcn = $input->getOption('fqcn') ? $input->getOption('fqcn') : 'ClarolineCoreBundle';
+        $domain = $input->getOption('domain') ? $input->getOption('domain') : 'platform';
         $locale = $input->getArgument('locale');
-        $mainLang = $input->getOption('main_lang') ? $input->getOption('main_lang'): 'fr';
-        $filledShortPath = '@' . $fqcn . '/Resources/translations/' . $domain . '.' . $locale . '.yml';
-        $mainShortPath = '@' . $fqcn . '/Resources/translations/' . $domain . '.' . $mainLang . '.yml';
+        $mainLang = $input->getOption('main_lang') ? $input->getOption('main_lang') : 'fr';
+        $filledShortPath = '@'.$fqcn.'/Resources/translations/'.$domain.'.'.$locale.'.yml';
+        $mainShortPath = '@'.$fqcn.'/Resources/translations/'.$domain.'.'.$mainLang.'.yml';
         $mainFile = $this->getContainer()->get('kernel')->locateResource($mainShortPath);
         $filledFile = $this->getContainer()->get('kernel')->locateResource($filledShortPath);
         if ($input->getOption('fill')) {
@@ -125,7 +125,7 @@ class TranslationDebugCommand extends ContainerAwareCommand
                 }
             }
 
-            $line++;
+            ++$line;
         }
     }
 
@@ -133,20 +133,20 @@ class TranslationDebugCommand extends ContainerAwareCommand
     {
         return array(
             'en' => array(
-                'by', 'dsn'
+                'by', 'dsn',
             ),
             'fr' => array(
-                'dsn'
+                'dsn',
             ),
             'es' => array(
-                'dsn'
+                'dsn',
             ),
             'nl' => array(
 
             ),
             'de' => array(
 
-            )
+            ),
         );
     }
 }

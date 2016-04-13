@@ -2,9 +2,8 @@
 /**
  * Created by : Vincent SAISSET
  * Date: 21/08/13
- * Time: 15:39
+ * Time: 15:39.
  */
-
 namespace Innova\CollecticielBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
@@ -87,35 +86,31 @@ class Drop
      */
     protected $hiddenDirectory;
 
-
     /**
      * Indicate if the drop was close automaticaly ( when time is up by the dropzone option
-     * autoCloseOpenedDropsWhenTimeIsUp )
+     * autoCloseOpenedDropsWhenTimeIsUp ).
      *
      * @ORM\Column(name="auto_closed_drop",type="boolean", nullable=false,options={"default" = 0})
      */
     protected $autoClosedDrop = 0;
 
-
     /**
      * @var bool
-     * Used to flag that a copy have been unlocked ( admin made a correction that unlocked the copy:
-     *  the copy doesn't wait anymore the expected number of correction
+     *           Used to flag that a copy have been unlocked ( admin made a correction that unlocked the copy:
+     *           the copy doesn't wait anymore the expected number of correction
      *
      * @ORM\Column(name="unlocked_drop",type="boolean",nullable=false,options={"default" = false})
      */
     protected $unlockedDrop = false;
 
-
     /**
      * @var bool
-     * Used to flag that a user have been unlocked ( admin made a correction that unlocked the copy:
-     * the drop author will not need anymore to do the expected number of correction to see his copy.)
+     *           Used to flag that a user have been unlocked ( admin made a correction that unlocked the copy:
+     *           the drop author will not need anymore to do the expected number of correction to see his copy.)
      *
      * @ORM\Column(name="unlocked_user",type="boolean",nullable=false,options={"default" = false})
      */
     protected $unlockedUser = false;
-
 
     public function __construct()
     {
@@ -333,6 +328,7 @@ class Drop
                 break;
             }
         }
+
         return $hasDeniedCorrection;
     }
 
@@ -350,7 +346,7 @@ class Drop
             // if an ended  correction (with a endDate value) has not been found
             if ($validCorrectionFound == false) {
                 // if its a valid correction.
-                if ($correction->getEndDate() !== NULL) {
+                if ($correction->getEndDate() !== null) {
                     // valid correction found, we change the step and keep the date.
                     $date = $correction->getEndDate();
                     $validCorrectionFound = true;
@@ -358,13 +354,12 @@ class Drop
             } else {
                 // at least a valid ended  correction has been found ( with an endDate)
                 // date comparaison if $correction endDate is not NULL;
-                if ($correction->getEndDate() !== NULL) {
+                if ($correction->getEndDate() !== null) {
                     if ($date->getTimestamp() < $correction->getEndDate()->getTimestamp()) {
                         $date = $correction->getEndDate();
                     }
                 }
             }
-
         }
 
         return $date;
@@ -387,7 +382,7 @@ class Drop
     }
 
     /**
-     * @param boolean $unlockedDrop
+     * @param bool $unlockedDrop
      */
     public function setUnlockedDrop($unlockedDrop)
     {
@@ -395,7 +390,7 @@ class Drop
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isUnlockedDrop()
     {
@@ -403,7 +398,7 @@ class Drop
     }
 
     /**
-     * @param boolean $unlockedUser
+     * @param bool $unlockedUser
      */
     public function setUnlockedUser($unlockedUser)
     {
@@ -411,7 +406,7 @@ class Drop
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getUnlockedUser()
     {
@@ -419,9 +414,9 @@ class Drop
     }
 
     /**
-     * Get unlockedDrop
+     * Get unlockedDrop.
      *
-     * @return boolean 
+     * @return bool
      */
     public function getUnlockedDrop()
     {
@@ -429,9 +424,10 @@ class Drop
     }
 
     /**
-     * Add documents
+     * Add documents.
      *
      * @param \Innova\CollecticielBundle\Entity\Document $documents
+     *
      * @return Drop
      */
     public function addDocument(\Innova\CollecticielBundle\Entity\Document $documents)
@@ -442,7 +438,7 @@ class Drop
     }
 
     /**
-     * Remove documents
+     * Remove documents.
      *
      * @param \Innova\CollecticielBundle\Entity\Document $documents
      */
@@ -452,9 +448,10 @@ class Drop
     }
 
     /**
-     * Add corrections
+     * Add corrections.
      *
      * @param \Innova\CollecticielBundle\Entity\Correction $corrections
+     *
      * @return Drop
      */
     public function addCorrection(\Innova\CollecticielBundle\Entity\Correction $corrections)
@@ -465,7 +462,7 @@ class Drop
     }
 
     /**
-     * Remove corrections
+     * Remove corrections.
      *
      * @param \Innova\CollecticielBundle\Entity\Correction $corrections
      */

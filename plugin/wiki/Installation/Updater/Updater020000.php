@@ -6,8 +6,6 @@ use Claroline\InstallationBundle\Updater\Updater;
 use Icap\WikiBundle\Entity\Wiki;
 use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Entity\Contribution;
-use Doctrine\Common\Persistence\Mapping\MappingException;
-use Symfony\Component\Filesystem\Filesystem;
 
 class Updater020000 extends Updater
 {
@@ -38,10 +36,11 @@ class Updater020000 extends Updater
     {
         try {
             $this->log('Retrieving temporary sections...');
+
             return $this->conn->query('SELECT * FROM icap__wiki_section_temp');
         } catch (\Exception $e) {
             $this->log('Error while retrieving temporary sections');
-        }        
+        }
     }
 
     private function createActiveContributions($tempSections)
@@ -62,7 +61,7 @@ class Updater020000 extends Updater
             $section->setActiveContribution($activeContribution);
 
             $em->persist($section);
-            $em->flush();                
+            $em->flush();
         }
     }
 
@@ -73,7 +72,7 @@ class Updater020000 extends Updater
             CREATE TABLE icap__wiki_section_temp
             AS (SELECT * FROM icap__wiki_section)
         ');
-    }    
+    }
 
     private function dropTables()
     {

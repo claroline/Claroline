@@ -2,11 +2,9 @@
 
 namespace Icap\BlogBundle\Event\Log;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\BlogOptions;
-use Icap\BlogBundle\Entity\Post;
 
 class LogBlogConfigureEvent extends AbstractLogResourceEvent
 {
@@ -22,10 +20,10 @@ class LogBlogConfigureEvent extends AbstractLogResourceEvent
 
         $details = array(
             'blog' => array(
-                'blog'      => $blog->getId(),
-                'options'   => json_encode($blogOptions),
-                'changeSet' => $changeSet
-            )
+                'blog' => $blog->getId(),
+                'options' => json_encode($blogOptions),
+                'changeSet' => $changeSet,
+            ),
         );
 
         parent::__construct($blog->getResourceNode(), $details);

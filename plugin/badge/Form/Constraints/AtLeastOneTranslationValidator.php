@@ -14,17 +14,17 @@ class AtLeastOneTranslationValidator extends ConstraintValidator
      */
     public function validate($badge, Constraint $constraint)
     {
-        $translations        = $badge->getTranslations();
+        $translations = $badge->getTranslations();
         $hasEmptyTranslation = 0;
 
         foreach ($translations as $translation) {
             // Have to put all method call in variable because of empty doesn't
             // support result of method as parameter (prior to PHP 5.5)
-            $name        = $translation->getName();
+            $name = $translation->getName();
             $description = $translation->getDescription();
-            $criteria    = $translation->getCriteria();
+            $criteria = $translation->getCriteria();
             if (empty($name) && empty($description) && empty($criteria)) {
-                $hasEmptyTranslation++;
+                ++$hasEmptyTranslation;
             }
         }
 

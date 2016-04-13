@@ -10,7 +10,6 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
@@ -35,7 +34,7 @@ class FavouriteListener extends ContainerAware
         TokenStorageInterface $tokenStorage,
         Router $router,
         EngineInterface $templatingEngine
-    ){
+    ) {
         $this->om = $om;
         $this->tokenStorage = $tokenStorage;
         $this->router = $router;
@@ -53,14 +52,14 @@ class FavouriteListener extends ContainerAware
         $favourite = $this->om->getRepository('HeVinciFavouriteBundle:Favourite')
             ->findBy(array(
                 'resourceNode' => $nodeId,
-                'user' => $this->tokenStorage->getToken()->getUser()
+                'user' => $this->tokenStorage->getToken()->getUser(),
             ));
 
         $content = $this->templatingEngine->render(
             'HeVinciFavouriteBundle:Favourite:form.html.twig',
             array(
                 'isFavourite' => (bool) $favourite,
-                'nodeId' => $nodeId
+                'nodeId' => $nodeId,
             )
         );
 
@@ -81,7 +80,7 @@ class FavouriteListener extends ContainerAware
         $content = $this->templatingEngine->render(
             'HeVinciFavouriteBundle:widget:favourite.html.twig',
             array(
-                'favourites' => $favourites
+                'favourites' => $favourites,
             )
         );
 

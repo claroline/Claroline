@@ -6,11 +6,10 @@ use Innova\PathBundle\Manager\UserProgressionManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-
 use Innova\PathBundle\Entity\Step;
 
 /**
- * Class UserProgressionController
+ * Class UserProgressionController.
  *
  * @Route(
  *      "/progression",
@@ -21,13 +20,15 @@ use Innova\PathBundle\Entity\Step;
 class UserProgressionController
 {
     /**
-     * User Progression manager
+     * User Progression manager.
+     *
      * @var \Innova\PathBundle\Manager\UserProgressionManager
      */
     protected $userProgressionManager;
 
     /**
-     * Class constructor
+     * Class constructor.
+     *
      * @param \Innova\PathBundle\Manager\UserProgressionManager $userProgressionManager
      */
     public function __construct(UserProgressionManager $userProgressionManager)
@@ -36,9 +37,11 @@ class UserProgressionController
     }
 
     /**
-     * Log a new action from User (mark the the  step as to do)
+     * Log a new action from User (mark the the  step as to do).
+     *
      * @param \Innova\PathBundle\Entity\Step $step
-     * @param string $status
+     * @param string                         $status
+     *
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      *
      * @Route(
@@ -49,7 +52,7 @@ class UserProgressionController
      * )
      * @Method("POST")
      */
-    public function createAction(Step $step, $status = null, $authorized=0)
+    public function createAction(Step $step, $status = null, $authorized = 0)
     {
         $progression = $this->userProgressionManager->create($step, null, $status, $authorized);
 
@@ -57,9 +60,11 @@ class UserProgressionController
     }
 
     /**
-     * Update progression of a User
+     * Update progression of a User.
+     *
      * @param \Innova\PathBundle\Entity\Step $step
-     * @param string $status
+     * @param string                         $status
+     *
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      *
      * @Route(

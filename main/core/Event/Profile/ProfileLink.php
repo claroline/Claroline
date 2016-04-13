@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -8,9 +8,7 @@
  * 
  * Date: 5/5/15
  */
-
 namespace Claroline\CoreBundle\Event\Profile;
-
 
 class ProfileLink
 {
@@ -25,6 +23,7 @@ class ProfileLink
 
     /**
      * @param mixed $url
+     *
      * @return $this
      */
     public function setUrl($url)
@@ -44,6 +43,7 @@ class ProfileLink
 
     /**
      * @param mixed $name
+     *
      * @return $this
      */
     public function setName($name)
@@ -60,4 +60,4 @@ class ProfileLink
     {
         return $this->name;
     }
-} 
+}

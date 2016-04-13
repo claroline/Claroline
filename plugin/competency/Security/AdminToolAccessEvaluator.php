@@ -25,13 +25,12 @@ class AdminToolAccessEvaluator
      * })
      *
      * @param SecurityContextInterface $context
-     * @param EntityManagerInterface $em
+     * @param EntityManagerInterface   $em
      */
     public function __construct(
         SecurityContextInterface $context,
         EntityManagerInterface $em
-    )
-    {
+    ) {
         $this->securityContext = $context;
         $this->em = $em;
     }
@@ -40,7 +39,9 @@ class AdminToolAccessEvaluator
      * @DI\SecurityFunction("canOpenAdminTool(toolName)")
      *
      * @param string $toolName
+     *
      * @throws \Exception
+     *
      * @return bool
      */
     public function canOpenAdminTool($toolName)

@@ -29,6 +29,7 @@ class InternationalizationController extends Controller
      * @EXT\Template
      *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function formAction()
@@ -45,6 +46,7 @@ class InternationalizationController extends Controller
      * @EXT\Route("/internationalization/submit", name="claro_admin_i18n_submit")
      *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function submitAction()
@@ -62,7 +64,7 @@ class InternationalizationController extends Controller
             return new RedirectResponse($this->get('router')->generate('claro_admin_parameters_index'));
         }
 
-       return $this->render(
+        return $this->render(
            'ClarolineCoreBundle:Administration:Internationalization\form.html.twig',
            array('form' => $form->createView(), 'product' => $product)
        );

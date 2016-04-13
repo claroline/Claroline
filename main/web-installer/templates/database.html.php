@@ -20,13 +20,17 @@
         <?php $errors = $var('validation_errors') ?>
 
         <hr>
-        <div class="form-group <?php if (isset($errors['driver'])) echo 'has-error' ?>">
+        <div class="form-group <?php if (isset($errors['driver'])) {
+    echo 'has-error';
+} ?>">
             <label class="control-label col-sm-2">
                 <?php echo $trans('driver') ?>
             </label>
             <div class="col-sm-10">
                 <select name="driver" class="form-control">
-                    <option <?php if ($var('settings')->getDriver() === 'pdo_mysql') echo 'selected' ?>>
+                    <option <?php if ($var('settings')->getDriver() === 'pdo_mysql') {
+    echo 'selected';
+} ?>>
                         MySQL
                     </option>
                 </select>
@@ -37,7 +41,9 @@
                 </span>
             <?php endif ?>
         </div>
-        <div class="form-group <?php if (isset($errors['host'])) echo 'has-error' ?>">
+        <div class="form-group <?php if (isset($errors['host'])) {
+    echo 'has-error';
+} ?>">
             <label class="control-label col-sm-2">
                 <span class="required">*</span>
                 <?php echo $trans('host') ?>
@@ -55,7 +61,9 @@
                 </span>
             <?php endif ?>
         </div>
-        <div class="form-group <?php if (isset($errors['name'])) echo 'has-error' ?>">
+        <div class="form-group <?php if (isset($errors['name'])) {
+    echo 'has-error';
+} ?>">
             <label class="control-label col-sm-2">
                 <span class="required">*</span>
                 <?php echo $trans('database') ?>
@@ -73,7 +81,9 @@
                 </span>
             <?php endif ?>
         </div>
-        <div class="form-group <?php if (isset($errors['user'])) echo 'has-error' ?>">
+        <div class="form-group <?php if (isset($errors['user'])) {
+    echo 'has-error';
+} ?>">
             <label class="control-label col-sm-2">
                 <span class="required">*</span>
                 <?php echo $trans('user') ?>
@@ -91,7 +101,9 @@
                 </span>
             <?php endif ?>
         </div>
-        <div class="form-group <?php if (isset($errors['password'])) echo 'has-error' ?>">
+        <div class="form-group <?php if (isset($errors['password'])) {
+    echo 'has-error';
+} ?>">
             <label class="control-label col-sm-2">
                 <?php echo $trans('password') ?>
             </label>
@@ -108,7 +120,9 @@
                 </span>
             <?php endif ?>
         </div>
-        <div class="form-group <?php if (isset($errors['port'])) echo 'has-error' ?>">
+        <div class="form-group <?php if (isset($errors['port'])) {
+    echo 'has-error';
+} ?>">
             <label class="control-label col-sm-2">
                 <?php echo $trans('port') ?>
             </label>

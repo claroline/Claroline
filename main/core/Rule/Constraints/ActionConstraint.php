@@ -36,7 +36,7 @@ class ActionConstraint extends AbstractConstraint
      */
     public function isApplicableTo(Rule $rule)
     {
-        return (null !== $rule->getAction());
+        return null !== $rule->getAction();
     }
 
     /**
@@ -52,7 +52,7 @@ class ActionConstraint extends AbstractConstraint
         if ($foundType) {
             $type = $matches[1];
             $parts = explode(']]', $action);
-            $action = ($foundType) ? $parts[1]: $action;
+            $action = ($foundType) ? $parts[1] : $action;
 
             return $queryBuilder
                 ->join('l.resourceType', 'rt')

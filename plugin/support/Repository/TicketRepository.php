@@ -24,8 +24,7 @@ class TicketRepository extends EntityRepository
         $search,
         $orderedBy = 'creationDate',
         $order = 'DESC'
-    )
-    {
+    ) {
         $dql = "
             SELECT t
             FROM FormaLibre\SupportBundle\Entity\Ticket t
@@ -59,8 +58,7 @@ class TicketRepository extends EntityRepository
         $search,
         $orderedBy = 'num',
         $order = 'ASC'
-    )
-    {
+    ) {
         $dql = "
             SELECT t
             FROM FormaLibre\SupportBundle\Entity\Ticket t
@@ -97,8 +95,7 @@ class TicketRepository extends EntityRepository
         $level,
         $orderedBy = 'creationDate',
         $order = 'DESC'
-    )
-    {
+    ) {
         $dql = "
             SELECT t
             FROM FormaLibre\SupportBundle\Entity\Ticket t
@@ -119,8 +116,7 @@ class TicketRepository extends EntityRepository
         $search,
         $orderedBy = 'creationDate',
         $order = 'DESC'
-    )
-    {
+    ) {
         $dql = "
             SELECT t
             FROM FormaLibre\SupportBundle\Entity\Ticket t
@@ -154,8 +150,7 @@ class TicketRepository extends EntityRepository
         User $user,
         $orderedBy = 'creationDate',
         $order = 'DESC'
-    )
-    {
+    ) {
         $dql = "
             SELECT t
             FROM FormaLibre\SupportBundle\Entity\Ticket t
@@ -177,8 +172,7 @@ class TicketRepository extends EntityRepository
         $search,
         $orderedBy = 'creationDate',
         $order = 'DESC'
-    )
-    {
+    ) {
         $dql = "
             SELECT t
             FROM FormaLibre\SupportBundle\Entity\Ticket t
@@ -213,8 +207,7 @@ class TicketRepository extends EntityRepository
         User $user,
         $orderedBy = 'creationDate',
         $order = 'DESC'
-    )
-    {
+    ) {
         $dql = "
             SELECT t
             FROM FormaLibre\SupportBundle\Entity\Ticket t
@@ -237,8 +230,7 @@ class TicketRepository extends EntityRepository
         $search,
         $orderedBy = 'creationDate',
         $order = 'DESC'
-    )
-    {
+    ) {
         $dql = "
             SELECT t
             FROM FormaLibre\SupportBundle\Entity\Ticket t
@@ -273,8 +265,7 @@ class TicketRepository extends EntityRepository
         Type $type,
         $orderedBy = 'creationDate',
         $order = 'DESC'
-    )
-    {
+    ) {
         $dql = "
             SELECT t
             FROM FormaLibre\SupportBundle\Entity\Ticket t
@@ -297,8 +288,7 @@ class TicketRepository extends EntityRepository
         $search,
         $orderedBy = 'creationDate',
         $order = 'DESC'
-    )
-    {
+    ) {
         $dql = "
             SELECT t
             FROM FormaLibre\SupportBundle\Entity\Ticket t
@@ -335,8 +325,7 @@ class TicketRepository extends EntityRepository
         Type $type,
         $orderedBy = 'creationDate',
         $order = 'DESC'
-    )
-    {
+    ) {
         $dql = "
             SELECT t
             FROM FormaLibre\SupportBundle\Entity\Ticket t
@@ -362,8 +351,7 @@ class TicketRepository extends EntityRepository
         $search,
         $orderedBy = 'creationDate',
         $order = 'DESC'
-    )
-    {
+    ) {
         $dql = "
             SELECT t
             FROM FormaLibre\SupportBundle\Entity\Ticket t
@@ -402,8 +390,7 @@ class TicketRepository extends EntityRepository
         $status,
         $orderedBy = 'creationDate',
         $order = 'DESC'
-    )
-    {
+    ) {
         $dql = "
             SELECT t
             FROM FormaLibre\SupportBundle\Entity\Ticket t
@@ -426,8 +413,7 @@ class TicketRepository extends EntityRepository
         $search,
         $orderedBy = 'creationDate',
         $order = 'DESC'
-    )
-    {
+    ) {
         $dql = "
             SELECT t
             FROM FormaLibre\SupportBundle\Entity\Ticket t

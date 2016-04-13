@@ -6,7 +6,6 @@ use Claroline\CoreBundle\Entity\Activity\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use HeVinci\CompetencyBundle\Util\RepositoryTestCase;
 
@@ -251,10 +250,10 @@ class AbilityRepositoryTest extends RepositoryTestCase
 
     private function createLink($index)
     {
-        $competency = $this->persistCompetency('Competency ' . $index);
-        $ability = $this->persistAbility('Ability ' . $index);
-        $scale = $this->persistScale('Scale ' . $index);
-        $level = $this->persistLevel('Level ' . $index, $scale, $index);
+        $competency = $this->persistCompetency('Competency '.$index);
+        $ability = $this->persistAbility('Ability '.$index);
+        $scale = $this->persistScale('Scale '.$index);
+        $level = $this->persistLevel('Level '.$index, $scale, $index);
         $this->persistLink($competency, $ability, $level);
     }
 

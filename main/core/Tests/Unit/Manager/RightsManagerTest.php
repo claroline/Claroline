@@ -88,13 +88,13 @@ class RightsManagerTest extends MockeryTestCase
             'open' => false,
             'delete' => true,
             'edit' => false,
-            'export' => true
+            'export' => true,
         );
 
         $types = array(
             new \Claroline\CoreBundle\Entity\Resource\ResourceType(),
             new \Claroline\CoreBundle\Entity\Resource\ResourceType(),
-            new \Claroline\CoreBundle\Entity\Resource\ResourceType()
+            new \Claroline\CoreBundle\Entity\Resource\ResourceType(),
         );
         $newRights = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceRights');
         $this->om->shouldReceive('factory')->with('Claroline\CoreBundle\Entity\Resource\ResourceRights')
@@ -119,7 +119,7 @@ class RightsManagerTest extends MockeryTestCase
             'open' => false,
             'delete' => true,
             'edit' => false,
-            'export' => true
+            'export' => true,
         );
 
         $node = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
@@ -141,7 +141,7 @@ class RightsManagerTest extends MockeryTestCase
             new \Claroline\CoreBundle\Entity\Resource\ResourceType(),
             new \Claroline\CoreBundle\Entity\Resource\ResourceType(),
             new \Claroline\CoreBundle\Entity\Resource\ResourceType(),
-            new \Claroline\CoreBundle\Entity\Resource\ResourceType()
+            new \Claroline\CoreBundle\Entity\Resource\ResourceType(),
         );
 
         $node = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
@@ -171,7 +171,7 @@ class RightsManagerTest extends MockeryTestCase
             'open' => false,
             'delete' => true,
             'edit' => false,
-            'export' => true
+            'export' => true,
         );
 
         $this->rightsRepo
@@ -209,7 +209,7 @@ class RightsManagerTest extends MockeryTestCase
             'open' => false,
             'delete' => true,
             'edit' => false,
-            'export' => true
+            'export' => true,
         );
 
         $this->maskManager->shouldReceive('encodeMask')->once()->with($perms, $type)->andReturn(123);
@@ -223,7 +223,7 @@ class RightsManagerTest extends MockeryTestCase
         $role = $this->mock('Claroline\CoreBundle\Entity\Role');
         $baseRoles = array($role);
         $perms = array(
-            'ROLE_WS_MANAGER' => array('perms' => 'perms')
+            'ROLE_WS_MANAGER' => array('perms' => 'perms'),
         );
 
         $this->roleManager->shouldReceive('getRoleBaseName')
@@ -371,7 +371,7 @@ class RightsManagerTest extends MockeryTestCase
             );
         } else {
             $stringMocked = '[';
-                $stringMocked .= array_pop($mockedMethods);
+            $stringMocked .= array_pop($mockedMethods);
 
             foreach ($mockedMethods as $mockedMethod) {
                 $stringMocked .= ",{$mockedMethod}";
@@ -380,13 +380,13 @@ class RightsManagerTest extends MockeryTestCase
             $stringMocked .= ']';
 
             return $this->mock(
-                'Claroline\CoreBundle\Manager\RightsManager' . $stringMocked,
+                'Claroline\CoreBundle\Manager\RightsManager'.$stringMocked,
                 array(
                     $this->translator,
                     $this->om,
                     $this->dispatcher,
                     $this->roleManager,
-                    $this->maskManager
+                    $this->maskManager,
                 )
             );
         }

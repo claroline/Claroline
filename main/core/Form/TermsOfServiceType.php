@@ -20,7 +20,7 @@ class TermsOfServiceType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $content = "";
+        $content = '';
 
         if ($builder->getData() instanceof Content) {
             $content = $builder->getData()->getContent();
@@ -39,7 +39,7 @@ class TermsOfServiceType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
-            array('translation_domain' => 'platform','validation_groups' => array('registration', 'Default'))
+            array('translation_domain' => 'platform', 'validation_groups' => array('registration', 'Default'))
         );
     }
 }

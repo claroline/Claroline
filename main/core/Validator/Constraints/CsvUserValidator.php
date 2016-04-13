@@ -50,8 +50,7 @@ class CsvUserValidator extends ConstraintValidator
         UserManager $userManager,
         ValidatorInterface $validator,
         ClaroUtilities $ut
-    )
-    {
+    ) {
         $this->authenticationManager = $authenticationManager;
         $this->om = $om;
         $this->translator = $translator;
@@ -74,6 +73,7 @@ class CsvUserValidator extends ConstraintValidator
             if (trim($line) != '') {
                 if ($nbElements < 5) {
                     $this->context->addViolation($constraint->message);
+
                     return;
                 }
             }
@@ -85,11 +85,11 @@ class CsvUserValidator extends ConstraintValidator
         if ($mode === 1) {
             $currentDate = new \DateTime();
             $timestamp = $currentDate->getTimestamp();
-            $fakeUsername = '@@@fake_username_' . $timestamp . '@@@';
-            $fakeMail = 'fake_email_' .
-                $timestamp .
-                '@fake-' .
-                $timestamp .
+            $fakeUsername = '@@@fake_username_'.$timestamp.'@@@';
+            $fakeMail = 'fake_email_'.
+                $timestamp.
+                '@fake-'.
+                $timestamp.
                 '-claroline-connect.com';
         }
 
@@ -103,34 +103,34 @@ class CsvUserValidator extends ConstraintValidator
                 $email = $user[4];
 
                 if (isset($user[5])) {
-                    $code = trim($user[5]) === '' ? null: $user[5];
+                    $code = trim($user[5]) === '' ? null : $user[5];
                 } else {
                     $code = null;
                 }
 
                 if (isset($user[6])) {
-                    $phone = trim($user[6]) === '' ? null: $user[6];
+                    $phone = trim($user[6]) === '' ? null : $user[6];
                 } else {
                     $phone = null;
                 }
 
                 if (isset($user[7])) {
-                    $authentication = trim($user[7]) === '' ? null: $user[7];
+                    $authentication = trim($user[7]) === '' ? null : $user[7];
                 } else {
                     $authentication = null;
                 }
 
                 if (isset($user[8])) {
-                    $modelName = trim($user[7]) === '' ? null: $user[7];
+                    $modelName = trim($user[7]) === '' ? null : $user[7];
                 } else {
                     $modelName = null;
                 }
 
                 (!array_key_exists($email, $mails)) ?
-                    $mails[$email] = array($i + 1):
+                    $mails[$email] = array($i + 1) :
                     $mails[$email][] = $i + 1;
                 (!array_key_exists($username, $usernames)) ?
-                    $usernames[$username] = array($i + 1):
+                    $usernames[$username] = array($i + 1) :
                     $usernames[$username][] = $i + 1;
 
                 $existingUser = null;
@@ -147,11 +147,11 @@ class CsvUserValidator extends ConstraintValidator
                             array('%line%' => $i + 1),
                             'platform'
                         );
-                        $msg .= ' ' . $this->translator->trans(
+                        $msg .= ' '.$this->translator->trans(
                             'username_and_email_from_two_different_users',
                             array(
                                 '%username%' => $username,
-                                '%email%' => $email
+                                '%email%' => $email,
                             ),
                             'platform'
                         );
@@ -169,7 +169,6 @@ class CsvUserValidator extends ConstraintValidator
 
                     if ($upperExistingUsername === $upperUsername &&
                         $upperExistingMail === $upperMail) {
-
                         $existingUser->setUsername($fakeUsername);
                         $existingUser->setMail($fakeMail);
                     } elseif ($upperExistingUsername === $upperUsername) {
@@ -209,7 +208,7 @@ class CsvUserValidator extends ConstraintValidator
                             'authentication_invalid',
                             array('%authentication%' => $authentication, '%line%' => $i + 1),
                             'platform'
-                        ) . ' ';
+                        ).' ';
 
                         $this->context->addViolation($msg);
                     }
@@ -217,8 +216,8 @@ class CsvUserValidator extends ConstraintValidator
 
                 foreach ($errors as $error) {
                     $this->context->addViolation(
-                        $this->translator->trans('line_number', array('%line%' => $i + 1), 'platform') . ' ' .
-                        $error->getInvalidValue() . ' : ' . $error->getMessage()
+                        $this->translator->trans('line_number', array('%line%' => $i + 1), 'platform').' '.
+                        $error->getInvalidValue().' : '.$error->getMessage()
                     );
                 }
             }
@@ -232,31 +231,29 @@ class CsvUserValidator extends ConstraintValidator
                     'model_invalid',
                     array('%model%' => $modelName, '%line%' => $i + 1),
                     'platform'
-                ) . ' ';
+                ).' ';
                 $this->context->addViolation($msg);
             }
         }
 
         foreach ($usernames as $username => $lines) {
-
             if (count($lines) > 1) {
                 $msg = $this->translator->trans(
                     'username_found_at',
                     array('%username%' => $username, '%lines%' => $this->getLines($lines)),
                     'platform'
-                ) . ' ';
+                ).' ';
                 $this->context->addViolation($msg);
             }
         }
 
         foreach ($mails as $mail => $lines) {
-
             if (count($lines) > 1) {
                 $msg = $this->translator->trans(
                     'email_found_at',
                     array('%email%' => $mail, '%lines%' => $this->getLines($lines)),
                     'platform'
-                ) . ' ';
+                ).' ';
                 $this->context->addViolation($msg);
             }
         }

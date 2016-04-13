@@ -19,7 +19,7 @@ class JavascriptSafeTransformer implements  DataTransformerInterface
         'onload', 'onunload', 'onclick', 'ondblclick', 'onmousedown',
         'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout',
         'onfocus', 'onblur', 'onkeypress', 'onkeydown', 'onkeyup',
-        'onsubmit', 'onreset', 'onselect', 'onchange'
+        'onsubmit', 'onreset', 'onselect', 'onchange',
     );
 
     public function transform($value)
@@ -37,8 +37,8 @@ class JavascriptSafeTransformer implements  DataTransformerInterface
         $scriptPattern = '#<[\s]*script[^>]*>.*<[\s]*/[\s]*script[^>]*>#i';
         $onEventPattern =
             '#<[\s]*[^>]+([\s]*('
-            . implode('|', $this->blacklistedAttributes)
-            . ')[\s]*=[\s]*(["][\s]*[^>"]*["]|[\'][\s]*[^>\']*[\'])[\s]*)[^>]*>#i';
+            .implode('|', $this->blacklistedAttributes)
+            .')[\s]*=[\s]*(["][\s]*[^>"]*["]|[\'][\s]*[^>\']*[\'])[\s]*)[^>]*>#i';
 
         return preg_replace_callback(
             $onEventPattern,

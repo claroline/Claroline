@@ -5,11 +5,10 @@ namespace Icap\DropzoneBundle\Event\Log;
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Icap\DropzoneBundle\Entity\Criterion;
-use Icap\DropzoneBundle\Entity\Drop;
 use Icap\DropzoneBundle\Entity\Dropzone;
 
-class LogCriterionUpdateEvent extends AbstractLogResourceEvent {
-
+class LogCriterionUpdateEvent extends AbstractLogResourceEvent
+{
     const ACTION = 'resource-icap_dropzone-criterion_update';
 
     /**
@@ -21,14 +20,14 @@ class LogCriterionUpdateEvent extends AbstractLogResourceEvent {
     public function __construct(Dropzone $dropzone, $dropzoneChangeSet, Criterion $criterion, $criterionChangeSet)
     {
         $details = array(
-            'dropzone'  => array(
+            'dropzone' => array(
                 'id' => $dropzone->getId(),
                 'changeSet' => $dropzoneChangeSet,
             ),
             'criterion' => array(
                 'id' => $criterion->getId(),
                 'changeSet' => $criterionChangeSet,
-            )
+            ),
         );
 
         parent::__construct($dropzone->getResourceNode(), $details);

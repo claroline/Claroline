@@ -19,7 +19,7 @@ class UserFixture extends DataFixture
     public function unload()
     {
         $userNames = array_map(function ($user) {
-            return  strtolower($user[0] . $user[1]);
+            return  strtolower($user[0].$user[1]);
         }, $this->loadUserData());
 
         $this->createQueryBuilder()
@@ -39,7 +39,7 @@ class UserFixture extends DataFixture
 
     private function loadUserData()
     {
-        return $this->loadCsvData(__DIR__ . '/../files/users.csv', ' ');
+        return $this->loadCsvData(__DIR__.'/../files/users.csv', ' ');
     }
 
     private function buildUser($firstName, $lastName)
@@ -47,10 +47,10 @@ class UserFixture extends DataFixture
         $user = new User();
         $user->setFirstName($firstName);
         $user->setLastName($lastName);
-        $user->setUsername($username = strtolower($firstName . $lastName));
+        $user->setUsername($username = strtolower($firstName.$lastName));
         $user->setPassword($username);
         $user->setMail("{$username}@mail.com");
 
         return $user;
     }
-} 
+}

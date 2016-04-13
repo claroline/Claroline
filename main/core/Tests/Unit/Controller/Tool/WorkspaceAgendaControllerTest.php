@@ -78,13 +78,12 @@ class WorkspaceAgendaControllerTest extends MockeryTestCase
         $event->shouldReceive('getDescription')->once()->andReturn('blabla');
         $response = new Response(
             json_encode(
-                array('id' => '1'
-                    ,'title' => 'title',
+                array('id' => '1', 'title' => 'title',
                     'start' => '123456',
                     'end' => '123457',
                     'color' => '#BBBDDD',
                     'allDay' => false,
-                    'description' => 'blabla'
+                    'description' => 'blabla',
                 )
             ),
             200,
@@ -96,12 +95,10 @@ class WorkspaceAgendaControllerTest extends MockeryTestCase
             $response->getContent(),
             $this->getController(array('checkUserIsAllowed'))->addEventAction($workspace)->getContent()
         );
-
     }
 
     public function testUpdateAction()
     {
-
         $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $user = new User();
@@ -127,10 +124,10 @@ class WorkspaceAgendaControllerTest extends MockeryTestCase
              ->once()
              ->with(FormFactory::TYPE_AGENDA, array(), $event)
              ->andReturn($form);
-             $form->shouldReceive('handleRequest')
+        $form->shouldReceive('handleRequest')
                  ->once()
                  ->with($this->request);
-             $form->shouldReceive('isValid')
+        $form->shouldReceive('isValid')
                  ->once()
                  ->andReturn(true);
         $event->shouldReceive('setAllDay')->with(true)->once();
@@ -153,7 +150,7 @@ class WorkspaceAgendaControllerTest extends MockeryTestCase
                     'end' => '123457',
                     'color' => '#BBBDDD',
                     'allDay' => false,
-                    'description' => 'blabla'
+                    'description' => 'blabla',
                 )
             ),
             200,
@@ -168,9 +165,9 @@ class WorkspaceAgendaControllerTest extends MockeryTestCase
             'Symfony\Component\HttpFoundation\Response',
             $controller
         );
-     }
+    }
 
-    private function getController (array $mockedMethods = array())
+    private function getController(array $mockedMethods = array())
     {
         if (count($mockedMethods) === 0) {
             return new WorkspaceAgendaController(
@@ -182,7 +179,7 @@ class WorkspaceAgendaControllerTest extends MockeryTestCase
             );
         } else {
             $stringMocked = '[';
-                $stringMocked .= array_pop($mockedMethods);
+            $stringMocked .= array_pop($mockedMethods);
 
             foreach ($mockedMethods as $mockedMethod) {
                 $stringMocked .= ",{$mockedMethod}";
@@ -191,13 +188,13 @@ class WorkspaceAgendaControllerTest extends MockeryTestCase
             $stringMocked .= ']';
 
             return $this->mock(
-                'Claroline\CoreBundle\Controller\Tool\WorkspaceAgendaController' . $stringMocked,
+                'Claroline\CoreBundle\Controller\Tool\WorkspaceAgendaController'.$stringMocked,
                 array(
                     $this->security,
                     $this->formFactory,
                     $this->om,
                     $this->request,
-                    $this->roleManager
+                    $this->roleManager,
                 )
             );
         }

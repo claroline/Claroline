@@ -73,7 +73,7 @@ class OauthController extends Controller
         return array(
             'clients' => $clients,
             'friendRequests' => $friendRequests,
-            'pendingFriends' => $pendingFriends
+            'pendingFriends' => $pendingFriends,
         );
     }
 
@@ -93,7 +93,7 @@ class OauthController extends Controller
         $clients = $this->oauthManager->findVisibleClients();
 
         return array(
-            'clients' => $clients
+            'clients' => $clients,
         );
     }
 
@@ -152,7 +152,9 @@ class OauthController extends Controller
         if ($form->isValid()) {
             $grantTypes = $form->get('allowed_grant_types')->getData();
             $client = $this->oauthManager->createClient();
-            if ($uri = $form->get('uri')->getData()) $client->setRedirectUris(array($uri));
+            if ($uri = $form->get('uri')->getData()) {
+                $client->setRedirectUris(array($uri));
+            }
             $client->setAllowedGrantTypes($grantTypes);
             $client->setName($form->get('name')->getData());
             $this->oauthManager->updateClient($client);
@@ -161,7 +163,7 @@ class OauthController extends Controller
                 'id' => $client->getId(),
                 'name' => $form->get('name')->getData(),
                 'uri' => $form->get('uri')->getData(),
-                'grant_type' => $grantTypes
+                'grant_type' => $grantTypes,
             ));
         }
 
@@ -186,7 +188,9 @@ class OauthController extends Controller
 
         if ($form->isValid()) {
             $grantTypes = $form->get('allowed_grant_types')->getData();
-            if ($uri = $form->get('uri')->getData()) $client->setRedirectUris(array($uri));
+            if ($uri = $form->get('uri')->getData()) {
+                $client->setRedirectUris(array($uri));
+            }
             $client->setAllowedGrantTypes($grantTypes);
             $client->setName($form->get('name')->getData());
             $this->oauthManager->updateClient($client);
@@ -195,7 +199,7 @@ class OauthController extends Controller
                 'id' => $client->getId(),
                 'name' => $form->get('name')->getData(),
                 'uri' => $form->get('uri')->getData(),
-                'grant_type' => $grantTypes
+                'grant_type' => $grantTypes,
             ));
         }
 
@@ -257,7 +261,7 @@ class OauthController extends Controller
 
         if ($form->isValid()) {
             $request = $form->getData();
-            $host = $this->container->get('request')->getSchemeAndHttpHost() .
+            $host = $this->container->get('request')->getSchemeAndHttpHost().
                 $this->container->get('router')->getContext()->getBaseUrl();
             try {
                 $data = $this->oauthManager->createFriendRequest($request, $host);
@@ -269,7 +273,7 @@ class OauthController extends Controller
                     'platform')
                 ));
 
-                return array("form" => $form->createView());
+                return array('form' => $form->createView());
             }
 
             return new JsonResponse(array(
@@ -277,11 +281,11 @@ class OauthController extends Controller
                 'name' => $request->getName(),
                 'host' => $request->getHost(),
                 'success' => is_array($data),
-                'data' => $data
+                'data' => $data,
             ));
         }
 
-        return array("form" => $form->createView());
+        return array('form' => $form->createView());
     }
 
     /**

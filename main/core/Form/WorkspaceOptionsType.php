@@ -30,7 +30,7 @@ class WorkspaceOptionsType extends AbstractType
         $details = is_null($this->workspaceOptions) ?
             array() :
             $this->workspaceOptions->getDetails();
-        $backgroundColor = isset($details['background_color']) ? 
+        $backgroundColor = isset($details['background_color']) ?
             $details['background_color'] :
             null;
         $hideToolsMenu = isset($details['hide_tools_menu']) ?
@@ -53,7 +53,7 @@ class WorkspaceOptionsType extends AbstractType
                 'required' => false,
                 'mapped' => false,
                 'data' => $hideToolsMenu,
-                'label' => 'hide_tools_menu'
+                'label' => 'hide_tools_menu',
             )
         );
         $builder->add(
@@ -63,7 +63,7 @@ class WorkspaceOptionsType extends AbstractType
                 'required' => false,
                 'mapped' => false,
                 'data' => $hideBreadcrumb,
-                'label' => 'hide_breadcrumb'
+                'label' => 'hide_breadcrumb',
             )
         );
         $builder->add(
@@ -73,7 +73,7 @@ class WorkspaceOptionsType extends AbstractType
                 'required' => false,
                 'mapped' => false,
                 'data' => $backgroundColor,
-                'label' => 'background_color'
+                'label' => 'background_color',
             )
         );
         $builder->add(
@@ -83,7 +83,7 @@ class WorkspaceOptionsType extends AbstractType
                 'required' => false,
                 'mapped' => false,
                 'data' => $useDefaultResource,
-                'label' => 'open_resource_when_opening_ws'
+                'label' => 'open_resource_when_opening_ws',
             )
         );
         $builder->add(
@@ -93,7 +93,7 @@ class WorkspaceOptionsType extends AbstractType
                 'required' => false,
                 'mapped' => false,
                 'data' => $defaultResourceId,
-                'label' => 'resource_to_open'
+                'label' => 'resource_to_open',
             )
         );
     }

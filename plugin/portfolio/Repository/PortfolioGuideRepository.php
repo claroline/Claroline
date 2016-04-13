@@ -24,6 +24,6 @@ class PortfolioGuideRepository extends EntityRepository
             ->setParameter('user', $user)
         ;
 
-        return $executeQuery ? $queryBuilder->getQuery()->getOneOrNullResult(): $queryBuilder->getQuery();
+        return $executeQuery ? $queryBuilder->getQuery()->getOneOrNullResult() : $queryBuilder->getQuery();
     }
 }

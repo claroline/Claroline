@@ -32,10 +32,11 @@ class FormHandler
     /**
      * Returns whether a form is valid and stores it internally for future use.
      *
-     * @param string    $formReference  The form type name
-     * @param Request   $request        The request to be bound
-     * @param mixed     $data           An entity or array to be bound
-     * @param array     $options        The options to be passed to the form builder
+     * @param string  $formReference The form type name
+     * @param Request $request       The request to be bound
+     * @param mixed   $data          An entity or array to be bound
+     * @param array   $options       The options to be passed to the form builder
+     *
      * @return bool
      */
     public function isValid($formReference, Request $request, $data = null, array $options = [])
@@ -50,6 +51,7 @@ class FormHandler
      * Returns the data associated to the current form.
      *
      * @return mixed
+     *
      * @throws \LogicException if no form has been handled yet
      */
     public function getData()
@@ -64,9 +66,11 @@ class FormHandler
      * @param string $formReference The form type name
      * @param mixed  $data          An entity or array to be bound
      * @param array  $options       The options to be passed to the form builder
+     *
      * @return mixed
-     * @throws \LogicException      if no reference is passed and
-     *                              no form has been handled yet
+     *
+     * @throws \LogicException if no reference is passed and
+     *                         no form has been handled yet
      */
     public function getView($formReference = null, $data = null, array $options = [])
     {

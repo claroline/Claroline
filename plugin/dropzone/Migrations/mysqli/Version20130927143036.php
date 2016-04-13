@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Auto-generated migration based on mapping information: modify it with caution
+ * Auto-generated migration based on mapping information: modify it with caution.
  *
  * Generation date: 2013/09/27 02:30:38
  */
@@ -14,7 +14,7 @@ class Version20130927143036 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             CREATE TABLE icap__dropzonebundle_correction (
                 id INT AUTO_INCREMENT NOT NULL, 
                 user_id INT NOT NULL, 
@@ -35,8 +35,8 @@ class Version20130927143036 extends AbstractMigration
                 INDEX IDX_CDA81F40A8C6E7BD (drop_zone_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TABLE icap__dropzonebundle_criterion (
                 id INT AUTO_INCREMENT NOT NULL, 
                 drop_zone_id INT NOT NULL, 
@@ -44,8 +44,8 @@ class Version20130927143036 extends AbstractMigration
                 INDEX IDX_F94B3BA7A8C6E7BD (drop_zone_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TABLE icap__dropzonebundle_document (
                 id INT AUTO_INCREMENT NOT NULL, 
                 resource_node_id INT DEFAULT NULL, 
@@ -56,8 +56,8 @@ class Version20130927143036 extends AbstractMigration
                 INDEX IDX_744084244D224760 (drop_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TABLE icap__dropzonebundle_drop (
                 id INT AUTO_INCREMENT NOT NULL, 
                 drop_zone_id INT NOT NULL, 
@@ -74,8 +74,8 @@ class Version20130927143036 extends AbstractMigration
                 UNIQUE INDEX unique_drop_number_in_drop_zone (drop_zone_id, number), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TABLE icap__dropzonebundle_dropzone (
                 id INT AUTO_INCREMENT NOT NULL, 
                 hidden_directory_id INT DEFAULT NULL, 
@@ -103,8 +103,8 @@ class Version20130927143036 extends AbstractMigration
                 UNIQUE INDEX UNIQ_6782FC23B87FAB32 (resourceNode_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TABLE icap__dropzonebundle_grade (
                 id INT AUTO_INCREMENT NOT NULL, 
                 criterion_id INT NOT NULL, 
@@ -115,128 +115,128 @@ class Version20130927143036 extends AbstractMigration
                 UNIQUE INDEX unique_grade_for_criterion_and_correction (criterion_id, correction_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__dropzonebundle_correction 
             ADD CONSTRAINT FK_CDA81F40A76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id)
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__dropzonebundle_correction 
             ADD CONSTRAINT FK_CDA81F404D224760 FOREIGN KEY (drop_id) 
             REFERENCES icap__dropzonebundle_drop (id) 
             ON DELETE SET NULL
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__dropzonebundle_correction 
             ADD CONSTRAINT FK_CDA81F40A8C6E7BD FOREIGN KEY (drop_zone_id) 
             REFERENCES icap__dropzonebundle_dropzone (id) 
             ON DELETE CASCADE
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__dropzonebundle_criterion 
             ADD CONSTRAINT FK_F94B3BA7A8C6E7BD FOREIGN KEY (drop_zone_id) 
             REFERENCES icap__dropzonebundle_dropzone (id) 
             ON DELETE CASCADE
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__dropzonebundle_document 
             ADD CONSTRAINT FK_744084241BAD783F FOREIGN KEY (resource_node_id) 
             REFERENCES claro_resource_node (id) 
             ON DELETE SET NULL
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__dropzonebundle_document 
             ADD CONSTRAINT FK_744084244D224760 FOREIGN KEY (drop_id) 
             REFERENCES icap__dropzonebundle_drop (id)
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__dropzonebundle_drop 
             ADD CONSTRAINT FK_3AD19BA6A8C6E7BD FOREIGN KEY (drop_zone_id) 
             REFERENCES icap__dropzonebundle_dropzone (id)
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__dropzonebundle_drop 
             ADD CONSTRAINT FK_3AD19BA6A76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id)
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__dropzonebundle_drop 
             ADD CONSTRAINT FK_3AD19BA65342CDF FOREIGN KEY (hidden_directory_id) 
             REFERENCES claro_resource_node (id)
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__dropzonebundle_dropzone 
             ADD CONSTRAINT FK_6782FC235342CDF FOREIGN KEY (hidden_directory_id) 
             REFERENCES claro_resource_node (id)
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__dropzonebundle_dropzone 
             ADD CONSTRAINT FK_6782FC23B87FAB32 FOREIGN KEY (resourceNode_id) 
             REFERENCES claro_resource_node (id) 
             ON DELETE CASCADE
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__dropzonebundle_grade 
             ADD CONSTRAINT FK_B3C52D9397766307 FOREIGN KEY (criterion_id) 
             REFERENCES icap__dropzonebundle_criterion (id) 
             ON DELETE CASCADE
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__dropzonebundle_grade 
             ADD CONSTRAINT FK_B3C52D9394AE086B FOREIGN KEY (correction_id) 
             REFERENCES icap__dropzonebundle_correction (id) 
             ON DELETE CASCADE
-        ");
+        ');
     }
 
     public function down(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE icap__dropzonebundle_grade 
             DROP FOREIGN KEY FK_B3C52D9394AE086B
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__dropzonebundle_grade 
             DROP FOREIGN KEY FK_B3C52D9397766307
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__dropzonebundle_correction 
             DROP FOREIGN KEY FK_CDA81F404D224760
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__dropzonebundle_document 
             DROP FOREIGN KEY FK_744084244D224760
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__dropzonebundle_correction 
             DROP FOREIGN KEY FK_CDA81F40A8C6E7BD
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__dropzonebundle_criterion 
             DROP FOREIGN KEY FK_F94B3BA7A8C6E7BD
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__dropzonebundle_drop 
             DROP FOREIGN KEY FK_3AD19BA6A8C6E7BD
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE icap__dropzonebundle_correction
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE icap__dropzonebundle_criterion
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE icap__dropzonebundle_document
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE icap__dropzonebundle_drop
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE icap__dropzonebundle_dropzone
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE icap__dropzonebundle_grade
-        ");
+        ');
     }
 }

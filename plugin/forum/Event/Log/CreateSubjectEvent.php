@@ -25,14 +25,14 @@ class CreateSubjectEvent extends AbstractLogResourceEvent
     {
         $details = array(
             'subject' => array(
-                'id' => $subject->getId()
+                'id' => $subject->getId(),
             ),
             'category' => array(
-                'id' => $subject->getCategory()->getId()
+                'id' => $subject->getCategory()->getId(),
             ),
             'forum' => array(
-                'id' => $subject->getCategory()->getForum()->getId()
-            )
+                'id' => $subject->getCategory()->getForum()->getId(),
+            ),
         );
 
         parent::__construct($subject->getCategory()->getForum()->getResourceNode(), $details);

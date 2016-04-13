@@ -16,8 +16,8 @@ use Knp\Menu\ItemInterface;
 use Knp\Menu\Renderer\ListRenderer;
 
 /**
- * Class WorkspaceAdditionalActionsMenu
- * @package Claroline\CoreBundle\Menu
+ * Class WorkspaceAdditionalActionsMenu.
+ *
  * @DI\Service("claroline.menu.workspace_additional_actions_renderer")
  * @DI\Tag("knp_menu.renderer", attributes = {"name" = "knp_menu.renderer", "alias"="workspace_additional_actions"})
  */
@@ -34,16 +34,15 @@ class WorkspaceAdditionalActionsMenu extends ListRenderer
         $matcher,
         $defaultOptions,
         $charset
-    )
-    {
-        $defaultOptions['leaf_class'] = $defaultOptions["branch_class"] = "btn btn-default workspace-additional-action";
+    ) {
+        $defaultOptions['leaf_class'] = $defaultOptions['branch_class'] = 'btn btn-default workspace-additional-action';
         parent::__construct($matcher, $defaultOptions, $charset);
     }
 
     protected function renderLinkElement(ItemInterface $item, array $options)
     {
-        $uri = $item->getExtra('href') ? $item->getExtra('href'): $item->getUri();
-        $displayMode = $item->getExtra('display') ? $item->getExtra('display'): 'normal';
+        $uri = $item->getExtra('href') ? $item->getExtra('href') : $item->getUri();
+        $displayMode = $item->getExtra('display') ? $item->getExtra('display') : 'normal';
 
         return sprintf(
             '<i class="%s workspace-action" data-url="%s" data-toggle="tooltip" data-placement="left" title="%s" data-display-mode="%s"></i>',

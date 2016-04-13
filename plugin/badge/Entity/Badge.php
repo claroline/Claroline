@@ -34,17 +34,17 @@ class Badge extends Rulable
 {
     use SoftDeleteableEntity;
 
-    const EXPIRE_PERIOD_DAY       = 0;
+    const EXPIRE_PERIOD_DAY = 0;
     const EXPIRE_PERIOD_DAY_LABEL = 'day';
-    const EXPIRE_PERIOD_WEEK       = 1;
+    const EXPIRE_PERIOD_WEEK = 1;
     const EXPIRE_PERIOD_WEEK_LABEL = 'week';
-    const EXPIRE_PERIOD_MONTH       = 2;
+    const EXPIRE_PERIOD_MONTH = 2;
     const EXPIRE_PERIOD_MONTH_LABEL = 'month';
-    const EXPIRE_PERIOD_YEAR       = 3;
+    const EXPIRE_PERIOD_YEAR = 3;
     const EXPIRE_PERIOD_YEAR_LABEL = 'year';
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -54,7 +54,7 @@ class Badge extends Rulable
     protected $id;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(type="smallint", nullable=false)
      * @Expose
@@ -64,7 +64,7 @@ class Badge extends Rulable
     protected $version = 1;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="automatic_award", type="boolean", nullable=true)
      * @Expose
@@ -80,14 +80,14 @@ class Badge extends Rulable
     protected $imagePath;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_expiring", type="boolean", options={"default": 0})
      */
     protected $isExpiring = false;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="expire_duration", type="integer", nullable=true)
      * @Assert\GreaterThan(value = 0)
@@ -95,7 +95,7 @@ class Badge extends Rulable
     protected $expireDuration;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="expire_period", type="smallint", nullable=true)
      */
@@ -167,8 +167,8 @@ class Badge extends Rulable
     public function __construct()
     {
         $this->translations = new ArrayCollection();
-        $this->userBadges   = new ArrayCollection();
-        $this->badgeRules   = new ArrayCollection();
+        $this->userBadges = new ArrayCollection();
+        $this->badgeRules = new ArrayCollection();
     }
 
     /**
@@ -272,7 +272,7 @@ class Badge extends Rulable
             }
         }
 
-        return null;
+        return;
     }
 
     public function __get($name)
@@ -291,27 +291,26 @@ class Badge extends Rulable
             }
 
             return $translation;
-        }
-        elseif (preg_match('/Name|Description|Criteria$/', $name, $matches)) {
+        } elseif (preg_match('/Name|Description|Criteria$/', $name, $matches)) {
             //Usefull for badge rule form when wanted frName on a badge
             $searchedLocale = substr($name, 0, -strlen($matches[0]));
-            $translation    = $this->getTranslationForLocale($searchedLocale);
+            $translation = $this->getTranslationForLocale($searchedLocale);
 
             if (null !== $translation) {
-                return $translation->{'get' . $matches[0]}();
+                return $translation->{'get'.$matches[0]}();
             }
 
-            return null;
+            return;
         }
 
         $trace = debug_backtrace();
         trigger_error(
-            'Undefined property via __get(): ' . $name .
-            ' in ' . $trace[0]['file'] .
-            ' on line ' . $trace[0]['line'],
+            'Undefined property via __get(): '.$name.
+            ' in '.$trace[0]['file'].
+            ' on line '.$trace[0]['line'],
             E_USER_NOTICE);
 
-        return null;
+        return;
     }
 
     public function __set($name, $value)
@@ -326,16 +325,17 @@ class Badge extends Rulable
 
         $trace = debug_backtrace();
         trigger_error(
-            'Undefined property via __set(): ' . $name .
-            ' in ' . $trace[0]['file'] .
-            ' on line ' . $trace[0]['line'],
+            'Undefined property via __set(): '.$name.
+            ' in '.$trace[0]['file'].
+            ' on line '.$trace[0]['line'],
             E_USER_NOTICE);
 
-        return null;
+        return;
     }
 
     /**
-     * @param  BadgeTranslation $translation
+     * @param BadgeTranslation $translation
+     *
      * @return Badge
      */
     public function addTranslation(BadgeTranslation $translation)
@@ -349,7 +349,8 @@ class Badge extends Rulable
     }
 
     /**
-     * @param  BadgeTranslation $translation
+     * @param BadgeTranslation $translation
+     *
      * @return Badge
      */
     public function removeTranslation(BadgeTranslation $translation)
@@ -393,6 +394,7 @@ class Badge extends Rulable
 
     /**
      * @throws \InvalidArgumentException
+     *
      * @return null|string
      */
     public function getLocale()
@@ -448,6 +450,7 @@ class Badge extends Rulable
      * @param string $locale
      *
      * @throws \InvalidArgumentException
+     *
      * @return string
      */
     public function getName($locale = null)
@@ -463,6 +466,7 @@ class Badge extends Rulable
      * @param string $locale
      *
      * @throws \InvalidArgumentException
+     *
      * @return string
      */
     public function getDescription($locale = null)
@@ -478,6 +482,7 @@ class Badge extends Rulable
      * @param string $locale
      *
      * @throws \InvalidArgumentException
+     *
      * @return string
      */
     public function getSlug($locale = null)
@@ -493,6 +498,7 @@ class Badge extends Rulable
      * @param string $locale
      *
      * @throws \InvalidArgumentException
+     *
      * @return string
      */
     public function getCriteria($locale = null)
@@ -505,7 +511,7 @@ class Badge extends Rulable
     }
 
     /**
-     * @param boolean $automaticAward
+     * @param bool $automaticAward
      *
      * @return Badge
      */
@@ -517,7 +523,7 @@ class Badge extends Rulable
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getAutomaticAward()
     {
@@ -569,7 +575,7 @@ class Badge extends Rulable
     }
 
     /**
-     * @param boolean $isExpiring
+     * @param bool $isExpiring
      *
      * @return Badge
      */
@@ -581,7 +587,7 @@ class Badge extends Rulable
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getIsExpiring()
     {
@@ -652,7 +658,7 @@ class Badge extends Rulable
         return array(self::EXPIRE_PERIOD_DAY,
                      self::EXPIRE_PERIOD_WEEK,
                      self::EXPIRE_PERIOD_MONTH,
-                     self::EXPIRE_PERIOD_YEAR);
+                     self::EXPIRE_PERIOD_YEAR, );
     }
 
     /**
@@ -663,13 +669,14 @@ class Badge extends Rulable
         return array(self::EXPIRE_PERIOD_DAY_LABEL,
                      self::EXPIRE_PERIOD_WEEK_LABEL,
                      self::EXPIRE_PERIOD_MONTH_LABEL,
-                     self::EXPIRE_PERIOD_YEAR_LABEL);
+                     self::EXPIRE_PERIOD_YEAR_LABEL, );
     }
 
     /**
-     * @param integer $expirePeriodType
+     * @param int $expirePeriodType
      *
      * @throws \InvalidArgumentException
+     *
      * @return string
      */
     public static function getExpirePeriodTypeLabel($expirePeriodType)
@@ -677,7 +684,7 @@ class Badge extends Rulable
         $expirePeriodLabels = self::getExpirePeriodLabels();
 
         if (!isset($expirePeriodLabels[$expirePeriodType])) {
-            throw new \InvalidArgumentException("Unknown expired period type.");
+            throw new \InvalidArgumentException('Unknown expired period type.');
         }
 
         return $expirePeriodLabels[$expirePeriodType];
@@ -694,7 +701,7 @@ class Badge extends Rulable
 
         if ($this->imagePath !== $newFileName) {
             $this->olfFileName = $this->imagePath;
-            $this->imagePath   = null;
+            $this->imagePath = null;
         }
         $this->file = $file;
 
@@ -713,7 +720,7 @@ class Badge extends Rulable
      */
     public function getAbsolutePath()
     {
-        return (null === $this->imagePath) ? null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->imagePath;
+        return (null === $this->imagePath) ? null : $this->getUploadRootDir().DIRECTORY_SEPARATOR.$this->imagePath;
     }
 
     /**
@@ -721,11 +728,12 @@ class Badge extends Rulable
      */
     public function getWebPath()
     {
-        return (null === $this->imagePath) ? null : $this->getUploadDir() . DIRECTORY_SEPARATOR . $this->imagePath;
+        return (null === $this->imagePath) ? null : $this->getUploadDir().DIRECTORY_SEPARATOR.$this->imagePath;
     }
 
     /**
      * @throws \Exception
+     *
      * @return string
      */
     protected function getUploadRootDir()
@@ -755,28 +763,27 @@ class Badge extends Rulable
      */
     protected function getUploadDir()
     {
-        return sprintf("uploads%sbadges", DIRECTORY_SEPARATOR);
+        return sprintf('uploads%sbadges', DIRECTORY_SEPARATOR);
     }
 
     protected function dealWithAtLeastOneTranslation(ObjectManager $objectManager)
     {
-        $translations          = $this->getTranslations();
-        $hasEmptyTranslation   = 0;
+        $translations = $this->getTranslations();
+        $hasEmptyTranslation = 0;
         /** @var \Icap\BadgeBundle\Entity\BadgeTranslation[] $emptyTranslations */
-        $emptyTranslations     = array();
+        $emptyTranslations = array();
         /** @var \Icap\BadgeBundle\Entity\BadgeTranslation[] $nonEmptyTranslations */
-        $nonEmptyTranslations  = array();
+        $nonEmptyTranslations = array();
 
         foreach ($translations as $translation) {
             // Have to put all method call in variable because of empty doesn't
             // support result of method as parameter (prior to PHP 5.5)
-            $name        = $translation->getName();
+            $name = $translation->getName();
             $description = $translation->getDescription();
-            $criteria    = $translation->getCriteria();
+            $criteria = $translation->getCriteria();
             if (empty($name) && empty($description) && empty($criteria)) {
                 $emptyTranslations[] = $translation;
-            }
-            else {
+            } else {
                 $nonEmptyTranslations[] = $translation;
             }
         }
@@ -792,7 +799,6 @@ class Badge extends Rulable
                 ->setDescription($firstNonEmptyTranslation->getDescription())
                 ->setCriteria($firstNonEmptyTranslation->getCriteria());
         }
-
     }
 
     /**
@@ -829,7 +835,7 @@ class Badge extends Rulable
         $this->file->move($this->getUploadRootDir(), $this->imagePath);
 
         if (null !== $this->olfFileName && is_file($this->olfFileName)) {
-            unlink($this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->olfFileName);
+            unlink($this->getUploadRootDir().DIRECTORY_SEPARATOR.$this->olfFileName);
             $this->olfFileName = null;
         }
 
@@ -895,7 +901,7 @@ class Badge extends Rulable
             }
             $this->translations = $newTranslations;
 
-            $this->userBadges  = new ArrayCollection();
+            $this->userBadges = new ArrayCollection();
             $this->badgeClaims = new ArrayCollection();
         }
     }

@@ -11,8 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity;
 
-use Claroline\CoreBundle\Manager\LocaleManager;
-use \Serializable;
+use Serializable;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
@@ -20,17 +19,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Claroline\CoreBundle\Entity\AbstractRoleSubject;
-use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Validator\Constraints as ClaroAssert;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\ExecutionContextInterface;
-use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
-use Claroline\CoreBundle\Entity\UserOptions;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 
@@ -45,7 +40,7 @@ use JMS\Serializer\Annotation\SerializedName;
 class User extends AbstractRoleSubject implements Serializable, AdvancedUserInterface, EquatableInterface, OrderableInterface
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -258,7 +253,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $description;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(type="boolean", nullable=true)
      * @Groups({"api_user"})
@@ -267,7 +262,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $hasAcceptedTerms;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_enabled", type="boolean")
      * @Groups({"api_user"})
@@ -276,7 +271,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $isEnabled = true;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_mail_notified", type="boolean")
      * @Groups({"api_user"})
@@ -285,7 +280,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $isMailNotified = true;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="is_mail_validated", type="boolean")
      * @Groups({"api_user"})
@@ -294,7 +289,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $isMailValidated = false;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="hide_mail_warning", type="boolean")
      * @Groups({"api_user"})
@@ -319,7 +314,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $publicUrl;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="has_tuned_public_url", type="boolean")
      * @Groups({"api_user"})
@@ -410,15 +405,15 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function __construct()
     {
         parent::__construct();
-        $this->roles                      = new ArrayCollection();
-        $this->groups                     = new ArrayCollection();
-        $this->abstractResources          = new ArrayCollection();
-        $this->salt                       = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
-        $this->orderedTools               = new ArrayCollection();
-        $this->fieldsFacetValue           = new ArrayCollection();
-        $this->models                     = new ArrayCollection();
-        $this->organizations              = new ArrayCollection();
-        $this->events                     = new ArrayCollection();
+        $this->roles = new ArrayCollection();
+        $this->groups = new ArrayCollection();
+        $this->abstractResources = new ArrayCollection();
+        $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
+        $this->orderedTools = new ArrayCollection();
+        $this->fieldsFacetValue = new ArrayCollection();
+        $this->models = new ArrayCollection();
+        $this->organizations = new ArrayCollection();
+        $this->events = new ArrayCollection();
         $this->administratedOrganizations = new ArrayCollection();
     }
 
@@ -588,7 +583,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * Symfony security checks). The roles owned by groups the user is a
      * member are included by default.
      *
-     * @param boolean $areGroupsIncluded
+     * @param bool $areGroupsIncluded
      *
      * @return array[string]
      */
@@ -616,7 +611,9 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function getEntityRoles($areGroupsIncluded = true)
     {
         $roles = array();
-        if ($this->roles) $roles = $this->roles->toArray();
+        if ($this->roles) {
+            $roles = $this->roles->toArray();
+        }
 
         if ($areGroupsIncluded) {
             foreach ($this->getGroups() as $group) {
@@ -669,7 +666,8 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     }
 
     /**
-     * @param  string $phone
+     * @param string $phone
+     *
      * @return User
      */
     public function setPhone($phone)
@@ -728,7 +726,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
             array(
                 'id' => $this->id,
                 'username' => $this->username,
-                'roles' => $this->getRoles()
+                'roles' => $this->getRoles(),
             )
         );
     }
@@ -810,6 +808,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
 
     /**
      * Replace the old platform role of a user by a new one.
+     *
      * @todo This function is working for now but it's buggy. A user can have many platform
      * roles
      *
@@ -882,7 +881,6 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $this->hashTime = $hashTime;
     }
 
-
     public function getPictureFile()
     {
         return $this->pictureFile;
@@ -936,7 +934,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
             }
         }
 
-        /** @var \DateTime */
+        /* @var \DateTime */
         $expDate = $this->getExpirationDate();
 
         return ($this->getExpirationDate() >= new \DateTime()) ? true : false;
@@ -1092,7 +1090,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
             'email' => false,
             'phone' => true,
             'picture' => true,
-            'description' => true
+            'description' => true,
         );
     }
 
@@ -1108,7 +1106,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
 
     public function __toString()
     {
-        return $this->firstName . ' ' . $this->lastName;
+        return $this->firstName.' '.$this->lastName;
     }
 
     public function setGuid($guid)
@@ -1166,7 +1164,9 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
 
     public function addOrganization(Organization $organization)
     {
-        if (!$this->organizations->contains($organization)) $this->organizations->add($organization); 
+        if (!$this->organizations->contains($organization)) {
+            $this->organizations->add($organization);
+        }
     }
 
     //sometimes it's passed as an array and I don't understand why.
@@ -1182,10 +1182,10 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
             'lastName',
             'mail',
             'administrativeCode',
-            'username'
+            'username',
         );
     }
-    
+
     public static function getSearchableFields()
     {
         return self::getUserSearchableFields();
@@ -1198,12 +1198,12 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
 
     public function addAdministratedOrganization(Organization $organization)
     {
-        $this->administratedOrganizations->add($organization); 
+        $this->administratedOrganizations->add($organization);
     }
 
     public function removeAdministratedOrganization(Organization $organization)
     {
-        $this->administratedOrganizations->remove($organization); 
+        $this->administratedOrganizations->remove($organization);
     }
 
     public function setAdministratedOrganizations($organizations)

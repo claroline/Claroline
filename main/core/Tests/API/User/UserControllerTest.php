@@ -14,7 +14,7 @@ use Claroline\CoreBundle\Library\Testing\Persister;
  * - create database
  * - php app/console claroline:init_test_schema --env=test
  * - php app/console doctrine:schema:update --force --env=test
- * - bin/phpunit vendor/claroline/core-bundle/Tests/API/User/UserControllerTest.php -c app/phpunit.xml
+ * - bin/phpunit vendor/claroline/core-bundle/Tests/API/User/UserControllerTest.php -c app/phpunit.xml.
  */
 class UserControllerTest extends TransactionalTestCase
 {
@@ -89,7 +89,7 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals(4, count($data['users']));
 
         //now we're adding a simple filter
-        $this->client->request('GET', $url . '?username[]=john');
+        $this->client->request('GET', $url.'?username[]=john');
         $data = $this->client->getResponse()->getContent();
         $data = json_decode($data, true);
 
@@ -138,10 +138,10 @@ class UserControllerTest extends TransactionalTestCase
             'username' => 'toto',
             'plainPassword' => array(
                     'first' => 'toto',
-                    'second' => 'toto'
+                    'second' => 'toto',
                 ),
             'administrativeCode' => 'toto',
-            'mail' => 'toto@claroline.net'
+            'mail' => 'toto@claroline.net',
         );
         $form = array('profile_form_creation' => $fields);
         $this->client->request('POST', '/api/users.json', $form);
@@ -168,7 +168,7 @@ class UserControllerTest extends TransactionalTestCase
             'lastName' => 'toto',
             'username' => 'toto',
             'administrativeCode' => 'toto',
-            'mail' => 'toto@claroline.net'
+            'mail' => 'toto@claroline.net',
         );
         $form = array('profile_form' => $fields);
         $this->client->request('PUT', "/api/users/{$this->userOrga->getId()}.json", $form);
@@ -187,7 +187,7 @@ class UserControllerTest extends TransactionalTestCase
             'lastName' => 'toto',
             'username' => 'toto',
             'administrativeCode' => 'toto',
-            'mail' => 'toto@claroline.net'
+            'mail' => 'toto@claroline.net',
         );
         $form = array('profile_form' => $fields);
         $this->client->request('PUT', "/api/users/{$this->userOrga->getId()}.json", $form);
@@ -200,7 +200,7 @@ class UserControllerTest extends TransactionalTestCase
             'lastName' => 'toto',
             'username' => 'toto',
             'administrativeCode' => 'toto',
-            'mail' => 'toto@claroline.net'
+            'mail' => 'toto@claroline.net',
         );
         $form = array('profile_form' => $fields);
         $this->client->request('PUT', "/api/users/{$this->userOrga->getId()}.json", $form);
@@ -308,7 +308,6 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
-
     //@route: api_remove_user_role
     //@url: /api/users/{user}/roles/{role}/remove.{_format}
     //MAYBE CHANGE THIS TO DELETE BECAUSE THIS SHOULD NOT BE A GET
@@ -338,14 +337,12 @@ class UserControllerTest extends TransactionalTestCase
         $this->markTestSkipped('This test has not been implemented yet.');
     }
 
-
     //@route: api_add_user_group
     //@url: /api/users/{user}/groups/{group}/add.{_format}
     public function testAddUserGroupActionIsProtected()
     {
         $this->markTestSkipped('This test has not been implemented yet.');
     }
-
 
     //@route: api_remove_user_group
     //@url: /api/users/{user}/groups/{group}/remove.{_format}
@@ -360,7 +357,6 @@ class UserControllerTest extends TransactionalTestCase
     {
         $this->markTestSkipped('This test has not been implemented yet.');
     }
-
 
     //@route: api_get_user_admin_actions
     //@url: /api/user/admin/actions.{_format}

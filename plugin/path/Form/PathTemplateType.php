@@ -8,10 +8,10 @@ class PathTemplateType extends AbstractPathType
     {
         return 'innova_path_template';
     }
-    
+
     public function getDefaultOptions()
     {
-        return array (
+        return array(
             'data_class' => 'Innova\PathBundle\Entity\Path\PathTemplate',
         );
     }

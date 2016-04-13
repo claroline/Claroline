@@ -29,13 +29,11 @@ use Claroline\CoreBundle\Manager\AuthenticationManager;
 use Claroline\CoreBundle\Manager\ProfilePropertyManager;
 use Claroline\CoreBundle\Library\Security\Collection\UserCollection;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use FOS\RestBundle\Controller\Annotations\Post;
@@ -75,23 +73,22 @@ class UserController extends FOSRestController
         ProfilePropertyManager $profilePropertyManager,
         MailManager $mailManager,
         ApiManager $apiManager
-    )
-    {
-        $this->authenticationManager  = $authenticationManager;
-        $this->eventDispatcher        = $eventDispatcher;
-        $this->formFactory            = $formFactory;
-        $this->localeManager          = $localeManager;
-        $this->request                = $request;
-        $this->userManager            = $userManager;
-        $this->groupManager           = $groupManager;
-        $this->roleManager            = $roleManager;
-        $this->om                     = $om;
-        $this->userRepo               = $om->getRepository('ClarolineCoreBundle:User');
-        $this->roleRepo               = $om->getRepository('ClarolineCoreBundle:Role');
-        $this->groupRepo              = $om->getRepository('ClarolineCoreBundle:Group');
+    ) {
+        $this->authenticationManager = $authenticationManager;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->formFactory = $formFactory;
+        $this->localeManager = $localeManager;
+        $this->request = $request;
+        $this->userManager = $userManager;
+        $this->groupManager = $groupManager;
+        $this->roleManager = $roleManager;
+        $this->om = $om;
+        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
+        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
+        $this->groupRepo = $om->getRepository('ClarolineCoreBundle:Group');
         $this->profilePropertyManager = $profilePropertyManager;
-        $this->mailManager            = $mailManager;
-        $this->apiManager             = $apiManager;
+        $this->mailManager = $mailManager;
+        $this->apiManager = $apiManager;
     }
 
     /**
@@ -445,7 +442,9 @@ class UserController extends FOSRestController
 
     private function throwsExceptionIfNotAdmin()
     {
-        if (!$this->isAdmin()) throw new AccessDeniedException("This action can only be done by the administrator");
+        if (!$this->isAdmin()) {
+            throw new AccessDeniedException('This action can only be done by the administrator');
+        }
     }
 
     private function isUserGranted($action, $object)
@@ -455,7 +454,7 @@ class UserController extends FOSRestController
 
     private function throwExceptionIfNotGranted($action, $users)
     {
-        $collection = is_array($users) ? new UserCollection($users): new UserCollection(array($users));
+        $collection = is_array($users) ? new UserCollection($users) : new UserCollection(array($users));
         $isGranted = $this->isUserGranted($action, $collection);
 
         if (!$isGranted) {

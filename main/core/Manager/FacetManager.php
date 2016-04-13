@@ -27,8 +27,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-
 
 /**
  * @Service("claroline.manager.facet_manager")
@@ -55,8 +53,7 @@ class FacetManager
         AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->om = $om;
         $this->translator = $translator;
         $this->tokenStorage = $tokenStorage;
@@ -107,7 +104,7 @@ class FacetManager
     }
 
     /**
-     * Fixes gaps beteween facet orders
+     * Fixes gaps beteween facet orders.
      */
     public function reorderFacets()
     {
@@ -116,7 +113,7 @@ class FacetManager
 
         foreach ($facets as $facet) {
             $facet->setPosition($order);
-            $order++;
+            ++$order;
             $this->om->persist($facet);
         }
 
@@ -124,7 +121,7 @@ class FacetManager
     }
 
     /**
-     * Fixes gaps beteween fields orders
+     * Fixes gaps beteween fields orders.
      */
     public function reorderFields(PanelFacet $panelFacet)
     {
@@ -133,7 +130,7 @@ class FacetManager
 
         foreach ($fields as $field) {
             $field->setPosition($order);
-            $order++;
+            ++$order;
             $this->om->persist($field);
         }
 
@@ -141,11 +138,11 @@ class FacetManager
     }
 
     /**
-     * Creates a new field for a facet
+     * Creates a new field for a facet.
      *
      * @param PanelFacet $facet
      * @param string     $name
-     * @param integer    $type
+     * @param int        $type
      */
     public function addField(PanelFacet $panelFacet, $name, $type)
     {
@@ -163,9 +160,9 @@ class FacetManager
     }
 
     /**
-     * Adds a panel in a facet
+     * Adds a panel in a facet.
      *
-     * @param Facet $facet
+     * @param Facet  $facet
      * @param string $name
      *
      * @return PanelFacet
@@ -224,7 +221,7 @@ class FacetManager
     }
 
     /**
-     * Removes a field from a facet
+     * Removes a field from a facet.
      *
      * @param FieldFacet $field
      */
@@ -237,7 +234,7 @@ class FacetManager
     }
 
     /**
-     * Set the value of a field for a user
+     * Set the value of a field for a user.
      *
      * @param User       $user
      * @param FieldFacet $field
@@ -266,7 +263,7 @@ class FacetManager
                     \DateTime::createFromFormat(
                         $this->translator->trans('date_form_datepicker_php', array(), 'platform'),
                         $value
-                    ):
+                    ) :
                     $value;
                 $fieldFacetValue->setDateValue($date);
                 break;
@@ -277,7 +274,7 @@ class FacetManager
                 $fieldFacetValue->setStringValue($value);
                 break;
             default:
-                throw new \Exception('The facet type ' . $field->getType() . ' is unknown.');
+                throw new \Exception('The facet type '.$field->getType().' is unknown.');
         }
 
         $this->om->persist($fieldFacetValue);
@@ -291,7 +288,7 @@ class FacetManager
     }
 
     /**
-     * Moves a facet up
+     * Moves a facet up.
      *
      * @param Facet $facet
      */
@@ -313,7 +310,7 @@ class FacetManager
     }
 
     /**
-     * Moves a facet down
+     * Moves a facet down.
      *
      * @param Facet $facet
      */
@@ -355,7 +352,7 @@ class FacetManager
         $fields = $panel->getFieldsFacet();
 
         foreach ($fields as $field) {
-            foreach($ids as $key => $id) {
+            foreach ($ids as $key => $id) {
                 if ($id === $field->getId()) {
                     $field->setPosition($key);
                     $this->om->persist($field);
@@ -377,7 +374,7 @@ class FacetManager
         $panels = $facet->getPanelFacets();
 
         foreach ($panels as $panel) {
-            foreach($ids as $key => $id) {
+            foreach ($ids as $key => $id) {
                 if ($id === $panel->getId()) {
                     $panel->setPosition($key);
                     $this->om->persist($panel);
@@ -401,7 +398,7 @@ class FacetManager
     }
 
     /**
-     * Get the ordered facet list
+     * Get the ordered facet list.
      */
     public function getFacets()
     {
@@ -452,7 +449,7 @@ class FacetManager
      * for a fieldFacet and an array of roles.
      *
      * @param FieldFacet $fieldFacet
-     * @param array $roles
+     * @param array      $roles
      * @param $property (canOpen | canEdit)
      */
     public function setFieldBoolProperty(FieldFacet $fieldFacet, array $roles, $property)
@@ -462,7 +459,7 @@ class FacetManager
         $fieldFacetsRole = $fieldFacet->getFieldFacetsRole();
 
         //get the correct setter
-        $setterFunc = 'set' . ucfirst($property);
+        $setterFunc = 'set'.ucfirst($property);
 
         //initialize an array of roles wich are not linked to the field
         $unknownRoles = array();
@@ -544,7 +541,7 @@ class FacetManager
                 'canOpen' => true,
                 'name' => $entity->getName(),
                 'position' => $entity->getPosition(),
-                'panels' => $entity->getPanelFacets()
+                'panels' => $entity->getPanelFacets(),
             );
         }
 
@@ -558,7 +555,7 @@ class FacetManager
             case FieldFacet::DATE_TYPE:
                 return $ffv->getDateValue()->format($this->translator->trans('date_form_datepicker_php', array(), 'platform'));
             case FieldFacet::STRING_TYPE: return $ffv->getStringValue();
-            default: return "error";
+            default: return 'error';
         }
     }
 
@@ -592,6 +589,7 @@ class FacetManager
 
     /**
      * Returns each facet wich are visible in the private profile.
+     *
      * @todo change the implementation
      *
      * @return Facet[]
@@ -609,7 +607,7 @@ class FacetManager
                 'id' => $visible->getId(),
                 'name' => $visible->getName(),
                 'canOpen' => true,
-                'panels' => $visible->getPanelFacets()
+                'panels' => $visible->getPanelFacets(),
             );
         }
 
@@ -627,7 +625,7 @@ class FacetManager
                         'id' => $facet['id'],
                         'name' => $facet['name'],
                         'canOpen' => $canOpen,
-                        'panels' => $facet['panels']
+                        'panels' => $facet['panels'],
                     );
                     $found = true;
                 }
@@ -668,7 +666,7 @@ class FacetManager
                 'id' => $field->getId(),
                 'canOpen' => $canOpen,
                 'canEdit' => $canEdit,
-                'position' => $field->getPosition()
+                'position' => $field->getPosition(),
             );
         }
 
@@ -688,7 +686,7 @@ class FacetManager
         return $data;
     }
 
-    function getVisiblePublicPreference()
+    public function getVisiblePublicPreference()
     {
         $tokenRoles = $this->tokenStorage->getToken()->getRoles();
         $roles = array();
@@ -701,7 +699,7 @@ class FacetManager
             ->getAdminPublicProfilePreferenceByRole($roles);
     }
 
-    function getAdminPublicPreference()
+    public function getAdminPublicPreference()
     {
         return $this->om->getRepository('ClarolineCoreBundle:Facet\GeneralFacetPreference')->findAll();
     }

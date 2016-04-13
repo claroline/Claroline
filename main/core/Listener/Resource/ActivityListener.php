@@ -18,8 +18,6 @@ use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Event\ExportResourceTemplateEvent;
-use Claroline\CoreBundle\Event\ImportResourceTemplateEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Form\ActivityType;
 use Claroline\CoreBundle\Manager\ActivityManager;
@@ -64,8 +62,7 @@ class ActivityListener
         $persistence,
         ActivityManager $activityManager,
         TokenStorageInterface $tokenStorage
-    )
-    {
+    ) {
         $this->router = $router;
         $this->formFactory = $formFactory;
         $this->templating = $templating;
@@ -87,7 +84,7 @@ class ActivityListener
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'activity'
+                'resourceType' => 'activity',
             )
         );
         $event->setResponseContent($content);
@@ -122,7 +119,7 @@ class ActivityListener
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'activity'
+                'resourceType' => 'activity',
             )
         );
 
@@ -167,7 +164,9 @@ class ActivityListener
         $params = $activity->getParameters();
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if ($user === 'anon.') throw new AccessDeniedException();
+        if ($user === 'anon.') {
+            throw new AccessDeniedException();
+        }
 
         $evaluation =
             $this->activityManager->getEvaluationByUserAndActivityParams($user, $params) ?:
@@ -178,7 +177,7 @@ class ActivityListener
             array(
                 '_resource' => $activity,
                 'activityParams' => $params,
-                'evaluation' => $evaluation
+                'evaluation' => $evaluation,
             )
         );
 

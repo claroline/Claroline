@@ -27,13 +27,6 @@ use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Entity\Model\ResourceModel;
 use Claroline\CoreBundle\Event\NotPopulatedEventException;
 use Claroline\CoreBundle\Event\StrictDispatcher;
-use Claroline\CoreBundle\Manager\HomeTabManager;
-use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\CoreBundle\Manager\RightsManager;
-use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\ToolManager;
-use Claroline\CoreBundle\Manager\ToolRightsManager;
-use Claroline\CoreBundle\Manager\WidgetManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -85,24 +78,24 @@ class WorkspaceModelManager
         ToolRightsManager        $toolRightsManager,
         TokenStorageInterface    $tokenStorage,
         WidgetManager            $widgetManager
-    )
-    {
-        $this->dispatcher        = $dispatcher;
-        $this->homeTabManager    = $homeTabManager;
-        $this->om                = $om;
-        $this->resourceManager   = $resourceManager;
-        $this->rightsManager     = $rightsManager;
-        $this->roleManager       = $roleManager;
-        $this->toolManager       = $toolManager;
+    ) {
+        $this->dispatcher = $dispatcher;
+        $this->homeTabManager = $homeTabManager;
+        $this->om = $om;
+        $this->resourceManager = $resourceManager;
+        $this->rightsManager = $rightsManager;
+        $this->roleManager = $roleManager;
+        $this->toolManager = $toolManager;
         $this->toolRightsManager = $toolRightsManager;
-        $this->modelRepository   = $this->om->getRepository('ClarolineCoreBundle:Model\WorkspaceModel');
-        $this->tokenStorage      = $tokenStorage;
-        $this->widgetManager     = $widgetManager;
+        $this->modelRepository = $this->om->getRepository('ClarolineCoreBundle:Model\WorkspaceModel');
+        $this->tokenStorage = $tokenStorage;
+        $this->widgetManager = $widgetManager;
     }
 
     /**
      * @param $name
      * @param Workspace $workspace
+     *
      * @return WorkspaceModel
      */
     public function create($name, Workspace $workspace)
@@ -123,6 +116,7 @@ class WorkspaceModelManager
     /**
      * @param WorkspaceModel $model
      * @param $name
+     *
      * @return WorkspaceModel
      */
     public function edit(WorkspaceModel $model, $name)
@@ -145,6 +139,7 @@ class WorkspaceModelManager
 
     /**
      * @param Workspace $workspace
+     *
      * @return mixed
      */
     public function getByWorkspace(Workspace $workspace)
@@ -154,7 +149,7 @@ class WorkspaceModelManager
 
     /**
      * @param WorkspaceModel $model
-     * @param User $user
+     * @param User           $user
      */
     public function addUser(WorkspaceModel $model, User $user)
     {
@@ -165,7 +160,7 @@ class WorkspaceModelManager
 
     /**
      * @param WorkspaceModel $model
-     * @param Group $group
+     * @param Group          $group
      */
     public function addGroup(WorkspaceModel $model, Group $group)
     {
@@ -176,7 +171,7 @@ class WorkspaceModelManager
 
     /**
      * @param WorkspaceModel $model
-     * @param Group $group
+     * @param Group          $group
      */
     public function removeGroup(WorkspaceModel $model, Group $group)
     {
@@ -187,7 +182,7 @@ class WorkspaceModelManager
 
     /**
      * @param WorkspaceModel $model
-     * @param User $user
+     * @param User           $user
      */
     public function removeUser(WorkspaceModel $model, User $user)
     {
@@ -198,7 +193,7 @@ class WorkspaceModelManager
 
     /**
      * @param WorkspaceModel $model
-     * @param array $users
+     * @param array          $users
      */
     public function addUsers(WorkspaceModel $model, array $users)
     {
@@ -213,7 +208,7 @@ class WorkspaceModelManager
 
     /**
      * @param WorkspaceModel $model
-     * @param array $groups
+     * @param array          $groups
      */
     public function addGroups(WorkspaceModel $model, array $groups)
     {
@@ -228,8 +223,9 @@ class WorkspaceModelManager
 
     /**
      * @param WorkspaceModel $model
-     * @param array $resourceNodes
+     * @param array          $resourceNodes
      * @param $isCopy
+     *
      * @return array
      */
     public function addResourceNodes(WorkspaceModel $model, array $resourceNodes, $isCopy)
@@ -248,8 +244,9 @@ class WorkspaceModelManager
 
     /**
      * @param WorkspaceModel $model
-     * @param ResourceNode $resourceNode
+     * @param ResourceNode   $resourceNode
      * @param $isCopy
+     *
      * @return ResourceModel
      */
     public function addResourceNode(WorkspaceModel $model, ResourceNode $resourceNode, $isCopy)
@@ -275,7 +272,7 @@ class WorkspaceModelManager
 
     /**
      * @param WorkspaceModel $model
-     * @param array $homeTabs
+     * @param array          $homeTabs
      */
     public function addHomeTabs(WorkspaceModel $model, array $homeTabs)
     {
@@ -290,7 +287,7 @@ class WorkspaceModelManager
 
     /**
      * @param WorkspaceModel $model
-     * @param HomeTab $homeTab
+     * @param HomeTab        $homeTab
      */
     public function addHomeTab(WorkspaceModel $model, HomeTab $homeTab)
     {
@@ -301,7 +298,7 @@ class WorkspaceModelManager
 
     /**
      * @param WorkspaceModel $model
-     * @param HomeTab $homeTab
+     * @param HomeTab        $homeTab
      */
     public function removeHomeTab(WorkspaceModel $model, HomeTab $homeTab)
     {
@@ -312,7 +309,7 @@ class WorkspaceModelManager
 
     /**
      * @param WorkspaceModel $model
-     * @param array $homeTabs
+     * @param array          $homeTabs
      */
     public function updateHomeTabs(WorkspaceModel $model, array $homeTabs)
     {
@@ -335,6 +332,7 @@ class WorkspaceModelManager
 
     /**
      * @param WorkspaceModel $model
+     *
      * @return array
      */
     public function toArray(WorkspaceModel $model)
@@ -348,30 +346,27 @@ class WorkspaceModelManager
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $source
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\User                $user
      */
     private function duplicateWorkspaceRoles(
         Workspace $source,
         Workspace $workspace,
         User $user
-    )
-    {
+    ) {
         $this->log('Duplicating roles...');
         $guid = $workspace->getGuid();
         $roles = $source->getRoles();
-        $unusedRolePartName = '_' . $source->getGuid();
+        $unusedRolePartName = '_'.$source->getGuid();
 
         foreach ($roles as $role) {
             $roleName = str_replace($unusedRolePartName, '', $role->getName());
 
             $createdRole = $this->roleManager->createWorkspaceRole(
-                $roleName . '_' . $guid,
+                $roleName.'_'.$guid,
                 $role->getTranslationKey(),
                 $workspace,
                 $role->isReadOnly()
             );
-
-
 
             if ($roleName === 'ROLE_WS_MANAGER') {
                 $user->addRole($createdRole);
@@ -427,14 +422,13 @@ class WorkspaceModelManager
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $source
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\User                $user
      */
     private function duplicateRootDirectory(
         Workspace $source,
         Workspace $workspace,
         User $user
-    )
-    {
+    ) {
         //$this->log('Duplicating root directory...');
         $rootDirectory = new Directory();
         $rootDirectory->setName($workspace->getName());
@@ -488,7 +482,7 @@ class WorkspaceModelManager
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $source
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param array $homeTabs
+     * @param array                                            $homeTabs
      */
     private function duplicateHomeTabs(
         Workspace $source,
@@ -496,8 +490,7 @@ class WorkspaceModelManager
         array $homeTabs,
         $resourceInfos,
         &$tabsInfos = array()
-    )
-    {
+    ) {
         $this->log('Duplicating home tabs...');
         $this->om->startFlushSuite();
         $homeTabConfigs = $this->homeTabManager
@@ -535,7 +528,7 @@ class WorkspaceModelManager
             $newHomeTabConfig->setLocked($homeTabConfig->isLocked());
             $newHomeTabConfig->setTabOrder($order);
             $this->om->persist($newHomeTabConfig);
-            $order++;
+            ++$order;
 
             foreach ($widgetHomeTabConfigs as $widgetConfig) {
                 $widgetInstance = $widgetConfig->getWidgetInstance();
@@ -584,19 +577,19 @@ class WorkspaceModelManager
                     $newWidgetDisplayConfig->setWidth($widget->getDefaultWidth());
                     $newWidgetDisplayConfig->setHeight($widget->getDefaultHeight());
                 }
-                
+
                 $widgets[] = array('widget' => $widget, 'original' => $widgetInstance, 'copy' => $newWidgetInstance);
                 $this->om->persist($newWidgetDisplayConfig);
             }
         }
         $this->om->endFlushSuite();
         $this->om->forceFlush();
-        
+
         foreach ($widgets as $widget) {
             if ($widget['widget']->isConfigurable()) {
                 try {
                     $this->dispatcher->dispatch(
-                        'copy_widget_config_' . $widget['widget']->getName(),
+                        'copy_widget_config_'.$widget['widget']->getName(),
                         'CopyWidgetConfiguration',
                         array($widget['original'], $widget['copy'], $resourceInfos, $tabsInfos)
                     );
@@ -604,22 +597,20 @@ class WorkspaceModelManager
                     $widgetCongigErrors[] = array(
                         'widgetName' => $widget['widget']->getName(),
                         'widgetInstanceName' => $widget['original']->getName(),
-                        'error' => $e->getMessage()
+                        'error' => $e->getMessage(),
                     );
                 }
             }
         }
-        
-        
 
         return $widgetCongigErrors;
     }
 
     /**
-     * @param array $resourcesModels
-     * @param \Claroline\CoreBundle\Entity\Resource\Directory $rootDirectory
+     * @param array                                            $resourcesModels
+     * @param \Claroline\CoreBundle\Entity\Resource\Directory  $rootDirectory
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\User                $user
      */
     private function duplicateResources(
         array $resourcesModels,
@@ -627,9 +618,8 @@ class WorkspaceModelManager
         Workspace $workspace,
         User $user,
         &$resourcesInfos
-    )
-    {
-        $this->log('Duplicating ' . count($resourcesModels) . ' resources...');
+    ) {
+        $this->log('Duplicating '.count($resourcesModels).' resources...');
         $this->om->startFlushSuite();
 
         $copies = array();
@@ -640,9 +630,8 @@ class WorkspaceModelManager
             $resourceNode = $resourceModel->getResourceNode();
 
             if ($resourceModel->isCopy()) {
-
                 try {
-                    $this->log('Duplicating ' . $resourceNode->getName() . ' from type ' . $resourceNode->getResourceType()->getName());
+                    $this->log('Duplicating '.$resourceNode->getName().' from type '.$resourceNode->getResourceType()->getName());
                     $copy = $this->resourceManager->copy(
                         $resourceNode,
                         $rootDirectory->getResourceNode(),
@@ -658,7 +647,7 @@ class WorkspaceModelManager
                         'resourceName' => $resourceNode->getName(),
                         'resourceType' => $resourceNode->getResourceType()->getName(),
                         'type' => 'copy',
-                        'error' => $e->getMessage()
+                        'error' => $e->getMessage(),
                     );
                     continue;
                 }
@@ -693,7 +682,7 @@ class WorkspaceModelManager
 
             $position = $key + 1;
 
-            $this->log('Resource [' . $resourceModel->getResourceNode()->getName() . '] ' . $position . '/' . count($resourcesModels) . ' copied');
+            $this->log('Resource ['.$resourceModel->getResourceNode()->getName().'] '.$position.'/'.count($resourcesModels).' copied');
         }
 
         /*** Sets previous and next for each copied resource ***/
@@ -737,7 +726,7 @@ class WorkspaceModelManager
      */
     private function linkResourcesArray(array $resources)
     {
-        for ($i = 1; $i < count($resources); $i++) {
+        for ($i = 1; $i < count($resources); ++$i) {
             $node = $resources[$i]->getResourceNode();
             $node->setIndex($i);
             $this->om->persist($node);
@@ -747,14 +736,13 @@ class WorkspaceModelManager
     /**
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $copy
-     * @param array $workspaceRoles
+     * @param array                                              $workspaceRoles
      */
     private function duplicateRights(
         ResourceNode $resourceNode,
         ResourceNode $copy,
         array $workspaceRoles
-    )
-    {
+    ) {
         //$this->log('Duplicating rights...');
         $rights = $resourceNode->getRights();
         $workspace = $resourceNode->getWorkspace();
@@ -773,7 +761,6 @@ class WorkspaceModelManager
             if ($role->getWorkspace() === $workspace &&
                 isset($workspaceRoles[$key]) &&
                 !empty($workspaceRoles[$key])) {
-
                 $newRight->setRole($workspaceRoles[$key]);
             } else {
                 $newRight->setRole($role);
@@ -786,8 +773,8 @@ class WorkspaceModelManager
     /**
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $directory
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $directoryCopy
-     * @param \Claroline\CoreBundle\Entity\User $user
-     * @param array $workspaceRoles
+     * @param \Claroline\CoreBundle\Entity\User                  $user
+     * @param array                                              $workspaceRoles
      */
     private function duplicateDirectoryContent(
         ResourceNode $directory,
@@ -795,16 +782,15 @@ class WorkspaceModelManager
         User $user,
         array $workspaceRoles,
         &$resourcesInfos
-    )
-    {
+    ) {
         $this->log('Duplicating directory content...');
         $children = $directory->getChildren();
         $copies = array();
         $resourcesErrors = array();
 
         foreach ($children as $child) {
-           try {
-                $this->log('Duplicating ' . $resourceNode->getName() . ' from type ' . $resourceNode->getResourceType()->getName());
+            try {
+                $this->log('Duplicating '.$resourceNode->getName().' from type '.$resourceNode->getResourceType()->getName());
                 $copy = $this->resourceManager->copy(
                     $child,
                     $directoryCopy,
@@ -819,7 +805,7 @@ class WorkspaceModelManager
                     'resourceName' => $child->getName(),
                     'resourceType' => $child->getResourceType()->getName(),
                     'type' => 'copy',
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 );
                 continue;
             }
@@ -868,7 +854,7 @@ class WorkspaceModelManager
             $resourcesInfos
         );
         $this->om->forceFlush();
-        
+
         $errors['widgetConfigErrors'] = $this->duplicateHomeTabs($modelWorkspace, $workspace, $homeTabs->toArray(), $resourcesInfos);
     }
 

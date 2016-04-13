@@ -42,8 +42,7 @@ class SessionHandlerFactory
         $dbUsername,
         $dbPassword,
         $dbName
-    )
-    {
+    ) {
         $this->configHandler = $configHandler;
         $this->sessionPath = $sessionPath;
         $this->dbPassword = $dbPassword;
@@ -69,7 +68,7 @@ class SessionHandlerFactory
                 $dbOptions['db_data_col'] = $this->configHandler->getParameter('session_db_data_col');
                 $dbOptions['db_time_col'] = $this->configHandler->getParameter('session_db_time_col');
             } else {
-                $dsn = 'mysql:dbname=' . $this->dbName;
+                $dsn = 'mysql:dbname='.$this->dbName;
                 $username = $this->dbUsername;
                 $password = $this->dbPassword;
                 $dbOptions['db_table'] = 'claro_session';

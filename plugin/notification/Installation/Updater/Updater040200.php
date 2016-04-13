@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -8,9 +8,7 @@
  * 
  * Date: 4/13/15
  */
-
 namespace Icap\NotificationBundle\Installation\Updater;
-
 
 use Claroline\InstallationBundle\Updater\Updater;
 use Doctrine\DBAL\Connection;
@@ -27,7 +25,7 @@ class Updater040200 extends Updater
     private $connection;
 
     /**
-     * @param EntityManager $em
+     * @param EntityManager             $em
      * @param \Doctrine\DBAL\Connection $connection
      */
     public function __construct(EntityManager $em, Connection $connection)
@@ -54,4 +52,4 @@ class Updater040200 extends Updater
             }
         }
     }
-} 
+}

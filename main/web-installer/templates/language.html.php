@@ -6,11 +6,18 @@
             <label class="control-label col-sm-2"><?php echo $trans('install_language'); ?></label>
             <div class="col-sm-10">
                 <select name="install_language" class="form-control auto-submit">
-                    <?php foreach ($getLangs() as $lang) { ?>
-                    <option value="<?php echo $lang; ?>" <?php if ($var('install_language') === $lang){ echo 'selected';} ?>>
-                        <?php echo strtoupper($lang); ?>
+                    <?php foreach ($getLangs() as $lang) {
+    ?>
+                    <option value="<?php echo $lang;
+    ?>" <?php if ($var('install_language') === $lang) {
+    echo 'selected';
+}
+    ?>>
+                        <?php echo strtoupper($lang);
+    ?>
                     </option>
-                    <?php } ?>
+                    <?php 
+} ?>
                 </select>
             </div>
         </div>
@@ -20,11 +27,17 @@
                 <select name="country" class="form-control auto-submit">
                     <option></option>
                     <?php $current = $getCountry(); ?>
-                    <?php foreach ($getCountries() as $country) { ?>
-                    <option <?php if ($country === $current){ echo 'selected';} ?>>
-                        <?php echo $country; ?>
+                    <?php foreach ($getCountries() as $country) {
+    ?>
+                    <option <?php if ($country === $current) {
+    echo 'selected';
+}
+    ?>>
+                        <?php echo $country;
+    ?>
                     </option>
-                    <?php } ?>
+                    <?php 
+} ?>
                 </select>
             </div>
         </div>

@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -8,9 +8,7 @@
  * 
  * Date: 4/22/15
  */
-
 namespace Icap\SocialmediaBundle\Controller;
-
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
@@ -29,22 +27,24 @@ class ShareActionController extends Controller
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"id" = "resourceId"})
      * @Template()
+     *
      * @param ResourceNode $resourceNode
-     * @param User $user
+     * @param User         $user
+     *
      * @return array
      */
     public function formAction(ResourceNode $resourceNode, User $user)
     {
         $shareManager = $this->getShareActionManager();
-        $sharesCount = $shareManager->countShares(null, array("resource"=>$resourceNode->getId()));
+        $sharesCount = $shareManager->countShares(null, array('resource' => $resourceNode->getId()));
         $socialShare = new SocialShare();
-        $resourceUrl = $this->generateUrl("claro_resource_open_short", array("node" => $resourceNode->getId()), true);
+        $resourceUrl = $this->generateUrl('claro_resource_open_short', array('node' => $resourceNode->getId()), true);
 
         return array(
-            "resourceNode" => $resourceNode,
-            "networks" => $socialShare->getNetworks(),
-            "shares" => $sharesCount,
-            "resourceUrl" => $resourceUrl
+            'resourceNode' => $resourceNode,
+            'networks' => $socialShare->getNetworks(),
+            'shares' => $sharesCount,
+            'resourceUrl' => $resourceUrl,
         );
     }
 
@@ -52,25 +52,27 @@ class ShareActionController extends Controller
      * @Route("/share", name="icap_socialmedia_share")
      * @ParamConverter("user", options={"authenticatedUser" = false})
      * @Template()
+     *
      * @param Request $request
-     * @param User $user
+     * @param User    $user
+     *
      * @return bool
      */
     public function shareAction(Request $request, User $user = null)
     {
         $share = new ShareAction();
         $share->setUser($user);
-        $network = $request->get("network");
+        $network = $request->get('network');
         $options = $this->getShareActionManager()->createShare($request, $share);
         $this->dispatchShareEvent($share);
 
         $response = array();
         if ($network !== null) {
             $socialShare = new SocialShare();
-            $shareLink = $socialShare->getNetwork($network)->getShareLink($options["url"], array($options["title"]));
+            $shareLink = $socialShare->getNetwork($network)->getShareLink($options['url'], array($options['title']));
             $response = new RedirectResponse($shareLink);
         }
 
         return $response;
     }
-} 
+}

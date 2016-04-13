@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\DataFixtures\Required\Data;
 
-use Claroline\CoreBundle\Entity\Workspace\Template;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
 
@@ -22,10 +21,10 @@ class LoadTemplateData implements RequiredFixture
      */
     public function load(ObjectManager $manager)
     {
-        $destinationPath = $this->container->getParameter('claroline.param.templates_directory'). '/default.zip';
+        $destinationPath = $this->container->getParameter('claroline.param.templates_directory').'/default.zip';
         @unlink($destinationPath);
         copy($this->container->getParameter('claroline.param.default_template'), $destinationPath);
-        $destinationPath = $this->container->getParameter('claroline.param.templates_directory'). '/personal.zip';
+        $destinationPath = $this->container->getParameter('claroline.param.templates_directory').'/personal.zip';
         @unlink($destinationPath);
         copy($this->container->getParameter('claroline.param.personal_template'), $destinationPath);
     }

@@ -2,9 +2,8 @@
 /**
  * Created by : Vincent SAISSET
  * Date: 22/08/13
- * Time: 09:30
+ * Time: 09:30.
  */
-
 namespace Innova\CollecticielBundle\Controller;
 
 use Innova\CollecticielBundle\Entity\Correction;
@@ -20,11 +19,6 @@ use Innova\CollecticielBundle\Event\Log\LogDropReportEvent;
 use Innova\CollecticielBundle\Form\CorrectionReportType;
 use Innova\CollecticielBundle\Form\DropType;
 use Innova\CollecticielBundle\Form\DocumentType;
-use Innova\CollecticielBundle\Form\CommentType;
-use Innova\CollecticielBundle\Form\CorrectionCommentType;
-use Innova\CollecticielBundle\Form\CorrectionCriteriaPageType;
-use Innova\CollecticielBundle\Form\CorrectionStandardType;
-use Innova\CollecticielBundle\Form\CorrectionDenyType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
@@ -38,7 +32,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Innova\CollecticielBundle\Event\Log\LogDropzoneReturnReceiptEvent;
-use Innova\CollecticielBundle\Event\Log\LogDropzoneAddDocumentEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropzoneValidateDocumentEvent;
 
 class DropController extends DropzoneBaseController
@@ -125,7 +118,7 @@ class DropController extends DropzoneBaseController
         $userNbTextToRead = array();
 
         $activeRoute = $this->getRequest()->attributes->get('_route');
-      
+
         $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
 
         $returnReceiptArray = array();
@@ -142,41 +135,34 @@ class DropController extends DropzoneBaseController
             if (!empty($returnReceiptType)) {
                 // Récupération de la valeur de l'accusé de réceptoin
                 $returnReceiptArray[$document->getId()] = $returnReceiptType[0]->getReturnReceiptType()->getId();
-            }
-            else
-            {
+            } else {
                 $returnReceiptArray[$document->getId()] = 0;
             }
 
             // Récupération du premier enseignant qui a commenté ce document
-            $teacherCommentDocArray[$document->getId()]= 0;
+            $teacherCommentDocArray[$document->getId()] = 0;
             $userComments = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Comment')
             ->teacherCommentDocArray($document);
             // Traitement du tableau
             $foundAdminComment = false;
-            for ($indice = 0; $indice<count($userComments); $indice++)
-            {
+            for ($indice = 0; $indice < count($userComments); ++$indice) {
                 $ResourceNode = $dropzone->getResourceNode();
                 $workspace = $ResourceNode->getWorkspace();
                 // getting the  Manager role
-                $this->role_manager =  $this->get('claroline.manager.role_manager');
+                $this->role_manager = $this->get('claroline.manager.role_manager');
                 $role = $this->role_manager->getWorkspaceRolesForUser($userComments[$indice]->getUser(), $workspace);
 
                 // Traitement du tableau
-                for ($indiceRole = 0; $indiceRole<count($role); $indiceRole++)
-                {
+                for ($indiceRole = 0; $indiceRole < count($role); ++$indiceRole) {
                     $roleName = $role[$indiceRole]->getName();
-                    if (strpos('_' . $roleName, 'ROLE_WS_MANAGER') === 1)
-                    {
-                        if ($foundAdminComment == false)
-                        {
-                            $teacherCommentDocArray[$document->getId()]= 1;
+                    if (strpos('_'.$roleName, 'ROLE_WS_MANAGER') === 1) {
+                        if ($foundAdminComment == false) {
+                            $teacherCommentDocArray[$document->getId()] = 1;
                             $foundAdminComment = true;
                         }
                     }
                 }
             }
-
         }
 
         return array(
@@ -196,7 +182,7 @@ class DropController extends DropzoneBaseController
             'activeRoute' => $activeRoute,
             'collecticielOpenOrNot' => $collecticielOpenOrNot,
             'returnReceiptArray' => $returnReceiptArray,
-            'teacherCommentDocArray' => $teacherCommentDocArray
+            'teacherCommentDocArray' => $teacherCommentDocArray,
         );
     }
 
@@ -210,7 +196,6 @@ class DropController extends DropzoneBaseController
     }
 
     /**
-     *
      * @Route(
      *      "/{resourceId}/drops/by/user",
      *      name="innova_collecticiel_drops_by_user",
@@ -273,9 +258,11 @@ class DropController extends DropzoneBaseController
      * )
      * @ParamConverter("dropzone",class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      *
-     * @param  \Innova\CollecticielBundle\Entity\Dropzone         $dropzone
+     * @param \Innova\CollecticielBundle\Entity\Dropzone $dropzone
      * @param $userId
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
      * @internal param $user
      * @internal param $userId
      */
@@ -313,6 +300,7 @@ class DropController extends DropzoneBaseController
      * @param \Innova\CollecticielBundle\Entity\Dropzone $dropzone
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
      * @internal param $user
      * @internal param $userId
      */
@@ -332,6 +320,7 @@ class DropController extends DropzoneBaseController
      * @param \Innova\CollecticielBundle\Entity\Dropzone $dropzone
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
      * @internal param $user
      * @internal param $userId
      */
@@ -342,8 +331,10 @@ class DropController extends DropzoneBaseController
 
     /**
      *  Factorised function for lock & unlock users in a dropzone.
-     * @param  Dropzone                                           $dropzone
-     * @param  bool                                               $unlock
+     *
+     * @param Dropzone $dropzone
+     * @param bool     $unlock
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     private function unlockOrLockUsers(Dropzone $dropzone, $unlock = true)
@@ -433,7 +424,6 @@ class DropController extends DropzoneBaseController
     }
 
     /**
-     *
      * @Route(
      *      "/{resourceId}/drops/by/report",
      *      name="innova_collecticiel_drops_by_report",
@@ -564,7 +554,6 @@ class DropController extends DropzoneBaseController
      */
     public function dropsAwaitingAction($dropzone, $page)
     {
-
         $translator = $this->get('translator');
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
@@ -601,7 +590,7 @@ class DropController extends DropzoneBaseController
 
             // Calcul du compteur de documents sans accusé de réception
 
-            /** InnovaERV : ajout pour calculer les 2 zones **/
+            /* InnovaERV : ajout pour calculer les 2 zones **/
             // Nombre de commentaires non lus / Repo : Comment
             $nbCommentsPerUser = $this->getDoctrine()
                                 ->getRepository('InnovaCollecticielBundle:Comment')
@@ -611,7 +600,6 @@ class DropController extends DropzoneBaseController
             $nbTextToRead = $this->getDoctrine()
                                 ->getRepository('InnovaCollecticielBundle:Document')
                                 ->countTextToRead($drop->getUser(), $drop->getDropZone());
-
 
             // Nombre de demandes adressées / Repo : Document
             $countValideAndNotAdminDocs = $this->getDoctrine()
@@ -628,25 +616,22 @@ class DropController extends DropzoneBaseController
 
             $totalValideAndNotAdminDocs = $totalValideAndNotAdminDocs + $countValideAndNotAdminDocs;
 
-
             // Nombre d'AR pour cet utilisateur et pour ce dropzone / Repo : ReturnReceipt
             $countReturnReceiptForUserAndDropzone = $this->getDoctrine()
                                 ->getRepository('InnovaCollecticielBundle:ReturnReceipt')
                                 ->countTextToReadAll($this->get('security.token_storage')->getToken()->getUser(),
                                  $drop->getDropZone());
-            $countReturnReceiptForUserAndDropzone = $countReturnReceiptForUserAndDropzone -1;
+            $countReturnReceiptForUserAndDropzone = $countReturnReceiptForUserAndDropzone - 1;
 
             // Traitement du tableau
-            for ($indice = 0; $indice<=$countReturnReceiptForUserAndDropzone; $indice++)
-            {
+            for ($indice = 0; $indice <= $countReturnReceiptForUserAndDropzone; ++$indice) {
                 $documentId = $haveReturnReceiptOrNot[$indice]->getDocument()->getId();
                 $returnReceiptTypeId = $haveReturnReceiptOrNot[$indice]->getReturnReceiptType()->getId();
-                $haveReturnReceiptOrNotArray[$documentId]=$returnReceiptTypeId;
+                $haveReturnReceiptOrNotArray[$documentId] = $returnReceiptTypeId;
             }
 
             // Boucle pour calcul si le document X a un commentaire déposé par l'enseignant
             foreach ($drop->getDocuments() as $document2) {
-
                 if ($document2->getValidate() == 1) {
                     $documentId = $document2->getId();
 
@@ -678,16 +663,14 @@ class DropController extends DropzoneBaseController
 //                    "+ élève " . $commentReadForATeacherOrNot2 .
 //                    "+ créé admin lu admin " . $commentReadForATeacherOrNot3)
                     ;
-                    $haveCommentOrNotArray[$documentId]=$commentReadForATeacherOrNot+$commentReadForATeacherOrNot2+$commentReadForATeacherOrNot3;
+                    $haveCommentOrNotArray[$documentId] = $commentReadForATeacherOrNot + $commentReadForATeacherOrNot2 + $commentReadForATeacherOrNot3;
     //                var_dump("Indice : " . $indice);
-
                 }
             }
 
             // Affectations des résultats dans les tableaux
             $userToCommentCount[$drop->getUser()->getId()] = $nbCommentsPerUser;
             $userNbTextToRead[$drop->getUser()->getId()] = $nbTextToRead;
-
         }
 
         // Calcul du nombre de documents sans accusé de réception
@@ -733,7 +716,7 @@ class DropController extends DropzoneBaseController
         $teacherCommentDocArray = array();
 
         // Calcul du nombre d'AR en attente en prenant la même boucle que l'affichage de la liste.
-        $alertNbDocumentWithoutReturnReceipt=0;
+        $alertNbDocumentWithoutReturnReceipt = 0;
         foreach ($pager->getcurrentPageResults() as $drop) {
             foreach ($drop->getDocuments() as $document) {
 
@@ -748,39 +731,32 @@ class DropController extends DropzoneBaseController
                     // Récupération de la valeur de l'accusé de réceptoin
                     $id = $returnReceiptType[0]->getReturnReceiptType()->getId();
                     if ($id == 0) {
-                        $alertNbDocumentWithoutReturnReceipt++;
+                        ++$alertNbDocumentWithoutReturnReceipt;
                     }
+                } else {
+                    ++$alertNbDocumentWithoutReturnReceipt;
                 }
-                else
-                {
-                    $alertNbDocumentWithoutReturnReceipt++;
-                }
-
 
                 // Récupération du premier enseignant qui a commenté ce document
                 $userComments = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Comment')
                 ->teacherCommentDocArray($document);
                 // Traitement du tableau
                 $foundAdminComment = false;
-                for ($indice = 0; $indice<count($userComments); $indice++)
-                {
+                for ($indice = 0; $indice < count($userComments); ++$indice) {
                     $ResourceNode = $dropzone->getResourceNode();
                     $workspace = $ResourceNode->getWorkspace();
                     // getting the  Manager role
-                    $this->role_manager =  $this->get('claroline.manager.role_manager');
+                    $this->role_manager = $this->get('claroline.manager.role_manager');
                     $role = $this->role_manager->getWorkspaceRolesForUser($userComments[$indice]->getUser(), $workspace);
 
                     // Traitement du tableau
-                    for ($indiceRole = 0; $indiceRole<count($role); $indiceRole++)
-                    {
+                    for ($indiceRole = 0; $indiceRole < count($role); ++$indiceRole) {
                         $roleName = $role[$indiceRole]->getName();
-                        if (strpos('_' . $roleName, 'ROLE_WS_MANAGER') === 1)
-                        {
-                            if ($foundAdminComment == false)
-                            {
-                                $teacherCommentDocArray[$document->getId()]=
-                                $userComments[$indice]->getUser()->getFirstName() .
-                                " " . $userComments[$indice]->getUser()->getLastName();
+                        if (strpos('_'.$roleName, 'ROLE_WS_MANAGER') === 1) {
+                            if ($foundAdminComment == false) {
+                                $teacherCommentDocArray[$document->getId()] =
+                                $userComments[$indice]->getUser()->getFirstName().
+                                ' '.$userComments[$indice]->getUser()->getLastName();
                                 $foundAdminComment = true;
                             }
                         }
@@ -806,7 +782,7 @@ class DropController extends DropzoneBaseController
             'haveReturnReceiptOrNotArray' => $haveReturnReceiptOrNotArray,
             'alertNbDocumentWithoutReturnReceipt' => $alertNbDocumentWithoutReturnReceipt,
             'haveCommentOrNotArray' => $haveCommentOrNotArray,
-            'teacherCommentDocArray' => $teacherCommentDocArray
+            'teacherCommentDocArray' => $teacherCommentDocArray,
         ));
 
         return $dataToView;
@@ -1187,7 +1163,6 @@ class DropController extends DropzoneBaseController
      *      requirements={"resourceId" = "\d+"}
      * )
      * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
-     *
      */
     public function autoCloseDropsAction($dropzone)
     {
@@ -1232,7 +1207,7 @@ class DropController extends DropzoneBaseController
         $dropzoneManager = $this->get('innova.manager.dropzone_manager');
 
         $dropzoneVoter = $this->get('innova.manager.dropzone_voter');
-        
+
         // Récupération du Workspace
         $workspace = $dropzone->getResourceNode()->getWorkspace();
 
@@ -1264,7 +1239,7 @@ class DropController extends DropzoneBaseController
         $userNbAdressedRequests = array();
 
         foreach ($dropzone->getDrops() as $drop) {
-            /** InnovaERV : ajout pour calculer les 2 zones **/
+            /* InnovaERV : ajout pour calculer les 2 zones **/
 
             // Nombre de documents déposés/ Repo : Document
             $nbDocDropped = $this->getDoctrine()
@@ -1323,7 +1298,7 @@ class DropController extends DropzoneBaseController
             'userNbAdressedRequests' => $userNbAdressedRequests,
             'adminInnova' => $adminInnova,
             'usersByWorkspaces' => $usersByWorkspaces,
-            'collecticielOpenOrNot' => $collecticielOpenOrNot
+            'collecticielOpenOrNot' => $collecticielOpenOrNot,
         ));
 
         return $dataToView;
@@ -1336,14 +1311,15 @@ class DropController extends DropzoneBaseController
      *      options={"expose"=true}
      * )
      * @Template()
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function returnReceiptAction()
     {
-       
+
         // Récupération de l'ID de l'accusé de réception choisi
         $returnReceiptId = $this->get('request')->query->get('returnReceiptId');
-        $returnReceiptType = 
+        $returnReceiptType =
         $this->getDoctrine()->getRepository('InnovaCollecticielBundle:ReturnReceiptType')->find($returnReceiptId);
 
         // Récupération de l'ID du dropzone choisi
@@ -1352,17 +1328,16 @@ class DropController extends DropzoneBaseController
 
         // Récupération des documents sélectionnés
         $arrayDocsId = $this->get('request')->query->get('arrayDocsId');
-        
+
         $em = $this->getDoctrine()->getManager();
 
         // Récupération de l'utilisateur
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         // Parcours des documents sélectionnés et insertion en base de données
-        foreach($arrayDocsId as $documentId)
-        {
+        foreach ($arrayDocsId as $documentId) {
             // Par le JS, le document est transmis sous la forme "document_id_XX"
-            $docIdS = explode("_", $documentId);
+            $docIdS = explode('_', $documentId);
             $docId = $docIdS[2];
 
             if ($docId > 0) {
@@ -1402,7 +1377,7 @@ class DropController extends DropzoneBaseController
                 //$userAddDocument = $this->get('security.context')->getToken()->getUser()->getId(); 
                 $userDropDocument = $document->getDrop()->getUser()->getId();
                 $userSenderDocument = $document->getSender()->getId();
-            
+
                 // Ici avertir l'étudiant qui a travaillé sur ce collecticiel
                 $usersIds[] = $userDropDocument;
 
@@ -1411,7 +1386,6 @@ class DropController extends DropzoneBaseController
 
                 $this->get('event_dispatcher')->dispatch('log', $event);
                 // Fin de l'ajout de la notification
-
             }
         }
 
@@ -1429,7 +1403,7 @@ class DropController extends DropzoneBaseController
         $canEdit = $dropzoneVoter->checkEditRight($dropzone);
 
         $activeRoute = $this->getRequest()->attributes->get('_route');
-      
+
         $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
 
         $redirectRoot = $this->generateUrl(
@@ -1441,10 +1415,9 @@ class DropController extends DropzoneBaseController
 
         return new JsonResponse(
             array(
-                'link' => $redirectRoot
+                'link' => $redirectRoot,
             )
         );
-
     }
 
     /**
@@ -1454,11 +1427,12 @@ class DropController extends DropzoneBaseController
      *      options={"expose"=true}
      * )
      * @Template()
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function backLinkAction()
     {
-       
+
         // Récupération de l'ID du dropzone choisi
         $dropzoneId = $this->get('request')->query->get('dropzoneId');
         $dropzone = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Dropzone')->find($dropzoneId);
@@ -1472,10 +1446,8 @@ class DropController extends DropzoneBaseController
 
         return new JsonResponse(
             array(
-                'link' => $redirectRoot
+                'link' => $redirectRoot,
             )
         );
-
     }
-
 }

@@ -2,7 +2,6 @@
 
 namespace Icap\PortfolioBundle\Entity\Widget;
 
-
 interface SubWidgetInterface
 {
     /**

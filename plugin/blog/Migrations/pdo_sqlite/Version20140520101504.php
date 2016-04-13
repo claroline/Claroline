@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Auto-generated migration based on mapping information: modify it with caution
+ * Auto-generated migration based on mapping information: modify it with caution.
  *
  * Generation date: 2014/05/20 10:15:05
  */
@@ -14,21 +14,21 @@ class Version20140520101504 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE icap__blog_comment 
             ADD COLUMN update_date DATETIME DEFAULT NULL
-        ");
+        ');
     }
 
     public function down(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             DROP INDEX IDX_95EB616FA76ED395
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP INDEX IDX_95EB616F4B89032C
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TEMPORARY TABLE __temp__icap__blog_comment AS 
             SELECT id, 
             user_id, 
@@ -38,11 +38,11 @@ class Version20140520101504 extends AbstractMigration
             publication_date, 
             status 
             FROM icap__blog_comment
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE icap__blog_comment
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TABLE icap__blog_comment (
                 id INTEGER NOT NULL, 
                 user_id INTEGER DEFAULT NULL, 
@@ -57,8 +57,8 @@ class Version20140520101504 extends AbstractMigration
                 CONSTRAINT FK_95EB616F4B89032C FOREIGN KEY (post_id) 
                 REFERENCES icap__blog_post (id) NOT DEFERRABLE INITIALLY IMMEDIATE
             )
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             INSERT INTO icap__blog_comment (
                 id, user_id, post_id, message, creation_date, 
                 publication_date, status
@@ -71,15 +71,15 @@ class Version20140520101504 extends AbstractMigration
             publication_date, 
             status 
             FROM __temp__icap__blog_comment
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE __temp__icap__blog_comment
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE INDEX IDX_95EB616FA76ED395 ON icap__blog_comment (user_id)
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE INDEX IDX_95EB616F4B89032C ON icap__blog_comment (post_id)
-        ");
+        ');
     }
 }

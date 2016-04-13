@@ -73,21 +73,21 @@ class WorkspaceManagerTest extends MockeryTestCase
         $toolsInfos = array(
             'toolName1' => array(
                 'perms' => array('ROLE_WS_MANAGER', 'ROLE_WS_VISITOR'),
-                'name' => 'orderedToolName1'
+                'name' => 'orderedToolName1',
             ),
             'toolName2' => array(
                 'perms' => array('ROLE_WS_MANAGER', 'ROLE_WS_VISITOR'),
-                'name' => 'orderedToolName2'
-            )
+                'name' => 'orderedToolName2',
+            ),
         );
 
         $tools = array(
             'tools' => array(
                 'toolName1' => array(
                     'config' => 'config',
-                    'files' => array('file1')
-                )
-            )
+                    'files' => array('file1'),
+                ),
+            ),
         );
 
         $config = $this->mock('Claroline\CoreBundle\Library\Workspace\Configuration');
@@ -188,11 +188,11 @@ class WorkspaceManagerTest extends MockeryTestCase
                 'exportRolesSection',
                 'exportRootPermsSection',
                 'exportToolsInfosSection',
-                'exportToolsSection'
+                'exportToolsSection',
             )
         );
 
-        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace;
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
         $configName = 'configname';
         $archive = $this->mock('ZipArchive');
 
@@ -221,7 +221,7 @@ class WorkspaceManagerTest extends MockeryTestCase
         $template->shouldReceive('setName')->once()->with('config');
         $this->om->shouldReceive('persist')->once()->with($template);
         $this->om->shouldReceive('flush')->once();
-        $archive->shouldReceive('open')->once()->with($this->templateDir. 'guid.zip', \ZipArchive::CREATE);
+        $archive->shouldReceive('open')->once()->with($this->templateDir.'guid.zip', \ZipArchive::CREATE);
         $this->assertEquals($archive, $this->getManager()->createArchive('config'));
     }
 
@@ -245,7 +245,7 @@ class WorkspaceManagerTest extends MockeryTestCase
         $this->roleRepo->shouldReceive('findByWorkspace')->once()
             ->with($workspace)->andReturn(array($roleA, $roleB));
 
-         $this->assertEquals($expectedResult, $this->getManager()->exportRolesSection($workspace));
+        $this->assertEquals($expectedResult, $this->getManager()->exportRolesSection($workspace));
     }
 
     public function testExportRootPermsSection()
@@ -255,22 +255,22 @@ class WorkspaceManagerTest extends MockeryTestCase
             'open' => true,
             'delete' => false,
             'export' => false,
-            'edit' => false
+            'edit' => false,
         );
 
         $creations = array(
-            'name' => 'directory'
+            'name' => 'directory',
         );
 
         $expectedResult = array(
-            "root_perms" => array(
+            'root_perms' => array(
                     'ROLE_WS_TEST1' => array(
                         'copy' => true,
                         'open' => true,
                         'delete' => false,
                         'export' => false,
                         'edit' => false,
-                        'create' => $creations
+                        'create' => $creations,
                     ),
                     'ROLE_WS_TEST2' => array(
                         'copy' => true,
@@ -278,9 +278,9 @@ class WorkspaceManagerTest extends MockeryTestCase
                         'delete' => false,
                         'export' => false,
                         'edit' => false,
-                        'create' => array()
-                    )
-                )
+                        'create' => array(),
+                    ),
+                ),
         );
 
         $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
@@ -315,17 +315,16 @@ class WorkspaceManagerTest extends MockeryTestCase
     public function testExportToolsInfosSection()
     {
         $expected = array(
-            'tools_infos' =>
-                array(
+            'tools_infos' => array(
                     'toolName1' => array(
                         'perms' => array('ROLE_WS_TEST1', 'ROLE_WS_TEST2'),
-                        'name' => 'orderedToolName1'
+                        'name' => 'orderedToolName1',
                     ),
                     'toolName2' => array(
                         'perms' => array('ROLE_WS_TEST1', 'ROLE_WS_TEST2'),
-                        'name' => 'orderedToolName2'
-                    )
-                )
+                        'name' => 'orderedToolName2',
+                    ),
+                ),
         );
 
         $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
@@ -365,9 +364,9 @@ class WorkspaceManagerTest extends MockeryTestCase
             'tools' => array(
                 'toolName1' => array(
                     'config' => 'config',
-                    'files' => array('file1')
-                )
-            )
+                    'files' => array('file1'),
+                ),
+            ),
         );
 
         $workspace = new \Claroline\CoreBundle\Entity\Workspace\Workspace();
@@ -731,7 +730,7 @@ class WorkspaceManagerTest extends MockeryTestCase
             );
         } else {
             $stringMocked = '[';
-                $stringMocked .= array_pop($mockedMethods);
+            $stringMocked .= array_pop($mockedMethods);
 
             foreach ($mockedMethods as $mockedMethod) {
                 $stringMocked .= ",{$mockedMethod}";
@@ -740,7 +739,7 @@ class WorkspaceManagerTest extends MockeryTestCase
             $stringMocked .= ']';
 
             return $this->mock(
-                'Claroline\CoreBundle\Manager\WorkspaceManager' . $stringMocked,
+                'Claroline\CoreBundle\Manager\WorkspaceManager'.$stringMocked,
                 array(
                     $this->homeTabManager,
                     $this->roleManager,
@@ -752,7 +751,7 @@ class WorkspaceManagerTest extends MockeryTestCase
                     $this->ut,
                     $this->templateDir,
                     $this->pagerFactory,
-                    $this->security
+                    $this->security,
                 )
             );
         }

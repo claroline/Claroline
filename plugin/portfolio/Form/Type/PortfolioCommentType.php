@@ -43,7 +43,7 @@ class PortfolioCommentType extends AbstractType
 
         $builder->addEventListener(
             FormEvents::POST_SUBMIT,
-            function(FormEvent $event) use ($user) {
+            function (FormEvent $event) use ($user) {
                 /** @var \Icap\PortfolioBundle\Entity\PortfolioComment $data */
                 $data = $event->getData();
 
@@ -61,9 +61,9 @@ class PortfolioCommentType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Icap\PortfolioBundle\Entity\PortfolioComment',
+                'data_class' => 'Icap\PortfolioBundle\Entity\PortfolioComment',
                 'translation_domain' => 'icap_portfolio_comment',
-                'csrf_protection'    => false,
+                'csrf_protection' => false,
             )
         );
     }

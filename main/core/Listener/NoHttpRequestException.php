@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Listener;
 
 class NoHttpRequestException extends \Exception
 {
-    
     /**
      * @DI\Observe("kernel.request")
      *

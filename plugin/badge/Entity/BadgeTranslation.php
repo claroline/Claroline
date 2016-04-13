@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class BadgeTranslation
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -38,7 +38,7 @@ class BadgeTranslation
     protected $badge;
 
     /**
-     * @var string $locale
+     * @var string
      *
      * @ORM\Column(type="string", length=8, nullable=false)
      * @Expose
@@ -46,7 +46,7 @@ class BadgeTranslation
     protected $locale;
 
     /**
-     * @var string $name
+     * @var string
      *
      * @ORM\Column(type="string", length=128, nullable=false)
      * @Expose
@@ -55,7 +55,7 @@ class BadgeTranslation
     protected $name;
 
     /**
-     * @var string $description
+     * @var string
      *
      * @ORM\Column(type="string", length=128, nullable=false)
      * @Expose
@@ -64,7 +64,7 @@ class BadgeTranslation
     protected $description;
 
     /**
-     * @var string $slug
+     * @var string
      *
      * @Gedmo\Slug(fields={"name"})
      * @ORM\Column(type="string", length=128, nullable=false)
@@ -72,7 +72,7 @@ class BadgeTranslation
     protected $slug;
 
     /**
-     * @var string $criteria
+     * @var string
      *
      * @ORM\Column(type="text", nullable=false)
      * @Expose
@@ -222,7 +222,7 @@ class BadgeTranslation
     public function __clone()
     {
         if ($this->id) {
-            $this->id    = null;
+            $this->id = null;
             $this->badge = null;
         }
     }

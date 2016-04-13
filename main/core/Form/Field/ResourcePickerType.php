@@ -75,7 +75,7 @@ class ResourcePickerType extends TextType
                 'attr' => $this->defaultAttributes,
                 'display_view_button' => true,
                 'display_browse_button' => true,
-                'display_download_button' => true
+                'display_download_button' => true,
             )
         );
 
@@ -96,13 +96,13 @@ class ResourcePickerType extends TextType
     }
 
     /**
-     * Get resource node
+     * Get resource node.
      */
     private function getResourceNode(FormInterface $form)
     {
         if ($form->getData() instanceof ResourceNode) {
             return $form->getData();
-        } else if ($form->getData() and $form->getData() != '') {
+        } elseif ($form->getData() and $form->getData() != '') {
             return $this->resourceManager->getById($form->getData());
         }
     }

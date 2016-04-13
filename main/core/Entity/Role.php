@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity;
 
-use \RuntimeException;
+use RuntimeException;
 use Symfony\Component\Security\Core\Role\RoleInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
@@ -178,13 +178,13 @@ class Role implements RoleInterface
 
     public function __construct()
     {
-        $this->users             = new ArrayCollection();
-        $this->resourceContext   = new ArrayCollection();
-        $this->groups            = new ArrayCollection();
-        $this->facets            = new ArrayCollection();
-        $this->fieldFacetsRoles  = new ArrayCollection();
-        $this->toolRights        = new ArrayCollection();
-        $this->pwsToolConfig     = new ArrayCollection();
+        $this->users = new ArrayCollection();
+        $this->resourceContext = new ArrayCollection();
+        $this->groups = new ArrayCollection();
+        $this->facets = new ArrayCollection();
+        $this->fieldFacetsRoles = new ArrayCollection();
+        $this->toolRights = new ArrayCollection();
+        $this->pwsToolConfig = new ArrayCollection();
         $this->profileProperties = new ArrayCollection();
     }
 
@@ -199,6 +199,7 @@ class Role implements RoleInterface
      * cannot be modified by this setter.
      *
      * @param string $name
+     *
      * @throws \RuntimeException if the name isn't prefixed by 'ROLE_' or if the role is platform-wide
      */
     public function setName($name)
@@ -323,7 +324,7 @@ class Role implements RoleInterface
     public function getMaxUsers()
     {
         //2147483647 is the maximium integer in the database field.
-        return ($this->maxUsers === null) ? 2147483647: $this->maxUsers;
+        return ($this->maxUsers === null) ? 2147483647 : $this->maxUsers;
     }
 
     public function addToolRights(ToolRights $tr)
@@ -375,6 +376,6 @@ class Role implements RoleInterface
     {
         return is_null($this->workspace) ?
             $this->translationKey :
-            '[' . $this->workspace->getName() . '] ' . $this->translationKey;
+            '['.$this->workspace->getName().'] '.$this->translationKey;
     }
 }

@@ -9,9 +9,9 @@ use Icap\BlogBundle\Entity\Statusable;
 class TagRepository extends EntityRepository
 {
     /**
-     * @param Blog $blog
-     * @param bool $executeQuery
-     * @param integer|null $max
+     * @param Blog     $blog
+     * @param bool     $executeQuery
+     * @param int|null $max
      *
      * @return array|\Doctrine\ORM\AbstractQuery
      */
@@ -36,6 +36,6 @@ class TagRepository extends EntityRepository
             $query->setMaxResults($max);
         }
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $query->getResult() : $query;
     }
 }

@@ -4,7 +4,6 @@ namespace Icap\BadgeBundle\Controller\Tool;
 
 use Icap\BadgeBundle\Entity\Badge;
 use Icap\BadgeBundle\Entity\BadgeClaim;
-use Icap\BadgeBundle\Entity\BadgeRule;
 use Icap\BadgeBundle\Entity\BadgeTranslation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -49,37 +48,36 @@ class WorkspaceController extends Controller
         /** @var \Icap\BadgeBundle\Repository\UserBadgeRepository $userBadgeRepository */
         $userBadgeRepository = $this->getDoctrine()->getRepository('IcapBadgeBundle:UserBadge');
 
-        $totalBadges       = $badgeRepository->countByWorkspace($workspace);
+        $totalBadges = $badgeRepository->countByWorkspace($workspace);
         $totalBadgeAwarded = $userBadgeRepository->countAwardedBadgeByWorkspace($workspace);
 
         $parameters = array(
-            'badgePage'    => $badgePage,
-            'claimPage'    => $claimPage,
-            'userPage'    => $userPage,
-            'workspace'    => $workspace,
-            'add_link'     => 'icap_badge_workspace_tool_badges_add',
-            'edit_link'    => array(
-                'url'    => 'icap_badge_workspace_tool_badges_edit',
-                'suffix' => '#!edit'
+            'badgePage' => $badgePage,
+            'claimPage' => $claimPage,
+            'userPage' => $userPage,
+            'workspace' => $workspace,
+            'add_link' => 'icap_badge_workspace_tool_badges_add',
+            'edit_link' => array(
+                'url' => 'icap_badge_workspace_tool_badges_edit',
+                'suffix' => '#!edit',
             ),
-            'delete_link'      => 'icap_badge_workspace_tool_badges_delete',
-            'view_link'        => 'icap_badge_workspace_tool_badges_edit',
-            'current_link'     => 'icap_badge_workspace_tool_badges',
-            'claim_link'       => 'icap_badge_workspace_tool_manage_claim',
-            'statistics_link'  => 'icap_badge_workspace_tool_badges_statistics',
-            'totalBadges'          => $totalBadges,
-            'totalAwarding'        => $userBadgeRepository->countAwardingByWorkspace($workspace),
-            'totalBadgeAwarded'    => $totalBadgeAwarded,
+            'delete_link' => 'icap_badge_workspace_tool_badges_delete',
+            'view_link' => 'icap_badge_workspace_tool_badges_edit',
+            'current_link' => 'icap_badge_workspace_tool_badges',
+            'claim_link' => 'icap_badge_workspace_tool_manage_claim',
+            'statistics_link' => 'icap_badge_workspace_tool_badges_statistics',
+            'totalBadges' => $totalBadges,
+            'totalAwarding' => $userBadgeRepository->countAwardingByWorkspace($workspace),
+            'totalBadgeAwarded' => $totalBadgeAwarded,
             'totalBadgeNotAwarded' => $totalBadges - $totalBadgeAwarded,
             'route_parameters' => array(
-                'workspaceId' => $workspace->getId()
+                'workspaceId' => $workspace->getId(),
             ),
         );
 
-
         return array(
-            'workspace'   => $workspace,
-            'parameters'  => $parameters
+            'workspace' => $workspace,
+            'parameters' => $parameters,
         );
     }
 
@@ -126,8 +124,8 @@ class WorkspaceController extends Controller
 
         return array(
             'workspace' => $workspace,
-            'form'  => $this->get('icap_badge.form.badge.workspace')->createView(),
-            'badge' => $badge
+            'form' => $this->get('icap_badge.form.badge.workspace')->createView(),
+            'badge' => $badge,
         );
     }
 
@@ -144,14 +142,14 @@ class WorkspaceController extends Controller
     public function editAction(Request $request, Workspace $workspace, Badge $badge, $page = 1)
     {
         if (null === $badge->getWorkspace()) {
-            throw $this->createNotFoundException("No badge found.");
+            throw $this->createNotFoundException('No badge found.');
         }
 
         $this->checkUserIsAllowed($workspace);
 
-        $query   = $this->getDoctrine()->getRepository('IcapBadgeBundle:UserBadge')->findByBadge($badge, false);
+        $query = $this->getDoctrine()->getRepository('IcapBadgeBundle:UserBadge')->findByBadge($badge, false);
         $adapter = new DoctrineORMAdapter($query);
-        $pager   = new Pagerfanta($adapter);
+        $pager = new Pagerfanta($adapter);
 
         try {
             $pager->setCurrentPage($page);
@@ -179,9 +177,9 @@ class WorkspaceController extends Controller
 
         return array(
             'workspace' => $workspace,
-            'form'      => $this->get('icap_badge.form.badge.workspace')->createView(),
-            'badge'     => $badge,
-            'pager'     => $pager
+            'form' => $this->get('icap_badge.form.badge.workspace')->createView(),
+            'badge' => $badge,
+            'pager' => $pager,
         );
     }
 
@@ -198,7 +196,7 @@ class WorkspaceController extends Controller
     public function deleteAction(Workspace $workspace, Badge $badge)
     {
         if (null === $badge->getWorkspace()) {
-            throw $this->createNotFoundException("No badge found.");
+            throw $this->createNotFoundException('No badge found.');
         }
 
         $this->checkUserIsAllowed($workspace);
@@ -240,7 +238,7 @@ class WorkspaceController extends Controller
     public function awardAction(Request $request, Workspace $workspace, Badge $badge, User $loggedUser)
     {
         if (null === $badge->getWorkspace()) {
-            throw $this->createNotFoundException("No badge found.");
+            throw $this->createNotFoundException('No badge found.');
         }
 
         $this->checkUserIsAllowed($workspace);
@@ -255,8 +253,8 @@ class WorkspaceController extends Controller
                 try {
                     $doctrine = $this->getDoctrine();
 
-                    $group   = $form->get('group')->getData();
-                    $user    = $form->get('user')->getData();
+                    $group = $form->get('group')->getData();
+                    $user = $form->get('user')->getData();
                     $comment = $form->get('comment')->getData();
 
                     /** @var \Claroline\CoreBundle\Entity\User[] $users */
@@ -310,8 +308,8 @@ class WorkspaceController extends Controller
 
         return array(
             'workspace' => $workspace,
-            'badge'     => $badge,
-            'form'      => $form->createView()
+            'badge' => $badge,
+            'form' => $form->createView(),
         );
     }
 
@@ -328,7 +326,7 @@ class WorkspaceController extends Controller
     public function unawardAction(Request $request, Workspace $workspace, Badge $badge, User $user)
     {
         if (null === $badge->getWorkspace()) {
-            throw $this->createNotFoundException("No badge found.");
+            throw $this->createNotFoundException('No badge found.');
         }
 
         $this->checkUserIsAllowed($workspace);
@@ -383,7 +381,7 @@ class WorkspaceController extends Controller
     public function manageClaimAction(Workspace $workspace, BadgeClaim $badgeClaim, $validate = false)
     {
         if (null === $badgeClaim->getBadge()->getWorkspace()) {
-            throw $this->createNotFoundException("No badge found.");
+            throw $this->createNotFoundException('No badge found.');
         }
 
         $this->checkUserIsAllowed($workspace);
@@ -441,19 +439,19 @@ class WorkspaceController extends Controller
         /** @var \Icap\BadgeBundle\Repository\UserBadgeRepository $userBadgeRepository */
         $userBadgeRepository = $this->getDoctrine()->getRepository('IcapBadgeBundle:UserBadge');
 
-        $totalBadges       = $badgeRepository->countByWorkspace($workspace);
+        $totalBadges = $badgeRepository->countByWorkspace($workspace);
         $totalBadgeAwarded = $userBadgeRepository->countAwardedBadgeByWorkspace($workspace);
 
         $statistics = array(
-            'totalBadges'          => $totalBadges,
-            'totalAwarding'        => $userBadgeRepository->countAwardingByWorkspace($workspace),
-            'totalBadgeAwarded'    => $totalBadgeAwarded,
-            'totalBadgeNotAwarded' => $totalBadges - $totalBadgeAwarded
+            'totalBadges' => $totalBadges,
+            'totalAwarding' => $userBadgeRepository->countAwardingByWorkspace($workspace),
+            'totalBadgeAwarded' => $totalBadgeAwarded,
+            'totalBadgeNotAwarded' => $totalBadges - $totalBadgeAwarded,
         );
 
         return array(
-            'workspace'  => $workspace,
-            'statistics' => $statistics
+            'workspace' => $workspace,
+            'statistics' => $statistics,
         );
     }
 

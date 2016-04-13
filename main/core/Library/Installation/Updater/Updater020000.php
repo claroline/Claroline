@@ -87,8 +87,8 @@ class Updater020000 extends Updater
     {
         $this->log('Dumping logos and icons...');
         $filesystem = new Filesystem();
-        $imgDir = __DIR__ . '/../../../Resources/public/images';
-        $webDir = __DIR__ . '/../../../../../../web';
+        $imgDir = __DIR__.'/../../../Resources/public/images';
+        $webDir = __DIR__.'/../../../../../../web';
         $filesystem->mirror("{$imgDir}/logos", "{$webDir}/uploads/logos");
         $filesystem->copy("{$imgDir}/ico/favicon.ico", "{$webDir}/favicon.ico", true);
         $filesystem->copy("{$imgDir}/ico/apple-touch-icon.png", "{$webDir}/apple-touch-icon.png", true);
@@ -126,18 +126,18 @@ class Updater020000 extends Updater
     private function migrateWorkspaceWidgetData()
     {
         $this->log('Migrating workspace widgets...');
-        $select = "
+        $select = '
             SELECT instance. * , widget.name AS widget_name
             FROM claro_widget_display instance
             RIGHT JOIN claro_widget widget ON instance.widget_id = widget.id
             WHERE parent_id IS NOT NULL
             AND instance.is_desktop = false
-        ";
+        ';
         $rows = $this->conn->query($select);
 
         foreach ($rows as $row) {
-            $wsId = $row['workspace_id'] ? $row['workspace_id']: 'null';
-            $userId = $row['user_id'] ? $row['user_id']: 'null';
+            $wsId = $row['workspace_id'] ? $row['workspace_id'] : 'null';
+            $userId = $row['user_id'] ? $row['user_id'] : 'null';
             $name = $this->conn->quote($this->translator->trans($row['widget_name'], array(), 'widget'));
             $query = "
                 INSERT INTO claro_widget_instance (workspace_id, user_id, widget_id, is_admin, is_desktop, name)
@@ -153,7 +153,7 @@ class Updater020000 extends Updater
         $result = $this->conn->query("SELECT id FROM claro_widget WHERE name = 'simple_text'");
         $widget = $result->fetch();
         $widgetId = $widget['id'];
-        $configs = $this->conn->query("SELECT * FROM simple_text_workspace_widget_config");
+        $configs = $this->conn->query('SELECT * FROM simple_text_workspace_widget_config');
 
         foreach ($configs as $config) {
             if (!$config['is_default']) {
@@ -171,9 +171,9 @@ class Updater020000 extends Updater
                 AND widget_id = {$widgetId}
             ";
             $instance = $this->conn->query($query)->fetch();
-            $this->conn->query("
+            $this->conn->query('
                 INSERT INTO claro_simple_text_widget_config (content, widgetInstance_id)
-                VALUES (". $this->conn->quote($config['content']) . ", {$instance['id']})
+                VALUES ('.$this->conn->quote($config['content']).", {$instance['id']})
             ");
         }
     }
@@ -201,13 +201,13 @@ class Updater020000 extends Updater
             ";
 
             if (is_null($row['user_id'])) {
-                $widgetInstanceReq .= " AND user_id IS NULL";
+                $widgetInstanceReq .= ' AND user_id IS NULL';
             } else {
                 $widgetInstanceReq .= " AND user_id = {$row['user_id']}";
             }
 
             if (is_null($row['workspace_id'])) {
-                $widgetInstanceReq .= " AND workspace_id IS NULL";
+                $widgetInstanceReq .= ' AND workspace_id IS NULL';
             } else {
                 $widgetInstanceReq .= " AND workspace_id = {$row['workspace_id']}";
             }
@@ -277,7 +277,7 @@ class Updater020000 extends Updater
         } catch (MappingException $e) {
             $this->log(
                 'A MappingException has been thrown while trying to get HomeTabConfig'
-                . ' or WidgetHomeTabConfig repository'
+                .' or WidgetHomeTabConfig repository'
             );
         }
     }

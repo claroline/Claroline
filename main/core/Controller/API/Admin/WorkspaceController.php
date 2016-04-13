@@ -66,8 +66,7 @@ class WorkspaceController extends FOSRestController
         TokenStorageInterface $tokenStorage,
         ClaroUtilities $utilities,
         WorkspaceManager $workspaceManager
-    )
-    {
+    ) {
         $this->formFactory = $formFactory;
         $this->om = $om;
         $this->request = $request;
@@ -155,7 +154,7 @@ class WorkspaceController extends FOSRestController
 
         if ($form->isValid()) {
             $config = Configuration::fromTemplate(
-                $this->templateDir . DIRECTORY_SEPARATOR . 'default.zip'
+                $this->templateDir.DIRECTORY_SEPARATOR.'default.zip'
             );
             $config->setWorkspaceName($form->get('name')->getData());
             $config->setWorkspaceCode($form->get('code')->getData());

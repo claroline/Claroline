@@ -9,7 +9,9 @@ class LastMessageWidgetConfigRepository extends EntityRepository
 {
     /**
      * @param WidgetInstance $widgetInstance
+     *
      * @return \Claroline\ForumBundle\Entity\Widget\LastMessageWidgetConfig|null
+     *
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findOneOrNullByWidgetInstance(WidgetInstance $widgetInstance)
@@ -20,5 +22,4 @@ class LastMessageWidgetConfigRepository extends EntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
-
 }

@@ -20,13 +20,19 @@
             </label>
             <div class="col-sm-10">
                 <select name="transport" class="form-control auto-submit">
-                    <option <?php if ($transport === 'smtp') echo 'selected' ?>>
+                    <option <?php if ($transport === 'smtp') {
+    echo 'selected';
+} ?>>
                         SMTP
                     </option>
-                    <option <?php if ($transport === 'sendmail') echo 'selected' ?>>
+                    <option <?php if ($transport === 'sendmail') {
+    echo 'selected';
+} ?>>
                         Sendmail / Postfix
                     </option>
-                    <option <?php if ($transport === 'gmail') echo 'selected' ?>>
+                    <option <?php if ($transport === 'gmail') {
+    echo 'selected';
+} ?>>
                         Gmail
                     </option>
                 </select>
@@ -34,7 +40,9 @@
         </div>
 
         <?php if ($transport === 'smtp'): ?>
-            <div class="form-group <?php if (isset($errors['host'])) echo 'has-error' ?>">
+            <div class="form-group <?php if (isset($errors['host'])) {
+    echo 'has-error';
+} ?>">
                 <label class="control-label col-sm-2">
                     <span class="required">*</span>
                     <?php echo $trans('host') ?>
@@ -52,7 +60,9 @@
                 </span>
                 <?php endif ?>
             </div>
-            <div class="form-group <?php if (isset($errors['username'])) echo 'has-error' ?>">
+            <div class="form-group <?php if (isset($errors['username'])) {
+    echo 'has-error';
+} ?>">
                 <label class="control-label col-sm-2">
                     <?php echo $trans('username') ?>
                 </label>
@@ -69,7 +79,9 @@
                 </span>
                 <?php endif ?>
             </div>
-            <div class="form-group <?php if (isset($errors['password'])) echo 'has-error' ?>">
+            <div class="form-group <?php if (isset($errors['password'])) {
+    echo 'has-error';
+} ?>">
                 <label class="control-label col-sm-2">
                     <?php echo $trans('password') ?>
                 </label>
@@ -86,18 +98,26 @@
                 </span>
                 <?php endif ?>
             </div>
-            <div class="form-group <?php if (isset($errors['encryption'])) echo 'has-error' ?>">
+            <div class="form-group <?php if (isset($errors['encryption'])) {
+    echo 'has-error';
+} ?>">
                 <label class="control-label col-sm-2">
                     <?php echo $trans('encryption') ?>
                 </label>
                 <div class="col-sm-10">
                     <select name="encryption" class="form-control">
-                        <option <?php if ($var('mailing_settings')->getTransportOption('encryption') === '') echo 'selected' ?>>
+                        <option <?php if ($var('mailing_settings')->getTransportOption('encryption') === '') {
+    echo 'selected';
+} ?>>
                         </option>
-                        <option <?php if ($var('mailing_settings')->getTransportOption('encryption') === 'tls') echo 'selected' ?>>
+                        <option <?php if ($var('mailing_settings')->getTransportOption('encryption') === 'tls') {
+    echo 'selected';
+} ?>>
                             tls
                         </option>
-                        <option <?php if ($var('mailing_settings')->getTransportOption('encryption') === 'ssl') echo 'selected' ?>>
+                        <option <?php if ($var('mailing_settings')->getTransportOption('encryption') === 'ssl') {
+    echo 'selected';
+} ?>>
                             ssl
                         </option>
                     </select>
@@ -108,21 +128,31 @@
                 </span>
                 <?php endif ?>
             </div>
-            <div class="form-group <?php if (isset($errors['auth_mode'])) echo 'has-error' ?>">
+            <div class="form-group <?php if (isset($errors['auth_mode'])) {
+    echo 'has-error';
+} ?>">
                 <label class="control-label col-sm-2">
                     <?php echo $trans('auth_mode') ?>
                 </label>
                 <div class="col-sm-10">
                     <select name="auth_mode" class="form-control">
-                        <option <?php if ($var('mailing_settings')->getTransportOption('auth_mode') === '') echo 'selected' ?>>
+                        <option <?php if ($var('mailing_settings')->getTransportOption('auth_mode') === '') {
+    echo 'selected';
+} ?>>
                         </option>
-                        <option <?php if ($var('mailing_settings')->getTransportOption('auth_mode') === 'plain') echo 'selected' ?>>
+                        <option <?php if ($var('mailing_settings')->getTransportOption('auth_mode') === 'plain') {
+    echo 'selected';
+} ?>>
                             plain
                         </option>
-                        <option <?php if ($var('mailing_settings')->getTransportOption('auth_mode') === 'login') echo 'selected' ?>>
+                        <option <?php if ($var('mailing_settings')->getTransportOption('auth_mode') === 'login') {
+    echo 'selected';
+} ?>>
                             login
                         </option>
-                        <option <?php if ($var('mailing_settings')->getTransportOption('auth_mode') === 'cram-md5') echo 'selected' ?>>
+                        <option <?php if ($var('mailing_settings')->getTransportOption('auth_mode') === 'cram-md5') {
+    echo 'selected';
+} ?>>
                             cram-md5
                         </option>
                     </select>
@@ -133,7 +163,9 @@
                 </span>
                 <?php endif ?>
             </div>
-            <div class="form-group <?php if (isset($errors['port'])) echo 'has-error' ?>">
+            <div class="form-group <?php if (isset($errors['port'])) {
+    echo 'has-error';
+} ?>">
                 <label class="control-label col-sm-2">
                     <?php echo $trans('port') ?>
                 </label>
@@ -151,7 +183,9 @@
                 <?php endif ?>
             </div>
         <?php elseif ($transport === 'gmail'): ?>
-            <div class="form-group <?php if (isset($errors['username'])) echo 'has-error' ?>">
+            <div class="form-group <?php if (isset($errors['username'])) {
+    echo 'has-error';
+} ?>">
                 <label class="control-label col-sm-2">
                     <span class="required">*</span>
                     <?php echo $trans('username') ?>
@@ -169,7 +203,9 @@
                 </span>
                 <?php endif ?>
             </div>
-            <div class="form-group <?php if (isset($errors['password'])) echo 'has-error' ?>">
+            <div class="form-group <?php if (isset($errors['password'])) {
+    echo 'has-error';
+} ?>">
                 <label class="control-label col-sm-2">
                     <span class="required">*</span>
                     <?php echo $trans('password') ?>

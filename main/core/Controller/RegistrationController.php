@@ -67,8 +67,7 @@ class RegistrationController extends Controller
         RoleManager $roleManager,
         FacetManager $facetManager,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->request = $request;
         $this->userManager = $userManager;
         $this->configHandler = $configHandler;
@@ -175,7 +174,7 @@ class RegistrationController extends Controller
         $formats = array('json', 'xml');
 
         if (!in_array($format, $formats)) {
-            Return new Response(
+            return new Response(
                 "The format {$format} is not supported (supported formats are 'json', 'xml')",
                 400
             );
@@ -239,8 +238,8 @@ class RegistrationController extends Controller
      * ie: if the self registration is disabled, he can't.
      *
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
-     * @return Respone
      *
+     * @return Respone
      */
     private function checkAccess()
     {

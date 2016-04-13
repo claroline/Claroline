@@ -39,9 +39,9 @@ class LogDesktopWidgetConfigType extends AbstractType
                     '5' => '5',
                     '10' => '10',
                     '15' => '15',
-                    '20' => '20'
+                    '20' => '20',
                 ),
-                'required' => true
+                'required' => true,
             )
         );
     }
@@ -56,7 +56,7 @@ class LogDesktopWidgetConfigType extends AbstractType
         $resolver->setDefaults(
             array(
                 'workspaces' => array(),
-                'translation_domain' => 'log'
+                'translation_domain' => 'log',
             )
         );
     }

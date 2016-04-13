@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Auto-generated migration based on mapping information: modify it with caution
+ * Auto-generated migration based on mapping information: modify it with caution.
  *
  * Generation date: 2014/04/02 01:12:56
  */
@@ -14,10 +14,10 @@ class Version20140402131254 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE icap__dropzonebundle_dropzone 
             ADD COLUMN auto_close_opened_drops_when_time_is_up BOOLEAN NOT NULL
-        ");
+        ');
         $this->addSql("
             ALTER TABLE icap__dropzonebundle_dropzone 
             ADD COLUMN auto_close_state VARCHAR(255) DEFAULT 'waiting' NOT NULL
@@ -26,13 +26,13 @@ class Version20140402131254 extends AbstractMigration
 
     public function down(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             DROP INDEX UNIQ_6782FC235342CDF
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP INDEX UNIQ_6782FC23B87FAB32
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TEMPORARY TABLE __temp__icap__dropzonebundle_dropzone AS 
             SELECT id, 
             hidden_directory_id, 
@@ -62,11 +62,11 @@ class Version20140402131254 extends AbstractMigration
             total_criteria_column, 
             resourceNode_id 
             FROM icap__dropzonebundle_dropzone
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE icap__dropzonebundle_dropzone
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TABLE icap__dropzonebundle_dropzone (
                 id INTEGER NOT NULL, 
                 hidden_directory_id INTEGER DEFAULT NULL, 
@@ -102,8 +102,8 @@ class Version20140402131254 extends AbstractMigration
                 REFERENCES claro_resource_node (id) 
                 ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
             )
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             INSERT INTO icap__dropzonebundle_dropzone (
                 id, hidden_directory_id, edition_state, 
                 instruction, correction_instruction, 
@@ -146,15 +146,15 @@ class Version20140402131254 extends AbstractMigration
             total_criteria_column, 
             resourceNode_id 
             FROM __temp__icap__dropzonebundle_dropzone
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE __temp__icap__dropzonebundle_dropzone
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE UNIQUE INDEX UNIQ_6782FC235342CDF ON icap__dropzonebundle_dropzone (hidden_directory_id)
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE UNIQUE INDEX UNIQ_6782FC23B87FAB32 ON icap__dropzonebundle_dropzone (resourceNode_id)
-        ");
+        ');
     }
 }

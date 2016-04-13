@@ -34,13 +34,15 @@ class WidgetViewEvent extends Event
 
     /**
      * @return string
+     *
      * @throws \Exception
      */
     public function getView()
     {
         if (null === $this->view) {
-            throw new \Exception("Empty view");
+            throw new \Exception('Empty view');
         }
+
         return $this->view;
     }
 

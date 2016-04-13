@@ -42,7 +42,7 @@ class RolesImporter extends Importer implements ConfigurationInterface
         $this->roleManager = $roleManager;
     }
 
-    public function  getConfigTreeBuilder()
+    public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('roles');
@@ -63,12 +63,12 @@ class RolesImporter extends Importer implements ConfigurationInterface
                                 ->ifTrue(
                                     function ($v) {
                                         return call_user_func_array(
-                                            __CLASS__ . '::nameAlreadyExists',
+                                            __CLASS__.'::nameAlreadyExists',
                                             array($v)
                                         );
                                     }
                                 )
-                                ->thenInvalid("The name %s already exists")
+                                ->thenInvalid('The name %s already exists')
                                 ->end()
                             ->end()
                             ->scalarNode('translation')->info('The displayed role name')->example('student')->isRequired()->end()
@@ -88,6 +88,7 @@ class RolesImporter extends Importer implements ConfigurationInterface
      * Validate the workspace properties.
      *
      * @todo show the expected array
+     *
      * @param array $data
      */
     public function validate(array $data)
@@ -151,7 +152,9 @@ class RolesImporter extends Importer implements ConfigurationInterface
                 );
             }
 
-            if ($roleEntity) $entityRoles[$role['role']['name']] = $roleEntity;
+            if ($roleEntity) {
+                $entityRoles[$role['role']['name']] = $roleEntity;
+            }
         }
 
         return $entityRoles;
@@ -166,7 +169,7 @@ class RolesImporter extends Importer implements ConfigurationInterface
                 $data[] = array('role' => array(
                     'name' => $this->roleManager->getWorkspaceRoleBaseName($role),
                     'translation' => $role->getTranslationKey(),
-                    'is_base_role' => false
+                    'is_base_role' => false,
                 ));
             }
         }

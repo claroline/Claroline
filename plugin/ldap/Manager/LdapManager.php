@@ -11,8 +11,6 @@
 
 namespace Claroline\LdapBundle\Manager;
 
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-
 use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\Yaml\Dumper;
 use Symfony\Component\Yaml\Parser;
@@ -29,7 +27,7 @@ class LdapManager
 
     public function __construct()
     {
-        $this->path = __DIR__ . '/../../../../../../app/config/Authentication/claroline.ldap.yml';
+        $this->path = __DIR__.'/../../../../../../app/config/Authentication/claroline.ldap.yml';
         $this->yml = new Parser();
         $this->dumper = new Dumper();
         $this->config = $this->parseYml();
@@ -37,9 +35,10 @@ class LdapManager
 
     /**
      * This method create the LDAP link identifier on success and test the connection.
+     *
      * @param server   An array containing LDAP informations as host, port or dn.
      *
-     * @return boolean
+     * @return bool
      */
     public function connect($server, $user = null, $password = null)
     {
@@ -54,7 +53,7 @@ class LdapManager
 
             if ($this->connect && $user && $password) {
                 return ldap_bind($this->connect, $user, $password);
-            } else if ($this->connect) {
+            } elseif ($this->connect) {
                 return ldap_bind($this->connect);
             }
         }
@@ -71,7 +70,7 @@ class LdapManager
     public function findUser($server, $user)
     {
         $server = $this->get($server);
-        $filter = '(&(objectClass=' . $server['objectClass'] . '))';
+        $filter = '(&(objectClass='.$server['objectClass'].'))';
         $search = ldap_search(
             $this->connect,
             $this->prepareUsername($server, $user),
@@ -81,7 +80,7 @@ class LdapManager
                 $server['firstName'],
                 $server['lastName'],
                 $server['email'],
-                'userpassword'
+                'userpassword',
             )
         );
 
@@ -147,7 +146,7 @@ class LdapManager
      * @param name The name of the server
      * @param data An array containing LDAP informations as host, port or dn
      *
-     * @return boolean
+     * @return bool
      */
     public function exists($name, $data)
     {
@@ -178,7 +177,7 @@ class LdapManager
      *
      * @param name The name of the server.
      *
-     * @return boolean
+     * @return bool
      */
     public function deleteServer($name)
     {
@@ -190,11 +189,11 @@ class LdapManager
     }
 
     /**
-     * Save the LDAP mapping settings
+     * Save the LDAP mapping settings.
      *
      * @param settings The settings array containing mapping
      *
-     * @return boolean
+     * @return bool
      */
     public function saveSettings($settings)
     {
@@ -220,7 +219,7 @@ class LdapManager
     }
 
     /**
-     * Get LDAP opbject classes
+     * Get LDAP opbject classes.
      *
      * @param server An array containing LDAP informations as host, port or dn
      */
@@ -242,7 +241,7 @@ class LdapManager
     }
 
     /**
-     * Get list of LDAP users
+     * Get list of LDAP users.
      *
      * @param server An array containing LDAP informations as host, port or dn
      */
@@ -251,7 +250,7 @@ class LdapManager
         $users = array();
 
         if (isset($server['objectClass']) and
-            $search = $this->search($server, '(&(objectClass=' . $server['objectClass'] . '))')
+            $search = $this->search($server, '(&(objectClass='.$server['objectClass'].'))')
         ) {
             $users = $this->getEntries($search);
         }
@@ -260,7 +259,7 @@ class LdapManager
     }
 
     /**
-     * Get list of LDAP users
+     * Get list of LDAP users.
      *
      * @param server An array containing LDAP informations as host, port or dn
      */
@@ -269,7 +268,7 @@ class LdapManager
         $groups = array();
 
         if (isset($server['group']) and
-            $search = $this->search($server, '(&(objectClass=' . $server['group'] . '))')
+            $search = $this->search($server, '(&(objectClass='.$server['group'].'))')
         ) {
             $groups = $this->getEntries($search);
         }
@@ -280,7 +279,7 @@ class LdapManager
     /**
      * Return the LDAP configurations.
      *
-     * @return Array
+     * @return array
      */
     public function getConfig()
     {
@@ -288,7 +287,7 @@ class LdapManager
     }
 
     /**
-     * Return a list of available servers
+     * Return a list of available servers.
      */
     public function getServers()
     {
@@ -320,7 +319,7 @@ class LdapManager
     /**
      * Parse .yml file into LDAP configuration array.
      *
-     * @return Array
+     * @return array
      */
     private function parseYml()
     {
@@ -332,11 +331,11 @@ class LdapManager
     }
 
     /**
-     * Authenticate ldap user
+     * Authenticate ldap user.
      *
      * @param name The name of the server.
      *
-     * @return boolean
+     * @return bool
      */
     public function authenticate($name, $user, $password)
     {
@@ -350,7 +349,7 @@ class LdapManager
     private function prepareUsername($server, $user)
     {
         if ($server['append_dn']) {
-            return $server['userName'] . '=' . $user . ',' . $server['dn'];
+            return $server['userName'].'='.$user.','.$server['dn'];
         }
 
         return $user;

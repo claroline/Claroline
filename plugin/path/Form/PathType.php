@@ -6,7 +6,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class PathType extends AbstractPathType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options = array ())
+    public function buildForm(FormBuilderInterface $builder, array $options = array())
     {
         parent::buildForm($builder, $options);
 
@@ -16,7 +16,7 @@ class PathType extends AbstractPathType
             array(
                 'required' => true,
                 'mapped' => false,
-                'attr' => array ('checked' => 'checked')
+                'attr' => array('checked' => 'checked'),
             )
         );
     }
@@ -25,10 +25,10 @@ class PathType extends AbstractPathType
     {
         return 'innova_path';
     }
-    
+
     public function getDefaultOptions()
     {
-        return array (
+        return array(
             'data_class' => 'Innova\PathBundle\Entity\Path\Path',
         );
     }

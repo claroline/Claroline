@@ -15,7 +15,7 @@ use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Event dispatched by the administration page when the administration page of a plugin is asked
+ * Event dispatched by the administration page when the administration page of a plugin is asked.
  */
 class PluginOptionsEvent extends Event implements DataConveyorEventInterface, MandatoryEventInterface
 {
@@ -25,7 +25,7 @@ class PluginOptionsEvent extends Event implements DataConveyorEventInterface, Ma
     public function setResponse(Response $response)
     {
         $this->isPopulated = true;
-        $this->response    = $response;
+        $this->response = $response;
     }
 
     public function getResponse()
@@ -36,7 +36,7 @@ class PluginOptionsEvent extends Event implements DataConveyorEventInterface, Ma
     /**
      * Checks if the event has been populated.
      *
-     * @return boolean
+     * @return bool
      */
     public function isPopulated()
     {

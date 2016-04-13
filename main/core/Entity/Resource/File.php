@@ -32,7 +32,7 @@ class File extends AbstractResource
     /**
      * Returns the file size.
      *
-     * @return integer
+     * @return int
      */
     public function getSize()
     {
@@ -42,7 +42,7 @@ class File extends AbstractResource
     /**
      * Sets the file size.
      *
-     * @param integer $size
+     * @param int $size
      */
     public function setSize($size)
     {
@@ -57,16 +57,16 @@ class File extends AbstractResource
     public function getFormattedSize()
     {
         if ($this->size < 1024) {
-            return $this->size . ' B';
+            return $this->size.' B';
         } elseif ($this->size < 1048576) {
-            return round($this->size / 1024, 2) . ' KB';
+            return round($this->size / 1024, 2).' KB';
         } elseif ($this->size < 1073741824) {
-            return round($this->size / 1048576, 2) . ' MB';
+            return round($this->size / 1048576, 2).' MB';
         } elseif ($this->size < 1099511627776) {
-            return round($this->size / 1073741824, 2) . ' GB';
+            return round($this->size / 1073741824, 2).' GB';
         }
 
-        return round($this->size / 1099511627776, 2) . ' TB';
+        return round($this->size / 1099511627776, 2).' TB';
     }
 
     /**
@@ -92,5 +92,4 @@ class File extends AbstractResource
     {
         $this->hashName = $hashName;
     }
-
 }

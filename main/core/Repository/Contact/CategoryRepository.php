@@ -21,8 +21,7 @@ class CategoryRepository extends EntityRepository
         $orderedBy = 'order',
         $order = 'ASC',
         $executeQuery = true
-    )
-    {
+    ) {
         $dql = "
             SELECT c
             FROM Claroline\CoreBundle\Entity\Contact\Category c

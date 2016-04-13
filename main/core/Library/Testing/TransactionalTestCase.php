@@ -16,8 +16,6 @@ use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Bundle\FrameworkBundle\Client;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\ORM\Tools\SchemaTool;
 
 abstract class TransactionalTestCase extends WebTestCase
 {
@@ -53,13 +51,13 @@ abstract class TransactionalTestCase extends WebTestCase
     private function logClient(User $user, Client $client, $firewall = 'main')
     {
         $tokenStorage = $client->getContainer()->get('security.token_storage');
-        $token = new UsernamePasswordToken($user, $user->getPlainPassword(), $firewall , $user->getRoles());
+        $token = new UsernamePasswordToken($user, $user->getPlainPassword(), $firewall, $user->getRoles());
         $tokenStorage->setToken($token);
 
         //now we generate the cookie !
         //@see http://symfony.com/doc/current/cookbook/testing/simulating_authentication.html
         $session = $client->getContainer()->get('session');
-        $session->set('_security_' . $firewall, serialize($token));
+        $session->set('_security_'.$firewall, serialize($token));
         $session->save();
         $cookie = new Cookie($session->getName(), $session->getId());
         $client->getCookieJar()->set($cookie);

@@ -104,7 +104,7 @@ class WorkspaceRepository extends EntityRepository
     /**
      * Counts the workspaces.
      *
-     * @return integer
+     * @return int
      */
     public function count()
     {
@@ -117,7 +117,7 @@ class WorkspaceRepository extends EntityRepository
     /**
      * Counts the personal workspaces.
      *
-     * @return integer
+     * @return int
      */
     public function countPersonalWorkspaces()
     {
@@ -134,7 +134,7 @@ class WorkspaceRepository extends EntityRepository
     /**
      * Counts the non personal workspaces.
      *
-     * @return integer
+     * @return int
      */
     public function countNonPersonalWorkspaces()
     {
@@ -173,7 +173,7 @@ class WorkspaceRepository extends EntityRepository
     /**
      * Returns the workspaces whose at least one tool is accessible to one of the given roles.
      *
-     * @param string $search
+     * @param string   $search
      * @param string[] $roles
      *
      * @return array[Workspace]
@@ -206,9 +206,10 @@ class WorkspaceRepository extends EntityRepository
      * at least one accessible tool will be considered open. Only the
      * ids are returned.
      *
-     * @param array[string]     $roles
-     * @param array[Workspace]  $workspaces
-     * @param string|null       $toolName
+     * @param array[string]    $roles
+     * @param array[Workspace] $workspaces
+     * @param string|null      $toolName
+     *
      * @return array[integer]
      */
     public function findOpenWorkspaceIds(
@@ -217,10 +218,8 @@ class WorkspaceRepository extends EntityRepository
         $toolName = null,
         $action = 'open',
         $orderedToolType = 0
-    )
-    {
+    ) {
         if (count($roleNames) === 0 || count($workspaces) === 0) {
-
             return array();
         } else {
             $dql = '
@@ -408,7 +407,7 @@ class WorkspaceRepository extends EntityRepository
      *
      * @param User          $user
      * @param array[string] $roles
-     * @param integer       $max
+     * @param int           $max
      *
      * @return array
      */
@@ -438,7 +437,7 @@ class WorkspaceRepository extends EntityRepository
     /**
      * Returns the name, code and number of resources of each workspace.
      *
-     * @param integer $max
+     * @param int $max
      *
      * @return array
      */
@@ -640,8 +639,7 @@ class WorkspaceRepository extends EntityRepository
     public function findDisplayableWorkspacesWithoutBySearch(
         array $excludedWorkspaces,
         $search
-    )
-    {
+    ) {
         $dql = '
             SELECT w
             FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
@@ -665,8 +663,7 @@ class WorkspaceRepository extends EntityRepository
         Workspace $workspace,
         array $roles,
         $orderedToolType = 0
-    )
-    {
+    ) {
         if (count($roles > 0)) {
             $dql = "
                 SELECT DISTINCT w
@@ -689,7 +686,7 @@ class WorkspaceRepository extends EntityRepository
             return $query->getOneOrNullResult();
         }
 
-        return null;
+        return;
     }
 
     public function findByName(
@@ -697,8 +694,7 @@ class WorkspaceRepository extends EntityRepository
         $executeQuery = true,
         $orderedBy = 'id',
         $order = 'ASC'
-    )
-    {
+    ) {
         $upperSearch = strtoupper($search);
         $upperSearch = trim($upperSearch);
         $upperSearch = preg_replace('/\s+/', ' ', $upperSearch);
@@ -942,8 +938,7 @@ class WorkspaceRepository extends EntityRepository
         $search,
         $orderedBy = 'name',
         $order = 'ASC'
-    )
-    {
+    ) {
         $dql = "
             SELECT w
             FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
@@ -999,8 +994,7 @@ class WorkspaceRepository extends EntityRepository
         $search,
         $orderedBy = 'name',
         $order = 'ASC'
-    )
-    {
+    ) {
         $dql = "
             SELECT w
             FROM Claroline\CoreBundle\Entity\Workspace\Workspace w

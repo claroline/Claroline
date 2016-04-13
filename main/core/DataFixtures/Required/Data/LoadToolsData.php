@@ -30,7 +30,7 @@ class LoadToolsData implements RequiredFixture
             array('logs', 'list', false, false, true, false, false, false, false, false, true),
             array('analytics', 'bar-chart-o', false, false, true, false, false, false, false, false, true),
             array('users', 'user', true, false, true, false, false, false, false, false, true),
-            array('my_contacts', 'users', false, false, false, true, false, false, false, false, true)
+            array('my_contacts', 'users', false, false, false, true, false, false, false, false, true),
         );
 
         foreach ($tools as $tool) {

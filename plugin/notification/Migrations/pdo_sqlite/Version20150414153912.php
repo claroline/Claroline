@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Auto-generated migration based on mapping information: modify it with caution
+ * Auto-generated migration based on mapping information: modify it with caution.
  *
  * Generation date: 2015/04/14 03:39:15
  */
@@ -14,7 +14,7 @@ class Version20150414153912 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             CREATE TABLE icap__notification_plugin_configuration (
                 id INTEGER NOT NULL, 
                 dropdown_items INTEGER NOT NULL, 
@@ -24,13 +24,13 @@ class Version20150414153912 extends AbstractMigration
                 last_purge_date DATETIME DEFAULT NULL, 
                 PRIMARY KEY(id)
             )
-        ");
+        ');
     }
 
     public function down(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             DROP TABLE icap__notification_plugin_configuration
-        ");
+        ');
     }
 }

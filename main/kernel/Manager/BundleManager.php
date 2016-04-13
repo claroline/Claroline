@@ -12,7 +12,6 @@
 namespace Claroline\KernelBundle\Manager;
 
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
@@ -63,7 +62,7 @@ class BundleManager
                 } elseif ($bundle->supports($environment)) {
                     $activeBundles[] = array(
                         self::BUNDLE_INSTANCE => $bundle,
-                        self::BUNDLE_CONFIG => $bundle->getConfiguration($environment)
+                        self::BUNDLE_CONFIG => $bundle->getConfiguration($environment),
                     );
                 }
             }
@@ -76,7 +75,7 @@ class BundleManager
                 if ($config instanceof ConfigurationBuilder) {
                     $activeBundles[] = array(
                         self::BUNDLE_INSTANCE => $bundle,
-                        self::BUNDLE_CONFIG => $config
+                        self::BUNDLE_CONFIG => $config,
                     );
 
                     break;

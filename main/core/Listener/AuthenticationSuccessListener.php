@@ -29,7 +29,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Role\SwitchUserRole;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -65,7 +64,6 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
      *     "router"                 = @DI\Inject("router"),
      *     "userManager"            = @DI\Inject("claroline.manager.user_manager")
      * })
-     *
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -78,8 +76,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         ObjectManager $manager,
         Router $router,
         UserManager $userManager
-    )
-    {
+    ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
@@ -120,8 +117,8 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
                         'tag' => $defaultWorkspaceTag,
                         'user' => $user,
                         'ordered_by' => 'id',
-                        'order' => 'ASC'
-                    )
+                        'order' => 'ASC',
+                    ),
                 )
             );
             $workspaces = $event->getResponse();
@@ -185,7 +182,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             && 200 === $event->getResponse()->getStatusCode()
             && !$event->getResponse() instanceof StreamedResponse
         ) {
-            if ($token =  $this->tokenStorage->getToken()) {
+            if ($token = $this->tokenStorage->getToken()) {
                 if ('anon.' !== $user = $token->getUser()) {
                     $uri = $event->getRequest()->getRequestUri();
                     $user->setLastUri($uri);
@@ -223,9 +220,10 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     }
 
     /**
-     * Return a user if need to accept the terms of service
+     * Return a user if need to accept the terms of service.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     *
      * @return Claroline\CoreBundle\Entity\User
      */
     private function getUser(Request $request)
@@ -247,7 +245,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         return array(
             'bazinga_exposetranslation_js',
             'login_check',
-            'login'
+            'login',
         );
     }
 

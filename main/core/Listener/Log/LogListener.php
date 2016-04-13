@@ -51,8 +51,7 @@ class LogListener
         $container,
         RoleManager $roleManager,
         PlatformConfigurationHandler $ch
-    )
-    {
+    ) {
         $this->om = $om;
         $this->tokenStorage = $tokenStorage;
         $this->container = $container;
@@ -113,7 +112,9 @@ class LogListener
         if (!($event->getAction() === LogUserDeleteEvent::ACTION && $event->getReceiver() === $doer)) {
             //Prevent self delete case
             //Sometimes, the entity manager has been cleared, so we must merge the doer.
-           if ($doer) $doer = $this->om->merge($doer);
+           if ($doer) {
+               $doer = $this->om->merge($doer);
+           }
             $log->setDoer($doer);
         }
         $log->setDoerType($doerType);
@@ -125,7 +126,9 @@ class LogListener
             $log->setReceiver($event->getReceiver());
         }
         if ($event->getAction() !== LogGroupDeleteEvent::ACTION) {
-            if ($receiverGroup = $event->getReceiverGroup()) $this->om->merge($receiverGroup);
+            if ($receiverGroup = $event->getReceiverGroup()) {
+                $this->om->merge($receiverGroup);
+            }
             $log->setReceiverGroup($receiverGroup);
         }
         if (
@@ -175,8 +178,8 @@ class LogListener
         if ($doer !== null) {
             $details['doer'] = array(
                 'firstName' => $doer->getFirstName(),
-                'lastName'  => $doer->getLastName(),
-                'publicUrl' => $doer->getPublicUrl()
+                'lastName' => $doer->getLastName(),
+                'publicUrl' => $doer->getPublicUrl(),
             );
 
             if (count($log->getDoerPlatformRoles()) > 0) {
@@ -204,7 +207,7 @@ class LogListener
     }
 
     /**
-     * Is a repeat if the session contains a same logSignature for the same action category
+     * Is a repeat if the session contains a same logSignature for the same action category.
      */
     public function isARepeat(LogGenericEvent $event)
     {

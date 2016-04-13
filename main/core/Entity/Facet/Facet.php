@@ -12,9 +12,7 @@
 namespace Claroline\CoreBundle\Entity\Facet;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Claroline\CoreBundle\Entity\Facet\FieldFacet;
-use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection; use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Claroline\CoreBundle\Entity\Role;
 
@@ -23,7 +21,8 @@ use Claroline\CoreBundle\Entity\Role;
  * @ORM\Table(name="claro_facet")
  * @UniqueEntity("name")
  */
-class Facet {
+class Facet
+{
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")

@@ -41,7 +41,7 @@ class Config
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $widgetInstance;
-    
+
     public function getId()
     {
         return $this->id;
@@ -61,7 +61,7 @@ class Config
     {
         $this->widgetInstance = $ds;
     }
-    
+
     public function getWidgetInstance()
     {
         return $this->widgetInstance;

@@ -6,9 +6,7 @@
  * Time: 15:33
  * To change this template use File | Settings | File Templates.
  */
-
 namespace Icap\WikiBundle\Controller;
-
 
 use Claroline\CoreBundle\Entity\User;
 use Icap\WikiBundle\Entity\Wiki;
@@ -16,9 +14,7 @@ use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Entity\Contribution;
 use Icap\WikiBundle\Form\SectionType;
-use Icap\WikiBundle\Form\EditSectionType;
 use Icap\WikiBundle\Form\DeleteSectionType;
-
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -27,8 +23,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-
-use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
@@ -54,9 +48,9 @@ class SectionController extends Controller
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function historyAction(Wiki $wiki, User $user, $sectionId, $page, $maxPerPage) 
+    public function historyAction(Wiki $wiki, User $user, $sectionId, $page, $maxPerPage)
     {
-        $this->checkAccess("OPEN", $wiki);
+        $this->checkAccess('OPEN', $wiki);
 
         $contributionRepository = $this->get('icap.wiki.contribution_repository');
         $section = $this->getSection($wiki, $sectionId);
@@ -66,33 +60,35 @@ class SectionController extends Controller
         if ($section->getVisible() === true || $isAdmin) {
             $query = $contributionRepository->getSectionHistoryQuery($section);
             $adapter = new DoctrineORMAdapter($query, false);
-            $pager   = new PagerFanta($adapter);
+            $pager = new PagerFanta($adapter);
             $pager->setMaxPerPage($maxPerPage);
-            
+
             try {
                 $pager->setCurrentPage($page);
             } catch (NotValidCurrentPageException $exception) {
                 throw new NotFoundHttpException();
             }
 
-            $maxPerPageArray = array(10,25,50,100,250,500);
+            $maxPerPageArray = array(10, 25, 50, 100, 250, 500);
+
             return array(
                 '_resource' => $wiki,
                 'pager' => $pager,
                 'section' => $section,
                 'workspace' => $wiki->getResourceNode()->getWorkspace(),
                 'maxPerPageArray' => $maxPerPageArray,
-                'isAdmin' => $isAdmin
+                'isAdmin' => $isAdmin,
             );
-        }
-        else {
+        } else {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
     }
 
     /**
-     * Displays form for creating new section to wiki
+     * Displays form for creating new section to wiki.
+     *
      * @param $wikiId, $parentSectionId
+     *
      * @return $wiki, $form
      * @Route(
      *      "/{wikiId}/section/new/{parentSectionId}",
@@ -108,10 +104,10 @@ class SectionController extends Controller
      */
     public function newAction(Request $request, $wiki, $user, $parentSectionId)
     {
-        $this->checkAccess("OPEN", $wiki);
+        $this->checkAccess('OPEN', $wiki);
         $collection = $collection = new ResourceCollection(array($wiki->getResourceNode()));
         $isAdmin = $this->isUserGranted('EDIT', $wiki, $collection);
-        if ($isAdmin || $wiki->getMode()!==2) {
+        if ($isAdmin || $wiki->getMode() !== 2) {
             $section = new Section();
             $section->setWiki($wiki);
             $section->setAuthor($user);
@@ -119,15 +115,16 @@ class SectionController extends Controller
             $section->setNewActiveContributionToSection($user);
 
             return $this->persistCreateSection($request, $wiki, $section, $user, $parentSectionId);
-        }
-        else {
+        } else {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
     }
 
     /**
-     * Displays form allowing user to edit a section
+     * Displays form allowing user to edit a section.
+     *
      * @param $wikiId, $sectionId
+     *
      * @return $wiki, $section, $form 
      * @Route(
      *      "/{wikiId}/section/edit/{sectionId}",
@@ -144,10 +141,10 @@ class SectionController extends Controller
      */
     public function editAction(Request $request, $wiki, $user, $sectionId)
     {
-        $this->checkAccess("OPEN", $wiki);
+        $this->checkAccess('OPEN', $wiki);
         $collection = $collection = new ResourceCollection(array($wiki->getResourceNode()));
         $isAdmin = $this->isUserGranted('EDIT', $wiki, $collection);
-        if ($isAdmin || $wiki->getMode()!==2) {
+        if ($isAdmin || $wiki->getMode() !== 2) {
             $section = $this->getSection($wiki, $sectionId);
             $oldActiveContribution = $section->getActiveContribution();
             $section->setNewActiveContributionToSection($user);
@@ -157,12 +154,14 @@ class SectionController extends Controller
             return $this->persistUpdateSection($request, $wiki, $section, $oldActiveContribution, $user);
         } else {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
-        }      
+        }
     }
 
     /**
-     * Updates a wiki section
+     * Updates a wiki section.
+     *
      * @param $wikiId, $sectionId, $isBrother
+     *
      * @return $form
      * @Route(
      *      "/{wikiId}/section/move/{sectionId}/{referenceSectionId}/{isBrother}",
@@ -179,30 +178,29 @@ class SectionController extends Controller
      */
     public function moveSectionAction(Request $request, Wiki $wiki, $sectionId, $referenceSectionId, $isBrother)
     {
-        $this->checkAccess("EDIT", $wiki);
+        $this->checkAccess('EDIT', $wiki);
         $section = $this->getSection($wiki, $sectionId);
         $em = $this->getDoctrine()->getManager();
         $repo = $this->get('icap.wiki.section_repository');
         $oldParent = $section->getParent();
         $oldLeft = $section->getLeft();
-        $isBrother = $isBrother==='true';
+        $isBrother = $isBrother === 'true';
         $flashBag = $this->get('session')->getFlashBag();
         $translator = $this->get('translator');
-        
+
         $referenceSection = null;
-        
+
         try {
             $referenceSection = $this->getSection($wiki, $referenceSectionId);
-            if ($isBrother===true && !$referenceSection->isRoot()) {
+            if ($isBrother === true && !$referenceSection->isRoot()) {
                 $repo->persistAsNextSiblingOf($section, $referenceSection);
                 $newParent = $referenceSection->getParent();
-            }
-            else {
+            } else {
                 $repo->persistAsFirstChildOf($section, $referenceSection);
-                $newParent = $referenceSection;            
+                $newParent = $referenceSection;
             }
             $em->flush();
-                    
+
             $changeSet = $section->getMoveEventChangeSet($oldParent, $oldLeft, $newParent);
             $this->dispatchSectionMoveEvent($wiki, $section, $changeSet);
 
@@ -211,19 +209,19 @@ class SectionController extends Controller
             $flashBag->add('error', $translator->trans('icap_wiki_section_move_error', array(), 'icap_wiki'));
         }
 
-        
-
         return new Response($this->generateUrl(
                     'icap_wiki_view',
                     array(
-                        'wikiId' => $wiki->getId()
+                        'wikiId' => $wiki->getId(),
                     )
                 ));
     }
 
     /**
-     * Displays form for section deletion confirmation
+     * Displays form for section deletion confirmation.
+     *
      * @param $wikiId, $sectionId
+     *
      * @return $wiki, $section, $form 
      * @Route(
      *      "/{wikiId}/section/delete/{sectionId}",
@@ -239,15 +237,17 @@ class SectionController extends Controller
      */
     public function deleteAction(Request $request, $wiki, $user, $sectionId)
     {
-        $this->checkAccess("EDIT", $wiki);
+        $this->checkAccess('EDIT', $wiki);
         $section = $this->getSection($wiki, $sectionId);
-       
-        return $this->persistDeleteSection($request, $wiki, $section, $user);        
+
+        return $this->persistDeleteSection($request, $wiki, $section, $user);
     }
 
     /**
-     * Displays form for section deletion confirmation
+     * Displays form for section deletion confirmation.
+     *
      * @param $wikiId, $sectionId
+     *
      * @return $wiki, $section, $form 
      * @Route(
      *      "/{wikiId}/section/restore/{sectionId}",
@@ -263,11 +263,11 @@ class SectionController extends Controller
      */
     public function restoreAction(Request $request, $wiki, $user, $sectionId)
     {
-        $this->checkAccess("EDIT", $wiki);
+        $this->checkAccess('EDIT', $wiki);
         $section = $this->getSection($wiki, $sectionId);
         $flashBag = $this->get('session')->getFlashBag();
         $translator = $this->get('translator');
-        try{
+        try {
             $sectionRepository = $this->get('icap.wiki.section_repository');
             $sectionRepository->restoreSection($section, $wiki->getRoot());
 
@@ -275,18 +275,20 @@ class SectionController extends Controller
             $flashBag->add('success', $translator->trans('icap_wiki_section_restore_success', array(), 'icap_wiki'));
         } catch (\Exception $exception) {
             $flashBag->add('error', $translator->trans('icap_wiki_section_restore_error', array(), 'icap_wiki'));
-        }         
+        }
+
         return $this->redirect(
             $this->generateUrl(
                 'icap_wiki_view',
                 array(
-                    'wikiId' => $wiki->getId()
+                    'wikiId' => $wiki->getId(),
                 )
             )
         );
     }
 
-    private function persistCreateSection (Request $request, Wiki $wiki, Section $section, User $user, $parentSectionId) {
+    private function persistCreateSection(Request $request, Wiki $wiki, Section $section, User $user, $parentSectionId)
+    {
         $form = $this->createForm(new SectionType(), $section);
         if ($request->isXMLHttpRequest()) {
             return $this->render(
@@ -295,11 +297,10 @@ class SectionController extends Controller
                     '_resource' => $wiki,
                     'parentSectionId' => $parentSectionId,
                     'workspace' => $wiki->getResourceNode()->getWorkspace(),
-                    'form' => $form->createView()
+                    'form' => $form->createView(),
                 )
             );
-        }
-        elseif ("POST" === $request->getMethod()) {
+        } elseif ('POST' === $request->getMethod()) {
             $form->handleRequest($request);
             if ($form->isValid()) {
                 $flashBag = $this->get('session')->getFlashBag();
@@ -311,7 +312,7 @@ class SectionController extends Controller
                     $section->setVisible(false);
                 }
 
-                try{
+                try {
                     $em = $this->getDoctrine()->getManager();
                     $sectionRepository = $this->get('icap.wiki.section_repository');
                     $sectionRepository->persistAsLastChildOf($section, $parent);
@@ -324,13 +325,13 @@ class SectionController extends Controller
                     var_dump($exception->getMessage());
                     die();
                     $flashBag->add('error', $translator->trans('icap_wiki_section_add_error', array(), 'icap_wiki'));
-                }                
+                }
 
                 return $this->redirect(
                     $this->generateUrl(
                         'icap_wiki_view',
                         array(
-                            'wikiId' => $wiki->getId()
+                            'wikiId' => $wiki->getId(),
                         )
                     )
                 );
@@ -341,11 +342,12 @@ class SectionController extends Controller
             '_resource' => $wiki,
             'parentSectionId' => $parentSectionId,
             'workspace' => $wiki->getResourceNode()->getWorkspace(),
-            'form' => $form->createView()
+            'form' => $form->createView(),
         );
     }
 
-    private function persistUpdateSection (Request $request, Wiki $wiki, Section $section, Contribution $oldActiveContribution, User $user) {
+    private function persistUpdateSection(Request $request, Wiki $wiki, Section $section, Contribution $oldActiveContribution, User $user)
+    {
         $form = $this->createForm($this->get('icap.wiki.section_edit_type'), $section);
         if ($request->isXMLHttpRequest()) {
             return $this->render(
@@ -354,11 +356,10 @@ class SectionController extends Controller
                     '_resource' => $wiki,
                     'section' => $section,
                     'workspace' => $wiki->getResourceNode()->getWorkspace(),
-                    'form' => $form->createView()
+                    'form' => $form->createView(),
                 )
             );
-        }
-        else if ("POST" === $request->getMethod()) {
+        } elseif ('POST' === $request->getMethod()) {
             $form->handleRequest($request);
             $section->isActiveContributionChanged($oldActiveContribution);
             if ($form->isValid()) {
@@ -372,7 +373,7 @@ class SectionController extends Controller
                 $flashBag = $this->get('session')->getFlashBag();
                 $translator = $this->get('translator');
 
-                $position = $section->getId();                
+                $position = $section->getId();
                 $activeContribution = $section->getActiveContribution();
                 try {
                     if ($section->getHasChangedActiveContribution() === true && $wiki->getMode() == 1) {
@@ -387,26 +388,25 @@ class SectionController extends Controller
                         $oldParent = $section->getParent();
                         $oldLeft = $section->getLeft();
                         $referenceSection = $this->getSection($wiki, $position);
-                        if ($isBrother==true) {                            
+                        if ($isBrother == true) {
                             $repo->persistAsNextSiblingOf($section, $referenceSection);
                             $newParent = $referenceSection->getParent();
-                        }
-                        else {
+                        } else {
                             $repo->persistAsFirstChildOf($section, $referenceSection);
                             $newParent = $referenceSection;
                         }
                         $em->flush();
 
-                        $moveChangeSet = $section->getMoveEventChangeSet($oldParent, $oldLeft, $newParent);        
+                        $moveChangeSet = $section->getMoveEventChangeSet($oldParent, $oldLeft, $newParent);
                         $this->dispatchSectionMoveEvent($wiki, $section, $moveChangeSet);
-                    }           
+                    }
 
                     if ($section->getHasChangedActiveContribution() === true) {
                         $this->dispatchContributionCreateEvent($wiki, $section, $activeContribution);
                     }
                     unset($changeSet['activeContribution']);
                     if (!empty($changeSet)) {
-                        $this->dispatchSectionUpdateEvent($wiki, $section, $changeSet);                        
+                        $this->dispatchSectionUpdateEvent($wiki, $section, $changeSet);
                     }
                     $flashBag->add('success', $translator->trans('icap_wiki_section_update_success', array(), 'icap_wiki'));
                 } catch (\Exception $exception) {
@@ -414,12 +414,12 @@ class SectionController extends Controller
                     die();
                     $flashBag->add('error', $translator->trans('icap_wiki_section_update_error', array(), 'icap_wiki'));
                 }
-                
+
                 return $this->redirect(
                     $this->generateUrl(
                         'icap_wiki_view',
                         array(
-                            'wikiId' => $wiki->getId()
+                            'wikiId' => $wiki->getId(),
                         )
                     )
                 );
@@ -429,11 +429,12 @@ class SectionController extends Controller
         return array(
             '_resource' => $wiki,
             'section' => $section,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         );
     }
 
-    private function persistDeleteSection (Request $request, Wiki $wiki, Section $section, User $user) {
+    private function persistDeleteSection(Request $request, Wiki $wiki, Section $section, User $user)
+    {
         $form = $this->createForm(new DeleteSectionType(), $section);
 
         if ($request->isXMLHttpRequest()) {
@@ -443,16 +444,15 @@ class SectionController extends Controller
                     '_resource' => $wiki,
                     'section' => $section,
                     'workspace' => $wiki->getResourceNode()->getWorkspace(),
-                    'form' => $form->createView()
+                    'form' => $form->createView(),
                 )
             );
-        }
-        elseif ("POST" === $request->getMethod()) {
+        } elseif ('POST' === $request->getMethod()) {
             $flashBag = $this->get('session')->getFlashBag();
             $translator = $this->get('translator');
             //If section is already deleted then delete permanently
             if ($section->getDeleted() === true) {
-                try {                    
+                try {
                     $em = $this->getDoctrine()->getManager();
                     $em->remove($section);
                     $em->flush();
@@ -462,24 +462,24 @@ class SectionController extends Controller
                 } catch (\Exception $exception) {
                     $flashBag->add('error', $translator->trans('icap_wiki_section_remove_error', array(), 'icap_wiki'));
                 }
+
                 return $this->redirect(
                     $this->generateUrl(
                         'icap_wiki_configure',
                         array(
-                            'wikiId' => $wiki->getId()
+                            'wikiId' => $wiki->getId(),
                         )
                     )
-                ); 
+                );
             } else {
                 $form->handleRequest($request);
-                if($form->isValid()){
+                if ($form->isValid()) {
                     //Proceed to deletion
-                    try {    
+                    try {
                         $repo = $this->get('icap.wiki.section_repository');
                         if ($form->get('children')->getData() == false) {
                             $repo->deleteFromTree($section);
-                        }
-                        else {
+                        } else {
                             $repo->deleteSubtree($section);
                         }
 
@@ -487,26 +487,25 @@ class SectionController extends Controller
                         $flashBag->add('success', $translator->trans('icap_wiki_section_delete_success', array(), 'icap_wiki'));
                     } catch (\Exception $exception) {
                         $flashBag->add('error', $translator->trans('icap_wiki_section_delete_error', array(), 'icap_wiki'));
-                    }               
+                    }
 
                     return $this->redirect(
                         $this->generateUrl(
                             'icap_wiki_view',
                             array(
-                                'wikiId' => $wiki->getId()
+                                'wikiId' => $wiki->getId(),
                             )
                         )
                     );
                 }
             }
-            
         }
 
         return array(
             '_resource' => $wiki,
             'section' => $section,
             'workspace' => $wiki->getResourceNode()->getWorkspace(),
-            'form' => $form->createView()
+            'form' => $form->createView(),
         );
     }
 }

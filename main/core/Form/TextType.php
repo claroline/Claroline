@@ -36,7 +36,7 @@ class TextType extends AbstractType
                 'label' => 'publish_resource',
                 'required' => true,
                 'mapped' => false,
-                'attr' => array('checked' => 'checked')
+                'attr' => array('checked' => 'checked'),
            )
         );
     }
@@ -51,7 +51,7 @@ class TextType extends AbstractType
         $resolver->setDefaults(
             array(
                 'class' => 'Claroline\CoreBundle\Entity\Resource\Text',
-                'translation_domain' => 'platform'
+                'translation_domain' => 'platform',
             )
         );
     }

@@ -43,10 +43,7 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -118,29 +115,28 @@ class ParametersController extends Controller
         WorkspaceManager $workspaceManager,
         StrictDispatcher $eventDispatcher,
         ThemeManager $themeManager
-    )
-    {
-        $this->configHandler      = $configHandler;
-        $this->roleManager        = $roleManager;
-        $this->formFactory        = $formFactory;
-        $this->request            = $request;
-        $this->termsOfService     = $termsOfService;
-        $this->localeManager      = $localeManager;
-        $this->translator         = $translator;
-        $this->mailManager        = $mailManager;
-        $this->contentManager     = $contentManager;
-        $this->cacheManager       = $cacheManager;
+    ) {
+        $this->configHandler = $configHandler;
+        $this->roleManager = $roleManager;
+        $this->formFactory = $formFactory;
+        $this->request = $request;
+        $this->termsOfService = $termsOfService;
+        $this->localeManager = $localeManager;
+        $this->translator = $translator;
+        $this->mailManager = $mailManager;
+        $this->contentManager = $contentManager;
+        $this->cacheManager = $cacheManager;
         $this->dbSessionValidator = $sessionValidator;
-        $this->refresher          = $refresher;
-        $this->toolManager        = $toolManager;
-        $this->paramAdminTool     = $this->toolManager->getAdminToolByName('platform_parameters');
-        $this->router             = $router;
-        $this->ipwlm              = $ipwlm;
-        $this->tokenManager       = $tokenManager;
-        $this->userManager        = $userManager;
-        $this->workspaceManager   = $workspaceManager;
-        $this->eventDispatcher    = $eventDispatcher;
-        $this->themeManager       = $themeManager;
+        $this->refresher = $refresher;
+        $this->toolManager = $toolManager;
+        $this->paramAdminTool = $this->toolManager->getAdminToolByName('platform_parameters');
+        $this->router = $router;
+        $this->ipwlm = $ipwlm;
+        $this->tokenManager = $tokenManager;
+        $this->userManager = $userManager;
+        $this->workspaceManager = $workspaceManager;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->themeManager = $themeManager;
     }
 
     /**
@@ -259,7 +255,7 @@ class ParametersController extends Controller
         return array(
             'form_settings' => $form->createView(),
             'logos' => $this->get('claroline.common.logo_service')->listLogos(),
-            'tags' => $tags
+            'tags' => $tags,
         );
     }
 
@@ -319,7 +315,7 @@ class ParametersController extends Controller
 
         return array(
             'form_appearance' => $form->createView(),
-            'logos' => $this->get('claroline.common.logo_service')->listLogos()
+            'logos' => $this->get('claroline.common.logo_service')->listLogos(),
         );
     }
 
@@ -356,7 +352,6 @@ class ParametersController extends Controller
         return array('form_mail' => $form->createView());
     }
 
-
     /**
      * @EXT\Route("/mail/server/submit", name="claro_admin_edit_parameters_mail_server")
      * @EXT\Method("POST")
@@ -386,7 +381,7 @@ class ParametersController extends Controller
             'password' => $form['mailer_password']->getData(),
             'auth_mode' => $form['mailer_auth_mode']->getData(),
             'encryption' => $form['mailer_encryption']->getData(),
-            'port' => $form['mailer_port']->getData()
+            'port' => $form['mailer_port']->getData(),
         );
 
         $settings = new MailingSettings();
@@ -397,7 +392,7 @@ class ParametersController extends Controller
         if (count($errors) > 0) {
             foreach ($errors as $field => $error) {
                 $trans = $this->translator->trans($error, array(), 'platform');
-                $form->get('mailer_' . $field)->addError(new FormError($trans));
+                $form->get('mailer_'.$field)->addError(new FormError($trans));
             }
 
             return array('form_mail' => $form->createView());
@@ -421,7 +416,7 @@ class ParametersController extends Controller
                 'mailer_password' => $data['password'],
                 'mailer_auth_mode' => $data['auth_mode'],
                 'mailer_encryption' => $data['encryption'],
-                'mailer_port' => $data['port']
+                'mailer_port' => $data['port'],
             )
         );
 
@@ -441,13 +436,13 @@ class ParametersController extends Controller
     public function resetMailServerAction()
     {
         $data = array(
-            'mailer_transport'  => 'smtp',
-            'mailer_host'       => null,
-            'mailer_username'   => null,
-            'mailer_password'   => null,
-            'mailer_auth_mode'  => null,
+            'mailer_transport' => 'smtp',
+            'mailer_host' => null,
+            'mailer_username' => null,
+            'mailer_password' => null,
+            'mailer_auth_mode' => null,
             'mailer_encryption' => null,
-            'mailer_port'       => null
+            'mailer_port' => null,
         );
 
         $this->configHandler->setParameters($data);
@@ -490,7 +485,7 @@ class ParametersController extends Controller
         $errors = $this->mailManager->validateMailVariable($formData['content'], '%password%');
 
         return array(
-            'form' => $this->updateMailContent($formData, $form, $errors, $this->mailManager->getMailInscription())
+            'form' => $this->updateMailContent($formData, $form, $errors, $this->mailManager->getMailInscription()),
         );
     }
 
@@ -528,7 +523,7 @@ class ParametersController extends Controller
         $errors = $this->mailManager->validateMailVariable($formData['content'], '%content%');
 
         return array(
-            'form' => $this->updateMailContent($formData, $form, $errors, $this->mailManager->getMailLayout())
+            'form' => $this->updateMailContent($formData, $form, $errors, $this->mailManager->getMailLayout()),
         );
     }
 
@@ -713,7 +708,7 @@ class ParametersController extends Controller
                 'session_db_dsn' => $form['session_db_dsn']->getData(),
                 'session_db_user' => $form['session_db_user']->getData(),
                 'session_db_password' => $form['session_db_password']->getData(),
-                'cookie_lifetime' => $form['cookie_lifetime']->getData()
+                'cookie_lifetime' => $form['cookie_lifetime']->getData(),
             );
 
             $errors = $this->dbSessionValidator->validate($data);
@@ -800,6 +795,7 @@ class ParametersController extends Controller
         //the current ip must be whitelisted so it can access the the plateform when it's under maintenance
         MaintenanceHandler::disableMaintenance();
         $this->ipwlm->removeIP($_SERVER['REMOTE_ADDR']);
+
         return new RedirectResponse($this->router->generate('claro_admin_parameters_index'));
     }
 
@@ -822,7 +818,7 @@ class ParametersController extends Controller
 
         return array(
             'tokens' => $tokens,
-            'direction' => $direction
+            'direction' => $direction,
         );
     }
 
@@ -906,7 +902,7 @@ class ParametersController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'token' => $securityToken
+            'token' => $securityToken,
         );
     }
 
@@ -945,7 +941,7 @@ class ParametersController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'token' => $securityToken
+            'token' => $securityToken,
         );
     }
 
@@ -1002,8 +998,8 @@ class ParametersController extends Controller
     public function sendDatasConfirmAction()
     {
         $ds = DIRECTORY_SEPARATOR;
-        $platformOptionsFile = $this->container->getParameter('kernel.root_dir') .
-            $ds . 'config' . $ds . 'platform_options.yml';
+        $platformOptionsFile = $this->container->getParameter('kernel.root_dir').
+            $ds.'config'.$ds.'platform_options.yml';
 
         if (is_null($this->configHandler->getParameter('token'))) {
             $token = $this->generateToken(20);
@@ -1031,12 +1027,10 @@ class ParametersController extends Controller
     {
         if ($token === $this->configHandler->getParameter('token') &&
             $this->configHandler->getParameter('confirm_send_datas') === 'OK') {
-
             $this->sendDatas(2);
 
             return new Response('success', 200);
         } else {
-
             return new Response('Forbidden', 403);
         }
     }
@@ -1088,7 +1082,7 @@ class ParametersController extends Controller
         $type = $mode;
         $token = $this->configHandler->getParameter('token');
 
-        $currentUrl = $this->request->getHttpHost() .
+        $currentUrl = $this->request->getHttpHost().
             $this->request->getRequestUri();
         $currentUrl = preg_replace(
             '/\/admin\/parameters\/send\/datas\/(.)*$/',
@@ -1102,17 +1096,17 @@ class ParametersController extends Controller
         );
         $this->configHandler->setParameter('platform_url', $platformUrl);
 
-        $postDatas = "ip=$ip" .
-            "&name=$name" .
-            "&url=$platformUrl" .
-            "&lang=$lang" .
-            "&country=$country" .
-            "&email=$supportEmail" .
-            "&version=$version" .
-            "&workspaces=$nbNonPersonalWorkspaces" .
-            "&personal_workspaces=$nbPersonalWorkspaces" .
-            "&users=$nbUsers" .
-            "&stats_type=$type" .
+        $postDatas = "ip=$ip".
+            "&name=$name".
+            "&url=$platformUrl".
+            "&lang=$lang".
+            "&country=$country".
+            "&email=$supportEmail".
+            "&version=$version".
+            "&workspaces=$nbNonPersonalWorkspaces".
+            "&personal_workspaces=$nbPersonalWorkspaces".
+            "&users=$nbUsers".
+            "&stats_type=$type".
             "&token=$token";
 
         $curl = curl_init($url);
@@ -1126,7 +1120,7 @@ class ParametersController extends Controller
 
     private function generateToken($length)
     {
-        $chars = array_merge(range(0,9), range('a', 'z'), range('A', 'Z'));
+        $chars = array_merge(range(0, 9), range('a', 'z'), range('A', 'Z'));
         $charsSize = count($chars);
         $token = uniqid();
 
@@ -1142,13 +1136,12 @@ class ParametersController extends Controller
     {
         $ds = DIRECTORY_SEPARATOR;
         $version = '-';
-        $installedFile = $this->container->getParameter('kernel.root_dir') .
-            $ds . '..' . $ds . 'vendor' . $ds . 'composer' . $ds . 'installed.json';
+        $installedFile = $this->container->getParameter('kernel.root_dir').
+            $ds.'..'.$ds.'vendor'.$ds.'composer'.$ds.'installed.json';
         $jsonString = file_get_contents($installedFile);
         $bundles = json_decode($jsonString, true);
 
         foreach ($bundles as $bundle) {
-
             if (isset($bundle['name']) && $bundle['name'] === 'claroline/core-bundle') {
                 $version = $bundle['version'];
                 break;

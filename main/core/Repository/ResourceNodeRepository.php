@@ -61,7 +61,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
      * Returns the descendants of a resource.
      *
      * @param ResourceNode $resource           The resource node to start with
-     * @param boolean      $includeStartNode   Whether the given resource should be included in the result
+     * @param bool         $includeStartNode   Whether the given resource should be included in the result
      * @param string       $filterResourceType A resource type to filter the results
      *
      * @return array[ResourceNode]
@@ -70,8 +70,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
         ResourceNode $resource,
         $includeStartNode = false,
         $filterResourceType = null
-    )
-    {
+    ) {
         $builder = new ResourceQueryBuilder();
         $builder->selectAsEntity(true)
             ->wherePathLike($resource->getPath(), $includeStartNode);
@@ -90,8 +89,8 @@ class ResourceNodeRepository extends MaterializedPathRepository
      * Returns the immediate children of a resource that are openable by any of the given roles.
      *
      * @param ResourceNode $parent The id of the parent of the requested children
-     * @param array $roles [string] $roles  An array of roles
-     * @param User $user the user opening
+     * @param array        $roles  [string] $roles  An array of roles
+     * @param User         $user   the user opening
      * @param withLastOpenDate with the last openend node (with the last opened date)
      *
      * @throws \RuntimeException
@@ -102,7 +101,9 @@ class ResourceNodeRepository extends MaterializedPathRepository
     public function findChildren(ResourceNode $parent, array $roles, $user, $withLastOpenDate = false)
     {
         //if we usurpate a role, then it's like we're anonymous.
-        if (in_array('ROLE_USURPATE_WORKSPACE_ROLE', $roles)) $user = 'anon.';
+        if (in_array('ROLE_USURPATE_WORKSPACE_ROLE', $roles)) {
+            $user = 'anon.';
+        }
 
         if (count($roles) === 0) {
             throw new \RuntimeException('Roles cannot be empty');
@@ -184,11 +185,10 @@ class ResourceNodeRepository extends MaterializedPathRepository
                     }
                 }
             }
-
         }
 
         return $returnedArray;
-   }
+    }
 
     /**
      * Returns the root directories of workspaces a user is registered to.
@@ -212,7 +212,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
     }
 
     /**
-     * Returns the roots directories a user is granted access
+     * Returns the roots directories a user is granted access.
      *
      * @param array $roles
      *
@@ -243,14 +243,14 @@ class ResourceNodeRepository extends MaterializedPathRepository
     public function findAncestors(ResourceNode $resource)
     {
         // No need to access DB to get ancestors as they are given by the materialized path.
-        $regex = '/-(\d+)' . ResourceNode::PATH_SEPARATOR . '/';
+        $regex = '/-(\d+)'.ResourceNode::PATH_SEPARATOR.'/';
         $parts = preg_split($regex, $resource->getPath(), -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
         $ancestors = array();
         $currentPath = '';
 
         for ($i = 0, $count = count($parts); $i < $count; $i += 2) {
             $ancestor = array();
-            $currentPath = $currentPath . $parts[$i] . '-' . $parts[$i + 1] . '`';
+            $currentPath = $currentPath.$parts[$i].'-'.$parts[$i + 1].'`';
             $ancestor['path'] = $currentPath;
             $ancestor['name'] = $parts[$i];
             $ancestor['id'] = (int) $parts[$i + 1];
@@ -266,9 +266,9 @@ class ResourceNodeRepository extends MaterializedPathRepository
      * these roles are matched.
      * WARNING: the recursive search is far from being optimized.
      *
-     * @param array   $criteria    An array of search filters
-     * @param array   $roles       An array of user's roles
-     * @param boolean $isRecursive Will the search follow links.
+     * @param array $criteria    An array of search filters
+     * @param array $roles       An array of user's roles
+     * @param bool  $isRecursive Will the search follow links.
      *
      * @return array[array] An array of resources represented as arrays
      */
@@ -286,7 +286,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
             }
 
             $baseRoots = (count($criteria['roots']) > 0) ?
-                $criteria['roots']: array();
+                $criteria['roots'] : array();
             $finalRoots = array_merge($additionalRoots, $baseRoots);
             $criteria['roots'] = $finalRoots;
         }
@@ -304,7 +304,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
      * Returns an array of different file types with the number of resources that
      * belong to this type.
      *
-     * @param integer $max
+     * @param int $max
      *
      * @return array
      */
@@ -429,8 +429,8 @@ class ResourceNodeRepository extends MaterializedPathRepository
 
         return $results = $qb->getQuery()->execute(
             array(
-                ':workspace'    => $workspace,
-                ':resourceType' => $resourceType
+                ':workspace' => $workspace,
+                ':resourceType' => $resourceType,
             )
         );
     }
@@ -444,7 +444,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
      */
     public function findByName($name, $extraDatas = array(), $executeQuery = true)
     {
-        $name  = strtoupper($name);
+        $name = strtoupper($name);
         /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
         $queryBuilder = $this->createQueryBuilder('resourceNode');
         $queryBuilder->where($queryBuilder->expr()->like('UPPER(resourceNode.name)', ':name'));
@@ -461,7 +461,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
             ->orderBy('resourceNode.name', 'ASC')
             ->setParameter(':name', "%{$name}%");
 
-        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder;
+        return $executeQuery ? $queryBuilder->getQuery()->getResult() : $queryBuilder;
     }
 
     /**
@@ -479,8 +479,8 @@ class ResourceNodeRepository extends MaterializedPathRepository
 
         foreach ($resourceNodes as $resourceNode) {
             $resultArray[] = array(
-                'id'   => $resourceNode->getId(),
-                'text' => $resourceNode->getPathForDisplay()
+                'id' => $resourceNode->getId(),
+                'text' => $resourceNode->getPathForDisplay(),
             );
         }
 
@@ -499,7 +499,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
             'dateFrom' => 'whereDateFrom',
             'dateTo' => 'whereDateTo',
             'name' => 'whereNameLike',
-            'isExportable' => 'whereIsExportable'
+            'isExportable' => 'whereIsExportable',
         );
         $allowedFilters = array_keys($filterMethodMap);
 
@@ -520,10 +520,10 @@ class ResourceNodeRepository extends MaterializedPathRepository
      * Executes a DQL query and returns resources as entities or arrays.
      * If it returns arrays, it add a "pathfordisplay" field to each item.
      *
-     * @param Query   $query   The query to execute
-     * @param integer $offset  First row to start with
-     * @param integer $numrows Maximum number of rows to return
-     * @param boolean $asArray Whether the resources must be returned as arrays or as objects
+     * @param Query $query   The query to execute
+     * @param int   $offset  First row to start with
+     * @param int   $numrows Maximum number of rows to return
+     * @param bool  $asArray Whether the resources must be returned as arrays or as objects
      *
      * @return array[AbstractResource|array]
      */
@@ -537,10 +537,8 @@ class ResourceNodeRepository extends MaterializedPathRepository
             $return = $resources;
             // Add a field "pathfordisplay" in each entity (as array) of the given array.
             foreach ($resources as $key => $resource) {
-
                 if (isset($resource['path'])) {
                     $return[$key]['path_for_display'] = ResourceNode::convertPathForDisplay($resource['path']);
-
                 }
             }
 
@@ -564,7 +562,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
 
         $isWorkspaceManager = false;
         $ws = $node->getWorkspace();
-        $managerRole = 'ROLE_WS_MANAGER_' . $ws->getGuid();
+        $managerRole = 'ROLE_WS_MANAGER_'.$ws->getGuid();
 
         if (in_array($managerRole, $rolenames)) {
             $isWorkspaceManager = true;

@@ -46,7 +46,7 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setContainer(ContainerInterface $container = null)
     {
@@ -63,10 +63,10 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
             $numTot = ((1 - pow($this->numberDirectory, $this->depth + 1)) / (1 - $this->numberDirectory)) - 1;
         }
 
-        $this->log("Number of directories that will be generated per workspace: ". $numTot);
-        $this->log("Number of files that will be generated per workspace: ". $numTot * $this->numberFiles);
-        $this->log("Number of filled workspaces: ". $this->numberRoots);
-        $this->log("Total resources: ". $this->numberRoots * ($numTot * $this->numberFiles + $numTot));
+        $this->log('Number of directories that will be generated per workspace: '.$numTot);
+        $this->log('Number of files that will be generated per workspace: '.$numTot * $this->numberFiles);
+        $this->log('Number of filled workspaces: '.$this->numberRoots);
+        $this->log('Total resources: '.$this->numberRoots * ($numTot * $this->numberFiles + $numTot));
 
         $this->user = $this->findJohnDoe($manager);
         $this->pws = $this->user->getPersonalWorkspace();
@@ -78,7 +78,7 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
 
         $start = time();
 
-        for ($i = 0; $i < $this->numberRoots; $i++) {
+        for ($i = 0; $i < $this->numberRoots; ++$i) {
             $ws = $manager->getRepository('ClarolineCoreBundle:Workspace\Workspace')
                 ->find($maxWsId);
             $this->userRootDirectory = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
@@ -91,26 +91,25 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
                 $this->numberFiles,
                 $this->userRootDirectory
             );
-            $maxWsId--;
+            --$maxWsId;
         }
 
         $end = time();
         $duration = $this->container->get('claroline.utilities.misc')->timeElapsed($end - $start);
-        $this->log("Time elapsed for the demo creation: " . $duration);
+        $this->log('Time elapsed for the demo creation: '.$duration);
 
         return $duration;
-
     }
 
     private function generateItems(EntityManager $em, $maxDepth, $curDepth, $directoryCount, $fileCount, ResourceNode $parent)
     {
-        $curDepth++;
+        ++$curDepth;
 
-        for ($j = 0; $j < $directoryCount; $j++) {
+        for ($j = 0; $j < $directoryCount; ++$j) {
             $this->log('Total resources created: '.$this->totalResources);
             $dir = $this->addDirectory($parent, $this->user);
 
-            for ($k = 0; $k < $fileCount; $k++) {
+            for ($k = 0; $k < $fileCount; ++$k) {
                 $this->addFile($parent, $this->user);
             }
 
@@ -118,13 +117,13 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
                 $this->generateItems($em, $maxDepth, $curDepth, $directoryCount, $fileCount, $dir);
 
                 if ($curDepth == 1) {
-                    $this->log(" [UOW size: " . $em->getUnitOfWork()->size() . "]");
+                    $this->log(' [UOW size: '.$em->getUnitOfWork()->size().']');
                     // Clear the EntityManager (EM) to free memory and speed all EM operations.
                     // We may clear the EM only when coming back at level 1 else we have
                     // problems with entities needed in the hierarchy.
                     $em->flush();
                     $em->clear();
-                    $this->log(" [UOW size: " . $em->getUnitOfWork()->size() . "]");
+                    $this->log(' [UOW size: '.$em->getUnitOfWork()->size().']');
                     // Re-attach all needed entities else we have problems later.
                     $this->userRootDirectory = $em->merge($this->userRootDirectory);
                     $this->user = $em->merge($this->user);
@@ -134,20 +133,20 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
             }
         }
 
-        $this->log(" [UOW size: " . $em->getUnitOfWork()->size() . "]");
+        $this->log(' [UOW size: '.$em->getUnitOfWork()->size().']');
     }
 
     private function addDirectory(ResourceNode $parent, User $user)
     {
         $dirType = $this->container->get('claroline.persistence.object_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneByName('directory');
-        $this->suffixName++;
+        ++$this->suffixName;
         $name = 'dir_'.$this->suffixName;
         $dir = new Directory();
         $dir->setName($name);
         $this->log('create '.$name);
-        $dir = $this->container->get('claroline.manager.resource_manager')->create($dir, $dirType, $user, $this->pws,$parent);
-        $this->totalResources++;
+        $dir = $this->container->get('claroline.manager.resource_manager')->create($dir, $dirType, $user, $this->pws, $parent);
+        ++$this->totalResources;
 
         return $dir->getResourceNode();
     }
@@ -156,7 +155,7 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
     {
         $fileType = $this->container->get('claroline.persistence.object_manager')
             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneByName('file');
-        $this->suffixName++;
+        ++$this->suffixName;
         $name = 'file_'.$this->suffixName.'.txt';
         $file = new File();
         $file->setName($name);
@@ -167,7 +166,7 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
         $this->log('create '.$name);
         $file = $this->container->get('claroline.manager.resource_manager')
             ->create($file, $fileType, $user, $this->pws, $parent);
-        $this->totalResources++;
+        ++$this->totalResources;
 
         return $file;
     }
@@ -175,7 +174,7 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
     private function findJohnDoe(ObjectManager $manager)
     {
         $query = $manager->createQuery("SELECT u FROM Claroline\CoreBundle\Entity\User u where u.username = 'JohnDoe'");
-        $query->setFetchMode("MyProject\User", "address", "EXTRA_LAZY");
+        $query->setFetchMode("MyProject\User", 'address', 'EXTRA_LAZY');
 
         return $query->getSingleResult();
     }

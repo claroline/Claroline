@@ -26,9 +26,9 @@ use Claroline\CoreBundle\Library\Security\Collection\GroupCollection;
 class GroupVoter implements VoterInterface
 {
     const CREATE = 'create';
-    const EDIT   = 'edit';
+    const EDIT = 'edit';
     const DELETE = 'delete';
-    const VIEW   = 'view';
+    const VIEW = 'view';
 
     /**
      * @DI\InjectParams({
@@ -37,10 +37,9 @@ class GroupVoter implements VoterInterface
      * })
      */
     public function __construct(
-        ObjectManager $om, 
+        ObjectManager $om,
         GroupManager $groupManager
-    )
-    {
+    ) {
         $this->om = $om;
         $this->groupManager = $groupManager;
     }
@@ -48,8 +47,10 @@ class GroupVoter implements VoterInterface
     //ROLE_ADMIN can always do anything, so we don't have to check that.
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-        if (!$object instanceof Group && !$object instanceof GroupCollection) return VoterInterface::ACCESS_ABSTAIN;
-        $groups = $object instanceof GroupCollection ? $object->getGroups(): array($object);
+        if (!$object instanceof Group && !$object instanceof GroupCollection) {
+            return VoterInterface::ACCESS_ABSTAIN;
+        }
+        $groups = $object instanceof GroupCollection ? $object->getGroups() : array($object);
         $action = strtolower($attributes[0]);
 
         switch ($action) {
@@ -84,16 +85,20 @@ class GroupVoter implements VoterInterface
     private function checkEdit($token, $groups)
     {
         foreach ($groups as $group) {
-            if (!$this->isOrganizationManager($token, $group)) return VoterInterface::ACCESS_DENIED;
+            if (!$this->isOrganizationManager($token, $group)) {
+                return VoterInterface::ACCESS_DENIED;
+            }
         }
-        
+
         return VoterInterface::ACCESS_GRANTED;
     }
 
     private function checkDelete($token, $groups)
     {
         foreach ($groups as $group) {
-            if (!$this->isOrganizationManager($token, $group)) return VoterInterface::ACCESS_DENIED;
+            if (!$this->isOrganizationManager($token, $group)) {
+                return VoterInterface::ACCESS_DENIED;
+            }
         }
 
         return VoterInterface::ACCESS_GRANTED;
@@ -102,7 +107,9 @@ class GroupVoter implements VoterInterface
     private function checkView($token, $groups)
     {
         foreach ($groups as $group) {
-            if (!$this->isOrganizationManager($token, $group)) return VoterInterface::ACCESS_DENIED;
+            if (!$this->isOrganizationManager($token, $group)) {
+                return VoterInterface::ACCESS_DENIED;
+            }
         }
 
         return VoterInterface::ACCESS_GRANTED;
@@ -115,7 +122,9 @@ class GroupVoter implements VoterInterface
 
         foreach ($adminOrganizations as $adminOrganization) {
             foreach ($groupOrganizations as $groupOrganization) {
-                if ($groupOrganization === $adminOrganization) return true;
+                if ($groupOrganization === $adminOrganization) {
+                    return true;
+                }
             }
         }
 

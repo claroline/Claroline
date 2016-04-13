@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Library\Security\Voter;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Manager\IPWhiteListManager;
 use JMS\DiExtraBundle\Annotation as DI;
 

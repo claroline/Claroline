@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Controller\Log\Tool;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -52,6 +51,7 @@ class WorkspaceController extends Controller
      * @param $page int The requested page number.
      *
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     *
      * @return Response
      */
     public function logListAction(Workspace $workspace, $page)
@@ -92,6 +92,7 @@ class WorkspaceController extends Controller
      * @param $page int The requested page number.
      *
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     *
      * @return Response
      */
     public function logByUserAction(Workspace $workspace, $page)
@@ -116,12 +117,10 @@ class WorkspaceController extends Controller
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
-     *
-     * Exports in CSV the list of user actions for the given criteria
-     *
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      *
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     *
      * @return Response
      */
     public function logByUserCSVAction(Workspace $workspace)
@@ -132,21 +131,21 @@ class WorkspaceController extends Controller
 
         $logManager = $this->get('claroline.log.manager');
 
-        $response = new StreamedResponse(function() use($logManager, $workspace) {
+        $response = new StreamedResponse(function () use ($logManager,$workspace) {
 
             $results = $logManager->countByUserListForCSV('workspace', $workspace);
             $handle = fopen('php://output', 'w+');
             while (false !== ($row = $results->next())) {
                 // add a line in the csv file. You need to implement a toArray() method
                 // to transform your object into an array
-                fputcsv($handle, array($row[$results->key()]['name'],$row[$results->key()]['actions']));
+                fputcsv($handle, array($row[$results->key()]['name'], $row[$results->key()]['actions']));
             }
 
             fclose($handle);
         });
         $dateStr = date('YmdHis');
         $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition','attachment; filename="user_actions_'.$dateStr.'.csv"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="user_actions_'.$dateStr.'.csv"');
 
         return $response;
     }

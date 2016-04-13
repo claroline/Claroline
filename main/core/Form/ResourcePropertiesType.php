@@ -33,14 +33,14 @@ class ResourcePropertiesType extends AbstractType
         $attrParams = array(
                 'class' => 'datepicker input-small',
                 'data-date-format' => $this->translator->trans('date_form_datepicker_format', array(), 'platform'),
-                'autocomplete' => 'off'
+                'autocomplete' => 'off',
             );
 
         $dateParams = array(
             'format' => $dateFormat,
             'widget' => 'single_text',
             'input' => 'datetime',
-            'attr' => $attrParams
+            'attr' => $attrParams,
         );
 
         $builder->add('name', 'text', array('label' => 'name'));
@@ -50,7 +50,7 @@ class ResourcePropertiesType extends AbstractType
             array(
                 'required' => false,
                 'mapped' => false,
-                'label' => 'icon'
+                'label' => 'icon',
             )
         );
         $builder->add(
@@ -60,7 +60,7 @@ class ResourcePropertiesType extends AbstractType
                 'disabled' => true,
                 'widget' => 'single_text',
                 'format' => $dateFormat,
-                'label' => 'creation_date'
+                'label' => 'creation_date',
             )
         );
         $builder->add(
@@ -70,13 +70,13 @@ class ResourcePropertiesType extends AbstractType
                 'disabled' => true,
                 'widget' => 'single_text',
                 'format' => $dateFormat,
-                'label' => 'last_modification'
+                'label' => 'last_modification',
             )
         );
         $builder->add(
             'published',
             'checkbox',
-            array( 'required' => true, 'label' => 'published')
+            array('required' => true, 'label' => 'published')
         );
         $accessibleFromParams = $dateParams;
         $accessibleFromParams['label'] = 'accessible_from';
@@ -95,7 +95,7 @@ class ResourcePropertiesType extends AbstractType
                 'multiple' => false,
                 'property' => 'name',
                 'disabled' => true,
-                'label' => 'resource_type'
+                'label' => 'resource_type',
             )
         );
         $builder->add(
@@ -105,7 +105,7 @@ class ResourcePropertiesType extends AbstractType
                 'data' => $this->creator,
                 'mapped' => false,
                 'disabled' => true,
-                'label' => 'creator'
+                'label' => 'creator',
             )
         );
         $builder->add(
@@ -113,7 +113,7 @@ class ResourcePropertiesType extends AbstractType
             'text',
             array(
                 'label' => 'license',
-                'required' => false
+                'required' => false,
             )
         );
         $builder->add(
@@ -121,7 +121,7 @@ class ResourcePropertiesType extends AbstractType
             'text',
             array(
                 'label' => 'author',
-                'required' => false
+                'required' => false,
             )
         );
     }

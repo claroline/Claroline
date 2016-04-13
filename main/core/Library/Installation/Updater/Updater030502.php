@@ -40,7 +40,7 @@ class Updater030502 extends Updater
             $this->conn->query('CREATE TABLE claro_workspace_model_resource (id INT AUTO_INCREMENT NOT NULL, resource_node_id INT NOT NULL, model_id INT NOT NULL, isCopy TINYINT(1) NOT NULL, INDEX IDX_F5D706351BAD783F (resource_node_id), INDEX IDX_F5D706357975B7E7 (model_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB');
             $this->conn->query('ALTER TABLE claro_workspace_model_resource ADD CONSTRAINT FK_F5D706351BAD783F FOREIGN KEY (resource_node_id) REFERENCES claro_resource_node (id) ON DELETE CASCADE');
             $this->conn->query('ALTER TABLE claro_workspace_model_resource ADD CONSTRAINT FK_F5D706357975B7E7 FOREIGN KEY (model_id) REFERENCES claro_workspace_model (id) ON DELETE CASCADE;');
-        } catch(\Doctrine\DBAL\DBALException $e) {
+        } catch (\Doctrine\DBAL\DBALException $e) {
             $this->log('claro_workspace_model_resource could not be created or already exists');
         }
     }

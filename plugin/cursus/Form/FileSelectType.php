@@ -26,7 +26,7 @@ class FileSelectType extends AbstractType
                 'required' => true,
                 'mapped' => false,
                 'label' => 'file',
-                'translation_domain' => 'platform'
+                'translation_domain' => 'platform',
             )
         );
     }

@@ -20,6 +20,6 @@ class ClarolineResultBundle extends PluginBundle
     {
         $config = new ConfigurationBuilder();
 
-        return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'results');
+        return $config->addRoutingResource(__DIR__.'/Resources/config/routing.yml', null, 'results');
     }
 }

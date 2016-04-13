@@ -102,8 +102,7 @@ class Manager
         SecurityContextInterface $sc,
         MaskManager $maskManager,
         RightsManager $rightsManager
-    )
-    {
+    ) {
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
         $this->notificationRepo = $om->getRepository('ClarolineForumBundle:Notification');
@@ -128,7 +127,7 @@ class Manager
      * a message is posted.
      *
      * @param \Claroline\ForumBundle\Entity\Forum $forum
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\User   $user
      */
     public function subscribe(Forum $forum, User $user, $selfActivation = true)
     {
@@ -146,7 +145,7 @@ class Manager
      * Unsubscribe a user from a forum.
      *
      * @param \Claroline\ForumBundle\Entity\Forum $forum
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\User   $user
      */
     public function unsubscribe(Forum $forum, User $user)
     {
@@ -161,8 +160,8 @@ class Manager
      * Create a category.
      *
      * @param \Claroline\ForumBundle\Entity\Forum $forum
-     * @param string $name The category name
-     * @param boolean $autolog
+     * @param string                              $name    The category name
+     * @param bool                                $autolog
      *
      * @return \Claroline\ForumBundle\Entity\Category
      */
@@ -200,27 +199,28 @@ class Manager
 
     /**
      * @param \Claroline\ForumBundle\Entity\Message $message
-     *
      * @param \Claroline\ForumBundle\Entity\Subject $subject
+     *
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+     *
      * @return \Claroline\ForumBundle\Entity\Message
      */
     public function createMessage(Message $message, Subject $subject)
     {
-    	$forum = $subject->getCategory()->getForum();
+        $forum = $subject->getCategory()->getForum();
         $collection = new ResourceCollection(array($forum->getResourceNode()));
 
         if (!$this->sc->isGranted('post', $collection)) {
             throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
         }
 
-     	$user = $this->sc->getToken()->getUser();
+        $user = $this->sc->getToken()->getUser();
         $message->setCreator($user);
-        $message->setAuthor($user->getFirstName() . ' ' . $user->getLastName());
+        $message->setAuthor($user->getFirstName().' '.$user->getLastName());
         $message->setSubject($subject);
         $this->om->persist($message);
         $this->om->flush();
-		$this->dispatch(new CreateMessageEvent($message));
+        $this->dispatch(new CreateMessageEvent($message));
         $this->sendMessageNotification($message, $message->getCreator());
 
         return $message;
@@ -264,9 +264,10 @@ class Manager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\User   $user
      * @param \Claroline\ForumBundle\Entity\Forum $forum
-     * @return boolean
+     *
+     * @return bool
      */
     public function hasSubscribed(User $user, Forum $forum)
     {
@@ -279,7 +280,7 @@ class Manager
      * Send a notification to a user about a message.
      *
      * @param \Claroline\ForumBundle\Entity\Message $message
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\User     $user
      */
     public function sendMessageNotification(Message $message, User $user)
     {
@@ -307,7 +308,7 @@ class Manager
     }
 
     /**
-     * @param integer $subjectId
+     * @param int $subjectId
      *
      * @return Subject
      */
@@ -317,7 +318,7 @@ class Manager
     }
 
     /**
-     * @param integer $forumId
+     * @param int $forumId
      *
      * @return Forum
      */
@@ -352,7 +353,7 @@ class Manager
     /**
      * Move a subject to an other category.
      *
-     * @param \Claroline\ForumBundle\Entity\Subject $subject
+     * @param \Claroline\ForumBundle\Entity\Subject  $subject
      * @param \Claroline\ForumBundle\Entity\Category $newCategory
      */
     public function moveSubject(Subject $subject, Category $newCategory)
@@ -425,8 +426,8 @@ class Manager
      * Get the pager for the subject list of a category.
      *
      * @param \Claroline\ForumBundle\Entity\Category $category
-     * @param integer $page
-     * @param integer $max
+     * @param int                                    $page
+     * @param int                                    $max
      *
      * @return \Pagerfanta\Pagerfanta
      */
@@ -441,8 +442,8 @@ class Manager
      * Get the pager for the message list of a subject.
      *
      * @param \Claroline\ForumBundle\Entity\Subject $subject
-     * @param integer $page
-     * @param integer $max
+     * @param int                                   $page
+     * @param int                                   $max
      *
      * @return \Pagerfanta\Pagerfanta
      */
@@ -457,8 +458,8 @@ class Manager
      * Get the pager for the forum search.
      *
      * @param \Claroline\ForumBundle\Entity\Forum $forum
-     * @param string $search
-     * @param integer $page
+     * @param string                              $search
+     * @param int                                 $page
      *
      * @return \Pagerfanta\Pagerfanta
      */
@@ -471,8 +472,8 @@ class Manager
 
     /**
      * @param \Claroline\ForumBundle\Entity\Message $message
-     * @param string $oldContent
-     * @param string $newContent
+     * @param string                                $oldContent
+     * @param string                                $newContent
      */
     public function editMessage(Message $message, $oldContent, $newContent)
     {
@@ -485,8 +486,8 @@ class Manager
 
     /**
      * @param \Claroline\ForumBundle\Entity\Subject $subject
-     * @param string $oldTitle
-     * @param string $newTitle
+     * @param string                                $oldTitle
+     * @param string                                $newTitle
      */
     public function editSubject(Subject $subject, $oldTitle, $newTitle)
     {
@@ -499,8 +500,8 @@ class Manager
 
     /**
      * @param \Claroline\ForumBundle\Entity\Category $category
-     * @param string $oldName
-     * @param string $newName
+     * @param string                                 $oldName
+     * @param string                                 $newName
      */
     public function editCategory(Category $category, $oldName, $newName)
     {
@@ -560,26 +561,26 @@ class Manager
     {
         $answer = $this->translator->trans('answer_message', array(), 'forum');
         $author = $message->getCreator()->getFirstName()
-            . ' '
-            . $message->getCreator()->getLastName();
+            .' '
+            .$message->getCreator()->getLastName();
         $date = $message->getCreationDate()->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));
         $by = $this->translator->trans('posted_by', array('%author%' => $author, '%date%' => $date), 'forum');
-        $mask = '<div class="original-poster"><b>' . $by . '</b></div><div class="well">%s</div></div><b>' . $answer . ':</b></div>';
+        $mask = '<div class="original-poster"><b>'.$by.'</b></div><div class="well">%s</div></div><b>'.$answer.':</b></div>';
 
         return sprintf(
             $mask,
             $message->getContent()
         );
     }
-    
+
     public function getReplyHTML(Message $message)
     {
         $author = $message->getCreator()->getFirstName()
-            . ' '
-            . $message->getCreator()->getLastName();
+            .' '
+            .$message->getCreator()->getLastName();
         $date = $message->getCreationDate()->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));
         $by = $this->translator->trans('posted_by', array('%author%' => $author, '%date%' => $date), 'forum');
-        
+
         return $by;
     }
 
@@ -628,7 +629,7 @@ class Manager
     /**
      * Unsubscribe a user from a forum.
      *
-     * @param \Claroline\ForumBundle\Entity\Forum $forum
+     * @param \Claroline\ForumBundle\Entity\Forum        $forum
      * @param \Claroline\ForumBundle\Entity\Notification $notification
      */
     private function removeNotification(Forum $forum, Notification $notification)
@@ -663,8 +664,7 @@ class Manager
         ResourceNode $node,
         $orderedBy = 'id',
         $order = 'DESC'
-    )
-    {
+    ) {
         return $this->forumRepo->findSubjectsReadingLogs(
             $user,
             $node,

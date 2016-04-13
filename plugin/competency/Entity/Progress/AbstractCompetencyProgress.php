@@ -122,7 +122,7 @@ abstract class AbstractCompetencyProgress
     public function setUser(User $user)
     {
         $this->user = $user;
-        $this->userName = $user->getFirstName() .  ' ' . $user->getLastName();
+        $this->userName = $user->getFirstName().' '.$user->getLastName();
     }
 
     /**

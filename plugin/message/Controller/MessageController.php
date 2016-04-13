@@ -80,8 +80,7 @@ class MessageController
         UserManager $userManager,
         Utilities $utils,
         WorkspaceManager $workspaceManager
-    )
-    {
+    ) {
         $this->formFactory = $formFactory;
         $this->groupManager = $groupManager;
         $this->mailManager = $mailManager;
@@ -110,7 +109,7 @@ class MessageController
     public function formForGroupAction(Group $group)
     {
         $url = $this->router->generate('claro_message_show', array('message' => 0))
-            . '?grpsIds[]=' . $group->getId();
+            .'?grpsIds[]='.$group->getId();
 
         return new RedirectResponse($url);
     }
@@ -130,7 +129,7 @@ class MessageController
     public function formForWorkspaceAction(Workspace $workspace)
     {
         $url = $this->router->generate('claro_message_show', array('message' => 0))
-            . '?wsIds[]=' . $workspace->getId();
+            .'?wsIds[]='.$workspace->getId();
 
         return new RedirectResponse($url);
     }
@@ -196,9 +195,9 @@ class MessageController
      * Displays the messages received by a user, optionally filtered by a search
      * on the object or the sender username.
      *
-     * @param User    $receiver
-     * @param integer $page
-     * @param string  $search
+     * @param User   $receiver
+     * @param int    $page
+     * @param string $search
      *
      * @return Response
      */
@@ -209,7 +208,7 @@ class MessageController
         return array(
             'pager' => $pager,
             'search' => $search,
-            'isMailerAvailable' => $this->mailManager->isMailerAvailable()
+            'isMailerAvailable' => $this->mailManager->isMailerAvailable(),
         );
     }
 
@@ -232,9 +231,9 @@ class MessageController
      * Displays the messages sent by a user, optionally filtered by a search
      * on the object.
      *
-     * @param User    $sender
-     * @param integer $page
-     * @param string  $search
+     * @param User   $sender
+     * @param int    $page
+     * @param string $search
      *
      * @return Response
      */
@@ -261,13 +260,9 @@ class MessageController
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template()
      *
-     *
-     * Displays the messages removed by a user, optionally filtered by a search
-     * on the object or the sender username.
-     *
-     * @param User    $user
-     * @param integer $page
-     * @param string  $search
+     * @param User   $user
+     * @param int    $page
+     * @param string $search
      *
      * @return Response
      */
@@ -324,13 +319,12 @@ class MessageController
         array $groups,
         array $workspaces,
         Message $message = null
-    )
-    {
+    ) {
         if ($message) {
             $this->messageManager->markAsRead($user, array($message));
             $ancestors = $this->messageManager->getConversation($message, $user);
             $sendString = $message->getSenderUsername();
-            $object = 'Re: ' . $message->getObject();
+            $object = 'Re: '.$message->getObject();
             $this->checkAccess($message, $user);
         } else {
             //datas from the post request
@@ -346,7 +340,7 @@ class MessageController
         return array(
             'ancestors' => $ancestors,
             'message' => $message,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         );
     }
 
@@ -439,7 +433,7 @@ class MessageController
      *
      * Marks a message as read.
      *
-     * @param User $user
+     * @param User    $user
      * @param Message $message
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -467,13 +461,9 @@ class MessageController
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template()
      *
-     *
-     * Displays the list of users that the current user can send a message to,
-     * optionally filtered by a search on first name and last name
-     *
-     * @param integer $page
-     * @param string  $search
-     * @param User    $user
+     * @param int    $page
+     * @param string $search
+     * @param User   $user
      *
      * @return Response
      */
@@ -521,8 +511,8 @@ class MessageController
      * @EXT\Method("POST")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
-     * @param boolean $isNotified
-     * @param User    $user
+     * @param bool $isNotified
+     * @param User $user
      *
      * @return Response
      */
@@ -549,13 +539,9 @@ class MessageController
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template()
      *
-     *
-     * Displays the list of groups that the current user can send a message to,
-     * optionally filtered by a search on group name
-     *
-     * @param integer $page
-     * @param string  $search
-     * @param User    $user
+     * @param int    $page
+     * @param string $search
+     * @param User   $user
      *
      * @return Response
      */
@@ -634,13 +620,9 @@ class MessageController
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template()
      *
-     *
-     * Displays the list of groups that the current user can send a message to,
-     * optionally filtered by a search on group name
-     *
-     * @param integer $page
-     * @param string  $search
-     * @param User    $user
+     * @param int    $page
+     * @param string $search
+     * @param User   $user
      *
      * @return Response
      */
@@ -655,14 +637,12 @@ class MessageController
     public function checkAccess(Message $message, User $user)
     {
         if ($message->getSenderUsername() === $user->getUsername()) {
-
             return true;
         }
         $userMessage = $this->messageManager
             ->getOneUserMessageByUserAndMessage($user, $message);
 
         if (!is_null($userMessage)) {
-
             return true;
         }
 
