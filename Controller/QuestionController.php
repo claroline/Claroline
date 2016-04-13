@@ -1131,28 +1131,28 @@ class QuestionController extends Controller {
      * To duplicate a question.
      *
      * @EXT\Route(
-     *     "/duplicate/{questionId}/{exoID}",
+     *     "/duplicate/{questionId}/{stepID}",
      *     name="ujm_question_duplicate",
-     *     defaults={"exoID"= -1},
+     *     defaults={"stepID"= -1},
      *     options={"expose"= true}
      * )
      *
      * @param int $questionId   id Question
-     * @param int $exoID        id Exercise if the user is in an exercise, -1 if the user is in the question bank
+     * @param int $stepID        id step if the user is in an exercise, -1 if the user is in the question bank
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function duplicateAction($questionId, $exoID) {
+    public function duplicateAction($questionId, $stepID) {
         $exercise = null;
         $service = $this->container->get('ujm.exo_question');
 
         $question = $service->controlUserQuestion($questionId);
         $sharedQuestions = $service->controlUserSharedQuestion($questionId);
         $allowToAccess = false;
+        $step = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Step')->find($stepID);
+        $exercise = $step->getExercise();
 
-        if ($exoID != -1) {
-            $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
-
+        if ($stepID != -1) {
             if ($this->container->get('ujm.exo_exercise')
                             ->isExerciseAdmin($exercise) === true) {
                 $allowToAccess = true;
@@ -1175,7 +1175,7 @@ class QuestionController extends Controller {
                     null, null, $this->getDoctrine()->getManager(),
                     $this->container->get('ujm.exo_exercise'), $this->container->get('ujm.exo_category'),
                     $this->container->get('security.token_storage')->getToken()->getUser(),
-                    $exercise, $this->get('translator')
+                    $exercise,$step,$this->get('translator')
             );
 
             $interXHandler->singleDuplicateInter($interactionX);
@@ -1183,7 +1183,7 @@ class QuestionController extends Controller {
             $categoryToFind = $interactionX->getQuestion()->getCategory();
             $titleToFind = $interactionX->getQuestion()->getTitle();
 
-            if ($exoID == -1) {
+            if ($stepID == -1) {
                 return $this->redirect(
                     $this->generateUrl('ujm_question_index', array(
                         'categoryToFind' => base64_encode($categoryToFind), 'titleToFind' => base64_encode($titleToFind),)
@@ -1191,7 +1191,7 @@ class QuestionController extends Controller {
                 );
             } else {
                 return $this->redirect(
-                    $this->generateUrl('ujm_exercise_open', [ 'id' => $exoID ]) . '#/steps'
+                    $this->generateUrl('ujm_exercise_open', [ 'id' => $exercise->getId() ]) . '#/steps'
                 );
             }
         } else {

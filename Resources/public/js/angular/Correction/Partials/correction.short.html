@@ -28,6 +28,7 @@
     <h3 class="panel-title">{{ 'label_exercise_correction'|trans:{}:'ujm_sequence' }}</h3>
     <div data-ng-if="correctionShortCtrl.score === -1">
         <span>{{ 'need_correction'|trans:{}:'ujm_sequence' }}</span><br/>
+        <div class="alert alert-danger" ng-show="correctionShortCtrl.message" role="alert">{{ 'mark_bigest_other'|trans:{}:'ujm_exo' }}</div>
         <a data-ng-click="correctionShortCtrl.showNotationInput()" id="note_question" class="btn btn-default">
             {{ 'note_question'|trans:{}:'ujm_sequence' }}
         </a>
