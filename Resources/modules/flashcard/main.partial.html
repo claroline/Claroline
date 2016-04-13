@@ -1,6 +1,7 @@
 <div class="panel-body" >
 {{ vm.deck.id }}
 {{ vm.deckNode.name }}
+{{ vm.deck }}
   <table class="table table-condensed table-bordered"
          data-ng-if="vm.results.length > 0">
     <thead>
@@ -56,7 +57,11 @@
   </button>
   <button class="btn btn-primary"
           data-ng-click="">
-    {{ 'show_cards'|trans:'flashcard' }}
+    {{ 'default_parameters'|trans:'flashcard' }}
+  </button>
+  <button class="btn btn-primary"
+          data-ng-click="">
+    {{ 'cards.show'|trans:'flashcard' }}
   </button>
   <button class="btn btn-primary"
           data-ng-click="">

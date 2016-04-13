@@ -9,11 +9,16 @@
  */
 
 import createNoteTemplate from './createNote.partial.html'
+import errorTemplate from './error.partial.html'
 
 export default class FlashCardCtrl {
-  constructor (service, modal) {
+  constructor (service, modal, $http) {
     this.deck = service.getDeck()
     this.deckNode = service.getDeckNode()
+    this.noteTypes = []
+    this.noteTypeChoosenId = 0
+    this.noteTypeChoosen = null
+    this.fieldValues = []
     this.editedMark = {}
     this.createdMark = {}
     this.importFile = null
@@ -23,10 +28,41 @@ export default class FlashCardCtrl {
     this._service = service
     this._modalFactory = modal
     this._modalInstance = null
+
+    service.findAllNoteType().then(d => this.noteTypes = d.data)
   }
 
   displayNoteCreationForm () {
     this._modal(createNoteTemplate)
+  }
+
+  createNote (form) {
+    if (form.$valid) {
+      const fields = []
+      let fieldLabel = null
+
+      for(let i=0; i<this.fieldValues.length; i++) {
+        fieldLabel = this.noteTypeChoosen.field_labels[i]
+        fields[i] = {
+          "id": fieldLabel.id,
+          "value": this.fieldValues[i]
+        }
+      }
+
+      this._service.createNote(this.noteTypeChoosen, fields).then(
+        d => { this.deck.notes.push(d.data) },
+        () => {
+          // Must do something to delete the created note in this controller
+          // but for the moment the created note is not added to the
+          // attributes.
+          // ...
+          this._modal(errorTemplate, 'errors.note.creation_failure')
+        }
+      )
+      this.fieldValues = []
+      this._resetForm(form)
+      this._closeModal()
+    }
   }
 
   createResult (form) {

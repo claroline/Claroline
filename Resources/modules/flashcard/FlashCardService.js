@@ -16,11 +16,27 @@ export default class FlashCardService {
   }
 
   getDeck () {
-      return this._deck
+    return this._deck
   }
 
   getDeckNode () {
-      return this._deckNode;
+    return this._deckNode
+  }
+
+  findAllNoteType () {
+    return this.$http.get(
+      Routing.generate('claroline_getall_note_type')
+    )
+  }
+
+  createNote (noteType, fields) {
+    const url = Routing.generate('claroline_create_note', {
+      deck: this._deck.id,
+      noteType: noteType.id
+    })
+
+    return this.$http
+      .post(url, { fields: fields})
   }
 
   createMark (props, onFail) {

@@ -1,0 +1,70 @@
+<form name="createNoteForm" novalidate>
+  {{ vm.noteTypes }}
+  {{ vm.noteTypeChoosen }}
+  {{ vm.fieldValues }}
+  <div class="modal-header">
+    <button type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="{{ 'close'|trans }}">
+      <span aria-hidden="true" data-ng-click="vm.cancel(createNoteForm)">&times;</span>
+    </button>
+    <h3 class="modal-title">{{ 'notes.add'|trans:'flashcard' }}</h3>
+  </div>
+  <div class="modal-body">
+    <div class="form-group"
+         data-ng-class="{ 'has-error': (createNoteForm.$submitted || createNoteForm.user.$dirty) && !createNoteForm.user.$valid }">
+      <label for="note-type">{{ 'note_type'|trans }}</label>
+      <select id="note-type"
+              class="form-control"
+              data-ng-model="vm.noteTypeChoosenId"
+              required>
+        <option 
+          data-ng-repeat="noteType in vm.noteTypes track by
+          noteType.name"
+          data-ng-click="vm.noteTypeChoosen = noteType"
+          value="{{ noteType.id }}">
+          {{ noteType.name }}
+        </option>
+      </select>
+      <p class="help-block"
+         data-ng-if="(createNoteForm.$submitted || createNoteForm.user.$dirty) && createNoteForm.user.$error.required">
+        {{ 'errors.not_blank'|trans:'results' }}
+      </p>
+      <p class="help-block"
+         data-ng-if="(createNoteForm.$submitted || createNoteForm.user.$dirty) && createNoteForm.user.$error.validUser">
+        {{ 'errors.unknown_user'|trans:'results' }}
+      </p>
+    </div>
+    <div class="form-group"
+         data-ng-if="vm.noteTypeChoosen !== undefined"
+         data-ng-repeat="fieldLabel in vm.noteTypeChoosen.field_labels">
+      <label for="field-{{ fieldLabel.id }}-value">{{ fieldLabel.name }}</label>
+      <input id="field-{{ fieldLabel.id }}-value"
+             type="text"
+             name="field-{{ fieldLabel.id }}-value"
+             class="form-control"
+             data-ng-model="vm.fieldValues[$index]"
+             required />
+      <p class="help-block"
+         data-ng-if="(createNoteForm.$submitted
+         || createNoteForm.fieldValues[$index].$dirty)
+         && createNoteForm.fieldValues[$index].$error.required">
+        {{ 'errors.not_blank'|trans:'flashcard' }}
+      </p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit"
+            class="btn btn-primary"
+            data-ng-disabled="!createNoteForm.$valid"
+            data-ng-click="vm.createNote(createNoteForm)">
+      {{ 'create'|trans }}
+    </button>
+    <button type="button"
+            class="btn btn-default"
+            data-ng-click="vm.cancel(createNoteForm)">
+      {{ 'cancel'|trans }}
+    </button>
+  </div>
+</form>
