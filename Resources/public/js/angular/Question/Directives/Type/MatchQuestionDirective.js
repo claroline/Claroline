@@ -14,7 +14,7 @@ angular.module('Question').directive('matchQuestion', [
             },
             link: function (scope, element, attr, matchQuestionCtrl) {
 
-                matchQuestionCtrl.init(scope.question);
+                matchQuestionCtrl.init(scope.question, scope.canSeeFeedback);
                 // init jsPlumb dom elements
                 $timeout(function () {
                     // MatchQuestion sub type is ToBind
@@ -49,6 +49,15 @@ angular.module('Question').directive('matchQuestion', [
                                 matchQuestionCtrl.handleDragMatchQuestionDrop(event, ui);
                             });
                         });
+                        
+                        if (scope.question.typeMatch === 3) {
+                            $(".draggable").each(function () {
+                                var id = $(this)[0].id.replace("div", "drag_handle");
+                                $(this).draggable({
+                                    handle: "#" + id
+                                });
+                            });
+                        }
 
                         matchQuestionCtrl.addPreviousDroppedItems();
                     }

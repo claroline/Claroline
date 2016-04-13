@@ -47,156 +47,18 @@ angular.module('Question').controller('MatchQuestionCtrl', [
         };
 
         /**
-         * find all orphan answers and set them in an array
+         * Listen to show-feedback event (broadcasted by ExercisePlayerCtrl)
          */
-        this.setOrphanAnswers = function () {
-            var hasSolution;
-            for (var i=0; i<this.question.secondSet.length; i++) {
-                hasSolution = false;
-                for (var j=0; j<this.solutions.length; j++) {
-                    if (this.question.secondSet[i].id === this.solutions[j].secondId) {
-                        hasSolution = true;
-                    }
-                }
-                if (!hasSolution) {
-                    this.orphanAnswers.push(this.question.secondSet[i]);
-                }
-            }
-        };
+        $scope.$on('show-feedback', function (event, data) {
+            this.showFeedback();
+        }.bind(this));
 
-        /**
-         * check if a Hint has already been used (in paper)
-         * @param {type} id
-         * @returns {Boolean}
-         */
-        this.hintIsUsed = function (id) {
-            if (this.currentQuestionPaperData && this.currentQuestionPaperData.hints) {
-                for (var i = 0; i < this.currentQuestionPaperData.hints.length; i++) {
-                    if (this.currentQuestionPaperData.hints[i] === id) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        };
-
-        /**
-         * Called on each jsPlumbConnectionEvent or jquery-ui drop event
-         * also called at init
-         * We need to share those informations with parent controllers
-         * For that purpose we use a shared service
-         */
-        this.updateStudentData = function () {
-            // build answers
-            this.currentQuestionPaperData.answer = [];
-            if (this.question.toBind) {
-                for (var i = 0; i < this.connections.length; i++) {
-                    if (this.connections[i] !== '' && this.connections[i].source && this.connections[i].target) {
-                        var answer = this.connections[i].source + ',' + this.connections[i].target;
-                        this.currentQuestionPaperData.answer.push(answer);
-                    }
-                }
-
-            } else { // toDrag
-                for (var i = 0; i < this.dropped.length; i++) {
-                    if (this.dropped[i] !== '' && this.dropped[i].source && this.dropped[i].target) {
-                        var answer = this.dropped[i].source + ',' + this.dropped[i].target;
-                        this.currentQuestionPaperData.answer.push(answer);
-                    }
-                }
-            }
-            DataSharing.setStudentData(this.question, this.currentQuestionPaperData);
-        };
-
-        /**
-         * Get hint data and update student data in common service
-         * @param {type} hintId
-         * @returns {undefined}
-         */
-        this.showHint = function (id) {
-            var penalty = QuestionService.getHintPenalty(this.question.hints, id);
-            $ngBootbox.confirm(Translator.trans('question_show_hint_confirm', {1: penalty}, 'ujm_sequence'))
-                    .then(function () {
-                        this.getHintData(id);
-                        this.currentQuestionPaperData.hints.push(id);
-                        this.updateStudentData();
-                        // hide button
-                        angular.element('#hint-' + id).hide();
-                    }.bind(this));
-        };
-
-        this.getHintData = function (id) {
-            var promise = QuestionService.getHint(id);
-            promise.then(function (result) {
-                this.usedHints.push(result.data);
-
-            }.bind(this));
-        };
-
-        this.showFeedback = function () {
-            this.savedAnswers = [];
-            for (var i=0; i<this.dropped.length; i++) {
-                this.savedAnswers.push(this.dropped[i]);
-            }
-            
-            // get question answers and feedback ONLY IF NEEDED
-            var promise = QuestionService.getQuestionSolutions(this.question.id);
-            promise.then(function (result) {
-                this.feedbackIsVisible = true;
-                this.solutions = result.solutions;
-                this.setScore();
-                this.questionFeedback = result.feedback;
-                if (!this.question.toBind) {
-                    $('.draggable').draggable("disable");
-                    $('.draggable').fadeTo(100, 0.3);
-                }
-                else {
-                    //$('.endPoints').draggable("disable");
-                }
-            }.bind(this));
-        };
-
-        this.setScore = function () {
-            var score = 0;
-            for (var i=0; i<this.solutions.length; i++) {
-                if (this.question.toBind) {
-                    for (var j = 0; j < this.connections.length; j++) {
-                        if (this.connections[j] !== '' && this.connections[j].source === this.solutions[i].firstId && this.connections[j].target === this.solutions[i].secondId) {
-                            score = score + this.solutions[i].score;
-                        }
-                    }
-
-                } else { // toDrag
-                    for (var j = 0; j < this.dropped.length; j++) {
-                        if (this.dropped[j] !== '' && this.dropped[j].source === this.solutions[i].firstId && this.dropped[j].target === this.solutions[i].secondId) {
-                            score = score + this.solutions[i].score;
-                        }
-                    }
-                }
-            }
-            DataSharing.setQuestionScore(score, this.question.id);
-        };
-
-        this.hideFeedback = function () {
-            this.feedbackIsVisible = false;
-            if (!this.question.toBind) {
-                $('.draggable').draggable('enable');
-                $('.draggable').fadeTo(100, 1);
-
-                for (var i=0; i<this.dropped.length; i++) {
-                    $('#draggable_' + this.dropped[i].source).draggable("disable");
-                    $('#draggable_' + this.dropped[i].source).fadeTo(100, 0.3);
-                }
-            }
-        };
+        $scope.$on('hide-feedback', function () {
+            this.hideFeedback();
+        }.bind(this));
         
         this.answerIsSaved = function (item) {
-            if (this.savedAnswers.indexOf(item) === -1) {
-                return false;
-            }
-            else {
-                return true;
-            }
+            return (this.savedAnswers.indexOf(item) !== -1);
         };
 
         /**
@@ -206,12 +68,11 @@ angular.module('Question').controller('MatchQuestionCtrl', [
          * @returns {Boolean}
          */
         this.checkAnswerValidity = function (label) {
-            var answers;
             if (this.question.toBind) {
-                answers = this.connections;
+                var answers = this.connections;
             }
             else {
-                answers = this.dropped;
+                var answers = this.dropped;
             }
 
             // set the orphan answers list
@@ -257,13 +118,8 @@ angular.module('Question').controller('MatchQuestionCtrl', [
             var valid3 = true;
             for (var i=0; i<answers.length; i++) {
                 if (answers[i].target === label.id) {
-                    subvalid = false;
-                    for (var j=0; j<this.solutions.length; j++) {
-                        if (this.solutions[j].firstId === answers[i].source && this.solutions[j].secondId === answers[i].target) {
-                            subvalid = true;
-                        }
-                    }
-                    if (subvalid === false) {
+                    subvalid = this.dropIsValid(answers[i]);
+                    if (subvalid === 2) {
                         valid3 = false;
                     }
                 }
@@ -291,6 +147,173 @@ angular.module('Question').controller('MatchQuestionCtrl', [
             else {
                 return valid && valid3;
             }
+        };
+        
+        this.dropIsValid = function (item) {
+            for (var i=0; i<this.solutions.length; i++) {
+                if (item.source === this.solutions[i].firstId && item.target === this.solutions[i].secondId) {
+                    return 1;
+                }
+            }
+            
+            return 2;
+        };
+
+        /**
+         * Get the correct answers for this label
+         * @param {type} label
+         * @returns {Array}
+         */
+        this.getCorrectAnswers = function (label) {
+            var correctAnswers = [];
+            var answersToShow = [];
+            for (var i=0; i<this.solutions.length; i++) {
+                if (this.solutions[i].secondId === label.id) {
+                    for (var j=0; j<this.question.firstSet.length; j++) {
+                        if (this.question.firstSet[j].id === this.solutions[i].firstId) {
+                            correctAnswers.push(this.question.firstSet[j].data);
+                        }
+                    }
+                }
+            }
+
+            var studentAnswers = this.getStudentAnswers(label);
+
+            for (var i=0; i<correctAnswers.length; i++) {
+                var selected = false;
+                for (var j=0; j<studentAnswers.length; j++) {
+                    if (correctAnswers[i] === studentAnswers[j]) {
+                        selected = true;
+                    }
+                }
+                if (selected) {
+                    answersToShow.push(correctAnswers[i]);
+                }
+            }
+
+            return answersToShow;
+        };
+
+        this.getCurrentItemFeedBack = function (label) {
+            for (var i=0; i<this.solutions.length; i++) {
+                if (this.solutions[i].secondId === label.id) {
+                    return this.solutions[i].feedback;
+                }
+            }
+        };
+
+        this.getCurrentItemFeedBackIfOk = function (label) {
+            if (!this.isRemovableItem(label.id, 'target')) {
+                return this.getCurrentItemFeedBack(label);
+            }
+        };
+        
+        this.getDropClass = function (typeDiv, proposal) {
+            var droppable = true;
+            for (var i=0; i<this.dropped.length; i++) {
+                if (this.dropped[i].target === proposal.id) {
+                    droppable = false;
+                }
+            }
+            
+            var classname = "";
+            if (typeDiv === "dropzone") {
+                if (droppable) {
+                    classname += "droppable ";
+                }
+                else {
+                    classname += "state-highlight-pair";
+                }
+            }
+            
+            return classname;
+        };
+        
+        this.getDropColor = function (subject, proposal) {
+            var found = false;
+            for (var i=0; i<this.savedAnswers.length; i++) {
+                if (this.savedAnswers[i].target === proposal.id) {
+                    for (var j=0; j<this.solutions.length; j++) {
+                        if (this.savedAnswers[i].source === this.solutions[j].firstId && this.savedAnswers[i].target === this.solutions[j].secondId && this.canSeeFeedback) {
+                            if (subject === 'div') {
+                                return "drop-success";
+                            }
+                            else if (subject === 'button') {
+                                return "drop-button-success";
+                            }
+                            found = true;
+                        }
+                    }
+                }
+            }
+            if (this.feedbackIsVisible && !found) {
+                if (subject === 'div') {
+                    return "drop-warning";
+                }
+                else {
+                    return "drop-button-warning";
+                }
+            }
+            else {
+                for (var i=0; i<this.dropped.length; i++) {
+                    if (this.dropped[i].target === proposal.id) {
+                        if (subject === 'div') {
+                            return "drop-alert";
+                        }
+                        else if (subject === 'button') {
+                            return "drop-button-alert";
+                        }
+                    }
+                }
+                if (subject === 'div') {
+                    return "drop-default";
+                }
+                else {
+                    return "drop-button-default";
+                }
+            }
+        };
+        
+        this.getDropFeedback = function (item) {
+            for (var i=0; i<this.solutions.length; i++) {
+                if (item.source === this.solutions[i].firstId && item.target === this.solutions[i].secondId) {
+                    return this.solutions[i].feedback;
+                }
+            }
+        };
+
+        this.getHintData = function (id) {
+            var promise = QuestionService.getHint(id);
+            promise.then(function (result) {
+                this.usedHints.push(result.data);
+
+            }.bind(this));
+        };
+
+        /**
+         * Get the student's answers for this label
+         * @param {type} label
+         * @returns {Array}
+         */
+        this.getStudentAnswers = function (label) {
+            var answers_to_check;
+            if (this.question.toBind) {
+                answers_to_check = this.connections;
+            }
+            else {
+                answers_to_check = this.dropped;
+            }
+            var answers = [];
+            for (var i=0; i<answers_to_check.length; i++) {
+                if (answers_to_check[i].target === label.id) {
+                    for (var j=0; j<this.question.firstSet.length; j++) {
+                        if (this.question.firstSet[j].id === answers_to_check[i].source) {
+                            answers.push(this.question.firstSet[j].data);
+                        }
+                    }
+                }
+            }
+            return answers;
         };
 
         /**
@@ -343,12 +366,85 @@ angular.module('Question').controller('MatchQuestionCtrl', [
             return answers;
         };
 
+        this.hideFeedback = function () {
+            this.feedbackIsVisible = false;
+            if (!this.question.toBind) {
+                $('.draggable').draggable('enable');
+                $('.draggable').fadeTo(100, 1);
+
+                for (var i=0; i<this.dropped.length; i++) {
+                    $('#draggable_' + this.dropped[i].source).draggable("disable");
+                    $('#draggable_' + this.dropped[i].source).fadeTo(100, 0.3);
+                }
+            }
+        };
+
         /**
-         * Get the student's answers for this label
-         * @param {type} label
-         * @returns {Array}
+         * check if a Hint has already been used (in paper)
+         * @param {type} id
+         * @returns {Boolean}
          */
-        this.getStudentAnswers = function (label) {
+        this.hintIsUsed = function (id) {
+            if (this.currentQuestionPaperData && this.currentQuestionPaperData.hints) {
+                for (var i = 0; i < this.currentQuestionPaperData.hints.length; i++) {
+                    if (this.currentQuestionPaperData.hints[i] === id) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        };
+        
+        this.isRemovableItem = function (proposalId, valueType) {
+            if (this.feedbackIsVisible) {
+                return false;
+            }
+            if (!this.canSeeFeedback) {
+                return true;
+            }
+            //----------
+            for (var i=0; i<this.savedAnswers.length; i++) {
+                if ((this.savedAnswers[i].target === proposalId && valueType === "target") || (this.savedAnswers[i].source === proposalId && valueType === "source")) {
+                    for (var j=0; j<this.solutions.length; j++) {
+                        if (this.savedAnswers[i].source === this.solutions[j].firstId && this.savedAnswers[i].target === this.solutions[j].secondId) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        };
+        
+        this.proposalDropped = function (proposal) {
+            for (var i=0; i<this.dropped.length; i++) {
+                if (this.dropped[i].source === proposal.id) {
+                    return true;
+                }
+            }
+            
+            return false;
+        };
+
+        /**
+         * find all orphan answers and set them in an array
+         */
+        this.setOrphanAnswers = function () {
+            var hasSolution;
+            for (var i=0; i<this.question.secondSet.length; i++) {
+                hasSolution = false;
+                for (var j=0; j<this.solutions.length; j++) {
+                    if (this.question.secondSet[i].id === this.solutions[j].secondId) {
+                        hasSolution = true;
+                    }
+                }
+                if (!hasSolution) {
+                    this.orphanAnswers.push(this.question.secondSet[i]);
+                }
+            }
+        };
+
+        this.setScore = function () {
+            var score = 0;
             var answers_to_check;
             if (this.question.toBind) {
                 answers_to_check = this.connections;
@@ -356,121 +452,53 @@ angular.module('Question').controller('MatchQuestionCtrl', [
             else {
                 answers_to_check = this.dropped;
             }
-            var answers = [];
-            for (var i=0; i<answers_to_check.length; i++) {
-                if (answers_to_check[i].target === label.id) {
-                    for (var j=0; j<this.question.firstSet.length; j++) {
-                        if (this.question.firstSet[j].id === answers_to_check[i].source) {
-                            answers.push(this.question.firstSet[j].data);
-                        }
+            for (var i=0; i<this.solutions.length; i++) {
+                for (var j=0; j<answers_to_check.length; j++) {
+                    if (answers_to_check[j] !== '' && answers_to_check[j].source === this.solutions[i].firstId && answers_to_check[j].target === this.solutions[i].secondId) {
+                        score = score + this.solutions[i].score;
                     }
                 }
             }
-            return answers;
+            DataSharing.setQuestionScore(score, this.question.id);
         };
 
-        /**
-         * Get the correct answers for this label
-         * @param {type} label
-         * @returns {Array}
-         */
-        this.getCorrectAnswers = function (label) {
-            var correctAnswers = [];
-            var answersToShow = [];
-            for (var i=0; i<this.solutions.length; i++) {
-                if (this.solutions[i].secondId === label.id) {
-                    for (var j=0; j<this.question.firstSet.length; j++) {
-                        if (this.question.firstSet[j].id === this.solutions[i].firstId) {
-                            correctAnswers.push(this.question.firstSet[j].data);
-                        }
-                    }
-                }
-            }
-
-            /**
-             * -----------------------------------------------------------------
-             * Reste un souci dans la liste des réponses correctes, à corriger
-             * -----------------------------------------------------------------
-             */
-
-            var studentAnswers = this.getStudentAnswers(label);
-
-            for (var i=0; i<correctAnswers.length; i++) {
-                var selected = false;
-                for (var j=0; j<studentAnswers.length; j++) {
-                    if (correctAnswers[i] === studentAnswers[j]) {
-                        selected = true;
-                    }
-                }
-                if (selected) {
-                    answersToShow.push(correctAnswers[i]);
-                }
-            }
-
-            return answersToShow;
-        };
-
-        this.getCurrentItemFeedBack = function (label) {
-            for (var i=0; i<this.solutions.length; i++) {
-                if (this.solutions[i].secondId === label.id) {
-                    return this.solutions[i].feedback;
-                }
-            }
-        };
-        
-        this.dropIsValid = function (item) {
-            for (var i=0; i<this.solutions.length; i++) {
-                if (item.source === this.solutions[i].firstId && item.target === this.solutions[i].secondId) {
-                    return 1;
-                }
+        this.showFeedback = function () {
+            this.savedAnswers = [];
+            for (var i=0; i<this.dropped.length; i++) {
+                this.savedAnswers.push(this.dropped[i]);
             }
             
-            return 2;
-        };
-        
-        this.getDropFeedback = function (item) {
-            for (var i=0; i<this.solutions.length; i++) {
-                if (item.source === this.solutions[i].firstId && item.target === this.solutions[i].secondId) {
-                    return this.solutions[i].feedback;
+            // get question answers and feedback ONLY IF NEEDED
+            var promise = QuestionService.getQuestionSolutions(this.question.id);
+            promise.then(function (result) {
+                this.feedbackIsVisible = true;
+                this.solutions = result.solutions;
+                this.setScore();
+                this.questionFeedback = result.feedback;
+                if (!this.question.toBind) {
+                    $('.draggable').draggable("disable");
+                    if (this.question.typeMatch !== 3) {
+                        $('.draggable').fadeTo(100, 0.3);
+                    }
                 }
-            }
-        };
-
-        /**
-         * Listen to show-feedback event (broadcasted by ExercisePlayerCtrl)
-         */
-        $scope.$on('show-feedback', function (event, data) {
-            this.showFeedback();
-            /*
-             * //todo: Find another solution to disable question "à lier"
-             * Unbinding events is a bad solution
-             * - It doesn't prevent the user from creating new segments, it just doesn't save them
-             * - The events cannot be re-bound after being unbound (on the "hide-feedback")
-             */
-            //this.unbindEvents();
-        }.bind(this));
-
-        $scope.$on('hide-feedback', function () {
-            this.hideFeedback();
-            //this.bindEvents();
-        }.bind(this));
-
-        this.bindEvents = function () {
-            $timeout(function () {
-                jsPlumb.bind("beforeDrop", function (info) {
-                    return this.handleBeforDrop(info);
-                });
-
-                // remove one connection
-                jsPlumb.bind("click", function (connection) {
-                    this.removeConnection(connection);
-                });
             }.bind(this));
         };
 
-        this.unbindEvents = function () {
-            jsPlumb.unbind("beforeDrop");
-            jsPlumb.unbind("click");
+        /**
+         * Get hint data and update student data in common service
+         * @param {type} hintId
+         * @returns {undefined}
+         */
+        this.showHint = function (id) {
+            var penalty = QuestionService.getHintPenalty(this.question.hints, id);
+            $ngBootbox.confirm(Translator.trans('question_show_hint_confirm', {1: penalty}, 'ujm_sequence'))
+                    .then(function () {
+                        this.getHintData(id);
+                        this.currentQuestionPaperData.hints.push(id);
+                        this.updateStudentData();
+                        // hide button
+                        angular.element('#hint-' + id).hide();
+                    }.bind(this));
         };
 
         /**
@@ -497,6 +525,32 @@ angular.module('Question').controller('MatchQuestionCtrl', [
             } else if (angular.element('#question-toggle-' + id).hasClass('fa-chevron-right')) {
                 angular.element('#question-toggle-' + id).removeClass('fa-chevron-right').addClass('fa-chevron-down');
             }
+        };
+
+        /**
+         * Called on each jsPlumbConnectionEvent or jquery-ui drop event
+         * also called at init
+         * We need to share those informations with parent controllers
+         * For that purpose we use a shared service
+         */
+        this.updateStudentData = function () {
+            // build answers
+            this.currentQuestionPaperData.answer = [];
+            var answers_to_check;
+            if (this.question.toBind) {
+                answers_to_check = this.connections;
+            }
+            else {
+                answers_to_check = this.dropped;
+            }
+            for (var i = 0; i < answers_to_check.length; i++) {
+                if (answers_to_check[i] !== '' && answers_to_check[i].source && answers_to_check[i].target) {
+                    var answer = answers_to_check[i].source + ',' + answers_to_check[i].target;
+                    this.currentQuestionPaperData.answer.push(answer);
+                }
+            }
+            
+            DataSharing.setStudentData(this.question, this.currentQuestionPaperData);
         };
 
 
@@ -533,6 +587,7 @@ angular.module('Question').controller('MatchQuestionCtrl', [
                 $(".droppable").each(function () {
                     if ($(this).find(".dragDropped").children()) {
                         $(this).removeClass('state-highlight');
+                        $(this).droppable( "option", "disabled", false );
                         $(this).find(".dragDropped").children().remove();
                     }
                 });
@@ -575,10 +630,20 @@ angular.module('Question').controller('MatchQuestionCtrl', [
                     if (sets[i] && sets[i] !== '') {
                         var items = sets[i].split(',');
                         // disable corresponding draggable item
-                        $('#draggable_' + items[0]).draggable("disable");
+                        if (this.question.typeMatch === 3) {
+                            $('#div_' + items[0]).draggable("disable");
+                        }
+                        else {
+                            $('#draggable_' + items[0]).draggable("disable");
+                        }
                         // ui update
-                        $('#draggable_' + items[0]).fadeTo(100, 0.3);
+                        if (this.question.typeMatch !== 3) {
+                            $('#draggable_' + items[0]).fadeTo(100, 0.3);
+                        }
                         $('#droppable_' + items[1]).addClass("state-highlight");
+                        if (this.question.typeMatch === 3) {
+                            $('#droppable_' + items[1]).droppable( "option", "disabled", true );
+                        }
                         var label = $('#draggable_' + items[0])[0].innerHTML;
                         var item = {
                             source: items[0],
@@ -590,6 +655,9 @@ angular.module('Question').controller('MatchQuestionCtrl', [
                     }
                 }
             }
+            console.log("-------");
+            console.log(this.savedAnswers);
+            console.log(this.solutions);
             this.updateStudentData();
         };
 
@@ -648,7 +716,13 @@ angular.module('Question').controller('MatchQuestionCtrl', [
         this.handleDragMatchQuestionDrop = function (event, ui) {
             // get dropped element id
             var sourceId = ui.draggable[0].id;
+            if (this.question.typeMatch === 3) {
+                sourceId = sourceId.replace("div", "draggable");
+            }
             var label = ui.draggable[0].innerHTML;
+            if (this.question.typeMatch === 3) {
+                label = $("#" + sourceId)[0].innerHTML;
+            }
             // get the container in which the element has been dropped
             var targetId = event.target.id;
 
@@ -667,10 +741,18 @@ angular.module('Question').controller('MatchQuestionCtrl', [
             this.updateStudentData();
 
             // disable draggable element
-            $('#' + sourceId).draggable("disable");
+            if (this.question.typeMatch === 3) {
+                $('#' + sourceId.replace("draggable", "div")).draggable("disable");
+            }
+            else {
+                $('#' + sourceId).draggable("disable");
+                $('#' + sourceId).fadeTo(100, 0.3);
+            }
             // ui update
-            $('#' + sourceId).fadeTo(100, 0.3);
             $('#' + targetId).addClass("state-highlight");
+            if (this.question.typeMatch === 3) {
+                $('#' + targetId).droppable( "option", "disabled", true );
+            }
         };
 
         /**
@@ -680,24 +762,70 @@ angular.module('Question').controller('MatchQuestionCtrl', [
          * @returns {undefined}
          */
         this.removeDropped = function (sourceId, targetId) {
-            // remove from local array (this.dropped)
-            for (var i = 0; i < this.dropped.length; i++) {
-                if (this.dropped[i].source === sourceId && this.dropped[i].target === targetId) {
-                    this.dropped.splice(i, 1);
+            /**
+             * HANDLE VALUES REMOVAL
+             */
+            if (targetId === -1) {
+                var itemId = sourceId;
+                var valueType = "source";
+            }
+            else {
+                var itemId = targetId;
+                var valueType = "target";
+            }
+            
+            if ((this.isRemovableItem(itemId, valueType) && this.question.typeMatch === 3) || this.question.typeMatch !== 3) {
+                /**
+                 * HANDLE VALUES REMOVAL
+                 */
+                if (targetId !== -1) {
+                    // remove from local array (this.dropped)
+                    for (var i = 0; i < this.dropped.length; i++) {
+                        if (this.dropped[i].source === sourceId && this.dropped[i].target === targetId) {
+                            this.dropped.splice(i, 1);
+                        }
+                    }
+                    if (this.question.typeMatch === 3) {
+                        $('#div_' + sourceId).draggable("enable");
+                        $('#div_' + sourceId).fadeTo(100, 1);
+                    }
+                    else {
+                        // reactivate source draggable element
+                        $('#draggable_' + sourceId).draggable("enable");
+                        // visual changes for reactivated draggable element
+                        $('#draggable_' + sourceId).fadeTo(100, 1);
+                    }
+
+                    // ui update
+                    if ($('#droppable_' + targetId).find(".dragDropped").children().length <= 1) {
+                        $('#droppable_' + targetId).removeClass("state-highlight");
+                        $('#droppable_' + targetId).droppable( "option", "disabled", false );
+                    }
+
+                    // update student data
+                    this.updateStudentData();
+                }
+                else {
+                    // remove from local array (this.dropped)
+                    for (var i = 0; i < this.dropped.length; i++) {
+                        if (this.dropped[i].source === sourceId) {
+                            var targetId = this.dropped[i].target;
+                            this.dropped.splice(i, 1);
+                        }
+                    }
+                    $('#div_' + sourceId).draggable("enable");
+                    $('#div_' + sourceId).fadeTo(100, 1);
+
+                    // ui update
+                    if ($('#droppable_' + targetId).find(".dragDropped").children().length <= 1) {
+                        $('#droppable_' + targetId).removeClass("state-highlight");
+                        $('#droppable_' + targetId).droppable( "option", "disabled", false );
+                    }
+
+                    // update student data
+                    this.updateStudentData();
                 }
             }
-            // reactivate source draggable element
-            $('#draggable_' + sourceId).draggable("enable");
-            // visual changes for reactivated draggable element
-            $('#draggable_' + sourceId).fadeTo(100, 1);
-
-            // ui update
-            if ($('#droppable_' + targetId).find(".dragDropped").children().length <= 1) {
-                $('#droppable_' + targetId).removeClass("state-highlight");
-            }
-
-            // update student data
-            this.updateStudentData();
         };
     }
 ]);
