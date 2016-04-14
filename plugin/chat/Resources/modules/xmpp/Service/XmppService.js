@@ -8,7 +8,8 @@
  */
 
 export default class XmppService {
-  constructor ($http) {
+  constructor ($rootScope, $http) {
+    this.$rootScope = $rootScope
     this.$http = $http
     this.config = {
       adminConnection: null,
@@ -31,15 +32,17 @@ export default class XmppService {
     this.adminPassword = XmppService._getGlobal('chatAdminPassword')
     this._connectionCallback = this._connectionCallback.bind(this)
     this._adminConnectionCallback = this._adminConnectionCallback.bind(this)
+    this._connectedCallBack = () => {}
   }
 
   _connectionCallback (status) {
-
     if (status === Strophe.Status.CONNECTED) {
       console.log('Connected')
       this.config['connection'].send($pres().c('priority').t('-1'))
       this.config['connected'] = true
       this.config['busy'] = false
+      this.refreshScope()
+      this._connectedCallBack()
       //$rootScope.$broadcast('xmppConnectedEvent')
     } else if (status === Strophe.Status.CONNFAIL) {
       console.log('Connection failed !')
@@ -59,31 +62,28 @@ export default class XmppService {
   }
 
   _adminConnectionCallback (status) {
-
     if (status === Strophe.Status.CONNECTED) {
       console.log('admin Connected')
       this.config['adminConnection'].send($pres().c('priority').t('-1'))
       this.config['adminConnected'] = true
-      //this.config['busy'] = false
+      this.refreshScope()
     } else if (status === Strophe.Status.CONNFAIL) {
       console.log('admin Connection failed !')
-      //this.config['connected'] = false
-      //this.config['busy'] = false
     } else if (status === Strophe.Status.DISCONNECTED) {
       console.log('admin Disconnected')
-      //this.config['connected'] = false
-      //this.config['busy'] = false
     } else if (status === Strophe.Status.CONNECTING) {
-      //this.config['busy'] = true
       console.log('admin Connecting...')
     } else if (status === Strophe.Status.DISCONNECTING) {
-      //this.config['busy'] = true
       console.log('admin Disconnecting...')
     }
   }
 
   getConfig () {
     return this.config
+  }
+
+  setConnectedCallBack (callback) {
+    this._connectedCallBack = callback
   }
 
   connect () {
@@ -130,5 +130,9 @@ export default class XmppService {
     }
 
     return window[name]
+  }
+
+  refreshScope () {
+    this.$rootScope.$apply()
   }
 }

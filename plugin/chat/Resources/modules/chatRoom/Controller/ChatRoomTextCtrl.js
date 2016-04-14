@@ -16,6 +16,7 @@ export default class ChatRoomTextCtrl {
     this.xmppConfig = ChatRoomService.getXmppConfig()
     this.messages = ChatRoomService.getMessages()
     this.users = ChatRoomService.getUsers()
+    this.bannedUsers = ChatRoomService.getBannedUsers()
     this.input = ''
     this.initialize()
   }
@@ -24,12 +25,11 @@ export default class ChatRoomTextCtrl {
     console.log('*********** status text ***********')
     console.log(this.xmppConfig)
     console.log(this.chatRoomConfig)
-  }
+    console.log('*********** END status text ***********')
 
-  refresh () {
-    console.log(this.chatRoomConfig)
-    console.log(this.users)
-    console.log(this.messages)
+    if (!this.chatRoomConfig['connected']) {
+      this.ChatRoomService.connectToRoom()
+    }
   }
 
   muteUser (username) {
@@ -41,15 +41,15 @@ export default class ChatRoomTextCtrl {
   }
 
   kickUser (username) {
-    console.log('Kick ' + username)
+    this.ChatRoomService.kickUser(username)
   }
 
   banUser (username) {
-    console.log('Ban ' + username)
+    this.ChatRoomService.banUser(username)
   }
 
   unbanUser (username) {
-    console.log('Unban ' + username)
+    this.ChatRoomService.unbanUser(username)
   }
 
   isAdmin () {

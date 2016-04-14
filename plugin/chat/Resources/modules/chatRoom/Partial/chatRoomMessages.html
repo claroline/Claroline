@@ -27,6 +27,10 @@
                         {{ message['name'] }}
                         {{ 'has_been_banned_from_the_chat_room'|trans:{}:'chat' }}
                     </span>
+                    <span ng-switch-when="unbanned">
+                        {{ message['name'] }}
+                        {{ 'has_been_unbanned_from_the_chat_room'|trans:{}:'chat' }}
+                    </span>
                 </b>
             </div>
             <div ng-switch-when="raw">

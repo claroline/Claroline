@@ -1,7 +1,7 @@
 {
   "webpack": {
     "entry": {
-      "list": "modules/chatRoom/chatRoom"
+      "room": "modules/chatRoom/chatRoom"
     }
   }
 }

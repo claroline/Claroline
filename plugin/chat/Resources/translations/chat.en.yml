@@ -13,6 +13,7 @@ chat_room_closed_msg: Chat room is closed
 chat_room_configuration: Chat room configuration
 chat_room_id: Chat room id
 chat_room_open_msg: Chat room is open
+chat_room_status: Chat room status
 chat_room_uninitialized_msg: Chat room is not available yet
 chat_room_unknown_status_msg: Chat room has an unknown status
 chat_username: Chat username
@@ -24,6 +25,7 @@ disable_chat_room_audio: Disable audio Chat room
 disable_chat_room_video: Disable video Chat room
 has_been_banned_from_the_chat_room: has been banned from the Chat room
 has_been_kicked_from_the_chat_room: has been kicked from the Chat room
+has_been_unbanned_from_the_chat_room: has been unbanned from the Chat room
 has_joined_the_chat_room: has joined the Chat room
 has_left_the_chat_room: has left the Chat room
 host: Host
@@ -37,6 +39,7 @@ muc_host: MUC server
 mute: Mute
 my_video: My video
 not_authorized_msg: You are not authorized to connect to this Chat room.
+not_connected: Not connected
 open: Open
 port: Port
 search_chat_users_infos: A search has to be performed in order to display users with a chat account.

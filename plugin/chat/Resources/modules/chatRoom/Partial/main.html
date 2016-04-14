@@ -8,6 +8,7 @@
         </div>
         <button class="btn btn-primary"
                 ng-if="crmc.chatRoomConfig['canEdit']"
+                ng-disabled="!crmc.xmppConfig['connected'] || !crmc.xmppConfig['adminConnected']"
                 ng-click="crmc.initializeChatRoom()"
         >
             {{ 'init_room'|trans:{}:'chat' }}
@@ -17,7 +18,7 @@
     <!-- Open room -->
     <div ng-if="crmc.chatRoomConfig['roomStatus'] === 'open'">
         <button class="btn btn-primary"
-                ng-disabled="crmc.xmppConfig['connected']"
+                ng-disabled="!crmc.xmppConfig['connected'] || !crmc.xmppConfig['adminConnected']"
                 ng-click="crmc.connectToRoom()"
         >
             {{ 'connect_to_chat_room'|trans:{}:'chat' }}

@@ -50,7 +50,7 @@ class ChatRoomMessage
     protected $userFullName;
 
     /**
-     * @ORM\Column(name="content", nullable=true)
+     * @ORM\Column(name="content", type="text", nullable=true)
      */
     protected $content;
 
