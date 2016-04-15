@@ -7,7 +7,7 @@
  * @param {Object}           step
  * @param {Object}           paper
  * @param {CommonService}    CommonService
- * @param {ExerciseService}    ExerciseService
+ * @param {ExerciseService}  ExerciseService
  * @param {FeedbackService}  FeedbackService
  * @param {UserPaperService} UserPaperService
  * @constructor
@@ -40,43 +40,6 @@ var ExercisePlayerCtrl = function ExercisePlayerCtrl($location, exercise, step, 
 
     // Get feedback info
     this.feedback = this.FeedbackService.get();
-
-    // Get the scope
-    exoPlayer = this;
-
-    // Initialize var
-    exoPlayer.$localStorage.$default({
-        counter: 0,
-        hours: 0,
-        minutes: 0,
-        secondes: 0
-    });
-
-    // Change duration from minutes to seconds because timer use second
-    exoPlayer.duration = exoPlayer.exercise.meta.duration * 60;
-
-    // Function to increase te timer
-    var onTimeout = function() {
-
-        // Increase the timer
-        exoPlayer.$localStorage.counter =  exoPlayer.$localStorage.counter + 1;
-        // Call function to increase next
-        myTimer = exoPlayer.$timeout(onTimeout, 1000);
-
-        // Transform counter into hours, minutes and second
-        exoPlayer.$localStorage.hours = Math.floor((exoPlayer.duration - exoPlayer.$localStorage.counter) / 3600);
-        exoPlayer.$localStorage.minutes = Math.floor(((exoPlayer.duration - exoPlayer.$localStorage.counter) - (exoPlayer.$localStorage.hours * 3600))  / 60);
-        exoPlayer.$localStorage.secondes = Math.floor((exoPlayer.duration - exoPlayer.$localStorage.counter) - ((exoPlayer.$localStorage.hours * 3600) + (exoPlayer.$localStorage.minutes * 60)));
-
-        // If timer reach the exercise duration
-        if (exoPlayer.$localStorage.counter == exoPlayer.duration) {
-            // Validate the exercise
-            exoPlayer.validateStep('end');
-        }
-    };
-
-    // Call for the first time the function to increase timer
-    myTimer = exoPlayer.$timeout(onTimeout, 1000);
 };
 
 // Set up dependency injection
@@ -145,12 +108,15 @@ ExercisePlayerCtrl.prototype.submitted = false;
 ExercisePlayerCtrl.prototype.submit = function submit() {
     return this.UserPaperService
                 .submitStep(this.step)
-                .then(function onSuccess() {
-                    this.submitted = true;
+                .then(function onSuccess(response) {
+                    if (response) {
+                        // Answers have been submitted
+                        this.submitted = true;
 
-                    if (this.FeedbackService.isEnabled()) {
-                        // Show feedback
-                        this.FeedbackService.show();
+                        if (this.FeedbackService.isEnabled()) {
+                            // Show feedback
+                            this.FeedbackService.show();
+                        }
                     }
                 }.bind(this));
 };
