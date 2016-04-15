@@ -342,6 +342,7 @@ step: Step
 # T
 temporary_mark: Temporary mark
 test_exit: Test output
+timer: Remaining time :
 title: Title
 type: Type
 type_exo : Type of exercise
