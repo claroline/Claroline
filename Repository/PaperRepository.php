@@ -201,7 +201,7 @@ class PaperRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('p');
 
-        $link = $qb->select('p')
+        $count = $qb->select('COUNT(p)')
             ->join('p.exercise', 'e')
             ->join('e.steps', 's')
             ->join('s.stepQuestions', 'sq')
@@ -209,9 +209,9 @@ class PaperRepository extends EntityRepository
             ->andWhere('sq.question = :question')
             ->setParameters(['question' => $hint->getQuestion(), 'exercise' => $paper->getExercise()])
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getSingleScalarResult();
 
 
-        return null !== $link;
+        return 0 < $count;
     }
 }
