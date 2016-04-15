@@ -10,19 +10,18 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\StepQuestionRepository")
  * @ORM\Table(name="ujm_step_question")
  */
-
-class StepQuestion {
-
+class StepQuestion
+{
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Step")
+     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Step", inversedBy="stepQuestions")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $step;
 
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Question")
+     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Question", inversedBy="stepQuestions")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $question;
@@ -34,15 +33,11 @@ class StepQuestion {
      */
     private $ordre;
 
-    public function __construct(Step $step, Question $question)
-    {
-        $this->step = $step;
-        $this->question = $question;
-    }
-
     public function setStep(Step $step)
     {
         $this->step = $step;
+
+        $step->addStepQuestion($this);
     }
 
     public function getStep()

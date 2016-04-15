@@ -1,0 +1,46 @@
+<h3 class="panel-title">{{ 'paper_details_table_your_answer'|trans:{}:'ujm_sequence' }}</h3>
+<p data-ng-bind-html="correctionShortCtrl.answer" ></p>
+
+<div data-ng-if="correctionShortCtrl.question.typeOpen !== 'long'" >
+    <h3 class="panel-title">{{ 'keys_words'|trans:{}:'ujm_sequence' }}</h3>
+    <table class="table table-striped table-bordered table-condensed">
+        <tr>
+            <th class="center-text">{{ 'keys_words'|trans:{}:'ujm_sequence' }}</th>
+            <th class="center-text">{{ 'case_sensitive'|trans:{}:'ujm_sequence' }}</th>
+            <th class="center-text">{{ 'points'|trans:{}:'ujm_sequence' }}</th>
+            <th class="center-text">{{ 'comment'|trans:{}:'ujm_sequence' }}</th>
+        </tr>
+        <tr data-ng-repeat="keyword in correctionShortCtrl.question.solutions">
+            <td>{{ keyword.word }}</td>
+            <td class="center-text">
+                <span data-ng-if="keyword.caseSensitive === true " class="fa fa-check-square-o"></span>
+                <span data-ng-if="keyword.caseSensitive === false " class="fa fa-square-o"></span>
+            </td>
+            <td class="center-text">{{ keyword.score }}</td>
+            <td class="center-text">
+                <span data-ng-if="keyword.feedback === null"> - </span>
+                <span data-ng-if="keyword.feedback !== null">{{ keyword.feedback }}</span>
+            </td>
+        </tr>
+    </table>
+</div>
+<div data-ng-if="correctionShortCtrl.question.typeOpen === 'long'">
+    <h3 class="panel-title">{{ 'label_exercise_correction'|trans:{}:'ujm_sequence' }}</h3>
+    <div data-ng-if="correctionShortCtrl.score === -1">
+        <span>{{ 'need_correction'|trans:{}:'ujm_sequence' }}</span><br/>
+        <div class="alert alert-danger" ng-show="correctionShortCtrl.message" role="alert">{{ 'mark_bigest_other'|trans:{}:'ujm_exo' }}</div>
+        <a data-ng-click="correctionShortCtrl.showNotationInput()" id="note_question" class="btn btn-default">
+            {{ 'note_question'|trans:{}:'ujm_sequence' }}
+        </a>
+        <p style="display: none;" id="score_p">
+            <input type="number" id="score_given" style="width: 50px;" min="0" max="{{ correctionShortCtrl.question.scoreMaxLongResp }}" />
+            /{{ correctionShortCtrl.question.scoreMaxLongResp }}<br/>
+            <a data-ng-click="correctionShortCtrl.saveNote()" class="btn btn-primary">{{ 'validate'|trans:{}:'ujm_sequence' }}</a>
+        </p>
+    </div>
+    <div data-ng-if="correctionShortCtrl.score !== -1">
+        <p>
+            {{ correctionShortCtrl.score }}/{{correctionShortCtrl.question.scoreMaxLongResp}}
+        </p>
+    </div>
+</div>

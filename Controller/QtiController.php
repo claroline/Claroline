@@ -34,7 +34,9 @@ class QtiController extends Controller
         } else {
             $em = $this->getDoctrine()->getManager();
             $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
-            $scanFile = $qtiRepos->scanFilesToImport($exercise);
+            $step = $this->container->get('ujm.exo_exercise')->createStep($exercise, 1, $em);
+            $em->flush();
+            $scanFile = $qtiRepos->scanFilesToImport($step);
         }
 
         if ($scanFile !== true) {
@@ -46,7 +48,7 @@ class QtiController extends Controller
         } else {
             $qtiRepos->assocExerciseQuestion(false);
 
-            return $this->redirect($this->generateUrl('ujm_exercise_questions', array('id' => $exoID)));
+            return $this->redirect($this->generateUrl('ujm_exercise_open', [ 'id' => $exoID ]) . '#/steps');
         }
     }
 

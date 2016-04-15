@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Manager;
 use Doctrine\Common\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Hint;
+use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerCollector;
 use UJM\ExoBundle\Transfer\Json\ValidationException;
@@ -122,9 +123,10 @@ class QuestionManager
         return $data;
     }
     
-    public function exportQuestionAnswers(Question $question){
+    public function exportQuestionAnswers(Question $question)
+    {
         $handler = $this->handlerCollector->getHandlerForInteractionType($question->getType());
-        // question infos
+        // question info
         $data = new \stdClass();
         $data->id = $question->getId();
         $data->feedback = $question->getFeedback() ? $question->getFeedback():'';
@@ -132,6 +134,15 @@ class QuestionManager
         $handler->convertQuestionAnswers($question, $data);
 
         return $data;
+    }
+
+    public function exportQuestionScore(Question $question, Paper $paper)
+    {
+        $response = $this->om
+            ->getRepository('UJMExoBundle:Response')
+            ->findOneBy(['paper' => $paper, 'question' => $question]);
+
+        return $response ? $response->getMark() : 0;
     }
 
     /**

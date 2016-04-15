@@ -1,4 +1,4 @@
-function cherche_type_ajax(exoID, displayFormType) {
+function cherche_type_ajax(exoID, stepID, displayFormType) {
     //"use strict";
 
     var indice_type = $("#menu_type_question").val();
@@ -6,7 +6,7 @@ function cherche_type_ajax(exoID, displayFormType) {
     $.ajax({
         type: "POST",
         url: displayFormType,
-        data: { indice_type: indice_type, exercise: exoID },
+        data: { indice_type: indice_type, exercise: exoID, step: stepID },
         cache: false,
         success: function (data) {
             $("#formulaire_interactions").html(data);
@@ -14,15 +14,15 @@ function cherche_type_ajax(exoID, displayFormType) {
     });
 }
 
-function cherche_type(warningChangeTypeQ, exoID, displayFormType) {
+function cherche_type(warningChangeTypeQ, exoID, stepID, displayFormType) {
     //"use strict";
 
     if (($("#formulaire_interactions").find("div").length) > 0) {
         if (confirm(warningChangeTypeQ)) {
-            cherche_type_ajax(exoID, displayFormType);
+            cherche_type_ajax(exoID, stepID, displayFormType);
         }
     } else {
-        cherche_type_ajax(exoID, displayFormType);
+        cherche_type_ajax(exoID, stepID, displayFormType);
     }
 }
 

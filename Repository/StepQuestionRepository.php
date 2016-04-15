@@ -20,7 +20,7 @@ class StepQuestionRepository extends EntityRepository
      * @param Exercice $exo
      * @return Question[]
      */
-    public function getMaxOrder(Exercise $exo){       
+    public function getMaxOrder(Exercise $exo){
         return $this->createQueryBuilder('sq')
             ->select('max(sq.ordre)')
             ->join('sq.step', 's')
@@ -29,7 +29,7 @@ class StepQuestionRepository extends EntityRepository
             ->getQuery()
             ->getResult();
     }
-    
+
       /**
      * Number of question for an exercise.
      *
@@ -48,7 +48,7 @@ class StepQuestionRepository extends EntityRepository
                 ->getQuery()
                 ->getSingleResult();
     }
-    
+
       /**
      *
      *
@@ -58,7 +58,7 @@ class StepQuestionRepository extends EntityRepository
      */
     public function findExoByOrder(Exercise $exo)
     {
-        return $query = $this->createQueryBuilder('sq')               
+        return $query = $this->createQueryBuilder('sq')
                 ->join('sq.step', 's')
                 ->where('s.exercise = :exercise')
                 ->setParameter(':exercise', $exo)
@@ -66,10 +66,9 @@ class StepQuestionRepository extends EntityRepository
                 ->getQuery()
                 ->getResult();
     }
-    
+
      /**
-     * Temporary : Waiting step manager
-     * 
+     *
      * Get StepQuestion with the question and exercise
      *
      * @param Exercise $exo if Exercise
@@ -77,7 +76,7 @@ class StepQuestionRepository extends EntityRepository
      * Return StepQuestion
      */
     public function findStepByExoQuestion(Exercise $exo, Question $question)
-    {      
+    {
         return $query = $this->createQueryBuilder('sq')
                 ->join('sq.step', 's')
                 ->where('s.exercise = :exercise')
@@ -85,11 +84,11 @@ class StepQuestionRepository extends EntityRepository
                 ->setParameters([
                     'exercise' => $exo,
                     'question' => $question
-                ])               
+                ])
                 ->getQuery()
                 ->getSingleResult();
     }
-    
+
     /**
      * Exercises use the question.
      *
@@ -99,8 +98,8 @@ class StepQuestionRepository extends EntityRepository
      * Return array[ExerciseQuestion]
      */
     public function getExercises(Question $question)
-    {       
-        return $query = $this->createQueryBuilder('sq')               
+    {
+        return $query = $this->createQueryBuilder('sq')
                 ->where('sq.question = :question')
                 ->setParameter(':question', $question)
                 ->getQuery()

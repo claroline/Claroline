@@ -38,7 +38,7 @@ class PaperManager
      * @param QuestionHandlerCollector $collector
      * @param ExerciseManager $exerciseManager
      * @param QuestionManager $questionManager
-     * @param Translator $translator
+     * @param TranslatorInterface $translator
      */
     public function __construct(
         ObjectManager $om,
@@ -99,6 +99,8 @@ class PaperManager
         $paper->setUser($user);
         $paper->setNumPaper($paperNum);
         $paper->setOrdreQuestion($order);
+        $paper->setAnonymous($exercise->getAnonymous());
+
 
         $this->om->persist($paper);
         $this->om->flush();
@@ -176,7 +178,7 @@ class PaperManager
     {
         $response = $this->om->getRepository('UJMExoBundle:Response')
             ->findOneBy(['paper' => $paper, 'question' => $question]);
-        
+
         $response->setMark($score);
 
         $scorePaper = $paper->getScore();
@@ -198,12 +200,7 @@ class PaperManager
      */
     public function hasHint(Paper $paper, Hint $hint)
     {
-        $link = $this->om->getRepository('UJMExoBundle:ExerciseQuestion')->findOneBy([
-            'question' => $hint->getQuestion(),
-            'exercise' => $paper->getExercise()
-        ]);
-
-        return $link !== null;
+        return $this->om->getRepository('UJMExoBundle:Paper')->hasHint($paper, $hint);
     }
 
     /**
@@ -275,6 +272,7 @@ class PaperManager
                 'start' => $paper->getStart()->format('Y-m-d H:i:s'),
                 'end' => $paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : null,
                 'interrupted' => $paper->getInterupt(),
+                'scoreTotal' => $paper->getScore(),
                 'questions' => $this->exportPaperQuestions($paper)
             ];
         }, $papers);
@@ -309,6 +307,7 @@ class PaperManager
             'start' => $paper->getStart()->format('Y-m-d H:i:s'),
             'end' => $paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : null,
             'interrupted' => $paper->getInterupt(),
+            'scoreTotal' => $paper->getScore(),
             'questions' => $this->exportPaperQuestions($paper)
         ];
 
@@ -334,7 +333,7 @@ class PaperManager
 
         $showUser = $user->getFirstName() . ' ' . $user->getLastName();
 
-        if ($paper->getExercise()->getAnonymous()) {
+        if ($paper->getAnonymous()) {
             $showUser = $this->translator->trans('anonymous', array(), 'ujm_exo');
         }
 
@@ -430,7 +429,11 @@ class PaperManager
             $answer = $response ? $handler->convertAnswerDetails($response) : null;
             $answerScore = $response ? $response->getMark() : 0;
             $hints = array_map(function ($link) {
-                return (string)$link->getHint()->getId();
+                return [
+                    'id'      => $link->getHint()->getId(),
+                    'value'   => $link->getHint()->getValue(),
+                    'penalty' => $link->getHint()->getPenalty(),
+                ];
             }, $links);
 
             if ($answer || count($hints) > 0) {

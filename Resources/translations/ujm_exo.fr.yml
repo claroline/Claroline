@@ -5,6 +5,8 @@ add_choice: Ajouter un choix
 add_label: Ajouter un label
 add_new_picture: Ajouter une nouvelle image
 add_proposal: Ajouter une proposition
+add_question: Ajouter une question
+add_step: Ajouter une étape
 add_zone_answer: Ajouter une zone de réponse
 advanced_edition: Edition avancée
 after_the_last_attempt: Après le dernier essai
@@ -29,6 +31,11 @@ at_the_end_of_assessment: A la fin du test
 at_the_same_time_that_the_correction: En même temps que la correction
 availability_of_correction: Disponibilité de la correction
 availability_of_score: Disponibilité de la note
+application/x.choice+json: QCM
+application/x.graphic+json: Graphique
+application/x.cloze+json: Texte à trous
+application/x.match+json: Association
+application/x.short+json: Ouverte
 
 # B
 badge_obtained: Félicitation ! Vous avez obtenu le badge de connaissances
@@ -75,6 +82,7 @@ delete: Supprimer
 delete_of_my_bank: Supprimer de ma banque
 delete_of_my_exercise: Supprimer de mon exercice
 delete_papers: Supprimer les copies
+delete_question: Supprimer l'étape
 description: Description
 display_all_list: Afficher la liste complète
 display_all_on_this_page: Tout afficher sur cette page
@@ -85,7 +93,7 @@ document: Document
 drop_category: Supprimer cette catégorie
 duplicate: Dupliquer
 duplicate_this_question: <input type ="text" name='nbq' value='0' size='2' /> fois cette question (10 maximum autorisé)
-duration: Durée
+duration: Durée (en minutes)
 
 # E
 edit: Editer
@@ -142,6 +150,7 @@ hole_creation: Création d'une question à trous
 hole_edition: Edition d'une question à trous
 hole_selector: Proposer une liste
 home_exercise: Accueil de l'exercice
+hide_additional_info: Masquer les informations supplémentaires
 
 # I
 infiny: Infini
@@ -185,6 +194,7 @@ manage_img: Gérer mes documents
 mark: Note
 mark_question: Noter cette question
 mark_bigest: La note doit être inférieure ou égale à
+mark_bigest_other: La note est superieur au score maximun
 matching: Association
 matching_creation: Création d'une question associative
 matching_edition: Edition d'une question associative
@@ -228,8 +238,10 @@ no_user_found: Pas d'utilisateur trouvé
 n_question: Question n°
 number_proposal: Numéro de la proposition
 number_of_papers: Nombre de copies
-number_questions_draw: Nombre de questions à tirer (0 pour toutes)
+number_questions_draw: Nombre de questions à tirer
+number_questions_draw_help: Tapez 0 pour tirer toutes les questions
 numerical: Numérique
+numerical_response: Réponse numérique
 num_paper: Numéro de la copie
 
 # O
@@ -240,12 +252,13 @@ open_creation: Création d'une question ouverte
 open_edition: Edition d'une question ouverte
 orders: Consignes
 orthography: Autoriser les fautes d'orthographe
+overview: Vue d'ensemble
 
 # P
 paper: Passage
 paper_legend: Copies nécessitant une correction manuelle
 paper_list: Liste des copies
-parameters: Paramètres
+metadata: Paramètres
 partially: Partiellement correcte
 penalty: Pénalité
 percentage: Pourcentage
@@ -307,6 +320,7 @@ search_question: Chercher des questions
 search_user_paper: Rechercher les copies de l'utilisateur
 see_shared_with: Question partagée avec des utilisateurs
 select: Sélectionner
+select_type: selectionner le type de l'Exercice
 selection: => Pour répondre, utiliser la technique du glisser/déposer.
 self: Vous ne pouvez pas partager une question avec vous-même
 shape: Forme
@@ -323,10 +337,13 @@ start_again: Recommencer
 start_date: Date de début
 sort: Trier les documents
 summative : Sommatif
+show_additional_info: Afficher les informations supplémentaires
+step: Etape
 
 # T
 temporary_mark: Note temporaire
 test_exit: Sortie du test
+timer: Temps restant :
 title: Titre
 type: Type
 type_exo : Type de l'exercice

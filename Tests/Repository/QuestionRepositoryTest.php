@@ -57,13 +57,15 @@ class QuestionRepositoryTest extends TransactionalTestCase
 
     public function testFindByExercise()
     {
+      //Il faut rajouter les steps..
         $q1 = $this->persist->qcmQuestion('qcm1');
         $q2 = $this->persist->qcmQuestion('qcm2');
-        $q3 = $this->persist->qcmQuestion('qcm3'); // extra
+        $q3 = $this->persist->qcmQuestion('qcm3'); // extr
         $e1 = $this->persist->exercise('ex1', [$q1, $q2]);
         $this->om->flush();
 
         $questions = $this->repo->findByExercise($e1);
+
         $this->assertEquals([$q1, $q2], $questions);
     }
 

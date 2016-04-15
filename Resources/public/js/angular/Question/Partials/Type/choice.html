@@ -1,0 +1,44 @@
+<div class="type-question-container choice-question-container panel panel-default">
+    <!-- Choices list -->
+    <table class="table table-hover table-striped choice-question-choice-table" data-ng-if="choiceQuestionCtrl.choices">
+        <!-- Choice row -->
+        <tr data-ng-repeat="choice in choiceQuestionCtrl.choices"
+            data-ng-class="{
+                'info': !choiceQuestionCtrl.feedback.visible && choiceQuestionCtrl.isChoiceSelected(choice) && 1 !== choice.valid,
+                'success' : 1 === choice.valid,
+                'danger'  : choiceQuestionCtrl.feedback.visible && 2 === choice.valid
+            }"
+            data-ng-click="choiceQuestionCtrl.toggleChoice(choice)"
+        >
+            <!-- Checkbox / Radio button -->
+            <td class="col-md-1 text-center">
+                <input
+                    type="{{ choiceQuestionCtrl.question.multiple ? 'checkbox' : 'radio' }}"
+                    id="choice-{{ choice.id }}"
+                    value="{{ choice.id }}"
+                    data-ng-checked="choiceQuestionCtrl.isChoiceSelected(choice)"
+                    data-ng-disabled="choiceQuestionCtrl.feedback.visible || 1 === choice.valid || choiceQuestionCtrl.isUniqueChoiceValid()"
+                />
+            </td>
+
+            <!-- Label -->
+            <td class="col-md-10 choice-label" data-ng-switch="(choice|simple_type)">
+                <img data-ng-switch-when="encoded-image" src="" data-ng-src="data:{{ choice.type }};{{ choice.encoding }}, {{ choice.data }}" />
+                <img data-ng-switch-when="web-image" src="" data-ng-src="{{ choice.url }}" />
+                <div data-ng-switch-when="simple-text">{{ choice.data }}</div>
+                <div data-ng-switch-when="html-text" data-ng-bind-html="choice.data | unsafe"></div>
+            </td>
+
+            <!-- Feedback -->
+            <td class="col-md-1 text-center">
+                <div data-ng-if="choiceQuestionCtrl.feedback.visible || 1 === choice.valid">
+                    <span class="fa feedback-info"
+                          title="{{ choiceQuestionCtrl.getChoiceFeedback(choice) }}"
+                          data-toggle="tooltip"
+                          data-ng-class="{'text-success fa-check' : 1 === choice.valid, 'text-danger fa-close': 2 === choice.valid}">
+                    </span>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

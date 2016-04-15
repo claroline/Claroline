@@ -56,12 +56,13 @@ class InteractionQCMController extends Controller
                    ->getToken()->getUser()
            ), $entity
        );
-        $serviceQcm = $this->container->get('ujm.exo_InteractionQCM');
+        $serviceQcm = $this->container->get('ujm.exo.qcm_service');
         $typeQCM = $serviceQcm->getTypeQCM();
 
         return $this->container->get('templating')->renderResponse(
            'UJMExoBundle:InteractionQCM:new.html.twig', array(
            'exoID' => $attr->get('exoID'),
+           'stepID' => $attr->get('stepID'),
            'entity' => $entity,
            'typeQCM' => json_encode($typeQCM),
            'form' => $form->createView(),
@@ -77,7 +78,7 @@ class InteractionQCMController extends Controller
      */
     public function createAction()
     {
-        $services = $this->container->get('ujm.exo_InteractionQCM');
+        $services = $this->container->get('ujm.exo.qcm_service');
         $interQCM = new InteractionQCM();
         $form = $this->createForm(
             new InteractionQCMType(
@@ -86,15 +87,17 @@ class InteractionQCMController extends Controller
         );
 
         $exoID = $this->container->get('request')->request->get('exercise');
+        $stepID = $this->container->get('request')->request->get('step');
 
         //Get the lock category
         $catSer = $this->container->get('ujm.exo_category');
 
         $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
+        $step = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Step')->find($stepID);
         $formHandler = new InteractionQCMHandler(
             $form, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('ujm.exo_exercise'), $catSer,
-            $this->container->get('security.token_storage')->getToken()->getUser(), $exercise,
+            $this->container->get('security.token_storage')->getToken()->getUser(), $exercise, $step,
             $this->get('translator')
         );
 
@@ -111,9 +114,7 @@ class InteractionQCMController extends Controller
                 );
             } else {
                 return $this->redirect(
-                    $this->generateUrl('ujm_exercise_questions', array(
-                        'id' => $exoID, 'categoryToFind' => $categoryToFind, 'titleToFind' => $titleToFind, )
-                    )
+                    $this->generateUrl('ujm_exercise_open', [ 'id' => $exoID ]) . '#/steps'
                 );
             }
         }
@@ -127,11 +128,12 @@ class InteractionQCMController extends Controller
         $typeQCM = $services->getTypeQCM();
         $formWithError = $this->render(
             'UJMExoBundle:InteractionQCM:new.html.twig', array(
-            'entity' => $interQCM,
-            'form' => $form->createView(),
-            'error' => true,
-            'exoID' => $exoID,
-            'typeQCM' => json_encode($typeQCM),
+                'entity' => $interQCM,
+                'form' => $form->createView(),
+                'error' => true,
+                'exoID' => $exoID,
+                'stepID' => $stepID,
+                'typeQCM' => json_encode($typeQCM),
             )
         );
         $interactionType = $this->container->get('ujm.exo_question')->getTypes();
@@ -141,6 +143,7 @@ class InteractionQCMController extends Controller
                 'UJMExoBundle:Question:new.html.twig', array(
                 'formWithError' => $formWithError,
                 'exoID' => $exoID,
+                'stepID' => $stepID,
                 'linkedCategory' => $catSer->getLinkedCategories(),
                 'locker' => $catSer->getLockCategory(),
                 'interactionType' => $interactionType,
@@ -154,7 +157,7 @@ class InteractionQCMController extends Controller
     public function editAction()
     {
         $attr = $this->get('request')->attributes;
-        $qcmSer = $this->container->get('ujm.exo_InteractionQCM');
+        $qcmSer = $this->container->get('ujm.exo.qcm_service');
         $catSer = $this->container->get('ujm.exo_category');
         $em = $this->get('doctrine')->getEntityManager();
 
@@ -234,12 +237,7 @@ class InteractionQCMController extends Controller
                 return $this->redirect($this->generateUrl('ujm_question_index'));
             } else {
                 return $this->redirect(
-                    $this->generateUrl(
-                        'ujm_exercise_questions',
-                        array(
-                            'id' => $exoID,
-                        )
-                    )
+                    $this->generateUrl('ujm_exercise_open', [ 'id' => $exoID ]) . '#/steps'
                 );
             }
         }
@@ -298,9 +296,9 @@ class InteractionQCMController extends Controller
             $vars['_resource'] = $exercise;
         }
 
-        $interQcmSer = $this->container->get('ujm.exo_InteractionQCM');
+        $interQcmSer = $this->container->get('ujm.exo.qcm_service');
         $res = $interQcmSer->response($request);
-
+    
         $vars['score'] = $res['score'];
         $vars['penalty'] = $res['penalty'];
         $vars['interQCM'] = $res['interQCM'];
