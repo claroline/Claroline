@@ -5,6 +5,8 @@ namespace UJM\ExoBundle\Repository;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Entity\Hint;
+use UJM\ExoBundle\Entity\Paper;
 
 /**
  * PaperRepository.
@@ -187,5 +189,29 @@ class PaperRepository extends EntityRepository
                     ->getSingleScalarResult();
         
         return $nb;
+    }
+
+    /**
+     * Returns whether a hint is related to a paper.
+     * @param Paper $paper
+     * @param Hint $hint
+     * @return bool
+     */
+    public function hasHint(Paper $paper, Hint $hint)
+    {
+        $qb = $this->createQueryBuilder('p');
+
+        $link = $qb->select('p')
+            ->join('p.exercise', 'e')
+            ->join('e.steps', 's')
+            ->join('s.stepQuestions', 'sq')
+            ->where('e = :exercise')
+            ->andWhere('sq.question = :question')
+            ->setParameters(['question' => $hint->getQuestion(), 'exercise' => $paper->getExercise()])
+            ->getQuery()
+            ->getOneOrNullResult();
+
+
+        return null !== $link;
     }
 }
