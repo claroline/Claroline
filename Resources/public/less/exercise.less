@@ -5,6 +5,7 @@
 @import "@{vendorPath}/variables.less";
 
 .exercise-container {
+    position: relative;
     .navbar {
         margin-bottom: 0 !important;
 
@@ -40,6 +41,25 @@
 
             &:last-child {
                 margin-bottom: 0;
+            }
+        }
+    }
+
+    .player-container {
+        .attempts {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: @panel-heading-padding;
+        }
+    }
+
+    .step-container {
+        .panel-heading {
+            border-bottom: none;
+
+            & + .panel-body {
+                border-top: 1px solid @panel-inner-border;
             }
         }
     }

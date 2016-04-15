@@ -6,10 +6,8 @@
 
     {# Exercise styles #}
     {% stylesheets debug=false filter='less, cssmin' output='vendor/ujmexo/ujm-exo.css'
-        '@UJMExoBundle/Resources/public/less/ujm-sequence.less'
-        '@UJMExoBundle/Resources/public/less/exercise.less'
         '@UJMExoBundle/Resources/public/less/loading-bar.css'
-        '@UJMExoBundle/Resources/public/less/matching-angular.css'
+        '@UJMExoBundle/Resources/public/less/main.less'
     %}
     <link rel="stylesheet" media="screen" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -65,10 +63,11 @@
 
     {# libs : bootbox #}
     {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm-exo-libs.js'
-        '@UJMExoBundle/Resources/public/js/libs/*'
-        '@UJMExoBundle/Resources/public/js/libs/angular-libs/*'
-        '@UJMExoBundle/Resources/public/js/libs/angular-libs/bootbox/*'
+        '@FrontEndBundle/Resources/public/jquery-ui/jquery-ui.min.js'
+        '@UJMExoBundle/Resources/public/js/libs/bootbox.min.js'
+        '@UJMExoBundle/Resources/public/js/libs/dom.jsPlumb.min.js'
         '@UJMExoBundle/Resources/public/js/libs/angular-libs/angular-table/*'
+        '@UJMExoBundle/Resources/public/js/libs/angular-libs/bootbox/*'
         '@UJMExoBundle/Resources/public/js/libs/angular-libs/loading-bar/*'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
@@ -90,6 +89,8 @@
 
         '@UJMExoBundle/Resources/public/js/angular/Step/*'
         '@UJMExoBundle/Resources/public/js/angular/Step/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/angular/Step/Directives/*'
+        '@UJMExoBundle/Resources/public/js/angular/Step/Services/*'
 
         '@UJMExoBundle/Resources/public/js/angular/Question/*'
         '@UJMExoBundle/Resources/public/js/angular/Question/Controllers/*'
