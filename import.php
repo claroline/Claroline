@@ -3,7 +3,7 @@
 if ($argc < 4) {
     die(
     "Usage:    php import.php <account> <namespace> <bundle>\n".
-    "Example:  php import.php UJM-dev UJM ExoBundle\n"
+    "Example:  php import.php UJM-dev ExoBundle plugin/exo\n"
   );
 }
 
@@ -20,7 +20,8 @@ cmd("git branch -f {$bundle} {$bundle}/master");
 cmd("git checkout {$bundle}");
 cmd("git pull --no-tags {$bundle} master");
 cmd("git filter-branch -f --msg-filter 'sed \"1 s/^/[{$bundle}] /\"' HEAD");
-cmd('git checkout import-test');
+cmd('git checkout master');
+cmd("git checkout -b import-{$prefix}");
 cmd("git read-tree --prefix={$prefix}/ -u {$bundle}");
 cmd("git commit -m 'Import {$bundle}'");
 cmd("git merge -s subtree {$bundle}");
