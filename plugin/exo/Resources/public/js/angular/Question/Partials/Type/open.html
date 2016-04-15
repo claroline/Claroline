@@ -1,0 +1,14 @@
+<div class="type-question-container open-question-container">
+    <!-- Answer input -->
+    <textarea style="margin-bottom: 20px;" class="form-control" rows="{{ 'long' === openQuestionCtrl.question.typeOpen ? 15 : 5 }} "
+            data-ng-if="openQuestionCtrl.question.typeOpen !== 'oneWord' && !openQuestionCtrl.feedback.visible"
+            data-ng-model="openQuestionCtrl.questionPaper.answer">
+    </textarea>
+
+    <input style="margin-bottom: 20px;" type="text" data-ng-if="openQuestionCtrl.question.typeOpen === 'oneWord' && !openQuestionCtrl.feedback.visible" data-ng-model="openQuestionCtrl.questionPaper.answer" />
+
+    <!-- Corrected text -->
+    <div class="panel panel-default" data-ng-if="openQuestionCtrl.feedback.visible && openQuestionCtrl.answerWithKeywords">
+        <div class="panel-body" data-ng-bind-html="openQuestionCtrl.answerWithKeywords | unsafe"></div>
+    </div>
+</div>

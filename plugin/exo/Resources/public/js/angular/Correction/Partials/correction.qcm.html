@@ -1,0 +1,31 @@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th class="center-text">{{ 'paper_details_table_choice'|trans:{}:'ujm_sequence' }}</th>
+            <th class="center-text">{{ 'paper_details_table_expected_answer'|trans:{}:'ujm_sequence' }}</th>
+            <th class="center-text">{{ 'paper_details_table_your_answer'|trans:{}:'ujm_sequence' }}</th>
+            <th class="center-text">{{ 'paper_details_table_comment'|trans:{}:'ujm_sequence' }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr data-ng-repeat="choice in correctionQCMCtrl.question.choices">
+            <td class="center-text" data-ng-switch="(choice|simple_type)">
+                <img data-ng-switch-when="encoded-image" class="image" data-ng-src="data:{{choice.type}};{{choice.encoding}}, {{choice.data}}"/>
+                <img data-ng-switch-when="web-image" class="image" data-ng-src="{{choice.url}}"/>
+                <div data-ng-switch-when="simple-text">{{choice.data}}</div>
+                <div data-ng-switch-when="html-text" data-ng-bind-html="choice.data | unsafe"></div>
+            </td>
+            <td class="center-text">
+                <div class="fa text-success fa-check" data-ng-if="correctionQCMCtrl.isChoiceValid(question, choice)"></div>
+            </td>
+            <td class="center-text">
+                <div data-ng-class="{'text-success fa fa-check' : correctionQCMCtrl.isStudentChoice(question, choice) === 1, 'text-danger fa fa-close': correctionQCMCtrl.isStudentChoice(question, choice) === 2}" title="{{choiceQuestionCtrl.getChoiceFeedback(choice)}}">
+                    
+                </div>
+            </td>
+            <td class="center-text">
+                <span>{{correctionQCMCtrl.getCurrentChoiceFeedBack(question, choice)}}</span>
+            </td>
+        </tr>
+    </tbody>
+</table>

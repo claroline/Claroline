@@ -1,0 +1,128 @@
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% block stylesheets %}
+    {# Claroline CSS #}
+    {{ parent() }}
+
+    {# Exercise styles #}
+    {% stylesheets debug=false filter='less, cssmin' output='vendor/ujmexo/ujm-exo.css'
+        '@UJMExoBundle/Resources/public/less/loading-bar.css'
+        '@UJMExoBundle/Resources/public/less/main.less'
+    %}
+    <link rel="stylesheet" media="screen" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{# Title of the Page #}
+{% block title %} {{ 'exercise' | trans({}, 'ujm_exo') }} : {{ _resource.title }} {% endblock %}
+
+{# Breadcrumbs #}
+{% block breadcrumb %}
+    {{ parent() }}
+{% endblock %}
+
+{# Content of the Page #}
+{% block content %}
+    {# Initialize AngularJS application #}
+    <div data-ng-app="ExerciseApp" data-ng-cloak="">
+        <exercise
+            data-exercise="{{ exercise | json_encode | raw | escape }}"
+            data-nb-papers ="{{ nbPapers }}"
+            data-edit-enabled="{{ editEnabled }}"
+            data-compose-enabled="{{ composeEnabled }}"
+            data-duration="{{ duration }}">
+        </exercise>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {# Claroline JS #}
+    {{ parent() }}
+
+    {# Translations #}
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'ujm_sequence' }) }}"></script>
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'ujm_exo' }) }}"></script>
+
+    {# Angular JS #}
+    {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm-exo-angular-js.js'
+        '@FrontEndBundle/Resources/public/angular/angular.min.js'
+        '@FrontEndBundle/Resources/public/angular-sanitize/angular-sanitize.min.js'
+        '@FrontEndBundle/Resources/public/angular-route/angular-route.min.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {# Angular UI #}
+    {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm-exo-angular-ui.js'
+        '@FrontEndBundle/Resources/public/angular-bootstrap/ui-bootstrap-tpls.min.js'
+        '@FrontEndBundle/Resources/public/angular-ui-tinymce/src/tinymce.js'
+        '@FrontEndBundle/Resources/public/angular-ui-translation/angular-translation.js'
+        '@FrontEndBundle/Resources/public/angular-ui-resource-picker/angular-resource-picker.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {# libs : bootbox #}
+    {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm-exo-libs.js'
+        '@FrontEndBundle/Resources/public/jquery-ui/jquery-ui.min.js'
+        '@UJMExoBundle/Resources/public/js/libs/bootbox.min.js'
+        '@UJMExoBundle/Resources/public/js/libs/dom.jsPlumb.min.js'
+        '@UJMExoBundle/Resources/public/js/libs/angular-libs/angular-table/*'
+        '@UJMExoBundle/Resources/public/js/libs/angular-libs/bootbox/*'
+        '@UJMExoBundle/Resources/public/js/libs/angular-libs/loading-bar/*'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm-exo-app.js'
+        '@UJMExoBundle/Resources/public/js/anonymous-wrapper-start.js'
+
+        '@UJMExoBundle/Resources/public/js/angular/*'
+
+        '@UJMExoBundle/Resources/public/js/angular/Common/*'
+        '@UJMExoBundle/Resources/public/js/angular/Common/Directives/*'
+        '@UJMExoBundle/Resources/public/js/angular/Common/Filters/*'
+        '@UJMExoBundle/Resources/public/js/angular/Common/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/angular/Exercise/*'
+        '@UJMExoBundle/Resources/public/js/angular/Exercise/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/angular/Exercise/Directives/*'
+        '@UJMExoBundle/Resources/public/js/angular/Exercise/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/angular/Step/*'
+        '@UJMExoBundle/Resources/public/js/angular/Step/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/angular/Step/Directives/*'
+        '@UJMExoBundle/Resources/public/js/angular/Step/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/angular/Question/*'
+        '@UJMExoBundle/Resources/public/js/angular/Question/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/angular/Question/Controllers/Type/*'
+        '@UJMExoBundle/Resources/public/js/angular/Question/Directives/*'
+        '@UJMExoBundle/Resources/public/js/angular/Question/Directives/Type/*'
+        '@UJMExoBundle/Resources/public/js/angular/Question/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/angular/Paper/*'
+        '@UJMExoBundle/Resources/public/js/angular/Paper/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/angular/Paper/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/angular/Correction/*'
+        '@UJMExoBundle/Resources/public/js/angular/Correction/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/angular/Correction/Directives/*'
+        '@UJMExoBundle/Resources/public/js/angular/Correction/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/anonymous-wrapper-end.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {# Set some vars needed by Angular parts #}
+    <script type="text/javascript">
+        {# Make Twig variables accessibles by AngularJS #}
+        var AngularApp = {};
+
+        AngularApp.webDir = "{{ path('claro_index') }}".split('/').slice(0, -2).join('/') + "/";
+        AngularApp.locale = "{{ app.request.locale ~ '_' ~ app.request.locale|upper }}";
+    </script>
+    
+    <script src="https://rawgithub.com/gsklee/ngStorage/master/ngStorage.js"></script>
+{% endblock %}

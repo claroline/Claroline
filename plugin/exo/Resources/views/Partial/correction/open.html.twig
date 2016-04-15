@@ -1,0 +1,54 @@
+{% include "UJMExoBundle:Partial:correction/interaction.html.twig" %}
+
+<div class="panel-body">
+    {% if response is not defined %}
+        {% set response = responses[p].response %}
+    {% endif %}
+
+    <p><h3 class="panel-title">{{ 'your_answer' | trans({}, 'ujm_exo') }}</h3></p>
+    {{ response|raw}}
+
+{#    {% if inter.typeopenquestion == 'oneWord' %}
+        <p><h3 class="panel-title">{{ 'expected_answer' | trans }}</h3></p>
+        <div id="eAnswer">{{ goodResponseOpenOneWord(inter.id) }}</div>
+    {% endif %}#}
+
+    {% if not (inter.typeopenquestion == 'long') %}
+        <p><h3 class="panel-title">{{ 'keys_words' | trans({}, 'ujm_exo') }}</h3></p>
+        <div id="eAnswer">
+            <table id="tablewr" class="table table-striped table-bordered table-condensed">
+                <thead>
+                    <tr style="background-color: lightsteelblue;">
+                        <th class="classic">{{ 'keys_words' | trans({}, 'ujm_exo') }}</th>
+                        <th class="classic">{{ 'case_sensitive' | trans({}, 'ujm_exo') }}</th>
+                        <th class="classic">{{ 'points' | trans({}, 'ujm_exo') }}</th>
+                        <th class="classic">{{ 'comment' | trans({}, 'ujm_exo') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for wr in inter.wordResponses %}
+                    <tr>
+                        <td>{{ wr.response }}</td>
+                        <td>
+                            {% if wr.caseSensitive %}
+                                <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
+                            {% else %}
+                                <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
+                            {% endif %}
+                        </td>
+                        <td>{{ wr.score }}</td>
+                        <td class="classic">
+                {% if wr.feedback is not empty %}
+                    {{ wr.feedback|raw }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+</div>

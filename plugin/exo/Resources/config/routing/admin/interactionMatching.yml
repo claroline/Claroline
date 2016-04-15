@@ -1,0 +1,19 @@
+ujm_interactionmatching_create:
+    pattern:  /create
+    defaults: { _controller: "UJMExoBundle:InteractionMatching:create" }
+    requirements: { _method: post }
+
+ujm_interactionmatching_edit:
+    pattern: /edit/{interaction}/{exoID}/{catID}/{user}
+    defaults: { _controller: "UJMExoBundle:InteractionMatching:edit" }
+    requirements: { _method: post }
+
+ujm_interactionmatching_response:
+    pattern: /testMatching
+    defaults: { _controller: "UJMExoBundle:InteractionMatching:responseMatching" }
+    requirements: { _method: post }
+
+ujm_interactionmatching_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "UJMExoBundle:InteractionMatching:update" }
+    requirements: { _method: post }

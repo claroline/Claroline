@@ -1,0 +1,72 @@
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+    {% block breadcrumb %}
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'fa fa-briefcase',
+                    'name': 'desktop'|trans({}, 'platform'),
+                    'href': path('claro_desktop_open')
+                },
+                {
+                    'name': 'bank_of_questions' | trans({}, 'ujm_exo'),
+                    'href': path('ujm_question_index')
+                },
+                {
+                    'name': 'correction' | trans({}, 'ujm_exo'),
+                    'href': ''
+                }
+            ])
+        }}
+    {% endblock %}
+{% else %}
+    {% block resourceBreadcrumb %}
+        <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
+        <li class="active">{{ 'bank_of_questions' | trans({}, 'ujm_exo') }}</li>
+    {% endblock %}
+{% endif %}
+
+{% extends layout %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
+{% endblock %}
+
+{% block title %} {{ 'correction' | trans({}, 'ujm_exo') }} {% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'correction' | trans({}, 'ujm_exo') }}</h3>
+    </div>
+
+    <div class="panel-body">
+        {% if exoID == -1 %}
+            <a href="{{ path('ujm_question_index') }}" class="btn btn-primary">
+                <i class="fa fa-arrow-left"></i> {{ 'back_to_the_list' | trans({}, 'ujm_exo') }}
+            </a>
+        {% else %}
+            <a class="btn btn-primary" href="{{ path('ujm_exercise_open', {'id': exoID}) }}#/steps">
+                <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
+            </a>
+        {% endif %}
+    </div>
+ <div class="list-group">
+        <div class="list-group-item">
+    {% set inter = interHole %}
+    {% include "UJMExoBundle:Partial:correction/hole.html.twig" %}
+    <hr/>
+    {% include "UJMExoBundle:Partial:correction/overviewScore.html.twig" %}
+         </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
+    <script type="text/javascript">
+        responseHole('{{ response|raw }}');
+    </script>
+{% endblock %}

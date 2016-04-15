@@ -1,0 +1,94 @@
+/* ==========================================================================
+   Demo
+   ========================================================================== */
+
+.border {
+  position: absolute;
+  z-index: 999;
+  padding: 18px 20px;
+  cursor: move;
+  top: 25px;
+}
+
+.border:hover {
+  border-color: #ADD8C7;
+}
+
+.border--one {
+  left: 30%;
+}
+
+.border--two {
+  left: 40%;
+  top: 28px;
+}
+
+.border--three {
+  left: 49%;
+  top: 32px;
+}
+
+.border--four {
+  left: 59%;
+  top: 32px;
+}
+
+.border--text {
+  left: 60%;
+  top: 26px;
+}
+
+.border--fixed {
+  position: fixed;
+  top: 390px;
+}
+
+.icon {
+  background: #107FC9;
+  border-radius: 999px;
+}
+
+.icon--simple {
+  border-radius: 0;
+}
+
+.border--one .icon {
+  width: 26px;
+  height: 26px;
+}
+
+.border--two .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.border--three .icon {
+  width: 10px;
+  height: 10px;
+}
+
+.border--four .icon {
+  width: 60px;
+  height: 10px;
+}
+
+.icon.background--light {
+  background: red;
+}
+
+.icon.background--dark {
+  background: green;
+}
+
+.icon.background--dark.background--complex {
+  background: purple;
+}
+
+.icon.background--light.background--complex {
+  background: rose;
+}
+
+
+/* ==========================================================================
+   FlexSlider
+   ========================================================================== */

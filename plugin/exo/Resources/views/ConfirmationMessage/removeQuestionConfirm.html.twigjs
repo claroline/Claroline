@@ -1,0 +1,5 @@
+{% twig_js name="removeQuestionConfirm" %}
+
+{# no transchoice filter in twigjs... #}
+
+{{ 'remove_question_confirm_message'|trans({}, 'ujm_exo') }}

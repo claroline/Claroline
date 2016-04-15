@@ -1,0 +1,65 @@
+<div class="modal fade" id="modaladdpicture" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </br>
+            </div>
+            <div class="modal-body">
+                <h3 class="panel-title">{{'add_new_picture'|trans({}, 'ujm_exo') }}</h3>
+                <label for="label">{{ 'picture_name' | trans({}, 'ujm_exo') }} : </label>
+                <form id="uploadForm" enctype="multipart/form-data" method="post"
+                      action="{{ path('ujm_interactiongraphic_AddImg', { 'redirection': 0 }) }}">
+                    <input class="form-control" type="text" required="required" id='label' name="label" />
+                    <input id="picture" name="picture" type="file" required="true" accept="image/*"/>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
+                        <button type="submit" class="btn btn-primary" id="submit_picture"
+                                onclick="ValidName('{{ 'wrong_name' | trans({}, 'ujm_exo') }}','label', '{{ path('ujm_Picture_name_alreadyExist') }}',
+                                    '{{ 'already_exist' | trans({}, 'ujm_exo') }}', 'uploadForm');return false;">{{ 'ok'|trans({}, 'platform') }}</button>
+                    </div>
+                </form>
+           </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="{{ asset('bundles/ujmexo/js/addImage.js') }}"></script>
+<script type="text/javascript">
+
+    var doc;
+
+    $(document).ready(function () {
+
+        var options = {
+            success: function (data) {
+                doc = data.split(";");
+                ChangeList(doc[0], doc[1], doc[2]);
+            },
+            error: function () {
+                alert('ko');
+            }
+        };
+
+         $("#uploadForm").ajaxForm(options);
+
+    });
+
+    // Put the new image into the drop-down list
+    function ChangeList(idDoc, label, type) {
+
+        if (type.toLowerCase() == '.png' || type.toLowerCase() == '.jpeg' || type.toLowerCase() == '.jpg' || type.toLowerCase() == '.gif' || type.toLowerCase() == '.bmp') {
+
+            $("#ujm_exobundle_interactiongraphictype_picture")
+                .append($('<option selected="selected" value="' + idDoc + '"></option>')
+                .text(label));
+
+            $('#modaladdpicture').modal('hide');
+
+        } else {
+            alert("{{ 'not_image_messsage' | trans({}, 'ujm_exo') }}");
+        }
+    }
+
+    $('#modaladdpicture').modal('toggle', 'show');
+</script>

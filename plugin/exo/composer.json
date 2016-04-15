@@ -1,0 +1,21 @@
+{
+    "name": "ujm/exo-bundle",
+    "description": "Exercise tool for Claroline Connect",
+    "type": "claroline-plugin",
+    "require": {
+        "php": ">=5.5",
+        "doctrine/orm": "~2.5",
+        "claroline/core-bundle": "^6.6.4",
+        "icap/badge-bundle": "~6.0",
+        "json-quiz/json-quiz": "dev-master",
+        "stefk/jval": "dev-master"
+    },
+    "require-dev": {
+        "claroline/dev-bundle": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+          "UJM\\ExoBundle\\": ""
+        }
+    }
+}

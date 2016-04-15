@@ -1,0 +1,57 @@
+<div class="modal fade" id="modalpicture" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </br>
+            </div>
+
+            <div class="modal-body">
+                <h3 class="panel-title">{{ 'change_name' | trans({}, 'ujm_exo') }}</h3>
+
+                <form id="updateName" enctype="multipart/form-data" method="post" action="{{ path('ujm_question_name_update') }}">
+
+                    <p>{{ 'new_name' | trans({}, 'ujm_exo') }} ?</p>
+                    <input class="form-control" type="text" id='newlabel' name='newlabel' required="true"/>
+
+                    <div class="modal-footer">
+                        <input id="updateSubmit" type="submit" value="{{ 'change' | trans({}, 'ujm_exo') }} !"
+                            onclick="ValidName('{{ 'wrong_name' | trans({}, 'ujm_exo') }}','newlabel', '{{ path('ujm_Picture_name_alreadyExist') }}', '{{ 'already_exist' | trans({}, 'ujm_exo') }}', 'updateName');
+                                return false;" class="btn btn-primary"/>
+
+                        <input type="hidden" id="oldName" name="oldName" value="{{oldPicLabel}}"/>
+                        <input type="hidden" id="i" name="i" value="{{i}}"/>
+                    </div>
+                </form>
+           </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('#modalpicture').modal('toggle', 'show');
+
+    var oldname = $('#oldName').val();
+    var i = $('#i').val();
+
+    $(document).ready(function () {
+
+        $('#newlabel').val(oldname);
+
+        var options = {
+            success: function (data) {
+                if ($('#PicLabel' + i).html().trim() == oldname) {
+                    $('#PicLabel' + i).html(data);
+                    $('#modalpicture').modal('hide');
+                    return false;
+                }
+            },
+            error: function () {
+                alert('Veuillez actualiser la page ...');
+            }
+        };
+
+        $("#updateName").ajaxForm(options);
+    });
+</script>

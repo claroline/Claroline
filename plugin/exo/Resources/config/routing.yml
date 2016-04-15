@@ -1,0 +1,67 @@
+admin_category:
+    resource: "routing/admin/category.yml"
+    prefix:   /admin/category
+
+admin_exercise:
+    resource: "routing/admin/exercise.yml"
+    prefix:   /admin/exercise
+
+admin_interaction_graphic:
+    resource: "routing/admin/interactionGraphic.yml"
+    prefix:   /admin/interactiongraphic
+
+admin_interaction_hole:
+    resource: "routing/admin/interactionHole.yml"
+    prefix:   /admin/interactionhole
+
+admin_interaction_open:
+    resource: "routing/admin/interactionOpen.yml"
+    prefix:   /admin/interactionopen
+
+admin_interaction_qcm:
+    resource: "routing/admin/interactionQCM.yml"
+    prefix:   /admin/interactionqcm
+
+admin_interaction_matching:
+    resource: "routing/admin/interactionMatching.yml"
+    prefix:   /admin/interactionmatching
+
+admin_paper:
+    resource: "routing/admin/paper.yml"
+    prefix:   /admin/paper
+
+admin_question:
+    resource: "@UJMExoBundle/Controller/QuestionController.php"
+    type: annotation
+    prefix:   /admin/question
+
+all_exercise:
+    resource: "routing/all/exercise.yml"
+    prefix:   /all/exercise
+
+all_hint:
+    resource: "routing/all/hint.yml"
+    prefix:   /all/hint
+
+all_qti:
+    resource: "routing/all/qti.yml"
+    prefix:   /all/qti
+    
+sequence:
+    resource: "@UJMExoBundle/Controller/Sequence/SequenceController.php"
+    type: annotation
+    prefix: /
+
+ujm_exercise:
+    resource: "@UJMExoBundle/Controller/ExerciseController.php"
+    type: annotation
+
+ujm_api_exercise:
+    resource: "@UJMExoBundle/Controller/Api/ExerciseController.php"
+    type: annotation
+    prefix: /api
+
+ujm_api_paper:
+    resource: "@UJMExoBundle/Controller/Api/PaperController.php"
+    type: annotation
+    prefix: /api

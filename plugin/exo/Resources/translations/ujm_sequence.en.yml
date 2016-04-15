@@ -1,0 +1,92 @@
+# a
+answer_zone: Answer zone
+
+# b
+btn_end_sequence_label: End exercise
+btn_interrupt_sequence_label: Interrupt
+btn_prev_step_label: Go to previous step
+btn_next_step_label: Go to next step
+btn_retry_step: Retry step
+btn_validate_step: Validate step
+btn_toggle_all_paper_question_panels: Show / Hide all questions
+
+# c
+case_sensitive: Case sensitive
+comment: Comment
+
+# d
+dropdown_step_navigate_choice_label: Step N°%1% / %2%
+
+
+# g
+graphic_setpoint_first: Drag the "sights" on the picture. The sight center defines your answer.
+graphic_setpoint_second: Use drag and drop to answer.
+graphic_setpoint_third: Correct answers are only counted once.
+graphic_reset_answers: Init answers.
+
+# k
+keys_words: Keys words
+
+# l
+link_exercice_home: Exercise home
+link_exercise_continue: Continue
+link_exercise_retry: Retry
+link_exercise_play: Answer
+link_exercise_docimology: Docimology
+link_csv_export: CSV export
+label_exercise_score: Global score
+label_exercise_question_score: Score
+label_exercise_correction: Correction
+label_no_labels_associated: No associated label(s)
+label_manual_correction_needed: Manual correction needed!
+
+# n
+need_correction: This answer needs a manual correction
+note_question: Note this question
+
+# p
+paper_list: Paper list
+paper_list_no_paper: Currently no paper
+paper_search: Search a paper
+paper_list_manual_correction_needed: Manual correction needed
+paper_list_table_user: User
+paper_list_table_paper_number: Paper number
+paper_list_table_start_date: Start date
+paper_list_table_end_date: End date
+paper_list_table_interrupted: Interrupted
+paper_list_table_interrupted_yes: Yes
+paper_list_table_interrupted_no: No
+paper_list_table_action: Correction
+paper_list_table_action_not_available: Not available yet
+paper_list_table_score: Score
+paper_list_table_first_page_label: First
+paper_list_table_last_page_label: Last
+paper_list_table_toggle_pagination: Paginated / Unpaginated results
+
+paper_details_table_choice: Choice
+paper_details_table_expected_answer: Expected answer
+paper_details_table_your_answer: Your answer
+paper_details_table_comment: Comment
+paper_details_paper_score: Global score
+paper_details_question_score: Question score
+paper_details_correction_label: Correction
+
+points: Points
+
+# q
+question_hints: Hints
+question_hint_label: Hint
+question_hint_show_title: Show hint
+question_show_hint_confirm: Are you sure you want to see this hint ? <br/> This will give you a penalty of %1% points.
+
+# s
+sequence_step: Step
+sequence_attempts_infos: You have %1% attempt(s)
+sequence_nb_attempts: Attempt N° %1%
+sequence_interrupt_sequence_confirm: Are you sure you want to go to interrupt the exercise ?
+sequence_end_sequence_confirm: Are you sure you want to go to finish the exercise ? <br/> Yon won't be able to edit your answers.
+sequence_play_leave_confirm: Are you sure you want to leave the application ?
+sequence_score: Score
+
+# v
+validate: Validate

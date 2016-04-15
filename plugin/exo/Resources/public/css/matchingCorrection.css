@@ -1,0 +1,31 @@
+.labelMatch {
+    padding: 10px;
+    border: 1px solid black;
+    margin: 5px;
+}
+
+.associatedProposal {
+    padding: 5px;
+    border: 1px black;
+}
+
+.rightResponse {
+    padding: 10px;
+    border: 2px solid green;
+    margin: 5px;
+}
+
+.falseResponse {
+    padding: 10px;
+    border: 2px solid red;
+    margin: 5px;
+}
+
+.proposals {
+    border: 1px solid #ddd;
+    font-family: cursive;
+}
+
+.labels {
+    border-style: none none dotted none;
+}

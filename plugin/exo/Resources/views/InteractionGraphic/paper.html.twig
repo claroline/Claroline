@@ -1,0 +1,109 @@
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+    {% block breadcrumb %}
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'fa fa-briefcase',
+                    'name': 'desktop'|trans({}, 'platform'),
+                    'href': path('claro_desktop_open')
+                },
+                {
+                    'name': 'bank_of_questions' | trans({}, 'ujm_exo'),
+                    'href': path('ujm_question_index')
+                },
+                {
+                    'name': 'question' | trans({}, 'ujm_exo'),
+                    'href': ''
+                }
+            ])
+        }}
+    {% endblock %}
+{% else %}
+    {% block resourceBreadcrumb %}
+        <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
+        <li class="active">{{ 'bank_of_questions' | trans({}, 'ujm_exo') }}</li>
+    {% endblock %}
+{% endif %}
+
+{% extends layout %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/ujmexo/css/graphic.css') }}" type="text/css" rel="stylesheet"/>
+{% endblock %}
+
+{% block title %} {{ 'paper' | trans({}, 'ujm_exo') }} {{ 'question' | trans({}, 'ujm_exo') }} {% endblock %}
+
+{% block section_content %}
+
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ interactionToDisplayed.question.title }}</h3>
+    </div>
+    <div class="panel-body">
+        {% if exoID == -1 %}
+            <a class="btn btn-primary" href="{{ path('ujm_question_index') }}">
+                <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
+            </a>
+        {% else %}
+            <a class="btn btn-primary" href="{{ path('ujm_exercise_open', {'id': exoID}) }}#/steps">
+                <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="list-group">
+        <div class="list-group-item">
+
+            {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
+
+            <h5>{{ 'orders' | trans({}, 'ujm_exo') }} :</h5>
+            <h6><em>{{ "position" | trans({}, 'ujm_exo') }}<br/>{{ "selection" | trans({}, 'ujm_exo') }}<br/>{{ "raz" | trans({}, 'ujm_exo') }}<br/>
+                {{ "only_once" | trans({}, 'ujm_exo') }}</em>
+            </h6>
+
+            <div id="Answer" style="position: relative;">
+                <p id="ContainerCursor">
+                    {% set i = 1 %}
+                    {% for coords in listeCoords %}
+                        <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{ i }}" id="cursor{{ i }}"
+                            />
+                        {% set i = i + 1 %}
+                   {% endfor %}
+                </p><p>
+                <img class="AnswerImage" src="{{ asset(interactionToDisplayed.picture.url) }}" alt="AnswerImg" id="AnswerImg"
+                         width="{{ interactionToDisplayed.picture.width }}" height="{{ interactionToDisplayed.picture.height }}"
+                         />
+                </p>
+            </div>
+
+            <form name="ValidGraphic" id="ValidGraphic" action="{{ path('ujm_interactiongraphic_response') }}" method="post">
+                <input type="hidden" id="nbpointer" name="nbpointer" value="{{ i }}"/>
+                <input type="hidden" id="answers" name="answers" value=""/>
+                <input type="hidden" id="graphId" name="graphId" value="{{ interactionToDisplayed.id }}"/>
+
+                {% if interactionToDisplayed.question.hints is not empty %}
+                    {% set tryInteraction = interactionToDisplayed %}
+                    {% include "UJMExoBundle:Partial:hintTryInteraction.html.twig" %}
+                {% endif %}
+
+                <div class="panel-footer">
+                    <input type="hidden" name="exoID" value="{{ exoID }}" />
+                    <button type="submit" onclick="NoEmptyAnswer();return false;" class="btn btn-primary">
+                        {{ 'validate' | trans({}, 'ujm_exo') }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery-ui/jquery-ui.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphicdisplay.js') }}"></script>
+{% endblock %}

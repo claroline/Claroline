@@ -1,0 +1,114 @@
+<div class="player-container">
+    <!-- Player header -->
+    <div class="attempts">
+        <span data-ng-if="exercisePlayerCtrl.exercise.meta.maxAttempts > 0">{{ 'sequence_attempts_infos'|trans:{"1" : exercisePlayerCtrl.exercise.meta.maxAttempts}:'ujm_sequence'}}.</span>
+        <span>{{ 'sequence_nb_attempts'|trans:{"1" : exercisePlayerCtrl.paper.number}:'ujm_sequence' }}</span>
+        <span data-ng-if="exercisePlayerCtrl.exercise.meta.maxAttempts > 0">/ {{ exercisePlayerCtrl.exercise.meta.maxAttempts }}</span>
+    </div>
+
+    <!-- Step content -->
+    <div class="panel-body">
+        <timer
+            data-ng-if="exercisePlayerCtrl.exercise.meta.duration != 0"
+            data-duration="exercisePlayerCtrl.exercise.meta.duration * 60"
+            data-on-end="exercisePlayerCtrl.end()"
+        ></timer>
+
+        <!--<div class="alert alert-warning" role="alert" data-ng-show="exercisePlayerCtrl.exercise.meta.duration != 0">
+            {{ 'timer'|trans:{};'ujm_exo' }}
+            <span data-ng-show="exercisePlayerCtrl.$localStorage.hours != 0">
+                {{ exercisePlayerCtrl.$localStorage.hours }}h
+            </span>
+
+            <span data-ng-show="exercisePlayerCtrl.$localStorage.minutes != 0">
+                {{ exercisePlayerCtrl.$localStorage.minutes }}m
+            </span>
+
+            <span data-ng-show="exercisePlayerCtrl.$localStorage.minutes < 2 && exercisePlayerCtrl.$localStorage.hours == 0">
+                {{ exercisePlayerCtrl.$localStorage.seconds }}s
+            </span>
+        </div>-->
+
+        <!-- Display the current Step -->
+        <step-show data-step-index="{{ exercisePlayerCtrl.index }}"  data-step="exercisePlayerCtrl.step"></step-show>
+    </div>
+
+    <!-- Player navigation -->
+    <div class="panel-footer text-center">
+        <div class="btn-group" role="group">
+            <!-- Previous step -->
+            <button type="button" role="button" class="btn btn-default"
+                    data-toggle="tooltip" data-container="body" title="{{ 'btn_prev_step_label'|trans:{}:'ujm_sequence' }}"
+                    data-ng-disabled="!exercisePlayerCtrl.previous || (exercisePlayerCtrl.feedback.enabled && !exercisePlayerCtrl.feedback.visible)"
+                    data-ng-click="exercisePlayerCtrl.goTo(exercisePlayerCtrl.previous)"
+            >
+                <span class="fa fa-arrow-circle-left"></span>
+                <span class="sr-only">{{ 'btn_prev_step_label'|trans:{}:'ujm_sequence' }}</span>
+            </button>
+
+            <!-- Validate step (for Formative exercises) -->
+            <button type="button" role="button" class="btn btn-success"
+                    data-ng-show="exercisePlayerCtrl.feedback.enabled && !exercisePlayerCtrl.feedback.visible"
+                    data-ng-click="exercisePlayerCtrl.submit()"
+            >
+                <span class="fa fa-check"></span>
+                {{ 'btn_validate_step'|trans:{}:'ujm_sequence' }}
+            </button>
+
+            <!-- Retry step (for Formative exercises) -->
+            <button type="button" role="button" class="btn btn-default"
+                    data-ng-show="exercisePlayerCtrl.feedback.enabled && exercisePlayerCtrl.feedback.visible"
+                    data-toggle="tooltip" data-container="body" title="{{ 'btn_retry_step'|trans:{}:'ujm_sequence' }}"
+                    data-ng-click="exercisePlayerCtrl.retry()"
+            >
+                <span class="fa fa-refresh"></span>
+                {{ 'btn_retry_step'|trans:{}:'ujm_sequence' }}
+            </button>
+
+            <!-- Next step -->
+            <button type="button" role="button"class="btn btn-default"
+                    data-ng-disabled="!exercisePlayerCtrl.next || (exercisePlayerCtrl.feedback.enabled && !exercisePlayerCtrl.feedback.visible)"
+                    data-toggle="tooltip" data-container="body" title="{{ 'btn_next_step_label'|trans:{}:'ujm_sequence' }}"
+                    data-ng-click="exercisePlayerCtrl.goTo(exercisePlayerCtrl.next)"
+            >
+                <span class="fa fa-arrow-circle-right"></span>
+                <span class="sr-only">{{ 'btn_next_step_label'|trans:{}:'ujm_sequence' }}</span>
+            </button>
+        </div>
+
+        <!-- Navigation menu (to go to any step of the Exercise) -->
+        <div class="btn-group dropup">
+            <button data-ng-disabled="exercisePlayerCtrl.feedback.enabled && !exercisePlayerCtrl.feedback.visible" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ 'dropdown_step_navigate_choice_label'|trans:{"1" : exercisePlayerCtrl.index + 1, "2" : exercisePlayerCtrl.exercise.steps.length}:'ujm_sequence'}} <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li data-ng-repeat="step in exercisePlayerCtrl.exercise.steps">
+                    <a href="" data-ng-click="exercisePlayerCtrl.goTo(step)">
+                        {{ 'dropdown_step_navigate_choice_label'|trans:{ "1" : $index + 1, "2" : exercisePlayerCtrl.exercise.steps.length }:'ujm_sequence'}}
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Interrupt Exercise -->
+        <button type="button" role="button" class="btn btn-warning"
+                data-ng-if="!exercisePlayerCtrl.isLastStep && exercisePlayerCtrl.exercise.meta.dispButtonInterrupt"
+                ng-bootbox-confirm="{{ 'sequence_interrupt_sequence_confirm'|trans:{}:'ujm_sequence'}}"
+                ng-bootbox-confirm-action="exercisePlayerCtrl.interrupt()"
+        >
+            <span class="fa fa-ban"></span>
+            {{ 'btn_interrupt_sequence_label'|trans:{}:'ujm_sequence' }}
+        </button>
+
+        <!-- End Exercise -->
+        <button type="button" role="button" class="btn btn-primary"
+                data-ng-if="!exercisePlayerCtrl.next"
+                data-ng-disabled="!exercisePlayerCtrl.feedback.visible && exercisePlayerCtrl.feedback.enabled"
+                ng-bootbox-confirm="{{ 'sequence_end_sequence_confirm'|trans:{}:'ujm_sequence'}}"
+                ng-bootbox-confirm-action="exercisePlayerCtrl.end()"
+        >
+            <span class="fa fa-sign-out"></span>
+            {{ 'btn_end_sequence_label'|trans:{}:'ujm_sequence' }}
+        </button>
+    </div>
+</div>

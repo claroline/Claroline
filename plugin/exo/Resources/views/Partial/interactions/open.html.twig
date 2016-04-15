@@ -1,0 +1,41 @@
+<div>
+    <div class="form-group row col-md-offset-3">
+        <label class="control-label col-md-1">{{ 'type_question' | trans({}, 'ujm_exo') }}</label>
+            <div class="col-md-2">
+                {{ form_widget(form.typeopenquestion) }}
+            </div>
+            <div id="qOpenScoreMaxLongResp">
+                 <label class="control-label col-md-2 col-md-offset-1">{{ 'right_response' | trans({}, 'ujm_exo') }}</label>
+                <div class="col-md-1 {% if not form.scoreMaxLongResp.vars.valid %} has-error{% endif %}">
+                    {{ form_widget(form.scoreMaxLongResp) }}
+                    {{ form_errors(form.scoreMaxLongResp) }}
+                </div>
+            </div>
+    </div>
+    <div id="qOpenOneWord" style="display: none;">
+        <p>
+            {{ form_widget(form.wordResponses) }}
+        <div id="openError" class="{% if not form.wordResponses.vars.valid %} alert alert-danger{% endif %}">
+            {{ form_errors(form.wordResponses) }}
+        </div>
+        <table id="tablewr" class="table table-striped table-condensed">
+            <thead>
+                <tr style="background-color: lightsteelblue;">
+                    <th class="classic">{{ 'keys_words' | trans({}, 'ujm_exo') }}</th>
+                    <th class="classic">{{ 'points' | trans({}, 'ujm_exo') }}</th>
+                    <th class="classic">{{ 'case_sensitive' | trans({}, 'ujm_exo') }}</th>
+                    <th class="classic">{{ 'comment' | trans({}, 'ujm_exo') }}</th>
+                        {% if (nbResponses is not defined or nbResponses == 0) %}
+                        <th class="classic">{{ 'delete' | trans({}, 'ujm_exo') }}</th>
+                        {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        {% if (nbResponses is not defined or nbResponses == 0) %}
+            <a href="#" id="add_wr" class="btn btn-primary"><i class="fa fa-plus"></i> {{ 'key_word' | trans({}, 'ujm_exo') }}</a>
+        {% endif %}
+        </p>
+    </div>
+</div>

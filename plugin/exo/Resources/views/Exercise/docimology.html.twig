@@ -1,0 +1,333 @@
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/ujmexo/css/docimology.css') }}" type="text/css" rel="stylesheet"/>
+{% endblock %}
+
+{% block title %} {{ 'docimology' | trans({}, 'ujm_exo') }} {% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
+    <li class="active">{{ 'docimology' | trans({}, 'ujm_exo') }}</li>
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'docimology' | trans({}, 'ujm_exo') }}</h3>
+    </div>
+    <div class="panel-body">
+        <a href="{{ path('ujm_exercise_open', { 'id': exoID }) }}" class="btn btn-primary">
+            <i class="fa fa-arrow-left"></i> {{ "back" | trans({}, 'ujm_exo') }}
+        </a><br/><br/>
+
+        {% if nbPapers >= 12 %}
+            {#--------------------------------------------------- Legend -----------------------------------------------------------------------------------#}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ 'legend' | trans({}, 'ujm_exo') }}</h3>
+                </div>
+                <div class="panel-body" id="questionList">
+                    <h4>{{ "number_of_papers" | trans({}, 'ujm_exo') }} : {{ nbPapers }}</h4>
+                    <h3 class="panel-title">{{ "list_question" | trans({}, 'ujm_exo') }}</h3>
+                    <ol>
+                        {% for questionTitle in questionsList %}
+                            <li>{{ questionTitle }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+            {#--------------------------------------------------- Histogramm of marks ---------------------------------------------------------------------#}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ 'histo_marks' | trans({}, 'ujm_exo') }}</h3>
+                </div>
+                <div class="panel-body" id="histoMarks"></div>
+            </div>
+            {#--------------------------------------------------- Histogramm of success -------------------------------------------------------------------#}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ 'histo_success' | trans({}, 'ujm_exo') }}</h3>
+                </div>
+                <div class="panel-body" id="histoSuccess"  style="margin-bottom: 100px;"></div>
+            </div>
+            {#--------------------------------------------------- Histogramm of discrimination -----------------------------------------------------------#}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ 'histo_discrimination' | trans({}, 'ujm_exo') }}</h3>
+                </div>
+                <div class="panel-body" id="histoDiscrimination"></div>
+                <div class="list-group">
+                    <div class="list-group-item">
+                        {% if coeffQ == 'none' %}
+                            {{ 'explain_coeff_dis0' | trans({}, 'ujm_exo') }}
+
+                        {% endif %}
+                        <p>
+                            {{ 'explain_coeff_dis1' | trans({}, 'ujm_exo') }}
+                            {{ 'explain_coeff_dis2' | trans({}, 'ujm_exo') }}
+                            {{ 'explain_coeff_dis3' | trans({}, 'ujm_exo') }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {#--------------------------------------------------- Histogramm of measure of diffculty -----------------------------------------------------#}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ 'histo_measure_difficulty' | trans({}, 'ujm_exo') }}</h3>
+                </div>
+                <div class="panel-body" id="histoMeasureOfDifficulty"></div>
+                <div class="list-group">
+                    <div class="list-group-item">
+                        <p>
+                        {{ 'explain_measure_difficulty' | trans({}, 'ujm_exo') }}.
+                        {{ 'calculation_measure_difficulty' | trans({}, 'ujm_exo') }}.
+                        {{ 'meaning_measure_difficulty' | trans({}, 'ujm_exo') }}.
+                        {{ 'info_measure_difficulty' | trans({}, 'ujm_exo') }}.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-info">{{ 'not_enought_papers'|trans({}, 'ujm_exo') }}.</div>
+        {% endif %}
+    <div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/jquery.jqplot.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.barRenderer.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.pointLabels.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.categoryAxisRenderer.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.canvasTextRenderer.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/plugins/jqplot.canvasAxisLabelRenderer.js') }}"></script>
+
+    {% if nbPapers >= 12 %}
+        <script type="text/javascript">
+            $(document).ready(function(){
+                /*********************************histo mark******************************************************/
+                var s1 = [{{ frequencyMarks }}];
+                var marks = [{{ scoreList }}];
+
+                $.jqplot('histoMarks', [s1], {
+
+                    series:[{renderer:$.jqplot.BarRenderer}],
+
+                    seriesDefaults:{
+                        color: '#06A1E3',
+                        rendererOptions: {fillToZero: true},
+                        pointLabels: {
+                            show: true,
+                            hideZeros: true
+                        }
+                    },
+
+                    axes: {
+                        xaxis: {
+                            label: '{{ 'score'|trans({}, 'ujm_exo') }}',
+                            labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                            labelOptions:{
+                                fontFamily:'Helvetica',
+                                fontSize: '14pt'
+                            },
+                            renderer: $.jqplot.CategoryAxisRenderer,
+                            ticks: marks,
+                            tickOptions: {showGridline: false, formatString: '%.1f'}
+                        },
+
+                        yaxis: {
+                            label: '{{ 'frequency'|trans({}, 'ujm_exo') }}',
+                            labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                            labelOptions:{
+                                fontFamily:'Helvetica',
+                                fontSize: '14pt'
+                            },
+                            pad: 1,
+                            min: 0,
+                            max: {{ maxY }},
+                            tickOptions: {formatString: '%d'}
+                        }
+                    }
+                });
+
+                /*********************************histoSuccess******************************************************/
+
+                {% set series = '' %}
+                {% set i = 1 %}
+                {% for serie in seriesResponsesTab %}
+                    {% set sname = 's' ~ i %}
+                        var {{ sname }} = [{{ serie }}];
+                    {% if series == '' %}
+                        {% set series = 's' ~ i %}
+                    {% else %}
+                        {% set series = series ~ ',' ~ 's' ~ i %}
+                    {% endif %}
+                    {% set i = i + 1 %}
+                {% endfor %}
+
+                plot3 = $.jqplot('histoSuccess', [{{ series }}], {
+
+                    stackSeries: true,
+                    captureRightClick: true,
+
+                    seriesDefaults:{
+                        renderer:$.jqplot.BarRenderer,
+
+                        rendererOptions: {
+                            barMargin: 30,
+                            highlightMouseDown: true,
+                            fillToZero: true
+                        },
+
+                        pointLabels: {
+                            show: true,
+                            hideZeros: true
+                        }
+
+                    },
+                    axes: {
+
+                        xaxis: {
+                            label: '{{ 'question'|trans({}, 'ujm_exo') }}',
+                            renderer: $.jqplot.CategoryAxisRenderer,
+
+                            labelOptions:{
+                                fontFamily:'Helvetica',
+                                fontSize: '14pt'
+                            },
+
+                            tickOptions: {showGridline: false}
+                        },
+
+                        yaxis: {
+                            label: '{{ 'frequency'|trans({}, 'ujm_exo') }}',
+                            labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+
+                            labelOptions:{
+                                fontFamily:'Helvetica',
+                                fontSize: '14pt'
+                            },
+
+                            pad: 1,
+                            min: 0,
+                            max: {{ maxY2 }},
+
+                            tickOptions: {formatString: '%d'}
+                        }
+                    },
+                    legend: {
+                        show: true,
+                        location: 's',
+                        placement: 'outside'
+                    },
+
+                    series:[
+                        {label:'{{ 'correct'|trans({}, 'ujm_exo') }}', color: 'green'},
+                        {label:'{{ 'partially'|trans({}, 'ujm_exo') }}', color: 'blue'},
+                        {label:'{{ 'wrong'|trans({}, 'ujm_exo') }}', color: 'red'},
+                        {label:'{{ 'no_answer'|trans({}, 'ujm_exo') }}', color: 'yellow'}
+                    ]
+                });
+
+                /*********************************histoDiscrimination******************************************************/
+                if ({{ coeffQ }} != 'none') {
+
+                    var s1 = [{{ coeffQ }}];
+
+                    $.jqplot('histoDiscrimination', [s1], {
+
+                        stackSeries: true,
+                        series:[{renderer:$.jqplot.BarRenderer}],
+
+                        seriesDefaults:{
+                            color: '#06A1E3',
+                            rendererOptions: {fillToZero: true},
+                            pointLabels: {
+                                show: true,
+                                hideZeros: false,
+                                formatString: '%.3f'
+                            }
+                        },
+
+                        axes: {
+                            xaxis: {
+                                label: '{{ 'question'|trans({}, 'ujm_exo') }}',
+                                labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                                labelOptions:{
+                                    fontFamily:'Helvetica',
+                                    fontSize: '14pt'
+                                },
+                                renderer: $.jqplot.CategoryAxisRenderer,
+                                tickOptions: {showGridline: false}
+                            },
+
+                            yaxis: {
+                                label: '{{ 'Coefficient'|trans({}, 'ujm_exo') }}',
+                                labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                                labelOptions:{
+                                    fontFamily:'Helvetica',
+                                    fontSize: '14pt'
+                                },
+                                pad: 0.5,
+                                min: -1,
+                                max: 1,
+                                tickOptions: {formatString: '%.1f'}
+                            }
+                        }
+                    });
+                }
+
+                /*********************************histoMeasureOfDifficulty******************************************************/
+                var percent = [{{MeasureDifficulty}}];
+
+                $.jqplot('histoMeasureOfDifficulty', [percent], {
+
+                    series:[{renderer:$.jqplot.BarRenderer}],
+
+                    seriesDefaults:{
+                        color: '#06A1E3',
+                        rendererOptions: {fillToZero: true},
+                        pointLabels: {
+                            show: true,
+                            formatString: '%.1f %'
+                        }
+                    },
+
+                    axes: {
+                        xaxis: {
+                            label: '{{ 'question'|trans({}, 'ujm_exo') }}',
+                            labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                            labelOptions:{
+                                fontFamily:'Helvetica',
+                                fontSize: '14pt'
+                            },
+                            renderer: $.jqplot.CategoryAxisRenderer,
+                            tickOptions: {showGridline: false}
+                        },
+
+                        yaxis: {
+                            label: '{{ 'percentage'|trans({}, 'ujm_exo') }}',
+                            labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                            labelOptions:{
+                                fontFamily:'Helvetica',
+                                fontSize: '14pt'
+                            },
+                            pad: 10,
+                            min: 0,
+                            max: 100,
+                            tickOptions: {formatString: '%d%'}
+                        }
+                    }
+                });
+            });
+        </script>
+    {% endif %}
+{% endblock %}

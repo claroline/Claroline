@@ -1,0 +1,51 @@
+// Load styles for Question types
+@import "type/choice.less";
+@import "type/cloze.less";
+@import "type/graphic.less";
+@import "type/match.less";
+@import "type/open.less";
+
+.question-container {
+    // Title of the Question
+    .panel-heading {
+        /* Panels can be collapsed by clicking on heading => change cursor to help User */
+        cursor: pointer;
+
+        .panel-title > * {
+            vertical-align: middle;
+        }
+    }
+
+    // Generic information of the Question
+    .question-info {
+        margin-bottom: 20px;
+    }
+
+    .question-feedback {
+        .alert {
+            > span > p { // Remove margin from TinyMCE <p> wrapper
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    // Available hints for the Question
+    .question-hints {
+        .hint {
+            margin-bottom: floor(@grid-gutter-width / 2);
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+
+            > div {
+                margin-bottom: 0;
+                padding: @padding-base-vertical @padding-base-horizontal;
+            }
+        }
+    }
+
+    .feedback-info {
+        cursor: help;
+    }
+}

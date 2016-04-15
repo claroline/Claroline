@@ -1,0 +1,13 @@
+{% if nbAttemptAllowed == 0 %}
+    <div class="alert alert-info">{{ 'attempt_info6'|trans({}, 'ujm_exo') }}</div>
+{% elseif nbAttemptAllowed > 0 %}
+    <div class="alert alert-info">
+        {{ 'attempt_info4'|trans({}, 'ujm_exo') }} {{nbAttemptAllowed}}
+        {% if nbAttemptAllowed > 1 %}
+            {{ 'attempt_info2plur'|trans({}, 'ujm_exo') }}
+        {% else %}
+            {{ 'attempt_info2sing'|trans({}, 'ujm_exo') }}
+        {% endif %}
+        {{ 'attempt_info5'|trans({}, 'ujm_exo') }}
+    </div>
+{% endif %}

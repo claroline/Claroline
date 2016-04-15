@@ -1,0 +1,46 @@
+UJM\ExoBundle\Entity\InteractionQCM:
+    properties:
+        scoreRightResponse:
+            - UJM\ExoBundle\Validator\Constraints\isValidQCMGlobalMark: ~
+
+        scoreFalseResponse:
+            - UJM\ExoBundle\Validator\Constraints\isValidQCMGlobalMark: ~
+
+UJM\ExoBundle\Entity\Hint:
+    properties:
+        penalty:
+            - UJM\ExoBundle\Validator\Constraints\isValidMark: ~
+
+UJM\ExoBundle\Entity\Choice:
+    properties:
+        weight:
+            - UJM\ExoBundle\Validator\Constraints\isValidQCMMark: ~
+        label:
+             - UJM\ExoBundle\Validator\Constraints\isNotEmpty: ~
+
+UJM\ExoBundle\Entity\InteractionOpen:
+    properties:
+        scoreMaxLongResp:
+            - UJM\ExoBundle\Validator\Constraints\isValidMark: ~
+
+UJM\ExoBundle\Entity\Label:
+    properties:
+        scoreRightResponse:
+            - UJM\ExoBundle\Validator\Constraints\isValidMark: ~
+
+UJM\ExoBundle\Entity\WordResponse:
+    properties:
+        score:
+            - UJM\ExoBundle\Validator\Constraints\isValidMark: ~
+        response:
+            - UJM\ExoBundle\Validator\Constraints\isNotEmpty: ~
+
+#UJM\ExoBundle\Entity\Question:
+#    properties:
+#        category:
+#            - UJM\ExoBundle\Validator\Constraints\isNotEmpty: ~
+
+UJM\ExoBundle\Entity\Interaction:
+  properties:
+        invite:
+            - UJM\ExoBundle\Validator\Constraints\isNotEmpty: ~

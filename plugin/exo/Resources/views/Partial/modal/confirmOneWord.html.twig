@@ -1,0 +1,24 @@
+{% javascripts
+    debug=false
+    vars=["locale"]
+    "@UJMExoBundle/Resources/views/ConfirmationMessage/warningOneWord.html.twigjs"
+    filter="twig_js"
+%}
+    <script language="javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+<script>
+    function createValidationBox() {
+        var html = Twig.render(
+            ModalWindow,
+            {'footer': Twig.render(ValidationFooter), 'isHidden': true, 'modalId': 'confirm-modal', 'body': Twig.render(warningOneWord, {'nbItems': 1})}
+        );
+        $('body').append(html);
+    }
+
+    createValidationBox();
+
+$('#modal-valid-button').click(function(event){
+     checkModal=true; //declare in interactionOpen.js
+     $('#formOpen').submit();
+});
+</script>

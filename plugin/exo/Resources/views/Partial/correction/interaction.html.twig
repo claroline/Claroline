@@ -1,0 +1,12 @@
+{% if p is defined %}
+    <h3 class="panel-title">{{ 'n_question' | trans({}, 'ujm_exo') }}{{p + 1}} : {{ inter.question.title }}</h3>
+    <hr/>
+{% endif %}
+
+{% if inter.question.description %}
+    <p>{{ inter.question.description|raw }}</p>
+    <hr/>
+{% endif %}
+
+{{ inter.question.invite|raw }}
+<hr/>

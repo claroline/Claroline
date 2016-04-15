@@ -1,0 +1,45 @@
+.jqplot-title {
+    margin-bottom: 10px;
+    font-size: large;
+    font-weight: bold;
+}
+
+.jqplot-xaxis {
+    margin-top: 10px;
+}
+
+.jqplot-yaxis {
+    margin-right: 30px;
+    margin-left: 10px;
+}
+.jqplot-yaxis-tick {
+    left: 35px;
+}
+
+.jqplot-xaxis-tick {
+    margin-bottom: 10px;
+}
+table.jqplot-table-legend {
+    position: absolute;
+    border: #06A1E3 double thick;
+    margin-left: 1%;
+    margin-top: 10%;
+}
+
+div.jqplot-table-legend-swatch {
+    margin: 10px;
+    width: 20px;
+    height: 20px;
+}
+
+td.jqplot-table-legend.jqplot-table-legend-label {
+    padding-right: 10px;
+}
+
+tr.jqplot-table-legend {
+    display: inline-block;
+}
+
+.jqplot-target {
+    margin: 10px;
+}

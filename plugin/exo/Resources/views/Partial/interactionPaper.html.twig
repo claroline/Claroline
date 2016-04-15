@@ -1,0 +1,9 @@
+<p><h4>{{ interactionToDisplayed.question.title }}</h4></p>
+
+{% if interactionToDisplayed.question.description %}
+    <p>{{ interactionToDisplayed.question.description|raw }}</p>
+    <hr/>
+{% endif %}
+
+<p>{{ interactionToDisplayed.question.invite|raw }}</p>
+<hr/>

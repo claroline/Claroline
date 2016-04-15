@@ -1,0 +1,63 @@
+<link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
+<link rel="stylesheet" href="{{ asset('bundles/ujmexo/js/ext/jquery-ui-smoothness.css') }}"/>
+<link rel="stylesheet" href="{{ asset('bundles/ujmexo/js/ext/changecolor.css') }}"/>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'graphic_creation' | trans({}, 'ujm_exo') }}</h3>
+    </div>
+
+    <form name="InterGraphForm" id="InterGraphForm" onsubmit="return Check('{{ 'no_question' | trans({}, 'ujm_exo') }} ...',
+        '{{ 'no_img' | trans({}, 'ujm_exo') }} !', '{{ 'no_answer_zone' | trans({}, 'ujm_exo') }} ...',
+        '{{ form.question.invite.vars.id }}');" action="{{ path('ujm_interactiongraphic_create') }}" method="post" {{ form_enctype(form) }}>
+
+        <div class="panel-body">
+            {% set src = 'new' %}
+
+            {% include "UJMExoBundle:Partial:question.html.twig" %}
+            {% include "UJMExoBundle:Partial:interactions/graphic.html.twig" %}
+            {% include "UJMExoBundle:Partial:model.html.twig" %}
+            {% include "UJMExoBundle:Partial:cloneInterCreation.html.twig" %}
+            {% include "UJMExoBundle:Partial:restform.html.twig" %}
+        </div>
+
+        <div class="panel-footer">
+            <input type="hidden" name="exercise" value="{{ exoID }}" />
+            <input type="hidden" name="step" value="{{ stepID }}" />
+            <button type="submit"  id="button_submit" class="btn btn-primary">{{ 'create' | trans({}, 'ujm_exo') }}</button>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/background-check.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/main.js') }}"></script>
+
+
+<script type="text/javascript" src="{{ asset('bundles/ujmexo/js/hint.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/ujmexo/js/category_pop.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery-ui/jquery-ui.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/ujmexo/js/instructions.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphic.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/malsup.js') }}"></script>
+
+
+{# ---------------------------------------------- Javascript ------------------------------------------------------- #}
+
+{% if error is defined %}
+    <script type="text/javascript">
+        newHintEdit('{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'penalty' | trans({}, 'ujm_exo') }}', '{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'delete' | trans({}, 'ujm_exo') }}');
+    </script>
+{% else %}
+    <script type="text/javascript">
+        newHint('{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'penalty' | trans({}, 'ujm_exo') }}', '{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'delete' | trans({}, 'ujm_exo') }}');
+    </script>
+
+    <script type="text/javascript">
+        var translations = {
+            'tradWrongPoint' : '{{ 'wrong_point' | trans({}, 'ujm_exo') }}',
+            'tradCircle' : '{{ 'cercle' | trans({}, 'ujm_exo') }}',
+            'tradSquare' : '{{ 'square' | trans({}, 'ujm_exo') }}'
+        }
+    </script>
+{% endif %}
