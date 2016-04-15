@@ -42,7 +42,6 @@ before_script:
   - php travis/local/pkg/main/dev/Resources/travis/pre-composer.php claroline/distribution travis/local/pkg
 
   # fetch dependencies and build
-  - composer self-update
   - composer update --prefer-source
   - npm install
   - npm run bower
@@ -51,5 +50,5 @@ before_script:
   - php app/console claroline:init_test_schema --env=test
 
 script:
-  - bin/php-cs-fixer fix --dry-run --diff --config-file=vendor/claroline/distribution/main/dev/Resources/travis/php-cs.php -vvv
+  - bin/php-cs-fixer fix --dry-run --diff --config-file=vendor/claroline/distribution/main/dev/Resources/travis/php-cs.php
   - SYMFONY_DEPRECATIONS_HELPER=weak bin/phpunit -c vendor/claroline/distribution
