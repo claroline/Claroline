@@ -162,8 +162,6 @@ class QcmHandler implements QuestionHandlerInterface
             $choiceData->id = (string) $choice->getId();
             $choiceData->type = 'text/html';
             $choiceData->data = $choice->getLabel();
-            $choiceData->rightResponse = $choice->getRightResponse();
-            $choiceData->feedback = $choice->getFeedback();
 
             return $choiceData;
         }, $choices);
@@ -179,6 +177,7 @@ class QcmHandler implements QuestionHandlerInterface
                 $solutionData = new \stdClass();
                 $solutionData->id = (string) $choice->getId();
                 $solutionData->score = $choice->getWeight();
+                $solutionData->rightResponse = $choice->getRightResponse();
 
                 if ($choice->getFeedback()) {
                     $solutionData->feedback = $choice->getFeedback();
@@ -200,6 +199,7 @@ class QcmHandler implements QuestionHandlerInterface
             $solutionData = new \stdClass();
             $solutionData->id = (string) $choice->getId();
             $solutionData->score = $choice->getWeight();
+            $solutionData->rightResponse = $choice->getRightResponse();
 
             if ($choice->getFeedback()) {
                 $solutionData->feedback = $choice->getFeedback();
