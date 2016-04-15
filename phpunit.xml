@@ -42,6 +42,7 @@
             <directory>plugin/result/Tests/</directory>
             <directory>plugin/rss-reader/Tests/</directory>
             <directory>plugin/url/Tests/</directory>
+            <directory>plugin/exo/Tests/</directory>
 
         </testsuite>
     </testsuites>
