@@ -30,13 +30,13 @@
 {# functions javascript #}
 {% if error is defined %}
     <script type="text/javascript">
-       insertStyle('{{ typeOpen|raw }}', '{{ 'delete' | trans({}, 'ujm_exo') }}','{{ 'advanced_edition' | trans({}, 'ujm_exo') }}','{{ 'comment' | trans({}, 'ujm_exo') }}');
+       insertStyle('{{ typeOpen|raw }}', '{{ 'delete' | trans({}, 'ujm_exo') }}','{{ 'advanced_edition' | trans({}, 'ujm_exo') }}','{{ 'comment' | trans({}, 'ujm_exo') }}', '{{'key_word' | trans({}, 'ujm_exo')}}', '{{'reponse' | trans({}, 'ujm_exo')}}', '{{'numerical_response' | trans({}, 'ujm_exo')}}', '{{ 'keys_words' | trans({}, 'ujm_exo') }}' );
        openEdit(0);
        newHintEdit('{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'penalty' | trans({}, 'ujm_exo') }}', '{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'delete' | trans({}, 'ujm_exo') }}');
     </script>
 {% else %}
     <script type="text/javascript">
-        insertStyle('{{ typeOpen|raw }}', '{{ 'delete' | trans({}, 'ujm_exo') }}','{{ 'advanced_edition' | trans({}, 'ujm_exo') }}','{{ 'comment' | trans({}, 'ujm_exo') }}');
+        insertStyle('{{ typeOpen|raw }}', '{{ 'delete' | trans({}, 'ujm_exo') }}','{{ 'advanced_edition' | trans({}, 'ujm_exo') }}','{{ 'comment' | trans({}, 'ujm_exo') }}', '{{'key_word' | trans({}, 'ujm_exo')}}', '{{'response' | trans({}, 'ujm_exo')}}', '{{'numerical_response' | trans({}, 'ujm_exo')}}', '{{ 'keys_words' | trans({}, 'ujm_exo') }}');
         newHint('{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'penalty' | trans({}, 'ujm_exo') }}', '{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'delete' | trans({}, 'ujm_exo') }}');
     </script>
 {% endif %}

@@ -17,17 +17,20 @@ use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
 class HoleHandler implements QuestionHandlerInterface
 {
     private $om;
+    private $container;
 
     /**
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "container"       = @DI\Inject("service_container")
      * })
      *
      * @param ObjectManager $om
+     * @param ContainerInterface $container
      */
-    public function __construct(ObjectManager $om)
-    {
+    public function __construct(ObjectManager $om, ContainerInterface $container) {
         $this->om = $om;
+        $this->container = $container;
     }
 
     /**
@@ -185,6 +188,7 @@ class HoleHandler implements QuestionHandlerInterface
             $holeData->type = 'text/html';
             $holeData->selector = $hole->getSelector();
             $holeData->position = (string) $hole->getPosition();
+
             return $holeData;
         }, $holes);
         
@@ -293,7 +297,6 @@ class HoleHandler implements QuestionHandlerInterface
 
     /**
      * @todo handle global score option
-     * @todo threat Hole with select and those with input in the same way (for select, we use ID and we need to use the Word text instead)
      *
      * {@inheritdoc}
      */
@@ -302,26 +305,6 @@ class HoleHandler implements QuestionHandlerInterface
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionHole')
             ->findOneByQuestion($question);
 
-        $mark = 0;
-
-        foreach ($data as $answer) {
-            foreach ($interaction->getHoles() as $hole) {
-                foreach ($hole->getWordResponses() as $wd) {
-                    if ($hole->getSelector() === true) {
-                        if ((string)$wd->getId() === (string)$answer['answerText']) {
-                            $mark += $wd->getScore();
-                        }
-                    }
-                    else {
-                        if ( (!$wd->getCaseSensitive() && $wd->getResponse() === $answer['answerText'])
-                            || ($wd->getCaseSensitive() && strtolower($wd->getResponse()) === strtolower($answer['answerText'])) ) {
-                            $mark += $wd->getScore();
-                        }
-                    }
-                }
-            }
-        }
-        
         $answers = [];
         $i=0;
         foreach ($data as $answer) {
@@ -331,10 +314,14 @@ class HoleHandler implements QuestionHandlerInterface
             $i++;
         }
 
+        $serviceHole = $this->container->get("ujm.exo.hole_service");
+
+        $mark = $serviceHole->mark($interaction, $data, 0);
+
         if ($mark < 0) {
             $mark = 0;
         }
-        
+
         $json = json_encode($answers);
         $response->setResponse($json);
         $response->setMark($mark);

@@ -11,6 +11,7 @@ angular.module('Correction').controller('CorrectionShortCtrl', [
         this.paper = {};
         this.answer = "";
         this.score = 0;
+        this.message = false;
 
         this.init = function (question, paper) {
             this.question = question;
@@ -38,9 +39,17 @@ angular.module('Correction').controller('CorrectionShortCtrl', [
 
         this.saveNote = function () {
             var note = $("#score_given").val();
-
-            CorrectionService.saveScore(this.question.id, this.paper.id, note);
-
+            if( note <= this.question.scoreMaxLongResp){
+                CorrectionService.saveScore(this.question.id, this.paper.id, note);
+                for (var i=0; i<this.paper.questions.length; i++) {
+                    if (this.question.id.toString() === this.paper.questions[i].id) {
+                        this.paper.questions[i].score = note;
+                    }
+                }
+            }
+            else{
+               return this.message = true;
+            }
             this.score = note;
         };
 

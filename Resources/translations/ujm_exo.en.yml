@@ -31,6 +31,11 @@ at_the_end_of_assessment: At the end of assessment
 at_the_same_time_that_the_correction: At the same time that the correction
 availability_of_correction: Availability of correction
 availability_of_score: Availability of score
+application/x.choice+json: QCM
+application/x.graphic+json: Graphic
+application/x.cloze+json: Text with hole
+application/x.match+json: Matching
+application/x.short+json: Open
 
 # B
 badge_obtained: Congratulations ! You got the badge of knowledge
@@ -188,6 +193,7 @@ manage_img: Manage my documents
 mark: Mark
 mark_question: Marked this question
 mark_bigest: The mark must be less than or equal to
+mark_bigest_other: The rating is greater than the maximum score
 matching: Association
 matching_creation: Association creation
 matching_edition: Association edition
@@ -234,6 +240,7 @@ number_of_papers: Number of papers
 number_questions_draw: Number of questions to draw (0 for all)
 number_questions_draw_help: Type 0 to draw all questions
 numerical: Numerical
+numerical_response: Numerical response (value or interval)
 num_paper: Paper's number
 
 # O

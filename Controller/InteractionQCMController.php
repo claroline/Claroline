@@ -56,7 +56,7 @@ class InteractionQCMController extends Controller
                    ->getToken()->getUser()
            ), $entity
        );
-        $serviceQcm = $this->container->get('ujm.exo_InteractionQCM');
+        $serviceQcm = $this->container->get('ujm.exo.qcm_service');
         $typeQCM = $serviceQcm->getTypeQCM();
 
         return $this->container->get('templating')->renderResponse(
@@ -78,7 +78,7 @@ class InteractionQCMController extends Controller
      */
     public function createAction()
     {
-        $services = $this->container->get('ujm.exo_InteractionQCM');
+        $services = $this->container->get('ujm.exo.qcm_service');
         $interQCM = new InteractionQCM();
         $form = $this->createForm(
             new InteractionQCMType(
@@ -157,7 +157,7 @@ class InteractionQCMController extends Controller
     public function editAction()
     {
         $attr = $this->get('request')->attributes;
-        $qcmSer = $this->container->get('ujm.exo_InteractionQCM');
+        $qcmSer = $this->container->get('ujm.exo.qcm_service');
         $catSer = $this->container->get('ujm.exo_category');
         $em = $this->get('doctrine')->getEntityManager();
 
@@ -296,9 +296,9 @@ class InteractionQCMController extends Controller
             $vars['_resource'] = $exercise;
         }
 
-        $interQcmSer = $this->container->get('ujm.exo_InteractionQCM');
+        $interQcmSer = $this->container->get('ujm.exo.qcm_service');
         $res = $interQcmSer->response($request);
-
+    
         $vars['score'] = $res['score'];
         $vars['penalty'] = $res['penalty'];
         $vars['interQCM'] = $res['interQCM'];

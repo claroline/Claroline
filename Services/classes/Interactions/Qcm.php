@@ -5,6 +5,11 @@
  */
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
+/**
+ * @DI\Service("ujm.exo.qcm_service")
+ */
 class Qcm extends Interaction
 {
     /**
@@ -63,15 +68,13 @@ class Qcm extends Interaction
         $penalty = null
     )
     {
-        $score = 0;
         $scoreMax = $this->maxScore($interQCM);
-
+        
         if (!$interQCM->getWeightResponse()) {
             $score = $this->markGlobal($allChoices, $response, $interQCM, $penalty) . '/' . $scoreMax;
         } else {
             $score = $this->markWeightResponse($allChoices, $response, $penalty, $scoreMax) . '/' . $scoreMax;
         }
-
         return $score;
     }
 
@@ -180,7 +183,7 @@ class Qcm extends Interaction
                 $response = $resp;
             }
         }
-
+        
         return $response;
     }
 

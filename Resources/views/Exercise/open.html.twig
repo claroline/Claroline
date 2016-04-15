@@ -29,7 +29,8 @@
             data-exercise="{{ exercise | json_encode | raw | escape }}"
             data-nb-papers ="{{ nbPapers }}"
             data-edit-enabled="{{ editEnabled }}"
-            data-compose-enabled="{{ composeEnabled }}">
+            data-compose-enabled="{{ composeEnabled }}"
+            data-duration="{{ duration }}">
         </exercise>
     </div>
 {% endblock %}
@@ -121,4 +122,6 @@
         AngularApp.webDir = "{{ path('claro_index') }}".split('/').slice(0, -2).join('/') + "/";
         AngularApp.locale = "{{ app.request.locale ~ '_' ~ app.request.locale|upper }}";
     </script>
+    
+    <script src="https://rawgithub.com/gsklee/ngStorage/master/ngStorage.js"></script>
 {% endblock %}

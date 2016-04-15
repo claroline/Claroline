@@ -8,6 +8,7 @@ use UJM\ExoBundle\Entity\InteractionOpen;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("ujm.exo.open_handler")
@@ -16,16 +17,20 @@ use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
 class OpenHandler implements QuestionHandlerInterface {
 
     private $om;
+    private $container;
 
     /**
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "container"       = @DI\Inject("service_container")
      * })
-     *
+     * 
      * @param ObjectManager $om
+     * @param ContainerInterface $container
      */
-    public function __construct(ObjectManager $om) {
+    public function __construct(ObjectManager $om, ContainerInterface $container) {
         $this->om = $om;
+        $this->container = $container;
     }
 
     /**
@@ -197,20 +202,11 @@ class OpenHandler implements QuestionHandlerInterface {
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionOpen')
                 ->findOneByQuestion($question);
 
-        $mark = 0;
-
         $answer = $data;
 
-        if ($interaction->getTypeOpenQuestion()->getValue() === "long") {
-            $mark = -1;
-        }
-        else {
-            foreach ($interaction->getWordResponses() as $wd) {
-                if (strpos($answer,$wd->getResponse()) !== false) {
-                    $mark += $wd->getScore();
-                }
-            }
-        }
+        $serviceOpen = $this->container->get("ujm.exo.open_service");
+
+        $mark=$serviceOpen->mark($interaction, $data, 0);
 
         $response->setResponse($answer);
         $response->setMark($mark);

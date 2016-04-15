@@ -21,7 +21,7 @@
                 <tbody>
                 <tr data-ng-repeat="item in step.items">
                     <!--<td></td>-->
-                    <td>{{ item.type }}</td>
+                    <td>{{ item.type | trans:{}:'ujm_exo'}}</td>
                     <td>{{ item.title }}</td>
                     <td class="text-center" data-ng-bind-html="item.invite | unsafe"></td>
                     <td>

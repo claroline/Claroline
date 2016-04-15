@@ -5,6 +5,11 @@
  */
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
+/**
+ * @DI\Service("ujm.exo.graphic_service")
+ */
 class Graphic extends Interaction
 {
     /**
@@ -27,7 +32,7 @@ class Graphic extends Interaction
 
         $rightCoords = $em->getRepository('UJMExoBundle:Coords')
             ->findBy(array('interactionGraphic' => $graphId));
-
+        
         $interG = $em->getRepository('UJMExoBundle:InteractionGraphic')
             ->find($graphId);
 
@@ -82,11 +87,18 @@ class Graphic extends Interaction
      */
     public function mark($answers = null, $request = null, $rightCoords = null, $coords = null)
     {
-        $max = $request->request->get('nbpointer'); // Number of answer zones
+        // differenciate the exercise of the bank of questions
+        if(is_int($request) ) {
+            $max = $request;
+            $coords = preg_split('[,]', $answers); // Divide the answer zones into cells
+        } else {
+            $max = $request->request->get('nbpointer'); // Number of answer zones
+            $coords = preg_split('[;]', $answers); // Divide the answer zones into cells
+        }
+        
         $verif = array();
-        $coords = preg_split('[;]', $answers); // Divide the answer zones into cells
         $point = $z = 0;
-
+        
         for ($i = 0; $i < $max - 1; ++$i) {
             for ($j = 0; $j < $max - 1; ++$j) {
                 if (preg_match('/[0-9]+/', $coords[$j])) {

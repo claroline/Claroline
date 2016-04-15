@@ -5,6 +5,11 @@
  */
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
+/**
+ * @DI\Service("ujm.exo.hole_service")
+ */
 class Hole extends Interaction
 {
     /**
@@ -61,8 +66,14 @@ class Hole extends Interaction
         $score = 0;
         $scoreMax = $this->maxScore($interHole);
 
+        $i=1;
         foreach ($interHole->getHoles() as $hole) {
-            $response = $request->get('blank_' . $hole->getPosition());
+            if(is_array($request) ) {
+                $response = $request[$i];
+                $i++;
+            } else {
+                $response = $request->get('blank_' . $hole->getPosition());
+            }
             $response = trim($response);
             $response = preg_replace('/\s+/', ' ', $response);
             $score += $this->getScoreHole($hole, $response);
@@ -176,7 +187,7 @@ class Hole extends Interaction
         if ($hole->getSelector() == true) {
             $wr = $em->getRepository('UJMExoBundle:WordResponse')->find($response);
             $mark = $wr->getScore();
-        } else {            
+        } else {
             foreach ($hole->getWordResponses() as $wr) {
                 $mark += $this->getScoreWordResponse($wr, $response);
             }

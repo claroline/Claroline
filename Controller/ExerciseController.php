@@ -61,6 +61,7 @@ class ExerciseController extends Controller
             'exercise'         => $this->get('ujm.exo.exercise_manager')->exportExercise($exercise, false),
             'editEnabled'      => $isExoAdmin,
             'composeEnabled'   => $isAllowedToCompose,
+            'duration'         => $exercise->getDuration()
         ]);
     }
 
@@ -490,9 +491,9 @@ class ExerciseController extends Controller
 
         $docimoServ = $this->container->get('ujm.exo_docimology');
         $em = $this->getDoctrine()->getManager();
-        
-        $eqs = $em->getRepository('UJMExoBundle:StepQuestion')->findExoByOrder($exercise);
-        
+
+        $sqs = $em->getRepository('UJMExoBundle:StepQuestion')->findExoByOrder($exercise);
+
         $papers = $em->getRepository('UJMExoBundle:Paper')->getExerciseAllPapers($exercise->getId());
 
         if ($this->container->get('ujm.exo_exercise')->isExerciseAdmin($exercise)) {
@@ -505,15 +506,15 @@ class ExerciseController extends Controller
 
             if ($nbPapers >= 12) {
                 $histoMark = $docimoServ->histoMark($exercise->getId());
-                $histoSuccess = $docimoServ->histoSuccess($exercise->getId(), $eqs, $papers);
+                $histoSuccess = $docimoServ->histoSuccess($exercise->getId(), $sqs, $papers);
 
                 if ($exercise->getNbQuestion() == 0) {
-                    $histoDiscrimination = $docimoServ->histoDiscrimination($exercise->getId(), $eqs, $papers);
+                    $histoDiscrimination = $docimoServ->histoDiscrimination($exercise->getId(), $sqs, $papers);
                 } else {
                     $histoDiscrimination['coeffQ'] = 'none';
                 }
 
-                $histoMeasureDifficulty = $docimoServ->histoMeasureOfDifficulty($exercise->getId(), $eqs);
+                $histoMeasureDifficulty = $docimoServ->histoMeasureOfDifficulty($exercise->getId(), $sqs);
 
                 $parameters['scoreList'] = $histoMark['scoreList'];
                 $parameters['frequencyMarks'] = $histoMark['frequencyMarks'];

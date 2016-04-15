@@ -5,6 +5,11 @@
  */
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
+/**
+ * @DI\Service("ujm.exo.open_service")
+ */
 class Open extends Interaction
 {
     /**
@@ -95,14 +100,21 @@ class Open extends Interaction
         $scoreMax = 0;
 
         if ($interOpen->getTypeOpenQuestion() == 'long') {
+            
             $scoreMax = $interOpen->getScoreMaxLongResp();
+            
         } elseif ($interOpen->getTypeOpenQuestion() == 'oneWord') {
+            
             $scoreMax = $em->getRepository('UJMExoBundle:WordResponse')
                 ->getScoreMaxOneWord($interOpen->getId());
+            
         } elseif ($interOpen->getTypeOpenQuestion() == 'short') {
+            
             $scoreMax = $em->getRepository('UJMExoBundle:WordResponse')
                 ->getScoreMaxShort($interOpen->getId());
+            
         }
+//        alert();
 
         return $scoreMax;
     }

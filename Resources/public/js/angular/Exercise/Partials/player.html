@@ -8,9 +8,26 @@
 
     <!-- Step content -->
     <div class="panel-body">
+		<div class="alert alert-warning" role="alert" ng-show="exercisePlayerCtrl.exercise.meta.duration != 0">
+            Temps restant :
+            <span ng-show="exercisePlayerCtrl.$localStorage.hours != 0">{{ exercisePlayerCtrl.$localStorage.hours }}h</span>
+            <span ng-show="exercisePlayerCtrl.$localStorage.minutes != 0">{{ exercisePlayerCtrl.$localStorage.minutes }}m</span>
+            <span ng-show="exercisePlayerCtrl.$localStorage.minutes < 2 && exercisePlayerCtrl.$localStorage.hours == 0">{{ exercisePlayerCtrl.$localStorage.secondes }}s</span>
+        </div>
+
         <!-- Display the current Step -->
         <step-show data-step-index="{{ exercisePlayerCtrl.index }}"  data-step="exercisePlayerCtrl.step"></step-show>
     </div>
+    <!-- NAVIGATE THROUGH STEPS / INTERRUPT / END EXERCISE -->
+    <div class="panel-footer">
+        <div class="row center-text">
+            <!-- PREV / NEXT / JUMP TO / END -->
+            <div class="col-md-12">
+                <!-- NEXT / PREV -->
+                <div class="btn-group" role="group">
+                    <button role="button" data-ng-disabled="exercisePlayerCtrl.currentStepIndex === 0" data-container="body" data-toggle="tooltip" title="{{ 'btn_prev_step_label'|trans:{}:'ujm_sequence' }}" type="button" data-ng-click="exercisePlayerCtrl.validateStep('backward')" class="btn btn-default">    
+                        <i class="fa fa-arrow-circle-left"></i>
+                    </button>
 
     <!-- Player navigation -->
     <div class="panel-footer text-center">

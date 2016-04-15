@@ -21,7 +21,7 @@ class StepQuestion
 
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Question")
+     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Question", inversedBy="stepQuestions")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $question;

@@ -1,66 +1,69 @@
-/**
- * Match Question Directive
- * Manages Question of types Match
- *
- * @returns {object}
- * @constructor
- */
-var MatchQuestionDirective = function MatchQuestionDirective($timeout) {
-    return {
-        restrict: 'E',
-        replace: true,
-        controller: 'MatchQuestionCtrl',
-        controllerAs: 'matchQuestionCtrl',
-        bindToController: true,
-        templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Question/Partials/Type/match.html',
-        scope: {
-            question     : '=',
-            questionPaper: '='
-        },
-        link: function (scope, element, attr, matchQuestionCtrl) {
-            // init jsPlumb dom elements
-            $timeout(function () {
-                // MatchQuestion sub type is ToBind
-                if (matchQuestionCtrl.question.toBind) {
-                    matchQuestionCtrl.initMatchQuestionJsPlumb('bind');
+angular.module('Question').directive('matchQuestion', [
+    '$timeout',
+    function ($timeout) {
+        return {
+            restrict: 'E',
+            replace: true,
+            controller: 'MatchQuestionCtrl',
+            controllerAs: 'matchQuestionCtrl',
+            templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Question/Partials/Type/match.html',
+            scope: {
+                step: '=',
+                question: '=',
+                canSeeFeedback: '='
+            },
+            link: function (scope, element, attr, matchQuestionCtrl) {
 
-                    jsPlumb.bind("beforeDrop", function (info) {
-                        return matchQuestionCtrl.handleBeforeDrop(info);
-                    });
-
-                    // remove one connection
-                    jsPlumb.bind("click", function (connection) {
-                        matchQuestionCtrl.removeConnection(connection);
-                    });
-
-                    matchQuestionCtrl.addPreviousConnections();
-
-                } else {
-                    matchQuestionCtrl.initMatchQuestionJsPlumb('drag');
-
-                    $(".droppable").each(function () {
-                        $(this).on("drop", function (event, ui) {
-                            matchQuestionCtrl.handleDragMatchQuestionDrop(event, ui);
+                matchQuestionCtrl.init(scope.question, scope.canSeeFeedback);
+                // init jsPlumb dom elements
+                $timeout(function () {
+                    // MatchQuestion sub type is ToBind
+                    if (scope.question.toBind) {
+                        matchQuestionCtrl.initMatchQuestionJsPlumb('bind');
+                        $("#resetAll").click(function () {
+                            matchQuestionCtrl.reset('bind');
                         });
-                    });
 
-                    matchQuestionCtrl.addPreviousDroppedItems();
-                }
-            });
+                        jsPlumb.bind("beforeDrop", function (info) {
+                            return matchQuestionCtrl.handleBeforDrop(info);
+                        });
 
-            // Destroy JSPlumb events
-            scope.$on('$destroy', function () {
-                jsPlumb.detachEveryConnection();
-                jsPlumb.deleteEveryEndpoint();
-            });
-        }
-    };
-};
+                        // remove one connection
+                        jsPlumb.bind("click", function (connection) {
+                            matchQuestionCtrl.removeConnection(connection);
+                        });
 
-// Set up dependency injection
-MatchQuestionDirective.$inject = [ '$timeout' ];
+                        matchQuestionCtrl.addPreviousConnections();
 
-// Register directive into AngularJS
-angular
-    .module('Question')
-    .directive('matchQuestion', MatchQuestionDirective);
+                    } else {
+
+                        matchQuestionCtrl.initMatchQuestionJsPlumb('drag');
+
+                        // reset all elements
+                        $("#resetAll").click(function () {
+                            matchQuestionCtrl.reset('drag');
+                        });
+
+                        $(".droppable").each(function () {
+                            $(this).on("drop", function (event, ui) {
+                                matchQuestionCtrl.handleDragMatchQuestionDrop(event, ui);
+                            });
+                        });
+                        
+                        if (scope.question.typeMatch === 3) {
+                            $(".draggable").each(function () {
+                                var id = $(this)[0].id.replace("div", "drag_handle");
+                                $(this).draggable({
+                                    handle: "#" + id
+                                });
+                            });
+                        }
+
+                        matchQuestionCtrl.addPreviousDroppedItems();
+                    }
+
+                }.bind(this));
+            }
+        };
+    }
+]);

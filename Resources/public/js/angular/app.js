@@ -20,7 +20,8 @@ angular
         'Exercise',
         'Question',
         'Paper',
-        'Correction'
+        'Correction',
+        'ngStorage'
     ])
 
     // Configure application

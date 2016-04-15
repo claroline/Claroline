@@ -9,6 +9,7 @@ use UJM\ExoBundle\Entity\InteractionQCM;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("ujm.exo.qcm_handler")
@@ -17,17 +18,20 @@ use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
 class QcmHandler implements QuestionHandlerInterface
 {
     private $om;
+    private $container;
 
     /**
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "container"       = @DI\Inject("service_container")
      * })
-     *
+     * 
      * @param ObjectManager $om
+     * @param ContainerInterface $container
      */
-    public function __construct(ObjectManager $om)
-    {
+    public function __construct(ObjectManager $om, ContainerInterface $container) {
         $this->om = $om;
+        $this->container = $container;
     }
 
     /**
@@ -165,11 +169,12 @@ class QcmHandler implements QuestionHandlerInterface
 
             return $choiceData;
         }, $choices);
-
-        $scoreTotal = 0;
-        foreach ($choices as $choice) {
-            $scoreTotal = $scoreTotal + $choice->getWeight();
-        }
+        $interaction = $repo->findOneByQuestion($question);
+        $scoreTotal=$this->container->get("ujm.exo.qcm_service")->maxScore($interaction);
+//        $scoreTotal = 0;
+//        foreach ($choices as $choice) {
+//            $scoreTotal = $scoreTotal + $choice->getWeight();
+//        }
         $exportData->scoreTotal = $scoreTotal;
 
         if ($withSolution) {
@@ -267,22 +272,15 @@ class QcmHandler implements QuestionHandlerInterface
      *
      * {@inheritdoc}
      */
-    public function storeAnswerAndMark(Question $question, Response $response, $data)
+    public function storeAnswerAndMark(Question $question, Response $responseEntity, $data)
     {
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionQCM')
             ->findOneByQuestion($question);
-
-        if (!$interaction->getWeightResponse()) {
-            throw new \Exception('Global score not implemented yet');
-        }
-
-        $mark = 0;
-
-        foreach ($interaction->getChoices() as $choice) {
-            if (in_array((string) $choice->getId(), $data)) {
-                $mark += $choice->getWeight();
-            }
-        }
+        
+        $serviceQCM = $this->container->get("ujm.exo.qcm_service");
+        $allChoices = $interaction->getChoices();
+        
+        $mark = $serviceQCM->mark($interaction, $data, $allChoices, 0);
 
         if ($mark < 0) {
             $mark = 0;
@@ -290,7 +288,7 @@ class QcmHandler implements QuestionHandlerInterface
 
         $result = count($data) > 0 ? implode(';', $data) : '';
 
-        $response->setResponse($result);
-        $response->setMark($mark);
+        $responseEntity->setResponse($result);
+        $responseEntity->setMark($mark);
     }
 }

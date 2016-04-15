@@ -7,9 +7,11 @@ use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Entity\Hint;
 use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Manager\ExerciseManager;
@@ -107,13 +109,13 @@ class ExerciseController
     public function attemptAction(User $user, Exercise $exercise)
     {
         $this->assertHasPermission('OPEN', $exercise);
-        
+
         // if not admin of the resource check if exercise max attempts is reached
         if (!$this->isAdmin($exercise)) {
 
             $max = $exercise->getMaxAttempts();
             $nbFinishedPapers = $this->paperManager->countUserFinishedPapers($exercise, $user);
-            
+
             if($max > 0 && $nbFinishedPapers >= $max){
                 throw new AccessDeniedHttpException('max attempts reached');
             }
@@ -121,6 +123,28 @@ class ExerciseController
         $data = $this->paperManager->openPaper($exercise, $user, false);
 
         return new JsonResponse($data);
+    }
+
+    /**
+     * Marks a paper as finished.
+     *
+     * @EXT\Route("/papers/{id}/end", name="exercise_finish_paper")
+     * @EXT\Method("PUT")
+     * @EXT\ParamConverter("user", converter="current_user")
+     *
+     * @param User  $user
+     * @param Paper $paper
+     * @return JsonResponse
+     */
+    public function finishPaperAction(User $user, Paper $paper)
+    {
+        if ($user !== $paper->getUser()) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $this->paperManager->finishPaper($paper);
+
+        return new JsonResponse('', 204);
     }
 
     /**
@@ -135,7 +159,7 @@ class ExerciseController
      */
     public function papersAction(User $user, Exercise $exercise)
     {        
-        if($this->isAdmin($exercise)) {
+        if ($this->isAdmin($exercise)) {
             return new JsonResponse($this->paperManager->exportExercisePapers($exercise));
         }
         return new JsonResponse($this->paperManager->exportUserPapers($exercise, $user));
