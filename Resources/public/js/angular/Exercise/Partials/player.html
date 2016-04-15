@@ -1,99 +1,114 @@
 <div class="player-container">
-    <div class="panel-heading clearfix">
-        <h3 class="panel-title pull-left">
-            {{ 'sequence_step'|trans:{}:'ujm_sequence' }} {{exercisePlayerCtrl.getCurrentStepNumber()}} / {{exercisePlayerCtrl.exercise.steps.length}}
-        </h3>
-        <span class="pull-right">
-            <!-- IF MAX ATTEMPTS -->
-            <span data-ng-if="exercisePlayerCtrl.exercise.meta.maxAttempts > 0">{{ 'sequence_attempts_infos'|trans:{"1" : exercisePlayerCtrl.exercise.meta.maxAttempts}:'ujm_sequence'}}</span>
-            <span>{{ 'sequence_nb_attempts'|trans:{"1" : exercisePlayerCtrl.paper.number}:'ujm_sequence' }}</span>
-            <span data-ng-if="exercisePlayerCtrl.exercise.meta.maxAttempts > 0">/ {{exercisePlayerCtrl.exercise.meta.maxAttempts}}</span>
-            <span data-ng-if="exercisePlayerCtrl.checkIfFeedbackIsAvailable()"> - {{ 'sequence_score'|trans:{}:'ujm_sequence' }}: </span>
-            <span data-ng-if="exercisePlayerCtrl.checkIfFeedbackIsAvailable() && !exercisePlayerCtrl.feedbackIsShown">...</span>
-            <span data-ng-if="exercisePlayerCtrl.checkIfFeedbackIsAvailable() && exercisePlayerCtrl.feedbackIsShown">{{ exercisePlayerCtrl.getCurrentScore() }}/{{ exercisePlayerCtrl.getTotalScore() }}</span>
-        </span>
+    <!-- Player header -->
+    <div class="attempts">
+        <span data-ng-if="exercisePlayerCtrl.exercise.meta.maxAttempts > 0">{{ 'sequence_attempts_infos'|trans:{"1" : exercisePlayerCtrl.exercise.meta.maxAttempts}:'ujm_sequence'}}.</span>
+        <span>{{ 'sequence_nb_attempts'|trans:{"1" : exercisePlayerCtrl.paper.number}:'ujm_sequence' }}</span>
+        <span data-ng-if="exercisePlayerCtrl.exercise.meta.maxAttempts > 0">/ {{ exercisePlayerCtrl.exercise.meta.maxAttempts }}</span>
     </div>
+
+    <!-- Step content -->
     <div class="panel-body">
-        <div class="row">
-            <div class="col-md-12">
+        <timer
+            data-ng-if="exercisePlayerCtrl.exercise.meta.duration != 0"
+            data-duration="exercisePlayerCtrl.exercise.meta.duration * 60"
+            data-on-end="exercisePlayerCtrl.end()"
+        ></timer>
 
-                <div class="alert alert-warning" role="alert" ng-show="exercisePlayerCtrl.exercise.meta.duration != 0">
-                    Temps restant :
-                    <span ng-show="exercisePlayerCtrl.$localStorage.hours != 0">{{ exercisePlayerCtrl.$localStorage.hours }}h</span>
-                    <span ng-show="exercisePlayerCtrl.$localStorage.minutes != 0">{{ exercisePlayerCtrl.$localStorage.minutes }}m</span>
-                    <span ng-show="exercisePlayerCtrl.$localStorage.minutes < 2 && exercisePlayerCtrl.$localStorage.hours == 0">{{ exercisePlayerCtrl.$localStorage.secondes }}s</span>
-                </div>
+        <!--<div class="alert alert-warning" role="alert" data-ng-show="exercisePlayerCtrl.exercise.meta.duration != 0">
+            {{ 'timer'|trans:{};'ujm_exo' }}
+            <span data-ng-show="exercisePlayerCtrl.$localStorage.hours != 0">
+                {{ exercisePlayerCtrl.$localStorage.hours }}h
+            </span>
 
-                <div class="step-container" data-ng-repeat="item in exercisePlayerCtrl.exercise.steps[exercisePlayerCtrl.currentStepIndex].items">
-                    <!-- switch on item type -->
-                    <div data-ng-switch="item.type">
-                        <div data-ng-switch-when="application/x.choice+json" class="choice-directive-container">
-                            <choice-question data-can-see-feedback="exercisePlayerCtrl.checkIfFeedbackIsAvailable()" data-question="item"></choice-question>
-                        </div>
-                        <div data-ng-switch-when="application/x.match+json" class="match-directive-container">
-                            <match-question data-can-see-feedback="exercisePlayerCtrl.checkIfFeedbackIsAvailable()" data-question="item"></match-question>
-                        </div>
-                        <div data-ng-switch-when="application/x.cloze+json" class="cloze-directive-container">
-                            <cloze-question data-step="stepShowCtrl.currentStep" data-question="item"></cloze-question>
-                        </div>
-                        <div data-ng-switch-when="application/x.short+json" class="short-directive-container">
-                            <open-question data-step="stepShowCtrl.currentStep" data-question="item"></open-question>
-                        </div>
-                        <div data-ng-switch-when="application/x.graphic+json" class="graphic-directive-container">
-                            <graphic-question data-can-see-feedback="exercisePlayerCtrl.checkIfFeedbackIsAvailable()" data-question="item"></graphic-question>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+            <span data-ng-show="exercisePlayerCtrl.$localStorage.minutes != 0">
+                {{ exercisePlayerCtrl.$localStorage.minutes }}m
+            </span>
+
+            <span data-ng-show="exercisePlayerCtrl.$localStorage.minutes < 2 && exercisePlayerCtrl.$localStorage.hours == 0">
+                {{ exercisePlayerCtrl.$localStorage.seconds }}s
+            </span>
+        </div>-->
+
+        <!-- Display the current Step -->
+        <step-show data-step-index="{{ exercisePlayerCtrl.index }}"  data-step="exercisePlayerCtrl.step"></step-show>
     </div>
-    <!-- NAVIGATE THROUGH STEPS / INTERRUPT / END EXERCISE -->
-    <div class="panel-footer">
-        <div class="row center-text">
-            <!-- PREV / NEXT / JUMP TO / END -->
-            <div class="col-md-12">
-                <!-- NEXT / PREV -->
-                <div class="btn-group" role="group">
-                    <button role="button" data-ng-disabled="exercisePlayerCtrl.currentStepIndex === 0" data-container="body" data-toggle="tooltip" title="{{ 'btn_prev_step_label'|trans:{}:'ujm_sequence' }}" type="button" data-ng-click="exercisePlayerCtrl.validateStep('backward')" class="btn btn-default">
-                        <i class="fa fa-arrow-circle-left"></i>
-                    </button>
 
-                    <button role="button" data-ng-show="exercisePlayerCtrl.checkIfFeedbackIsAvailable() && !exercisePlayerCtrl.feedbackIsShown" data-container="body" data-toggle="tooltip" type="button" data-ng-click="exercisePlayerCtrl.showFeedback()" class="btn btn-default">
-                        <i class="fa fa-check"> {{ 'btn_validate_step'|trans:{}:'ujm_sequence' }}</i>
-                    </button>
+    <!-- Player navigation -->
+    <div class="panel-footer text-center">
+        <div class="btn-group" role="group">
+            <!-- Previous step -->
+            <button type="button" role="button" class="btn btn-default"
+                    data-toggle="tooltip" data-container="body" title="{{ 'btn_prev_step_label'|trans:{}:'ujm_sequence' }}"
+                    data-ng-disabled="!exercisePlayerCtrl.previous || (exercisePlayerCtrl.feedback.enabled && !exercisePlayerCtrl.feedback.visible)"
+                    data-ng-click="exercisePlayerCtrl.goTo(exercisePlayerCtrl.previous)"
+            >
+                <span class="fa fa-arrow-circle-left"></span>
+                <span class="sr-only">{{ 'btn_prev_step_label'|trans:{}:'ujm_sequence' }}</span>
+            </button>
 
-                    <button role="button" data-ng-show="exercisePlayerCtrl.checkIfFeedbackIsAvailable() && exercisePlayerCtrl.feedbackIsShown" data-container="body" data-toggle="tooltip" type="button" data-ng-click="exercisePlayerCtrl.hideFeedback()" class="btn btn-default">
-                        <i class="fa fa-refresh"> {{ 'btn_retry_step'|trans:{}:'ujm_sequence' }}</i>
-                    </button>
+            <!-- Validate step (for Formative exercises) -->
+            <button type="button" role="button" class="btn btn-success"
+                    data-ng-show="exercisePlayerCtrl.feedback.enabled && !exercisePlayerCtrl.feedback.visible"
+                    data-ng-click="exercisePlayerCtrl.submit()"
+            >
+                <span class="fa fa-check"></span>
+                {{ 'btn_validate_step'|trans:{}:'ujm_sequence' }}
+            </button>
 
-                    <button role="button" data-ng-disabled="exercisePlayerCtrl.getCurrentStepNumber() === exercisePlayerCtrl.exercise.steps.length || (!exercisePlayerCtrl.feedbackIsShown && exercisePlayerCtrl.checkIfFeedbackIsAvailable())" data-container="body" data-toggle="tooltip" title="{{ 'btn_next_step_label'|trans:{}:'ujm_sequence' }}" type="button" data-ng-click="exercisePlayerCtrl.validateStep('forward')" class="btn btn-default">
-                        <i class="fa fa-arrow-circle-right"></i>
-                    </button>
+            <!-- Retry step (for Formative exercises) -->
+            <button type="button" role="button" class="btn btn-default"
+                    data-ng-show="exercisePlayerCtrl.feedback.enabled && exercisePlayerCtrl.feedback.visible"
+                    data-toggle="tooltip" data-container="body" title="{{ 'btn_retry_step'|trans:{}:'ujm_sequence' }}"
+                    data-ng-click="exercisePlayerCtrl.retry()"
+            >
+                <span class="fa fa-refresh"></span>
+                {{ 'btn_retry_step'|trans:{}:'ujm_sequence' }}
+            </button>
 
-                </div>
-                <!-- JUMP TO -->
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ 'dropdown_step_navigate_choice_label'|trans:{"1" : exercisePlayerCtrl.getCurrentStepNumber(), "2" : exercisePlayerCtrl.exercise.steps.length}:'ujm_sequence'}} <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li data-ng-repeat="step in exercisePlayerCtrl.exercise.steps">
-                            <a href="" data-ng-click="exercisePlayerCtrl.jumpToStep(step)">{{ 'dropdown_step_navigate_choice_label'|trans:{"1" : $index + 1, "2" : exercisePlayerCtrl.exercise.steps.length}:'ujm_sequence'}}</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- INTERRUPT SEQUENCE -->
-                <button data-ng-if="!exercisePlayerCtrl.isLastStep && exercisePlayerCtrl.exercise.meta.dispButtonInterrupt" role="button" type="button" ng-bootbox-confirm="{{ 'sequence_interrupt_sequence_confirm'|trans:{}:'ujm_sequence'}}" ng-bootbox-confirm-action="exercisePlayerCtrl.validateStep('interrupt')" class="btn btn-danger">
-                    <span class="fa fa-minus-circle"></span>
-                    {{ 'btn_interrupt_sequence_label'|trans:{}:'ujm_sequence' }}
-                </button>
-
-                <!-- END SEQUENCE -->
-                <button data-ng-if="exercisePlayerCtrl.isLastStep" data-ng-disabled="!exercisePlayerCtrl.feedbackIsShown && exercisePlayerCtrl.checkIfFeedbackIsAvailable()" role="button" type="button" ng-bootbox-confirm="{{ 'sequence_end_sequence_confirm'|trans:{}:'ujm_sequence'}}" ng-bootbox-confirm-action="exercisePlayerCtrl.validateStep('end')" class="btn btn-default">
-                    {{ 'btn_end_sequence_label'|trans:{}:'ujm_sequence' }}
-                </button>
-            </div>
+            <!-- Next step -->
+            <button type="button" role="button"class="btn btn-default"
+                    data-ng-disabled="!exercisePlayerCtrl.next || (exercisePlayerCtrl.feedback.enabled && !exercisePlayerCtrl.feedback.visible)"
+                    data-toggle="tooltip" data-container="body" title="{{ 'btn_next_step_label'|trans:{}:'ujm_sequence' }}"
+                    data-ng-click="exercisePlayerCtrl.goTo(exercisePlayerCtrl.next)"
+            >
+                <span class="fa fa-arrow-circle-right"></span>
+                <span class="sr-only">{{ 'btn_next_step_label'|trans:{}:'ujm_sequence' }}</span>
+            </button>
         </div>
+
+        <!-- Navigation menu (to go to any step of the Exercise) -->
+        <div class="btn-group dropup">
+            <button data-ng-disabled="exercisePlayerCtrl.feedback.enabled && !exercisePlayerCtrl.feedback.visible" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ 'dropdown_step_navigate_choice_label'|trans:{"1" : exercisePlayerCtrl.index + 1, "2" : exercisePlayerCtrl.exercise.steps.length}:'ujm_sequence'}} <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li data-ng-repeat="step in exercisePlayerCtrl.exercise.steps">
+                    <a href="" data-ng-click="exercisePlayerCtrl.goTo(step)">
+                        {{ 'dropdown_step_navigate_choice_label'|trans:{ "1" : $index + 1, "2" : exercisePlayerCtrl.exercise.steps.length }:'ujm_sequence'}}
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Interrupt Exercise -->
+        <button type="button" role="button" class="btn btn-warning"
+                data-ng-if="!exercisePlayerCtrl.isLastStep && exercisePlayerCtrl.exercise.meta.dispButtonInterrupt"
+                ng-bootbox-confirm="{{ 'sequence_interrupt_sequence_confirm'|trans:{}:'ujm_sequence'}}"
+                ng-bootbox-confirm-action="exercisePlayerCtrl.interrupt()"
+        >
+            <span class="fa fa-ban"></span>
+            {{ 'btn_interrupt_sequence_label'|trans:{}:'ujm_sequence' }}
+        </button>
+
+        <!-- End Exercise -->
+        <button type="button" role="button" class="btn btn-primary"
+                data-ng-if="!exercisePlayerCtrl.next"
+                data-ng-disabled="!exercisePlayerCtrl.feedback.visible && exercisePlayerCtrl.feedback.enabled"
+                ng-bootbox-confirm="{{ 'sequence_end_sequence_confirm'|trans:{}:'ujm_sequence'}}"
+                ng-bootbox-confirm-action="exercisePlayerCtrl.end()"
+        >
+            <span class="fa fa-sign-out"></span>
+            {{ 'btn_end_sequence_label'|trans:{}:'ujm_sequence' }}
+        </button>
     </div>
 </div>

@@ -140,10 +140,10 @@ angular.module('Correction').controller('CorrectionClozeCtrl', [
                             }
                         });
                         if (good_answer) {
-                            $('#answer_' + this.question.id).find('#'+holes[j].position).addClass("color-success");
+                            $('#answer_' + this.question.id).find('#'+holes[j].position).addClass("text-success");
                         }
                         else {
-                            $('#answer_' + this.question.id).find('#'+holes[j].position).addClass("color-danger");
+                            $('#answer_' + this.question.id).find('#'+holes[j].position).addClass("text-danger");
                         }
                     }
                 }

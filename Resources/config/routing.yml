@@ -60,3 +60,8 @@ ujm_api_exercise:
     resource: "@UJMExoBundle/Controller/Api/ExerciseController.php"
     type: annotation
     prefix: /api
+
+ujm_api_paper:
+    resource: "@UJMExoBundle/Controller/Api/PaperController.php"
+    type: annotation
+    prefix: /api

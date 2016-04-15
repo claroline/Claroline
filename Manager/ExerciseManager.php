@@ -13,26 +13,37 @@ use UJM\ExoBundle\Transfer\Json\Validator;
  */
 class ExerciseManager
 {
+    /**
+     * @var ObjectManager
+     */
     private $om;
+
+    /**
+     * @var Validator
+     */
     private $validator;
-    private $questionManager;
+
+    /**
+     * @var StepManager
+     */
+    private $stepManager;
 
     /**
      * @DI\InjectParams({
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "validator"  = @DI\Inject("ujm.exo.json_validator"),
-     *     "manager"    = @DI\Inject("ujm.exo.question_manager")
+     *     "om"          = @DI\Inject("claroline.persistence.object_manager"),
+     *     "validator"   = @DI\Inject("ujm.exo.json_validator"),
+     *     "stepManager" = @DI\Inject("ujm.exo.step_manager")
      * })
      *
-     * @param ObjectManager     $om
-     * @param Validator         $validator
-     * @param QuestionManager   $manager
+     * @param ObjectManager $om
+     * @param Validator     $validator
+     * @param StepManager   $stepManager
      */
-    public function __construct(ObjectManager $om, Validator $validator, QuestionManager $manager)
+    public function __construct(ObjectManager $om, Validator $validator, StepManager $stepManager)
     {
         $this->om = $om;
         $this->validator = $validator;
-        $this->questionManager = $manager;
+        $this->stepManager = $stepManager;
     }
 
     /**
@@ -304,23 +315,13 @@ class ExerciseManager
      */
     public function exportSteps(Exercise $exercise, $withSolutions = true)
     {
-        $stepList = array();
-        $steps = $this->pickSteps($exercise);
+        $steps = $exercise->getSteps();
 
-        $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
-
+        $data = [];
         foreach ($steps as $step) {
-            $currentStep = [
-                'id'    => $step->getId(),
-                'items' => [],
-            ];
-
-            foreach ($questionRepo->findByStep($step) as $question) {
-                $currentStep['items'][] = $this->questionManager->exportQuestion($question, $withSolutions);
-            }
-
-            $stepList[] = $currentStep;
+            $data[] = $this->stepManager->exportStep($step, $withSolutions);
         }
-        return $stepList;
+
+        return $data;
     }
 }

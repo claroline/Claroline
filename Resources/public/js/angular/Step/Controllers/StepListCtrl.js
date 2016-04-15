@@ -1,18 +1,25 @@
 /**
  * List of steps of an Exercise
+ * @param {String}          exerciseId
  * @param {Array}           steps
  * @param {ExerciseService} ExerciseService
+ * @param {StepService}     StepService
  * @constructor
  */
-var StepListCtrl = function StepListCtrl(exerciseId, steps, ExerciseService) {
+var StepListCtrl = function StepListCtrl(exerciseId, steps, ExerciseService, StepService) {
     this.steps           = steps;
     this.exerciseId      = exerciseId;
     this.ExerciseService = ExerciseService;
+    this.StepService     = StepService;
 };
 
 // Set p up dependency injection
-StepListCtrl.$inject = [ 'exerciseId', 'steps', 'ExerciseService' ];
+StepListCtrl.$inject = [ 'exerciseId', 'steps', 'ExerciseService', 'StepService' ];
 
+/**
+ * ID of the current Exercise
+ * @type {string}
+ */
 StepListCtrl.prototype.exerciseId = null;
 
 /**

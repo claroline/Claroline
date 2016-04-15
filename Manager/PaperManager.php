@@ -38,7 +38,7 @@ class PaperManager
      * @param QuestionHandlerCollector $collector
      * @param ExerciseManager $exerciseManager
      * @param QuestionManager $questionManager
-     * @param Translator $translator
+     * @param TranslatorInterface $translator
      */
     public function __construct(
         ObjectManager $om,
@@ -200,12 +200,7 @@ class PaperManager
      */
     public function hasHint(Paper $paper, Hint $hint)
     {
-        $link = $this->om->getRepository('UJMExoBundle:StepQuestion')->findStepByExoQuestion(
-            $paper->getExercise(),
-            $hint->getQuestion()
-        );
-
-        return $link !== null;
+        return $this->om->getRepository('UJMExoBundle:Paper')->hasHint($paper, $hint);
     }
 
     /**
@@ -277,7 +272,7 @@ class PaperManager
                 'start' => $paper->getStart()->format('Y-m-d H:i:s'),
                 'end' => $paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : null,
                 'interrupted' => $paper->getInterupt(),
-                'globalNote' => $paper->getScore(),
+                'scoreTotal' => $paper->getScore(),
                 'questions' => $this->exportPaperQuestions($paper)
             ];
         }, $papers);
@@ -312,7 +307,7 @@ class PaperManager
             'start' => $paper->getStart()->format('Y-m-d H:i:s'),
             'end' => $paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : null,
             'interrupted' => $paper->getInterupt(),
-            'globalNote' => $paper->getScore(),
+            'scoreTotal' => $paper->getScore(),
             'questions' => $this->exportPaperQuestions($paper)
         ];
 
@@ -381,7 +376,6 @@ class PaperManager
                 'start' => $paper->getStart()->format('Y-m-d H:i:s'),
                 'end' => $paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : null,
                 'interrupted' => $paper->getInterupt(),
-                'globalNote' => $paper->getScore(),
                 'questions' => $this->exportPaperQuestions($paper)
             ];
         }, $papers);
@@ -435,7 +429,11 @@ class PaperManager
             $answer = $response ? $handler->convertAnswerDetails($response) : null;
             $answerScore = $response ? $response->getMark() : 0;
             $hints = array_map(function ($link) {
-                return (string)$link->getHint()->getId();
+                return [
+                    'id'      => $link->getHint()->getId(),
+                    'value'   => $link->getHint()->getValue(),
+                    'penalty' => $link->getHint()->getPenalty(),
+                ];
             }, $links);
 
             if ($answer || count($hints) > 0) {

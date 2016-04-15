@@ -18,8 +18,6 @@ PaperShowCtrl.prototype.paper = {};
 
 PaperShowCtrl.prototype.questions = [];
 
-PaperShowCtrl.prototype.paper = null;
-
 // Register controller into Angular JS
 angular
     .module('Paper')

@@ -228,7 +228,9 @@ class ExerciseServices
                     // Add the question to the existing Step
                     $em = $this->doctrine->getManager();
 
-                    $sq = new StepQuestion($step, $question);
+                    $sq = new StepQuestion();
+                    $sq->setStep($step);
+                    $sq->setQuestion($question);
                     $sq->setOrdre($step->getNbQuestion() + 1);
                     $em->persist($sq);
                     $em->flush();
@@ -326,7 +328,9 @@ class ExerciseServices
                 $em = $this->doctrine->getManager();
                 $step = $this->createStep($exercise, $orderStep, $em);
 
-                $sq = new StepQuestion($step, $question);
+                $sq = new StepQuestion();
+                $sq->setStep($step);
+                $sq->setQuestion($question);
                 $sq->setOrdre('1');
                 $em->persist($sq);
                 $em->flush();

@@ -5,14 +5,12 @@
  * we deport all that stuff in this service to keep Controller as slim as possible
  */
 angular.module('Question').factory('MatchQuestionService', [
-    'QuestionService',
-    'DataSharing',
-    function MatchQuestionService(QuestionService, DataSharing) {
+    function MatchQuestionService() {
 
         return {
             initBindMatchQuestion: function () {
-
                 jsPlumb.setContainer($("body"));
+
                 // source elements
                 $(".origin").each(function () {
                     jsPlumb.addEndpoint(this, {
@@ -45,8 +43,8 @@ angular.module('Question').factory('MatchQuestionService', [
                 });
 
                 jsPlumb.detachEveryConnection();
-
             },
+
             initDragMatchQuestion: function () {
                 jsPlumb.detachEveryConnection();
                 jsPlumb.deleteEveryEndpoint();

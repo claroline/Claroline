@@ -7,13 +7,6 @@
         "doctrine/orm": "~2.5",
         "claroline/core-bundle": "^6.6.4",
         "icap/badge-bundle": "~6.0",
-        "innova/angular-js-bundle": "~5.1",
-        "innova/angular-ui-bootstrap-bundle" : "~5.0",
-        "innova/angular-ui-tinymce-bundle" : "~5.0",
-        "innova/angular-ui-translation-bundle" : "~5.0",
-        "innova/angular-ui-resource-picker-bundle" : "~6.0",
-        "innova/angular-ui-sortable-bundle" : "~5.0",
-        "innova/angular-ui-pageslide-bundle" : "~5.0",
         "json-quiz/json-quiz": "dev-master",
         "stefk/jval": "dev-master"
     },

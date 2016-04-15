@@ -1,0 +1,14 @@
+<div class="step-container">
+    <h4 class="step-title">
+        {{ 'step'|trans:{}:'ujm_exo' }} <span class="badge">{{ stepShowCtrl.stepIndex*1 + 1 }}</span>
+    </h4>
+
+    <!-- Display items of the step -->
+    <question-show data-ng-repeat="item in stepShowCtrl.step.items" data-question="item"></question-show>
+
+    <!-- Display no item message -->
+    <div class="alert alert-info" data-ng-if="0 === stepShowCtrl.step.items.length">
+        <span class="fa fa-warning"></span>
+        {{ 'no_question_found'|trans:{}:'ujm_exo' }}
+    </div>
+</div>

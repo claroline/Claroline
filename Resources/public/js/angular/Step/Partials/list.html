@@ -11,8 +11,8 @@
                 <thead>
                 <tr>
                     <!--<th scope="col">{{ 'category' | trans:{}:'ujm_exo' }}</th>-->
-                    <th scope="col" class="col-md-3">{{ 'title' | trans:{}:'ujm_exo' }}</th>
                     <th scope="col" class="col-md-2">{{ 'type' | trans:{}:'ujm_exo' }}</th>
+                    <th scope="col" class="col-md-3">{{ 'title' | trans:{}:'ujm_exo' }}</th>
                     <th scope="col" class="col-md-5">{{ 'question' | trans:{}:'ujm_exo' }}</th>
                     <th scope="col" class="col-md-2">{{ 'actions' | trans:{}:'ujm_exo' }}</th>
                 </tr>
@@ -21,9 +21,9 @@
                 <tbody>
                 <tr data-ng-repeat="item in step.items">
                     <!--<td></td>-->
-                    <td>{{ item.title }}</td>
                     <td>{{ item.type | trans:{}:'ujm_exo'}}</td>
-                    <td class="text-center" data-ng-bind-html="item.invite"></td>
+                    <td>{{ item.title }}</td>
+                    <td class="text-center" data-ng-bind-html="item.invite | unsafe"></td>
                     <td>
                         <!-- Edit Item button -->
                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans:{}:'ujm_exo' }}" href="{{ 'ujm_question_edit' | path:{ id: item.id, exoID: stepListCtrl.exerciseId } }}">
@@ -32,7 +32,7 @@
                         </a>
 
                         <!-- Duplicate Item button -->
-                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans:{}:'ujm_exo' }}" href="{{ 'ujm_question_duplicate' | path:{ questionId: item.id, stepID: step.id } }}">
+                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans:{}:'ujm_exo' }}" href="{{ 'ujm_question_duplicate' | path:{ questionId: item.id, exoID: stepListCtrl.exerciseId } }}">
                             <span class="fa fa-repeat"></span>
                             <span class="sr-only">{{ 'duplicate' | trans:{}:'ujm_exo' }}</span>
                         </a>
@@ -70,7 +70,7 @@
 
         <div class="alert alert-info" data-ng-if="0 === stepListCtrl.steps.length">
             <span class="fa fa-warning"></span>
-            {{ 'no_question_found'|trans:{}:'ujm_exo' }} ...
+            {{ 'no_question_found'|trans:{}:'ujm_exo' }}
         </div>
 
         <button type="button" class="btn btn-primary" data-ng-click="stepListCtrl.addStep()">

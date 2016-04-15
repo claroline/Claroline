@@ -4,12 +4,12 @@ namespace UJM\ExoBundle\Transfer\Json\QuestionHandler;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use UJM\ExoBundle\Entity\Hole;
 use UJM\ExoBundle\Entity\InteractionHole;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Transfer\Json\QuestionHandlerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("ujm.exo.hole_handler")
@@ -139,7 +139,7 @@ class HoleHandler implements QuestionHandlerInterface
         $holeQuestion = $repo->findOneBy(['question' => $question]);
         $holes = $holeQuestion->getHoles()->toArray();
         $text = $holeQuestion->getHtmlWithoutValue();
-
+        
         $scoreTotal = 0;
         foreach ($holes as $hole) {
             $maxScore = 0;
@@ -150,38 +150,56 @@ class HoleHandler implements QuestionHandlerInterface
             }
             $scoreTotal = $scoreTotal + $maxScore;
         }
-
+        
         $exportData->scoreTotal = $scoreTotal;
         $exportData->text = $text;
         if ($withSolution) {
             $exportData->solution = $holeQuestion->getHtml();
-            $exportData->solutions = $holeQuestion->getHtml();
+            $exportData->solutions = array_map(function ($hole) {
+                $solutionData = new \stdClass();
+                $solutionData->id = (string) $hole->getId();
+
+                $wordResponses = $hole->getWordResponses()->toArray();
+                $expectedWord = null;
+                array_walk($wordResponses, function ($wr) use (&$expectedWord) {
+                    if (empty($expectedWord) || ($wr->getScore() > $expectedWord->getScore())) {
+                        $expectedWord = $wr;
+                    }
+                });
+
+                $solutionData->wordResponses = array_map(function ($wr) use ($expectedWord) {
+                    $wrData = new \stdClass();
+                    $wrData->id = (string) $wr->getId();
+                    $wrData->response = (string) $wr->getResponse();
+                    $wrData->caseSensitive = $wr->getCaseSensitive();
+                    $wrData->score = $wr->getScore();
+                    $wrData->feedback = $wr->getFeedback();
+                    $wrData->rightResponse = $expectedWord->getId() === $wr->getId();
+
+                    return $wrData;
+                }, $wordResponses);
+
+                return $solutionData;
+            }, $holes);
         }
+
         $exportData->holes = array_map(function ($hole) {
             $holeData = new \stdClass();
             $holeData->id = (string) $hole->getId();
             $holeData->type = 'text/html';
             $holeData->selector = $hole->getSelector();
             $holeData->position = (string) $hole->getPosition();
-            $holeData->wordResponses = array_map(function ($wr) {
-                $wrData = new \stdClass();
-                $wrData->id = (string) $wr->getId();
-                $wrData->response = (string) $wr->getResponse();
-                $wrData->score = $wr->getScore();
-                $wrData->feedback = $wr->getFeedback();
-                return $wrData;
-            }, $hole->getWordResponses()->toArray());
 
             return $holeData;
         }, $holes);
-
+        
         return $exportData;
     }
-
+    
     public function convertQuestionAnswers(Question $question, \stdClass $exportData){
         $repo = $this->om->getRepository('UJMExoBundle:InteractionHole');
         $holeQuestion = $repo->findOneBy(['question' => $question]);
-
+        
         $holes = $holeQuestion->getHoles()->toArray();
         $exportData->solutions = array_map(function ($hole) {
                 $solutionData = new \stdClass();
@@ -189,14 +207,25 @@ class HoleHandler implements QuestionHandlerInterface
                 $solutionData->type = 'text/html';
                 $solutionData->selector = $hole->getSelector();
                 $solutionData->position = (string) $hole->getPosition();
-                $solutionData->wordResponses = array_map(function ($wr) {
+
+                $wordResponses = $hole->getWordResponses()->toArray();
+                $expectedWord = null;
+                array_walk($wordResponses, function ($wr) use (&$expectedWord) {
+                    if (empty($expectedWord) || ($wr->getScore() > $expectedWord->getScore())) {
+                        $expectedWord = $wr;
+                    }
+                });
+
+                $solutionData->wordResponses = array_map(function ($wr) use ($expectedWord) {
                     $wrData = new \stdClass();
                     $wrData->id = (string) $wr->getId();
                     $wrData->response = (string) $wr->getResponse();
                     $wrData->score = $wr->getScore();
+                    $wrData->rightResponse = $expectedWord->getId() === $wr->getId();
                     if ($wr->getFeedback()) {
                         $wrData->feedback = $wr->getFeedback();
                     }
+
                     return $wrData;
                 }, $hole->getWordResponses()->toArray());
 
@@ -211,11 +240,11 @@ class HoleHandler implements QuestionHandlerInterface
     public function convertAnswerDetails(Response $response)
     {
         $parts = json_decode($response->getResponse());
-
+        
         foreach ($parts as $key=>$value) {
             $array[$key] = $value;
         }
-
+        
     //    $parts = explode(';', $response->getResponse());
 
         return array_filter($array, function ($part) {
@@ -240,10 +269,26 @@ class HoleHandler implements QuestionHandlerInterface
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionHole')
             ->findOneByQuestion($question);
 
+        $holeIds = array_map(function ($hole) {
+            return (string) $hole->getId();
+        }, $interaction->getHoles()->toArray());
+
         foreach ($data as $answer) {
             if ($answer || $answer !== null) {
-                if (!is_string($answer) && !is_numeric($answer)) {
-                    return ['Answer array must contain only strings or numeric identifiers, ' . gettype($answer) . ' given.'];
+                if (empty($answer['holeId'])) {
+                    return ['Answer `holeId` cannot be empty'];
+                }
+
+                if (!is_string($answer['holeId'])) {
+                    return ['Answer `holeId` must contain only strings , ' . gettype($answer['holeId']) . ' given.'];
+                }
+
+                if (!in_array($answer['holeId'], $holeIds)) {
+                    return ['Answer array identifiers must reference question holes'];
+                }
+
+                if (!empty($answer['answerText']) && !is_string($answer['answerText'])) {
+                    return ['Answer `answerText` must contain only strings , ' . gettype($answer['holeId']) . ' given.'];
                 }
             }
         }

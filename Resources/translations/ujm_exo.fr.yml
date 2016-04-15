@@ -343,6 +343,7 @@ step: Etape
 # T
 temporary_mark: Note temporaire
 test_exit: Sortie du test
+timer: Temps restant :
 title: Titre
 type: Type
 type_exo : Type de l'exercice
