@@ -129,7 +129,8 @@
         "claroline/result-bundle": "*",
         "innova/path-bundle": "*",
         "claroline/pdf-generator-bundle": "*",
-        "claroline/dev-bundle": "*"
+        "claroline/dev-bundle": "*",
+        "ujm/exo-bundle": "*"
     },
     "autoload": {
         "psr-4": {
@@ -174,7 +175,8 @@
             "Claroline\\ResultBundle\\": "plugin/result",
             "Innova\\PathBundle\\": "plugin/path",
             "Claroline\\PdfGeneratorBundle\\": "plugin/pdf-generator",
-            "Claroline\\DevBundle\\": "main/dev"
+            "Claroline\\DevBundle\\": "main/dev",
+            "UJM\\ExoBundle\\": "plugin/exo"
         }
     },
     "bundles": [
@@ -217,6 +219,7 @@
         "Icap\\OAuthBundle\\IcapOAuthBundle",
         "Claroline\\ResultBundle\\ClarolineResultBundle",
         "Innova\\PathBundle\\InnovaPathBundle",
-        "Claroline\\DevBundle\\ClarolineDevBundle"
+        "Claroline\\DevBundle\\ClarolineDevBundle",
+        "UJM\\ExoBundle\\UJMExoBundle"
     ]
 }

@@ -20,9 +20,9 @@ This repository is still a work in progress.
 - [ ] upgrade from previous packages
 - [ ] add LessonBundle
 - [ ] add WebsiteBundle
-- [ ] add ExoBundle
 - [ ] add FormulaPluginBundle
 - [ ] add PdfGeneratorBundle
+- [ ] ensure ExoBundle dependency on BadgeBundle is met (e.g. when enabling/disabling plugins)
 - [ ] check if PdfGeneratorBundle is usable before activation (requires wkhtmltopdf)
 - [ ] check if LdapBundle is usable before activation (requires ext5-ldap)
 - [ ] migrate contents from DevBundle
