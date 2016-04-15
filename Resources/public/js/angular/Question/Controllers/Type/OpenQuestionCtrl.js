@@ -5,6 +5,11 @@
  */
 var OpenQuestionCtrl = function OpenQuestionCtrl(FeedbackService) {
     AbstractQuestionCtrl.apply(this, arguments);
+
+    // Initialize answer if needed
+    if (null === this.questionPaper.answer || typeof this.questionPaper.answer === 'undefined') {
+        this.questionPaper.answer = '';
+    }
 };
 
 // Extends AbstractQuestionCtrl

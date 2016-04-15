@@ -6,6 +6,11 @@
 var ChoiceQuestionCtrl = function ChoiceQuestionCtrl(FeedbackService) {
     AbstractQuestionCtrl.apply(this, arguments);
 
+    // Initialize answer if needed
+    if (null === this.questionPaper.answer || typeof this.questionPaper.answer === 'undefined') {
+        this.questionPaper.answer = [];
+    }
+
     if (this.question.choices) {
         this.choices = this.question.choices;
     }
