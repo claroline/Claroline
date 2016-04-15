@@ -12,6 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Exercise extends AbstractResource
 {
+    const TYPE_SUMMATIVE  = '1';
+    const TYPE_EVALUATIVE = '2';
+    const TYPE_FORMATIVE  = '3';
+
     /**
      * @ORM\Column(name="title", type="string", length=255)
      */
@@ -99,7 +103,7 @@ class Exercise extends AbstractResource
      * @ORM\Column(name="type", type="string", length=255)
      * sommatif, formatif, certificatif
      */
-    private $type = '1';
+    private $type = self::TYPE_SUMMATIVE;
 
     /**
      * @ORM\OneToMany(
