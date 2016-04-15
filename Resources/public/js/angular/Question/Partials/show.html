@@ -1,7 +1,7 @@
 <div class="question-container panel panel-default">
-    <div class="panel-heading">
+    <div class="panel-heading" data-ng-click="collapsed = !collapsed">
         <!-- Title of the Question -->
-        <h4 class="panel-title" data-ng-click="collapsed = !collapsed">
+        <h4 class="panel-title">
             <span class="fa fa-fw" data-ng-class="{ 'fa-caret-down': !collapsed, 'fa-caret-right': collapsed }"></span>
 
             {{ questionShowCtrl.question.title }}
