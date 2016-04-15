@@ -181,21 +181,6 @@ class ExerciseController
     }
 
     /**
-     * Return a question solutions, global feedback, choices / proposals and for each proposal the feedback
-     *
-     * @EXT\Route("/question/{id}", name="get_question_solutions")
-     *
-     * @param Question $question
-     * @return JsonResponse
-     */
-    public function getQuestionSolutions(Question $question)
-    {
-        $data = $this->questionManager->exportQuestionAnswers($question);
-
-        return new JsonResponse($data);
-    }
-
-    /**
      * Returns one paper.
      * Also includes the complete definition and solution of each question
      * associated with the exercise.

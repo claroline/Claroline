@@ -27,31 +27,6 @@ QuestionService.prototype.getHintPenalty = function getHintPenalty(collection, s
     }
 };
 
-/**
- * Used for displaying in-context question feedback and solutions
- * @param   {Object} question
- * @returns {Object}
- */
-QuestionService.prototype.getSolutions = function getSolutions(question) {
-    var deferred = this.$q.defer();
-    this.$http
-        .get(
-            Routing.generate('get_question_solutions', { id: question.id })
-        )
-        .success(function (response) {
-            deferred.resolve(response);
-        })
-        .error(function (data, status) {
-            deferred.reject([]);
-            var msg = data && data.error && data.error.message ? data.error.message : 'QuestionService get solutions error';
-            var code = data && data.error && data.error.code ? data.error.code : 400;
-            var url = Routing.generate('ujm_sequence_error', {message:msg, code:code});
-            //$window.location = url;
-        });
-
-    return deferred.promise;
-};
-
 // Register service into AngularJS
 angular
     .module('Question')
