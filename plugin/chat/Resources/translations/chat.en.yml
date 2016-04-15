@@ -5,6 +5,7 @@ ban: Ban
 banned_msg: You have been banned from the Chat room.
 banned_users: Banned users
 bosh_server_port: BOSH server port
+cancel_ban: Cancel ban
 chat: Chat
 chat_account_not_activated_msg: Your chat account is not activated
 chat_accounts_creation: Chat accounts creation
@@ -23,6 +24,8 @@ connecting: Connecting...
 create_chat_accounts: Create Chat accounts
 disable_chat_room_audio: Disable audio Chat room
 disable_chat_room_video: Disable video Chat room
+disable_participation: Disable participation
+enable_participation: Enable participation
 has_been_banned_from_the_chat_room: has been banned from the Chat room
 has_been_kicked_from_the_chat_room: has been kicked from the Chat room
 has_been_unbanned_from_the_chat_room: has been unbanned from the Chat room
@@ -35,12 +38,14 @@ invalid_room_type: Invalid room type
 kick: Kick
 kicked_msg: You have been kicked from the Chat room.
 me: Me
+moderator: Moderator
 muc_host: MUC server
 mute: Mute
 my_video: My video
 not_authorized_msg: You are not authorized to connect to this Chat room.
 not_connected: Not connected
 open: Open
+participant: Participant
 port: Port
 search_chat_users_infos: A search has to be performed in order to display users with a chat account.
 select_users_for_chat_account_generation: Select users for Chat account generation
@@ -48,3 +53,4 @@ status: Status
 text_only: Text only
 type: Type
 uninitialized: Not initialized
+visitor: Visitor

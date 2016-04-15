@@ -18,6 +18,7 @@ export default class ChatRoomService {
     this.config = {
       connected: false,
       busy: false,
+      resourceId: ChatRoomService._getGlobal('resourceId'),
       room: `${ChatRoomService._getGlobal('roomName')}@${ChatRoomService._getGlobal('xmppMucHost')}`,
       roomId: ChatRoomService._getGlobal('roomId'),
       roomName: ChatRoomService._getGlobal('roomName'),
@@ -45,6 +46,13 @@ export default class ChatRoomService {
     this._onIQStanza = this._onIQStanza.bind(this)
 
     this._fullConnection = this._fullConnection.bind(this)
+    $rootScope.$on('$stateChangeStart',
+      function(event, toState, toParams, fromState, fromParams, options){
+        console.log('state changed')
+        //event.preventDefault();
+        // transitionTo() promise will be rejected with
+        // a 'transition prevented' error
+    })
   }
 
   getConfig () {
@@ -118,16 +126,31 @@ export default class ChatRoomService {
 
   disconnectFromRoom () {
     if (this.config['connected']) {
+      //const presence = $pres({
+      //  from: `${this.xmppConfig['username']}@${this.xmppConfig['xmppHost']}`,
+      //  to: `${this.config['room']}/${this.config['myUsername']}`,
+      //  type: 'unavailable'
+      //})
+      //const presence = $pres({
+      //    to: this.config['room'] + "/" + this.config['myUsername'],
+      //    from: this.xmppConfig['username'] + "@" + this.xmppConfig['xmppHost'] + '/' + this.config['roomName'],
+      //    type: "unavailable"
+      //})
       this.xmppConfig['connection'].send(
-        $pres({
-            to: `${this.config['room']}/${this.xmppConfig['username']}`,
-            from: `${this.xmppConfig['username']}@${this.xmppConfig['xmppHost']}/${this.config['roomName']}`,
-            type: 'unavailable'
-        })
+        $pres({from: this.xmppConfig['username'] + "@" + this.xmppConfig['xmppHost'] + "/" + this.config['roomName'], to: this.config['room'] + "/" + this.config['myUsername'], type: "unavailable"})
       )
-      this.xmppConfig['connection'].flush()
-      this.xmppConfig['connection'].disconnect()
+      console.log( `${this.xmppConfig['username']}@${this.xmppConfig['xmppHost']}/${this.config['roomName']}`)
+      console.log( `${this.config['room']}/${this.config['myUsername']}`)
+                        //$pres({
+                        //    to: room + "/" + XmppService.getUsername(),
+                        //    from: XmppService.getUsername() + "@" + XmppService.getXmppHost() + '/' + roomName,
+                        //    type: "unavailable"
+                        //})
+      //this.xmppConfig['connection'].flush()
+      //this.xmppConfig['connection'].disconnect()
       this.config['connected'] = false
+      console.log('Disconnected')
+
 
       // TODO : Log disconnection
     }
@@ -236,25 +259,32 @@ export default class ChatRoomService {
   }
 
   canParticipate () {
-    return this.config['myRole'] !== 'none' && this.config['myRole'] !== 'visitor'
+    return this.config['connected'] && this.config['myRole'] !== 'none' && this.config['myRole'] !== 'visitor'
   }
 
   sendMessage (message) {
     if (message !== '') {
-      this.xmppConfig['connection'].send(
-        $msg({
-          to: this.config['room'],
-          type: "groupchat"
-        }).c('body').t(message)
-        .up()
-        .c(
-          'datas',
-          {
-            firstName:  this.xmppConfig['firstName'],
-            lastName: this.xmppConfig['lastName'],
-            color: this.xmppConfig['color']
+      this.MessageService.addMessage(this.xmppConfig['fullName'], message, this.xmppConfig['color'])
+      this.registerMessage(message, this.config['myUsername'], this.xmppConfig['fullName']).then(
+        (d) => {
+          if (d === 'ok') {
+            this.xmppConfig['connection'].send(
+              $msg({
+                to: this.config['room'],
+                type: "groupchat"
+              }).c('body').t(message)
+              .up()
+              .c(
+                'datas',
+                {
+                  firstName:  this.xmppConfig['firstName'],
+                  lastName: this.xmppConfig['lastName'],
+                  color: this.xmppConfig['color']
+                }
+              )
+            )
           }
-        )
+        }
       )
     }
   }
@@ -262,7 +292,7 @@ export default class ChatRoomService {
   initializeRoleAndAffiliation () {
     console.log('initialize role & affiliation...')
 
-    if (this.config['myAffiliation'] !== 'outcast') {
+    if (this.config['myAffiliation'] !== 'owner' && this.config['myAffiliation'] !== 'outcast' && this.config['myRole'] !== 'visitor') {
       if (this.config['canEdit']) {
         if (this.config['myAffiliation'] !== 'admin') {
           console.log('Granting ADMIN affiliation...')
@@ -339,8 +369,34 @@ export default class ChatRoomService {
     }
   }
 
-  banUser (username) {
+  muteUser (username) {
     if (this.config['canEdit'] && this.config['myRole'] === 'moderator') {
+      const iq = $iq({
+        id: `mute-${username}`,
+        from: `${this.xmppConfig['username']}@${this.xmppConfig['xmppHost']}/${this.config['roomName']}`,
+        to: this.config['room'],
+        type: 'set'
+      }).c('x', {xmlns: 'http://jabber.org/protocol/muc#admin'})
+        .c('item', {nick: username, role: 'visitor'})
+      this.xmppConfig['connection'].sendIQ(iq)
+    }
+  }
+
+  unmuteUser (username) {
+    if (this.config['canEdit'] && this.config['myRole'] === 'moderator') {
+      const iq = $iq({
+        id: `unmute-${username}`,
+        from: `${this.xmppConfig['username']}@${this.xmppConfig['xmppHost']}/${this.config['roomName']}`,
+        to: this.config['room'],
+        type: 'set'
+      }).c('x', {xmlns: 'http://jabber.org/protocol/muc#admin'})
+        .c('item', {nick: username, role: 'participant'})
+      this.xmppConfig['connection'].sendIQ(iq)
+    }
+  }
+
+  banUser (username) {
+    if (this.config['canEdit'] && this.config['myAffiliation'] === 'admin') {
       const iq = $iq({
         id: `ban-${username}`,
         from: `${this.xmppConfig['username']}@${this.xmppConfig['xmppHost']}/${this.config['roomName']}`,
@@ -353,7 +409,7 @@ export default class ChatRoomService {
   }
 
   unbanUser (username) {
-    if (this.config['canEdit'] && this.config['myRole'] === 'moderator') {
+    if (this.config['canEdit'] && this.config['myAffiliation'] === 'admin') {
       const iq = $iq({
         id: `unban-${username}`,
         from: `${this.xmppConfig['username']}@${this.xmppConfig['xmppHost']}/${this.config['roomName']}`,
@@ -406,7 +462,15 @@ export default class ChatRoomService {
         fullName: fullName
       }
     )
-    this.$http.post(route, {message: message})
+    return this.$http.post(route, {message: message}).then(
+      (d) => {return 'ok'},
+      (d) =>  {
+        if (d['status'] === 403) {
+          const route = Routing.generate('claro_resource_open_short', {node: this.config['resourceId']})
+          window.location = route
+        }
+      }
+    )
   }
 
   manageKickedStatus () {
@@ -512,7 +576,7 @@ export default class ChatRoomService {
           this.config['myRole'] = role
           this.config['myAffiliation'] = affiliation
 
-          if (statusCode === '110') {
+          if (statusCode === '110' && type !== 'unavailable') {
             this.config['connected'] = true
             this.config['busy'] = false
             this.config['myUsername'] = username
@@ -557,6 +621,7 @@ export default class ChatRoomService {
     const from = $(message).attr('from')
     const type = $(message).attr('type')
     const roomName = Strophe.getBareJidFromJid(from)
+    const username = Strophe.getResourceFromJid(from)
 
     if (type === 'groupchat' && roomName.toLowerCase() === this.config['room'].toLowerCase()) {
       const delayElement = $(message).find('delay')
@@ -578,22 +643,17 @@ export default class ChatRoomService {
           //  $rootScope.$broadcast('rawRoomMessageEvent', {message: body});
           } else if (status === 'management') {
             const type =  datas.attr('type')
-            const username = datas.attr('username')
+            const user = datas.attr('username')
             const value =  datas.attr('value');
-            this.manageManagementMessage(type, username, value)
-          } else {
+            this.manageManagementMessage(type, user, value)
+          } else if (username !== this.config['myUsername']) {
             const firstName = datas.attr('firstName')
             const lastName = datas.attr('lastName')
-            const username = Strophe.getResourceFromJid(from)
             let color = datas.attr('color')
             color = (color === undefined) ? null : color
             const sender = (firstName !== undefined && lastName !== undefined) ? `${firstName} ${lastName}` : username
             this.MessageService.addMessage(sender, body, color)
             this.refreshScope()
-
-            if (username === this.config['myUsername']) {
-              this.registerMessage(body, username, sender)
-            }
           }
         }
       }

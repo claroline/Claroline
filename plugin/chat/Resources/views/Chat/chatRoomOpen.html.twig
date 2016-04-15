@@ -173,6 +173,7 @@
     >
     </script>
     <script>
+        window.resourceId = {{ chatRoom.getResourceNode().getId() }}
         window.roomId = {{ chatRoom.getId() }}
         window.roomName = '{{ chatRoom.getRoomName() }}'
         window.roomStatus = '{{ chatRoom.getRoomStatusText() }}'

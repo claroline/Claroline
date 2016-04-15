@@ -5,6 +5,7 @@ ban: Bannir
 banned_msg: Vous avez été banni de la Chat room.
 banned_users: Utilisateurs bannis
 bosh_server_port: Port pour le serveur BOSH
+cancel_ban: Annuler le bannissement
 chat: Chat
 chat_account_not_activated_msg: Votre compte pour le Chat n'est pas activé
 chat_accounts_creation: Création de comptes pour le Chat
@@ -23,6 +24,8 @@ connecting: Connexion en cours...
 create_chat_accounts: Créer des comptes pour le Chat
 disable_chat_room_audio: Désactiver les Chat rooms audio
 disable_chat_room_video: Désactiver les Chat rooms video
+disable_participation: Empêcher de participer
+enable_participation: Permettre de participer
 has_been_banned_from_the_chat_room: a été banni de la Chat room
 has_been_kicked_from_the_chat_room: a été éjecté de la Chat room
 has_been_unbanned_from_the_chat_room: n'est plus banni de la Chat room
@@ -35,12 +38,14 @@ invalid_room_type: Le type de la Chat room n'est pas valide
 kick: Ejecter
 kicked_msg: Vous avez été éjecté de la Chat room.
 me: Moi
+moderator: Modérateur
 muc_host: Serveur MUC
 mute: Muet
 my_video: Ma video
 not_authorized_msg: Vous n'êtes pas authorisé à vous connecter à cette Chat room.
 not_connected: Non connecté
 open: Ouvert
+participant: Participant
 port: Port
 search_chat_users_infos: Une recherche doit être effectuée pour afficher les utilisateurs ayant un compte pour le Chat.
 select_users_for_chat_account_generation: Sélectionnez les utilisateurs pour lesquels vous désirez créer un compte pour le Chat
@@ -48,3 +53,4 @@ status: Statut
 text_only: Texte seulement
 type: Type
 uninitialized: Non initialisé
+visitor: Visiteur

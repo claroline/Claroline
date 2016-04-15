@@ -19,6 +19,12 @@ export default class ChatRoomTextCtrl {
     this.bannedUsers = ChatRoomService.getBannedUsers()
     this.input = ''
     this.initialize()
+
+    $(window).unload(($event) => {
+      $event.preventDefault()
+      console.log('Disconnecting...')
+      this.ChatRoomService.disconnectFromRoom()
+    })
   }
 
   initialize () {
@@ -32,16 +38,16 @@ export default class ChatRoomTextCtrl {
     }
   }
 
+  kickUser (username) {
+    this.ChatRoomService.kickUser(username)
+  }
+
   muteUser (username) {
-    console.log('Mute ' + username)
+    this.ChatRoomService.muteUser(username)
   }
 
   unmuteUser (username) {
-    console.log('Unmute ' + username)
-  }
-
-  kickUser (username) {
-    this.ChatRoomService.kickUser(username)
+    this.ChatRoomService.unmuteUser(username)
   }
 
   banUser (username) {
@@ -70,6 +76,10 @@ export default class ChatRoomTextCtrl {
       {},
       { reload: true, inherit: true, notify: true }
     )
+  }
+
+  disconnect () {
+    this.ChatRoomService.disconnectFromRoom()
   }
 
   sendMessage () {

@@ -21,6 +21,7 @@ use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\FOSRestController;
 use JMS\DiExtraBundle\Annotation as DI;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -173,7 +174,12 @@ class ChatController extends FOSRestController
      */
     public function postChatRoomMessageRegisterAction(Request $request, ChatRoom $chatRoom, $username, $fullName)
     {
-        $this->checkChatRoomRight($chatRoom, 'OPEN');
+        $hasRight = $this->hasChatRoomRight($chatRoom, 'OPEN');
+
+        if (!$hasRight) {
+
+            return new JsonResponse('not_authorized', 403);
+        }
         $message = $request->request->get('message', false);
         $this->chatManager->saveChatRoomMessage($chatRoom, $username, $fullName, $message, ChatRoomMessage::MESSAGE);
     }
