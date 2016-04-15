@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -74,6 +75,21 @@ class Step
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $exercise;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="StepQuestion",
+     *     mappedBy="step",
+     * )
+     */
+    private $stepQuestions;
+
+    public function __construct()
+    {
+        $this->stepQuestions = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -235,4 +251,31 @@ class Step
         return $this->exercise;
     }
 
+    /**
+     * @return ArrayCollection
+     */
+    public function getStepQuestions()
+    {
+        return $this->stepQuestions;
+    }
+
+    /**
+     * @param StepQuestion $stepQuestion
+     */
+    public function addStepQuestion(StepQuestion $stepQuestion)
+    {
+        if (!$this->stepQuestions->contains($stepQuestion)) {
+            $this->stepQuestions->add($stepQuestion);
+        }
+    }
+
+    /**
+     * @param StepQuestion $stepQuestion
+     */
+    public function removeStepQuestion(StepQuestion $stepQuestion)
+    {
+        if ($this->stepQuestions->contains($stepQuestion)) {
+            $this->stepQuestions->removeElement($stepQuestion);
+        }
+    }
 }
