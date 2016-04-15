@@ -5,18 +5,12 @@
 angular.module('Correction').controller('CorrectionQCMCtrl', [
     'CommonService',
     function (CommonService) {
-
-
         this.question = {};
         this.paper = {};
 
         this.init = function (question, paper) {
             this.question = question;
             this.paper = paper;
-        };
-
-        this.getChoiceSimpleType = function (choice) {
-            return CommonService.getObjectSimpleType(choice);
         };
 
         /**

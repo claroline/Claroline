@@ -166,7 +166,7 @@ angular
                 })
 
                 // Respond to Exercise
-                .when('/play', {
+                .when('/play/:stepId?', {
                     templateUrl : AngularApp.webDir + 'bundles/ujmexo/js/angular/Exercise/Partials/player.html',
                     controller  : 'ExercisePlayerCtrl',
                     controllerAs: 'exercisePlayerCtrl',
@@ -179,9 +179,30 @@ angular
                         ],
                         paper: [
                             'ExerciseService',
-                            function paperResolve(ExerciseService) {
+                            'UserPaperService',
+                            function paperResolve(ExerciseService, UserPaperService) {
                                 // Start a new Attempt and retrieve the Paper if maxAttempt is not reach
-                                return ExerciseService.start();
+                                return UserPaperService.start(ExerciseService.getExercise());
+                            }
+                        ],
+                        step: [
+                            '$route',
+                            'ExerciseService',
+                            function stepResolve($route, ExerciseService) {
+                                var step = null;
+
+                                // Retrieve the step from route ID
+                                if ($route.current.params && $route.current.params.stepId) {
+                                    step = ExerciseService.getStep($route.current.params.stepId);
+                                } else {
+                                    // No route param => open the first Step
+                                    var steps = ExerciseService.getSteps();
+                                    if (steps && steps[0]) {
+                                        step = steps[0];
+                                    }
+                                }
+
+                                return step;
                             }
                         ]
                     },

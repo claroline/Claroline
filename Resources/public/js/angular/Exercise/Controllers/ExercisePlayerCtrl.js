@@ -1,30 +1,58 @@
 /**
  * Exercise Player Controller
- * @param $window
- * @param $scope
- * @param ExerciseService
- * @param CommonService
- * @param DataSharing
+ * Plays and registers answers to an Exercise
+ *
+ * @param {Object}           $location
+ * @param {Object}           exercise
+ * @param {Object}           step
+ * @param {Object}           paper
+ * @param {CommonService}    CommonService
+ * @param {ExerciseService}    ExerciseService
+ * @param {FeedbackService}  FeedbackService
+ * @param {UserPaperService} UserPaperService
  * @constructor
  */
-var ExercisePlayerCtrl = function ExercisePlayerCtrl(exercise, paper, $window, $scope, ExerciseService, CommonService, DataSharing) {
+var ExercisePlayerCtrl = function ExercisePlayerCtrl($location, exercise, step, paper, CommonService, ExerciseService, FeedbackService, UserPaperService) {
     // Store services
-    this.DataSharing     = DataSharing;
-    this.CommonService   = CommonService;
-    this.ExerciseService = ExerciseService;
-    this.$scope          = $scope;
-    this.$window         = $window;
+    this.$location        = $location;
+    this.CommonService    = CommonService;
+    this.ExerciseService  = ExerciseService;
+    this.FeedbackService  = FeedbackService;
+    this.UserPaperService = UserPaperService;
 
     // Initialize some data
-    this.exercise = exercise;
-    this.paper    = this.DataSharing.setPaper(paper);
+    this.exercise = exercise; // Current exercise
+    this.paper    = paper;    // Paper of the current User
 
-    // Set the current Step
-    this.setCurrentStep(this.currentStepIndex);
+    this.step     = step;
+    this.index    = this.ExerciseService.getIndex(step);
+    this.previous = this.ExerciseService.getPrevious(step);
+    this.next     = this.ExerciseService.getNext(step);
+
+    // Reset feedback (hide feedback and reset registered callbacks of the Step)
+    this.FeedbackService.reset();
+
+    // Configure Feedback
+    if ('3' === this.exercise.meta.type) {
+        // Enable feedback
+        this.FeedbackService.enable();
+    }
+
+    // Get feedback info
+    this.feedback = this.FeedbackService.get();
 };
 
 // Set up dependency injection
-ExercisePlayerCtrl.$inject = [ 'exercise', 'paper', '$window', '$scope', 'ExerciseService', 'CommonService', 'DataSharing' ];
+ExercisePlayerCtrl.$inject = [
+    '$location',
+    'exercise',
+    'step',
+    'paper',
+    'CommonService',
+    'ExerciseService',
+    'FeedbackService',
+    'UserPaperService'
+];
 
 /**
  * Current played Exercise
@@ -39,186 +67,134 @@ ExercisePlayerCtrl.prototype.exercise = {};
 ExercisePlayerCtrl.prototype.paper = {};
 
 /**
- * Is the Exercise finished ?
- * @type {boolean}
+ * Feedback information
+ * @type {Object}
  */
-ExercisePlayerCtrl.prototype.isFinished = false;
-
-/**
- * Is the current Step the first one ?
- * @type {boolean}
- */
-ExercisePlayerCtrl.prototype.isFirstStep = true;
-
-/**
- * Is the current Step the last one ?
- * @type {boolean}
- */
-ExercisePlayerCtrl.prototype.isLastStep = false;
+ExercisePlayerCtrl.prototype.feedback = null;
 
 /**
  * Current step index
  * @type {number}
  */
-ExercisePlayerCtrl.prototype.currentStepIndex = 0;
+ExercisePlayerCtrl.prototype.index = 0;
 
 /**
- * Current step
- * @type {null}
+ * Current played step
+ * @type {Object}
  */
-ExercisePlayerCtrl.prototype.currentStep = null;
+ExercisePlayerCtrl.prototype.step = null;
 
 /**
- * Display feedback ?
- * @type {boolean}
+ * Previous step
+ * @type {Object}
  */
-ExercisePlayerCtrl.prototype.feedbackIsShown = false;
+ExercisePlayerCtrl.prototype.previous = null;
 
 /**
- * Check index data validity and set current step
- * @param {Number} index
+ * Next step
+ * @type {Object}
  */
-ExercisePlayerCtrl.prototype.setCurrentStep = function setCurrentStep(index) {
-    this.isFirstStep = index === 0;
-    this.isLastStep  = index === this.exercise.steps.length - 1;
+ExercisePlayerCtrl.prototype.next = null;
 
-    console.log(this.exercise.steps);
+/**
+ * Is the current Step answers submitted ?
+ * @type {Boolean}
+ */
+ExercisePlayerCtrl.prototype.submitted = false;
 
-    // check new index is in computable range
-    if (index < this.exercise.steps.length && index >= 0) {
-        this.currentStep = this.exercise.steps[index];
+/**
+ * Submit answers for the current Step
+ */
+ExercisePlayerCtrl.prototype.submit = function submit() {
+    return this.UserPaperService
+                .submitStep(this.step)
+                .then(function onSuccess() {
+                    this.submitted = true;
+
+                    if (this.FeedbackService.isEnabled()) {
+                        // Show feedback
+                        this.FeedbackService.show();
+                    }
+                }.bind(this));
+};
+
+/**
+ * Retry the current Step
+ */
+ExercisePlayerCtrl.prototype.retry = function retry() {
+    this.submitted = false;
+
+    if (this.FeedbackService.isEnabled()) {
+        // Hide feedback
+        this.FeedbackService.hide();
+    }
+};
+
+/**
+ * Navigate to a step
+ * @param step
+ */
+ExercisePlayerCtrl.prototype.goTo = function goTo(step) {
+    // Manually disable tooltip
+    $('.tooltip').hide();
+
+    if (!this.submitted) {
+        // Answers for the current step have not been submitted => submit it before navigating
+        this.submit()
+            .then(function onSuccess() {
+                this.submitted = false;
+                this.$location.path('/play/' + step.id);
+            }.bind(this));
     } else {
-        var url = Routing.generate('ujm_sequence_error', { message: 'index out of bounds', code: '400' });
-        this.$window.location = url;
+        // Directly navigate to the Step
+        this.submitted = false;
+        this.$location.path('/play/' + step.id);
     }
 };
 
 /**
- * Get the step number for display
- * @returns {Number}
+ * End the Exercise
+ * Saves the current step and go to the Exercise home or papers if correction is available
  */
-ExercisePlayerCtrl.prototype.getCurrentStepNumber = function getCurrentStepNumber() {
-    return this.currentStepIndex + 1;
-};
-
-/**
- * When using the drop down to jump to a specific step
- * @param {Object} step
- */
-ExercisePlayerCtrl.prototype.jumpToStep = function jumpToStep(step) {
-    if (this.exercise.steps.indexOf(step) !== this.exercise.steps.indexOf(this.currentStep)) {
-        this.validateStep('goto', this.exercise.steps.indexOf(step));
-    }
-};
-
-ExercisePlayerCtrl.prototype.getTotalScore = function () {
-    var totalScore = 0;
-    for (var i=0; i<this.exercise.steps[this.currentStepIndex].items.length; i++) {
-        totalScore += this.exercise.steps[this.currentStepIndex].items[i].scoreTotal;
-    }
-
-    return totalScore;
-};
-
-ExercisePlayerCtrl.prototype.getCurrentScore = function () {
-    var studentData = this.DataSharing.getStudentData();
-    if (studentData.question.typeOpen === "long") {
-        return "-";
-    }
-    else {
-        for (var i=0; i<studentData.paper.questions.length; i++) {
-            if (studentData.paper.questions[i].id === studentData.question.id.toString()) {
-                return studentData.paper.questions[i].score;
-            }
-        }
-    }
-};
-
-/**
- * save the current step in paper js object
- * in some case end the exercise
- * go to another step or end exercise
- * @param {String} action
- * @param {Number} index (nullable) the step index when using direct access
- */
-ExercisePlayerCtrl.prototype.validateStep = function (action, index) {
-    // manualy disable tooltips...
-    $('.tooltip').each(function () {
-        $(this).hide();
-    });
-
-    // get next step index
-    this.currentStepIndex = this.getNextStepIndex(this.currentStepIndex, action, index);
-
-    // data set by question directive
-    var studentData = this.DataSharing.getStudentData();
-    // TODO : améliorer
-    if (3 != this.exercise.meta.type) {
-        var submitPromise = this.ExerciseService.submitAnswer(this.paper.id, studentData);
-    }
-
-    // navigate to desired step / end / terminate exercise
-    this.handleStepNavigation(action, studentData.paper);
-};
-
-/**
- *
- * @param {number} current current index
- * @param {string} action
- * @param {number} index the index to reach (when the drop box is used)
- * @returns {number}
- */
-ExercisePlayerCtrl.prototype.getNextStepIndex = function (current, action, index) {
-    var newIndex = 0;
-    if (action && (action === 'forward' || action === 'backward')) {
-        newIndex = action === 'forward' ? current + 1 : current - 1;
-    } else if (action && action === 'goto' && index !== undefined) {
-        newIndex = index;
-    }
-    return newIndex;
-};
-
-/**
- * Navigate to desired step or end exercise and redirect to appropriate view
- * @param {string} action
- * @param {object} paper
- */
-ExercisePlayerCtrl.prototype.handleStepNavigation = function (action, paper) {
-    this.feedbackIsShown = false;
-
-    if (action && (action === 'forward' || action === 'backward' || action === 'goto')) {
-        this.setCurrentStep(this.currentStepIndex);
-    } else if (action && action === 'end') {
-        var endPromise = this.ExerciseService.end(paper);
-        endPromise.then(function (result) {
-            if (this.checkCorrectionAvailability()) {
-                // go to paper correction view
-                var url = Routing.generate('ujm_exercise_open', {id: this.exercise.id}) + '#/papers/' + paper.id;
-                this.$window.location = url;
-            }
-            else {
-                // go to exercise home page
-                var url = Routing.generate('ujm_exercise_open', {id: this.exercise.id});
-                this.$window.location = url;
-            }
+ExercisePlayerCtrl.prototype.end = function end() {
+    this.submit()
+        .then(function onSuccess() {
+            // Answers submitted, we can now end the Exercise
+            this.UserPaperService
+                .end()
+                .then(function onSuccess() {
+                    if (this.checkCorrectionAvailability()) {
+                        // go to paper correction view
+                        this.$location.path('/papers/' + this.paper.id);
+                    }
+                    else {
+                        // go to exercise home page
+                        this.$location.path('/');
+                    }
+                }.bind(this));
         }.bind(this));
-    } else if (action && action === 'interrupt') {
-        // go to exercise home page
-        var url = Routing.generate('ujm_exercise_open', {id: this.exercise.id});
-        this.$window.location = url;
-    } else {
-        var url = Routing.generate('ujm_sequence_error', {message: 'action not allowed', code: '400'});
-        this.$window.location = url;
-    }
 };
 
+/**
+ * Interrupt the Exercise
+ * Saves the current step and go to the Exercise home
+ */
+ExercisePlayerCtrl.prototype.interrupt = function interrupt() {
+    this.submit()
+        .then(function onSuccess() {
+            // Return to exercise home
+            this.$location.path('/');
+        }.bind(this));
+};
 
 /**
  * Check if correction is available for an exercise
  * @returns {Boolean}
+ * @todo To mode into CorrectionService
  */
 ExercisePlayerCtrl.prototype.checkCorrectionAvailability = function () {
     var correctionMode = this.CommonService.getCorrectionMode(this.exercise.meta.correctionMode);
+
     switch (correctionMode) {
         case "test-end":
             return true;
@@ -243,28 +219,6 @@ ExercisePlayerCtrl.prototype.checkCorrectionAvailability = function () {
         default:
             return false;
     }
-};
-
-ExercisePlayerCtrl.prototype.showFeedback = function () {
-    var studentData = this.DataSharing.getStudentData();
-    var submitPromise = this.ExerciseService.submitAnswer(this.paper.id, studentData);
-    submitPromise.then(function (result) {
-        this.feedbackIsShown = true;
-    }.bind(this));
-    this.$scope.$broadcast('show-feedback');
-};
-
-ExercisePlayerCtrl.prototype.hideFeedback = function () {
-    this.feedbackIsShown = false;
-    this.$scope.$broadcast('hide-feedback');
-};
-
-/**
- * Checks if feedback fields can be visible at some times
- * @returns {Boolean}
- */
-ExercisePlayerCtrl.prototype.checkIfFeedbackIsAvailable = function () {
-    return this.exercise.meta.type === "3";
 };
 
 // Register controller into Angular JS

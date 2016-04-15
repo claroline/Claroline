@@ -23,7 +23,7 @@
                     <!--<td></td>-->
                     <td>{{ item.type }}</td>
                     <td>{{ item.title }}</td>
-                    <td class="text-center" data-ng-bind-html="item.invite"></td>
+                    <td class="text-center" data-ng-bind-html="item.invite | unsafe"></td>
                     <td>
                         <!-- Edit Item button -->
                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans:{}:'ujm_exo' }}" href="{{ 'ujm_question_edit' | path:{ id: item.id, exoID: stepListCtrl.exerciseId } }}">
@@ -70,7 +70,7 @@
 
         <div class="alert alert-info" data-ng-if="0 === stepListCtrl.steps.length">
             <span class="fa fa-warning"></span>
-            {{ 'no_question_found'|trans:{}:'ujm_exo' }} ...
+            {{ 'no_question_found'|trans:{}:'ujm_exo' }}
         </div>
 
         <button type="button" class="btn btn-primary" data-ng-click="stepListCtrl.addStep()">

@@ -1,56 +1,14 @@
-<div class="panel panel-default" id="question-{{ openQuestionCtrl.question.id }}">
-    <div class="panel-heading clearfix">
-        <h4 class="panel-title pull-left">
-            <span>{{ openQuestionCtrl.question.title }}</span>
-        </h4>
-        <div class="btn-group  pull-right">
-            <a class="btn btn-default fa fa-chevron-down" id="question-toggle-{{ openQuestionCtrl.question.id }}" data-ng-click="openQuestionCtrl.toggleDetails(question.id)"></a>
-        </div>
-    </div>
-    <div class="panel-body" id="question-body-{{openQuestionCtrl.question.id}}">
-        <div class="row">
-            <div class="col-md-12">
-                <div data-ng-bind-html="openQuestionCtrl.question.invite | unsafe"></div>
-            </div>
-        </div>
+<div class="type-question-container open-question-container">
+    <!-- Answer input -->
+    <textarea style="margin-bottom: 20px;" class="form-control" rows="{{ 'long' === openQuestionCtrl.question.typeOpen ? 15 : 5 }} "
+            data-ng-if="openQuestionCtrl.question.typeOpen !== 'oneWord' && !openQuestionCtrl.feedback.visible"
+            data-ng-model="openQuestionCtrl.questionPaper.answer">
+    </textarea>
 
-        <hr/>
+    <input style="margin-bottom: 20px;" type="text" data-ng-if="openQuestionCtrl.question.typeOpen === 'oneWord' && !openQuestionCtrl.feedback.visible" data-ng-model="openQuestionCtrl.questionPaper.answer" />
 
-        <div class="row" data-ng-if="openQuestionCtrl.question.description">
-            <div class="col-md-12">
-                {{ openQuestionCtrl.question.description }}
-            </div>
-        </div>
-
-        <hr data-ng-if="openQuestionCtrl.question.description" />
-
-        <textarea data-ng-if="openQuestionCtrl.question.typeOpen !== 'oneWord' && !openQuestionCtrl.feedbackIsVisible" data-ng-change="openQuestionCtrl.updateStudentData()" data-ng-model="openQuestionCtrl.answer" data-ng-bind="openQuestionCtrl.answer" id="openTextArea" ></textarea>
-        <input type="text" data-ng-if="openQuestionCtrl.question.typeOpen === 'oneWord' && !openQuestionCtrl.feedbackIsVisible" data-ng-change="openQuestionCtrl.updateStudentData()" data-ng-model="openQuestionCtrl.answer" data-ng-bind="openQuestionCtrl.answer" id="openTextArea" />
-        <div data-ng-if="openQuestionCtrl.feedbackIsVisible">
-            <span data-ng-bind-html="openQuestionCtrl.answer"></span>
-        </div>
-        <div data-ng-if="openQuestionCtrl.question.hints">
-            <hr/>
-            <!-- Question hints row -->
-            <div class="form-inline">
-                <div class="form-group">
-                    <div data-ng-repeat="hint in openQuestionCtrl.question.hints" style="margin-bottom: 10px;">
-                        <div data-ng-if="!openQuestionCtrl.hintIsUsed(hint.id)">
-                            <button type="button" role="button" class="btn btn-default fa fa-eye" title="{{ 'question_hint_show_title'|trans:{}:'ujm_sequence' }}" data-ng-click="openQuestionCtrl.showHint(hint.id)" id="hint-{{hint.id}}"> {{ 'question_hint_label'|trans:{}:'ujm_sequence' }} {{$index + 1}}</button>
-                        </div>
-                    </div>
-                    <div data-ng-repeat="used in openQuestionCtrl.usedHints" id="visible-hints">
-                        <h4>{{used}}</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div data-ng-if="openQuestionCtrl.feedbackIsVisible && openQuestionCtrl.questionFeedback">
-                <div class="col-md-12">
-                    <label class="alert alert-info" data-ng-bind-html="openQuestionCtrl.questionFeedback | unsafe"></label>
-                </div>
-            </div>
-        </div>
+    <!-- Corrected text -->
+    <div class="panel panel-default" data-ng-if="openQuestionCtrl.feedback.visible && openQuestionCtrl.answerWithKeywords">
+        <div class="panel-body" data-ng-bind-html="openQuestionCtrl.answerWithKeywords | unsafe"></div>
     </div>
 </div>

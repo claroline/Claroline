@@ -86,7 +86,7 @@ angular.module('Question').controller('GraphicQuestionCtrl', [
         };
         
         this.setSolution = function () {
-            var promise = QuestionService.getQuestionSolutions(this.question.id);
+            var promise = QuestionService.getSolutions(this.question);
             promise.then(function (result) {
                 this.solutions = result.solutions;
                 for (var i=0; i<this.solutions.length; i++) {
@@ -161,61 +161,11 @@ angular.module('Question').controller('GraphicQuestionCtrl', [
         this.getAssetsDir = function () {
             return AngularApp.webDir;
         };
-
-
-        /**
-         * check if a Hint has already been used (in paper)
-         * @param {type} id
-         * @returns {Boolean}
-         */
-        this.hintIsUsed = function (id) {
-            if (this.currentQuestionPaperData && this.currentQuestionPaperData.hints) {
-                for (var i = 0; i < this.currentQuestionPaperData.hints.length; i++) {
-                    if (this.currentQuestionPaperData.hints[i] === id) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        };
-
-        /**
-         * Get hint data and update student data in common service
-         * @param {type} hintId
-         * @returns {undefined}
-         */
-        this.showHint = function (id) {
-            var penalty = QuestionService.getHintPenalty(this.question.hints, id);
-            $ngBootbox.confirm(Translator.trans('question_show_hint_confirm', {1: penalty}, 'ujm_sequence'))
-                .then(function () {
-                    this.getHintData(id);
-                    this.currentQuestionPaperData.hints.push(id);
-                    this.updateStudentData();
-                    // hide hint button
-                    angular.element('#hint-' + id).hide();
-                }.bind(this));
-        };
-
-        this.getHintData = function (id) {
-            var promise = QuestionService.getHint(id);
-            promise.then(function (result) {
-                //console.log(result);
-                this.usedHints.push(result);
-
-            }.bind(this));
-        };
-
-        /**
-         * Listen to show-feedback event (broadcasted by ExercisePlayerCtrl)
-         */
-        $scope.$on('show-feedback', function (event, data) {
-            this.showFeedback();
-        }.bind(this));
         
         
         this.showFeedback = function () {
             // get question answers and feedback ONLY IF NEEDED
-            /*var promise = QuestionService.getQuestionSolutions(this.question.id);
+            /*var promise = QuestionService.getSolutions(this.question);
              promise.then(function (result) {*/
             this.feedbackIsVisible = true;
             this.disableDraggable();
@@ -253,7 +203,7 @@ angular.module('Question').controller('GraphicQuestionCtrl', [
 
                     if (((this.solutions[i].size >= distance*2 && this.solutions[i].shape === "circle") || (this.solutions[i].shape === "square" && pointX > startX && pointX < endX && pointY > startY && pointY < endY)) && this.notFoundZones.indexOf(this.solutions[i]) !== -1) {
                         var rightPointY = pointY + topElementsHeight;
-                        $("#" + firstElementId).replaceWith("<i id='crosshair_valid_" + firstElementNumId + "' class='color-success fa fa-check' data-toggle='tooltip' style='top: " + rightPointY + "px; left: " + pointX + "px; position: absolute; z-index: 3;' title='" + this.solutions[i].feedback + "' ></i>");
+                        $("#" + firstElementId).replaceWith("<i id='crosshair_valid_" + firstElementNumId + "' class='text-success fa fa-check' data-toggle='tooltip' style='top: " + rightPointY + "px; left: " + pointX + "px; position: absolute; z-index: 3;' title='" + this.solutions[i].feedback + "' ></i>");
 
                         var solution = this.solutions[i];
                         var elem = document.createElement('div');
@@ -289,7 +239,7 @@ angular.module('Question').controller('GraphicQuestionCtrl', [
                 var numId = id.replace("crosshair_", "");
                 var rightPointY = $("#" + id).prop("y");
                 var pointX = $("#" + id).prop("x");
-                $("#" + id).replaceWith("<i id='crosshair_invalid_" + numId + "' class='color-danger fa fa-close crosshair_invalid' data-toggle='tooltip' style='top: " + rightPointY + "px; left: " + pointX + "px; position: absolute; z-index: 3;' title='" + this.solutions[i].feedback + "' ></i>");
+                $("#" + id).replaceWith("<i id='crosshair_invalid_" + numId + "' class='text-danger fa fa-close crosshair_invalid' data-toggle='tooltip' style='top: " + rightPointY + "px; left: " + pointX + "px; position: absolute; z-index: 3;' title='" + this.solutions[i].feedback + "' ></i>");
             }
         };
         
@@ -305,10 +255,6 @@ angular.module('Question').controller('GraphicQuestionCtrl', [
                 $("#crosshair_" + this.question.coords[i].id).draggable('enable');
             }
         };
-
-        $scope.$on('hide-feedback', function (event, data) {
-            this.hideFeedback();
-        }.bind(this));
 
         this.hideFeedback = function () {
             this.feedbackIsVisible = false;
@@ -328,24 +274,11 @@ angular.module('Question').controller('GraphicQuestionCtrl', [
         };
 
         /**
-         * Checks if the question has meta
-         * @returns {boolean}
-         */
-        this.questionHasOtherMeta = function () {
-            return CommonService.objectHasOtherMeta(this.question);
-        };
-
-        /**
          * Called on each checkbox / radiobutton click
          * We need to share those informations with parent controllers
          * For that purpose we use a shared service
          */
         this.updateStudentData = function () {
-
-            //array(
-            //  "471-335.9999694824219",
-            //  "583-125"
-            // )
             var answers = [];
             for (var i = 0; i < this.coords.length; i++) {
                 var answerString = this.coords[i].x.toString() + '-' + this.coords[i].y.toString();
@@ -353,32 +286,6 @@ angular.module('Question').controller('GraphicQuestionCtrl', [
             }
             this.currentQuestionPaperData.answer = answers;
             DataSharing.setStudentData(this.question, this.currentQuestionPaperData);
-        };
-
-        /**
-         * Hide / show a specific panel content and handle hide / show button icon
-         * @param {string} id (part of the panel id)
-         */
-        this.toggleDetails = function (id) {
-
-            // custom toggle function to avoid the use of jquery
-            if (angular.element('#question-body-' + id).attr('style') === undefined) {
-                angular.element('#question-body-' + id).attr('style', 'display: none;');
-            } else {
-                // hide / show panel body
-                if (angular.element('#question-body-' + id).attr('style') === 'display: none;') {
-                    angular.element('#question-body-' + id).attr('style', 'display: block;');
-                } else if (angular.element('#question-body-' + id).attr('style') === 'display: block;') {
-                    angular.element('#question-body-' + id).attr('style', 'display: none;');
-                }
-            }
-
-            // handle hide / show button icon
-            if (angular.element('#question-toggle-' + id).hasClass('fa-chevron-down')) {
-                angular.element('#question-toggle-' + id).removeClass('fa-chevron-down').addClass('fa-chevron-right');
-            } else if (angular.element('#question-toggle-' + id).hasClass('fa-chevron-right')) {
-                angular.element('#question-toggle-' + id).removeClass('fa-chevron-right').addClass('fa-chevron-down');
-            }
         };
     }
 ]);

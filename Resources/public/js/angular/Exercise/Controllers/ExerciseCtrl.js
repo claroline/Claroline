@@ -13,9 +13,6 @@ var ExerciseCtrl = function ExerciseCtrl(ExerciseService, $route) {
     this.ExerciseService.setEditEnabled(this.editEnabled);
     this.ExerciseService.setComposeEnabled(this.composeEnabled);
 
-    // Force reload of the route (as ng-view is deeper in the directive tree, route resolution is deferred and it causes issues)
-    $route.reload();
-
     this.$route = $route;
 };
 

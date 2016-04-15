@@ -1,0 +1,75 @@
+<div class="question-container panel panel-default">
+    <div class="panel-heading">
+        <!-- Title of the Question -->
+        <h4 class="panel-title" data-ng-click="collapsed = !collapsed">
+            <span class="fa fa-fw" data-ng-class="{ 'fa-caret-down': !collapsed, 'fa-caret-right': collapsed }"></span>
+
+            {{ questionShowCtrl.question.title }}
+
+            <!-- Score -->
+            <div class="pull-right label label-primary" data-ng-if="questionShowCtrl.feedback.enabled">
+                {{ 'score'|trans:{}:'ujm_exo' }}:
+                <span>{{ questionShowCtrl.feedback.visible ? questionShowCtrl.questionPaper.score + '/' + questionShowCtrl.question.scoreTotal : '...' }}</span>
+            </div>
+        </h4>
+    </div>
+
+    <div class="panel-body" data-ng-show="!collapsed">
+        <div class="question-info">
+            <!-- Invite of the Question -->
+            <div data-ng-bind-html="questionShowCtrl.question.invite | unsafe"></div>
+
+            <!-- Description of the Question -->
+            <div data-ng-bind="questionShowCtrl.question.description"></div>
+        </div>
+
+        <!-- Display specificity of the Question -->
+        <div data-ng-switch="questionShowCtrl.question.type">
+            <!-- Choice Type -->
+            <choice-question data-ng-switch-when="application/x.choice+json" data-question="questionShowCtrl.question" data-question-paper="questionShowCtrl.questionPaper"></choice-question>
+
+            <!-- Match Type -->
+            <match-question data-ng-switch-when="application/x.match+json" data-question="questionShowCtrl.question" data-question-paper="questionShowCtrl.questionPaper"></match-question>
+
+            <!-- Cloze Type -->
+            <cloze-question data-ng-switch-when="application/x.cloze+json" data-question="questionShowCtrl.question" data-question-paper="questionShowCtrl.questionPaper"></cloze-question>
+
+            <!-- Open Type -->
+            <open-question data-ng-switch-when="application/x.short+json" data-question="questionShowCtrl.question" data-question-paper="questionShowCtrl.questionPaper"></open-question>
+
+            <!-- Graphic Type -->
+            <graphic-question data-ng-switch-when="application/x.graphic+json" data-question="questionShowCtrl.question" data-question-paper="questionShowCtrl.questionPaper"></graphic-question>
+        </div>
+
+        <!-- Display Question Feedback -->
+        <div class="question-feedback" data-ng-if="questionShowCtrl.feedback.visible && questionShowCtrl.question.feedback">
+            <div class="alert alert-info">
+                <span class="fa fa-fw fa-comment pull-left"></span>
+                <span data-ng-bind-html="questionShowCtrl.question.feedback | unsafe"></span>
+            </div>
+        </div>
+
+        <!-- Display Hints -->
+        <div class="question-hints" data-ng-if="questionShowCtrl.question.hints">
+            <hr/>
+
+            <div class="hint" data-ng-repeat="hint in questionShowCtrl.question.hints">
+                <!-- Button to load the Hint -->
+                <button type="button" role="button" class="btn btn-default"
+                        data-ng-if="!questionShowCtrl.isHintUsed(hint)"
+                        ng-bootbox-confirm="{{ 'question_show_hint_confirm'|trans:{ 1: hint.penalty }:'ujm_sequence' }}"
+                        ng-bootbox-confirm-action="questionShowCtrl.showHint(hint)"
+                >
+                    <span class="fa fa-fw fa-eye"></span>
+                    {{ 'question_hint_show_title'|trans:{}:'ujm_sequence' }} {{ $index + 1 }}
+                </button>
+
+                <!-- Hint info if already loaded -->
+                <div class="well well-sm" data-ng-if="questionShowCtrl.isHintUsed(hint)">
+                    <span class="fa fa-fw fa-lightbulb-o"></span>
+                    {{ questionShowCtrl.getHintValue(hint) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

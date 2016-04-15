@@ -9,8 +9,9 @@ angular.module('Question').directive('graphicQuestion', [
             templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/angular/Question/Partials/Type/graphic.html',
             scope: {
                 question: '=',
-                canSeeFeedback: '='
+                questionPaper: '='
             },
+            bindToController: true,
             link: function (scope, element, attr, graphicQuestionCtrl) {
                 graphicQuestionCtrl.init(scope.question, scope.canSeeFeedback);
                 // in case of coming from a js plumb question

@@ -1,9 +1,10 @@
 /**
  * Exercise Service
  */
-var ExerciseService = function ExerciseService($http, $q) {
+var ExerciseService = function ExerciseService($http, $q, UserPaperService) {
     this.$http = $http;
     this.$q    = $q;
+    this.UserPaperService = UserPaperService;
 };
 
 // Set up dependency injection
@@ -47,14 +48,6 @@ ExerciseService.prototype.setExercise = function setExercise(exercise) {
 };
 
 /**
- * Get steps of an Exercise
- * @returns {Array}
- */
-ExerciseService.prototype.getSteps = function getSteps() {
-    return (this.exercise && this.exercise.steps) ? this.exercise.steps : [];
-};
-
-/**
  * Is edit enabled ?
  * @returns {boolean}
  */
@@ -94,7 +87,7 @@ ExerciseService.prototype.setComposeEnabled = function setComposeEnabled(compose
 
 /**
  * Save modifications of the metadata of the Exercise
- * @param exercise
+ * @param   {Object} exercise
  * @returns {Promise}
  */
 ExerciseService.prototype.save = function save(exercise) {
@@ -123,65 +116,71 @@ ExerciseService.prototype.save = function save(exercise) {
 };
 
 /**
- * Start the current Exercise
- * @returns {promise}
+ * Get steps of an Exercise
+ * @returns {Array}
  */
-ExerciseService.prototype.start = function start() {
-    var deferred = this.$q.defer();
-
-    this.$http.post(
-            Routing.generate('exercise_new_attempt', { id: this.exercise.id })
-        ).success(function(response){
-            // TODO : display message
-
-            if (response && response.paper) {
-                deferred.resolve(response.paper);
-            }
-        }).error(function(data, status){
-            // TODO : display message
-
-            deferred.reject([]);
-            var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService get exercise error';
-            var code = data && data.error && data.error.code ? data.error.code : 403;
-            var url = Routing.generate('ujm_sequence_error', { message: msg, code: code });
-            /*$window.location = url;*/
-        });
-
-    return deferred.promise;
+ExerciseService.prototype.getSteps = function getSteps() {
+    return (this.exercise && this.exercise.steps) ? this.exercise.steps : [];
 };
 
 /**
- * End the current Exercise
- * @param   {Object} studentPaper
- * @returns {promise}
+ * Get an Exercise step by its ID
+ * @param   {string} stepId
+ * @returns {Object}
  */
-ExerciseService.prototype.end = function end(studentPaper) {
-    // Backup CODE
-    var deferred = this.$q.defer();
+ExerciseService.prototype.getStep = function getStep(stepId) {
+    var step = null;
+    if (this.exercise.steps) {
+        for (var i = 0; i < this.exercise.steps.length; i++) {
+            if (stepId == this.exercise.steps[i].id) {
+                step = this.exercise.steps[i];
+                break;
+            }
+        }
+    }
 
-    this.$http
-        .put(
-            Routing.generate('exercise_finish_paper', { id: studentPaper.id })
-        )
-        // Success callback
-        .success(function (response) {
-            // TODO : display message
+    return step;
+};
 
-            deferred.resolve(response);
-        })
-        // Error callback
-        .error(function (data, status) {
-            // TODO : display message
+/**
+ * Get the index of a Step
+ * @param   {Object} step
+ * @returns {Number}
+ */
+ExerciseService.prototype.getIndex = function getIndex(step) {
+    return (this.exercise && this.exercise.steps) ? this.exercise.steps.indexOf(step) : -1;
+};
 
-            deferred.reject([]);
+/**
+ * Get the previous step of a step
+ * @param   {Object} step
+ * @returns {Object}
+ */
+ExerciseService.prototype.getPrevious = function getPrevious(step) {
+    var previous = null;
 
-            var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService end sequence error';
-            var code = data && data.error && data.error.code ? data.error.code : 403;
-            var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});
-            /*$window.location = url;*/
-        });
+    var pos = this.getIndex(step);
+    if (-1 !== pos && this.exercise.steps && this.exercise.steps[pos - 1]) {
+        previous = this.exercise.steps[pos - 1];
+    }
 
-    return deferred.promise;
+    return previous;
+};
+
+/**
+ * Get the next step of a step
+ * @param   {Object} step
+ * @returns {Object}
+ */
+ExerciseService.prototype.getNext = function getNext(step) {
+    var next = null;
+
+    var pos = this.getIndex(step);
+    if (-1 !== pos && this.exercise.steps && this.exercise.steps[pos + 1]) {
+        next = this.exercise.steps[pos + 1];
+    }
+
+    return next;
 };
 
 /**
@@ -268,40 +267,6 @@ ExerciseService.prototype.removeStep = function removeStep(step) {
     return deferred.promise;
 };
 
-ExerciseService.prototype.removeItem = function removeItem(step, item) {
-    // Store a copy of the item if something goes wrong
-    var itemBack = angular.copy(item, {});
-
-    // Remove item from Step
-    var pos = step.items.indexOf(item);
-    if (-1 !== pos) {
-        step.items.splice(pos, 1);
-    }
-
-    var deferred = this.$q.defer();
-    this.$http
-        .delete(
-            Routing.generate('ujm_exercise_question_delete', { id: this.exercise.id, qid: item.id })
-        )
-        // Success callback
-        .success(function (response) {
-            // TODO : display success message
-
-            deferred.resolve(response);
-        })
-        // Error callback
-        .error(function (data, status) {
-            // Restore item
-            step.items.push(itemBack);
-
-            // TODO : display error message
-
-            deferred.reject({});
-        }.bind(this));
-
-    return deferred.promise;
-};
-
 /**
  * Publish the current Exercise
  * @returns {ExerciseService}
@@ -346,7 +311,7 @@ ExerciseService.prototype.publish = function publish() {
 ExerciseService.prototype.unpublish = function unpublish() {
     var deferred = this.$q.defer();
 
-    // We anticipate the success of the publishing (that's just a boolean change on boolean flag)
+    // We anticipate the success of the publishing (that's just a change on boolean flag)
     this.exercise.meta.published = false;
 
     this.$http
@@ -368,40 +333,6 @@ ExerciseService.prototype.unpublish = function unpublish() {
 
             deferred.reject({});
         }.bind(this));
-
-    return deferred.promise;
-};
-
-/**
- * Save the answer given to a question
- * @param {number} paperId
- * @param {object} studentData
- * @returns promise
- */
-ExerciseService.prototype.submitAnswer = function submitAnswer(paperId, studentData) {
-    // Backup CODE
-    var deferred = this.$q.defer();
-
-    this.$http
-        .put(
-            Routing.generate('exercise_submit_answer', {paperId: paperId, questionId: studentData.question.id}), {data: studentData.answers}
-        )
-        // Success callback
-        .success(function (response) {
-            // TODO : display message
-
-            deferred.resolve(response);
-        })
-        // Error callback
-        .error(function (data, status) {
-            // TODO : display message
-
-            deferred.reject([]);
-            var msg = data && data.error && data.error.message ? data.error.message : 'ExerciseService submit answer error';
-            var code = data && data.error && data.error.code ? data.error.code : 403;
-            var url = Routing.generate('ujm_sequence_error', {message: msg, code: code});
-            //$window.location = url;
-        });
 
     return deferred.promise;
 };

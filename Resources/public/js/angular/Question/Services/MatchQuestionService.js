@@ -5,9 +5,7 @@
  * we deport all that stuff in this service to keep Controller as slim as possible
  */
 angular.module('Question').factory('MatchQuestionService', [
-    'QuestionService',
-    'DataSharing',
-    function MatchQuestionService(QuestionService, DataSharing) {
+    function MatchQuestionService() {
 
         return {
             initBindMatchQuestion: function () {
