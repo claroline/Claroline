@@ -4,6 +4,7 @@ namespace UJM\ExoBundle\Transfer\Json\QuestionHandler;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use UJM\ExoBundle\Entity\Hole;
 use UJM\ExoBundle\Entity\InteractionHole;
 use UJM\ExoBundle\Entity\Question;
