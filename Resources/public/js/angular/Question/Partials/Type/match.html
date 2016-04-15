@@ -1,64 +1,45 @@
-<div class="panel panel-default" id="question-{{matchQuestionCtrl.question.id}}">
-    <div class="panel-heading clearfix">
-        <h4 class="panel-title pull-left">
-            <span>{{ matchQuestionCtrl.question.title }}</span>
-        </h4>
-        <div class="btn-group  pull-right">           
-            <a class="btn btn-default fa fa-chevron-down" id="question-toggle-{{matchQuestionCtrl.question.id}}" data-ng-click="matchQuestionCtrl.toggleDetails(question.id)"></a>
-        </div>
-    </div>
-    <div class="panel-body" id="question-body-{{matchQuestionCtrl.question.id}}">
-        <div class="row">
-            <div class="col-md-12">
-                <div data-ng-bind-html="matchQuestionCtrl.question.invite | unsafe"></div>
-            </div>
-        </div>
-
-        <hr/>
-
-        <div class="row">
-            <div class="col-md-12">
-                {{matchQuestionCtrl.question.description}}   
-            </div>
-        </div>
-
-        <hr/>
-
+<div class="type-question-container match-question-container panel panel-default">
+    <div class="panel-body">
         <!-- RESET CONNECTIONS BTN -->
-        <div class="row">
-            <div class="col-md-12">
-                <input data-ng-disabled="matchQuestionCtrl.feedbackIsVisible" type="button" name="resetAll"  id="resetAll" value="Reset" class="btn btn-primary">
-            </div>
-        </div>        
+        <div class="text-right">
+            <button type="button" role="button" class="btn btn-sm btn-danger" data-ng-disabled="matchQuestionCtrl.feedback.visible" data-ng-click="matchQuestionCtrl.reset()">
+                <span class="fa fa-refresh"></span>
+                {{ 'reset'|trans:{}:'ujm_exo' }}
+            </button>
+        </div>
+
         <!-- TO BIND PROPOSALS & ASSOCIATED LABELS -->
         <div data-ng-if="matchQuestionCtrl.question.typeMatch === 1" class="row center-text">
             <!-- PROPOSALS -->
-            <div class="col-md-6">
-                <div data-ng-repeat="proposal in matchQuestionCtrl.question.firstSet" class="row origin draggable" id="draggable_{{proposal.id}}">
-                    <div class="col-md-12 setLabel">    
+            <div class="col-md-5">
+                <div data-ng-repeat="proposal in matchQuestionCtrl.question.firstSet" class="origin draggable" id="draggable_{{proposal.id}}">
+                    <div class="setLabel">
                         <div data-ng-bind-html="proposal.data | unsafe"></div>
                     </div>
                 </div>
             </div>
+
             <!-- EMPTY -->
             <div class="col-md-2">
 
             </div>
+
             <!-- LABELS -->
-            <div class="col-md-6">
-                <div data-ng-repeat="proposal in matchQuestionCtrl.question.secondSet" class="row droppable" id="droppable_{{proposal.id}}">
-                    <div class="col-md-12 setLabel">                        
+            <div class="col-md-5">
+                <div data-ng-repeat="proposal in matchQuestionCtrl.question.secondSet" class="droppable" id="droppable_{{proposal.id}}">
+                    <div class="setLabel">
                          <div data-ng-bind-html="proposal.data | unsafe"></div>
                     </div>
                 </div>
             </div>
         </div>
+
         <!-- TO DRAG SUB TYPE  -->
         <div data-ng-if="matchQuestionCtrl.question.typeMatch === 2" class="row center-text">
             <!-- PROPOSALS -->
             <div class="col-md-6">
-                <div data-ng-repeat="proposal in matchQuestionCtrl.question.firstSet" class="row origin to-drag" id="div_{{proposal.id}}">
-                    <div class="col-md-12 setLabel">                        
+                <div data-ng-repeat="proposal in matchQuestionCtrl.question.firstSet" class="origin to-drag" id="div_{{proposal.id}}">
+                    <div class="setLabel">
                         <ul>
                             <li id="draggable_{{proposal.id}}" class="draggable">
                                 <div data-ng-bind-html="proposal.data | unsafe"></div>
@@ -67,16 +48,11 @@
                     </div>
                 </div>
             </div>
-            <!-- EMPTY -->
-            <!--
-            <div class="col-md-2">
 
-            </div>
-            -->
             <!-- LABELS -->
             <div class="col-md-6">
-                <div data-ng-repeat="proposal in matchQuestionCtrl.question.secondSet" class="row droppable" id="droppable_{{proposal.id}}">
-                    <div class="col-md-12 setLabel">
+                <div data-ng-repeat="proposal in matchQuestionCtrl.question.secondSet" class="droppable" id="droppable_{{proposal.id}}">
+                    <div class="setLabel">
                         <ul>
                             <li class="lidroppable">
                                  <div data-ng-bind-html="proposal.data | unsafe"></div>
@@ -87,13 +63,13 @@
                             <li data-ng-repeat="item in matchQuestionCtrl.dropped" id="dropped_{{item.source}}" data-ng-if="item.target === proposal.id">
                                 <div class="row dropped-item-row">
                                     <div class="col-sm-9" data-ng-bind-html="item.label | unsafe">
-                                        
+
                                     </div>
                                     <div class="col-md-1">
-                                        <i data-ng-if="(matchQuestionCtrl.feedbackIsVisible || (matchQuestionCtrl.dropIsValid(item) === 1 && matchQuestionCtrl.answerIsSaved(item))) && matchQuestionCtrl.canSeeFeedback" data-toggle="tooltip" data-ng-class="{'color-success fa fa-check' : matchQuestionCtrl.dropIsValid(item) === 1, 'color-danger fa fa-close': matchQuestionCtrl.dropIsValid(item) === 2}" title="{{matchQuestionCtrl.getDropFeedback(item)}}"></i>
+                                        <i data-ng-if="(matchQuestionCtrl.feedback.visible || (matchQuestionCtrl.dropIsValid(item) === 1 && matchQuestionCtrl.answerIsSaved(item))) && matchQuestionCtrl.canSeeFeedback" data-toggle="tooltip" data-ng-class="{'color-success fa fa-check' : matchQuestionCtrl.dropIsValid(item) === 1, 'color-danger fa fa-close': matchQuestionCtrl.dropIsValid(item) === 2}" title="{{matchQuestionCtrl.getDropFeedback(item)}}"></i>
                                     </div>
                                     <div class="col-sm-2">
-                                        <button data-ng-disabled="(matchQuestionCtrl.feedbackIsVisible || (matchQuestionCtrl.dropIsValid(item) === 1 && matchQuestionCtrl.answerIsSaved(item))) && matchQuestionCtrl.canSeeFeedback" class="btn btn-danger fa fa-trash" data-ng-click="matchQuestionCtrl.removeDropped(item.source, proposal.id)"></button>
+                                        <button data-ng-disabled="(matchQuestionCtrl.feedback.visible || (matchQuestionCtrl.dropIsValid(item) === 1 && matchQuestionCtrl.answerIsSaved(item))) && matchQuestionCtrl.feedback.enabled" class="btn btn-danger fa fa-trash" data-ng-click="matchQuestionCtrl.removeDropped(item.source, proposal.id)"></button>
                                     </div>
                                 </div>
                             </li>
@@ -102,6 +78,7 @@
                 </div>
             </div>
         </div>
+
         <!-- TO PAIR SUB TYPE  -->
         <div data-ng-if="matchQuestionCtrl.question.typeMatch === 3" class="row">
             <!-- PROPOSALS -->
@@ -128,6 +105,7 @@
                     <div data-ng-if="matchQuestionCtrl.proposalDropped(proposal)" data-ng-click="matchQuestionCtrl.removeDropped(proposal.id, -1)" class="col-md-12 fa fa-undo drag-zoom drag-button drop-textbox-height"></div>
                 </div>
             </div>
+
             <!-- LABELS -->
             <div class="col-md-3">
                 <div data-ng-repeat="proposal in matchQuestionCtrl.question.secondSet" class="{{matchQuestionCtrl.getDropClass('dropzone', proposal)}} {{ matchQuestionCtrl.getDropColor('div', proposal) }} row drop-textbox drop-textbox-height dropzone-textbox" id="droppable_{{proposal.id}}" data-toggle="tooltip" title="{{matchQuestionCtrl.getCurrentItemFeedBackIfOk(proposal)}}">
@@ -153,6 +131,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="col-md-6">
                 <div data-ng-repeat="proposal in matchQuestionCtrl.question.secondSet" class="row drop-textbox drop-textbox-height drop-label-textbox drop-default" id="label_{{proposal.id}}">
                     <div class="col-md-11 setLabel">
@@ -173,15 +152,8 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div data-ng-if="matchQuestionCtrl.feedbackIsVisible && matchQuestionCtrl.questionFeedback">
-                <div class="col-md-12">
-                    <label class="alert alert-info" data-ng-bind-html="matchQuestionCtrl.questionFeedback | unsafe"></label>
-                </div>
-            </div>
-        </div>
-        
-        <table data-ng-if="matchQuestionCtrl.feedbackIsVisible && matchQuestionCtrl.question.toBind" class="table table-striped">
+
+        <table data-ng-if="matchQuestionCtrl.feedback.visible && matchQuestionCtrl.question.toBind" class="table table-striped">
             <thead>
                 <tr>
                     <th class="center-text">{{ 'paper_details_table_choice'|trans:{}:'ujm_sequence' }}</th>
@@ -189,6 +161,7 @@
                     <th class="center-text">{{ 'paper_details_table_comment'|trans:{}:'ujm_sequence' }}</th>
                 </tr>
             </thead>
+
             <tbody>
                 <tr data-ng-repeat="label in matchQuestionCtrl.question.secondSet">
                     <!-- student answer -->
@@ -208,6 +181,7 @@
                                         <span data-ng-class="correctionMatchCtrl.checkProposalValidity(item.id) ? '':'wrong-label'">{{item.data}}</span>
                                          -->
                                     </li>
+
                                     <li data-ng-if="item.length == 0" data-ng-repeat="item in matchQuestionCtrl.getStudentAnswers(label)">
                                         -
                                     </li>
@@ -221,7 +195,7 @@
                             <div class="panel-heading clearfix">
                                 <h4 class="panel-title pull-left">
                                    <div data-ng-bind-html="label.data | unsafe"></div>
-                                </h4>                       
+                                </h4>
                             </div>
                             <div class="panel-body">
                                 <ul>
@@ -240,23 +214,5 @@
                 </tr>
             </tbody>
         </table>
-
-        <!-- HINTS -->
-        <div data-ng-if="matchQuestionCtrl.question.hints">
-            <hr/>
-            <!-- Question hints row -->
-            <div class="form-inline">
-                <div class="form-group">
-                    <div data-ng-repeat="hint in matchQuestionCtrl.question.hints" style="margin-bottom: 10px;">                        
-                        <div data-ng-if="!matchQuestionCtrl.hintIsUsed(hint.id)">
-                            <button type="button" role="button" class="btn btn-default fa fa-eye" title="{{ 'question_hint_show_title'|trans:{}:'ujm_sequence' }}" data-ng-click="choiceQuestionCtrl.showHint(hint.id)" id="hint-{{hint.id}}"> {{ 'question_hint_label'|trans:{}:'ujm_sequence' }} {{$index + 1}}</button>
-                        </div>
-                    </div>
-                    <div data-ng-repeat="used in matchQuestionCtrl.usedHints">
-                        <h4>{{used}}</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>

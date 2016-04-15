@@ -9,8 +9,8 @@ angular.module('Question').factory('MatchQuestionService', [
 
         return {
             initBindMatchQuestion: function () {
-
                 jsPlumb.setContainer($("body"));
+
                 // source elements
                 $(".origin").each(function () {
                     jsPlumb.addEndpoint(this, {
@@ -43,8 +43,8 @@ angular.module('Question').factory('MatchQuestionService', [
                 });
 
                 jsPlumb.detachEveryConnection();
-
             },
+
             initDragMatchQuestion: function () {
                 jsPlumb.detachEveryConnection();
                 jsPlumb.deleteEveryEndpoint();
