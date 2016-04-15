@@ -18,6 +18,7 @@ class QuestionHandlerCollector
      * Adds a question handler to the collection.
      *
      * @param QuestionHandlerInterface $handler
+     *
      * @throws UnregisterableHandlerException
      */
     public function addHandler(QuestionHandlerInterface $handler)
@@ -53,7 +54,9 @@ class QuestionHandlerCollector
      * Returns the handler for a specific MIME type, if any.
      *
      * @param string $type
+     *
      * @throws UnregisteredHandlerException
+     *
      * @return QuestionHandlerInterface
      */
     public function getHandlerForMimeType($type)
@@ -72,7 +75,9 @@ class QuestionHandlerCollector
      * Returns the handler for a specific interaction type, if any.
      *
      * @param string $type
+     *
      * @throws UnregisteredHandlerException
+     *
      * @return QuestionHandlerInterface
      */
     public function getHandlerForInteractionType($type)
@@ -91,6 +96,7 @@ class QuestionHandlerCollector
 
     /**
      * @param string $type
+     *
      * @return bool
      */
     public function hasHandlerForMimeType($type)
@@ -100,6 +106,7 @@ class QuestionHandlerCollector
 
     /**
      * @param string $type
+     *
      * @return bool
      */
     public function hasHandlerForInteractionType($type)
@@ -115,6 +122,7 @@ class QuestionHandlerCollector
 
     /**
      * @param string $uri
+     *
      * @return bool
      */
     public function hasHandlerForSchemaUri($uri)

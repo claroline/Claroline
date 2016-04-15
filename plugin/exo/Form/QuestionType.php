@@ -56,11 +56,11 @@ class QuestionType extends AbstractType
             ->add('description', 'textarea', array(
                     'label' => 'question_description',
                     'required' => false,
-                    'attr'  => array(
+                    'attr' => array(
                         'placeholder' => 'question_description',
-                        'class'=> 'form-control',
-                        'data-new-tab' => 'yes'
-                    )
+                        'class' => 'form-control',
+                        'data-new-tab' => 'yes',
+                    ),
                 )
             )
             ->add('invite', 'tinymce', array(
@@ -82,18 +82,18 @@ class QuestionType extends AbstractType
                     //for automatically open documents in a new tab for all tinymce field
                     'attr' => array(
                         'data-new-tab' => 'yes',
-                        'placeholder' => 'interaction_feedback'
+                        'placeholder' => 'interaction_feedback',
                     ),
                     'label' => 'interaction_feedback',
-                    'required' => false
+                    'required' => false,
                 )
             )
             ->add(
                 'hints', 'collection', array(
-                    'type' => new HintType,
+                    'type' => new HintType(),
                     'prototype' => true,
                     'allow_add' => true,
-                    'allow_delete' => true
+                    'allow_delete' => true,
                 )
             );
     }

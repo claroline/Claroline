@@ -66,17 +66,17 @@ class Question
      */
     private $model = false;
 
-     /**
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $supplementary;
 
-     /**
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $specification;
 
-     /**
+    /**
      * @ORM\ManyToOne(targetEntity="Category")
      */
     private $category;
@@ -94,8 +94,8 @@ class Question
      * )
      */
     private $hints;
-    
-     /**
+
+    /**
      * Note: used for joins only.
      *
      * @ORM\OneToMany(targetEntity="StepQuestion", mappedBy="question")
@@ -110,7 +110,7 @@ class Question
     }
 
     /**
-     * Note: this method is automatically called in AbstractInteraction#setQuestion
+     * Note: this method is automatically called in AbstractInteraction#setQuestion.
      *
      * @param string $type
      */
@@ -232,7 +232,7 @@ class Question
     }
 
     /**
-     * @param boolean $locked
+     * @param bool $locked
      */
     public function setLocked($locked)
     {
@@ -240,7 +240,7 @@ class Question
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getLocked()
     {
@@ -248,7 +248,7 @@ class Question
     }
 
     /**
-     * @param boolean $model
+     * @param bool $model
      */
     public function setModel($model)
     {
@@ -256,7 +256,7 @@ class Question
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getModel()
     {
@@ -353,5 +353,4 @@ class Question
     {
         return $this->specification;
     }
-
 }

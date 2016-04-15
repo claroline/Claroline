@@ -3,6 +3,7 @@
 /**
  * To export a QCM question in QTI.
  */
+
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -19,9 +20,9 @@ class QcmExport extends QtiExport
     /**
      * Implements the abstract method.
      *
-     * @access public
-     * @param Question $question
+     * @param Question      $question
      * @param qtiRepository $qtiRepos
+     *
      * @return BinaryFileResponse
      */
     public function export(Question $question, qtiRepository $qtiRepos)
@@ -54,7 +55,7 @@ class QcmExport extends QtiExport
         $this->promptTag();
 
         //comment globale for this question
-        if ($this->interactionqcm->getQuestion()->getFeedBack()!= null
+        if ($this->interactionqcm->getQuestion()->getFeedBack() != null
             && $this->interactionqcm->getQuestion()->getFeedBack() != '') {
             $this->qtiFeedBack($question->getFeedBack());
         }
@@ -73,7 +74,7 @@ class QcmExport extends QtiExport
         $mapping = $this->document->CreateElement('mapping');
         $i = -1;
         foreach ($this->interactionqcm->getChoices() as $ch) {
-            $i++;
+            ++$i;
             if ($ch->getRightResponse() ==  true) {
                 $this->valueCorrectResponseTag($i);
             }
@@ -101,7 +102,7 @@ class QcmExport extends QtiExport
     /**
      * add tag value in correctResponse for each good choice.
      *
-     * @param Integer $choiceNumber
+     * @param int $choiceNumber
      */
     private function valueCorrectResponseTag($choiceNumber)
     {
@@ -138,7 +139,7 @@ class QcmExport extends QtiExport
         $prompt = $this->document->CreateElement('prompt');
         $invite = $this->interactionqcm->getQuestion()->getInvite();
         // Managing the resource export
-        $body=$this->qtiExportObject($invite);
+        $body = $this->qtiExportObject($invite);
         foreach ($body->childNodes as $child) {
             $inviteNew = $this->document->importNode($child, true);
             $prompt->appendChild($inviteNew);
@@ -152,7 +153,7 @@ class QcmExport extends QtiExport
      *
      *
      * @param \UJM\ExoBundle\Entity\Choice $choice
-     * @param Integer                      $choiceNumber
+     * @param int                          $choiceNumber
      */
     private function simpleChoiceTag($choice, $choiceNumber)
     {
@@ -183,8 +184,8 @@ class QcmExport extends QtiExport
      *
      *
      * @param DOM element $mapping
-     * @param Integer     $i
-     * @param Float       $weight
+     * @param int         $i
+     * @param float       $weight
      */
     private function notationByChoice($mapping, $i, $weight)
     {

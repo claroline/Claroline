@@ -19,8 +19,9 @@ class PaperRepository extends EntityRepository
     /**
      * Returns the unfinished papers of a user for a given exercise, if any.
      *
-     * @param User      $user
-     * @param Exercise  $exercise
+     * @param User     $user
+     * @param Exercise $exercise
+     *
      * @return array
      */
     public function findUnfinishedPapers(User $user, Exercise $exercise)
@@ -165,9 +166,9 @@ class PaperRepository extends EntityRepository
 
         return $nbPapers;
     }
-    
+
     /**
-     * Count the number of finished paper for a user and an exercise
+     * Count the number of finished paper for a user and an exercise.
      *
      * @param User
      * @param Exercise
@@ -178,7 +179,7 @@ class PaperRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('p');
 
-        $nb = $qb   ->select('COUNT(p)')
+        $nb = $qb->select('COUNT(p)')
                     ->join('p.exercise', 'e')
                     ->join('p.user', 'u')
                     ->where('u = :user')
@@ -187,14 +188,16 @@ class PaperRepository extends EntityRepository
                     ->setParameters(['user' => $user, 'exercise' => $exercise])
                     ->getQuery()
                     ->getSingleScalarResult();
-        
+
         return $nb;
     }
 
     /**
      * Returns whether a hint is related to a paper.
+     *
      * @param Paper $paper
-     * @param Hint $hint
+     * @param Hint  $hint
+     *
      * @return bool
      */
     public function hasHint(Paper $paper, Hint $hint)
@@ -210,7 +213,6 @@ class PaperRepository extends EntityRepository
             ->setParameters(['question' => $hint->getQuestion(), 'exercise' => $paper->getExercise()])
             ->getQuery()
             ->getSingleScalarResult();
-
 
         return 0 < $count;
     }

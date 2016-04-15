@@ -3,6 +3,7 @@
 /**
  * Services for the matching.
  */
+
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
 use JMS\DiExtraBundle\Annotation as DI;
@@ -18,7 +19,7 @@ class Open extends Interaction
      *
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param int $paperID id Paper or 0 if it's just a question test and not a paper
+     * @param int                                       $paperID id Paper or 0 if it's just a question test and not a paper
      *
      * @return mixed[]
      */
@@ -54,8 +55,8 @@ class Open extends Interaction
      * To calculate the score.
      *
      * @param \UJM\ExoBundle\Entity\InteractionOpen $interOpen
-     * @param String $response
-     * @param float $penalty penalty if the user showed hints
+     * @param string                                $response
+     * @param float                                 $penalty   penalty if the user showed hints
      *
      * @return string userScore/scoreMax
      */
@@ -63,8 +64,7 @@ class Open extends Interaction
         \UJM\ExoBundle\Entity\InteractionOpen $interOpen = null,
         $response = null,
         $penalty = null
-    )
-    {
+    ) {
         if ($interOpen->getTypeOpenQuestion() == 'long') {
             $score = -1;
         } elseif ($interOpen->getTypeOpenQuestion() == 'oneWord') {
@@ -80,7 +80,7 @@ class Open extends Interaction
             }
         }
 
-        $score .= '/' . $this->maxScore($interOpen);
+        $score .= '/'.$this->maxScore($interOpen);
 
         return $score;
     }
@@ -100,19 +100,13 @@ class Open extends Interaction
         $scoreMax = 0;
 
         if ($interOpen->getTypeOpenQuestion() == 'long') {
-            
             $scoreMax = $interOpen->getScoreMaxLongResp();
-            
         } elseif ($interOpen->getTypeOpenQuestion() == 'oneWord') {
-            
             $scoreMax = $em->getRepository('UJMExoBundle:WordResponse')
                 ->getScoreMaxOneWord($interOpen->getId());
-            
         } elseif ($interOpen->getTypeOpenQuestion() == 'short') {
-            
             $scoreMax = $em->getRepository('UJMExoBundle:WordResponse')
                 ->getScoreMaxShort($interOpen->getId());
-            
         }
 //        alert();
 
@@ -138,8 +132,8 @@ class Open extends Interaction
      *
      * call getAlreadyResponded and prepare the interaction to displayed if necessary
      *
-     * @param \UJM\ExoBundle\Entity\Interaction $interactionToDisplay interaction (question) to displayed
-     * @param Symfony\Component\HttpFoundation\Session\SessionInterface $session
+     * @param \UJM\ExoBundle\Entity\Interaction                            $interactionToDisplay interaction (question) to displayed
+     * @param Symfony\Component\HttpFoundation\Session\SessionInterface    $session
      * @param \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...) $interactionX
      *
      * @return \UJM\ExoBundle\Entity\Response
@@ -176,7 +170,7 @@ class Open extends Interaction
      * Get score for an open question with one word.
      *
      *
-     * @param String $response
+     * @param string                                $response
      * @param \UJM\ExoBundle\Entity\InteractionOpen $interOpen
      *
      * @return float
@@ -195,7 +189,7 @@ class Open extends Interaction
      * Get score for an open question with short answer.
      *
      *
-     * @param String $response
+     * @param string                                $response
      * @param \UJM\ExoBundle\Entity\InteractionOpen $interOpen
      *
      * @return float
@@ -205,11 +199,11 @@ class Open extends Interaction
         $score = 0;
 
         foreach ($interOpen->getWordResponses() as $wr) {
-            $pattern = '/' . $wr->getResponse() . '/';
+            $pattern = '/'.$wr->getResponse().'/';
             if (!$wr->getCaseSensitive()) {
                 $pattern .= 'i';
             }
-            $subject = '/' . $response . '/';
+            $subject = '/'.$response.'/';
             if (preg_match($pattern, $subject)) {
                 $score += $wr->getScore();
             }

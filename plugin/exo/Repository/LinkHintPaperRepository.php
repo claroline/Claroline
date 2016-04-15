@@ -12,8 +12,9 @@ class LinkHintPaperRepository extends EntityRepository
      * Returns all the hint links marked as "viewed" which are associated
      * with a question in a given paper.
      *
-     * @param Paper     $paper
-     * @param Question  $question
+     * @param Paper    $paper
+     * @param Question $question
+     *
      * @return array
      */
     public function findViewedByPaperAndQuestion(Paper $paper, Question $question)

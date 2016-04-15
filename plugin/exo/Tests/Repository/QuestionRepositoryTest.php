@@ -57,7 +57,7 @@ class QuestionRepositoryTest extends TransactionalTestCase
 
     public function testFindByExercise()
     {
-      //Il faut rajouter les steps..
+        //Il faut rajouter les steps..
         $q1 = $this->persist->qcmQuestion('qcm1');
         $q2 = $this->persist->qcmQuestion('qcm2');
         $q3 = $this->persist->qcmQuestion('qcm3'); // extr

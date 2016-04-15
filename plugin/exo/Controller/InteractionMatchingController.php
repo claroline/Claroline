@@ -59,8 +59,8 @@ class InteractionMatchingController extends Controller
            ), $entity
        );
 
-       $interMatchSer = $this->container->get('ujm.exo_InteractionMatching');
-       $typeMatching = $interMatchSer->getTypeMatching();
+        $interMatchSer = $this->container->get('ujm.exo_InteractionMatching');
+        $typeMatching = $interMatchSer->getTypeMatching();
 
         return $this->container->get('templating')->renderResponse(
            'UJMExoBundle:InteractionMatching:new.html.twig', array(
@@ -118,7 +118,7 @@ class InteractionMatchingController extends Controller
                 );
             } else {
                 return $this->redirect(
-                    $this->generateUrl('ujm_exercise_open', [ 'id' => $exoID ]) . '#/steps'
+                    $this->generateUrl('ujm_exercise_open', ['id' => $exoID]).'#/steps'
                 );
             }
         }
@@ -238,7 +238,7 @@ class InteractionMatchingController extends Controller
             throw $this->createNotFoundException('Enable to find InteractionMatching entity.');
         }
 
-        if ( $user->getId() != $interMatching->getQuestion()->getUser()->getId() ) {
+        if ($user->getId() != $interMatching->getQuestion()->getUser()->getId()) {
             $catID = $interMatching->getQuestion()->getUser()->getId();
         }
 
@@ -260,7 +260,7 @@ class InteractionMatchingController extends Controller
                 return $this->redirect($this->generateUrl('ujm_question_index'));
             } else {
                 return $this->redirect(
-                    $this->generateUrl('ujm_exercise_open', [ 'id' => $exoID ]) . '#/steps'
+                    $this->generateUrl('ujm_exercise_open', ['id' => $exoID]).'#/steps'
                 );
             }
         }
@@ -289,7 +289,7 @@ class InteractionMatchingController extends Controller
         $entity = $em->getRepository('UJMExoBundle:InteractionMatching')->find($id);
         //Deleting of relations, if there the question is shared
         $sharesQuestion = $em->getRepository('UJMExoBundle:Share')->findBy(array('question' => $entity->getQuestion()->getId()));
-        foreach ($sharesQuestion as $share){
+        foreach ($sharesQuestion as $share) {
             $em->remove($share);
         }
         if (!$entity) {

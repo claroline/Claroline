@@ -114,7 +114,7 @@ class InteractionQCMController extends Controller
                 );
             } else {
                 return $this->redirect(
-                    $this->generateUrl('ujm_exercise_open', [ 'id' => $exoID ]) . '#/steps'
+                    $this->generateUrl('ujm_exercise_open', ['id' => $exoID]).'#/steps'
                 );
             }
         }
@@ -237,7 +237,7 @@ class InteractionQCMController extends Controller
                 return $this->redirect($this->generateUrl('ujm_question_index'));
             } else {
                 return $this->redirect(
-                    $this->generateUrl('ujm_exercise_open', [ 'id' => $exoID ]) . '#/steps'
+                    $this->generateUrl('ujm_exercise_open', ['id' => $exoID]).'#/steps'
                 );
             }
         }
@@ -266,7 +266,7 @@ class InteractionQCMController extends Controller
         $entity = $em->getRepository('UJMExoBundle:InteractionQCM')->find($id);
         //Deleting of relations, if there the question is shared
         $sharesQuestion = $em->getRepository('UJMExoBundle:Share')->findBy(array('question' => $entity->getQuestion()->getId()));
-        foreach ($sharesQuestion as $share){
+        foreach ($sharesQuestion as $share) {
             $em->remove($share);
         }
         if (!$entity) {
@@ -298,7 +298,7 @@ class InteractionQCMController extends Controller
 
         $interQcmSer = $this->container->get('ujm.exo.qcm_service');
         $res = $interQcmSer->response($request);
-    
+
         $vars['score'] = $res['score'];
         $vars['penalty'] = $res['penalty'];
         $vars['interQCM'] = $res['interQCM'];

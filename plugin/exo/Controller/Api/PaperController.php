@@ -20,7 +20,7 @@ use UJM\ExoBundle\Manager\QuestionManager;
 use UJM\ExoBundle\Manager\StepManager;
 
 /**
- * Paper Controller
+ * Paper Controller.
  *
  * @EXT\Route(
  *     requirements={"id"="\d+"},
@@ -72,10 +72,10 @@ class PaperController
         QuestionManager $questionManager,
         PaperManager    $paperManager)
     {
-        $this->om              = $objectManager;
-        $this->stepManager     = $stepManager;
+        $this->om = $objectManager;
+        $this->stepManager = $stepManager;
         $this->questionManager = $questionManager;
-        $this->paperManager    = $paperManager;
+        $this->paperManager = $paperManager;
     }
 
     /**
@@ -90,6 +90,7 @@ class PaperController
      * @param User  $user
      * @param Paper $paper
      * @param Hint  $hint
+     *
      * @return JsonResponse
      */
     public function showHintAction(User $user, Paper $paper, Hint $hint)
@@ -117,10 +118,11 @@ class PaperController
      * @EXT\ParamConverter("paper",    class="UJMExoBundle:Paper",    options={"mapping": {"paperId": "id"}})
      * @EXT\ParamConverter("question", class="UJMExoBundle:Question", options={"mapping": {"questionId": "id"}})
      *
-     * @param  Paper    $paper
-     * @param  Question $question
-     * @param  User     $user
-     * @param  Request  $request
+     * @param Paper    $paper
+     * @param Question $question
+     * @param User     $user
+     * @param Request  $request
+     *
      * @return JsonResponse
      */
     public function submitQuestionAction(Paper $paper, Question $question, User $user, Request $request)
@@ -140,9 +142,9 @@ class PaperController
         if (Exercise::TYPE_FORMATIVE === $paper->getExercise()->getType()) {
             // For formative, export solution and score for immediate feedback
             $answers = $this->questionManager->exportQuestionAnswers($question);
-            $score   = $this->questionManager->exportQuestionScore($question, $paper);
+            $score = $this->questionManager->exportQuestionScore($question, $paper);
 
-            return new JsonResponse([ 'question' => $answers, 'score' => $score ], 200);
+            return new JsonResponse(['question' => $answers, 'score' => $score], 200);
         } else {
             return new JsonResponse('', 204);
         }
@@ -162,10 +164,11 @@ class PaperController
      * @EXT\ParamConverter("paper", class="UJMExoBundle:Paper", options={"mapping": {"paperId": "id"}})
      * @EXT\ParamConverter("step",  class="UJMExoBundle:Step",  options={"mapping": {"stepId": "id"}})
      *
-     * @param  Paper   $paper
-     * @param  Step    $step
-     * @param  User    $user
-     * @param  Request $request
+     * @param Paper   $paper
+     * @param Step    $step
+     * @param User    $user
+     * @param Request $request
+     *
      * @return JsonResponse
      */
     public function submitStepAction(Paper $paper, Step $step, User $user, Request $request)
@@ -201,11 +204,11 @@ class PaperController
                 $question = $stepQuestion->getQuestion();
 
                 $questionAnswers = $this->questionManager->exportQuestionAnswers($question);
-                $questionScore   = $this->questionManager->exportQuestionScore($question, $paper);
+                $questionScore = $this->questionManager->exportQuestionScore($question, $paper);
 
                 $answers[] = [
                     'question' => $questionAnswers,
-                    'score'    => $questionScore,
+                    'score' => $questionScore,
                 ];
             }
 
@@ -224,6 +227,7 @@ class PaperController
      *
      * @param User  $user
      * @param Paper $paper
+     *
      * @return JsonResponse
      */
     public function finishPaperAction(User $user, Paper $paper)
@@ -246,8 +250,9 @@ class PaperController
      * @EXT\ParamConverter("question", class="UJMExoBundle:Question", options={"mapping": {"questionId": "id"}})
      *
      * @param Question $question
-     * @param Paper $paper
-     * @param int $score
+     * @param Paper    $paper
+     * @param int      $score
+     *
      * @return JsonResponse
      */
     public function saveOpenLongScore(Question $question, Paper $paper, $score)

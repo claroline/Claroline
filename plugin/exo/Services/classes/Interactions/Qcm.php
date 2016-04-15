@@ -3,6 +3,7 @@
 /**
  * Services for the qcm.
  */
+
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
 use JMS\DiExtraBundle\Annotation as DI;
@@ -18,7 +19,7 @@ class Qcm extends Interaction
      *
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param int $paperID id Paper or 0 if it's just a question test and not a paper
+     * @param int                                       $paperID id Paper or 0 if it's just a question test and not a paper
      *
      * @return mixed[]
      */
@@ -55,9 +56,9 @@ class Qcm extends Interaction
      *
      *
      * @param \UJM\ExoBundle\Entity\InteractionQCM $interQCM
-     * @param array [integer] $response array of id Choice selected
-     * @param array [UJM\ExoBundle\Entity\Choice] $allChoices choices linked at the QCM
-     * @param float $penalty penalty if the user showed hints
+     * @param array [integer]                      $response   array of id Choice selected
+     * @param array [UJM\ExoBundle\Entity\Choice]  $allChoices choices linked at the QCM
+     * @param float                                $penalty    penalty if the user showed hints
      *
      * @return string userScore/scoreMax
      */
@@ -66,15 +67,15 @@ class Qcm extends Interaction
         array $response = null,
         $allChoices = null,
         $penalty = null
-    )
-    {
+    ) {
         $scoreMax = $this->maxScore($interQCM);
-        
+
         if (!$interQCM->getWeightResponse()) {
-            $score = $this->markGlobal($allChoices, $response, $interQCM, $penalty) . '/' . $scoreMax;
+            $score = $this->markGlobal($allChoices, $response, $interQCM, $penalty).'/'.$scoreMax;
         } else {
-            $score = $this->markWeightResponse($allChoices, $response, $penalty, $scoreMax) . '/' . $scoreMax;
+            $score = $this->markWeightResponse($allChoices, $response, $penalty, $scoreMax).'/'.$scoreMax;
         }
+
         return $score;
     }
 
@@ -123,8 +124,8 @@ class Qcm extends Interaction
      *
      * call getAlreadyResponded and prepare the interaction to displayed if necessary
      *
-     * @param \UJM\ExoBundle\Entity\Interaction $interactionToDisplay interaction (question) to displayed
-     * @param Symfony\Component\HttpFoundation\Session\SessionInterface $session
+     * @param \UJM\ExoBundle\Entity\Interaction                            $interactionToDisplay interaction (question) to displayed
+     * @param Symfony\Component\HttpFoundation\Session\SessionInterface    $session
      * @param \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...) $interactionX
      *
      * @return \UJM\ExoBundle\Entity\Response
@@ -168,9 +169,9 @@ class Qcm extends Interaction
      *
      *
      * @param array [integer] or int $response
-     * @param int $qcmCode type of qcm (multiple or simple)
+     * @param int                    $qcmCode  type of qcm (multiple or simple)
      *
-     * @return integer[]
+     * @return int[]
      */
     private function convertResponseInArray($resp, $qcmCode)
     {
@@ -183,7 +184,7 @@ class Qcm extends Interaction
                 $response = $resp;
             }
         }
-        
+
         return $response;
     }
 
@@ -193,7 +194,7 @@ class Qcm extends Interaction
      *
      * @param array [integer] or int $response
      *
-     * @return String
+     * @return string
      */
     private function convertResponseInChr($response)
     {
@@ -201,7 +202,7 @@ class Qcm extends Interaction
 
         foreach ($response as $res) {
             if ($res != null) {
-                $responseID .= $res . ';';
+                $responseID .= $res.';';
             }
         }
 
@@ -213,8 +214,8 @@ class Qcm extends Interaction
      *
      *
      * @param array [UJM\ExoBundle\Entity\Choice] $allChoices choices linked at the QCM
-     * @param array [integer] $response array of id Choice selected
-     * @param float $penalty penalty if the user showed hints
+     * @param array [integer]                     $response   array of id Choice selected
+     * @param float                               $penalty    penalty if the user showed hints
      *
      * @return float
      */
@@ -223,7 +224,7 @@ class Qcm extends Interaction
         $score = 0;
         $markByChoice = array();
         foreach ($allChoices as $choice) {
-            $markByChoice[(string)$choice->getId()] = $choice->getWeight();
+            $markByChoice[(string) $choice->getId()] = $choice->getWeight();
         }
         if (isset($response[0]) && $response[0] != null) {
             foreach ($response as $res) {
@@ -249,9 +250,9 @@ class Qcm extends Interaction
      *
      *
      * @param array [\UJM\ExoBundle\Entity\Choice] $allChoices choices linked at the QCM
-     * @param array [integer] $response array of id Choice selected
+     * @param array [integer]                      $response   array of id Choice selected
      * @param \UJM\ExoBundle\Entity\InteractionQCM $interQCM
-     * @param float $penalty penalty if the user showed hints
+     * @param float                                $penalty    penalty if the user showed hints
      *
      * @return float
      */
@@ -261,7 +262,7 @@ class Qcm extends Interaction
         $rightChoices = array();
         foreach ($allChoices as $choice) {
             if ($choice->getRightResponse()) {
-                $rightChoices[] = (string)$choice->getId();
+                $rightChoices[] = (string) $choice->getId();
             }
         }
 

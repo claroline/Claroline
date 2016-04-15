@@ -3,6 +3,7 @@
 /**
  * To export a Matching question in QTI.
  */
+
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -16,11 +17,11 @@ class MatchingExport extends QtiExport
     private $cardinality;
 
     /**
-     * Implements the abstract method
+     * Implements the abstract method.
      *
-     * @access public
-     * @param Question $question
+     * @param Question      $question
      * @param qtiRepository $qtiRepos
+     *
      * @return BinaryFileResponse
      */
     public function export(Question $question, qtiRepository $qtiRepos)
@@ -98,7 +99,7 @@ class MatchingExport extends QtiExport
         $prompt = $this->document->CreateElement('prompt');
         $invite = $this->interactionmatching->getQuestion()->getInvite();
         // Managing the resource export
-        $body=$this->qtiExportObject($invite);
+        $body = $this->qtiExportObject($invite);
         foreach ($body->childNodes as $child) {
             $inviteNew = $this->document->importNode($child, true);
             $prompt->appendChild($inviteNew);
@@ -185,7 +186,8 @@ class MatchingExport extends QtiExport
      * @param type $numberLabel
      * @param type $elementLabel
      */
-    protected function simpleMatchSetTagLabel($label, $numberLabel, $elementLabel){
+    protected function simpleMatchSetTagLabel($label, $numberLabel, $elementLabel)
+    {
         if ($this->cardinality == 'multiple') {
             $w = 0;
             foreach ($this->interactionmatching->getProposals() as $pr) {
@@ -204,19 +206,19 @@ class MatchingExport extends QtiExport
 
         $simpleLabel = $this->document->CreateElement('simpleAssociableChoice');
 
-        $simpleLabel->setAttribute("identifier", "right".$numberLabel);
-        $simpleLabel->setAttribute("fixed", $positionForced);
-        $simpleLabel->setAttribute("matchMax", $maxAssociation);
+        $simpleLabel->setAttribute('identifier', 'right'.$numberLabel);
+        $simpleLabel->setAttribute('fixed', $positionForced);
+        $simpleLabel->setAttribute('matchMax', $maxAssociation);
 
         $this->matchInteraction->appendChild($simpleLabel);
         $this->getDomEl($simpleLabel, $label->getValue());
         $elementLabel->appendChild($simpleLabel);
 
-        if(($label->getFeedback()!=Null) && ($label->getFeedback()!="")){
+        if (($label->getFeedback() != null) && ($label->getFeedback() != '')) {
             $feedbackInline = $this->document->CreateElement('feedbackInline');
-            $feedbackInline->setAttribute("outcomeIdentifier", "FEEDBACK");
-            $feedbackInline->setAttribute("identifier","Choice".$numberLabel);
-            $feedbackInline->setAttribute("showHide","show");
+            $feedbackInline->setAttribute('outcomeIdentifier', 'FEEDBACK');
+            $feedbackInline->setAttribute('identifier', 'Choice'.$numberLabel);
+            $feedbackInline->setAttribute('showHide', 'show');
             $this->getDomEl($feedbackInline, $label->getFeedback());
             $simpleLabel->appendChild($feedbackInline);
         }

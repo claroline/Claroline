@@ -13,12 +13,13 @@ use UJM\ExoBundle\Form\InteractionHoleHandler;
 /**
  * InteractionHole controller.
  */
-class InteractionHoleController extends Controller {
-
+class InteractionHoleController extends Controller
+{
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showAction() {
+    public function showAction()
+    {
         $attr = $this->get('request')->attributes;
         $em = $this->get('doctrine')->getEntityManager();
         $vars = $attr->get('vars');
@@ -39,7 +40,8 @@ class InteractionHoleController extends Controller {
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function newAction() {
+    public function newAction()
+    {
         $attr = $this->get('request')->attributes;
         $entity = new InteractionHole();
         $form = $this->createForm(
@@ -65,7 +67,8 @@ class InteractionHoleController extends Controller {
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function createAction() {
+    public function createAction()
+    {
         $interHole = new InteractionHole();
         $form = $this->createForm(
                 new InteractionHoleType(
@@ -98,12 +101,12 @@ class InteractionHoleController extends Controller {
             if ($exoID == -1) {
                 return $this->redirect(
                                 $this->generateUrl('ujm_question_index', array(
-                                    'categoryToFind' => base64_encode($categoryToFind), 'titleToFind' => base64_encode($titleToFind),)
+                                    'categoryToFind' => base64_encode($categoryToFind), 'titleToFind' => base64_encode($titleToFind), )
                                 )
                 );
             } else {
                 return $this->redirect(
-                    $this->generateUrl('ujm_exercise_open', [ 'id' => $exoID ]) . '#/steps'
+                    $this->generateUrl('ujm_exercise_open', ['id' => $exoID]).'#/steps'
                 );
             }
         }
@@ -145,7 +148,8 @@ class InteractionHoleController extends Controller {
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function editAction() {
+    public function editAction()
+    {
         $attr = $this->get('request')->attributes;
         $holeSer = $this->container->get('ujm.exo_InteractionHole');
         $catSer = $this->container->get('ujm.exo_category');
@@ -182,7 +186,8 @@ class InteractionHoleController extends Controller {
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function updateAction($id) {
+    public function updateAction($id)
+    {
         $exoID = $this->container->get('request')->request->get('exercise');
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $catID = -1;
@@ -219,7 +224,7 @@ class InteractionHoleController extends Controller {
                 return $this->redirect($this->generateUrl('ujm_question_index'));
             } else {
                 return $this->redirect(
-                    $this->generateUrl('ujm_exercise_open', [ 'id' => $exoID ]) . '#/steps'
+                    $this->generateUrl('ujm_exercise_open', ['id' => $exoID]).'#/steps'
                 );
             }
         }
@@ -246,7 +251,8 @@ class InteractionHoleController extends Controller {
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteAction($id, $pageNow) {
+    public function deleteAction($id, $pageNow)
+    {
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('UJMExoBundle:InteractionHole')->find($id);
         //Deleting of relations, if there the question is shared
@@ -270,7 +276,8 @@ class InteractionHoleController extends Controller {
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function responseHoleAction() {
+    public function responseHoleAction()
+    {
         $vars = array();
         $request = $this->get('request');
         $postVal = $req = $request->request->all();
@@ -291,5 +298,4 @@ class InteractionHoleController extends Controller {
 
         return $this->render('UJMExoBundle:InteractionHole:holeOverview.html.twig', $vars);
     }
-
 }

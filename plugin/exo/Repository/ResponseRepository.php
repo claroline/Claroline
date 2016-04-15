@@ -36,7 +36,7 @@ class ResponseRepository extends EntityRepository
      *
      *
      * @param int    $exoId id Exercise
-     * @param String $order to order result
+     * @param string $order to order result
      *
      * Return array
      */

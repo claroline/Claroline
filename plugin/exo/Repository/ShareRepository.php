@@ -23,11 +23,12 @@ class ShareRepository extends EntityRepository
      * Return array[Share]
      */
     public function getControlSharedQuestion($user, $question)
-    {     
+    {
         $qb = $this->createQueryBuilder('s');
         $qb->join('s.question', 'q')
             ->where($qb->expr()->in('q', $question))
             ->andWhere($qb->expr()->in('s.user', $user));
+
         return $qb->getQuery()->getResult();
     }
 
@@ -71,14 +72,14 @@ class ShareRepository extends EntityRepository
      * Search shared questions by category.
      *
      *
-     * @param user    $user    id User
-     * @param String $whatToFind string to find
+     * @param user   $user       id User
+     * @param string $whatToFind string to find
      *
      * Return array[Share]
      */
     public function findByUserAndCategoryName(User $user, $whatToFind)
     {
-        $userId=$user->getId();
+        $userId = $user->getId();
         $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s JOIN s.question q JOIN q.category c
             WHERE c.value LIKE ?1
             AND s.user = ?2';
@@ -93,14 +94,14 @@ class ShareRepository extends EntityRepository
      * Search shared questions by title.
      *
      *
-     * @param user    $user     id User
-     * @param String $whatToFind string to find
+     * @param user   $user       id User
+     * @param string $whatToFind string to find
      *
      * Return array[Share]
      */
     public function findByUserAndTitle(User $user, $whatToFind)
     {
-        $userId=$user->getId();
+        $userId = $user->getId();
         $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s JOIN s.question q
             WHERE q.title LIKE ?1
             AND s.user = ?2';
@@ -115,14 +116,14 @@ class ShareRepository extends EntityRepository
      * Search shared questions by type.
      *
      *
-     * @param user    $user    id User
-     * @param String $whatToFind string to find
+     * @param user   $user       id User
+     * @param string $whatToFind string to find
      *
      * Return array[Share]
      */
     public function findByUserAndType(User $user, $whatToFind)
     {
-        $userId=$user->getId();
+        $userId = $user->getId();
         $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s
                 JOIN s.question q
                 WHERE s.user = ?2
@@ -138,14 +139,14 @@ class ShareRepository extends EntityRepository
      * Search shared questions by contain.
      *
      *
-     * @param User    $user    id User
-     * @param String $whatToFind string to find
+     * @param User   $user       id User
+     * @param string $whatToFind string to find
      *
      * Return array[Share]
      */
     public function findByUserAndInvite(User $user, $whatToFind)
     {
-        $userId=$user->getId();
+        $userId = $user->getId();
         $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s
                 JOIN s.question q
                 WHERE s.user = ?2
@@ -161,14 +162,14 @@ class ShareRepository extends EntityRepository
      * Search shared questions.
      *
      *
-     * @param int    $user     id User
-     * @param String $whatToFind string to find
+     * @param int    $user       id User
+     * @param string $whatToFind string to find
      *
      * Return array[Share]
      */
     public function findByUserAndContent(User $user, $whatToFind)
     {
-        $userId=$user->getId();
+        $userId = $user->getId();
         $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s,
                 UJM\ExoBundle\Entity\Question q, UJM\ExoBundle\Entity\Category c
                 WHERE s.question = q AND q.category = c

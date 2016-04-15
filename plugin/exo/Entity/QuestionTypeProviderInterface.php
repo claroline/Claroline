@@ -15,5 +15,5 @@ interface QuestionTypeProviderInterface
      *
      * @return string
      */
-    static function getQuestionType();
+    public static function getQuestionType();
 }

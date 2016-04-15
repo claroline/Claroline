@@ -16,21 +16,22 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @DI\Service("ujm.exo.match_handler")
  * @DI\Tag("ujm.exo.question_handler")
  */
-class MatchHandler implements QuestionHandlerInterface {
-
+class MatchHandler implements QuestionHandlerInterface
+{
     private $om;
     private $container;
-    
+
     /**
      * @DI\InjectParams({
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "container"       = @DI\Inject("service_container")
      * })
      * 
-     * @param ObjectManager $om
+     * @param ObjectManager      $om
      * @param ContainerInterface $container
      */
-    public function __construct(ObjectManager $om, ContainerInterface $container) {
+    public function __construct(ObjectManager $om, ContainerInterface $container)
+    {
         $this->om = $om;
         $this->container = $container;
     }
@@ -38,28 +39,32 @@ class MatchHandler implements QuestionHandlerInterface {
     /**
      * {@inheritdoc}
      */
-    public function getQuestionMimeType() {
+    public function getQuestionMimeType()
+    {
         return 'application/x.match+json';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getInteractionType() {
+    public function getInteractionType()
+    {
         return InteractionMatching::TYPE;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getJsonSchemaUri() {
+    public function getJsonSchemaUri()
+    {
         return 'http://json-quiz.github.io/json-quiz/schemas/question/match/schema.json';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function validateAfterSchema(\stdClass $questionData) {
+    public function validateAfterSchema(\stdClass $questionData)
+    {
         $errors = [];
 
         if (!isset($questionData->solutions)) {
@@ -79,14 +84,14 @@ class MatchHandler implements QuestionHandlerInterface {
             if (!in_array($solution->firstId, $proposalsIds)) {
                 $errors[] = [
                     'path' => "solutions[{$index}]",
-                    'message' => "id {$solution->firstId} doesn't match any proposal id"
+                    'message' => "id {$solution->firstId} doesn't match any proposal id",
                 ];
             }
 
             if (!in_array($solution->secondId, $labelsIds)) {
                 $errors[] = [
                     'path' => "solutions[{$index}]",
-                    'message' => "id {$solution->secondId} doesn't match any label id"
+                    'message' => "id {$solution->secondId} doesn't match any label id",
                 ];
             }
         }
@@ -103,7 +108,7 @@ class MatchHandler implements QuestionHandlerInterface {
         if ($maxScore <= 0) {
             $errors[] = [
                 'path' => 'solutions',
-                'message' => 'there is no solution with a positive score'
+                'message' => 'there is no solution with a positive score',
             ];
         }
 
@@ -113,7 +118,8 @@ class MatchHandler implements QuestionHandlerInterface {
     /**
      * {@inheritdoc}
      */
-    public function persistInteractionDetails(Question $question, \stdClass $importData) {
+    public function persistInteractionDetails(Question $question, \stdClass $importData)
+    {
         // used by QuestionManager->importQuestion
         // this importQuestion method seems to be used only in test context...
         $interaction = new InteractionMatching();
@@ -196,7 +202,8 @@ class MatchHandler implements QuestionHandlerInterface {
     /**
      * {@inheritdoc}
      */
-    public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true, $forPaperList = false) {
+    public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true, $forPaperList = false)
+    {
         $repo = $this->om->getRepository('UJMExoBundle:InteractionMatching');
         $match = $repo->findOneBy(['question' => $question]);
         $exportData->random = $match->getShuffle();
@@ -217,6 +224,7 @@ class MatchHandler implements QuestionHandlerInterface {
             $firstSetData->id = (string) $proposal->getId();
             $firstSetData->type = 'text/plain';
             $firstSetData->data = $proposal->getValue();
+
             return $firstSetData;
         }, $proposals);
 
@@ -226,6 +234,7 @@ class MatchHandler implements QuestionHandlerInterface {
             $secondSetData->id = (string) $label->getId();
             $secondSetData->type = 'text/plain';
             $secondSetData->data = $label->getValue();
+
             return $secondSetData;
         }, $labels);
 
@@ -241,28 +250,29 @@ class MatchHandler implements QuestionHandlerInterface {
         //if ($withSolution) {
 
             $exportData->solutions = array();
-            foreach ($proposals as $proposal) {
-                $associatedLabels = $proposal->getAssociatedLabel();
-                foreach ($associatedLabels as $label) {
-                    $solution = new \stdClass();
-                    $solution->firstId = (string) $proposal->getId();
-                    $solution->secondId = (string) $label->getId();
-                    $solution->score = $label->getScoreRightResponse();
-                    if ($label->getFeedback()) {
-                        $solution->feedback = $label->getFeedback();
-                    }
-                    array_push($exportData->solutions, $solution);
+        foreach ($proposals as $proposal) {
+            $associatedLabels = $proposal->getAssociatedLabel();
+            foreach ($associatedLabels as $label) {
+                $solution = new \stdClass();
+                $solution->firstId = (string) $proposal->getId();
+                $solution->secondId = (string) $label->getId();
+                $solution->score = $label->getScoreRightResponse();
+                if ($label->getFeedback()) {
+                    $solution->feedback = $label->getFeedback();
                 }
+                array_push($exportData->solutions, $solution);
             }
+        }
         //}
 
         return $exportData;
     }
 
-    public function convertQuestionAnswers(Question $question, \stdClass $exportData) {
+    public function convertQuestionAnswers(Question $question, \stdClass $exportData)
+    {
         $repo = $this->om->getRepository('UJMExoBundle:InteractionMatching');
         $match = $repo->findOneBy(['question' => $question]);
-        
+
         $proposals = $match->getProposals()->toArray();
         $exportData->solutions = array();
         foreach ($proposals as $proposal) {
@@ -278,15 +288,15 @@ class MatchHandler implements QuestionHandlerInterface {
                 array_push($exportData->solutions, $solution);
             }
         }
-        
+
         return $exportData;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function convertAnswerDetails(Response $response) {
-
+    public function convertAnswerDetails(Response $response)
+    {
         $parts = explode(';', $response->getResponse());
 
         return array_filter($parts, function ($part) {
@@ -297,9 +307,10 @@ class MatchHandler implements QuestionHandlerInterface {
     /**
      * {@inheritdoc}
      */
-    public function validateAnswerFormat(Question $question, $data) {
+    public function validateAnswerFormat(Question $question, $data)
+    {
         if (!is_array($data)) {
-            return ['Answer data must be an array, ' . gettype($data) . ' given'];
+            return ['Answer data must be an array, '.gettype($data).' given'];
         }
 
         $count = 0;
@@ -350,57 +361,57 @@ class MatchHandler implements QuestionHandlerInterface {
                 return ['Answer array identifiers must reference a question proposal associated label id'];
             }
         }
+
         return [];
     }
 
-    /**
-     * @todo handle global score option
-     *
-     * {@inheritdoc}
-     */
-     public function storeAnswerAndMark(Question $question, Response $response, $data) {
-
+     /**
+      * @todo handle global score option
+      *
+      * {@inheritdoc}
+      */
+     public function storeAnswerAndMark(Question $question, Response $response, $data)
+     {
          $interaction = $this->om->getRepository('UJMExoBundle:InteractionMatching')
                  ->findOneByQuestion($question);
 
          $labels = $interaction->getLabels();
          // at least one label must have a score
          $score = 0;
-        $tabLabelGraduate = array(); // store labels already considered in calculating the score
+         $tabLabelGraduate = array(); // store labels already considered in calculating the score
         foreach ($labels as $label) {
-             // if first label
-             if(count($tabLabelGraduate) === 0){
-               $score += $label->getScoreRightResponse();
-             } else if (count($tabLabelGraduate) > 0){
-               foreach($tabLabelGraduate as $labelPast) { // nothing in the array
+            // if first label
+             if (count($tabLabelGraduate) === 0) {
+                 $score += $label->getScoreRightResponse();
+             } elseif (count($tabLabelGraduate) > 0) {
+                 foreach ($tabLabelGraduate as $labelPast) { // nothing in the array
                    if ($labelPast !== $label) {
                        $score += $label->getScoreRightResponse();
                    }
-               }
+                 }
              }
 
              // add the labels already considered
              array_push($tabLabelGraduate, $label);
+        }
+         if ($score === 0) {
+             throw new \Exception('Global score not implemented yet');
          }
-        if ($score === 0) {
-            throw new \Exception('Global score not implemented yet');
-        }
-        
-        $serviceMatching = $this->container->get("ujm.exo.matching_service");
-        
-        $tabsResponses = $serviceMatching->initTabResponseMatching($data, $interaction);
-        $tabRightResponse = $tabsResponses[1];
-        $tabResponseIndex = $tabsResponses[0];
 
-        $mark = $serviceMatching->mark($interaction, 0, $tabRightResponse, $tabResponseIndex);
+         $serviceMatching = $this->container->get('ujm.exo.matching_service');
 
-        if ($mark < 0) {
-            $mark = 0;
-        }
+         $tabsResponses = $serviceMatching->initTabResponseMatching($data, $interaction);
+         $tabRightResponse = $tabsResponses[1];
+         $tabResponseIndex = $tabsResponses[0];
 
-        $result = count($data) > 0 ? implode(';', $data) : '';
-        $response->setResponse($result);
-        $response->setMark($mark);
+         $mark = $serviceMatching->mark($interaction, 0, $tabRightResponse, $tabResponseIndex);
+
+         if ($mark < 0) {
+             $mark = 0;
+         }
+
+         $result = count($data) > 0 ? implode(';', $data) : '';
+         $response->setResponse($result);
+         $response->setMark($mark);
      }
-
 }

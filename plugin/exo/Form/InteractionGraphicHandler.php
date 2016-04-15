@@ -62,7 +62,6 @@ class InteractionGraphicHandler extends QuestionHandler
 
         $interGraph->setQuestion($interGraph->getQuestion());
 
-
         for ($i = 0; $i < $lengthCoord; ++$i) {
             $this->em->persist($allCoords[$i]);
         }
@@ -163,8 +162,8 @@ class InteractionGraphicHandler extends QuestionHandler
         for ($i = 0; $i < $lengthCoord; ++$i) {
             $inter = preg_split('[§§]', $coord[$i]); // Divide the src of the answer zone and the other informations
 
-            $before = array('|-|','~~','^^');
-            $after = array('@@','@@','@@');
+            $before = array('|-|', '~~', '^^');
+            $after = array('@@', '@@', '@@');
 
             $data = str_replace($before, $after, $inter[1]); // replace separation punctuation of the informations ...
 
@@ -201,9 +200,9 @@ class InteractionGraphicHandler extends QuestionHandler
      * Get the shape of the answer zone.
      *
      *
-     * @param String route of response zone
+     * @param string route of response zone
      *
-     * @return String shape of response zone
+     * @return string shape of response zone
      */
     private function getShape($url)
     {
@@ -222,9 +221,9 @@ class InteractionGraphicHandler extends QuestionHandler
      * Get the color of the answer zone.
      *
      *
-     * @param String route of response zone
+     * @param string route of response zone
      *
-     * @return String color of response zone
+     * @return string color of response zone
      */
     private function getColor($url)
     {

@@ -3,13 +3,13 @@
 /**
  * To import a question in QTI.
  */
+
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use UJM\ExoBundle\Entity\Category;
-use UJM\ExoBundle\Entity\Interaction;
 use UJM\ExoBundle\Entity\Question;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 
@@ -145,12 +145,12 @@ abstract class QtiImport
                 $ib->removeChild($child);
             }
         }
-        foreach ($ib->getElementsByTagName("img") as $img) {
+        foreach ($ib->getElementsByTagName('img') as $img) {
             $node = $img->parentNode;
             $i = 0;
             while ($i == 0) {
-                if ( ($node->nodeName == 'itemBody') || ($node->nodeName == 'prompt') || ($node->nodeName == 'simpleChoice') || ($node->nodeName == 'simpleAssociableChoice') ) {
-                    $i++;
+                if (($node->nodeName == 'itemBody') || ($node->nodeName == 'prompt') || ($node->nodeName == 'simpleChoice') || ($node->nodeName == 'simpleAssociableChoice')) {
+                    ++$i;
                 } else {
                     $node = $node->parentNode;
                 }
@@ -205,7 +205,7 @@ abstract class QtiImport
     /**
      * @param DomElement <object> $ob
      *
-     * @return String
+     * @return string
      */
     private function getFileName($ob)
     {
@@ -323,7 +323,7 @@ abstract class QtiImport
      *
      * @param DOMNodelist::item $domEl element of dom
      *
-     * @return String
+     * @return string
      */
     protected function domElementToString($domEl)
     {

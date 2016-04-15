@@ -3,6 +3,7 @@
 /**
  * To export an open question in QTI.
  */
+
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use UJM\ExoBundle\Entity\Question;
@@ -14,8 +15,7 @@ class OpenExport extends QtiExport
     /**
      * Implements the abstract method.
      *
-     * @access public
-     * @param Question $question
+     * @param Question      $question
      * @param qtiRepository $qtiRepos
      */
     public function export(Question $question, qtiRepository $qtiRepos)
@@ -35,7 +35,7 @@ class OpenExport extends QtiExport
         $this->itemBodyTag();
 
         if ($this->interactionopen->getQuestion()->getFeedBack() != null
-            && $this->interactionopen->getQuestion()->getFeedBack() != ''){
+            && $this->interactionopen->getQuestion()->getFeedBack() != '') {
             $this->qtiFeedBack($question->getFeedBack());
         }
     }
@@ -48,10 +48,10 @@ class OpenExport extends QtiExport
     {
         $arg_list = func_get_args();
         $node = $arg_list[0];
-        $invite =$this->interactionopen->getQuestion()->getInvite();
+        $invite = $this->interactionopen->getQuestion()->getInvite();
         $prompt = $this->document->CreateElement('prompt');
         //Managing the resource export
-        $body=$this->qtiExportObject($invite);
+        $body = $this->qtiExportObject($invite);
         foreach ($body->childNodes as $child) {
             $inviteNew = $this->document->importNode($child, true);
             $prompt->appendChild($inviteNew);
@@ -86,7 +86,7 @@ class OpenExport extends QtiExport
      * add the tag defaultValue in outcomeDeclaration.
      *
      *
-     * @return String value of cardinality for the responseDeclaration element
+     * @return string value of cardinality for the responseDeclaration element
      */
     private function getCardinality()
     {

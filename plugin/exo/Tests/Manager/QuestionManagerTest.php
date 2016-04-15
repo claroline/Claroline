@@ -25,7 +25,8 @@ class QuestionManagerTest extends TransactionalTestCase
     }
 
     /**
-     * Choice question
+     * Choice question.
+     *
      * @expectedException \UJM\ExoBundle\Transfer\Json\ValidationException
      */
     public function testImportQuestionThrowsOnValidationError()
@@ -34,8 +35,9 @@ class QuestionManagerTest extends TransactionalTestCase
         $this->manager->importQuestion(json_decode($data));
     }
 
-     /**
-     * Match question
+    /**
+     * Match question.
+     *
      * @expectedException \UJM\ExoBundle\Transfer\Json\ValidationException
      */
     public function testImportMatchQuestionWithoutSolutionScoreThrowsOnValidationError()
@@ -46,6 +48,7 @@ class QuestionManagerTest extends TransactionalTestCase
 
     /**
      * @dataProvider validQcmQuestionProvider
+     *
      * @param string $dataFilename
      */
     public function testQcmQuestionRoundTrip($dataFilename)
@@ -78,12 +81,13 @@ class QuestionManagerTest extends TransactionalTestCase
           ['qcm-2'],
           ['qcm-3'],
           ['qcm-4'],
-          ['qcm-5']
+          ['qcm-5'],
         ];
     }
 
-     /**
+    /**
      * @dataProvider validMatchQuestionProvider
+     *
      * @param string $dataFilename
      */
     public function testMatchQuestionRoundTrip($dataFilename)
@@ -107,13 +111,12 @@ class QuestionManagerTest extends TransactionalTestCase
         $this->assertQuestionIdConsistency($exportedEvalData);
     }
 
-
     public function validMatchQuestionProvider()
     {
         return [
           ['match-1'],
           ['match-2'],
-          ['match-3']
+          ['match-3'],
         ];
     }
 
@@ -123,8 +126,9 @@ class QuestionManagerTest extends TransactionalTestCase
         $fixture->load($this->om);
     }
 
-    private function loadData($fileRelativeName) {
-        $file = realpath(__DIR__ . "/../Data/json/{$fileRelativeName}.json");
+    private function loadData($fileRelativeName)
+    {
+        $file = realpath(__DIR__."/../Data/json/{$fileRelativeName}.json");
 
         return json_decode(file_get_contents($file));
     }
@@ -136,7 +140,7 @@ class QuestionManagerTest extends TransactionalTestCase
      *
      * @param \stdClass $expected
      * @param \stdClass $actual
-     * @param null $msg
+     * @param null      $msg
      */
     private function assertEqualsWithoutIds(\stdClass $expected, \stdClass $actual, $msg = null)
     {
@@ -148,9 +152,9 @@ class QuestionManagerTest extends TransactionalTestCase
             foreach (get_object_vars($object) as $property => $value) {
                 if ($property === 'id') {
                     unset($object->id);
-                } elseif ($property === 'firstId'){ // for match questions
+                } elseif ($property === 'firstId') { // for match questions
                     unset($object->firstId);
-                } elseif ($property === 'secondId'){ // for match questions
+                } elseif ($property === 'secondId') { // for match questions
                     unset($object->secondId);
                 } elseif (is_object($value)) {
                     $removeIds($value);

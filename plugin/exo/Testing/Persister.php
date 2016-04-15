@@ -30,8 +30,8 @@ use UJM\ExoBundle\Manager\PaperManager;
  * Simple testing utility allowing to create and persist
  * various exercise-related entities with minimal effort.
  */
-class Persister {
-
+class Persister
+{
     /**
      * @var ObjectManager
      */
@@ -62,17 +62,20 @@ class Persister {
      */
     private $paperManager;
 
-    public function __construct(ObjectManager $om, PaperManager $paperManager) {
+    public function __construct(ObjectManager $om, PaperManager $paperManager)
+    {
         $this->om = $om;
         $this->paperManager = $paperManager;
     }
 
     /**
-     * @param string    $text
-     * @param float     $score
+     * @param string $text
+     * @param float  $score
+     *
      * @return Choice
      */
-    public function qcmChoice($text, $score) {
+    public function qcmChoice($text, $score)
+    {
         $choice = new Choice();
         $choice->setLabel($text);
         $choice->setWeight($score);
@@ -82,12 +85,14 @@ class Persister {
     }
 
     /**
-     * @param string    $title
-     * @param Choice[]  $choices
-     * @param string    $description
+     * @param string   $title
+     * @param Choice[] $choices
+     * @param string   $description
+     *
      * @return Question
      */
-    public function qcmQuestion($title, array $choices = [], $description = '') {
+    public function qcmQuestion($title, array $choices = [], $description = '')
+    {
         $question = new Question();
         $question->setTitle($title);
         $question->setInvite('Invite...');
@@ -118,9 +123,11 @@ class Persister {
 
     /**
      * @param string $title
+     *
      * @return Question
      */
-    public function openQuestion($title) {
+    public function openQuestion($title)
+    {
         $question = new Question();
         $question->setTitle($title);
         $question->setInvite('Invite...');
@@ -134,26 +141,31 @@ class Persister {
         return $question;
     }
 
-    public function matchLabel($text, $score = 0) {
+    public function matchLabel($text, $score = 0)
+    {
         $label = new Label();
         $label->setFeedback('feedback...');
         $label->setValue($text);
         $label->setScoreRightResponse($score);
         $this->om->persist($label);
+
         return $label;
     }
 
-    public function matchProposal($text, Label $label = null) {
+    public function matchProposal($text, Label $label = null)
+    {
         $proposal = new Proposal();
         $proposal->setValue($text);
         if ($label !== null) {
             $proposal->addAssociatedLabel($label);
         }
         $this->om->persist($proposal);
+
         return $proposal;
     }
 
-    public function matchQuestion($title, $labels = [], $proposals = []) {
+    public function matchQuestion($title, $labels = [], $proposals = [])
+    {
         $question = new Question();
         $question->setTitle($title);
         $question->setInvite('Invite...');
@@ -182,16 +194,19 @@ class Persister {
 
         $this->om->persist($interactionMatching);
         $this->om->persist($question);
+
         return $question;
     }
 
-    /**
-     * @param string        $title
-     * @param Question[]    $questions
-     * @param User          $user
-     * @return Exercise
-     */
-     public function exercise($title, array $questions = [], User $user = null) {
+     /**
+      * @param string        $title
+      * @param Question[]    $questions
+      * @param User          $user
+      *
+      * @return Exercise
+      */
+     public function exercise($title, array $questions = [], User $user = null)
+     {
          $exercise = new Exercise();
          $exercise->setTitle($title);
 
@@ -230,34 +245,38 @@ class Persister {
              $this->om->persist($link);*/
          }
 
-
          return $exercise;
      }
 
     /**
-     * @param User      $user
-     * @param Exercise  $exercise
+     * @param User     $user
+     * @param Exercise $exercise
+     *
      * @return Paper
      */
-    public function paper(User $user, Exercise $exercise) {
+    public function paper(User $user, Exercise $exercise)
+    {
         return $this->paperManager->createPaper($user, $exercise);
     }
 
-    public function finishpaper(Paper $paper) {
+    public function finishpaper(Paper $paper)
+    {
         return $this->paperManager->finishPaper($paper);
     }
 
     /**
      * @param string $username
+     *
      * @return User
      */
-    public function user($username) {
+    public function user($username)
+    {
         $user = new User();
         $user->setFirstName($username);
         $user->setLastName($username);
         $user->setUsername($username);
         $user->setPassword($username);
-        $user->setMail($username . '@mail.com');
+        $user->setMail($username.'@mail.com');
         $user->setGuid($username);
         $this->om->persist($user);
 
@@ -282,9 +301,11 @@ class Persister {
 
     /**
      * @param string $name
+     *
      * @return Category
      */
-    public function category($name) {
+    public function category($name)
+    {
         $category = new Category();
         $category->setValue($name);
         $this->om->persist($category);
@@ -294,9 +315,11 @@ class Persister {
 
     /**
      * @param string $name
+     *
      * @return Role
      */
-    public function role($name) {
+    public function role($name)
+    {
         $role = new Role();
         $role->setName($name);
         $role->setTranslationKey($name);
@@ -305,7 +328,8 @@ class Persister {
         return $role;
     }
 
-    public function maskDecoder(ResourceType $type, $permission, $value) {
+    public function maskDecoder(ResourceType $type, $permission, $value)
+    {
         $decoder = new MaskDecoder();
         $decoder->setResourceType($type);
         $decoder->setName($permission);
@@ -315,7 +339,8 @@ class Persister {
         return $decoder;
     }
 
-    public function hint(Question $question, $text, $penalty = 1) {
+    public function hint(Question $question, $text, $penalty = 1)
+    {
         $hint = new Hint();
         $hint->setValue($text);
         $hint->setPenalty($penalty);
@@ -324,5 +349,4 @@ class Persister {
 
         return $hint;
     }
-
 }

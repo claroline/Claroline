@@ -89,7 +89,7 @@ class InteractionGraphic extends AbstractInteraction
         if ($this->id) {
             $this->id = null;
             $this->question = clone $this->question;
-            $newCoords = new ArrayCollection;
+            $newCoords = new ArrayCollection();
 
             foreach ($this->coords as $coord) {
                 $newCoord = clone $coord;

@@ -17,8 +17,8 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
  * @DI\Service("ujm.exo.graphic_handler")
  * @DI\Tag("ujm.exo.question_handler")
  */
-class GraphicHandler implements QuestionHandlerInterface {
-
+class GraphicHandler implements QuestionHandlerInterface
+{
     private $om;
     private $container;
     private $doctrine;
@@ -30,11 +30,12 @@ class GraphicHandler implements QuestionHandlerInterface {
      *     "doctrine"        = @DI\Inject("doctrine")
      * })
      *
-     * @param ObjectManager $om
+     * @param ObjectManager      $om
      * @param ContainerInterface $container
-     * @param Registry $doctrine
+     * @param Registry           $doctrine
      */
-    public function __construct(ObjectManager $om, ContainerInterface $container, Registry $doctrine) {
+    public function __construct(ObjectManager $om, ContainerInterface $container, Registry $doctrine)
+    {
         $this->om = $om;
         $this->container = $container;
         $this->doctrine = $doctrine;
@@ -43,28 +44,32 @@ class GraphicHandler implements QuestionHandlerInterface {
     /**
      * {@inheritdoc}
      */
-    public function getQuestionMimeType() {
+    public function getQuestionMimeType()
+    {
         return 'application/x.graphic+json';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getInteractionType() {
+    public function getInteractionType()
+    {
         return InteractionGraphic::TYPE;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getJsonSchemaUri() {
+    public function getJsonSchemaUri()
+    {
         return 'http://json-quiz.github.io/json-quiz/schemas/question/graphic/schema.json';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function validateAfterSchema(\stdClass $questionData) {
+    public function validateAfterSchema(\stdClass $questionData)
+    {
         $errors = [];
 
         if (!isset($questionData->solutions)) {
@@ -80,7 +85,7 @@ class GraphicHandler implements QuestionHandlerInterface {
             if (!in_array($solution->id, $coordIds)) {
                 $errors[] = [
                     'path' => "solutions[{$index}]",
-                    'message' => "id {$solution->id} doesn't match any coord id"
+                    'message' => "id {$solution->id} doesn't match any coord id",
                 ];
             }
         }
@@ -97,7 +102,7 @@ class GraphicHandler implements QuestionHandlerInterface {
         if ($maxScore <= 0) {
             $errors[] = [
                 'path' => 'solutions',
-                'message' => 'there is no solution with a positive score'
+                'message' => 'there is no solution with a positive score',
             ];
         }
 
@@ -107,11 +112,11 @@ class GraphicHandler implements QuestionHandlerInterface {
     /**
      * {@inheritdoc}
      */
-    public function persistInteractionDetails(Question $question, \stdClass $importData) {
+    public function persistInteractionDetails(Question $question, \stdClass $importData)
+    {
         $interaction = new InteractionGraphic();
 
         for ($i = 0, $max = count($importData->coords); $i < $max; ++$i) {
-
             $coord = new Coords();
 
             foreach ($importData->solutions as $solution) {
@@ -156,7 +161,8 @@ class GraphicHandler implements QuestionHandlerInterface {
     /**
      * {@inheritdoc}
      */
-    public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true, $forPaperList = false) {
+    public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true, $forPaperList = false)
+    {
         $repo = $this->om->getRepository('UJMExoBundle:InteractionGraphic');
         $graphic = $repo->findOneBy(['question' => $question]);
 
@@ -176,6 +182,7 @@ class GraphicHandler implements QuestionHandlerInterface {
         $exportData->coords = array_map(function ($coord) {
             $coordData = new \stdClass();
             $coordData->id = (string) $coord->getId();
+
             return $coordData;
         }, $coords);
 
@@ -199,7 +206,8 @@ class GraphicHandler implements QuestionHandlerInterface {
         return $exportData;
     }
 
-    public function convertQuestionAnswers(Question $question, \stdClass $exportData) {
+    public function convertQuestionAnswers(Question $question, \stdClass $exportData)
+    {
         $repo = $this->om->getRepository('UJMExoBundle:InteractionGraphic');
         $graphic = $repo->findOneBy(['question' => $question]);
         $coords = $graphic->getCoords()->toArray();
@@ -218,13 +226,15 @@ class GraphicHandler implements QuestionHandlerInterface {
 
             return $solutionData;
         }, $coords);
+
         return $exportData;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function convertAnswerDetails(Response $response) {
+    public function convertAnswerDetails(Response $response)
+    {
         $parts = explode(';', $response->getResponse());
 
         return array_filter($parts, function ($part) {
@@ -235,10 +245,10 @@ class GraphicHandler implements QuestionHandlerInterface {
     /**
      * {@inheritdoc}
      */
-    public function validateAnswerFormat(Question $question, $data) {
-
+    public function validateAnswerFormat(Question $question, $data)
+    {
         if (!is_array($data)) {
-            return ['Answer data must be an array, ' . gettype($data) . ' given'];
+            return ['Answer data must be an array, '.gettype($data).' given'];
         }
     }
 
@@ -247,7 +257,8 @@ class GraphicHandler implements QuestionHandlerInterface {
      *
      * {@inheritdoc}
      */
-    public function storeAnswerAndMark(Question $question, Response $response, $data) {
+    public function storeAnswerAndMark(Question $question, Response $response, $data)
+    {
         // a response is recorded like this : 471 - 335.9999694824219;583 - 125;
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionGraphic')
             ->findOneByQuestion($question);
@@ -265,7 +276,7 @@ class GraphicHandler implements QuestionHandlerInterface {
         $rightCoords = $em->getRepository('UJMExoBundle:Coords')
             ->findBy(array('interactionGraphic' => $interaction->getId()));
 
-        $serviceGraphic = $this->container->get("ujm.exo.graphic_service");
+        $serviceGraphic = $this->container->get('ujm.exo.graphic_service');
 
         $nbpointer = count($data);
 
@@ -284,5 +295,4 @@ class GraphicHandler implements QuestionHandlerInterface {
         $response->setResponse($result);
         $response->setMark($mark);
     }
-
 }

@@ -30,11 +30,11 @@ class QtiServices
      * sort the paths of questions.
      *
      * @param UJM\ExoBundle\Services\classes\QTI\qtiRepository $qtiRepos
-     * @param String $stepDir directory of step
+     * @param string                                           $stepDir  directory of step
      *
      * @return array of String array with the paths of questions sorted
      */
-    public function sortPathOfQuestions($qtiRepos, $stepDir='')
+    public function sortPathOfQuestions($qtiRepos, $stepDir = '')
     {
         $pathQtiDir = $qtiRepos->getUserDir().'questions';
         if ($stepDir != '') {

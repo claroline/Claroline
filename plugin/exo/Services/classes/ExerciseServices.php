@@ -223,7 +223,7 @@ class ExerciseServices
             if ($this->isExerciseAdmin($exercise)) {
                 if (null == $step) {
                     // Create a new Step to add the Question
-                    $this->createStepForOneQuestion($exercise,$question, 1);
+                    $this->createStepForOneQuestion($exercise, $question, 1);
                 } else {
                     // Add the question to the existing Step
                     $em = $this->doctrine->getManager();
@@ -240,12 +240,12 @@ class ExerciseServices
     }
 
     /**
-     * Add a question in a step
+     * Add a question in a step.
      *
      *
      * @param UJM\ExoBundle\Entity\Question $question
-     * @param UJM\ExoBundle\Entity\Step $step
-     * @param Integer $order
+     * @param UJM\ExoBundle\Entity\Step     $step
+     * @param int                           $order
      */
     public function addQuestionInStep($question, $step, $order)
     {
@@ -315,35 +315,37 @@ class ExerciseServices
     }
 
     /**
-     * Temporary : Waiting step manager
+     * Temporary : Waiting step manager.
      *
      * Create a step for one question in the exercise
      *
      * @param Exercise $exercise
      * @param Question $question
-     * @param int $orderStep order of the step in the exercise
+     * @param int      $orderStep order of the step in the exercise
      */
     public function createStepForOneQuestion(Exercise $exercise,
-            Question $question, $orderStep) {
-                $em = $this->doctrine->getManager();
-                $step = $this->createStep($exercise, $orderStep, $em);
+            Question $question, $orderStep)
+    {
+        $em = $this->doctrine->getManager();
+        $step = $this->createStep($exercise, $orderStep, $em);
 
-                $sq = new StepQuestion();
-                $sq->setStep($step);
-                $sq->setQuestion($question);
-                $sq->setOrdre('1');
-                $em->persist($sq);
-                $em->flush();
+        $sq = new StepQuestion();
+        $sq->setStep($step);
+        $sq->setQuestion($question);
+        $sq->setOrdre('1');
+        $em->persist($sq);
+        $em->flush();
     }
 
     /**
-     *
      * @param Exercise $exercise
-     * @param type $orderStep
-     * @param type $em
+     * @param type     $orderStep
+     * @param type     $em
+     *
      * @return Step
      */
-    public function createStep (Exercise $exercise, $orderStep, $em) {
+    public function createStep(Exercise $exercise, $orderStep, $em)
+    {
 
         //Creating a step by question
         $step = new Step();

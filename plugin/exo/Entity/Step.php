@@ -11,7 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\StepRepository")
  * @ORM\Table(name="ujm_step")
  */
-
 class Step
 {
     /**
@@ -43,7 +42,7 @@ class Step
     private $keepSameQuestion;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="shuffle", type="boolean", nullable=true)
      */
@@ -99,7 +98,7 @@ class Step
         return $this->id;
     }
 
-     /**
+    /**
      * Set text.
      *
      * @param string $text

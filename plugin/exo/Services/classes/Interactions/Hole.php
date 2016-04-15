@@ -3,6 +3,7 @@
 /**
  * Services for the hole.
  */
+
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
 use JMS\DiExtraBundle\Annotation as DI;
@@ -18,7 +19,7 @@ class Hole extends Interaction
      *
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param int $paperID id Paper or 0 if it's just a question test and not a paper
+     * @param int                                       $paperID id Paper or 0 if it's just a question test and not a paper
      *
      * @return mixed[]
      */
@@ -51,9 +52,9 @@ class Hole extends Interaction
      * implement the abstract method
      * To calculate the score.
      *
-     * @param \UJM\ExoBundle\Entity\InteractionHole $interHole
+     * @param \UJM\ExoBundle\Entity\InteractionHole     $interHole
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param float $penalty penalty if the user showed hints
+     * @param float                                     $penalty   penalty if the user showed hints
      *
      * @return string userScore/scoreMax
      */
@@ -61,18 +62,17 @@ class Hole extends Interaction
         \UJM\ExoBundle\Entity\InteractionHole $interHole = null,
         $request = null,
         $penalty = null
-    )
-    {
+    ) {
         $score = 0;
         $scoreMax = $this->maxScore($interHole);
 
-        $i=1;
+        $i = 1;
         foreach ($interHole->getHoles() as $hole) {
-            if(is_array($request) ) {
+            if (is_array($request)) {
                 $response = $request[$i];
-                $i++;
+                ++$i;
             } else {
-                $response = $request->get('blank_' . $hole->getPosition());
+                $response = $request->get('blank_'.$hole->getPosition());
             }
             $response = trim($response);
             $response = preg_replace('/\s+/', ' ', $response);
@@ -85,7 +85,7 @@ class Hole extends Interaction
             $score = 0;
         }
 
-        $score .= '/' . $scoreMax;
+        $score .= '/'.$scoreMax;
 
         return $score;
     }
@@ -134,8 +134,8 @@ class Hole extends Interaction
      *
      * call getAlreadyResponded and prepare the interaction to displayed if necessary
      *
-     * @param \UJM\ExoBundle\Entity\Interaction $interactionToDisplay interaction (question) to displayed
-     * @param Symfony\Component\HttpFoundation\Session\SessionInterface $session
+     * @param \UJM\ExoBundle\Entity\Interaction                            $interactionToDisplay interaction (question) to displayed
+     * @param Symfony\Component\HttpFoundation\Session\SessionInterface    $session
      * @param \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...) $interactionX
      *
      * @return \UJM\ExoBundle\Entity\Response
@@ -148,7 +148,7 @@ class Hole extends Interaction
     }
 
     /**
-     * @param \UJM\ExoBundle\Entity\InteractionHole $interHole
+     * @param \UJM\ExoBundle\Entity\InteractionHole     $interHole
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @return json
@@ -157,7 +157,7 @@ class Hole extends Interaction
     {
         $em = $this->doctrine->getManager();
         foreach ($interHole->getHoles() as $hole) {
-            $response = $request->get('blank_' . $hole->getPosition());
+            $response = $request->get('blank_'.$hole->getPosition());
             $response = trim($response);
             $response = preg_replace('/\s+/', ' ', $response);
 
@@ -176,7 +176,7 @@ class Hole extends Interaction
 
     /**
      * @param \UJM\ExoBundle\Entity\Hole $hole
-     * @param String $response
+     * @param string                     $response
      *
      * @return float
      */

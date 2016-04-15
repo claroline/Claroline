@@ -26,10 +26,11 @@ class HoleHandler implements QuestionHandlerInterface
      *     "container"       = @DI\Inject("service_container")
      * })
      *
-     * @param ObjectManager $om
+     * @param ObjectManager      $om
      * @param ContainerInterface $container
      */
-    public function __construct(ObjectManager $om, ContainerInterface $container) {
+    public function __construct(ObjectManager $om, ContainerInterface $container)
+    {
         $this->om = $om;
         $this->container = $container;
     }
@@ -78,7 +79,7 @@ class HoleHandler implements QuestionHandlerInterface
             if (!in_array($solution->id, $holeIds)) {
                 $errors[] = [
                     'path' => "solutions[{$index}]",
-                    'message' => "id {$solution->id} doesn't match any choice id"
+                    'message' => "id {$solution->id} doesn't match any choice id",
                 ];
             }
         }
@@ -95,7 +96,7 @@ class HoleHandler implements QuestionHandlerInterface
         if ($maxScore <= 0) {
             $errors[] = [
                 'path' => 'solutions',
-                'message' => 'there is no solution with a positive score'
+                'message' => 'there is no solution with a positive score',
             ];
         }
 
@@ -139,7 +140,7 @@ class HoleHandler implements QuestionHandlerInterface
         $holeQuestion = $repo->findOneBy(['question' => $question]);
         $holes = $holeQuestion->getHoles()->toArray();
         $text = $holeQuestion->getHtmlWithoutValue();
-        
+
         $scoreTotal = 0;
         foreach ($holes as $hole) {
             $maxScore = 0;
@@ -150,7 +151,7 @@ class HoleHandler implements QuestionHandlerInterface
             }
             $scoreTotal = $scoreTotal + $maxScore;
         }
-        
+
         $exportData->scoreTotal = $scoreTotal;
         $exportData->text = $text;
         if ($withSolution) {
@@ -192,14 +193,15 @@ class HoleHandler implements QuestionHandlerInterface
 
             return $holeData;
         }, $holes);
-        
+
         return $exportData;
     }
-    
-    public function convertQuestionAnswers(Question $question, \stdClass $exportData){
+
+    public function convertQuestionAnswers(Question $question, \stdClass $exportData)
+    {
         $repo = $this->om->getRepository('UJMExoBundle:InteractionHole');
         $holeQuestion = $repo->findOneBy(['question' => $question]);
-        
+
         $holes = $holeQuestion->getHoles()->toArray();
         $exportData->solutions = array_map(function ($hole) {
                 $solutionData = new \stdClass();
@@ -231,6 +233,7 @@ class HoleHandler implements QuestionHandlerInterface
 
                 return $solutionData;
             }, $holes);
+
         return $exportData;
     }
 
@@ -240,11 +243,11 @@ class HoleHandler implements QuestionHandlerInterface
     public function convertAnswerDetails(Response $response)
     {
         $parts = json_decode($response->getResponse());
-        
-        foreach ($parts as $key=>$value) {
+
+        foreach ($parts as $key => $value) {
             $array[$key] = $value;
         }
-        
+
     //    $parts = explode(';', $response->getResponse());
 
         return array_filter($array, function ($part) {
@@ -258,7 +261,7 @@ class HoleHandler implements QuestionHandlerInterface
     public function validateAnswerFormat(Question $question, $data)
     {
         if (!is_array($data)) {
-            return ['Answer data must be an array, ' . gettype($data) . ' given'];
+            return ['Answer data must be an array, '.gettype($data).' given'];
         }
         $count = 0;
 
@@ -280,7 +283,7 @@ class HoleHandler implements QuestionHandlerInterface
                 }
 
                 if (!is_string($answer['holeId'])) {
-                    return ['Answer `holeId` must contain only strings , ' . gettype($answer['holeId']) . ' given.'];
+                    return ['Answer `holeId` must contain only strings , '.gettype($answer['holeId']).' given.'];
                 }
 
                 if (!in_array($answer['holeId'], $holeIds)) {
@@ -288,7 +291,7 @@ class HoleHandler implements QuestionHandlerInterface
                 }
 
                 if (!empty($answer['answerText']) && !is_string($answer['answerText'])) {
-                    return ['Answer `answerText` must contain only strings , ' . gettype($answer['holeId']) . ' given.'];
+                    return ['Answer `answerText` must contain only strings , '.gettype($answer['holeId']).' given.'];
                 }
             }
         }
@@ -307,15 +310,15 @@ class HoleHandler implements QuestionHandlerInterface
             ->findOneByQuestion($question);
 
         $answers = [];
-        $i=0;
+        $i = 0;
         foreach ($data as $answer) {
             if ($answer || $answer !== null) {
                 $answers[$i] = $answer;
             }
-            $i++;
+            ++$i;
         }
 
-        $serviceHole = $this->container->get("ujm.exo.hole_service");
+        $serviceHole = $this->container->get('ujm.exo.hole_service');
 
         $mark = $serviceHole->mark($interaction, $data, 0);
 

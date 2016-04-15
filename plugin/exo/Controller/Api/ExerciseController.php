@@ -7,11 +7,9 @@ use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\Hint;
 use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Manager\ExerciseManager;
@@ -19,7 +17,7 @@ use UJM\ExoBundle\Manager\PaperManager;
 use UJM\ExoBundle\Manager\QuestionManager;
 
 /**
- * Exercise Controller
+ * Exercise Controller.
  *
  * @EXT\Route(
  *     requirements={"id"="\d+"},
@@ -53,8 +51,7 @@ class ExerciseController
         ExerciseManager $exerciseManager,
         QuestionManager $questionManager,
         PaperManager $paperManager
-    )
-    {
+    ) {
         $this->authorization = $authorization;
         $this->exerciseManager = $exerciseManager;
         $this->questionManager = $questionManager;
@@ -68,6 +65,7 @@ class ExerciseController
      * @EXT\Route("/exercises/{id}", name="exercise_get")
      *
      * @param Exercise $exercise
+     *
      * @return JsonResponse
      */
     public function exportAction(Exercise $exercise)
@@ -84,6 +82,7 @@ class ExerciseController
      * @EXT\Route("/exercises/{id}/minimal", name="exercise_get_minimal")
      *
      * @param Exercise $exercise
+     *
      * @return JsonResponse
      */
     public function minimalExportAction(Exercise $exercise)
@@ -94,16 +93,16 @@ class ExerciseController
     }
 
     /**
-     *
      * Opens an exercise, creating a new paper or re-using an unfinished one.
-     * Also check that max attempts are not reached if needed
+     * Also check that max attempts are not reached if needed.
      *
      * @EXT\Route("/exercises/{id}/attempts", name="exercise_new_attempt")
      * @EXT\Method("POST")
      * @EXT\ParamConverter("user", converter="current_user")
      *
-     * @param User      $user
-     * @param Exercise  $exercise
+     * @param User     $user
+     * @param Exercise $exercise
+     *
      * @return JsonResponse
      */
     public function attemptAction(User $user, Exercise $exercise)
@@ -112,11 +111,10 @@ class ExerciseController
 
         // if not admin of the resource check if exercise max attempts is reached
         if (!$this->isAdmin($exercise)) {
-
             $max = $exercise->getMaxAttempts();
             $nbFinishedPapers = $this->paperManager->countUserFinishedPapers($exercise, $user);
 
-            if($max > 0 && $nbFinishedPapers >= $max){
+            if ($max > 0 && $nbFinishedPapers >= $max) {
                 throw new AccessDeniedHttpException('max attempts reached');
             }
         }
@@ -134,6 +132,7 @@ class ExerciseController
      *
      * @param User  $user
      * @param Paper $paper
+     *
      * @return JsonResponse
      */
     public function finishPaperAction(User $user, Paper $paper)
@@ -153,26 +152,29 @@ class ExerciseController
      * @EXT\Route("/exercises/{id}/papers", name="exercise_papers")
      * @EXT\ParamConverter("user", converter="current_user")
      *
-     * @param User      $user
-     * @param Exercise  $exercise
+     * @param User     $user
+     * @param Exercise $exercise
+     *
      * @return JsonResponse
      */
     public function papersAction(User $user, Exercise $exercise)
-    {        
+    {
         if ($this->isAdmin($exercise)) {
             return new JsonResponse($this->paperManager->exportExercisePapers($exercise));
         }
+
         return new JsonResponse($this->paperManager->exportUserPapers($exercise, $user));
     }
 
     /**
-     * Returns the number of finished paper for a given user and exercise
+     * Returns the number of finished paper for a given user and exercise.
      *
      * @EXT\Route("/exercises/{id}/papers/count", name="exercise_papers_count")
      * @EXT\ParamConverter("user", converter="current_user")
      *
-     * @param User      $user
-     * @param Exercise  $exercise
+     * @param User     $user
+     * @param Exercise $exercise
+     *
      * @return JsonResponse
      */
     public function countFinishedPaperAction(User $user, Exercise $exercise)
@@ -189,8 +191,9 @@ class ExerciseController
      * @EXT\ParamConverter("paper", class="UJMExoBundle:Paper", options={"mapping": {"paperId": "id"}})
      * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"exerciseId": "id"}})
      *
-     * @param Exercise  $exercise
-     * @param Paper     $paper
+     * @param Exercise $exercise
+     * @param Paper    $paper
+     *
      * @return JsonResponse
      */
     public function paperAction(Exercise $exercise, Paper $paper)

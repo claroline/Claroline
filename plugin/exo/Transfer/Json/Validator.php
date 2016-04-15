@@ -20,8 +20,8 @@ class Validator
      *     "kernelDir" = @DI\Inject("%kernel.root_dir%")
      * })
      *
-     * @param QuestionHandlerCollector  $collector
-     * @param string                    $kernelDir
+     * @param QuestionHandlerCollector $collector
+     * @param string                   $kernelDir
      */
     public function __construct(QuestionHandlerCollector $collector, $kernelDir)
     {
@@ -34,6 +34,7 @@ class Validator
      * metadata schemas. Returns an array of validation errors.
      *
      * @param \stdClass $metadata
+     *
      * @return array
      */
     public function validateMetadata(\stdClass $metadata)
@@ -46,7 +47,6 @@ class Validator
 
             // Validate custom metadata fields
             if (count($errors) === 0) {
-
             }
 
             return $errors;
@@ -54,7 +54,7 @@ class Validator
 
         return [[
             'path' => '',
-            'message' => 'Exercise metadata cannot be validated due to missing property "type"'
+            'message' => 'Exercise metadata cannot be validated due to missing property "type"',
         ]];
     }
 
@@ -64,6 +64,7 @@ class Validator
      *
      * @param \stdClass $question
      * @param bool      $requireSolution
+     *
      * @return array
      */
     public function validateQuestion(\stdClass $question, $requireSolution = true)
@@ -80,7 +81,7 @@ class Validator
                     && !isset($question->solutions)) {
                     $errors[] = [
                         'path' => '',
-                        'message' => 'a solution(s) property is required'
+                        'message' => 'a solution(s) property is required',
                     ];
                 }
 
@@ -93,13 +94,13 @@ class Validator
 
             return [[
                 'path' => 'type',
-                'message' => "Unknown question type '{$question->type}'"
+                'message' => "Unknown question type '{$question->type}'",
             ]];
         }
 
         return [[
             'path' => '',
-            'message' => 'Question cannot be validated due to missing property "type"'
+            'message' => 'Question cannot be validated due to missing property "type"',
         ]];
     }
 
@@ -107,6 +108,7 @@ class Validator
      * Validates a json-decoded exercise against the quiz schema.
      *
      * @param \stdClass $quiz
+     *
      * @return array
      */
     public function validateExercise(\stdClass $quiz)

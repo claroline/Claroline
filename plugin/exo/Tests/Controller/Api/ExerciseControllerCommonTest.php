@@ -13,7 +13,7 @@ use UJM\ExoBundle\Testing\Persister;
 use UJM\ExoBundle\Testing\RequestTrait;
 
 /**
- * Tests that are common to all exercise / question types
+ * Tests that are common to all exercise / question types.
  */
 class ExerciseControllerCommonTest extends TransactionalTestCase
 {
@@ -39,7 +39,6 @@ class ExerciseControllerCommonTest extends TransactionalTestCase
     private $hi1;
     /** @var Exercise */
     private $ex1;
-
 
     protected function setUp()
     {
@@ -92,15 +91,16 @@ class ExerciseControllerCommonTest extends TransactionalTestCase
 
     /**
      * Minimal exercise export is used to get exercise data from paper list and paper details views
-     * It returns only exercise metadata and id and is available for all "CAN OPEN RESOURCE" users
+     * It returns only exercise metadata and id and is available for all "CAN OPEN RESOURCE" users.
      */
-    public function testMinimalExport(){
+    public function testMinimalExport()
+    {
         $this->request('GET', "/exercise/api/exercises/{$this->ex1->getId()}/minimal", $this->john);
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $content = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals($this->ex1->getId(), $content->id);
         $this->assertEquals('ex1', $content->meta->title);
-        $this->assertFalse(property_exists($content, "steps"));
+        $this->assertFalse(property_exists($content, 'steps'));
     }
 
     public function testAnonymousAttempt()
@@ -121,9 +121,10 @@ class ExerciseControllerCommonTest extends TransactionalTestCase
 
     /**
      * Checks that a basic user (ie not admin of the resource)
-     * Can not make a new attempt if max attempts is reached
+     * Can not make a new attempt if max attempts is reached.
      */
-    public function testAttemptMaxAttemptsReached(){
+    public function testAttemptMaxAttemptsReached()
+    {
 
         // create 'open' mask in db
         $type = $this->ex1->getResourceNode()->getResourceType();
@@ -156,9 +157,10 @@ class ExerciseControllerCommonTest extends TransactionalTestCase
 
     /**
      * Checks that an admin user (ie admin of the resource)
-     * Can make a new attempt even if max attempts is reached
+     * Can make a new attempt even if max attempts is reached.
      */
-    public function testAttemptMaxAttemptsReachedAdmin(){
+    public function testAttemptMaxAttemptsReachedAdmin()
+    {
         // set exercise max attempts
         $this->ex1->setMaxAttempts(1);
         // first attempt for john
@@ -267,7 +269,7 @@ class ExerciseControllerCommonTest extends TransactionalTestCase
     }
 
     /**
-     * Checks the count of finished papers
+     * Checks the count of finished papers.
      */
     public function testCountFinishedPaper()
     {
@@ -282,7 +284,7 @@ class ExerciseControllerCommonTest extends TransactionalTestCase
         // count john's finished papers
         $this->request('GET', "/exercise/api/exercises/{$this->ex1->getId()}/papers/count", $this->john);
         $content = json_decode($this->client->getResponse()->getContent());
-        $this->assertTrue((int)$content === 1);
+        $this->assertTrue((int) $content === 1);
     }
 
     public function testAnonymousPapers()
@@ -292,7 +294,7 @@ class ExerciseControllerCommonTest extends TransactionalTestCase
     }
 
     /**
-     * Checks that as a "normal" user I'll only see my own papers even if another user's paper exists
+     * Checks that as a "normal" user I'll only see my own papers even if another user's paper exists.
      */
     public function testUserPapers()
     {
@@ -314,7 +316,7 @@ class ExerciseControllerCommonTest extends TransactionalTestCase
 
     /**
      * Checks that as a "admin" user (ie creator of the exercise)
-     * I'll see all exercise's papers
+     * I'll see all exercise's papers.
      */
     public function testAdminPapers()
     {

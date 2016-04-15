@@ -23,7 +23,7 @@ abstract class AbstractInteraction implements QuestionTypeProviderInterface
     protected $question;
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {

@@ -14,7 +14,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\Step;
 use UJM\ExoBundle\Entity\Subscription;
 use UJM\ExoBundle\Form\ExerciseType;
 
@@ -220,7 +219,7 @@ class ExerciseListener
 
         foreach ($listQuestionsExoToCopy as $eq) {
             $questionToAdd = $em->getRepository('UJMExoBundle:Question')->find($eq->getQuestion());
-            $this->container->get('ujm.exo_exercise')->createStepForOneQuestion($newExercise,$questionToAdd, 1);
+            $this->container->get('ujm.exo_exercise')->createStepForOneQuestion($newExercise, $questionToAdd, 1);
         }
 
         $user = $this->container->get('security.token_storage')->getToken()->getUser();

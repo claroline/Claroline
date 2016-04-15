@@ -49,7 +49,7 @@ class Coords
      * @ORM\Column(type="float")
      */
     private $size;
-    
+
     /**
      * @ORM\Column(type="text", nullable=true)
      */

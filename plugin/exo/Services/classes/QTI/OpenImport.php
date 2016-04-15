@@ -3,6 +3,7 @@
 /**
  * To import an open question.
  */
+
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use UJM\ExoBundle\Entity\InteractionOpen;

@@ -3,6 +3,7 @@
 /**
  * To import a question with holes in QTI.
  */
+
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use UJM\ExoBundle\Entity\Hole;
@@ -109,7 +110,7 @@ class HoleImport extends QtiImport
      * Get correctResponse.
      *
      *
-     * @param String $identifier identifier of hole
+     * @param string $identifier identifier of hole
      */
     protected function getCorrectResponse($identifier)
     {
@@ -180,10 +181,10 @@ class HoleImport extends QtiImport
      * Create hole.
      *
      *
-     * @param Intger  $size     hole's size for the input
-     * @param String  $qtiId    id of hole in the qti file
-     * @param bool    $selector text or list
-     * @param Integer $position position of hole in the text
+     * @param Intger $size     hole's size for the input
+     * @param string $qtiId    id of hole in the qti file
+     * @param bool   $selector text or list
+     * @param int    $position position of hole in the text
      */
     protected function createHole($size, $qtiId, $selector, $position)
     {
@@ -201,7 +202,7 @@ class HoleImport extends QtiImport
      * Create wordResponse.
      *
      *
-     * @param String                    $qtiId id of hole in the qti file
+     * @param string                    $qtiId id of hole in the qti file
      * @param UJM\ExoBundle\Entity\Hole $hole
      */
     protected function createWordResponse($qtiId, $hole)
@@ -230,7 +231,7 @@ class HoleImport extends QtiImport
     {
         foreach ($mapping->getElementsByTagName('mapEntry') as $mapEntry) {
             $keyWord = new WordResponse();
-            $this->addFeedbackInLine($mapEntry,$keyWord);
+            $this->addFeedbackInLine($mapEntry, $keyWord);
             $keyWord->setResponse($mapEntry->getAttribute('mapKey'));
             $keyWord->setScore($mapEntry->getAttribute('mappedValue'));
             $keyWord->setHole($hole);
@@ -247,7 +248,7 @@ class HoleImport extends QtiImport
      * Create wordResponseForList.
      *
      *
-     * @param String                    $qtiId   id of hole in the qti file
+     * @param string                    $qtiId   id of hole in the qti file
      * @param DOMNodelist::item         $ib      element itemBody
      * @param DOMNodelist::item         $mapping element mapping
      * @param UJM\ExoBundle\Entity\Hole $hole
@@ -265,7 +266,7 @@ class HoleImport extends QtiImport
                         if ($mapEntry->getAttribute('mapKey') == $ic->getAttribute('identifier')) {
                             $score = $mapEntry->getAttribute('mappedValue');
                             $matchScore = true;
-                            $this->addFeedbackInLine($mapEntry,$keyWord);
+                            $this->addFeedbackInLine($mapEntry, $keyWord);
                         }
                         if ($mapEntry->getAttribute('caseSensitive') == true) {
                             $keyWord->setCaseSensitive(true);
@@ -289,9 +290,9 @@ class HoleImport extends QtiImport
             }
         }
     }
-    protected function addFeedbackInLine($mapEntry,$keyWord)
+    protected function addFeedbackInLine($mapEntry, $keyWord)
     {
-        $feedback = $mapEntry->getElementsByTagName("feedbackInline");
+        $feedback = $mapEntry->getElementsByTagName('feedbackInline');
         if ($feedback->item(0)) {
             $feedbackVal = $this->domElementToString($feedback->item(0));
             $feedbackVal = html_entity_decode($feedbackVal);

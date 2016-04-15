@@ -81,7 +81,7 @@ class InteractionQCM extends AbstractInteraction
     }
 
     /**
-     * @param boolean $shuffle
+     * @param bool $shuffle
      */
     public function setShuffle($shuffle)
     {
@@ -89,7 +89,7 @@ class InteractionQCM extends AbstractInteraction
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getShuffle()
     {
@@ -129,7 +129,7 @@ class InteractionQCM extends AbstractInteraction
     }
 
     /**
-     * @param boolean $weightResponse
+     * @param bool $weightResponse
      */
     public function setWeightResponse($weightResponse)
     {
@@ -137,19 +137,20 @@ class InteractionQCM extends AbstractInteraction
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getWeightResponse()
     {
         return $this->weightResponse;
     }
-    
+
     /**
      * @return ArrayCollection
      */
     public function setChoices(ArrayCollection $choices)
     {
         $this->choices = $choices;
+
         return $this->choices;
     }
 

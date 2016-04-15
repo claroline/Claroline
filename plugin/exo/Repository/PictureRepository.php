@@ -16,9 +16,9 @@ class PictureRepository extends EntityRepository
      * Search user's pictures by type and by label.
      *
      *
-     * @param String $type        type of picture
+     * @param string $type        type of picture
      * @param int    $userID      id User
-     * @param String $searchLabel label of picture
+     * @param string $searchLabel label of picture
      *
      * Return array[Picture]
      */
@@ -55,7 +55,7 @@ class PictureRepository extends EntityRepository
      * Search user's pictures by type and by label.
      *
      *
-     * @param String $labelToFind label of picture
+     * @param string $labelToFind label of picture
      * @param int    $userID      id User
      * @param bool   $strict      for a strict search or no
      *

@@ -25,7 +25,7 @@ class ExerciseHandler
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param Doctrine EntityManager                    $em
      * @param \Claroline\CoreBundle\Entity\User         $user
-     * @param String                                    $action
+     * @param string                                    $action
      */
     public function __construct(Form $form, Request $request, EntityManager $em, User $user, $action)
     {

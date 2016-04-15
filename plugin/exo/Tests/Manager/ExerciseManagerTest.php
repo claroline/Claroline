@@ -135,6 +135,7 @@ class ExerciseManagerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider validQuizProvider
+     *
      * @param string $dataFilename
      */
     public function testSchemaRoundTrip($dataFilename)
@@ -163,7 +164,7 @@ class ExerciseManagerTest extends \PHPUnit_Framework_TestCase
     public function validQuizProvider()
     {
         return [
-            ['quiz-metadata.json']
+            ['quiz-metadata.json'],
         ];
     }
 }

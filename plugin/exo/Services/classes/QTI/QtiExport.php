@@ -30,7 +30,6 @@ abstract class QtiExport
     /**
      * Constructor.
      *
-     * @access public
      *
      * @param \Doctrine\Bundle\DoctrineBundle\Registry                                            $doctrine              Dependency Injection
      * @param \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorageInterface Dependency Injection
@@ -48,9 +47,6 @@ abstract class QtiExport
 
     /**
      * Generate object tags for the attached files.
-     *
-     * @access protected
-     *
      */
     protected function objetcTags()
     {
@@ -69,10 +65,9 @@ abstract class QtiExport
     /**
      * Generate head of QTI.
      *
-     * @access protected
      *
-     * @param String $identifier type question
-     * @param String $title      title of question
+     * @param string $identifier type question
+     * @param string $title      title of question
      */
     protected function qtiHead($identifier, $title)
     {
@@ -90,9 +85,8 @@ abstract class QtiExport
     /**
      * Add a new tag responseDeclaration to node.
      *
-     * @access protected
      *
-     * @param String $baseType
+     * @param string $baseType
      */
     protected function qtiResponseDeclaration($identifier, $baseType, $cardinality)
     {
@@ -109,8 +103,6 @@ abstract class QtiExport
 
     /**
      * add the tag outcomeDeclaration to the node.
-     *
-     * @access protected
      */
     protected function qtiOutComeDeclaration()
     {
@@ -125,14 +117,14 @@ abstract class QtiExport
      * add the tag modalFeedback to the node.
      *
      *
-     * @param String $feedBack
+     * @param string $feedBack
      */
     protected function qtiFeedBack($feedBack)
     {
         $this->modalFeedback = $this->document->CreateElement('modalFeedback');
-        $this->modalFeedback->setAttribute("outcomeIdentifier","FEEDBACK");
-        $this->modalFeedback->setAttribute("identifier","COMMENT");
-        $this->modalFeedback->setAttribute("showHide","show");
+        $this->modalFeedback->setAttribute('outcomeIdentifier', 'FEEDBACK');
+        $this->modalFeedback->setAttribute('identifier', 'COMMENT');
+        $this->modalFeedback->setAttribute('showHide', 'show');
 
         $body = $this->qtiExportObject($feedBack);
         foreach ($body->childNodes as $child) {
@@ -163,37 +155,42 @@ abstract class QtiExport
     }
 
     /**
-     * Managing the resource export, format QTI
-     * @param String $str
+     * Managing the resource export, format QTI.
+     *
+     * @param string $str
+     *
      * @return DOMElement
      */
-    protected function qtiExportObject($str) {
+    protected function qtiExportObject($str)
+    {
         $dom = new \DOMDocument();
         $dom->loadHTML($str);
         $this->imgToObject($dom);
         $this->aToObject($dom);
         $body = $dom->getElementsByTagName('body')->item(0);
+
         return $body;
     }
 
     /**
-     * Export atached file
-     * @access private
+     * Export atached file.
      *
-     * @param String $path path of file to export
+     * @param string $path path of file to export
      *
      * @return \Claroline\CoreBundle\Entity\Resource\File
      */
-    private function getFile($path) {
+    private function getFile($path)
+    {
         $urlExplode = explode('/', $path);
         $idNode = end($urlExplode);
-        $objSrc =  $this->doctrine->getManager()->getRepository('ClarolineCoreBundle:Resource\File')->findOneBy(array('resourceNode' => $idNode));
+        $objSrc = $this->doctrine->getManager()->getRepository('ClarolineCoreBundle:Resource\File')->findOneBy(array('resourceNode' => $idNode));
         $src = $this->container->getParameter('claroline.param.files_directory').'/'.$objSrc->getHashName();
         $name = $objSrc->getResourceNode()->getName();
         $dest = $this->qtiRepos->getUserDir().$name;
         copy($src, $dest);
-        $ressource = array ('name' => $name, 'url' => $src);
+        $ressource = array('name' => $name, 'url' => $src);
         $this->resourcesLinked[] = $ressource;
+
         return $objSrc;
     }
 
@@ -232,17 +229,15 @@ abstract class QtiExport
     }
 
     /**
-     * add the dom in a DomElement
+     * add the dom in a DomElement.
      *
-     * @access protected
      *
      * @param DOMElement $domEl
-     * @param String $label
-     *
+     * @param string     $label
      */
     protected function getDomEl($domEl, $label)
     {
-       //Managing the resource export
+        //Managing the resource export
         $body = $this->qtiExportObject($label);
         foreach ($body->childNodes as $child) {
             $labelNew = $this->document->importNode($child, true);
@@ -251,11 +246,9 @@ abstract class QtiExport
     }
 
     /**
-     * Convert img tag to object tag
-     * @access protected
+     * Convert img tag to object tag.
      *
      * @param \DOMDocument $DOMdoc
-     *
      */
     protected function imgToObject($DOMdoc)
     {
@@ -265,10 +258,10 @@ abstract class QtiExport
             //Copy the image in the archiv
             $src = $img->getAttribute('src');
             $file = $this->getFile($src);
-            $object->setAttribute("data", $file->getResourceNode()->getName());
+            $object->setAttribute('data', $file->getResourceNode()->getName());
             $objecttxt = $DOMdoc->CreateTextNode($file->getResourceNode()->getName());
             $object->appendChild($objecttxt);
-            $object->setAttribute("type", $file->getResourceNode()->getMimeType());
+            $object->setAttribute('type', $file->getResourceNode()->getMimeType());
             //Creating one table to replace the tags
             $elements[] = array($object, $img);
         }
@@ -280,11 +273,9 @@ abstract class QtiExport
         }
     }
     /**
-     * Convert a tag to object tag
-     * @access protected
+     * Convert a tag to object tag.
      *
      * @param \DOMDocument $DOMdoc
-     *
      */
     protected function aToObject($DOMdoc)
     {
@@ -294,8 +285,8 @@ abstract class QtiExport
             //Copy the file in the archive
             $path = $aTag->getAttribute('href');
             $file = $this->getFile($path);
-            $object->setAttribute("data", $file->getResourceNode()->getName());
-            $object->setAttribute("type", $file->getResourceNode()->getMimeType());
+            $object->setAttribute('data', $file->getResourceNode()->getName());
+            $object->setAttribute('type', $file->getResourceNode()->getMimeType());
             //Creating one table to replace the tags
             $elements[] = array($object, $aTag);
         }
@@ -307,12 +298,10 @@ abstract class QtiExport
         }
     }
 
-
     /**
      * abstract method to export the question.
      *
-     * @access public
-     * @param Question $question
+     * @param Question      $question
      * @param qtiRepository $qtiRepos
      */
     abstract public function export(Question $question, qtiRepository $qtiRepos);

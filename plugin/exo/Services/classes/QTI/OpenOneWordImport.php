@@ -4,6 +4,7 @@
 /**
  * To import an open question whith one word.
  */
+
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use UJM\ExoBundle\Entity\WordResponse;
@@ -54,7 +55,7 @@ class OpenOneWordImport extends OpenImport
         $mapping = $rp->getElementsByTagName('mapping')->item(0);
         foreach ($mapping->getElementsByTagName('mapEntry') as $me) {
             $keyWord = new WordResponse();
-            $feedback = $me->getElementsByTagName("feedbackInline");
+            $feedback = $me->getElementsByTagName('feedbackInline');
             if ($feedback->item(0)) {
                 $feedbackVal = $this->domElementToString($feedback->item(0));
                 $feedbackVal = html_entity_decode($feedbackVal);

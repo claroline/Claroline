@@ -15,8 +15,8 @@ use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Exercise;
 use Claroline\CoreBundle\Entity\User;
 
-class QuestionService {
-
+class QuestionService
+{
     private $doctrine;
     private $tokenStorage;
     private $kernel;
@@ -44,7 +44,8 @@ class QuestionService {
      *
      * @return array
      */
-    public function controlUserSharedQuestion($questionID) {
+    public function controlUserSharedQuestion($questionID)
+    {
         $em = $this->doctrine->getEntityManager();
         $user = $this->tokenStorage->getToken()->getUser();
 
@@ -57,12 +58,13 @@ class QuestionService {
     /**
      * Call after applied a filter in a questions list to know the actions allowed for each interaction.
      *
-     * @param Collection of \UJM\ExoBundle\Entity\Question  $listQuestions
-     * @param int                                           $userID
+     * @param Collection of \UJM\ExoBundle\Entity\Question $listQuestions
+     * @param int                                          $userID
      *
      * @return mixed[]
      */
-    public function getActionsAllQuestions($listQuestions, $userID) {
+    public function getActionsAllQuestions($listQuestions, $userID)
+    {
         $em = $this->doctrine->getEntityManager();
 
         $allActions = array();
@@ -113,7 +115,8 @@ class QuestionService {
      *
      * @return mixed
      */
-    public function controlUserQuestion($questionId) {
+    public function controlUserQuestion($questionId)
+    {
         $em = $this->doctrine->getEntityManager();
         $user = $this->tokenStorage->getToken()->getUser();
 
@@ -122,12 +125,14 @@ class QuestionService {
     }
 
     /**
-     * For a question know if it's linked with response and if it's shared
+     * For a question know if it's linked with response and if it's shared.
      *
      * @param Question $question
-     * @return boolean[]
+     *
+     * @return bool[]
      */
-    public function getActionQuestion(Question $question) {
+    public function getActionQuestion(Question $question)
+    {
         $em = $this->doctrine->getEntityManager();
         $response = $em->getRepository('UJMExoBundle:Response')
                 ->findOneByQuestion($question);
@@ -162,7 +167,8 @@ class QuestionService {
      *
      * @return array
      */
-    public function getActionShared($shared) {
+    public function getActionShared($shared)
+    {
         $em = $this->doctrine->getEntityManager();
         $question = $shared->getQuestion();
 
@@ -190,22 +196,25 @@ class QuestionService {
      *
      * @return array of type Interaction
      */
-    public function getTypes() {
+    public function getTypes()
+    {
         $path = $this->kernel->locateResource('@UJMExoBundle');
         $yaml = new Parser();
-        $interactionType = $yaml->parse(file_get_contents($path . 'Resources/config/interaction.yml'));
+        $interactionType = $yaml->parse(file_get_contents($path.'Resources/config/interaction.yml'));
 
         return $interactionType;
     }
     /**
-     * Get list of question after the filter
+     * Get list of question after the filter.
      * 
-     * @param type $idExo id exercise selected in the filter, -1 if not selection
-     * @param type $user
+     * @param type     $idExo    id exercise selected in the filter, -1 if not selection
+     * @param type     $user
      * @param Exercise $exercise
+     *
      * @return type
      */
-    public function getListQuestionExo($idExo,User $user, Exercise $exercise) {       
+    public function getListQuestionExo($idExo, User $user, Exercise $exercise)
+    {
         //"My models"
         if ($idExo == -2) {
             $listQExo = $this->doctrine
@@ -215,7 +224,7 @@ class QuestionService {
         }
         //Other exercise
         else {
-            $exoFilter=$this->doctrine->getManager()->getRepository('UJMExoBundle:Exercise')->find($idExo);
+            $exoFilter = $this->doctrine->getManager()->getRepository('UJMExoBundle:Exercise')->find($idExo);
             $listQExo = $this->doctrine
                     ->getManager()
                     ->getRepository('UJMExoBundle:Question')
@@ -224,20 +233,23 @@ class QuestionService {
 
         return $listQExo;
     }
-     /**
-     * Question shared with user
+    /**
+     * Question shared with user.
+     *
      * @param array $shared
+     *
      * @return array
      */
-    public function getQuestionShare($shared){
+    public function getQuestionShare($shared)
+    {
         $sharedWithMe = array();
 
-                $end = count($shared);
+        $end = count($shared);
 
-                for ($i = 0; $i < $end; $i++) {
-                    $sharedWithMe[] = $shared[$i]->getQuestion();
-                }
-                return $sharedWithMe;
+        for ($i = 0; $i < $end; ++$i) {
+            $sharedWithMe[] = $shared[$i]->getQuestion();
+        }
+
+        return $sharedWithMe;
     }
-
 }

@@ -3,6 +3,7 @@
 /**
  * To create temporary repository for QTI files.
  */
+
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
@@ -54,7 +55,7 @@ class QtiRepository
     /**
      * Create the repository.
      *
-     * @param String $directory directory
+     * @param string $directory directory
      * @param bool   $clear     to clear or no the directory userRootDir
      */
     public function createDirQTI($directory = 'default', $clear = true)
@@ -78,7 +79,7 @@ class QtiRepository
      */
     public function removeDirectory()
     {
-//        if (is_dir($this->userRootDir)) {
+        //        if (is_dir($this->userRootDir)) {
 //            exec('rm -rf '.$this->userRootDir.'*');
 //            $fs = new FileSystem();
 //            $iterator = new \DirectoryIterator($this->userRootDir);
@@ -181,7 +182,7 @@ class QtiRepository
     }
 
     /**
-     * @param String name of the xml file
+     * @param string name of the xml file
      *
      * @return bool
      */
@@ -259,10 +260,9 @@ class QtiRepository
     }
 
     /**
-     * call method to export a question
+     * call method to export a question.
      *
-     * @access public
-     * @param  \UJM\ExoBundle\Entity\Question $question
+     * @param \UJM\ExoBundle\Entity\Question $question
      */
     public function export($question)
     {

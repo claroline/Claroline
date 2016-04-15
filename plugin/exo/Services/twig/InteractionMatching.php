@@ -62,7 +62,7 @@ class InteractionMatching extends \Twig_Extension
      * init array of rights responses indexed by labelId.
      *
      *
-     * @param String                                          $response
+     * @param string                                          $response
      * @param \UJM\ExoBundle\Entity\Paper\InteractionMatching $interMatching
      *
      * Return array of arrays

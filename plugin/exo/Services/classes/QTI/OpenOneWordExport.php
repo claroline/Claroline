@@ -3,6 +3,7 @@
 /**
  * To export in QTI an open question with one word.
  */
+
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -13,9 +14,9 @@ class OpenOneWordExport extends OpenExport
     /**
      * overload the export method.
      *
-     * @access public
-     * @param Question $question
+     * @param Question      $question
      * @param qtiRepository $qtiRepos
+     *
      * @return BinaryFileResponse
      */
     public function export(Question $question, qtiRepository $qtiRepos)
@@ -60,14 +61,14 @@ class OpenOneWordExport extends OpenExport
             $mapEntry->setAttribute('caseSensitive', $resp->getCaseSensitive());
             $mapping->appendChild($mapEntry);
 
-            if(($resp->getFeedback()!=Null) && ($resp->getFeedback()!="")){
-            $feedbackInline = $this->document->CreateElement('feedbackInline');
-            $feedbackInline->setAttribute("outcomeIdentifier", "FEEDBACK");
-            $feedbackInline->setAttribute("identifier","Choice".$resp->getId());
-            $feedbackInline->setAttribute("showHide","show");
-            $this->getDomEl($feedbackInline, $resp->getFeedback());
-            $mapEntry->appendChild($feedbackInline);
-        }
+            if (($resp->getFeedback() != null) && ($resp->getFeedback() != '')) {
+                $feedbackInline = $this->document->CreateElement('feedbackInline');
+                $feedbackInline->setAttribute('outcomeIdentifier', 'FEEDBACK');
+                $feedbackInline->setAttribute('identifier', 'Choice'.$resp->getId());
+                $feedbackInline->setAttribute('showHide', 'show');
+                $this->getDomEl($feedbackInline, $resp->getFeedback());
+                $mapEntry->appendChild($feedbackInline);
+            }
 
             ++$i;
         }

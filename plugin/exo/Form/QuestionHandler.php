@@ -25,15 +25,15 @@ abstract class QuestionHandler
      * Constructor.
      *
      *
-     * @param \Symfony\Component\Form\Form                     $form       for an Interaction
+     * @param \Symfony\Component\Form\Form                     $form     for an Interaction
      * @param \Symfony\Component\HttpFoundation\Request        $request
      * @param Doctrine EntityManager                           $em
      * @param \UJM\ExoBundle\Services\classes\exerciseServices $exoServ
      * @param \UJM\ExoBundle\Services\classes\CategoryService  $catServ
      * @param \Claroline\CoreBundle\Entity\User                $user
-     * @param UJM\ExoBundle\Entity\Exercise                    $exercise   instance of Exercise if the Interaction is created or modified since an exercise if since the bank $exercise=-1
+     * @param UJM\ExoBundle\Entity\Exercise                    $exercise instance of Exercise if the Interaction is created or modified since an exercise if since the bank $exercise=-1
      * @param UJM\ExoBundle\Entity\Step
-     * @param Translation                                      $translator
+     * @param Translation $translator
      */
     public function __construct(Form $form = null, Request $request = null, EntityManager $em, $exoServ, $catServ, User $user, $exercise = -1, $step = -1, TranslatorInterface $translator = null)
     {
@@ -79,7 +79,8 @@ abstract class QuestionHandler
      *
      * @param object type of InteractionQCM or InteractionGraphic or .... $inter
      */
-    protected function persistHints($inter) {
+    protected function persistHints($inter)
+    {
         foreach ($inter->getQuestion()->getHints() as $hint) {
             $hint->setPenalty(ltrim($hint->getPenalty(), '-'));
             $hint->setQuestion($inter->getQuestion());
@@ -129,10 +130,10 @@ abstract class QuestionHandler
     {
         $question = $this->form->getData()->getQuestion();
 
-        if ($question->getTitle() == "") {
+        if ($question->getTitle() == '') {
             //removes html tags and entity code html
             $provTitle = html_entity_decode(strip_tags($question->getInvite()));
-            $newTitle = substr($provTitle,0,50);
+            $newTitle = substr($provTitle, 0, 50);
             $question->setTitle($newTitle);
         }
     }
@@ -201,7 +202,8 @@ abstract class QuestionHandler
     }
 
     /**
-     * Link interaction to a Step if created from an Exercise
+     * Link interaction to a Step if created from an Exercise.
+     *
      * @param $inter
      */
     protected function addStep($inter)
@@ -210,7 +212,6 @@ abstract class QuestionHandler
         var_dump($data);
         die();
         if (-1 !== $data) {
-
         }
     }
 
@@ -269,7 +270,7 @@ abstract class QuestionHandler
 
     /**
      * Control if the user is the owner of the category
-     * If no, the default category of user will be used -> clone of a shared question
+     * If no, the default category of user will be used -> clone of a shared question.
      *
      * @param object type of InteractionQCM or InteractionGraphic or .... $inter
      */
@@ -279,12 +280,14 @@ abstract class QuestionHandler
     }
 
     /**
-     * Create the default category for the user
+     * Create the default category for the user.
      *
      * @param string $default name of default's category
+     *
      * @return \UJM\ExoBundle\Entity\Category
      */
-    private function createCategoryDefault ($default) {
+    private function createCategoryDefault($default)
+    {
         $newCategory = new Category();
         $newCategory->setValue($default);
         $newCategory->setLocker(1);

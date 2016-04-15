@@ -3,6 +3,7 @@
 /**
  * Services for the paper.
  */
+
 namespace UJM\ExoBundle\Services\classes;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
@@ -80,7 +81,7 @@ class PaperService
      */
     public function roundUpDown($toBeAdjusted)
     {
-        return (round($toBeAdjusted / 0.5) * 0.5);
+        return round($toBeAdjusted / 0.5) * 0.5;
     }
 
     /**
@@ -126,7 +127,7 @@ class PaperService
      *
      *
      * @param Collection of \UJM\ExoBundle\Entity\Interaction $interactions
-     * @param String                                          $order
+     * @param string                                          $order
      *
      * @return UJM\ExoBundle\Entity\Interaction[]
      */
@@ -154,7 +155,7 @@ class PaperService
      *
      *
      * @param Collection of \UJM\ExoBundle\Entity\Response $responses
-     * @param String                                       $order
+     * @param string                                       $order
      *
      * @return UJM\ExoBundle\Entity\Response[]
      */
@@ -186,7 +187,7 @@ class PaperService
     }
 
     /**
-     * @param String $order
+     * @param string $order
      *
      * Return \UJM\ExoBundle\Interaction[]
      */
@@ -215,7 +216,7 @@ class PaperService
     }
 
     /**
-     * @param String $order
+     * @param string $order
      *
      * Return integer[];
      */
@@ -264,14 +265,14 @@ class PaperService
      *
      * @param int                               $numQuestionToDisplayed position of the question in the paper
      * @param \UJM\ExoBundle\Entity\Interaction $interactionToDisplay   interaction (question) to displayed
-     * @param String                            $typeInterToDisplayed
+     * @param string                            $typeInterToDisplayed
      * @param bool                              $dispButtonInterrupt    to display or no the button "Interrupt"
      * @param int                               $maxAttempsAllowed      the number of max attemps allowed for the exercise
      * @param Claroline workspace               $workspace
      * @param \UJM\ExoBundle\Entity\Paper       $paper                  current paper
      * @param SessionInterface session
      *
-     * @return Array
+     * @return array
      */
     public function displayQuestion(
         $numQuestionToDisplayed, $interactionToDisplay,

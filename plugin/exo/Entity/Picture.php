@@ -128,7 +128,7 @@ class Picture
     }
 
     /**
-     * @param integer $width
+     * @param int $width
      */
     public function setWidth($width)
     {

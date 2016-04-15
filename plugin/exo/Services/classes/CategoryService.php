@@ -3,6 +3,7 @@
 /**
  * Services for the qcm.
  */
+
 namespace UJM\ExoBundle\Services\classes;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
@@ -32,7 +33,7 @@ class CategoryService
      * Get the lock category.
      *
      *
-     * @return String the name of category locked
+     * @return string the name of category locked
      */
     public function getLockCategory()
     {
@@ -54,7 +55,7 @@ class CategoryService
      * Get information if these categories are linked to questions, allow to know if a category can be deleted or not.
      *
      *
-     * @return boolean[]
+     * @return bool[]
      */
     public function getLinkedCategories()
     {
@@ -80,7 +81,7 @@ class CategoryService
 
     /**
      * Control if the user is the owner of the category
-     * If no, the default category of user will be used
+     * If no, the default category of user will be used.
      *
      * @param \UJM\ExoBundle\Entity\Question $question
      */

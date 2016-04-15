@@ -5,15 +5,13 @@ namespace UJM\ExoBundle\Tests\Controller\Api;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use UJM\ExoBundle\Entity\Choice;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\Hint;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Testing\Persister;
 use UJM\ExoBundle\Testing\RequestTrait;
 
 /**
- * Tests that are specific to MatchQuestionType
+ * Tests that are specific to MatchQuestionType.
  */
 class ExerciseControllerMatchTest extends TransactionalTestCase
 {
@@ -37,13 +35,12 @@ class ExerciseControllerMatchTest extends TransactionalTestCase
     private $prop1;
     /** @var Proposal */
     private $prop2;
-     /** @var Proposal */
+    /** @var Proposal */
     private $prop3;
     /** @var Question */
     private $qu1;
     /** @var Exercise */
     private $ex1;
-
 
     protected function setUp()
     {

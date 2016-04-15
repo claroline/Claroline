@@ -3,6 +3,7 @@
 /**
  * Services for the matching.
  */
+
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
 use JMS\DiExtraBundle\Annotation as DI;
@@ -18,7 +19,7 @@ class Matching extends Interaction
      *
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param int $paperID id Paper or 0 if it's just a question test and not a paper
+     * @param int                                       $paperID id Paper or 0 if it's just a question test and not a paper
      *
      * @return mixed[]
      */
@@ -58,9 +59,9 @@ class Matching extends Interaction
      *
      *
      * @param \UJM\ExoBundle\Entity\InteractionMatching $interMatching
-     * @param float $penality penalty if the user showed hints
-     * @param array $tabRightResponse
-     * @param array $tabResponseIndex
+     * @param float                                     $penality         penalty if the user showed hints
+     * @param array                                     $tabRightResponse
+     * @param array                                     $tabResponseIndex
      *
      * @return string userScore/scoreMax
      */
@@ -68,8 +69,7 @@ class Matching extends Interaction
         \UJM\ExoBundle\Entity\InteractionMatching $interMatching = null,
         $penalty = null, $tabRightResponse = null,
         $tabResponseIndex = null
-    )
-    {
+    ) {
         $em = $this->doctrine->getManager();
         $scoretmp = 0;
         $scoreMax = $this->maxScore($interMatching);
@@ -93,7 +93,7 @@ class Matching extends Interaction
         if ($score < 0) {
             $score = 0;
         }
-        $score .= '/' . $scoreMax;
+        $score .= '/'.$scoreMax;
 
         return $score;
     }
@@ -137,8 +137,8 @@ class Matching extends Interaction
      *
      * call getAlreadyResponded and prepare the interaction to displayed if necessary
      *
-     * @param \UJM\ExoBundle\Entity\Interaction $interactionToDisplay interaction (question) to displayed
-     * @param Symfony\Component\HttpFoundation\Session\SessionInterface $session
+     * @param \UJM\ExoBundle\Entity\Interaction                            $interactionToDisplay interaction (question) to displayed
+     * @param Symfony\Component\HttpFoundation\Session\SessionInterface    $session
      * @param \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...) $interactionX
      *
      * @return \UJM\ExoBundle\Entity\Response
@@ -185,7 +185,7 @@ class Matching extends Interaction
      * init array of rights responses indexed by labelId.
      *
      *
-     * @param String $response
+     * @param string                                          $response
      * @param \UJM\ExoBundle\Entity\Paper\InteractionMatching $interMatching
      *
      * @return array of arrays
@@ -229,7 +229,7 @@ class Matching extends Interaction
                 foreach ($associateLabel as $associatedLabel) {
                     $index = $associatedLabel->getId();
                     if (isset($tabRightResponse[$index])) {
-                        $tabRightResponse[$index] .= '-' . $proposal->getId();
+                        $tabRightResponse[$index] .= '-'.$proposal->getId();
                     } else {
                         $tabRightResponse[$index] = $proposal->getId();
                     }
@@ -251,14 +251,14 @@ class Matching extends Interaction
      * init array of student response indexed by labelId.
      *
      *
-     * @param String $response
+     * @param string $response
      *
-     * @return integer[]
+     * @return int[]
      */
     private function getTabResponseIndex($response)
     {
         // in attempte of angular for the question bank
-        if(is_array($response)){
+        if (is_array($response)) {
             $tabResponse = $response;
         } else {
             $tabResponse = explode(';', substr($response, 0, -1));
@@ -268,10 +268,10 @@ class Matching extends Interaction
         //array of responses of user indexed by labelId
         foreach ($tabResponse as $rep) {
             $tabTmp = preg_split('(,)', $rep);
-            $end=count($tabTmp);
+            $end = count($tabTmp);
             for ($i = 1; $i < $end; ++$i) {
                 if (isset($tabResponseIndex[$tabTmp[$i]])) {
-                    $tabResponseIndex[$tabTmp[$i]] .= '-' . $tabTmp[0];
+                    $tabResponseIndex[$tabTmp[$i]] .= '-'.$tabTmp[0];
                 } else {
                     $tabResponseIndex[$tabTmp[$i]] = $tabTmp[0];
                 }

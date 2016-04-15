@@ -29,7 +29,7 @@ class ValidatorTest extends TransactionalTestCase
         $errors = $this->validator->validateQuestion(new \stdClass());
         $expected = [[
             'path' => '',
-            'message' => 'Question cannot be validated due to missing property "type"'
+            'message' => 'Question cannot be validated due to missing property "type"',
         ]];
         $this->assertEquals($expected, $errors);
     }
@@ -41,7 +41,7 @@ class ValidatorTest extends TransactionalTestCase
         $errors = $this->validator->validateQuestion($question);
         $expected = [[
             'path' => 'type',
-            'message' => "Unknown question type 'application/x.foo+json'"
+            'message' => "Unknown question type 'application/x.foo+json'",
         ]];
         $this->assertEquals($expected, $errors);
     }
@@ -52,7 +52,7 @@ class ValidatorTest extends TransactionalTestCase
         $question = json_decode($data);
         $expected = [
             'path' => '/solutions/0',
-            'message' => 'property "id" is missing'
+            'message' => 'property "id" is missing',
         ];
         $this->assertContains($expected, $this->validator->validateQuestion($question));
     }
@@ -63,13 +63,14 @@ class ValidatorTest extends TransactionalTestCase
         $question = json_decode($data);
         $expected = [
             'path' => '',
-            'message' => 'a solution(s) property is required'
+            'message' => 'a solution(s) property is required',
         ];
         $this->assertContains($expected, $this->validator->validateQuestion($question));
     }
 
     /**
      * @dataProvider validQuestionProvider
+     *
      * @param string $dataFilename
      */
     public function testValidQuestionData($dataFilename)

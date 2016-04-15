@@ -20,7 +20,7 @@ class MatchHandlerTest extends TransactionalTestCase
     {
         parent::setUp();
         $this->handler = $this->client->getContainer()->get('ujm.exo.match_handler');
-        $this->dataDir = realpath(__DIR__ . '/../../../Data/json/question');
+        $this->dataDir = realpath(__DIR__.'/../../../Data/json/question');
     }
 
     public function testPostValidateInconsistentSolutionProposalId()
@@ -29,24 +29,25 @@ class MatchHandlerTest extends TransactionalTestCase
         $errors = $this->handler->validateAfterSchema($data);
         $expected = [
             'path' => 'solutions[0]',
-            'message' => "id 1 doesn't match any proposal id"
+            'message' => "id 1 doesn't match any proposal id",
         ];
         $this->assertContains($expected, $errors);
     }
-    
-     public function testPostValidateInconsistentSolutionLabelId()
+
+    public function testPostValidateInconsistentSolutionLabelId()
     {
         $data = json_decode(file_get_contents("{$this->dataDir}/invalid/match-inconsistent-solution-label-id.json"));
         $errors = $this->handler->validateAfterSchema($data);
         $expected = [
             'path' => 'solutions[1]',
-            'message' => "id 12 doesn't match any label id"
+            'message' => "id 12 doesn't match any label id",
         ];
         $this->assertContains($expected, $errors);
     }
 
     /**
      * @dataProvider nonPositiveScoreProvider
+     *
      * @param string $dataFileName
      */
     public function testPostValidateNonPositiveScore($dataFileName)
@@ -55,7 +56,7 @@ class MatchHandlerTest extends TransactionalTestCase
         $errors = $this->handler->validateAfterSchema($data);
         $expected = [
             'path' => 'solutions',
-            'message' => "there is no solution with a positive score"
+            'message' => 'there is no solution with a positive score',
         ];
         $this->assertContains($expected, $errors);
     }
@@ -64,7 +65,7 @@ class MatchHandlerTest extends TransactionalTestCase
     {
         return [
             ['match-negative-score'],
-            ['match-zero-score']
+            ['match-zero-score'],
         ];
     }
 }

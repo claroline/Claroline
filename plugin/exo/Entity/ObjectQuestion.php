@@ -12,7 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ObjectQuestion
 {
-
     /**
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
@@ -123,5 +122,4 @@ class ObjectQuestion
     {
         return $this->type;
     }
-
 }

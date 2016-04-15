@@ -46,7 +46,7 @@ class WSRestController extends Controller
             }
 
             if (!is_dir($userDir)) {
-                $dirs = array('audio','images','media','video');
+                $dirs = array('audio', 'images', 'media', 'video');
                 mkdir($userDir);
 
                 foreach ($dirs as $dir) {

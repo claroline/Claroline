@@ -60,7 +60,7 @@ class InteractionMatching extends AbstractInteraction
     }
 
     /**
-     * @param boolean $shuffle
+     * @param bool $shuffle
      */
     public function setShuffle($shuffle)
     {
@@ -68,7 +68,7 @@ class InteractionMatching extends AbstractInteraction
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getShuffle()
     {
@@ -107,13 +107,14 @@ class InteractionMatching extends AbstractInteraction
         $this->labels->add($label);
         $label->setInteractionMatching($this);
     }
-    
+
     /**
      * @return ArrayCollection
      */
     public function setProposals(ArrayCollection $proposals)
     {
         $this->proposals = $proposals;
+
         return $this->proposals;
     }
 
@@ -134,7 +135,7 @@ class InteractionMatching extends AbstractInteraction
         $proposal->setInteractionMatching($this);
     }
 
-    public function shuffleProposals ()
+    public function shuffleProposals()
     {
         $this->sortProposals();
         $i = 0;
@@ -175,7 +176,7 @@ class InteractionMatching extends AbstractInteraction
     public function sortProposals()
     {
         $tab = [];
-        $proposals = new ArrayCollection;
+        $proposals = new ArrayCollection();
 
         foreach ($this->proposals as $proposal) {
             $tab[] = $proposal->getOrdre();
@@ -197,7 +198,7 @@ class InteractionMatching extends AbstractInteraction
         $i = 0;
         $tabShuffle = [];
         $tabFixed = [];
-        $labels = new ArrayCollection;
+        $labels = new ArrayCollection();
         $labelCount = count($this->labels);
 
         while ($i < $labelCount) {
@@ -233,7 +234,7 @@ class InteractionMatching extends AbstractInteraction
     public function sortLabels()
     {
         $tab = [];
-        $labels = new ArrayCollection;
+        $labels = new ArrayCollection();
 
         foreach ($this->labels as $label) {
             $tab[] = $label->getOrdre();
@@ -254,8 +255,8 @@ class InteractionMatching extends AbstractInteraction
             $this->id = null;
             $newLinkLabelProposal = [];
             $this->question = clone $this->question;
-            $newLabels = new ArrayCollection;
-            $newProposals = new ArrayCollection;
+            $newLabels = new ArrayCollection();
+            $newProposals = new ArrayCollection();
 
             foreach ($this->labels as $label) {
                 $newLabel = clone $label;

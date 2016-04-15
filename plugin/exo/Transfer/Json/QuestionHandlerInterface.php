@@ -33,6 +33,7 @@ interface QuestionHandlerInterface
      * JSON Schema validator. Returns an array of validation errors, if any.
      *
      * @param \stdClass $questionData
+     *
      * @return array
      */
     public function validateAfterSchema(\stdClass $questionData);
@@ -77,6 +78,7 @@ interface QuestionHandlerInterface
      * be JSON-encoded.
      *
      * @param Response $response
+     *
      * @return mixed
      */
     public function convertAnswerDetails(Response $response);
@@ -85,8 +87,9 @@ interface QuestionHandlerInterface
      * Ensures answer data is in the correct format and returns validation
      * errors, if any.
      *
-     * @param Question  $question
-     * @param mixed     $data
+     * @param Question $question
+     * @param mixed    $data
+     *
      * @return array
      */
     public function validateAnswerFormat(Question $question, $data);
@@ -94,9 +97,9 @@ interface QuestionHandlerInterface
     /**
      * Populates an answer with its actual contents and mark.
      *
-     * @param Question  $question
-     * @param Response  $response
-     * @param mixed     $data
+     * @param Question $question
+     * @param Response $response
+     * @param mixed    $data
      */
     public function storeAnswerAndMark(Question $question, Response $response, $data);
 }

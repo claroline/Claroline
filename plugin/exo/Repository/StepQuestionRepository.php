@@ -3,8 +3,8 @@
 namespace UJM\ExoBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use \UJM\ExoBundle\Entity\Exercise;
-use \UJM\ExoBundle\Entity\Question;
+use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Entity\Question;
 
 /**
  * StepQuestionRepository.
@@ -14,13 +14,15 @@ use \UJM\ExoBundle\Entity\Question;
  */
 class StepQuestionRepository extends EntityRepository
 {
-   /**
+    /**
      * Returns the order max.
      *
      * @param Exercice $exo
+     *
      * @return Question[]
      */
-    public function getMaxOrder(Exercise $exo){
+    public function getMaxOrder(Exercise $exo)
+    {
         return $this->createQueryBuilder('sq')
             ->select('max(sq.ordre)')
             ->join('sq.step', 's')
@@ -30,7 +32,7 @@ class StepQuestionRepository extends EntityRepository
             ->getResult();
     }
 
-      /**
+    /**
      * Number of question for an exercise.
      *
      *
@@ -49,9 +51,7 @@ class StepQuestionRepository extends EntityRepository
                 ->getSingleResult();
     }
 
-      /**
-     *
-     *
+    /**
      * @param Exercise $exo if Exercise
      *
      * Return StepQuestion
@@ -67,9 +67,8 @@ class StepQuestionRepository extends EntityRepository
                 ->getResult();
     }
 
-     /**
-     *
-     * Get StepQuestion with the question and exercise
+    /**
+     * Get StepQuestion with the question and exercise.
      *
      * @param Exercise $exo if Exercise
      *
@@ -83,7 +82,7 @@ class StepQuestionRepository extends EntityRepository
                 ->andWhere('sq.question = :question')
                 ->setParameters([
                     'exercise' => $exo,
-                    'question' => $question
+                    'question' => $question,
                 ])
                 ->getQuery()
                 ->getSingleResult();
@@ -104,6 +103,5 @@ class StepQuestionRepository extends EntityRepository
                 ->setParameter(':question', $question)
                 ->getQuery()
                 ->getResult();
-
     }
 }

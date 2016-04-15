@@ -178,8 +178,8 @@ class ExoImporter extends Importer implements ConfigurationInterface
     /**
      * create the exercise.
      *
-     * @param array $exercise properties of the exercise
-     * @param Object User $user
+     * @param array       $exercise properties of the exercise
+     * @param object User $user
      */
     private function createExo(array $exercise, $user)
     {
@@ -216,8 +216,9 @@ class ExoImporter extends Importer implements ConfigurationInterface
     /**
      * create the exercise.
      *
-     * @param array $step properties of the step
+     * @param array                         $step     properties of the step
      * @param UJM\ExoBundle\Entity\Exercise $exercise
+     *
      * @return UJM\ExoBundle\Entity\Step
      */
     private function createStep(array $step, $exercise)
@@ -241,9 +242,9 @@ class ExoImporter extends Importer implements ConfigurationInterface
     /**
      * create the step and the question.
      *
-     * @param UJM\ExoBundle\Entity\Step[] $steps
-     * @param UJM\ExoBundle\Entity\Exercise $exercise
-     * @param String $exoPath
+     * @param UJM\ExoBundle\Entity\Step[]                      $steps
+     * @param UJM\ExoBundle\Entity\Exercise                    $exercise
+     * @param string                                           $exoPath
      * @param UJM\ExoBundle\Services\classes\QTI\QtiRepository $qtiRepos
      */
     private function createQuestion($steps, $exercise, $exoPath, $qtiRepos)
@@ -277,8 +278,8 @@ class ExoImporter extends Importer implements ConfigurationInterface
      * create the directory questions to export an exercise and export the qti files.
      *
      * @param UJM\ExoBundle\Services\classes\QTI\qtiRepository $qtiRepos
-     * @param collection of  UJM\ExoBundle\Entity\Question  $interactions
-     * @param Integer $numStep order the step in the exercise
+     * @param collection of  UJM\ExoBundle\Entity\Question     $interactions
+     * @param int                                              $numStep      order the step in the exercise
      */
     private function createQuestionsDirectory($qtiRepos, $questions, $numStep)
     {
@@ -299,11 +300,12 @@ class ExoImporter extends Importer implements ConfigurationInterface
     }
 
     /**
-     * return steps of an exercise in an array
+     * return steps of an exercise in an array.
      *
-     * @param Object Exercise $ojbect
+     * @param object Exercise                                  $ojbect
      * @param UJM\ExoBundle\Services\classes\QTI\qtiRepository $qtiRepos
-     * @param String $exoTitle
+     * @param string                                           $exoTitle
+     *
      * @return array
      */
     private function getStepsToExport($object, $qtiRepos, $exoTitle, array &$files)
@@ -321,7 +323,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
                     'nbQuestion' => $step->getNbQuestion(),
                     'keepSameQuestion' => $step->getKeepSameQuestion(),
                     'duration' => $step->getDuration(),
-                    'maxAttempts' => $step->getMaxAttempts()
+                    'maxAttempts' => $step->getMaxAttempts(),
                     );
             $steps[] = $s;
             $questions = $questionRepo->findByStep($step);

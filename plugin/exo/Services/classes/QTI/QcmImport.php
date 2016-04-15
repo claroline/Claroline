@@ -3,6 +3,7 @@
 /**
  * To import a QCM question in QTI.
  */
+
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use UJM\ExoBundle\Entity\Choice;
@@ -158,7 +159,7 @@ class QcmImport extends QtiImport
      * Get weightChoice.
      *
      *
-     * @param String $identifier identifier of choice in the qti file
+     * @param string $identifier identifier of choice in the qti file
      *
      * return float
      */
@@ -184,7 +185,7 @@ class QcmImport extends QtiImport
      * Get rightResponse.
      *
      *
-     * @param String $identifier identifier of choice in the qti file
+     * @param string $identifier identifier of choice in the qti file
      *
      * return boolean
      */

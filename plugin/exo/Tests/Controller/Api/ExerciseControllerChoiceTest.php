@@ -13,7 +13,7 @@ use UJM\ExoBundle\Testing\Persister;
 use UJM\ExoBundle\Testing\RequestTrait;
 
 /**
- * Specific tests for ChoiceQuestionType
+ * Specific tests for ChoiceQuestionType.
  */
 class ExerciseControllerChoiceTest extends TransactionalTestCase
 {
@@ -39,7 +39,6 @@ class ExerciseControllerChoiceTest extends TransactionalTestCase
     private $hi1;
     /** @var Exercise */
     private $ex1;
-
 
     protected function setUp()
     {

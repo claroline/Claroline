@@ -20,7 +20,7 @@ class QcmHandlerTest extends TransactionalTestCase
     {
         parent::setUp();
         $this->handler = $this->client->getContainer()->get('ujm.exo.qcm_handler');
-        $this->dataDir = realpath(__DIR__ . '/../../../Data/json/question');
+        $this->dataDir = realpath(__DIR__.'/../../../Data/json/question');
     }
 
     public function testPostValidateInconsistentSolutionId()
@@ -29,13 +29,14 @@ class QcmHandlerTest extends TransactionalTestCase
         $errors = $this->handler->validateAfterSchema($data);
         $expected = [
             'path' => 'solutions[1]',
-            'message' => "id 3 doesn't match any choice id"
+            'message' => "id 3 doesn't match any choice id",
         ];
         $this->assertContains($expected, $errors);
     }
 
     /**
      * @dataProvider nonPositiveScoreProvider
+     *
      * @param string $dataFileName
      */
     public function testPostValidateNonPositiveScore($dataFileName)
@@ -44,7 +45,7 @@ class QcmHandlerTest extends TransactionalTestCase
         $errors = $this->handler->validateAfterSchema($data);
         $expected = [
             'path' => 'solutions',
-            'message' => "there is no solution with a positive score"
+            'message' => 'there is no solution with a positive score',
         ];
         $this->assertContains($expected, $errors);
     }
@@ -53,7 +54,7 @@ class QcmHandlerTest extends TransactionalTestCase
     {
         return [
             ['qcm-negative-score'],
-            ['qcm-zero-score']
+            ['qcm-zero-score'],
         ];
     }
 }

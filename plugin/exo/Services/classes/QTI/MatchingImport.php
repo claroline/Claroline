@@ -3,6 +3,7 @@
 /**
  * To import a Matching question in QTI.
  */
+
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use UJM\ExoBundle\Entity\Proposal;
@@ -101,7 +102,7 @@ class MatchingImport extends QtiImport
         foreach ($sms->getElementsByTagName('simpleAssociableChoice') as $simpleLabel) {
             //create a new Label and set attributes
             $label = new Label();
-            $feedback = $simpleLabel->getElementsByTagName("feedbackInline");
+            $feedback = $simpleLabel->getElementsByTagName('feedbackInline');
             if ($feedback->item(0)) {
                 $feedbackVal = $this->domElementToString($feedback->item(0));
                 $feedbackVal = html_entity_decode($feedbackVal);

@@ -5,8 +5,8 @@ namespace UJM\ExoBundle\Installation;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class Updater600200 {
-
+class Updater600200
+{
     use LoggableTrait;
 
     private $connection;
@@ -32,12 +32,12 @@ class Updater600200 {
     }
 
     /**
-     * create temporary table for picture in order to recover data
+     * create temporary table for picture in order to recover data.
      */
     private function createTemporaryPicture()
     {
         $this->log('Create ujm_picture_temp ...');
-        $this->connection->exec("
+        $this->connection->exec('
             CREATE TABLE ujm_picture_temp (
                 id INT NOT NULL,
                 user_id INT DEFAULT NULL,
@@ -49,35 +49,34 @@ class Updater600200 {
                 INDEX IDX_88AACC8AA76ED395 (user_id),
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ");
+        ');
 
         $this->checkDocument();
     }
 
     /**
-     * create temporary table for interaction_graphic in order to recover picture_id
+     * create temporary table for interaction_graphic in order to recover picture_id.
      */
     private function createTemporaryInterGraph()
     {
         $this->log('Create ujm_interaction_graphic_temp ...');
-        $this->connection->exec("
+        $this->connection->exec('
             CREATE TABLE ujm_interaction_graphic_temp (
                 id INT NOT NULL,
                 document_id INT NOT NULL,
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ");
+        ');
 
-        $this->connection->exec("
+        $this->connection->exec('
             INSERT INTO ujm_interaction_graphic_temp (id, document_id)
             SELECT id, document_id
             FROM ujm_interaction_graphic
-        ");
+        ');
     }
 
-
     /**
-     * recover the questions of an exercise in order to inject in step_question
+     * recover the questions of an exercise in order to inject in step_question.
      */
     private function checkDocument()
     {
@@ -93,9 +92,9 @@ class Updater600200 {
             $this->connection->exec("
                 INSERT INTO ujm_picture_temp
                 VALUES ({$res['id']}, {$res['user_id']}, '"
-                . addslashes($res['label']) . "', '"
-                . addslashes($res['url']) . "', '"
-                . addslashes($res['type']) . "',
+                .addslashes($res['label'])."', '"
+                .addslashes($res['url'])."', '"
+                .addslashes($res['type'])."',
                 0, 0
                 )
             ");
@@ -105,7 +104,7 @@ class Updater600200 {
     }
 
     /**
-     * recover the documents in order to inject in picture
+     * recover the documents in order to inject in picture.
      */
     private function checkExoQuestion()
     {
@@ -119,9 +118,9 @@ class Updater600200 {
         return $this->connection->query($checkQuery)->fetchAll();
     }
 
-     /**
+    /**
      * recover the width and height
-     * move interaction_graphic -> picture
+     * move interaction_graphic -> picture.
      */
     private function checkInteractionGraphic()
     {
@@ -134,7 +133,7 @@ class Updater600200 {
 
         $results = $this->connection->query($checkQuery)->fetchAll();
         foreach ($results as $res) {
-           $this->connection->exec("
+            $this->connection->exec("
                 UPDATE ujm_picture_temp
                 SET width = {$res['width']}, height = {$res['height']}
                 WHERE id = {$res['id']}
@@ -147,17 +146,16 @@ class Updater600200 {
             ADD CONSTRAINT FK_9EBD442FEE45BDBF FOREIGN KEY (picture_id)
             REFERENCES ujm_picture (id)
          */
-        $this->connection->exec("
+        $this->connection->exec('
             UPDATE ujm_interaction_graphic
             SET document_id = NULL
-        ");
-
+        ');
     }
 
     /**
-     * update exercise, type and anonymous
+     * update exercise, type and anonymous.
      */
-    private function upExercise ()
+    private function upExercise()
     {
         $this->log('UPDATE type of exercise ...');
 
@@ -168,8 +166,7 @@ class Updater600200 {
     }
 
     /**
-     *
-     * Remove unused tables
+     * Remove unused tables.
      */
     private function dropUnusedTables()
     {
@@ -179,16 +176,16 @@ class Updater600200 {
             'ujm_document',
             'ujm_exercise_question',
             'ujm_picture_temp',
-            'ujm_interaction_graphic_temp'
+            'ujm_interaction_graphic_temp',
         ]);
     }
 
     /**
-     * Move data exercise_question in step_question
+     * Move data exercise_question in step_question.
      */
     private function migrateExerciseQuestionData()
     {
-        $exoId  = -1;
+        $exoId = -1;
         $stepId = -1;
 
         $exoQuestion = $this->checkExoQuestion();
@@ -203,33 +200,32 @@ class Updater600200 {
     }
 
     /**
-     * Move data picture_temp in picture
+     * Move data picture_temp in picture.
      */
     private function migratePicture()
     {
         $this->log('UPDATE Picture ...');
 
-        $this->connection->exec("
+        $this->connection->exec('
             INSERT INTO ujm_picture (id, user_id, `label`, url, type, width, height)
             SELECT id, user_id, `label`, url, type, width, height
             FROM ujm_picture_temp
-        ");
+        ');
 
         $this->log('UPDATE interaction_graphic -> picture_id ...');
         $query = 'SELECT * FROM ujm_interaction_graphic_temp';
         $results = $this->connection->query($query)->fetchAll();
         foreach ($results as $res) {
-            $query ='UPDATE ujm_interaction_graphic SET picture_id=' . $res['document_id']
-                . ' WHERE id=' . $res['id'];
+            $query = 'UPDATE ujm_interaction_graphic SET picture_id='.$res['document_id']
+                .' WHERE id='.$res['id'];
             $this->connection->exec($query);
         }
-
     }
 
     /**
-     * Create one step for each exercise
+     * Create one step for each exercise.
      *
-     * @param Integer $exoId
+     * @param int $exoId
      */
     private function newStep($exoId, $orderStep)
     {
@@ -242,17 +238,16 @@ class Updater600200 {
             ({$exoId}, '', 0, FALSE, FALSE, 0, 0, {$orderStep})
         ");
 
-        $query = 'SELECT * FROM ujm_step WHERE exercise_id=' . $exoId . ' AND ordre='.$orderStep;
+        $query = 'SELECT * FROM ujm_step WHERE exercise_id='.$exoId.' AND ordre='.$orderStep;
         $step = $this->connection->query($query)->fetch();
 
         return $step['id'];
     }
 
     /**
-     *
-     * @param Integer $stepId
-     * @param Integer $qid
-     * @param Integer $order
+     * @param int $stepId
+     * @param int $qid
+     * @param int $order
      */
     private function addQuestionStep($stepId, $qid, $order)
     {
@@ -283,8 +278,8 @@ class Updater600200 {
     private function calculateScore($idPaper)
     {
         $query = 'SELECT sum(mark) as score '
-                . 'FROM ujm_response '
-                . 'WHERE paper_id=' . $idPaper;
+                .'FROM ujm_response '
+                .'WHERE paper_id='.$idPaper;
         $result = $this->connection->query($query)->fetch();
 
         if ($result['score'] == '') {
@@ -303,11 +298,10 @@ class Updater600200 {
     private function updatePaper($score, $idPaper)
     {
         $this->log('UPDATE Paper ...');
-        $query ='UPDATE ujm_paper SET score=' . $score
-                . ' WHERE id=' . $idPaper;
+        $query = 'UPDATE ujm_paper SET score='.$score
+                .' WHERE id='.$idPaper;
         $this->connection->exec($query);
     }
-
 
     private function dropTables(array $tables)
     {

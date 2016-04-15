@@ -3,6 +3,7 @@
 /**
  * To import a QCM question in QTI.
  */
+
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use UJM\ExoBundle\Entity\Coords;
@@ -53,13 +54,14 @@ class GraphicImport extends QtiImport
     /**
      * Create the Coords.
      */
-    protected function createCoords() {
+    protected function createCoords()
+    {
         $am = $this->assessmentItem->getElementsByTagName('areaMapping')->item(0);
 
         foreach ($am->getElementsByTagName('areaMapEntry') as $areaMapEntry) {
             $tabCoords = explode(',', $areaMapEntry->getAttribute('coords'));
             $coords = new Coords();
-            $feedback = $areaMapEntry->getElementsByTagName("feedbackInline");
+            $feedback = $areaMapEntry->getElementsByTagName('feedbackInline');
             if ($feedback->item(0)) {
                 $feedbackVal = $this->domElementToString($feedback->item(0));
                 $feedbackVal = html_entity_decode($feedbackVal);
@@ -68,7 +70,7 @@ class GraphicImport extends QtiImport
             }
             $x = $tabCoords[0] - $tabCoords[2];
             $y = $tabCoords[1] - $tabCoords[2];
-            $coords->setValue($x . ',' . $y);
+            $coords->setValue($x.','.$y);
             $coords->setSize($tabCoords[2] * 2);
             $coords->setShape($areaMapEntry->getAttribute('shape'));
             $coords->setScoreCoords($areaMapEntry->getAttribute('mappedValue'));
@@ -114,8 +116,8 @@ class GraphicImport extends QtiImport
     /**
      * Copy the picture in the user's directory.
      *
-     * @param String $picture picture's name
-     * @param String $userDir user's directory
+     * @param string $picture picture's name
+     * @param string $userDir user's directory
      */
     protected function cpPicture($picture, $userDir)
     {
@@ -129,7 +131,7 @@ class GraphicImport extends QtiImport
         }
 
         if (!is_dir($userDir)) {
-            $dirs = array('audio','images','media','video');
+            $dirs = array('audio', 'images', 'media', 'video');
             mkdir($userDir);
 
             foreach ($dirs as $dir) {
@@ -152,9 +154,9 @@ class GraphicImport extends QtiImport
     }
 
     /**
-     * @param String $picture
+     * @param string $picture
      *
-     * @return String
+     * @return string
      */
     private function getPictureName($picture)
     {

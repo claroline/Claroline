@@ -24,7 +24,7 @@ class Updater700100
     public function addMatchType()
     {
         $this->log('Add type To pair in match question types...');
-        
+
         $query = '
             SELECT *
             FROM ujm_type_matching

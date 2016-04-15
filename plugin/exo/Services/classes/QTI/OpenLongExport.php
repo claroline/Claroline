@@ -3,6 +3,7 @@
 /**
  * To export an open long response question in QTI.
  */
+
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -15,9 +16,9 @@ class OpenLongExport extends OpenExport
     /**
      * overload the export method.
      *
-     * @access public
-     * @param Question $question
+     * @param Question      $question
      * @param qtiRepository $qtiRepos
+     *
      * @return BinaryFileResponse
      */
     public function export(Question $question, qtiRepository $qtiRepos)

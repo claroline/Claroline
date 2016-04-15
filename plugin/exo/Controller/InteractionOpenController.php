@@ -107,8 +107,8 @@ class InteractionOpenController extends Controller
                     )
                 );
             } else {
-                 return $this->redirect(
-                     $this->generateUrl('ujm_exercise_open', [ 'id' => $exoID ]) . '#/steps'
+                return $this->redirect(
+                     $this->generateUrl('ujm_exercise_open', ['id' => $exoID]).'#/steps'
                 );
             }
         }
@@ -233,7 +233,7 @@ class InteractionOpenController extends Controller
                 return $this->redirect($this->generateUrl('ujm_question_index'));
             } else {
                 return $this->redirect(
-                    $this->generateUrl('ujm_exercise_open', [ 'id' => $exoID ]) . '#/steps'
+                    $this->generateUrl('ujm_exercise_open', ['id' => $exoID]).'#/steps'
                 );
             }
         }
@@ -262,7 +262,7 @@ class InteractionOpenController extends Controller
         $entity = $em->getRepository('UJMExoBundle:InteractionOpen')->find($id);
         //Deleting of relations, if there the question is shared
         $sharesQuestion = $em->getRepository('UJMExoBundle:Share')->findBy(array('question' => $entity->getQuestion()->getId()));
-        foreach ($sharesQuestion as $share){
+        foreach ($sharesQuestion as $share) {
             $em->remove($share);
         }
         if (!$entity) {

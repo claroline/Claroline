@@ -3,6 +3,7 @@
 /**
  * abstract class.
  */
+
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
@@ -29,8 +30,8 @@ abstract class Interaction
     /**
      * Get penalty for an interaction and a paper.
      *
-     * @param \UJM\ExoBundle\Entity\Question    $question
-     * @param int                               $paperID
+     * @param \UJM\ExoBundle\Entity\Question $question
+     * @param int                            $paperID
      *
      * @return float
      */
@@ -61,9 +62,9 @@ abstract class Interaction
     /**
      * Get penalty for a test or a paper.
      *
-     * @param \UJM\ExoBundle\Entity\Question                                $question
-     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface    $session
-     * @param int                                                           $paperID
+     * @param \UJM\ExoBundle\Entity\Question                             $question
+     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
+     * @param int                                                        $paperID
      *
      * @return float
      */
@@ -95,7 +96,7 @@ abstract class Interaction
       *
       *
       * @param \UJM\ExoBundle\Entity\WordResponse $wr
-      * @param String $response
+      * @param string $response
       *
       * @return float
       */
@@ -191,7 +192,7 @@ abstract class Interaction
      /**
       * abstract method.
       *
-      * @param Integer $interId id of inetraction
+      * @param int $interId id of inetraction
       * @param Symfony\Component\HttpFoundation\Session\SessionInterface $session
       * @param \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...) $interactionX
       */

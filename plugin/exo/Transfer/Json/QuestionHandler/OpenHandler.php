@@ -14,8 +14,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @DI\Service("ujm.exo.open_handler")
  * @DI\Tag("ujm.exo.question_handler")
  */
-class OpenHandler implements QuestionHandlerInterface {
-
+class OpenHandler implements QuestionHandlerInterface
+{
     private $om;
     private $container;
 
@@ -25,10 +25,11 @@ class OpenHandler implements QuestionHandlerInterface {
      *     "container"       = @DI\Inject("service_container")
      * })
      * 
-     * @param ObjectManager $om
+     * @param ObjectManager      $om
      * @param ContainerInterface $container
      */
-    public function __construct(ObjectManager $om, ContainerInterface $container) {
+    public function __construct(ObjectManager $om, ContainerInterface $container)
+    {
         $this->om = $om;
         $this->container = $container;
     }
@@ -36,28 +37,32 @@ class OpenHandler implements QuestionHandlerInterface {
     /**
      * {@inheritdoc}
      */
-    public function getQuestionMimeType() {
+    public function getQuestionMimeType()
+    {
         return 'application/x.short+json';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getInteractionType() {
+    public function getInteractionType()
+    {
         return InteractionOpen::TYPE;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getJsonSchemaUri() {
+    public function getJsonSchemaUri()
+    {
         return 'http://json-quiz.github.io/json-quiz/schemas/question/short/schema.json';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function validateAfterSchema(\stdClass $questionData) {
+    public function validateAfterSchema(\stdClass $questionData)
+    {
         $errors = [];
 
         if (!isset($questionData->solutions)) {
@@ -76,7 +81,7 @@ class OpenHandler implements QuestionHandlerInterface {
         if ($maxScore <= 0) {
             $errors[] = [
                 'path' => 'solutions',
-                'message' => 'there is no solution with a positive score'
+                'message' => 'there is no solution with a positive score',
             ];
         }
 
@@ -86,7 +91,8 @@ class OpenHandler implements QuestionHandlerInterface {
     /**
      * {@inheritdoc}
      */
-    public function persistInteractionDetails(Question $question, \stdClass $importData) {
+    public function persistInteractionDetails(Question $question, \stdClass $importData)
+    {
         $interaction = new InteractionOpen();
 
         for ($i = 0, $max = count($importData->holes); $i < $max; ++$i) {
@@ -112,10 +118,11 @@ class OpenHandler implements QuestionHandlerInterface {
     /**
      * {@inheritdoc}
      */
-    public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true, $forPaperList = false) {
+    public function convertInteractionDetails(Question $question, \stdClass $exportData, $withSolution = true, $forPaperList = false)
+    {
         $repo = $this->om->getRepository('UJMExoBundle:InteractionOpen');
         $openQuestion = $repo->findOneBy(['question' => $question]);
-        
+
         $exportData->scoreTotal = 5;
 
         if ($withSolution) {
@@ -128,14 +135,14 @@ class OpenHandler implements QuestionHandlerInterface {
                 $responseData->caseSensitive = $wr->getCaseSensitive();
                 $responseData->score = $wr->getScore();
                 $responseData->feedback = $wr->getFeedback();
+
                 return $responseData;
             }, $responses->toArray());
         }
-        if ($openQuestion->getTypeOpenQuestion()->getValue() === "long") {
+        if ($openQuestion->getTypeOpenQuestion()->getValue() === 'long') {
             $exportData->scoreMaxLongResp = $openQuestion->getScoreMaxLongResp();
             $exportData->scoreTotal = $openQuestion->getScoreMaxLongResp();
-        }
-        else {
+        } else {
             $scoreTotal = 0;
             foreach ($openQuestion->getWordResponses()->toArray() as $response) {
                 $scoreTotal = $scoreTotal + $response->getScore();
@@ -148,10 +155,11 @@ class OpenHandler implements QuestionHandlerInterface {
         return $exportData;
     }
 
-    public function convertQuestionAnswers(Question $question, \stdClass $exportData) {
+    public function convertQuestionAnswers(Question $question, \stdClass $exportData)
+    {
         $repo = $this->om->getRepository('UJMExoBundle:InteractionOpen');
         $openQuestion = $repo->findOneBy(['question' => $question]);
-        
+
         $responses = $openQuestion->getWordResponses();
 
         $exportData->solutions = array_map(function ($wr) {
@@ -161,26 +169,28 @@ class OpenHandler implements QuestionHandlerInterface {
             $responseData->caseSensitive = $wr->getCaseSensitive();
             $responseData->score = $wr->getScore();
             $responseData->feedback = $wr->getFeedback();
+
             return $responseData;
         }, $responses->toArray());
-        
+
         return $exportData;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function convertAnswerDetails(Response $response) {
+    public function convertAnswerDetails(Response $response)
+    {
         return $response->getResponse();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function validateAnswerFormat(Question $question, $data) {
-
+    public function validateAnswerFormat(Question $question, $data)
+    {
         if (!is_string($data)) {
-            return ['Answer data must be a string, ' . gettype($data) . ' given'];
+            return ['Answer data must be a string, '.gettype($data).' given'];
         }
 
         $count = 0;
@@ -197,16 +207,16 @@ class OpenHandler implements QuestionHandlerInterface {
      *
      * {@inheritdoc}
      */
-    public function storeAnswerAndMark(Question $question, Response $response, $data) {
-
+    public function storeAnswerAndMark(Question $question, Response $response, $data)
+    {
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionOpen')
                 ->findOneByQuestion($question);
 
         $answer = $data;
 
-        $serviceOpen = $this->container->get("ujm.exo.open_service");
+        $serviceOpen = $this->container->get('ujm.exo.open_service');
 
-        $mark=$serviceOpen->mark($interaction, $data, 0);
+        $mark = $serviceOpen->mark($interaction, $data, 0);
 
         $response->setResponse($answer);
         $response->setMark($mark);

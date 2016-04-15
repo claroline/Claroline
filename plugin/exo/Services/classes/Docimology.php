@@ -3,6 +3,7 @@
 /**
  * Services for the docimology.
  */
+
 namespace UJM\ExoBundle\Services\classes;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
@@ -99,9 +100,9 @@ class Docimology
      * To draw histogram of discrimination.
      *
      *
-     * @param int                 $exerciseId
+     * @param int $exerciseId
      * @param doctrine collection sqs        questions linked with the exercise
-     * @param doctrine collection $papers     papers linked with the exercise
+     * @param doctrine collection $papers papers linked with the exercise
      *
      * @return float[]
      */
@@ -250,8 +251,8 @@ class Docimology
      * To get the number of answers with the 'correct' status.
      *
      *
-     * @param int                 $exerciseId
-     * @param Question $sq       questions 
+     * @param int      $exerciseId
+     * @param Question $sq         questions 
      *
      * @return array
      */
@@ -452,7 +453,7 @@ class Docimology
     /**
      * @param doctrine collection $sqs questions linked with the exercise
      *
-     * @return String[] array of title of each question of an exercise
+     * @return string[] array of title of each question of an exercise
      */
     private function getQuestionsTitle($sqs)
     {

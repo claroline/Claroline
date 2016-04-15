@@ -12,9 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Exercise extends AbstractResource
 {
-    const TYPE_SUMMATIVE  = '1';
+    const TYPE_SUMMATIVE = '1';
     const TYPE_EVALUATIVE = '2';
-    const TYPE_FORMATIVE  = '3';
+    const TYPE_FORMATIVE = '3';
 
     /**
      * @ORM\Column(name="title", type="string", length=255)
@@ -248,7 +248,7 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Set doprint
+     * Set doprint.
      *
      * @param bool $doprint
      */
@@ -421,7 +421,6 @@ class Exercise extends AbstractResource
     }
 
     /**
-     *
      * @param string $type
      */
     public function setType($type)
@@ -438,7 +437,6 @@ class Exercise extends AbstractResource
     }
 
     /**
-     *
      * @return ArrayCollection
      */
     public function getSteps()
@@ -447,8 +445,10 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Add a step to the Exercise
+     * Add a step to the Exercise.
+     *
      * @param Step $step
+     *
      * @return $this
      */
     public function addStep(Step $step)
@@ -463,8 +463,10 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Remove a Step from the Exercise
+     * Remove a Step from the Exercise.
+     *
      * @param Step $step
+     *
      * @return $this
      */
     public function removeStep(Step $step)

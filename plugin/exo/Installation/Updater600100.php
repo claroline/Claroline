@@ -104,7 +104,7 @@ class Updater600100
                 'ujm_interaction_matching' => 'FK_AC9801C7886DEE8F',
                 'ujm_interaction_open' => 'FK_BFFE44F4886DEE8F',
                 'ujm_interaction_qcm' => 'FK_58C3D5A1886DEE8F',
-                'ujm_response' => 'FK_A7EC2BC2886DEE8F'
+                'ujm_response' => 'FK_A7EC2BC2886DEE8F',
             ];
 
             // if values need to be changed in those tables, unique indexes must be dropped/restored
@@ -179,8 +179,7 @@ class Updater600100
     }
 
     /**
-     *
-     * Remove unused tables related to "expertise" functionality
+     * Remove unused tables related to "expertise" functionality.
      */
     private function dropExpertiseTables()
     {
@@ -189,12 +188,12 @@ class Updater600100
             'ujm_expertise',
             'ujm_exercise_group',
             'ujm_planning',
-            'ujm_group'
+            'ujm_group',
         ]);
     }
 
     /**
-     * Move data from interaction table to question table (merge)
+     * Move data from interaction table to question table (merge).
      */
     private function migrateInteractionData()
     {
@@ -204,12 +203,12 @@ class Updater600100
 
         $this->log('Moving data from ujm_interaction to ujm_question...');
 
-        $typeQuery = "
+        $typeQuery = '
             UPDATE ujm_question AS question
             JOIN ujm_interaction AS interaction
             ON question.id = interaction.question_id
             SET question.type = interaction.type
-        ";
+        ';
         $inviteQuery = '
             UPDATE ujm_question AS question
             JOIN ujm_interaction AS interaction
@@ -229,13 +228,13 @@ class Updater600100
     }
 
     /**
-     * Remove unused tables after the interaction/question merge
+     * Remove unused tables after the interaction/question merge.
      */
     private function dropInteractionTables()
     {
         $this->dropTables([
             'ujm_document_interaction',
-            'ujm_interaction'
+            'ujm_interaction',
         ]);
     }
 

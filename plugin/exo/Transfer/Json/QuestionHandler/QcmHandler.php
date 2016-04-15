@@ -26,10 +26,11 @@ class QcmHandler implements QuestionHandlerInterface
      *     "container"       = @DI\Inject("service_container")
      * })
      * 
-     * @param ObjectManager $om
+     * @param ObjectManager      $om
      * @param ContainerInterface $container
      */
-    public function __construct(ObjectManager $om, ContainerInterface $container) {
+    public function __construct(ObjectManager $om, ContainerInterface $container)
+    {
         $this->om = $om;
         $this->container = $container;
     }
@@ -78,7 +79,7 @@ class QcmHandler implements QuestionHandlerInterface
             if (!in_array($solution->id, $choiceIds)) {
                 $errors[] = [
                     'path' => "solutions[{$index}]",
-                    'message' => "id {$solution->id} doesn't match any choice id"
+                    'message' => "id {$solution->id} doesn't match any choice id",
                 ];
             }
         }
@@ -95,7 +96,7 @@ class QcmHandler implements QuestionHandlerInterface
         if ($maxScore <= 0) {
             $errors[] = [
                 'path' => 'solutions',
-                'message' => 'there is no solution with a positive score'
+                'message' => 'there is no solution with a positive score',
             ];
         }
 
@@ -154,7 +155,7 @@ class QcmHandler implements QuestionHandlerInterface
         $qcm = $repo->findOneBy(['question' => $question]);
         $exportData->random = $qcm->getShuffle();
         // if needed shuffle choices
-        if($exportData->random && !$forPaperList){
+        if ($exportData->random && !$forPaperList) {
             $qcm->shuffleChoices();
         }
 
@@ -170,7 +171,7 @@ class QcmHandler implements QuestionHandlerInterface
             return $choiceData;
         }, $choices);
         $interaction = $repo->findOneByQuestion($question);
-        $scoreTotal=$this->container->get("ujm.exo.qcm_service")->maxScore($interaction);
+        $scoreTotal = $this->container->get('ujm.exo.qcm_service')->maxScore($interaction);
 //        $scoreTotal = 0;
 //        foreach ($choices as $choice) {
 //            $scoreTotal = $scoreTotal + $choice->getWeight();
@@ -195,7 +196,8 @@ class QcmHandler implements QuestionHandlerInterface
         return $exportData;
     }
 
-    public function convertQuestionAnswers(Question $question, \stdClass $exportData){
+    public function convertQuestionAnswers(Question $question, \stdClass $exportData)
+    {
         $repo = $this->om->getRepository('UJMExoBundle:InteractionQCM');
         $qcm = $repo->findOneBy(['question' => $question]);
 
@@ -212,6 +214,7 @@ class QcmHandler implements QuestionHandlerInterface
 
             return $solutionData;
         }, $choices);
+
         return $exportData;
     }
 
@@ -233,7 +236,7 @@ class QcmHandler implements QuestionHandlerInterface
     public function validateAnswerFormat(Question $question, $data)
     {
         if (!is_array($data)) {
-            return ['Answer data must be an array, ' . gettype($data) . ' given'];
+            return ['Answer data must be an array, '.gettype($data).' given'];
         }
 
         $count = 0;
@@ -276,10 +279,10 @@ class QcmHandler implements QuestionHandlerInterface
     {
         $interaction = $this->om->getRepository('UJMExoBundle:InteractionQCM')
             ->findOneByQuestion($question);
-        
-        $serviceQCM = $this->container->get("ujm.exo.qcm_service");
+
+        $serviceQCM = $this->container->get('ujm.exo.qcm_service');
         $allChoices = $interaction->getChoices();
-        
+
         $mark = $serviceQCM->mark($interaction, $data, $allChoices, 0);
 
         if ($mark < 0) {

@@ -18,7 +18,7 @@ class StepManager
      *     "questionManager" = @DI\Inject("ujm.exo.question_manager")
      * })
      *
-     * @param QuestionManager   $questionManager
+     * @param QuestionManager $questionManager
      */
     public function __construct(QuestionManager $questionManager)
     {
@@ -28,8 +28,9 @@ class StepManager
     /**
      * Exports a step in a JSON-encodable format.
      *
-     * @param  Step  $step
-     * @param  bool  $withSolutions
+     * @param Step $step
+     * @param bool $withSolutions
+     *
      * @return array
      */
     public function exportStep(Step $step, $withSolutions = true)
@@ -45,7 +46,7 @@ class StepManager
         }
 
         return [
-            'id'    => $step->getId(),
+            'id' => $step->getId(),
             'items' => $items,
         ];
     }

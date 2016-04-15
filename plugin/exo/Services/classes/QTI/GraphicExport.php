@@ -3,6 +3,7 @@
 /**
  * To export a graphic question in QTI.
  */
+
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -17,9 +18,9 @@ class GraphicExport extends QtiExport
     /**
      * Implements the abstract method.
      *
-     * @access public
-     * @param Question $question
+     * @param Question      $question
      * @param qtiRepository $qtiRepos
+     *
      * @return BinaryFileResponse
      */
     public function export(Question $question, qtiRepository $qtiRepos)
@@ -105,7 +106,8 @@ class GraphicExport extends QtiExport
     /**
      * add the tag areaMapping in responseDeclaration.
      */
-    private function areaMappingTag() {
+    private function areaMappingTag()
+    {
         $areaMapping = $this->document->createElement('areaMapping');
         $areaMapping->setAttribute('defaultValue', '0');
         $this->responseDeclaration[0]->appendChild($areaMapping);
@@ -114,15 +116,15 @@ class GraphicExport extends QtiExport
             $xy = $this->qtiCoord($c);
             $areaMapEntry = $this->document->createElement('areaMapEntry');
             $areaMapEntry->setAttribute('shape', $c->getShape());
-            $areaMapEntry->setAttribute('coords', $xy[0] . ',' . $xy[1] . ',' . $xy[2]);
+            $areaMapEntry->setAttribute('coords', $xy[0].','.$xy[1].','.$xy[2]);
             $areaMapEntry->setAttribute('mappedValue', $c->getScoreCoords());
             $areaMapEntry->setAttribute('color', $c->getColor());
             $areaMapping->appendChild($areaMapEntry);
-            if (($c->getFeedback() != Null) && ($c->getFeedback() != "")) {
+            if (($c->getFeedback() != null) && ($c->getFeedback() != '')) {
                 $feedbackInline = $this->document->CreateElement('feedbackInline');
-                $feedbackInline->setAttribute("outcomeIdentifier", "FEEDBACK");
-                $feedbackInline->setAttribute("identifier", "Choice" . $c->getId());
-                $feedbackInline->setAttribute("showHide", "show");
+                $feedbackInline->setAttribute('outcomeIdentifier', 'FEEDBACK');
+                $feedbackInline->setAttribute('identifier', 'Choice'.$c->getId());
+                $feedbackInline->setAttribute('showHide', 'show');
                 $this->getDomEl($feedbackInline, $c->getFeedback());
                 $areaMapEntry->appendChild($feedbackInline);
             }

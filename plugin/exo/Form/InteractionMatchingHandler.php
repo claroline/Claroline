@@ -99,7 +99,7 @@ class InteractionMatchingHandler extends QuestionHandler
             $originalProposal[] = $proposal;
         }
 
-        foreach ($originalInterMatching->getQuestion()->getHints() as $hints ) {
+        foreach ($originalInterMatching->getQuestion()->getHints() as $hints) {
             $originalHints[] = $hints;
         }
 

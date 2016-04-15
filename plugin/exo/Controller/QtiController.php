@@ -48,7 +48,7 @@ class QtiController extends Controller
         } else {
             $qtiRepos->assocExerciseQuestion(false);
 
-            return $this->redirect($this->generateUrl('ujm_exercise_open', [ 'id' => $exoID ]) . '#/steps');
+            return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $exoID]).'#/steps');
         }
     }
 
@@ -223,26 +223,24 @@ class QtiController extends Controller
      * @param int $id : id of question
      */
     public function ExportAction($id)
-    {     
+    {
         $service = $this->container->get('ujm.exo_question');
         $question = $service->controlUserQuestion($id);
         $sharedQuestions = $service->controlUserSharedQuestion($id);
-        
+
         $qtiRepos = $this->container->get('ujm.exo_qti_repository');
         $qtiRepos->createDirQTI();
-        
+
         if (count($question) > 0 || count($sharedQuestions) > 0) {
             if (count($sharedQuestions) > 0) {
                 $question = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Question')->find($id);
-            }            
+            }
             $export = $qtiRepos->export($question);
+
             return $export;
-        }
-        else {
+        } else {
             return $this->redirect($this->generateUrl('ujm_question_index'));
         }
-
-        
     }
 
     /**

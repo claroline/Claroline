@@ -3,6 +3,7 @@
 /**
  * Services for the graphic.
  */
+
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
 use JMS\DiExtraBundle\Annotation as DI;
@@ -18,7 +19,7 @@ class Graphic extends Interaction
      *
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param int $paperID id Paper or 0 if it's just a question test and not a paper
+     * @param int                                       $paperID id Paper or 0 if it's just a question test and not a paper
      *
      * @return mixed[]
      */
@@ -32,7 +33,7 @@ class Graphic extends Interaction
 
         $rightCoords = $em->getRepository('UJMExoBundle:Coords')
             ->findBy(array('interactionGraphic' => $graphId));
-        
+
         $interG = $em->getRepository('UJMExoBundle:InteractionGraphic')
             ->find($graphId);
 
@@ -78,27 +79,27 @@ class Graphic extends Interaction
      * To calculate the score.
      *
      *
-     * @param String $answers
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param string                                             $answers
+     * @param \Symfony\Component\HttpFoundation\Request          $request
      * @param doctrineCollection of \UJM\ExoBundle\Entity\Coords $rightCoords
-     * @param array [string] $coords
+     * @param array [string]                                     $coords
      *
      * @return float
      */
     public function mark($answers = null, $request = null, $rightCoords = null, $coords = null)
     {
         // differenciate the exercise of the bank of questions
-        if(is_int($request) ) {
+        if (is_int($request)) {
             $max = $request;
             $coords = preg_split('[,]', $answers); // Divide the answer zones into cells
         } else {
             $max = $request->request->get('nbpointer'); // Number of answer zones
             $coords = preg_split('[;]', $answers); // Divide the answer zones into cells
         }
-        
+
         $verif = array();
         $point = $z = 0;
-        
+
         for ($i = 0; $i < $max - 1; ++$i) {
             for ($j = 0; $j < $max - 1; ++$j) {
                 if (preg_match('/[0-9]+/', $coords[$j])) {
@@ -168,8 +169,8 @@ class Graphic extends Interaction
      *
      * call getAlreadyResponded and prepare the interaction to displayed if necessary
      *
-     * @param \UJM\ExoBundle\Entity\Interaction $interactionToDisplay interaction (question) to displayed
-     * @param Symfony\Component\HttpFoundation\Session\SessionInterface $session
+     * @param \UJM\ExoBundle\Entity\Interaction                            $interactionToDisplay interaction (question) to displayed
+     * @param Symfony\Component\HttpFoundation\Session\SessionInterface    $session
      * @param \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...) $interactionX
      *
      * @return \UJM\ExoBundle\Entity\Response
@@ -185,9 +186,9 @@ class Graphic extends Interaction
      * Graphic question : Check if the suggested answer zone isn't already right in order not to have points twice.
      *
      *
-     * @param String $coor coords of one right answer
-     * @param array $verif list of the student's placed answers zone
-     * @param int $z number of rights placed answers by the user
+     * @param string $coor  coords of one right answer
+     * @param array  $verif list of the student's placed answers zone
+     * @param int    $z     number of rights placed answers by the user
      *
      * @return bool
      */

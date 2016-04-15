@@ -74,5 +74,4 @@ class StepQuestion
     {
         return $this->ordre;
     }
-
 }

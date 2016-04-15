@@ -3,6 +3,7 @@
 /**
  * To import a long open question.
  */
+
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 class OpenLongImport extends OpenImport

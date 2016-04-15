@@ -13,7 +13,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class PaginationService
 {
-     public function __construct(Registry $doctrine,ContainerInterface $container) {
+    public function __construct(Registry $doctrine, ContainerInterface $container)
+    {
         $this->doctrine = $doctrine;
         $this->container = $container;
         $this->request = $container->get('request');
@@ -185,43 +186,49 @@ class PaginationService
 
         return $doublePagination;
     }
-    /**
-     * The pagination for seach question
-     * @param array $listQuestions
-     * @return array
-     */
-       public function paginationSearchQuestion($listQuestions) {
-        $em = $this->doctrine->getManager();
-        $exoID = $this->request->query->get('exoID'); // If we import or see the questions
-        $exercise =  $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
-        $page = $this->request->query->get('page'); // Which page
+       /**
+        * The pagination for seach question.
+        *
+        * @param array $listQuestions
+        *
+        * @return array
+        */
+       public function paginationSearchQuestion($listQuestions)
+       {
+           $em = $this->doctrine->getManager();
+           $exoID = $this->request->query->get('exoID'); // If we import or see the questions
+        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
+           $page = $this->request->query->get('page'); // Which page
         $displayAll = $this->request->query->get('displayAll', 0); // If we want to have all the questions in one page
         $max = 10; // Max questions displayed per page
 
         if ($exoID == -1) {
-
             if ($displayAll == 1) {
                 $max = count($listQuestions);
             }
+
             return $pagination = $this->pagination($listQuestions, $max, $page);
-        } else {      
+        } else {
             $exoQuestions = $em->getRepository('UJMExoBundle:Question')->findByExercise($exercise);
 
-            $finalList = $this->finishList($listQuestions,$exoQuestions);
+            $finalList = $this->finishList($listQuestions, $exoQuestions);
             if ($displayAll == 1) {
                 $max = count($finalList);
             }
 
             return $pagination = $this->pagination($finalList, $max, $page);
         }
-    }
+       }
     /**
-     * Return the finish list
+     * Return the finish list.
+     *
      * @param array $listQuestions
      * @param array $exoQuestions
+     *
      * @return array
      */
-    public function finishList($listQuestions,$exoQuestions) {
+    public function finishList($listQuestions, $exoQuestions)
+    {
         $already = false;
         $length = count($listQuestions);
         for ($i = 0; $i < $length; ++$i) {
@@ -236,46 +243,53 @@ class PaginationService
             }
             $already = false;
         }
+
         return $finalList;
     }
 
     /**
-     * Calculation of Max for pagination
+     * Calculation of Max for pagination.
+     *
      * @param type $shared
      * @param type $displayAll
      * @param type $userQuestions
      */
-    public function getMaxByDisplayAll($shared,$displayAll,$userQuestions){
+    public function getMaxByDisplayAll($shared, $displayAll, $userQuestions)
+    {
         $max = 10; // Max of questions per page
          if ($displayAll == 1) {
-                    if (count($userQuestions) > count($shared)) {
-                        $max = count($userQuestions);
-                    } else {
-                        $max = count($shared);
-                    }
-                }
-                return $max;
+             if (count($userQuestions) > count($shared)) {
+                 $max = count($userQuestions);
+             } else {
+                 $max = count($shared);
+             }
+         }
+
+        return $max;
     }
 
-    public function getPageGoNow($nbItem,$maxPage,$pageToGo,$pageGoNow){
+    public function getPageGoNow($nbItem, $maxPage, $pageToGo, $pageGoNow)
+    {
         if ($pageToGo) {
-                   $pageGoNow = $pageToGo;
-                   return $pageGoNow;
-                } else {
-                    // If new item > max per page, display next page
+            $pageGoNow = $pageToGo;
+
+            return $pageGoNow;
+        } else {
+            // If new item > max per page, display next page
                     $rest = $nbItem % $maxPage;
 
-                    if ($nbItem == 0) {
-                      $pageGoNow = 0;
-                    }
+            if ($nbItem == 0) {
+                $pageGoNow = 0;
+            }
 
-                    if ($rest == 0) {
-                      $pageGoNow += 1;
-                    }
-                    return $pageGoNow;
-                }
+            if ($rest == 0) {
+                $pageGoNow += 1;
+            }
+
+            return $pageGoNow;
+        }
     }
-        /**
+    /**
      * Returns a NotFoundHttpException.
      *
      * This will result in a 404 response code. Usage example:

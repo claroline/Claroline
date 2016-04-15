@@ -51,7 +51,7 @@ class InteractionOpen extends AbstractInteraction
     }
 
     /**
-     * @param boolean $orthographyCorrect
+     * @param bool $orthographyCorrect
      */
     public function setOrthographyCorrect($orthographyCorrect)
     {
@@ -127,7 +127,7 @@ class InteractionOpen extends AbstractInteraction
     {
         if ($this->id) {
             $this->id = null;
-            $this->question= clone $this->question;
+            $this->question = clone $this->question;
             $newWordResponses = new ArrayCollection();
 
             foreach ($this->wordResponses as $wordResponse) {

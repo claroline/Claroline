@@ -27,16 +27,15 @@ class QuestionManager
      *     "collector"  = @DI\Inject("ujm.exo.question_handler_collector")
      * })
      *
-     * @param ObjectManager             $om
-     * @param Validator                 $validator
-     * @param QuestionHandlerCollector  $collector
+     * @param ObjectManager            $om
+     * @param Validator                $validator
+     * @param QuestionHandlerCollector $collector
      */
     public function __construct(
         ObjectManager $om,
         Validator $validator,
         QuestionHandlerCollector $collector
-    )
-    {
+    ) {
         $this->om = $om;
         $this->validator = $validator;
         $this->handlerCollector = $collector;
@@ -46,8 +45,9 @@ class QuestionManager
      * Imports a question in a JSON-decoded format.
      *
      * @param \stdClass $data
-     * @throws ValidationException  if the question is not valid
-     * @throws \Exception           if the question type import is not implemented
+     *
+     * @throws ValidationException if the question is not valid
+     * @throws \Exception          if the question type import is not implemented
      */
     public function importQuestion(\stdClass $data)
     {
@@ -83,10 +83,12 @@ class QuestionManager
     /**
      * Exports a question in a JSON-encodable format.
      *
-     * @param Question  $question
-     * @param bool      $withSolution
-     * @param bool      $forPaperList
+     * @param Question $question
+     * @param bool     $withSolution
+     * @param bool     $forPaperList
+     *
      * @return \stdClass
+     *
      * @throws \Exception if the question type export is not implemented
      */
     public function exportQuestion(Question $question, $withSolution = true, $forPaperList = false)
@@ -122,14 +124,14 @@ class QuestionManager
 
         return $data;
     }
-    
+
     public function exportQuestionAnswers(Question $question)
     {
         $handler = $this->handlerCollector->getHandlerForInteractionType($question->getType());
         // question info
         $data = new \stdClass();
         $data->id = $question->getId();
-        $data->feedback = $question->getFeedback() ? $question->getFeedback():'';
+        $data->feedback = $question->getFeedback() ? $question->getFeedback() : '';
 
         $handler->convertQuestionAnswers($question, $data);
 
@@ -149,9 +151,11 @@ class QuestionManager
      * Ensures the format of the answer is correct and returns a list of
      * validation errors, if any.
      *
-     * @param Question  $question
-     * @param mixed     $data
+     * @param Question $question
+     * @param mixed    $data
+     *
      * @return array
+     *
      * @throws \UJM\ExoBundle\Transfer\Json\UnregisteredHandlerException
      */
     public function validateAnswerFormat(Question $question, $data)

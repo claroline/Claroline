@@ -16,6 +16,7 @@ class QuestionRepository extends EntityRepository
      *
      * @param User $user
      * @param bool $limitToModels
+     *
      * @return array
      */
     public function findByUser(User $user, $limitToModels = false)
@@ -40,6 +41,7 @@ class QuestionRepository extends EntityRepository
      * Returns all the questions linked to a given exercise.
      *
      * @param Exercise $exercise
+     *
      * @return Question[]
      */
     public function findByExercise(Exercise $exercise)
@@ -58,6 +60,7 @@ class QuestionRepository extends EntityRepository
      * Returns all the questions linked to a given step.
      *
      * @param Step $step
+     *
      * @return Question[]
      */
     public function findByStep(Step $step)
@@ -76,6 +79,7 @@ class QuestionRepository extends EntityRepository
      * Returns the questions corresponding to an array of ids.
      *
      * @param array $ids
+     *
      * @return Question[]
      */
     public function findByIds(array $ids)
@@ -92,9 +96,10 @@ class QuestionRepository extends EntityRepository
      * associated with a given exercise. Allows to select only
      * questions defined as models (defaults to false).
      *
-     * @param User      $user
-     * @param Exercise  $exercise
-     * @param bool      $limitToModels
+     * @param User     $user
+     * @param Exercise $exercise
+     * @param bool     $limitToModels
+     *
      * @return array
      */
     public function findByUserNotInExercise(User $user, Exercise $exercise, $limitToModels = false)
@@ -117,7 +122,7 @@ class QuestionRepository extends EntityRepository
             ->orderBy('c.value, q.title', 'ASC')
             ->setParameters([
                 'user' => $user,
-                'exercise' => $exercise
+                'exercise' => $exercise,
             ])
             ->getQuery()
             ->getResult();
@@ -127,8 +132,9 @@ class QuestionRepository extends EntityRepository
      * Returns the questions created by a user whose category
      * name matches a given search string.
      *
-     * @param User      $user
-     * @param string    $categoryName
+     * @param User   $user
+     * @param string $categoryName
+     *
      * @return array
      */
     public function findByUserAndCategoryName(User $user, $categoryName)
@@ -139,7 +145,7 @@ class QuestionRepository extends EntityRepository
             ->andWhere('c.value LIKE :search')
             ->setParameters([
                 'user' => $user,
-                'search' => "%{$categoryName}%"
+                'search' => "%{$categoryName}%",
             ])
             ->getQuery()
             ->getResult();
@@ -149,8 +155,9 @@ class QuestionRepository extends EntityRepository
      * Returns the questions created by a user whose type
      * matches a given search string.
      *
-     * @param User      $user
-     * @param string    $type
+     * @param User   $user
+     * @param string $type
+     *
      * @return array
      */
     public function findByUserAndType(User $user, $type)
@@ -160,7 +167,7 @@ class QuestionRepository extends EntityRepository
             ->andWhere('q.type LIKE :search')
             ->setParameters([
                 'user' => $user,
-                'search' => "%{$type}%"
+                'search' => "%{$type}%",
             ])
             ->getQuery()
             ->getResult();
@@ -170,8 +177,9 @@ class QuestionRepository extends EntityRepository
      * Returns the questions created by a user whose title
      * matches a given search string.
      *
-     * @param User      $user
-     * @param string    $title
+     * @param User   $user
+     * @param string $title
+     *
      * @return array
      */
     public function findByUserAndTitle(User $user, $title)
@@ -181,7 +189,7 @@ class QuestionRepository extends EntityRepository
             ->andWhere('q.title LIKE :search')
             ->setParameters([
                 'user' => $user,
-                'search' => "%{$title}%"
+                'search' => "%{$title}%",
             ])
             ->getQuery()
             ->getResult();
@@ -191,8 +199,9 @@ class QuestionRepository extends EntityRepository
      * Returns the questions created by a user whose invite
      * matches a given search string.
      *
-     * @param User      $user
-     * @param string    $invite
+     * @param User   $user
+     * @param string $invite
+     *
      * @return array
      */
     public function findByUserAndInvite(User $user, $invite)
@@ -202,7 +211,7 @@ class QuestionRepository extends EntityRepository
             ->andWhere('q.invite LIKE :search')
             ->setParameters([
                 'user' => $user,
-                'search' => "%{$invite}%"
+                'search' => "%{$invite}%",
             ])
             ->getQuery()
             ->getResult();
@@ -214,9 +223,10 @@ class QuestionRepository extends EntityRepository
      * Allows to select only questions which are not associated with
      * a particular exercise.
      *
-     * @param User $user
-     * @param string $content
+     * @param User     $user
+     * @param string   $content
      * @param Exercise $excluded
+     *
      * @return array
      */
     public function findByUserAndContent(User $user, $content, Exercise $excluded = null)
@@ -231,7 +241,7 @@ class QuestionRepository extends EntityRepository
 
         $parameters = [
             'user' => $user,
-            'search' => "%{$content}%"
+            'search' => "%{$content}%",
         ];
 
         if ($excluded) {

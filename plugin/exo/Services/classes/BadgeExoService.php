@@ -4,6 +4,7 @@
  * Services for the badges linked with the exercices
  * To display the badge obtained by an user in his list of copies.
  */
+
 namespace UJM\ExoBundle\Services\classes;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
@@ -29,7 +30,7 @@ class BadgeExoService
      *
      * @param int    $userId     id User
      * @param int    $resourceId id Claroline Resource
-     * @param String $locale     given by container->getParameter('locale') FR, EN ....
+     * @param string $locale     given by container->getParameter('locale') FR, EN ....
      *
      * @return \Icap\BadgeBundle\Entity\Badge[]
      */
@@ -110,7 +111,7 @@ class BadgeExoService
      *
      *
      * @param \Icap\BadgeBundle\Entity\Badge $badge
-     * @param String                         $locale given by container->getParameter('locale') FR, EN ....
+     * @param string                         $locale given by container->getParameter('locale') FR, EN ....
      *
      * @return \Icap\BadgeBundle\Entity\BadgeTranslation
      */

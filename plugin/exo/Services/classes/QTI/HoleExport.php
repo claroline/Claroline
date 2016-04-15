@@ -3,6 +3,7 @@
 /**
  * To export question with holes in QTI.
  */
+
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -16,9 +17,9 @@ class HoleExport extends QtiExport
     /**
      * Implements the abstract method.
      *
-     * @access public
-     * @param Question $question
+     * @param Question      $question
      * @param qtiRepository $qtiRepos
+     *
      * @return BinaryFileResponse
      */
     public function export(Question $question, qtiRepository $qtiRepos)
@@ -98,15 +99,15 @@ class HoleExport extends QtiExport
             $mapEntry->setAttribute('mappedValue', $resp->getScore());
             $mapEntry->setAttribute('caseSensitive', $resp->getCaseSensitive());
             $mapping->appendChild($mapEntry);
-            if(($resp->getFeedback()!=Null) && ($resp->getFeedback()!="")){
+            if (($resp->getFeedback() != null) && ($resp->getFeedback() != '')) {
                 $feedbackInline = $this->document->CreateElement('feedbackInline');
-                $feedbackInline->setAttribute("outcomeIdentifier", "FEEDBACK");
-                $feedbackInline->setAttribute("identifier","choice_".$resp->getId());
-                $feedbackInline->setAttribute("showHide","show");
+                $feedbackInline->setAttribute('outcomeIdentifier', 'FEEDBACK');
+                $feedbackInline->setAttribute('identifier', 'choice_'.$resp->getId());
+                $feedbackInline->setAttribute('showHide', 'show');
                 $this->getDomEl($feedbackInline, $resp->getFeedback());
                 $mapEntry->appendChild($feedbackInline);
             }
-            $i++;
+            ++$i;
         }
         $Tagvalue = $this->document->CreateElement('value');
         if (!$hole->getSelector()) {
@@ -130,7 +131,7 @@ class HoleExport extends QtiExport
         $prompt = $this->document->CreateElement('prompt');
         $invite = $this->interactionhole->getQuestion()->getInvite();
         // Managing the resource export
-        $body=$this->qtiExportObject($invite);
+        $body = $this->qtiExportObject($invite);
         foreach ($body->childNodes as $child) {
             $inviteNew = $this->document->importNode($child, true);
             $prompt->appendChild($inviteNew);

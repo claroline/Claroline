@@ -61,7 +61,7 @@ class Interaction extends \Twig_Extension
      *
      *
      * @param int    $interId   id InteractionX
-     * @param String $typeInter type of interaction (QCM, graphic, ...)
+     * @param string $typeInter type of interaction (QCM, graphic, ...)
      *
      * Return array
      */
@@ -108,7 +108,7 @@ class Interaction extends \Twig_Extension
      * Cet rights for a question and an user, this method is used in the views with a table of questions.
      *
      *
-     * @param String $questionsList the type of the list (share, import, my, exoList)
+     * @param string $questionsList the type of the list (share, import, my, exoList)
      * @param bool   $shareRight    if the user can be edit a shared question
      * @param int    $actionQ       info right about a question
      * @param bool   $qexoEdit      if the user can edit a question in an exercise

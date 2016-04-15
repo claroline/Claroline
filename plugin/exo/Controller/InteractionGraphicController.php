@@ -103,7 +103,7 @@ class InteractionGraphicController extends Controller
                 );
             } else {
                 return $this->redirect(
-                    $this->generateUrl('ujm_exercise_open', [ 'id' => $exoID ]) . '#/steps'
+                    $this->generateUrl('ujm_exercise_open', ['id' => $exoID]).'#/steps'
                 );
             }
         }
@@ -238,7 +238,7 @@ class InteractionGraphicController extends Controller
                 return $this->redirect($this->generateUrl('ujm_question_index'));
             } else {
                 return $this->redirect(
-                    $this->generateUrl('ujm_exercise_open', [ 'id' => $exoID ]) . '#/steps'
+                    $this->generateUrl('ujm_exercise_open', ['id' => $exoID]).'#/steps'
                 );
             }
         }
@@ -268,7 +268,7 @@ class InteractionGraphicController extends Controller
         $coords = $em->getRepository('UJMExoBundle:Coords')->findBy(array('interactionGraphic' => $id));
         //Deleting of relations, if there the question is shared
         $sharesQuestion = $em->getRepository('UJMExoBundle:Share')->findBy(array('question' => $interactionGraphic->getQuestion()->getId()));
-        foreach ($sharesQuestion as $share){
+        foreach ($sharesQuestion as $share) {
             $em->remove($share);
         }
         if (!$interactionGraphic) {

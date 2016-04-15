@@ -16,7 +16,7 @@ class ValidationException extends \Exception
 
         $errorMessages = array_map(function ($error) {
             return sprintf(
-                "  { path: %s, msg: %s }",
+                '  { path: %s, msg: %s }',
                 $error['path'],
                 $error['message']
             );
