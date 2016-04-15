@@ -11,14 +11,21 @@ angular.module('Correction').controller('CorrectionCtrl', [
         this.context = '';
 
         this.questionPanelsState = 'opened'; // all panels are open
-        this.globalNote = 0.0;
+        this.globalNote = '-';
 
         this.init = function (paper, questions) {
             this.paper = paper;
             this.questions = questions;
-            this.globalNote = 0;//CommonService.getPaperScore(this.paper, this.questions);
+            this.globalNote = this.resultPaperScore();
         };
 
+        this.resultPaperScore = function () {
+            var score = CommonService.getPaperScore(this.paper, this.questions);
+            if(score !== null){
+                return score;
+            }
+            return '-';
+        }
         /**
          * Hide / Show all question panels
          */

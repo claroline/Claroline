@@ -99,10 +99,18 @@ angular.module('Paper').controller('PaperListCtrl', [
          * @returns {undefined}
          */
         this.setTableData = function () {
+            var score;
             for (var i = 0; i < this.filtered.length; i++) {
                 // set scores in paper object and in the same time format end date
-                if (this.filtered[i].end) { // TODO check score availability
-                    this.filtered[i].score = CommonService.getPaperScore(this.filtered[i], this.questions) + '/20';
+                if (this.filtered[i].end ) { // TODO check score availability
+                    score = CommonService.getPaperScore(this.filtered[i], this.questions) ;
+                    if(score !== null){
+                        this.filtered[i].score = score + '/20';
+                    }
+                    else{
+                        this.filtered[i].end = '-';
+                        this.filtered[i].score = '-';
+                    }
                 }
                 else {
                     this.filtered[i].end = '-';

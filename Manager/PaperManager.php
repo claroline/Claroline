@@ -178,7 +178,7 @@ class PaperManager
     {
         $response = $this->om->getRepository('UJMExoBundle:Response')
             ->findOneBy(['paper' => $paper, 'question' => $question]);
-        
+
         $response->setMark($score);
 
         $scorePaper = $paper->getScore();
