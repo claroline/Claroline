@@ -47,8 +47,7 @@ before_script:
   - npm install
   - npm run bower
   - composer build
-  - php app/console doctrine:database:create --env=test
-  - php app/console claroline:init_test_schema --env=test
+  - php app/console claroline:install --env=test
 
 script:
   - bin/php-cs-fixer fix --dry-run --diff --config-file=vendor/claroline/distribution/main/dev/Resources/travis/php-cs.php -vvv

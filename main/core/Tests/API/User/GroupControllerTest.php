@@ -100,7 +100,7 @@ class GroupControllerTest extends TransactionalTestCase
     }
 
     //@route: api_post_group
-    //@url: /api/groups.{_format} 
+    //@url: /api/groups.{_format}
     //@method: POST
     public function testPostGroupAction()
     {
@@ -108,7 +108,7 @@ class GroupControllerTest extends TransactionalTestCase
     }
 
     //@route: api_post_group
-    //@url: /api/groups.{_format} 
+    //@url: /api/groups.{_format}
     //@method: POST
     public function testPostGroupActionIsProtected()
     {
@@ -116,7 +116,7 @@ class GroupControllerTest extends TransactionalTestCase
     }
 
     //@route: api_put_group
-    //@url: /api/groups/{group}.{_format} 
+    //@url: /api/groups/{group}.{_format}
     //@method: PUT
     public function testPutGroupAction()
     {
@@ -124,7 +124,7 @@ class GroupControllerTest extends TransactionalTestCase
     }
 
     //@route: api_put_group
-    //@url: /api/groups/{group}.{_format} 
+    //@url: /api/groups/{group}.{_format}
     //@method: PUT
     public function testPutGroupActionIsProtected()
     {
@@ -228,10 +228,10 @@ class GroupControllerTest extends TransactionalTestCase
     }
 
     //@route: api_get_search_groups
-    //@url: /api/searches/{page}/groups/{limit}.{_format}
+    //@url: /api/groups/page/{page}/limit/{limit}/search.{_format}
     public function testGetSearchGroupsAction()
     {
-        $url = '/api/searches/0/groups/10.json';
+        $url = '/api/groups/page/0/limit/10/search.json';
         //ADMINISTRATOR USAGE !
         $this->logIn($this->admin);
 
@@ -250,7 +250,7 @@ class GroupControllerTest extends TransactionalTestCase
         //ORGANIZATION MANAGER USAGE !
         $this->logIn($this->adminOrga);
 
-        //base search should retrive all the users of my organizations
+        //base search should retrieve all the users of my organizations
         $this->client->request('GET', $url);
         $data = $this->client->getResponse()->getContent();
         $data = json_decode($data, true);
@@ -259,7 +259,7 @@ class GroupControllerTest extends TransactionalTestCase
         //USER USAGE
         $this->logIn($this->john);
 
-        //base search should retrive all the users of my organizations. If I don't have any, it should be 0
+        //base search should retrieve all the users of my organizations. If I don't have any, it should be 0
         $this->client->request('GET', $url);
         $data = $this->client->getResponse()->getContent();
         $data = json_decode($data, true);
@@ -277,30 +277,30 @@ class GroupControllerTest extends TransactionalTestCase
         $this->assertGreaterThan(0, count($data));
     }
 
-    //@route: api_get_create_group_form
-    //@url: ANY  /api/create/group/form.{_format}
+    //@route: api_get_group_create_form
+    //@url: ANY  /api/group/create/form.json
     public function testGetCreateGroupFormAction()
     {
         $this->logIn($this->john);
-        $this->client->request('GET', '/api/create/group/form.json');
+        $this->client->request('GET', '/api/group/create/form.json');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
-    //@route: api_get_edit_group_form
+    //@route: api_get_group_edit_form
     //@url: /api/edits/{group}/group/form.{_format}
     public function testGetEditGroupFormAction()
     {
         $this->logIn($this->adminOrga);
-        $this->client->request('GET', "/api/edits/{$this->groupOrga->getId()}/group/form.json");
+        $this->client->request('GET', "/api/group/{$this->groupOrga->getId()}/edit/form.json");
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
-    //@route: api_get_edit_group_form
-    //@url: /api/edits/{group}/group/form.{_format}
+    //@route: api_get_group_edit_form
+    //@url: /api/group/{group}/edit/form.{_format}
     public function testGetEditGroupFormActionisProtected()
     {
         $this->logIn($this->john);
-        $this->client->request('GET', "/api/edits/{$this->groupOrga->getId()}/group/form.json");
+        $this->client->request('GET', "/api/group/{$this->groupOrga->getId()}/edit/form.json");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 }

@@ -75,10 +75,11 @@ class UserControllerTest extends TransactionalTestCase
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
-    //@route: api_search_users
+    //@route: api_get_search_users
+    //@url: /api/users/page/{page}/limit/{limit}/search.{_format}
     public function testSearchUsersAction()
     {
-        $url = '/api/users/page/0/limit/10/search';
+        $url = '/api/users/page/0/limit/10/search.json';
         //ADMINISTRATOR USAGE !
         $this->logIn($this->admin);
 
@@ -115,11 +116,11 @@ class UserControllerTest extends TransactionalTestCase
     }
 
     //@url: /api/user/searchable/fields.{_format}
-    //@route: api_get_user_searchable_fields
+    //@route: api_get_user_fields
     public function testGetUsersSearchableFieldsAction()
     {
         $this->logIn($this->john);
-        $this->client->request('GET', '/api/user/searchable/fields.json');
+        $this->client->request('GET', '/api/users/fields.json');
         $data = $this->client->getResponse()->getContent();
         $data = json_decode($data, true);
         $this->assertEquals(7, count($data));
@@ -224,7 +225,7 @@ class UserControllerTest extends TransactionalTestCase
     public function testGetUserActionIsProtected()
     {
         $this->logIn($this->adminOrga);
-        $this->client->request('GET', "api/users/{$this->john->getId()}.json");
+        $this->client->request('GET', "api/user/{$this->john->getId()}.json");
         $data = $this->client->getResponse()->getContent();
         $data = json_decode($data, true);
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
@@ -359,11 +360,11 @@ class UserControllerTest extends TransactionalTestCase
     }
 
     //@route: api_get_user_admin_actions
-    //@url: /api/user/admin/actions.{_format}
+    //@url: /api/user/admin/action.{_format}
     public function testGetUserAdminActionsAction()
     {
         $this->logIn($this->admin);
-        $this->client->request('GET', '/api/user/admin/actions.json');
+        $this->client->request('GET', '/api/user/admin/action.json');
         $data = $this->client->getResponse()->getContent();
         $data = json_decode($data, true);
         //this will vary depending on plugins...

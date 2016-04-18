@@ -5,7 +5,6 @@ namespace HeVinci\CompetencyBundle\Tests\Repository;
 use Claroline\CoreBundle\Entity\Activity\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use HeVinci\CompetencyBundle\Util\RepositoryTestCase;
 
@@ -267,8 +266,8 @@ class AbilityRepositoryTest extends RepositoryTestCase
         $workspace->setGuid('abc123');
         $workspace->setCreator($user);
 
-        $type = new ResourceType();
-        $type->setName('activity');
+        $type = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+            ->findOneByName('activity');
 
         $node = new ResourceNode();
         $node->setName($name);

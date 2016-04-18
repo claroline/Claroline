@@ -93,7 +93,7 @@ class OrganizationControllerTest extends TransactionalTestCase
     }
 
     //@route: api_get_organizations
-    //@url: /api/organizations.{_format} 
+    //@url: /api/organizations.{_format}
     public function testGetOrganizationsAction()
     {
         $this->persister->organization('orga1');
@@ -107,7 +107,7 @@ class OrganizationControllerTest extends TransactionalTestCase
     }
 
     //@route: api_get_organizations
-    //@url: /api/organizations.{_format} 
+    //@url: /api/organizations.{_format}
     public function testGetOrganizationsActionIsProtected()
     {
         $this->logIn($this->john);
@@ -138,30 +138,30 @@ class OrganizationControllerTest extends TransactionalTestCase
     }
 
     //@route: api_get_edit_organization_form
-    //@url: /api/edits/{organization}/organization/form.{_format}
+    //@url: /api/organization/{organization}/edit/form.json
     public function testGetEditOrganizationFormAction()
     {
         $orga = $this->persister->organization('orga');
         $this->persister->flush();
         $this->logIn($this->admin);
-        $this->client->request('GET', "/api/edits/{$orga->getId()}/organization/form.json");
+        $this->client->request('GET', "/api/organization/{$orga->getId()}/edit/form.json");
         $data = $this->client->getResponse()->getContent();
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     //@route: api_get_edit_organization_form
-    //@url: /api/edits/{organization}/organization/form.{_format}
+    //@url: /api/organization/{organization}/edit/form.json
     public function testGetEditOrganizationFormActionIsProtected()
     {
         $orga = $this->persister->organization('orga');
         $this->persister->flush();
         $this->logIn($this->john);
-        $this->client->request('GET', "/api/edits/{$orga->getId()}/organization/form.json");
+        $this->client->request('GET', "/api/organization/{$orga->getId()}/edit/form.json");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     //@route: api_put_organization
-    //@url: /api/organizations/{organization}.{_format} 
+    //@url: /api/organizations/{organization}.{_format}
     public function testPutOrganizationAction()
     {
         $orga = $this->persister->organization('orga');
@@ -182,7 +182,7 @@ class OrganizationControllerTest extends TransactionalTestCase
     }
 
     //@route: api_put_organization
-    //@url: /api/organizations/{organization}.{_format} 
+    //@url: /api/organizations/{organization}.{_format}
     public function testPutOrganizationActionIsProtected()
     {
         $orga = $this->persister->organization('orga');

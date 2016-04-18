@@ -12,7 +12,6 @@
 namespace Claroline\ResultBundle\Testing;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -43,10 +42,7 @@ class Persister
         $this->om->persist($user);
 
         if (!$this->userRole) {
-            $this->userRole = new Role();
-            $this->userRole->setName('ROLE_USER');
-            $this->userRole->setTranslationKey('user');
-            $this->om->persist($this->userRole);
+            $this->userRole = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
         }
 
         $user->addRole($this->userRole);
@@ -83,9 +79,8 @@ class Persister
         $result->setTotal($total);
 
         if (!$this->resultType) {
-            $this->resultType = new ResourceType();
-            $this->resultType->setName('claroline_result');
-            $this->om->persist($this->resultType);
+            $this->resultType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+                ->findOneByName('claroline_result');
         }
 
         $node = new ResourceNode();

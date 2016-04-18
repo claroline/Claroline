@@ -14,10 +14,11 @@ class AdditionalInstallerTest extends TransactionalTestCase
         $em = $container->get('doctrine.orm.entity_manager');
         $actionRepo = $em->getRepository('ClarolineCoreBundle:Resource\MenuAction');
         $roleRepo = $em->getRepository('ClarolineCoreBundle:Role');
-        $this->createActivityType($em);
 
-        $this->assertNull($actionRepo->findOneByName('manage-competencies'));
-        $this->assertNull($roleRepo->findOneByName('ROLE_COMPETENCY_MANAGER'));
+        //It should already be installed after a claroline:install --env=test.
+        $em->remove($actionRepo->findOneByName('manage-competencies'));
+        $em->remove($roleRepo->findOneByName('ROLE_COMPETENCY_MANAGER'));
+        $em->flush();
 
         $installer = new AdditionalInstaller();
         $installer->setContainer($container);
