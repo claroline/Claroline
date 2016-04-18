@@ -172,4 +172,28 @@ class Deck extends AbstractResource
         return $this->userPreferences;
     }
 
+    /**
+     * Return the preference for a user. If the given user doesn't have
+     * personnal preferences, the default preferences are used.
+     *
+     * @param User $user
+     * @return UserPreference
+     */
+    public function getUserPreference(User $user)
+    {
+        foreach($this->userPreferences as $userPref) {
+            if($user->getId() == $userPref->getUser()->getId()) {
+                return $userPref;
+            }
+        }
+
+        $userPref = new UserPreference();
+        $userPref->setNewCardDay($this->newCardDayDefault);
+        $userPref->setSessionDuration($this->sessionDurationDefault);
+        $userPref->setUser($user);
+        $userPref->setDeck($this);
+
+        return $userPref;
+    }
+
 }

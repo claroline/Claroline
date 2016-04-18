@@ -33,6 +33,7 @@ class FieldValue
      * @Groups({
      *     "api_flashcard",
      *     "api_flashcard_note",
+     *     "api_flashcard_card",
      *     "api_flashcard_deck"
      * })
      */
@@ -45,6 +46,7 @@ class FieldValue
      * @Groups({
      *     "api_flashcard",
      *     "api_flashcard_note",
+     *     "api_flashcard_card",
      *     "api_flashcard_deck"
      * })
      */
@@ -56,6 +58,7 @@ class FieldValue
      * @Groups({
      *     "api_flashcard",
      *     "api_flashcard_note",
+     *     "api_flashcard_card",
      *     "api_flashcard_deck"
      * })
      */

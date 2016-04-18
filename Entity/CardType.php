@@ -32,6 +32,7 @@ class CardType
      * @ORM\GeneratedValue(strategy="AUTO")
      * @Groups({
      *     "api_flashcard",
+     *     "api_flashcard_card",
      *     "api_flashcard_deck"
      * })
      */
@@ -43,6 +44,7 @@ class CardType
      * @ORM\Column(name="name", type="string", length=255)
      * @Groups({
      *     "api_flashcard",
+     *     "api_flashcard_card",
      *     "api_flashcard_deck"
      * })
      */
@@ -54,6 +56,7 @@ class CardType
      * @ORM\JoinColumn(onDelete="CASCADE")
      * @Groups({
      *     "api_flashcard",
+     *     "api_flashcard_card",
      *     "api_flashcard_deck"
      * })
      */
@@ -65,6 +68,7 @@ class CardType
      * @ORM\JoinColumn(onDelete="CASCADE")
      * @Groups({
      *     "api_flashcard",
+     *     "api_flashcard_card",
      *     "api_flashcard_deck"
      * })
      */

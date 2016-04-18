@@ -34,6 +34,7 @@ class FieldLabel
      *     "api_flashcard",
      *     "api_flashcard_note_type",
      *     "api_flashcard_note",
+     *     "api_flashcard_card",
      *     "api_flashcard_deck"
      * })
      */
@@ -47,6 +48,7 @@ class FieldLabel
      *     "api_flashcard",
      *     "api_flashcard_note_type",
      *     "api_flashcard_note",
+     *     "api_flashcard_card",
      *     "api_flashcard_deck"
      * })
      */

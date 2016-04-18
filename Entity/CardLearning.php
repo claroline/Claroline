@@ -14,12 +14,14 @@ namespace Claroline\FlashCardBundle\Entity;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * CardLearning
  *
  * @ORM\Table(name="claro_fcbundle_card_learning")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\FlashCardBundle\Repository\CardLearningRepository")
  */
 class CardLearning
 {
@@ -29,6 +31,10 @@ class CardLearning
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({
+     *     "api_flashcard",
+     *     "api_flashcard_card"
+     * })
      */
     private $id;
 
@@ -36,6 +42,10 @@ class CardLearning
      * @var float
      *
      * @ORM\Column(name="factor", type="float")
+     * @Groups({
+     *     "api_flashcard",
+     *     "api_flashcard_card"
+     * })
      */
     private $factor;
 
@@ -43,6 +53,10 @@ class CardLearning
      * @var boolean
      *
      * @ORM\Column(name="painfull", type="boolean")
+     * @Groups({
+     *     "api_flashcard",
+     *     "api_flashcard_card"
+     * })
      */
     private $painfull;
 
@@ -50,6 +64,10 @@ class CardLearning
      * @var integer
      *
      * @ORM\Column(name="number_repeated", type="integer")
+     * @Groups({
+     *     "api_flashcard",
+     *     "api_flashcard_card"
+     * })
      */
     private $numberRepeated;
 
@@ -57,23 +75,38 @@ class CardLearning
      * @var date
      *
      * @ORM\Column(name="due_date", type="date")
+     * @Groups({
+     *     "api_flashcard",
+     *     "api_flashcard_card"
+     * })
      */
     private $dueDate;
 
     /**
      * @ORM\ManyToOne(targetEntity="Card")
      * @ORM\JoinColumn(onDelete="CASCADE")
+     * @Groups({
+     *     "api_flashcard",
+     *     "api_flashcard_card"
+     * })
      */
     private $card;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(onDelete="CASCADE")
+     * @Groups({
+     *     "api_flashcard",
+     * })
      */
     private $user;
 
     public function __construct()
     {
+        $this->factor = 1.3;
+        $this->painfull = false;
+        $this->numberRepeated = 0;
+        $this->dueDate = null;
     }
 
     /**

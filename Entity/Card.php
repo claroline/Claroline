@@ -20,7 +20,7 @@ use JMS\Serializer\Annotation\SerializedName;
  * Card
  *
  * @ORM\Table(name="claro_fcbundle_card")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\FlashCardBundle\Repository\CardRepository")
  */
 class Card
 {
@@ -54,7 +54,10 @@ class Card
     /**
      * @ORM\ManyToOne(targetEntity="Note", inversedBy="cards")
      * @ORM\JoinColumn(onDelete="CASCADE")
-     * @Groups({"api_flashcard", "api_flashcard_card"})
+     * @Groups({
+     *     "api_flashcard", 
+     *     "api_flashcard_card"
+     * })
      */
     private $note;
 
