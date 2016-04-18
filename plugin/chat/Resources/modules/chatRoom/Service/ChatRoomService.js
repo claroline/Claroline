@@ -46,13 +46,6 @@ export default class ChatRoomService {
     this._onIQStanza = this._onIQStanza.bind(this)
 
     this._fullConnection = this._fullConnection.bind(this)
-    $rootScope.$on('$stateChangeStart',
-      function(event, toState, toParams, fromState, fromParams, options){
-        console.log('state changed')
-        //event.preventDefault();
-        // transitionTo() promise will be rejected with
-        // a 'transition prevented' error
-    })
   }
 
   getConfig () {
@@ -73,6 +66,10 @@ export default class ChatRoomService {
 
   getMessages () {
     return this.MessageService.getMessages()
+  }
+
+  getOldMessages () {
+    return this.MessageService.getOldMessages()
   }
 
   connect () {
@@ -148,12 +145,19 @@ export default class ChatRoomService {
                         //})
       //this.xmppConfig['connection'].flush()
       //this.xmppConfig['connection'].disconnect()
-      this.config['connected'] = false
-      console.log('Disconnected')
-
-
-      // TODO : Log disconnection
     }
+  }
+
+  resetChatRoomDatas () {
+    this.config['myRole'] = null
+    this.config['myAffiliation'] = null
+    this.config['adminConnected'] = false
+    this.config['connected'] = false
+    this.MessageService.emptyMessages()
+    this.MessageService.emptyOldMessages()
+    this.UserService.emptyUsers()
+    this.UserService.emptyBannedUsers()
+    console.log('Disconnected')
   }
 
   initializeRoom () {
@@ -289,6 +293,15 @@ export default class ChatRoomService {
     }
   }
 
+  getRegisteredMessages () {
+    const route = Routing.generate('api_get_registered_messages' , {chatRoom: this.config['roomId']})
+    this.$http.get(route).then(d => {
+      d['data'].forEach(m => {
+        this.MessageService.addOldMessage(m['userFullName'], m['content'], m['color'], m['type'], m['creationDate'])
+      })
+    })
+  }
+
   initializeRoleAndAffiliation () {
     console.log('initialize role & affiliation...')
 
@@ -421,7 +434,7 @@ export default class ChatRoomService {
     }
   }
 
-  sendUnbanMessage (username) {
+  sendUnbanMessage (username, name) {
     this.xmppConfig['connection'].send(
       $msg({
         to: this.config['room'],
@@ -433,6 +446,7 @@ export default class ChatRoomService {
         {
           status: 'management',
           username: username,
+          name: name,
           type: 'unban-user',
           value: true
         }
@@ -463,8 +477,8 @@ export default class ChatRoomService {
       }
     )
     return this.$http.post(route, {message: message}).then(
-      (d) => {return 'ok'},
-      (d) =>  {
+      d => {return 'ok'},
+      d =>  {
         if (d['status'] === 403) {
           const route = Routing.generate('claro_resource_open_short', {node: this.config['resourceId']})
           window.location = route
@@ -493,10 +507,24 @@ export default class ChatRoomService {
     this.config['connected'] = false
   }
 
-  manageManagementMessage (type, username, value) {
+  manageBannedUsers (bannedUsernames) {
+    const route = Routing.generate('api_post_chat_users_infos')
+    this.$http.post(route, {usernames: bannedUsernames}).then(
+      d => {
+        const usersDatas = d['data']
+        bannedUsernames.forEach(username => {
+          const name = usersDatas[username] ? `${usersDatas[username]['firstName']} ${usersDatas[username]['lastName']}` : username
+          const color = usersDatas[username] ? usersDatas[username]['color'] : null
+          this.UserService.addBannedUser(username, name, color)
+        })
+      }
+    )
+  }
+
+  manageManagementMessage (type, username, name, value) {
     if (type === 'unban-user') {
       this.UserService.removeBannedUser(username)
-      this.MessageService.addPresenceMessage(username, 'unbanned')
+      this.MessageService.addPresenceMessage(name, 'unbanned')
       this.refreshScope()
     }
   }
@@ -564,7 +592,8 @@ export default class ChatRoomService {
       const role = item.attr('role')
       color = (color === undefined) ? null : color
 
-      const name = (firstName !== undefined && lastName !== undefined) ? `${firstName} ${lastName}` : username
+      let name = (firstName !== undefined && lastName !== undefined) ? `${firstName} ${lastName}` : username
+      name = (name === username) ? this.UserService.getUserFullName(name) : name
 
       if (errorCode === '403') {
         console.log('Forbidden')
@@ -576,19 +605,26 @@ export default class ChatRoomService {
           this.config['myRole'] = role
           this.config['myAffiliation'] = affiliation
 
-          if (statusCode === '110' && type !== 'unavailable') {
-            this.config['connected'] = true
-            this.config['busy'] = false
-            this.config['myUsername'] = username
-            this.config['messageType'] = null
-            this.config['message'] = null
-            this.registerPresence('connection')
-            this.initializeRoleAndAffiliation()
+          if (statusCode === '110') {
 
-            if (this.config['canEdit'] && this.config['myAffiliation'] === 'admin') {
-              this.requestOutcastList()
+            if (type === 'unavailable') {
+              this.resetChatRoomDatas()
+              this.registerPresence('disconnection')
+            } else {
+              this.getRegisteredMessages()
+              this.config['connected'] = true
+              this.config['busy'] = false
+              this.config['myUsername'] = username
+              this.config['messageType'] = null
+              this.config['message'] = null
+              this.registerPresence('connection')
+              this.initializeRoleAndAffiliation()
+
+              if (this.config['canEdit'] && this.config['myAffiliation'] === 'admin') {
+                this.requestOutcastList()
+              }
+              this.refreshScope()
             }
-            this.refreshScope()
           } else if (statusCode === '301') {
             this.manageBannedStatus()
           } else if (statusCode === '307') {
@@ -596,7 +632,10 @@ export default class ChatRoomService {
           }
         } else {
           if (statusCode === '301') {
-            this.UserService.addBannedUser(username)
+            const userDatas = this.UserService.getUserDatas(username)
+            const userDatasName = userDatas['name'] ?  userDatas['name'] : username
+            const userDatasColor = userDatas['color'] ?  userDatas['color'] : null
+            this.UserService.addBannedUser(username, userDatasName, userDatasColor)
             this.MessageService.addPresenceMessage(name, 'banned')
           } else if (statusCode === '307') {
             this.MessageService.addPresenceMessage(name, 'kicked')
@@ -605,9 +644,17 @@ export default class ChatRoomService {
 
         if (type === 'unavailable') {
           this.UserService.removeUser(username, statusCode)
+
+          if (statusCode !== '301' && statusCode === '307') {
+            this.MessageService.addPresenceMessage(name, 'disconnection')
+          }
           this.refreshScope()
         } else {
-          this.UserService.addUser(username, name, color, affiliation, role)
+          const added = this.UserService.addUser(username, name, color, affiliation, role)
+
+          if (added) {
+            this.MessageService.addPresenceMessage(name, 'connection')
+          }
           this.refreshScope()
         }
       }
@@ -644,8 +691,9 @@ export default class ChatRoomService {
           } else if (status === 'management') {
             const type =  datas.attr('type')
             const user = datas.attr('username')
+            const userFullName = datas.attr('name')
             const value =  datas.attr('value');
-            this.manageManagementMessage(type, user, value)
+            this.manageManagementMessage(type, user, userFullName, value)
           } else if (username !== this.config['myUsername']) {
             const firstName = datas.attr('firstName')
             const lastName = datas.attr('lastName')
@@ -687,31 +735,27 @@ export default class ChatRoomService {
     if (type === 'result') {
       if (id === 'room-outcast-list') {
         const items = $(iq).find('item')
-        //console.log(items)
+        let bannedUsernames = []
 
         for (let i = 0; i < items.length; i++) {
-          //console.log(items[i])
           const jid = $(items[i]).attr('jid')
-          //console.log(jid)
           const username = Strophe.getNodeFromJid(jid)
-          this.UserService.addBannedUser(username)
+          bannedUsernames.push(username)
         }
-        //items.each(item => {
-        //  console.log(item)
-        //  const jid = item.attr('jid')
-        //  const username = Strophe.getNodeFromJid(jid)
-        //  this.UserService.addBannedUser(username)
-        //})
+        this.manageBannedUsers(bannedUsernames)
         this.refreshScope()
-        //console.log(this.UserService.getBannedUsers())
       } else if (id.substring(0, 4) === 'ban-') {
         const username = id.substring(4, id.length)
-        this.UserService.addBannedUser(username)
+        const userDatas = this.UserService.getUserDatas(username)
+        const userDatasName = userDatas['name'] ?  userDatas['name'] : username
+        const userDatasColor = userDatas['color'] ?  userDatas['color'] : null
+        this.UserService.addBannedUser(username, userDatasName, userDatasColor)
         this.refreshScope()
       } else if (id.substring(0, 6) === 'unban-') {
         const username = id.substring(6, id.length)
-        this.registerPresence('unbanned', username, username)
-        this.sendUnbanMessage(username)
+        const name = this.UserService.getBannedUserFullName(username)
+        this.registerPresence('unbanned', username, name)
+        this.sendUnbanMessage(username, name)
       }
     }
 

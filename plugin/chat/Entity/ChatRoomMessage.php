@@ -133,4 +133,20 @@ class ChatRoomMessage
     {
         $this->type = $type;
     }
+
+    public function getTypeText()
+    {
+        $typeText = '';
+
+        switch ($this->type) {
+            case self::MESSAGE :
+                $typeText = 'message';
+                break;
+            case self::PRESENCE :
+                $typeText = 'presence';
+                break;
+        }
+
+        return $typeText;
+    }
 }

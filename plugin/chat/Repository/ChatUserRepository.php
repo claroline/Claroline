@@ -48,4 +48,17 @@ class ChatUserRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function findChatUsersByUsernames(array $usernames)
+    {
+        $dql = '
+            SELECT cu
+            FROM Claroline\ChatBundle\Entity\ChatUser cu
+            WHERE cu.chatUsername IN (:usernames)
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('usernames', $usernames);
+
+        return $query->getResult();
+    }
 }

@@ -15,23 +15,19 @@ export default class ChatRoomTextCtrl {
     this.chatRoomConfig = ChatRoomService.getConfig()
     this.xmppConfig = ChatRoomService.getXmppConfig()
     this.messages = ChatRoomService.getMessages()
+    this.oldMessages = ChatRoomService.getOldMessages()
     this.users = ChatRoomService.getUsers()
     this.bannedUsers = ChatRoomService.getBannedUsers()
     this.input = ''
     this.initialize()
+  }
 
+  initialize () {
     $(window).unload(($event) => {
       $event.preventDefault()
       console.log('Disconnecting...')
       this.ChatRoomService.disconnectFromRoom()
     })
-  }
-
-  initialize () {
-    console.log('*********** status text ***********')
-    console.log(this.xmppConfig)
-    console.log(this.chatRoomConfig)
-    console.log('*********** END status text ***********')
 
     if (!this.chatRoomConfig['connected']) {
       this.ChatRoomService.connectToRoom()
@@ -71,6 +67,7 @@ export default class ChatRoomTextCtrl {
   }
 
   goBack () {
+    this.ChatRoomService.disconnectFromRoom()
     this.$state.transitionTo(
       'main',
       {},

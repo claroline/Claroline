@@ -23,13 +23,17 @@ export default class UserService {
 
   addUser (username, name, color = null, affiliation = null, role = null) {
     const index = this.users.findIndex(u => u['username'] === username)
+    let added = false
 
     if (index === -1) {
       this.users.push({username: username, name: name, color: color, affiliation: affiliation, role: role})
+      added = true
     } else {
       this.users[index]['affiliation'] = affiliation
       this.users[index]['role'] = role
     }
+
+    return added
   }
 
   removeUser (username, statusCode = 0) {
@@ -40,16 +44,16 @@ export default class UserService {
     }
   }
 
-  addBannedUser (username) {
-    const index = this.bannedUsers.findIndex(u => u === username)
+  addBannedUser (username, name, color = null) {
+    const index = this.bannedUsers.findIndex(u => u['username'] === username)
 
     if (index === -1) {
-      this.bannedUsers.push(username)
+      this.bannedUsers.push({username: username, name: name, color: color})
     }
   }
 
   removeBannedUser (username) {
-    const index = this.bannedUsers.findIndex(u => u === username)
+    const index = this.bannedUsers.findIndex(u => u['username'] === username)
 
     if (index > -1) {
       this.bannedUsers.splice(index, 1)
@@ -60,9 +64,39 @@ export default class UserService {
     return this.users.findIndex(u => u['username'] === username) > -1
   }
 
+  hasBannedUser (username) {
+    return this.bannedUsers.findIndex(u => u['username'] === username) > -1
+  }
+
   getUserFullName (username) {
     const index = this.users.findIndex(u => u['username'] === username)
 
     return index > -1 ? this.users[index]['name'] : username
+  }
+
+  getBannedUserFullName (username) {
+    const index = this.bannedUsers.findIndex(u => u['username'] === username)
+
+    return index > -1 ? this.bannedUsers[index]['name'] : username
+  }
+
+  getUserDatas (username) {
+    const index = this.users.findIndex(u => u['username'] === username)
+
+    return index > -1 ? this.users[index] : null
+  }
+
+  getBannedUserDatas (username) {
+    const index = this.bannedUsers.findIndex(u => u['username'] === username)
+
+    return index > -1 ? this.bannedUsers[index] : null
+  }
+
+  emptyUsers () {
+    this.users.splice(0, this.users.length)
+  }
+
+  emptyBannedUsers () {
+    this.bannedUsers.splice(0, this.bannedUsers.length)
   }
 }

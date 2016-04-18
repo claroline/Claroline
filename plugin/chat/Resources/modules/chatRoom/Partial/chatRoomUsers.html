@@ -71,13 +71,13 @@
             {{ 'banned_users'|trans:{}:'chat' }}
             <span class="badge">{{ crc.bannedUsers.length }}</span>
         </h4>
-        <span ng-repeat="username in crc.bannedUsers" class="banned-user">
-            {{ username }}
+        <span ng-repeat="bannedUser in crc.bannedUsers" class="banned-user">
+            {{ bannedUser['name'] }}
             <i class="fa fa-thumbs-up pointer-hand chat-room-unban-btn"
                data-toggle="tooltip"
                data-placement="top"
                title="{{ 'cancel_ban'|trans:{}:'chat' }}"
-               ng-click="crc.unbanUser(username)"
+               ng-click="crc.unbanUser(bannedUser['username'])"
             >
             </i>
             <br>

@@ -166,10 +166,20 @@ class ChatManager
         return $users;
     }
 
+    public function getChatUsersByUsernames(array $usernames)
+    {
+        return count($usernames) > 0 ? $this->chatUserRepo->findChatUsersByUsernames($usernames) : array();
+    }
+
 
     /***********************************************
      * Access to ChatRoomMessageRepository methods *
      ***********************************************/
+
+    public function getMessagesByChatRoom(ChatRoom $chatRoom)
+    {
+        return $this->chatRoomMessageRepo->findMessagesByChatRoom($chatRoom);
+    }
 
     public function getChatRoomParticipantsName(ChatRoom $chatRoom)
     {

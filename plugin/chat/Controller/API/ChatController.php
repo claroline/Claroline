@@ -184,6 +184,82 @@ class ChatController extends FOSRestController
         $this->chatManager->saveChatRoomMessage($chatRoom, $username, $fullName, $message, ChatRoomMessage::MESSAGE);
     }
 
+    /**
+     * @View(serializerGroups={"api_chat"})
+     * @ApiDoc(
+     *     description="Get users infos by usernames",
+     *     views = {"chat"}
+     * )
+     */
+    public function postChatUsersInfosAction(Request $request)
+    {
+        $datas = array();
+        $usernames = $request->request->get('usernames', false);
+        $chatUsers = $this->chatManager->getChatUsersByUsernames($usernames);
+
+        foreach ($chatUsers as $chatUser) {
+            $chatUsername = $chatUser->getChatUsername();
+            $user = $chatUser->getUser();
+            $options = $chatUser->getOptions();
+            $color = isset($options['color']) ? $options['color'] : null;
+            $datas[$chatUsername] = array(
+                'username' => $chatUsername,
+                'firstName' => $user->getFirstName(),
+                'lastName' => $user->getLastName(),
+                'color' => $color
+            );
+        }
+
+        return $datas;
+    }
+
+    /**
+     * @View(serializerGroups={"api_chat"})
+     * @ApiDoc(
+     *     description="Get registered messages",
+     *     views = {"chat"}
+     * )
+     */
+    public function getRegisteredMessagesAction(ChatRoom $chatRoom)
+    {
+        $datas = array();
+        $names = array();
+        $usernames = array();
+        $colors = array();
+        $messages = $this->chatManager->getMessagesByChatRoom($chatRoom);
+
+        foreach ($messages as $message) {
+            $username = $message->getUsername();
+
+            if (!isset($names[$username])) {
+                $names[$username] = $username;
+                $usernames[] = $username;
+            }
+        }
+        $chatUsers = $this->chatManager->getChatUsersByUsernames($usernames);
+
+        foreach ($chatUsers as $chatUser) {
+            $chatUsername = $chatUser->getChatUsername();
+            $options = $chatUser->getOptions();
+            $colors[$chatUsername] = isset($options['color']) ? $options['color'] : null;
+        }
+
+        foreach ($messages  as $message) {
+            $username = $message->getUsername();
+            $color = isset($colors[$username]) ? $colors[$username] : null;
+            $datas[] = array(
+                'username' => $username,
+                'userFullName' => $message->getUserFullName(),
+                'creationDate' => $message->getCreationDate(),
+                'type' => $message->getTypeText(),
+                'content' => $message->getContent(),
+                'color' => $color
+            );
+        }
+
+        return $datas;
+    }
+
     private function checkChatRoomRight(ChatRoom $chatRoom, $right)
     {
         $collection = new ResourceCollection(array($chatRoom->getResourceNode()));

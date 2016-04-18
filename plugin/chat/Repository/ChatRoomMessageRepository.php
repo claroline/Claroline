@@ -16,6 +16,20 @@ use Doctrine\ORM\EntityRepository;
 
 class ChatRoomMessageRepository extends EntityRepository
 {
+    public function findMessagesByChatRoom(ChatRoom $chatRoom)
+    {
+        $dql = '
+            SELECT crm
+            FROM Claroline\ChatBundle\Entity\ChatRoomMessage crm
+            WHERE crm.chatRoom = :chatRoom
+            ORDER BY crm.creationDate ASC
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('chatRoom', $chatRoom);
+
+        return $query->getResult();
+    }
+
     public function findChatRoomParticipantsName(ChatRoom $chatRoom)
     {
         $dql = '
