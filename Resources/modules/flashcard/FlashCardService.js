@@ -24,9 +24,22 @@ export default class FlashCardService {
   }
 
   findAllNoteType () {
-    return this.$http.get(
-      Routing.generate('claroline_getall_note_type')
-    )
+    const url = Routing.generate('claroline_getall_note_type')
+    return this.$http.get(url)
+  }
+
+  findNewCardToLearn (deck) {
+    const url = Routing.generate('claroline_new_card_to_learn', {
+      deck: deck.id
+    })
+    return this.$http.get(url)
+  }
+
+  findCardToLearn (deck) {
+    const url = Routing.generate('claroline_card_to_review', {
+      deck: deck.id
+    })
+    return this.$http.get(url)
   }
 
   createNote (noteType, fields) {

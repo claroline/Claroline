@@ -19,6 +19,9 @@ export default class FlashCardCtrl {
     this.noteTypeChoosenId = 0
     this.noteTypeChoosen = null
     this.fieldValues = []
+    this.newCards = []
+    this.learingCards = []
+
     this.editedMark = {}
     this.createdMark = {}
     this.importFile = null
@@ -30,6 +33,8 @@ export default class FlashCardCtrl {
     this._modalInstance = null
 
     service.findAllNoteType().then(d => this.noteTypes = d.data)
+    service.findNewCardToLearn(this.deck).then(d => this.newCards = d.data)
+    service.findCardToLearn(this.deck).then(d => this.learningCards = d.data)
   }
 
   displayNoteCreationForm () {
@@ -50,7 +55,10 @@ export default class FlashCardCtrl {
       }
 
       this._service.createNote(this.noteTypeChoosen, fields).then(
-        d => { this.deck.notes.push(d.data) },
+        d => { 
+          this.deck.notes.push(d.data)
+          this.newCards = service.findNewCardToLearn(this.deck)
+        },
         () => {
           // Must do something to delete the created note in this controller
           // but for the moment the created note is not added to the

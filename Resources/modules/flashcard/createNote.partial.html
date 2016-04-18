@@ -13,7 +13,9 @@
   </div>
   <div class="modal-body">
     <div class="form-group"
-         data-ng-class="{ 'has-error': (createNoteForm.$submitted || createNoteForm.user.$dirty) && !createNoteForm.user.$valid }">
+         data-ng-class="{ 'has-error': 
+         (createNoteForm.$submitted || createNoteForm.user.$dirty) && 
+         !createNoteForm.user.$valid }">
       <label for="note-type">{{ 'note_type'|trans }}</label>
       <select id="note-type"
               class="form-control"
@@ -28,11 +30,13 @@
         </option>
       </select>
       <p class="help-block"
-         data-ng-if="(createNoteForm.$submitted || createNoteForm.user.$dirty) && createNoteForm.user.$error.required">
+         data-ng-if="(createNoteForm.$submitted || createNoteForm.user.$dirty) && 
+         createNoteForm.user.$error.required">
         {{ 'errors.not_blank'|trans:'results' }}
       </p>
       <p class="help-block"
-         data-ng-if="(createNoteForm.$submitted || createNoteForm.user.$dirty) && createNoteForm.user.$error.validUser">
+         data-ng-if="(createNoteForm.$submitted || createNoteForm.user.$dirty) && 
+         createNoteForm.user.$error.validUser">
         {{ 'errors.unknown_user'|trans:'results' }}
       </p>
     </div>
@@ -47,9 +51,9 @@
              data-ng-model="vm.fieldValues[$index]"
              required />
       <p class="help-block"
-         data-ng-if="(createNoteForm.$submitted
-         || createNoteForm.fieldValues[$index].$dirty)
-         && createNoteForm.fieldValues[$index].$error.required">
+         data-ng-if="(createNoteForm.$submitted ||
+         createNoteForm.fieldValues[$index].$dirty) &&
+         createNoteForm.fieldValues[$index].$error.required">
         {{ 'errors.not_blank'|trans:'flashcard' }}
       </p>
     </div>

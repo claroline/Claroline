@@ -9,3 +9,7 @@ claro_note_type:
 claro_note:
     resource: "@ClarolineFlashCardBundle/Controller/NoteController.php"
     type: annotation
+
+claro_card:
+    resource: "@ClarolineFlashCardBundle/Controller/CardLearningController.php"
+    type: annotation

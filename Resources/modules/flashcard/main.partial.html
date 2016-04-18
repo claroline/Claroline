@@ -1,22 +1,44 @@
 <div class="panel-body" >
+<h1>Débug</h1>
 {{ vm.deck.id }}
 {{ vm.deckNode.name }}
+<pre>
 {{ vm.deck }}
+</pre>
+
+<pre>
+{{ vm.noteTypes }}
+</pre>
+
+<pre>
+{{ vm.newCards.length }}
+</pre>
+
+<pre>
+{{ vm.learningCards }}
+</pre>
+
+<hr/>
+
   <table class="table table-condensed table-bordered"
-         data-ng-if="vm.results.length > 0">
+         data-ng-if="vm.learningCards.length > 0 ||
+         vm.newCards.length > 0">
     <thead>
       <tr>
-        <th>{{ 'name'|trans }}</th>
-        <th>{{ 'mark'|trans:'flashcard' }}</th>
-        <th>{{ 'total'|trans }}</th>
+        <th>{{ 'new_cards'|trans:'flashcard' }}</th>
+        <th>{{ 'card_failed'|trans:'flashcard' }}</th>
+        <th>{{ 'card_to_review'|trans:'flashcard' }}</th>
+        <!--
         <th colspan="2" data-ng-if="!vm.isReadOnly"></th>
+        -->
       </tr>
     </thead>
     <tbody>
-      <tr data-ng-repeat="result in vm.results track by result.markId">
-        <td>{{ result.name }}</td>
-        <td>{{ result.mark }}</td>
-        <td>{{ vm.max }}</td>
+      <tr>
+        <td>{{ vm.newCards.length }}</td>
+        <td></td>
+        <td>{{ vm.learningCards.length }}</td>
+        <!--
         <td style="text-align: center" data-ng-if="!vm.isReadOnly">
           <a href="#"
              aria-label="{{ 'edit'|trans }}"
@@ -39,12 +61,14 @@
             <i class="fa fa-remove"></i>
           </a>
         </td>
+        -->
       </tr>
     </tbody>
   </table>
 
   <div class="alert alert-info"
-       data-ng-if="vm.results.length == 0">
+       data-ng-if="vm.learningCards.length == 0 &&
+       vm.newCards.length == 0">
     <i class="fa fa-info-circle"></i>
     {{ 'deck.empty'|trans:'flashcard' }}
   </div>
@@ -53,11 +77,11 @@
 <div class="panel-footer" data-ng-if="!vm.isReadOnly">
   <button class="btn btn-primary"
           data-ng-click="">
-    {{ 'parameters'|trans:'flashcard' }}
+    {{ 'default_parameters'|trans:'flashcard' }}
   </button>
   <button class="btn btn-primary"
           data-ng-click="">
-    {{ 'default_parameters'|trans:'flashcard' }}
+    {{ 'parameters'|trans:'flashcard' }}
   </button>
   <button class="btn btn-primary"
           data-ng-click="">
@@ -69,6 +93,6 @@
   </button>
   <button class="btn btn-primary"
           data-ng-click="vm.displayNoteCreationForm()">
-    {{ 'notes.add'|trans:'flashcard' }}
+    {{ 'cards.add'|trans:'flashcard' }}
   </button>
 </div>
