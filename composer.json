@@ -4,14 +4,14 @@
     "license": "GPL-3.0+",
     "require": {
         "php": ">=5.5",
-        "claroline/distribution": "dev-master",
-        "mockery/mockery": "^0.9.4"
+        "claroline/distribution": "dev-master"
     },
     "require-dev": {
         "fabpot/php-cs-fixer": "^1.10",
         "mikey179/vfsStream": "~1.5",
         "phpunit/phpunit": "~4.6",
-        "symfony/phpunit-bridge": "*"
+        "symfony/phpunit-bridge": "*",
+        "mockery/mockery": "^0.9.4"
     },
     "scripts": {
         "fast-install" : [
