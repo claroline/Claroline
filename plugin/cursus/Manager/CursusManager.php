@@ -1728,7 +1728,7 @@ class CursusManager
         $json = $this->serializer->serialize(
             $courses,
             'json',
-            SerializationContext::create()->setGroups(array('api'))
+            SerializationContext::create()->setGroups(array('api_cursus'))
         );
         $archive->addFromString('courses.json', $json);
 
@@ -1750,7 +1750,7 @@ class CursusManager
         $cursusJson = $this->serializer->serialize(
             $cursusList,
             'json',
-            SerializationContext::create()->setGroups(array('api'))
+            SerializationContext::create()->setGroups(array('api_cursus'))
         );
         $archive->addFromString('cursus.json', $cursusJson);
 
