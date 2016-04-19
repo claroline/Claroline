@@ -9,6 +9,7 @@
  *
  * Date: 11/18/15
  */
+
 namespace Claroline\CoreBundle\Twig;
 
 use JMS\DiExtraBundle\Annotation as DI;

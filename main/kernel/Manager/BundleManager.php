@@ -41,16 +41,17 @@ class BundleManager
         );
     }
 
-    public function getActiveBundles()
+    public function getActiveBundles($fetchAll = false)
     {
         $entries = parse_ini_file($this->bundlesFile);
         $activeBundles = array();
         $configProviderBundles = array();
         $nonAutoConfigurableBundles = array();
         $environment = $this->getEnvironment();
+        $updateMode = file_exists($this->kernel->getRootDir().'/config/.update');
 
         foreach ($entries as $bundleClass => $isActive) {
-            if ($isActive && $bundleClass !== 'Claroline\KernelBundle\ClarolineKernelBundle') {
+            if (($isActive || $fetchAll || $updateMode) && $bundleClass !== 'Claroline\KernelBundle\ClarolineKernelBundle') {
                 $bundle = new $bundleClass($this->kernel);
 
                 if ($bundle instanceof ConfigurationProviderInterface) {

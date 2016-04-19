@@ -31,11 +31,13 @@ class FileSystem extends Fs
         $iterator = new \DirectoryIterator($path);
 
         foreach ($iterator as $el) {
-            if ($el->isDir()) {
-                $this->rmdir($el->getRealPath(), $recursive);
-            }
-            if ($el->isFile()) {
-                $this->remove($el->getRealPath());
+            if (!$el->isDot()) {
+                if ($el->isDir()) {
+                    $this->rmdir($el->getRealPath(), $recursive);
+                }
+                if ($el->isFile()) {
+                    $this->remove($el->getRealPath());
+                }
             }
         }
     }

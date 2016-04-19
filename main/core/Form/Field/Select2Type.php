@@ -8,6 +8,7 @@
  *
  * Date: 2/1/16
  */
+
 namespace Claroline\CoreBundle\Form\Field;
 
 use Symfony\Component\Form\AbstractType;

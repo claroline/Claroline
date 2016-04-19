@@ -103,6 +103,8 @@ class DatabaseWriter
         $this->em->persist($pluginEntity);
         $this->persistConfiguration($pluginConfiguration, $pluginEntity, $pluginBundle);
         $this->em->flush();
+
+        return $pluginEntity;
     }
 
     /**
@@ -121,15 +123,18 @@ class DatabaseWriter
             )
         );
 
+        $plugin->setDescription($pluginBundle->getDescription());
+
         if (null === $plugin) {
             throw new \Exception('Unable to retrieve plugin for updating its configuration.');
         }
 
         $plugin->setHasOptions($pluginConfiguration['has_options']);
-
         $this->em->persist($plugin);
         $this->updateConfiguration($pluginConfiguration, $plugin, $pluginBundle);
         $this->em->flush();
+
+        return $plugin;
     }
 
     /**

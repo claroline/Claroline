@@ -25,4 +25,6 @@ interface PluginBundleInterface extends BundleInterface, AutoConfigurableInterfa
     public function getConfigFile();
     public function getImgFolder();
     public function getAssetsFolder();
+    public function getRequiredPhpExtensions();
+    public function getRequiredPlugins();
 }

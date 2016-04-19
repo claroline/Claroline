@@ -19,13 +19,27 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Repository\Exception\UnknownFilterException;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Repository for AbstractResource entities. The methods of this class may return
  * entities either as objects or as as arrays (see their respective documentation).
  */
-class ResourceNodeRepository extends MaterializedPathRepository
+class ResourceNodeRepository extends MaterializedPathRepository implements ContainerAwareInterface
 {
+    private $container;
+    private $builder;
+    private $bundles = [];
+
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+        $bundles = $this->container->get('claroline.manager.plugin_manager')->getEnabled(true);
+        $this->builder = new ResourceQueryBuilder();
+        $this->builder->setBundles($bundles);
+    }
+
     public function find($id)
     {
         $dql = '
@@ -47,12 +61,11 @@ class ResourceNodeRepository extends MaterializedPathRepository
      */
     public function findWorkspaceRoot(Workspace $workspace)
     {
-        $builder = new ResourceQueryBuilder();
-        $builder->selectAsEntity()
+        $this->builder->selectAsEntity()
             ->whereInWorkspace($workspace)
             ->whereParentIsNull();
-        $query = $this->_em->createQuery($builder->getDql());
-        $query->setParameters($builder->getParameters());
+        $query = $this->_em->createQuery($this->builder->getDql());
+        $query->setParameters($this->builder->getParameters());
 
         return $query->getOneOrNullResult();
     }
@@ -71,16 +84,15 @@ class ResourceNodeRepository extends MaterializedPathRepository
         $includeStartNode = false,
         $filterResourceType = null
     ) {
-        $builder = new ResourceQueryBuilder();
-        $builder->selectAsEntity(true)
+        $this->builder->selectAsEntity(true)
             ->wherePathLike($resource->getPath(), $includeStartNode);
 
         if ($filterResourceType) {
-            $builder->whereTypeIn(array($filterResourceType));
+            $this->builder->whereTypeIn(array($filterResourceType));
         }
 
-        $query = $this->_em->createQuery($builder->getDql());
-        $query->setParameters($builder->getParameters());
+        $query = $this->_em->createQuery($this->builder->getDql());
+        $query->setParameters($this->builder->getParameters());
 
         return $this->executeQuery($query, null, null, false);
     }
@@ -109,19 +121,18 @@ class ResourceNodeRepository extends MaterializedPathRepository
             throw new \RuntimeException('Roles cannot be empty');
         }
 
-        $builder = new ResourceQueryBuilder();
         $returnedArray = array();
 
         $isWorkspaceManager = $this->isWorkspaceManager($parent, $roles);
         //check if manager of the workspace.
         //if it's true, show every children
         if ($isWorkspaceManager) {
-            $builder->selectAsArray()
+            $this->builder->selectAsArray()
                 ->whereParentIs($parent)
                 ->whereActiveIs(true)
                 ->orderByIndex();
-            $query = $this->_em->createQuery($builder->getDql());
-            $query->setParameters($builder->getParameters());
+            $query = $this->_em->createQuery($this->builder->getDql());
+            $query->setParameters($this->builder->getParameters());
             $items = $query->iterate(null, AbstractQuery::HYDRATE_ARRAY);
 
             foreach ($items as $key => $item) {
@@ -130,14 +141,14 @@ class ResourceNodeRepository extends MaterializedPathRepository
             }
         //otherwise only show visible children
         } else {
-            $builder->selectAsArray(true)
+            $this->builder->selectAsArray(true)
                 ->whereParentIs($parent)
                 ->whereActiveIs(true)
                 ->whereHasRoleIn($roles)
                 ->whereIsAccessible($user);
 
-            $query = $this->_em->createQuery($builder->getDql());
-            $query->setParameters($builder->getParameters());
+            $query = $this->_em->createQuery($this->builder->getDql());
+            $query->setParameters($this->builder->getParameters());
 
             $children = $this->executeQuery($query);
             $childrenWithMaxRights = array();
@@ -165,17 +176,17 @@ class ResourceNodeRepository extends MaterializedPathRepository
         //We can't do one request because of the left join + max combination
 
         if ($withLastOpenDate && $user !== 'anon.') {
-            $builder->selectAsArray(false, true)
+            $this->builder->selectAsArray(false, true)
                 ->whereParentIs($parent)
                 ->addLastOpenDate($user)
                 ->groupById();
 
             if (!$isWorkspaceManager) {
-                $builder->whereHasRoleIn($roles)->whereIsAccessible($user);
+                $this->builder->whereHasRoleIn($roles)->whereIsAccessible($user);
             }
 
-            $query = $this->_em->createQuery($builder->getDql());
-            $query->setParameters($builder->getParameters());
+            $query = $this->_em->createQuery($this->builder->getDql());
+            $query->setParameters($this->builder->getParameters());
             $items = $this->executeQuery($query);
 
             foreach ($returnedArray as $key => $returnedElement) {
@@ -199,14 +210,13 @@ class ResourceNodeRepository extends MaterializedPathRepository
      */
     public function findWorkspaceRootsByUser(User $user)
     {
-        $builder = new ResourceQueryBuilder();
-        $dql = $builder->selectAsArray()
+        $dql = $this->builder->selectAsArray()
             ->whereParentIsNull()
             ->whereInUserWorkspace($user)
             ->orderByPath()
             ->getDql();
         $query = $this->_em->createQuery($dql);
-        $query->setParameters($builder->getParameters());
+        $query->setParameters($this->builder->getParameters());
 
         return $this->executeQuery($query);
     }
@@ -220,15 +230,14 @@ class ResourceNodeRepository extends MaterializedPathRepository
      */
     public function findWorkspaceRootsByRoles(array $roles)
     {
-        $builder = new ResourceQueryBuilder();
-        $dql = $builder->selectAsArray()
+        $dql = $this->builder->selectAsArray()
             ->whereParentIsNull()
             ->whereHasRoleIn($roles)
             ->orderByName()
             ->getDql();
 
         $query = $this->_em->createQuery($dql);
-        $query->setParameters($builder->getParameters());
+        $query->setParameters($this->builder->getParameters());
 
         return $this->executeQuery($query);
     }
@@ -274,8 +283,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
      */
     public function findByCriteria(array $criteria, array $roles = null, $isRecursive = false)
     {
-        $builder = new ResourceQueryBuilder();
-        $builder->selectAsArray();
+        $this->builder->selectAsArray();
 
         if ($isRecursive) {
             $shortcuts = $this->findRecursiveDirectoryShortcuts($criteria, $roles);
@@ -291,10 +299,10 @@ class ResourceNodeRepository extends MaterializedPathRepository
             $criteria['roots'] = $finalRoots;
         }
 
-        $this->addFilters($builder, $criteria, $roles);
-        $dql = $builder->orderByPath()->getDql();
+        $this->addFilters($this->builder, $criteria, $roles);
+        $dql = $this->builder->orderByPath()->getDql();
         $query = $this->_em->createQuery($dql);
-        $query->setParameters($builder->getParameters());
+        $query->setParameters($this->builder->getParameters());
         $resources = $query->getResult();
 
         return $resources;
@@ -377,12 +385,11 @@ class ResourceNodeRepository extends MaterializedPathRepository
      */
     public function findRecursiveDirectoryShortcuts(array $criteria, array $roles = null, $alreadyFound = array())
     {
-        $builder = new ResourceQueryBuilder();
-        $builder->selectAsArray();
-        $this->addFilters($builder, $criteria, $roles);
-        $dql = $builder->whereIsShortcut()->getDql();
+        $this->builder->selectAsArray();
+        $this->addFilters($this->builder, $criteria, $roles);
+        $dql = $this->builder->whereIsShortcut()->getDql();
         $query = $this->_em->createQuery($dql);
-        $query->setParameters($builder->getParameters());
+        $query->setParameters($this->builder->getParameters());
         $results = $query->getResult();
 
         foreach ($results as $result) {
@@ -399,22 +406,21 @@ class ResourceNodeRepository extends MaterializedPathRepository
 
     public function findByMimeTypeAndParent($mimeType, ResourceNode $parent, array $roles)
     {
-        $builder = new ResourceQueryBuilder();
         if (!$this->isWorkspaceManager($parent, $roles)) {
-            $dql = $builder->selectAsEntity(false, 'Claroline\CoreBundle\Entity\Resource\File')
+            $dql = $this->builder->selectAsEntity(false, 'Claroline\CoreBundle\Entity\Resource\File')
                 ->whereParentIs($parent)
                 ->whereMimeTypeIs('%'.$mimeType.'%')
                 ->whereHasRoleIn($roles)
                 ->getDql();
         } else {
-            $dql = $builder->selectAsEntity(false, 'Claroline\CoreBundle\Entity\Resource\File')
+            $dql = $this->builder->selectAsEntity(false, 'Claroline\CoreBundle\Entity\Resource\File')
                 ->whereParentIs($parent)
                 ->whereMimeTypeIs('%'.$mimeType.'%')
                 ->getDql();
         }
 
         $query = $this->_em->createQuery($dql);
-        $query->setParameters($builder->getParameters());
+        $query->setParameters($this->builder->getParameters());
         $resources = $query->getResult();
 
         return $resources;

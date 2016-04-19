@@ -1232,3 +1232,12 @@ edit_organization: Edit organization
 coordinates: Coordinates
 address: Address
 csv_delete: Csv suppression
+plugins: Plugins
+activate: Activate
+version: Version
+origin: Origin
+cache_management: Cache management
+cache_management_explanation: Your must empty your app/cache directory to finalize these changes.
+required_by: Required by:
+require: Require:
+requirement_warning: Requierment warning

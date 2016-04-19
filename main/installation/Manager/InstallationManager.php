@@ -58,7 +58,7 @@ class InstallationManager
 
     public function install(InstallableInterface $bundle, $requiredOnly = true)
     {
-        $this->log(sprintf('<comment>Installing %s...</comment>', $bundle->getName()));
+        $this->log(sprintf('<comment>Installing %s %s... </comment>', $bundle->getName(), $bundle->getVersion()));
         $additionalInstaller = $this->getAdditionalInstaller($bundle);
 
         if ($additionalInstaller) {

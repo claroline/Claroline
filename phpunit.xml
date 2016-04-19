@@ -23,8 +23,8 @@
             <!--
             <directory>main/*/Tests/</directory>
             <directory>plugin/*/Tests/</directory>
+            <directory>main/core/Tests/API/Admin</directory>
             -->
-
             <!-- Uncomment the following elements individually in the meantime -->
 
             <directory>main/core/Tests/API/</directory>

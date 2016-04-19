@@ -266,6 +266,11 @@ claro_admin_i18n:
     prefix: admin/i18n
     type: annotation
 
+claro_admin_plugin:
+    resource: "@ClarolineCoreBundle/Controller/Administration/PluginController.php"
+    prefix: admin/plugins
+    type: annotation
+
 claro_api:
     resource: "@ClarolineCoreBundle/Controller/API/User/ApiController.php"
     prefix: api
@@ -318,6 +323,14 @@ claro_parameters_api:
     resource: "@ClarolineCoreBundle/Controller/API/Admin/ParametersController.php"
     type: rest
     prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
+
+claro_plugin_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Admin/PluginController.php"
+    prefix: api
+    type: rest
     defaults: {_format: json}
     options:
         expose: true
@@ -387,4 +400,3 @@ claro_admin_widget:
     prefix: admin/widget
     resource: "@ClarolineCoreBundle/Controller/Administration/WidgetController.php"
     type: annotation
-

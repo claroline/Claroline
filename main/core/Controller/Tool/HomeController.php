@@ -31,6 +31,7 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WidgetManager;
+use Claroline\CoreBundle\Manager\PluginManager;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactory;
@@ -63,6 +64,7 @@ class HomeController extends Controller
     private $userManager;
     private $utils;
     private $widgetManager;
+    private $bundleManager;
 
     /**
      * @DI\InjectParams({
@@ -77,6 +79,7 @@ class HomeController extends Controller
      *     "tokenStorage"       = @DI\Inject("security.token_storage"),
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
      *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
+     *     "bundleManager"      = @DI\Inject("claroline.manager.plugin_manager"),
      *     "utils"              = @DI\Inject("claroline.security.utilities"),
      *     "widgetManager"      = @DI\Inject("claroline.manager.widget_manager")
      * })
@@ -94,7 +97,8 @@ class HomeController extends Controller
         ToolManager $toolManager,
         UserManager $userManager,
         Utilities $utils,
-        WidgetManager $widgetManager
+        WidgetManager $widgetManager,
+        PluginManager $bundleManager
     ) {
         $this->em = $em;
         $this->eventDispatcher = $eventDispatcher;
@@ -109,6 +113,8 @@ class HomeController extends Controller
         $this->userManager = $userManager;
         $this->utils = $utils;
         $this->widgetManager = $widgetManager;
+        $this->bundleManager = $bundleManager;
+        $this->bundles = $bundleManager->getEnabled(true);
     }
 
     /**
@@ -319,7 +325,7 @@ class HomeController extends Controller
     public function desktopWidgetInstanceCreateFormAction(User $user, HomeTab $homeTab)
     {
         $instanceForm = $this->formFactory->create(
-            new WidgetInstanceType(true, true, $user->getEntityRoles()),
+            new WidgetInstanceType($this->bundles, true, true, $user->getEntityRoles()),
             new WidgetInstance()
         );
         $displayConfigForm = $this->formFactory->create(
@@ -354,7 +360,7 @@ class HomeController extends Controller
         $widgetDisplayConfig = new WidgetDisplayConfig();
 
         $instanceForm = $this->formFactory->create(
-            new WidgetInstanceType(true, true, $user->getEntityRoles()),
+            new WidgetInstanceType($this->bundles, true, true, $user->getEntityRoles()),
             $widgetInstance
         );
         $displayConfigForm = $this->formFactory->create(
@@ -533,7 +539,7 @@ class HomeController extends Controller
         $this->checkWorkspaceEditionAccess($workspace);
 
         $instanceForm = $this->formFactory->create(
-            new WidgetInstanceType(false),
+            new WidgetInstanceType($this->bundles, false),
             new WidgetInstance()
         );
         $widgetHomeTabConfigForm = $this->formFactory->create(
@@ -580,7 +586,7 @@ class HomeController extends Controller
         $widgetDisplayConfig = new WidgetDisplayConfig();
 
         $instanceForm = $this->formFactory->create(
-            new WidgetInstanceType(false),
+            new WidgetInstanceType($this->bundles, false),
             $widgetInstance
         );
         $widgetHomeTabConfigForm = $this->formFactory->create(

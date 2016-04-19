@@ -131,7 +131,7 @@ class WorkspaceController extends Controller
 
         $logManager = $this->get('claroline.log.manager');
 
-        $response = new StreamedResponse(function () use ($logManager,$workspace) {
+        $response = new StreamedResponse(function () use ($logManager, $workspace) {
 
             $results = $logManager->countByUserListForCSV('workspace', $workspace);
             $handle = fopen('php://output', 'w+');

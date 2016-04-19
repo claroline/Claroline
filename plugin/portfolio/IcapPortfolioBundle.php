@@ -42,6 +42,11 @@ class IcapPortfolioBundle extends PluginBundle implements ConfigurationProviderI
         return 'DataFixtures/Required';
     }
 
+    public function getRequiredPlugins()
+    {
+        return ['Claroline\\TeamBundle\\ClarolineTeamBundle'];
+    }
+
     public function getAdditionalInstaller()
     {
         return new AdditionalInstaller();
