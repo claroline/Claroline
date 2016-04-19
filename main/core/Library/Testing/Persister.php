@@ -52,20 +52,16 @@ class Persister
     {
         $roleUser = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
 
-        if (!$roleUser) {
-            $this->role('ROLE_USER');
-            $this->om->flush(); //we really need it
-        }
-
         $user = new User();
         $user->setFirstName($username);
         $user->setLastName($username);
         $user->setUsername($username);
         $user->setPassword($username);
         $user->setMail($username.'@mail.com');
-
-        //much better
-        $this->container->get('claroline.manager.user_manager')->createUser($user, false);
+        $user->setGuid(uniqid());
+        $user->addRole($roleUser);
+        $this->container->get('claroline.manager.role_manager')->createUserRole($user);
+        $this->om->persist($user);
 
         return $user;
     }
