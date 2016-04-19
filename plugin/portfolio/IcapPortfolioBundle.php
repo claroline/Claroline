@@ -27,6 +27,8 @@ class IcapPortfolioBundle extends PluginBundle implements ConfigurationProviderI
         $config = new ConfigurationBuilder();
         $emptyConfigs = array(
             'Innova\AngularJSBundle\InnovaAngularJSBundle',
+            'Innova\AngularUIResourcePickerBundle\InnovaAngularUIResourcePickerBundle',
+            'Innova\AngularUITinyMCEBundle\InnovaAngularUITinyMCEBundle',
         );
         if (in_array($bundleClass, $emptyConfigs)) {
             return $config;
