@@ -43,6 +43,7 @@ class WebsitePageRepository extends NestedTreeRepository{
                 resourceWorkspace.name AS resourceNodeWorkspace,
                 page.resourceNodeType,
                 page.url,
+                page.target,
                 page.richText,
                 page.root,
                 page.type
@@ -53,6 +54,8 @@ class WebsitePageRepository extends NestedTreeRepository{
                 page.visible,
                 page.title,
                 page.isSection,
+                page.url,
+                page.target,
                 page.left,
                 page.level,
                 page.right,

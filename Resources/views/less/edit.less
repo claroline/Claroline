@@ -30,7 +30,7 @@ div.content-container {
   float:right !important;
 }
 .loading {
-  position: absolute;
+  position: fixed;
   background-color: rgba(0, 0, 0, 0.8);
   background-image: url("../images/loading.gif");
   color: #bababa;
@@ -372,7 +372,7 @@ div.edit-menu-container {
         }
         .menu-dropdown-icon{
           display: inline-block;
-          width: 15px;
+          width: 10px;
           font-size: 15px;
           padding: 1px 1px;
           a{
@@ -448,9 +448,18 @@ div.ws-colorpicker{
   }
 }
 
-//Tinymce fullscreen
-div.mce-fullscreen{
+// Tinymce fullscreen
+div.mce-fullscreen {
   top:54px !important;
+}
+
+// Alert style
+div.alert {
+  position: fixed;
+  top: 60px;
+  width: 96%;
+  margin: 0 2%;
+  z-index: 1050;
 }
 
 

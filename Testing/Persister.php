@@ -14,6 +14,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Icap\WebsiteBundle\Entity\Website;
 
@@ -92,7 +93,7 @@ class Persister
      */
     public function website($title, User $creator)
     {
-        $website = new Website();
+        $website = new Website(true);
         if (!$this->websiteType) {
             $this->websiteType = new ResourceType();
             $this->websiteType->setName('icap_website');
@@ -113,5 +114,12 @@ class Persister
         $this->om->persist($node);
 
         return $website;
+    }
+
+    public function deleteWebsiteTestsFolder(Website $website)
+    {
+        $websiteUploadFolder = $website->getOptions()->getUploadRootDir();
+        $fs = new FileSystem();
+        $fs->remove($websiteUploadFolder);
     }
 }

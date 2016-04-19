@@ -38,7 +38,7 @@
         '<ul ng-class="{invisible: inactive}">' +
         '<li ng-repeat="item in menu.children" ng-mouseleave="menuLeave(item)" ng-mouseover="menuOver(item)" ng-style="getStyle(item)">' +
         '<i ng-if="item.children && item.children.length>0" ng-click="onSubmenuClicked(item, $event)" class="floatLeft iconSpacing" ng-class="options.groupIcon"></i>' +
-        '<a href="{{options.basePath+\'/\'+item.id}}" title="{{item.title}}" ng-click="options.onItemClick($event, item)">' +
+        '<a ng-href="{{options.buildHref(item)}}" target="{{!item.target?\'\':\'_blank\'}}" title="{{item.title}}" ng-click="options.onItemClick($event, item)">' +
         '<i ng-if="item.icon" class="floatRight" ng-class="item.icon"></i>' +
         '<span>{{item.title}}</span>' +
         '</a>' +
@@ -362,6 +362,9 @@
     preventItemClick: true,
     preventGroupItemClick: true,
     swipe: 'both',
+    buildHref: function () {
+
+    },
     onCollapseMenuStart: function () {
     },
     onCollapseMenuEnd: function () {

@@ -1,9 +1,11 @@
-import angular from 'angular/index'
-import httpInterceptorConfig from './http-interceptor.config'
-import httpInterceptorFactory from './http-interceptor.factory'
+import register from '../../utils/register'
+import requestInterceptorFactory from './request-interceptor.factory'
 import requestHandlerFactory from './request-handler.factory'
+import alertFactory from './alert.factory'
 
-angular.module('blocks.httpInterceptor', [])
-  .config(httpInterceptorConfig)
-  .factory('httpInterceptor', httpInterceptorFactory)
+let registerApp = new register('blocks.httpInterceptor', [])
+registerApp
   .factory('requestHandler', requestHandlerFactory)
+  .factory('httpInterceptor', requestInterceptorFactory)
+  .factory('$alert', alertFactory)
+  .config(['$httpProvider', ($httpProvider) => { $httpProvider.interceptors.push('httpInterceptor') }])

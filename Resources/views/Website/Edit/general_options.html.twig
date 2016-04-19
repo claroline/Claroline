@@ -5,25 +5,29 @@
             <div>
                 <input id="full-screen-set-option" type="radio" data-ng-model="vm.options.isFullScreen" data-ng-value="true"> <label for="full-screen-set-option" class="normal-text">{{ 'full_scr'|trans({},'icap_website') }}</label>
                 <input id="full-screen-unset-option" type="radio" data-ng-model="vm.options.isFullScreen" data-ng-value="false"> <label for="full-screen-unset-option" class="normal-text">{{ 'fix_scr'|trans({}, 'icap_website') }}</label>
-                <input type="number" class="form-control" min="800" max="1200" id="total-width" data-ng-model="vm.options.totalWidth" data-ng-disabled="vm.options.isFullScreen">px
+                <input type="number" class="form-control" min="800" max="1200" id="total-width" data-ng-model="vm.options.data.totalWidth" data-ng-disabled="vm.options.isFullScreen">px
             </div>
         </div>
         <div>
             <label for="bg-color">{{ 'bg_color'|trans({},'icap_website') }}</label><br/>
-            <div class="input-group color-group input-group-sm" bs-colorpicker data-color="vm.options.bgColor"></div>
+            <div class="input-group color-group input-group-sm" bs-colorpicker data-color="vm.options.data.bgColor"></div>
+        </div>
+        <div>
+            <label for="bg-content-color">{{ 'bg_content_color'|trans({},'icap_website') }}</label><br/>
+            <div class="input-group color-group input-group-sm" bs-colorpicker data-color="vm.options.data.bgContentColor"></div>
         </div>
         <div>
             <div>{{ 'enable_analytics'|trans({}, 'icap_website') }}</div>
             <div>
                 <div class="input-group">
                     <span class="input-group-btn">
-                        <select id="analytics-provider" class="form-control" data-ng-model="vm.options.analyticsProvider">
+                        <select id="analytics-provider" class="form-control" data-ng-model="vm.options.data.analyticsProvider">
                             <option value="none">{{ 'none'|trans({}, 'icap_website') }}</option>
                             <option value="google">Google</option>
                             <option value="xiti">XiTi</option>
                         </select>
                     </span>
-                    <input id="analytics-id" data-ng-model="vm.options.analyticsAccountId" placeholder="id" class="form-control" data-ng-disabled="vm.options.analyticsProvider=='none'||vm.options.analyticsProvider==null">
+                    <input id="analytics-id" data-ng-model="vm.options.data.analyticsAccountId" placeholder="id" class="form-control" data-ng-disabled="vm.options.data.analyticsProvider=='none'||vm.options.data.analyticsProvider==null">
                 </div>
             </div>
         </div>
@@ -32,7 +36,7 @@
     <div class="col-md-5">
         <div>
             <label for="css-code">{{ 'css_code'|trans({}, 'icap_website') }}</label><br/>
-            <textarea id="css-code" data-ng-model="vm.options.cssCode" style="font-size: 10px; height: 95px; width: 100%;" class="form-control"></textarea>
+            <textarea id="css-code" data-ng-model="vm.options.data.cssCode" style="font-size: 10px; height: 95px; width: 100%;" class="form-control"></textarea>
         </div>
     </div>
 </div>

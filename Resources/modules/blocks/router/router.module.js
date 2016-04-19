@@ -1,10 +1,10 @@
-import angular from 'angular/index'
-import routeHelperProvider from './route-helper.provider'
-import routeHelperFactory from './route-helper.factory'
+import register from '../../utils/register'
+import routeHelperConfig from './route-helper.provider'
+import routeHelper from './route-helper.factory'
 
-angular
-  .module('blocks.router', [
-    'ngRoute'
-  ])
-  .provider('routeHelperConfig', routeHelperProvider)
-  .factory('routeHelper', routeHelperFactory)
+let registerApp = new register('blocks.router', [
+  'ngRoute'
+])
+registerApp
+  .provider('routeHelperConfig', routeHelperConfig)
+  .factory('routeHelper', routeHelper)

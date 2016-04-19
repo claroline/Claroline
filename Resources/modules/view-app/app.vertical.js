@@ -3,33 +3,25 @@
  */
 import angular from 'angular/index'
 
-import ngResource from 'angular-resource'
-import ngRoute from 'angular-route'
-import ngTouch from 'angular-touch'
-import ngAnimate from 'angular-animate'
-import ngSanitize from 'angular-sanitize'
-import ngStrap from 'angular-strap'
-import ngStrapTpl from 'angular-strap/dist/angular-strap.tpl'
-import ViewAppConfig from './view.app.config'
+import {} from 'angular-animate'
 import MainController from './main.controller'
-import MultilevelPushMenu from '../vendor/angular-ui/multi-level-push-menu/pushmenu'
+import {} from '../vendor/angular-ui/multi-level-push-menu/pushmenu'
+import {} from '../components/resizer/resizer.module'
+import register from '../utils/register'
 
 //import utilities from '../components/utilities/utilities.module'
 
-angular
-  .module('app',
-  [
-    'ngSanitize',
-    'mgcrea.ngStrap',
-    'ui.resizer',
-    'website.constants',
-    window.menuNgPlugin
-  ]
-)
-  .run(ViewAppConfig.run)
+let registerApp = new register('app', [
+  'ui.resizer',
+  'website.constants',
+  'wxy.pushmenu'
+])
+
+registerApp
+  .run(['$rootScope', ($rootScope) => {$rootScope.pageLoaded = true}])
   .controller('MainController', MainController)
 
 //Bootstrap angular in body
 angular.element(document).ready(function () {
-  angular.bootstrap(document.getElementsByTagName('body')[ 0 ], [ 'app' ]);
-});
+  angular.bootstrap(document.getElementsByTagName('body')[ 0 ], [ 'app' ])
+})

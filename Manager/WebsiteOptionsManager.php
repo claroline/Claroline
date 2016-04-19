@@ -8,12 +8,11 @@
 
 namespace Icap\WebsiteBundle\Manager;
 
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Icap\WebsiteBundle\Form\WebsiteOptionsType;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
-use Doctrine\ORM\EntityManager;
-use Icap\WebsiteBundle\Entity\Website;
 use Icap\WebsiteBundle\Entity\WebsiteOptions;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -32,9 +31,9 @@ class WebsiteOptionsManager {
     protected $formFactory;
 
     /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var ObjectManager
      */
-    protected $entityManager;
+    protected $om;
 
     /**
      * @var \JMS\Serializer\Serializer
@@ -46,14 +45,17 @@ class WebsiteOptionsManager {
      *
      * @DI\InjectParams({
      *      "formFactory"   = @DI\Inject("form.factory"),
-     *      "entityManager" = @DI\Inject("doctrine.orm.entity_manager"),
+     *      "objectManager" = @DI\Inject("claroline.persistence.object_manager"),
      *      "serializer"    = @DI\Inject("jms_serializer")
      * })
+     * @param FormFactory $formFactory
+     * @param ObjectManager $objectManager
+     * @param Serializer $serializer
      */
-    public function __construct (FormFactory $formFactory, EntityManager $entityManager, Serializer $serializer)
+    public function __construct (FormFactory $formFactory, ObjectManager $objectManager, Serializer $serializer)
     {
         $this->formFactory = $formFactory;
-        $this->entityManager = $entityManager;
+        $this->om = $objectManager;
         $this->serializer = $serializer;
     }
 
@@ -63,8 +65,8 @@ class WebsiteOptionsManager {
         $form->submit($parameters, 'PATCH' !== $method);
         if ($form->isValid()) {
             $options = $form->getData();
-            $this->entityManager->persist($options);
-            $this->entityManager->flush();
+            $this->om->persist($options);
+            $this->om->flush();
             $serializationContext = new SerializationContext();
             $serializationContext->setSerializeNull(true);
 
@@ -92,14 +94,14 @@ class WebsiteOptionsManager {
                 $options->$setImageValue($newFileName);
                 try{
                     $uploadedFile->move($options->getUploadRootDir(), $newFileName);
-                    $this->entityManager->persist($options);
-                    $this->entityManager->flush();
+                    $this->om->persist($options);
+                    $this->om->flush();
                 } catch(\Exception $e) {
                     if (file_exists($options->getUploadRootDir() . DIRECTORY_SEPARATOR .$newFileName)) {
                         unlink($options->getUploadRootDir() . DIRECTORY_SEPARATOR . $newFileName);
                     }
                     $options->$setImageValue($oldFileName);
-                    throw new \InvalidArgumentException();
+                    throw new \InvalidArgumentException($e->getMessage());
                 }
 
                 if (null !== $oldFileName && !filter_var($oldFileName, FILTER_VALIDATE_URL) && file_exists($options->getUploadRootDir() . DIRECTORY_SEPARATOR . $oldFileName)) {
@@ -120,8 +122,8 @@ class WebsiteOptionsManager {
         $oldPath = $options->$getImageValue();
         $options->$setImageValue($newPath);
         try{
-            $this->entityManager->persist($options);
-            $this->entityManager->flush();
+            $this->om->persist($options);
+            $this->om->flush();
         } catch(\Exception $e) {
             $options->$setImageValue($oldPath);
             throw new \InvalidArgumentException();

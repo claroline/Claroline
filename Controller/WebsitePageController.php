@@ -30,7 +30,8 @@ class WebsitePageController extends Controller{
      * @Route(
      *      "/{pageId}",
      *      requirements={"pageId" = "\d+"},
-     *      name="icap_website_page_view"
+     *      name="icap_website_page_view",
+     *      options={"expose"=true}
      * )
      * @ParamConverter("website", class="IcapWebsiteBundle:Website", options={"id" = "websiteId"})
      * @Template("IcapWebsiteBundle:Website:view.html.twig")
@@ -63,7 +64,8 @@ class WebsitePageController extends Controller{
      * @Route(
      *      "/page/{pageId}",
      *      requirements={"pageId" = "\d+"},
-     *      name="icap_website_page_get"
+     *      name="icap_website_page_get",
+     *      options={"expose"=true}
      * )
      * @ParamConverter("website", class="IcapWebsiteBundle:Website", options={"id" = "websiteId"})
      * @Method({"GET"})
@@ -92,7 +94,8 @@ class WebsitePageController extends Controller{
      * @Route(
      *      "/page/{parentPageId}",
      *      requirements={"parentPageId" = "\d+"},
-     *      name="icap_website_page_post"
+     *      name="icap_website_page_post",
+     *      options={"expose"=true}
      * )
      * @ParamConverter("website", class="IcapWebsiteBundle:Website", options={"id" = "websiteId"})
      * @Method({"POST"})
@@ -123,7 +126,8 @@ class WebsitePageController extends Controller{
      * @Route(
      *      "/page/{pageId}",
      *      requirements={"pageId" = "\d+"},
-     *      name="icap_website_page_put"
+     *      name="icap_website_page_put",
+     *      options={"expose"=true}
      * )
      * @ParamConverter("website", class="IcapWebsiteBundle:Website", options={"id" = "websiteId"})
      * @Method({"PUT"})
@@ -153,7 +157,8 @@ class WebsitePageController extends Controller{
      * @Route(
      *      "/page/{pageId}/setHomepage",
      *      requirements={"pageId" = "\d+"},
-     *      name="icap_website_page_set_homepage"
+     *      name="icap_website_page_set_homepage",
+     *      options={"expose"=true}
      * )
      * @ParamConverter("website", class="IcapWebsiteBundle:Website", options={"id" = "websiteId"})
      * @Method({"PUT"})
@@ -184,7 +189,8 @@ class WebsitePageController extends Controller{
      *      "/page/{pageId}/{newParentId}/{previousSiblingId}",
      *      requirements={"pageId" = "\d+", "newParentId" = "\d+", "previousSiblingId" = "\d+"},
      *      defaults={"previousSiblingId" = 0},
-     *      name="icap_website_page_move"
+     *      name="icap_website_page_move",
+     *      options={"expose"=true}
      * )
      * @ParamConverter("website", class="IcapWebsiteBundle:Website", options={"id" = "websiteId"})
      * @Method({"PUT"})
@@ -217,7 +223,8 @@ class WebsitePageController extends Controller{
      * @Route(
      *      "/page/{pageId}",
      *      requirements={"pageId" = "\d+"},
-     *      name="icap_website_page_delete"
+     *      name="icap_website_page_delete",
+     *      options={"expose"=true}
      * )
      * @ParamConverter("website", class="IcapWebsiteBundle:Website", options={"id" = "websiteId"})
      * @Method({"DELETE"})

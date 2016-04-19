@@ -1,39 +1,50 @@
 import angular from 'angular/index'
-import bsColorpicker from 'mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker'
-import ngFileUploadShim from 'ng-file-upload/ng-file-upload-shim'
-import ngResource from 'angular-resource'
-import ngRoute from 'angular-route'
-import ngTouch from 'angular-touch'
-import ngAnimate from 'angular-animate'
-import ngSanitize from 'angular-sanitize'
-import ngFileUpload from 'ng-file-upload'
-import ngStrap from 'angular-strap'
-import ngStrapTpl from 'angular-strap/dist/angular-strap.tpl'
-import ngUiTree from 'angular-ui-tree'
-import MultilevelPushMenu from '../vendor/angular-ui/multi-level-push-menu/pushmenu'
-import EditAppConfig from './edit-app.config'
+import register from '../utils/register'
+import {} from 'mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker'
+import {} from 'ng-file-upload/ng-file-upload-shim'
+import {} from 'angular-resource'
+import {} from 'angular-route'
+import {} from 'angular-touch'
+import {} from 'angular-animate'
+import {} from 'ng-file-upload'
+import {} from 'angular-bootstrap'
+import {} from '../vendor/angular-ui/multi-level-push-menu/pushmenu'
+import {} from '../components/resizer/resizer.module'
+import {} from '../blocks/httpInterceptor/http-interceptor.module'
+import {} from '../blocks/router/router.module'
+import {} from 'angular-ui-tinymce'
+import {} from '../components/flexnav/flexnav.module'
+import {} from '../components/bsColorpicker/bs-colorpicker.module'
+import {} from '../components/webtree/webtree.module'
+import tinyMceConfig from '../components/tinymce/tinymce.config'
+import EditAppConfig from './app.config'
+import websiteOptions from './website-options.service'
+import MainController from './main.controller.js'
 
-angular
-  .module('app',
+let registerApp = new register('app',
   [
-    'ngSanitize',
     'ui.resizer',
     'ngFileUpload',
     'website.constants',
     'components.utilities',
     'blocks.httpInterceptor',
     'blocks.router',
-    'ui.tree',
-    'mgcrea.ngStrap',
+    'ui.webtree',
+    'ui.bootstrap',
     'ui.tinymce',
     'ui.resourcePicker',
     'wxy.pushmenu',
     'ui.flexnav',
     'bs.colorpicker'
-  ]
-)
+  ])
+registerApp
   .config(EditAppConfig.config)
   .run(EditAppConfig.run)
+  .value('tinyMceConfig', new tinyMceConfig())
+  .filter('trustAsHtml', ['$sce', $sce => text => $sce.trustAsHtml(text)])
+  .filter('trustAsResourceUrl', ['$sce', $sce => text => $sce.trustAsResourceUrl(text)])
+  .service('websiteOptions', websiteOptions)
+  .controller('MainController', MainController);
 
 //Bootstrap angular in body
 angular.element(document).ready(function () {

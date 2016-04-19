@@ -72,7 +72,7 @@ class WebsiteManager {
         array_unshift($websitePages, $orgRoot);
         $newWebsitePagesMap = array();
 
-        $newWebsite = new Website();
+        $newWebsite = new Website($orgWebsite->isTest());
         foreach ($websitePages as $websitePage) {
             $newWebsitePage = new WebsitePage();
             $newWebsitePage->setWebsite($newWebsite);
@@ -107,12 +107,12 @@ class WebsiteManager {
      *
      * @param array $data
      * @param $rootPath
-     *
+     * @param $test
      * @return Website
      */
-    public function importWebsite(array $data, $rootPath)
+    public function importWebsite(array $data, $rootPath, $test = false)
     {
-        $website = new Website();
+        $website = new Website($test);
         if (isset($data['data'])) {
             $websiteData = $data['data'];
             $websiteOptions = new WebsiteOptions();
@@ -126,8 +126,8 @@ class WebsiteManager {
                 $entityWebsitePage->importFromArray($websitePage, $rootPath);
                 if ($websitePage['is_root']) {
                     $website->setRoot($entityWebsitePage);
-                    //$this->em->persist($website);
-                    $this->websitePageRepository->persistAsFirstChild($entityWebsitePage);
+                    $this->om->persist($website);
+                    //$this->websitePageRepository->persistAsFirstChild($entityWebsitePage);
                 } else {
                     $entityWebsitePageParent = $websitePagesMap[$websitePage['parent_id']];
                     $entityWebsitePage->setParent($entityWebsitePageParent);
@@ -139,17 +139,17 @@ class WebsiteManager {
 
                 $websitePagesMap[$websitePage['id']] = $entityWebsitePage;
             }
-            //$this->em->flush();
+            $this->om->flush();
             $websiteOptions->importFromArray(
                 $websiteData['options'],
                 $rootPath
-            );     
+            );
         }
 
         return $website;
     }
 
-    public function exportWebsite(Workspace $workspace, array &$files, Website $object)
+    public function exportWebsite(Workspace $workspace, &$files, Website $object)
     {
         //Getting all website pages and building array
         $rootWebsitePage = $object->getRoot();

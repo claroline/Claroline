@@ -1,73 +1,10 @@
-{% macro getVendorScripts() %}
-    {% javascripts debug=false filter='jsmin' output='js/icapwebsite/edit.vendor.js'
-    '@FrontEndBundle/Resources/public/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js'
-    '@FrontEndBundle/Resources/public/ng-file-upload/ng-file-upload-shim.min.js'
-    '@FrontEndBundle/Resources/public/angular/angular.min.js'
-    '@FrontEndBundle/Resources/public/angular-resource/angular-resource.min.js'
-    '@FrontEndBundle/Resources/public/angular-route/angular-route.min.js'
-    '@FrontEndBundle/Resources/public/angular-touch/angular-touch.min.js'
-    '@FrontEndBundle/Resources/public/angular-animate/angular-animate.min.js'
-    '@FrontEndBundle/Resources/public/angular-sanitize/angular-sanitize.min.js'
-    '@FrontEndBundle/Resources/public/ng-file-upload/ng-file-upload.js'
-    '@InnovaAngularUITinyMCEBundle/Resources/public/js/angular-tinymce-directive.js'
-    '@FrontEndBundle/Resources/public/angular-strap/dist/angular-strap.min.js'
-    '@FrontEndBundle/Resources/public/angular-strap/dist/angular-strap.tpl.min.js'
-    '@FrontEndBundle/Resources/public/angular-ui-tree/dist/angular-ui-tree.min.js'
-    '@IcapWebsiteBundle/Resources/public/js/vendor/angular-ui/multi-level-push-menu/pushmenu.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-{% endmacro %}
-
-{% macro getAppScripts() %}
-    {% javascripts debug=false filter='jsmin' output='js/icapwebsite/edit.app.js'
-    '@IcapWebsiteBundle/Resources/public/js/blocks/httpInterceptor/httpInterceptor.module.js'
-    '@IcapWebsiteBundle/Resources/public/js/blocks/httpInterceptor/requestHandler.js'
-    '@IcapWebsiteBundle/Resources/public/js/blocks/httpInterceptor/httpInterceptor.config.js'
-    '@IcapWebsiteBundle/Resources/public/js/blocks/httpInterceptor/httpInterceptor.factory.js'
-    '@IcapWebsiteBundle/Resources/public/js/blocks/router/router.module.js'
-    '@IcapWebsiteBundle/Resources/public/js/blocks/router/routeHelper.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/utilities/utilities.module.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/utilities/utilities.service.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/utilities/iframeHeightOnLoad.directive.js'
-    '@InnovaAngularUIResourcePickerBundle/Resources/public/js/angular-resource-picker-directive.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/flexnav/flexnav.module.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/flexnav/flexnav-options.service.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/flexnav/flexnav-utils.service.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/flexnav/flexnav.directive.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/flexnav/flexnav-submenu.directive.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/flexnav/templates/main_menu.tpl.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/flexnav/templates/sub_menu.tpl.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/resizer/resizer.module.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/resizer/resizer.directive.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/resizer/resizerBottom.directive.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/resizer/resizerRight.directive.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/resizer/changeHeight.directive.js'
-    '@IcapWebsiteBundle/Resources/public/js/edit-app/app.js'
-    '@IcapWebsiteBundle/Resources/public/js/edit-app/app.config.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/bsColorpicker/bsColorpicker.module.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/bsColorpicker/bsColorpicker.directive.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/tinyMceConfig/tinyMceConfig.js'
-    '@IcapWebsiteBundle/Resources/public/js/edit-app/websiteTree/websiteTreeNode.service.js'
-    '@IcapWebsiteBundle/Resources/public/js/edit-app/websiteTree/websiteTree.service.js'
-    '@IcapWebsiteBundle/Resources/public/js/edit-app/websiteOptions/websiteOptions.service.js'
-    '@IcapWebsiteBundle/Resources/public/js/edit-app/main.controller.js'
-    '@IcapWebsiteBundle/Resources/public/js/templates/menu_renderer.tpl.js'
-    '@IcapWebsiteBundle/Resources/public/js/templates/tree_renderer.tpl.js'
-    '@IcapWebsiteBundle/Resources/public/js/app.bootstrap.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-{% endmacro %}
-
 {% macro getStylesheets() %}
     {% stylesheets debug=false filter='less, cssmin' output='bundles/icapwebsite/css/edit-style.css'
-    '@IcapWebsiteBundle/Resources/public/css/angular/bootstrap-additions.min.css'
     '@FrontEndBundle/Resources/public/angular-ui-tree/dist/angular-ui-tree.min.css'
     '@IcapWebsiteBundle/Resources/public/css/angular/angular-motion.min.css'
     '@IcapWebsiteBundle/Resources/views/less/edit.less'
     '@IcapWebsiteBundle/Resources/public/css/angular/pushmenu.css'
-    '@IcapWebsiteBundle/Resources/public/css/angular/flexnav.css'
+    '@IcapWebsiteBundle/Resources/views/less/flexnav.less'
     %}
     <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
     {% endstylesheets %}

@@ -33,12 +33,17 @@ class Website extends AbstractResource{
 
     protected $pages;
 
+    protected $test;
     /**
      * @ORM\OneToOne(targetEntity="Icap\WebsiteBundle\Entity\WebsitePage")
      * @ORM\JoinColumn(name="homepage_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $homePage;
 
+    public function __construct($test = false)
+    {
+        $this->test = $test;
+    }
 
     /**
      * @return WebsiteOptions
@@ -139,5 +144,10 @@ class Website extends AbstractResource{
         /*if ($rootPage != null || $options != null) {
             $em->flush();
         }*/
+    }
+
+    public function isTest()
+    {
+        return $this->test;
     }
 }

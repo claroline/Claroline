@@ -3,52 +3,52 @@
         <div>
             <div><label>{{ 'menu_orientation'|trans({}, 'icap_website') }}</label></div>
             <div class="btn-group">
-                <button class="btn btn-default btn-sm" data-ng-class="{'active':vm.options.menuOrientation=='horizontal'}" data-ng-click="vm.options.menuOrientation='horizontal'">{{ 'horizontal'|trans({},'icap_website') }}</button>
-                <button class="btn btn-default btn-sm" data-ng-class="{'active':vm.options.menuOrientation=='vertical'}" data-ng-click="vm.options.menuOrientation='vertical'">{{ 'vertical'|trans({},'icap_website') }}</button>
+                <button class="btn btn-default btn-sm" data-ng-class="{'active':vm.options.data.menuOrientation=='horizontal'}" data-ng-click="vm.options.data.menuOrientation='horizontal'">{{ 'horizontal'|trans({},'icap_website') }}</button>
+                <button class="btn btn-default btn-sm" data-ng-class="{'active':vm.options.data.menuOrientation=='vertical'}" data-ng-click="vm.options.data.menuOrientation='vertical'">{{ 'vertical'|trans({},'icap_website') }}</button>
             </div>
         </div>
-        <div class="menu-vertical-width-container" data-ng-show="vm.options.menuOrientation=='vertical'">
+        <div class="menu-vertical-width-container" data-ng-show="vm.options.data.menuOrientation=='vertical'">
             <label for="menu-width">{{ 'width'|trans({},'icap_website') }}</label>
-            <input type="number" id="menu-width" max="200" min="50" class="form-control" data-ng-model="vm.options.menuWidth"/> px
+            <input type="number" id="menu-width" max="200" min="50" class="form-control" data-ng-model="vm.options.data.menuWidth"/> px
         </div>
     </div>
     <div class="col-md-3">
         <div>
             <label for="menu-bg-color">{{ 'bg_color'|trans({},'icap_website') }}</label>
-            <div class="input-group color-group input-group-sm" bs-colorpicker data-color="vm.options.menuBgColor"></div>
+            <div class="input-group color-group input-group-sm" bs-colorpicker data-color="vm.options.data.menuBgColor"></div>
         </div>
         <div>
             <label for="menu-hover-color">{{ 'hover_color'|trans({},'icap_website') }}</label>
-            <div class="input-group color-group input-group-sm" bs-colorpicker data-color="vm.options.menuHoverColor"></div>
+            <div class="input-group color-group input-group-sm" bs-colorpicker data-color="vm.options.data.menuHoverColor"></div>
         </div>
         <div>
             <label for="menu-section-color">{{ 'section_color'|trans({},'icap_website') }}</label>
-            <div class="input-group color-group input-group-sm" bs-colorpicker data-color="vm.options.sectionBgColor"></div>
+            <div class="input-group color-group input-group-sm" bs-colorpicker data-color="vm.options.data.sectionBgColor"></div>
         </div>
         <div>
             <label for="menu-border-color">{{ 'border_color'|trans({},'icap_website') }}</label>
-            <div class="input-group color-group input-group-sm" bs-colorpicker data-color="vm.options.menuBorderColor"></div>
+            <div class="input-group color-group input-group-sm" bs-colorpicker data-color="vm.options.data.menuBorderColor"></div>
         </div>
     </div>
     <div class="col-md-3">
         <div>
             <label for="menu-font-color">{{ 'font_color'|trans({},'icap_website') }}</label>
-            <div class="input-group color-group input-group-sm" bs-colorpicker data-color="vm.options.menuFontColor"></div>
+            <div class="input-group color-group input-group-sm" bs-colorpicker data-color="vm.options.data.menuFontColor"></div>
         </div>
         <div>
             <label for="section-font-color">{{ 'section_font_color'|trans({},'icap_website') }}</label>
-            <div class="input-group color-group input-group-sm" bs-colorpicker data-color="vm.options.sectionFontColor"></div>
+            <div class="input-group color-group input-group-sm" bs-colorpicker data-color="vm.options.data.sectionFontColor"></div>
         </div>
 
     </div>
     <div class="col-md-4 col-last">
         <div>
             <label for="menu-font-size">{{ 'font_size'|trans({},'icap_website') }}</label>
-            <input type="number" id="menu-font-size" max="20" min="10" data-ng-model="vm.options.menuFontSize" class="form-control"/> px
+            <input type="number" id="menu-font-size" max="20" min="10" data-ng-model="vm.options.data.menuFontSize" class="form-control"/> px
         </div>
         <div>
             <label for="menu-font-family">{{ 'font_family'|trans({},'icap_website') }}</label>
-            <select id="menu-font-family" class="form-control" data-ng-model="vm.options.menuFontFamily">
+            <select id="menu-font-family" class="form-control" data-ng-model="vm.options.data.menuFontFamily">
                 <option value="inherit">{{ 'default'|trans({},'icap_website') }}</option>
                 <option value="Arial, Tahoma, Helvetica, FreeSans, sans-serif">Arial</option>
                 <option value="'Courier New', Courier, FreeMono, monospace">Courier</option>
@@ -60,8 +60,8 @@
             </select>
         </div>
         <div>
-            <button class="btn btn-default" data-ng-click="vm.options.toggleBold()" data-ng-class="{'active':vm.options.menuFontWeight=='bold'}"><i class="fa fa-bold"></i></button>
-            <button class="btn btn-default" data-ng-click="vm.options.toggleItalic()" data-ng-class="{'active':vm.options.menuFontStyle=='italic'}"><i class="fa fa-italic"></i></button>
+            <button class="btn btn-default" data-ng-click="vm.options.toggleBold()" data-ng-class="{'active':vm.options.data.menuFontWeight=='bold'}"><i class="fa fa-bold"></i></button>
+            <button class="btn btn-default" data-ng-click="vm.options.toggleItalic()" data-ng-class="{'active':vm.options.data.menuFontStyle=='italic'}"><i class="fa fa-italic"></i></button>
         </div>
     </div>
     <div class="clearfix"></div>

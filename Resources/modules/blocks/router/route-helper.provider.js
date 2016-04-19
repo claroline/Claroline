@@ -1,18 +1,24 @@
 /**
  * Created by ptsavdar on 15/03/16.
  */
+let _config = new WeakMap()
+
 export default class RouteHelperConfig {
-  construct () {
-    this.config = {}
+  constructor () {
+    _config.set(this, {})
   }
 
   $get () {
+    return this.config
+  }
+
+  get config () {
     return {
-      config: this.config
+      config: _config.get(this)
     }
   }
 
-  setConfig (config) {
-    this.config = config
+  set config (config) {
+    _config.set(this, config)
   }
 }

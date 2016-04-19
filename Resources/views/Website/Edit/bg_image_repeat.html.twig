@@ -8,47 +8,47 @@
 <div class="col-md-2">
     <label>{{ 'bg_image'|trans({}, 'icap_website') }}</label>
     <div>
-        <input id="{{ classPrefix }}-image-none-choice" type="radio" value="none" ng-click="vm.updateImagePath('{{ variablePrefix }}Image', true)" ng-model="vm.options.temp.{{ variablePrefix }}ImageChoice"> <label for="{{ classPrefix }}-image-none-choice" class="normal-text">{{ 'no_image'|trans({},'icap_website') }}</label>
-        <input id="{{ classPrefix }}-image-url-choice" type="radio" value="url" ng-model="vm.options.temp.{{ variablePrefix }}ImageChoice"> <label for="{{ classPrefix }}-image-url-choice" class="normal-text">{{ 'paste_url'|trans({},'icap_website') }}</label>
-        <input id="{{ classPrefix }}-image-upload-choice" type="radio" value="upload" ng-model="vm.options.temp.{{ variablePrefix }}ImageChoice"> <label for="{{ classPrefix }}-image-upload-choice" class="normal-text">{{ 'upload_image'|trans({},'icap_website') }}</label>
+        <input id="{{ classPrefix }}-image-none-choice" type="radio" value="none" ng-click="vm.updateImagePath('{{ variablePrefix }}Image', true)" ng-model="vm.options.{{ variablePrefix }}ImageChoice"> <label for="{{ classPrefix }}-image-none-choice" class="normal-text">{{ 'no_image'|trans({},'icap_website') }}</label>
+        <input id="{{ classPrefix }}-image-url-choice" type="radio" value="url" ng-model="vm.options.{{ variablePrefix }}ImageChoice"> <label for="{{ classPrefix }}-image-url-choice" class="normal-text">{{ 'paste_url'|trans({},'icap_website') }}</label>
+        <input id="{{ classPrefix }}-image-upload-choice" type="radio" value="upload" ng-model="vm.options.{{ variablePrefix }}ImageChoice"> <label for="{{ classPrefix }}-image-upload-choice" class="normal-text">{{ 'upload_image'|trans({},'icap_website') }}</label>
     </div>
-    <div class="form-group" data-ng-if="vm.options.temp.{{ variablePrefix }}ImageChoice=='upload'">
+    <div class="form-group" data-ng-if="vm.options.{{ variablePrefix }}ImageChoice=='upload'">
         <input id="{{ classPrefix }}-image" class="form-control full-width" type="file" ngf-select="vm.uploadImage($file, '{{ variablePrefix }}Image')" ngf-pattern="image/*" ngf-accept="'image/*'">
     </div>
-    <div data-ng-if="vm.options.temp.{{ variablePrefix }}ImageChoice=='url'">
-        <input id="{{ classPrefix }}-image-url" class="form-control" type="url" data-ng-model="vm.options.temp.{{ variablePrefix }}ImagePath"> <button class="btn btn-sm btn-primary" data-ng-click="vm.updateImagePath('{{ variablePrefix }}Image', false)">{{ 'apply'|trans({},'icap_website') }}</button>
+    <div data-ng-if="vm.options.{{ variablePrefix }}ImageChoice=='url'">
+        <input id="{{ classPrefix }}-image-url" class="form-control" type="url" data-ng-model="vm.options.{{ variablePrefix }}ImagePath"> <button class="btn btn-sm btn-primary" data-ng-click="vm.updateImagePath('{{ variablePrefix }}Image', false)">{{ 'apply'|trans({},'icap_website') }}</button>
     </div>
     <div><small class="text-warning">{{ 'change_bg_image_attention_text'|trans({}, 'icap_website') }}</small></div>
 </div>
-<div class="col-md-1 bg-image-margin" data-ng-if="vm.options.temp.{{ variablePrefix }}ImageChoice!='none'">
+<div class="col-md-1 bg-image-margin" data-ng-if="vm.options.{{ variablePrefix }}ImageChoice!='none'">
     <div>
         <div>{{ 'bg_position'|trans({},'icap_website') }}</div>
         <div>
-            <button type="button" class="btn btn-default btn-sm float-left bg-position-btn left-top" data-ng-class="{'active':vm.options.isBgPositionButtonActive('{{ variablePrefix }}', 'left top')}" data-ng-click="vm.options.{{ variablePrefix }}Position='left top'"><i class="fa fa-picture-o"></i></button>
-            <button type="button" class="btn btn-default btn-sm float-left bg-position-btn center-top" data-ng-class="{'active':vm.options.isBgPositionButtonActive('{{ variablePrefix }}', 'center top')}" data-ng-click="vm.options.{{ variablePrefix }}Position='center top'"><i class="fa fa-picture-o"></i></button>
-            <button type="button" class="btn btn-default btn-sm float-left bg-position-btn right-top" data-ng-class="{'active':vm.options.isBgPositionButtonActive('{{ variablePrefix }}', 'right top')}" data-ng-click="vm.options.{{ variablePrefix }}Position='right top'"><i class="fa fa-picture-o"></i></button>
+            <button type="button" class="btn btn-default btn-sm float-left bg-position-btn left-top" data-ng-class="{'active':vm.options.isBgPositionButtonActive('{{ variablePrefix }}', 'left top')}" data-ng-click="vm.options.data.{{ variablePrefix }}Position='left top'"><i class="fa fa-picture-o"></i></button>
+            <button type="button" class="btn btn-default btn-sm float-left bg-position-btn center-top" data-ng-class="{'active':vm.options.isBgPositionButtonActive('{{ variablePrefix }}', 'center top')}" data-ng-click="vm.options.data.{{ variablePrefix }}Position='center top'"><i class="fa fa-picture-o"></i></button>
+            <button type="button" class="btn btn-default btn-sm float-left bg-position-btn right-top" data-ng-class="{'active':vm.options.isBgPositionButtonActive('{{ variablePrefix }}', 'right top')}" data-ng-click="vm.options.data.{{ variablePrefix }}Position='right top'"><i class="fa fa-picture-o"></i></button>
             <div class="clearfix"></div>
         </div>
         <div>
-            <button type="button" class="btn btn-default btn-sm float-left bg-position-btn left-center" data-ng-class="{'active':vm.options.isBgPositionButtonActive('{{ variablePrefix }}', 'left center')}" data-ng-click="vm.options.{{ variablePrefix }}Position='left center'"><i class="fa fa-picture-o"></i></button>
-            <button type="button" class="btn btn-default btn-sm float-left bg-position-btn center-center" data-ng-class="{'active':vm.options.isBgPositionButtonActive('{{ variablePrefix }}', 'center center')}" data-ng-click="vm.options.{{ variablePrefix }}Position='center center'"><i class="fa fa-picture-o"></i></button>
-            <button type="button" class="btn btn-default btn-sm float-left bg-position-btn right-center" data-ng-class="{'active':vm.options.isBgPositionButtonActive('{{ variablePrefix }}', 'right center')}" data-ng-click="vm.options.{{ variablePrefix }}Position='right center'"><i class="fa fa-picture-o"></i></button>
+            <button type="button" class="btn btn-default btn-sm float-left bg-position-btn left-center" data-ng-class="{'active':vm.options.isBgPositionButtonActive('{{ variablePrefix }}', 'left center')}" data-ng-click="vm.options.data.{{ variablePrefix }}Position='left center'"><i class="fa fa-picture-o"></i></button>
+            <button type="button" class="btn btn-default btn-sm float-left bg-position-btn center-center" data-ng-class="{'active':vm.options.isBgPositionButtonActive('{{ variablePrefix }}', 'center center')}" data-ng-click="vm.options.data.{{ variablePrefix }}Position='center center'"><i class="fa fa-picture-o"></i></button>
+            <button type="button" class="btn btn-default btn-sm float-left bg-position-btn right-center" data-ng-class="{'active':vm.options.isBgPositionButtonActive('{{ variablePrefix }}', 'right center')}" data-ng-click="vm.options.data.{{ variablePrefix }}Position='right center'"><i class="fa fa-picture-o"></i></button>
             <div class="clearfix"></div>
         </div>
         <div>
-            <button type="button" class="btn btn-default btn-sm float-left bg-position-btn left-bottom" data-ng-class="{'active':vm.options.isBgPositionButtonActive('{{ variablePrefix }}', 'left bottom')}" data-ng-click="vm.options.{{ variablePrefix }}Position='left bottom'"><i class="fa fa-picture-o"></i></button>
-            <button type="button" class="btn btn-default btn-sm float-left bg-position-btn center-bottom" data-ng-class="{'active':vm.options.isBgPositionButtonActive('{{ variablePrefix }}', 'center bottom')}" data-ng-click="vm.options.{{ variablePrefix }}Position='center bottom'"><i class="fa fa-picture-o"></i></button>
-            <button type="button" class="btn btn-default btn-sm float-left bg-position-btn right-bottom" data-ng-class="{'active':vm.options.isBgPositionButtonActive('{{ variablePrefix }}', 'right bottom')}" data-ng-click="vm.options.{{ variablePrefix }}Position='right bottom'"><i class="fa fa-picture-o"></i></button>
+            <button type="button" class="btn btn-default btn-sm float-left bg-position-btn left-bottom" data-ng-class="{'active':vm.options.isBgPositionButtonActive('{{ variablePrefix }}', 'left bottom')}" data-ng-click="vm.options.data.{{ variablePrefix }}Position='left bottom'"><i class="fa fa-picture-o"></i></button>
+            <button type="button" class="btn btn-default btn-sm float-left bg-position-btn center-bottom" data-ng-class="{'active':vm.options.isBgPositionButtonActive('{{ variablePrefix }}', 'center bottom')}" data-ng-click="vm.options.data.{{ variablePrefix }}Position='center bottom'"><i class="fa fa-picture-o"></i></button>
+            <button type="button" class="btn btn-default btn-sm float-left bg-position-btn right-bottom" data-ng-class="{'active':vm.options.isBgPositionButtonActive('{{ variablePrefix }}', 'right bottom')}" data-ng-click="vm.options.data.{{ variablePrefix }}Position='right bottom'"><i class="fa fa-picture-o"></i></button>
             <div class="clearfix"></div>
         </div>
     </div>
 </div>
-<div class="col-md-1 bg-image-margin" data-ng-if="vm.options.temp.{{ variablePrefix }}ImageChoice!='none'">
+<div class="col-md-1 bg-image-margin" data-ng-if="vm.options.{{ variablePrefix }}ImageChoice!='none'">
     <div>
         <div>{{ 'bg_repeat'|trans({},'icap_website') }}</div>
         <div class="btn-group">
-            <input type="checkbox" id="{{ classPrefix }}-image-repeat-x-choice" value="x" data-ng-click="vm.options.repeatChanged('{{ variablePrefix }}')" data-ng-model="vm.options.temp.{{ variablePrefix }}ImageRepeat.x"> <label for="{{ classPrefix }}-image-repeat-x-choice" class="normal-text">{{ 'horizontally'|trans({}, 'icap_website') }}</label><br/>
-            <input type="checkbox" id="{{ classPrefix }}-image-repeat-y-choice" value="y" data-ng-click="vm.options.repeatChanged('{{ variablePrefix }}')" data-ng-model="vm.options.temp.{{ variablePrefix }}ImageRepeat.y"> <label for="{{ classPrefix }}-image-repeat-y-choice" class="normal-text">{{ 'vertically'|trans({}, 'icap_website') }}</label>
+            <input type="checkbox" id="{{ classPrefix }}-image-repeat-x-choice" value="x" data-ng-click="vm.options.repeatChanged('{{ variablePrefix }}')" data-ng-model="vm.options.{{ variablePrefix }}ImageRepeat.x"> <label for="{{ classPrefix }}-image-repeat-x-choice" class="normal-text">{{ 'horizontally'|trans({}, 'icap_website') }}</label><br/>
+            <input type="checkbox" id="{{ classPrefix }}-image-repeat-y-choice" value="y" data-ng-click="vm.options.repeatChanged('{{ variablePrefix }}')" data-ng-model="vm.options.{{ variablePrefix }}ImageRepeat.y"> <label for="{{ classPrefix }}-image-repeat-y-choice" class="normal-text">{{ 'vertically'|trans({}, 'icap_website') }}</label>
         </div>
     </div>
 </div>

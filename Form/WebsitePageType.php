@@ -44,6 +44,17 @@ class WebsitePageType extends AbstractType
                 'url'
             )
             ->add(
+                'target',
+                'choice',
+                array(
+                    'choices' => array(
+                        'embed' => 0,
+                        'new_window' => 1
+                    ),
+                    'choices_as_values' => true
+                )
+            )
+            ->add(
                 'resourceNode',
                 'entity',
                 array(

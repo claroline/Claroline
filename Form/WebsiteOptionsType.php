@@ -21,6 +21,7 @@ class WebsiteOptionsType extends AbstractType
             ->add('analyticsAccountId')
             ->add('cssCode')
             ->add('bgColor')
+            ->add('bgContentColor')
             ->add('bgRepeat')
             ->add('bgPosition')
             ->add('bannerBgColor')
