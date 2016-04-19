@@ -1,6 +1,7 @@
 icap_website_type_name: Nom
 save_all_options: Sauvegarder toutes les options
 'bg_color': Couleur de l'arrière-plan
+'bg_content_color': Couleur de l'arrière-plan du contenu
 'site_width': Largeur du site
 'full_scr': Plein écran
 'fix_scr': Fixe
@@ -59,10 +60,13 @@ save_all_options: Sauvegarder toutes les options
 'url': URL
 'blank_page': Page de texte riche
 'url_page': Liens vers URL externe
+'target': Ouvrir la page dans
+'embedded': le corps du site
+'new_window': un nouvel onglet
 'resource_page': Liens vers ressource plateforme
 'confirm': Confirmer
 'cancel': Annuler
-'confirm_delete_message': Êtes-vous sûr de vouloir supprimer définitivement '{{ menu.currentPageNode.title }}' ainsi que tous ses enfants?
+'confirm_delete_message': Êtes-vous sûr de vouloir supprimer définitivement '%title%' ainsi que tous ses enfants?
 'add_resource': Ajouter une ressource
 'change_resource': Changer la ressource
 'error': Erreur
@@ -87,3 +91,4 @@ save_all_options: Sauvegarder toutes les options
 'display_footer': Affichage du pied de page
 'change_bg_image_attention_text': Attention! Si vous changez cette option, l'image en cours sera supprimée.
 'view_website': Visualiser
+'no_pages': Pas de pages créées

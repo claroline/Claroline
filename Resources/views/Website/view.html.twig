@@ -5,7 +5,7 @@
 {% set options = _resource.options %}
 
 {% block content %}
-    <div class="website-container" ng-controller="MainController">
+    <div class="website-container" ng-controller="MainController as vm">
         <div class="loading text-center" ng-if="!pageLoaded" >
             {{ 'loading'|trans({},'icap_website') }}
         </div>
@@ -23,26 +23,21 @@
                 <nav ng-if="false">
                     {{commonMacros.buildMenu(_resource.pages[0], _resource.id)}}
                 </nav>
-                <ui-flexnav menu="menu" nav-style="options" options="flexnavOptions"></ui-flexnav>
+                <ui-flexnav menu="vm.menu" style-options="vm.options" options="vm.flexnavOptions"></ui-flexnav>
             {% endif %}
             <div class="website-content" ng-style="{'min-height': contentHeight+'px'}">
                 {% if options.menuOrientation == 'vertical' %}
-                    <aside ng-if="false">
-                        <nav>
-                            {{commonMacros.buildMenu(_resource.pages[0], _resource.id)}}
-                        </nav>
-                    </aside>
-                    <wxy-push-menu menu="menu" menu-style="options" options="pushMenuOptions" menu-width="options.menuWidth"></wxy-push-menu>
+                    <wxy-push-menu menu="vm.menu" menu-style="vm.options" options="vm.pushMenuOptions" menu-width="vm.options.menuWidth"></wxy-push-menu>
                 {% endif %}
-                <div class="website-page-content" change-height="contentHeight" style="min-height: 400px;">
+                <div class="website-page-content" change-height="vm.contentHeight" style="min-height: 400px;">
                     <div>
                         {% if currentPage is defined and currentPage is not empty %}
                             {% if currentPage.type == pageTypes.blank %}
                                 <div>{{ currentPage.richText|raw }}</div>
                             {% elseif currentPage.type == pageTypes.url %}
-                                <iframe width="100%" iframe-height-on-load="contentHeight" src="{{ currentPage.url }}"></iframe>
+                                <iframe width="100%" iframe-height-on-load="vm.contentHeight" src="{{ currentPage.url }}"></iframe>
                             {% elseif currentPage.type == pageTypes.resource %}
-                                <iframe width="100%" iframe-height-on-load="contentHeight" src="{{ path('claro_resource_open', {
+                                <iframe width="100%" iframe-height-on-load="vm.contentHeight" src="{{ path('claro_resource_open', {
                                 'resourceType': currentPage.resourceNodeType,
                                 'node': currentPage.resourceNode.id
                                 }) }}"></iframe>
@@ -89,27 +84,26 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ viewMacros.getVendorScripts() }}
-
+    {% if options.menuOrientation == 'horizontal' %}
+        <script src="{{ hotAsset("dist/icap-website-view-app-horizontal.js") }}"></script>
+    {% else %}
+        <script src="{{ hotAsset("dist/icap-website-view-app-vertical.js") }}"></script>
+    {% endif %}
     <script type="text/javascript">
         (function() {
             'use strict';
-
-            window.menuNgPlugin = "{{ options.menuOrientation=='horizontal'?'ui.flexnav':'wxy.pushmenu' }}";
-            var websiteData = {
-                'id': {{ _resource.id }},
-                'options': {{ _resource.options|serialize('json', serialization_context().setSerializeNull(true))|raw }},
-                'path': "{{ path('icap_website_view',{'websiteId': _resource.id}) }}",
-                'pages': {{ _resource.pages|serialize('json', serialization_context().setSerializeNull(true))|raw }}
-            };
-
             angular
-                    .module('website.constants', [])
-                    .constant('website.data', websiteData);
+                .module('website.constants', [])
+                .constant('website.data', {
+                    'id': {{ _resource.id }},
+                    'currentPage': {{ currentPage.id }},
+                    'options': {{ _resource.options|serialize('json', serialization_context().setSerializeNull(true))|raw }},
+                    'path': "{{ path('icap_website_view',{'websiteId': _resource.id}) }}",
+                    'pages': {{ _resource.pages|serialize('json', serialization_context().setSerializeNull(true))|raw }}
+                });
+
         })();
     </script>
-
-    {{ viewMacros.getAppScripts(options.menuOrientation) }}
 
     {% if options.analyticsProvider=="google" and options.analyticsId is not empty %}
         <script>

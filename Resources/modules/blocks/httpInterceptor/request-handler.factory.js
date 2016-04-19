@@ -1,56 +1,42 @@
-(function () {
-  'use strict';
+let REQUEST_SUCCESS = 'REQUEST_SUCCESS'
+let REQUEST_ERROR = 'REQUEST_ERROR'
+let _$rootScope = new WeakMap()
+let _$alert = new WeakMap()
+export default class RequestHandler {
+  constructor ($rootScope, $alert) {
+    _$rootScope.set(this, $rootScope)
+    _$alert.set(this, $alert)
+  }
+  // Handle starting and ending of requests showing and hiding loading div
+  // Show loading div
+  requestStarted () {
+    _$rootScope.get(this).pageLoaded = false
+  }
+  // Hide loading div
+  requestEnded () {
+    _$rootScope.get(this).pageLoaded = true
+  }
+  // Broadcast success message
+  requestSuccess (response) {
+    _$rootScope.get(this).$broadcast(REQUEST_SUCCESS, response)
+  }
+  // Broadcast error rejection
+  requestError (rejection) {
+    _$rootScope.get(this).$broadcast(REQUEST_ERROR, rejection)
+  }
+  // Handle things globally on success
+  onRequestSuccess ($scope, handler) {
+    $scope.$on(REQUEST_SUCCESS, (event, response) => {
+      response.alert = _$alert.get(this)
+      handler(response)
+    })
+  }
+  onRequestError ($scope, handler) {
+    $scope.$on(REQUEST_ERROR, (event, rejection) => {
+      rejection.alert = _$alert.get(this)
+      handler(rejection)
+    })
+  }
+}
 
-  angular
-    .module('blocks.httpInterceptor')
-
-
-  requestHandler.$inject = [ '$rootScope' ];
-
-  function requestHandler($rootScope) {
-
-    //Handle general success and error messages
-    var REQUEST_SUCCESS = 'REQUEST_SUCCESS';
-    var REQUEST_ERROR = 'REQUEST_ERROR';
-
-    var service = {
-      requestStarted: requestStarted,
-      requestEnded: requestEnded,
-      requestSuccess: requestSuccess,
-      requestError: requestError,
-      onRequestSuccess: onRequestSuccess,
-      onRequestError: onRequestError
-    }
-
-    return service;
-
-    //Handle starting and ending of requests showing and hiding loading div
-    //Show loading div
-    function requestStarted() {
-      $rootScope.pageLoaded = false;
-    };
-    //Hide loading div
-    function requestEnded() {
-      $rootScope.pageLoaded = true;
-    };
-    //Broadcast success message
-    function requestSuccess(response) {
-      $rootScope.$broadcast(REQUEST_SUCCESS, response);
-    };
-    //Broadcast error rejection
-    function requestError(rejection) {
-      $rootScope.$broadcast(REQUEST_ERROR, rejection);
-    };
-    //Handle things globally on success
-    function onRequestSuccess($scope, handler) {
-      $scope.$on(REQUEST_SUCCESS, function (event, response) {
-        handler(response);
-      });
-    };
-    function onRequestError($scope, handler) {
-      $scope.$on(REQUEST_ERROR, function (event, rejection) {
-        handler(rejection);
-      });
-    };
-  };
-})();
+RequestHandler.$inject = [ '$rootScope', '$alert' ]

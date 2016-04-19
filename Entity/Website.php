@@ -33,15 +33,20 @@ class Website extends AbstractResource{
 
     protected $pages;
 
+    protected $test;
     /**
      * @ORM\OneToOne(targetEntity="Icap\WebsiteBundle\Entity\WebsitePage")
      * @ORM\JoinColumn(name="homepage_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $homePage;
 
+    public function __construct($test = false)
+    {
+        $this->test = $test;
+    }
 
     /**
-     * @return mixed
+     * @return WebsiteOptions
      */
     public function getOptions()
     {
@@ -50,7 +55,7 @@ class Website extends AbstractResource{
 
     /**
      * @param WebsiteOptions $options
-     * @return $this
+     * @return Website
      */
     public function setOptions($options)
     {
@@ -76,7 +81,7 @@ class Website extends AbstractResource{
     }
 
     /**
-     * @return mixed
+     * @return WebsitePage
      */
     public function getRoot()
     {
@@ -84,15 +89,15 @@ class Website extends AbstractResource{
     }
 
     /**
-     * @param mixed $root
+     * @param WebsitePage $root
      */
-    public function setRoot($root)
+    public function setRoot(WebsitePage $root)
     {
         $this->root = $root;
     }
 
     /**
-     * @return mixed
+     * @return WebsitePage
      */
     public function getHomePage()
     {
@@ -100,15 +105,15 @@ class Website extends AbstractResource{
     }
 
     /**
-     * @param mixed $homePage
+     * @param WebsitePage $homePage
      */
-    public function setHomePage($homePage)
+    public function setHomePage(WebsitePage $homePage)
     {
         $this->homePage = $homePage;
     }
 
     /**
-     * @ORM\PostPersist
+     * @ORM\PrePersist
      */
     public function createOptionsAndRoot(LifecycleEventArgs $event){
         $em = $event->getEntityManager();
@@ -121,7 +126,8 @@ class Website extends AbstractResource{
             $rootPage->setTitle($this->getResourceNode()->getName());
             $rootPage->setType(WebsitePageTypeEnum::ROOT_PAGE);
             $this->setRoot($rootPage);
-
+        }
+        if ($rootPage->getId() == null) {
             $em->getRepository('IcapWebsiteBundle:WebsitePage')->persistAsFirstChild($rootPage);
         }
 
@@ -129,12 +135,19 @@ class Website extends AbstractResource{
             $options = new WebsiteOptions();
             $options->setWebsite($this);
             $this->setOptions($options);
+        }
 
+        if ($options->getId() == null) {
             $em->persist($options);
         }
 
-        if ($rootPage != null || $options != null) {
+        /*if ($rootPage != null || $options != null) {
             $em->flush();
-        }
+        }*/
+    }
+
+    public function isTest()
+    {
+        return $this->test;
     }
 }

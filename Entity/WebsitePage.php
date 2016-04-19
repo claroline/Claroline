@@ -56,6 +56,15 @@ class WebsitePage{
     protected $richText;
 
     /**
+     * @var text
+     *
+     * @ORM\Column(type="smallint", nullable=true)
+     * @JMS\SerializedName("target")
+     * @JMS\Accessor(getter="getTarget")
+     */
+    protected $target;
+
+    /**
      * @var string
      * @Assert\Url()
      * @ORM\Column(type="string", nullable=true)
@@ -220,6 +229,26 @@ class WebsitePage{
     public function setRichText($richText)
     {
         $this->richText = $richText;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTarget()
+    {
+        if ($this->target == null) {
+            return 0;
+        }
+
+        return $this->target;
+    }
+
+    /**
+     * @param int $target
+     */
+    public function setTarget($target)
+    {
+        $this->target = $target;
     }
 
     /**
@@ -396,7 +425,7 @@ class WebsitePage{
     }
 
     /**
-     * @return mixed
+     * @return WebsitePage
      */
     public function getParent()
     {
@@ -412,7 +441,7 @@ class WebsitePage{
     }
 
     /**
-     * @param mixed $parent
+     * @param WebsitePage $parent
      */
     public function setParent(WebsitePage $parent)
     {
@@ -474,7 +503,6 @@ class WebsitePage{
             'is_homepage'           => $this->getIsHomepage(),
             'url'                   => $this->url
         );
-
         if (isset($files) && $files !== null) {
             if ($this->type == WebsitePageTypeEnum::RESOURCE_PAGE) {
                 $pageArray['type'] = WebsitePageTypeEnum::URL_PAGE;

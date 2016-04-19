@@ -1,56 +1,7 @@
-{% macro getVendorScripts() %}
-    {% javascripts debug=false filter='jsmin' output='js/website/view.vendor.js'
-    '@FrontEndBundle/Resources/public/angular/angular.min.js'
-    '@FrontEndBundle/Resources/public/angular-resource/angular-resource.min.js'
-    '@FrontEndBundle/Resources/public/angular-route/angular-route.min.js'
-    '@FrontEndBundle/Resources/public/angular-touch/angular-touch.min.js'
-    '@FrontEndBundle/Resources/public/angular-animate/angular-animate.min.js'
-    '@FrontEndBundle/Resources/public/angular-sanitize/angular-sanitize.min.js'
-    '@FrontEndBundle/Resources/public/angular-strap/dist/angular-strap.min.js'
-    '@FrontEndBundle/Resources/public/angular-strap/dist/angular-strap.tpl.min.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-{% endmacro %}
-
-{% macro getAppScripts(orientation) %}
-    {% javascripts debug=false filter='jsmin' output='js/website/view.app.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/utilities/utilities.module.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/utilities/utilities.service.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/utilities/iframeHeightOnLoad.directive.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/resizer/resizer.module.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/resizer/resizer.directive.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/resizer/resizerBottom.directive.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/resizer/resizerRight.directive.js'
-    '@IcapWebsiteBundle/Resources/public/js/components/resizer/changeHeight.directive.js'
-    '@IcapWebsiteBundle/Resources/public/js/view-app/app.js'
-    '@IcapWebsiteBundle/Resources/public/js/view-app/app.config.js'
-    '@IcapWebsiteBundle/Resources/public/js/app.bootstrap.js'
-    '@IcapWebsiteBundle/Resources/public/js/view-app/main.controller.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-    {% if orientation == 'horizontal' %}
-        {% javascripts debug=false filter='jsmin' output='js/website/components/view.flexnav.js'
-        '@IcapWebsiteBundle/Resources/public/js/components/flexnav/flexnav.module.js'
-        '@IcapWebsiteBundle/Resources/public/js/components/flexnav/flexnav-options.service.js'
-        '@IcapWebsiteBundle/Resources/public/js/components/flexnav/flexnav-utils.service.js'
-        '@IcapWebsiteBundle/Resources/public/js/components/flexnav/flexnav.directive.js'
-        '@IcapWebsiteBundle/Resources/public/js/components/flexnav/flexnav-submenu.directive.js'
-        '@IcapWebsiteBundle/Resources/public/js/components/flexnav/templates/main_menu.tpl.js'
-        '@IcapWebsiteBundle/Resources/public/js/components/flexnav/templates/sub_menu.tpl.js'
-        %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-        {% endjavascripts %}
-    {% else %}
-        <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/vendor/angular-ui/multi-level-push-menu/pushmenu.js') }}"></script>
-    {% endif %}
-{% endmacro %}
-
 {% macro getStylesheets(orientation) %}
     {% if orientation == 'horizontal' %}
         {% stylesheets debug=false filter='less, cssmin' output='bundles/icapwebsite/css/view-style-horizontal.css'
-        "@IcapWebsiteBundle/Resources/public/css/angular/flexnav.css"
+        "@IcapWebsiteBundle/Resources/views/less/flexnav.less"
         "@IcapWebsiteBundle/Resources/views/less/view.less"
         %}
         <link rel="stylesheet" href="{{ asset_url }}" screen="media" />

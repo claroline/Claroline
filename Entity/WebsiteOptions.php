@@ -92,6 +92,15 @@ class WebsiteOptions{
     /**
      * @var string
      *
+     * @Assert\Length(max = 11)
+     * @ORM\Column(type="string", nullable=true)
+     * @JMS\SerializedName("bgContentColor")
+     */
+    protected $bgContentColor = "#FFFFFF";
+
+    /**
+     * @var string
+     *
      * @ORM\Column(type="string", nullable=true)
      * @JMS\Accessor(getter="getBgImageForWeb")
      * @JMS\SerializedName("bgImage")
@@ -451,6 +460,22 @@ class WebsiteOptions{
     public function setBgColor($bgColor)
     {
         $this->bgColor = $bgColor;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBgContentColor()
+    {
+        return $this->bgContentColor;
+    }
+
+    /**
+     * @param string $bgContentColor
+     */
+    public function setBgContentColor($bgContentColor)
+    {
+        $this->bgContentColor = $bgContentColor;
     }
 
     /**
@@ -962,7 +987,7 @@ class WebsiteOptions{
     }
 
     /**
-     * @return mixed
+     * @return Website
      */
     public function getWebsite()
     {
@@ -1036,7 +1061,11 @@ class WebsiteOptions{
      */
     public function getUploadDir()
     {
-        return sprintf("uploads%swebsites%s".$this->getWebsite()->getId(), DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR);
+        $uploadDir = sprintf("uploads%swebsites%s", DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR);
+        if ($this->getWebsite()->isTest()) {
+            return $uploadDir."tests";
+        }
+        return $uploadDir.$this->getWebsite()->getId();
     }
 
     /**

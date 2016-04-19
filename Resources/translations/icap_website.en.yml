@@ -1,6 +1,7 @@
 icap_website_type_name: Name
 save_all_options: Save all options
 'bg_color': Background color
+'bg_content_color': Content background color
 'site_width': Website's width
 'full_scr': Full screen
 'fix_scr': Fix
@@ -59,10 +60,13 @@ save_all_options: Save all options
 'url': URL
 'blank_page': Rich text page
 'url_page': External URL page
+'target': Open page
+'embedded': inside the website
+'new_window': in a new tab
 'resource_page': Platfrom resource page
 'confirm': Confirm
 'cancel': Cancel
-'confirm_delete_message': Are you sure you want to permanently delete '{{ menu.currentPageNode.title }}' and all it's children?
+'confirm_delete_message': Are you sure you want to permanently delete '%title%' and all it's children?
 'add_resource': Add resource
 'change_resource': Change resource
 'error': Error
@@ -85,5 +89,7 @@ empty_site_message: Your website is currently empty. You need to create some pag
 'menu_orientation': Menu orientation
 'change_bg_image_attention_text': Attention! If you change this option the current option (image) will be deleted.
 'view_website': View website
+'no_pages': No pages
+
 
 

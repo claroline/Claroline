@@ -6,31 +6,25 @@
  */
 import angular from 'angular/index'
 
-import ngResource from 'angular-resource'
-import ngRoute from 'angular-route'
-import ngTouch from 'angular-touch'
-import ngAnimate from 'angular-animate'
-import ngSanitize from 'angular-sanitize'
-import ngStrap from 'angular-strap'
-import ngStrapTpl from 'angular-strap.tpl'
-import ViewAppConfig from 'ViewAppConfig'
-import MainController from 'MainController'
-import FlexnavModule from '../components/flexnav/flexnav.module'
+import {} from 'angular-animate'
+import MainController from './main.controller'
+import {} from '../components/flexnav/flexnav.module'
+import {} from '../components/resizer/resizer.module'
+import register from '../utils/register'
 
-angular
-  .module('app',
+let registerApp = new register('app',
   [
-    'ngSanitize',
-    'mgcrea.ngStrap',
     'ui.resizer',
     'website.constants',
-    window.menuNgPlugin
+    'ui.flexnav'
   ]
 )
-  .run(ViewAppConfig.run)
-  .controller('MainController', MainController)
+
+registerApp
+  .run(['$rootScope', ($rootScope) => {$rootScope.pageLoaded = true}])
+  .controller('MainController', ['website.data', MainController])
 
 //Bootstrap angular in body
 angular.element(document).ready(function () {
-  angular.bootstrap(document.getElementsByTagName('body')[ 0 ], [ 'app' ]);
-});
+  angular.bootstrap(document.getElementsByTagName('body')[ 0 ], [ 'app' ])
+})

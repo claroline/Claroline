@@ -3,17 +3,17 @@
         <div>
             <div><label>{{ ('display_'~tag)|trans({}, 'icap_website') }}</label></div>
             <div class="btn-group" role="group">
-                <button class="btn btn-default" id="has-{{ tag }}" data-ng-class="{'active':vm.options.{{ tag }}Enabled}" data-ng-click="vm.options.{{ tag }}Enabled=true">{{ 'activate'|trans({}, 'icap_website') }}</button>
-                <button class="btn btn-default" id="has-{{ tag }}" data-ng-class="{'active':!vm.options.{{ tag }}Enabled}" data-ng-click="vm.options.{{ tag }}Enabled=false">{{ 'disable'|trans({}, 'icap_website') }}</button>
+                <button class="btn btn-default" id="has-{{ tag }}" data-ng-class="{'active':vm.options.data.{{ tag }}Enabled}" data-ng-click="vm.options.data.{{ tag }}Enabled=true">{{ 'activate'|trans({}, 'icap_website') }}</button>
+                <button class="btn btn-default" id="has-{{ tag }}" data-ng-class="{'active':!vm.options.data.{{ tag }}Enabled}" data-ng-click="vm.options.data.{{ tag }}Enabled=false">{{ 'disable'|trans({}, 'icap_website') }}</button>
             </div>
         </div>
         <div>
             <label for="{{ tag }}-bg-color">{{ 'bg_color'|trans({},'icap_website') }}</label>
-            <div class="input-group color-group input-group-sm" bs-colorpicker data-color="vm.options.{{ tag }}BgColor"></div>
+            <div class="input-group color-group input-group-sm" bs-colorpicker data-color="vm.options.data.{{ tag }}BgColor"></div>
         </div>
         <div>
             <label for="{{ tag }}-height">{{ 'height'|trans({},'icap_website') }}</label>
-            <input type="number" class="form-control" id="{{ tag }}-height" max="200" data-ng-model="vm.options.{{ tag }}Height"/> px
+            <input type="number" class="form-control" id="{{ tag }}-height" max="200" data-ng-model="vm.options.data.{{ tag }}Height"/> px
         </div>
     </div>
     <div class="col-md-3">

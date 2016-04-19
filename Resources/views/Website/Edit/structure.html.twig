@@ -2,121 +2,107 @@
 <div class="structure-container container-fluid" data-ng-show="optionWindow=='structure'">
     <div class="row">
         <div class="edit-menu-container col-sm-3">
-            <div >
-                <h5 class="text-center">{{ 'page_list'|trans({}, 'icap_website') }}</h5>
-                <div class="dropdown">
-                    <button class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="type"><i class="fa fa-plus"></i> <span class="caret"></span></button>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="" data-ng-click="vm.createNewPageForm()">{{ 'create_page'|trans({}, 'icap_website') }}</a></li>
-                        <li data-ng-class="{'disabled':vm.menu.currentPageNode==vm.menu.root}"><a href="" data-ng-click="vm.createNewPageForm(vm.menu.currentPageNode)">{{ 'create_sub_page'|trans({}, 'icap_website') }}</a></li>
-                    </ul>
-                    <button data-ng-class="{'disabled':vm.menu.currentPageNode==vm.menu.root}" data-ng-click="vm.confirmNodeDelete(vm.menu.currentPageNode)" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button>
-                </div>
-            </div>
-            <div class="ui-tree-container" data-ui-tree="vm.treeOptions" data-drag-enabled="true" id="tree-root">
-                <ul id="nd-{{ '{{ vm.menu.root.id }}' }}" class="edit-menu" data-ui-tree-nodes data-ng-model="vm.menu.root.children">
-                    <li id="nd-{{ '{{ node.id }}' }}" data-ng-repeat="node in vm.menu.root.children" data-ui-tree-node data-ng-include="'tree_renderer.tpl'"></li>
-                </ul>
-            </div>
+            <webtree id="website-tree" data-instance="vm.tree" data-tree="vm.website"></webtree>
         </div>
         <div class="edit-page-container col-sm-9">
-            <div data-ng-class="{'panel panel-default':vm.menu.currentEditPageNode.new}" data-ng-if="vm.menu.currentEditPageNode!=null && vm.menu.confirmDelete == false">
-                <div class="panel-heading" data-ng-if="vm.menu.currentEditPageNode.new"><div class="panel-title">{{ 'create_page'|trans({}, 'icap_website') }}</div></div>
-                <div data-ng-class="{'panel-body new-page-body':vm.menu.currentEditPageNode.new}">
-                    <h4 data-ng-if="!vm.menu.currentEditPageNode.new">{{ 'edit_page'|trans({}, 'icap_website') }}: <small class="text-primary">{{ '{{ vm.menu.currentEditPageNode.title }}' }}</small></h4>
-                    <h5 data-ng-if="!vm.menu.currentEditPageNode.new">
+            <div data-ng-class="{'panel panel-default':vm.tree.activeNode.new}" data-ng-if="vm.tree.activeNode">
+                <div class="panel-heading" data-ng-if="vm.tree.activeNode.new"><div class="panel-title">{{ 'create_page'|trans({}, 'icap_website') }}</div></div>
+                <div data-ng-class="{'panel-body new-page-body':vm.tree.activeNode.new}">
+                    <h4 data-ng-if="!vm.tree.activeNode.new">{{ 'edit_page'|trans({}, 'icap_website') }}: <small class="text-primary">{{ '{{ vm.tree.activeNode.title }}' }}</small></h4>
+                    <h5 data-ng-if="!vm.tree.activeNode.new">
                         {{ 'url'|trans({}, 'icap_website') }} :
                         <small>
-                            <a data-ng-if="vm.menu.currentEditPageNode.isHomepage" href="{{ url('icap_website_force_view', {'websiteId': _resource.id}) }}">{{ url('icap_website_force_view', {'websiteId': _resource.id}) }}</a>
-                            <a data-ng-if="!vm.menu.currentEditPageNode.isHomepage" data-ng-href="{{ url('icap_website_view', {'websiteId': _resource.id}) }}/{{ '{{ vm.menu.currentEditPageNode.id }}' }}">{{ url('icap_website_view', {'websiteId': _resource.id}) }}/{{ '{{ vm.menu.currentEditPageNode.id }}' }}</a>
+                            <a data-ng-if="vm.tree.activeNode.isHomepage" href="{{ url('icap_website_force_view', {'websiteId': _resource.id}) }}">{{ url('icap_website_force_view', {'websiteId': _resource.id}) }}</a>
+                            <a data-ng-if="!vm.tree.activeNode.isHomepage" data-ng-href="{{ url('icap_website_view', {'websiteId': _resource.id}) }}/{{ '{{ vm.tree.activeNode.id }}' }}">{{ url('icap_website_view', {'websiteId': _resource.id}) }}/{{ '{{ vm.tree.activeNode.id }}' }}</a>
                         </small>
                     </h5>
-                    <div>
-                        <button class="btn btn-xs btn-success" data-ng-if="vm.menu.currentEditPageNode&&!vm.menu.currentEditPageNode.isHomepage" data-ng-click="vm.setAsHomepage()"><i class="fa fa-home"></i> {{ 'set_as_homepage'|trans({}, 'icap_website') }}</button>
+                    <div data-ng-if="vm.tree.activeNode && !vm.tree.activeNode.new && !vm.tree.activeNode.isHomepage">
+                        <button class="btn btn-xs btn-success" data-ng-click="vm.setAsHomepage()"><i class="fa fa-home"></i> {{ 'set_as_homepage'|trans({}, 'icap_website') }}</button>
                     </div>
                     <form class="form" role="form">
                         <div class="form-group">
                             <label for="page-type">{{ 'type'|trans({}, 'icap_website') }}</label>
                             <div class="page-type-buttons">
-                                <button class="btn btn-default" data-ng-click="vm.menu.currentEditPageNode.type='{{ pageTypes.blank }}'" data-ng-class="{'active':vm.menu.currentEditPageNode.type=='{{ pageTypes.blank }}'}">
+                                <button class="btn btn-default" data-ng-click="vm.tree.activeNode.type='{{ pageTypes.blank }}'" data-ng-class="{'active':vm.tree.activeNode.type=='{{ pageTypes.blank }}'}">
                                     {{ "blank_page"|trans({}, 'icap_website') }} <br/>
                                     <i class="fa fa-file-code-o"></i>
                                 </button>
-                                <button class="btn btn-default" data-ng-click="vm.menu.currentEditPageNode.type='{{ pageTypes.resource }}'" data-ng-class="{'active':vm.menu.currentEditPageNode.type=='{{ pageTypes.resource }}'}">
+                                <button class="btn btn-default" data-ng-click="vm.tree.activeNode.type='{{ pageTypes.resource }}'" data-ng-class="{'active':vm.tree.activeNode.type=='{{ pageTypes.resource }}'}">
                                     {{ "resource_page"|trans({}, 'icap_website') }} <br/>
                                     <i class="fa fa-folder"></i>
                                 </button>
-                                <button class="btn btn-default" data-ng-click="vm.menu.currentEditPageNode.type='{{ pageTypes.url }}'" data-ng-class="{'active':vm.menu.currentEditPageNode.type=='{{ pageTypes.url }}'}">
+                                <button class="btn btn-default" data-ng-click="vm.tree.activeNode.type='{{ pageTypes.url }}'" data-ng-class="{'active':vm.tree.activeNode.type=='{{ pageTypes.url }}'}">
                                     {{ "url_page"|trans({}, 'icap_website') }} <br/>
                                     <i class="fa fa-globe"></i>
                                 </button>
                             </div>
                         </div>
-                        <div class="form-group" data-ng-class="{'has-warning':vm.menu.currentEditPageNode.title.length>70}">
-                            <label for="page-title">{{ 'title'|trans({}, 'icap_website') }}</label> <small>({{ '{{ vm.menu.currentEditPageNode.title.length }}'~' '~'chars'|trans({}, 'icap_website') }})</small>
-                            <input id="page-title" class="form-control " type="text" data-ng-model="vm.menu.currentEditPageNode.title" placeholder="title" />
+                        <div class="form-group" data-ng-class="{'has-warning':vm.tree.activeNode.title.length>70}">
+                            <label for="page-title">{{ 'title'|trans({}, 'icap_website') }}</label> <small>({{ '{{ vm.tree.activeNode.title.length }}'~' '~'chars'|trans({}, 'icap_website') }})</small>
+                            <input id="page-title" class="form-control " type="text" data-ng-model="vm.tree.activeNode.title" placeholder="title" />
                             <small class="text-primary">{{ 'title_limit_message'|trans({}, 'icap_website') }}</small>
                         </div>
-                        <div class="form-group" data-ng-class="{'has-warning':vm.menu.currentEditPageNode.description.length>160}">
-                            <label for="page-description">{{ 'description'|trans({}, 'icap_website') }}</label> <small>({{ '{{ vm.menu.currentEditPageNode.description.length }}'~' '~'chars'|trans({}, 'icap_website') }})</small>
-                            <textarea id="page-description" class="form-control" data-ng-model="vm.menu.currentEditPageNode.description" placeholder="description"></textarea>
+                        <div class="form-group" data-ng-class="{'has-warning':vm.tree.activeNode.description.length>160}">
+                            <label for="page-description">{{ 'description'|trans({}, 'icap_website') }}</label> <small>({{ '{{ vm.tree.activeNode.description.length }}'~' '~'chars'|trans({}, 'icap_website') }})</small>
+                            <textarea id="page-description" class="form-control" data-ng-model="vm.tree.activeNode.description" placeholder="description"></textarea>
                             <small class="text-primary">{{ 'description_limit_message'|trans({}, 'icap_website') }}</small>
                         </div>
                         <div class="form-group">
-                            <input id="page-visible" type="checkbox" data-ng-model="vm.menu.currentEditPageNode.visible" />
+                            <input id="page-visible" type="checkbox" data-ng-model="vm.tree.activeNode.visible" />
                             <label for="page-visible">{{ 'visible'|trans({}, 'icap_website') }}</label>
                         </div>
                         <div class="form-group">
-                            <input id="page-is-section" type="checkbox" data-ng-model="vm.menu.currentEditPageNode.isSection" />
+                            <input id="page-is-section" type="checkbox" data-ng-model="vm.tree.activeNode.isSection" />
                             <label for="page-is-section">{{ 'section'|trans({}, 'icap_website') }}</label>
                             <small class="text-primary">({{ 'section_info'|trans({}, 'icap_website') }})</small>
                         </div>
-                        <div class="form-group" data-ng-if="vm.menu.currentEditPageNode.type=='{{ pageTypes.blank }}'">
+                        <div class="form-group" data-ng-if="vm.tree.activeNode.type=='{{ pageTypes.blank }}'">
                             <label for="page-richtext">{{ 'content'|trans({}, 'icap_website') }}</label>
-                            <textarea id="page-richtext" class="form-control" ui-tinymce="vm.tinymceConfig" data-ng-model="vm.menu.currentEditPageNode.richText"></textarea>
+                            <textarea id="page-richtext" class="form-control" ui-tinymce="vm.tinymceConfig" data-ng-model="vm.tree.activeNode.richText"></textarea>
                         </div>
-                        <div class="form-group" data-ng-if="vm.menu.currentEditPageNode.type=='{{ pageTypes.url }}'">
-                            <label for="page-url">{{ 'url'|trans({}, 'icap_website') }}</label>
-                            <input id="page-url" type="url" class="form-control" data-ng-model="vm.menu.currentEditPageNode.url" placeholder="http://www.example.com"/>
+                        <div class="form-group" data-ng-if="vm.tree.activeNode.type=='{{ pageTypes.url }}'">
+                            <div class="form-group">
+                                <label for="page-url">{{ 'url'|trans({}, 'icap_website') }}</label>
+                                <input id="page-url" type="url" class="form-control" data-ng-model="vm.tree.activeNode.url" placeholder="http://www.example.com"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="page-target">{{ 'target'|trans({}, 'icap_website') }}</label>
+                                <select id="page-target" data-ng-model="vm.tree.activeNode.target" convert-to-number>
+                                    <option value="0">{{ 'embedded'|trans({}, 'icap_website') }}</option>
+                                    <option value="1">{{ 'new_window'|trans({}, 'icap_website') }}</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="form-group" data-ng-if="vm.menu.currentEditPageNode.type=='{{ pageTypes.resource }}'">
+
+                        <div class="form-group" data-ng-if="vm.tree.activeNode.type=='{{ pageTypes.resource }}'">
                             <div><label for="page-resource-node">{{ 'resource'|trans({}, 'icap_website') }}:</label></div>
-                            <div data-ng-if="vm.menu.currentEditPageNode.resourceNode">
-                                <span data-ng-if="vm.menu.currentEditPageNode.resourceNodeWorkspace"><i class="fa fa-book"></i> {{ '{{ vm.menu.currentEditPageNode.resourceNodeWorkspace }}' }} : </span>
-                                <a target="_blank" data-ng-href="{{ '{{ vm.menu.currentEditPageNode.generateResourceUrl() }}' }}">{{ '{{ vm.menu.currentEditPageNode.resourceNodeName }}' }}</a>
+                            <div data-ng-if="vm.tree.activeNode.resourceNode">
+                                <span data-ng-if="vm.tree.activeNode.resourceNodeWorkspace"><i class="fa fa-book"></i> {{ '{{ vm.tree.activeNode.resourceNodeWorkspace }}' }} : </span>
+                                <a target="_blank" data-ng-href="{{ '{{ vm.tree.activeNode.generateResourceUrl()|trustAsResourceUrl }}' }}">{{ '{{ vm.tree.activeNode.resourceNodeName }}' }}</a>
                             </div>
                             <div>
                                 <btn-resource-picker type="button" class="btn btn-sm btn-success" data-parameters="vm.resourcePickerConfig">
-                                    <span data-ng-if="!vm.menu.currentEditPageNode.resourceNode">
+                                    <span data-ng-if="!vm.tree.activeNode.resourceNode">
                                         <i class="fa fa-plus"></i> {{ 'add_resource'|trans({}, 'icap_website') }}
                                     </span>
-                                    <span data-ng-if="vm.menu.currentEditPageNode.resourceNode">
+                                    <span data-ng-if="vm.tree.activeNode.resourceNode">
                                         <i class="fa fa-refresh"></i> {{ 'change_resource'|trans({}, 'icap_website') }}
                                     </span>
                                 </btn-resource-picker>
                             </div>
-                            <input id="page-resource-node" type="hidden" class="form-control" data-ng-model="vm.menu.currentEditPageNode.resourceNode"/>
-                            <input id="page-resource-node" type="hidden" class="form-control" data-ng-model="vm.menu.currentEditPageNode.resourceNodeType"/>
+                            <input id="page-resource-node" type="hidden" class="form-control" data-ng-model="vm.tree.activeNode.resourceNode"/>
+                            <input id="page-resource-node" type="hidden" class="form-control" data-ng-model="vm.tree.activeNode.resourceNodeType"/>
                         </div>
                         <button data-ng-click="vm.saveWebsitePage()" class="btn btn-primary">
-                            <span data-ng-if="vm.menu.currentEditPageNode.new">{{ 'save_page'|trans({}, 'icap_website') }}</span>
-                            <span data-ng-if="!vm.menu.currentEditPageNode.new">{{ 'save_changes'|trans({}, 'icap_website') }}</span>
+                            <span data-ng-if="vm.tree.activeNode.new">{{ 'save_page'|trans({}, 'icap_website') }}</span>
+                            <span data-ng-if="!vm.tree.activeNode.new">{{ 'save_changes'|trans({}, 'icap_website') }}</span>
                         </button>
                     </form>
                 </div>
             </div>
-            <div  class="panel panel-default" data-ng-if="vm.menu.confirmDelete == true">
-                <div class="panel-body">
-                    <div>{{ 'confirm_delete_message'|trans({}, 'icap_website') }}</div>
-                    <div>
-                        <button class="btn btn-primary" data-ng-click="vm.removeCurrentPageNode()">{{ 'confirm'|trans({}, 'icap_website') }}</button>
-                        <button class="btn btn-default" data-ng-click="vm.cancelPageNodeDelete()">{{ 'cancel'|trans({}, 'icap_website') }}</button>
-                    </div>
-                </div>
-            </div>
-            <div class="" data-ng-if="vm.menu.root.children.length==0&&(vm.menu.currentEditPageNode==null||vm.menu.currentEditPageNode==vm.menu.root)">
+            <div class="" data-ng-if="vm.tree.root.children.length==0&&(vm.tree.activeNode==null||vm.tree.activeNode==vm.tree.root)">
                 <p>{{ 'empty_site_message'|trans({}, 'icap_website') }}</p>
-                <p><button class="btn btn-primary" data-ng-click="vm.createNewPageForm()">{{ 'create_page'|trans({}, 'icap_website') }}</button></p>
+                <p><button class="btn btn-primary" data-ng-click="vm.createNewPage()">{{ 'create_page'|trans({}, 'icap_website') }}</button></p>
             </div>
         </div>
     </div>

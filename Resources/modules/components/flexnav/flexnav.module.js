@@ -1,14 +1,10 @@
-import angular from 'angular/index'
-import uiFlexnav from 'flexnav.directive'
-import uiFlexnavSubmenu from 'flexnav-submenu.directive'
-import FlexnavUtils from 'flexnav-utils.service'
-import FlexnavOptions from 'flexnav-options.service'
-import FlexnavTemplates from 'flexnav.templates'
+import register from '../../utils/register'
+import uiFlexnav from './flexnav.directive'
+import uiFlexnavSubmenu from './flexnav-submenu.directive'
+import FlexnavUtils from './flexnav-utils.factory'
 
-angular
-  .module('ui.flexnav', [])
+let registerApp = new register('ui.flexnav', [])
+registerApp
+  .factory('flexnav.utils', FlexnavUtils)
   .directive('uiFlexnav', uiFlexnav)
   .directive('uiFlexnavSubmenu', uiFlexnavSubmenu)
-  .factory('flexnav.utils',FlexnavUtils)
-  .value('flexnav.options', FlexnavOptions)
-  .run(FlexnavTemplates.append)
