@@ -145,7 +145,7 @@ class StepManager
             if (empty($stepStructure->condition->scid) || (!empty($oldCondition) && $stepStructure->condition->scid !== $oldCondition->getId())) {
                 // Condition has never been published or has been replaced by a new one
                 $condition = $this->stepConditionManager->create($step, $stepStructure->condition);
-            } else {
+            } elseif ($oldCondition) {
                 // Update existing condition
                 $condition = $this->stepConditionManager->edit($step, $oldCondition, $stepStructure->condition);
             }
