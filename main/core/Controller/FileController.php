@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Resource\File;
@@ -41,23 +41,19 @@ class FileController extends Controller
     {
         $collection = new ResourceCollection(array($node));
         $this->checkAccess('OPEN', $collection);
+
+        // free the session as soon as possible
+        // see https://github.com/claroline/CoreBundle/commit/7cee6de85bbc9448f86eb98af2abb1cb072c7b6b
+        $this->get('session')->save();
+
         $file = $this->get('claroline.manager.resource_manager')->getResourceFromNode($node);
         $path = $this->container->getParameter('claroline.param.files_directory').DIRECTORY_SEPARATOR
             .$file->getHashName();
 
-        $response = new StreamedResponse();
-        $response->setCallBack(
-            function () use ($path) {
-                readfile($path);
-            }
-        );
-
-        $this->get('session')->save();
-
+        $response = new BinaryFileResponse($path);
         $response->headers->set('Content-Type', $node->getMimeType());
-        $response->send();
 
-        return new Response();
+        return $response;
     }
 
     /**
