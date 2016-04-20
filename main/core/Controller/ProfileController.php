@@ -499,13 +499,13 @@ class ProfileController extends Controller
      */
     public function checkPublicUrlAction(Request $request)
     {
-        $existedUser = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByPublicUrl(
-            $request->request->get('publicUrl')
-        );
+        $publicUrl = $request->request->get('publicUrl');
         $data = array('check' => false);
-
-        if (null === $existedUser) {
-            $data['check'] = true;
+        if (preg_match('/^[^\/]+$/',$publicUrl)) {
+            $existedUser = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByPublicUrl($publicUrl);
+            if (null === $existedUser) {
+                $data['check'] = true;
+            }
         }
 
         $response = new JsonResponse($data);

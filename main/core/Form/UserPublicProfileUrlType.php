@@ -16,6 +16,7 @@ class UserPublicProfileUrlType extends AbstractType
                 'attr' => array(
                     'maxlength' => 30,
                     'class' => 'check-ok',
+                    'pattern' => '[^/]+'
                 ),
             ));
     }

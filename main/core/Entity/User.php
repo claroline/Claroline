@@ -307,6 +307,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     /**
      * @var string
      *
+     * @Assert\Regex("/^[^\/]+$/")
      * @ORM\Column(name="public_url", type="string", nullable=true, unique=true)
      * @Groups({"api_user"})
      * @SerializedName("publicUrl")
