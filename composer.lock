@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7a95178165bf59ebb7b2c2e2c2b4a7c5",
-    "content-hash": "c7ac490737dadccdaa5077c7c45705a1",
+    "hash": "e4baddc4ff87bd16517a68f148968099",
+    "content-hash": "64c126dc14cb89ada5b5a0cc9d2f5afa",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -115,195 +115,29 @@
             "time": "2016-01-19 19:47:22"
         },
         {
-            "name": "claroline/activity-tool-bundle",
-            "version": "6.0.1",
+            "name": "claroline/distribution",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/claroline/ActivityToolBundle.git",
-                "reference": "cd93640089af6a2e179de673a69844421f73b695"
+                "url": "https://github.com/claroline/Distribution.git",
+                "reference": "32a287f646a911d5897f5d1cfd5023189e65d038"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/ActivityToolBundle/zipball/cd93640089af6a2e179de673a69844421f73b695",
-                "reference": "cd93640089af6a2e179de673a69844421f73b695",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": "~6.0",
-                "php": ">=5.5"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Claroline\\ActivityToolBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Claroline development team",
-                    "email": "dev@claroline.net",
-                    "homepage": "http://github.com/claroline"
-                }
-            ],
-            "description": "Claroline activity tool bundle",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "activity",
-                "tool"
-            ],
-            "time": "2016-02-03 15:50:00"
-        },
-        {
-            "name": "claroline/agenda-bundle",
-            "version": "6.0.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/claroline/AgendaBundle.git",
-                "reference": "ce0aa6d10d934c1704bca4cb1c56c6257e446968"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/claroline/AgendaBundle/zipball/ce0aa6d10d934c1704bca4cb1c56c6257e446968",
-                "reference": "ce0aa6d10d934c1704bca4cb1c56c6257e446968",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": "~6.0",
-                "php": ">=5.5"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Claroline\\AgendaBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "plugin"
-            ],
-            "time": "2016-02-03 15:34:26"
-        },
-        {
-            "name": "claroline/announcement-bundle",
-            "version": "6.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/claroline/AnnouncementBundle.git",
-                "reference": "d98c73802708aae463543f2952717858122c1de0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/claroline/AnnouncementBundle/zipball/d98c73802708aae463543f2952717858122c1de0",
-                "reference": "d98c73802708aae463543f2952717858122c1de0",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": "~6.0",
-                "php": ">=5.5"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Claroline\\AnnouncementBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Claroline development team",
-                    "email": "dev@claroline.net",
-                    "homepage": "http://github.com/claroline"
-                }
-            ],
-            "description": "Claroline announcement bundle",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Announcement",
-                "Claroline"
-            ],
-            "time": "2016-02-03 10:57:50"
-        },
-        {
-            "name": "claroline/bundle-recorder",
-            "version": "6.0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/claroline/BundleRecorder.git",
-                "reference": "8862f38b8b9429f1755b85c40d3fc4ec8c7a4e90"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/claroline/BundleRecorder/zipball/8862f38b8b9429f1755b85c40d3fc4ec8c7a4e90",
-                "reference": "8862f38b8b9429f1755b85c40d3fc4ec8c7a4e90",
-                "shasum": ""
-            },
-            "require": {
-                "composer/composer": "*",
-                "php": ">=5.5",
-                "psr/log": "1.0.*@dev"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Claroline\\BundleRecorder\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Claroline development team",
-                    "email": "dev@claroline.net",
-                    "homepage": "http://github.com/claroline"
-                }
-            ],
-            "description": "Claroline bundle recorder",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Bundle recorder",
-                "Claroline"
-            ],
-            "time": "2016-02-18 18:06:07"
-        },
-        {
-            "name": "claroline/core-bundle",
-            "version": "6.8.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/claroline/CoreBundle.git",
-                "reference": "895b20d102956b0ee8a8faf8fd366cd7f1c2a2a7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/claroline/CoreBundle/zipball/895b20d102956b0ee8a8faf8fd366cd7f1c2a2a7",
-                "reference": "895b20d102956b0ee8a8faf8fd366cd7f1c2a2a7",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/32a287f646a911d5897f5d1cfd5023189e65d038",
+                "reference": "32a287f646a911d5897f5d1cfd5023189e65d038",
                 "shasum": ""
             },
             "require": {
                 "besimple/sso-auth-bundle": "*",
-                "claroline/bundle-recorder": "~6.0",
-                "claroline/front-end-bundle": ">=7.0.1,<8",
-                "claroline/installation-bundle": "~6.0",
-                "claroline/kernel-bundle": "~6.0",
-                "claroline/migration-bundle": "~6.0",
+                "claroline/front-end-bundle": "dev-7.x-test",
                 "cocur/slugify": "~1.0",
+                "composer/composer": "~1.0",
+                "ddeboer/data-import": "~0.18",
+                "doctrine/data-fixtures": "dev-master",
                 "doctrine/dbal": "~2.4",
                 "doctrine/doctrine-bundle": "~1.3",
+                "doctrine/migrations": "~1.3",
                 "doctrine/orm": "~2.4",
                 "ext-curl": "*",
                 "ext-fileinfo": "*",
@@ -315,28 +149,46 @@
                 "friendsofsymfony/rest-bundle": "~1.4",
                 "gedmo/doctrine-extensions": "~2.3",
                 "gregwar/captcha-bundle": "1.0.12",
+                "guzzle/http": "~3.1",
                 "hwi/oauth-bundle": "0.4.*@dev",
+                "icap/html-diff": "~1.1",
                 "idci/exporter-bundle": "1.0.0",
+                "innova/angular-js-bundle": "~5.0",
+                "innova/angular-ui-pageslide-bundle": "~5.0",
+                "innova/angular-ui-resource-picker-bundle": "~6.0",
+                "innova/angular-ui-tinymce-bundle": "5.*",
+                "jdorn/sql-formatter": "~1.0",
                 "jms/di-extra-bundle": "1.5.0",
                 "jms/security-extra-bundle": "1.5.1",
                 "jms/serializer-bundle": "~0.13",
                 "jms/twig-js-bundle": "1.0.0",
                 "johngrogg/ics-parser": "dev-master",
                 "knplabs/knp-menu-bundle": "2.0.0",
+                "knplabs/knp-snappy-bundle": "1.3",
                 "leafo/lessphp": "0.4.0",
                 "mrclay/minify": "~2.2",
                 "natxet/cssmin": "3.0.2",
                 "nelmio/api-doc-bundle": "dev-master",
                 "php": ">=5.5",
+                "psr/log": "~1.0",
                 "sensio/distribution-bundle": "~2.3.4",
                 "sensio/framework-extra-bundle": "3.0.12",
                 "sensio/generator-bundle": "~2.4",
+                "stefk/jval": "dev-master",
                 "stfalcon/tinymce-bundle": "0.3.8",
                 "stof/doctrine-extensions-bundle": "1.1.0",
                 "symfony/assetic-bundle": "~2.4",
+                "symfony/console": "~2.0",
+                "symfony/filesystem": "~2.0",
+                "symfony/framework-bundle": "*",
+                "symfony/http-foundation": "*",
+                "symfony/http-kernel": "*",
                 "symfony/monolog-bundle": "~2.5",
                 "symfony/swiftmailer-bundle": "~2.3",
                 "symfony/symfony": "~2.7.0",
+                "symfony/twig-bridge": "~2.0",
+                "symfony/twig-bundle": "~2.0",
+                "symfony/yaml": "*",
                 "twig/extensions": "1.2.0",
                 "werkint/jsmin": "1.0.0",
                 "white-october/pagerfanta-bundle": "1.0.2",
@@ -344,10 +196,101 @@
                 "zendframework/zend-crypt": "~2.3",
                 "zenstruck/form-bundle": "1.5.1"
             },
+            "replace": {
+                "claroline/activity-tool-bundle": "*",
+                "claroline/agenda-bundle": "*",
+                "claroline/announcement-bundle": "*",
+                "claroline/bundle-recorder": "*",
+                "claroline/core-bundle": "*",
+                "claroline/cursus-bundle": "*",
+                "claroline/dev-bundle": "*",
+                "claroline/forum-bundle": "*",
+                "claroline/image-player-bundle": "*",
+                "claroline/installation-bundle": "*",
+                "claroline/kernel-bundle": "*",
+                "claroline/ldap-bundle": "*",
+                "claroline/message-bundle": "*",
+                "claroline/migration-bundle": "*",
+                "claroline/pdf-generator-bundle": "*",
+                "claroline/pdf-player-bundle": "*",
+                "claroline/result-bundle": "*",
+                "claroline/rss-reader-bundle": "*",
+                "claroline/scorm-bundle": "*",
+                "claroline/survey-bundle": "*",
+                "claroline/tag-bundle": "*",
+                "claroline/team-bundle": "*",
+                "claroline/text-player-bundle": "*",
+                "claroline/video-player-bundle": "*",
+                "claroline/web-installer": "*",
+                "claroline/web-resource-bundle": "*",
+                "formalibre/presence-bundle": "*",
+                "formalibre/reservation-bundle": "*",
+                "formalibre/support-bundle": "*",
+                "hevinci/competency-bundle": "*",
+                "hevinci/favourite-bundle": "*",
+                "hevinci/url-bundle": "*",
+                "icap/badge-bundle": "*",
+                "icap/blog-bundle": "*",
+                "icap/dropzone-bundle": "*",
+                "icap/notification-bundle": "*",
+                "icap/oauth-bundle": "*",
+                "icap/portfolio-bundle": "*",
+                "icap/social-media-bundle": "*",
+                "icap/wiki-bundle": "*",
+                "innova/collecticiel-bundle": "*",
+                "innova/path-bundle": "*"
+            },
+            "require-dev": {
+                "fabpot/php-cs-fixer": "^1.10",
+                "mikey179/vfsstream": "~1.5",
+                "mockery/mockery": "^0.9.4",
+                "phpunit/phpunit": "~4.6"
+            },
             "type": "claroline-core",
             "autoload": {
                 "psr-4": {
-                    "Claroline\\CoreBundle\\": ""
+                    "Claroline\\CoreBundle\\": "main/core/",
+                    "Claroline\\BundleRecorder\\": "main/recorder/",
+                    "Claroline\\InstallationBundle\\": "main/installation/",
+                    "Claroline\\MigrationBundle\\": "main/migration/",
+                    "Claroline\\KernelBundle\\": "main/kernel/",
+                    "Claroline\\WebInstaller\\": "main/web-installer/",
+                    "Claroline\\ActivityToolBundle\\": "plugin/activity-tool",
+                    "Claroline\\AgendaBundle\\": "plugin/agenda",
+                    "Claroline\\AnnouncementBundle\\": "plugin/announcement",
+                    "Claroline\\CursusBundle\\": "plugin/cursus",
+                    "Claroline\\ForumBundle\\": "plugin/forum",
+                    "Claroline\\ImagePlayerBundle\\": "plugin/image-player",
+                    "Claroline\\LdapBundle\\": "plugin/ldap",
+                    "Claroline\\MessageBundle\\": "plugin/message",
+                    "Icap\\NotificationBundle\\": "plugin/notification",
+                    "Claroline\\PdfPlayerBundle\\": "plugin/pdf-player",
+                    "FormaLibre\\PresenceBundle\\": "plugin/presence",
+                    "FormaLibre\\ReservationBundle\\": "plugin/reservation",
+                    "Claroline\\RssReaderBundle\\": "plugin/rss-reader",
+                    "Claroline\\ScormBundle\\": "plugin/scorm",
+                    "FormaLibre\\SupportBundle\\": "plugin/support",
+                    "Claroline\\SurveyBundle\\": "plugin/survey",
+                    "Claroline\\TagBundle\\": "plugin/tag",
+                    "Claroline\\TeamBundle\\": "plugin/team",
+                    "Claroline\\TextPlayerBundle\\": "plugin/text-player",
+                    "Claroline\\VideoPlayerBundle\\": "plugin/video-player",
+                    "Claroline\\WebResourceBundle\\": "plugin/web-resource",
+                    "Innova\\CollecticielBundle\\": "plugin/collecticiel",
+                    "HeVinci\\FavouriteBundle\\": "plugin/favourite",
+                    "HeVinci\\CompetencyBundle\\": "plugin/competency",
+                    "HeVinci\\UrlBundle\\": "plugin/url",
+                    "Icap\\BadgeBundle\\": "plugin/badge",
+                    "Icap\\BlogBundle\\": "plugin/blog",
+                    "Icap\\DropzoneBundle\\": "plugin/dropzone",
+                    "Icap\\PortfolioBundle\\": "plugin/portfolio",
+                    "Icap\\SocialmediaBundle\\": "plugin/social-media",
+                    "Icap\\WikiBundle\\": "plugin/wiki",
+                    "Icap\\OAuthBundle\\": "plugin/oauth",
+                    "Claroline\\ResultBundle\\": "plugin/result",
+                    "Innova\\PathBundle\\": "plugin/path",
+                    "Claroline\\PdfGeneratorBundle\\": "plugin/pdf-generator",
+                    "Claroline\\DevBundle\\": "main/dev"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -361,126 +304,30 @@
                     "homepage": "http://github.com/claroline"
                 }
             ],
-            "description": "Claroline core bundle",
+            "description": "Claroline distribution",
             "homepage": "http://www.claroline.net",
             "keywords": [
                 "Claroline",
-                "core"
+                "distribution"
             ],
-            "time": "2016-03-16 09:02:31"
-        },
-        {
-            "name": "claroline/cursus-bundle",
-            "version": "6.1.13",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/claroline/CursusBundle.git",
-                "reference": "6e7a090c3093e2ff7be6e39a3b825b310f73c7c0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/claroline/CursusBundle/zipball/6e7a090c3093e2ff7be6e39a3b825b310f73c7c0",
-                "reference": "6e7a090c3093e2ff7be6e39a3b825b310f73c7c0",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": ">=6.7.3.2,<7.0",
-                "php": ">=5.5"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Claroline\\CursusBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Claroline development team",
-                    "email": "dev@claroline.net",
-                    "homepage": "http://github.com/claroline"
-                }
-            ],
-            "description": "Claroline cursus tool plugin",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "Cursus",
-                "plugin",
-                "tool"
-            ],
-            "time": "2016-03-09 15:05:38"
-        },
-        {
-            "name": "claroline/forum-bundle",
-            "version": "6.0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/claroline/ForumBundle.git",
-                "reference": "b2114ba3dbc5aca13556394ffdc3975dc626057d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/claroline/ForumBundle/zipball/b2114ba3dbc5aca13556394ffdc3975dc626057d",
-                "reference": "b2114ba3dbc5aca13556394ffdc3975dc626057d",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": "~6.0",
-                "claroline/message-bundle": "~6.0",
-                "icap/notification-bundle": "~6.0",
-                "php": ">=5.5"
-            },
-            "require-dev": {
-                "claroline/dev-bundle": "dev-master"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Claroline\\ForumBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Claroline development team",
-                    "email": "dev@claroline.net",
-                    "homepage": "http://github.com/claroline"
-                }
-            ],
-            "description": "Claroline forum plugin",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "forum",
-                "plugin"
-            ],
-            "time": "2016-02-03 10:52:06"
+            "time": "2016-04-18 07:50:00"
         },
         {
             "name": "claroline/front-end-bundle",
-            "version": "7.0.3",
+            "version": "dev-7.x-test",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/FrontEndBundle.git",
-                "reference": "fdf74165b4b05b04bea8293963dc844dd104f9ae"
+                "reference": "2baad174be4bcb35c87f8f5df07127de1d23fa17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/FrontEndBundle/zipball/fdf74165b4b05b04bea8293963dc844dd104f9ae",
-                "reference": "fdf74165b4b05b04bea8293963dc844dd104f9ae",
+                "url": "https://api.github.com/repos/claroline/FrontEndBundle/zipball/2baad174be4bcb35c87f8f5df07127de1d23fa17",
+                "reference": "2baad174be4bcb35c87f8f5df07127de1d23fa17",
                 "shasum": ""
             },
             "require": {
-                "claroline/kernel-bundle": "*",
-                "php": ">=5.5",
-                "symfony/framework-bundle": "~2.0"
+                "php": ">=5.5"
             },
             "type": "library",
             "autoload": {
@@ -493,672 +340,7 @@
                 "GPL-3.0+"
             ],
             "description": "Front-end dependencies bundle for Claroline 2.0",
-            "time": "2016-03-08 10:43:02"
-        },
-        {
-            "name": "claroline/image-player-bundle",
-            "version": "6.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/claroline/ImagePlayerBundle.git",
-                "reference": "7d4f3ece148e33cafe152dde63c4ba534c8deb4f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/claroline/ImagePlayerBundle/zipball/7d4f3ece148e33cafe152dde63c4ba534c8deb4f",
-                "reference": "7d4f3ece148e33cafe152dde63c4ba534c8deb4f",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": "~6.0",
-                "php": ">=5.5"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Claroline\\ImagePlayerBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Claroline development team",
-                    "email": "dev@claroline.net",
-                    "homepage": "http://github.com/claroline"
-                }
-            ],
-            "description": "Claroline image player plugin",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "Image player",
-                "plugin"
-            ],
-            "time": "2016-02-03 15:42:43"
-        },
-        {
-            "name": "claroline/installation-bundle",
-            "version": "6.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/claroline/InstallationBundle.git",
-                "reference": "8669926d861f039a555cba2c085b043dd25665d1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/claroline/InstallationBundle/zipball/8669926d861f039a555cba2c085b043dd25665d1",
-                "reference": "8669926d861f039a555cba2c085b043dd25665d1",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/bundle-recorder": "~6.0",
-                "claroline/kernel-bundle": "~6.0",
-                "claroline/migration-bundle": "~6.0",
-                "doctrine/data-fixtures": "dev-master",
-                "doctrine/doctrine-bundle": "~1.0",
-                "php": ">=5.5",
-                "symfony/symfony": "~2.3"
-            },
-            "type": "bundle",
-            "autoload": {
-                "psr-4": {
-                    "Claroline\\InstallationBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Claroline development team",
-                    "email": "dev@claroline.net",
-                    "homepage": "http://github.com/claroline"
-                }
-            ],
-            "description": "Claroline installation bundle",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "installation"
-            ],
-            "time": "2016-02-22 12:02:33"
-        },
-        {
-            "name": "claroline/kernel-bundle",
-            "version": "6.0.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/claroline/KernelBundle.git",
-                "reference": "60e44619997c336242cfd57e6a7b20e5207f3aab"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/claroline/KernelBundle/zipball/60e44619997c336242cfd57e6a7b20e5207f3aab",
-                "reference": "60e44619997c336242cfd57e6a7b20e5207f3aab",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.5",
-                "symfony/filesystem": "~2.0",
-                "symfony/framework-bundle": "*"
-            },
-            "type": "bundle",
-            "autoload": {
-                "psr-4": {
-                    "Claroline\\KernelBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Claroline development team",
-                    "email": "dev@claroline.net",
-                    "homepage": "http://github.com/claroline"
-                }
-            ],
-            "description": "Claroline kernel bundle",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "kernel"
-            ],
-            "time": "2016-02-03 16:13:26"
-        },
-        {
-            "name": "claroline/message-bundle",
-            "version": "6.0.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/claroline/MessageBundle.git",
-                "reference": "bd5dd87eb0f31ee1d4e5bdb518a36c36a6ed1741"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/claroline/MessageBundle/zipball/bd5dd87eb0f31ee1d4e5bdb518a36c36a6ed1741",
-                "reference": "bd5dd87eb0f31ee1d4e5bdb518a36c36a6ed1741",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": "~6.0",
-                "php": ">=5.5"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Claroline\\MessageBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "plugin"
-            ],
-            "time": "2016-02-03 12:43:29"
-        },
-        {
-            "name": "claroline/migration-bundle",
-            "version": "6.0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/claroline/MigrationBundle.git",
-                "reference": "81a9a6a00e21e9c42cf82a5b07c3fd817387b01e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/claroline/MigrationBundle/zipball/81a9a6a00e21e9c42cf82a5b07c3fd817387b01e",
-                "reference": "81a9a6a00e21e9c42cf82a5b07c3fd817387b01e",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/kernel-bundle": "~6.0",
-                "doctrine/migrations": "~1.3",
-                "doctrine/orm": "~2.2",
-                "jdorn/sql-formatter": "~1.0",
-                "php": ">=5.5",
-                "psr/log": "~1.0",
-                "symfony/console": "~2.0",
-                "symfony/framework-bundle": "*",
-                "symfony/twig-bridge": "~2.0",
-                "symfony/twig-bundle": "~2.0"
-            },
-            "require-dev": {
-                "mikey179/vfsstream": "dev-master",
-                "mockery/mockery": "dev-master@dev"
-            },
-            "type": "bundle",
-            "autoload": {
-                "psr-4": {
-                    "Claroline\\MigrationBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Claroline development team",
-                    "email": "dev@claroline.net",
-                    "homepage": "http://github.com/claroline"
-                }
-            ],
-            "description": "Claroline migration bundle",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "migration"
-            ],
-            "time": "2016-02-15 09:38:01"
-        },
-        {
-            "name": "claroline/pdf-player-bundle",
-            "version": "6.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/claroline/PdfPlayerBundle.git",
-                "reference": "48d4b4ad13a18b4c81f35b8fb85bd3ba7a91ab64"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/claroline/PdfPlayerBundle/zipball/48d4b4ad13a18b4c81f35b8fb85bd3ba7a91ab64",
-                "reference": "48d4b4ad13a18b4c81f35b8fb85bd3ba7a91ab64",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": ">=6.8.3, <7.0",
-                "php": ">=5.5"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Claroline\\PdfPlayerBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Claroline development team",
-                    "email": "dev@claroline.net",
-                    "homepage": "http://github.com/claroline"
-                }
-            ],
-            "description": "Claroline PDF player plugin",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "PDF player",
-                "plugin"
-            ],
-            "time": "2016-03-11 15:58:34"
-        },
-        {
-            "name": "claroline/rss-reader-bundle",
-            "version": "6.0.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/claroline/RssReaderBundle.git",
-                "reference": "2804fc5dfc1f208ecf750a6642439726aaa4bcef"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/claroline/RssReaderBundle/zipball/2804fc5dfc1f208ecf750a6642439726aaa4bcef",
-                "reference": "2804fc5dfc1f208ecf750a6642439726aaa4bcef",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": "~6.0",
-                "php": ">=5.5"
-            },
-            "type": "claroline-plugin",
-            "extra": {
-                "dbVersion": "20130925173308"
-            },
-            "autoload": {
-                "psr-4": {
-                    "Claroline\\RssReaderBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Claroline development team",
-                    "email": "dev@claroline.net",
-                    "homepage": "http://github.com/claroline"
-                }
-            ],
-            "description": "Claroline RSS reader plugin",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "plugin",
-                "rss"
-            ],
-            "time": "2016-02-03 15:47:22"
-        },
-        {
-            "name": "claroline/scorm-bundle",
-            "version": "6.1.7.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/claroline/ScormBundle.git",
-                "reference": "d07ff22b05ba85110d62142cf577245f0716ebf9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/claroline/ScormBundle/zipball/d07ff22b05ba85110d62142cf577245f0716ebf9",
-                "reference": "d07ff22b05ba85110d62142cf577245f0716ebf9",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": ">=6.3.0,<7.0",
-                "php": ">=5.5"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Claroline\\ScormBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Claroline development team",
-                    "email": "dev@claroline.net",
-                    "homepage": "http://github.com/claroline"
-                }
-            ],
-            "description": "Claroline scorm plugin",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "plugin",
-                "scorm"
-            ],
-            "time": "2016-02-09 16:03:15"
-        },
-        {
-            "name": "claroline/survey-bundle",
-            "version": "6.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/claroline/SurveyBundle.git",
-                "reference": "193ec6dc28e9f5e821a16c6dd9dfc4d2eba1f4c9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/claroline/SurveyBundle/zipball/193ec6dc28e9f5e821a16c6dd9dfc4d2eba1f4c9",
-                "reference": "193ec6dc28e9f5e821a16c6dd9dfc4d2eba1f4c9",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": "~6.0",
-                "php": ">=5.5"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Claroline\\SurveyBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Claroline development team",
-                    "email": "dev@claroline.net",
-                    "homepage": "http://github.com/claroline"
-                }
-            ],
-            "description": "Claroline survey plugin",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "plugin",
-                "survey"
-            ],
-            "time": "2016-02-03 10:53:47"
-        },
-        {
-            "name": "claroline/tag-bundle",
-            "version": "6.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/claroline/TagBundle.git",
-                "reference": "4a33c6a1c328f09f501503be697947f0997aa774"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/claroline/TagBundle/zipball/4a33c6a1c328f09f501503be697947f0997aa774",
-                "reference": "4a33c6a1c328f09f501503be697947f0997aa774",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": ">=6.3.7,<7.0",
-                "php": ">=5.5"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Claroline\\TagBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Claroline development team",
-                    "email": "dev@claroline.net",
-                    "homepage": "http://github.com/claroline"
-                }
-            ],
-            "description": "Claroline tag plugin",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "plugin",
-                "tag"
-            ],
-            "time": "2016-02-03 15:36:20"
-        },
-        {
-            "name": "claroline/team-bundle",
-            "version": "6.0.1",
-            "target-dir": "Claroline/TeamBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/claroline/TeamBundle.git",
-                "reference": "7bc46e0ca4d4a6a899328bccab6751fae042c972"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/claroline/TeamBundle/zipball/7bc46e0ca4d4a6a899328bccab6751fae042c972",
-                "reference": "7bc46e0ca4d4a6a899328bccab6751fae042c972",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": "~6.0",
-                "php": ">=5.4.1"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-0": {
-                    "Claroline\\TeamBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Claroline development team",
-                    "email": "dev@claroline.net",
-                    "homepage": "http://github.com/claroline"
-                }
-            ],
-            "description": "Claroline workspace team tool plugin",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "Team",
-                "plugin",
-                "tool"
-            ],
-            "time": "2015-09-14 07:33:29"
-        },
-        {
-            "name": "claroline/video-js-bundle",
-            "version": "6.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/claroline/VideoJsBundle.git",
-                "reference": "99255cf76b89809ef559408145e666214101726d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/claroline/VideoJsBundle/zipball/99255cf76b89809ef559408145e666214101726d",
-                "reference": "99255cf76b89809ef559408145e666214101726d",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": "~6.0",
-                "php": ">=5.5"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Claroline\\VideoJsBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "plugin"
-            ],
-            "time": "2016-02-03 12:41:30"
-        },
-        {
-            "name": "claroline/video-player-bundle",
-            "version": "6.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/claroline/VideoPlayerBundle.git",
-                "reference": "e505ae0ccf412f9d2814e449873679c4fa25107f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/claroline/VideoPlayerBundle/zipball/e505ae0ccf412f9d2814e449873679c4fa25107f",
-                "reference": "e505ae0ccf412f9d2814e449873679c4fa25107f",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": "~6.0",
-                "claroline/video-js-bundle": "~6.0",
-                "php": ">=5.5"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Claroline\\VideoPlayerBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Claroline development team",
-                    "email": "dev@claroline.net",
-                    "homepage": "http://github.com/claroline"
-                }
-            ],
-            "description": "Claroline video player plugin",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "Video player",
-                "plugin"
-            ],
-            "time": "2016-02-03 12:42:38"
-        },
-        {
-            "name": "claroline/web-installer",
-            "version": "6.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/claroline/WebInstaller.git",
-                "reference": "5d258c4d910df485987eac2363fc1a7e51c346db"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/claroline/WebInstaller/zipball/5d258c4d910df485987eac2363fc1a7e51c346db",
-                "reference": "5d258c4d910df485987eac2363fc1a7e51c346db",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": ">=4.5.0",
-                "php": ">=5.5",
-                "symfony/http-foundation": "*",
-                "symfony/http-kernel": "*",
-                "symfony/yaml": "*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Claroline\\WebInstaller\\": "lib"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Claroline development team",
-                    "email": "dev@claroline.net",
-                    "homepage": "http://github.com/claroline"
-                }
-            ],
-            "description": "Claroline web installer",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "Web installer"
-            ],
-            "time": "2016-02-03 15:39:17"
-        },
-        {
-            "name": "claroline/web-resource-bundle",
-            "version": "6.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/claroline/WebResourceBundle.git",
-                "reference": "48e0483ec5df447ff5f1d1dec0d162a979087b38"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/claroline/WebResourceBundle/zipball/48e0483ec5df447ff5f1d1dec0d162a979087b38",
-                "reference": "48e0483ec5df447ff5f1d1dec0d162a979087b38",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": "~6.0",
-                "php": ">=5.5"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Claroline\\WebResourceBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Claroline development team",
-                    "email": "dev@claroline.net",
-                    "homepage": "http://github.com/claroline"
-                }
-            ],
-            "description": "Claroline web resource plugin",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "Web Resource",
-                "plugin"
-            ],
-            "time": "2016-02-03 10:56:10"
+            "time": "2016-04-01 14:34:48"
         },
         {
             "name": "cocur/slugify",
@@ -1225,16 +407,16 @@
         },
         {
             "name": "composer/composer",
-            "version": "1.0.0-beta1",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "5cb2b522637a941d608c58bd522f3b2a7bda4a1c"
+                "reference": "32df3aa8cdbdaa16df9491b5e672e81c87f94c78"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/5cb2b522637a941d608c58bd522f3b2a7bda4a1c",
-                "reference": "5cb2b522637a941d608c58bd522f3b2a7bda4a1c",
+                "url": "https://api.github.com/repos/composer/composer/zipball/32df3aa8cdbdaa16df9491b5e672e81c87f94c78",
+                "reference": "32df3aa8cdbdaa16df9491b5e672e81c87f94c78",
                 "shasum": ""
             },
             "require": {
@@ -1296,20 +478,20 @@
                 "dependency",
                 "package"
             ],
-            "time": "2016-03-03 15:15:10"
+            "time": "2016-04-05 12:27:26"
         },
         {
             "name": "composer/semver",
-            "version": "1.3.0",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/semver.git",
-                "reference": "df4463baa9f44fe6cf0a6da4fde2934d4c0a2747"
+                "reference": "84c47f3d8901440403217afc120683c7385aecb8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/semver/zipball/df4463baa9f44fe6cf0a6da4fde2934d4c0a2747",
-                "reference": "df4463baa9f44fe6cf0a6da4fde2934d4c0a2747",
+                "url": "https://api.github.com/repos/composer/semver/zipball/84c47f3d8901440403217afc120683c7385aecb8",
+                "reference": "84c47f3d8901440403217afc120683c7385aecb8",
                 "shasum": ""
             },
             "require": {
@@ -1358,28 +540,28 @@
                 "validation",
                 "versioning"
             ],
-            "time": "2016-02-25 22:23:39"
+            "time": "2016-03-30 13:16:03"
         },
         {
             "name": "composer/spdx-licenses",
-            "version": "1.1.2",
+            "version": "1.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/spdx-licenses.git",
-                "reference": "9e1c3926bb0842812967213d7c92827bc5883671"
+                "reference": "547659c3cacd3ccfe1b4714c2ff88cafc6b6793b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/spdx-licenses/zipball/9e1c3926bb0842812967213d7c92827bc5883671",
-                "reference": "9e1c3926bb0842812967213d7c92827bc5883671",
+                "url": "https://api.github.com/repos/composer/spdx-licenses/zipball/547659c3cacd3ccfe1b4714c2ff88cafc6b6793b",
+                "reference": "547659c3cacd3ccfe1b4714c2ff88cafc6b6793b",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.2"
+                "php": "^5.3.2 || ^7.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.5",
-                "phpunit/phpunit-mock-objects": "~2.3"
+                "phpunit/phpunit": "^4.5 || ^5.0.5",
+                "phpunit/phpunit-mock-objects": "2.3.0 || ^3.0"
             },
             "type": "library",
             "extra": {
@@ -1419,7 +601,7 @@
                 "spdx",
                 "validator"
             ],
-            "time": "2015-10-05 11:27:42"
+            "time": "2016-03-25 10:57:10"
         },
         {
             "name": "container-interop/container-interop",
@@ -2414,116 +1596,6 @@
             "time": "2016-01-05 21:34:58"
         },
         {
-            "name": "formalibre/presence-bundle",
-            "version": "6.1.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/FormaLibre/PresenceBundle.git",
-                "reference": "1fb80633d42e1cb79dea467419479c4d50d556a3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/FormaLibre/PresenceBundle/zipball/1fb80633d42e1cb79dea467419479c4d50d556a3",
-                "reference": "1fb80633d42e1cb79dea467419479c4d50d556a3",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/agenda-bundle": "~6.0",
-                "claroline/core-bundle": "~6.0",
-                "claroline/cursus-bundle": "~6.0",
-                "php": ">=5.5"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "FormaLibre\\PresenceBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "plugin"
-            ],
-            "time": "2016-03-14 08:58:33"
-        },
-        {
-            "name": "formalibre/reservation-bundle",
-            "version": "6.0.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/FormaLibre/ReservationBundle.git",
-                "reference": "255dd780b8194cd2fe17beb4998ace6eebc23ce1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/FormaLibre/ReservationBundle/zipball/255dd780b8194cd2fe17beb4998ace6eebc23ce1",
-                "reference": "255dd780b8194cd2fe17beb4998ace6eebc23ce1",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/agenda-bundle": "~6.0",
-                "claroline/core-bundle": "~6.0",
-                "ddeboer/data-import": "~0.18",
-                "php": ">=5.4.1"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "FormaLibre\\ReservationBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "plugin"
-            ],
-            "time": "2016-03-08 10:57:46"
-        },
-        {
-            "name": "formalibre/support-bundle",
-            "version": "6.0.4",
-            "target-dir": "FormaLibre/SupportBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/FormaLibre/SupportBundle.git",
-                "reference": "e34245e6ed316234476c7232bbfb4380ae6b8e4c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/FormaLibre/SupportBundle/zipball/e34245e6ed316234476c7232bbfb4380ae6b8e4c",
-                "reference": "e34245e6ed316234476c7232bbfb4380ae6b8e4c",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": ">=6.1.1,<7.0",
-                "php": ">=5.4.1"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-0": {
-                    "FormaLibre\\Support": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "plugin"
-            ],
-            "time": "2015-09-29 15:03:02"
-        },
-        {
             "name": "friendsofsymfony/jsrouting-bundle",
             "version": "1.6.0",
             "source": {
@@ -2655,16 +1727,16 @@
         },
         {
             "name": "friendsofsymfony/oauth2-php",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfSymfony/oauth2-php.git",
-                "reference": "4ae0a2aa85566146ef6f0f7169854c49e0c9243a"
+                "reference": "fa2aecb1fca2a03fd5f9aca19fe9adb9dfff928c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/oauth2-php/zipball/4ae0a2aa85566146ef6f0f7169854c49e0c9243a",
-                "reference": "4ae0a2aa85566146ef6f0f7169854c49e0c9243a",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/oauth2-php/zipball/fa2aecb1fca2a03fd5f9aca19fe9adb9dfff928c",
+                "reference": "fa2aecb1fca2a03fd5f9aca19fe9adb9dfff928c",
                 "shasum": ""
             },
             "require": {
@@ -2677,7 +1749,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1.x-dev"
+                    "dev-master": "1.2.x-dev"
                 }
             },
             "autoload": {
@@ -2705,7 +1777,7 @@
                 "oauth",
                 "oauth2"
             ],
-            "time": "2015-12-21 11:32:17"
+            "time": "2016-03-31 14:24:17"
         },
         {
             "name": "friendsofsymfony/rest-bundle",
@@ -3178,101 +2250,6 @@
             "time": "2014-05-01 21:36:02"
         },
         {
-            "name": "hevinci/competency-bundle",
-            "version": "6.2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hevinci/CompetencyBundle.git",
-                "reference": "4e027fbc26844ad6f5666c7a59ec1a9a91508093"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hevinci/CompetencyBundle/zipball/4e027fbc26844ad6f5666c7a59ec1a9a91508093",
-                "reference": "4e027fbc26844ad6f5666c7a59ec1a9a91508093",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": "~6.2",
-                "php": ">=5.5",
-                "stefk/jval": "dev-master"
-            },
-            "require-dev": {
-                "claroline/dev-bundle": "dev-master"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "HeVinci\\CompetencyBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "time": "2016-01-25 11:24:56"
-        },
-        {
-            "name": "hevinci/favourite-bundle",
-            "version": "6.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hevinci/FavouriteBundle.git",
-                "reference": "f23d6f1a010d4c1d699db76b2f403cd55966afb0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hevinci/FavouriteBundle/zipball/f23d6f1a010d4c1d699db76b2f403cd55966afb0",
-                "reference": "f23d6f1a010d4c1d699db76b2f403cd55966afb0",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": "~6.2",
-                "php": ">=5.5"
-            },
-            "require-dev": {
-                "claroline/dev-bundle": "dev-master"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "HeVinci\\FavouriteBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "description": "Favorite Plugin for Claroline Connect",
-            "time": "2016-01-22 16:33:00"
-        },
-        {
-            "name": "hevinci/url-bundle",
-            "version": "6.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hevinci/UrlBundle.git",
-                "reference": "0772ba3cfa3c1f8e62237eff6c5e238e0578ac89"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hevinci/UrlBundle/zipball/0772ba3cfa3c1f8e62237eff6c5e238e0578ac89",
-                "reference": "0772ba3cfa3c1f8e62237eff6c5e238e0578ac89",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": "~6.2",
-                "guzzle/http": "~3.1",
-                "php": ">=5.5"
-            },
-            "require-dev": {
-                "claroline/dev-bundle": "dev-master"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "HeVinci\\UrlBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "description": "Url Plugin for Claroline Connect",
-            "homepage": "http://www.claroline.net",
-            "time": "2016-01-25 14:46:02"
-        },
-        {
             "name": "hwi/oauth-bundle",
             "version": "0.4.1",
             "source": {
@@ -3413,141 +2390,6 @@
             "time": "2016-03-08 08:00:04"
         },
         {
-            "name": "icap/badge-bundle",
-            "version": "v6.4.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/iCAPLyon1/BadgeBundle.git",
-                "reference": "f3dd829adeed8f4f8ea6b66dcb3d59abdaa04876"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/BadgeBundle/zipball/f3dd829adeed8f4f8ea6b66dcb3d59abdaa04876",
-                "reference": "f3dd829adeed8f4f8ea6b66dcb3d59abdaa04876",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": "~6.0",
-                "icap/notification-bundle": "~6.0",
-                "icap/portfolio-bundle": "~6.0",
-                "php": ">=5.4.1"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Icap\\BadgeBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "authors": [
-                {
-                    "name": "ICAP development team",
-                    "homepage": "https://github.com/iCAPLyon1"
-                }
-            ],
-            "description": "Claroline badge plugin from ICAP",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "ICAP",
-                "badge",
-                "plugin"
-            ],
-            "time": "2016-03-07 13:29:27"
-        },
-        {
-            "name": "icap/blog-bundle",
-            "version": "v6.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/iCAPLyon1/BlogBundle.git",
-                "reference": "13760c15b07a39c34b6b44b22a17a881085054fd"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/BlogBundle/zipball/13760c15b07a39c34b6b44b22a17a881085054fd",
-                "reference": "13760c15b07a39c34b6b44b22a17a881085054fd",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": "~6.0",
-                "icap/notification-bundle": "~6.0",
-                "php": ">=5.4.1"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Icap\\BlogBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "authors": [
-                {
-                    "name": "ICAP development team",
-                    "homepage": "https://github.com/iCAPLyon1"
-                }
-            ],
-            "description": "Claroline blog plugin from ICAP",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "ICAP",
-                "blog",
-                "plugin"
-            ],
-            "time": "2016-02-17 16:27:36"
-        },
-        {
-            "name": "icap/dropzone-bundle",
-            "version": "v6.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/iCAPLyon1/DropZoneBundle.git",
-                "reference": "a38b2ab50ecb6d7ac7d891ac000895dd5439e5e9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/DropZoneBundle/zipball/a38b2ab50ecb6d7ac7d891ac000895dd5439e5e9",
-                "reference": "a38b2ab50ecb6d7ac7d891ac000895dd5439e5e9",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/agenda-bundle": "~6.0",
-                "claroline/core-bundle": "~6.0",
-                "ext-intl": "*",
-                "icap/notification-bundle": "~6.0",
-                "php": ">=5.4.1"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "4.1.*"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Icap\\DropzoneBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "authors": [
-                {
-                    "name": "ICAP development team",
-                    "homepage": "https://github.com/iCAPLyon1"
-                }
-            ],
-            "description": "Claroline wiki plugin from ICAP",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "ICAP",
-                "plugin",
-                "wiki"
-            ],
-            "time": "2016-02-17 16:24:15"
-        },
-        {
             "name": "icap/html-diff",
             "version": "v1.1.0",
             "source": {
@@ -3590,290 +2432,6 @@
                 "html diff"
             ],
             "time": "2016-02-17 16:35:09"
-        },
-        {
-            "name": "icap/lesson-bundle",
-            "version": "v6.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/iCAPLyon1/LessonBundle.git",
-                "reference": "07a4389c0cf187c813695e6731b0714cd7d80532"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/LessonBundle/zipball/07a4389c0cf187c813695e6731b0714cd7d80532",
-                "reference": "07a4389c0cf187c813695e6731b0714cd7d80532",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": "~6.0",
-                "icap/notification-bundle": "~6.0",
-                "php": ">=5.3.3"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Icap\\LessonBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "authors": [
-                {
-                    "name": "ICAP development team",
-                    "homepage": "https://github.com/iCAPLyon1"
-                }
-            ],
-            "description": "Claroline lesson plugin from ICAP",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "ICAP",
-                "lesson",
-                "plugin"
-            ],
-            "time": "2016-02-17 16:21:22"
-        },
-        {
-            "name": "icap/notification-bundle",
-            "version": "v6.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/iCAPLyon1/NotificationBundle.git",
-                "reference": "2b1e591454b0036fc222020b674b9a1bfae11940"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/NotificationBundle/zipball/2b1e591454b0036fc222020b674b9a1bfae11940",
-                "reference": "2b1e591454b0036fc222020b674b9a1bfae11940",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": "~6.0",
-                "php": ">=5.4.1"
-            },
-            "type": "claroline-core",
-            "autoload": {
-                "psr-4": {
-                    "Icap\\NotificationBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "authors": [
-                {
-                    "name": "ICAP development team",
-                    "homepage": "https://github.com/iCAPLyon1"
-                }
-            ],
-            "description": "Notification bundle for Claroline Connect. See https://github.com/claroline/Claroline",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "ICAP",
-                "notification"
-            ],
-            "time": "2016-02-17 15:39:26"
-        },
-        {
-            "name": "icap/oauth-bundle",
-            "version": "v6.2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/iCAPLyon1/OAuthBundle.git",
-                "reference": "e38ecf22ee5be9a22097a256c69ec599a78eb2f3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/OAuthBundle/zipball/e38ecf22ee5be9a22097a256c69ec599a78eb2f3",
-                "reference": "e38ecf22ee5be9a22097a256c69ec599a78eb2f3",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": "~6.0",
-                "hwi/oauth-bundle": "0.4.*@dev",
-                "php": ">=5.4.1"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Icap\\OAuthBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "ICAP",
-                "facebook",
-                "google",
-                "oauth",
-                "twitter"
-            ],
-            "time": "2016-03-10 08:26:07"
-        },
-        {
-            "name": "icap/portfolio-bundle",
-            "version": "v6.3.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/iCAPLyon1/PortfolioBundle.git",
-                "reference": "04369e72311076461cc88804b59fc37c4f5d193f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/PortfolioBundle/zipball/04369e72311076461cc88804b59fc37c4f5d193f",
-                "reference": "04369e72311076461cc88804b59fc37c4f5d193f",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": "~6.0",
-                "claroline/team-bundle": "~6.0",
-                "innova/angular-js-bundle": "~5.0",
-                "innova/angular-ui-resource-picker-bundle": "~6.0",
-                "innova/angular-ui-tinymce-bundle": "5.*",
-                "php": ">=5.4.1"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Icap\\PortfolioBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "authors": [
-                {
-                    "name": "AILLOUD Maxime",
-                    "homepage": "https://github.com/maxailloud"
-                }
-            ],
-            "description": "Portfolio bundle for Claroline Connect. See https://github.com/claroline/Claroline",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "portfolio"
-            ],
-            "time": "2016-03-04 09:27:18"
-        },
-        {
-            "name": "icap/socialmedia-bundle",
-            "version": "v6.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/iCAPLyon1/SocialmediaBundle.git",
-                "reference": "11a4943b9d1757a61800761d2ef61891c2de1ac4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/SocialmediaBundle/zipball/11a4943b9d1757a61800761d2ef61891c2de1ac4",
-                "reference": "11a4943b9d1757a61800761d2ef61891c2de1ac4",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": "~6.0",
-                "php": ">=5.4.1"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Icap\\SocialmediaBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "description": "Social media bundle for Claroline Connect",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "ICAP",
-                "social media"
-            ],
-            "time": "2016-02-17 14:57:18"
-        },
-        {
-            "name": "icap/website-bundle",
-            "version": "v6.2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/iCAPLyon1/WebsiteBundle.git",
-                "reference": "5d8cc04f3c0e3951b84a606f587b9acf30627f46"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/WebsiteBundle/zipball/5d8cc04f3c0e3951b84a606f587b9acf30627f46",
-                "reference": "5d8cc04f3c0e3951b84a606f587b9acf30627f46",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": "~6.0",
-                "innova/angular-js-bundle": "~5.0",
-                "jms/serializer-bundle": "~0.12",
-                "php": ">=5.4.1"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Icap\\WebsiteBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "authors": [
-                {
-                    "name": "ICAP development team",
-                    "homepage": "https://github.com/iCAPLyon1"
-                }
-            ],
-            "description": "Claroline website plugin from ICAP",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "ICAP",
-                "plugin",
-                "website"
-            ],
-            "time": "2016-02-17 15:06:58"
-        },
-        {
-            "name": "icap/wiki-bundle",
-            "version": "v6.3.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/iCAPLyon1/WikiBundle.git",
-                "reference": "90ff11977892f33a93584accc7242ac88ec432a5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/WikiBundle/zipball/90ff11977892f33a93584accc7242ac88ec432a5",
-                "reference": "90ff11977892f33a93584accc7242ac88ec432a5",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": "~6.0",
-                "icap/html-diff": "~1.1",
-                "icap/notification-bundle": "~6.0",
-                "php": ">=5.3.0"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Icap\\WikiBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "authors": [
-                {
-                    "name": "ICAP development team",
-                    "homepage": "https://github.com/iCAPLyon1"
-                }
-            ],
-            "description": "Claroline wiki plugin from ICAP",
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "ICAP",
-                "plugin",
-                "wiki"
-            ],
-            "time": "2016-02-17 16:59:01"
         },
         {
             "name": "idci/exporter-bundle",
@@ -3978,62 +2536,6 @@
                 "angular"
             ],
             "time": "2015-06-09 14:59:11"
-        },
-        {
-            "name": "innova/angular-ui-bootstrap-bundle",
-            "version": "5.0.0",
-            "target-dir": "Innova/AngularUIBootstrapBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/InnovaLangues/AngularUIBootsrapBundle.git",
-                "reference": "77877fde891c9f390ea1e14d0ffd658a441fd12c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/InnovaLangues/AngularUIBootsrapBundle/zipball/77877fde891c9f390ea1e14d0ffd658a441fd12c",
-                "reference": "77877fde891c9f390ea1e14d0ffd658a441fd12c",
-                "shasum": ""
-            },
-            "require": {
-                "innova/angular-js-bundle": "~5.0",
-                "php": ">=5.3.0",
-                "symfony/symfony": "2.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Innova\\AngularUIBootstrapBundle": "."
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Arnaud Bey",
-                    "email": "arnaud.bey@u-grenoble3.fr"
-                },
-                {
-                    "name": "Axel Penin",
-                    "email": "axel.penin@u-grenoble3.fr"
-                },
-                {
-                    "name": "Eric Vincent",
-                    "email": "eric.vincent@u-grenoble3.fr"
-                },
-                {
-                    "name": "Donovan Tengblad",
-                    "email": "donovan.tengblad@u-grenoble3.fr"
-                }
-            ],
-            "description": "Symfony 2 bundle which provides Angular UI Twitter Bootstrap.",
-            "homepage": "http://github.com/InnovaLangues/AngularUIBootstrapBundle",
-            "keywords": [
-                "Symfony2",
-                "angular-ui"
-            ],
-            "time": "2015-05-12 12:46:47"
         },
         {
             "name": "innova/angular-ui-pageslide-bundle",
@@ -4152,65 +2654,6 @@
             "time": "2015-05-22 14:02:35"
         },
         {
-            "name": "innova/angular-ui-sortable-bundle",
-            "version": "5.0.0",
-            "target-dir": "Innova/AngularUISortableBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/InnovaLangues/AngularUISortableBundle.git",
-                "reference": "2260e6b91701d6e975a14f0868955aa1df22db2d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/InnovaLangues/AngularUISortableBundle/zipball/2260e6b91701d6e975a14f0868955aa1df22db2d",
-                "reference": "2260e6b91701d6e975a14f0868955aa1df22db2d",
-                "shasum": ""
-            },
-            "require": {
-                "innova/angular-js-bundle": "~5.0",
-                "php": ">=5.3.0",
-                "symfony/symfony": "2.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Innova\\AngularUISortableBundle": "."
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Arnaud Bey",
-                    "email": "arnaud.bey@u-grenoble3.fr"
-                },
-                {
-                    "name": "Axel Penin",
-                    "email": "axel.penin@u-grenoble3.fr"
-                },
-                {
-                    "name": "Eric Vincent",
-                    "email": "eric.vincent@u-grenoble3.fr"
-                },
-                {
-                    "name": "Donovan Tengblad",
-                    "email": "donovan.tengblad@u-grenoble3.fr"
-                }
-            ],
-            "description": "AngularJS UI Sortable Symfony 2 bundle",
-            "homepage": "http://github.com/InnovaLangues/AngularUISortableBundle",
-            "keywords": [
-                "Symfony2",
-                "angular",
-                "jquery",
-                "jquery-ui",
-                "sortable"
-            ],
-            "time": "2015-05-26 09:00:32"
-        },
-        {
             "name": "innova/angular-ui-tinymce-bundle",
             "version": "5.1.1",
             "target-dir": "Innova/AngularUITinyMCEBundle",
@@ -4266,120 +2709,6 @@
                 "tinymce"
             ],
             "time": "2015-09-03 13:13:32"
-        },
-        {
-            "name": "innova/angular-ui-translation-bundle",
-            "version": "5.0.1",
-            "target-dir": "Innova/AngularUITranslationBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/InnovaLangues/AngularUITranslationBundle.git",
-                "reference": "306a572a1b44126d3e94421d975de1a714a16fbf"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/InnovaLangues/AngularUITranslationBundle/zipball/306a572a1b44126d3e94421d975de1a714a16fbf",
-                "reference": "306a572a1b44126d3e94421d975de1a714a16fbf",
-                "shasum": ""
-            },
-            "require": {
-                "innova/angular-js-bundle": "~5.0",
-                "php": ">=5.3.0",
-                "symfony/symfony": "2.*",
-                "willdurand/js-translation-bundle": "~2.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Innova\\AngularUITranslationBundle": "."
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Arnaud Bey",
-                    "email": "arnaud.bey@u-grenoble3.fr"
-                },
-                {
-                    "name": "Axel Penin",
-                    "email": "axel.penin@u-grenoble3.fr"
-                },
-                {
-                    "name": "Eric Vincent",
-                    "email": "eric.vincent@u-grenoble3.fr"
-                },
-                {
-                    "name": "Donovan Tengblad",
-                    "email": "donovan.tengblad@u-grenoble3.fr"
-                }
-            ],
-            "description": "Provides a new Angular JS filter which can access to Symfony 2 translations.",
-            "homepage": "http://github.com/InnovaLangues/AngularUITranslationBundle",
-            "keywords": [
-                "Symfony2",
-                "angular",
-                "translation"
-            ],
-            "time": "2015-10-14 10:04:29"
-        },
-        {
-            "name": "innova/path-bundle",
-            "version": "v6.1.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/InnovaLangues/PathBundle.git",
-                "reference": "69c938422a37fe44ba6483839001677b18889a27"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/InnovaLangues/PathBundle/zipball/69c938422a37fe44ba6483839001677b18889a27",
-                "reference": "69c938422a37fe44ba6483839001677b18889a27",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": "~6.0",
-                "claroline/tag-bundle": "~6.0",
-                "claroline/team-bundle": "~6.0",
-                "innova/angular-ui-pageslide-bundle": "~5.0"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Innova\\PathBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Arnaud Bey",
-                    "email": "arnaud.bey@u-grenoble3.fr"
-                },
-                {
-                    "name": "Axel Penin",
-                    "email": "axel.penin@u-grenoble3.fr"
-                },
-                {
-                    "name": "Eric Vincent",
-                    "email": "eric.vincent@u-grenoble3.fr"
-                },
-                {
-                    "name": "Donovan Tengblad",
-                    "email": "donovan.tengblad@u-grenoble3.fr"
-                }
-            ],
-            "description": "Claroline Path Bundle",
-            "homepage": "http://github.com/InnovaLangues/PathBundle",
-            "keywords": [
-                "Claroline",
-                "path"
-            ],
-            "time": "2016-03-18 08:17:59"
         },
         {
             "name": "jdorn/sql-formatter",
@@ -4984,12 +3313,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/johngrogg/ics-parser.git",
-                "reference": "3b56078196a1251913b1a99094e47da7c1051910"
+                "reference": "8ed85e9ce540f0ebea43f5d6789a984e3138380f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/johngrogg/ics-parser/zipball/3b56078196a1251913b1a99094e47da7c1051910",
-                "reference": "3b56078196a1251913b1a99094e47da7c1051910",
+                "url": "https://api.github.com/repos/johngrogg/ics-parser/zipball/8ed85e9ce540f0ebea43f5d6789a984e3138380f",
+                "reference": "8ed85e9ce540f0ebea43f5d6789a984e3138380f",
                 "shasum": ""
             },
             "type": "library",
@@ -5016,25 +3345,7 @@
                 "ical",
                 "ics"
             ],
-            "time": "2016-03-10 17:27:22"
-        },
-        {
-            "name": "json-quiz/json-quiz",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/json-quiz/json-quiz.git",
-                "reference": "15da51bdac43dcaf68811272ef22ea4d5d54ddc8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/15da51bdac43dcaf68811272ef22ea4d5d54ddc8",
-                "reference": "15da51bdac43dcaf68811272ef22ea4d5d54ddc8",
-                "shasum": ""
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "time": "2016-02-12 10:44:18"
+            "time": "2016-03-16 14:36:39"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -5221,6 +3532,128 @@
                 "menu"
             ],
             "time": "2014-08-01 09:57:23"
+        },
+        {
+            "name": "knplabs/knp-snappy",
+            "version": "0.4.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/KnpLabs/snappy.git",
+                "reference": "44f7a9b37d5686fd7db4c1e9569a802a5d16923f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/KnpLabs/snappy/zipball/44f7a9b37d5686fd7db4c1e9569a802a5d16923f",
+                "reference": "44f7a9b37d5686fd7db4c1e9569a802a5d16923f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "symfony/process": "~2.3|~3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.7"
+            },
+            "suggest": {
+                "h4cc/wkhtmltoimage-amd64": "Provides wkhtmltoimage-amd64 binary for Linux-compatible machines, use version `~0.12` as dependency",
+                "h4cc/wkhtmltoimage-i386": "Provides wkhtmltoimage-i386 binary for Linux-compatible machines, use version `~0.12` as dependency",
+                "h4cc/wkhtmltopdf-amd64": "Provides wkhtmltopdf-amd64 binary for Linux-compatible machines, use version `~0.12` as dependency",
+                "h4cc/wkhtmltopdf-i386": "Provides wkhtmltopdf-i386 binary for Linux-compatible machines, use version `~0.12` as dependency",
+                "wemersonjanuario/wkhtmltopdf-windows": "Provides wkhtmltopdf executable for Windows, use version `~0.12` as dependency"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.5.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Knp\\Snappy": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "KnpLabs Team",
+                    "homepage": "http://knplabs.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://github.com/KnpLabs/snappy/contributors"
+                }
+            ],
+            "description": "PHP5 library allowing thumbnail, snapshot or PDF generation from a url or a html page. Wrapper for wkhtmltopdf/wkhtmltoimage.",
+            "homepage": "http://github.com/KnpLabs/snappy",
+            "keywords": [
+                "knp",
+                "knplabs",
+                "pdf",
+                "snapshot",
+                "thumbnail",
+                "wkhtmltopdf"
+            ],
+            "time": "2015-11-17 13:16:27"
+        },
+        {
+            "name": "knplabs/knp-snappy-bundle",
+            "version": "v1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/KnpLabs/KnpSnappyBundle.git",
+                "reference": "2aa510cb0192658428ff29206cef85342ec24d44"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/KnpLabs/KnpSnappyBundle/zipball/2aa510cb0192658428ff29206cef85342ec24d44",
+                "reference": "2aa510cb0192658428ff29206cef85342ec24d44",
+                "shasum": ""
+            },
+            "require": {
+                "knplabs/knp-snappy": "*",
+                "php": ">=5.3.2",
+                "symfony/finder": ">=2.0.0",
+                "symfony/framework-bundle": ">=2.0.0",
+                "symfony/validator": ">=2.0.0"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Knp\\Bundle\\SnappyBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "KnpLabs Team",
+                    "homepage": "http://knplabs.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://github.com/KnpLabs/KnpSnappyBundle/contributors"
+                }
+            ],
+            "description": "Easily create PDF and images in Symfony2 by converting Twig/HTML templates.",
+            "homepage": "http://github.com/KnpLabs/KnpSnappyBundle",
+            "keywords": [
+                "bundle",
+                "knp",
+                "knplabs",
+                "pdf",
+                "snappy"
+            ],
+            "time": "2015-08-24 21:40:00"
         },
         {
             "name": "kriswallsmith/assetic",
@@ -5441,16 +3874,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.18.1",
+            "version": "1.19.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "a5f2734e8c16f3aa21b3da09715d10e15b4d2d45"
+                "reference": "5f56ed5212dc509c8dc8caeba2715732abb32dbf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/a5f2734e8c16f3aa21b3da09715d10e15b4d2d45",
-                "reference": "a5f2734e8c16f3aa21b3da09715d10e15b4d2d45",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/5f56ed5212dc509c8dc8caeba2715732abb32dbf",
+                "reference": "5f56ed5212dc509c8dc8caeba2715732abb32dbf",
                 "shasum": ""
             },
             "require": {
@@ -5465,13 +3898,13 @@
                 "doctrine/couchdb": "~1.0@dev",
                 "graylog2/gelf-php": "~1.0",
                 "jakub-onderka/php-parallel-lint": "0.9",
+                "php-amqplib/php-amqplib": "~2.4",
                 "php-console/php-console": "^3.1.3",
                 "phpunit/phpunit": "~4.5",
                 "phpunit/phpunit-mock-objects": "2.3.0",
                 "raven/raven": "^0.13",
                 "ruflin/elastica": ">=0.90 <3.0",
-                "swiftmailer/swiftmailer": "~5.3",
-                "videlalvaro/php-amqplib": "~2.4"
+                "swiftmailer/swiftmailer": "~5.3"
             },
             "suggest": {
                 "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
@@ -5480,11 +3913,11 @@
                 "ext-mongo": "Allow sending log messages to a MongoDB server",
                 "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
                 "mongodb/mongodb": "Allow sending log messages to a MongoDB server via PHP Driver",
+                "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
                 "php-console/php-console": "Allow sending log messages to Google Chrome",
                 "raven/raven": "Allow sending log messages to a Sentry server",
                 "rollbar/rollbar": "Allow sending log messages to Rollbar",
-                "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
-                "videlalvaro/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib"
+                "ruflin/elastica": "Allow sending log messages to an Elastic Search server"
             },
             "type": "library",
             "extra": {
@@ -5515,7 +3948,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2016-03-13 16:08:35"
+            "time": "2016-04-12 18:29:35"
         },
         {
             "name": "mrclay/minify",
@@ -5611,12 +4044,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nelmio/NelmioApiDocBundle.git",
-                "reference": "2a0f95eac0ab2aa466545d0b21d15739636811b7"
+                "reference": "718dfc6e9c2b37000c3dd0740ebd09cffd3bc022"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nelmio/NelmioApiDocBundle/zipball/2a0f95eac0ab2aa466545d0b21d15739636811b7",
-                "reference": "2a0f95eac0ab2aa466545d0b21d15739636811b7",
+                "url": "https://api.github.com/repos/nelmio/NelmioApiDocBundle/zipball/718dfc6e9c2b37000c3dd0740ebd09cffd3bc022",
+                "reference": "718dfc6e9c2b37000c3dd0740ebd09cffd3bc022",
                 "shasum": ""
             },
             "require": {
@@ -5629,6 +4062,7 @@
             "conflict": {
                 "jms/serializer": "<0.12",
                 "jms/serializer-bundle": "<0.11",
+                "symfony/symfony": "~2.7.8",
                 "twig/twig": "<1.12"
             },
             "require-dev": {
@@ -5657,7 +4091,7 @@
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.11-dev"
+                    "dev-master": "2.12-dev"
                 }
             },
             "autoload": {
@@ -5686,7 +4120,7 @@
                 "documentation",
                 "rest"
             ],
-            "time": "2016-02-24 18:00:28"
+            "time": "2016-03-22 07:28:24"
         },
         {
             "name": "ocramius/proxy-manager",
@@ -5817,54 +4251,6 @@
                 "paging"
             ],
             "time": "2014-10-06 10:57:25"
-        },
-        {
-            "name": "paragonie/random_compat",
-            "version": "v1.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "ff76e1a660669bb56ba74ba0583fd8d41417bf39"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/ff76e1a660669bb56ba74ba0583fd8d41417bf39",
-                "reference": "ff76e1a660669bb56ba74ba0583fd8d41417bf39",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.2.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "4.*|5.*"
-            },
-            "suggest": {
-                "ext-libsodium": "Provides a modern crypto API that can be used to generate random bytes."
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "lib/random.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Paragon Initiative Enterprises",
-                    "email": "security@paragonie.com",
-                    "homepage": "https://paragonie.com"
-                }
-            ],
-            "description": "PHP 5.x polyfill for random_bytes() and random_int() from PHP 7",
-            "keywords": [
-                "csprng",
-                "pseudorandom",
-                "random"
-            ],
-            "time": "2016-03-17 16:11:57"
         },
         {
             "name": "phpcollection/phpcollection",
@@ -6006,16 +4392,16 @@
         },
         {
             "name": "seld/cli-prompt",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/cli-prompt.git",
-                "reference": "b27db1514f7d7bb7a366ad95d4eb2b17140a0691"
+                "reference": "8cbe10923cae5bcd7c5a713f6703fc4727c8c1b4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/cli-prompt/zipball/b27db1514f7d7bb7a366ad95d4eb2b17140a0691",
-                "reference": "b27db1514f7d7bb7a366ad95d4eb2b17140a0691",
+                "url": "https://api.github.com/repos/Seldaek/cli-prompt/zipball/8cbe10923cae5bcd7c5a713f6703fc4727c8c1b4",
+                "reference": "8cbe10923cae5bcd7c5a713f6703fc4727c8c1b4",
                 "shasum": ""
             },
             "require": {
@@ -6050,7 +4436,7 @@
                 "input",
                 "prompt"
             ],
-            "time": "2016-01-09 17:55:27"
+            "time": "2016-04-18 09:31:41"
         },
         {
             "name": "seld/jsonlint",
@@ -6297,12 +4683,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/stefk/JVal.git",
-                "reference": "b663b82de053ec55cd08a5662c0126c1a003bd2a"
+                "reference": "d0b5dd610caaa7a06e882f3ac1e607f725a73d76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stefk/JVal/zipball/b663b82de053ec55cd08a5662c0126c1a003bd2a",
-                "reference": "b663b82de053ec55cd08a5662c0126c1a003bd2a",
+                "url": "https://api.github.com/repos/stefk/JVal/zipball/d0b5dd610caaa7a06e882f3ac1e607f725a73d76",
+                "reference": "d0b5dd610caaa7a06e882f3ac1e607f725a73d76",
                 "shasum": ""
             },
             "require": {
@@ -6340,7 +4726,7 @@
                 "json",
                 "validation"
             ],
-            "time": "2016-01-26 16:10:01"
+            "time": "2016-04-16 19:15:19"
         },
         {
             "name": "stfalcon/tinymce-bundle",
@@ -6587,20 +4973,20 @@
         },
         {
             "name": "symfony/monolog-bundle",
-            "version": "v2.10.0",
+            "version": "2.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/monolog-bundle.git",
-                "reference": "82fd8f36e2cccbe94faf237403c48052d4d4b77e"
+                "reference": "e7caf4936c7be82bc6d68df87f1d23a0d5bf6e00"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/monolog-bundle/zipball/82fd8f36e2cccbe94faf237403c48052d4d4b77e",
-                "reference": "82fd8f36e2cccbe94faf237403c48052d4d4b77e",
+                "url": "https://api.github.com/repos/symfony/monolog-bundle/zipball/e7caf4936c7be82bc6d68df87f1d23a0d5bf6e00",
+                "reference": "e7caf4936c7be82bc6d68df87f1d23a0d5bf6e00",
                 "shasum": ""
             },
             "require": {
-                "monolog/monolog": "~1.12",
+                "monolog/monolog": "~1.18",
                 "php": ">=5.3.2",
                 "symfony/config": "~2.3|~3.0",
                 "symfony/dependency-injection": "~2.3|~3.0",
@@ -6615,7 +5001,7 @@
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.9.x-dev"
+                    "dev-master": "2.x-dev"
                 }
             },
             "autoload": {
@@ -6643,60 +5029,7 @@
                 "log",
                 "logging"
             ],
-            "time": "2016-03-13 15:55:56"
-        },
-        {
-            "name": "symfony/polyfill-apcu",
-            "version": "v1.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/polyfill-apcu.git",
-                "reference": "0c901e4e65a2f7ece68f0fd249b56d6ad3adc214"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-apcu/zipball/0c901e4e65a2f7ece68f0fd249b56d6ad3adc214",
-                "reference": "0c901e4e65a2f7ece68f0fd249b56d6ad3adc214",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.1-dev"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "bootstrap.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony polyfill backporting apcu_* functions to lower PHP versions",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "apcu",
-                "compatibility",
-                "polyfill",
-                "portable",
-                "shim"
-            ],
-            "time": "2016-03-03 16:49:40"
+            "time": "2016-04-13 16:21:01"
         },
         {
             "name": "symfony/swiftmailer-bundle",
@@ -6757,24 +5090,22 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v2.7.10",
+            "version": "v2.7.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "9a3b6bf6ebee49370aaf15abc1bdeb4b1986a67d"
+                "reference": "cc69dbd24b4b2e6de60b2414ef95da2794f459a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/9a3b6bf6ebee49370aaf15abc1bdeb4b1986a67d",
-                "reference": "9a3b6bf6ebee49370aaf15abc1bdeb4b1986a67d",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/cc69dbd24b4b2e6de60b2414ef95da2794f459a2",
+                "reference": "cc69dbd24b4b2e6de60b2414ef95da2794f459a2",
                 "shasum": ""
             },
             "require": {
                 "doctrine/common": "~2.4",
-                "paragonie/random_compat": "~1.0",
                 "php": ">=5.3.9",
                 "psr/log": "~1.0",
-                "symfony/polyfill-apcu": "~1.1",
                 "twig/twig": "~1.23|~2.0"
             },
             "replace": {
@@ -6831,7 +5162,7 @@
                 "egulias/email-validator": "~1.2",
                 "ircmaxell/password-compat": "~1.0",
                 "monolog/monolog": "~1.11",
-                "ocramius/proxy-manager": "~0.4|~1.0|~2.0"
+                "ocramius/proxy-manager": "~0.4|~1.0"
             },
             "type": "library",
             "extra": {
@@ -6879,7 +5210,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2016-02-28 20:37:19"
+            "time": "2015-11-23 11:58:08"
         },
         {
             "name": "twig/extensions",
@@ -6993,48 +5324,6 @@
                 "templating"
             ],
             "time": "2016-01-25 21:22:18"
-        },
-        {
-            "name": "ujm/exo-bundle",
-            "version": "6.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/UJM-dev/ExoBundle.git",
-                "reference": "9269caa3e62621eaee1d450344445534270b37e3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/UJM-dev/ExoBundle/zipball/9269caa3e62621eaee1d450344445534270b37e3",
-                "reference": "9269caa3e62621eaee1d450344445534270b37e3",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": "^6.6.4",
-                "doctrine/orm": "~2.5",
-                "icap/badge-bundle": "~6.0",
-                "innova/angular-js-bundle": "~5.1",
-                "innova/angular-ui-bootstrap-bundle": "~5.0",
-                "innova/angular-ui-pageslide-bundle": "~5.0",
-                "innova/angular-ui-resource-picker-bundle": "~6.0",
-                "innova/angular-ui-sortable-bundle": "~5.0",
-                "innova/angular-ui-tinymce-bundle": "~5.0",
-                "innova/angular-ui-translation-bundle": "~5.0",
-                "json-quiz/json-quiz": "dev-master",
-                "php": ">=5.5",
-                "stefk/jval": "dev-master"
-            },
-            "require-dev": {
-                "claroline/dev-bundle": "dev-master"
-            },
-            "type": "claroline-plugin",
-            "autoload": {
-                "psr-4": {
-                    "UJM\\ExoBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "description": "Exercise tool for Claroline Connect",
-            "time": "2016-03-18 08:32:48"
         },
         {
             "name": "werkint/jsmin",
@@ -7452,16 +5741,16 @@
         },
         {
             "name": "zendframework/zend-math",
-            "version": "2.6.0",
+            "version": "2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-math.git",
-                "reference": "395ebb981e01f2fc708ba07d8ee0d86f6e3e9ed6"
+                "reference": "f4358090d5d23973121f1ed0b376184b66d9edec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-math/zipball/395ebb981e01f2fc708ba07d8ee0d86f6e3e9ed6",
-                "reference": "395ebb981e01f2fc708ba07d8ee0d86f6e3e9ed6",
+                "url": "https://api.github.com/repos/zendframework/zend-math/zipball/f4358090d5d23973121f1ed0b376184b66d9edec",
+                "reference": "f4358090d5d23973121f1ed0b376184b66d9edec",
                 "shasum": ""
             },
             "require": {
@@ -7475,13 +5764,13 @@
             "suggest": {
                 "ext-bcmath": "If using the bcmath functionality",
                 "ext-gmp": "If using the gmp functionality",
-                "ircmaxell/random-lib": "Fallback random byte generator for Zend\\Math\\Rand if OpenSSL/Mcrypt extensions are unavailable"
+                "ircmaxell/random-lib": "Fallback random byte generator for Zend\\Math\\Rand if Mcrypt extensions is unavailable"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.6-dev",
-                    "dev-develop": "2.7-dev"
+                    "dev-master": "2.7-dev",
+                    "dev-develop": "2.8-dev"
                 }
             },
             "autoload": {
@@ -7498,20 +5787,20 @@
                 "math",
                 "zf2"
             ],
-            "time": "2016-02-02 23:15:14"
+            "time": "2016-04-07 16:29:53"
         },
         {
             "name": "zendframework/zend-stdlib",
-            "version": "3.0.0",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-stdlib.git",
-                "reference": "22eb098958980fbbe6b9a06f209f5a4b496cc0c1"
+                "reference": "8bafa58574204bdff03c275d1d618aaa601588ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-stdlib/zipball/22eb098958980fbbe6b9a06f209f5a4b496cc0c1",
-                "reference": "22eb098958980fbbe6b9a06f209f5a4b496cc0c1",
+                "url": "https://api.github.com/repos/zendframework/zend-stdlib/zipball/8bafa58574204bdff03c275d1d618aaa601588ae",
+                "reference": "8bafa58574204bdff03c275d1d618aaa601588ae",
                 "shasum": ""
             },
             "require": {
@@ -7543,7 +5832,7 @@
                 "stdlib",
                 "zf2"
             ],
-            "time": "2016-02-03 16:53:37"
+            "time": "2016-04-12 21:19:36"
         },
         {
             "name": "zenstruck/form-bundle",
@@ -7606,44 +5895,6 @@
     ],
     "packages-dev": [
         {
-            "name": "claroline/dev-bundle",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/claroline/DevBundle.git",
-                "reference": "319ab1db80dfe44ef0021bb3f96ab66721c243d9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/claroline/DevBundle/zipball/319ab1db80dfe44ef0021bb3f96ab66721c243d9",
-                "reference": "319ab1db80dfe44ef0021bb3f96ab66721c243d9",
-                "shasum": ""
-            },
-            "require": {
-                "claroline/core-bundle": ">=5.1.14",
-                "fabpot/php-cs-fixer": "^1.10",
-                "mikey179/vfsstream": "~1.5",
-                "php": ">=5.5",
-                "phpunit/phpunit": "~4.6"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Claroline\\DevBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "homepage": "http://www.claroline.net",
-            "keywords": [
-                "Claroline",
-                "development"
-            ],
-            "time": "2016-01-25 15:33:01"
-        },
-        {
             "name": "fabpot/php-cs-fixer",
             "version": "v1.11.2",
             "source": {
@@ -7698,17 +5949,62 @@
             "time": "2016-02-26 07:37:29"
         },
         {
-            "name": "mikey179/vfsStream",
-            "version": "v1.6.2",
+            "name": "hamcrest/hamcrest-php",
+            "version": "v1.2.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mikey179/vfsStream.git",
-                "reference": "fefd182fa739d4e23d9dc7c80d3344f528d600ab"
+                "url": "https://github.com/hamcrest/hamcrest-php.git",
+                "reference": "b37020aa976fa52d3de9aa904aa2522dc518f79c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikey179/vfsStream/zipball/fefd182fa739d4e23d9dc7c80d3344f528d600ab",
-                "reference": "fefd182fa739d4e23d9dc7c80d3344f528d600ab",
+                "url": "https://api.github.com/repos/hamcrest/hamcrest-php/zipball/b37020aa976fa52d3de9aa904aa2522dc518f79c",
+                "reference": "b37020aa976fa52d3de9aa904aa2522dc518f79c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "replace": {
+                "cordoval/hamcrest-php": "*",
+                "davedevelopment/hamcrest-php": "*",
+                "kodova/hamcrest-php": "*"
+            },
+            "require-dev": {
+                "phpunit/php-file-iterator": "1.3.3",
+                "satooshi/php-coveralls": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "hamcrest"
+                ],
+                "files": [
+                    "hamcrest/Hamcrest.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD"
+            ],
+            "description": "This is the PHP port of Hamcrest Matchers",
+            "keywords": [
+                "test"
+            ],
+            "time": "2015-05-11 14:41:42"
+        },
+        {
+            "name": "mikey179/vfsStream",
+            "version": "v1.6.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mikey179/vfsStream.git",
+                "reference": "c19925cd0390d3c436a0203ae859afa460d0474b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mikey179/vfsStream/zipball/c19925cd0390d3c436a0203ae859afa460d0474b",
+                "reference": "c19925cd0390d3c436a0203ae859afa460d0474b",
                 "shasum": ""
             },
             "require": {
@@ -7741,7 +6037,72 @@
             ],
             "description": "Virtual file system to mock the real file system in unit tests.",
             "homepage": "http://vfs.bovigo.org/",
-            "time": "2016-01-13 09:41:49"
+            "time": "2016-04-09 09:42:01"
+        },
+        {
+            "name": "mockery/mockery",
+            "version": "0.9.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/padraic/mockery.git",
+                "reference": "70bba85e4aabc9449626651f48b9018ede04f86b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/padraic/mockery/zipball/70bba85e4aabc9449626651f48b9018ede04f86b",
+                "reference": "70bba85e4aabc9449626651f48b9018ede04f86b",
+                "shasum": ""
+            },
+            "require": {
+                "hamcrest/hamcrest-php": "~1.1",
+                "lib-pcre": ">=7.0",
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.9.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Mockery": "library/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Pádraic Brady",
+                    "email": "padraic.brady@gmail.com",
+                    "homepage": "http://blog.astrumfutura.com"
+                },
+                {
+                    "name": "Dave Marshall",
+                    "email": "dave.marshall@atstsolutions.co.uk",
+                    "homepage": "http://davedevelopment.co.uk"
+                }
+            ],
+            "description": "Mockery is a simple yet flexible PHP mock object framework for use in unit testing with PHPUnit, PHPSpec or any other testing framework. Its core goal is to offer a test double framework with a succinct API capable of clearly defining all possible object operations and interactions using a human readable Domain Specific Language (DSL). Designed as a drop in alternative to PHPUnit's phpunit-mock-objects library, Mockery is easy to integrate with PHPUnit and can operate alongside phpunit-mock-objects without the World ending.",
+            "homepage": "http://github.com/padraic/mockery",
+            "keywords": [
+                "BDD",
+                "TDD",
+                "library",
+                "mock",
+                "mock objects",
+                "mockery",
+                "stub",
+                "test",
+                "test double",
+                "testing"
+            ],
+            "time": "2015-04-02 19:54:00"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -8595,20 +6956,20 @@
         },
         {
             "name": "symfony/phpunit-bridge",
-            "version": "v3.0.3",
+            "version": "v3.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "4580ae86cde5497d38fc971192cd2c37e546eb4f"
+                "reference": "b097218e4ab7724e7ec0c420e96dfd70518c2354"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/4580ae86cde5497d38fc971192cd2c37e546eb4f",
-                "reference": "4580ae86cde5497d38fc971192cd2c37e546eb4f",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/b097218e4ab7724e7ec0c420e96dfd70518c2354",
+                "reference": "b097218e4ab7724e7ec0c420e96dfd70518c2354",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.9"
+                "php": ">=5.3.3"
             },
             "suggest": {
                 "symfony/debug": "For tracking deprecated interfaces usages at runtime with DebugClassLoader"
@@ -8646,12 +7007,14 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2016-01-21 09:38:31"
+            "time": "2016-03-23 13:46:08"
         }
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "claroline/distribution": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
