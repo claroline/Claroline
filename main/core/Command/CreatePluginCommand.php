@@ -556,14 +556,6 @@ class CreatePluginCommand extends ContainerAwareCommand
         }
     }
 
-    /**
-     * Placeholders are put between [[]].
-     */
-    private function removePlaceHolders($content)
-    {
-        $content = preg_replace('/\[\[(.*)\]\]/', '', $content);
-    }
-
     private function getNormalizedBundleName($ibundle)
     {
         preg_match_all('/[A-Z][^A-Z]*/', $ibundle, $results);
