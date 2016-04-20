@@ -1,17 +1,22 @@
 <form name="createNoteForm" novalidate>
+  <div class="panel-body" >
   {{ vm.noteTypes }}
   {{ vm.noteTypeChoosen }}
   {{ vm.fieldValues }}
-  <div class="modal-header">
-    <button type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="{{ 'close'|trans }}">
-      <span aria-hidden="true" data-ng-click="vm.cancel(createNoteForm)">&times;</span>
-    </button>
-    <h3 class="modal-title">{{ 'notes.add'|trans:'flashcard' }}</h3>
-  </div>
-  <div class="modal-body">
+  
+    <div class="alert alert-danger"
+         data-ng-if="vm.errorMessage !== null">
+      <i class="fa fa-warning"></i>
+      {{ vm.errorMessage|trans:'flashcard' }}
+      <ul>
+        <li data-ng-repeat="error in vm.errors track by error.line">
+          {{ error.message|trans:'flashcard' }}
+          <span data-ng-if="error.line">
+            ({{ 'errors.line'|trans:'flashcard' }} {{ error.line }})
+          </span>
+        </li>
+      </ul>
+    </div>
     <div class="form-group"
          data-ng-class="{ 'has-error': 
          (createNoteForm.$submitted || createNoteForm.user.$dirty) && 
@@ -58,17 +63,16 @@
       </p>
     </div>
   </div>
-  <div class="modal-footer">
+  <div class="panel-footer" data-ng-if="!vm.isReadOnly">
     <button type="submit"
             class="btn btn-primary"
             data-ng-disabled="!createNoteForm.$valid"
             data-ng-click="vm.createNote(createNoteForm)">
       {{ 'create'|trans }}
     </button>
-    <button type="button"
-            class="btn btn-default"
-            data-ng-click="vm.cancel(createNoteForm)">
+    <a class="btn btn-default"
+       href="#/">
       {{ 'cancel'|trans }}
-    </button>
+    </a>
   </div>
 </form>

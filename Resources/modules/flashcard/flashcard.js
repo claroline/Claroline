@@ -13,7 +13,9 @@ import {} from 'angular-bootstrap'
 import {} from 'angular-route'
 import mainTemplate from './main.partial.html'
 import studyTemplate from './study.partial.html'
+import createNoteTemplate from './createNote.partial.html'
 import FlashCardCtrl from './FlashCardCtrl.js'
+import CreateNoteCtrl from './CreateNoteCtrl.js'
 import StudyCtrl from './StudyCtrl.js'
 import FlashCardService from './FlashCardService.js'
 
@@ -34,13 +36,16 @@ angular
   ])
   .controller('FlashCardCtrl', [
     'FlashCardService',
-    'FlashCardModal',
     FlashCardCtrl
   ])
   .controller('StudyCtrl', [
     'FlashCardService',
     StudyCtrl
-    ])
+  ])
+  .controller('CreateNoteCtrl', [
+    'FlashCardService',
+    CreateNoteCtrl
+  ])
   .filter('trans', () => (string, domain = 'platform') =>
     Translator.trans(string, domain)
   )
@@ -57,6 +62,12 @@ angular
           template: studyTemplate,
           bindToController: true,
           controller: 'StudyCtrl',
+          controllerAs: 'vm'
+        })
+        .when('/create_note', {
+          template: createNoteTemplate,
+          bindToController: true,
+          controller: 'CreateNoteCtrl',
           controllerAs: 'vm'
         })
         .otherwise({
