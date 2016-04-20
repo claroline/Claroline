@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e4baddc4ff87bd16517a68f148968099",
-    "content-hash": "64c126dc14cb89ada5b5a0cc9d2f5afa",
+    "hash": "26d7cb5097387a003537d3d37c2ed431",
+    "content-hash": "b00629a66d3a69d9449134b56ca4a373",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "32a287f646a911d5897f5d1cfd5023189e65d038"
+                "reference": "26204507a55ea31f6158c3dfcb44448cf7a6eaef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/32a287f646a911d5897f5d1cfd5023189e65d038",
-                "reference": "32a287f646a911d5897f5d1cfd5023189e65d038",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/26204507a55ea31f6158c3dfcb44448cf7a6eaef",
+                "reference": "26204507a55ea31f6158c3dfcb44448cf7a6eaef",
                 "shasum": ""
             },
             "require": {
@@ -247,6 +247,51 @@
                 "phpunit/phpunit": "~4.6"
             },
             "type": "claroline-core",
+            "extra": {
+                "bundles": [
+                    "Claroline\\InstallationBundle\\ClarolineInstallationBundle",
+                    "Claroline\\MigrationBundle\\ClarolineMigrationBundle",
+                    "Claroline\\KernelBundle\\ClarolineKernelBundle",
+                    "Claroline\\CoreBundle\\ClarolineCoreBundle",
+                    "Claroline\\AgendaBundle\\ClarolineAgendaBundle",
+                    "FormaLibre\\ReservationBundle\\FormaLibreReservationBundle",
+                    "Claroline\\ImagePlayerBundle\\ClarolineImagePlayerBundle",
+                    "Claroline\\MessageBundle\\ClarolineMessageBundle",
+                    "Claroline\\ForumBundle\\ClarolineForumBundle",
+                    "Claroline\\TagBundle\\ClarolineTagBundle",
+                    "FormaLibre\\SupportBundle\\FormaLibreSupportBundle",
+                    "Claroline\\RssReaderBundle\\ClarolineRssReaderBundle",
+                    "Icap\\NotificationBundle\\IcapNotificationBundle",
+                    "Claroline\\SurveyBundle\\ClarolineSurveyBundle",
+                    "Claroline\\AnnouncementBundle\\ClarolineAnnouncementBundle",
+                    "Claroline\\LdapBundle\\ClarolineLdapBundle",
+                    "Claroline\\ScormBundle\\ClarolineScormBundle",
+                    "Claroline\\PdfPlayerBundle\\ClarolinePdfPlayerBundle",
+                    "Claroline\\CursusBundle\\ClarolineCursusBundle",
+                    "Claroline\\TeamBundle\\ClarolineTeamBundle",
+                    "Claroline\\PdfGeneratorBundle\\ClarolinePdfGeneratorBundle",
+                    "FormaLibre\\PresenceBundle\\FormaLibrePresenceBundle",
+                    "Claroline\\VideoPlayerBundle\\ClarolineVideoPlayerBundle",
+                    "Claroline\\ActivityToolBundle\\ClarolineActivityToolBundle",
+                    "Claroline\\WebResourceBundle\\ClarolineWebResourceBundle",
+                    "Claroline\\TextPlayerBundle\\ClarolineTextPlayerBundle",
+                    "Innova\\CollecticielBundle\\InnovaCollecticielBundle",
+                    "HeVinci\\FavouriteBundle\\HeVinciFavouriteBundle",
+                    "HeVinci\\CompetencyBundle\\HeVinciCompetencyBundle",
+                    "HeVinci\\UrlBundle\\HeVinciUrlBundle",
+                    "Icap\\PortfolioBundle\\IcapPortfolioBundle",
+                    "Icap\\BadgeBundle\\IcapBadgeBundle",
+                    "Icap\\BlogBundle\\IcapBlogBundle",
+                    "Icap\\DropzoneBundle\\IcapDropzoneBundle",
+                    "Icap\\SocialmediaBundle\\IcapSocialmediaBundle",
+                    "Icap\\WikiBundle\\IcapWikiBundle",
+                    "Icap\\OAuthBundle\\IcapOAuthBundle",
+                    "Claroline\\ResultBundle\\ClarolineResultBundle",
+                    "Innova\\PathBundle\\InnovaPathBundle",
+                    "Claroline\\DevBundle\\ClarolineDevBundle",
+                    "Icap\\WebsiteBundle\\IcapWebsiteBundle"
+                ]
+            },
             "autoload": {
                 "psr-4": {
                     "Claroline\\CoreBundle\\": "main/core/",
@@ -254,7 +299,6 @@
                     "Claroline\\InstallationBundle\\": "main/installation/",
                     "Claroline\\MigrationBundle\\": "main/migration/",
                     "Claroline\\KernelBundle\\": "main/kernel/",
-                    "Claroline\\WebInstaller\\": "main/web-installer/",
                     "Claroline\\ActivityToolBundle\\": "plugin/activity-tool",
                     "Claroline\\AgendaBundle\\": "plugin/agenda",
                     "Claroline\\AnnouncementBundle\\": "plugin/announcement",
@@ -290,7 +334,9 @@
                     "Claroline\\ResultBundle\\": "plugin/result",
                     "Innova\\PathBundle\\": "plugin/path",
                     "Claroline\\PdfGeneratorBundle\\": "plugin/pdf-generator",
-                    "Claroline\\DevBundle\\": "main/dev"
+                    "Claroline\\DevBundle\\": "main/dev",
+                    "Claroline\\WebInstaller\\": "main/web-installer/",
+                    "Icap\\WebsiteBundle\\": "plugin/website"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -310,7 +356,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2016-04-18 07:50:00"
+            "time": "2016-04-20 12:57:51"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -407,16 +453,16 @@
         },
         {
             "name": "composer/composer",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "32df3aa8cdbdaa16df9491b5e672e81c87f94c78"
+                "reference": "de0e25b0d494ace6b571a9205b82d017e5cb9257"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/32df3aa8cdbdaa16df9491b5e672e81c87f94c78",
-                "reference": "32df3aa8cdbdaa16df9491b5e672e81c87f94c78",
+                "url": "https://api.github.com/repos/composer/composer/zipball/de0e25b0d494ace6b571a9205b82d017e5cb9257",
+                "reference": "de0e25b0d494ace6b571a9205b82d017e5cb9257",
                 "shasum": ""
             },
             "require": {
@@ -478,7 +524,7 @@
                 "dependency",
                 "package"
             ],
-            "time": "2016-04-05 12:27:26"
+            "time": "2016-04-18 20:14:28"
         },
         {
             "name": "composer/semver",
@@ -4044,12 +4090,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nelmio/NelmioApiDocBundle.git",
-                "reference": "718dfc6e9c2b37000c3dd0740ebd09cffd3bc022"
+                "reference": "9caa2816e7d8a02fa97d71ff5be849d483e37cf9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nelmio/NelmioApiDocBundle/zipball/718dfc6e9c2b37000c3dd0740ebd09cffd3bc022",
-                "reference": "718dfc6e9c2b37000c3dd0740ebd09cffd3bc022",
+                "url": "https://api.github.com/repos/nelmio/NelmioApiDocBundle/zipball/9caa2816e7d8a02fa97d71ff5be849d483e37cf9",
+                "reference": "9caa2816e7d8a02fa97d71ff5be849d483e37cf9",
                 "shasum": ""
             },
             "require": {
@@ -4120,7 +4166,7 @@
                 "documentation",
                 "rest"
             ],
-            "time": "2016-03-22 07:28:24"
+            "time": "2016-04-20 11:41:39"
         },
         {
             "name": "ocramius/proxy-manager",
@@ -6105,6 +6151,46 @@
             "time": "2015-04-02 19:54:00"
         },
         {
+            "name": "pdepend/pdepend",
+            "version": "2.2.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pdepend/pdepend.git",
+                "reference": "b086687f3a01dc6bb92d633aef071d2c5dd0db06"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pdepend/pdepend/zipball/b086687f3a01dc6bb92d633aef071d2c5dd0db06",
+                "reference": "b086687f3a01dc6bb92d633aef071d2c5dd0db06",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.7",
+                "symfony/config": "^2.3.0|^3",
+                "symfony/dependency-injection": "^2.3.0|^3",
+                "symfony/filesystem": "^2.3.0|^3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.4.0,<4.8",
+                "squizlabs/php_codesniffer": "^2.0.0"
+            },
+            "bin": [
+                "src/bin/pdepend"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PDepend\\": "src/main/php/PDepend"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Official version of pdepend to be handled with Composer",
+            "time": "2016-03-10 15:15:04"
+        },
+        {
             "name": "phpdocumentor/reflection-docblock",
             "version": "2.0.4",
             "source": {
@@ -6152,6 +6238,71 @@
                 }
             ],
             "time": "2015-02-03 12:10:50"
+        },
+        {
+            "name": "phpmd/phpmd",
+            "version": "2.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpmd/phpmd.git",
+                "reference": "fccbdb6b222f6d7a6d35af1c396ba5435cec76a9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpmd/phpmd/zipball/fccbdb6b222f6d7a6d35af1c396ba5435cec76a9",
+                "reference": "fccbdb6b222f6d7a6d35af1c396ba5435cec76a9",
+                "shasum": ""
+            },
+            "require": {
+                "pdepend/pdepend": "~2.0",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.0",
+                "squizlabs/php_codesniffer": "^2.0"
+            },
+            "bin": [
+                "src/bin/phpmd"
+            ],
+            "type": "project",
+            "autoload": {
+                "psr-0": {
+                    "PHPMD\\": "src/main/php"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Manuel Pichler",
+                    "email": "github@manuel-pichler.de",
+                    "homepage": "https://github.com/manuelpichler",
+                    "role": "Project Founder"
+                },
+                {
+                    "name": "Other contributors",
+                    "homepage": "https://github.com/phpmd/phpmd/graphs/contributors",
+                    "role": "Contributors"
+                },
+                {
+                    "name": "Marc Würth",
+                    "email": "ravage@bluewin.ch",
+                    "homepage": "https://github.com/ravage84",
+                    "role": "Project Maintainer"
+                }
+            ],
+            "description": "PHPMD is a spin-off project of PHP Depend and aims to be a PHP equivalent of the well known Java tool PMD.",
+            "homepage": "http://phpmd.org/",
+            "keywords": [
+                "mess detection",
+                "mess detector",
+                "pdepend",
+                "phpmd",
+                "pmd"
+            ],
+            "time": "2016-03-10 17:17:44"
         },
         {
             "name": "phpspec/prophecy",
@@ -7013,7 +7164,8 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "claroline/distribution": 20
+        "claroline/distribution": 20,
+        "phpmd/phpmd": 0
     },
     "prefer-stable": true,
     "prefer-lowest": false,

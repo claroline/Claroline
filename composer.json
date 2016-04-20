@@ -11,7 +11,8 @@
         "mikey179/vfsStream": "~1.5",
         "phpunit/phpunit": "~4.6",
         "symfony/phpunit-bridge": "*",
-        "mockery/mockery": "^0.9.4"
+        "mockery/mockery": "^0.9.4",
+        "phpmd/phpmd" : "@stable"
     },
     "scripts": {
         "fast-install" : [
