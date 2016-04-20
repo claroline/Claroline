@@ -123,8 +123,6 @@ class DatabaseWriter
             )
         );
 
-        $plugin->setDescription($pluginBundle->getDescription());
-
         if (null === $plugin) {
             throw new \Exception('Unable to retrieve plugin for updating its configuration.');
         }
