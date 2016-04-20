@@ -1,0 +1,94 @@
+icap_website_type_name: Nom
+save_all_options: Sauvegarder toutes les options
+'bg_color': Couleur de l'arrière-plan
+'bg_content_color': Couleur de l'arrière-plan du contenu
+'site_width': Largeur du site
+'full_scr': Plein écran
+'fix_scr': Fixe
+'bg_image': Image de l'arrière-plan
+'upload_image': Télécharger
+'no_image': Aucune
+'paste_url': URL
+'apply': Appliquer
+'reset': Réinitialiser
+'bg_repeat': Répéter
+'bg_position': Positionnement
+'none': Aucun
+'horizontal': Horizontal
+'vertical': Vertical
+'width': Largeur
+'height': Hauteur
+'hover_color': Couleur de survol
+'border_color': Couleur de la bordure
+'section_color': Couleur des sections
+'font_color': Couleur du texte
+'section_font_color': Couleur du texte des sections
+'font_size': Taille de police
+'font_family': Police
+'banner': Bannière
+'footer': Pied de page
+'structure': Architecture
+'menu': Menu
+'general': Général
+'default': Défaut
+'enable_copyright': Afficher le droit d’auteur sur le pied de page
+'enable_analytics': Relier aux outils externes de visites/fréquentation
+'css_code': Appliquer du code css sur le contenu des pages générées du site web
+'analytics_info': Exemple: 'UA-XXXXX-Y' pour Google Analytics ou 'xxxxxxx' pour XiTi. Déclarez comme site dans Google Analytics http://mon_instance.univ-lyon1.fr/webapp/website/website.html sans préciser l'id dans l'URL
+'rich_content': Ajouter du texte riche :
+'rich_content_explain': Ajouter du contenu riche grâce à l'éditeur en le faisant apparaître dans l'aperçu
+'horizontally': Horiz.
+'vertically': Verti.
+'both': Les deux
+'activate': Activer
+'disable': Désactiver
+'save_options': Sauvegarder les options
+'editor_enable': Afficher l'éditeur
+'editor_disable': Cacher l'éditeur
+'add_new_page': Créer une nouvelle page
+'title': Titre
+'description': Description
+'visible': Rendre visible cette page dans le site
+'section': Cette page est une section
+'section_info': S'affiche dans le menu avec un style different
+'type': Type
+'content': Contenu
+'resource': Ressource
+'save': Sauvegarder
+'save_page': Sauvegarder pour créer la page
+'save_changes': Sauvegarder les modifications
+'url': URL
+'blank_page': Page de texte riche
+'url_page': Liens vers URL externe
+'target': Ouvrir la page dans
+'embedded': le corps du site
+'new_window': un nouvel onglet
+'resource_page': Liens vers ressource plateforme
+'confirm': Confirmer
+'cancel': Annuler
+'confirm_delete_message': Êtes-vous sûr de vouloir supprimer définitivement '%title%' ainsi que tous ses enfants?
+'add_resource': Ajouter une ressource
+'change_resource': Changer la ressource
+'error': Erreur
+'error_500': Votre action n'a pas été effectuée à cause d'une erreur interne serveur. Si l'erreur persiste, veuillez contacter l'assistance ou votre administrateur système.
+'error_511': Cette action requiert une authentification. Si vous étiez préalablement identifié sur la plateforme, votre session a probablement expiré. Veuillez vous identifier à nouveau et relancer votre action.
+'error_401': Vous n'avez pas les droits suffisants pour effectuer cette action.
+'error_417': Votre action n'a pas été effectuée à cause d'un paramètre invalide ou manquant.
+'success': Succès
+'success_message': Votre action a bien été effectuée
+'loading': patienter...
+'title_limit_message': Moins de 70 caractères, en correspondance à la limite de Google sur l'affichage des résultats.
+'description_limit_message': 160 caractères maximum. Mettre en majuscule la première lettre d'un mot important ou même l'ensemble du mot.
+'chars': caractères
+'edit_page': Modifier les propriétés de la page
+'create_page': Créer une nouvelle page
+'create_sub_page': Créer une sous-page
+'page_list': Liste de vos pages
+'empty_site_message': Votre site web est vide. Vous devez créer des pages. La première page creée sera la page d'accueil de votre site. Vous pouvez à tout moment changer cette option en cliquant sur le bouton 'Définir en page d'accueil' (à l'interieur du panneau d'édition de la page sélectionnée).
+'set_as_homepage': Définir en page d'accueil
+'menu_orientation': Affichage du menu
+'display_banner': Affichage de la bannière
+'display_footer': Affichage du pied de page
+'change_bg_image_attention_text': Attention! Si vous changez cette option, l'image en cours sera supprimée.
+'view_website': Visualiser
+'no_pages': Pas de pages créées

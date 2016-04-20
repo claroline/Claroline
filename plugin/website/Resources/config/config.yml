@@ -1,0 +1,10 @@
+plugin:
+    has_options: false
+    icon: icap_website_icon_admin.png
+
+    resources:
+        - class: Icap\WebsiteBundle\Entity\Website
+          name: icap_website
+          is_browsable: false
+          is_exportable: false
+          icon: icap_website_icon.png

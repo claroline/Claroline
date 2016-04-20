@@ -1,0 +1,17 @@
+{% macro getStylesheets(orientation) %}
+    {% if orientation == 'horizontal' %}
+        {% stylesheets debug=false filter='less, cssmin' output='bundles/icapwebsite/css/view-style-horizontal.css'
+        "@IcapWebsiteBundle/Resources/views/less/flexnav.less"
+        "@IcapWebsiteBundle/Resources/views/less/view.less"
+        %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+        {% endstylesheets %}
+    {% else %}
+        {% stylesheets debug=false filter='less, cssmin' output='bundles/icapwebsite/css/view-style-vertical.css'
+        "@IcapWebsiteBundle/Resources/public/css/angular/pushmenu.css"
+        "@IcapWebsiteBundle/Resources/views/less/view.less"
+        %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+        {% endstylesheets %}
+    {% endif %}
+{% endmacro %}
