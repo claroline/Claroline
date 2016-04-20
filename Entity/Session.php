@@ -14,6 +14,8 @@ namespace Claroline\FlashCardBundle\Entity;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * Session
@@ -29,6 +31,10 @@ class Session
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({
+     *     "api_flashcard",
+     *     "api_flashcard_session"
+     * })
      */
     private $id;
 
@@ -36,6 +42,10 @@ class Session
      * @var date
      *
      * @ORM\Column(name="due_date", type="date")
+     * @Groups({
+     *     "api_flashcard",
+     *     "api_flashcard_session"
+     * })
      */
     private $date;
 
@@ -43,6 +53,10 @@ class Session
      * @var integer
      *
      * @ORM\Column(name="duration", type="integer")
+     * @Groups({
+     *     "api_flashcard",
+     *     "api_flashcard_session"
+     * })
      */
     private $duration;
 
@@ -66,6 +80,8 @@ class Session
 
     public function __construct()
     {
+        $this->date = new \DateTime();
+        $this->duration = 0;
         $this->cards = new ArrayCollection();
     }
 
@@ -120,11 +136,37 @@ class Session
     }
 
     /**
+     * @param Card
+     *
+     * @return boolean
+     */
+    public function addCard(Card $obj)
+    {
+        if($this->cards->contains($obj)) {
+            return false;
+        } else {
+            return $this->cards->add($obj);
+        }
+    }
+
+    /**
      * @return ArrayCollection
      */
     public function getCards()
     {
         return $this->cards;
+    }
+
+    /**
+     * @param ArrayCollection $obj
+     *
+     * @return Session
+     */
+    public function setCards(ArrayCollection $obj)
+    {
+        $this->cards = $obj;
+
+        return $this;
     }
 
     /**

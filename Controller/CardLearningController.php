@@ -16,6 +16,7 @@ use Claroline\FlashCardBundle\Entity\CardLearning;
 use Claroline\FlashCardBundle\Entity\Deck;
 use Claroline\FlashCardBundle\Manager\CardLearningManager;
 use Claroline\FlashCardBundle\Manager\CardManager;
+use Claroline\FlashCardBundle\Manager\SessionManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -32,6 +33,7 @@ class CardLearningController
 {
     private $cardMgr;
     private $cardLearningMgr;
+    private $sessionMgr;
     private $formHandler;
     private $checker;
     private $tokenStorage;
@@ -41,22 +43,25 @@ class CardLearningController
      * @DI\InjectParams({
      *     "cardMgr" = @DI\Inject("claroline.flashcard.card_manager"),
      *     "cardLearningMgr" = @DI\Inject("claroline.flashcard.card_learning_manager"),
+     *     "sessionMgr" = @DI\Inject("claroline.flashcard.session_manager"),
      *     "handler" = @DI\Inject("claroline.form_handler"),
      *     "checker" = @DI\Inject("security.authorization_checker"),
      *     "tokenStorage" = @DI\Inject("security.token_storage"),
      *     "serializer" = @DI\Inject("serializer")
      * })
      *
-     * @param CardManager               $cardMgr
-     * @param CardLearningManager               $cardLearningMgr
+     * @param CardManager                   $cardMgr
+     * @param CardLearningManager           $cardLearningMgr
+     * @param SessionManager                $sessionMgr
      * @param FormHandler                   $handler
      * @param AuthorizationCheckerInterface $checker
-     * @param TokenStorageInterface $tokenStorage
+     * @param TokenStorageInterface         $tokenStorage
      * @param $serializer
      */
     public function __construct(
         CardManager $cardMgr,
         CardLearningManager $cardLearningMgr,
+        SessionManager $sessionMgr,
         FormHandler $handler,
         AuthorizationCheckerInterface $checker,
         TokenStorageInterface $tokenStorage,
@@ -65,6 +70,7 @@ class CardLearningController
     {
         $this->cardMgr = $cardMgr;
         $this->cardLearningMgr = $cardLearningMgr;
+        $this->sessionMgr = $sessionMgr;
         $this->formHandler = $handler;
         $this->checker = $checker;
         $this->tokenStorage = $tokenStorage;
@@ -111,6 +117,42 @@ class CardLearningController
         $date = new \DateTime();
 
         $cardLearnings = $this->cardLearningMgr->getCardToReview($deck, $user, $date);
+
+        $context = new SerializationContext();
+        $context->setGroups('api_flashcard_card');
+        return new JsonResponse(json_decode(
+            $this->serializer->serialize($cardLearnings, 'json', $context)
+        ));
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/study_card/session/{session}/card/{card}/result/{result}",
+     *     name="claroline_study_card"
+     * )
+     *
+     * @param Session $session
+     * @param Card $card
+     * @param $result
+     * @return JsonResponse
+     */
+    public function studyCardAction(Session $session, Card $card, $result)
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+        $cardLearning = $this->cardLearingMgr->getCardLearning($card, $user);
+
+        $cardLearning->study($result);
+
+        $this->cardLearningMgr->save($cardLearning);
+
+        // Save the session
+        $session->addCard($card);
+
+        $now = new \DateTime();
+        $interval = $now->getTimestamp() - $session->getDate()->getTimestamp();
+        $session->setDuration($session->getDuration() + $interval);
+
+        $this->sessionMgr->save($session);
 
         $context = new SerializationContext();
         $context->setGroups('api_flashcard_card');

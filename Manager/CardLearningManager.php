@@ -47,7 +47,7 @@ class CardLearningManager
      * @param CardLearning $cardLearning
      * @return CardLearning
      */
-    public function create(CardLearning $cardLearning)
+    public function save(CardLearning $cardLearning)
     {
         $this->om->persist($cardLearning);
         $this->om->flush();
@@ -62,6 +62,22 @@ class CardLearningManager
     {
         $this->om->remove($cardLearning);
         $this->om->flush();
+    }
+
+    /**
+     * @param Card $car
+     * @param User $user
+     * @return CardLearning
+     */
+    public function getCardLearning(Card $card, User $user)
+    {
+        $repo = $this->om->getRepository('ClarolineFlashCardBundle:CardLearning');
+        return $cardLearning = $repo->findOneBy(
+            array(
+                'user' => $user,
+                'card' => $card,
+            )
+        );
     }
 
     /**

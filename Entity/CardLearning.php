@@ -101,12 +101,83 @@ class CardLearning
      */
     private $user;
 
+    const ANS_AGAIN = 0, // Not good, repeat again
+          ANS_HARD = 1,  // Good, but difficult to remember
+          ANS_GOOD = 2,  // Good
+          ANS_EASY = 3;  // Good and easy to remember
+
     public function __construct()
     {
         $this->factor = 1.3;
         $this->painfull = false;
         $this->numberRepeated = 0;
         $this->dueDate = null;
+    }
+
+    /**
+     * @param int $answerQuality
+     *     0 - Not good, repeat again
+     *     1 - Good, but difficult to remember
+     *     2 - Good
+     *     3 - Good and easy to remember
+     *     See constant of this class
+     */
+    public function study($answerQuality)
+    {
+        if($answerQuality > 0) {
+            $this->numberRepeated++;
+        } else {
+            $this->numberRepeated = 0;
+        }
+
+        $this->updateFactor($answerQuality);
+        $this->updateDueDate();
+    }
+
+    /**
+     * @param int $answerQuality
+     */
+    public function updateFactor($answerQuality)
+    {
+        $newFactor = $this->factor;
+
+        if($answerQuality > $this::ANS_AGAIN) {
+            // The quality must be between 0 and 5
+            $answerQuality += 2;
+            $newFactor = $this->factor - 0.8 + 0.28 * $answerQuality - 0.02 * $answerQuality * $answerQuality;
+        }
+
+        if($newFactor < 1.3) {
+            $this->factor = 1.3;
+        } elseif($newFactor > 2.5) {
+            $this->factor = 2.5;
+        } else {
+            $this->factor = $newFactor;
+        }
+    }
+
+    public function updateDueDate()
+    {
+        if($this->numberRepeated > 0) {
+            $date = new \DateTime();
+
+            if($this->numberRepeated == 1) {
+                $nbrDays = 1;
+            } elseif($this->numberRepeated == 2) {
+                $nbrDays = 6;
+            } else {
+                $nbrDays = 6;
+                for($i=2; $i <= $this->numberRepeated; $i++) {
+                    $nbrDays *= $this->factor;
+                }
+                $nbrDays = ceil($nbrDays);
+            }
+
+            $date->add(new \DateInterval('P' . $nbrDays . 'D'));
+            $date->setTime(0, 0);
+
+            $this->dueDate = $date;
+        }
     }
 
     /**
