@@ -1,0 +1,47 @@
+<style type="text/css">
+html, body {
+    background-color: {{ options.bgColor|raw }};
+    background-image: url("{{ commonMacros.getImagePath(options.getBgImageForWeb())|raw }}");
+    background-repeat: {{ options.bgRepeat|raw }};
+    background-position: {{ options.bgPosition|raw }};
+}
+
+div.banner{
+    background-color: {{ options.bannerBgColor|raw }};
+    background-image: url("{{ commonMacros.getImagePath(options.getBannerBgImageForWeb())|raw }}");
+    background-repeat: {{ options.bannerBgRepeat|raw }};
+    background-position: {{ options.bannerBgPosition|raw }};
+    height: {{ options.bannerHeight|raw }}px;
+}
+
+div.footer{
+    background-color: {{ options.footerBgColor|raw }};
+    background-image: url("{{ commonMacros.getImagePath(options.getFooterBgImageForWeb())|raw }}");
+    background-repeat: {{ options.footerBgRepeat|raw }};
+    background-position: {{ options.footerBgPosition|raw }};
+    height: {{ options.footerHeight|raw }}px;
+}
+
+div.website-content {
+    height: auto;
+}
+div.website-page-content {
+    padding: 10px;
+    background-color: {{ options.bgContentColor|raw }};
+}
+
+{% if options.totalWidth > 200 %}
+@media (min-width:{{ options.totalWidth|raw }}px) {
+    div.website-body {
+        width: {{ options.totalWidth|raw }}px;
+        margin: auto;
+    }
+}
+{% endif %}
+
+{% if options.cssCode is not empty %}
+{{ options.cssCode|raw }}
+{% endif %}
+
+</style>
+
