@@ -765,6 +765,7 @@ class ResourceManager
         $withDirectoryContent = true,
         array $rights = array()
     ) {
+        $this->log("Copying {$node->getName()} from type {$node->getResourceType()->getName()}");
         $resource = $this->getResourceFromNode($node);
 
         if ($resource instanceof ResourceShortcut) {
