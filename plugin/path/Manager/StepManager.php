@@ -349,6 +349,7 @@ class StepManager
 
         $step->setLvl($data['lvl']);
         $step->setOrder($data['order']);
+        $step->setActivityHeight(0);
 
         // Link Step to its Activity
         if (!empty($data['activityNodeId']) && !empty($createdResources[$data['activityNodeId']])) {
