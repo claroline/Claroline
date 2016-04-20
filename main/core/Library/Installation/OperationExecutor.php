@@ -63,7 +63,6 @@ class OperationExecutor
         $this->previousRepoFile = $this->kernel->getRootDir().'/config/previous-installed.json';
         $this->installedRepoFile = $this->kernel->getRootDir().'/../vendor/composer/installed.json';
         $this->bundleFile = $this->kernel->getRootDir().'/config/bundles.ini';
-        $this->bupBundleFile = $this->kernel->getRootDir().'/config/bundles.bup.ini';
         $this->detector = new Detector();
         $this->om = $om;
     }
@@ -112,40 +111,20 @@ class OperationExecutor
 
         $previous = $this->openRepository($this->previousRepoFile);
         $current = $this->openRepository($this->installedRepoFile);
-        $operations = [];
-        $previousBundles = array_keys(parse_ini_file($this->bupBundleFile));
-
-        $previousBundles = array_filter($previousBundles, function ($var) {
-            if (in_array('Claroline\InstallationBundle\Bundle\InstallableInterface', class_implements($var))) {
-                $parts = explode('\\', $var);
-
-                if ($var !== 'Claroline\CoreBundle\ClarolineCoreBundle') {
-                    $this->log('<fg=blue>'.$var.' is already installed.</fg=blue>');
-                    $this->log('If something goes wrong, you can trigger these operations manually:');
-                    $this->log('Installation: php app/console claroline:plugin:install '.$parts[0].' '.$parts[1]);
-                    $this->log('Single update: php app/console claroline:test_update '.$parts[0].$parts[1]);
-                }
-
-                return true;
-            } else {
-                return false;
-            }
-        });
 
         /** @var PackageInterface $currentPackage */
         foreach ($current->getCanonicalPackages() as $currentPackage) {
-            $jsonpath = $this->kernel->getRootDir().'/../vendor/'.$currentPackage->getName().'/composer.json';
-            $json = json_decode(file_get_contents($jsonpath), true);
-            //this is a meta package
-            if (array_key_exists('bundles', $json)) {
+            $extra = $currentPackage->getExtra();
+            //this is a meta package if the bundles key exists
+            if (array_key_exists('bundles', $extra)) {
                 //this is only valid for installable bundles
-                $bundles = array_filter($json['bundles'], function ($var) {
+                $bundles = array_filter($extra['bundles'], function ($var) {
                     return in_array('Claroline\InstallationBundle\Bundle\InstallableInterface', class_implements($var)) ?  true : false;
                 });
+
                 foreach ($bundles as $bundle) {
-                    if (in_array($bundle, $previousBundles) === true) {
+                    if ($previousPackage = $this->findPreviousPackage($bundle)) {
                         $operations[$bundle] = new Operation(Operation::UPDATE, $currentPackage, $bundle);
-                        $previousPackage = $this->findPreviousPackage($currentPackage);
                         $operations[$bundle]->setFromVersion($previousPackage->getVersion());
                         $operations[$bundle]->setToVersion($currentPackage->getVersion());
                     } else {
@@ -157,6 +136,7 @@ class OperationExecutor
                 if (!($previousPackage = $previous->findPackage($currentPackage->getName(), '*'))) {
                     $this->log("Installation of {$currentPackage->getName()} required");
                     $operation = $this->buildOperation(Operation::INSTALL, $currentPackage);
+                    $operation->setToVersion($currentPackage->getVersion());
                     $operations[$operation->getBundleFqcn()] = $operation;
                 } elseif ($currentPackage->getVersion() !== $previousPackage->getVersion()
                     || $currentPackage->isDev()) {
@@ -298,15 +278,33 @@ class OperationExecutor
         return $byFqcn;
     }
 
-    private function findPreviousPackage($currentPackage)
+    private function findPreviousPackage($bundle)
     {
         $previous = $this->openRepository($this->previousRepoFile);
 
         foreach ($previous->getCanonicalPackages() as $package) {
-            if ($package->getName() === $currentPackage->getName()) {
-                return $package;
+            $extra = $package->getExtra();
+
+            if ($extra && array_key_exists('bundles', $extra)) {
+                //Otherwise convert the name in a dirty little way
+                //If it's a metapackage, check in the bundle list
+                foreach ($extra['bundles'] as $installedBundle) {
+                    if ($installedBundle === $bundle) {
+                        return $package;
+                    }
+                }
+            } else {
+                $bundleParts = explode('\\', $bundle);
+
+                //magic !
+                if (preg_replace('/[^A-Za-z0-9]/', '', $package->getPrettyName()) === strtolower($bundleParts[2])) {
+                    return $package;
+                }
             }
         }
+
+        //Not found. We return null and we'll try to install it later on.
+        return;
     }
 
     private function buildOperation($type, PackageInterface $package)

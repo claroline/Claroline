@@ -8,6 +8,7 @@
  * 
  * Date: 4/7/15
  */
+
 namespace Claroline\CoreBundle\Menu;
 
 use JMS\DiExtraBundle\Annotation as DI;

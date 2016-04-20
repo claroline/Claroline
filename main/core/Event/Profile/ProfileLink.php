@@ -8,6 +8,7 @@
  * 
  * Date: 5/5/15
  */
+
 namespace Claroline\CoreBundle\Event\Profile;
 
 class ProfileLink

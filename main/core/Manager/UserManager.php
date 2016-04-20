@@ -143,9 +143,7 @@ class UserManager
         $additionnalRoles = [];
 
         foreach ($rolesToAdd as $roleToAdd) {
-            if (is_string($roleToAdd)) {
-                $additionnalRoles[] = $this->roleManager->getRoleByName($roleToAdd);
-            }
+            $additionnalRoles[] = is_string($roleToAdd) ? $this->roleManager->getRoleByName($roleToAdd) : $roleToAdd;
         }
 
         if (count($organizations) === 0 && count($user->getOrganizations()) === 0) {

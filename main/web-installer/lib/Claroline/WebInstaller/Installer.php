@@ -115,7 +115,18 @@ class Installer
         $logger = new ConsoleLogger($output, $verbosityLevelMap);
         $installer->setLogger($logger);
         $output->writeln('Installing the platform from composer...');
-        $installer->updateFromComposerInfo();
+
+        //$kernel = $this->getContainer()->get('kernel');
+        /*
+        $rootDir = $kernel->getRootDir();
+        $iniBupFile = $rootDir . '/config/bundles.bup.ini';
+        @unlink($iniBupFile);
+        $previous = $rootDir . '/config/previous-installed.json';
+        @unlink($previous);
+        file_put_contents($previous, '[]');
+        */
+
+        $installer->installFromKernel(false);
     }
 
     private function createAdminUser(ContainerInterface $container, OutputInterface $output)

@@ -8,6 +8,7 @@
  *
  * Date: 2/18/16
  */
+
 namespace Claroline\CoreBundle\Listener;
 
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;

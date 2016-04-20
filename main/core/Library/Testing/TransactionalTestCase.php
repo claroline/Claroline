@@ -40,6 +40,17 @@ abstract class TransactionalTestCase extends WebTestCase
             $this->client->shutdown();
         }
 
+        // the following helps to free memory and speed up test suite execution.
+        // see http://kriswallsmith.net/post/18029585104/faster-phpunit
+        $refl = new \ReflectionObject($this);
+
+        foreach ($refl->getProperties() as $prop) {
+            if (!$prop->isStatic() && 0 !== strpos($prop->getDeclaringClass()->getName(), 'PHPUnit_')) {
+                $prop->setAccessible(true);
+                $prop->setValue($this, null);
+            }
+        }
+
         parent::tearDown();
     }
 

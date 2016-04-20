@@ -8,6 +8,7 @@
  * 
  * Date: 4/13/15
  */
+
 namespace Claroline\CoreBundle\Listener\Notification;
 
 use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;

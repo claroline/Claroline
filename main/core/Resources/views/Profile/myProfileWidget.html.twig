@@ -16,14 +16,16 @@
             <p class="text-center text-muted">
                 {{ 'registered'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}
             </p>
-            <div class="progress" style="height: 6px;">
-                <div class="progress-bar" role="progressbar" aria-valuenow="{{ completion }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ completion }}%;">
+            {% if completion is not null %}
+                <div class="progress" style="height: 6px;">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="{{ completion }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ completion }}%;">
 
+                    </div>
                 </div>
-            </div>
-            <p class="text-center text-muted">
-                {{ 'your_profile_is_n_complete'|trans({'%n%': completion}, 'platform') }}
-            </p>
+                <p class="text-center text-muted">
+                    {{ 'your_profile_is_n_complete'|trans({'%n%': completion}, 'platform') }}
+                </p>
+            {% endif %}
             <p class="text-center"><a href="{{ path('claro_profile_view') }}">{{ 'click_to_view_modify_profile'|trans({}, 'platform') }}</a></p>
         </div>
     </aside>

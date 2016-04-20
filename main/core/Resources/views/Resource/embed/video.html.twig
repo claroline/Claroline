@@ -1,9 +1,4 @@
 <video width="100%" height="400" controls="controls" preload='none'>
     <source src="{{ path('claro_file_get_media', {'node': node.getId}) }}" type="{{ node.getMimeType() }}">
-    <!-- In case of the browser does not support the video tag: -->
-    <object width="100%" height="400">
-        <param name="video" value="{{ path('claro_file_get_media', {'node': node.getId}) }}">
-        <embed src="{{ path('claro_file_get_media', {'node': node.getId}) }}"></embed>
-    </object>
 </video>
 <a href="{{ path('claro_resource_open', {'resourceType': node.getResourceType().getName(), 'node' : node.getId()}) }}">{{ node.getName() }}</a>

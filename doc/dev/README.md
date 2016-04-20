@@ -68,18 +68,3 @@ This command will allow you to reorder translations and adding the missing keys 
 - [-f]: Update the translation file (reorder and inject the missing keys).
 
 `php app/console claroline:debug:translation en --domain=forum --main_lang=fr --fqcn=ClarolineForumBundle -f`
-
-### claroline:tool [tool [bundle]]
-
-Launches one of the available tool scripts (located in
-*./Resources/scripts/tools*) for a given bundle.
-
-This command can be used interactively (e.g. to see the
-list of available tools) :
-
-`php app/console claroline:tool`
-
-**Available tools:**
-
-- *cs*: applies PHP-CS-fixer to the bundle
-- *cs-dry*: applies PHP-CS-fixer diff (no changes, just preview) to the bundle

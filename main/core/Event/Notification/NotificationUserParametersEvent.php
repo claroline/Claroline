@@ -8,6 +8,7 @@
  * 
  * Date: 4/13/15
  */
+
 namespace Claroline\CoreBundle\Event\Notification;
 
 use Symfony\Component\EventDispatcher\Event;

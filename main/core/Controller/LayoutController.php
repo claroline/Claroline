@@ -105,7 +105,7 @@ class LayoutController extends Controller
     {
         // TODO: replace core bundle version by distribution version when available
         // TODO: find the lightest way to get that information
-        $bundleManager = $this->get('claroline.manager.bundle_manager');
+        $bundleManager = $this->get('claroline.manager.plugin_manager');
         $version = $bundleManager->getDistributionVersion();
 
         $roleUser = $this->roleManager->getRoleByName('ROLE_USER');

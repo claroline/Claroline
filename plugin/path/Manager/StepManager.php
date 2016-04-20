@@ -145,7 +145,7 @@ class StepManager
             if (empty($stepStructure->condition->scid) || (!empty($oldCondition) && $stepStructure->condition->scid !== $oldCondition->getId())) {
                 // Condition has never been published or has been replaced by a new one
                 $condition = $this->stepConditionManager->create($step, $stepStructure->condition);
-            } else {
+            } elseif ($oldCondition) {
                 // Update existing condition
                 $condition = $this->stepConditionManager->edit($step, $oldCondition, $stepStructure->condition);
             }
@@ -349,6 +349,7 @@ class StepManager
 
         $step->setLvl($data['lvl']);
         $step->setOrder($data['order']);
+        $step->setActivityHeight(0);
 
         // Link Step to its Activity
         if (!empty($data['activityNodeId']) && !empty($createdResources[$data['activityNodeId']])) {

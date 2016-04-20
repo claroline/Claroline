@@ -8,6 +8,7 @@
  *
  * Date: 2/18/16
  */
+
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Entity\Widget\Widget;

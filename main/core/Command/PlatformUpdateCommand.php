@@ -38,7 +38,6 @@ class PlatformUpdateCommand extends ContainerAwareCommand
     {
         parent::configure();
         $this->setName('claroline:update')
-            ->setAliases(array('claroline:install'))
             ->setDescription(
                 'Updates, installs or uninstalls the platform packages brought by composer.'
             );

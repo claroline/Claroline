@@ -199,7 +199,7 @@ class CreatePluginCommand extends ContainerAwareCommand
         );
 
         if ($input->getOption('install')) {
-            $bundleManager = $this->getContainer()->get('claroline.manager.bundle_manager');
+            $bundleManager = $this->getContainer()->get('claroline.manager.plugin_manager');
             $bundleManager->updateIniFile($ivendor, $ibundle);
             $bundleManager->updateAutoload($ivendor, $ibundle, $vname, $bname);
         }
