@@ -16,7 +16,10 @@ if (!file_exists($targetFile)) {
 }
 
 $targets = array_filter(file($targetFile), function ($line) {
-    return !empty($line);
+    $line = trim($line);
+    $length = strlen($line);
+
+    return $length > 4 && strpos($line, '.php') === $length - 4;
 });
 
 $files = array_map(function ($filePath) use ($pkgDir) {
