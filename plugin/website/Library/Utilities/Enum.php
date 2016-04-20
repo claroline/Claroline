@@ -3,21 +3,23 @@
  * Created by PhpStorm.
  * User: panos
  * Date: 9/23/14
- * Time: 2:08 PM
+ * Time: 2:08 PM.
  */
 
 namespace Icap\WebsiteBundle\Library\Utilities;
+
 use ReflectionClass;
 
 /**
- * Class to implement enumerations for PHP 5 (without SplEnum)
+ * Class to implement enumerations for PHP 5 (without SplEnum).
  */
-abstract class Enum {
+abstract class Enum
+{
     private $value;
     private $ordinal;
 
     /**
-     * Return string representation of this enum
+     * Return string representation of this enum.
      *
      * @return string
      */
@@ -27,46 +29,51 @@ abstract class Enum {
     }
 
     /**
-     * Tries to set the value  of this enum
+     * Tries to set the value  of this enum.
      *
      * @param string $value
+     *
      * @throws Exception If value is not part of this enum
      */
     public function setValue($value)
     {
-        if ($this->isValidEnumValue($value))
+        if ($this->isValidEnumValue($value)) {
             $this->value = $value;
-        else
+        } else {
             $this->value = null;
+        }
     }
 
     /**
-     * Validates if the type given is part of this enum class
+     * Validates if the type given is part of this enum class.
      *
      * @param string $checkValue
+     *
      * @return bool
      */
     public function isValidEnumValue($checkValue)
     {
         $reflector = new ReflectionClass(get_class($this));
-        foreach ($reflector->getConstants() as $validValue)
-        {
-            if ($validValue == $checkValue) return true;
+        foreach ($reflector->getConstants() as $validValue) {
+            if ($validValue == $checkValue) {
+                return true;
+            }
         }
+
         return false;
     }
 
     /**
      * @param string $value Value for this display type
      */
-    function __construct($value)
+    public function __construct($value)
     {
         $this->setValue($value);
     }
 
     /**
      * With a magic getter you can get the value from this enum using
-     * any variable name as in:
+     * any variable name as in:.
      *
      * <code>
      *   $myEnum = new MyEnum(MyEnum::start);
@@ -74,16 +81,17 @@ abstract class Enum {
      * </code>
      *
      * @param string $property
+     *
      * @return string
      */
-    function __get($property)
+    public function __get($property)
     {
         return $this->value;
     }
 
     /**
      * With a magic setter you can set the enum value using any variable
-     * name as in:
+     * name as in:.
      *
      * <code>
      *   $myEnum = new MyEnum(MyEnum::Start);
@@ -92,9 +100,10 @@ abstract class Enum {
      *
      * @param string $property
      * @param string $value
+     *
      * @throws Exception Throws exception if an invalid type is used
      */
-    function __set($property, $value)
+    public function __set($property, $value)
     {
         $this->setValue($value);
     }
@@ -105,8 +114,8 @@ abstract class Enum {
      *
      * @return string
      */
-    function __toString()
+    public function __toString()
     {
-        return (string)$this->value;
+        return (string) $this->value;
     }
-} 
+}

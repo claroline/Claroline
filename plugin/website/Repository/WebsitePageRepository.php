@@ -3,21 +3,20 @@
  * Created by PhpStorm.
  * User: panos
  * Date: 8/27/14
- * Time: 11:44 AM
+ * Time: 11:44 AM.
  */
 
 namespace Icap\WebsiteBundle\Repository;
 
-
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Icap\WebsiteBundle\Entity\Website;
 
-
-class WebsitePageRepository extends NestedTreeRepository{
+class WebsitePageRepository extends NestedTreeRepository
+{
     /**
      * @param Website $website
-     * @param boolean $isAdmin
-     * @param boolean $isMenu (get page collection or array collection)
+     * @param bool    $isAdmin
+     * @param bool    $isMenu  (get page collection or array collection)
      *
      * @return mixed
      */
@@ -27,7 +26,7 @@ class WebsitePageRepository extends NestedTreeRepository{
         if (!$isMenu) {
             $queryBuilder->leftJoin('page.resourceNode', 'resource')
                 ->leftJoin('resource.workspace', 'resourceWorkspace')
-                ->select("
+                ->select('
                 page.id,
                 page.title,
                 page.visible,
@@ -47,7 +46,7 @@ class WebsitePageRepository extends NestedTreeRepository{
                 page.richText,
                 page.root,
                 page.type
-            ");
+            ');
         } else {
             $queryBuilder->select('
                 page.id,
@@ -68,7 +67,7 @@ class WebsitePageRepository extends NestedTreeRepository{
             ->orderBy('page.root, page.left', 'ASC')
             ->setParameter('website', $website);
 
-        if ($isAdmin===false) {
+        if ($isAdmin === false) {
             $queryBuilder
                 ->andWhere('page.visible = :visible')
                 ->setParameter('visible', true);
@@ -111,7 +110,7 @@ class WebsitePageRepository extends NestedTreeRepository{
             ->andWhere($queryBuilder->expr()->in('page.id', $pageIds))
             ->orderBy('page.root, page.left', 'ASC')
             ->setParameter('website', $website);
-        if ($isAdmin===false) {
+        if ($isAdmin === false) {
             $queryBuilder
                 ->andWhere('page.visible = :visible')
                 ->setParameter('visible', true);
@@ -119,4 +118,4 @@ class WebsitePageRepository extends NestedTreeRepository{
 
         return $queryBuilder->getQuery()->getResult();
     }
-} 
+}

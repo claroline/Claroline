@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Auto-generated migration based on mapping information: modify it with caution
+ * Auto-generated migration based on mapping information: modify it with caution.
  *
  * Generation date: 2014/07/07 03:19:14
  */
@@ -14,7 +14,7 @@ class Version20140707151913 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             CREATE TABLE icap__website_page (
                 id INT AUTO_INCREMENT NOT NULL, 
                 resource_node_id INT DEFAULT NULL, 
@@ -36,8 +36,8 @@ class Version20140707151913 extends AbstractMigration
                 INDEX IDX_FB66D1D4727ACA70 (parent_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TABLE icap__website_options (
                 id INT AUTO_INCREMENT NOT NULL, 
                 website_id INT DEFAULT NULL, 
@@ -77,8 +77,8 @@ class Version20140707151913 extends AbstractMigration
                 UNIQUE INDEX UNIQ_C40F17718F45C82 (website_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TABLE icap__website (
                 id INT AUTO_INCREMENT NOT NULL, 
                 creation_date DATETIME NOT NULL, 
@@ -86,60 +86,60 @@ class Version20140707151913 extends AbstractMigration
                 UNIQUE INDEX UNIQ_452309F8B87FAB32 (resourceNode_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__website_page 
             ADD CONSTRAINT FK_FB66D1D41BAD783F FOREIGN KEY (resource_node_id) 
             REFERENCES claro_resource_node (id)
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__website_page 
             ADD CONSTRAINT FK_FB66D1D418F45C82 FOREIGN KEY (website_id) 
             REFERENCES icap__website (id) 
             ON DELETE CASCADE
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__website_page 
             ADD CONSTRAINT FK_FB66D1D4727ACA70 FOREIGN KEY (parent_id) 
             REFERENCES icap__website_page (id) 
             ON DELETE CASCADE
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__website_options 
             ADD CONSTRAINT FK_C40F17718F45C82 FOREIGN KEY (website_id) 
             REFERENCES icap__website (id) 
             ON DELETE CASCADE
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__website 
             ADD CONSTRAINT FK_452309F8B87FAB32 FOREIGN KEY (resourceNode_id) 
             REFERENCES claro_resource_node (id) 
             ON DELETE CASCADE
-        ");
+        ');
     }
 
     public function down(Schema $schema)
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE icap__website_page 
             DROP FOREIGN KEY FK_FB66D1D4727ACA70
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__website_page 
             DROP FOREIGN KEY FK_FB66D1D418F45C82
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE icap__website_options 
             DROP FOREIGN KEY FK_C40F17718F45C82
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE icap__website_page
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE icap__website_options
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE icap__website
-        ");
+        ');
     }
 }

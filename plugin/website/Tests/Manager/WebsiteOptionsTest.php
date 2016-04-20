@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -10,7 +10,6 @@
  */
 
 namespace Icap\WebsiteBundle\Tests;
-
 
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -44,8 +43,8 @@ class WebsiteOptionsTest extends TransactionalTestCase
         $user = $this->persist->user('john');
         $this->website = $this->persist->website('Test Website', $user);
         $this->websiteOptionParams = array(
-            'bannerText'    => 'banner',
-            'footerText'    => 'footer'
+            'bannerText' => 'banner',
+            'footerText' => 'footer',
         );
         $this->file = tempnam(sys_get_temp_dir(), 'upl');
         imagepng(imagecreatetruecolor(10, 10), $this->file);
@@ -62,7 +61,7 @@ class WebsiteOptionsTest extends TransactionalTestCase
     public function testUpdate()
     {
         $repo = $this->om->getRepository('IcapWebsiteBundle:WebsiteOptions');
-        $this->websiteOptionsManager->processForm($this->website->getOptions(), $this->websiteOptionParams, "PUT");
+        $this->websiteOptionsManager->processForm($this->website->getOptions(), $this->websiteOptionParams, 'PUT');
         $this->assertEquals('banner', $repo->findOneBy(array('website' => $this->website))->getBannerText(), 'Test Website options update');
     }
 

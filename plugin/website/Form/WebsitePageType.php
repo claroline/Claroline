@@ -10,7 +10,7 @@ class WebsitePageType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -49,17 +49,17 @@ class WebsitePageType extends AbstractType
                 array(
                     'choices' => array(
                         'embed' => 0,
-                        'new_window' => 1
+                        'new_window' => 1,
                     ),
-                    'choices_as_values' => true
+                    'choices_as_values' => true,
                 )
             )
             ->add(
                 'resourceNode',
                 'entity',
                 array(
-                    'class' =>  'ClarolineCoreBundle:Resource\ResourceNode',
-                    'choice_label' => 'id'
+                    'class' => 'ClarolineCoreBundle:Resource\ResourceNode',
+                    'choice_label' => 'id',
                 )
             )
             ->add(
@@ -86,7 +86,7 @@ class WebsitePageType extends AbstractType
             'data_class' => 'Icap\WebsiteBundle\Entity\WebsitePage',
             'translation_domain' => 'icap_website',
             'csrf_protection' => false,
-            'intention' => 'create_website_page'
+            'intention' => 'create_website_page',
         ));
     }
 }

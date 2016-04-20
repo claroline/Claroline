@@ -3,13 +3,12 @@
  * Created by PhpStorm.
  * User: panos
  * Date: 8/28/14
- * Time: 9:37 AM
+ * Time: 9:37 AM.
  */
 
 namespace Icap\WebsiteBundle\Controller;
 
 use Icap\WebsiteBundle\Entity\Website;
-
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -25,7 +24,8 @@ use Icap\WebsiteBundle\Entity\WebsitePageTypeEnum;
  *      requirements={"websiteId" = "\d+"}
  * )
  */
-class WebsitePageController extends Controller{
+class WebsitePageController extends Controller
+{
     /**
      * @Route(
      *      "/{pageId}",
@@ -39,8 +39,8 @@ class WebsitePageController extends Controller{
      */
     public function viewAction(Website $website, $pageId)
     {
-        $this->checkAccess("OPEN", $website);
-        $isAdmin = $this->isUserGranted("ADMINISTRATE", $website);
+        $this->checkAccess('OPEN', $website);
+        $isAdmin = $this->isUserGranted('ADMINISTRATE', $website);
         $user = $this->getLoggedUser();
         $pageManager = $this->getWebsitePageManager();
         $pages = $pageManager->getPageTree($website, $isAdmin, true);
@@ -55,8 +55,8 @@ class WebsitePageController extends Controller{
             'pageTypes' => array(
                 'blank' => WebsitePageTypeEnum::BLANK_PAGE,
                 'resource' => WebsitePageTypeEnum::RESOURCE_PAGE,
-                'url' => WebsitePageTypeEnum::URL_PAGE
-            )
+                'url' => WebsitePageTypeEnum::URL_PAGE,
+            ),
         );
     }
 
@@ -73,17 +73,17 @@ class WebsitePageController extends Controller{
     public function getAction(Website $website, $pageId)
     {
         $response = new JsonResponse();
-        $this->checkAccess("OPEN", $website);
-        try{
-            $isAdmin = $this->isUserGranted("ADMINISTRATE", $website);
+        $this->checkAccess('OPEN', $website);
+        try {
+            $isAdmin = $this->isUserGranted('ADMINISTRATE', $website);
 
             $pageManager = $this->getWebsitePageManager();
             $page = $pageManager->getPages($website, $pageId, $isAdmin, true);
-            if ($page === NULL) {
+            if ($page === null) {
                 $page = array();
             }
             $response->setData($page);
-        } catch(\Exception $exception) {
+        } catch (\Exception $exception) {
             $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
@@ -105,14 +105,14 @@ class WebsitePageController extends Controller{
         $response = new JsonResponse();
         $user = $this->getLoggedUser();
         if ($user !== null) {
-            try{
-                $this->checkAccess("ADMINISTRATE", $website);
+            try {
+                $this->checkAccess('ADMINISTRATE', $website);
                 $pageManager = $this->getWebsitePageManager();
                 $parentPage = $pageManager->getPages($website, $parentPageId, true, false)[0];
                 $newPage = $pageManager->createEmptyPage($website, $parentPage);
-                $newPageJson = $pageManager->processForm($website, $newPage, $request->request->all(), "POST");
+                $newPageJson = $pageManager->processForm($website, $newPage, $request->request->all(), 'POST');
                 $response->setData($newPageJson);
-            } catch(\Exception $exception) {
+            } catch (\Exception $exception) {
                 $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         } else {
@@ -137,13 +137,13 @@ class WebsitePageController extends Controller{
         $response = new JsonResponse();
         $user = $this->getLoggedUser();
         if ($user !== null) {
-            try{
-                $this->checkAccess("ADMINISTRATE", $website);
+            try {
+                $this->checkAccess('ADMINISTRATE', $website);
                 $pageManager = $this->getWebsitePageManager();
                 $page = $pageManager->getPages($website, $pageId, true, false)[0];
-                $pageJson = $pageManager->processForm($website, $page, $request->request->all(), "PUT");
+                $pageJson = $pageManager->processForm($website, $page, $request->request->all(), 'PUT');
                 $response->setData($pageJson);
-            } catch(\Exception $exception) {
+            } catch (\Exception $exception) {
                 $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         } else {
@@ -168,13 +168,13 @@ class WebsitePageController extends Controller{
         $response = new JsonResponse();
         $user = $this->getLoggedUser();
         if ($user !== null) {
-            try{
-                $this->checkAccess("ADMINISTRATE", $website);
+            try {
+                $this->checkAccess('ADMINISTRATE', $website);
                 $pageManager = $this->getWebsitePageManager();
                 $page = $pageManager->getPages($website, $pageId, true, false)[0];
                 $pageManager->changeHomepage($website, $page);
                 $response->setStatusCode(Response::HTTP_OK);
-            } catch(\Exception $exception) {
+            } catch (\Exception $exception) {
                 $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         } else {
@@ -200,16 +200,16 @@ class WebsitePageController extends Controller{
         $response = new JsonResponse();
         $user = $this->getLoggedUser();
         if ($user !== null) {
-            $this->checkAccess("ADMINISTRATE", $website);
+            $this->checkAccess('ADMINISTRATE', $website);
             $pageManager = $this->getWebsitePageManager();
-            try{
+            try {
                 $pageManager->handleMovePage($website, array(
                         'pageId' => $pageId,
                         'newParentId' => $newParentId,
-                        'previousSiblingId' => $previousSiblingId
+                        'previousSiblingId' => $previousSiblingId,
                     )
                 );
-            } catch(\Exception $exception) {
+            } catch (\Exception $exception) {
                 $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         } else {
@@ -234,12 +234,12 @@ class WebsitePageController extends Controller{
         $response = new JsonResponse();
         $user = $this->getLoggedUser();
         if ($user !== null) {
-            $this->checkAccess("ADMINISTRATE", $website);
+            $this->checkAccess('ADMINISTRATE', $website);
             $pageManager = $this->getWebsitePageManager();
             $page = $pageManager->getPages($website, $pageId, true, false)[0];
-            try{
+            try {
                 $pageManager->deletePage($page);
-            } catch(\Exception $exception) {
+            } catch (\Exception $exception) {
                 $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         } else {

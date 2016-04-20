@@ -3,24 +3,21 @@
  * Created by PhpStorm.
  * User: panos
  * Date: 7/4/14
- * Time: 4:00 PM
+ * Time: 4:00 PM.
  */
 
 namespace Icap\WebsiteBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-
 use Icap\WebsiteBundle\Entity\Website;
-
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 
-
-class Controller extends BaseController{
+class Controller extends BaseController
+{
     /**
-     * @param string $permission
-     *
+     * @param string  $permission
      * @param Website $website
      *
      * @throws AccessDeniedException
@@ -36,8 +33,7 @@ class Controller extends BaseController{
     }
 
     /**
-     * @param string $permission
-     *
+     * @param string  $permission
      * @param Website $website
      *
      * @return bool
@@ -51,6 +47,7 @@ class Controller extends BaseController{
         if ($this->get('security.authorization_checker')->isGranted($permission, $collection)) {
             $checkPermission = true;
         }
+
         return $checkPermission;
     }
 
@@ -62,14 +59,15 @@ class Controller extends BaseController{
     protected function dispatch($event)
     {
         $this->get('event_dispatcher')->dispatch('log', $event);
+
         return $this;
     }
 
     /**
      * @param Website $website
-     * @param string $childType
-     * @param string $action
-     * @param array $details
+     * @param string  $childType
+     * @param string  $action
+     * @param array   $details
      *
      * @return Controller
      */
@@ -81,11 +79,13 @@ class Controller extends BaseController{
             $action,
             $details
         );
+
         return $this->dispatch($event);
     }
 
     /**
      * Retrieve logged user. If anonymous return null.
+     *
      * @return user
      */
     protected function getLoggedUser()

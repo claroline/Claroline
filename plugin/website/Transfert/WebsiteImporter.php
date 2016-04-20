@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -10,7 +10,6 @@
  */
 
 namespace Icap\WebsiteBundle\Transfert;
-
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
@@ -24,8 +23,8 @@ use JMS\DiExtraBundle\Annotation as DI;
  * @DI\Service("claroline.importer.icap_website_importer")
  * @DI\Tag("claroline.importer")
  */
-class WebsiteImporter extends Importer implements ConfigurationInterface{
-
+class WebsiteImporter extends Importer implements ConfigurationInterface
+{
     /**
      * @var \Icap\WebsiteBundle\Manager\WebsiteManager
      */
@@ -45,7 +44,6 @@ class WebsiteImporter extends Importer implements ConfigurationInterface{
         $this->container = $container;
     }
 
-
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
@@ -55,7 +53,7 @@ class WebsiteImporter extends Importer implements ConfigurationInterface{
         return $treeBuilder;
     }
 
-    function getName()
+    public function getName()
     {
         return 'icap_website';
     }
@@ -126,7 +124,7 @@ class WebsiteImporter extends Importer implements ConfigurationInterface{
         ->end();
     }
 
-    function validate(array $data)
+    public function validate(array $data)
     {
         $processor = new Processor();
         $processor->processConfiguration($this, $data);
@@ -141,12 +139,12 @@ class WebsiteImporter extends Importer implements ConfigurationInterface{
 
     /**
      * @param Workspace $workspace
-     * @param array $files
-     * @param mixed $object
+     * @param array     $files
+     * @param mixed     $object
      *
      * @return array $data
      */
-    function export(Workspace $workspace, array &$files, $object)
+    public function export(Workspace $workspace, array &$files, $object)
     {
         return $this->websiteManager->exportWebsite($workspace, $files, $object);
     }

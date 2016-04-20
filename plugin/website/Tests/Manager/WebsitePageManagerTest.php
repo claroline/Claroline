@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  * User: ptsavdar
  * Date: 16/03/16
- * Time: 16:23
+ * Time: 16:23.
  */
 
 namespace Icap\WebsiteBundle\Tests;
-
 
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -40,12 +39,12 @@ class WebsitePageManagerTest extends TransactionalTestCase
         $user = $this->persist->user('john');
         $this->website = $this->persist->website('Test Website', $user);
         $this->websitePageParams = array(
-            'title'             => 'Test page',
-            'type'              => WebsitePageTypeEnum::BLANK_PAGE,
-            'description'       => 'Test description',
-            'visible'           => true,
-            'isSection'         => false,
-            'richText'          => '<div>this is a test page</div>'
+            'title' => 'Test page',
+            'type' => WebsitePageTypeEnum::BLANK_PAGE,
+            'description' => 'Test description',
+            'visible' => true,
+            'isSection' => false,
+            'richText' => '<div>this is a test page</div>',
         );
     }
 
@@ -53,7 +52,7 @@ class WebsitePageManagerTest extends TransactionalTestCase
     {
         $repo = $this->om->getRepository('IcapWebsiteBundle:WebsitePage');
         $websitePage = $this->manager->createEmptyPage($this->website, $this->website->getRoot());
-        $this->manager->processForm($this->website, $websitePage, $this->websitePageParams, "POST");
+        $this->manager->processForm($this->website, $websitePage, $this->websitePageParams, 'POST');
         $pages = $repo->findBy([], ['creationDate' => 'ASC']);
         $this->assertEquals(2, count($pages), 'Test WebsitePage creation');
         $this->assertEquals($websitePage, $pages[1], 'Verify correct WebsitePage was created');
@@ -65,9 +64,9 @@ class WebsitePageManagerTest extends TransactionalTestCase
     {
         $repo = $this->om->getRepository('IcapWebsiteBundle:WebsitePage');
         $websitePage = $this->manager->createEmptyPage($this->website, $this->website->getRoot());
-        $this->manager->processForm($this->website, $websitePage, $this->websitePageParams, "POST");
-        $this->websitePageParams['title'] = "Test page modified";
-        $this->manager->processForm($this->website, $websitePage, $this->websitePageParams, "PUT");
+        $this->manager->processForm($this->website, $websitePage, $this->websitePageParams, 'POST');
+        $this->websitePageParams['title'] = 'Test page modified';
+        $this->manager->processForm($this->website, $websitePage, $this->websitePageParams, 'PUT');
         $pages = $repo->findBy([], ['creationDate' => 'ASC']);
         $this->assertEquals($this->websitePageParams['title'], $pages[1]->getTitle(), 'Verify correct WebsitePage update');
     }
@@ -77,8 +76,8 @@ class WebsitePageManagerTest extends TransactionalTestCase
         $repo = $this->om->getRepository('IcapWebsiteBundle:WebsitePage');
         $page1 = $this->manager->createEmptyPage($this->website, $this->website->getRoot());
         $page2 = $this->manager->createEmptyPage($this->website, $this->website->getRoot());
-        $this->manager->processForm($this->website, $page1, $this->websitePageParams, "POST");
-        $this->manager->processForm($this->website, $page2, $this->websitePageParams, "POST");
+        $this->manager->processForm($this->website, $page1, $this->websitePageParams, 'POST');
+        $this->manager->processForm($this->website, $page2, $this->websitePageParams, 'POST');
         $this->manager->handleMovePage($this->website, array('pageId' => $page2->getId(), 'newParentId' => $page1->getId()));
         $pages = $repo->findBy([], ['creationDate' => 'ASC']);
         $this->assertEquals($page1->getId(), $pages[2]->getParent()->getId(), 'Verify correct WebsitePage move');
@@ -90,8 +89,8 @@ class WebsitePageManagerTest extends TransactionalTestCase
         $websiteRepo = $this->om->getRepository('IcapWebsiteBundle:Website');
         $page1 = $this->manager->createEmptyPage($this->website, $this->website->getRoot());
         $page2 = $this->manager->createEmptyPage($this->website, $this->website->getRoot());
-        $this->manager->processForm($this->website, $page1, $this->websitePageParams, "POST");
-        $this->manager->processForm($this->website, $page2, $this->websitePageParams, "POST");
+        $this->manager->processForm($this->website, $page1, $this->websitePageParams, 'POST');
+        $this->manager->processForm($this->website, $page2, $this->websitePageParams, 'POST');
         $this->assertEquals($page1->getId(), $websiteRepo->find($this->website->getId())->getHomepage()->getId(), 'Test Website original homepage');
         $this->assertEquals(true, $repo->find($page1->getId())->getIsHomepage());
         $this->manager->changeHomepage($this->website, $page2);

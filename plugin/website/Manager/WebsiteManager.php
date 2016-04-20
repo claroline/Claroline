@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the Claroline Connect package
+ * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
@@ -13,7 +13,6 @@ namespace Icap\WebsiteBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Icap\WebsiteBundle\Entity\Website;
 use Icap\WebsiteBundle\Entity\WebsiteOptions;
 use Icap\WebsiteBundle\Entity\WebsitePage;
@@ -23,7 +22,8 @@ use Symfony\Component\Routing\Router;
 /**
  * @DI\Service("icap.website.manager")
  */
-class WebsiteManager {
+class WebsiteManager
+{
     /**
      * @var ObjectManager;
      */
@@ -59,9 +59,10 @@ class WebsiteManager {
     }
 
     /**
-     * Copies website to a location
+     * Copies website to a location.
      *
      * @param Website $orgWebsite
+     *
      * @return Website
      */
     public function copyWebsite(Website $orgWebsite)
@@ -103,11 +104,12 @@ class WebsiteManager {
 
     /**
      * Imports website object from array
-     * (see WebsiteImporter for structure and description)
+     * (see WebsiteImporter for structure and description).
      *
      * @param array $data
      * @param $rootPath
      * @param $test
+     *
      * @return Website
      */
     public function importWebsite(array $data, $rootPath, $test = false)
@@ -161,10 +163,10 @@ class WebsiteManager {
         }
         $websiteOptionsArray = $object->getOptions()->exportToArray($files);
         $data = array(
-            'options'   => $websiteOptionsArray,
-            'pages'     => $websitePagesArray
+            'options' => $websiteOptionsArray,
+            'pages' => $websitePagesArray,
         );
 
         return $data;
     }
-} 
+}

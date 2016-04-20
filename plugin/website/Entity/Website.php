@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: panos
  * Date: 7/4/14
- * Time: 3:56 PM
+ * Time: 3:56 PM.
  */
 
 namespace Icap\WebsiteBundle\Entity;
@@ -17,8 +17,8 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
  * @ORM\Table(name="icap__website")
  * @ORM\HasLifecycleCallbacks()
  */
-class Website extends AbstractResource{
-
+class Website extends AbstractResource
+{
     /**
      * @ORM\OneToOne(targetEntity="Icap\WebsiteBundle\Entity\WebsitePage")
      * @ORM\JoinColumn(name="root_id", referencedColumnName="id", onDelete="CASCADE")
@@ -55,6 +55,7 @@ class Website extends AbstractResource{
 
     /**
      * @param WebsiteOptions $options
+     *
      * @return Website
      */
     public function setOptions($options)
@@ -115,7 +116,8 @@ class Website extends AbstractResource{
     /**
      * @ORM\PrePersist
      */
-    public function createOptionsAndRoot(LifecycleEventArgs $event){
+    public function createOptionsAndRoot(LifecycleEventArgs $event)
+    {
         $em = $event->getEntityManager();
         $rootPage = $this->getRoot();
         $options = $this->getOptions();

@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: panos
  * Date: 7/7/14
- * Time: 11:39 AM
+ * Time: 11:39 AM.
  */
 
 namespace Icap\WebsiteBundle\Entity;
@@ -20,7 +20,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="Icap\WebsiteBundle\Repository\WebsitePageRepository")
  * @JMS\ExclusionPolicy("none")
  */
-class WebsitePage{
+class WebsitePage
+{
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -31,7 +32,7 @@ class WebsitePage{
     /**
      * @ORM\Column(type="boolean", nullable=false)
      */
-    protected $visible=true;
+    protected $visible = true;
 
     /**
      * @ORM\Column(type="datetime", name="creation_date")
@@ -72,7 +73,7 @@ class WebsitePage{
     protected $url;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(type="boolean")
      * @JMS\SerializedName("isSection")
@@ -268,7 +269,7 @@ class WebsitePage{
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getIsSection()
     {
@@ -276,7 +277,7 @@ class WebsitePage{
     }
 
     /**
-     * @param boolean $isSection
+     * @param bool $isSection
      */
     public function setIsSection($isSection)
     {
@@ -329,10 +330,10 @@ class WebsitePage{
      */
     public function getResourceNodeId()
     {
-        if ($this->resourceNode!==null) {
+        if ($this->resourceNode !== null) {
             return $this->resourceNode->getId();
         } else {
-            return null;
+            return;
         }
     }
 
@@ -469,8 +470,11 @@ class WebsitePage{
      */
     public function getIsHomepage()
     {
-        if($this->isHomepage === null) return false;
-        else return $this->isHomepage;
+        if ($this->isHomepage === null) {
+            return false;
+        } else {
+            return $this->isHomepage;
+        }
     }
 
     /**
@@ -488,32 +492,32 @@ class WebsitePage{
 
     public function exportToArray(RouterInterface $router = null, &$files = null)
     {
-        $tmpFilePath = sys_get_temp_dir(). DIRECTORY_SEPARATOR;
+        $tmpFilePath = sys_get_temp_dir().DIRECTORY_SEPARATOR;
 
         $pageArray = array(
-            'id'                    => $this->id,
-            'parent_id'             => ($this->parent !== null)?$this->parent->getId():null,
-            'is_root'               => $this->level == 0,
-            'visible'               => $this->visible,
-            'creation_date'         => $this->creationDate,
-            'title'                 => $this->title,
-            'is_section'            => $this->isSection,
-            'description'           => $this->description,
-            'type'                  => $this->type,
-            'is_homepage'           => $this->getIsHomepage(),
-            'url'                   => $this->url
+            'id' => $this->id,
+            'parent_id' => ($this->parent !== null) ? $this->parent->getId() : null,
+            'is_root' => $this->level == 0,
+            'visible' => $this->visible,
+            'creation_date' => $this->creationDate,
+            'title' => $this->title,
+            'is_section' => $this->isSection,
+            'description' => $this->description,
+            'type' => $this->type,
+            'is_homepage' => $this->getIsHomepage(),
+            'url' => $this->url,
         );
         if (isset($files) && $files !== null) {
             if ($this->type == WebsitePageTypeEnum::RESOURCE_PAGE) {
                 $pageArray['type'] = WebsitePageTypeEnum::URL_PAGE;
                 $pageArray['url'] = $router->generate('claro_resource_open', array(
                     'resourceType' => $this->resourceNodeType,
-                    'node' => $this->resourceNode->getId()
+                    'node' => $this->resourceNode->getId(),
                 ), true);
-            } else if ($this->type == WebsitePageTypeEnum::BLANK_PAGE) {
-                $richTextUid = uniqid('ws_page_content_') . '.txt';
-                file_put_contents($tmpFilePath . $richTextUid, $this->richText);
-                $files[$richTextUid] = $tmpFilePath . $richTextUid;
+            } elseif ($this->type == WebsitePageTypeEnum::BLANK_PAGE) {
+                $richTextUid = uniqid('ws_page_content_').'.txt';
+                file_put_contents($tmpFilePath.$richTextUid, $this->richText);
+                $files[$richTextUid] = $tmpFilePath.$richTextUid;
                 $pageArray['rich_text_path'] = $richTextUid;
             }
         } else {
@@ -538,12 +542,12 @@ class WebsitePage{
         if ($this->type == WebsitePageTypeEnum::BLANK_PAGE) {
             if (isset($optionsArray['rich_text'])) {
                 $this->richText = $optionsArray['rich_text'];
-            } else if (isset($optionsArray['rich_text_path'])) {
+            } elseif (isset($optionsArray['rich_text_path'])) {
                 $this->richText = file_get_contents(
-                    $rootPath . DIRECTORY_SEPARATOR . $optionsArray['rich_text_path']
+                    $rootPath.DIRECTORY_SEPARATOR.$optionsArray['rich_text_path']
                 );
             }
-        } else if ($this->type == WebsitePageTypeEnum::RESOURCE_PAGE) {
+        } elseif ($this->type == WebsitePageTypeEnum::RESOURCE_PAGE) {
             if (isset($pageArray['resource_node']) && isset($pageArray['resource_node_type'])) {
                 $this->resourceNode = $pageArray['resource_node'];
                 $this->resourceNodeType = $pageArray['resource_node_type'];

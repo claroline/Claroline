@@ -3,26 +3,23 @@
  * Created by PhpStorm.
  * User: panos
  * Date: 7/4/14
- * Time: 4:02 PM
+ * Time: 4:02 PM.
  */
 
 namespace Icap\WebsiteBundle\Listener;
 
 use Icap\WebsiteBundle\Entity\Website;
 use Icap\WebsiteBundle\Form\WebsiteType;
-
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
-
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Event\LogCreateDelegateViewEvent;
 
-class WebsiteListener extends ContainerAware{
+class WebsiteListener extends ContainerAware
+{
     public function onCreateForm(CreateFormResourceEvent $event)
     {
         $form = $this->container->get('form.factory')->create(new WebsiteType(), new Website());
@@ -30,7 +27,7 @@ class WebsiteListener extends ContainerAware{
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'icap_website'
+                'resourceType' => 'icap_website',
             )
         );
         $event->setResponseContent($content);
@@ -49,7 +46,7 @@ class WebsiteListener extends ContainerAware{
                 'ClarolineCoreBundle:Resource:createForm.html.twig',
                 array(
                     'form' => $form->createView(),
-                    'resourceType' => 'icap_website'
+                    'resourceType' => 'icap_website',
                 )
             );
             $event->setErrorFormContent($content);
@@ -83,4 +80,4 @@ class WebsiteListener extends ContainerAware{
         $event->setCopy($newWebsite);
         $event->stopPropagation();
     }
-} 
+}

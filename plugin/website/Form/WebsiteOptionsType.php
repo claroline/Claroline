@@ -10,7 +10,7 @@ class WebsiteOptionsType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -51,7 +51,7 @@ class WebsiteOptionsType extends AbstractType
             ->add('totalWidth')
         ;
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */
@@ -61,7 +61,7 @@ class WebsiteOptionsType extends AbstractType
             'data_class' => 'Icap\WebsiteBundle\Entity\WebsiteOptions',
             'translation_domain' => 'icap_website',
             'csrf_protection' => false,
-            'intention' => 'update_website_options'
+            'intention' => 'update_website_options',
         ));
     }
 

@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: panos
  * Date: 9/2/14
- * Time: 3:03 PM
+ * Time: 3:03 PM.
  */
 
 namespace Icap\WebsiteBundle\Manager;
@@ -19,12 +19,12 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Form\Form;
 
 /**
- * Class WebsiteOptionsManager
- * @package Icap\WebsiteBundle\Manager
+ * Class WebsiteOptionsManager.
  *
  * @DI\Service("icap.website.options.manager")
  */
-class WebsiteOptionsManager {
+class WebsiteOptionsManager
+{
     /**
      * @var \Symfony\Component\Form\FormFactory
      */
@@ -41,25 +41,26 @@ class WebsiteOptionsManager {
     protected $serializer;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @DI\InjectParams({
      *      "formFactory"   = @DI\Inject("form.factory"),
      *      "objectManager" = @DI\Inject("claroline.persistence.object_manager"),
      *      "serializer"    = @DI\Inject("jms_serializer")
      * })
-     * @param FormFactory $formFactory
+     *
+     * @param FormFactory   $formFactory
      * @param ObjectManager $objectManager
-     * @param Serializer $serializer
+     * @param Serializer    $serializer
      */
-    public function __construct (FormFactory $formFactory, ObjectManager $objectManager, Serializer $serializer)
+    public function __construct(FormFactory $formFactory, ObjectManager $objectManager, Serializer $serializer)
     {
         $this->formFactory = $formFactory;
         $this->om = $objectManager;
         $this->serializer = $serializer;
     }
 
-    public function processForm(WebsiteOptions $options, array $parameters, $method = "PUT")
+    public function processForm(WebsiteOptions $options, array $parameters, $method = 'PUT')
     {
         $form = $this->formFactory->create(new WebsiteOptionsType(), $options, array('method' => $method));
         $form->submit($parameters, 'PATCH' !== $method);
@@ -84,7 +85,7 @@ class WebsiteOptionsManager {
 
     public function handleUploadImageFile(WebsiteOptions $options, UploadedFile $uploadedFile, $imageStr)
     {
-        if ($uploadedFile->getMimeType()=="image/png" || $uploadedFile->getMimeType()=="image/jpg" || $uploadedFile->getMimeType()=="image/jpeg") {
+        if ($uploadedFile->getMimeType() == 'image/png' || $uploadedFile->getMimeType() == 'image/jpg' || $uploadedFile->getMimeType() == 'image/jpeg') {
             $newFileName = sha1(uniqid(mt_rand(), true)).'.'.$uploadedFile->guessExtension();
             $oldFileName = null;
             $getImageValue = 'get'.ucfirst($imageStr);
@@ -92,20 +93,20 @@ class WebsiteOptionsManager {
             if ($options->$getImageValue() !== $newFileName) {
                 $oldFileName = $options->$getImageValue();
                 $options->$setImageValue($newFileName);
-                try{
+                try {
                     $uploadedFile->move($options->getUploadRootDir(), $newFileName);
                     $this->om->persist($options);
                     $this->om->flush();
-                } catch(\Exception $e) {
-                    if (file_exists($options->getUploadRootDir() . DIRECTORY_SEPARATOR .$newFileName)) {
-                        unlink($options->getUploadRootDir() . DIRECTORY_SEPARATOR . $newFileName);
+                } catch (\Exception $e) {
+                    if (file_exists($options->getUploadRootDir().DIRECTORY_SEPARATOR.$newFileName)) {
+                        unlink($options->getUploadRootDir().DIRECTORY_SEPARATOR.$newFileName);
                     }
                     $options->$setImageValue($oldFileName);
                     throw new \InvalidArgumentException($e->getMessage());
                 }
 
-                if (null !== $oldFileName && !filter_var($oldFileName, FILTER_VALIDATE_URL) && file_exists($options->getUploadRootDir() . DIRECTORY_SEPARATOR . $oldFileName)) {
-                    unlink($options->getUploadRootDir() . DIRECTORY_SEPARATOR . $oldFileName);
+                if (null !== $oldFileName && !filter_var($oldFileName, FILTER_VALIDATE_URL) && file_exists($options->getUploadRootDir().DIRECTORY_SEPARATOR.$oldFileName)) {
+                    unlink($options->getUploadRootDir().DIRECTORY_SEPARATOR.$oldFileName);
                 }
             }
 
@@ -121,21 +122,22 @@ class WebsiteOptionsManager {
         $setImageValue = 'set'.ucfirst($imageStr);
         $oldPath = $options->$getImageValue();
         $options->$setImageValue($newPath);
-        try{
+        try {
             $this->om->persist($options);
             $this->om->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $options->$setImageValue($oldPath);
             throw new \InvalidArgumentException();
         }
-        if(null !== $oldPath && !filter_var($oldPath, FILTER_VALIDATE_URL) && file_exists($options->getUploadRootDir() . DIRECTORY_SEPARATOR . $oldPath)) {
-            unlink($options->getUploadRootDir() . DIRECTORY_SEPARATOR . $oldPath);
+        if (null !== $oldPath && !filter_var($oldPath, FILTER_VALIDATE_URL) && file_exists($options->getUploadRootDir().DIRECTORY_SEPARATOR.$oldPath)) {
+            unlink($options->getUploadRootDir().DIRECTORY_SEPARATOR.$oldPath);
         }
 
         return array($imageStr => $options->getWebPath($imageStr));
     }
 
-    private function getErrorMessages(Form $form) {
+    private function getErrorMessages(Form $form)
+    {
         $errors = array();
         foreach ($form->getErrors() as $key => $error) {
             $template = $error->getMessageTemplate();
@@ -154,6 +156,7 @@ class WebsiteOptionsManager {
                 }
             }
         }
+
         return $errors;
     }
 }

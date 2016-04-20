@@ -13,7 +13,7 @@ class IcapWebsiteBundle extends PluginBundle implements ConfigurationProviderInt
     {
         $config = new ConfigurationBuilder();
 
-        return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'icap_website');
+        return $config->addRoutingResource(__DIR__.'/Resources/config/routing.yml', null, 'icap_website');
     }
 
     public function suggestConfigurationFor(Bundle $bundle, $environment)
@@ -26,6 +26,7 @@ class IcapWebsiteBundle extends PluginBundle implements ConfigurationProviderInt
         if (in_array($bundleClass, $emptyConfigs)) {
             return $config;
         }
+
         return false;
     }
 }
