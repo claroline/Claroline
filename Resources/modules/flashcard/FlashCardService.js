@@ -23,6 +23,10 @@ export default class FlashCardService {
     return this._deckNode
   }
 
+  getNoteTypes () {
+    return this._noteTypes
+  }
+
   findAllNoteType () {
     const url = Routing.generate('claroline_getall_note_type')
     return this.$http.get(url)
@@ -52,25 +56,9 @@ export default class FlashCardService {
       .post(url, { fields: fields})
   }
 
-  createMark (props, onFail) {
-    const user = this._users.find(user => user.name === props.user)
-    const result = { name: props.user, mark: props.mark }
-    const url = Routing.generate('claro_create_mark', {
-      id: this._resultId,
-      userId: user.id
-    })
-
-    this._marks.push(result)
-
-    this.$http
-      .post(url, { mark: props.mark })
-      .then(
-        response => { result.markId = response.data },
-        () => {
-          this._deleteMark(result)
-          onFail()
-        }
-      )
+  createSession () {
+    const url = Routing.generate('claroline_create_session')
+    return this.$http.get(url)
   }
 
   deleteMark (mark, onFail) {
